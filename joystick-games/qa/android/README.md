@@ -1,0 +1,31 @@
+# Android 实包与 pureTV SDK 验收
+
+此工具安装正式签名游戏和同证书签名的独立 `testOnly` Observer。游戏输入全部来自仓库原版 `puretv-joystick/joystick_sdk.py`，经透明 TCP 转发器记录真实消息和 ACK。Observer 只读 `JoystickGameQA.snapshot()`、`PureGameHost.getInfo()` 和侧栏 DOM，不消费原生输入快照、不改模型、不改时钟。
+
+```sh
+python3 joystick-games/qa/android/build-observer.py \
+  --game cf-transport-ship --sdk /absolute/android-sdk \
+  --jdk /absolute/jdk17 --output /absolute/empty-observer-build
+
+# unsigned Observer 必须走仓库正式签名流程，不能临时造签名密钥。
+python3 joystick-games/qa/android/run.py \
+  --game cf-transport-ship --apk /absolute/signed-game.apk \
+  --observer /absolute/signed-observer.apk \
+  --output /absolute/new-runtime-output --adb adb
+```
+
+`--game` 也支持 `qq-speed`。目标包分别为 `com.ecojust.joystickcf` 和 `com.ecojust.joystickqqspeed`，Activity 沿用原 `com.ecojust.gamekit.MainActivity`。仅连接工作流的专用模拟器；多设备时显式 `--serial`。
+
+使用另一新输出目录加 `--occupy-default-port` 验证默认端口被占用：Observer 的启动夹具先占用 63485，再启动未经修改的游戏宿主，游戏自行选择备用端口。测试从真实 `getInfo()` 获取发布端口，转发该端口并验证连接、全部操作和重连。该夹具不提供输入或模型写入端点。正常模式必须使用 63485，两种模式都要求进程 PID 与服务端口在同一轮中保持稳定；不得把重启后的端口差异当作连接中端口漂移。
+
+验收范围：
+
+- 实际 WebGL 2 上下文及菜单；START 开始、暂停、模拟时间冻结和恢复。
+- CF：普通 TCP 方向输入改变位置；B＋方向改变实际 yaw/pitch；A 增加实际 `shotsFired`；X 开始实际换弹。
+- QQ：加速到可转向速度后检查实际 heading 左右变化；A＋方向进入真实漂移。小喷尝试另存快照，不把没有可用库存的氮气或小喷尝试记为功能通过。
+- 九键分别按下/释放，在生产帧已消费并缓存的原始玩家输入中逐个核对，防止 A/X、B/Y 被合并。START 暂停会隔离当前按住状态，不能要求被隔离的玩法输入继续保持 true；开始/暂停另用真实游戏状态判据。
+- 图标、完整 ID 和 1P/2P；双手柄独立、断开清键、同 ID 重连、重连 held-sync 不误触 START；每条 SDK 消息对应实际 ACK。
+
+输出保存游戏/Observer/实际执行源码哈希、原始 `wire.jsonl`、ADB 命令和输出、只读快照、原生 PNG 与屏幕录像。每张图前自然等待 1500 ms 并记录前后 DOM、实际采集时间及 PNG 哈希；这不等同于渲染栅栏，图片仍须逐张目视。既有失败目录不可覆盖。Observer 不随最终游戏 APK 分发。
+
+本地 `python3 joystick-games/qa/android/test_runner.py` 仅验证 SDK 透传/ACK、只读工具和快照契约，不能替代 Android 实包运行；实体电视、ESP32 及发现广播测试仍需单独进行。
