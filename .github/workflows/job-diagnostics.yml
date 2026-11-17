@@ -1,38 +1,38 @@
-name: Read failed job diagnostics
+name: Preserve original Mac QA evidence
 on:
   workflow_dispatch:
-    inputs:
-      job_id:
-        description: Failed GitHub Actions job ID
-        required: true
 permissions:
   actions: read
+  contents: write
 jobs:
-  diagnostics:
-    runs-on: ubuntu-latest
+  archive:
+    runs-on: ubuntu-24.04
     steps:
-      - name: Report verification log tail
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: joystick-macos-qa-*
+          run-id: 44115155028
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/original
+      - name: Archive original evidence without altering it
         env:
           GH_TOKEN: ${{ github.token }}
-          JOB_ID: ${{ inputs.job_id }}
-          REPOSITORY: ${{ github.repository }}
         run: |
-          python - <<'PY'
-          import os, re, subprocess
-          job = os.environ['JOB_ID']
-          assert job.isdigit()
-          result = subprocess.run(['gh', 'api', '--allow-escape-sequences', f"repos/{os.environ['REPOSITORY']}/actions/jobs/{job}/logs"], capture_output=True, text=True)
-          log = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', result.stdout + result.stderr)
-          lines = log.splitlines()
-          primary = [i for i, line in enumerate(lines) if re.search(r'FAILURE: Build failed|\* What went wrong:', line) and '##[error]' not in line]
-          fallback = [i for i, line in enumerate(lines) if re.search(r'(?:unbound variable|Traceback|error:|Error:|TimeoutError|ui\.mjs:|> Task .+ FAILED|Execution failed for task)', line) and '##[error]' not in line]
-          matches = primary or fallback
-          if matches:
-              before = '\n'.join(lines[max(0, matches[0] - 50):matches[0]])[-3500:]
-              print('::notice title=Failure preceding context::' + before.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
-              start = max(0, matches[0] - 2)
-              selected = '\n'.join(lines[start:start + 65])[:3500]
-          else:
-              selected = log[-3500:]
-          print('::notice title=Failed job log::' + selected.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
+          set -euo pipefail
+          cd "$RUNNER_TEMP/original"
+          python3 - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          files={str(p):{'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in Path('.').rglob('*') if p.is_file()}
+          Path('archive-manifest.json').write_text(json.dumps({'sourceRun':44115155028,'sourceCommit':'8d6475980ce2312df8839a38dd724794eb59b83b','files':files},indent=2)+'\n')
+          for p in Path('.').rglob('report.json'):
+            r=json.loads(p.read_text());print(p,r.get('status'),r.get('error','')[-1000:]);sent={(x['connection'],x['message']['seq']) for x in r['wire'] if x['direction']=='sdk-to-game'};ack={(x['connection'],x['message']['seq']) for x in r['wire'] if x['direction']=='game-to-sdk' and x['message'].get('type')=='ack'};print('Missing ACK',sorted(sent-ack),'Unexpected ACK',sorted(ack-sent))
           PY
+          git init -b export
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -m 'Archive original failed Mac QA 44115155028 [skip ci]'
+          gh auth setup-git
+          git remote add origin https://github.com/ecojust/pureTV.git
+          git push origin HEAD:refs/heads/build-assets/joystick-games-macos-original-44115155028
