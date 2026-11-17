@@ -1,0 +1,352 @@
+{
+  "checkedAt": "2026-11-17",
+  "reviewType": "independent read-only targeted review",
+  "reviewedCount": 15,
+  "method": [
+    "独立gh API非search复核指定提交的署名、文件列表与关键patch；raw固定SHA读取关键源码/README/许可。",
+    "对已下载完整tree/源码做只读核对；不运行上游游戏、不安装依赖、不构建、不做浏览器试玩。",
+    "Jet Stream/Microbial Focus由本审查子agent独立复核；其他条目由本审查agent核对。"
+  ],
+  "summary": {
+    "eligibleWithScopeAndRuntimeCaveats": 13,
+    "referenceOnly": 2,
+    "blockingForStrictConfirmedGameCount": [
+      "Palmera Bay无对手/目标，仅自由驾驶沙盒。",
+      "Saltline镜像的原作者Claude来源尚未本轮直接验证，原作授权待确认。"
+    ],
+    "resolvedRecordErrors": [
+      "Palmera Bay不存在的src/input.js已读条目已删除/改main.js。",
+      "Ascmearc证据遗漏运行时TOML并只列测试文件，现已补齐并收窄scope。"
+    ],
+    "noBasisToAssertInfringement": true,
+    "http200IsNotPlaytest": true
+  },
+  "records": [
+    {
+      "title": "Jet Stream",
+      "repo": "abagames/claude-one-button-game-creation",
+      "verdict": "pass",
+      "findings": [
+        "独立gh API确认3d50e1a提交含Generated with Claude Code及Co-Authored-By；虽然标题含documentation，main.js确为added +379/-0。",
+        "固定main.js：L78输入，L303–325击障计分，L369–373越界end()；11327字节与清单哈希一致。",
+        "固定LICENSE.txt是完整MIT，2026 ABA Games。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/abagames/claude-one-button-game-creation/commit/3d50e1aae53b28b6e93e835d8b7341e9f1584d1a",
+        "https://github.com/abagames/claude-one-button-game-creation/blob/d81f02a0928b35d9c979e9918aa9dc3c2770821b/docs/jet-stream/main.js#L78",
+        "https://github.com/abagames/claude-one-button-game-creation/blob/d81f02a0928b35d9c979e9918aa9dc3c2770821b/LICENSE.txt",
+        "https://github.com/abagames/claude-one-button-game-creation/blob/d81f02a0928b35d9c979e9918aa9dc3c2770821b/docs/index.html#L12"
+      ],
+      "requirements": [
+        "unpkg加载crisp-game-lib及相关库；离线需打包依赖；未实玩。"
+      ],
+      "correction": {
+        "optional": "玩法可精确为“切换三条气流航道，用尾流摧毁风障并保持不被吹出画面”。"
+      }
+    },
+    {
+      "title": "Microbial Focus",
+      "repo": "abagames/claude-one-button-game-creation",
+      "verdict": "pass",
+      "findings": [
+        "gh API确认6fe380ca提交带Claude生成/共同署名并新增main.js +330/-0；正文明确Complete game implementation using crisp-game-lib。",
+        "固定源码L38调焦输入，L204–224离场计分，L312–317危险满值end()；9422字节与清单哈希一致。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/abagames/claude-one-button-game-creation/commit/6fe380ca09526227633ecba74aa482cb70896202",
+        "https://github.com/abagames/claude-one-button-game-creation/blob/d81f02a0928b35d9c979e9918aa9dc3c2770821b/docs/microbial-focus/main.js#L38",
+        "https://github.com/abagames/claude-one-button-game-creation/blob/d81f02a0928b35d9c979e9918aa9dc3c2770821b/LICENSE.txt"
+      ],
+      "requirements": [
+        "浏览器/CDN；没有把HTTP 200当实玩。"
+      ],
+      "correction": null
+    },
+    {
+      "title": "Terrabrowser",
+      "repo": "Wimmboo2/Terrabrowser",
+      "verdict": "pass_with_license_unknown",
+      "findings": [
+        "独立gh API确认53eb19ba创建提交有Claude Opus5.5署名，并实际新增src/player.js +636、enemies.js +662、main.js +257等。",
+        "当前player.js L89死亡重生、L98键盘跳跃、L192–194伤害死亡；main.js L261帧循环，属于实质游戏。",
+        "当前完整tree未见LICENSE/COPYING；用“未明确”正确，不等同断言无任何授权。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/Wimmboo2/Terrabrowser/commit/53eb19ba3401ac79d6c44455789ee998b9930c06",
+        "https://github.com/Wimmboo2/Terrabrowser/blob/471220ee4e09495235ab038243296cd8f79da6bb/src/player.js#L89",
+        "https://github.com/Wimmboo2/Terrabrowser/blob/471220ee4e09495235ab038243296cd8f79da6bb/src/main.js#L261"
+      ],
+      "requirements": [
+        "保留静态源码核验、未实玩；勿写全部游戏由Claude独立完成。"
+      ],
+      "correction": null
+    },
+    {
+      "title": "CLAWD COLLECTION",
+      "repo": "tanuu5/clawd-collection",
+      "verdict": "pass_with_license_boundaries",
+      "findings": [
+        "固定README制作节明确Claude Code实现角色/房间/演出/UI，超出提示词或CLAUDE.md证据。",
+        "独立raw读取gacha.js：L142–146本地随机抽取并扣虚拟代币；idle.js实现任务/收益/离线奖励，不是纯模型场景。",
+        "README明确代码MIT，Clawd角色与名称/商标不属MIT授权；字体OFL。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/tanuu5/clawd-collection/blob/32cf7ef7d75c3a66355cd56d9c3a809187028a48/README.md",
+        "https://github.com/tanuu5/clawd-collection/blob/32cf7ef7d75c3a66355cd56d9c3a809187028a48/src/game/gacha.js#L142",
+        "https://github.com/tanuu5/clawd-collection/blob/32cf7ef7d75c3a66355cd56d9c3a809187028a48/src/game/idle.js#L123"
+      ],
+      "requirements": [
+        "代币是本地游戏状态，不应误写需要Claude API key；Next服务并非本游戏要求（本项目为Vite/Three.js）。",
+        "必须保留代码/角色/字体许可边界。"
+      ],
+      "correction": null
+    },
+    {
+      "title": "Peri Golf",
+      "repo": "Furkiozknn/peri-golf",
+      "verdict": "pass_with_license_boundaries",
+      "findings": [
+        "README明确Made with Claude Code/Built by Claude Fable5.1；index.html包含物理、洞进度、击球与结算代码。",
+        "CREDITS开头概括all CC0，但最后明确Fredoka为SIL OFL1.1，不应把所有资产概括CC0。",
+        "index.html L1745 Three.js jsDelivr importmap，L2256 GoatCounter统计，L3896 WebGLRenderer。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/Furkiozknn/peri-golf/blob/875de69749f3b74a9b0d928fe88b98392c2c055e/README.md",
+        "https://github.com/Furkiozknn/peri-golf/blob/875de69749f3b74a9b0d928fe88b98392c2c055e/CREDITS.md",
+        "https://github.com/Furkiozknn/peri-golf/blob/875de69749f3b74a9b0d928fe88b98392c2c055e/index.html#L1745",
+        "https://github.com/Furkiozknn/peri-golf/blob/875de69749f3b74a9b0d928fe88b98392c2c055e/index.html#L2256"
+      ],
+      "requirements": [
+        "ES modules须HTTP；CDN依赖，统计脚本应在移植时处理；无证据需要API key。",
+        "代码MIT；Poly Haven/Kenney为CC0；Fredoka为OFL。"
+      ],
+      "correction": null
+    },
+    {
+      "title": "Tidewater",
+      "repo": "dgreenheck/tidewater",
+      "verdict": "pass_narrow_claude_scope",
+      "findings": [
+        "独立API确认当前提交Claude共同署名，确实改src/main.js、ShoreWaves.js与WaterMaterial.js；证明海岸渲染源码参与，不证明整游戏由Claude编写。",
+        "已读CatchMinigame.js存在张力、体力及snapped/escaped/caught终局。",
+        "README/CREDITS说明代码MIT及CC0音频/扫描、Rocketbox MIT角色、OFL/Apache字体；Rocketbox许可原文已独立读取。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/dgreenheck/tidewater/commit/4811ba48d795197de5621985f404e765c0b7c0ef",
+        "https://github.com/dgreenheck/tidewater/blob/4811ba48d795197de5621985f404e765c0b7c0ef/src/game/CatchMinigame.js",
+        "https://github.com/dgreenheck/tidewater/blob/4811ba48d795197de5621985f404e765c0b7c0ef/README.md#L16",
+        "https://github.com/dgreenheck/tidewater/blob/4811ba48d795197de5621985f404e765c0b7c0ef/CREDITS.md",
+        "https://github.com/dgreenheck/tidewater/blob/4811ba48d795197de5621985f404e765c0b7c0ef/public/models/characters/LICENSE-Rocketbox.md"
+      ],
+      "requirements": [
+        "仅WebGPU/WGSL；Vite静态构建；GPU和浏览器需兼容。",
+        "Google Fonts运行时联网；不得简化为所有资产MIT。"
+      ],
+      "correction": null
+    },
+    {
+      "title": "AMAR.IO",
+      "repo": "onehundredapps/amar.io",
+      "verdict": "pass_with_license_unknown",
+      "findings": [
+        "独立API查询旧brianm3050/amar.io返回canonical onehundredapps/amar.io，fork=false；只计一个游戏。",
+        "README明确Built entirely by Claude Opus5.5；主index有分裂、吞噬、成长、重置胜利、WebRTC多人源码。",
+        "主index L1940–1952通过Trystero CDN加载并joinRoom；README“no server”不能推断无需联网/信令。",
+        "ga2/README明确是Galaxy Arena第二版WebGPU重写、当前仅bots；不再单计独立游戏，也不与主入口WebGL条件混写。",
+        "递归tree无根许可证；记录未明确准确。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/onehundredapps/amar.io/blob/a074716cc36f395a2aec1955a9c84784b6d621eb/README.md",
+        "https://github.com/onehundredapps/amar.io/blob/a074716cc36f395a2aec1955a9c84784b6d621eb/index.html#L1940",
+        "https://github.com/onehundredapps/amar.io/blob/a074716cc36f395a2aec1955a9c84784b6d621eb/ga2/README.md"
+      ],
+      "requirements": [
+        "主入口Three.js/WebGL/CDN；多人需联网、WebRTC与信令；ga2为WebGPU且无WebGL回退。"
+      ],
+      "correction": null
+    },
+    {
+      "title": "Palmera Bay",
+      "repo": "vcahlik/palmera-bay",
+      "verdict": "reference_only_do_not_count_strict_game",
+      "findings": [
+        "README明确no opponents and no goals, just free roam；有驾驶输入/物理/碰撞，但严格有目标游戏数应排除，可保留驾驶沙盒参考。",
+        "Claude Code作者声明明确；未发现根LICENSE，不能标MIT。",
+        "初稿codeRead误列不存在的src/input.js；实际输入在src/main.js与touch.js。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/vcahlik/palmera-bay/blob/8d17361835784cae757b8b68dd8007487b62be15/README.md#L14",
+        "https://github.com/vcahlik/palmera-bay/blob/8d17361835784cae757b8b68dd8007487b62be15/src/main.js#L170"
+      ],
+      "requirements": [
+        "已提交dist可本地HTML打开；Three.js打包，Google Font有系统回退。"
+      ],
+      "correction": {
+        "status": "resolved_by_three_d_agent",
+        "change": "删除虚构src/input.js已读记录，改真实main.js；新增countAsStrictGame=false。"
+      }
+    },
+    {
+      "title": "Saltline（中文HTML存档）",
+      "repo": "Megasu/jimao-3a-game",
+      "verdict": "reference_only_primary_provenance_unverified",
+      "findings": [
+        "固定README L13–22承认这是收到的中文HTML，原作Saltline/作者Felix/Claude Fable5.2是镜像作者转述，且未逐项对照原始源码。",
+        "读取原合集Artifact URL只收到HTTP200的JS壳，未提取到Saltline/Felix/Fable正文；本轮不能声称已直接验证原作者来源。",
+        "README L109–113明确镜像MIT不代表已核实原作MIT；没有依据据此指控侵权。",
+        "游戏本体含任务/枪械/撤离逻辑，问题在来源证据与许可范围，非断言它不是游戏。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/Megasu/jimao-3a-game/blob/d8107837b3c834d7df3267be1824023cddfea895/README.md#L13",
+        "https://github.com/Megasu/jimao-3a-game/blob/d8107837b3c834d7df3267be1824023cddfea895/README.md#L109",
+        "https://claude.ai/artifact/MXxb36zKgN261ckbGhmNin",
+        "https://claude.ai/artifact/BGY1SztrAYcJQHSsnHHGmp"
+      ],
+      "requirements": [
+        "保留“来源与原作授权待确认参考”；不要计入严格Claude已核实的独立游戏数。"
+      ],
+      "correction": null
+    },
+    {
+      "title": "Dirt Crown",
+      "repo": "triptych/web-games-andrew",
+      "verdict": "pass_rename_verified",
+      "findings": [
+        "独立API确认7172d587带Claude Opus5.5署名，新增game-068/js/sim/race.js +289、car.js +256、main.js +663等实际源码。",
+        "662d9afcc70ad829cdc7397b274ffdd818bcfc80确认整组从game-068重命名game-069；不是新增第二款游戏。",
+        "当前race.js有比赛/检查点/AI/结束；只按现路径计一次。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/triptych/web-games-andrew/commit/7172d5872abe94bc398c47b3c95fa1d130d00d85",
+        "https://github.com/triptych/web-games-andrew/commit/662d9afcc70ad829cdc7397b274ffdd818bcfc80",
+        "https://github.com/triptych/web-games-andrew/blob/a7051c34fe2e7550fd206e6272f758df171855b0/game-069/js/sim/race.js"
+      ],
+      "requirements": [
+        "Three.js CDN、字体和静态HTTP；不将作者的bot测试描述为本轮已运行。"
+      ],
+      "correction": null
+    },
+    {
+      "title": "PHOSPHOR PATROL",
+      "repo": "triptych/web-games-andrew",
+      "verdict": "pass_rename_verified",
+      "findings": [
+        "独立API确认245df892有Claude共同署名，新增game-069/js/sim/world.js +482、enemies.js +348等。",
+        "c16c0221992b6dc1039d944568511448cc4602e4确认从game-069重命名game-070；与Dirt Crown是不同游戏，旧号不应误判同款也不应额外计数。",
+        "world.js有射击、殖民者救援、损伤/波次/失败状态。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/triptych/web-games-andrew/commit/245df892c464d04c02909d8cec13b96c553d1a93",
+        "https://github.com/triptych/web-games-andrew/commit/c16c0221992b6dc1039d944568511448cc4602e4",
+        "https://github.com/triptych/web-games-andrew/blob/a7051c34fe2e7550fd206e6272f758df171855b0/game-070/js/sim/world.js"
+      ],
+      "requirements": [
+        "Three.js CDN，静态HTTP，WebAudio。"
+      ],
+      "correction": null
+    },
+    {
+      "title": "Munch Maze",
+      "repo": "vreshch/kids-games",
+      "verdict": "pass",
+      "findings": [
+        "独立raw README L21–25明确Claude Code builds it / Every game on the site went through that loop，作用于各游戏而非单纯提示文件。",
+        "munch-maze-world.ts L68 rollDie、L83 stepPlayer、L95敌回合、L123得分、L150清空目标判定，玩法闭环真实。",
+        "package.json确认Next16.4.6/React19.3.1及next start脚本。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/vreshch/kids-games/blob/ca0c247fbd3308550529239d66740d67ad6519ca/README.md#L21",
+        "https://github.com/vreshch/kids-games/blob/ca0c247fbd3308550529239d66740d67ad6519ca/package.json",
+        "https://github.com/vreshch/kids-games/blob/ca0c247fbd3308550529239d66740d67ad6519ca/src/lib/munch-maze-world.ts#L68"
+      ],
+      "requirements": [
+        "这是Next/React组件，需现有服务/构建或提取适配，不能写单HTML直开。"
+      ],
+      "correction": null
+    },
+    {
+      "title": "The Nine Lives of Ash",
+      "repo": "phirogue/SparkyGames",
+      "verdict": "pass_with_license_unknown",
+      "findings": [
+        "独立API确认2080b0212e有Claude Fable5共同署名，修改game/scenes/game.gd +15、save_service.gd +4及任务/结局数据，明确修复一次性奖励，不只是测试。",
+        "固定combat_state.gd L372命令处理，L585撤退/死亡，L980–982胜败；属于可玩规则源码。",
+        "当前无明确许可原文件；可称序章原型，不能将目标iOS/Android商店当实际发布。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/phirogue/SparkyGames/commit/2080b0212e19eba45d3fb20abca30dbe7b9f0cf1",
+        "https://github.com/phirogue/SparkyGames/blob/3b370c0e21522c2fc496295e25e650443a070aac/game/core/combat_state.gd#L372"
+      ],
+      "requirements": [
+        "Godot4/GDScript，当前文档为编辑器运行，不是已验证浏览器入口。"
+      ],
+      "correction": null
+    },
+    {
+      "title": "Ascmearc（原Warlock）",
+      "repo": "jannef/ascmearc",
+      "verdict": "pass_narrow_claude_scope",
+      "findings": [
+        "独立API及patch确认37c0b5bb有Claude署名，实际运行时ordgar.toml新增食用尸体学Spellcraft gives5/up_to40，hunger.toml提供文案，并有laws_tests.rs。",
+        "这属于游戏规则数据参与；不能把仅此提交扩大为Claude编写战斗引擎。",
+        "当前combat.rs L542 strike等有实际命中/伤害规则，input.rs有操作；WebGPU要求不能遗漏。",
+        "canonical仓库已改名ascmearc，旧warlock勿另计。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/jannef/ascmearc/commit/37c0b5bb290adff4822b742b7c2b1cdb897723cb",
+        "https://github.com/jannef/ascmearc/blob/f0a99ccdaf61adf914b030d85bff59ea1baeac1b/crates/ascmearc-core/src/combat.rs#L542"
+      ],
+      "requirements": [
+        "Rust/Bevy桌面与WASM WebGPU，GPL-3.0-only。"
+      ],
+      "correction": {
+        "status": "resolved_by_two_d_agent",
+        "change": "evidence类型改游戏规则数据共同署名；changedGameFiles加入两份运行时TOML，scope已收窄。"
+      }
+    },
+    {
+      "title": "CARD GAME（LÖVE2D）",
+      "repo": "Corttezz/card-game-love2d",
+      "verdict": "pass_narrow_claude_scope",
+      "findings": [
+        "独立API确认7aba2cf4虽是merge标题，但Claude共同署名且有GameplayScene.lua +39/-8、main.lua等实际代码差异。",
+        "GameplayScene补setGame/resetTurnState修复弃局/续局绑定与回合残留；证据不是仅文档。",
+        "当前Game.lua有抽牌、卡效、enemyTurn、checkGameOver L1755及checkVictory L1839；确有战斗闭环。",
+        "未发现明确许可原文件，应保持未明确。"
+      ],
+      "evidenceUrls": [
+        "https://github.com/Corttezz/card-game-love2d/commit/7aba2cf4fd429193de5ae329c99b4e904126b47c",
+        "https://github.com/Corttezz/card-game-love2d/blob/998dbffef8dc3fdd19fb41f21344b2999f7a37d1/src/core/Game.lua#L1755"
+      ],
+      "requirements": [
+        "Lua/LÖVE2D桌面运行时；不应当浏览器单文件游戏。"
+      ],
+      "correction": null
+    }
+  ],
+  "additionalExclusionCheck": {
+    "repo": "Braffolk/fable5-world-demo",
+    "result": "上游README明确WebGPU无WebGL回退的程序化4×4km世界，只有walk/fly/bookmark/flythrough；three-d.json已排除其风景展示，处理正确。"
+  },
+  "globalRecommendations": [
+    "统一把Claude共同署名限定为已核实提交的代码/规则数据参与，不能自动写全部游戏由Claude完成。",
+    "无明确许可证用“未发现覆盖该游戏的明确许可文件/授权待确认”；不要臆断侵权。",
+    "保留原始源码路径及canonical仓库改名，归并旧仓库、重编号和二代重写。",
+    "全部当前demo结论只到HTTP可达；不能标实玩通过、TV适配通过或性能达标。",
+    "WebGPU、CDN、P2P信令、Next/Node服务、原生Godot/LÖVE运行时以及不同素材许可应在面向用户的主表中保留。"
+  ],
+  "crossFileScan": {
+    "files": [
+      "collections.json",
+      "three-d.json",
+      "two-d.json",
+      "showcase.json",
+      "one-button.json"
+    ],
+    "recordCount": 97,
+    "canonicalRepositoryCount": 63,
+    "exactNormalizedTitleDuplicates": [],
+    "repositoriesRepeatedAcrossDifferentSourceFiles": [],
+    "scope": "机械扫描标题和规范仓库，仅用于发现明显重复；并非97项逐一独立内容审查。"
+  }
+}

@@ -164,6 +164,16 @@ The [fork/ catalog](fork/README.md) contains 14 apps and 23 APKs under 10 MB fro
 </tr>
 </table>
 
+<!-- claude-games:start -->
+## Claude-assisted game references
+
+The [Chinese README contains 93 game references from 61 GitHub repositories](README.md#claude-游戏参考清单), grouped into racing/sports, 3D action/exploration, platform/shooter arcade games, strategy/cards, puzzles, simulation/casual games, rhythm, and one-button arcade games. The list includes source links, gameplay notes, runtime requirements, demo/download links, Claude attribution and license status.
+
+Checked on **2026-11-17** using original author statements or Claude-signed commits that affect game code, plus static source review. Stars are a dated repository snapshot. These are candidates for further evaluation; HTTP-accessible demos are not gameplay tests or pureTV compatibility claims. The already adapted CF and QQ Speed games are excluded from the new-reference count. See the [source catalog and review scope](docs/claude-games/README.md).
+
+Examples worth examining include **Kart Royale, Turbo Kart Rally, Nova Lancer, GLUP, Sugarplum Drop, Quiverspire, Peri Golf, and CELADON**. Runtime and license differences are recorded explicitly: Tidewater requires WebGPU, GalaxyQuest targets Meta Quest and needs original game data, and MAINSPRING has a noncommercial license.
+<!-- claude-games:end -->
+
 ## MCP / Agent
 
 Open “Device connection → MCP · Agent debugging,” copy the configuration into your client, and keep the manager window open. Its 34 tools cover system information, connections, app management, APK installation, launcher switching and layouts, market browsing/downloads/installation, background images, ADB configuration, language and theme settings, cancellation, and logs. The Agent and the interface share the same state.
