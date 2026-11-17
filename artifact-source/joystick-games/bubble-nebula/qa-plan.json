@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": [
+    "gameplay.tick",
+    "gameplay.score",
+    "gameplay.playerX",
+    "gameplay.playerY",
+    "gameplay.blown"
+  ],
+  "steps": [
+    {
+      "name": "Start the first sector",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.phase",
+          "op": "eq",
+          "value": "play"
+        }
+      ]
+    },
+    {
+      "name": "Move jump and blow a real bubble",
+      "keys": [
+        "RIGHT",
+        "A",
+        "B"
+      ],
+      "holdMs": 1400,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.blown",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Pause the real simulation",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Resume only by explicit START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ],
+  "storageRestartRequired": true
+}

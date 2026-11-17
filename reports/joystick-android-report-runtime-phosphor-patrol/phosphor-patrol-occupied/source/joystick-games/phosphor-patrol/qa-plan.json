@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": [
+    "gameplay.tick",
+    "gameplay.score",
+    "gameplay.playerX",
+    "gameplay.playerY",
+    "gameplay.shots"
+  ],
+  "steps": [
+    {
+      "name": "Open the cabinet menu",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "menu"
+        }
+      ]
+    },
+    {
+      "name": "Launch the first patrol",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.phase",
+          "op": "eq",
+          "value": "play"
+        }
+      ]
+    },
+    {
+      "name": "Thrust and fire lasers",
+      "keys": [
+        "RIGHT",
+        "A"
+      ],
+      "holdMs": 1400,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.shots",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Spend a smart bomb",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.bombs",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Pause the real simulation",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Focus the real sound setting while paused",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Persist a genuine sound-setting change",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Resume only by explicit START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ],
+  "storageRestartRequired": true
+}
