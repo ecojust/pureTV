@@ -26,6 +26,8 @@ python3 joystick-games/qa/android/run.py \
 - 九键分别按下/释放，在生产帧已消费并缓存的原始玩家输入中逐个核对，防止 A/X、B/Y 被合并。START 暂停会隔离当前按住状态，不能要求被隔离的玩法输入继续保持 true；开始/暂停另用真实游戏状态判据。
 - 图标、完整 ID 和 1P/2P；双手柄独立、断开清键、同 ID 重连、重连 held-sync 不误触 START；每条 SDK 消息对应实际 ACK。
 
+ID 文本接受完整 `controller_id` 或共享组件的精确 `ID: ` 标签加完整 ID；不使用子串匹配，也不接受省略号、截断、错误 ID 或额外字符。首轮实际 Android 报告因为遗漏标签前缀被 QA 误拒，原报告/录像及独立复核保留于 `../../docs/qa/android/runtime-attempt-1-review/`，两份真实 DOM 摘录作为回归夹具。
+
 输出保存游戏/Observer/实际执行源码哈希、原始 `wire.jsonl`、ADB 命令和输出、只读快照、原生 PNG 与屏幕录像。每张图前自然等待 1500 ms 并记录前后 DOM、实际采集时间及 PNG 哈希；这不等同于渲染栅栏，图片仍须逐张目视。既有失败目录不可覆盖。Observer 不随最终游戏 APK 分发。
 
 动作等待使用生产缓存的 `controller.pollCount`：按下后必须看到更新帧中的对应九键输入，再等更新帧中的实际位置、角度、射击或漂移变化，才松开。暂停和 held-sync 抑制也要跨越真实新帧；held-sync 先匹配同 TCP 连接和 seq 的真实 ACK。等待有墙钟上限，不以固定按住毫秒数推算已渲染帧数。工具修正来源及陈旧快照负例见 `../../docs/qa/android/freshness-correction/summary.json`。

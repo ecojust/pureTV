@@ -257,9 +257,14 @@ class Acceptance:
         return next((p.get('buttons', {}) for p in players if p.get('controllerId') == self.clients[0].identity and p.get('connected')), {})
 
     @staticmethod
+    def full_id_text(row):
+        identity = row.get('controllerId')
+        return isinstance(identity, str) and bool(identity) and row.get('idText') in (identity, 'ID: ' + identity)
+
+    @staticmethod
     def visible_ids(snapshot):
         return [r['controllerId'] for c in snapshot.get('page', {}).get('controllerClients', {}).get('containers', []) if c['visible']
-                for r in c['rows'] if r['visible'] and r['iconVisible'] and r['idText'] == r['controllerId']]
+                for r in c['rows'] if r['visible'] and r['iconVisible'] and Acceptance.full_id_text(r)]
 
     def capture(self, name, expected_ids):
         # A real wait helps compositor settling; never represented as a presentation fence.

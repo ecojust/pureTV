@@ -101,6 +101,23 @@ class Contracts(unittest.TestCase):
         row['idText']=row['controllerId']; row['iconVisible']=False
         self.assertEqual(runner.Acceptance.visible_ids(sample),[])
 
+    def test_actual_android_failed_snapshots_have_exact_prefixed_complete_id(self):
+        fixture=json.loads((HERE/'fixtures/id-dom-run-44110295680.json').read_text())
+        self.assertEqual(len(fixture['cases']),2)
+        for case in fixture['cases']:
+            self.assertEqual(runner.Acceptance.visible_ids(case['snapshot']),[case['expectedControllerId']])
+            row=case['snapshot']['page']['controllerClients']['containers'][0]['rows'][0]
+            self.assertEqual(row['idText'],'ID: '+case['expectedControllerId'])
+
+    def test_prefixed_id_rejects_truncation_extra_text_and_wrong_identity(self):
+        identity='virtual-2c074df64494'
+        row={'controllerId':identity,'idText':'ID: '+identity}
+        self.assertTrue(runner.Acceptance.full_id_text(row))
+        for bad in ['ID: virtual-2c074df…','ID: virtual-2c074df64493','ID: '+identity+'suffix',
+                    'prefix ID: '+identity, 'ID: '+identity[:-1], 'ID: '+identity+' ', None, '']:
+            row['idText']=bad; self.assertFalse(runner.Acceptance.full_id_text(row),bad)
+        self.assertFalse(runner.Acceptance.full_id_text({'controllerId':'','idText':'ID: '}))
+
     def test_freshness_rejects_stale_missing_boolean_and_reset_counters(self):
         before = {'game': {'controller': {'pollCount': 8}}}
         for value in [None, True, False, 7, 8]:
