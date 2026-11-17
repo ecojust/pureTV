@@ -167,11 +167,11 @@ The [fork/ catalog](fork/README.md) contains 14 apps and 23 APKs under 10 MB fro
 <!-- claude-games:start -->
 ## Claude-assisted game references
 
-The [Chinese README contains 93 game references from 61 GitHub repositories](README.md#claude-游戏参考清单), grouped into racing/sports, 3D action/exploration, platform/shooter arcade games, strategy/cards, puzzles, simulation/casual games, rhythm, and one-button arcade games. The list includes source links, gameplay notes, runtime requirements, demo/download links, Claude attribution and license status.
+The [Chinese README contains 301 game references from 178 GitHub repositories](README.md#claude-游戏参考清单), grouped into racing/sports, 3D action/exploration, platform/shooter arcade games, strategy/cards, puzzles, simulation/casual games, rhythm, and one-button arcade games. The list includes source links, gameplay notes, runtime requirements, demo/download links, Claude attribution and license status.
 
-Checked on **2026-11-17** using original author statements or Claude-signed commits that affect game code, plus static source review. Stars are a dated repository snapshot. These are candidates for further evaluation; HTTP-accessible demos are not gameplay tests or pureTV compatibility claims. The already adapted CF and QQ Speed games are excluded from the new-reference count. See the [source catalog and review scope](docs/claude-games/README.md).
+Checked on **2026-11-17** using original author statements or Claude-signed commits that affect game code, plus static source review. Stars are a dated repository snapshot. These are candidates for further evaluation; HTTP-accessible demos are not gameplay tests or pureTV compatibility claims. The original 93-entry porting scope is retained separately in the [baseline and TV assessment](docs/claude-games/tv-assessment.md); additional references do not increase published game counts. The already adapted CF and QQ Speed games are excluded from the new-reference count. See the [source catalog and review scope](docs/claude-games/README.md).
 
-Examples worth examining include **Kart Royale, Turbo Kart Rally, Nova Lancer, GLUP, Sugarplum Drop, Quiverspire, Peri Golf, and CELADON**. Runtime and license differences are recorded explicitly: Tidewater requires WebGPU, GalaxyQuest targets Meta Quest and needs original game data, and MAINSPRING has a noncommercial license.
+Examples worth examining include **Ponpoko Kart, Sky Rings, PHOENIX ∞, Loop Clear, Kart Royale, Nova Lancer, Sugarplum Drop, and CELADON**. Runtime and license differences are recorded explicitly: Tidewater requires WebGPU, GalaxyQuest targets Meta Quest and needs original game data, and MAINSPRING has a noncommercial license.
 <!-- claude-games:end -->
 
 ## MCP / Agent

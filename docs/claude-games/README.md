@@ -2,6 +2,8 @@
 
 完整分类清单直接放在[根 README](../../README.md#claude-游戏参考清单)。检查日期为 **2026-11-17**；星标与仓库状态是当日快照，不会实时刷新。
 
+当前共 **301项、178个仓库**，本轮在原93项基础上新增208项。按竞速体育、3D动作探索、平台弹幕、策略卡牌、解谜、经营休闲、音乐节奏和单键街机分为8类。Gabriel同一绘画游戏入口中的8种玩法合为一项；Treant的相近棋类变体按家族合并，保留各自规则与源码依据，不把模式数量直接当作独立项目数。
+
 ## 如何筛选
 
 每个条目都需要实际游戏源码，以及明确的 Claude 参与依据：作者的制作说明、逐游戏模型记录，或确实涉及游戏源码的 Claude 署名提交。仅有 `CLAUDE.md`、提示词、空模板或引擎工具的仓库不算游戏。署名提交只说明 Claude 参与开发，不表示全部代码、美术或音乐均由 Claude 生成。
@@ -14,11 +16,17 @@
 
 - [catalog.json](catalog.json)：收录项目、固定源码提交、Claude 依据、玩法、运行方式、许可及链接检查信息。
 - [research-notes.json](research-notes.json)：查询入口、排除原因与去重记录。
-- [citation-checks.json](citation-checks.json)：93个固定源码路径与89个Claude依据链接的逐项核对；[首次检查](citation-checks-attempt-1.json)保留一处跨行Markdown引文拼接问题，已按原文拆分并复核。
-- [independent-review.json](independent-review.json)：独立复核的范围、发现和处理结果。
-- [verification.json](verification.json)：最终清单计数、链接与文档一致性核验。
+- [expansion/](expansion/)：本轮三组发现记录、排除原因、独立引文与实际源码提交核对、固定路径和字节数核对。
+- [expansion-verification.json](expansion-verification.json)：当前301项清单计数、链接与文档一致性核验。
+- 原93项的[citation-checks.json](citation-checks.json)、[independent-review.json](independent-review.json)、[verification.json](verification.json)及[首次检查](citation-checks-attempt-1.json)保留当时结果；它们对应[原始快照](porting-baseline-93.json)，不是新增208项的核验报告。
 
 README 中的「Claude 依据」链接指向原作者说明或具体提交；源码链接尽量固定到检查时的提交。演示站点由各自作者维护，之后可能迁移或下线。许可证按检查到的原文件或范围说明记录，未找到明确声明时直接标注「未明确」。
+
+本轮进一步核对了Claude署名提交实际修改的游戏规则文件，换掉仅涉及文档、测试或辅助回放的引用。玩法也以源码核对：例如Purrfect Logic是按行、列、区域放猫并禁止相邻，不是数独；没有把源码不支持的门将写进Goal Kick。演示返回401/404、需要自备API、多人服务器或外部信令的情况分别保留，HTTP200仍只表示页面或项目入口可访问。
+
+## 原93项的双平台适配
+
+[逐项评估](tv-assessment.md)和[tv-assessment.json](tv-assessment.json)绑定[原始93项快照](porting-baseline-93.json)。当前Web宿主路线可继续51项，其余逐项记录素材、许可或另建运行层的条件；这不是已发布数量，也不表示其它引擎永远不能适配。扩大参考目录不改变原93项适配任务的边界。
 
 ## 后续维护
 

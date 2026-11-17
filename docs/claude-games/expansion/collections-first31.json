@@ -1,0 +1,2791 @@
+{
+  "checkedAt": "2026-11-17",
+  "scope": "新增Claude辅助游戏静态来源调查；不代表实玩或移植完成",
+  "baselineExclusion": "docs/claude-games/porting-baseline-93.json (original 93 entries)",
+  "games": [
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Purrfect Logic",
+      "summary": "猫主题数独：依据行、列与宫约束填写缺失数字。",
+      "category": "解谜与益智",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#purrfect-logic",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/meowdoku/index.html",
+      "sourcePath": "games/meowdoku/index.html",
+      "sourceSha256": "a90ddc27b5ac85c4e84383a3acce3c0d007ae33acf48d6d9f233b987041ef53b",
+      "sourceBytes": 19379,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/meowdoku/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/meowdoku/index.html",
+        "bytesRead": 19379,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/meowdoku/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/meowdoku/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/meowdoku/",
+        "bytesRead": 19379,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 205,
+          "text": "(function () {"
+        },
+        {
+          "line": 221,
+          "text": "  function keyMagenta(img) {"
+        },
+        {
+          "line": 234,
+          "text": "  function fallbackSprite(kind) {"
+        },
+        {
+          "line": 266,
+          "text": "  function loadSprite(src, kind) {"
+        },
+        {
+          "line": 267,
+          "text": "    return new Promise(function (res) {"
+        },
+        {
+          "line": 269,
+          "text": "      img.onload = function () {"
+        },
+        {
+          "line": 274,
+          "text": "      img.onerror = function () { SPRITES[kind] = fallbackSprite(kind); res(); };"
+        },
+        {
+          "line": 279,
+          "text": "  function loadBg() {"
+        },
+        {
+          "line": 280,
+          "text": "    return new Promise(function (res) {"
+        },
+        {
+          "line": 282,
+          "text": "      img.onload = function () {"
+        },
+        {
+          "line": 300,
+          "text": "  function fmt(ms) {"
+        },
+        {
+          "line": 305,
+          "text": "  function renderHearts() {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Combo Grid",
+      "summary": "把给定方块形状放入网格，填满行列消除并续得新块。",
+      "category": "解谜与益智",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#combo-grid",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/block-blast/index.html",
+      "sourcePath": "games/block-blast/index.html",
+      "sourceSha256": "d5d1616ff8f4a64d4534dbcee4351c59b365d44f7b571a5664f452607e349eb0",
+      "sourceBytes": 24594,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/block-blast/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/block-blast/index.html",
+        "bytesRead": 24594,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/block-blast/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/block-blast/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/block-blast/",
+        "bytesRead": 24594,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 39,
+          "text": "function makePiece(cells) {"
+        },
+        {
+          "line": 46,
+          "text": "function emptyBoard() { return Array.from({ length: N }, () => new Array(N).fill(0)); }"
+        },
+        {
+          "line": 48,
+          "text": "function canPlace(board, piece, row, col) {"
+        },
+        {
+          "line": 56,
+          "text": "function place(board, piece, row, col, colorId) {"
+        },
+        {
+          "line": 59,
+          "text": "function findFullLines(board) {"
+        },
+        {
+          "line": 73,
+          "text": "function clearLines(board, lines) {"
+        },
+        {
+          "line": 77,
+          "text": "function anyFit(board, piece) {"
+        },
+        {
+          "line": 83,
+          "text": "function isGameOver(board, tray) {"
+        },
+        {
+          "line": 86,
+          "text": "function scoreFor(cellsPlaced, linesCleared, comboStreak) {"
+        },
+        {
+          "line": 102,
+          "text": "function loadImage(src) {"
+        },
+        {
+          "line": 110,
+          "text": "function keyMagenta(img) {           // zero alpha on (widened) magenta pixels"
+        },
+        {
+          "line": 123,
+          "text": "function trimAlpha(cv) {             // crop transparent margins"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Carnival Cannon Crush",
+      "summary": "瞄准发射炮弹，用有限弹药击倒物理堆叠目标。",
+      "category": "平台、弹幕与街机",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#carnival-cannon-crush",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/smash-fest/index.html",
+      "sourcePath": "games/smash-fest/index.html",
+      "sourceSha256": "b42e4e97c1f4230e5dbe6b614a92cb57f2117cae05fb91cdf99ebded5870894b",
+      "sourceBytes": 27655,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/smash-fest/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/smash-fest/index.html",
+        "bytesRead": 27655,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/smash-fest/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/smash-fest/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/smash-fest/",
+        "bytesRead": 27655,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 107,
+          "text": "function keyMagenta(img){"
+        },
+        {
+          "line": 124,
+          "text": "function preload(done){"
+        },
+        {
+          "line": 139,
+          "text": "function resize(){"
+        },
+        {
+          "line": 151,
+          "text": "function toWorld(e){"
+        },
+        {
+          "line": 177,
+          "text": "var levelIdx = 0, score = 0, scoreAtLevelStart = 0;"
+        },
+        {
+          "line": 184,
+          "text": "function makeObj(def, shelfArr){"
+        },
+        {
+          "line": 193,
+          "text": "function loadLevel(i){"
+        },
+        {
+          "line": 200,
+          "text": "  scoreAtLevelStart = score;"
+        },
+        {
+          "line": 207,
+          "text": "function showOverlay(name){"
+        },
+        {
+          "line": 212,
+          "text": "function showPlayUI(){"
+        },
+        {
+          "line": 217,
+          "text": "function updateHUD(){"
+        },
+        {
+          "line": 219,
+          "text": "  $('hudScore').textContent = score;"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Slide & Exit",
+      "summary": "滑动不同颜色积木，按通道和出口限制疏通棋盘。",
+      "category": "解谜与益智",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#slide-exit",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/block-out/index.html",
+      "sourcePath": "games/block-out/index.html",
+      "sourceSha256": "57c7a3892449935aba4451ed247861db716d331d2ae8cdbf40e671d94412ef81",
+      "sourceBytes": 25139,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/block-out/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/block-out/index.html",
+        "bytesRead": 25139,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/block-out/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/block-out/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/block-out/",
+        "bytesRead": 25139,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 94,
+          "text": "      <span class=\"hudPill\" id=\"scorePill\">Score 0</span>"
+        },
+        {
+          "line": 131,
+          "text": "    <p>Final score</p>"
+        },
+        {
+          "line": 164,
+          "text": "function loadImage(src) {"
+        },
+        {
+          "line": 174,
+          "text": "function keyImage(img) {"
+        },
+        {
+          "line": 201,
+          "text": "function sliceBlockSheet(cv) {"
+        },
+        {
+          "line": 237,
+          "text": "function tintGate(cv) {"
+        },
+        {
+          "line": 253,
+          "text": "async function preload() {"
+        },
+        {
+          "line": 265,
+          "text": "function gateFor(gates, x, y, dx, dy) {"
+        },
+        {
+          "line": 273,
+          "text": "function slideDest(blocks, block, dx, dy, gates) {"
+        },
+        {
+          "line": 299,
+          "text": "let levelIdx = 0, score = 0, timeLeft = TIME_LIMIT;"
+        },
+        {
+          "line": 306,
+          "text": "function startLevel(i) {"
+        },
+        {
+          "line": 316,
+          "text": "  scorePill.textContent = 'Score ' + score;"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Starlight Peaks",
+      "summary": "按相邻点数接牌清除三峰布局，利用牌堆继续连锁。",
+      "category": "策略、塔防与卡牌",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#starlight-peaks",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/disney-solitaire/index.html",
+      "sourcePath": "games/disney-solitaire/index.html",
+      "sourceSha256": "a6f125305dc62b84b4ee6f2fab08816c7018fe1cd8a2cfe6c2f59c6ea7525135",
+      "sourceBytes": 25557,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/disney-solitaire/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/disney-solitaire/index.html",
+        "bytesRead": 25557,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/disney-solitaire/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/disney-solitaire/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/disney-solitaire/",
+        "bytesRead": 25557,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 161,
+          "text": "    <span class=\"pill\">✦ <b id=\"hud-score\">0</b></span>"
+        },
+        {
+          "line": 196,
+          "text": "      <div class=\"scorebox\" id=\"end-score\"></div>"
+        },
+        {
+          "line": 213,
+          "text": "function buildSlots(layout){ const slots=[]; layout.rows.forEach((xs,row)=>xs.forEach(x=>slots.push({row,x}))); return slots; }"
+        },
+        {
+          "line": 214,
+          "text": "function isAdjacent(a,b){ const d=(a-b+13)%13; return d===1||d===12; }"
+        },
+        {
+          "line": 215,
+          "text": "function isCovered(slots,removed,i){"
+        },
+        {
+          "line": 224,
+          "text": "function makeDeck(rng){"
+        },
+        {
+          "line": 238,
+          "text": "function keyMagenta(im){"
+        },
+        {
+          "line": 246,
+          "text": "function preload(src,key,doKey){"
+        },
+        {
+          "line": 262,
+          "text": "function startLevel(level, score){"
+        },
+        {
+          "line": 266,
+          "text": "  S={ level, score, levelStart:score, layout, slots,"
+        },
+        {
+          "line": 282,
+          "text": "function buildBoardDOM(){"
+        },
+        {
+          "line": 294,
+          "text": "function layoutBoard(){"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Star Gulp",
+      "summary": "移动吞噬洞收集更小物体并长大，清扫场景争取得分。",
+      "category": "经营、沙盒与休闲",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#star-gulp",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/hole-stars/index.html",
+      "sourcePath": "games/hole-stars/index.html",
+      "sourceSha256": "a8220e1fd0643074f2f1cca9f9993403f2de375a69c094e2b2af46d38cc2a17f",
+      "sourceBytes": 18632,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/hole-stars/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/hole-stars/index.html",
+        "bytesRead": 18632,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/hole-stars/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/hole-stars/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/hole-stars/",
+        "bytesRead": 18632,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 60,
+          "text": "    <div class=\"pill\"><span id=\"scoreTxt\">0</span><span class=\"sub\">SCORE</span></div>"
+        },
+        {
+          "line": 81,
+          "text": "  { r:16, grow:2.2, score:10, count:14 },"
+        },
+        {
+          "line": 82,
+          "text": "  { r:30, grow:3.5, score:25, count:7  },"
+        },
+        {
+          "line": 83,
+          "text": "  { r:48, grow:5.0, score:50, count:4  }"
+        },
+        {
+          "line": 94,
+          "text": "function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}"
+        },
+        {
+          "line": 96,
+          "text": "function canEat(objR, holeR, dist){ return objR < holeR && dist < holeR*0.8; }"
+        },
+        {
+          "line": 98,
+          "text": "function buildLevel(seed){"
+        },
+        {
+          "line": 133,
+          "text": "function keyMagenta(image){"
+        },
+        {
+          "line": 148,
+          "text": "function loadAll(){"
+        },
+        {
+          "line": 164,
+          "text": "function resize(){"
+        },
+        {
+          "line": 180,
+          "text": "  score: document.getElementById('scoreTxt')"
+        },
+        {
+          "line": 189,
+          "text": "let timeLeft = TIME_LIMIT, score = 0, eaten = 0, endDelay = 0;"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Vector Vacate",
+      "summary": "按箭头方向移出线段，规划顺序避免相互阻塞。",
+      "category": "解谜与益智",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#vector-vacate",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/arrows-puzzle-escape/index.html",
+      "sourcePath": "games/arrows-puzzle-escape/index.html",
+      "sourceSha256": "224124a4003fd8b0967134cc9c28825114072ec8f23656eefe442c2abde98f3b",
+      "sourceBytes": 22934,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/arrows-puzzle-escape/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/arrows-puzzle-escape/index.html",
+        "bytesRead": 22934,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/arrows-puzzle-escape/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/arrows-puzzle-escape/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/arrows-puzzle-escape/",
+        "bytesRead": 22934,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 26,
+          "text": "(function () {"
+        },
+        {
+          "line": 47,
+          "text": "  function resize() {"
+        },
+        {
+          "line": 60,
+          "text": "  function layout() {"
+        },
+        {
+          "line": 81,
+          "text": "  function keyMagenta(img) {"
+        },
+        {
+          "line": 96,
+          "text": "  function loadAll(done) {"
+        },
+        {
+          "line": 99,
+          "text": "    names.forEach(function (name) {"
+        },
+        {
+          "line": 101,
+          "text": "      img.onload = function () {"
+        },
+        {
+          "line": 105,
+          "text": "      img.onerror = function () {"
+        },
+        {
+          "line": 114,
+          "text": "  function mulberry32(a) {"
+        },
+        {
+          "line": 115,
+          "text": "    return function () {"
+        },
+        {
+          "line": 124,
+          "text": "  function slideInfo(cells, size, r, c, d) {"
+        },
+        {
+          "line": 136,
+          "text": "  function generateLevel(size, count, rng) {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Perfect Season Draft",
+      "summary": "从给定球员中选择和配置阵容，权衡位置与阵容实力。",
+      "category": "策略、塔防与卡牌",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#perfect-season-draft",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/draft-legends/index.html",
+      "sourcePath": "games/draft-legends/index.html",
+      "sourceSha256": "9aae1fe468f6a47ecb9fbad3fd91ae6dfd6ea751f76af9356565e15703a9ecda",
+      "sourceBytes": 27937,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/draft-legends/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/draft-legends/index.html",
+        "bytesRead": 27937,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/draft-legends/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/draft-legends/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/draft-legends/",
+        "bytesRead": 27937,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 258,
+          "text": "function rollRating(r1, r2) { // r1,r2 in [0,1)"
+        },
+        {
+          "line": 264,
+          "text": "function tierOf(rtg) {"
+        },
+        {
+          "line": 270,
+          "text": "function chemistryBonus(decades) { // array of decade strings"
+        },
+        {
+          "line": 276,
+          "text": "function teamTotal(lineup) {"
+        },
+        {
+          "line": 281,
+          "text": "function winProb(total) {"
+        },
+        {
+          "line": 287,
+          "text": "function simSeason(p, rng) {"
+        },
+        {
+          "line": 292,
+          "text": "function gradeOf(wins) {"
+        },
+        {
+          "line": 305,
+          "text": "function keyMagenta(img) {"
+        },
+        {
+          "line": 315,
+          "text": "function loadArt(cb) {"
+        },
+        {
+          "line": 317,
+          "text": "  names.forEach(function (n) {"
+        },
+        {
+          "line": 319,
+          "text": "    img.onload = function () {"
+        },
+        {
+          "line": 323,
+          "text": "    img.onerror = function () { ART[n] = null; if (--left === 0) cb(); };"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Bluff Circle",
+      "summary": "玩家围绕隐藏身份和词语线索作判断，进行社交推理投票。",
+      "category": "策略、塔防与卡牌",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#bluff-circle",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/imposter-party/index.html",
+      "sourcePath": "games/imposter-party/index.html",
+      "sourceSha256": "b308f205a2760f44d2cc8d45a465c33f8bc6e93be0ee86f1007b23cd045c715c",
+      "sourceBytes": 28530,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/imposter-party/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/imposter-party/index.html",
+        "bytesRead": 28530,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/imposter-party/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/imposter-party/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/imposter-party/",
+        "bytesRead": 28530,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 251,
+          "text": "        In this order, each player says <b>one clue</b> about the secret word. Imposter: bluff like your score depends on it (it does)."
+        },
+        {
+          "line": 321,
+          "text": "function tallyVotes(votes, n) {"
+        },
+        {
+          "line": 326,
+          "text": "function resolveRound(votes, n, imposterIdx) {"
+        },
+        {
+          "line": 334,
+          "text": "function applyScores(scores, imposterIdx, crewWins) {"
+        },
+        {
+          "line": 343,
+          "text": "function shuffled(arr, rng = Math.random) {"
+        },
+        {
+          "line": 361,
+          "text": "function keyMagenta(img) {"
+        },
+        {
+          "line": 374,
+          "text": "function loadOne(name, spec) {"
+        },
+        {
+          "line": 405,
+          "text": "function show(id) {"
+        },
+        {
+          "line": 412,
+          "text": "function esc(t) { const d = document.createElement(\"div\"); d.textContent = t; return d.innerHTML; }"
+        },
+        {
+          "line": 413,
+          "text": "function playerName(i) { return S.names[i] || (\"Player \" + (i + 1)); }"
+        },
+        {
+          "line": 416,
+          "text": "function buildNameInputs() {"
+        },
+        {
+          "line": 431,
+          "text": "function buildCats() {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Drift Away Arrows",
+      "summary": "沿可滑动方向涂满棋盘，利用墙面停靠规划覆盖路线。",
+      "category": "解谜与益智",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#drift-away-arrows",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/amaze-go/index.html",
+      "sourcePath": "games/amaze-go/index.html",
+      "sourceSha256": "cd30f2c1670a287e8c2a74e7c815978670b5fe50ad0842e57c1bc046aa612d4d",
+      "sourceBytes": 32234,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/amaze-go/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/amaze-go/index.html",
+        "bytesRead": 32234,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/amaze-go/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/amaze-go/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/amaze-go/",
+        "bytesRead": 32234,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 85,
+          "text": "  #score {"
+        },
+        {
+          "line": 92,
+          "text": "  #score.bump { transform: scale(1.25); }"
+        },
+        {
+          "line": 195,
+          "text": "    <div id=\"score\">0</div>"
+        },
+        {
+          "line": 242,
+          "text": "(function () {"
+        },
+        {
+          "line": 267,
+          "text": "  function mulberry32(a) {"
+        },
+        {
+          "line": 268,
+          "text": "    return function () {"
+        },
+        {
+          "line": 276,
+          "text": "  function pieceCells(p) {"
+        },
+        {
+          "line": 283,
+          "text": "  function headCell(p) {"
+        },
+        {
+          "line": 289,
+          "text": "  function pathInfo(p, pieces) {"
+        },
+        {
+          "line": 308,
+          "text": "  function genLevel(seed, count, lenPool) {"
+        },
+        {
+          "line": 342,
+          "text": "  function keyMagenta(img) {"
+        },
+        {
+          "line": 355,
+          "text": "  function cropOpaque(cv) {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Sudden Death Strikers",
+      "summary": "控制射门方向与门将扑救，进行点球决胜。",
+      "category": "竞速与体育",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#sudden-death-strikers",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/ea-fc-mobile/index.html",
+      "sourcePath": "games/ea-fc-mobile/index.html",
+      "sourceSha256": "3388676731410e7bf60f11eebf178253fdf20178f14b552f43f70b31940f5e1d",
+      "sourceBytes": 29534,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/ea-fc-mobile/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/ea-fc-mobile/index.html",
+        "bytesRead": 29534,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/ea-fc-mobile/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/ea-fc-mobile/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/ea-fc-mobile/",
+        "bytesRead": 29534,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 69,
+          "text": "function fit(){"
+        },
+        {
+          "line": 87,
+          "text": "function keyMagenta(img){"
+        },
+        {
+          "line": 110,
+          "text": "function zoneRect(i){                                   // 0..5 row-major, top row first"
+        },
+        {
+          "line": 114,
+          "text": "function zoneCenter(i){ const r = zoneRect(i); return { x: r.x + r.w/2, y: r.y + r.h/2 }; }"
+        },
+        {
+          "line": 115,
+          "text": "function zoneOfPoint(px, py){"
+        },
+        {
+          "line": 122,
+          "text": "function shootoutStatus(pGoals, aGoals, pTaken, aTaken, bestOf){"
+        },
+        {
+          "line": 132,
+          "text": "function shotOutcome(targetX, targetY, power, keeperZone, rnd){"
+        },
+        {
+          "line": 155,
+          "text": "function saveOutcome(aiZone, aiMiss, diveZone, rnd){"
+        },
+        {
+          "line": 183,
+          "text": "function resetMatch(){"
+        },
+        {
+          "line": 191,
+          "text": "function keeperHome(){"
+        },
+        {
+          "line": 194,
+          "text": "function startShootPhase(){"
+        },
+        {
+          "line": 200,
+          "text": "function startSavePhase(){"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Last Keep",
+      "summary": "瞄准攻击不断逼近的敌人，保护中心据点并取得升级。",
+      "category": "策略、塔防与卡牌",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#last-keep",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/kingshot/index.html",
+      "sourcePath": "games/kingshot/index.html",
+      "sourceSha256": "4dda79e36eee177fd29107ef1652ddf6334a6c6a19b7a157a6256d6c28601a7e",
+      "sourceBytes": 23247,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/kingshot/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/kingshot/index.html",
+        "bytesRead": 23247,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/kingshot/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/kingshot/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/kingshot/",
+        "bytesRead": 23247,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 67,
+          "text": "    <div id=\"endTitle\" class=\"bigmsg\">VICTORY</div>"
+        },
+        {
+          "line": 71,
+          "text": "    <div class=\"stat\">Final score: <b id=\"endScore\">0</b></div>"
+        },
+        {
+          "line": 84,
+          "text": "function laneFromX(x, w) { return Math.min(2, Math.max(0, Math.floor(x / (w / 3)))); }"
+        },
+        {
+          "line": 85,
+          "text": "function waveDef(n) {"
+        },
+        {
+          "line": 95,
+          "text": "function scoreBonus(keepHp) { return Math.max(0, Math.round(keepHp)) * 5; }"
+        },
+        {
+          "line": 101,
+          "text": "function resize() {"
+        },
+        {
+          "line": 130,
+          "text": "function keyMagenta(img) {"
+        },
+        {
+          "line": 144,
+          "text": "function loadImage(key, src) {"
+        },
+        {
+          "line": 157,
+          "text": "  keepHp: KEEP_MAX_HP, kills: 0, score: 0,"
+        },
+        {
+          "line": 163,
+          "text": "function resetGame() {"
+        },
+        {
+          "line": 165,
+          "text": "  S.keepHp = KEEP_MAX_HP; S.kills = 0; S.score = 0;"
+        },
+        {
+          "line": 171,
+          "text": "function startWave() {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Seaside Scoop",
+      "summary": "合并相同物件逐级生产订单材料，完成目标推进修复。",
+      "category": "经营、沙盒与休闲",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#seaside-scoop",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/gossip-harbor/index.html",
+      "sourcePath": "games/gossip-harbor/index.html",
+      "sourceSha256": "561ab126cb9d9ddfe365c68594f908017fd37291ffeb9ee2b95f33c8178a99e2",
+      "sourceBytes": 25404,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/gossip-harbor/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/gossip-harbor/index.html",
+        "bytesRead": 25404,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/gossip-harbor/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/gossip-harbor/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/gossip-harbor/",
+        "bytesRead": 25404,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 23,
+          "text": "function canMergeTiers(a, b) { return a != null && a === b && a < MAX_TIER; }"
+        },
+        {
+          "line": 24,
+          "text": "function mergedTier(a, b) { return canMergeTiers(a, b) ? a + 1 : null; }"
+        },
+        {
+          "line": 25,
+          "text": "function orderMatches(orderTier, itemTier) { return orderTier != null && orderTier === itemTier; }"
+        },
+        {
+          "line": 26,
+          "text": "function hasAnyMerge(tiers) {"
+        },
+        {
+          "line": 31,
+          "text": "function isStalled(tiers, energy, orderTiers) {"
+        },
+        {
+          "line": 55,
+          "text": "function resize() {"
+        },
+        {
+          "line": 69,
+          "text": "function toLogical(e) {"
+        },
+        {
+          "line": 84,
+          "text": "function keyMagenta(img) {"
+        },
+        {
+          "line": 97,
+          "text": "function cropAlpha(cnv, sx, sw) {"
+        },
+        {
+          "line": 115,
+          "text": "function loadImage(src) {"
+        },
+        {
+          "line": 123,
+          "text": "async function loadAssets() {"
+        },
+        {
+          "line": 146,
+          "text": "let grid, score, best, energy, lastRegen, orders, nextItemId;"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Circle Down",
+      "summary": "在逐渐缩小的安全圈中移动躲避或战斗求生。",
+      "category": "平台、弹幕与街机",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#circle-down",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/fortnite/index.html",
+      "sourcePath": "games/fortnite/index.html",
+      "sourceSha256": "38431483572bbcd822e23b98b731d54d53a52b66ea7b8db6580272f992b5017d",
+      "sourceBytes": 33339,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/fortnite/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/fortnite/index.html",
+        "bytesRead": 33339,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/fortnite/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/fortnite/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/fortnite/",
+        "bytesRead": 33339,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 50,
+          "text": "  <div class=\"stat\" id=\"scoreTxt\">Score: 0</div>"
+        },
+        {
+          "line": 74,
+          "text": "function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }"
+        },
+        {
+          "line": 75,
+          "text": "function dist2(ax, ay, bx, by) { const dx = ax - bx, dy = ay - by; return dx * dx + dy * dy; }"
+        },
+        {
+          "line": 77,
+          "text": "function circleRectPush(cx, cy, cr, rx, ry, rw, rh) {"
+        },
+        {
+          "line": 95,
+          "text": "function segRectHit(x1, y1, x2, y2, rx, ry, rw, rh) {"
+        },
+        {
+          "line": 118,
+          "text": "function resize() {"
+        },
+        {
+          "line": 137,
+          "text": "function keyMagenta(img) {"
+        },
+        {
+          "line": 149,
+          "text": "function loadAll() {"
+        },
+        {
+          "line": 165,
+          "text": "function rnd(a, b) { return a + Math.random() * (b - a); }"
+        },
+        {
+          "line": 167,
+          "text": "function pickNextZone(s) {"
+        },
+        {
+          "line": 176,
+          "text": "function stormUpdate(s, dt) {"
+        },
+        {
+          "line": 191,
+          "text": "function crateBlocksSeg(x1, y1, x2, y2) {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Blocky Obby Dash",
+      "summary": "控制角色跑跳通过障碍与平台，抵达关卡终点。",
+      "category": "平台、弹幕与街机",
+      "runtime": "单文件HTML5+Canvas，预生成美术；原设计竖屏触屏，无运行时API key，但素材授权尚需作者确认。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#blocky-obby-dash",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/roblox/index.html",
+      "sourcePath": "games/roblox/index.html",
+      "sourceSha256": "8ede80cc2980f151b0425c92799a6ec65b79b19e2f3d8f42f9f0927e0108d8a5",
+      "sourceBytes": 23770,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/roblox/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/games/roblox/index.html",
+        "bytesRead": 23770,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "commit": "5d3d35db1f98961e332beca37b2e5a693b4bed9c",
+        "quote": "Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Chart Toppers Arcade — 15 playable chart-topper remakes + launcher",
+        "sourcePathAffected": "games/roblox/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/roblox/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/games/roblox/",
+        "bytesRead": 23770,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 134,
+          "text": "function keyMagenta(img){"
+        },
+        {
+          "line": 171,
+          "text": "function loadAll(done){"
+        },
+        {
+          "line": 189,
+          "text": "function resize(){"
+        },
+        {
+          "line": 202,
+          "text": "function bindHold(id, on, off){"
+        },
+        {
+          "line": 204,
+          "text": "  function down(e){ e.preventDefault(); el.classList.add('held'); on(); }"
+        },
+        {
+          "line": 205,
+          "text": "  function up(e){ if (e) e.preventDefault(); el.classList.remove('held'); off(); }"
+        },
+        {
+          "line": 227,
+          "text": "function now(){ return performance.now() / 1000; }"
+        },
+        {
+          "line": 234,
+          "text": "function resetGame(){"
+        },
+        {
+          "line": 244,
+          "text": "function respawnPoint(){"
+        },
+        {
+          "line": 253,
+          "text": "function burst(x, y, color, n, spd){"
+        },
+        {
+          "line": 260,
+          "text": "function floatText(x, y, txt, color){"
+        },
+        {
+          "line": 263,
+          "text": "function flash(){"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "pawanp3/renderwolf-fable5-chart-toppers",
+      "title": "Firing Line",
+      "summary": "将三峰接龙相邻点数规则与推进战线相结合，清理桌面牌并度过多波牌局。",
+      "category": "策略、塔防与卡牌",
+      "runtime": "静态HTML/Canvas；需重做方向键焦点与电视横屏布局。",
+      "variants": [],
+      "id": "pawanp3/renderwolf-fable5-chart-toppers#firing-line",
+      "commit": "b82032668c5bd1bcf68ceadbb2d011f06419d4b6",
+      "sourceUrl": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/blob/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/fusion_games/firing-line/index.html",
+      "sourcePath": "fusion_games/firing-line/index.html",
+      "sourceSha256": "0817c0966449dafa3cc7c89435d21fcf82a9f728ab16d2297e03447dcf4f3aef",
+      "sourceBytes": 151179,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/fusion_games/firing-line/index.html",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/pawanp3/renderwolf-fable5-chart-toppers/b82032668c5bd1bcf68ceadbb2d011f06419d4b6/fusion_games/firing-line/index.html",
+        "bytesRead": 151179,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/pawanp3/renderwolf-fable5-chart-toppers/commit/e56329c5812456e5cf42c422b342160ec186d47f",
+        "commit": "e56329c5812456e5cf42c422b342160ec186d47f",
+        "quote": "Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>",
+        "commitSubject": "Add Fusion Games section to the arcade with Firing Line",
+        "sourcePathAffected": "fusion_games/firing-line/index.html",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/fusion_games/firing-line/",
+        "httpStatus": 200,
+        "finalUrl": "https://pawanp3.github.io/renderwolf-fable5-chart-toppers/fusion_games/firing-line/",
+        "bytesRead": 151179,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 54,
+          "text": "function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }"
+        },
+        {
+          "line": 131,
+          "text": "function rowN(r) { return TOP_N + r; }"
+        },
+        {
+          "line": 132,
+          "text": "function newCard(lo, hi) {"
+        },
+        {
+          "line": 136,
+          "text": "function ranksMatch(a, b) {"
+        },
+        {
+          "line": 141,
+          "text": "function cutList(rank) {"
+        },
+        {
+          "line": 146,
+          "text": "function chainScore(n) { return 60 + 40 * (n - 1); }"
+        },
+        {
+          "line": 180,
+          "text": "function idlePose(k, t) {"
+        },
+        {
+          "line": 191,
+          "text": "function visCell(k, t) {"
+        },
+        {
+          "line": 204,
+          "text": "function beginStep(k, t) {"
+        },
+        {
+          "line": 321,
+          "text": "function pal() { return STYLES[artStyle].pal; }"
+        },
+        {
+          "line": 333,
+          "text": "function inkPal(spriteKey) { return sprites[spriteKey] ? pal() : STYLES.grim.pal; }"
+        },
+        {
+          "line": 343,
+          "text": "function loadImage(src) {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "mundeok/math-arcade-paradise",
+      "title": "Combo Challenge",
+      "summary": "在倒计时内从四个答案选择算式正解，连续答对累积连击。",
+      "category": "解谜与益智",
+      "runtime": "韩文HTML/ES6 Canvas数学街机；依赖公共engine、输入和计分模块，需本地静态服务器；儿童触屏布局需横屏/方向焦点适配。",
+      "variants": [],
+      "id": "mundeok/math-arcade-paradise#combo-challenge",
+      "commit": "9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88",
+      "sourceUrl": "https://github.com/mundeok/math-arcade-paradise/blob/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g01_combo.js",
+      "sourcePath": "src/games/g01_combo.js",
+      "sourceSha256": "af4b9a757d33d76915cb0a9c2c19856f5fb5b2b5efd15b71c6114cfb162a297a",
+      "sourceBytes": 21191,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g01_combo.js",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g01_combo.js",
+        "bytesRead": 21191,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/mundeok/math-arcade-paradise/commit/72174907f90eed0795f56368eeac6a6cea69d4ee",
+        "commit": "72174907f90eed0795f56368eeac6a6cea69d4ee",
+        "quote": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>",
+        "commitSubject": "Phase 1: combo challenge + falling catch (tablet test pending)",
+        "sourcePathAffected": "src/games/g01_combo.js",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 24,
+          "text": "export const g01Combo = {"
+        },
+        {
+          "line": 34,
+          "text": "  tutorial: {"
+        },
+        {
+          "line": 348,
+          "text": "  onTouch(x, y, phase) {"
+        },
+        {
+          "line": 436,
+          "text": "  onKey(e) {"
+        },
+        {
+          "line": 585,
+          "text": "function shuffle(arr) {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "mundeok/math-arcade-paradise",
+      "title": "Falling Catch",
+      "summary": "从落下的数字中点击正确答案，避开错误数字。",
+      "category": "解谜与益智",
+      "runtime": "韩文HTML/ES6 Canvas数学街机；依赖公共engine、输入和计分模块，需本地静态服务器；儿童触屏布局需横屏/方向焦点适配。",
+      "variants": [],
+      "id": "mundeok/math-arcade-paradise#falling-catch",
+      "commit": "9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88",
+      "sourceUrl": "https://github.com/mundeok/math-arcade-paradise/blob/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g02_catch.js",
+      "sourcePath": "src/games/g02_catch.js",
+      "sourceSha256": "5ccc3d5d28a0095b7ef54cd06f54e1886a93e8656d55fa513c45c66aebbcea6b",
+      "sourceBytes": 25346,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g02_catch.js",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g02_catch.js",
+        "bytesRead": 25346,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/mundeok/math-arcade-paradise/commit/72174907f90eed0795f56368eeac6a6cea69d4ee",
+        "commit": "72174907f90eed0795f56368eeac6a6cea69d4ee",
+        "quote": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>",
+        "commitSubject": "Phase 1: combo challenge + falling catch (tablet test pending)",
+        "sourcePathAffected": "src/games/g02_catch.js",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 42,
+          "text": "export const g02Catch = {"
+        },
+        {
+          "line": 70,
+          "text": "  tutorial: {"
+        },
+        {
+          "line": 138,
+          "text": "    if (e.scoreManager.lives <= 1) step = Math.min(step, 1.0); // 라이프1 상승 중단"
+        },
+        {
+          "line": 264,
+          "text": "  onTouch(x, y, phase) {"
+        },
+        {
+          "line": 615,
+          "text": "  onKey() {},"
+        },
+        {
+          "line": 628,
+          "text": "function shuffle(arr) {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "mundeok/math-arcade-paradise",
+      "title": "Math Racing",
+      "summary": "驾驶三车道小车穿过正确答案的闸门；速度与连击提高。",
+      "category": "解谜与益智",
+      "runtime": "韩文HTML/ES6 Canvas数学街机；依赖公共engine、输入和计分模块，需本地静态服务器；儿童触屏布局需横屏/方向焦点适配。",
+      "variants": [],
+      "id": "mundeok/math-arcade-paradise#math-racing",
+      "commit": "9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88",
+      "sourceUrl": "https://github.com/mundeok/math-arcade-paradise/blob/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g03_race.js",
+      "sourcePath": "src/games/g03_race.js",
+      "sourceSha256": "b8a20a46b6d56b65a5aa721d218b90d9af400ff109509ffdb14806f3a14da906",
+      "sourceBytes": 35258,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g03_race.js",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g03_race.js",
+        "bytesRead": 35258,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/mundeok/math-arcade-paradise/commit/b5d57f3e8ac22479a7eef60fcf5c5c74172e8b75",
+        "commit": "b5d57f3e8ac22479a7eef60fcf5c5c74172e8b75",
+        "quote": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>",
+        "commitSubject": "docs: clarify level axis usage + Phase 5",
+        "sourcePathAffected": "src/games/g03_race.js",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 30,
+          "text": "export const g03Race = {"
+        },
+        {
+          "line": 41,
+          "text": "  tutorial: {"
+        },
+        {
+          "line": 70,
+          "text": "    this.bestScore = ScoreManager.getHighScores(this.id)[0]?.score ?? null;"
+        },
+        {
+          "line": 357,
+          "text": "      const before = e.scoreManager.score;"
+        },
+        {
+          "line": 359,
+          "text": "      const shown = e.scoreManager.score - before; // 이번 정답으로 피버가 켜져도 실제 가산과 일치."
+        },
+        {
+          "line": 396,
+          "text": "      const before = e.scoreManager.score;"
+        },
+        {
+          "line": 398,
+          "text": "      const shown = e.scoreManager.score - before;"
+        },
+        {
+          "line": 464,
+          "text": "    if (this.engine.scoreManager.score > this.bestScore) {"
+        },
+        {
+          "line": 558,
+          "text": "  onTouch(x, y, phase) {"
+        },
+        {
+          "line": 604,
+          "text": "  onKey(e) {"
+        },
+        {
+          "line": 778,
+          "text": "function drawSmoke(ctx, s) {"
+        },
+        {
+          "line": 793,
+          "text": "function roundRectPath(ctx, x, y, w, h, r) {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "mundeok/math-arcade-paradise",
+      "title": "Timing Puzzle",
+      "summary": "在旋转指针经过正确答案时按键，兼顾心算与时机。",
+      "category": "解谜与益智",
+      "runtime": "韩文HTML/ES6 Canvas数学街机；依赖公共engine、输入和计分模块，需本地静态服务器；儿童触屏布局需横屏/方向焦点适配。",
+      "variants": [],
+      "id": "mundeok/math-arcade-paradise#timing-puzzle",
+      "commit": "9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88",
+      "sourceUrl": "https://github.com/mundeok/math-arcade-paradise/blob/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g04_timing.js",
+      "sourcePath": "src/games/g04_timing.js",
+      "sourceSha256": "6086d70a411fd417f623242f1fdd5e02ca75558c57d98c774f91138248d38586",
+      "sourceBytes": 16483,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g04_timing.js",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g04_timing.js",
+        "bytesRead": 16483,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/mundeok/math-arcade-paradise/commit/003e3c564ea7aa5e289da35365f3ecb84dd1afd1",
+        "commit": "003e3c564ea7aa5e289da35365f3ecb84dd1afd1",
+        "quote": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>",
+        "commitSubject": "Phase 3: timing puzzle + multiple chain",
+        "sourcePathAffected": "src/games/g04_timing.js",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 18,
+          "text": "export const g04Timing = {"
+        },
+        {
+          "line": 22,
+          "text": "  tutorial:{"
+        },
+        {
+          "line": 118,
+          "text": "    const e=this.engine,before=e.scoreManager.score,floats=e.ui.floatScores.length;"
+        },
+        {
+          "line": 126,
+          "text": "    return e.scoreManager.score-before;"
+        },
+        {
+          "line": 128,
+          "text": "  onTouch(x,y,phase){"
+        },
+        {
+          "line": 264,
+          "text": "  onKey(e){"
+        },
+        {
+          "line": 266,
+          "text": "    const n=this.numbers[Number(e.key)-1];if(n){const p=this._numPos(n);this.onTouch(p.x,p.y,'start');}"
+        },
+        {
+          "line": 274,
+          "text": "function drum(ctx,x,y,rx,ry,color,label,pulse,squash){"
+        },
+        {
+          "line": 299,
+          "text": "function animal(ctx,x,y,r,color,type){"
+        },
+        {
+          "line": 311,
+          "text": "function shuffle(items){"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "mundeok/math-arcade-paradise",
+      "title": "Number Match",
+      "summary": "将问题卡与对应答案卡两两配对，完成整组算式。",
+      "category": "解谜与益智",
+      "runtime": "韩文HTML/ES6 Canvas数学街机；依赖公共engine、输入和计分模块，需本地静态服务器；儿童触屏布局需横屏/方向焦点适配。",
+      "variants": [],
+      "id": "mundeok/math-arcade-paradise#number-match",
+      "commit": "9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88",
+      "sourceUrl": "https://github.com/mundeok/math-arcade-paradise/blob/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g05_match.js",
+      "sourcePath": "src/games/g05_match.js",
+      "sourceSha256": "7fcc08acf34d9e20b9860519f7eb9c12b54a3d605b26a02787a2572b32afffa9",
+      "sourceBytes": 32171,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g05_match.js",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g05_match.js",
+        "bytesRead": 32171,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/mundeok/math-arcade-paradise/commit/56c7a667e1d170ed35e00e6db8ea2c7e38965c68",
+        "commit": "56c7a667e1d170ed35e00e6db8ea2c7e38965c68",
+        "quote": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>",
+        "commitSubject": "Phase 4: number match + shooting",
+        "sourcePathAffected": "src/games/g05_match.js",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 35,
+          "text": "export const g05Match = {"
+        },
+        {
+          "line": 46,
+          "text": "  tutorial: {"
+        },
+        {
+          "line": 117,
+          "text": "    if (e.scoreManager.lives <= 1) patience = Math.min(12, patience + 1);"
+        },
+        {
+          "line": 353,
+          "text": "  onTouch(x, y, phase) {"
+        },
+        {
+          "line": 655,
+          "text": "  onKey() {},"
+        },
+        {
+          "line": 671,
+          "text": "function drawCookie(ctx, x, y, r) {"
+        },
+        {
+          "line": 687,
+          "text": "function drawCreature(ctx, x, y, r, kind, mood, t) {"
+        },
+        {
+          "line": 732,
+          "text": "function fitText(ctx, text, cx, cy, maxW, baseSize, minSize) {"
+        },
+        {
+          "line": 743,
+          "text": "function hitRect(r, x, y) {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "mundeok/math-arcade-paradise",
+      "title": "Stack Builder",
+      "summary": "移动推车接住正确数字方块并堆高，错误块干扰推进。",
+      "category": "解谜与益智",
+      "runtime": "韩文HTML/ES6 Canvas数学街机；依赖公共engine、输入和计分模块，需本地静态服务器；儿童触屏布局需横屏/方向焦点适配。",
+      "variants": [],
+      "id": "mundeok/math-arcade-paradise#stack-builder",
+      "commit": "9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88",
+      "sourceUrl": "https://github.com/mundeok/math-arcade-paradise/blob/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g06_stack.js",
+      "sourcePath": "src/games/g06_stack.js",
+      "sourceSha256": "c2ba7c278afabbb587dcf47b29da888add0787fdc0279e567bd8bc8b6125de99",
+      "sourceBytes": 38072,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g06_stack.js",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g06_stack.js",
+        "bytesRead": 38072,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/mundeok/math-arcade-paradise/commit/fcb5ab674e78620105decfd3558947da72c09b46",
+        "commit": "fcb5ab674e78620105decfd3558947da72c09b46",
+        "quote": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>",
+        "commitSubject": "Phase 2: balloon pop + stack builder",
+        "sourcePathAffected": "src/games/g06_stack.js",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 40,
+          "text": "export const g06Stack = {"
+        },
+        {
+          "line": 79,
+          "text": "  tutorial: {"
+        },
+        {
+          "line": 198,
+          "text": "    if (e.scoreManager.lives <= 1) tier = 0;"
+        },
+        {
+          "line": 579,
+          "text": "    const e = this.engine, before = e.scoreManager.score;"
+        },
+        {
+          "line": 585,
+          "text": "    this.catchFeedback = { perfect, points: e.scoreManager.score - before, t: 0, dur: 0.5 };"
+        },
+        {
+          "line": 631,
+          "text": "  onTouch(x, y, phase) {"
+        },
+        {
+          "line": 634,
+          "text": "  onKey(e) {"
+        },
+        {
+          "line": 921,
+          "text": "function shuffle(arr) {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "mundeok/math-arcade-paradise",
+      "title": "Math Shooter",
+      "summary": "在下降的数字机器人中瞄准并射击正确答案。",
+      "category": "解谜与益智",
+      "runtime": "韩文HTML/ES6 Canvas数学街机；依赖公共engine、输入和计分模块，需本地静态服务器；儿童触屏布局需横屏/方向焦点适配。",
+      "variants": [],
+      "id": "mundeok/math-arcade-paradise#math-shooter",
+      "commit": "9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88",
+      "sourceUrl": "https://github.com/mundeok/math-arcade-paradise/blob/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g07_shoot.js",
+      "sourcePath": "src/games/g07_shoot.js",
+      "sourceSha256": "2b405512f9a72d639b03a94421919c5e10e5c0b8db621849f41d789c28d6e300",
+      "sourceBytes": 32581,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g07_shoot.js",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g07_shoot.js",
+        "bytesRead": 32581,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/mundeok/math-arcade-paradise/commit/56c7a667e1d170ed35e00e6db8ea2c7e38965c68",
+        "commit": "56c7a667e1d170ed35e00e6db8ea2c7e38965c68",
+        "quote": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>",
+        "commitSubject": "Phase 4: number match + shooting",
+        "sourcePathAffected": "src/games/g07_shoot.js",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 50,
+          "text": "export const g07Shoot = {"
+        },
+        {
+          "line": 81,
+          "text": "  tutorial: {"
+        },
+        {
+          "line": 169,
+          "text": "    if (e.scoreManager.lives <= 1) step = Math.min(step, 1.0); // 라이프1 상승 중단"
+        },
+        {
+          "line": 452,
+          "text": "    const e = this.engine, before = e.scoreManager.score, floats = e.ui.floatScores?.length || 0;"
+        },
+        {
+          "line": 456,
+          "text": "    return e.scoreManager.score - before; // 발동 프레임/콤보 증가 뒤에도 실제 득점과 일치"
+        },
+        {
+          "line": 673,
+          "text": "  onTouch(x, y, phase) {"
+        },
+        {
+          "line": 688,
+          "text": "  onKey(e) {"
+        },
+        {
+          "line": 715,
+          "text": "function drawRobot(ctx, x, y, r, label, alpha, variant=0) {"
+        },
+        {
+          "line": 728,
+          "text": "function drawLauncher(ctx, x, y, w, h) {"
+        },
+        {
+          "line": 734,
+          "text": "function roundRectPath(ctx, x, y, w, h, r) {"
+        },
+        {
+          "line": 745,
+          "text": "function clamp(v, lo, hi) {"
+        },
+        {
+          "line": 749,
+          "text": "function shuffle(arr) {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "mundeok/math-arcade-paradise",
+      "title": "Multiplication Chain",
+      "summary": "找出指定乘法表的倍数；按顺序连点获得更高连锁奖金。",
+      "category": "解谜与益智",
+      "runtime": "韩文HTML/ES6 Canvas数学街机；依赖公共engine、输入和计分模块，需本地静态服务器；儿童触屏布局需横屏/方向焦点适配。",
+      "variants": [],
+      "id": "mundeok/math-arcade-paradise#multiplication-chain",
+      "commit": "9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88",
+      "sourceUrl": "https://github.com/mundeok/math-arcade-paradise/blob/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g08_chain.js",
+      "sourcePath": "src/games/g08_chain.js",
+      "sourceSha256": "4b3045cbb42d3352df7b8f82c223f2560d8b9d5d610d9729aac54c6b4d0f3a68",
+      "sourceBytes": 10479,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g08_chain.js",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g08_chain.js",
+        "bytesRead": 10479,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/mundeok/math-arcade-paradise/commit/003e3c564ea7aa5e289da35365f3ecb84dd1afd1",
+        "commit": "003e3c564ea7aa5e289da35365f3ecb84dd1afd1",
+        "quote": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>",
+        "commitSubject": "Phase 3: timing puzzle + multiple chain",
+        "sourcePathAffected": "src/games/g08_chain.js",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 1,
+          "text": "// 배수 젤리 팡: stationary board, editable adjacent path, release-to-score."
+        },
+        {
+          "line": 9,
+          "text": "export const g08Chain={"
+        },
+        {
+          "line": 13,
+          "text": "  tutorial:{"
+        },
+        {
+          "line": 125,
+          "text": "  onTouch(x,y,phase){"
+        },
+        {
+          "line": 156,
+          "text": "      if(res?.gameOver){this.phase='finished';this._detach?.();}"
+        },
+        {
+          "line": 160,
+          "text": "    const before=e.scoreManager.score,layout=this._layout();"
+        },
+        {
+          "line": 163,
+          "text": "    // Each question keeps the old dan/op; no callbacks score stale tiles."
+        },
+        {
+          "line": 170,
+          "text": "    // next board; this game's footer shows the actual aggregate score instead."
+        },
+        {
+          "line": 178,
+          "text": "    this.feedback={text:correct.length?`${correct.length}연결! ×${mult}  +${e.scoreManager.score-before}`:'다시 이어봐!',t:.9};"
+        },
+        {
+          "line": 188,
+          "text": "  onKey(e){"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "mundeok/math-arcade-paradise",
+      "title": "Balloon Pop Equations",
+      "summary": "识别数字与乘除算式的等值关系，戳破所有匹配气球。",
+      "category": "解谜与益智",
+      "runtime": "韩文HTML/ES6 Canvas数学街机；依赖公共engine、输入和计分模块，需本地静态服务器；儿童触屏布局需横屏/方向焦点适配。",
+      "variants": [],
+      "id": "mundeok/math-arcade-paradise#balloon-pop-equations",
+      "commit": "9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88",
+      "sourceUrl": "https://github.com/mundeok/math-arcade-paradise/blob/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g09_balloon.js",
+      "sourcePath": "src/games/g09_balloon.js",
+      "sourceSha256": "ccab88837b958c1bc4b453be9845b006e23d12061ff2ee8665ec7581802097b4",
+      "sourceBytes": 23736,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g09_balloon.js",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g09_balloon.js",
+        "bytesRead": 23736,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/mundeok/math-arcade-paradise/commit/fcb5ab674e78620105decfd3558947da72c09b46",
+        "commit": "fcb5ab674e78620105decfd3558947da72c09b46",
+        "quote": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>",
+        "commitSubject": "Phase 2: balloon pop + stack builder",
+        "sourcePathAffected": "src/games/g09_balloon.js",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 16,
+          "text": "export const g09Balloon = {"
+        },
+        {
+          "line": 40,
+          "text": "  tutorial: {"
+        },
+        {
+          "line": 166,
+          "text": "      const before = e.scoreManager.score;"
+        },
+        {
+          "line": 169,
+          "text": "      this.scoreNote = {text: '+' + (e.scoreManager.score - before), t: 0}; // 점수배수·게이지·정답음·연출 자동(피버 무적)"
+        },
+        {
+          "line": 397,
+          "text": "  onTouch(x, y, phase) {"
+        },
+        {
+          "line": 470,
+          "text": "  onKey() {},"
+        },
+        {
+          "line": 486,
+          "text": "function labelFont(label) {"
+        },
+        {
+          "line": 493,
+          "text": "function drawBalloon(ctx, x, y, rx, ry, hue, label, fontPx) {"
+        },
+        {
+          "line": 554,
+          "text": "function shuffle(arr) {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "mundeok/math-arcade-paradise",
+      "title": "Remainder Treasure Hunt",
+      "summary": "把宝石均匀分给海盗，预测和选择除法余数。",
+      "category": "解谜与益智",
+      "runtime": "韩文HTML/ES6 Canvas数学街机；依赖公共engine、输入和计分模块，需本地静态服务器；儿童触屏布局需横屏/方向焦点适配。",
+      "variants": [],
+      "id": "mundeok/math-arcade-paradise#remainder-treasure-hunt",
+      "commit": "9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88",
+      "sourceUrl": "https://github.com/mundeok/math-arcade-paradise/blob/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g10_treasure.js",
+      "sourcePath": "src/games/g10_treasure.js",
+      "sourceSha256": "5b18851cbf03bc0b567f33999c66804b1491e8bd4a157428a2c5b6dd1b441ecd",
+      "sourceBytes": 50250,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g10_treasure.js",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g10_treasure.js",
+        "bytesRead": 50250,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/mundeok/math-arcade-paradise/commit/b5d57f3e8ac22479a7eef60fcf5c5c74172e8b75",
+        "commit": "b5d57f3e8ac22479a7eef60fcf5c5c74172e8b75",
+        "quote": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>",
+        "commitSubject": "docs: clarify level axis usage + Phase 5",
+        "sourcePathAffected": "src/games/g10_treasure.js",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 38,
+          "text": "export const g10Treasure = {"
+        },
+        {
+          "line": 49,
+          "text": "  tutorial: {"
+        },
+        {
+          "line": 355,
+          "text": "  onTouch(x, y, phase) {"
+        },
+        {
+          "line": 489,
+          "text": "    const e = this.engine, before = e.scoreManager.score;"
+        },
+        {
+          "line": 491,
+          "text": "    const shown = e.scoreManager.score - before, chest = this._chestRect();"
+        },
+        {
+          "line": 1025,
+          "text": "  onKey(ev) {"
+        },
+        {
+          "line": 1107,
+          "text": "function hitRect(r, x, y) {"
+        },
+        {
+          "line": 1110,
+          "text": "function clamp(v, lo, hi) {"
+        },
+        {
+          "line": 1113,
+          "text": "function ri(min, max) {"
+        },
+        {
+          "line": 1116,
+          "text": "function pick(arr) {"
+        },
+        {
+          "line": 1119,
+          "text": "function ease(t) {"
+        },
+        {
+          "line": 1124,
+          "text": "function drawGem(ctx, x, y, r) {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "mundeok/math-arcade-paradise",
+      "title": "Multiplication Farm",
+      "summary": "在方格田地中画出长方形阵列，用面积构造乘除算式并收获。",
+      "category": "解谜与益智",
+      "runtime": "韩文HTML/ES6 Canvas数学街机；依赖公共engine、输入和计分模块，需本地静态服务器；儿童触屏布局需横屏/方向焦点适配。",
+      "variants": [],
+      "id": "mundeok/math-arcade-paradise#multiplication-farm",
+      "commit": "9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88",
+      "sourceUrl": "https://github.com/mundeok/math-arcade-paradise/blob/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g11_farm.js",
+      "sourcePath": "src/games/g11_farm.js",
+      "sourceSha256": "dda189a3a6cb15fcd696f04bf73dd5c8d2c47c9cc0aa124f2d9305562b6cb642",
+      "sourceBytes": 27539,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g11_farm.js",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/mundeok/math-arcade-paradise/9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88/src/games/g11_farm.js",
+        "bytesRead": 27539,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/mundeok/math-arcade-paradise/commit/adc9abced2a5a6862bee0ff5b29abdd7480fb0f8",
+        "commit": "adc9abced2a5a6862bee0ff5b29abdd7480fb0f8",
+        "quote": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>",
+        "commitSubject": "feat: toy art direction + delivery & farm games (by Astra)",
+        "sourcePathAffected": "src/games/g11_farm.js",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "未明确",
+        "url": null,
+        "basis": "固定commit源码树未发现项目根LICENSE/COPYING；第三方依赖许可不等于游戏许可。"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 23,
+          "text": "export const g11Farm = {"
+        },
+        {
+          "line": 34,
+          "text": "  tutorial: {"
+        },
+        {
+          "line": 132,
+          "text": "    if (this._isFever() && !this.wasFever) this.feverStartScore = e.scoreManager.score;"
+        },
+        {
+          "line": 214,
+          "text": "        const score = dist - (contains ? 1000 : 0);"
+        },
+        {
+          "line": 215,
+          "text": "        if (score < bestScore) { bestScore = score; best = { r0, c0, rows: rr, cols }; }"
+        },
+        {
+          "line": 313,
+          "text": "    const before = e.scoreManager.score;"
+        },
+        {
+          "line": 327,
+          "text": "      points: e.scoreManager.score - before, time: tb, t: 0.6,"
+        },
+        {
+          "line": 345,
+          "text": "      this.reward = { text: 'FEVER 수확!', points: this.engine.scoreManager.score - this.feverStartScore, time: 0, t: 0.7 };"
+        },
+        {
+          "line": 385,
+          "text": "  onTouch(x, y, phase) {"
+        },
+        {
+          "line": 413,
+          "text": "  onKey(event) {"
+        },
+        {
+          "line": 589,
+          "text": "function drawCrop(ctx, x, y, s) {"
+        },
+        {
+          "line": 601,
+          "text": "function drawWeed(ctx, x, y, s) {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "rickymetz/wordgirl",
+      "title": "Crosshatch",
+      "summary": "在交叉填字框中补全单词，允许多组合法答案，探索当天所有可用词。",
+      "category": "解谜与益智",
+      "runtime": "React/TypeScript/Vite离线PWA与本地词典；英语文字输入和拖放/点击需要电视虚拟键盘或选字焦点。",
+      "variants": [],
+      "id": "rickymetz/wordgirl#crosshatch",
+      "commit": "24e56d735ba30e4b9366ae8aaa46ef74eb88570e",
+      "sourceUrl": "https://github.com/rickymetz/wordgirl/blob/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/src/games/crosshatch/engine/scoring.ts",
+      "sourcePath": "src/games/crosshatch/engine/scoring.ts",
+      "sourceSha256": "904dc966ddfac8547926f81c3d364e42412fd5b416421fe38cccaad69d8161cb",
+      "sourceBytes": 1082,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/rickymetz/wordgirl/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/src/games/crosshatch/engine/scoring.ts",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/rickymetz/wordgirl/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/src/games/crosshatch/engine/scoring.ts",
+        "bytesRead": 1082,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/rickymetz/wordgirl/commit/da03a2f3f07cff9fb6745624819e0ffffe2df47a",
+        "commit": "da03a2f3f07cff9fb6745624819e0ffffe2df47a",
+        "quote": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>",
+        "commitSubject": "Add Crosshatch: a combo-hunting crossword game",
+        "sourcePathAffected": "src/games/crosshatch/engine/scoring.ts",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "声明许可（见摘录）",
+        "url": "https://github.com/rickymetz/wordgirl/blob/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/LICENSE.md",
+        "quote": "Required Notice: Copyright (c) 2026 Rick Metzger (https://wordgirl.net)\n\n# PolyForm Noncommercial License 1.0.0\n\n<https://polyformproject.org/licenses/noncommercial/1.0.0>\n\n## Acceptance\n\nIn order to get any license under these terms, you must agree to them as both strict obligations and conditions to all your licenses.\n\n## Copyright License\n\nThe licensor grants you a copyright license for the software to do everything you might do with the software that would otherwise infringe the licensor's copyright in it for any permitted purpose.  However, you may only distribute the software according to [Distribution License](#distribution-license) and make changes or new works based on the software according to [Changes and New Works License](#changes-and-new-works-license).\n\n## Distribution License\n\nThe licensor grants you an additional copyright license to distribute copies of the software.  Your license to distribute covers distributing the software with changes and new works permitted by [Changes and New Works License](#changes-and-new-works-license).\n\n## Notices\n\nYou must ensure that anyone who gets a copy of any part of the software from you also gets a copy of these terms or the URL for them above, as well as copies of any plain-text lines beginning with `Required Notice:` that the licensor provided with the software.  For example:\n\n> Required Notice: Copyright Yoyodyne, Inc. (http://example.com)\n\n## Changes and New Works License\n\nThe licensor grants you an additional copyright license to make changes and new works based on the software for any permitted purpose.\n\n## Patent License\n\nThe licensor grants you a patent license for the software that covers patent claims the licensor can license, or becomes able to license, that you would infringe by using the software.\n\n## No",
+        "sourcePath": "LICENSE.md"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 8,
+          "text": "export function uniqueWords(combos: readonly Combo[]): string[] {"
+        },
+        {
+          "line": 13,
+          "text": "export function targetWords(puzzle: CrosshatchPuzzle): string[] {"
+        },
+        {
+          "line": 17,
+          "text": "export function isSolved(found: number, total: number): boolean {"
+        },
+        {
+          "line": 26,
+          "text": "export function canFinishEarly(found: number, bonus: number, total: number): boolean {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "rickymetz/wordgirl",
+      "title": "Doublet",
+      "summary": "旋转放置双字母多米诺，使棋盘各行列都拼成合法单词。",
+      "category": "解谜与益智",
+      "runtime": "React/TypeScript/Vite离线PWA与本地词典；英语文字输入和拖放/点击需要电视虚拟键盘或选字焦点。",
+      "variants": [],
+      "id": "rickymetz/wordgirl#doublet",
+      "commit": "24e56d735ba30e4b9366ae8aaa46ef74eb88570e",
+      "sourceUrl": "https://github.com/rickymetz/wordgirl/blob/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/src/games/doublet/engine/scoring.ts",
+      "sourcePath": "src/games/doublet/engine/scoring.ts",
+      "sourceSha256": "7459bf75d1d561f443e7e17d75f60faeaccab12abcac13721551240f70908335",
+      "sourceBytes": 539,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/rickymetz/wordgirl/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/src/games/doublet/engine/scoring.ts",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/rickymetz/wordgirl/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/src/games/doublet/engine/scoring.ts",
+        "bytesRead": 539,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/rickymetz/wordgirl/commit/301d4c227648c9a79b99a632ea720bc74110ccce",
+        "commit": "301d4c227648c9a79b99a632ea720bc74110ccce",
+        "quote": "Co-authored-by: Claude <noreply@anthropic.com>",
+        "commitSubject": "Rename Tileword to Doublet (#13)",
+        "sourcePathAffected": "src/games/doublet/engine/scoring.ts",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "声明许可（见摘录）",
+        "url": "https://github.com/rickymetz/wordgirl/blob/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/LICENSE.md",
+        "quote": "Required Notice: Copyright (c) 2026 Rick Metzger (https://wordgirl.net)\n\n# PolyForm Noncommercial License 1.0.0\n\n<https://polyformproject.org/licenses/noncommercial/1.0.0>\n\n## Acceptance\n\nIn order to get any license under these terms, you must agree to them as both strict obligations and conditions to all your licenses.\n\n## Copyright License\n\nThe licensor grants you a copyright license for the software to do everything you might do with the software that would otherwise infringe the licensor's copyright in it for any permitted purpose.  However, you may only distribute the software according to [Distribution License](#distribution-license) and make changes or new works based on the software according to [Changes and New Works License](#changes-and-new-works-license).\n\n## Distribution License\n\nThe licensor grants you an additional copyright license to distribute copies of the software.  Your license to distribute covers distributing the software with changes and new works permitted by [Changes and New Works License](#changes-and-new-works-license).\n\n## Notices\n\nYou must ensure that anyone who gets a copy of any part of the software from you also gets a copy of these terms or the URL for them above, as well as copies of any plain-text lines beginning with `Required Notice:` that the licensor provided with the software.  For example:\n\n> Required Notice: Copyright Yoyodyne, Inc. (http://example.com)\n\n## Changes and New Works License\n\nThe licensor grants you an additional copyright license to make changes and new works based on the software for any permitted purpose.\n\n## Patent License\n\nThe licensor grants you a patent license for the software that covers patent claims the licensor can license, or becomes able to license, that you would infringe by using the software.\n\n## No",
+        "sourcePath": "LICENSE.md"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 1,
+          "text": "export interface Rank {"
+        },
+        {
+          "line": 6,
+          "text": "export const RANKS: Rank[] = ["
+        },
+        {
+          "line": 13,
+          "text": "export function rankFor("
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "rickymetz/wordgirl",
+      "title": "Serpentine",
+      "summary": "在字母棋盘上追踪不交叉连续路径，覆盖全部格子解出隐藏诗句。",
+      "category": "解谜与益智",
+      "runtime": "React/TypeScript/Vite离线PWA与本地词典；英语文字输入和拖放/点击需要电视虚拟键盘或选字焦点。",
+      "variants": [],
+      "id": "rickymetz/wordgirl#serpentine",
+      "commit": "24e56d735ba30e4b9366ae8aaa46ef74eb88570e",
+      "sourceUrl": "https://github.com/rickymetz/wordgirl/blob/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/src/games/serpentine/engine/validation.ts",
+      "sourcePath": "src/games/serpentine/engine/validation.ts",
+      "sourceSha256": "58ed9b0f4072eadf2cb871112ea9d1fdda30c8b15e4d6d7dc2443d76ffb3a8be",
+      "sourceBytes": 4659,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/rickymetz/wordgirl/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/src/games/serpentine/engine/validation.ts",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/rickymetz/wordgirl/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/src/games/serpentine/engine/validation.ts",
+        "bytesRead": 4659,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/rickymetz/wordgirl/commit/ac9a11faac57dee14bd27bfda171ef8ba52a9b5b",
+        "commit": "ac9a11faac57dee14bd27bfda171ef8ba52a9b5b",
+        "quote": "Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nCo-authored-by: Claude <noreply@anthropic.com>",
+        "commitSubject": "Add Serpentine: poetry snake puzzle with irregular grids (#25)",
+        "sourcePathAffected": "src/games/serpentine/engine/validation.ts",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "声明许可（见摘录）",
+        "url": "https://github.com/rickymetz/wordgirl/blob/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/LICENSE.md",
+        "quote": "Required Notice: Copyright (c) 2026 Rick Metzger (https://wordgirl.net)\n\n# PolyForm Noncommercial License 1.0.0\n\n<https://polyformproject.org/licenses/noncommercial/1.0.0>\n\n## Acceptance\n\nIn order to get any license under these terms, you must agree to them as both strict obligations and conditions to all your licenses.\n\n## Copyright License\n\nThe licensor grants you a copyright license for the software to do everything you might do with the software that would otherwise infringe the licensor's copyright in it for any permitted purpose.  However, you may only distribute the software according to [Distribution License](#distribution-license) and make changes or new works based on the software according to [Changes and New Works License](#changes-and-new-works-license).\n\n## Distribution License\n\nThe licensor grants you an additional copyright license to distribute copies of the software.  Your license to distribute covers distributing the software with changes and new works permitted by [Changes and New Works License](#changes-and-new-works-license).\n\n## Notices\n\nYou must ensure that anyone who gets a copy of any part of the software from you also gets a copy of these terms or the URL for them above, as well as copies of any plain-text lines beginning with `Required Notice:` that the licensor provided with the software.  For example:\n\n> Required Notice: Copyright Yoyodyne, Inc. (http://example.com)\n\n## Changes and New Works License\n\nThe licensor grants you an additional copyright license to make changes and new works based on the software for any permitted purpose.\n\n## Patent License\n\nThe licensor grants you a patent license for the software that covers patent claims the licensor can license, or becomes able to license, that you would infringe by using the software.\n\n## No",
+        "sourcePath": "LICENSE.md"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 13,
+          "text": "export function isContiguousPath(path: Cell[]): boolean {"
+        },
+        {
+          "line": 36,
+          "text": "export function crossingStepIndex(path: readonly Cell[]): number {"
+        },
+        {
+          "line": 47,
+          "text": "export function pathSelfCrosses(path: readonly Cell[]): boolean {"
+        },
+        {
+          "line": 59,
+          "text": "export function cellsFitPuzzle(cells: readonly Cell[], puzzle: PuzzleDef): boolean {"
+        },
+        {
+          "line": 70,
+          "text": "function pathSpellsText(path: Cell[], puzzle: PuzzleDef): boolean {"
+        },
+        {
+          "line": 83,
+          "text": "export function checkSolved("
+        },
+        {
+          "line": 96,
+          "text": "export function validatePuzzle(puzzle: PuzzleDef): string | null {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    },
+    {
+      "repository": "rickymetz/wordgirl",
+      "title": "Sixfold",
+      "summary": "完成6×6字母数独，同时用谜面推断隐藏的两条同字母异序单词。",
+      "category": "解谜与益智",
+      "runtime": "React/TypeScript/Vite离线PWA与本地词典；英语文字输入和拖放/点击需要电视虚拟键盘或选字焦点。",
+      "variants": [],
+      "id": "rickymetz/wordgirl#sixfold",
+      "commit": "24e56d735ba30e4b9366ae8aaa46ef74eb88570e",
+      "sourceUrl": "https://github.com/rickymetz/wordgirl/blob/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/src/games/sixfold/engine/solver.ts",
+      "sourcePath": "src/games/sixfold/engine/solver.ts",
+      "sourceSha256": "2ee10914a29414929ccfddb133915586a0dfcc169d4fc69f34ab357f0709df61",
+      "sourceBytes": 7522,
+      "sourceHTTP": {
+        "url": "https://raw.githubusercontent.com/rickymetz/wordgirl/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/src/games/sixfold/engine/solver.ts",
+        "httpStatus": 200,
+        "finalUrl": "https://raw.githubusercontent.com/rickymetz/wordgirl/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/src/games/sixfold/engine/solver.ts",
+        "bytesRead": 7522,
+        "playtested": false
+      },
+      "claudeEvidence": {
+        "type": "实际修改该游戏源码的上游Git提交署名",
+        "url": "https://github.com/rickymetz/wordgirl/commit/5c6021a29762e9284395ba54805480dd1c941059",
+        "commit": "5c6021a29762e9284395ba54805480dd1c941059",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "commitSubject": "Sixfold: an anagram-family letter sudoku (#112)",
+        "sourcePathAffected": "src/games/sixfold/engine/solver.ts",
+        "scope": "确认Claude参与该游戏实现，不声称全部代码由Claude独立生成。"
+      },
+      "license": {
+        "status": "声明许可（见摘录）",
+        "url": "https://github.com/rickymetz/wordgirl/blob/24e56d735ba30e4b9366ae8aaa46ef74eb88570e/LICENSE.md",
+        "quote": "Required Notice: Copyright (c) 2026 Rick Metzger (https://wordgirl.net)\n\n# PolyForm Noncommercial License 1.0.0\n\n<https://polyformproject.org/licenses/noncommercial/1.0.0>\n\n## Acceptance\n\nIn order to get any license under these terms, you must agree to them as both strict obligations and conditions to all your licenses.\n\n## Copyright License\n\nThe licensor grants you a copyright license for the software to do everything you might do with the software that would otherwise infringe the licensor's copyright in it for any permitted purpose.  However, you may only distribute the software according to [Distribution License](#distribution-license) and make changes or new works based on the software according to [Changes and New Works License](#changes-and-new-works-license).\n\n## Distribution License\n\nThe licensor grants you an additional copyright license to distribute copies of the software.  Your license to distribute covers distributing the software with changes and new works permitted by [Changes and New Works License](#changes-and-new-works-license).\n\n## Notices\n\nYou must ensure that anyone who gets a copy of any part of the software from you also gets a copy of these terms or the URL for them above, as well as copies of any plain-text lines beginning with `Required Notice:` that the licensor provided with the software.  For example:\n\n> Required Notice: Copyright Yoyodyne, Inc. (http://example.com)\n\n## Changes and New Works License\n\nThe licensor grants you an additional copyright license to make changes and new works based on the software for any permitted purpose.\n\n## Patent License\n\nThe licensor grants you a patent license for the software that covers patent claims the licensor can license, or becomes able to license, that you would infringe by using the software.\n\n## No",
+        "sourcePath": "LICENSE.md"
+      },
+      "demo": {
+        "url": null,
+        "httpStatus": null,
+        "playtested": false
+      },
+      "sourceObservations": [
+        {
+          "line": 8,
+          "text": "export type Grid = Int8Array;"
+        },
+        {
+          "line": 12,
+          "text": "export interface Units {"
+        },
+        {
+          "line": 20,
+          "text": "export function buildUnits(regions: readonly number[]): Units {"
+        },
+        {
+          "line": 38,
+          "text": "export interface WordConstraint {"
+        },
+        {
+          "line": 43,
+          "text": "function unitMasks(grid: Grid, units: Units): Int32Array {"
+        },
+        {
+          "line": 57,
+          "text": "function lineOpen(grid: Grid, wc: WordConstraint): boolean {"
+        },
+        {
+          "line": 68,
+          "text": "function popcount(m: number): number {"
+        },
+        {
+          "line": 82,
+          "text": "export function countSolutions("
+        },
+        {
+          "line": 161,
+          "text": "export interface LogicResult {"
+        },
+        {
+          "line": 179,
+          "text": "export function logicSolve("
+        },
+        {
+          "line": 262,
+          "text": "export const EMPTY = -1;"
+        },
+        {
+          "line": 263,
+          "text": "export function emptyGrid(): Grid {"
+        }
+      ],
+      "checkedAt": "2026-11-17",
+      "playtested": false,
+      "readyForRelease": false,
+      "reviewScope": "逐游戏真实源码与Git提交静态核验，HTTP仅可达性；未运行游戏。"
+    }
+  ],
+  "rejected": [
+    {
+      "rejected": {
+        "repository": "rickymetz/wordgirl",
+        "title": "Polygram",
+        "path": "src/games/polygram/engine/completion.ts",
+        "summary": "用提供的字母组成指定长度单词；找全一组后增加字母并升级多边形。",
+        "category": "解谜与益智",
+        "runtime": "React/TypeScript/Vite离线PWA与本地词典；英语文字输入和拖放/点击需要电视虚拟键盘或选字焦点。",
+        "demoUrl": null,
+        "variants": []
+      },
+      "reason": "No explicit Claude co-author commit touching this source file"
+    },
+    {
+      "rejected": {
+        "repository": "rickymetz/wordgirl",
+        "title": "Pierglass",
+        "path": "src/games/pierglass/engine/generator.ts",
+        "summary": "排列字母让镜像两侧都成词，使用全部字母并争取最少行数。",
+        "category": "解谜与益智",
+        "runtime": "React/TypeScript/Vite离线PWA与本地词典；英语文字输入和拖放/点击需要电视虚拟键盘或选字焦点。",
+        "demoUrl": null,
+        "variants": []
+      },
+      "reason": "No explicit Claude co-author commit touching this source file"
+    }
+  ],
+  "count": 31,
+  "repositoryCount": 3
+}
