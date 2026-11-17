@@ -1,0 +1,355 @@
+{
+  "method": "Diagnostic rebuilt host, not an original installation package runtime test",
+  "originalPackageSource": "a73a1976e7d38ff27b8e457b933519ea66eaa949",
+  "workflowSourceCommit": "e00e23617c43bac9d3daf62c5e5c427f5c544149",
+  "game": "bubble-nebula",
+  "status": "failed",
+  "gameAssetsChanged": false,
+  "gameplayVerified": false,
+  "originalAppModified": false,
+  "observations": [
+    {
+      "elapsedSeconds": 10,
+      "ready": true,
+      "active": true,
+      "gamePresent": false,
+      "startupObservation": {
+        "gameQaType": "undefined",
+        "readyState": "complete",
+        "records": [
+          {
+            "kind": "document-start",
+            "time": 1794944073893,
+            "values": [
+              "loading",
+              "http://127.0.0.1:51937/tv.html",
+              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)"
+            ]
+          },
+          {
+            "kind": "error",
+            "time": 1794944074154,
+            "values": [
+              "TypeError: null is not an object (evaluating 'i.getShaderPrecisionFormat(i.VERTEX_SHADER,i.HIGH_FLOAT).precision')",
+              "http://127.0.0.1:51937/tv.html",
+              "3969",
+              "19398",
+              "l@http://127.0.0.1:51937/tv.html:3969:19398\nfg@http://127.0.0.1:51937/tv.html:3969:19743\nTt@http://127.0.0.1:51937/tv.html:4220:20056\nMa@http://127.0.0.1:51937/tv.html:4220:20554\nJa@http://127.0.0.1:51937/tv.html:4394:1800\nio@http://127.0.0.1:51937/tv.html:4499:6170\n@http://127.0.0.1:51937/tv.html:4499:64423\nglobal code@http://127.0.0.1:51937/tv.html:4500:1131",
+              "undefined",
+              "undefined",
+              "undefined"
+            ]
+          },
+          {
+            "kind": "readystatechange",
+            "time": 1794944074154,
+            "values": [
+              "interactive"
+            ]
+          },
+          {
+            "kind": "readystatechange",
+            "time": 1794944074277,
+            "values": [
+              "complete"
+            ]
+          },
+          {
+            "kind": "console.log",
+            "time": 1794944074288,
+            "values": [
+              "THREE.WebGLRenderer: Context Lost."
+            ]
+          }
+        ],
+        "scripts": [
+          {
+            "src": "",
+            "type": ""
+          }
+        ],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)"
+      }
+    },
+    {
+      "elapsedSeconds": 30,
+      "ready": true,
+      "active": true,
+      "gamePresent": false,
+      "startupObservation": {
+        "gameQaType": "undefined",
+        "readyState": "complete",
+        "records": [
+          {
+            "kind": "document-start",
+            "time": 1794944073893,
+            "values": [
+              "loading",
+              "http://127.0.0.1:51937/tv.html",
+              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)"
+            ]
+          },
+          {
+            "kind": "error",
+            "time": 1794944074154,
+            "values": [
+              "TypeError: null is not an object (evaluating 'i.getShaderPrecisionFormat(i.VERTEX_SHADER,i.HIGH_FLOAT).precision')",
+              "http://127.0.0.1:51937/tv.html",
+              "3969",
+              "19398",
+              "l@http://127.0.0.1:51937/tv.html:3969:19398\nfg@http://127.0.0.1:51937/tv.html:3969:19743\nTt@http://127.0.0.1:51937/tv.html:4220:20056\nMa@http://127.0.0.1:51937/tv.html:4220:20554\nJa@http://127.0.0.1:51937/tv.html:4394:1800\nio@http://127.0.0.1:51937/tv.html:4499:6170\n@http://127.0.0.1:51937/tv.html:4499:64423\nglobal code@http://127.0.0.1:51937/tv.html:4500:1131",
+              "undefined",
+              "undefined",
+              "undefined"
+            ]
+          },
+          {
+            "kind": "readystatechange",
+            "time": 1794944074154,
+            "values": [
+              "interactive"
+            ]
+          },
+          {
+            "kind": "readystatechange",
+            "time": 1794944074277,
+            "values": [
+              "complete"
+            ]
+          },
+          {
+            "kind": "console.log",
+            "time": 1794944074288,
+            "values": [
+              "THREE.WebGLRenderer: Context Lost."
+            ]
+          }
+        ],
+        "scripts": [
+          {
+            "src": "",
+            "type": ""
+          }
+        ],
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)"
+      }
+    }
+  ],
+  "commands": [
+    {
+      "name": "sdk",
+      "argv": [
+        "xcrun",
+        "--sdk",
+        "macosx",
+        "--show-sdk-path"
+      ]
+    },
+    {
+      "name": "swift-version",
+      "argv": [
+        "xcrun",
+        "swiftc",
+        "--version"
+      ]
+    },
+    {
+      "name": "compile-diagnostic-host",
+      "argv": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "5",
+        "-O",
+        "-module-name",
+        "JoystickGame",
+        "-target",
+        "x86_64-apple-macos11.0",
+        "-sdk",
+        "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "-framework",
+        "AppKit",
+        "-framework",
+        "WebKit",
+        "-framework",
+        "Network",
+        "/Users/runner/work/_temp/capability/bubble-nebula/executed-sources/ControllerServer.swift",
+        "/Users/runner/work/_temp/capability/bubble-nebula/executed-sources/GameStorage.swift",
+        "/Users/runner/work/_temp/capability/bubble-nebula/executed-sources/LocalAssetServer.swift",
+        "/Users/runner/work/_temp/capability/bubble-nebula/executed-sources/main.swift",
+        "-o",
+        "/Users/runner/work/_temp/startup-diagnostic-host-cache/e1dce55c025fad95fbee6aa7151b1c9396eb5660ac266c7571fbb045db5126ec-host"
+      ]
+    },
+    {
+      "name": "sign-diagnostic-copy",
+      "argv": [
+        "codesign",
+        "--force",
+        "--sign",
+        "-",
+        "--timestamp=none",
+        "/Users/runner/work/_temp/capability/bubble-nebula/BUBBLE NEBULA Startup Diagnostic.app"
+      ]
+    }
+  ],
+  "originalHostSources": {
+    "ControllerServer.swift": {
+      "bytes": 21160,
+      "sha256": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430"
+    },
+    "GameStorage.swift": {
+      "bytes": 1714,
+      "sha256": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+    },
+    "LocalAssetServer.swift": {
+      "bytes": 13465,
+      "sha256": "1d968e721a6848d421f85d112e36d5dda716af5acfa7b36f23d27893b429ef2d"
+    },
+    "main.swift": {
+      "bytes": 20743,
+      "sha256": "fcf968cd99187d950205aaf35b9ed3071cc44c78ef5d1023ccca4bba3181c3f1"
+    }
+  },
+  "diagnosticHostSources": {
+    "ControllerServer.swift": {
+      "bytes": 21160,
+      "sha256": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430"
+    },
+    "GameStorage.swift": {
+      "bytes": 1714,
+      "sha256": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+    },
+    "LocalAssetServer.swift": {
+      "bytes": 13465,
+      "sha256": "1d968e721a6848d421f85d112e36d5dda716af5acfa7b36f23d27893b429ef2d"
+    },
+    "main.swift": {
+      "bytes": 22496,
+      "sha256": "bed5deea19c7806b03e29d780237e1703471297d4a115758fbd2832928dcdc16"
+    }
+  },
+  "swiftVersion": "Apple Swift version 6.1.2 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)\nTarget: x86_64-apple-macosx15.0",
+  "diagnosticHostCache": {
+    "key": "e1dce55c025fad95fbee6aa7151b1c9396eb5660ac266c7571fbb045db5126ec",
+    "reused": false,
+    "inputs": {
+      "sources": {
+        "ControllerServer.swift": {
+          "bytes": 21160,
+          "sha256": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430"
+        },
+        "GameStorage.swift": {
+          "bytes": 1714,
+          "sha256": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+        },
+        "LocalAssetServer.swift": {
+          "bytes": 13465,
+          "sha256": "1d968e721a6848d421f85d112e36d5dda716af5acfa7b36f23d27893b429ef2d"
+        },
+        "main.swift": {
+          "bytes": 22496,
+          "sha256": "bed5deea19c7806b03e29d780237e1703471297d4a115758fbd2832928dcdc16"
+        }
+      },
+      "architecture": "x86_64",
+      "sdk": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "swiftVersion": "Apple Swift version 6.1.2 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)\nTarget: x86_64-apple-macosx15.0"
+    }
+  },
+  "diagnosticBinarySha256": "7ad55b4383e3a42300d62031879cc18eb97bdc85aee4000c6025a4d338c7abe3",
+  "webFiles": {
+    "THIRD-PARTY-NOTICES.txt": {
+      "bytes": 3013,
+      "sha256": "85372b587efd23015db8e0361d4c699c6751322857ca20fdf0852613f4fce163"
+    },
+    "bridge.js": {
+      "bytes": 5712,
+      "sha256": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c"
+    },
+    "game-config.json": {
+      "bytes": 436,
+      "sha256": "720e90987d485163061f8e843c0e01dd16404138ed234912c5855c4ab4af6dcc"
+    },
+    "tv.html": {
+      "bytes": 690529,
+      "sha256": "6b0d6f5126dbf0520cf062263c8129707bf1c0ea30a1814622db7f4f2cb5a5a4"
+    }
+  },
+  "diagnosticAppFiles": {
+    "Contents/Info.plist": {
+      "bytes": 1670,
+      "sha256": "ccbf9ba4edc31b7378738c0a41b35b3221448059a5a8933d7d5c4efe185a8c14"
+    },
+    "Contents/MacOS/BubbleNebula": {
+      "bytes": 438912,
+      "sha256": "1dee8f91f57954863fd32b42c2b1f29b240a1b64af347cb5b648353e15a6b742"
+    },
+    "Contents/PkgInfo": {
+      "bytes": 8,
+      "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0"
+    },
+    "Contents/Resources/Game.icns": {
+      "bytes": 266385,
+      "sha256": "98e261c822146718be350172a190bddbbfb85f764e0b55058fb9ea82194de6eb"
+    },
+    "Contents/Resources/LICENSE": {
+      "bytes": 1074,
+      "sha256": "817f65ae87dcd4fc4fa968827e9056e86682096925c62b34e6c10f10597b77db"
+    },
+    "Contents/Resources/NOTICE.md": {
+      "bytes": 3013,
+      "sha256": "85372b587efd23015db8e0361d4c699c6751322857ca20fdf0852613f4fce163"
+    },
+    "Contents/Resources/Web/THIRD-PARTY-NOTICES.txt": {
+      "bytes": 3013,
+      "sha256": "85372b587efd23015db8e0361d4c699c6751322857ca20fdf0852613f4fce163"
+    },
+    "Contents/Resources/Web/bridge.js": {
+      "bytes": 5712,
+      "sha256": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c"
+    },
+    "Contents/Resources/Web/game-config.json": {
+      "bytes": 436,
+      "sha256": "720e90987d485163061f8e843c0e01dd16404138ed234912c5855c4ab4af6dcc"
+    },
+    "Contents/Resources/Web/tv.html": {
+      "bytes": 690529,
+      "sha256": "6b0d6f5126dbf0520cf062263c8129707bf1c0ea30a1814622db7f4f2cb5a5a4"
+    },
+    "Contents/_CodeSignature/CodeResources": {
+      "bytes": 3850,
+      "sha256": "74eb7ad26e316d5c181d32058e35c6d49842305c38f087a9030378d99a0a8164"
+    }
+  },
+  "diagnosticInfoPlist": {
+    "CFBundleDisplayName": "BUBBLE NEBULA Startup Diagnostic",
+    "CFBundleExecutable": "BubbleNebula",
+    "CFBundleIconFile": "Game",
+    "CFBundleIdentifier": "com.ecojust.joystick.bubblenebula.startupdiagnostic",
+    "CFBundleName": "BUBBLE NEBULA Startup Diagnostic",
+    "CFBundlePackageType": "APPL",
+    "CFBundleShortVersionString": "0.1.0",
+    "CFBundleVersion": "1",
+    "LSMinimumSystemVersion": "11.0",
+    "NSAppTransportSecurity": {
+      "NSAllowsLocalNetworking": true
+    },
+    "NSBonjourServices": [
+      "_puretv._tcp"
+    ],
+    "NSHighResolutionCapable": true,
+    "NSHumanReadableCopyright": "Upstream authors; pureTV controller adaptation. See bundled source and license notices.",
+    "NSLocalNetworkUsageDescription": "Connect the pureTV Wi-Fi controller to this game on your Mac.",
+    "NSPrincipalClass": "NSApplication",
+    "NSSupportsAutomaticGraphicsSwitching": true,
+    "PureTVStorageKeys": [
+      "bubble-nebula.v1",
+      "bubble-nebula.v1.settings",
+      "bubble-nebula.v1.scores"
+    ],
+    "PureTVUpstreamAttribution": "https://github.com/triptych/web-games-andrew"
+  },
+  "diagnosticPreferencesDomain": "com.ecojust.joystick.startupdiagnostic.bubble-nebula.44159596612.x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/workflow-source/joystick-games/qa/tools/mac-startup-diagnostic.py\", line 132, in main\n    assert len(report['observations']) == 3, 'Startup state observations are missing'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Startup state observations are missing\n"
+}
