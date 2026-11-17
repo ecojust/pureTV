@@ -1,0 +1,356 @@
+{
+  "sourceRun": 44118366855,
+  "method": "Read-only review of original recorded game snapshots plus the frozen actual runner predicates. No model or clock writes.",
+  "reports": [
+    {
+      "game": "cf-transport-ship",
+      "mode": "normal",
+      "observedGameStates": {
+        "cf-movement": {
+          "position": {
+            "x": -31.08391990000004,
+            "y": 0,
+            "z": -6.6
+          },
+          "yaw": -1.5707963267948966,
+          "pitch": 0,
+          "ammo": 30,
+          "reloading": false,
+          "shotsFired": 0
+        },
+        "cf-yaw": {
+          "position": {
+            "x": -30.613247781560382,
+            "y": 0,
+            "z": -6.527176149114703
+          },
+          "yaw": -1.8824813267948948,
+          "pitch": 0,
+          "ammo": 30,
+          "reloading": false,
+          "shotsFired": 0
+        },
+        "cf-aim": {
+          "position": {
+            "x": -30.613247781560382,
+            "y": 0,
+            "z": -6.527176149114703
+          },
+          "yaw": -2.065796326794896,
+          "pitch": 0.42162999999999523,
+          "ammo": 30,
+          "reloading": false,
+          "shotsFired": 0
+        },
+        "cf-fired": {
+          "position": {
+            "x": -30.613247781560382,
+            "y": 0,
+            "z": -6.527176149114703
+          },
+          "yaw": -2.065796326794896,
+          "pitch": 0.5316299999999953,
+          "ammo": 26,
+          "reloading": false,
+          "shotsFired": 4
+        },
+        "cf-reloading": {
+          "position": {
+            "x": -30.613247781560382,
+            "y": 0,
+            "z": -6.527176149114703
+          },
+          "yaw": -2.065796326794896,
+          "pitch": 0.5316299999999953,
+          "ammo": 24,
+          "reloading": true,
+          "shotsFired": 6
+        }
+      },
+      "executedGameplayTests": [
+        {
+          "name": "CF forward movement changes actual position",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "CF B+direction changes actual yaw and pitch",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "CF A fires actual weapon",
+          "status": "passed",
+          "details": {
+            "before": 0,
+            "after": 4
+          }
+        },
+        {
+          "name": "CF X starts actual reload",
+          "status": "passed",
+          "details": null
+        }
+      ],
+      "scope": "Actual recorded game-state values and frozen executed predicate. QQ current right-turn baseline was used by the runner but not serialized separately; numeric right delta cannot be independently recomputed from qq-left and qq-right because left release continued after its recorded sample. No claim of Android race completion or full reload duration."
+    },
+    {
+      "game": "cf-transport-ship",
+      "mode": "occupied",
+      "observedGameStates": {
+        "cf-movement": {
+          "position": {
+            "x": -31.52549319999998,
+            "y": 0,
+            "z": -0.5999999999999996
+          },
+          "yaw": -1.5707963267948966,
+          "pitch": 0,
+          "ammo": 30,
+          "reloading": false,
+          "shotsFired": 0
+        },
+        "cf-yaw": {
+          "position": {
+            "x": -30.41228319999997,
+            "y": 0,
+            "z": -0.5999999999999996
+          },
+          "yaw": -2.00161132679489,
+          "pitch": 0,
+          "ammo": 30,
+          "reloading": false,
+          "shotsFired": 0
+        },
+        "cf-aim": {
+          "position": {
+            "x": -30.41228319999997,
+            "y": 0,
+            "z": -0.5999999999999996
+          },
+          "yaw": -2.11161132679489,
+          "pitch": 0.2933150000000016,
+          "ammo": 30,
+          "reloading": false,
+          "shotsFired": 0
+        },
+        "cf-fired": {
+          "position": {
+            "x": -30.41228319999997,
+            "y": 0,
+            "z": -0.5999999999999996
+          },
+          "yaw": -2.11161132679489,
+          "pitch": 0.4033150000000016,
+          "ammo": 24,
+          "reloading": false,
+          "shotsFired": 6
+        },
+        "cf-reloading": {
+          "position": {
+            "x": -30.41228319999997,
+            "y": 0,
+            "z": -0.5999999999999996
+          },
+          "yaw": -2.11161132679489,
+          "pitch": 0.4033150000000016,
+          "ammo": 22,
+          "reloading": true,
+          "shotsFired": 8
+        }
+      },
+      "executedGameplayTests": [
+        {
+          "name": "CF forward movement changes actual position",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "CF B+direction changes actual yaw and pitch",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "CF A fires actual weapon",
+          "status": "passed",
+          "details": {
+            "before": 0,
+            "after": 6
+          }
+        },
+        {
+          "name": "CF X starts actual reload",
+          "status": "passed",
+          "details": null
+        }
+      ],
+      "scope": "Actual recorded game-state values and frozen executed predicate. QQ current right-turn baseline was used by the runner but not serialized separately; numeric right delta cannot be independently recomputed from qq-left and qq-right because left release continued after its recorded sample. No claim of Android race completion or full reload duration."
+    },
+    {
+      "game": "qq-speed",
+      "mode": "normal",
+      "observedGameStates": {
+        "qq-left": {
+          "h": 1.2224942618708414,
+          "speed": 27.407099206565338,
+          "drift": false,
+          "stats": {
+            "drift": 0,
+            "small": 0,
+            "perfect": 0,
+            "double": 0,
+            "nitro": 0,
+            "crash": 0,
+            "top": 98.66555714363521,
+            "land": 0
+          }
+        },
+        "qq-right": {
+          "h": 1.3055097185031266,
+          "speed": 38.66248641665322,
+          "drift": false,
+          "stats": {
+            "drift": 0,
+            "small": 0,
+            "perfect": 0,
+            "double": 0,
+            "nitro": 0,
+            "crash": 0,
+            "top": 139.1849510999516,
+            "land": 0
+          }
+        },
+        "qq-drifting": {
+          "h": 2.0392021484702205,
+          "speed": 34.15020067865688,
+          "drift": true,
+          "stats": {
+            "drift": 1,
+            "small": 0,
+            "perfect": 0,
+            "double": 0,
+            "nitro": 0,
+            "crash": 1,
+            "top": 161.44890454667325,
+            "land": 0
+          }
+        },
+        "qq-small-boost-attempt": {
+          "h": 1.6723173070659993,
+          "speed": 25.90157420054157,
+          "drift": false,
+          "stats": {
+            "drift": 1,
+            "small": 1,
+            "perfect": 0,
+            "double": 0,
+            "nitro": 0,
+            "crash": 2,
+            "top": 170.317542370408,
+            "land": 0
+          }
+        }
+      },
+      "executedGameplayTests": [
+        {
+          "name": "QQ left and right steer in original vehicle coordinates",
+          "status": "passed",
+          "details": {
+            "before": 0.97524753335958,
+            "left": 1.2224942618708414,
+            "right": 1.3055097185031266
+          }
+        },
+        {
+          "name": "QQ A+direction enters actual drift",
+          "status": "passed",
+          "details": null
+        }
+      ],
+      "scope": "Actual recorded game-state values and frozen executed predicate. QQ current right-turn baseline was used by the runner but not serialized separately; numeric right delta cannot be independently recomputed from qq-left and qq-right because left release continued after its recorded sample. No claim of Android race completion or full reload duration."
+    },
+    {
+      "game": "qq-speed",
+      "mode": "occupied",
+      "observedGameStates": {
+        "qq-left": {
+          "h": 1.2099228431121196,
+          "speed": 31.057165094832452,
+          "drift": false,
+          "stats": {
+            "drift": 0,
+            "small": 0,
+            "perfect": 0,
+            "double": 0,
+            "nitro": 0,
+            "crash": 0,
+            "top": 111.80579434139683,
+            "land": 0
+          }
+        },
+        "qq-right": {
+          "h": 1.3805423332639082,
+          "speed": 39.12344187483286,
+          "drift": false,
+          "stats": {
+            "drift": 0,
+            "small": 0,
+            "perfect": 0,
+            "double": 0,
+            "nitro": 0,
+            "crash": 0,
+            "top": 140.8443907493983,
+            "land": 0
+          }
+        },
+        "qq-drifting": {
+          "h": 1.9155589011257195,
+          "speed": 36.781666757092694,
+          "drift": true,
+          "stats": {
+            "drift": 1,
+            "small": 0,
+            "perfect": 0,
+            "double": 0,
+            "nitro": 0,
+            "crash": 1,
+            "top": 159.85955400011028,
+            "land": 0
+          }
+        },
+        "qq-small-boost-attempt": {
+          "h": 1.9552085483894417,
+          "speed": 24.57002095906353,
+          "drift": false,
+          "stats": {
+            "drift": 1,
+            "small": 1,
+            "perfect": 1,
+            "double": 0,
+            "nitro": 0,
+            "crash": 2,
+            "top": 190.60576530922117,
+            "land": 0
+          }
+        }
+      },
+      "executedGameplayTests": [
+        {
+          "name": "QQ left and right steer in original vehicle coordinates",
+          "status": "passed",
+          "details": {
+            "before": 0.97524753335958,
+            "left": 1.2099228431121196,
+            "right": 1.3805423332639082
+          }
+        },
+        {
+          "name": "QQ A+direction enters actual drift",
+          "status": "passed",
+          "details": null
+        }
+      ],
+      "scope": "Actual recorded game-state values and frozen executed predicate. QQ current right-turn baseline was used by the runner but not serialized separately; numeric right delta cannot be independently recomputed from qq-left and qq-right because left release continued after its recorded sample. No claim of Android race completion or full reload duration."
+    }
+  ]
+}
