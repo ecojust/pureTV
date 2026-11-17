@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "renderer": "canvas2d",
+  "storageRestartRequired": true,
+  "pauseStablePaths": [
+    "gameplay.tick",
+    "gameplay.worldTick",
+    "gameplay.playerX",
+    "gameplay.playerY",
+    "gameplay.hp",
+    "gameplay.pearls",
+    "gameplay.projectiles"
+  ],
+  "steps": [
+    {
+      "name": "Enter the original introduction",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 700,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "cine"
+        },
+        {
+          "path": "gameplay.introTick",
+          "op": "gte",
+          "value": 30
+        }
+      ]
+    },
+    {
+      "name": "Skip the opening film with a real confirm press",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 700,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "title"
+        },
+        {
+          "path": "gameplay.titleTick",
+          "op": "gte",
+          "value": 170
+        }
+      ]
+    },
+    {
+      "name": "Open the nine-location map",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 700,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "select"
+        }
+      ]
+    },
+    {
+      "name": "Travel to Embarcadero by boat",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 3200,
+      "expect": [
+        {
+          "path": "gameplay.arrival",
+          "op": "eq",
+          "value": false
+        },
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Walk right through the first platform",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 420,
+      "expect": [
+        {
+          "path": "gameplay.playerX",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Jump with original vertical physics",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.playerY",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Use the catfish inhale cone",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 450,
+      "expect": [
+        {
+          "path": "gameplay.suckTicks",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Pause explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Resume explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ]
+}
