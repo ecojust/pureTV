@@ -1,0 +1,290 @@
+{
+  "sourceCommit": "a73a1976e7d38ff27b8e457b933519ea66eaa949",
+  "batch": "triptych-01",
+  "status": "passed",
+  "shared": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "joystick-games/shared/macos/tests/web-bridge.test.mjs"
+      ],
+      "status": "passed",
+      "log": "shared/00.log",
+      "startedAt": "2026-11-17T18:42:23.380337+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/build-source.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/01.log",
+      "startedAt": "2026-11-17T18:42:23.541378+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-tools.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/02.log",
+      "startedAt": "2026-11-17T18:42:23.890145+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/native-observation.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/03.log",
+      "startedAt": "2026-11-17T18:42:24.199583+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/reuse-source.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/04.log",
+      "startedAt": "2026-11-17T18:42:24.707004+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "5",
+        "joystick-games/shared/macos/Sources/ControllerServer.swift",
+        "joystick-games/shared/macos/tests/ControllerServerTests.swift",
+        "-o",
+        "/Users/runner/work/_temp/controller-tests"
+      ],
+      "status": "passed",
+      "log": "shared/05.log",
+      "startedAt": "2026-11-17T18:42:25.303095+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/runner/work/_temp/controller-tests"
+      ],
+      "status": "passed",
+      "log": "shared/06.log",
+      "startedAt": "2026-11-17T18:42:34.200377+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "5",
+        "joystick-games/shared/macos/Sources/GameStorage.swift",
+        "joystick-games/shared/macos/tests/GameStorageTests.swift",
+        "-o",
+        "/Users/runner/work/_temp/storage-tests"
+      ],
+      "status": "passed",
+      "log": "shared/07.log",
+      "startedAt": "2026-11-17T18:42:34.237078+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/runner/work/_temp/storage-tests"
+      ],
+      "status": "passed",
+      "log": "shared/08.log",
+      "startedAt": "2026-11-17T18:42:34.767322+00:00",
+      "returncode": 0
+    }
+  ],
+  "games": [
+    {
+      "game": "sugarplum-drop",
+      "status": "passed",
+      "originalTestScript": "node src/dev/simtest.mjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "sugarplum-drop/dependencies.log",
+          "startedAt": "2026-11-17T18:42:34.802942+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "sugarplum-drop/original-tests.log",
+          "startedAt": "2026-11-17T18:42:35.697682+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "sugarplum-drop/frozen-dist.log",
+          "startedAt": "2026-11-17T18:42:51.215786+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "command": [
+          "python3",
+          "joystick-games/tools/macos-build.py",
+          "--game",
+          "sugarplum-drop",
+          "--output",
+          "/Users/runner/work/_temp/build/sugarplum-drop",
+          "--host-cache",
+          "/Users/runner/work/_temp/host-cache"
+        ],
+        "status": "passed",
+        "log": "sugarplum-drop/native-build.log",
+        "startedAt": "2026-11-17T18:42:51.530827+00:00",
+        "returncode": 0
+      }
+    },
+    {
+      "game": "starblazer-86",
+      "status": "passed",
+      "originalTestScript": "node src/dev/simtest.mjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "starblazer-86/dependencies.log",
+          "startedAt": "2026-11-17T18:43:47.387936+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "starblazer-86/original-tests.log",
+          "startedAt": "2026-11-17T18:43:48.287148+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "starblazer-86/frozen-dist.log",
+          "startedAt": "2026-11-17T18:44:01.364560+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "command": [
+          "python3",
+          "joystick-games/tools/macos-build.py",
+          "--game",
+          "starblazer-86",
+          "--output",
+          "/Users/runner/work/_temp/build/starblazer-86",
+          "--host-cache",
+          "/Users/runner/work/_temp/host-cache"
+        ],
+        "status": "passed",
+        "log": "starblazer-86/native-build.log",
+        "startedAt": "2026-11-17T18:44:01.744539+00:00",
+        "returncode": 0
+      }
+    },
+    {
+      "game": "popgun-pip",
+      "status": "passed",
+      "originalTestScript": "node src/dev/simtest.mjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "popgun-pip/dependencies.log",
+          "startedAt": "2026-11-17T18:44:16.611420+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "popgun-pip/original-tests.log",
+          "startedAt": "2026-11-17T18:44:17.425754+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "popgun-pip/frozen-dist.log",
+          "startedAt": "2026-11-17T18:44:18.713262+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "command": [
+          "python3",
+          "joystick-games/tools/macos-build.py",
+          "--game",
+          "popgun-pip",
+          "--output",
+          "/Users/runner/work/_temp/build/popgun-pip",
+          "--host-cache",
+          "/Users/runner/work/_temp/host-cache"
+        ],
+        "status": "passed",
+        "log": "popgun-pip/native-build.log",
+        "startedAt": "2026-11-17T18:44:19.045493+00:00",
+        "returncode": 0
+      }
+    }
+  ]
+}
