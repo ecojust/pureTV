@@ -1,0 +1,38 @@
+name: Preserve original Mac QA evidence
+on:
+  workflow_dispatch:
+permissions:
+  actions: read
+  contents: write
+jobs:
+  archive:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: joystick-macos-qa-*
+          run-id: 44115155028
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/original
+      - name: Archive original evidence without altering it
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/original"
+          python3 - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          files={str(p):{'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in Path('.').rglob('*') if p.is_file()}
+          Path('archive-manifest.json').write_text(json.dumps({'sourceRun':44115155028,'sourceCommit':'8d6475980ce2312df8839a38dd724794eb59b83b','files':files},indent=2)+'\n')
+          for p in Path('.').rglob('report.json'):
+            r=json.loads(p.read_text());print(p,r.get('status'),r.get('error','')[-1000:]);sent={(x['connection'],x['message']['seq']) for x in r['wire'] if x['direction']=='sdk-to-game'};ack={(x['connection'],x['message']['seq']) for x in r['wire'] if x['direction']=='game-to-sdk' and x['message'].get('type')=='ack'};print('Missing ACK',sorted(sent-ack),'Unexpected ACK',sorted(ack-sent))
+          PY
+          git init -b export
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -m 'Archive original failed Mac QA 44115155028 [skip ci]'
+          gh auth setup-git
+          git remote add origin https://github.com/ecojust/pureTV.git
+          git push origin HEAD:refs/heads/build-assets/joystick-games-macos-original-44115155028
