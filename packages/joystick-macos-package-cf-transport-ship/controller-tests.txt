@@ -1,0 +1,29 @@
+PASS 1: all nine physical buttons have independent states and monotonic counters
+PASS 2: hello and all nine sync messages ACK their sequence without action pulses
+PASS 3: direction pairs cancel while independent axes remain
+PASS 4: quick taps survive snapshots as cumulative counters
+PASS 5: A/X aliases keep a hold until both release and do not double-pulse
+PASS 6: B/Y aliases aggregate without a duplicate nitro edge
+PASS 7: held START and action sync require release before a new action
+PASS 8: long_press without down is a continuation, not a fresh action
+PASS 9: duplicate and stale sequence acknowledge but never replay
+PASS 10: repeated hello and ping preserve held controls and refresh heartbeat
+PASS 11: background cancellation quarantines held keys without new pulses
+PASS 12: input enable transitions cancel actions but retain the controller session
+PASS 13: all nine background buttons are ACKed without gameplay input or pulses
+PASS 14: a preexisting hold can release in the background without a release reward
+PASS 15: keys newly held in background remain blocked after foreground until physical release
+PASS 16: background held sync blocks every key including continuous directions
+PASS 17: first connection while background never queues a start for foreground
+PASS 18: background reconnect retains the input gate while resetting the connection generation
+PASS 19: same ID reconnect replaces old peer with new session and clean sequence
+PASS 20: different ID cannot steal occupied controller seat
+PASS 21: identity changes on an existing socket are rejected
+PASS 22: disconnect neutralizes every control and advances cancellation
+PASS 23: bounded peers and unauthenticated handshake deadline
+PASS 24: invalid JSON, UTF-8 and top-level arrays fail closed
+PASS 25: strict JSON scalar types and safe integer sequence
+PASS 26: TCP framing accepts split frames, batched lines and CRLF
+PASS 27: TCP framing rejects oversized terminated and partial frames
+PASS 28: stop releases owner and preserves monotonic snapshot revision
+28 controller protocol tests passed
