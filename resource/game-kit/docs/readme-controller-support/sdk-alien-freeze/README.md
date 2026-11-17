@@ -1,9 +1,0 @@
-# Alien reconnect bookkeeping and gameplay freeze
-
-The original actual Android API 36 report passed five groups, then rejected reconnect because only `model.players[0].connected` and `players[0].connected` changed false to true. Both full snapshots were retained; all other model and player fields were identical and both states remained paused. All 48 original SDK messages had ACKs and there were no transport errors. The unchanged signed APK model sets player.connected in readInputs (line 113), before its paused early return (line 135); simulation runs below that return (line 144).
-
-The sole QA change removes connected only at the direct player level in those two arrays, only for alien-shooter. It preserves every other field, including cancelSeq, active, position, aim, inventory, cooldowns, events, score/credits and time. Twenty regression cases use the exact original raw pair and cloned negative examples; they also verify another game's connected field and same-named fields outside the arrays remain strict. The raw snapshots are unchanged.
-
-A complete browser run using byte-identical assets from the signed Alien 0.1.3 APK passed eight groups and all 65 messages received matching ACKs. It reproduced the connected false→true transition while both snapshots remained paused and elapsed stayed exactly 1.9166666666666647. No production game, original SDK, model clock or gameplay state was modified. The browser result does not substitute for the subsequent actual Android retry or physical TV/phone/ESP32 testing.
-
-The original Android failure, exact before/after scripts, complete browser report and screenshots, directly redirected stdout/stderr, production source copies, and regression source/output are preserved here. `verification.json` binds executed source and APK asset hashes; the archive manifest lists every evidence file.

@@ -1,1 +1,0 @@
-window.PureGame={key(){},suspend(){}};
