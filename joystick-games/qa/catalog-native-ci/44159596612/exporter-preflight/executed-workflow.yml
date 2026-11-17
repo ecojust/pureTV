@@ -1,0 +1,177 @@
+name: Read original joystick catalog macOS evidence
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run:
+        description: Original catalog macOS build or runtime QA run ID
+        required: true
+        type: string
+      source_sha:
+        description: Exact original frozen workflow source SHA
+        required: true
+        type: string
+      artifact_source_sha:
+        description: Original package source, or frozen probe source for capability evidence
+        required: false
+        default: ''
+        type: string
+      source_attempt:
+        description: Exact original run attempt
+        required: true
+        default: '1'
+        type: string
+      batch:
+        description: Completed original batch
+        required: true
+        type: choice
+        options: [triptych-01, triptych-02, one-button-01, capability]
+      evidence_kind:
+        description: Completed original job evidence (never installation packages)
+        required: true
+        type: choice
+        options: [build, qa-arm64, qa-intel, capability-arm64, capability-intel]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      actions: read
+    env:
+      SOURCE_RUN: ${{ inputs.source_run }}
+      SOURCE_SHA: ${{ inputs.source_sha }}
+      ARTIFACT_SOURCE_SHA: ${{ inputs.artifact_source_sha }}
+      SOURCE_ATTEMPT: ${{ inputs.source_attempt }}
+      BATCH: ${{ inputs.batch }}
+      EVIDENCE_KIND: ${{ inputs.evidence_kind }}
+    steps:
+      - name: Verify exact original source, completed job and evidence artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json,os,re,subprocess
+          from pathlib import Path
+          run=os.environ['SOURCE_RUN'];source=os.environ['SOURCE_SHA'];attempt=os.environ['SOURCE_ATTEMPT'];batch=os.environ['BATCH'];kind=os.environ['EVIDENCE_KIND'];package_source=os.environ['ARTIFACT_SOURCE_SHA'] or source
+          assert re.fullmatch('[1-9][0-9]*',run) and re.fullmatch('[1-9][0-9]*',attempt) and re.fullmatch('[a-f0-9]{40}',source)
+          assert re.fullmatch('[a-f0-9]{40}',package_source)
+          assert os.environ['GITHUB_REPOSITORY']=='ecojust/pureTV'
+          assert batch in ['triptych-01','triptych-02','one-button-01','capability'] and kind in ['build','qa-arm64','qa-intel','capability-arm64','capability-intel']
+          def api(path):return json.loads(subprocess.check_output(['gh','api','repos/ecojust/pureTV/'+path]))
+          original=api('actions/runs/'+run)
+          assert original['path'] in ['.github/workflows/joystick-catalog-macos.yml','.github/workflows/joystick-catalog-macos-runtime.yml','.github/workflows/joystick-macos-capability.yml'] and original['event']=='workflow_dispatch'
+          capability=original['path']=='.github/workflows/joystick-macos-capability.yml'
+          assert capability is kind.startswith('capability-') and capability is (batch=='capability')
+          runtime=original['path'].endswith('-runtime.yml')
+          if capability:assert os.environ['ARTIFACT_SOURCE_SHA'], 'Capability evidence requires the exact original frozen probe source'
+          elif runtime:assert kind!='build' and os.environ['ARTIFACT_SOURCE_SHA'], 'Separate runtime evidence requires the explicit original package source'
+          else:assert package_source==source, 'Original build/runtime workflow package source must match its workflow commit'
+          assert original['head_sha']==source and original['run_attempt']==int(attempt), 'Run source or attempt changed'
+          assert original['repository']['full_name']==original['head_repository']['full_name']=='ecojust/pureTV'
+          jobs=api(f'actions/runs/{run}/attempts/{attempt}/jobs?per_page=100')['jobs']
+          runner={'qa-arm64':'macos-latest','qa-intel':'macos-15-intel','capability-arm64':'macos-latest','capability-intel':'macos-15-intel'}.get(kind)
+          prefix=('observe ('+runner+')') if capability else ('build' if kind=='build' else 'verify')+' ('+batch+','
+          selected_jobs=[job for job in jobs if job['name'].startswith(prefix) and (runner is None or runner in job['labels'])]
+          assert len(selected_jobs)==1 and selected_jobs[0]['status']=='completed', 'Expected one completed original job'
+          job=selected_jobs[0]
+          name='joystick-macos-capability-'+runner if capability else 'joystick-catalog-macos-'+('build-'+batch if kind=='build' else ('runtime-' if runtime else 'qa-')+batch+'-'+runner)
+          artifacts=api('actions/runs/'+run+'/artifacts?per_page=100')['artifacts']
+          selected=[item for item in artifacts if item['name']==name and not item['expired']]
+          assert len(selected)==1, 'Expected one non-expired evidence artifact'
+          artifact=selected[0]
+          assert artifact['workflow_run']['id']==int(run) and artifact['workflow_run']['head_sha']==source
+          assert job['started_at']<=artifact['created_at']<=job['completed_at'], 'Artifact is not from this completed job attempt'
+          assert artifact['size_in_bytes']<250_000_000
+          out=Path(os.environ['RUNNER_TEMP'])/'catalog-macos-evidence';out.mkdir()
+          record={'sourceRunId':int(run),'sourceCommit':package_source,'workflowSourceCommit':source,'sourceRunAttempt':int(attempt),'originalWorkflow':original['path'],'separateRuntimeQa':runtime,'independentCapabilityDiagnostic':capability,'sourceMeaning':'frozen probe source' if capability else 'original package source','batch':batch,'kind':kind,'originalJobId':job['id'],'originalJobConclusion':job['conclusion'],'artifact':{key:artifact.get(key) for key in ['id','name','size_in_bytes','digest','created_at','updated_at']}}
+          (out/'original-artifact.json').write_text(json.dumps(record,indent=2)+'\n')
+          (out/'original-job.json').write_text(json.dumps(job,indent=2)+'\n')
+          with open(os.environ['GITHUB_ENV'],'a') as stream:stream.write('ARTIFACT_ID='+str(artifact['id'])+'\nORIGINAL_JOB_ID='+str(job['id'])+'\n')
+          print(json.dumps(record))
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ecojust/pureTV
+          run-id: ${{ inputs.source_run }}
+          artifact-ids: ${{ env.ARTIFACT_ID }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/catalog-macos-evidence/artifact
+      - name: Preserve original job log and verify evidence-only export
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os,re,subprocess,urllib.parse
+          from pathlib import Path
+          out=Path(os.environ['RUNNER_TEMP'])/'catalog-macos-evidence';artifact=out/'artifact';job=os.environ['ORIGINAL_JOB_ID']
+          assert re.fullmatch('[1-9][0-9]*',job) and artifact.is_dir() and any(artifact.iterdir())
+          original=json.loads((out/'original-artifact.json').read_text());capability=original['independentCapabilityDiagnostic']
+          allowed={'.json','.log','.txt','.png','.py','.swift','.plist'}
+          if capability:allowed|={'.js','.patch','.yml'}
+          total=0
+          for path in artifact.rglob('*'):
+              assert not path.is_symlink(), 'Symlink in evidence'
+              if path.is_file():
+                  assert path.suffix in allowed, 'Unexpected non-evidence file: '+str(path.relative_to(artifact))
+                  assert path.stat().st_size<50_000_000
+                  total+=path.stat().st_size
+          assert total<250_000_000
+          report_name='observation-report.json' if capability else 'build-report.json' if os.environ['EVIDENCE_KIND']=='build' else 'batch-report.json'
+          report=json.loads((artifact/report_name).read_text())
+          assert report['sourceCommit']==original['sourceCommit']
+          if capability:
+              assert report['workflowSourceCommit']==original['workflowSourceCommit'] and report['runId']==original['sourceRunId'] and report['runAttempt']==original['sourceRunAttempt']
+              assert report['gamesOpened'] is False and report['gameAssetsChanged'] is False and report['installationPackagesIncluded'] is False
+              assert hashlib.sha256((artifact/'executed-webgl-probe.swift').read_bytes()).hexdigest()==report['probeSourceSha256']
+          else:assert report['batch']==os.environ['BATCH']
+          if original['separateRuntimeQa']:assert report['qaSourceCommit']==original['workflowSourceCommit']
+          # This fixed workflow has no signing step, credentials or environment dumps.
+          # Preserve raw logs without rendering their control sequences in the console.
+          result=subprocess.run(['gh','api','--allow-escape-sequences','repos/ecojust/pureTV/actions/jobs/'+job+'/logs?cachebust='+os.environ['GITHUB_RUN_ID']],capture_output=True)
+          status={'originalJobId':int(job),'downloaded':result.returncode==0,'exitCode':result.returncode}
+          if result.returncode==0:
+              raw=result.stdout;status['originalDownloadedLog']={'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}
+              signed_keys={'sig','signature','token','access_token','x-amz-signature','x-goog-signature'}
+              redactions=[]
+              def redact(match):
+                  url=match.group();keys={key.lower() for key,_ in urllib.parse.parse_qsl(urllib.parse.urlsplit(url).query)}
+                  if keys & signed_keys:
+                      redactions.append(hashlib.sha256(url.encode()).hexdigest());return '[signed download URL redacted]'
+                  return url
+              log=re.sub(r'https?://[^\s<>\"\']+',redact,raw.decode(errors='replace'))
+              status['signedUrlRedactions']=len(redactions);status['redactedUrlSha256']=redactions
+              (out/'original-job.log').write_text(log)
+          else:status['error']=re.sub(r'https?://\S+','[download URL redacted]',result.stderr.decode(errors='replace'))
+          (out/'job-log-download-status.json').write_text(json.dumps(status,indent=2)+'\n')
+          rows={}
+          for path in sorted(out.rglob('*')):
+              assert not path.is_symlink()
+              if path.is_file():rows[path.relative_to(out).as_posix()]={'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+          manifest={'sourceRunId':int(os.environ['SOURCE_RUN']),'sourceCommit':original['sourceCommit'],'workflowSourceCommit':original['workflowSourceCommit'],'originalWorkflow':original['originalWorkflow'],'sourceRunAttempt':int(os.environ['SOURCE_ATTEMPT']),'batch':os.environ['BATCH'],'kind':os.environ['EVIDENCE_KIND'],'independentCapabilityDiagnostic':capability,'sourceMeaning':original['sourceMeaning'],'exporterSourceCommit':os.environ['GITHUB_SHA'],'exportRunId':int(os.environ['GITHUB_RUN_ID']),'exportRunAttempt':int(os.environ['GITHUB_RUN_ATTEMPT']),'gamesRerun':False,'installPackagesValidated':False,'files':rows}
+          (out/'export-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          print(json.dumps({'evidenceFiles':len(rows),'originalJobLogDownloaded':status['downloaded'],'gamesRerun':False,'installPackagesValidated':False}))
+          PY
+      - name: Publish original evidence on a new immutable diagnostic branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          branch="build-assets/joystick-catalog-macos-evidence-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
+          url="https://github.com/$GITHUB_REPOSITORY.git"
+          gh auth setup-git
+          test -z "$(git ls-remote --heads "$url" "refs/heads/$branch")"
+          directory="$RUNNER_TEMP/catalog-macos-evidence"
+          git init --initial-branch "$branch" "$directory"
+          git -C "$directory" config user.name github-actions[bot]
+          git -C "$directory" config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git -C "$directory" add .
+          git -C "$directory" commit -q -m "Original macOS ${SOURCE_RUN} ${BATCH} ${EVIDENCE_KIND} evidence"
+          git -C "$directory" remote add origin "$url"
+          git -C "$directory" push "--force-with-lease=refs/heads/$branch:" origin "HEAD:refs/heads/$branch"
