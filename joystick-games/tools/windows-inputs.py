@@ -4,7 +4,7 @@ import hashlib,json,os,re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 HOST='joystick-games/shared/windows'
-TOOLS=('windows-inputs.py','windows-build.py','windows-packages.py','windows-verify.py','windows-evidence.py','windows-export.py','macos-verify.py','qa-plan.py','asset-policy.py')
+TOOLS=('windows-inputs.py','windows-build.py','windows-packages.py','windows-verify.py','windows-display.py','windows-evidence.py','windows-export.py','macos-verify.py','qa-plan.py','asset-policy.py')
 WORKFLOW='.github/workflows/joystick-catalog-windows.yml'
 GAME_REQUIRED=('game.json','package.json','package-lock.json','build.mjs','qa-plan.json','NOTICE.md')
 GAME_DIRS={'src','dist','test','tests','qa','assets','public','vendor'}

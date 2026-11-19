@@ -6,6 +6,7 @@ ROOT=Path(__file__).resolve().parents[2]
 def module(name,path):
     spec=importlib.util.spec_from_file_location(name,path);value=importlib.util.module_from_spec(spec);spec.loader.exec_module(value);return value
 base=module('macos_observation',Path(__file__).with_name('macos-verify.py'))
+display_api=module('windows_display',Path(__file__).with_name('windows-display.py'))
 plan_api=base.qa_plan
 class WindowsCheck(base.CatalogCheck):
     def __init__(self,args):
@@ -16,6 +17,8 @@ class WindowsCheck(base.CatalogCheck):
         self.user=ctypes.WinDLL('user32',use_last_error=True)
         self.user.SetThreadDpiAwarenessContext.argtypes=[ctypes.c_void_p];self.user.SetThreadDpiAwarenessContext.restype=ctypes.c_void_p
         assert self.user.SetThreadDpiAwarenessContext(ctypes.c_void_p(-4)), 'Cannot disable DPI virtualization for native window measurement'
+        self.display_session=display_api.DisplaySession(self.out/'display-setup.json');self.report['nativeDisplay']=self.display_session.report
+        self.report['sourceHashes']['joystick-games/tools/windows-display.py']=base.digest(display_api.__file__)
         self.user.FindWindowW.argtypes=[ctypes.c_wchar_p,ctypes.c_wchar_p];self.user.FindWindowW.restype=ctypes.c_void_p
         self.user.PostMessageW.argtypes=[ctypes.c_void_p,ctypes.c_uint,ctypes.c_size_t,ctypes.c_ssize_t]
         self.user.ShowWindow.argtypes=[ctypes.c_void_p,ctypes.c_int];self.user.SetForegroundWindow.argtypes=[ctypes.c_void_p]
@@ -23,7 +26,7 @@ class WindowsCheck(base.CatalogCheck):
         self.user.SendMessageW.argtypes=[ctypes.c_void_p,ctypes.c_uint,ctypes.c_size_t,ctypes.c_ssize_t]
         self.user.SetWindowPos.argtypes=[ctypes.c_void_p,ctypes.c_void_p,ctypes.c_int,ctypes.c_int,ctypes.c_int,ctypes.c_int,ctypes.c_uint]
         self.user.GetWindowRect.argtypes=[ctypes.c_void_p,ctypes.c_void_p]
-        for p in [Path(__file__),Path(base.__file__),Path(plan_api.__file__),base.SDK,ROOT/'joystick-games'/args.game/'qa-plan.json']:shutil.copy2(p,self.out/('executed-'+p.name))
+        for p in [Path(__file__),Path(base.__file__),Path(display_api.__file__),Path(plan_api.__file__),base.SDK,ROOT/'joystick-games'/args.game/'qa-plan.json']:shutil.copy2(p,self.out/('executed-'+p.name))
     def hwnd(self):
         title=json.loads((self.args.app/'game.json').read_text(encoding='utf-8'))['name'];window=self.user.FindWindowW('PureTVGameWindow',title)
         assert window,'Actual game window missing';pid=ctypes.c_ulong();self.user.GetWindowThreadProcessId(window,ctypes.byref(pid));assert pid.value==self.app.pid,'Wrong game window process';return window
@@ -36,6 +39,7 @@ class WindowsCheck(base.CatalogCheck):
         class Point(ctypes.Structure):_fields_=[('x',ctypes.c_long),('y',ctypes.c_long)]
         class Minimum(ctypes.Structure):_fields_=[('reserved',Point),('maximumSize',Point),('maximumPosition',Point),('minimumTrack',Point),('maximumTrack',Point)]
         handle=self.hwnd();outer=wintypes.RECT();assert self.user.GetWindowRect(handle,ctypes.byref(outer))
+        initial=self.read();self.report['nativeWindowSetup']={'originalOuterPixels':{key:getattr(outer,key) for key in ('left','top','right','bottom')},'originalClientPixels':initial['clientPixels'],'originalDocumentViewport':{key:initial['document'][key] for key in ('width','height')},'windowDpi':initial['windowDpi'],'resizeFlags':0x0016,'resizeFlagsMeaning':'SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE'}
         minimum=Minimum();self.user.SendMessageW(handle,0x0024,0,ctypes.addressof(minimum))
         assert minimum.minimumTrack.x>=960 and minimum.minimumTrack.y>=540
         before=self.read();assert self.user.SetWindowPos(handle,None,0,0,minimum.minimumTrack.x,minimum.minimumTrack.y,0x0016)
@@ -95,6 +99,7 @@ class WindowsCheck(base.CatalogCheck):
         self.user.PostMessageW(self.hwnd(),0x0010,0,0);self.app.wait(timeout=20);assert self.app.returncode==0;self.app=None;return self.report['storageRestart']
     def run(self):
         try:
+            self.display_session.prepare()
             if self.args.occupy_default_port:
                 self.blocker=socket.socket();self.blocker.setsockopt(socket.SOL_SOCKET,socket.SO_EXCLUSIVEADDRUSE,1);self.blocker.bind(('0.0.0.0',63485));self.blocker.listen(1)
             initial=self.launch();assert all(v is None for v in initial['storage']['initial'].values()),'Fresh profile had saves'
@@ -122,6 +127,8 @@ class WindowsCheck(base.CatalogCheck):
                     except subprocess.TimeoutExpired:process.kill()
             if self.blocker:self.blocker.close()
             for log in self.logs:log.close()
+            try:self.display_session.restore()
+            except Exception:self.report['status']='failed';self.report['displayRestoreError']=traceback.format_exc()
             self.report['finishedAt']=base.now();(self.out/'report.json').write_text(json.dumps(self.report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         return 0 if self.report['status']=='passed' else 1
 if __name__=='__main__':

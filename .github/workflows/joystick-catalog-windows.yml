@@ -68,6 +68,8 @@ jobs:
         env:
           GAME: ${{ matrix.game }}
         run: |
+          python -B joystick-games/shared/windows/tests/display.test.py *> "$env:RUNNER_TEMP/display-tests.log"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -B joystick-games/shared/windows/tests/assets.test.py *> "$env:RUNNER_TEMP/assets-tests.log"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -B joystick-games/shared/windows/tests/source-scope.test.py *> "$env:RUNNER_TEMP/source-scope-tests.log"
