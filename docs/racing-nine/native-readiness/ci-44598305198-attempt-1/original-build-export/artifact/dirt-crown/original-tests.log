@@ -1,0 +1,78 @@
+
+> dirt-crown@0.1.0 test
+> node --test tests/*.test.mjs && node tests/run-upstream.mjs
+
+TAP version 13
+# Subtest: 20 authored tracks and all 26 career events retained, each route constructs
+ok 1 - 20 authored tracks and all 26 career events retained, each route constructs
+  ---
+  duration_ms: 88.424209
+  type: 'test'
+  ...
+# Subtest: simulation and procedural models remain byte-identical to fixed upstream
+ok 2 - simulation and procedural models remain byte-identical to fixed upstream
+  ---
+  duration_ms: 57.730959
+  type: 'test'
+  ...
+# Subtest: default and persisted settings cannot add implicit throttle
+ok 3 - default and persisted settings cannot add implicit throttle
+  ---
+  duration_ms: 1.026916
+  type: 'test'
+  ...
+# Subtest: six held actions are independent, X/Y/START never create throttle
+ok 4 - six held actions are independent, X/Y/START never create throttle
+  ---
+  duration_ms: 1.096709
+  type: 'test'
+  ...
+# Subtest: TV input drives original controls and autoGas remains disabled even with touch settings
+ok 5 - TV input drives original controls and autoGas remains disabled even with touch settings
+  ---
+  duration_ms: 0.391958
+  type: 'test'
+  ...
+# Subtest: disconnect cancels, never creates action release; held reconnect is quarantined
+ok 6 - disconnect cancels, never creates action release; held reconnect is quarantined
+  ---
+  duration_ms: 0.595666
+  type: 'test'
+  ...
+# Subtest: background cancellation requires release before repeat action
+ok 7 - background cancellation requires release before repeat action
+  ---
+  duration_ms: 0.174167
+  type: 'test'
+  ...
+# Subtest: edge computation does not merge simultaneous independent buttons
+ok 8 - edge computation does not merge simultaneous independent buttons
+  ---
+  duration_ms: 0.214708
+  type: 'test'
+  ...
+# Subtest: menu confirmation and navigation holds cannot leak throttle/actions into a race
+ok 9 - menu confirmation and navigation holds cannot leak throttle/actions into a race
+  ---
+  duration_ms: 0.216958
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 243.550875
+
+purity
+
+tracks
+
+determinism
+
+rules
+
+1051/1051 checks passed

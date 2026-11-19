@@ -1,0 +1,233 @@
+{
+  "sourceCommit": "e347d691d94042021717bd0a331371451d113a48",
+  "batch": "racing-01",
+  "runner": "macos-latest",
+  "expectedArchitecture": "arm64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "backroad-rally",
+      "status": "failed",
+      "checks": [],
+      "error": "Traceback (most recent call last):\n  File \"<stdin>\", line 31, in <module>\n  File \"/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py\", line 1027, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py\", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/Users/runner/work/_temp/packages/backroad-rally/build-manifest.json'\n"
+    },
+    {
+      "game": "ponpoko-kart",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/ponpoko-kart",
+            "--output",
+            "/Users/runner/work/_temp/qa/ponpoko-kart/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "ponpoko-kart/package-verification.log",
+          "startedAt": "2026-11-19T19:21:23.886983+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "ponpoko-kart",
+            "--app",
+            "/Users/runner/work/_temp/packages/ponpoko-kart/installed/Ponpoko Kart.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/ponpoko-kart/native"
+          ],
+          "status": "passed",
+          "log": "ponpoko-kart/native.log",
+          "startedAt": "2026-11-19T19:22:20.872915+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "ponpoko-kart",
+            "--app",
+            "/Users/runner/work/_temp/packages/ponpoko-kart/installed/Ponpoko Kart.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/ponpoko-kart/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "ponpoko-kart/occupied-port.log",
+          "startedAt": "2026-11-19T19:23:57.360565+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "ponpoko-kart",
+            "--app",
+            "/Users/runner/work/_temp/packages/ponpoko-kart/installed/Ponpoko Kart.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/ponpoko-kart/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "ponpoko-kart/rosetta.log",
+          "startedAt": "2026-11-19T19:25:21.192601+00:00",
+          "returncode": 0
+        }
+      ],
+      "capability": {
+        "before": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "ponpoko-kart",
+            "--phase",
+            "before",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/ponpoko-kart/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/ponpoko-kart/capability/before"
+          ],
+          "status": "passed",
+          "log": "ponpoko-kart/capability-before.log",
+          "startedAt": "2026-11-19T19:21:56.112223+00:00",
+          "returncode": 0
+        },
+        "after": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "ponpoko-kart",
+            "--phase",
+            "after",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/ponpoko-kart/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/ponpoko-kart/capability/after"
+          ],
+          "status": "passed",
+          "log": "ponpoko-kart/capability-after.log",
+          "startedAt": "2026-11-19T19:26:47.588240+00:00",
+          "returncode": 0
+        }
+      }
+    },
+    {
+      "game": "night-racer",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/night-racer",
+            "--output",
+            "/Users/runner/work/_temp/qa/night-racer/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "night-racer/package-verification.log",
+          "startedAt": "2026-11-19T19:26:59.152511+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "night-racer",
+            "--app",
+            "/Users/runner/work/_temp/packages/night-racer/installed/Night Racer.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/night-racer/native"
+          ],
+          "status": "passed",
+          "log": "night-racer/native.log",
+          "startedAt": "2026-11-19T19:27:26.061007+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "night-racer",
+            "--app",
+            "/Users/runner/work/_temp/packages/night-racer/installed/Night Racer.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/night-racer/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "night-racer/occupied-port.log",
+          "startedAt": "2026-11-19T19:28:32.009895+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "night-racer",
+            "--app",
+            "/Users/runner/work/_temp/packages/night-racer/installed/Night Racer.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/night-racer/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "night-racer/rosetta.log",
+          "startedAt": "2026-11-19T19:29:29.550595+00:00",
+          "returncode": 0
+        }
+      ],
+      "capability": {
+        "before": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "night-racer",
+            "--phase",
+            "before",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/night-racer/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/night-racer/capability/before"
+          ],
+          "status": "passed",
+          "log": "night-racer/capability-before.log",
+          "startedAt": "2026-11-19T19:27:21.068825+00:00",
+          "returncode": 0
+        },
+        "after": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "night-racer",
+            "--phase",
+            "after",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/night-racer/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/night-racer/capability/after"
+          ],
+          "status": "passed",
+          "log": "night-racer/capability-after.log",
+          "startedAt": "2026-11-19T19:30:29.040710+00:00",
+          "returncode": 0
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+plan	Validate frozen source and registered batches	﻿2026-11-19T19:39:12.8725022Z ##[group]Run python3 - <<'PY'
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8725292Z [36;1mpython3 - <<'PY'[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8725517Z [36;1mimport hashlib,importlib.util,json,os,re,subprocess[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8725736Z [36;1mfrom pathlib import Path[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8725907Z [36;1msource=os.environ['REQUESTED_SOURCE'][0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8726174Z [36;1massert re.fullmatch(r'[a-f0-9]{40}',source), 'A complete lowercase commit SHA is required'[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8726630Z [36;1massert source==os.environ['GITHUB_SHA']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(), 'Select the frozen commit as the workflow ref'[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8727306Z [36;1mbuild_spec=importlib.util.spec_from_file_location('macos_builder','joystick-games/tools/macos-build.py');builder=importlib.util.module_from_spec(build_spec);build_spec.loader.exec_module(builder)[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8727911Z [36;1mregistry_path=Path('joystick-games/catalog-registry.json');registry=builder.registry_data(registry_path.read_text())[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8728880Z [36;1mspec=importlib.util.spec_from_file_location('qa_plan','joystick-games/tools/qa-plan.py');qa_plan=importlib.util.module_from_spec(spec);spec.loader.exec_module(qa_plan)[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8729526Z [36;1mspec=importlib.util.spec_from_file_location('coverage','joystick-games/tools/macos-coverage.py');coverage=importlib.util.module_from_spec(spec);spec.loader.exec_module(coverage)[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8730079Z [36;1massert registry['schemaVersion']==1 and isinstance(registry['games'],dict) and isinstance(registry['batches'],dict)[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8730401Z [36;1mrequested=os.environ['REQUESTED_BATCHES'][0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8730696Z [36;1mbatches=list(registry['batches']) if requested=='all' else [part.strip() for part in requested.split(',')][0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8730999Z [36;1massert batches and len(batches)==len(set(batches))[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8731264Z [36;1mselected=[];seen=set();renderers={};test_scripts={};coverage_policies={}[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8731484Z [36;1mfor batch in batches:[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8731725Z [36;1m  assert re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*',batch) and batch in registry['batches'], batch[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8732104Z [36;1m  games=registry['batches'][batch];assert isinstance(games,list) and games and len(games)==len(set(games)), batch[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8732390Z [36;1m  for game in games:[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8732650Z [36;1m    assert re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*',game) and game in registry['games'] and game not in seen, game[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8733053Z [36;1m    assert game not in ['cf-transport-ship','qq-speed'], 'Previously released package bytes are outside this workflow'[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8733480Z [36;1m    seen.add(game);meta=json.loads((Path('joystick-games')/game/'game.json').read_text());entry=registry['games'][game][0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8733826Z [36;1m    assert meta['id']==game and meta['packageName']==entry['packageName'][0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8734194Z [36;1m    assert re.fullmatch(r'[A-Za-z][A-Za-z0-9]*',entry['executable']) and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9 ._-]*',entry['appName'])[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8734628Z [36;1m    renderers[game]=qa_plan.accepted_renderers(qa_plan.load_plan(Path('joystick-games')/game/'qa-plan.json'))[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8734967Z [36;1m    coverage_policies[game]=coverage.policy(game,entry,renderers[game])[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8735329Z [36;1m    test_scripts[game]=json.loads((Path('joystick-games')/game/'package.json').read_text()).get('scripts',{}).get('test') or None[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8735652Z [36;1m  selected.append({'batch':batch,'games':games})[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8735998Z [36;1mbuild={'include':selected};verify={'include':[dict(item,runner=runner) for item in selected for runner in ['macos-latest','macos-15-intel']]}[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8736627Z [36;1mpaths=[registry_path,Path('.github/workflows/joystick-catalog-macos.yml'),Path('joystick-games/tools/qa-plan.py'),Path('puretv-joystick/joystick_sdk.py'),*sorted(Path('joystick-games/tools').glob('macos-*.py'))][0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8801182Z [36;1mpaths += [Path('joystick-games/shared/macos/tools/webgl-probe.swift'),Path('joystick-games/shared/macos/tests/capability.test.py'),Path('joystick-games/shared/macos/tests/coverage.test.py')][0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8801786Z [36;1minputs={str(p):{'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in paths}[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8802571Z [36;1mrecord={'sourceCommit':source,'runId':int(os.environ['GITHUB_RUN_ID']),'runAttempt':int(os.environ['GITHUB_RUN_ATTEMPT']),'batches':selected,'games':sorted(seen),'renderers':renderers,'coveragePolicies':coverage_policies,'originalTestScripts':test_scripts,'inputFiles':inputs}[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8803421Z [36;1mout=Path(os.environ['RUNNER_TEMP'])/'plan';out.mkdir();(out/'plan.json').write_text(json.dumps(record,indent=2)+'\n')[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8804165Z [36;1m(out/'catalog-registry.json').write_bytes(registry_path.read_bytes());(out/'executed-workflow.yml').write_bytes(Path('.github/workflows/joystick-catalog-macos.yml').read_bytes())[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8804627Z [36;1mwith open(os.environ['GITHUB_OUTPUT'],'a') as stream:[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8805015Z [36;1m  stream.write('build_matrix='+json.dumps(build,separators=(',',':'))+'\nverify_matrix='+json.dumps(verify,separators=(',',':'))+'\n')[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8805325Z [36;1mPY[0m
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8825657Z shell: /usr/bin/bash -e {0}
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8825838Z env:
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8826006Z   REQUESTED_SOURCE: 06f1ab2b77e45d5fabcbd7233f8d3e9279a9d5c7
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8826218Z   REQUESTED_BATCHES: racing-03
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.8826357Z ##[endgroup]
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.9717987Z Traceback (most recent call last):
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.9718684Z   File "<stdin>", line 25, in <module>
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.9719154Z   File "/home/runner/work/pureTV/pureTV/joystick-games/tools/macos-coverage.py", line 39, in policy
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.9719817Z     assert renderers==['webgl2'],'Limited coverage requires the exact WebGL2 renderer plan'
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.9720324Z            ^^^^^^^^^^^^^^^^^^^^^
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.9720629Z AssertionError: Limited coverage requires the exact WebGL2 renderer plan
+plan	Validate frozen source and registered batches	2026-11-19T19:39:12.9881524Z ##[error]Process completed with exit code 1.
