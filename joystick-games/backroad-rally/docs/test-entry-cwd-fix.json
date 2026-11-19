@@ -1,0 +1,55 @@
+{
+  "time": "2026-11-19T19:25:48.142315+00:00",
+  "originalMacRunId": 44596707197,
+  "originalMacSource": "e347d691d94042021717bd0a331371451d113a48",
+  "change": "Run the unchanged original Vitest suites with actual process.cwd=src/upstream; --root alone did not move process.cwd",
+  "oldTestCommand": "vitest run --root src/upstream --configLoader runner --no-cache --no-fsModuleCache",
+  "newTestCommand": "cd src/upstream && vitest run --configLoader runner --no-cache --no-fsModuleCache",
+  "packageJsonSha256": "a9062b50e0012d018ed0c26f2abb93c87710ffee3350402f67125e17baa94c70",
+  "oldPackageJsonSha256": "e81fc6f34927748227eb32cd13dfdf64e92b779aa95bc82199bb0ddc6a3398dd",
+  "resourceBytesUnchanged": [
+    {
+      "path": "public/audio/mix.json",
+      "bytes": 4249,
+      "sha256": "63fc6509402c62324686a8ee585cd625aa5b8d244a70abbaf04f0e5234ff40e2",
+      "unchangedFromOriginalMacSource": true
+    },
+    {
+      "path": "public/data/menu.json",
+      "bytes": 2822,
+      "sha256": "198988baa6d7d9293ab66fa0f853a23018fda46f1506290a513e3519d42b1d45",
+      "unchangedFromOriginalMacSource": true
+    },
+    {
+      "path": "public/data/cars_tuning.json",
+      "bytes": 8629,
+      "sha256": "f04c2d9c42c8ab1c0bd09c649c2ef15f2899b22e8816d55df306d93a408e4ca4",
+      "unchangedFromOriginalMacSource": true
+    }
+  ],
+  "targeted": {
+    "log": "test-cwd-targeted.log",
+    "command": "npm test -- test/audio.test.ts test/menus.test.ts test/tuning.test.ts --maxWorkers=1",
+    "suitesPassed": 3,
+    "testsPassed": 38,
+    "exitCode": 0
+  },
+  "wholeEntry": {
+    "log": "test-cwd-full.log",
+    "command": "nice -n 19 npm test -- --maxWorkers=1",
+    "exitCode": 1,
+    "suitesPassed": 18,
+    "suitesFailed": 2,
+    "testsPassed": 167,
+    "testsFailed": 9,
+    "exceptions": "All9 are original5000ms timeouts:3 stageSeams and6 stages decode; no ENOENT remains",
+    "conditions": "2CPUshared environment with active SwiftShader browser, this test process nice19 and one worker",
+    "interpretation": "Timeouts occurred under resource contention; not claimed as a full pass. Same unchanged suites passed in original Mac run. No test timeout, assertions, clock or model changed.",
+    "next": "The next real Mac source workflow must strictly rerun the complete original entry"
+  },
+  "distFilesByteIdentical": 333,
+  "distModified": false,
+  "sourceSymlinks": [],
+  "nestedDependencyCacheCreated": false,
+  "testsOrResourcesModified": false
+}

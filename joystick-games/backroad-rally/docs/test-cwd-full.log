@@ -1,0 +1,81 @@
+
+> puretv-backroad-rally@0.1.0 test
+> cd src/upstream && vitest run --configLoader runner --no-cache --no-fsModuleCache --maxWorkers=1
+
+
+ RUN  v5.0.4 /dev/shm/puretv-submit/joystick-games/backroad-rally/src/upstream
+
+stdout | test/stageSeams.test.ts > stage japan terrain > has cracks as converted, and none after weldSeams
+japan: 9059 vertices welded, largest move 2.6 cm, 306 ms
+
+stdout | test/stageSeams.test.ts > stage alps terrain > has cracks as converted, and none after weldSeams
+alps: 9100 vertices welded, largest move 2.6 cm, 188 ms
+
+stdout | test/stageSeams.test.ts > stage arizona terrain > has cracks as converted, and none after weldSeams
+arizona: 10512 vertices welded, largest move 2.6 cm, 385 ms
+
+ ❯ test/stageSeams.test.ts (6 tests | 3 failed) 31239ms
+   ❯ stage japan terrain (1)
+     × has cracks as converted, and none after weldSeams 7231ms
+   ❯ stage alps terrain (1)
+     × has cracks as converted, and none after weldSeams 7118ms
+   ❯ stage arizona terrain (1)
+     × has cracks as converted, and none after weldSeams 6557ms
+ ❯ test/stages.test.ts (14 tests | 6 failed) 52109ms
+   ❯ stage finland (2)
+     × decodes the instance table onto the stage 13978ms
+   ❯ stage japan (2)
+     × decodes the instance table onto the stage 12811ms
+   ❯ stage alps (2)
+     × decodes the instance table onto the stage 8369ms
+   ❯ stage wales (2)
+     × decodes the instance table onto the stage 5488ms
+   ❯ stage arizona (2)
+     × decodes the instance table onto the stage 5213ms
+   ❯ stage vermont (2)
+     × decodes the instance table onto the stage 6224ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/stageSeams.test.ts > stage japan terrain > has cracks as converted, and none after weldSeams
+ FAIL  test/stageSeams.test.ts > stage alps terrain > has cracks as converted, and none after weldSeams
+ FAIL  test/stageSeams.test.ts > stage arizona terrain > has cracks as converted, and none after weldSeams
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ test/stageSeams.test.ts:93:3
+     91|
+     92| describe.each(STAGES)('stage %s terrain', (id) => {
+     93|   it('has cracks as converted, and none after weldSeams', async () => {
+       |   ^
+     94|     const parts = await decode(id);
+     95|     const before = seamGaps(parts);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  test/stages.test.ts > stage finland > decodes the instance table onto the stage
+ FAIL  test/stages.test.ts > stage japan > decodes the instance table onto the stage
+ FAIL  test/stages.test.ts > stage alps > decodes the instance table onto the stage
+ FAIL  test/stages.test.ts > stage wales > decodes the instance table onto the stage
+ FAIL  test/stages.test.ts > stage arizona > decodes the instance table onto the stage
+ FAIL  test/stages.test.ts > stage vermont > decodes the instance table onto the stage
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ test/stages.test.ts:17:3
+     15| describe.each(STAGES)('stage %s', (id) => {
+     16|   const st = json<StageJson>(`data/stages/${id}.json`);
+     17|   it('decodes the instance table onto the stage', async () => {
+       |   ^
+     18|     const buf = readFileSync(pub(`data/stages/${id}.bin`));
+     19|     const bin = await decodeInstances(st.bin, buf.buffer.slice(buf.byt…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+
+ Test Files  2 failed | 18 passed (20)
+      Tests  9 failed | 167 passed (176)
+   Start at  19:23:06
+   Duration  110.60s (tests 90%, transform 5%, import 5%, worker 1%)
+
+    Isolate  20 workers spawned · ~465ms startup each (spawn + environment, per file)
+             at least ~8.84s faster with isolate: false — reuses workers across files instead of one per file
+
