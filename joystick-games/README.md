@@ -31,7 +31,7 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 | [Ponpoko Kart](ponpoko-kart/) | 验证中 | [DMG](ponpoko-kart/macos/PonpokoKart-0.1.0-macos-universal.dmg) · [ZIP](ponpoko-kart/macos/PonpokoKart-0.1.0-macos-universal.zip) |
 | [Penguintrack](penguintrack/) | 验证中 | [DMG](penguintrack/macos/Penguintrack-0.1.0-macos-universal.dmg) · [ZIP](penguintrack/macos/Penguintrack-0.1.0-macos-universal.zip) |
 | [Last Track](last-track/) | 验证中 | [DMG](last-track/macos/LastTrack-0.1.0-macos-universal.dmg) · [ZIP](last-track/macos/LastTrack-0.1.0-macos-universal.zip) |
-| [Dirt Crown](dirt-crown/) | 验证中 | [DMG](dirt-crown/macos/DirtCrown-0.1.0-macos-universal.dmg) · [ZIP](dirt-crown/macos/DirtCrown-0.1.0-macos-universal.zip) |
+| [Dirt Crown](dirt-crown/) | [APK](dirt-crown/dirt-crown-0.1.0.apk) | [DMG](dirt-crown/macos/DirtCrown-0.1.0-macos-universal.dmg) · [ZIP](dirt-crown/macos/DirtCrown-0.1.0-macos-universal.zip) |
 
 Kart Rush Windows：[安装 EXE](kart-rush/KartRush-0.1.0-windows-x64-setup.exe) · [便携 ZIP](kart-rush/KartRush-0.1.0-windows-x64.zip)，需要 Windows 10 1903+ x64 与 WebView2 Runtime；未做 Authenticode 签名。它已具备三个平台的下载文件，其他八款继续验证。
 
