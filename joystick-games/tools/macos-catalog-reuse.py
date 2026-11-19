@@ -16,6 +16,8 @@ QA_FILES = {
     'joystick-games/tools/macos-verify.py',
     'joystick-games/tools/macos-packages.py',
     'joystick-games/tools/macos-catalog-reuse.py',
+    'joystick-games/tools/macos-capability.py',
+    'joystick-games/tools/macos-coverage.py',
     'joystick-games/tools/qa-plan.py',
     # Executed only by the CI verifier; never copied into the shipped .app.
     'joystick-games/shared/macos/tools/allow-local-network.py',

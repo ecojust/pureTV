@@ -1,0 +1,151 @@
+{
+  "sourceCommit": "33e8183835f5eaf6c7361eaa41ff34c1462dfdee",
+  "batch": "adventure-01",
+  "runner": "macos-latest",
+  "expectedArchitecture": "arm64",
+  "status": "passed",
+  "games": [
+    {
+      "game": "glup",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/glup",
+            "--output",
+            "/Users/runner/work/_temp/qa/glup/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "glup/package-verification.log",
+          "startedAt": "2026-11-19T19:01:04.498008+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "glup",
+            "--app",
+            "/Users/runner/work/_temp/packages/glup/installed/GLUP.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/glup/native"
+          ],
+          "status": "passed",
+          "log": "glup/native.log",
+          "startedAt": "2026-11-19T19:01:29.858668+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "glup",
+            "--app",
+            "/Users/runner/work/_temp/packages/glup/installed/GLUP.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/glup/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "glup/occupied-port.log",
+          "startedAt": "2026-11-19T19:02:34.638054+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "glup",
+            "--app",
+            "/Users/runner/work/_temp/packages/glup/installed/GLUP.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/glup/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "glup/rosetta.log",
+          "startedAt": "2026-11-19T19:03:30.668690+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "emberbrood",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/emberbrood",
+            "--output",
+            "/Users/runner/work/_temp/qa/emberbrood/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "emberbrood/package-verification.log",
+          "startedAt": "2026-11-19T19:04:33.643417+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "emberbrood",
+            "--app",
+            "/Users/runner/work/_temp/packages/emberbrood/installed/Emberbrood.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/emberbrood/native"
+          ],
+          "status": "passed",
+          "log": "emberbrood/native.log",
+          "startedAt": "2026-11-19T19:04:51.170043+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "emberbrood",
+            "--app",
+            "/Users/runner/work/_temp/packages/emberbrood/installed/Emberbrood.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/emberbrood/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "emberbrood/occupied-port.log",
+          "startedAt": "2026-11-19T19:05:37.366162+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "emberbrood",
+            "--app",
+            "/Users/runner/work/_temp/packages/emberbrood/installed/Emberbrood.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/emberbrood/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "emberbrood/rosetta.log",
+          "startedAt": "2026-11-19T19:06:22.206194+00:00",
+          "returncode": 0
+        }
+      ]
+    }
+  ]
+}

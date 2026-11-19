@@ -178,12 +178,19 @@ class Check:
     def __init__(self,args):
         self.args=args;self.out=args.output.resolve();self.out.mkdir(parents=True,exist_ok=True);assert not any(self.out.iterdir())
         self.diag=self.out/'diagnostics';self.diag.mkdir();self.processes=[];self.logs=[];self.client=None;self.proxy=None;self.app=None;self.blocker=None;self.held=set();self.stop=threading.Event();self.last=None
+        self.phase='package_setup'
         self.report={'status':'running','qaSourceCommit':os.environ.get('GITHUB_SHA'),'artifactSourceCommit':os.environ.get('ARTIFACT_SOURCE_COMMIT',os.environ.get('GITHUB_SHA')),'artifactRunId':os.environ.get('ARTIFACT_SOURCE_RUN',os.environ.get('GITHUB_RUN_ID')),'startedAt':now(),'game':args.game,'method':'Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.','physicalEsp32Tested':False,'tests':[],'wire':[],'observerErrors':[],'observerConnectionEnds':[],'snapshots':[],'screenshots':[],'sourceHashes':{str(p.relative_to(ROOT)):digest(p) for p in [Path(__file__),SDK,SHARED/'tools/webgl-probe.swift',SHARED/'tools/allow-local-network.py',SHARED/'Sources/main.swift',SHARED/'Sources/ControllerServer.swift',SHARED/'Web/bridge.js']}}
+        self.report.update(qaRunId=int(os.environ['GITHUB_RUN_ID']) if os.environ.get('GITHUB_RUN_ID') else None,
+                           qaRunAttempt=int(os.environ['GITHUB_RUN_ATTEMPT']) if os.environ.get('GITHUB_RUN_ATTEMPT') else None,
+                           runnerKind=os.environ.get('RUNNER_KIND'),runnerName=os.environ.get('RUNNER_NAME'))
     def process(self,argv,name):
         log=(self.out/name).open('wb');self.logs.append(log);p=subprocess.Popen([str(a) for a in argv],stdout=log,stderr=subprocess.STDOUT);self.processes.append(p);return p
     def read(self):
         if self.app and self.app.poll() is not None:raise RuntimeError('App exited '+str(self.app.returncode))
-        try:self.last=json.loads((self.diag/'state.json').read_text());return self.last
+        try:
+            self.last=json.loads((self.diag/'state.json').read_text())
+            if self.last.get('processArchitecture') in ['arm64','x86_64']:self.report['nativeProcessArchitecture']=self.last['processArchitecture']
+            return self.last
         except (OSError,ValueError):return None
     def until(self,predicate,label,seconds=25):
         end=time.monotonic()+seconds
@@ -394,7 +401,9 @@ class Check:
             domain='com.ecojust.joystick.qa.'+self.args.game+'.'+uuid.uuid4().hex;self.preferences_domain=domain;self.bundle_identifier=info['CFBundleIdentifier']
             self.report['freshInstallSetup']={'method':'New randomly named app preference suite; existing user domains are untouched','preferencesDomain':domain,'reusedAcrossRestartOnly':True}
             self.launch_command=prefix+[binary,'--diagnostics-dir',self.diag,'--preferences-domain',domain,'--language','zh']
+            self.phase='native_launch'
             self.app=self.process(self.launch_command,'native.log')
+            self.phase='initialization'
             initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)
             classification=initialization(initial['game'],probe,getattr(self,'renderers',None));self.report['initialization']={'classification':classification,'observedGame':initial['game']}
             assert classification!='initialization_error','Actual game initialization failed: '+json.dumps(initial['game'],ensure_ascii=False)
@@ -404,15 +413,25 @@ class Check:
             if self.report['renderer'].startswith('webgl'):self.report['webglAvailable']=self.graphics
             self.report['renderingAvailable']=self.graphics
             assert self.graphics or (self.args.game in LEGACY_GAMES and classification in ['webgl_unavailable','webgl_incomplete'] and self.args.allow_unavailable_webgl), 'This platform must render the actual game'
+            self.phase='gameplay_and_controller'
             self.screenshot('menu.png');self.check('Bonjour actual port and version',self.discovery);self.check('Original SDK and complete identity card' if self.graphics else 'Original SDK native receiver without renderer',self.connect)
             if self.graphics:self.check('Real gameplay actions and START pause/resume',self.gameplay)
             self.check('Three foreground cycles keep transport stable',self.focus);self.check('Disconnect, held sync and same-ID reconnect',self.reconnect)
             if hasattr(self,'capture_storage'):self.check('Real game storage reaches native persistence',self.capture_storage)
             self.check('Same-sequence ACK for every SDK message',self.acks);self.check('Normal quit closes TCP',self.quit)
-            if hasattr(self,'restart_storage'):self.check('Native relaunch restores actual saves at a different origin',self.restart_storage)
+            if hasattr(self,'restart_storage'):
+                self.phase='storage_restart'
+                self.check('Native relaunch restores actual saves at a different origin',self.restart_storage)
             self.report['status']='passed' if self.graphics else 'limited_graphics';self.report['fullGameCompletionTested']=False
             if not self.graphics:self.report['limitations']=['Runner WebGL2 initialization is unavailable or its shader-precision API is incomplete, as recorded by the actual app and independent probe. Native TCP/Bonjour/ACK/lifecycle and error screen only; no gameplay or rendered controller-card claim.']
-        except Exception:self.report['status']='failed';self.report['error']=traceback.format_exc();self.report['lastState']=self.last;print(self.report['error'],file=sys.stderr)
+            self.phase='finished'
+        except Exception:
+            self.report['status']='failed';self.report['error']=traceback.format_exc();self.report['lastState']=self.last
+            self.report['failurePhase']=self.phase
+            self.report['nativeProcessAlive']=self.app is not None and self.app.poll() is None
+            timestamp=(self.last or {}).get('timestamp')
+            self.report['lastStateFresh']=type(timestamp) in [int,float] and 0<=time.time()-timestamp<=5
+            print(self.report['error'],file=sys.stderr)
         finally:
             self.stop.set()
             if self.client:self.client.disconnect()
@@ -424,7 +443,7 @@ class Check:
                     except subprocess.TimeoutExpired:p.kill()
             if self.blocker:self.blocker.close()
             for log in self.logs:log.close()
-            self.report['finishedAt']=now();(self.out/'report.json').write_text(json.dumps(self.report,ensure_ascii=False,indent=2)+'\n');shutil.copy2(__file__,self.out/'executed-macos-verify.py')
+            self.report['phase']=self.phase;self.report['finishedAt']=now();(self.out/'report.json').write_text(json.dumps(self.report,ensure_ascii=False,indent=2)+'\n');shutil.copy2(__file__,self.out/'executed-macos-verify.py')
         return 0 if self.report['status'] in ['passed','limited_graphics'] else 1
 class CatalogCheck(Check):
     """Native observations shared by every registered Canvas/DOM/WebGL game."""
