@@ -14,6 +14,7 @@ import sys
 import time
 
 FLAG = 'SUPERVISE_PON_EMULATOR'
+GPU_FLAG = 'PON_DISABLE_VULKAN'
 EXPECTED_ARGS = ['-port', '5554', '-avd', 'JoystickGamesValidation', '-no-window',
                  '-memory', '2048', '-gpu', 'swiftshader_indirect', '-noaudio', '-no-boot-anim', '-no-snapshot']
 MAX_OUTPUT = 1024 * 1024
@@ -45,7 +46,16 @@ def atomic_json(path, value):
         if created and temporary.exists(): temporary.unlink()
 
 
+def disable_vulkan(environment=os.environ):
+    value = environment.get(GPU_FLAG, 'false')
+    assert value in ('false', 'true'), 'Invalid Vulkan diagnostic opt-in'
+    if value == 'true':
+        assert environment.get(FLAG, 'false') == 'true', 'Vulkan comparison requires exact Pon supervision'
+    return value == 'true'
+
+
 def enabled(environment=os.environ):
+    disable_vulkan(environment)
     value = environment.get(FLAG, 'false')
     assert value in ('false', 'true'), 'Invalid supervisor opt-in'
     if value == 'false':
@@ -60,6 +70,13 @@ def enabled(environment=os.environ):
     for name in ('GITHUB_RUN_ID', 'GITHUB_RUN_ATTEMPT'):
         assert re.fullmatch('[1-9][0-9]*', environment.get(name, ''))
     return True
+
+
+def expected_arguments(environment=os.environ):
+    if disable_vulkan(environment):
+        assert enabled(environment), 'Vulkan comparison requires exact Pon supervision'
+        return [*EXPECTED_ARGS, '-feature', '-Vulkan']
+    return list(EXPECTED_ARGS)
 
 
 def process_identity(pid):
@@ -271,6 +288,7 @@ def restore(output, *, stop=True):
 
 
 def prepare(sdk, output):
+    arguments = expected_arguments()
     sdk = Path(sdk).resolve(); entry = sdk / 'emulator/emulator'; backup = entry.with_name(BACKUP_NAME)
     assert not entry.parent.is_symlink() and entry.parent.resolve() == sdk / 'emulator'
     assert not entry.is_symlink() and stat.S_ISREG(entry.lstat().st_mode) and entry.stat().st_mode & 0o111
@@ -284,7 +302,8 @@ def prepare(sdk, output):
     state = {'schemaVersion': 1, 'status': 'preparing', 'sdk': str(sdk), 'entry': str(entry), 'backup': str(backup),
              'output': str(output), 'sourceSha256': hashlib.sha256(source).hexdigest(),
              'original': {'sha256': digest(entry), 'bytes': entry.stat().st_size, 'mode': stat.S_IMODE(entry.stat().st_mode)},
-             'shimSha256': hashlib.sha256(wrapper).hexdigest(), 'expectedArguments': EXPECTED_ARGS,
+             'shimSha256': hashlib.sha256(wrapper).hexdigest(), 'expectedArguments': arguments,
+             'disableVulkan': disable_vulkan(),
              'qaSourceSha': os.environ.get('GITHUB_SHA'), 'qaRunId': os.environ.get('GITHUB_RUN_ID'),
              'qaRunAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'), 'game': 'ponpoko-kart', 'restored': False}
     atomic_json(output / 'state.json', state)
@@ -323,6 +342,8 @@ def assert_ready(output):
     assert digest(state['entry']) == state['shimSha256'] and digest(state['backup']) == state['original']['sha256']
     assert state['qaSourceSha'] == os.environ['GITHUB_SHA'] and state['qaRunId'] == os.environ['GITHUB_RUN_ID']
     assert state['qaRunAttempt'] == os.environ['GITHUB_RUN_ATTEMPT']
+    assert state['disableVulkan'] is disable_vulkan(), 'Vulkan diagnostic selection changed after preparation'
+    assert state['expectedArguments'] == expected_arguments(), 'Unexpected prepared emulator arguments'
     return state
 
 
@@ -335,7 +356,7 @@ def launch(output, arguments):
     if arguments in (['-version'], ['-list-avds'], ['-accel-check'], ['-help'], ['-help-all']):
         os.execv(state['backup'], [state['entry'], *arguments])
     assert_ready(output)
-    assert arguments == EXPECTED_ARGS, 'Unexpected supervised emulator arguments'
+    assert arguments == state['expectedArguments'], 'Unexpected supervised emulator arguments'
     result = run_child([state['entry'], *arguments], Path(state['backup']), output / 'launch', sdk=state['sdk'], forward_output=True)
     return 128 - result['returnCode'] if result['returnCode'] < 0 else result['returnCode']
 

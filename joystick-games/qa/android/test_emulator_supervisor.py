@@ -65,6 +65,7 @@ class SupervisorTests(unittest.TestCase):
         self.entry.parent.mkdir(parents=True); shutil.copyfile(self.binary, self.entry); self.entry.chmod(0o755)
         self.original = self.entry.read_bytes(); self.output = self.root / 'observation'
         self.env = {'SUPERVISE_PON_EMULATOR': 'true', 'PURETV_DISPOSABLE_EMULATOR': '1', 'GITHUB_ACTIONS': 'true',
+                    'PON_DISABLE_VULKAN': 'false',
                     'GAME': 'ponpoko-kart', 'ARTIFACT_SOURCE': '8f283c73f52f857777306eafc88f710262367834',
                     'ARTIFACT_RUN': '44597115244', 'ARTIFACT_EXPORT': '4249f5c0ec3053a1dec652a7880a040e1bb143f0',
                     'ARTIFACT_ID': '', 'ARTIFACT_ATTEMPT': '', 'GITHUB_SHA': 'a' * 40, 'GITHUB_RUN_ID': '123',
@@ -98,10 +99,55 @@ class SupervisorTests(unittest.TestCase):
                 with patch.dict(os.environ, {key: value}):
                     with self.assertRaises(AssertionError, msg=key): exec(guard, {'os': os})
 
+    def test_vulkan_flag_defaults_off_and_requires_supervised_exact_original(self):
+        environment = dict(self.env); environment.pop('PON_DISABLE_VULKAN')
+        self.assertFalse(m.disable_vulkan(environment))
+        self.assertEqual(m.expected_arguments(environment), m.EXPECTED_ARGS)
+        environment['PON_DISABLE_VULKAN'] = 'true'
+        self.assertEqual(m.expected_arguments(environment), m.EXPECTED_ARGS + ['-feature', '-Vulkan'])
+        for key, value in [('SUPERVISE_PON_EMULATOR', 'false'), ('GAME', 'night-racer'),
+                           ('ARTIFACT_SOURCE', 'b'*40), ('ARTIFACT_RUN', '1'),
+                           ('ARTIFACT_EXPORT', 'c'*40), ('ARTIFACT_ID', '1')]:
+            with self.assertRaises(AssertionError, msg=key): m.expected_arguments(dict(environment, **{key: value}))
+        for value in ['', 'TRUE', '1', '-feature -Vulkan']:
+            with self.assertRaises(AssertionError): m.enabled(dict(environment, PON_DISABLE_VULKAN=value))
+        with patch.dict(os.environ, {'SUPERVISE_PON_EMULATOR': 'false', 'PON_DISABLE_VULKAN': 'true'}):
+            result = subprocess.run([sys.executable, str(MODULE), 'prepare', '--sdk', str(self.sdk), '--output', str(self.output)], capture_output=True)
+        self.assertNotEqual(result.returncode, 0); self.assertFalse(self.output.exists())
+        self.assertEqual(self.entry.read_bytes(), self.original)
+
+    def test_actual_workflow_vulkan_scope_and_only_two_added_argument_tokens(self):
+        workflow = (ROOT/'.github/workflows/joystick-catalog-android-runtime.yml').read_text()
+        start = workflow.index("          assert os.environ['SUPERVISE_PON_EMULATOR']")
+        guard = compile(textwrap.dedent(workflow[start:workflow.index('          out=Path(', start)]), '<workflow-vulkan-guard>', 'exec')
+        with patch.dict(os.environ, {'PON_DISABLE_VULKAN': 'true', 'GAMES': 'ponpoko-kart',
+                                    'BATCH': 'racing-01', 'CONFIRM_BACKROAD_INSTALL': 'false'}):
+            exec(guard, {'os': os})
+            for key, value in [('SUPERVISE_PON_EMULATOR', 'false'), ('GAMES', 'night-racer'),
+                               ('GAMES', 'ponpoko-kart,night-racer'), ('BATCH', 'racing-02'),
+                               ('ARTIFACT_SOURCE', 'b'*40), ('ARTIFACT_RUN', '1'),
+                               ('ARTIFACT_EXPORT', 'c'*40), ('ARTIFACT_ID', '1'),
+                               ('ARTIFACT_ATTEMPT', '1'), ('CONFIRM_BACKROAD_INSTALL', 'true'),
+                               ('PON_DISABLE_VULKAN', '1')]:
+                with patch.dict(os.environ, {key: value}):
+                    with self.assertRaises(AssertionError, msg=key): exec(guard, {'os': os})
+        options = next(line.strip().removeprefix('emulator-options: ') for line in workflow.splitlines()
+                       if line.strip().startswith('emulator-options: '))
+        selection = "${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}"
+        self.assertEqual(options.count(selection), 1)
+        prefix = ['-port', '5554', '-avd', 'JoystickGamesValidation']
+        self.assertEqual(prefix + options.replace(selection, '').split(), m.EXPECTED_ARGS)
+        self.assertEqual(prefix + options.replace(selection, ' -feature -Vulkan').split(),
+                         m.EXPECTED_ARGS + ['-feature', '-Vulkan'])
+        self.assertIn("emulator-build: '16970787'", workflow); self.assertIn('api-level: 36', workflow)
+        declared = workflow.split('      pon_disable_vulkan:', 1)[1].split('\n\nconcurrency:', 1)[0]
+        self.assertIn('default: false', declared); self.assertIn('type: boolean', declared)
+
     def test_atomic_install_queries_match_and_finally_restores_exact_original(self):
         state = self.prepared()
         try:
             self.assertEqual(state['status'], 'verified'); self.assertTrue(state['queriesIdentical'])
+            self.assertFalse(state['disableVulkan']); self.assertEqual(state['expectedArguments'], m.EXPECTED_ARGS)
             self.assertEqual(Path(state['backup']).read_bytes(), self.original)
             self.assertNotEqual(self.entry.read_bytes(), self.original)
             m.assert_ready(self.output)
@@ -194,6 +240,39 @@ class SupervisorTests(unittest.TestCase):
             self.assertNotEqual(bad.returncode, 0)
             alias = subprocess.run([str(self.entry), '@OtherAvd'], capture_output=True, timeout=5)
             self.assertNotEqual(alias.returncode, 0)
+        finally: m.restore(self.output)
+
+    def test_vulkan_comparison_real_child_receives_only_exact_selected_argv(self):
+        with patch.dict(os.environ, {'PON_DISABLE_VULKAN': 'true'}):
+            state = self.prepared()
+            try:
+                expected = m.EXPECTED_ARGS + ['-feature', '-Vulkan']
+                self.assertTrue(state['disableVulkan']); self.assertEqual(state['expectedArguments'], expected)
+                result = subprocess.run([str(self.entry), *expected], capture_output=True, timeout=5)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                report = json.loads((self.output/'launch/report.json').read_text())
+                self.assertEqual(report['arguments'], expected); self.assertIsNone(report['intervention'])
+                self.assertFalse(report['rootCauseProven'])
+                self.assertEqual((self.output/'launch/stdout.log').read_text().splitlines(),
+                                 ['argv0='+str(self.entry)] + ['arg'+str(i+1)+'='+arg for i,arg in enumerate(expected)])
+                for wrong in [m.EXPECTED_ARGS, expected + ['-feature', '-Vulkan'],
+                              m.EXPECTED_ARGS + ['-feature', 'Vulkan'], expected + ['-memory', '3072']]:
+                    failed = subprocess.run([str(self.entry), *wrong], capture_output=True, timeout=5)
+                    self.assertNotEqual(failed.returncode, 0)
+                    self.assertIn(b'Unexpected supervised emulator arguments', failed.stderr)
+            finally: m.restore(self.output)
+        self.assertEqual(self.entry.read_bytes(), self.original)
+
+    def test_vulkan_selection_or_prepared_arguments_cannot_drift_before_launch(self):
+        self.prepared()
+        try:
+            with patch.dict(os.environ, {'PON_DISABLE_VULKAN': 'true'}):
+                with self.assertRaisesRegex(AssertionError, 'selection changed'): m.assert_ready(self.output)
+            state = json.loads((self.output/'state.json').read_text())
+            state['expectedArguments'] += ['-feature', '-Vulkan']
+            (self.output/'state.json').write_text(json.dumps(state))
+            with self.assertRaisesRegex(AssertionError, 'prepared emulator arguments'): m.assert_ready(self.output)
+            self.assertFalse((self.output/'launch').exists())
         finally: m.restore(self.output)
 
     def child_case(self, name, mode, seconds=2, budget=4096):
