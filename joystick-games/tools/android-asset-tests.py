@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Resource-policy rejection and exact payload tests; no gameplay claims."""
 import copy
+import hashlib
 import importlib.util
 import json
 import os
@@ -63,7 +64,7 @@ class PolicyBoundaries(unittest.TestCase):
         valid = large_policy()
         mutations = [dict(valid, schemaVersion=True), dict(valid, schemaVersion=2),
                      dict(valid, maxAssetBytes=True), dict(valid, maxTotalBytes=1.0),
-                     dict(valid, maxApkBytes=100_000_001), dict(valid, maxAssetBytes=0),
+                     dict(valid, maxApkBytes=128_000_001), dict(valid, maxAssetBytes=0),
                      dict(valid, maxAssetBytes=64 * 1024 * 1024 + 1),
                      dict(valid, maxTotalBytes=256 * 1024 * 1024 + 1),
                      dict(valid, maxTotalBytes=valid['maxAssetBytes'] - 1),
@@ -77,11 +78,22 @@ class PolicyBoundaries(unittest.TestCase):
 
     def test_low_level_builder_keeps_a_hard_upper_bound(self):
         limits = dict(kit.DEFAULT_LIMITS, extraExtensions=('.glb',))
-        for bad in [dict(limits, maxApkBytes=100_000_001), dict(limits, maxAssetBytes=True),
+        for bad in [dict(limits, maxApkBytes=128_000_001), dict(limits, maxAssetBytes=True),
                     dict(limits, extraExtensions=['.exe']), dict(limits, extraExtensions=[[]]),
                     dict(limits, extraExtensions=['.glb', '.glb']), dict(limits, ignoreTotal=True)]:
             with self.subTest(limits=bad), self.assertRaises(ValueError):
                 kit.checked_limits(bad)
+
+    def test_explicit_128mb_cap_and_desktop_defaults(self):
+        meta=dict(metadata(),assetPolicy=dict(large_policy(),maxApkBytes=128_000_000))
+        entry={'packageName':meta['packageName'],'assetPolicy':meta['assetPolicy']}
+        for platform in ['android','macos','windows']:
+            self.assertEqual(policy.limits(meta,entry,platform)['maxApkBytes'],128_000_000)
+        self.assertEqual(kit.checked_limits(policy.android_limits(meta,entry))['maxApkBytes'],128_000_000)
+        self.assertEqual(policy.desktop_package_limit(meta,entry),128_000_000)
+        self.assertEqual(policy.desktop_package_limit(metadata()),100_000_000)
+        self.assertEqual(policy.limits(metadata())['maxApkBytes'],10_000_000)
+        self.assertEqual(policy.limits(metadata(),platform='windows'),policy.DEFAULT_MACOS)
 
 
 class ExactPayload(unittest.TestCase):
@@ -163,6 +175,25 @@ class ExactPayload(unittest.TestCase):
         with self.assertRaises(AssertionError):
             macos.copy_web_assets(self.assets, target, policy.DEFAULT_MACOS, explicit=True)
 
+    def test_real_opus_and_m4a_only_enter_explicit_payload_unchanged(self):
+        fixtures=ROOT/'joystick-games/tools/fixtures/audio'
+        records=json.loads((fixtures/'provenance.json').read_text())['files']
+        for name in ['backfire.opus','backfire.m4a']:
+            data=(fixtures/name).read_bytes()
+            self.assertEqual(hashlib.sha256(data).hexdigest(),records[name]['sha256'])
+            (self.assets/name).write_bytes(data)
+        self.assertTrue((self.assets/'backfire.opus').read_bytes().startswith(b'OggS'))
+        self.assertEqual((self.assets/'backfire.m4a').read_bytes()[4:8],b'ftyp')
+        with self.assertRaises(ValueError):kit.payload(self.game)
+        output=kit.payload(self.game,self.limits)
+        for name in ['backfire.opus','backfire.m4a']:
+            self.assertEqual(output[name],(fixtures/name).read_bytes())
+        target=self.root/'audio-mac';target.mkdir()
+        with self.assertRaises(AssertionError):macos.copy_web_assets(self.assets,target,policy.DEFAULT_MACOS)
+        macos.copy_web_assets(self.assets,target,policy.limits(self.meta,self.registration,'macos'),explicit=True)
+        for name in ['backfire.opus','backfire.m4a']:
+            self.assertEqual((target/name).read_bytes(),(fixtures/name).read_bytes())
+
 
 class NativeMime(unittest.TestCase):
     def test_actual_java_mime_method_with_jdk(self):
@@ -174,7 +205,8 @@ class NativeMime(unittest.TestCase):
         expected = {'car.glb': 'model/gltf-binary', 'CAR.GLB': 'model/gltf-binary', 'car.gltf': 'model/gltf+json',
                     'mesh.bin': 'application/octet-stream', 'decoder.wasm': 'application/wasm',
                     'car.ktx2': 'image/ktx2', 'sky.hdr': 'application/octet-stream',
-                    'font.woff2': 'font/woff2', 'music.mp3': 'audio/mpeg', 'unsafe.exe': None}
+                    'font.woff2': 'font/woff2', 'music.mp3': 'audio/mpeg',
+                    'backfire.opus':'audio/ogg','backfire.m4a':'audio/mp4','BACKFIRE.M4A':'audio/mp4','unsafe.exe': None}
         with tempfile.TemporaryDirectory(prefix='actual-mime-java-') as tmp:
             path = Path(tmp) / 'MimeFixture.java'
             path.write_text('public final class MimeFixture {\n' + method + '\npublic static void main(String[] args) { for (String arg: args) System.out.println(bundledAssetMime(arg)); }}\n')

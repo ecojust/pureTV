@@ -168,7 +168,9 @@ jobs:
           # Reuse jobs do not execute the build's shared suite. Compile and run
           # the unchanged production HTTP server on this actual QA runner too.
           asset_inputs={}
-          for name in ['.github/workflows/joystick-catalog-macos-runtime.yml','joystick-games/shared/macos/Sources/LocalAssetServer.swift','joystick-games/shared/macos/tests/local-assets.test.py']:
+          asset_sources=['.github/workflows/joystick-catalog-macos-runtime.yml','joystick-games/shared/macos/Sources/LocalAssetServer.swift','joystick-games/shared/macos/tests/local-assets.test.py']
+          asset_sources += [path.as_posix() for path in sorted(Path('joystick-games/tools/fixtures/audio').glob('*')) if path.is_file()]
+          for name in asset_sources:
             data=Path(name).read_bytes();assert data==subprocess.check_output(['git','show',qa_source+':'+name]), 'Uncommitted asset HTTP test input'
             target=out/'executed-source'/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
             asset_inputs[name]={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}

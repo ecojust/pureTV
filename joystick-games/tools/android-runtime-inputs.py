@@ -65,6 +65,7 @@ def expected_inputs(root, commit, slug):
              *[game + name for name in ('game.json', 'package.json', 'package-lock.json', 'build.mjs')]}
     required = tree(root, commit, 'resource/game-kit/android/src/main', game + 'src', game + 'dist', 'joystick-games/shared/web')
     required |= {n for n in tree(root, commit, 'joystick-games/tools') if fnmatch.fnmatch(n, 'joystick-games/tools/android-*.py')}
+    required |= tree(root, commit, 'joystick-games/tools/fixtures/audio')
     required |= tree(root, commit, game + 'icon.xml')
     if slug not in GAMES:
         registry = build.registry_data(frozen(root, commit, build.REGISTRY))

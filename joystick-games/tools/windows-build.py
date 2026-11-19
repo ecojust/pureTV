@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Build the original Windows x64 host, exact frozen web assets and NSIS installer."""
-import argparse, hashlib, json, os, platform, re, shutil, subprocess, sys, urllib.request, zipfile
+import argparse, hashlib, importlib.util, json, os, platform, re, shutil, subprocess, sys, urllib.request, zipfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 SHARED=ROOT/'joystick-games/shared/windows'
+scope_spec=importlib.util.spec_from_file_location('windows_inputs',Path(__file__).with_name('windows-inputs.py'));source_scope=importlib.util.module_from_spec(scope_spec);scope_spec.loader.exec_module(source_scope)
+policy_spec=importlib.util.spec_from_file_location('asset_policy',Path(__file__).with_name('asset-policy.py'));asset_policy=importlib.util.module_from_spec(policy_spec);policy_spec.loader.exec_module(asset_policy)
 def digest(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def inventory(folder):return {p.relative_to(folder).as_posix():{'bytes':p.stat().st_size,'sha256':digest(p)} for p in sorted(folder.rglob('*')) if p.is_file()}
 def run(*cmd):subprocess.run([str(x) for x in cmd],check=True)
@@ -99,6 +101,26 @@ def toolchain(work,nsis):
             'compilerRecordSha256':digest(records[0]),'windowsSdkVersion':sdk,
             'nsisVersion':subprocess.check_output([nsis,'/VERSION'],text=True).strip(),'nsisExecutableSha256':digest(Path(nsis))}
 
+def verify_web_assets(folder,meta,identity,with_host=False):
+    explicit=asset_policy.declaration(meta,identity);limits=asset_policy.limits(meta,identity,'windows')
+    types={'.html','.js','.css','.json','.txt','.svg','.png','.webp','.jpg','.jpeg','.ico','.woff','.woff2','.ttf','.otf','.ogg','.wav','.mp3'}
+    if explicit:types.update(asset_policy.EXTRA_EXTENSIONS)
+    files=[]
+    for path in folder.rglob('*'):
+        assert not path.is_symlink(),'Symlink distribution asset: '+str(path)
+        if not path.is_file():continue
+        relative=path.relative_to(folder)
+        assert not any(part in source_scope.CACHE for part in relative.parts),'Cache or dependency directory inside packaged assets'
+        assert all(re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]*',part) for part in relative.parts),'Unsafe asset path: '+str(relative)
+        assert path.suffix.lower() in types,'Unsupported distribution asset: '+str(relative)
+        assert with_host or relative.as_posix() not in ('bridge.js','diagnostics.js'),'Reserved host asset: '+str(relative)
+        assert path.stat().st_size<=limits['maxAssetBytes'],'Asset exceeds declared budget: '+str(relative)
+        files.append(path)
+    assert (folder/'tv.html').is_file(),'Missing TV entry page'
+    assert len(files)<=asset_policy.MAX_FILES,'Too many distribution assets'
+    total=sum(path.stat().st_size for path in files);assert total<=limits['maxTotalBytes'],'Web assets exceed declared total budget'
+    return {'explicit':explicit is not None,'limits':limits,'files':len(files),'totalBytes':total,'resourceServing':'WebView2 virtual-host folder mapping; browser MIME detection','expectedAudioMimeTypes':{'.opus':'audio/ogg','.m4a':'audio/mp4'} if explicit else {}}
+
 def build(args):
     assert sys.platform=='win32' and platform.machine().lower() in ('amd64','x86_64'),'Requires Windows x64 with MSVC'
     registry=json.loads((ROOT/'joystick-games/catalog-registry.json').read_text(encoding='utf-8'));assert args.game in registry['games']
@@ -108,25 +130,23 @@ def build(args):
     assert isinstance(meta['storageKeys'],list) and len(meta['storageKeys'])<=64
     assert all(isinstance(k,str) and re.fullmatch(r'[A-Za-z0-9_.:%-]{1,128}',k) and k not in ('__proto__','joystick.language') for k in meta['storageKeys'])
     assert len(set(meta['storageKeys']))==len(meta['storageKeys'])
-    selected=[Path(__file__),ROOT/'joystick-games/catalog-registry.json']
-    for directory in [SHARED,game,ROOT/'joystick-games/shared/web']:
-        for p in directory.rglob('*'):
-            if 'node_modules' in p.relative_to(directory).parts:continue
-            assert not p.is_symlink(),p
-            if p.is_file():selected.append(p)
+    selection=source_scope.select(args.game);selected=[ROOT/name for name in selection['files']]
     source=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
     source_files={};source_blobs=committed_blobs(source)
+    source_scope.verify_complete_git_selection(selection,source_blobs)
     for p in sorted(set(selected)):
         name=p.relative_to(ROOT).as_posix();raw=p.read_bytes()
         assert raw==committed_bytes(source_blobs,name),'Uncommitted build input: '+name
         source_files[name]={'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}
+    verify_web_assets(game/'dist',meta,identity)
     out=args.output.resolve();assert not out.exists() or not any(out.iterdir()),'Output must be new/empty';out.mkdir(parents=True,exist_ok=True)
     deps=args.dependencies.resolve();lock=dependencies(deps)
     work=out/'build';run('cmake','-S',SHARED,'-B',work,'-A','x64','-DPURETV_DEPS='+str(deps));run('cmake','--build',work,'--config','Release');run('ctest','--test-dir',work,'-C','Release','--output-on-failure')
     folder=out/(identity['executable']+'-'+meta['version']+'-windows-x64');folder.mkdir();shutil.copy2(work/'Release/PureTVGame.exe',folder/'PureTVGame.exe');shutil.copy2(game/'game.json',folder/'game.json');shutil.copytree(game/'dist',folder/'Web')
     for p in (SHARED/'Web').iterdir():
         assert not (folder/'Web'/p.name).exists();shutil.copy2(p,folder/'Web'/p.name)
-    for name in ('LICENSE','NOTICE.md','upstream.json'):
+    web_policy=verify_web_assets(folder/'Web',meta,identity,with_host=True)
+    for name in ('LICENSE','LICENSE.txt','NOTICE.md','upstream.json'):
         if (game/name).is_file():shutil.copy2(game/name,folder/name)
     notices=folder/'Host-Licenses';notices.mkdir();shutil.copy2(deps/'json-LICENSE.MIT',notices/'nlohmann-json-MIT.txt')
     for p in (deps/'webview2').iterdir():
@@ -138,9 +158,11 @@ def build(args):
             if p.is_file():z.write(p,p.relative_to(out))
     installer=out/(folder.name+'-setup.exe');nsis=shutil.which('makensis') or str(Path(os.environ.get('ProgramFiles(x86)','C:/Program Files (x86)'))/'NSIS/makensis.exe');assert Path(nsis).is_file(),'NSIS must be installed'
     script=out/'installer.nsi';script.write_text(installer_text(meta,identity,folder,installer,inventory(folder)),encoding='utf-8');run(nsis,'/V2',script)
+    package_limit=asset_policy.desktop_package_limit(meta,identity)
+    assert all(p.stat().st_size<package_limit for p in (archive,installer)),'Desktop package exceeds declared limit'
     assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()==source
-    for name,item in source_files.items():assert digest(ROOT/name)==item['sha256']
-    manifest={'game':args.game,'version':meta['version'],'sourceCommit':source,'committedInputsVerified':True,'platform':'windows','architecture':'x86_64','minimumWindows':'10 1903','webView2Runtime':'Microsoft Edge WebView2 Evergreen, must be installed','authenticodeSigned':False,'physicalControllerTested':False,'toolchain':toolchain(work,nsis),'dependencies':lock,'inputFiles':source_files,'appFiles':inventory(folder),'packages':{p.name:{'bytes':p.stat().st_size,'sha256':digest(p)} for p in (archive,installer)}}
+    assert source_scope.file_records(source_scope.select(args.game))==source_files,'Source file set or bytes changed during build'
+    manifest={'game':args.game,'version':meta['version'],'sourceCommit':source,'committedInputsVerified':True,'platform':'windows','architecture':'x86_64','minimumWindows':'10 1903','webView2Runtime':'Microsoft Edge WebView2 Evergreen, must be installed','authenticodeSigned':False,'physicalControllerTested':False,'toolchain':toolchain(work,nsis),'dependencies':lock,'webAssets':web_policy,'packageByteLimit':package_limit,'inputFiles':source_files,'inputScope':selection,'appFiles':inventory(folder),'packages':{p.name:{'bytes':p.stat().st_size,'sha256':digest(p)} for p in (archive,installer)}}
     (out/'build-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8');print(json.dumps({'game':args.game,'output':str(out),'packages':list(manifest['packages'])}))
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--game',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--dependencies',type=Path,required=True);build(p.parse_args())

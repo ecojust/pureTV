@@ -59,7 +59,15 @@
 }
 ```
 
-单资源硬上限 64 MiB，总资源硬上限 256 MiB，APK `<100,000,000` 字节；实际预算可以更小，不能用 null、布尔值、浮点数、未知字段或只改一边来启用。总资源预算覆盖生成配置；flat 文件上限 2048，Android asset index 保留 64 KiB 上限。新增允许的二进制格式包含 GLB、GLTF、BIN、WASM、HDR、KTX2，均保持独立文件和逐字节 payload 校验。Mac ZIP/DMG 生成后也在推送前检查实际单包 `<100,000,000`，超限保留失败输出而不默默丢资源。
+单资源硬上限 64 MiB，总资源硬上限 256 MiB；为保留 Backroad 完整原素材，显式政策的 APK / 桌面包硬上限现为 `<128,000,000` 字节。未声明政策仍保持 Android `<10,000,000`、桌面包 `<100,000,000` 的原限制。实际预算可以更小，不能用 null、布尔值、浮点数、未知字段或只改一边来启用。总资源预算覆盖生成配置；flat 文件上限 2048，Android asset index 保留 64 KiB 上限。新增允许的二进制格式包含 GLB、GLTF、BIN、WASM、HDR、KTX2、OPUS、M4A，均保持独立文件和逐字节 payload 校验。大包仍需主任务另行落实公开交付通道，不能直接突破现有 Git 导出上限，也不因此转码、压缩 GLB 或删音频。
+
+完整音频格式与新预算的后续验证：
+
+- `.opus` 使用 `audio/ogg`，`.m4a` 使用 `audio/mp4`；只在注册与游戏均声明同一政策时进入新格式白名单。Windows 同事接入共享 `limits(..., platform='windows')` / `desktop_package_limit()`，实际 WebView2 音频解码仍须平台验证。
+- 原 Backroad `A_Backfire_02.opus`（1,952 字节）与 `.m4a`（3,401 字节）作为真实传输夹具，逐字节核对固定 upstream commit `e5542f96b9a9a2912fdaa160396054e81f022f23`，并附原 LICENSE 与逐文件来源 / SHA；位于 `joystick-games/tools/fixtures/audio/`。没有替换或缩减游戏资产。
+- [audio-budget-validation-attempt-1](audio-budget-validation-attempt-1/) 的 46 项本地回归、三份 Mac workflow actionlint 1.7.12 默认检查通过，保留未知政策、旧尺寸拒绝、128 MB 超限、未声明新格式拒绝等边界。
+- [android-compile-attempt-4-audio](android-compile-attempt-4-audio/) 实际编译了共享 Android 宿主，按显式 128 MB 政策打包原 OPUS/M4A 夹具，APK **12,270,390 字节**，SHA-256 `045044a296b296b7ce97beeb0fc98dfdc08005d04be1922409827cb2d6982d5f`；ZIP 原音频字节一致，原 CLI 再次实际拒绝超过 10 MB 的默认包。未签名/安装/解码，不是游戏通过。
+- Mac HTTP 套件新增真实 OPUS/M4A 原字节、MIME 与 Range 检查，现为 9 项；新格式与新预算的 Mac 运行仍待新冻结来源 CI。当前进行中的 `44584471562` 属于此前 `eb45042` 来源，只覆盖原 8 项。完整待冻结源清单见 [audio-budget-source-inventory.json](audio-budget-source-inventory.json)。
 
 ## 已执行的验证与待执行项目
 

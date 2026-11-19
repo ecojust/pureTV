@@ -186,6 +186,8 @@ public class MainActivity extends Activity {
         if (path.endsWith(".ogg")) return "audio/ogg";
         if (path.endsWith(".wav")) return "audio/wav";
         if (path.endsWith(".mp3")) return "audio/mpeg";
+        if (path.endsWith(".opus")) return "audio/ogg";
+        if (path.endsWith(".m4a")) return "audio/mp4";
         if (path.endsWith(".glb")) return "model/gltf-binary";
         if (path.endsWith(".gltf")) return "model/gltf+json";
         if (path.endsWith(".bin") || path.endsWith(".hdr")) return "application/octet-stream";

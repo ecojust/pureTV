@@ -127,6 +127,7 @@ jobs:
           # Preserve its exact executed source before any native compilation,
           # including failures; the always-uploaded build artifact owns these.
           asset_sources=['.github/workflows/joystick-catalog-macos.yml','joystick-games/shared/macos/Sources/LocalAssetServer.swift','joystick-games/shared/macos/tests/local-assets.test.py']
+          asset_sources += [path.as_posix() for path in sorted(Path('joystick-games/tools/fixtures/audio').glob('*')) if path.is_file()]
           asset_inputs={}
           for name in asset_sources:
             data=Path(name).read_bytes();assert data==subprocess.check_output(['git','show',source+':'+name]), 'Uncommitted asset HTTP test input'

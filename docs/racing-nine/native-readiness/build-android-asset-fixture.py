@@ -40,7 +40,7 @@ def main():
     builder = module('fixture_original_builder', ROOT / 'resource/game-kit/build.py')
     policy = module('fixture_resource_policy', ROOT / 'joystick-games/tools/asset-policy.py')
     declaration = {'schemaVersion': 1, 'maxAssetBytes': 16_000_000,
-                   'maxTotalBytes': 32_000_000, 'maxApkBytes': 32_000_000}
+                   'maxTotalBytes': 128_000_000, 'maxApkBytes': 128_000_000}
     meta = {'id': 'asset-fixture', 'packageName': 'com.ecojust.joystick.assetfixture',
             'name': '仅资源边界测试', 'nameEn': 'Asset packaging fixture only',
             'version': '0.1.0', 'versionCode': 1, 'assetPolicy': declaration}
@@ -58,6 +58,11 @@ def main():
     random_bytes = random.Random(63485)
     for name, size in [('fixture.glb', 8_000_001), ('fixture.ogg', 4_000_003)]:
         (assets / name).write_bytes(random_bytes.randbytes(size))
+    audio_fixtures=ROOT/'joystick-games/tools/fixtures/audio'
+    audio_records=json.loads((audio_fixtures/'provenance.json').read_text())['files']
+    for name in ['backfire.opus','backfire.m4a']:
+        assert record(audio_fixtures/name)=={key:audio_records[name][key] for key in ['bytes','sha256']}
+        shutil.copyfile(audio_fixtures/name,assets/name)
     try:
         builder.payload(game)
     except ValueError as error:
@@ -66,7 +71,7 @@ def main():
         raise AssertionError('Default small-game builder accepted the large 3D fixture')
     source_paths = [ROOT / 'resource/game-kit/build.py', ROOT / 'joystick-games/tools/asset-policy.py',
                     Path(__file__), *sorted((ROOT / 'resource/game-kit/android/src/main').rglob('*')),
-                    *sorted((ROOT / 'resource/game-kit/web').iterdir())]
+                    *sorted((ROOT / 'resource/game-kit/web').iterdir()),*sorted(audio_fixtures.iterdir())]
     source = {str(path.relative_to(ROOT)): record(path) for path in source_paths if path.is_file()}
     builder.main(['--kit', str(composed), '--game', str(game), '--output', str(args.scratch / 'output'),
                   '--cache', str(args.scratch / 'dex-cache'), '--sdk', str(args.sdk),

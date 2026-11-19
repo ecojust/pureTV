@@ -106,6 +106,8 @@ def inputs(game):
     selected.extend(p for p in (ROOT/'joystick-games/tools').glob('macos-*') if p.is_file())
     selected.append(ROOT/'.github/workflows/joystick-games-macos.yml')
     selected.append(ROOT/POLICY_PATH)
+    audio_fixtures=ROOT/'joystick-games/tools/fixtures/audio'
+    if audio_fixtures.exists():selected.extend(p for p in audio_fixtures.rglob('*') if p.is_file() or p.is_symlink())
     if game.name not in LEGACY_GAMES:
         selected.extend([REGISTRY,ROOT/'joystick-games/tools/qa-plan.py',ROOT/'puretv-joystick/joystick_sdk.py'])
         selected.extend((ROOT/'.github/workflows').glob('joystick-catalog-macos*.yml'))
@@ -212,7 +214,8 @@ def main():
         staging=Path(temporary);run('ditto',app,staging/app.name);(staging/'Applications').symlink_to('/Applications')
         run('hdiutil','create','-volname',name,'-srcfolder',staging,'-format','UDZO','-ov',dmg)
     run('hdiutil','verify',dmg)
-    assert all(0<p.stat().st_size<100_000_000 for p in [zipfile,dmg]),'Package exceeds Git export limit; preserve output and use an approved large-package delivery path'
+    package_limit=asset_policy.desktop_package_limit(meta,None if args.game in LEGACY_GAMES else registry_games()[args.game])
+    assert all(0<p.stat().st_size<package_limit for p in [zipfile,dmg]),'Package exceeds declared desktop budget: '+str(package_limit)
     packages={p.name:{'bytes':p.stat().st_size,'sha256':digest(p)} for p in [zipfile,dmg]}
     assert capture('git','-C',ROOT,'rev-parse','HEAD')==source_commit, 'HEAD changed during build'
     assert inputs(game)==source_inputs, 'Source files or input set changed during build'

@@ -35,14 +35,14 @@ def checked_limits(limits=None):
     if limits is None:
         return dict(DEFAULT_LIMITS)
     require(isinstance(limits, dict) and set(limits) == set(DEFAULT_LIMITS), 'Invalid explicit build limits')
-    maxima = {'maxAssetBytes': 64 * 1024 * 1024, 'maxTotalBytes': 256 * 1024 * 1024, 'maxApkBytes': 100_000_000}
+    maxima = {'maxAssetBytes': 64 * 1024 * 1024, 'maxTotalBytes': 256 * 1024 * 1024, 'maxApkBytes': 128_000_000}
     for key, maximum in maxima.items():
         require(type(limits[key]) is int and 0 < limits[key] <= maximum, 'Invalid limit: ' + key)
     require(limits['maxAssetBytes'] <= limits['maxTotalBytes'], 'Asset limit exceeds total budget')
     extensions = limits['extraExtensions']
     require(isinstance(extensions, (tuple, list)) and all(isinstance(ext, str) for ext in extensions)
             and len(set(extensions)) == len(extensions), 'Invalid extra extensions')
-    require(set(extensions) <= {'.glb', '.gltf', '.bin', '.wasm', '.hdr', '.ktx2', '.woff', '.woff2', '.ttf', '.otf', '.ico'}, 'Unsupported extra extension')
+    require(set(extensions) <= {'.glb', '.gltf', '.bin', '.wasm', '.hdr', '.ktx2', '.woff', '.woff2', '.ttf', '.otf', '.ico', '.opus', '.m4a'}, 'Unsupported extra extension')
     return dict(limits)
 
 

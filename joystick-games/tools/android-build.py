@@ -139,6 +139,11 @@ def sources(slug):
             if path.is_file():
                 paths.append(path)
     paths += list((ROOT / 'joystick-games/tools').glob('android-*.py'))
+    fixtures=ROOT/'joystick-games/tools/fixtures/audio'
+    if fixtures.exists():
+        for path in fixtures.rglob('*'):
+            assert not path.is_symlink(),str(path)
+            if path.is_file():paths.append(path)
     workflow = ROOT / '.github/workflows/joystick-games-android.yml'
     paths.append(workflow)  # Required even in CI sparse checkouts; never silently omit the workflow.
     if slug not in LEGACY_PACKAGES:

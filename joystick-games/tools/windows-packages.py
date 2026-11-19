@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Verify ZIP bytes, complete app file set and actual silent installer output."""
-import argparse,hashlib,json,os,shutil,subprocess,sys,zipfile
+import argparse,hashlib,importlib.util,json,os,shutil,subprocess,sys,zipfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
+scope_spec=importlib.util.spec_from_file_location('windows_inputs',Path(__file__).with_name('windows-inputs.py'));source_scope=importlib.util.module_from_spec(scope_spec);scope_spec.loader.exec_module(source_scope)
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def verify(args):
     assert sys.platform=='win32'
     source=args.source.resolve();manifest=json.loads((source/'build-manifest.json').read_text(encoding='utf-8'));assert manifest['sourceCommit']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+    assert source_scope.file_records(source_scope.select(manifest['game']))==manifest['inputFiles'],'Complete source closure differs from package'
     for name,item in manifest['inputFiles'].items():
         assert (ROOT/name).stat().st_size==item['bytes'] and sha(ROOT/name)==item['sha256'],name
     for name,item in manifest['packages'].items():assert (source/name).stat().st_size==item['bytes'] and sha(source/name)==item['sha256'],name

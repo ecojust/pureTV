@@ -52,7 +52,8 @@ final class LocalAssetServer {
         "png": "image/png", "webp": "image/webp", "jpg": "image/jpeg", "jpeg": "image/jpeg",
         "ico": "image/x-icon", "woff": "font/woff", "woff2": "font/woff2",
         "ttf": "font/ttf", "otf": "font/otf", "ogg": "audio/ogg", "wav": "audio/wav",
-        "mp3": "audio/mpeg", "glb": "model/gltf-binary", "gltf": "model/gltf+json",
+        "mp3": "audio/mpeg", "opus": "audio/ogg", "m4a": "audio/mp4",
+        "glb": "model/gltf-binary", "gltf": "model/gltf+json",
         "bin": "application/octet-stream", "wasm": "application/wasm",
         "hdr": "application/octet-stream", "ktx2": "image/ktx2"
     ]
@@ -78,7 +79,7 @@ final class LocalAssetServer {
         guard try number("schemaVersion", maximum: 1) == 1 else { throw Failure.assetBudget }
         let asset = try number("maxAssetBytes", maximum: 64 * 1024 * 1024)
         let total = try number("maxTotalBytes", maximum: 256 * 1024 * 1024)
-        _ = try number("maxApkBytes", maximum: 100_000_000)
+        _ = try number("maxApkBytes", maximum: 128_000_000)
         guard asset <= total else { throw Failure.assetBudget }
         return (asset, total)
     }
@@ -173,7 +174,7 @@ final class LocalAssetServer {
             let name = file.lastPathComponent
             guard name.range(of: "^[A-Za-z0-9][A-Za-z0-9_.-]*$", options: .regularExpression) != nil,
                   let mime = Self.mimeTypes[file.pathExtension.lowercased()] else { throw Failure.invalidRoot }
-            if policy == nil && ["glb", "gltf", "bin", "wasm", "hdr", "ktx2"].contains(file.pathExtension.lowercased()) {
+            if policy == nil && ["glb", "gltf", "bin", "wasm", "hdr", "ktx2", "opus", "m4a"].contains(file.pathExtension.lowercased()) {
                 throw Failure.invalidRoot
             }
             let values = try file.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])

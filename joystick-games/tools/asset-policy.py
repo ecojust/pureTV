@@ -7,9 +7,9 @@ DEFAULT_ANDROID = {'maxAssetBytes': 8_000_000, 'maxTotalBytes': 32_000_000,
 DEFAULT_MACOS = {'maxAssetBytes': 10 * 1024 * 1024, 'maxTotalBytes': 32 * 1024 * 1024,
                  'maxApkBytes': 10_000_000}
 HARD_LIMITS = {'maxAssetBytes': 64 * 1024 * 1024, 'maxTotalBytes': 256 * 1024 * 1024,
-               'maxApkBytes': 100_000_000}
+               'maxApkBytes': 128_000_000}
 EXTRA_EXTENSIONS = ('.glb', '.gltf', '.bin', '.wasm', '.hdr', '.ktx2',
-                    '.woff', '.woff2', '.ttf', '.otf', '.ico')
+                    '.woff', '.woff2', '.ttf', '.otf', '.ico', '.opus', '.m4a')
 MAX_FILES = 2048
 MAX_INDEX_BYTES = 65_536
 
@@ -36,7 +36,7 @@ def declaration(meta, registered=None):
 
 
 def limits(meta, registered=None, platform='android'):
-    assert platform in ('android', 'macos')
+    assert platform in ('android', 'macos', 'windows')
     value = declaration(meta, registered)
     if value is None:
         return dict(DEFAULT_ANDROID if platform == 'android' else DEFAULT_MACOS)
@@ -48,3 +48,9 @@ def android_limits(meta, registered=None):
     if value is None:
         return None  # Use the original GameKit interface and defaults exactly.
     return {**limits(meta, registered), 'extraExtensions': EXTRA_EXTENSIONS}
+
+
+def desktop_package_limit(meta, registered=None):
+    """Keep historical desktop cap unless a game explicitly declares its budget."""
+    value = declaration(meta, registered)
+    return 100_000_000 if value is None else value['maxApkBytes']

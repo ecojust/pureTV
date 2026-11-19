@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Validate native Windows results and export an immutable, explicit partial result."""
-import argparse,hashlib,json,os,subprocess
+import argparse,hashlib,importlib.util,json,os,subprocess
 from pathlib import Path
 p=argparse.ArgumentParser();p.add_argument('--directory',type=Path,required=True);args=p.parse_args()
 root=Path(__file__).resolve().parents[2];out=args.directory.resolve();source=os.environ['GITHUB_SHA'];games=json.loads(os.environ['REQUESTED_GAMES']);passed=[]
+scope_spec=importlib.util.spec_from_file_location('windows_inputs',Path(__file__).with_name('windows-inputs.py'));source_scope=importlib.util.module_from_spec(scope_spec);scope_spec.loader.exec_module(source_scope)
 def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 def same(path,item):assert path.stat().st_size==item['bytes'] and sha(path)==item['sha256'],path
 for game in games:
@@ -12,6 +13,7 @@ for game in games:
     for name,item in receipt['files'].items():same(evidence/name,item)
     if not packages.is_dir():continue
     manifest=json.loads((packages/'build-manifest.json').read_text(encoding='utf-8'));assert manifest['sourceCommit']==source and manifest['game']==game and manifest['committedInputsVerified'] and manifest['architecture']=='x86_64'
+    assert receipt['sourceScopeComplete'] and source_scope.file_records(source_scope.select(game))==manifest['inputFiles'],'Complete source closure differs from artifact'
     for name,item in manifest['inputFiles'].items():same(root/name,item)
     for name,item in manifest['packages'].items():same(packages/name,item)
     installed=json.loads((evidence/'package-verification.json').read_text(encoding='utf-8'));assert installed['status']=='passed' and installed['sourceCommit']==source and installed['installedBytesMatchPortable'] and installed['completeFileSetVerified'] and installed['uninstallPreservesUnrelatedFiles'] and installed['uninstallRemovesOnlyPackagedFiles']

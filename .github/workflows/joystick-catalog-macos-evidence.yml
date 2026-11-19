@@ -113,7 +113,7 @@ jobs:
           out=Path(os.environ['RUNNER_TEMP'])/'catalog-macos-evidence';artifact=out/'artifact';job=os.environ['ORIGINAL_JOB_ID']
           assert re.fullmatch('[1-9][0-9]*',job) and artifact.is_dir() and any(artifact.iterdir())
           original=json.loads((out/'original-artifact.json').read_text());capability=original['independentCapabilityDiagnostic']
-          allowed={'.json','.log','.txt','.png','.py','.swift','.plist','.yml'}
+          allowed={'.json','.log','.txt','.png','.py','.swift','.plist','.yml','.opus','.m4a'}
           if capability:allowed|={'.js','.patch','.yml'}
           total=0
           for path in artifact.rglob('*'):

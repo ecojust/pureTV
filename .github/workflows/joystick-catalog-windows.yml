@@ -20,6 +20,9 @@ jobs:
       games: ${{ steps.plan.outputs.games }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: joystick-games/catalog-registry.json
+          sparse-checkout-cone-mode: false
       - id: plan
         env:
           GAMES: ${{ inputs.games }}
@@ -42,6 +45,9 @@ jobs:
       matrix:
         game: ${{ fromJSON(needs.plan.outputs.games) }}
     steps:
+      - name: Enable exact long source paths before checkout
+        shell: pwsh
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
@@ -59,6 +65,10 @@ jobs:
         env:
           GAME: ${{ matrix.game }}
         run: |
+          python -B joystick-games/shared/windows/tests/assets.test.py *> "$env:RUNNER_TEMP/assets-tests.log"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B joystick-games/shared/windows/tests/source-scope.test.py *> "$env:RUNNER_TEMP/source-scope-tests.log"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -B joystick-games/shared/windows/tests/source-inputs.test.py *> "$env:RUNNER_TEMP/source-inputs-tests.log"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -B joystick-games/shared/windows/tests/installer.test.py *> "$env:RUNNER_TEMP/installer-tests.log"

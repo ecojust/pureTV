@@ -77,7 +77,7 @@ class NativeLocalAssets(unittest.TestCase):
             self.case_evidence = Path(os.environ['PURETV_ASSET_TEST_EVIDENCE']) / 'cases' / self._testMethodName
             self.case_evidence.mkdir(parents=True, exist_ok=False)
         self.policy = {'schemaVersion': 1, 'maxAssetBytes': 64 * 1024 * 1024,
-                       'maxTotalBytes': 128 * 1024 * 1024, 'maxApkBytes': 99_000_000}
+                       'maxTotalBytes': 128 * 1024 * 1024, 'maxApkBytes': 128_000_000}
 
     def tearDown(self):
         for index, process in enumerate(self.processes):
@@ -169,6 +169,23 @@ class NativeLocalAssets(unittest.TestCase):
             self.assertEqual(headers['Content-Range'], 'bytes */10')
         self.assertEqual(self.request(port, '/empty.mp3', headers={'Range': 'bytes=0-'})[0], 416)
 
+    def test_real_opus_m4a_mime_and_range_without_transcoding(self):
+        fixtures=Path(__file__).resolve().parents[3]/'tools/fixtures/audio'
+        records=json.loads((fixtures/'provenance.json').read_text())['files']
+        for name in ['backfire.opus','backfire.m4a']:
+            data=(fixtures/name).read_bytes()
+            self.assertEqual(hashlib.sha256(data).hexdigest(),records[name]['sha256'])
+            (self.root/name).write_bytes(data)
+        self.start(success=False)
+        port=self.start(self.policy)
+        for name,mime in [('backfire.opus','audio/ogg'),('backfire.m4a','audio/mp4')]:
+            data=(fixtures/name).read_bytes()
+            status,headers,body=self.request(port,'/'+name)
+            self.assertEqual((status,headers['Content-Type'],body),(200,mime,data))
+            status,headers,body=self.request(port,'/'+name,headers={'Range':'bytes=17-38'})
+            self.assertEqual((status,body),(206,data[17:39]))
+            self.assertEqual(headers['Content-Range'],f'bytes 17-38/{len(data)}')
+
     def test_paths_host_method_and_body_boundaries(self):
         port = self.start()
         for target in ['/../tv.html', '//tv.html', '/nested/tv.html', '/%74v.html', '/%2e%2e/tv.html',
@@ -211,7 +228,7 @@ class NativeLocalAssets(unittest.TestCase):
     def test_malformed_or_unbounded_policy_fails_closed(self):
         for policy in [True, {}, dict(self.policy, schemaVersion=True), dict(self.policy, schemaVersion=1.0),
                        dict(self.policy, maxAssetBytes=-1), dict(self.policy, maxAssetBytes=67_108_865),
-                       dict(self.policy, maxTotalBytes=268_435_457), dict(self.policy, maxApkBytes=100_000_001),
+                       dict(self.policy, maxTotalBytes=268_435_457), dict(self.policy, maxApkBytes=128_000_001),
                        dict(self.policy, maxTotalBytes=1024), dict(self.policy, unknown=1)]:
             self.start(policy, success=False)
 

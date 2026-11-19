@@ -1,0 +1,38 @@
+{
+  "tests": [
+    {
+      "script": "joystick-games/tools/android-tests.py",
+      "exitCode": 0,
+      "log": "0.log"
+    },
+    {
+      "script": "joystick-games/tools/android-asset-tests.py",
+      "exitCode": 0,
+      "log": "1.log"
+    },
+    {
+      "script": "joystick-games/shared/macos/tests/catalog-tools.test.py",
+      "exitCode": 0,
+      "log": "2.log"
+    },
+    {
+      "script": "joystick-games/shared/macos/tests/catalog-reuse.test.py",
+      "exitCode": 0,
+      "log": "3.log"
+    },
+    {
+      "script": "joystick-games/shared/macos/tests/reuse-source.test.py",
+      "exitCode": 0,
+      "log": "4.log"
+    }
+  ],
+  "actionlintExitCode": 0,
+  "actionlintCommand": [
+    "/dev/shm/racing-native-readiness/actionlint-1.7.12",
+    ".github/workflows/joystick-catalog-macos.yml",
+    ".github/workflows/joystick-catalog-macos-runtime.yml",
+    ".github/workflows/joystick-catalog-macos-evidence.yml"
+  ],
+  "macNativeAudioVerified": false,
+  "audioDecodeVerified": false
+}
