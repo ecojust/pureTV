@@ -1,0 +1,87 @@
+{"originalNpmTestConfigured":true,"scope":"Configured original tests only; an absent script is recorded, not claimed as tested"}
+
+> puretv-kart-royale@0.1.0 test
+> node --test tests/*.test.mjs
+
+TAP version 13
+# Subtest: independent nine-key controls feed original steering/drift/item pipeline
+ok 1 - independent nine-key controls feed original steering/drift/item pipeline
+  ---
+  duration_ms: 1.406149
+  type: 'test'
+  ...
+# Subtest: cancellation empties drift minimum hold and item re-arm buffer
+ok 2 - cancellation empties drift minimum hold and item re-arm buffer
+  ---
+  duration_ms: 0.179985
+  type: 'test'
+  ...
+# Subtest: cancelling original Kart drift forfeits charge without paying a boost
+ok 3 - cancelling original Kart drift forfeits charge without paying a boost
+  ---
+  duration_ms: 0.1494
+  type: 'test'
+  ...
+# Subtest: throttle cannot resume a paused original race; explicit resume can
+ok 4 - throttle cannot resume a paused original race; explicit resume can
+  ---
+  duration_ms: 0.334229
+  type: 'test'
+  ...
+# Subtest: Wi-Fi seat isolates touch AUTO gas; cancellation clears touch pointer latches
+ok 5 - Wi-Fi seat isolates touch AUTO gas; cancellation clears touch pointer latches
+  ---
+  duration_ms: 0.235347
+  type: 'test'
+  ...
+# Subtest: held standard gamepad confirm/pause cannot become fresh after cancellation
+ok 6 - held standard gamepad confirm/pause cannot become fresh after cancellation
+  ---
+  duration_ms: 0.362774
+  type: 'test'
+  ...
+# Subtest: cancelled keyboard OS repeat cannot auto-confirm; fresh keydown still works
+ok 7 - cancelled keyboard OS repeat cannot auto-confirm; fresh keydown still works
+  ---
+  duration_ms: 0.156405
+  type: 'test'
+  ...
+# Subtest: desktop settings save before optional touch DOM is mounted
+ok 8 - desktop settings save before optional touch DOM is mounted
+  ---
+  duration_ms: 0.458911
+  type: 'test'
+  ...
+# Subtest: production snapshot identifies Kart Royale and reads the current renderer context
+ok 9 - production snapshot identifies Kart Royale and reads the current renderer context
+  ---
+  duration_ms: 7.66967
+  type: 'test'
+  ...
+# Subtest: missing, lost or unknown contexts cannot report an available WebGL renderer
+ok 10 - missing, lost or unknown contexts cannot report an available WebGL renderer
+  ---
+  duration_ms: 15.247636
+  type: 'test'
+  ...
+# Subtest: snapshot uses peek pollCount without consuming another native frame
+ok 11 - snapshot uses peek pollCount without consuming another native frame
+  ---
+  duration_ms: 2.880006
+  type: 'test'
+  ...
+# Subtest: racing, paused and results observations do not advance or mutate the game
+ok 12 - racing, paused and results observations do not advance or mutate the game
+  ---
+  duration_ms: 7.255025
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 280.558845
