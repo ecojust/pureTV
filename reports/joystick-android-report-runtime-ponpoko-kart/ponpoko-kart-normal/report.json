@@ -1,0 +1,123 @@
+{
+  "game": "ponpoko-kart",
+  "targetPackage": "com.ecojust.joystick.ponpokokart",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": false,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "8f283c73f52f857777306eafc88f710262367834",
+  "apk": {
+    "path": "/home/runner/work/_temp/signed/packages/ponpoko-kart/ponpoko-kart-0.1.0.apk",
+    "bytes": 1602736,
+    "sha256": "a1c9a0f6de56fd5ec87e25d4a6b5be541c9a04686e76b31484d99cc890b86e22"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/signed/observers/ponpoko-kart/observer-ponpoko-kart.apk",
+    "bytes": 16783,
+    "sha256": "a422410ffa96249b4cc2d56d1ff1da90e29ddab6c99f8353c64b3a12aece170a"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 45715,
+      "sha256": "8c59d19cf55ee793f3a09ff7671062e8eeecbc74144884a1a79461d14390eaaf"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11264,
+      "sha256": "c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 12693,
+      "sha256": "3bf677cf2634fe364325e37a1439afab82a8a1f993efa77b64d56e14fe10bb8d"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 5101,
+      "sha256": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582"
+    },
+    "joystick-games/ponpoko-kart/qa-plan.json": {
+      "bytes": 3657,
+      "sha256": "111e1ed85b2e1374c64cdb8e1ac397f6523c4b645ebbebc111587df5686e1490"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 7735,
+      "sha256": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d"
+    }
+  },
+  "tests": [
+    {
+      "name": "catalog scenario starts with fresh app data before launch",
+      "status": "passed",
+      "details": {
+        "mode": "fresh-install-app-data",
+        "targetPackage": "com.ecojust.joystick.ponpokokart",
+        "method": "pm clear",
+        "phase": "before-target-launch",
+        "status": "passed",
+        "stdout": "Success"
+      }
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "timeout-initial-menu",
+      "snapshot": {
+        "game": null,
+        "info": {
+          "url": "http://10.0.2.15:33905/?room=NxCcomtGyc_mblLZl3d87Xo0PWcgi8KT",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdQSURBVHic7d3BbiM5FkXB8aD//5fV+1o0YWQxH6kTsS3YsuTyARcXzJ/P5/P5H0DQ/6d/AIApAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQ9c/bL/jz8/P2S77q8/n857/vfv9PX3/663ebfn+rr1+Z/vx2e/r5/JYTIJAlgECWAAJZAghkCSCQJYBAlgACWa/vAFfe3gH91u07rOnPd/frr34/p+/8npp+/ZXT/n6cAIEsAQSyBBDIEkAgSwCBLAEEsgQQyDpuB7gyfZ/ebk93aNM7tenfz+mfX/33cxonQCBLAIEsAQSyBBDIEkAgSwCBLAEEsq7bAX67b3/u7srTnd7K9I7vtp3ct3MCBLIEEMgSQCBLAIEsAQSyBBDIEkAgyw7wZbt3YNM7t9333Z1+X970fX/8jhMgkCWAQJYAAlkCCGQJIJAlgECWAAJZ1+0Ab99RTT93drfd9xVOP9f29p3f6T/f25wAgSwBBLIEEMgSQCBLAIEsAQSyBBDIOm4HOL1jO930fX3T9/3d/tzkb9+B3sYJEMgSQCBLAIEsAQSyBBDIEkAgSwCBrNd3gPX7yKZ3dk9N3/c3vRM8/fPnd5wAgSwBBLIEEMgSQCBLAIEsAQSyBBDIen0H+HQndvp9abvvw1s5/b686dc//fN56vb39/bO0QkQyBJAIEsAgSwBBLIEEMgSQCBLAIGsn89hF4xN75hu3+FN35c37fTf32F/bnlOgECWAAJZAghkCSCQJYBAlgACWQIIZL1+H+BT0zu5p99/99fvfi7vU9M7w9N3ert/vunf72mcAIEsAQSyBBDIEkAgSwCBLAEEsgQQyDpuB7h75zS9I5zecU3//E/tfv3pHehTdn6/4wQIZAkgkCWAQJYAAlkCCGQJIJAlgEDW6zvA3Tuz6efiTu/spu/b2+30neJup+/8bttROgECWQIIZAkgkCWAQJYAAlkCCGQJIJD18zlsOLV7Z7cy/XFM79ymd4Knf/5PTb+/len/f29zAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOv1HeDtO6Ppndjpn9/tP9+003eu06//tzkBAlkCCGQJIJAlgECWAAJZAghkCSCQ9fpzgXfbvVOafu7u7h3X9HORbzf9/qf/f9zGCRDIEkAgSwCBLAEEsgQQyBJAIEsAgazrngt8u+nn+t5+39z0f9fdn8/09z/9/+ff5gQIZAkgkCWAQJYAAlkCCGQJIJAlgEDW1+0Ap3dWK6e//unvb/rzWzn951s5bae3mxMgkCWAQJYAAlkCCGQJIJAlgECWAAJZr+8Av32HdvrObNr0zm/6vsSV+s7zbU6AQJYAAlkCCGQJIJAlgECWAAJZAghk/TP9A/xpeme0eyf27V+/2+3vf/X9d+8Mp/++TuMECGQJIJAlgECWAAJZAghkCSCQJYBA1tc9F3hleif49PuvTN+3t3L7fYZ1p//9/JYTIJAlgECWAAJZAghkCSCQJYBAlgACWa/fBzi9o5ve2U3PLp/+/NPvb/rzW5neWe729Pd/2vtzAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOv1HeDt94lN32d3+s5u+vNZ2f3c4Gm7/z5u38H+yQkQyBJAIEsAgSwBBLIEEMgSQCBLAIGs13eAT03vCOs7sdPf38ruHdvTz2f6PsFvu+9vxQkQyBJAIEsAgSwBBLIEEMgSQCBLAIGs454LvDJ9H9nuHdzundnt33/6vrnpneDK9E5z+vfzW06AQJYAAlkCCGQJIJAlgECWAAJZAghkXfdc4Nu/v+e2/rfp11+Z3lE+dfqO8W1OgECWAAJZAghkCSCQJYBAlgACWQIIZF13H+Dppp8rPP31u+3esU3vMFem77v8tp2gEyCQJYBAlgACWQIIZAkgkCWAQJYAAlmv7wBXTr8Pbnpnt3vnNr0DO/3rp3dwp/993MYJEMgSQCBLAIEsAQSyBBDIEkAgSwCBrON2gCvfvrM6/T663a+/+z67p3bvBKfv09v9/+80ToBAlgACWQIIZAkgkCWAQJYAAlkCCGRdtwO83fRzW6d3atM7wenX32337/f09/9bToBAlgACWQIIZAkgkCWAQJYAAlkCCGTZAR7m9vvgbv/5n5p+rvDp9yGexgkQyBJAIEsAgSwBBLIEEMgSQCBLAIGs63aAt+2M/jS9o9q9Uzv993P7c5HrO8u/zQkQyBJAIEsAgSwBBLIEEMgSQCBLAIGs43aA0zunadM7vd330d2+c5x+fyun3+d42ufnBAhkCSCQJYBAlgACWQIIZAkgkCWAQNbPZ3q4BDDECRDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBrH8BRK8LrOm5T5sAAAAASUVORK5CYII=",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "registering",
+            "serviceName": "Ponpoko Kart",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [],
+          "controllerClients": {
+            "containers": []
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.ponpokokart"
+      },
+      "error": "URLError(ConnectionRefusedError(111, 'Connection refused'))"
+    }
+  ],
+  "captures": [],
+  "installationSetup": {
+    "mode": "fresh-install-app-data",
+    "targetPackage": "com.ecojust.joystick.ponpokokart",
+    "method": "pm clear",
+    "phase": "before-target-launch",
+    "status": "passed",
+    "stdout": "Success"
+  },
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 754, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 412, in setup\n    initial = self.wait(lambda s: self.game(s).get('stage') == 'menu' and self.game(s).get('loading') is not True\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 218, in wait\n    raise AssertionError(label + ' timed out; last snapshot retained')\nAssertionError: initial-menu timed out; last snapshot retained\n"
+}
