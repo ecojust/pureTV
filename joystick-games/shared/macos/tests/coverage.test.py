@@ -9,9 +9,9 @@ REAL_PROBE_SHA256='9fa3123bc67099b564783941e61e7131a19d35def53f7702e45facdc7cd83
 REAL_PROBE_PROVENANCE={'exportCommit':'d26c8eabe88dea372fc342e38c3f48361bf72cd3','path':'joystick-macos-capability-macos-15-intel/webgl2-native.json','runId':44159596612,'note':'Old observation reused only as a unit-test fixture; never new native QA evidence.'}
 TESTS=['Bonjour actual port and version','Original SDK and complete identity card','Real gameplay actions and START pause/resume','Three foreground cycles keep transport stable','Disconnect, held sync and same-ID reconnect','Real game storage reaches native persistence','Same-sequence ACK for every SDK message','Normal quit closes TCP','Native relaunch restores actual saves at a different origin']
 class Coverage(unittest.TestCase):
-    def setUp(self):
+    def setUp(self,game='dirt-crown'):
         self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name).resolve();self.arm=self.root/'arm-artifact';self.intel=self.root/'intel-artifact';self.arm.mkdir();self.intel.mkdir()
-        self.game='dirt-crown';self.source='a'*40;self.qa=self.source;self.binary=hashlib.sha256(b'actual binary fixture').hexdigest()
+        self.game=game;self.source='a'*40;self.qa=self.source;self.binary=hashlib.sha256(b'actual binary fixture').hexdigest()
         self.entry={'packageName':'com.ecojust.joystick.dirtcrown','appName':'DirtCrown','executable':'DirtCrown'}
         self.qa_plan={'storageRestartRequired':True}
         self.sources={coverage.VERIFY:b'original verifier fixture',coverage.QA_PLAN:b'original plan validator fixture','puretv-joystick/joystick_sdk.py':b'original SDK fixture','joystick-games/'+self.game+'/qa-plan.json':json.dumps(self.qa_plan).encode(),coverage.PROBE:b'original default WKWebView probe fixture',coverage.CAPABILITY:b'original capability helper fixture',coverage.NETWORK:b'original network helper fixture'}
@@ -90,6 +90,16 @@ class Coverage(unittest.TestCase):
                     sample.update(contextLost=False,glError=0,version='WebGL 2.0',renderer='WebKit Renderer',vendor='WebKit',vertexHighFloat={'rangeMin':127,'rangeMax':127,'precision':23},fragmentHighFloat={'rangeMin':127,'rangeMax':127,'precision':23})
                 self.put(folder/'report.json',record);self.put(folder/'probe.json',record['probe'])
     def fingerprints(self):return {str(p.relative_to(self.root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in self.root.rglob('*') if p.is_file()}
+    def pon_fixture(self):
+        # Surrounding success/provenance remains synthetic. The exact error and
+        # reviewed bundle identity come from run 44596707197, not a new pass.
+        self.tearDown();self.setUp('ponpoko-kart');self.partial_fixture()
+        self.meta['webFiles']={'game.js':copy.deepcopy(coverage.PON_BUNDLE)};self.meta['inputFiles'][coverage.PON_BUNDLE_SOURCE]=copy.deepcopy(coverage.PON_BUNDLE)
+        path=self.intel/self.game/'native/report.json'
+        def failed(value):
+            value['error']='Traceback (synthetic surrounding fixture)\nAssertionError: Game runtime errors: '+json.dumps([coverage.PON_PRECISION_ERROR],ensure_ascii=False)
+            value['lastState']['game']={'game':'ponpoko-kart','stage':'error','renderer':'webgl2','webglVersion':None,'errors':[coverage.PON_PRECISION_ERROR],'frames':0,'paused':False,'audioState':'not_created','gameplay':{'mode':'boot','screen':'boot','renderCalls':0,'framePolls':0,'tick':0,'time':0,'worldTime':0},'controller':{'connected':False,'players':[],'pollCount':0}}
+        self.change(path,failed)
     def http_fixture(self):
         harness='// Synthetic harness; not a native execution\n'
         test_source=('HARNESS = '+repr(harness)+'\nclass NativeLocalAssets:\n    def test_fixture(self): pass\n').encode()
@@ -145,6 +155,35 @@ class Coverage(unittest.TestCase):
         self.partial_fixture();path=self.intel/self.game/'native/report.json';original=path.read_bytes()
         for update in ({'initialization':{'classification':'ready'}},{'renderingAvailable':True},{'error':'AssertionError: Fresh test domain unexpectedly restored saved game data'},{'error':'KeyError: missing field'}):
             self.change(path,lambda value:value.update(update));self.blocked();path.write_bytes(original)
+    def test_exact_frozen_pon_constructor_error_remains_failed_and_intel_unverified(self):
+        self.pon_fixture();before=self.fingerprints();result=self.assess();intel=result['verificationCoverage']['intelNative']
+        self.assertEqual(intel['status'],'unverified');self.assertEqual(intel['originalGameQaStatus'],'failed');self.assertFalse(intel['gameFailureCauseProven']);self.assertFalse(intel['boundedInitializationEvidence']['originalJavaScriptStackCaptured']);self.assertEqual(intel['boundedInitializationEvidence']['bundle'],coverage.PON_BUNDLE);self.assertEqual(self.fingerprints(),before)
+        report=self.read(self.intel/self.game/'native/report.json')
+        with self.assertRaises(AssertionError):coverage.failed_initialization(report)
+        with self.assertRaises(AssertionError):coverage.failed_initialization(report,'dirt-crown',self.meta)
+    def test_pon_bundle_must_match_both_packaged_web_and_frozen_source(self):
+        self.pon_fixture()
+        for section,key in [('webFiles','game.js'),('inputFiles',coverage.PON_BUNDLE_SOURCE)]:
+            original=copy.deepcopy(self.meta[section][key])
+            for value in ({'bytes':original['bytes']+1,'sha256':original['sha256']},{'bytes':original['bytes'],'sha256':'b'*64}):
+                self.meta[section][key]=value;self.blocked()
+            self.meta[section][key]=original
+    def test_pon_unknown_additional_and_generic_precision_errors_are_blocked(self):
+        self.pon_fixture();path=self.intel/self.game/'native/report.json';original=path.read_bytes()
+        for errors in ([coverage.PON_PRECISION_ERROR,'SyntaxError: missing module'],['null precision'],[coverage.PON_PRECISION_ERROR.replace('i.getShaderPrecisionFormat','j.getShaderPrecisionFormat')],['TypeError: '+coverage.PON_PRECISION_ERROR]):
+            def mutate(value):value['lastState']['game']['errors']=errors;value['error']='AssertionError: Game runtime errors: '+json.dumps(errors,ensure_ascii=False)
+            self.change(path,mutate);self.blocked();path.write_bytes(original)
+        self.change(path,lambda value:value.update(error='AssertionError: Actual game initialization failed: '+coverage.PON_PRECISION_ERROR));self.blocked()
+    def test_pon_non_boot_rendered_or_later_constructor_state_is_blocked(self):
+        self.pon_fixture();path=self.intel/self.game/'native/report.json';original=path.read_bytes()
+        for update in ({'frames':1},{'frames':False},{'stage':'playing'},{'webglVersion':2},{'audioState':'running'},{'error':'additional error'},{'stack':'new original evidence requires review'}):
+            self.change(path,lambda value:value['lastState']['game'].update(update));self.blocked();path.write_bytes(original)
+        for update in ({'mode':'menu'},{'screen':'race'},{'renderCalls':1},{'framePolls':1},{'tick':1},{'worldTime':1}):
+            self.change(path,lambda value:value['lastState']['game']['gameplay'].update(update));self.blocked();path.write_bytes(original)
+        self.change(path,lambda value:value['lastState']['game']['controller'].update(pollCount=1));self.blocked()
+    def test_pon_does_not_waive_healthy_probe_or_failed_arm_gameplay(self):
+        self.pon_fixture();path=self.arm/self.game/'rosetta/report.json';original=path.read_bytes();self.change(path,lambda value:value.update(status='failed'));self.blocked();path.write_bytes(original)
+        folder=self.intel/self.game/'capability/after';record=self.read(folder/'report.json');record['probe']['samples'][0]['contextLost']=False;self.put(folder/'report.json',record);self.put(folder/'probe.json',record['probe']);self.blocked()
     def test_probe_samples_errors_missing_or_healthy_cannot_qualify(self):
         self.partial_fixture();folder=self.intel/self.game/'capability/before';original=self.read(folder/'report.json')
         for changed in ('healthy','missing','error','notcreated','failed'):

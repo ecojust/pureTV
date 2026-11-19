@@ -1,0 +1,195 @@
+{
+  "sourceCommit": "e347d691d94042021717bd0a331371451d113a48",
+  "sourceFiles": {
+    "joystick-games/ponpoko-kart/build.mjs": {
+      "bytes": 1667,
+      "sha256": "eee1dda2eb354272b32af18a2792da9737435e82ca3b632a1953312851c2c9fa"
+    },
+    "joystick-games/ponpoko-kart/package.json": {
+      "bytes": 368,
+      "sha256": "e1a96d20f4861789a61510974f82c14d8bba8d6cd04519eb2f787d2d5c305b8d"
+    },
+    "joystick-games/ponpoko-kart/package-lock.json": {
+      "bytes": 14821,
+      "sha256": "47c911fa215bd820847dd18b43c071afa694aa2579b6e87b45d7ae77ba4231b9"
+    },
+    "joystick-games/ponpoko-kart/src/main.js": {
+      "bytes": 1700,
+      "sha256": "8bec317ecfc09a5353e9b80c589177809f7a0ed4399593ab9eb2e5192a3a3b19"
+    },
+    "joystick-games/ponpoko-kart/src/tv-adapter.js": {
+      "bytes": 5131,
+      "sha256": "949ce0c297f6baa40056506648915523038632e5ab7774c571bf2a8c59c037c5"
+    },
+    "joystick-games/ponpoko-kart/src/upstream/src/core/Game.js": {
+      "bytes": 21492,
+      "sha256": "55d78587cdc6ee2336758a6ea12470951ad4e8f46f4ad7b390f76878150f9270"
+    },
+    "joystick-games/ponpoko-kart/src/upstream/src/core/Renderer.js": {
+      "bytes": 9705,
+      "sha256": "7e1a035fb78e1a037a9ac9320941c96b532f4781b8725c613ff0a1024f3fc8b4"
+    }
+  },
+  "bundle": {
+    "path": "joystick-games/ponpoko-kart/dist/game.js",
+    "bytes": 1561049,
+    "sha256": "b26270b854a7672d67e36e987c2a5c938044556d5b91fc480c41211a5b959729",
+    "gitBlobSha1": "cecefb7109a4477d570ceb921c826bfcba046796",
+    "url": "https://raw.githubusercontent.com/ecojust/pureTV/e347d691d94042021717bd0a331371451d113a48/joystick-games/ponpoko-kart/dist/game.js"
+  },
+  "exactExpression": "i.getShaderPrecisionFormat(i.VERTEX_SHADER,i.HIGH_FLOAT).precision",
+  "exactExpressionOccurrences": 1,
+  "capabilitiesFunction": "xA (Three WebGLCapabilities)",
+  "precisionFunction": "c (Three getMaxPrecision)",
+  "callExpression": "j=new xA(et,fe,t,Zt)",
+  "callExpressionOccurrences": 1,
+  "excerpts": [
+    {
+      "label": "unique-exact-precision-expression",
+      "expressionCharacterOffset": 400604,
+      "excerptCharacterStart": 400044,
+      "excerptCharacterEnd": 401454,
+      "file": "unique-exact-precision-expression.txt",
+      "bytes": 1410,
+      "sha256": "a6c17f29283550566fd4686ca3511976e1f8a4922187b114423b30e1ed0fcd86"
+    },
+    {
+      "label": "webgl-renderer-initialization-calls-capabilities",
+      "expressionCharacterOffset": 713212,
+      "excerptCharacterStart": 712862,
+      "excerptCharacterEnd": 713762,
+      "file": "webgl-renderer-initialization-calls-capabilities.txt",
+      "bytes": 900,
+      "sha256": "8dad310499a0cbdec2a88c049dd26edcbc9c5ffcf5a49e519f3764c9d7ba1f7a"
+    }
+  ],
+  "threeDependency": {
+    "version": "0.186.1",
+    "resolved": "https://registry.npmjs.org/three/-/three-0.186.1.tgz",
+    "integrity": "sha512-blFeqb49wRCSGUGj7gtpfnSGHy2lwDk94RhUmS1c/hTby70kvChbWpkJ4Pm1390LqzzvTmzgXKHPEafJwCb8jA==",
+    "license": "MIT",
+    "originalPackageArchiveBytes": 4648523,
+    "originalPackageArchiveIntegrityVerified": true,
+    "archiveIncluded": false,
+    "retainedModules": {
+      "src/renderers/webgl/WebGLCapabilities.js": {
+        "bytes": 4038,
+        "sha256": "fc21d0cc71190f66bf7ce7a38b0a3b74c0f1dba5f1f5d94fd7a7f4bce39fc67a"
+      },
+      "src/renderers/WebGLRenderer.js": {
+        "bytes": 111481,
+        "sha256": "9e8740aad691246b31b3704014e8f3bbd38a8e7bf4b1b4d23868541b023cc63a"
+      },
+      "LICENSE": {
+        "bytes": 1081,
+        "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+      },
+      "package.json": {
+        "bytes": 3672,
+        "sha256": "f9c474a27c920b9435353a6235968f4453436bee0444fac7e5fd289c8fa463de"
+      }
+    }
+  },
+  "sourceChain": [
+    "src/main.js try block: new Game before adapter.attach",
+    "src/upstream/src/core/Game.js constructor: new Renderer before input/menus",
+    "src/upstream/src/core/Renderer.js constructor: new THREE.WebGLRenderer",
+    "Original Three WebGLRenderer initGLContext -> new WebGLCapabilities",
+    "Original WebGLCapabilities getMaxPrecision(highp) -> gl.getShaderPrecisionFormat(...).precision"
+  ],
+  "originalRuntime": {
+    "reportPath": "docs/racing-nine/native-readiness/ci-44596707197-attempt-1/original-intel-export/artifact/ponpoko-kart/native/report.json",
+    "reportSha256": "3e3c47d5fd66cd1d955f1c49ed8cdaf89919c78b555b4eeee6484f5e38cf1d4d",
+    "status": "failed",
+    "failurePhase": "initialization",
+    "nativeProcessAlive": true,
+    "lastStateFresh": true,
+    "game": {
+      "audioState": "not_created",
+      "controller": {
+        "buttons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "cancelled": false,
+        "connected": false,
+        "info": {},
+        "players": [],
+        "pollCount": 0,
+        "pressed": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "released": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "source": ""
+      },
+      "errors": [
+        "null is not an object (evaluating 'i.getShaderPrecisionFormat(i.VERTEX_SHADER,i.HIGH_FLOAT).precision')"
+      ],
+      "frames": 0,
+      "game": "ponpoko-kart",
+      "gameplay": {
+        "boost": 0,
+        "character": "",
+        "countdown": 0,
+        "course": "",
+        "driftActive": false,
+        "driftCharge": 0,
+        "driftLevel": 0,
+        "framePolls": 0,
+        "helpOpen": false,
+        "item": "",
+        "itemPending": false,
+        "jumpHeld": false,
+        "lap": 0,
+        "lookBack": false,
+        "mode": "boot",
+        "playerX": 0,
+        "playerY": 0,
+        "playerZ": 0,
+        "position": 0,
+        "progress": 0,
+        "renderCalls": 0,
+        "screen": "boot",
+        "speed": 0,
+        "tick": 0,
+        "time": 0,
+        "worldTime": 0
+      },
+      "paused": false,
+      "renderer": "webgl2",
+      "stage": "error",
+      "webglVersion": null
+    },
+    "pythonFailureStack": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 407, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 198, in until\n    s=self.read()\n      ^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 512, in read\n    assert not state['game'].get('errors'),'Game runtime errors: '+json.dumps(state['game']['errors'],ensure_ascii=False)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Game runtime errors: [\"null is not an object (evaluating 'i.getShaderPrecisionFormat(i.VERTEX_SHADER,i.HIGH_FLOAT).precision')\"]\n",
+    "originalJavaScriptStackCaptured": false,
+    "whyNoJavaScriptStack": "Frozen adapter error/unhandledrejection and fail(error) retain only message; no JS stack in original native.log or state. No stack reconstructed."
+  },
+  "sourceEvidenceMethod": "Exact frozen source bytes + unique complete runtime expression + fixed npm integrity-verified Three implementation + original successful frozen-dist build check. This is source correspondence, not a captured JavaScript stack or proof of a unique hardware cause.",
+  "gameFailureCauseProven": false,
+  "originalReportsModified": false
+}

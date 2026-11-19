@@ -20,6 +20,9 @@ HTTP_SOURCE='joystick-games/shared/macos/Sources/LocalAssetServer.swift'
 HTTP_TEST='joystick-games/shared/macos/tests/local-assets.test.py'
 RUNTIME_WORKFLOW='.github/workflows/joystick-catalog-macos-runtime.yml'
 AUDIO='joystick-games/tools/fixtures/audio/'
+PON_PRECISION_ERROR="null is not an object (evaluating 'i.getShaderPrecisionFormat(i.VERTEX_SHADER,i.HIGH_FLOAT).precision')"
+PON_BUNDLE={'bytes':1561049,'sha256':'b26270b854a7672d67e36e987c2a5c938044556d5b91fc480c41211a5b959729'}
+PON_BUNDLE_SOURCE='joystick-games/ponpoko-kart/dist/game.js'
 
 def digest(data):return hashlib.sha256(data).hexdigest()
 def canonical(value):return json.dumps(value,sort_keys=True,separators=(',',':')).encode()
@@ -122,26 +125,42 @@ def absolute_recorded_path(value):
     return path
 
 
-def failed_initialization(report):
+def failed_initialization(report,game=None,meta=None):
     assert report['status']=='failed' and report['failurePhase']=='initialization','Only an observed initialization failure can have limited coverage'
     assert report['nativeProcessAlive'] is True and report['lastStateFresh'] is True,'Native app must still be alive with a fresh observation'
     assert report['nativeProcessArchitecture']=='x86_64'
     assert report.get('initialization',{}).get('classification')!='ready' and report.get('renderingAvailable') is not True,'A later failure after renderer readiness cannot have limited coverage'
     error=report['error'];assert isinstance(error,str)
     terminal=error.strip().splitlines()[-1]
-    assert terminal.startswith(('AssertionError: Native initialization terminal state timed out: ', 'AssertionError: Actual game initialization failed: ')),'Non-initialization or unknown native QA exception requires investigation'
     state=report['lastState'];assert state['ready'] is True and state['active'] is True and state['processArchitecture']=='x86_64'
     for key in ('diagnosticError','lastJavaScriptError','navigationError','lastNavigationError'):
         assert not state.get(key),'Non-graphics native/JavaScript failure: '+key
     assert not state.get('earlyJavaScriptErrors') and not state.get('resourceErrors')
     assert report['tests']==[],'Gameplay/protocol/storage execution already began; this is not initialization-only'
-    game=state.get('game')
-    if game is not None:
-        assert isinstance(game,dict) and not game.get('errors'),'Explicit game errors require investigation'
+    observed=state.get('game');bounded=None
+    if isinstance(observed,dict) and observed.get('errors'):
+        # This exact frozen constructor expression was reviewed against the
+        # original Pon bundle. It is not a general TypeError/precision waiver.
+        assert game=='ponpoko-kart' and report['game']==game and isinstance(meta,dict) and meta['game']==game
+        assert meta['webFiles']['game.js']==PON_BUNDLE and meta['inputFiles'][PON_BUNDLE_SOURCE]==PON_BUNDLE,'Unreviewed Pon renderer bundle'
+        assert observed['errors']==[PON_PRECISION_ERROR] and terminal=='AssertionError: Game runtime errors: '+json.dumps([PON_PRECISION_ERROR],ensure_ascii=False),'Unknown or additional original renderer error'
+        assert observed['game']==game and observed['stage']=='error' and observed['renderer']=='webgl2' and observed['webglVersion'] is None
+        assert type(observed['frames']) is int and observed['frames']==0 and observed['paused'] is False and observed['audioState']=='not_created'
+        gameplay=observed['gameplay'];assert gameplay['mode']==gameplay['screen']=='boot'
+        for key in ('renderCalls','framePolls','tick','time','worldTime'):
+            assert type(gameplay[key]) in (int,float) and gameplay[key]==0,'Renderer/gameplay progressed beyond the bounded constructor failure'
+        controller=observed['controller'];assert controller['connected'] is False and controller['players']==[] and type(controller['pollCount']) is int and controller['pollCount']==0
+        assert not any(observed.get(key) for key in ('error','message','stack','errorStack')) and not state.get('lastJavaScriptStack'),'Additional or newly captured error evidence needs review'
+        bounded={'kind':'frozen_ponpoko_three_precision_initialization','originalError':PON_PRECISION_ERROR,'bundlePath':'game.js','bundleSourcePath':PON_BUNDLE_SOURCE,'bundle':dict(PON_BUNDLE),'originalJavaScriptStackCaptured':False,'gameplayStarted':False,'diagnosticStage':'error','diagnosticMode':'boot'}
+    else:
+        assert terminal.startswith(('AssertionError: Native initialization terminal state timed out: ', 'AssertionError: Actual game initialization failed: ')),'Non-initialization or unknown native QA exception requires investigation'
+    if observed is not None and bounded is None:
+        assert isinstance(observed,dict) and not observed.get('errors'),'Explicit game errors require investigation'
         allowed={'Error creating WebGL context.','THREE.WebGLRenderer: Error creating WebGL context.','WebGL2 is required','WebGL 2 is required'}
         for key in ('error','message'):
-            value=game.get(key);assert not value or value in allowed,'Unclassified game error cannot be attributed to graphics'
+            value=observed.get(key);assert not value or value in allowed,'Unclassified game error cannot be attributed to graphics'
     timestamp(report['startedAt']);timestamp(report['finishedAt'])
+    return bounded
 
 
 def capability(evidence,phase,game,meta,plan,binary,report,inputs,require_context_loss=True):
@@ -295,10 +314,11 @@ def assess_game(game,meta,plan,entry,arm_folder,intel_folder):
             if runner=='macos-15-intel' and report['status']!='passed':
                 assert selected_policy==PARTIAL,'Default full policy never waives Intel native failure'
                 assert batch['status']=='failed' and record['status']=='failed' and record['checks'][index]['status']=='failed' and record['checks'][index]['returncode']!=0
-                failed_initialization(report)
+                bounded=failed_initialization(report,game,meta)
                 before=capability(evidence,'before',game,meta,plan,binary,report,inputs);after=capability(evidence,'after',game,meta,plan,binary,report,inputs)
                 assert before['jobId']==after['jobId'] and before['runnerName']==after['runnerName'] and before['host']==after['host'] and before['runnerImage']==after['runnerImage'],'Capability observations came from different execution hosts'
                 coverage['intelNative']={'status':'unverified','processArchitecture':'x86_64','originalGameQaStatus':'failed','capabilityObservation':'webgl2_context_lost','gameFailureCauseProven':False}
+                if bounded is not None:coverage['intelNative']['boundedInitializationEvidence']=bounded
             else:
                 assert (batch['status']=='passed' or (runner=='macos-15-intel' and selected_policy==PARTIAL and batch['status']=='failed')) and record['status']=='passed' and record['checks'][index]['status']=='passed' and record['checks'][index]['returncode']==0
                 strict_game(report,architecture,renderers)
