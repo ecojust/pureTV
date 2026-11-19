@@ -1,0 +1,233 @@
+[
+  {
+    "game": "game-027",
+    "commit": "3e78cdfd6255ec5caf98dae6609a3482cb0e4aea",
+    "path": "game-027/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "game-027 v2.0.0: Alchemist's Lattice reset to the recent games' standards",
+    "fileStatus": "added",
+    "sourceBlobSha": "8caa8e0ddd3de86e35e8c32e1e7d8bcba2e4bc0a",
+    "changes": 323,
+    "commitMessage": "game-027 v2.0.0: Alchemist's Lattice reset to the recent games' standards\n\nPhaser 4 removed. A pure seeded sim (js/sim/: campaign, level, level\ngenerator, chapter map, bot) driven by commands, and a three.js r165 view\nthat reuses NEON ARCANA's (game-111) board, stage, effects and input,\nrestyled as a candlelit workbench with deposit slabs, crucible rings and\nfoe portrait tokens. DOM screens, procedural audio, mid-level saves.\n\nThe v1 design is kept (lattice, finite supply, exploration, refinement,\nbattle, cauldron tiers, run map, shop, skill tree, cast and chapter 1-2\nscripts) and finished: chapter 3, the ending, the open road, Tile Swap.\n\n56 fal paintings (nano-banana-2, 22 jobs built from the game's data).\ndev/simtest.mjs (77k checks, bot campaigns) and dev/browsertest.mjs\n(desktop to the ending, two phones, blocked storage), served from disk.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01ScowiycqY6zPHEFxHmkXxc"
+  },
+  {
+    "game": "game-044",
+    "commit": "68b78d176ce5ef2040f25642a59520946a05a8c6",
+    "path": "game-044/js/main.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "game-044: fix How to Play and the blank prologue; make phones usable",
+    "fileStatus": "modified",
+    "sourceBlobSha": "75a9dc163c2df0013e9978839769ee75186540de",
+    "changes": 28,
+    "commitMessage": "game-044: fix How to Play and the blank prologue; make phones usable\n\n\"How to Play\" on the title did nothing and \"Begin a New Tale\" showed a\nblack screen. Neither was phone-specific:\n- Storybook pages (z-index 70) sat under the title screen (80), so How to\n  Play opened invisibly behind it. Pages now sit at 85, above the title\n  and below the fade.\n- The prologue opened under the black fade left over from leaving the\n  title, which only lifted once the first scene loaded. Opening a page\n  now lifts any fade.\n\nShort landscape screens (phones on their side) had no room for the verb\nbar under the scene, which pushed the menu button off screen. The bar now\nmoves beside the scene there; fitScreen measures in two passes, because\nthe bar's height depends on the width it gets.\n\ndev/walkthrough.mjs missed both page bugs because Playwright clicks\nstraight through pointer-events:none layers. It now checks that every page\nbutton is topmost and un-faded before clicking. New dev/mobiletest.mjs\ndrives portrait and landscape phones by touch alone, with the same\nvisibility check before every tap, plus tap-target size and fit checks.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01Ya2yVt7Sy2Q2kS8LfNMymj"
+  },
+  {
+    "game": "game-058",
+    "commit": "a41d9f1323a300b07f4d9607c46e01ea0ea42c04",
+    "path": "game-058/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "game-058 Bumble Basket: casual trait-chain fruit puzzle in three.js",
+    "fileStatus": "added",
+    "sourceBlobSha": "0750bc6c2f87431b1bcd75baf40d8ce4d3329848",
+    "changes": 623,
+    "commitMessage": "game-058 Bumble Basket: casual trait-chain fruit puzzle in three.js\n\nDrag a bumblebee along a trail across a picnic blanket. Each hop only has\nto share one trait the bee can sense with the previous fruit (kind,\ncolour, size or family), so trails wander like a word ladder. Senses\nunlock one per garden through Set levels, while each garden adds more\nkinds, colours and sizes of fruit.\n\n- 30 levels in four gardens, ten blanket shapes, leaf piles, frost,\n  golden fruit from trails of seven, stars from moves left, free +5 moves\n- Set jars per sense earn the Honey Dipper, Paint Pollen, Buzz Bomb and\n  Rainbow Wings; endless Picnic mode; 81-stamp Fruit Album\n- 16 fruit kinds modelled in code with blinking faces, a meadow per\n  garden, the bee, a basket that fills, particles, generative music\n- Pure sim (js/sim) with a bot; dev/simtest.mjs (rules, invariants,\n  balance gate) and dev/browsertest.mjs (desktop + touch-only phones)\n- Launcher entry, classic-grid styles, README, status and changelog\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01RC78887CSpdq1q9Morg739"
+  },
+  {
+    "game": "game-067",
+    "commit": "024a366081e7fc3a44bba7ea05929a35770d0cec",
+    "path": "game-067/js/main.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "game-067 v1.0.1: taps land under the finger; Build drags move the view",
+    "fileStatus": "modified",
+    "sourceBlobSha": "cc1c77b54dce78c017cc71d4147fd6e85bbfbe44",
+    "changes": 24,
+    "commitMessage": "game-067 v1.0.1: taps land under the finger; Build drags move the view\n\nThe canvas was stretched by CSS to 100vw x 100vh while the renderer drew\nat innerWidth x innerHeight and taps were mapped against innerHeight. On\nphones with a URL bar 100vh is taller than the visible area, so the\npicture sat lower than where taps were mapped and things were built below\nthe finger (the same bug game-058 had). The renderer now sizes the canvas\nin px, picking and screen projection go through the canvas's bounding\nrect, and visualViewport resizes refit it.\n\nBuild now places on a tap only: a drag moves the camera and places\nnothing, and a press that wandered more than ~10 px is never a tap.\n\nThe browser test checks the canvas matches the visible viewport, that a\ntap on a tile builds on that tile, and that a drag in Build only moves\nthe camera, on desktop and both phone orientations.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01YQ3yWoQLHGiBSnE3r9X4WW"
+  },
+  {
+    "game": "game-080",
+    "commit": "69a8a831ba755256aad2bf447ef83fd08685b60c",
+    "path": "game-080/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "EMBERLEAF v1.2.0: a Compendium of calmed runaways in the satchel",
+    "fileStatus": "modified",
+    "sourceBlobSha": "703f55ce7a65a29cf50b7503374c0d75bed07da4",
+    "changes": 2,
+    "commitMessage": "EMBERLEAF v1.2.0: a Compendium of calmed runaways in the satchel\n\nA new satchel tab lists all 22 kinds of runaway book and 13 guardians:\nthe foe's sprite, how many you've calmed, its genre, and a snippet from\nthe book it really was (js/sim/data/excerpts.js). Guardians quote their\ngrimoires. Uncalmed ones are silhouettes with a hint of where they\nwander. Counts live in G.dex, bumped in calmFoe; older saves load with\nan empty Compendium.\n\nsimtest: the count, an excerpt for every foe, old saves load.\nbrowsertest: the tab lists all 35.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WQ92t9Ud61GThv56DgrTd2"
+  },
+  {
+    "game": "game-084",
+    "commit": "05da3a58b5a1ca46e93f862a5ce64234ab578019",
+    "path": "game-084/js/main.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "ROMANCER v1.0.1: the title's last R is no longer cut off",
+    "fileStatus": "modified",
+    "sourceBlobSha": "7f1ba2077053f300ef610cd3352becafd02ba54d",
+    "changes": 1,
+    "commitMessage": "ROMANCER v1.0.1: the title's last R is no longer cut off\n\nThe logo is gradient-clipped Orbitron 900, much wider than the fallback\nfont the harnesses use, so it overflowed its 440 px column and the\noverflow was invisible. Smaller size, a 520 px column, fit-to-width once\nthe real font loads; the wide-screen title column is left-aligned\nthroughout. REAL_FONTS=1 loads the real fonts in play.mjs and\nbrowsertest.mjs, which now checks the logo fits.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_016Zm2Z2tA1i5LXBSRkhaxFx"
+  },
+  {
+    "game": "game-102",
+    "commit": "44296883ba564788e9a6dd599ac53f747a1786e8",
+    "path": "game-102/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>",
+    "subject": "Add game-102 STARSLING: a physics slingshot in a synthwave space sunset",
+    "fileStatus": "added",
+    "sourceBlobSha": "68c695b4d64c76b485e373a9199146eef6235224",
+    "changes": 305,
+    "commitMessage": "Add game-102 STARSLING: a physics slingshot in a synthwave space sunset\n\nFling Rock, Iron, Ice and Nova asteroids at floating space stations to scrap\nthe robots aboard. Sim/view layout, three.js r165, no asset files.\n\n- js/sim/physics.js: boxes and circles, separating-axis contacts, warm-started\n  sequential impulses (the contact cache is saved state), sleeping\n- six sectors from a small station generator; four asteroid specials; black\n  holes; fuel chain reactions; stars and saved progress\n- a perfect bot that clears every sector and a mortal bot for the balance table\n- dev/simtest.mjs (149 checks) and dev/browsertest.mjs (real mouse, keys and\n  touches on desktop and two phones, blocked storage)\n- launcher entry, card style, README, status, CHANGELOG and learnings\n\nCo-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01ScowiwnFH4hprgAGzZdqD8"
+  },
+  {
+    "game": "game-105",
+    "commit": "e665853255365df668a3e8a7c801d60b4a0512cb",
+    "path": "game-105/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>",
+    "subject": "game-105: loose cable ends rest on the tray floor, not inside its base; calmer lamp",
+    "fileStatus": "modified",
+    "sourceBlobSha": "494018893eb460bfcb62a1156605646c718f516a",
+    "changes": 3,
+    "commitMessage": "game-105: loose cable ends rest on the tray floor, not inside its base; calmer lamp\n\nA plug pulled out and dropped over the device (or generated loose there) sat at mat height,\ninside the 0.42-high tray base, so the metal hid it and it could not be picked up again.\nLoose ends now rest on whatever is under them (sim: restY, view: floor clamp); a new\nsimtest section fails without the fix (24 failures) and passes with it. The work lamp was\nblowing the cover plates out to white from above, so it is dimmer.\n\nCo-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01ScowizW8VXXG9PGTFnUWDy"
+  },
+  {
+    "game": "game-108",
+    "commit": "4fd09e42fe0ecef9eb217c4fd4cbfaf92a045344",
+    "path": "game-108/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "Add game-108 Oathstones: match-3 RPG where every token keeps its own oath",
+    "fileStatus": "added",
+    "sourceBlobSha": "b2e235c01995cfb6a4f6a5aed2e0fd9dbfd76a2f",
+    "changes": 156,
+    "commitMessage": "Add game-108 Oathstones: match-3 RPG where every token keeps its own oath\n\nSim/view layout with three.js: a pure turn-based sim (act() commands), eleven\noaths (Kinship, Form, Twinned, Prism, Motley, Host, Cascade, Crossroads, Ring,\nVigil, Fool), 21 heroes that arrive on the board and bind nearby stones, a\nsummoning calling with pity, 18 stages over five regions, a bot, simtest and\nbrowsertest harnesses.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01Scowiy6vTWUMmNPQcWWjJx"
+  },
+  {
+    "game": "game-111",
+    "commit": "2931b4474deedf5997996609d500070b3958df95",
+    "path": "game-111/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "Add game-111 NEON ARCANA: a neon tarot block-placement puzzle in three.js",
+    "fileStatus": "added",
+    "sourceBlobSha": "61bb7b2f30d95bc38c51692d30a5ef4e257fba70",
+    "changes": 419,
+    "commitMessage": "Add game-111 NEON ARCANA: a neon tarot block-placement puzzle in three.js\n\nFill rows and columns of a glowing 8x8 lattice with glyphs to rekindle the\n22 Major Arcana and restore magic to the world.\n\n- Pure seeded sim driven by commands: 39 glyphs unlocked as the arcana\n  climb, a merciful deal that fades, resonance, sigils, blight that\n  cracks, harmony, the creeping Void, sparks and five tarot powers,\n  stuck-versus-over, embers that carry between readings, an ending and\n  an afterglow, and Free Readings for score.\n- three.js view: neon glass blocks in a custom shader, bloom and a lens\n  pass, particles, shards, beams, shock rings, floating words, a nebula\n  that regains colour, rune rings, a wheel of 22 procedurally painted\n  tarot cards and a rekindling cinematic.\n- Drag, tap-tap, keyboard and gamepad; a calm setting; a synth score.\n- dev/simtest.mjs (225 checks, bot campaigns at three skills) and\n  dev/browsertest.mjs (desktop, two touch-only phones, blocked storage).\n- Launcher entry, card style, README, status, CHANGELOG, learnings and\n  a preview picture.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01ScowivdcpuTCyZ6sjspB8F"
+  },
+  {
+    "game": "game-113",
+    "commit": "c58077f1586c0fcc41b36b0e832a9c0b348d0a39",
+    "path": "game-113/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "game-113: field, game, bot and simtest; the bot plays the whole story",
+    "fileStatus": "added",
+    "sourceBlobSha": "36060a45c706517ddf13f68f4b26db7f0f31350c",
+    "changes": 83,
+    "commitMessage": "game-113: field, game, bot and simtest; the bot plays the whole story\n\nField movement, interaction, triggers and roaming monsters; the game\nstate with save round trips; an auto-player that follows the quest\npointer and plays the duels at a skill level. simtest checks purity,\nmap reachability, 1,000+ composed phrases, the battle rules and save\nround trips, and has the bot finish the story on two seeds at two\nskills. Enemy HP and attack retuned from the bot's balance table.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01Scowix2RpEpmSNG7k7ZLJp"
+  },
+  {
+    "game": "game-116",
+    "commit": "af684501d529032567628135973a61d3e72708d0",
+    "path": "game-116/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "Add game-116 SOLITAIRE FROM OUTER SPACE: a TriPeaks solitaire roguelike deckbuilder as a 1950s B-movie",
+    "fileStatus": "added",
+    "sourceBlobSha": "ae91c69327035c9f8d794a2997cec0bd22d0fab2",
+    "changes": 85,
+    "commitMessage": "Add game-116 SOLITAIRE FROM OUTER SPACE: a TriPeaks solitaire roguelike deckbuilder as a 1950s B-movie\n\nEvery creature deals a TriPeaks table; your deck is the stock. Chain cards one\nrank up or down onto the beam: Rays blast, Rockets pierce shields, Shields\nblock and Atoms charge gadgets, all scaled by the turn's chain. A free beam\ncard plus two draws a turn, Quick cards, Clean Sweeps, telegraphed creature\nmoves (attack, shield, grow, jam Static/Slime, freeze, drain), 17 stock cards\nwith upgrades, 10 gadgets, 17 souvenirs and 21 creatures across three reels of\nbranching maps with a store, a diner, broadcasts and treasure.\n\nVanilla JS and Canvas 2D in the sim/view layout as a turn-based command sim;\nevery card, creature and backdrop drawn in code under film grain; a theremin\nscore in Web Audio. dev/simtest.mjs (purity, data, rules, maps over 300 seeds,\nsaves, a whole-run bot with a balance table) and dev/browsertest.mjs (desktop,\ntouch-only phones both ways, blocked storage). Launcher entry, card style,\nREADME/status/CHANGELOG rows, Garden preview and docs learnings.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01ScowiyZ64ovRpE8F8UUWYb"
+  },
+  {
+    "game": "game-118",
+    "commit": "7855c424a3c33bc0893c1703d33babd59f1976eb",
+    "path": "game-118/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>",
+    "subject": "Add game-118 The Kids Table: a Thanksgiving merge game in three.js",
+    "fileStatus": "added",
+    "sourceBlobSha": "a5f00b2de9e1f7a0513c6da8e3227f507aefd85e",
+    "changes": 405,
+    "commitMessage": "Add game-118 The Kids Table: a Thanksgiving merge game in three.js\n\nA hybrid merge puzzle in the sim/view layout, built from a primer on how\nmerge games work. Merge pumpkins, turkeys, wheat and kid crafts (four\nchains of six tiers, pair merge), serve the guests who sit down with\norders, spend stars on bigger tables that uncover the board and bring new\ngenerators, and finish a five-course Dinner Plan to win the kids a seat at\nthe big table.\n\n- sim: turn-based command layer (act/step), 6x7 board with covered cells,\n  movable generators that recharge while away, guests, goals, combos, shop,\n  board-lock detection, and a bot at two skill levels that tuned the economy\n- view: 26 dishes and generators built from primitives, gingham board on a\n  wooden table, merge ghosts, confetti, and a camera fitted to the free\n  rectangle between the HUD panels (portrait and wide)\n- UI: guest cards with drawn faces and icons rendered from the real models,\n  cookbook, shop, tables, goals, hints, calm-motion setting\n- input: mouse, touch (dish rides above the finger), keyboard, gamepad\n- tests: simtest (129 checks, whole games by bots), browsertest (real mouse,\n  keyboard and CDP touch on desktop, two phones, blocked storage), model gallery\n- collection: launcher entry and card style, README, status, CHANGELOG, docs,\n  Garden preview and share tags\n- scaffold-game template: Escape now passes through form fields (found again here)\n\nCo-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01Scowiz7JoWtHMEupdAT6Mo"
+  },
+  {
+    "game": "game-121",
+    "commit": "0adc05dadcf44a1f5c805e0efb714afa62042db9",
+    "path": "game-121/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>",
+    "subject": "Add game-121 ARCANA WAGON: a first-person fortune-teller adventure in three.js",
+    "fileStatus": "added",
+    "sourceBlobSha": "b4c2a319ef03ab5c65836323feb81ed8689b4f84",
+    "changes": 471,
+    "commitMessage": "Add game-121 ARCANA WAGON: a first-person fortune-teller adventure in three.js\n\nA seven-day narrative game: read the crystal ball's symbols and colours and the\nomens in the room, lay tarot cards drawn in code, learn the language of the\nuniverse in a Codex, gather five clues to a plot against the King, and spend\nevenings with one of three villagers. Pure seeded sim with bot, procedural\nthree.js wagon, people, ball and 22 tarot faces, DOM UI, simtest and browsertest.\n\nCo-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01Scowiw8EXjKvQK7UyppQU8"
+  },
+  {
+    "game": "game-122",
+    "commit": "4c343a21cd2d038a14f21855e323e3ab70b2870f",
+    "path": "game-122/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "Rainglass: UI, main loop, journal, gallery, simtest (WIP)",
+    "fileStatus": "modified",
+    "sourceBlobSha": "c8f5f5b1efc4c788a564ac09409ef9fe006569f8",
+    "changes": 2,
+    "commitMessage": "Rainglass: UI, main loop, journal, gallery, simtest (WIP)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01ScowiysQ9WrY1bPv1KCugW"
+  },
+  {
+    "game": "game-123",
+    "commit": "626a9662db42098b9230ad7251d5e51e2e206747",
+    "path": "game-123/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>",
+    "subject": "Add game-123 Atlas of Ink: a cartographer's commission game",
+    "fileStatus": "added",
+    "sourceBlobSha": "d0f2ac8074236099c68a5270a46ec6bad680e9e0",
+    "changes": 181,
+    "commitMessage": "Add game-123 Atlas of Ink: a cartographer's commission game\n\nScry a hidden fantasy island onto parchment with a hold-to-focus spell for six\nclients (farmer, prospector, adventurer, ship captain, pilgrim, king) who each\nuse the map for real. Canvas 2D, sim/view layout, bot-played sim tests, browser\ntests on desktop and touch phones, launcher entry, card style, Garden preview\nand docs.\n\nCo-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01Scowiwvbp3U4PucKfL3mHd"
+  },
+  {
+    "game": "game-130",
+    "commit": "54c7aab91a5e6cdab5ad1a51fe3d4445beecf257",
+    "path": "game-130/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "game-130 Starbase Spooky v1.1.0: a toolbar, room-to-room arrows and a backpack",
+    "fileStatus": "modified",
+    "sourceBlobSha": "a1e7e86aa8fe2e9faa8e5a2ca7d47c1c99631fd2",
+    "changes": 30,
+    "commitMessage": "game-130 Starbase Spooky v1.1.0: a toolbar, room-to-room arrows and a backpack\n\nGetting from room to room was hard (only the map went anywhere) and there was\nno inventory on screen. A toolbar now sits under the picture: the room Kit is\nin with ◀ ▶ to the rooms on either side (a ring in the map's order; the way to\nthe next job glows), a backpack of gadgets and clues with a card and voice\nline for each, and the tools. Door arrows at the picture's edges walk through\ntoo (the sim's new exit command). The job list fills the strip under the\ntoolbar. simtest walks the ring and has a bot finish games by side doors only;\nbrowsertest clicks and taps the toolbar on desktop and both phones.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01ScowixxC5uA81mGAWG5qQk"
+  },
+  {
+    "game": "game-133",
+    "commit": "8f98f4a611f0fc30b9d38aa08a77f9878245a3cb",
+    "path": "game-133/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Fable 5.2 <noreply@anthropic.com>",
+    "subject": "game-133 v1.1.0: a nightly assessment with a grade; the Cauldron shows its whole recipe",
+    "fileStatus": "modified",
+    "sourceBlobSha": "0d01b25b5672f86a8fb275bee931127ec8034d7c",
+    "changes": 44,
+    "commitMessage": "game-133 v1.1.0: a nightly assessment with a grade; the Cauldron shows its whole recipe\n\nCo-Authored-By: Claude Fable 5.2 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01ScowizXniMqNHijg5HQHx4"
+  },
+  {
+    "game": "game-136",
+    "commit": "c257dd99bea8da782bc70771ddf1e9f56cb82e20",
+    "path": "game-136/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "game-136 Pinch & Place: pure simulation, rooms, rating, decorator bot and simtest",
+    "fileStatus": "added",
+    "sourceBlobSha": "b7d4e5eaf714a16acb370ba5aae9fc249ac50f63",
+    "changes": 239,
+    "commitMessage": "game-136 Pinch & Place: pure simulation, rooms, rating, decorator bot and simtest\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01ScowiyXofejK99ncoN1ZdG"
+  },
+  {
+    "game": "game-138",
+    "commit": "6fde13e5fa0d4edc53c185cc0d9690271c100f9d",
+    "path": "game-138/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "game-138: view (POM materials, interior mapping, level meshes, Meshy models), UI, input, audio, simtest",
+    "fileStatus": "modified",
+    "sourceBlobSha": "c20cc0f62d5bc30240869065fb705e48255c0667",
+    "changes": 7,
+    "commitMessage": "game-138: view (POM materials, interior mapping, level meshes, Meshy models), UI, input, audio, simtest\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01ScowiwhBgS4gnWBEdcG6TS"
+  },
+  {
+    "game": "game-139",
+    "commit": "d67b2c1bfc32304b555568031a1a5c1c78ce6b4f",
+    "path": "game-139/js/sim/game.js",
+    "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+    "subject": "game-139 CLEAN SLATE: sim, bot, data, fal art and ElevenLabs audio (work in progress)",
+    "fileStatus": "added",
+    "sourceBlobSha": "c448dea48e17262809925dc416dfd4775c05267e",
+    "changes": 530,
+    "commitMessage": "game-139 CLEAN SLATE: sim, bot, data, fal art and ElevenLabs audio (work in progress)\n\nPyramid-solitaire roguelike deckbuilder about a retired assassin opening an inn.\nPure seeded sim with act() commands, a bot with skill and blade policy, simtest\n(purity, data, rules, determinism, balance), 51 fal pictures and 62 ElevenLabs\nclips with their prompt/processing scripts. View and UI to follow.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01ScowiyMLdBrJXCKbq1QtMm"
+  }
+]
