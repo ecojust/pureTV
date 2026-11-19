@@ -2,13 +2,19 @@
 
 来自 [zhuqipaopao-maker/night-racer-public](https://github.com/zhuqipaopao-maker/night-racer-public) 的非官方 pureTV 手柄适配，固定上游 `3a432cd3bf059dbaaa00d700f0f83e0e5313d40b`。保留雨夜街道、山路、海岸、长安等原场景，以及竞速／计时、漂移氮气、车库改装、金币任务和本地幽灵。
 
-已提供下方 Windows 安装包；Android TV 和 macOS 仍待各自验收。画面比较与来源见[赛车评审](../../docs/racing-nine/reviews/driving/comparison.json)，浏览器实际输入与画面检查见[验证记录](docs/VERIFICATION.md)。
+已提供下方 Windows 和 macOS 安装包；Android TV 仍在验证。画面比较与来源见[赛车评审](../../docs/racing-nine/reviews/driving/comparison.json)，浏览器实际输入与画面检查见[验证记录](docs/VERIFICATION.md)。
 
 ## Windows 下载
 
 0.1.0 x64：[安装 EXE](NightRacer-0.1.0-windows-x64-setup.exe)（21,423,109 字节）· [便携 ZIP](NightRacer-0.1.0-windows-x64.zip)（21,323,745 字节）· [SHA256 校验](SHA256SUMS.txt)。需要 **Windows 10 1903 或更新版本／Windows 11 x64、Microsoft Edge WebView2 Runtime 和可用的 WebGL 2**；便携版请完整解压后运行 `PureTVGame.exe`。安装包未做 Authenticode 签名。
 
 原 Windows CI 的正常端口与占用回退两种模式各通过 10 项检查，包含实际游戏、原 SDK 手柄、失焦／断线取消、存档重启与窗口检查；安装／卸载／重装及无关文件保留也通过。检查覆盖 96 DPI 下 960×540、1280×720，未做其他 DPI 缩放、实体手柄或完整通关测试。同批其他四款失败仍保留，以上结论仅针对本游戏。安装文件沿用原始字节，未重新编译，详见 [Windows 交付记录](docs/windows-delivery/) 和 [版本清单](windows-release.json)。
+
+## macOS 下载
+
+0.1.0 Universal：[DMG](macos/NightRacer-0.1.0-macos-universal.dmg) · [ZIP](macos/NightRacer-0.1.0-macos-universal.zip) · [SHA256](SHA256SUMS.txt)。要求 **macOS 11+、WebGL2**，包含 arm64 与 x86_64。Apple Silicon 原生、端口占用及 Rosetta 模式各通过9项实际检查，包括原 SDK 控制、暂停／断线取消和真实存档重启。**Intel Mac 图形运行仍未验证**；ad-hoc 签名，未经过 Apple 公证，未做实体手柄或完整通关测试。
+
+沿用原始构建文件，未重新打包；首次测试和能力探针失败记录保留，具体范围见 [Mac 交付核验](docs/macos-delivery/verification.json)。原截图可见完整连接 ID；端口占用模式的展开卡中小图标／席位标题未绘出，完整 ID 和游戏名仍可见，赛中截图的紧凑卡正常显示。
 
 | 手柄按键 | 驾驶 | 菜单 |
 | --- | --- | --- |
@@ -33,4 +39,4 @@ npm run build
 npm run build:check
 ```
 
-`dist/` 包含离线页面和原始模型／纹理，测试不会更改游戏时钟或物理规则。Windows 的原 SDK、原生图形、存档与安装包验证见上方；Android TV 与 macOS 仍待各自验收；实体电视和 ESP32 尚未测试。运行要求 WebGL2。
+`dist/` 包含离线页面和原始模型／纹理，测试不会更改游戏时钟或物理规则。Windows 与 macOS 的原 SDK、原生图形、存档与安装包验证见上方；Android TV 仍在验证；实体电视和 ESP32 尚未测试。运行要求 WebGL2。
