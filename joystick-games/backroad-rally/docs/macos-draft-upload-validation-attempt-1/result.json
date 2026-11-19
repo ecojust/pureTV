@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "sourceHeadBeforeChanges": "3317a7e3b15bb832878a86ed0fe6d2d96a2ce0aa",
+  "files": [
+    {
+      "path": "joystick-games/tools/backroad-macos-draft-upload.py",
+      "bytes": 14501,
+      "sha256": "7700e68b4575864e00dbc0e472981aec6a47deb7e2a56231d65d9147d757a074",
+      "role": "new_source"
+    },
+    {
+      "path": "joystick-games/tools/backroad-macos-draft-upload-test.py",
+      "bytes": 17319,
+      "sha256": "ece6d53da03e487c2861576e07179a658cc63910e475cdd5d54b3c10e0d58647",
+      "role": "new_source"
+    },
+    {
+      "path": ".github/workflows/joystick-backroad-macos-draft-upload.yml",
+      "bytes": 1602,
+      "sha256": "1de1b1b948979ac76966cecf0e11934c3b4315335a5b59967aab4f44fee23f38",
+      "role": "new_source"
+    },
+    {
+      "path": "joystick-games/tools/artifact-draft-transfer.py",
+      "bytes": 22122,
+      "sha256": "3a6e98adaa7b560650ccffe0c7c50c7bc3900f7342b73bafee535b464b8ed983",
+      "role": "unchanged_imported_dependency"
+    },
+    {
+      "path": "joystick-games/tools/android-runtime-artifact.py",
+      "bytes": 9210,
+      "sha256": "ee5d128e3510ed59778e7e871978fc8a8345e6d7e5a8436c5bf531a0879543d5",
+      "role": "unchanged_imported_dependency"
+    }
+  ],
+  "checks": [
+    {
+      "name": "new helper offline fixture boundaries",
+      "command": "TMPDIR=/dev/shm/racing-review-karts/countdown-schema-tests PYTHONDONTWRITEBYTECODE=1 python3 joystick-games/tools/backroad-macos-draft-upload-test.py",
+      "tests": 15,
+      "status": "passed",
+      "log": "tests-final-v2.log"
+    },
+    {
+      "name": "unchanged original transfer dependency boundaries",
+      "tests": 22,
+      "status": "passed",
+      "log": "dependency-tests.log"
+    },
+    {
+      "name": "new workflow actionlint",
+      "command": "/dev/shm/racing-tooling/actionlint -shellcheck= .github/workflows/joystick-backroad-macos-draft-upload.yml",
+      "status": "passed",
+      "shellcheckEnabled": false,
+      "log": "actionlint.log"
+    }
+  ],
+  "earlierAttempts": [
+    {
+      "log": "tests.log",
+      "result": "12 passed; one HTTP fixture failed because replacing HTTPSConnection before urllib opener creation removed debuglevel; no real network involved"
+    },
+    {
+      "log": "tests-final.log",
+      "result": "14 passed before real draft untagged URL observation; final fixture includes that observed behavior"
+    }
+  ],
+  "scope": {
+    "originalRun": 44608415225,
+    "originalAttempt": 1,
+    "originalSource": "68d343d22c762c904eb83854d4ab9c4113a7c30f",
+    "originalArtifact": 14570673468,
+    "existingDraftRelease": 451969286,
+    "tag": "joystick-backroad-rally-v0.1.0",
+    "game": "backroad-rally"
+  },
+  "nativePackageExecutionPerformed": false,
+  "largeArtifactDownloadedLocally": false,
+  "releaseWritePerformed": false,
+  "workflowDispatched": false,
+  "limitations": [
+    "This is local validation of the narrow transfer helper, not proof of a real CI upload.",
+    "The existing original source/package/native acceptance audits remain separate.",
+    "Draft assets may use temporary untagged download URLs; these do not mean the release was published.",
+    "No new Release creation, publishing, overwrite, deletion, building or signing operation exists in this helper."
+  ]
+}
