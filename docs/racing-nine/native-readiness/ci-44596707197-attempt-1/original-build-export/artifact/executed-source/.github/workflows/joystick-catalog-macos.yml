@@ -1,0 +1,409 @@
+name: Joystick catalog macOS
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Frozen 40-character commit (must be the selected workflow commit)
+        required: true
+        type: string
+      batches:
+        description: Comma-separated registry batch names, or all
+        required: true
+        default: all
+        type: string
+permissions:
+  contents: read
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    outputs:
+      build_matrix: ${{ steps.plan.outputs.build_matrix }}
+      verify_matrix: ${{ steps.plan.outputs.verify_matrix }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          sparse-checkout: |
+            joystick-games
+            puretv-joystick
+            .github/workflows
+      - name: Validate frozen source and registered batches
+        id: plan
+        env:
+          REQUESTED_SOURCE: ${{ inputs.source_sha }}
+          REQUESTED_BATCHES: ${{ inputs.batches }}
+        run: |
+          python3 - <<'PY'
+          import hashlib,importlib.util,json,os,re,subprocess
+          from pathlib import Path
+          source=os.environ['REQUESTED_SOURCE']
+          assert re.fullmatch(r'[a-f0-9]{40}',source), 'A complete lowercase commit SHA is required'
+          assert source==os.environ['GITHUB_SHA']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(), 'Select the frozen commit as the workflow ref'
+          build_spec=importlib.util.spec_from_file_location('macos_builder','joystick-games/tools/macos-build.py');builder=importlib.util.module_from_spec(build_spec);build_spec.loader.exec_module(builder)
+          registry_path=Path('joystick-games/catalog-registry.json');registry=builder.registry_data(registry_path.read_text())
+          spec=importlib.util.spec_from_file_location('qa_plan','joystick-games/tools/qa-plan.py');qa_plan=importlib.util.module_from_spec(spec);spec.loader.exec_module(qa_plan)
+          spec=importlib.util.spec_from_file_location('coverage','joystick-games/tools/macos-coverage.py');coverage=importlib.util.module_from_spec(spec);spec.loader.exec_module(coverage)
+          assert registry['schemaVersion']==1 and isinstance(registry['games'],dict) and isinstance(registry['batches'],dict)
+          requested=os.environ['REQUESTED_BATCHES']
+          batches=list(registry['batches']) if requested=='all' else [part.strip() for part in requested.split(',')]
+          assert batches and len(batches)==len(set(batches))
+          selected=[];seen=set();renderers={};test_scripts={};coverage_policies={}
+          for batch in batches:
+            assert re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*',batch) and batch in registry['batches'], batch
+            games=registry['batches'][batch];assert isinstance(games,list) and games and len(games)==len(set(games)), batch
+            for game in games:
+              assert re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*',game) and game in registry['games'] and game not in seen, game
+              assert game not in ['cf-transport-ship','qq-speed'], 'Previously released package bytes are outside this workflow'
+              seen.add(game);meta=json.loads((Path('joystick-games')/game/'game.json').read_text());entry=registry['games'][game]
+              assert meta['id']==game and meta['packageName']==entry['packageName']
+              assert re.fullmatch(r'[A-Za-z][A-Za-z0-9]*',entry['executable']) and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9 ._-]*',entry['appName'])
+              renderers[game]=qa_plan.accepted_renderers(qa_plan.load_plan(Path('joystick-games')/game/'qa-plan.json'))
+              coverage_policies[game]=coverage.policy(game,entry,renderers[game])
+              test_scripts[game]=json.loads((Path('joystick-games')/game/'package.json').read_text()).get('scripts',{}).get('test') or None
+            selected.append({'batch':batch,'games':games})
+          build={'include':selected};verify={'include':[dict(item,runner=runner) for item in selected for runner in ['macos-latest','macos-15-intel']]}
+          paths=[registry_path,Path('.github/workflows/joystick-catalog-macos.yml'),Path('joystick-games/tools/qa-plan.py'),Path('puretv-joystick/joystick_sdk.py'),*sorted(Path('joystick-games/tools').glob('macos-*.py'))]
+          paths += [Path('joystick-games/shared/macos/tools/webgl-probe.swift'),Path('joystick-games/shared/macos/tests/capability.test.py'),Path('joystick-games/shared/macos/tests/coverage.test.py')]
+          inputs={str(p):{'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in paths}
+          record={'sourceCommit':source,'runId':int(os.environ['GITHUB_RUN_ID']),'runAttempt':int(os.environ['GITHUB_RUN_ATTEMPT']),'batches':selected,'games':sorted(seen),'renderers':renderers,'coveragePolicies':coverage_policies,'originalTestScripts':test_scripts,'inputFiles':inputs}
+          out=Path(os.environ['RUNNER_TEMP'])/'plan';out.mkdir();(out/'plan.json').write_text(json.dumps(record,indent=2)+'\n')
+          (out/'catalog-registry.json').write_bytes(registry_path.read_bytes());(out/'executed-workflow.yml').write_bytes(Path('.github/workflows/joystick-catalog-macos.yml').read_bytes())
+          with open(os.environ['GITHUB_OUTPUT'],'a') as stream:
+            stream.write('build_matrix='+json.dumps(build,separators=(',',':'))+'\nverify_matrix='+json.dumps(verify,separators=(',',':'))+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joystick-catalog-macos-plan
+          path: ${{ runner.temp }}/plan/
+          if-no-files-found: warn
+          retention-days: 30
+  build:
+    needs: plan
+    runs-on: macos-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.build_matrix) }}
+    env:
+      GAMES_JSON: ${{ toJSON(matrix.games) }}
+      BATCH: ${{ matrix.batch }}
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          sparse-checkout: |
+            joystick-games
+            puretv-joystick
+            .github/workflows
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preserve every game's regressions and build independent universal packages
+        run: |
+          python3 - <<'PY'
+          import datetime,hashlib,json,os,shutil,signal,subprocess,sys,traceback
+          from pathlib import Path
+          temp=Path(os.environ['RUNNER_TEMP']);evidence=temp/'build-evidence';packages=temp/'packages';evidence.mkdir();packages.mkdir()
+          source=os.environ['GITHUB_SHA'];assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==source
+          assert subprocess.check_output(['uname','-m'],text=True).strip()=='arm64', 'This build job must run on Apple Silicon'
+          report={'sourceCommit':source,'batch':os.environ['BATCH'],'status':'running','shared':[],'games':[]}
+          def save(): (evidence/'build-report.json').write_text(json.dumps(report,indent=2)+'\n')
+          def execute(argv,log,cwd=None,timeout=900):
+            result={'command':list(map(str,argv)),'status':'running','log':str(log.relative_to(evidence)),'startedAt':datetime.datetime.now(datetime.timezone.utc).isoformat()}
+            log.parent.mkdir(parents=True,exist_ok=True)
+            with log.open('w') as stream:
+              try:
+                process=subprocess.Popen(result['command'],cwd=cwd,stdout=stream,stderr=subprocess.STDOUT,start_new_session=True)
+                try:process.wait(timeout=timeout)
+                except subprocess.TimeoutExpired:
+                  os.killpg(process.pid,signal.SIGKILL);process.wait();raise
+                result.update(returncode=process.returncode,status='passed' if process.returncode==0 else 'failed')
+              except Exception:
+                result.update(status='failed',error=traceback.format_exc());stream.write(result['error'])
+            print(str(log)+': '+result['status'],flush=True);return result
+          # The existing *.test.py discovery executes the real HTTP suite once.
+          # Preserve its exact executed source before any native compilation,
+          # including failures; the always-uploaded build artifact owns these.
+          asset_sources=['.github/workflows/joystick-catalog-macos.yml','joystick-games/shared/macos/Sources/LocalAssetServer.swift','joystick-games/shared/macos/tests/local-assets.test.py']
+          asset_sources += [path.as_posix() for path in sorted(Path('joystick-games/tools/fixtures/audio').glob('*')) if path.is_file()]
+          asset_inputs={}
+          for name in asset_sources:
+            data=Path(name).read_bytes();assert data==subprocess.check_output(['git','show',source+':'+name]), 'Uncommitted asset HTTP test input'
+            target=evidence/'executed-source'/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
+            asset_inputs[name]={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
+          (evidence/'local-assets-source-inputs.json').write_text(json.dumps({'sourceCommit':source,'runnerArchitecture':'arm64','files':asset_inputs},indent=2)+'\n')
+          coverage_inputs={}
+          for name in ['joystick-games/tools/macos-capability.py','joystick-games/tools/macos-coverage.py','joystick-games/shared/macos/tools/webgl-probe.swift','joystick-games/shared/macos/tests/capability.test.py','joystick-games/shared/macos/tests/coverage.test.py']:
+            data=Path(name).read_bytes();assert data==subprocess.check_output(['git','show',source+':'+name]), 'Uncommitted coverage test input'
+            target=evidence/'executed-source'/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
+            coverage_inputs[name]={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
+          (evidence/'coverage-source-inputs.json').write_text(json.dumps({'sourceCommit':source,'files':coverage_inputs},indent=2)+'\n')
+          os.environ['PURETV_ASSET_TEST_EVIDENCE']=str(evidence/'local-assets-compile')
+          shared=[['node','--test','joystick-games/shared/macos/tests/web-bridge.test.mjs']]
+          shared += [['python3',str(path)] for path in sorted(Path('joystick-games/shared/macos/tests').glob('*.test.py'))]
+          assert any('catalog-tools.test.py' in str(arg) for command in shared for arg in command), 'Catalog source/cache/QA regression must exist'
+          assert sum('local-assets.test.py' in str(arg) for command in shared for arg in command)==1, 'Native local-asset HTTP suite must run exactly once'
+          shared += [['xcrun','swiftc','-swift-version','5','joystick-games/shared/macos/Sources/ControllerServer.swift','joystick-games/shared/macos/tests/ControllerServerTests.swift','-o',str(temp/'controller-tests')],[str(temp/'controller-tests')]]
+          shared += [['xcrun','swiftc','-swift-version','5','joystick-games/shared/macos/Sources/GameStorage.swift','joystick-games/shared/macos/tests/GameStorageTests.swift','-o',str(temp/'storage-tests')],[str(temp/'storage-tests')]]
+          for index,command in enumerate(shared):report['shared'].append(execute(command,evidence/'shared'/f'{index:02d}.log'));save()
+          shared_ok=all(item['status']=='passed' for item in report['shared'])
+          for game in json.loads(os.environ['GAMES_JSON']):
+            game_dir=Path('joystick-games')/game;test_script=json.loads((game_dir/'package.json').read_text()).get('scripts',{}).get('test') or None
+            record={'game':game,'status':'running','originalTestScript':test_script,'testProvided':test_script is not None,'tests':[]};report['games'].append(record);save()
+            for name,command in [('dependencies',['npm','ci','--no-audit','--no-fund']),('original-tests',['npm','test']),('frozen-dist',['npm','run','build:check'])]:
+              if name=='original-tests' and test_script is None:
+                log=evidence/game/(name+'.log');log.parent.mkdir(parents=True,exist_ok=True);log.write_text('No package test script is supplied. No original-test pass is claimed. Frozen distribution and shared/native checks remain required.\n')
+                record['tests'].append({'name':name,'status':'not_provided','log':str(log.relative_to(evidence)),'reason':'No package test script supplied'})
+              else:record['tests'].append(dict(execute(command,evidence/game/(name+'.log'),cwd=game_dir),name=name))
+              save()
+            if shared_ok and all(item['status']=='passed' or (item['name']=='original-tests' and item['status']=='not_provided' and test_script is None) for item in record['tests']):
+              record['build']=execute(['python3','joystick-games/tools/macos-build.py','--game',game,'--output',str(temp/'build'/game),'--host-cache',str(temp/'host-cache')],evidence/game/'native-build.log',timeout=1200)
+              if record['build']['status']=='passed':
+                built=temp/'build'/game;target=packages/game;target.mkdir()
+                for path in [*built.glob('*-macos-universal.zip'),*built.glob('*-macos-universal.dmg'),built/'build-manifest.json',built/'SHA256SUMS.txt']:shutil.copy2(path,target/path.name)
+                record['status']='passed'
+              else:record['status']='failed'
+            else:record.update(status='failed',build={'status':'skipped','reason':'Shared or game source regressions failed; original reports retained'})
+            save()
+          report['status']='passed' if shared_ok and all(item['status']=='passed' for item in report['games']) else 'failed';save()
+          sys.exit(0 if report['status']=='passed' else 1)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joystick-catalog-macos-build-${{ matrix.batch }}
+          path: ${{ runner.temp }}/build-evidence/
+          if-no-files-found: warn
+          include-hidden-files: true
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joystick-catalog-macos-packages-${{ matrix.batch }}
+          path: ${{ runner.temp }}/packages/
+          if-no-files-found: warn
+          include-hidden-files: true
+          retention-days: 30
+  verify:
+    if: ${{ !cancelled() && needs.plan.result == 'success' }}
+    needs: [plan, build]
+    permissions:
+      contents: read
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.verify_matrix) }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 180
+    env:
+      GAMES_JSON: ${{ toJSON(matrix.games) }}
+      BATCH: ${{ matrix.batch }}
+      RUNNER_KIND: ${{ matrix.runner }}
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          sparse-checkout: |
+            joystick-games
+            puretv-joystick
+            .github/workflows
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: joystick-catalog-macos-packages-${{ matrix.batch }}
+          path: ${{ runner.temp }}/packages
+      - name: Run each installed app with real native gameplay and original SDK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import datetime,importlib.util,json,os,signal,subprocess,sys,traceback
+          from pathlib import Path
+          temp=Path(os.environ['RUNNER_TEMP']);out=temp/'qa';out.mkdir();source=os.environ['GITHUB_SHA']
+          spec=importlib.util.spec_from_file_location('qa_plan','joystick-games/tools/qa-plan.py');qa_plan=importlib.util.module_from_spec(spec);spec.loader.exec_module(qa_plan)
+          spec=importlib.util.spec_from_file_location('coverage','joystick-games/tools/macos-coverage.py');coverage=importlib.util.module_from_spec(spec);spec.loader.exec_module(coverage)
+          registry=json.loads(Path('joystick-games/catalog-registry.json').read_text())
+          assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==source
+          arm=os.environ['RUNNER_KIND']=='macos-latest';expected_arch='arm64' if arm else 'x86_64'
+          assert subprocess.check_output(['uname','-m'],text=True).strip()==expected_arch, 'Runner architecture changed'
+          report={'sourceCommit':source,'batch':os.environ['BATCH'],'runner':os.environ['RUNNER_KIND'],'expectedArchitecture':expected_arch,'status':'running','games':[]}
+          def save(): (out/'batch-report.json').write_text(json.dumps(report,indent=2)+'\n')
+          def execute(argv,log,timeout=900):
+            result={'command':list(map(str,argv)),'status':'running','log':str(log.relative_to(out)),'startedAt':datetime.datetime.now(datetime.timezone.utc).isoformat()};log.parent.mkdir(parents=True,exist_ok=True)
+            with log.open('w') as stream:
+              try:
+                process=subprocess.Popen(result['command'],stdout=stream,stderr=subprocess.STDOUT,start_new_session=True)
+                try:process.wait(timeout=timeout)
+                except subprocess.TimeoutExpired:
+                  os.killpg(process.pid,signal.SIGKILL);process.wait();raise
+                result.update(returncode=process.returncode,status='passed' if process.returncode==0 else 'failed')
+              except Exception:result.update(status='failed',error=traceback.format_exc());stream.write(result['error'])
+            print(str(log)+': '+result['status'],flush=True);return result
+          if arm:
+            available=subprocess.run(['/usr/bin/arch','-x86_64','/usr/bin/true'],capture_output=True).returncode==0
+            if not available:report['rosettaInstallation']=execute(['sudo','/usr/sbin/softwareupdate','--install-rosetta','--agree-to-license'],out/'rosetta-install.log',1200)
+          save()
+          for game in json.loads(os.environ['GAMES_JSON']):
+            record={'game':game,'status':'running','checks':[]};report['games'].append(record);save()
+            package=temp/'packages'/game;game_out=out/game;game_out.mkdir()
+            try:
+              meta=json.loads((package/'build-manifest.json').read_text());assert meta['sourceCommit']==source and meta['game']==game
+              renderers=qa_plan.accepted_renderers(qa_plan.load_plan(Path('joystick-games')/game/'qa-plan.json'))
+              coverage_policy=coverage.policy(game,registry['games'][game],renderers)
+              install=execute(['python3','joystick-games/tools/macos-packages.py','--directory',str(package),'--output',str(game_out/'package-verification.json')],game_out/'package-verification.log');record['checks'].append(install);save()
+              if install['status']=='passed':
+                app=package/'installed'/meta['appName']
+                if coverage_policy!='full-v1':
+                  record['capability']={'before':execute(['python3','joystick-games/tools/macos-capability.py','--game',game,'--phase','before','--manifest',str(package/'build-manifest.json'),'--output',str(game_out/'capability/before')],game_out/'capability-before.log')};save()
+                for mode,extra in [('native',[]),*([('occupied-port',['--occupy-default-port']),('rosetta',['--launch-architecture','x86_64'])] if arm else [])]:
+                  result=execute(['python3','joystick-games/tools/macos-verify.py','--game',game,'--app',str(app),'--output',str(game_out/mode),*extra],game_out/(mode+'.log'));record['checks'].append(result);save()
+                  if result['status']=='passed':
+                    try:
+                      observed=json.loads((game_out/mode/'report.json').read_text())
+                      assert observed['status']=='passed', 'Catalog gameplay cannot be waived as limited graphics'
+                      assert observed['initialization']['observedGame']['renderer'] in renderers
+                      assert observed['nativeProcessArchitecture']==('x86_64' if mode=='rosetta' else expected_arch)
+                    except Exception:result.update(status='failed',error=traceback.format_exc())
+                    save()
+                if coverage_policy!='full-v1':
+                  record['capability']['after']=execute(['python3','joystick-games/tools/macos-capability.py','--game',game,'--phase','after','--manifest',str(package/'build-manifest.json'),'--output',str(game_out/'capability/after')],game_out/'capability-after.log');save()
+              record['status']='passed' if record['checks'] and all(item['status']=='passed' for item in record['checks']) else 'failed'
+            except Exception:record.update(status='failed',error=traceback.format_exc())
+            save()
+          report['status']='passed' if all(item['status']=='passed' for item in report['games']) else 'failed';save()
+          sys.exit(0 if report['status']=='passed' else 1)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joystick-catalog-macos-qa-${{ matrix.batch }}-${{ matrix.runner }}
+          path: ${{ runner.temp }}/qa/
+          if-no-files-found: warn
+          include-hidden-files: true
+          retention-days: 30
+  export:
+    if: ${{ !cancelled() && needs.plan.result == 'success' && needs.build.result == 'success' }}
+    needs: [plan, build, verify]
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          sparse-checkout: |
+            joystick-games/tools
+            .github/workflows
+      - uses: actions/download-artifact@v4
+        with:
+          name: joystick-catalog-macos-plan
+          path: ${{ runner.temp }}/export/provenance
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: joystick-catalog-macos-build-*
+          path: ${{ runner.temp }}/export/build-evidence
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: joystick-catalog-macos-qa-*
+          path: ${{ runner.temp }}/export/evidence
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: joystick-catalog-macos-packages-*
+          path: ${{ runner.temp }}/export/packages
+      - name: Validate every package and original report, then export an immutable branch
+        id: validate-export
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import hashlib,importlib.util,json,os,re,subprocess,traceback
+          from pathlib import Path
+          out=Path(os.environ['RUNNER_TEMP'])/'export';source=os.environ['GITHUB_SHA'];run=os.environ['GITHUB_RUN_ID'];attempt=os.environ['GITHUB_RUN_ATTEMPT'];repo=os.environ['GITHUB_REPOSITORY']
+          coverage_report={'schemaVersion':2,'sourceCommit':source,'qaSourceCommit':os.environ['GITHUB_SHA'],'runId':int(run),'runAttempt':int(attempt),'status':'checking','games':{},'originalGameReportsModified':False}
+          try:
+            assert re.fullmatch(r'[a-f0-9]{40}',source) and run.isdigit() and attempt.isdigit()
+            plan=json.loads((out/'provenance/plan.json').read_text());assert plan['sourceCommit']==source and plan['runId']==int(run) and plan['runAttempt']==int(attempt)
+            registry=json.loads((out/'provenance/catalog-registry.json').read_text())
+            def matches(path,item):return path.is_file() and not path.is_symlink() and path.stat().st_size==item['bytes'] and hashlib.sha256(path.read_bytes()).hexdigest()==item['sha256']
+            assert matches(out/'provenance/catalog-registry.json',plan['inputFiles']['joystick-games/catalog-registry.json'])
+            assert matches(out/'provenance/executed-workflow.yml',plan['inputFiles']['.github/workflows/joystick-catalog-macos.yml'])
+            coverage_source=Path('joystick-games/tools/macos-coverage.py')
+            assert matches(coverage_source,plan['inputFiles']['joystick-games/tools/macos-coverage.py']), 'Coverage source differs from frozen plan'
+            (out/'provenance/executed-macos-coverage.py').write_bytes(coverage_source.read_bytes())
+            spec=importlib.util.spec_from_file_location('coverage',coverage_source);coverage=importlib.util.module_from_spec(spec);spec.loader.exec_module(coverage)
+            count=0
+            for batch in plan['batches']:
+              name=batch['batch'];games=batch['games'];assert games==registry['batches'][name]
+              build=json.loads((out/'build-evidence'/('joystick-catalog-macos-build-'+name)/'build-report.json').read_text())
+              assert build['sourceCommit']==source and build['status']=='passed' and [item['game'] for item in build['games']]==games
+              assert build['shared'] and all(item['status']=='passed' for item in build['shared'])
+              for game in games:
+                record=next(item for item in build['games'] if item['game']==game);assert record['status']==record['build']['status']=='passed' and len(record['tests'])==3
+                assert record['originalTestScript']==plan['originalTestScripts'][game] and record['testProvided'] is (plan['originalTestScripts'][game] is not None)
+                assert [item['name'] for item in record['tests']]==['dependencies','original-tests','frozen-dist']
+                assert record['tests'][0]['status']==record['tests'][2]['status']=='passed'
+                assert record['tests'][1]['status']==('passed' if plan['originalTestScripts'][game] else 'not_provided')
+                package=out/'packages'/('joystick-catalog-macos-packages-'+name)/game;meta=json.loads((package/'build-manifest.json').read_text());entry=registry['games'][game]
+                assert meta['game']==game and meta['sourceCommit']==source and meta['committedInputsVerified'] is True
+                assert meta['bundleIdentifier']==entry['packageName'] and meta['appName']==entry['appName']+'.app' and set(meta['architectures'])=={'arm64','x86_64'} and meta['signature']=='ad-hoc' and meta['appleNotarized'] is False
+                assert len(meta['packages'])==2 and {Path(key).suffix for key in meta['packages']}=={'.zip','.dmg'}
+                for filename,item in meta['packages'].items():assert Path(filename).name==filename and matches(package/filename,item), filename
+                executable=meta['appFiles']['Contents/MacOS/'+entry['executable']]['sha256']
+                arm_folder=out/'evidence'/('joystick-catalog-macos-qa-'+name+'-macos-latest')
+                intel_folder=out/'evidence'/('joystick-catalog-macos-qa-'+name+'-macos-15-intel')
+                coverage_report['games'][game]=coverage.assess_game(game,meta,plan,entry,arm_folder,intel_folder)
+                count+=1
+            assert count==len(plan['games'])
+            partial=any(row['overallGameplayVerification']=='partial' for row in coverage_report['games'].values())
+            coverage_report.update(status='validated',overallGameplayVerification='partial' if partial else 'complete',deliveryEligibility='eligible_with_intel_unverified' if partial else 'eligible')
+          except Exception:
+            coverage_report.update(status='blocked',deliveryEligibility='blocked',reason=traceback.format_exc());raise
+          finally:
+            (out/'coverage-report.json').write_text(json.dumps(coverage_report,indent=2)+'\n')
+
+          files={}
+          for path in sorted(out.rglob('*')):
+            assert not path.is_symlink(), path
+            if path.is_file():
+              assert path.stat().st_size<100000000, 'Git export file exceeds supported size: '+str(path)
+              files[path.relative_to(out).as_posix()]={'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+          branch=f'build-assets/joystick-catalog-macos-{run}-attempt-{attempt}'
+          manifest={'sourceCommit':source,'runId':int(run),'runAttempt':int(attempt),'exportBranch':branch,'games':plan['games'],'installPackagesValidated':True,'schemaVersion':2,'packageArchitectures':['arm64','x86_64'],'verificationCoverage':coverage_report['games'],'overallGameplayVerification':coverage_report['overallGameplayVerification'],'deliveryEligibility':coverage_report['deliveryEligibility'],'renderers':plan['renderers'],'physicalControllerTested':False,'appleNotarized':False,'files':files}
+          (out/'export-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          def git(*args):return subprocess.run(['git','-C',str(out),*args],check=True)
+          git('init','-b','export');git('config','user.name','github-actions[bot]');git('config','user.email','41898282+github-actions[bot]@users.noreply.github.com');git('add','.');git('commit','-m',f'Export validated catalog macOS {run} attempt {attempt} [skip ci]')
+          subprocess.run(['gh','auth','setup-git'],check=True);remote='https://github.com/'+repo+'.git';git('remote','add','origin',remote)
+          assert not subprocess.check_output(['git','ls-remote','--heads',remote,'refs/heads/'+branch],text=True).strip(), 'Immutable export branch already exists'
+          git('push','--force-with-lease=refs/heads/'+branch+':','origin','HEAD:refs/heads/'+branch)
+          PY
+      - name: Preserve a coverage verdict even when evidence preparation fails
+        if: always()
+        env:
+          STEP_RESULTS: ${{ toJSON(steps) }}
+        run: |
+          python3 - <<'PYFINAL'
+          import json,os
+          from pathlib import Path
+          path=Path(os.environ['RUNNER_TEMP'])/'export/coverage-report.json'
+          if not path.exists():
+              path.parent.mkdir(parents=True,exist_ok=True)
+              steps={name:{key:value.get(key) for key in ['outcome','conclusion']} for name,value in json.loads(os.environ['STEP_RESULTS']).items()}
+              path.write_text(json.dumps({'schemaVersion':2,'status':'blocked','deliveryEligibility':'blocked','reason':'Evidence preparation or validation could not complete; see original step outcomes and job logs','stepOutcomes':steps,'qaSourceCommit':os.environ['GITHUB_SHA'],'runId':int(os.environ['GITHUB_RUN_ID']),'runAttempt':int(os.environ['GITHUB_RUN_ATTEMPT']),'originalGameReportsModified':False},indent=2)+'\n')
+          PYFINAL
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joystick-catalog-macos-coverage
+          path: ${{ runner.temp }}/export/coverage-report.json
+          if-no-files-found: error
+          retention-days: 30
