@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/dev/shm/racing-native-readiness/gdb-local/mi-signal-experiment.py", line 63, in <module>
+    for mode,detach in [('fatal',False),('handled',False),('timeout',False),('fatal',True)]:case(mode,detach)
+                                                                                            ^^^^^^^^^^^^^^^^^
+  File "/dev/shm/racing-native-readiness/gdb-local/mi-signal-experiment.py", line 48, in case
+    event=mi.stop();assert 'signal-name="SIGSEGV"' in event,event;report['stops'].append(event);report.setdefault('stacks',[]).append(mi.command('-stack-list-frames --no-frame-filters 0 11'))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: *stopped,frame={addr="0x00007fa56bb8e3a7",func="??",args=[],from="/lib/x86_64-linux-gnu/libc.so.6",arch="i386:x86-64"},thread-id="1",stopped-threads="all",core="0"

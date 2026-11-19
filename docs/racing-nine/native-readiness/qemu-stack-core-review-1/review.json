@@ -1,0 +1,111 @@
+{
+  "status": "core-stage-no-blocker-integration-not-reviewed",
+  "reviewer": "racing_review_arcade",
+  "reviewedAt": "2026-11-19T23:20:16.123046+00:00",
+  "scope": "Static review of exact core helper and tests, plus original real ELF/MI evidence hashes. No test rerun or new target attachment.",
+  "sourceFiles": {
+    "joystick-games/tools/android-qemu-stack.py": {
+      "bytes": 32317,
+      "sha256": "91fb4cd86d5378e03f9a089663db213c45e1bb310bf73dbf23afa06e65481489"
+    },
+    "joystick-games/qa/android/test_qemu_stack.py": {
+      "bytes": 23915,
+      "sha256": "3fffbed20e5d15cde5478d777b2150b541784b4bb8202e2dbb080a1c9f0742a0"
+    }
+  },
+  "originalExecution": {
+    "path": "/dev/shm/racing-review-karts/qemu-stack-tests-attempt-3/result.json",
+    "bytes": 2894,
+    "sha256": "6580090a73e0386bce534484df0ec8eaa75229c0c29d75e53fb392796b3c6865",
+    "tests": 28,
+    "skipped": 0,
+    "exitCode": 0,
+    "artifacts": [
+      {
+        "path": "android-qemu-stack.py",
+        "bytes": 32317,
+        "sha256": "91fb4cd86d5378e03f9a089663db213c45e1bb310bf73dbf23afa06e65481489"
+      },
+      {
+        "path": "exit-code.txt",
+        "bytes": 2,
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      {
+        "path": "source-after.sha256",
+        "bytes": 220,
+        "sha256": "d921633e297322540b3dd394c73204633516ff45f159935926afef482c39bd2f"
+      },
+      {
+        "path": "source-before.sha256",
+        "bytes": 220,
+        "sha256": "d921633e297322540b3dd394c73204633516ff45f159935926afef482c39bd2f"
+      },
+      {
+        "path": "test_qemu_stack.py",
+        "bytes": 23915,
+        "sha256": "3fffbed20e5d15cde5478d777b2150b541784b4bb8202e2dbb080a1c9f0742a0"
+      },
+      {
+        "path": "tests.log",
+        "bytes": 4234,
+        "sha256": "5b62ea0cb31a4da72cd2610287fca5263d6e121d985ea15e7a2bb9656dc4cc13"
+      }
+    ],
+    "originalGdbScope": "Local GDB13.1 only; current container has no readable Yama ptrace_scope file."
+  },
+  "readOnlyChecker": {
+    "bytes": 5030,
+    "sha256": "f2a4a190cc8a9771094eaee5b956d51f62a6b2fb487105ac644ccab2825032c1"
+  },
+  "findings": [
+    {
+      "item": "Target/debugger identity",
+      "result": "Current parent, target PID/start/path/exeSHA/UID/TracerPid and actual GDB identity are checked after attach and immediately before every frame query."
+    },
+    {
+      "item": "Collection bounds",
+      "result": "4 SIGSEGV events x 4 threads x 12 frames; command deadlines use remaining window; 2MiB capture stream budget and separate bounded cleanup budget; only sanitized frame fields and module metadata are retained."
+    },
+    {
+      "item": "Module scope",
+      "result": "Mapped file path resolves to a regular file under allowed roots before hashing; symlink escape is covered by a negative case."
+    },
+    {
+      "item": "Signals",
+      "result": "Original local fatal and handled-then-fatal tests preserve parent -11, external TERM/INT preserve -15/-2, healthy direct detach returns 0, event-limit detach preserves pending fault. Initial attach-time SIGSEGV preservation is covered synthetically and is not called a real attach-time crash."
+    },
+    {
+      "item": "Uncertain handshake and cleanup",
+      "result": "Only the original attach token done/error, successful detach or actual debugger exit resolves attachment; unrelated detach error does not unlock reap. Unknown cleanup stays blocked, no kill/terminate method is present in the production helper."
+    },
+    {
+      "item": "Report budget",
+      "result": "Per-frame reserve and explicit minimal blocked-report fallback keep cleanup status writable. Partial fault events remain recorded."
+    },
+    {
+      "item": "Privilege",
+      "result": "use_sudo=True is rejected before creating output or a debugger process. No sudo execution or global ptrace/security change is present in this core."
+    }
+  ],
+  "previousDraftFindingsResolved": [
+    "module symlink escape",
+    "per-frame target/debugger identity",
+    "remaining capture deadline",
+    "unresolved attach result versus detach error",
+    "oversize report could obscure cleanup",
+    "initial real signal at attach could be omitted"
+  ],
+  "notYetReviewed": [
+    "Prepared GDB before QEMU launch",
+    "Exact per-child PR_SET_PTRACER identity authorized by root",
+    "Single-threaded preexec setup",
+    "Supervisor and debugger no-reap handshake across normal/error/cancel paths",
+    "CI same-user/Yama permission gate and GDB version/hash linkage",
+    "Default-off workflow/hook and fixed original APK/argv/API/GPU isolation"
+  ],
+  "integrationApproved": false,
+  "workflowDispatches": 0,
+  "newNativeOrDebuggerExecution": false,
+  "gameplayAcceptanceImplied": false
+}

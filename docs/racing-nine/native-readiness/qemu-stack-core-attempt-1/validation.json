@@ -1,0 +1,42 @@
+{
+  "stage": "core helper and tests only; no production integration or CI readiness claim",
+  "sourceFiles": {
+    "joystick-games/tools/android-qemu-stack.py": {
+      "bytes": 32317,
+      "sha256": "91fb4cd86d5378e03f9a089663db213c45e1bb310bf73dbf23afa06e65481489"
+    },
+    "joystick-games/qa/android/test_qemu_stack.py": {
+      "bytes": 23915,
+      "sha256": "3fffbed20e5d15cde5478d777b2150b541784b4bb8202e2dbb080a1c9f0742a0"
+    }
+  },
+  "testAttempts": [
+    {
+      "attempt": 1,
+      "tests": 20,
+      "helperSha256": "fa9d9bec508aa7c2f1b9d4e521a7ed9c115edf01f81ab61bc33b785b298aa556"
+    },
+    {
+      "attempt": 2,
+      "tests": 27,
+      "helperSha256": "66d30261635ac84dc09c4ad2a93ef725b723c5f0475029d9658d867db390b3e5"
+    },
+    {
+      "attempt": 3,
+      "tests": 28,
+      "helperSha256": "91fb4cd86d5378e03f9a089663db213c45e1bb310bf73dbf23afa06e65481489"
+    }
+  ],
+  "finalTestsPassed": 28,
+  "finalSkipped": 0,
+  "productionSupervisorChanged": false,
+  "productionWorkflowChanged": false,
+  "newWorkflowPosts": 0,
+  "sudoPath": "use_sudo true rejected before output/debugger; no privileged command is present",
+  "exploratoryLimit": "First exploratory smoke preserved its script/log/results but did not freeze its earlier helper source. It is not used as final verification. The second exploratory smoke includes the exact helper copy; final acceptance for this core stage uses the independently recorded 28-test source before/after hashes.",
+  "nextStage": "Root approved same-user GDB with exact PR_SET_PTRACER PID grant in the owned QEMU before exec. Prepared-debugger lifecycle, no-reap handshakes, process-local grant and CI pre-AVD same-permission fixture remain unimplemented and unverified by these 28 tests.",
+  "permissionReferences": {
+    "PR_SET_PTRACER.html": "https://man7.org/linux/man-pages/man2/PR_SET_PTRACER.2const.html",
+    "Yama.html": "https://docs.kernel.org/admin-guide/LSM/Yama.html"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "mode": "fatal",
+  "detachAtFault": true,
+  "pid": 153670,
+  "stops": [
+    "*stopped,reason=\"signal-received\",signal-name=\"SIGSEGV\",signal-meaning=\"Segmentation fault\",frame={addr=\"0x000056351c41c1cd\",func=\"actual_fault\",args=[{name=\"secret\"}],file=\"/dev/shm/racing-native-readiness/gdb-local/signal-fixture.c\",fullname=\"/dev/shm/racing-native-readiness/gdb-local/signal-fixture.c\",line=\"9\",arch=\"i386:x86-64\"},thread-id=\"1\",stopped-threads=\"all\",core=\"1\""
+  ],
+  "attachStop": "*stopped,frame={addr=\"0x00007f7229fe93a7\",func=\"??\",args=[],from=\"/lib/x86_64-linux-gnu/libc.so.6\",arch=\"i386:x86-64\"},thread-id=\"1\",stopped-threads=\"all\",core=\"1\"",
+  "stacks": [
+    "12^done,stack=[frame={level=\"0\",addr=\"0x000056351c41c1cd\",func=\"actual_fault\",file=\"/dev/shm/racing-native-readiness/gdb-local/signal-fixture.c\",fullname=\"/dev/shm/racing-native-readiness/gdb-local/signal-fixture.c\",line=\"9\",arch=\"i386:x86-64\"},frame={level=\"1\",addr=\"0x000056351c41c2f5\",func=\"main\",file=\"/dev/shm/racing-native-readiness/gdb-local/signal-fixture.c\",fullname=\"/dev/shm/racing-native-readiness/gdb-local/signal-fixture.c\",line=\"15\",arch=\"i386:x86-64\"}]"
+  ],
+  "originalParentWait": -11,
+  "targetStdout": "",
+  "targetStderr": "",
+  "commands": [
+    "-gdb-set pagination off",
+    "-gdb-set confirm off",
+    "-gdb-set auto-load off",
+    "-gdb-set debuginfod enabled off",
+    "-gdb-set print frame-arguments none",
+    "-gdb-set print entry-values no",
+    "-gdb-set mi-async on",
+    "-interpreter-exec console \"handle all nostop noprint pass\"",
+    "-interpreter-exec console \"handle SIGSEGV stop print pass\"",
+    "-target-attach 153670",
+    "-exec-continue",
+    "-stack-list-frames --no-frame-filters 0 11",
+    "-target-detach",
+    "-gdb-exit"
+  ],
+  "argumentAndLocalSecretAbsent": true,
+  "status": "passed"
+}
