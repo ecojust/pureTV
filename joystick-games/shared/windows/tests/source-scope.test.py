@@ -141,6 +141,69 @@ class SourceScope(unittest.TestCase):
         target,meta,row=self.release_fixture();initial=self.selection();blobs={name:{} for name in initial['files']};blobs[target.relative_to(self.root).as_posix()]={}
         (self.game/'src/nested/engine.js').unlink()
         with self.assertRaisesRegex(AssertionError,'missing'):scope.verify_complete_git_selection(self.selection(),blobs)
+    def remote_mac_fixture(self):
+        name='Sample-0.1.0-macos-universal.zip';tag='joystick-sample-v0.1.0'
+        row={'file':name,'storage':'github-release-asset','url':'https://github.com/ecojust/pureTV/releases/download/'+tag+'/'+name,'assetId':123,'bytes':105275042,'sha256':'a'*64}
+        meta={'schemaVersion':1,'game':'sample','macos':{'version':'0.1.0','releaseTag':tag,'releaseId':456,'files':[row]}}
+        self.put('joystick-games/sample/packages.json',json.dumps(meta));return meta,row
+    def test_remote_mac_metadata_never_excludes_a_source_path(self):
+        meta,row=self.remote_mac_fixture();result=self.selection();name='joystick-games/sample/'+row['file']
+        self.assertNotIn(name,result['files']);self.assertNotIn(name,result['excluded'])
+        self.assertIn('joystick-games/sample/packages.json',result['files']);self.assertIn('joystick-games/sample/dist/assets/track.glb',result['files'])
+        blobs={name:{} for name in result['files']};scope.verify_complete_git_selection(result,blobs)
+        # Even a tracked filename matching the remote artifact must remain an
+        # input omission; the declaration cannot hide a checkout deletion.
+        blobs[name]={}
+        with self.assertRaisesRegex(AssertionError,'missing'):scope.verify_complete_git_selection(result,blobs)
+    def test_remote_mac_cannot_mask_an_existing_file_directory_or_link(self):
+        meta,row=self.remote_mac_fixture();target=self.game/row['file'];target.write_bytes(b'actual source bytes')
+        with self.assertRaisesRegex(AssertionError,'conflicts with a local node'):self.selection()
+        target.unlink();target.mkdir()
+        with self.assertRaisesRegex(AssertionError,'conflicts with a local node'):self.selection()
+        target.rmdir()
+        try:target.symlink_to(self.root/'missing')
+        except OSError:return
+        with self.assertRaisesRegex(AssertionError,'conflicts with a local node'):self.selection()
+    def test_remote_mac_requires_exact_repo_tag_version_and_asset_identity(self):
+        meta,row=self.remote_mac_fixture();path=self.game/'packages.json'
+        mutations=[lambda d:d['macos'].update(version='0.1.0/evil'),lambda d:d['macos'].update(releaseTag='other'),lambda d:d['macos'].update(releaseId=True),lambda d:d['macos'].update(releaseId=0),lambda d:d['macos']['files'][0].update(assetId='123'),lambda d:d['macos']['files'][0].update(assetId=2**63),lambda d:d['macos']['files'][0].update(storage='external'),lambda d:d['macos']['files'][0].pop('assetId')]
+        for mutate in mutations:
+            changed=copy.deepcopy(meta);mutate(changed);path.write_text(json.dumps(changed))
+            with self.subTest(meta=changed),self.assertRaises(AssertionError):self.selection()
+        for url in ['http://github.com/ecojust/pureTV/releases/download/'+meta['macos']['releaseTag']+'/'+row['file'],row['url'].replace('ecojust/pureTV','someone/pureTV'),row['url']+'?redirect=1',row['url']+'#fragment',row['url'].replace(row['file'],'../'+row['file']),row['url'].replace('github.com','github.com.evil.invalid')]:
+            changed=copy.deepcopy(meta);changed['macos']['files'][0]['url']=url;path.write_text(json.dumps(changed))
+            with self.subTest(url=url),self.assertRaisesRegex(AssertionError,'URL differs'):self.selection()
+    def test_remote_mac_retains_original_path_size_hash_and_alias_guards(self):
+        meta,row=self.remote_mac_fixture();path=self.game/'packages.json'
+        for update in [{'file':'build.mjs'},{'file':'src/'+row['file']},{'file':'macos/'+row['file']},{'file':'../'+row['file']},{'bytes':True},{'bytes':0},{'sha256':'A'*64},{'sha256':'bad'}]:
+            changed=copy.deepcopy(meta);changed['macos']['files'][0].update(update);path.write_text(json.dumps(changed))
+            with self.subTest(update=update),self.assertRaises(AssertionError):self.selection()
+        changed=copy.deepcopy(meta);changed['macos']['files'].append(copy.deepcopy(row));path.write_text(json.dumps(changed))
+        with self.assertRaisesRegex(AssertionError,'Duplicate'):self.selection()
+    def test_remote_mac_does_not_relax_local_package_or_production_inputs(self):
+        target,local_meta,local_row=self.release_fixture();meta,row=self.remote_mac_fixture();old=row['file'];row['file']='Remote-'+old;row['url']=row['url'].replace(old,row['file']);meta['macos']['files'].append(local_row);(self.game/'packages.json').write_text(json.dumps(meta))
+        (target.parent/'SHA256SUMS.txt').write_text(''.join(r['sha256']+'  '+Path(r['file']).name+'\n' for r in [row,local_row]))
+        original=target.read_bytes();selected=self.selection();self.assertIn(target.relative_to(self.root).as_posix(),selected['excluded'])
+        target.write_bytes(original+b'changed')
+        with self.assertRaisesRegex(AssertionError,'size mismatch'):self.selection()
+        target.write_bytes(original);blobs={name:{} for name in selected['files']};(self.game/'src/nested/engine.js').unlink()
+        with self.assertRaisesRegex(AssertionError,'missing'):scope.verify_complete_git_selection(self.selection(),blobs)
+    def test_remote_mac_index_keeps_readme_and_checksums_as_exact_inputs(self):
+        meta,row=self.remote_mac_fixture();readme=self.put('joystick-games/sample/macos/README.md','Original release download links');sums=self.put('joystick-games/sample/macos/SHA256SUMS.txt',row['sha256']+'  '+row['file']+'\n')
+        result=self.selection()
+        for path in (readme,sums):self.assertIn('scope-configuration',result['files'][path.relative_to(self.root).as_posix()]['roles'])
+        readme.write_text('Changed actual delivery instructions');self.assertNotEqual(scope.file_records(result),scope.file_records(self.selection()))
+        extra=self.put('joystick-games/sample/macos/build.mjs','Must never disappear from production closure')
+        with self.assertRaisesRegex(AssertionError,'Undeclared file'):self.selection()
+        extra.unlink();sums.write_text('0'*64+'  '+row['file']+'\n')
+        with self.assertRaisesRegex(AssertionError,'checksum list differs'):self.selection()
+        sums.unlink()
+        with self.assertRaisesRegex(AssertionError,'requires exact checksum'):self.selection()
+    def test_remote_mac_index_rejects_local_binary_and_ambiguous_name(self):
+        target,local_meta,local_row=self.release_fixture();meta,row=self.remote_mac_fixture();meta['macos']['files'].append(local_row);(self.game/'packages.json').write_text(json.dumps(meta))
+        with self.assertRaisesRegex(AssertionError,'Ambiguous local and remote'):self.selection()
+        meta['macos']['files'].pop();(self.game/'packages.json').write_text(json.dumps(meta));(target.parent/'SHA256SUMS.txt').write_text(row['sha256']+'  '+row['file']+'\n')
+        with self.assertRaisesRegex(AssertionError,'Undeclared file'):self.selection()
     def test_local_packages_recursive_cycle_and_original_lock(self):
         self.package('local/one',{'dependencies':{'two':'file:../two'}});self.package('local/two',{'dependencies':{'one':'file:../one'}})
         (self.game/'package.json').write_text(json.dumps({'dependencies':{'one':'file:../../local/one'}}))

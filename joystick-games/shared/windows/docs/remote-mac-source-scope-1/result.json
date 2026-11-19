@@ -1,0 +1,91 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-11-19T22:36:07.290620+00:00",
+  "originalSourceCommit": "232d544079a472aa0ffb259c1bc73c692b94504d",
+  "originalWindowsRun": 44628818020,
+  "originalLocalReproduction": "original-local-reproduction.json",
+  "sourceInventory": {
+    "joystick-games/tools/windows-inputs.py": {
+      "bytes": 18668,
+      "sha256": "6b7198315bc15e0f9a4c275c794f326bd7a6631a1b3f94d7172269aa370dced5"
+    },
+    "joystick-games/shared/windows/tests/source-scope.test.py": {
+      "bytes": 24497,
+      "sha256": "8d4a992b6f849e404cca82dde68b51a61daffb46c0f7449074a0934b7d32952c"
+    }
+  },
+  "originalSourceInputs": {
+    "joystick-games/tools/windows-inputs.py": {
+      "bytes": 16740,
+      "sha256": "8c76db4b03ad3aba3f0ad51a4e474cd33f416fc294d8b2afccde882e6d3d0798"
+    },
+    "joystick-games/backroad-rally/packages.json": {
+      "bytes": 2826,
+      "sha256": "9dddf732d3e71ddd3310faf3e37297f9d35e00b2118574f4d3a77c6d5fc04702"
+    },
+    "joystick-games/backroad-rally/macos/README.md": {
+      "bytes": 774,
+      "sha256": "f761e82694e20150e9d7c2f03fec199e30e9ad411275a4f8012efa72113730d9"
+    },
+    "joystick-games/backroad-rally/macos/SHA256SUMS.txt": {
+      "bytes": 212,
+      "sha256": "2b0ce30ca34bc3363a24b54e547d7cd9de0bcc51c29803ea34b0d43b248423b9"
+    }
+  },
+  "commands": [
+    {
+      "command": [
+        "python",
+        "-B",
+        "joystick-games/shared/windows/tests/source-scope.test.py"
+      ],
+      "returncode": 0,
+      "tests": 32,
+      "log": "source-scope.test.py.log",
+      "bytes": 131,
+      "sha256": "3440faf5d53d3cd424e9c15e6b45f12996827b5f45cea9995a11e38c075786a3"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "joystick-games/shared/windows/tests/source-inputs.test.py"
+      ],
+      "returncode": 0,
+      "tests": 2,
+      "log": "source-inputs.test.py.log",
+      "bytes": 100,
+      "sha256": "121a8c46dc569fa3abc871d569cfafceb86973dc072049bcc17035cad2deb335"
+    }
+  ],
+  "actualBackroadScope": {
+    "selectedFiles": 928,
+    "distFiles": 333,
+    "completeFrozenGitPathSetVerified": true,
+    "remoteNamesNotExcluded": [
+      "BackroadRally-0.1.0-macos-universal.zip",
+      "BackroadRally-0.1.0-macos-universal.dmg"
+    ],
+    "remoteIndexInputs": {
+      "joystick-games/backroad-rally/macos/README.md": {
+        "bytes": 774,
+        "sha256": "f761e82694e20150e9d7c2f03fec199e30e9ad411275a4f8012efa72113730d9",
+        "roles": [
+          "scope-configuration"
+        ]
+      },
+      "joystick-games/backroad-rally/macos/SHA256SUMS.txt": {
+        "bytes": 212,
+        "sha256": "2b0ce30ca34bc3363a24b54e547d7cd9de0bcc51c29803ea34b0d43b248423b9",
+        "roles": [
+          "scope-configuration"
+        ]
+      }
+    }
+  },
+  "scope": "Source-selection correction only. Remote metadata is not downloaded or re-audited as a native package; all local package SHA/size/structure checks remain. No excluded output is created for a remote filename.",
+  "intermediateLocalObservation": "After the first remote-record-only draft, the exact Backroad scan exposed macos/README.md plus SHA256SUMS.txt as an unclassified directory. That local failure was reported before adding the exact, hash-bound remote index. The original Windows build log is not yet available while the run is in progress.",
+  "nativeWindowsExecutedForFix": false,
+  "remoteArtifactsDownloaded": false,
+  "newWorkflowDispatched": false
+}

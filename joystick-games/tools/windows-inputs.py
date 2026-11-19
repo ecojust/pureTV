@@ -22,7 +22,7 @@ def regular(root,path):
     return {'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
 
 class Scope:
-    def __init__(self,root):self.root=Path(os.path.abspath(root));self.paths={};self.excluded={};self.local_seen=set()
+    def __init__(self,root):self.root=Path(os.path.abspath(root));self.paths={};self.excluded={};self.local_seen=set();self.remote_packages={}
     def add(self,path,role):
         path=Path(os.path.abspath(path));regular(self.root,path)
         self.paths.setdefault(path,set()).add(role)
@@ -140,6 +140,21 @@ def declared_package_outputs(scope,game):
             assert name.casefold() not in aliases,'Duplicate published package path';aliases.add(name.casefold())
             size=item.get('bytes');digest=item.get('sha256')
             assert type(size) is int and size>0 and isinstance(digest,str) and re.fullmatch('[a-f0-9]{64}',digest),'Invalid published package size/hash'
+            if 'storage' in item:
+                # A published Mac release asset is metadata, not a local build
+                # output. Never add its name to the exclusion set: otherwise a
+                # remote declaration could conceal a missing tracked input.
+                assert platform=='macos' and item['storage']=='github-release-asset','Unsupported published package storage'
+                tag=descriptor.get('releaseTag');version=descriptor.get('version')
+                assert isinstance(version,str) and re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+',version),'Invalid remote Mac release version'
+                assert tag=='joystick-'+game.name+'-v'+version,'Remote Mac release tag differs from game/version'
+                assert len(parts)==1,'Remote package name must be a basename'
+                assert item.get('url')=='https://github.com/ecojust/pureTV/releases/download/'+tag+'/'+name,'Remote package URL differs from exact release identity'
+                assert all(type(value) is int and 0<value<2**63 for value in (descriptor.get('releaseId'),item.get('assetId'))),'Invalid remote release/asset ID'
+                target=game/name
+                assert not target.exists() and not is_link(target),'Remote package declaration conflicts with a local node'
+                scope.remote_packages[platform+'/'+name]={'bytes':size,'sha256':digest}
+                continue
             target=game/name;assert target.is_file() and not any(is_link(p) for p in [target,*target.parents]),'Missing or symlinked published package'
             assert target.stat().st_size==size,'Published package size mismatch: '+name
             h=hashlib.sha256()
@@ -150,20 +165,24 @@ def declared_package_outputs(scope,game):
     return result
 
 def published_directory(scope,game,path,declared):
-    """Every child must be an exact verified package or its exact checksum list."""
+    """Verify local payloads or an exact remote index; keep index bytes bound."""
     expected={name:record for name,record in declared.items() if name.startswith(path.name+'/')}
-    assert expected,'Unclassified game root directory: '+str(path)
+    remote={name:record for name,record in scope.remote_packages.items() if name.startswith(path.name+'/')}
+    assert expected or remote,'Unclassified game root directory: '+str(path)
+    assert not ({Path(n).name.casefold() for n in expected}&{Path(n).name.casefold() for n in remote}),'Ambiguous local and remote package basename'
+    if remote:assert (path/'SHA256SUMS.txt').is_file(),'Remote package index requires exact checksum list'
     for item in sorted(path.iterdir()):
         assert item.is_file() and not is_link(item),'Unexpected node in published package directory: '+str(item)
         name=item.relative_to(game).as_posix()
         if name in expected:scope.exclude(item,'published artifact verified by packages.json');continue
+        if remote and item.name=='README.md':scope.add(item,'scope-configuration');continue
         assert item.name=='SHA256SUMS.txt','Undeclared file in published package directory: '+name
         lines=item.read_text(encoding='utf-8').splitlines();checks={}
         for line in lines:
             match=re.fullmatch(r'([a-f0-9]{64})  ([A-Za-z0-9][A-Za-z0-9_.-]*)',line)
             assert match and match[2] not in checks,'Invalid published checksum list'
             checks[match[2]]=match[1]
-        assert checks=={Path(name).name:r['sha256'] for name,r in expected.items()},'Published checksum list differs from packages.json'
+        assert checks=={Path(name).name:r['sha256'] for name,r in {**expected,**remote}.items()},'Published checksum list differs from packages.json'
         scope.add(item,'scope-configuration')
 
 def release_outputs(scope,game):
@@ -203,7 +222,7 @@ def select(game,root=ROOT):
         if path.name in outputs:scope.exclude(path,'published artifact declared by platform release descriptor');continue
         assert not is_link(path),'Symlink game input: '+str(path)
         if path.is_dir():
-            if path.name in PLATFORMS and any(name.startswith(path.name+'/') for name in declared):
+            if path.name in PLATFORMS and any(name.startswith(path.name+'/') for name in [*declared,*scope.remote_packages]):
                 published_directory(scope,game,path,declared);continue
             assert path.name in GAME_DIRS,'Unclassified game root directory: '+str(path)
             scope.tree(path,'packaged-assets' if path.name=='dist' else 'game-derivation')

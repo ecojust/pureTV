@@ -1,0 +1,9 @@
+{
+  "status": "failed",
+  "exception": "AssertionError",
+  "message": "Missing or symlinked published package",
+  "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 7, in <module>\n  File \"/dev/shm/puretv-submit/joystick-games/tools/windows-inputs.py\", line 199, in select\n    declared=declared_package_outputs(scope,game);outputs=release_outputs(scope,game)|set(declared)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dev/shm/puretv-submit/joystick-games/tools/windows-inputs.py\", line 143, in declared_package_outputs\n    target=game/name;assert target.is_file() and not any(is_link(p) for p in [target,*target.parents]),'Missing or symlinked published package'\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Missing or symlinked published package\n",
+  "method": "Local exact frozen source selector; no Windows compiler or native execution",
+  "sourceCommit": "232d544079a472aa0ffb259c1bc73c692b94504d",
+  "readerSha256": "8c76db4b03ad3aba3f0ad51a4e474cd33f416fc294d8b2afccde882e6d3d0798"
+}
