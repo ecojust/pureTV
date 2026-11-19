@@ -191,11 +191,11 @@ def prepare(slug, directory):
     assets = staged / 'src/main/assets'
     assets.mkdir(parents=True)
     dist = original.checked_directory(game / 'dist', 'game distribution')
-    for path in sorted(dist.iterdir()):
-        assert path.is_file() and not path.is_symlink(), 'Distribution assets must be flat regular files'
-        assert original.SAFE_ASSET.fullmatch(path.name) and path.suffix.lower() in extensions
-        assert path.name not in PHONE and path.name not in ('game-config.json', 'assets-index.json')
-        shutil.copyfile(path, assets / path.name)
+    for name, path in original.asset_tree(dist, extensions, bool(policy and policy['allowNestedAssets'])).items():
+        assert name.casefold() not in PHONE and name.casefold() not in ('game-config.json', 'assets-index.json')
+        target = assets / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(path, target)
     assert (assets / 'tv.html').is_file(), 'Build the committed Web game first'
     write(staged / 'game.json', meta)
     if (game / 'icon.xml').exists():

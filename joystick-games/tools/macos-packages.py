@@ -16,13 +16,36 @@ def file_record(path):
     return {'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
 
 
+def validate_file_records(expected):
+    """Keep full relative names, rejecting aliases even on case-sensitive CI."""
+    assert isinstance(expected, dict) and expected, 'Missing application file inventory'
+    aliases = {}
+    for name, record in expected.items():
+        assert isinstance(name, str) and '\\' not in name and not any(ord(c) < 32 or ord(c) == 127 for c in name)
+        path = PurePosixPath(name)
+        assert name == path.as_posix() and not path.is_absolute() and all(p not in ('', '.', '..') for p in path.parts), 'Unsafe manifest path: ' + name
+        assert isinstance(record, dict) and set(record) == {'bytes', 'sha256'}
+        assert type(record['bytes']) is int and record['bytes'] >= 0 and re.fullmatch('[a-f0-9]{64}', record['sha256'])
+        for count in range(1, len(path.parts) + 1):
+            part = '/'.join(path.parts[:count]); kind = 'file' if count == len(path.parts) else 'directory'
+            previous = aliases.setdefault(part.casefold(), (part, kind))
+            assert previous == (part, kind), 'Manifest path collision: ' + part
+
+
 def exact_files(app, expected):
+    validate_file_records(expected)
     assert app.is_dir() and not app.is_symlink()
     actual = {}
+    aliases = set()
     for path in sorted(app.rglob('*')):
         assert not path.is_symlink(), 'Symlinked package content: ' + str(path)
+        relative = path.relative_to(app).as_posix()
+        assert relative.casefold() not in aliases, 'Installed path collision: ' + relative
+        aliases.add(relative.casefold())
         if path.is_file():
-            actual[path.relative_to(app).as_posix()] = file_record(path)
+            actual[relative] = file_record(path)
+        else:
+            assert path.is_dir(), 'Nonregular installed content: ' + relative
     assert actual == expected, 'Installed application file set or content differs from build manifest'
 
 
@@ -55,9 +78,9 @@ def main():
     assert meta['signature'] == 'ad-hoc' and meta['appleNotarized'] is False
     assert set(meta['architectures']) == {'arm64', 'x86_64'}
     assert '/' not in meta['appName'] and meta['appName'].endswith('.app')
-    for name in meta['appFiles']:
-        path = PurePosixPath(name)
-        assert name == path.as_posix() and not path.is_absolute() and '..' not in path.parts
+    validate_file_records(meta['appFiles'])
+    validate_file_records(meta['webFiles'])
+    assert meta['webFiles'] == {name[len('Contents/Resources/Web/'):]: value for name, value in meta['appFiles'].items() if name.startswith('Contents/Resources/Web/')}, 'Web paths or hashes differ from complete app manifest'
     provenance = {'artifactSourceCommit': meta['sourceCommit'], 'qaSourceCommit': os.environ['GITHUB_SHA']}
     if args.artifact_source_checkout:
         reuse_tool = 'macos-reuse.py' if meta['game'] in {'cf-transport-ship', 'qq-speed'} else 'macos-catalog-reuse.py'

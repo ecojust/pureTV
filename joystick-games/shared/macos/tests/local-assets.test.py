@@ -7,11 +7,12 @@ from pathlib import Path
 import platform
 import plistlib
 import select
+import shutil
 import socket
 import subprocess
 import tempfile
 import unittest
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 
 SOURCE = Path(__file__).resolve().parents[1] / 'Sources/LocalAssetServer.swift'
 HARNESS = r'''
@@ -223,7 +224,75 @@ class NativeLocalAssets(unittest.TestCase):
         for name in ['bad.exe', '.hidden.js', 'car.glb', 'bad%20.js']:
             path = self.root / name; path.write_bytes(b'x')
             self.start(success=False); path.unlink()
-        (self.root / 'nested').mkdir(); self.start(self.policy, success=False)
+        (self.root / 'nested').mkdir(); self.start(success=False)
+
+    def test_nested_relative_modules_models_original_audio_and_notices(self):
+        fixtures=Path(__file__).resolve().parents[3]/'tools/fixtures/audio'
+        model=bytes(range(256))*1024+b'last chunk'
+        files={'tv.html':b'<script type="module" src="./js/main.js"></script>',
+               'js/main.js':b'import "./util/math.js";fetch("../data/car.gltf")',
+               'js/util/math.js':b'export const size=3;',
+               'data/car.gltf':b'{"buffers":[{"uri":"../models/car.bin"}]}',
+               'models/car.bin':model, 'fonts/main.woff2':b'wOF2 fixture',
+               'audio/effects/backfire.opus':(fixtures/'backfire.opus').read_bytes(),
+               'audio/effects/backfire.m4a':(fixtures/'backfire.m4a').read_bytes(),
+               'docs/readme.md':b'# Original documentation', 'vendor/THREE_LICENSE':b'Original license',
+               'manifest.webmanifest':b'{"name":"Fixture"}'}
+        for name,data in files.items():
+            path=self.root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)
+        self.start(success=False)
+        port=self.start(self.policy)
+        module=urljoin('/tv.html','./js/main.js');dependency=urljoin(module,'./util/math.js')
+        for name in [module,dependency]:
+            status,headers,body=self.request(port,name)
+            self.assertEqual((status,body),(200,files[name[1:]]));self.assertEqual(headers['Content-Type'],'application/javascript; charset=utf-8')
+        gltf=urljoin(module,'../data/car.gltf');status,headers,body=self.request(port,gltf)
+        self.assertEqual(status,200);self.assertEqual(headers['Content-Type'],'model/gltf+json')
+        model_path=urljoin(gltf,json.loads(body)['buffers'][0]['uri'])
+        status,headers,body=self.request(port,model_path,headers={'Range':'bytes=65530-131080'})
+        self.assertEqual((status,body),(206,model[65530:131081]));self.assertEqual(headers['Content-Range'],f'bytes 65530-131080/{len(model)}')
+        for name,mime in [('audio/effects/backfire.opus','audio/ogg'),('audio/effects/backfire.m4a','audio/mp4'),
+                          ('docs/readme.md','text/plain; charset=utf-8'),('vendor/THREE_LICENSE','text/plain; charset=utf-8'),
+                          ('manifest.webmanifest','application/manifest+json')]:
+            status,headers,body=self.request(port,'/'+name)
+            self.assertEqual((status,headers['Content-Type'],body),(200,mime,files[name]))
+        self.assertEqual(self.request(port,'/js')[0],404)
+        for bad in ['/js/../tv.html','/js//main.js','/js/./main.js','/js/%2e%2e/tv.html','/js%2fmain.js','/js\\main.js','//js/main.js','/js/main.js/']:
+            self.assertIn(self.request(port,bad)[0],[400,404],bad)
+
+    def test_nested_parent_symlink_replacement_does_not_escape_open_root(self):
+        inside=self.root/'models';inside.mkdir();(inside/'car.bin').write_bytes(b'inside!')
+        outside=self.root.parent/'outside';outside.mkdir();(outside/'car.bin').write_bytes(b'outside')
+        port=self.start(self.policy)
+        inside.rename(self.root/'original-models');inside.symlink_to(outside,target_is_directory=True)
+        self.assertEqual(self.request(port,'/models/car.bin')[0],404)
+        self.start(self.policy,success=False)
+
+    def test_nested_invalid_names_depth_counts_and_path_index_are_bounded(self):
+        for name in ['nested/CON.bin','nested/lpt1.js','nested/trailing.','node_modules/a.js','nested/bad%20.js','nested/back\\slash.js']:
+            path=self.root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(b'x')
+            self.start(self.policy,success=False)
+            shutil.rmtree(self.root/name.split('/')[0])
+        deep=self.root/('/'.join(['level']*15));deep.mkdir(parents=True);(deep/'ok.js').write_bytes(b'x')
+        self.start(self.policy)
+        (deep/'one-more').mkdir();(deep/'one-more/fail.js').write_bytes(b'x')
+        self.start(self.policy,success=False);shutil.rmtree(self.root/'level')
+        for count,name in [(2049,'files'),(4097,'nodes'),(400,'index')]:
+            folder=self.root/name;folder.mkdir()
+            for index in range(count):
+                path=folder/(str(index)+('a'*180 if name=='index' else '')+('.js' if name!='nodes' else ''))
+                if name=='nodes':path.mkdir()
+                else:path.write_bytes(b'x')
+            self.start(self.policy,success=False);shutil.rmtree(folder)
+        long=self.root/('/'.join(['a'*150]*7));long.mkdir(parents=True);(long/'fail.js').write_bytes(b'x')
+        self.start(self.policy,success=False)
+
+    def test_nested_case_collision_is_rejected_on_case_sensitive_volume(self):
+        (self.root/'models').mkdir();(self.root/'Models').mkdir(exist_ok=True)
+        if len([p for p in self.root.iterdir() if p.name.lower()=='models'])!=2:
+            self.skipTest('This volume cannot represent colliding case variants; Python builder tests cover rejection')
+        (self.root/'models/a.js').write_bytes(b'a');(self.root/'Models/b.js').write_bytes(b'b')
+        self.start(self.policy,success=False)
 
     def test_malformed_or_unbounded_policy_fails_closed(self):
         for policy in [True, {}, dict(self.policy, schemaVersion=True), dict(self.policy, schemaVersion=1.0),

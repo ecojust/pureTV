@@ -45,29 +45,68 @@ def resource_policy(slug,meta):
     registered=None if slug in LEGACY_GAMES else registry_games()[slug]
     return asset_policy.declaration(meta,registered),asset_policy.limits(meta,registered,'macos')
 
+def web_asset_paths(root,explicit=False):
+    """Validate every path before copying; never flatten or silently omit nodes."""
+    assert root.is_dir() and not any(p.is_symlink() for p in [root,*root.parents]),'Invalid distribution directory'
+    result=[];seen=set();nodes=0
+    def walk(folder):
+        nonlocal nodes
+        for path in sorted(folder.iterdir()):
+            relative=path.relative_to(root);name=relative.as_posix();nodes+=1
+            assert nodes<=4096,'Too many bundled asset nodes'
+            assert len(name)<=1024 and len(relative.parts)<=16,'Bundled asset path exceeds limit: '+name
+            assert re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]*',path.name),'Unsafe bundled asset path: '+name
+            stem=path.name.split('.')[0].upper()
+            assert not path.name.endswith('.') and stem not in {'CON','PRN','AUX','NUL',*(f'COM{i}' for i in range(1,10)),*(f'LPT{i}' for i in range(1,10))},'Nonportable bundled asset path: '+name
+            assert path.name not in ('node_modules','__pycache__'),'Cache directory in bundled assets: '+name
+            assert not path.is_symlink(),'Symlink in bundled assets: '+name
+            assert name.casefold() not in seen,'Case-insensitive bundled asset collision: '+name
+            seen.add(name.casefold())
+            if path.is_dir():
+                assert explicit,'Nested bundled assets require explicit assetPolicy: '+name
+                walk(path)
+            else:
+                assert path.is_file(),'Not a regular bundled asset: '+name
+                result.append(path)
+                assert len(result)<=asset_policy.MAX_FILES,'Too many bundled assets'
+    walk(root)
+    assert len(json.dumps([p.relative_to(root).as_posix() for p in result],separators=(',',':')).encode())<=asset_policy.MAX_INDEX_BYTES,'Bundled asset path index exceeds limit'
+    return result
+
 def copy_web_assets(source,web,limits,explicit=False):
-    assert source.is_dir() and not any(p.is_symlink() for p in [source,*source.parents]),'Invalid distribution directory'
     types={'.html','.js','.css','.json','.txt','.svg','.png','.webp','.jpg','.jpeg','.ico','.woff','.woff2','.ttf','.otf','.ogg','.wav','.mp3'}
     if explicit:types.update(asset_policy.EXTRA_EXTENSIONS)
-    paths=list(source.iterdir());assert len(paths)<=asset_policy.MAX_FILES,'Too many bundled assets'
+    paths=web_asset_paths(source,explicit)
+    assert not any(p.name.casefold() in ('bridge.js','game-config.json') for p in source.iterdir()),'Reserved root distribution asset'
+    total=0
     for path in paths:
-        assert path.is_file() and not path.is_symlink() and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]*',path.name),path
-        assert path.suffix.lower() in types,'Unsupported distribution asset: '+path.name
-        assert path.name not in ('bridge.js','game-config.json'),'Reserved distribution asset: '+path.name
+        name=path.relative_to(source).as_posix()
+        notice=re.fullmatch(r'(?:[A-Za-z0-9][A-Za-z0-9_-]*_)?(?:LICENSE|NOTICE|COPYING)',path.name)
+        assert path.suffix.lower() in types or (explicit and notice),'Unsupported distribution asset: '+name
+        assert name.casefold() not in ('bridge.js','game-config.json'),'Reserved distribution asset: '+name
         size=path.stat().st_size
         assert (size<=limits['maxAssetBytes'] if explicit else size<limits['maxAssetBytes']),path
-        shutil.copy2(path,web/path.name)
+        total+=size
+        assert total<=limits['maxTotalBytes'],'Resources exceed total budget'
+    for path in paths:
+        target=web/path.relative_to(source);target.parent.mkdir(parents=True,exist_ok=True)
+        assert not any(p.is_symlink() for p in [target,*target.parents]),'Symlinked copy target'
+        shutil.copy2(path,target)
     assert (web/'tv.html').is_file(),'Missing TV entry page'
 
-def verify_web_budget(web,limits):
-    paths=list(web.iterdir())
-    assert len(paths)<=asset_policy.MAX_FILES,'Too many bundled assets'
+def verify_web_budget(web,limits,explicit=False):
+    paths=web_asset_paths(web,explicit)
     assert all(p.stat().st_size<=limits['maxAssetBytes'] for p in paths),'Generated resource exceeds asset budget'
     assert sum(p.stat().st_size for p in paths)<=limits['maxTotalBytes'],'Resources exceed total budget'
 def storage_keys(slug,meta):
     if slug in LEGACY_GAMES and 'storageKeys' not in meta:return None
     value=meta.get('storageKeys')
-    assert isinstance(value,list) and len(value)<=64,'Catalog game.json must declare exact storageKeys (empty if unused)'
+    maximum=64
+    if 'assetPolicy' in meta:
+        declaration,_=resource_policy(slug,meta)
+        assert declaration is not None and meta.get('id')==slug,'Expanded storage keys require the registered game resource policy'
+        maximum=512
+    assert isinstance(value,list) and len(value)<=maximum,'Catalog game.json must declare bounded exact storageKeys (empty if unused)'
     assert all(isinstance(key,str) and re.fullmatch(r'[A-Za-z0-9_.:%-]{1,128}',key) and key not in ['joystick.language','__proto__'] for key in value),'Invalid storage key'
     assert len(set(value))==len(value),'Duplicate storage key'
     return value
@@ -195,7 +234,7 @@ def main():
     copy_web_assets(game/'dist',web,limits,explicit=declaration is not None)
     assert not (web/'bridge.js').exists();shutil.copy2(SHARED/'Web/bridge.js',web/'bridge.js')
     (web/'game-config.json').write_text(json.dumps(meta,ensure_ascii=False)+'\n')
-    verify_web_budget(web,limits)
+    verify_web_budget(web,limits,explicit=declaration is not None)
     for p in [game/'NOTICE.md',game/'LICENSE',game/'LICENSE.txt',game/'UPSTREAM.md',game/'upstream.json']:
         if p.is_file():shutil.copy2(p,resources/p.name)
     info={'CFBundleName':name,'CFBundleDisplayName':meta['name'],'CFBundleIdentifier':meta['packageName'],'CFBundleExecutable':executable,'CFBundlePackageType':'APPL','CFBundleShortVersionString':meta['version'],'CFBundleVersion':str(meta['versionCode']),'CFBundleIconFile':'Game','LSMinimumSystemVersion':'11.0','NSHighResolutionCapable':True,'NSSupportsAutomaticGraphicsSwitching':True,'NSPrincipalClass':'NSApplication','NSLocalNetworkUsageDescription':'Connect the pureTV Wi-Fi controller to this game on your Mac.','NSBonjourServices':['_puretv._tcp'],'NSAppTransportSecurity':{'NSAllowsLocalNetworking':True},'PureTVUpstreamAttribution':meta.get('upstreamAttribution',meta.get('upstream','See bundled source notices')),'NSHumanReadableCopyright':'Upstream authors; pureTV controller adaptation. See bundled source and license notices.'}

@@ -1,0 +1,59 @@
+{
+  "platform": "Linux; real Swift HTTP tests are skipped, not verified",
+  "sourceFiles": {
+    "joystick-games/tools/macos-build.py": {
+      "bytes": 20228,
+      "sha256": "d06abf0298ae820802a5649ce4b8fca13a7b319ee0cac3a1c060d4a0f8b20388"
+    },
+    "joystick-games/tools/macos-packages.py": {
+      "bytes": 7235,
+      "sha256": "40082d42ab3c2608351ba8f1a0e6bd2dee8d74b47218576311f6ec0e81c1409f"
+    },
+    "joystick-games/shared/macos/Sources/LocalAssetServer.swift": {
+      "bytes": 23466,
+      "sha256": "7cc869ba4ac721b348aa8039641a74edbac80ce433effee4883f0145ad1fbd11"
+    },
+    "joystick-games/shared/macos/tests/catalog-tools.test.py": {
+      "bytes": 21388,
+      "sha256": "f2991485d56cb85c359559e13b68e4b34e925c059bd99659a4d5b1d2b9481d5f"
+    },
+    "joystick-games/shared/macos/tests/local-assets.test.py": {
+      "bytes": 18372,
+      "sha256": "936e14642a6c728c676e4350b0d1ecf9981ba6418d6748ff4217b1880460e4e9"
+    }
+  },
+  "tests": [
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-tools.test.py"
+      ],
+      "returncode": 0,
+      "log": "catalog-tools.log"
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/local-assets.test.py"
+      ],
+      "returncode": 0,
+      "log": "local-assets.log"
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-reuse.test.py"
+      ],
+      "returncode": 0,
+      "log": "catalog-reuse.log"
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/native-observation.test.py"
+      ],
+      "returncode": 0,
+      "log": "native-observation.log"
+    }
+  ]
+}

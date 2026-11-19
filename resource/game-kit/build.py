@@ -23,7 +23,7 @@ ZXING_SHA256 = '8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82
 ANDROID = '{http://schemas.android.com/apk/res/android}'
 SAFE_ASSET = re.compile(r'[A-Za-z0-9][A-Za-z0-9_.-]*')
 ASSET_EXTENSIONS = {'.html', '.css', '.js', '.json', '.png', '.webp', '.jpg', '.jpeg', '.svg', '.ogg', '.wav', '.mp3', '.txt'}
-DEFAULT_LIMITS = {'maxAssetBytes': 8_000_000, 'maxTotalBytes': 32_000_000, 'maxApkBytes': MAX_APK_BYTES, 'extraExtensions': ()}
+DEFAULT_LIMITS = {'maxAssetBytes': 8_000_000, 'maxTotalBytes': 32_000_000, 'maxApkBytes': MAX_APK_BYTES, 'extraExtensions': (), 'allowNestedAssets': False}
 
 
 def checked_limits(limits=None):
@@ -42,7 +42,8 @@ def checked_limits(limits=None):
     extensions = limits['extraExtensions']
     require(isinstance(extensions, (tuple, list)) and all(isinstance(ext, str) for ext in extensions)
             and len(set(extensions)) == len(extensions), 'Invalid extra extensions')
-    require(set(extensions) <= {'.glb', '.gltf', '.bin', '.wasm', '.hdr', '.ktx2', '.woff', '.woff2', '.ttf', '.otf', '.ico', '.opus', '.m4a'}, 'Unsupported extra extension')
+    require(set(extensions) <= {'.glb', '.gltf', '.bin', '.wasm', '.hdr', '.ktx2', '.woff', '.woff2', '.ttf', '.otf', '.ico', '.opus', '.m4a', '.md', '.webmanifest'}, 'Unsupported extra extension')
+    require(type(limits['allowNestedAssets']) is bool, 'Invalid nested asset policy')
     return dict(limits)
 
 
@@ -120,22 +121,54 @@ def metadata(game):
     return data
 
 
+def asset_tree(folder, extensions, allow_nested=False):
+    """Keep source-relative URLs intact without accepting filesystem aliases."""
+    folder = checked_directory(folder, 'asset directory')
+    files, names = {}, set()
+    paths = folder.rglob('*') if allow_nested else folder.iterdir()
+    reserved = {'CON', 'PRN', 'AUX', 'NUL'} | {p + str(i) for p in ('COM', 'LPT') for i in range(1, 10)}
+    for source in sorted(paths):
+        name = source.relative_to(folder).as_posix()
+        parts = name.split('/')
+        require(len(name) <= 1024 and len(parts) <= 16, 'Asset path is too long: ' + name)
+        require(all(SAFE_ASSET.fullmatch(part) and not part.endswith('.')
+                    and part.split('.')[0].upper() not in reserved for part in parts), 'Unsupported asset path: ' + name)
+        require(not source.is_symlink(), 'Asset symlink: ' + name)
+        require(name.casefold() not in names, 'Asset path collision: ' + name)
+        names.add(name.casefold())
+        require(len(names) <= 4096, 'Too many asset filesystem entries')
+        if source.is_dir():
+            require(allow_nested, 'Assets must be regular top-level files: ' + name)
+            continue
+        require(source.is_file(), 'Asset must be a regular file: ' + name)
+        special_notice = allow_nested and re.fullmatch(r'(?:[A-Za-z0-9][A-Za-z0-9_-]*_)?(?:LICENSE|NOTICE|COPYING)', source.name)
+        require(source.suffix.lower() in extensions or special_notice, 'Unsupported asset: ' + name)
+        files[name] = source
+        require(len(files) <= 2048, 'Too many bundled assets')
+    return files
+
+
 def asset_inputs(game, limits=None):
     """Return the exact payload, with explicit per-game overrides forbidden."""
     limits = checked_limits(limits)
     extensions = ASSET_EXTENSIONS | set(limits['extraExtensions'])
-    files = {}
+    files, names, aliases = {}, set(), {}
     for folder in (KIT / 'web', game / 'src/main/assets'):
         if not folder.exists() and not folder.is_symlink():
             continue
-        folder = checked_directory(folder, 'asset directory')
-        for source in sorted(folder.iterdir()):
-            require(source.is_file() and not source.is_symlink(), 'Assets must be regular top-level files: ' + str(source))
-            name = source.name
-            require(SAFE_ASSET.fullmatch(name) and source.suffix.lower() in extensions, 'Unsupported asset: ' + name)
-            require(name not in files and name not in ('assets-index.json', 'game-config.json'), 'Duplicate or reserved asset: ' + name)
+        for name, source in asset_tree(folder, extensions, limits['allowNestedAssets']).items():
+            folded = name.casefold()
+            require(folded not in names and folded.split('/')[0] not in ('assets-index.json', 'game-config.json'), 'Duplicate or reserved asset: ' + name)
+            parts = name.split('/')
+            for length in range(1, len(parts) + 1):
+                prefix = '/'.join(parts[:length])
+                require(aliases.get(prefix.casefold(), prefix) == prefix, 'Asset path collision: ' + name)
+                aliases[prefix.casefold()] = prefix
+            require(len(aliases) <= 4096, 'Too many asset filesystem entries')
+            require(not any(folded.startswith(old + '/') or old.startswith(folded + '/') for old in names), 'Asset file/directory collision: ' + name)
             require(source.stat().st_size <= limits['maxAssetBytes'], 'Oversized asset: ' + name)
             files[name] = source
+            names.add(folded)
             require(len(files) <= 2048, 'Too many bundled assets')
     require({'tv.html', 'controller.html', 'controller.js', 'controller.css'} <= files.keys(), 'Missing TV or phone controller assets')
     return files
@@ -201,6 +234,7 @@ def main(argv=None, *, limits=None):
         asset_dir = work / 'assets'
         asset_dir.mkdir()
         for name, content in data.items():
+            (asset_dir / name).parent.mkdir(parents=True, exist_ok=True)
             (asset_dir / name).write_bytes(content)
         manifest = ET.parse(KIT / 'android/src/main/AndroidManifest.xml')
         manifest.getroot().set('package', meta['packageName'])

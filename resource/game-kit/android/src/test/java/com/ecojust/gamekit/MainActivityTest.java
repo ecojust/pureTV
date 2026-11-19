@@ -153,7 +153,7 @@ public class MainActivityTest {
     }
 
     @Test public void onlyBuildIndexedAssetsAreReadable() throws Exception {
-        String[] names={"tv.html","tv.css","game.js","game-config.json","texture.png"};
+        String[] names={"tv.html","tv.css","game.js","game-config.json","texture.png","nested/worker/physics.js","nested/manifest.webmanifest"};
         for (String name:names) {
             WebResourceResponse response=activity.localAsset(Uri.parse("https://game-kit.invalid/"+name));
             assertEquals(name,200,response.getStatusCode());
@@ -172,7 +172,11 @@ public class MainActivityTest {
             "file:///android_asset/game.js","content://private/data",
             "https://game-kit.invalid/game.js?other=1","https://game-kit.invalid/game.js#fragment",
             "https://user@game-kit.invalid/game.js","https://game-kit.invalid/%67ame.js",
-            "https://game-kit.invalid/audio/../game.js","https://game-kit.invalid/audio/%2e%2e/game.js"
+            "https://game-kit.invalid/audio/../game.js","https://game-kit.invalid/audio/%2e%2e/game.js",
+            "https://game-kit.invalid/nested/worker/../worker/physics.js",
+            "https://game-kit.invalid/nested//worker/physics.js",
+            "https://game-kit.invalid/nested/%77orker/physics.js",
+            "https://game-kit.invalid/Nested/worker/physics.js"
         }) {
             WebResourceResponse response=activity.localAsset(Uri.parse(url));
             assertEquals(url,403,response.getStatusCode());assertEquals(-1,response.getData().read());response.getData().close();

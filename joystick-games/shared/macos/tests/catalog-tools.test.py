@@ -156,6 +156,22 @@ class CatalogTools(unittest.TestCase):
             with self.assertRaises(AssertionError):
                 builder.storage_keys('sample', {'storageKeys': value})
 
+    def test_expanded_storage_keys_require_matching_registered_policy_and_exact_keys(self):
+        policy={'schemaVersion':1,'maxAssetBytes':32_000_000,'maxTotalBytes':128_000_000,'maxApkBytes':128_000_000}
+        keys=['fixture-racer.ghost.'+str(index) for index in range(512)]
+        meta={'id':'fixture-racer','packageName':'com.ecojust.joystick.fixtureracer','assetPolicy':policy,'storageKeys':keys}
+        entry={'packageName':meta['packageName'],'assetPolicy':policy}
+        with patch.object(builder,'registry_games',return_value={'fixture-racer':entry}):
+            self.assertEqual(builder.storage_keys('fixture-racer',meta),keys)
+            for bad in [dict(meta,storageKeys=keys+['one.more']),dict(meta,storageKeys=keys[:-1]+[keys[0]]),
+                        dict(meta,storageKeys=['fixture-racer.ghost.*']),dict(meta,assetPolicy={}),
+                        dict(meta,assetPolicy=dict(policy,maxApkBytes=127_000_000)),dict(meta,id='other-game'),
+                        dict(meta,packageName='com.ecojust.joystick.othergame')]:
+                with self.assertRaises(AssertionError):builder.storage_keys('fixture-racer',bad)
+        for keys in [list(map(str,range(65))),list(map(str,range(512)))]:
+            with self.assertRaises(AssertionError):builder.storage_keys('sample',{'storageKeys':keys})
+        self.assertEqual(len(builder.storage_keys('sample',{'storageKeys':list(map(str,range(64)))})),64)
+
     def test_installation_requires_identical_file_set_not_just_known_files(self):
         with tempfile.TemporaryDirectory() as directory:
             app = Path(directory).resolve() / 'Game.app'
@@ -170,6 +186,78 @@ class CatalogTools(unittest.TestCase):
             (app / 'alias').symlink_to(app / 'binary')
             with self.assertRaises(AssertionError):
                 packages.exact_files(app, expected)
+
+    def test_nested_resources_preserve_paths_bytes_and_generated_budgets(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory).resolve();source=root/'dist';target=root/'Web';source.mkdir();target.mkdir()
+            assets={'tv.html':b'<script type="module" src="./js/main.js"></script>',
+                    'js/main.js':b'fetch("../data/track.json")', 'data/track.json':b'{"mesh":"../models/car.bin"}',
+                    'models/car.bin':bytes(range(256))*300, 'audio/effects/a.opus':b'OggS\0\xff',
+                    'fonts/title.woff2':b'wOF2', 'vendor/LICENSE':b'Original notice'}
+            for name,data in assets.items():
+                path=source/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)
+            limits={'maxAssetBytes':1_000_000,'maxTotalBytes':2_000_000}
+            with self.assertRaises(AssertionError):builder.copy_web_assets(source,target,limits)
+            builder.copy_web_assets(source,target,limits,explicit=True)
+            self.assertEqual(builder.files(source),builder.files(target))
+            builder.verify_web_budget(target,limits,explicit=True)
+            self.assertEqual((target/'models/car.bin').read_bytes(),assets['models/car.bin'])
+            (target/'bridge.js').write_bytes(b'host bridge')
+            with self.assertRaises(AssertionError):builder.verify_web_budget(target,dict(limits,maxTotalBytes=sum(map(len,assets.values()))),explicit=True)
+            with self.assertRaises(AssertionError):builder.verify_web_budget(target,dict(limits,maxAssetBytes=100),explicit=True)
+            with self.assertRaises(AssertionError):builder.verify_web_budget(target,limits)
+
+    def test_nested_resource_paths_reject_aliases_symlinks_and_reserved_roots(self):
+        for bad in ['models/CON.glb','models/lpt9.bin','assets./car.bin','models/bad%20.bin','models/back\\slash.bin','node_modules/a.js']:
+            with self.subTest(path=bad),tempfile.TemporaryDirectory() as directory:
+                root=Path(directory).resolve();(root/'tv.html').write_text('entry')
+                path=root/bad;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(b'x')
+                with self.assertRaises(AssertionError):builder.web_asset_paths(root,explicit=True)
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory).resolve();source=root/'dist';source.mkdir();target=root/'Web';target.mkdir()
+            (source/'tv.html').write_text('entry');(source/'models').mkdir();(source/'models/car.bin').write_bytes(b'x')
+            (source/'alias').symlink_to(source/'models',target_is_directory=True)
+            with self.assertRaises(AssertionError):builder.web_asset_paths(source,explicit=True)
+            (source/'alias').unlink();(source/'Models').mkdir(exist_ok=True)
+            if len([p for p in source.iterdir() if p.name.lower()=='models'])==2:
+                with self.assertRaises(AssertionError):builder.web_asset_paths(source,explicit=True)
+                (source/'Models').rmdir()
+            (source/'bridge.js').mkdir()
+            with self.assertRaises(AssertionError):builder.copy_web_assets(source,target,{'maxAssetBytes':100,'maxTotalBytes':1000},explicit=True)
+
+    def test_nested_resource_depth_file_node_and_index_limits(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory).resolve();path=root/('/'.join(['a']*15))/'a.js';path.parent.mkdir(parents=True);path.write_bytes(b'x')
+            self.assertEqual(len(builder.web_asset_paths(root,explicit=True)),1)
+            too_deep=path.parent/'deep';too_deep.mkdir();(too_deep/'a.js').write_bytes(b'x')
+            with self.assertRaises(AssertionError):builder.web_asset_paths(root,explicit=True)
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory).resolve()
+            for index in range(2049):(root/(str(index)+'.js')).write_bytes(b'x')
+            with self.assertRaisesRegex(AssertionError,'Too many bundled assets'):builder.web_asset_paths(root,explicit=True)
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory).resolve()
+            for index in range(4097):(root/str(index)).mkdir()
+            with self.assertRaisesRegex(AssertionError,'nodes'):builder.web_asset_paths(root,explicit=True)
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory).resolve()
+            for index in range(400):(root/(str(index)+'a'*180+'.js')).write_bytes(b'x')
+            with self.assertRaisesRegex(AssertionError,'index'):builder.web_asset_paths(root,explicit=True)
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory).resolve();path=root/('/'.join(['a'*150]*7))/'a.js';path.parent.mkdir(parents=True);path.write_bytes(b'x')
+            with self.assertRaisesRegex(AssertionError,'path exceeds'):builder.web_asset_paths(root,explicit=True)
+
+    def test_package_manifest_binds_full_nested_paths_and_rejects_aliases(self):
+        with tempfile.TemporaryDirectory() as directory:
+            app=Path(directory).resolve();path=app/'Contents/Resources/Web/models/car.bin';path.parent.mkdir(parents=True);path.write_bytes(b'actual model')
+            expected={'Contents/Resources/Web/models/car.bin':packages.file_record(path)}
+            packages.exact_files(app,expected)
+            for name in ['../car.bin','/car.bin','Contents//car.bin','Contents/./car.bin','Contents\\car.bin']:
+                with self.subTest(name=name),self.assertRaises(AssertionError):packages.validate_file_records({name:packages.file_record(path)})
+            for name in ['Contents/Resources/Web/Models/other.bin','Contents/Resources/Web/models','Contents/Resources/Web/models/CAR.bin']:
+                with self.subTest(name=name),self.assertRaises(AssertionError):packages.validate_file_records({**expected,name:packages.file_record(path)})
+            path.rename(path.parent.parent/'car.bin')
+            with self.assertRaises(AssertionError):packages.exact_files(app,expected)
 
     def test_second_sdk_retains_terminal_busy_error(self):
         spec = importlib.util.spec_from_file_location('catalog_sdk_fixture', verify.SDK)

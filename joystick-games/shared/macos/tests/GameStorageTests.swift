@@ -26,6 +26,17 @@ import Foundation
         require(legacy.receive(key: "cf_ship_opts", value: NSNull()))
         require(defaults.string(forKey: "cf_ship_opts") == nil)
         require(legacy.maxBytes == 65536 && first.maxBytes == 1048576)
+        let ghostKeys = (0..<367).map { "backroad-rally.ghost.fixture:\($0)" }
+        let ghosts = GameStorage(defaults: defaults, declaredKeys: ghostKeys, bundleIdentifier: "com.ecojust.joystick.backroadrally")
+        require(ghosts.keys == ghostKeys && ghosts.maxBytes == 1048576)
+        require(ghosts.receive(key: ghostKeys.last!, value: "original ghost record"))
+        require(!ghosts.receive(key: "backroad-rally.ghost.fixture:367", value: "not enumerated"))
+        require(!ghosts.receive(key: "backroad-rally.ghost.*", value: "wildcard"))
+        require(!ghosts.receive(key: ghostKeys[0], value: String(repeating: "x", count: 1048577)))
+        let anotherGame = GameStorage(defaults: defaults, declaredKeys: ghostKeys, bundleIdentifier: "com.ecojust.joystick.othergame")
+        require(anotherGame.snapshot().isEmpty)
+        require(anotherGame.receive(key: ghostKeys.last!, value: "separate namespace"))
+        require(ghosts.snapshot()[ghostKeys.last!] == "original ghost record")
         print("PASS: real UserDefaults reopening, deletion, bundle isolation, allowlist, UTF-8 bounds and legacy keys")
     }
 }

@@ -1,0 +1,38 @@
+{
+  "reviewedFiles": {
+    "resource/game-kit/build.py": {
+      "bytes": 16750,
+      "sha256": "3a929cfb934a8fe5aac5550009b2b09319da97eb874599959a378b251b95b6f9"
+    },
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/MainActivity.java": {
+      "bytes": 26480,
+      "sha256": "418962213a7d0bc92ee160c336f71ec6ecfb49b40fe8ef0f402d0b220742c1e4"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 12693,
+      "sha256": "3bf677cf2634fe364325e37a1439afab82a8a1f993efa77b64d56e14fe10bb8d"
+    },
+    "joystick-games/tools/asset-policy.py": {
+      "bytes": 2923,
+      "sha256": "49c67cdb1b71fcc65f7bd6f89765ac6857314a1a4bfa8dc7c69e3d768a05b751"
+    },
+    "joystick-games/tools/android-asset-tests.py": {
+      "bytes": 16867,
+      "sha256": "93d8ee0993fdef4ee27d3fbc50715ec6c470269ada6541f2010c338189b6e401"
+    }
+  },
+  "command": [
+    "python3",
+    "joystick-games/tools/android-asset-tests.py"
+  ],
+  "returncode": 0,
+  "sourceUnchangedDuringTests": true,
+  "conclusion": "No blocking issue found in reviewed nested tree/default-flat/indexed-URL paths. Does not establish device graphics/audio or whole-game native operation.",
+  "findings": [
+    "Explicit registry-matched policy is the only joystick opt-in; old CLI default remains flat and APK below 10000000 bytes.",
+    "asset_tree retains all nested relative names; fullmatch ASCII, reserved components, path/depth/node/file limits, symlink and casefold file/directory collision checks apply.",
+    "asset_inputs rejects reserved/generated roots and aliases across host/game trees; payload index enumerates exact complete asset paths and is bounded at 65536 bytes.",
+    "Android resource access requires exact unencoded URL path present in bundled index, fixed origin, no query/fragment, and explicit MIME.",
+    "Complete nested dist source bytes enter existing android-build sources(), and staged/payload asset contents are subsequently compared by existing build manifest checks."
+  ]
+}

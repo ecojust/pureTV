@@ -55,13 +55,13 @@ class PayloadBoundaries(unittest.TestCase):
 
     def test_nested_payload_is_rejected(self):
         (self.dist / 'nested').mkdir()
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             self.prepare()
 
     def test_symlink_asset_is_rejected(self):
         outside = self.root / 'outside.js'; outside.write_text('fixture')
         (self.dist / 'escape.js').symlink_to(outside)
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             self.prepare()
 
     def test_shared_phone_asset_cannot_be_overridden(self):

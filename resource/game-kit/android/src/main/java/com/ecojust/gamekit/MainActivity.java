@@ -163,13 +163,27 @@ public class MainActivity extends Activity {
                 bytes.write(buffer, 0, count);
             }
             JSONArray list = new JSONArray(bytes.toString("UTF-8"));
+            if (list.length() > 2049) throw new IOException("Too many assets");
+            java.util.Set<String> names = new java.util.HashSet<>();
             for (int i = 0; i < list.length(); i++) {
                 String name = list.getString(i);
-                if (!name.matches("[A-Za-z0-9][A-Za-z0-9_.-]*")) throw new IOException("Invalid asset name");
+                if (!validBundledAssetPath(name) || !names.add(name.toLowerCase(java.util.Locale.ROOT))) throw new IOException("Invalid or duplicate asset name");
                 if (!name.startsWith("controller.") && !name.endsWith(".txt")) bundledAssets.add(name);
             }
             if (!bundledAssets.contains("tv.html")) throw new IOException("Missing TV page");
         } catch (Exception invalid) { throw new IllegalStateException("Invalid bundled assets", invalid); }
+    }
+
+    static boolean validBundledAssetPath(String path) {
+        if (path == null || path.length() == 0 || path.length() > 1024) return false;
+        String[] parts = path.split("/", -1);
+        if (parts.length > 16) return false;
+        for (String part : parts) {
+            if (!part.matches("[A-Za-z0-9][A-Za-z0-9_.-]*") || part.endsWith(".")) return false;
+            String stem = part.split("\\.", 2)[0].toUpperCase(java.util.Locale.ROOT);
+            if (stem.matches("CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9]")) return false;
+        }
+        return true;
     }
 
     static String bundledAssetMime(String path) {
@@ -179,6 +193,7 @@ public class MainActivity extends Activity {
         if (path.endsWith(".css")) return "text/css";
         if (path.endsWith(".js")) return "application/javascript";
         if (path.endsWith(".json")) return "application/json";
+        if (path.endsWith(".webmanifest")) return "application/manifest+json";
         if (path.endsWith(".png")) return "image/png";
         if (path.endsWith(".webp")) return "image/webp";
         if (path.endsWith(".jpg") || path.endsWith(".jpeg")) return "image/jpeg";
@@ -198,6 +213,8 @@ public class MainActivity extends Activity {
         if (path.endsWith(".ttf")) return "font/ttf";
         if (path.endsWith(".otf")) return "font/otf";
         if (path.endsWith(".ico")) return "image/x-icon";
+        if (path.endsWith(".md") || path.endsWith("/license") || path.endsWith("/notice") || path.endsWith("/copying")
+            || path.endsWith("_license") || path.endsWith("_notice") || path.endsWith("_copying")) return "text/plain";
         return null;
     }
 
@@ -205,10 +222,10 @@ public class MainActivity extends Activity {
         String name = uri.getPath();
         String mime = bundledAssetMime(name);
         if ("https".equals(uri.getScheme()) && "game-kit.invalid".equals(uri.getEncodedAuthority())
-            && uri.getQuery() == null && uri.getFragment() == null && name != null
+            && uri.getQuery() == null && uri.getFragment() == null && name != null && name.startsWith("/")
             && name.equals(uri.getEncodedPath()) && mime != null && bundledAssets.contains(name.substring(1))) {
             String encoding = mime.startsWith("text/") || mime.equals("application/javascript")
-                || mime.equals("application/json") || mime.equals("model/gltf+json") ? "UTF-8" : null;
+                || mime.equals("application/json") || mime.equals("application/manifest+json") || mime.equals("model/gltf+json") ? "UTF-8" : null;
             Map<String,String> headers = new java.util.HashMap<>();
             headers.put("Cache-Control","no-store");
             headers.put("X-Content-Type-Options","nosniff");

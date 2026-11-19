@@ -11,10 +11,12 @@ GAME_DIRS={'src','dist','test','tests','qa','assets','public','vendor'}
 CACHE={'node_modules','__pycache__','.cache','.git'}
 PLATFORMS={'windows','macos','android'}
 
+def is_link(path):return path.is_symlink() or (getattr(path,'is_junction',lambda:False)())
+
 def regular(root,path):
     path=Path(os.path.abspath(path));root=Path(os.path.abspath(root))
     assert path.is_relative_to(root),'Input escapes repository: '+str(path)
-    assert not any(p.is_symlink() for p in [path,*path.parents]),'Symlink source traversal: '+str(path)
+    assert not any(is_link(p) for p in [path,*path.parents]),'Symlink source traversal: '+str(path)
     assert path.is_file(),'Required source file missing: '+str(path)
     data=path.read_bytes()
     return {'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
@@ -26,17 +28,17 @@ class Scope:
         self.paths.setdefault(path,set()).add(role)
     def exclude(self,path,reason):self.excluded[Path(path).relative_to(self.root).as_posix()]=reason
     def tree(self,path,role):
-        path=Path(path);assert path.is_dir() and not path.is_symlink(),'Required source directory missing or symlinked: '+str(path)
+        path=Path(path);assert path.is_dir() and not is_link(path),'Required source directory missing or symlinked: '+str(path)
         for item in sorted(path.iterdir()):
             if item.name in CACHE:
                 assert role!='packaged-assets','Cache or dependency directory inside packaged assets: '+str(item)
                 self.exclude(item,'installed dependency or cache');continue
-            assert not item.is_symlink(),'Symlink in source tree: '+str(item)
+            assert not is_link(item),'Symlink in source tree: '+str(item)
             if item.is_dir():self.tree(item,role)
             else:self.add(item,role)
     def local_package(self,path):
         path=Path(os.path.abspath(path));assert path.is_relative_to(self.root),'Local dependency escapes repository'
-        assert not any(p.is_symlink() for p in [path,*path.parents]),'Symlink local dependency'
+        assert not any(is_link(p) for p in [path,*path.parents]),'Symlink local dependency'
         if path in self.local_seen:return
         self.local_seen.add(path)
         if path.is_file():self.add(path,'local-dependency');return
@@ -104,7 +106,7 @@ def select(game,root=ROOT):
     for path in sorted(game.iterdir()):
         if path.name in CACHE or path.name=='docs':scope.exclude(path,'installed dependency/cache' if path.name in CACHE else 'historical evidence');continue
         if path.name in outputs:scope.exclude(path,'published artifact declared by platform release descriptor');continue
-        assert not path.is_symlink(),'Symlink game input: '+str(path)
+        assert not is_link(path),'Symlink game input: '+str(path)
         if path.is_dir():
             assert path.name in GAME_DIRS,'Unclassified game root directory: '+str(path)
             scope.tree(path,'packaged-assets' if path.name=='dist' else 'game-derivation')

@@ -9,7 +9,7 @@ DEFAULT_MACOS = {'maxAssetBytes': 10 * 1024 * 1024, 'maxTotalBytes': 32 * 1024 *
 HARD_LIMITS = {'maxAssetBytes': 64 * 1024 * 1024, 'maxTotalBytes': 256 * 1024 * 1024,
                'maxApkBytes': 128_000_000}
 EXTRA_EXTENSIONS = ('.glb', '.gltf', '.bin', '.wasm', '.hdr', '.ktx2',
-                    '.woff', '.woff2', '.ttf', '.otf', '.ico', '.opus', '.m4a')
+                    '.woff', '.woff2', '.ttf', '.otf', '.ico', '.opus', '.m4a', '.md', '.webmanifest')
 MAX_FILES = 2048
 MAX_INDEX_BYTES = 65_536
 
@@ -47,7 +47,7 @@ def android_limits(meta, registered=None):
     value = declaration(meta, registered)
     if value is None:
         return None  # Use the original GameKit interface and defaults exactly.
-    return {**limits(meta, registered), 'extraExtensions': EXTRA_EXTENSIONS}
+    return {**limits(meta, registered), 'extraExtensions': EXTRA_EXTENSIONS, 'allowNestedAssets': True}
 
 
 def desktop_package_limit(meta, registered=None):

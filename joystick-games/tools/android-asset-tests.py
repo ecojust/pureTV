@@ -45,7 +45,7 @@ class PolicyBoundaries(unittest.TestCase):
             'maxAssetBytes': 8_000_000, 'maxTotalBytes': 32_000_000, 'maxApkBytes': 10_000_000})
         self.assertIsNone(policy.android_limits(metadata()))
         self.assertEqual(kit.MAX_APK_BYTES, 10_000_000)
-        self.assertEqual(kit.checked_limits(), dict(policy.DEFAULT_ANDROID, extraExtensions=()))
+        self.assertEqual(kit.checked_limits(), dict(policy.DEFAULT_ANDROID, extraExtensions=(), allowNestedAssets=False))
         self.assertEqual(policy.limits(metadata(), platform='macos')['maxAssetBytes'], 10 * 1024 * 1024)
 
     def test_policy_requires_matching_game_registry_and_package(self):
@@ -80,7 +80,8 @@ class PolicyBoundaries(unittest.TestCase):
         limits = dict(kit.DEFAULT_LIMITS, extraExtensions=('.glb',))
         for bad in [dict(limits, maxApkBytes=128_000_001), dict(limits, maxAssetBytes=True),
                     dict(limits, extraExtensions=['.exe']), dict(limits, extraExtensions=[[]]),
-                    dict(limits, extraExtensions=['.glb', '.glb']), dict(limits, ignoreTotal=True)]:
+                    dict(limits, extraExtensions=['.glb', '.glb']), dict(limits, ignoreTotal=True),
+                    dict(limits, allowNestedAssets=1)]:
             with self.subTest(limits=bad), self.assertRaises(ValueError):
                 kit.checked_limits(bad)
 
@@ -148,7 +149,7 @@ class ExactPayload(unittest.TestCase):
             kit.payload(self.game, self.limits)
 
     def test_paths_symlinks_and_reserved_names_stay_rejected(self):
-        for name in ('nested', '.hidden.js', 'percent%20.js', 'back\\slash.js', 'assets-index.json', 'game-config.json', 'controller.js'):
+        for name in ('.hidden.js', 'percent%20.js', 'back\\slash.js', 'assets-index.json', 'game-config.json', 'controller.js', 'CON.js', 'tail.'):
             path = self.assets / name
             if name == 'nested': path.mkdir()
             else: path.write_text('not trusted')
@@ -156,10 +157,51 @@ class ExactPayload(unittest.TestCase):
                 kit.payload(self.game, self.limits)
             if path.is_dir(): path.rmdir()
             else: path.unlink()
+        nested = self.assets / 'nested'; nested.mkdir()
+        with self.assertRaises(ValueError):
+            kit.payload(self.game)
+        nested.rmdir()
         outside = self.root / 'outside.glb'; outside.write_bytes(b'x')
         (self.assets / 'escape.glb').symlink_to(outside)
         with self.assertRaises(ValueError):
             kit.payload(self.game, self.limits)
+
+    def test_nested_urls_and_original_notice_bytes_require_explicit_policy(self):
+        values = {'models/cars/car.glb': b'glTF\0\xff',
+                  'models/cars/car.gltf': b'{"buffers":[{"uri":"mesh.bin"}]}',
+                  'models/cars/mesh.bin': b'\0\xff\x80',
+                  'js/worker/physics.js': b'import "../../vendor/math.js";',
+                  'js/vendor/math.js': b'export const sum = (a,b) => a+b;',
+                  'vendor/LICENSE': b'Original license bytes',
+                  'vendor/THREE_LICENSE': b'Three original license bytes',
+                  'docs/AI.md': b'# Original notice\n',
+                  'manifest.webmanifest': b'{"name":"Fixture"}',
+                  'fonts/main.woff2': b'wOF2\0'}
+        for name, data in values.items():
+            path = self.assets / name; path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(data)
+        with self.assertRaises(ValueError): kit.payload(self.game)
+        result = kit.payload(self.game, self.limits)
+        for name, data in values.items(): self.assertEqual(result[name], data)
+        self.assertEqual(set(json.loads(result['assets-index.json'])), set(result) - {'assets-index.json'})
+
+    def test_nested_directory_aliases_symlinks_depth_and_collisions_are_rejected(self):
+        for name in ('A/car.js', 'a/other.js'):
+            path = self.assets / name; path.parent.mkdir(exist_ok=True); path.write_bytes(b'x')
+        with self.assertRaisesRegex(ValueError, 'collision'): kit.payload(self.game, self.limits)
+        shutil.rmtree(self.assets / 'A'); shutil.rmtree(self.assets / 'a')
+        outside = self.root / 'outside'; outside.mkdir(); (outside / 'escape.js').write_bytes(b'x')
+        (self.assets / 'linked').symlink_to(outside, target_is_directory=True)
+        with self.assertRaisesRegex(ValueError, 'symlink'): kit.payload(self.game, self.limits)
+        (self.assets / 'linked').unlink()
+        deep = self.assets.joinpath(*(['a'] * 16), 'game.js')
+        deep.parent.mkdir(parents=True); deep.write_bytes(b'x')
+        with self.assertRaisesRegex(ValueError, 'too long'): kit.payload(self.game, self.limits)
+        shutil.rmtree(self.assets / 'a')
+        path = self.assets / 'controller.js' / 'data.js'; path.parent.mkdir(); path.write_bytes(b'x')
+        with self.assertRaisesRegex(ValueError, 'collision'): kit.payload(self.game, self.limits)
+        shutil.rmtree(path.parent)
+        path = self.assets / 'game-config.json' / 'data.js'; path.parent.mkdir(); path.write_bytes(b'x')
+        with self.assertRaisesRegex(ValueError, 'reserved'): kit.payload(self.game, self.limits)
 
     def test_mac_flat_copy_rejects_undeclared_binary_and_preserves_declared_bytes(self):
         model = b'\0\xff\x80' * 1024
@@ -196,6 +238,23 @@ class ExactPayload(unittest.TestCase):
 
 
 class NativeMime(unittest.TestCase):
+    def test_actual_java_path_validator_with_jdk(self):
+        javac = shutil.which('javac')
+        if javac is None: self.skipTest('Requires JDK; no Android runtime claim')
+        java = str(Path(javac).with_name('java'))
+        source = (ROOT / 'resource/game-kit/android/src/main/java/com/ecojust/gamekit/MainActivity.java').read_text()
+        method = source[source.index('    static boolean validBundledAssetPath('):source.index('    static String bundledAssetMime(')]
+        valid = ['tv.html', 'models/cars/car.glb', 'js/worker/physics.js', 'vendor/LICENSE', 'docs/AI.md']
+        invalid = ['', '/tv.html', '../secret', 'models/../secret', 'a//b.js', 'a/', 'a\\b.js',
+                   'a/%2e%2e/b', 'a/.hidden', 'a/NUL.js', 'a/lpt9.txt', 'a./b.js',
+                   '/'.join(['a'] * 17), 'a' * 1025]
+        with tempfile.TemporaryDirectory(prefix='actual-path-java-') as tmp:
+            path = Path(tmp) / 'PathFixture.java'
+            path.write_text('public final class PathFixture {\n' + method + '\npublic static void main(String[] args) { for (String arg: args) System.out.println(validBundledAssetPath(arg)); }}\n')
+            subprocess.run([javac, str(path)], check=True, capture_output=True)
+            actual = subprocess.check_output([java, '-cp', tmp, 'PathFixture', *valid, *invalid], text=True).splitlines()
+            self.assertEqual(actual, ['true'] * len(valid) + ['false'] * len(invalid))
+
     def test_actual_java_mime_method_with_jdk(self):
         javac = shutil.which('javac')
         if javac is None: self.skipTest('Requires JDK; no Android runtime claim')
@@ -206,6 +265,7 @@ class NativeMime(unittest.TestCase):
                     'mesh.bin': 'application/octet-stream', 'decoder.wasm': 'application/wasm',
                     'car.ktx2': 'image/ktx2', 'sky.hdr': 'application/octet-stream',
                     'font.woff2': 'font/woff2', 'music.mp3': 'audio/mpeg',
+                    'manifest.webmanifest': 'application/manifest+json', 'vendor/THREE_LICENSE': 'text/plain', 'docs/AI.md': 'text/plain',
                     'backfire.opus':'audio/ogg','backfire.m4a':'audio/mp4','BACKFIRE.M4A':'audio/mp4','unsafe.exe': None}
         with tempfile.TemporaryDirectory(prefix='actual-mime-java-') as tmp:
             path = Path(tmp) / 'MimeFixture.java'

@@ -19,7 +19,7 @@ final class LocalAssetServer {
         }
     }
     private struct Asset {
-        let url: URL
+        let relativePath: String
         let size: Int
         let mime: String
     }
@@ -34,6 +34,7 @@ final class LocalAssetServer {
     }
     private let root: URL
     private let policy: Any?
+    private var rootDescriptor: Int32?
     private var listener: NWListener?
     private var generation = 0
     private var entryURL: URL?
@@ -48,7 +49,8 @@ final class LocalAssetServer {
     private static let mimeTypes: [String: String] = [
         "html": "text/html; charset=utf-8", "js": "application/javascript; charset=utf-8",
         "css": "text/css; charset=utf-8", "json": "application/json; charset=utf-8",
-        "txt": "text/plain; charset=utf-8", "svg": "image/svg+xml",
+        "webmanifest": "application/manifest+json",
+        "txt": "text/plain; charset=utf-8", "md": "text/plain; charset=utf-8", "svg": "image/svg+xml",
         "png": "image/png", "webp": "image/webp", "jpg": "image/jpeg", "jpeg": "image/jpeg",
         "ico": "image/x-icon", "woff": "font/woff", "woff2": "font/woff2",
         "ttf": "font/ttf", "otf": "font/otf", "ogg": "audio/ogg", "wav": "audio/wav",
@@ -62,6 +64,8 @@ final class LocalAssetServer {
         self.root = root
         self.policy = policy
     }
+
+    deinit { if let descriptor = rootDescriptor { Darwin.close(descriptor) } }
 
     private func limits() throws -> (asset: Int, total: Int) {
         guard let raw = policy else { return (Self.assetLimit, Self.totalAssetLimit) }
@@ -142,6 +146,7 @@ final class LocalAssetServer {
         clients.removeAll()
         entryURL = nil
         assets.removeAll()
+        if let descriptor = rootDescriptor { Darwin.close(descriptor); rootDescriptor = nil }
     }
 
     private func fail(_ error: Error) {
@@ -155,6 +160,37 @@ final class LocalAssetServer {
         for callback in callbacks { callback(result) }
     }
 
+    private static func safePath(_ path: String, nested: Bool) -> Bool {
+        let parts = path.split(separator: "/", omittingEmptySubsequences: false)
+        guard !parts.isEmpty, parts.count <= 16, path.utf8.count <= 1024,
+              nested || parts.count == 1 else { return false }
+        return parts.allSatisfy { part in
+            let name = String(part), stem = part.split(separator: ".").first.map(String.init)?.uppercased() ?? ""
+            let reserved = ["CON", "PRN", "AUX", "NUL"] + (1...9).flatMap { ["COM\($0)", "LPT\($0)"] }
+            let bytes = Array(name.utf8)
+            func alphanumeric(_ c: UInt8) -> Bool { (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 48 && c <= 57) }
+            return bytes.first.map(alphanumeric) == true && bytes.allSatisfy { alphanumeric($0) || $0 == 95 || $0 == 46 || $0 == 45 }
+                && !name.hasSuffix(".") && !reserved.contains(stem)
+                && !["node_modules", "__pycache__"].contains(name)
+        }
+    }
+
+    // Resolve every component relative to the already opened root. O_NOFOLLOW
+    // on only the final file would permit a replaced parent directory to escape.
+    private static func openAsset(_ path: String, root descriptor: Int32) -> Int32? {
+        let parts = path.split(separator: "/").map(String.init)
+        var current = dup(descriptor)
+        guard current >= 0 else { return nil }
+        for (index, part) in parts.enumerated() {
+            let flags = O_RDONLY | O_NOFOLLOW | (index == parts.count - 1 ? 0 : O_DIRECTORY)
+            let next = openat(current, part, flags)
+            Darwin.close(current)
+            guard next >= 0 else { return nil }
+            current = next
+        }
+        return current
+    }
+
     private func loadAssets() throws {
         let budget = try limits()
         guard root.isFileURL else { throw Failure.invalidRoot }
@@ -164,31 +200,50 @@ final class LocalAssetServer {
         let canonical = root.standardizedFileURL.resolvingSymlinksInPath()
         let rootValues = try canonical.resourceValues(forKeys: [.isDirectoryKey])
         guard rootValues.isDirectory == true else { throw Failure.invalidRoot }
-        let files = try FileManager.default.contentsOfDirectory(at: canonical,
-            includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey],
-            options: [])
-        guard files.count <= 2048 else { throw Failure.assetBudget }
+        let descriptor = open(canonical.path, O_RDONLY | O_DIRECTORY | O_NOFOLLOW)
+        guard descriptor >= 0 else { throw Failure.invalidRoot }
+        var keepDescriptor = false
+        defer { if !keepDescriptor { Darwin.close(descriptor) } }
         var loaded: [String: Asset] = [:]
-        var total = 0
-        for file in files {
-            let name = file.lastPathComponent
-            guard name.range(of: "^[A-Za-z0-9][A-Za-z0-9_.-]*$", options: .regularExpression) != nil,
-                  let mime = Self.mimeTypes[file.pathExtension.lowercased()] else { throw Failure.invalidRoot }
-            if policy == nil && ["glb", "gltf", "bin", "wasm", "hdr", "ktx2", "opus", "m4a"].contains(file.pathExtension.lowercased()) {
-                throw Failure.invalidRoot
+        var total = 0, nodes = 0, indexBytes = 2
+        var seen = Set<String>()
+        func visit(_ directory: URL, prefix: String) throws {
+            let files = try FileManager.default.contentsOfDirectory(at: directory,
+                includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey, .isSymbolicLinkKey, .fileSizeKey], options: [])
+            for file in files {
+                let name = prefix + file.lastPathComponent
+                nodes += 1
+                guard nodes <= 4096 else { throw Failure.assetBudget }
+                guard Self.safePath(name, nested: policy != nil), seen.insert(name.lowercased()).inserted else { throw Failure.invalidRoot }
+                let values = try file.resourceValues(forKeys: [.isRegularFileKey, .isDirectoryKey, .isSymbolicLinkKey, .fileSizeKey])
+                guard values.isSymbolicLink != true,
+                      file.resolvingSymlinksInPath().path == file.standardizedFileURL.path else { throw Failure.invalidRoot }
+                if values.isDirectory == true {
+                    guard policy != nil else { throw Failure.invalidRoot }
+                    try visit(file, prefix: name + "/")
+                    continue
+                }
+                let ext = file.pathExtension.lowercased()
+                let notice = policy != nil && file.lastPathComponent.range(of: "^(?:[A-Za-z0-9][A-Za-z0-9_-]*_)?(?:LICENSE|NOTICE|COPYING)$", options: .regularExpression) != nil
+                guard let mime = notice ? "text/plain; charset=utf-8" : Self.mimeTypes[ext], values.isRegularFile == true else { throw Failure.invalidRoot }
+                if policy == nil && ["glb", "gltf", "bin", "wasm", "hdr", "ktx2", "opus", "m4a", "md", "webmanifest"].contains(ext) { throw Failure.invalidRoot }
+                guard let handle = Self.openAsset(name, root: descriptor) else { throw Failure.invalidRoot }
+                var info = stat()
+                let valid = fstat(handle, &info) == 0 && (info.st_mode & mode_t(S_IFMT)) == mode_t(S_IFREG)
+                Darwin.close(handle)
+                guard valid else { throw Failure.invalidRoot }
+                guard let size = values.fileSize, size >= 0, size <= budget.asset, info.st_size == Int64(size) else { throw Failure.assetBudget }
+                total += size
+                indexBytes += name.utf8.count + 2 + (loaded.isEmpty ? 0 : 1)
+                guard total <= budget.total, loaded.count < 2048, indexBytes <= 65536 else { throw Failure.assetBudget }
+                loaded[name] = Asset(relativePath: name, size: size, mime: mime)
             }
-            let values = try file.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
-            guard values.isRegularFile == true, values.isSymbolicLink != true,
-                  file.resolvingSymlinksInPath().deletingLastPathComponent().path == canonical.path else {
-                throw Failure.invalidRoot
-            }
-            guard let size = values.fileSize, size >= 0, size <= budget.asset else { throw Failure.assetBudget }
-            total += size
-            guard total <= budget.total else { throw Failure.assetBudget }
-            loaded[name] = Asset(url: file, size: size, mime: mime)
         }
+        try visit(canonical, prefix: "")
         guard loaded["tv.html"] != nil else { throw Failure.missingEntry }
         assets = loaded
+        rootDescriptor = descriptor
+        keepDescriptor = true
     }
 
     private func accept(_ socket: NWConnection, generation expected: Int) {
@@ -273,9 +328,7 @@ final class LocalAssetServer {
             respond(id, status: 400, message: "Bad Request"); return
         }
         let name = String(decoded.dropFirst())
-        guard !name.isEmpty, name != ".", name != "..", !name.hasPrefix("."),
-              !name.contains("/"), !name.contains("\\"),
-              !name.unicodeScalars.contains(where: { $0.value < 32 || $0.value == 127 }) else {
+        guard Self.safePath(name, nested: policy != nil) else {
             respond(id, status: 404, message: "Not Found"); return
         }
         guard let asset = assets[name] else { respond(id, status: 404, message: "Not Found"); return }
@@ -309,9 +362,9 @@ final class LocalAssetServer {
 
     private func stream(_ id: UUID, asset: Asset, offset: Int, length: Int, status: Int, head: Bool) {
         guard let client = clients[id], !client.responding else { return }
-        // O_NOFOLLOW rejects a file replaced by a symlink after indexing.
-        let descriptor = open(asset.url.path, O_RDONLY | O_NOFOLLOW)
-        guard descriptor >= 0 else { respond(id, status: 404, message: "Not Found"); return }
+        guard let root = rootDescriptor, let descriptor = Self.openAsset(asset.relativePath, root: root) else {
+            respond(id, status: 404, message: "Not Found"); return
+        }
         var info = stat()
         guard fstat(descriptor, &info) == 0, (info.st_mode & mode_t(S_IFMT)) == mode_t(S_IFREG),
               info.st_size == Int64(asset.size) else {
