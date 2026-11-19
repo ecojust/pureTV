@@ -2,6 +2,12 @@
 
 基于 [SilverNinja71/Penguin-Track](https://github.com/SilverNinja71/Penguin-Track/tree/0369367ff5aa76902bdf0736e4644efbbd3f1d82) 的 pureTV 手柄适配。保留原作者的雪地赛车物理、画面和关卡；不是 pureTV 原创游戏。
 
+## Windows 下载
+
+0.1.0 x64：[安装 EXE](Penguintrack-0.1.0-windows-x64-setup.exe)（2,424,280 字节）· [便携 ZIP](Penguintrack-0.1.0-windows-x64.zip)（2,360,273 字节）· [SHA256 校验](SHA256SUMS.txt)。需要 **Windows 10 1903 或更新版本／Windows 11 x64、Microsoft Edge WebView2 Runtime 和可用的 WebGL 2**；便携版请完整解压后运行 `PureTVGame.exe`。安装包未做 Authenticode 签名。
+
+原 Windows CI 的正常端口与占用回退两种模式各通过 10 项检查，包含实际游戏、原 SDK 手柄、失焦／断线取消、存档重启与窗口检查；安装／卸载／重装及无关文件保留也通过。检查覆盖 96 DPI 下 960×540、1280×720，未做其他 DPI 缩放、实体手柄或完整通关测试。同批其他四款失败仍保留，以上结论仅针对本游戏。安装文件沿用原始字节，未重新编译，详见 [Windows 交付记录](docs/windows-delivery/) 和 [版本清单](windows-release.json)。
+
 ## macOS 下载
 
 0.1.0 Universal：[DMG](macos/Penguintrack-0.1.0-macos-universal.dmg) · [ZIP](macos/Penguintrack-0.1.0-macos-universal.zip) · [SHA256 校验](macos/SHA256SUMS.txt) · [包来源与验证范围](packages.json)。DMG 内的应用可拖入 Applications；ZIP 解压后也可运行同一个应用。
@@ -38,4 +44,4 @@ python3 -m http.server 8080 --directory dist
 
 `src/` 是可维护源码，`dist/` 为确切离线运行资产。`upstream.json` 保存原始 198 文件的固定提交/Git blob匹配与 SHA256；`docs/build-inputs.json` 保存编译输入和输出哈希。上游 MIT 版权行原为 “Spear-Mace PVP Contributors”，已原样保留；Three.js 为 MIT，Baloo 2 为 OFL 1.1，见 NOTICE 和 dist/THIRD-PARTY-NOTICES.txt。
 
-macOS 安装包及有限覆盖范围见上方；Android、Windows 的包与验证分别记录。需要 WebGL2 与现代系统 WebView，不承诺 Android 4.4/6 的旧 WebView 可用。实体电视、手机/ESP32 手柄及各平台原生验证状态见本目录证据，不把 Linux SwiftShader 当作设备性能。
+macOS、Windows 安装包及各自验证范围见上方；Android 仍待独立验收。需要 WebGL2 与现代系统 WebView，不承诺 Android 4.4/6 的旧 WebView 可用。实体电视、手机/ESP32 手柄及各平台原生验证状态见本目录证据，不把 Linux SwiftShader 当作设备性能。

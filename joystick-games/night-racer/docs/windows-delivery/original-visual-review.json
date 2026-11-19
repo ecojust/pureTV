@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "racing_windows_host",
+  "reviewedAt": "2026-11-19T21:38:31.783151+00:00",
+  "sourceRunId": 44615299245,
+  "sourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+  "immutableExportCommit": "6dc14b79a364dc8679f370f17099e0636acef356",
+  "result": "no_blocking_issue_in_reviewed_audit_or_sixteen_images",
+  "scope": "Independent static review of root actual audit script/results and direct viewing of 16 original Night/Penguin PNGs. No repeat native run, no rerun of 1177 unique source checks, no package download/copy.",
+  "reviewedAudit": {
+    "bytes": 9745,
+    "sha256": "5b343a4be5db554f969b95a42b54006e1086326d2c5d94fc1b847b2a161d8957"
+  },
+  "reviewedSummary": {
+    "bytes": 16449,
+    "sha256": "e54d93fda404f922b7063b0f43f51b556dd295b5d32bbfb37bc13bbe1a810e1d"
+  },
+  "reviewedFrozenScope": {
+    "bytes": 16740,
+    "sha256": "8c76db4b03ad3aba3f0ad51a4e474cd33f416fc294d8b2afccde882e6d3d0798"
+  },
+  "auditReview": {
+    "fixedSourceExportAndRun": true,
+    "actualExportTreeCommitIndependentlyChecked": true,
+    "regularGitBlobAndSHA256Checks": true,
+    "fixedFrozenInputScopeAndAllInputBytesCheckedByRoot": true,
+    "completePortableFileSetAndAMD64PECheckedByRoot": true,
+    "installerUninstallerAndRealSavedDataOriginalReportsBound": true,
+    "bothModesTenPassedChecksAndExactFrozenQAPlanBound": true,
+    "originalOverallRunFailurePreserved": true,
+    "sourceReferenceCount": 1429,
+    "uniqueSourceFilesCheckedByRoot": 1177,
+    "note": "This is supplemental review of the actual frozen original-export audit; it does not rerun source/native checks or independently recreate the producer API verification. 1429 per-game input references correspond to 1177 unique source files."
+  },
+  "visualFindings": [
+    "No main action/ID clipping or side-card obstruction of pause buttons in the 16 viewed images.",
+    "Night 960x540 main menu requires vertical scrolling for lower keyboard-help content; primary choices and Start race remain visible.",
+    "Penguin expanded paused/reconnected card covers part of the inactive background minimap; pause actions and ID remain readable.",
+    "Minimum-window captures are preconnection menu screenshots, not connected-ID coverage at 960x540. Connected ID coverage here is from the 1280x720 playing/paused/reconnected PNGs."
+  ],
+  "limitations": {
+    "authenticodeSigned": false,
+    "physicalControllerTested": false,
+    "fullGameCompletionTested": false,
+    "minimumConnectedViewportVisuallyTested": false,
+    "staticImageDoesNotProveMotionOrTemporalLifecycle": true
+  },
+  "screenshots": [
+    {
+      "path": "joystick-windows-evidence-night-racer/runtime-normal/diagnostics/minimum-window.png",
+      "bytes": 436809,
+      "sha256": "3cb07a2fd53ca02160564dbf67bfe3185cc131c546f016ccc26b08a0ba56571b",
+      "width": 960,
+      "height": 540,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": null,
+      "observation": "Actually viewed: 960x540 menu shows Neon District map choices, race mode, difficulty/class, Start race, Garage and Settings. Host card left is readable with no connected ID yet. Vertical scrollbar is present; lower keyboard-help rows extend below the viewport and are partly under the footer. Main choices/start remain visible."
+    },
+    {
+      "path": "joystick-windows-evidence-night-racer/runtime-normal/diagnostics/playing.png",
+      "bytes": 459974,
+      "sha256": "41b60a84f1249c352dba2a2f8346acfdca0a9d9de5265c3cb1b13f4b5c2691be",
+      "width": 1280,
+      "height": 720,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": "virtual-de2c36f5b545",
+      "observation": "Actually viewed: night city circuit, red player car and opponents, lap/position/timer, map and speed HUD are rendered. Left controller icon, 1P connected and complete wrapped ID are visible without covering the car or race HUD. Speed is 0 in this still; this image alone is not evidence of vehicle motion."
+    },
+    {
+      "path": "joystick-windows-evidence-night-racer/runtime-normal/diagnostics/paused.png",
+      "bytes": 331614,
+      "sha256": "4d68620471516e3506ce36704c3b9a6511bfff5a46decab55603226a050ce8eb",
+      "width": 1280,
+      "height": 720,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": "virtual-de2c36f5b545",
+      "observation": "Actually viewed: Pause title and Resume, Restart, Camera, Settings and Main menu buttons are visible and separated from the expanded controller card; complete wrapped ID is readable."
+    },
+    {
+      "path": "joystick-windows-evidence-night-racer/runtime-normal/diagnostics/reconnected.png",
+      "bytes": 415113,
+      "sha256": "b869857fe4b94def472bd2a2d3693d593f59b519d04ba0c371884a482f7f161b",
+      "width": 1280,
+      "height": 720,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": "virtual-de2c36f5b545",
+      "observation": "Actually viewed: connected controller card and complete wrapped ID are visible while the Pause menu remains on screen; Resume and the other actions are unobscured. This still does not by itself establish temporal behavior."
+    },
+    {
+      "path": "joystick-windows-evidence-night-racer/runtime-occupied/diagnostics/minimum-window.png",
+      "bytes": 432673,
+      "sha256": "3f4bf1fcea84a2ecb1ff0760c0ce867a389067941bbdc61d3cab6e09669aba39",
+      "width": 960,
+      "height": 540,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": null,
+      "observation": "Actually viewed: 960x540 menu shows Neon District map choices, race mode, difficulty/class, Start race, Garage and Settings. Host card left is readable with no connected ID yet. Vertical scrollbar is present; lower keyboard-help rows extend below the viewport and are partly under the footer. Main choices/start remain visible."
+    },
+    {
+      "path": "joystick-windows-evidence-night-racer/runtime-occupied/diagnostics/playing.png",
+      "bytes": 589243,
+      "sha256": "e813516be5a2528a9ed3e542e1d046265e25d0b0a41777beca4a524f907270b6",
+      "width": 1280,
+      "height": 720,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": "virtual-da4516288a59",
+      "observation": "Actually viewed: night city circuit, red player car and opponents, lap/position/timer, map and speed HUD are rendered. Left controller icon, 1P connected and complete wrapped ID are visible without covering the car or race HUD. Speed is 0 in this still; this image alone is not evidence of vehicle motion."
+    },
+    {
+      "path": "joystick-windows-evidence-night-racer/runtime-occupied/diagnostics/paused.png",
+      "bytes": 423374,
+      "sha256": "09b63daedbd5997b6ee219deaaaf445437038353c8c2887d09b772d4ed5925cb",
+      "width": 1280,
+      "height": 720,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": "virtual-da4516288a59",
+      "observation": "Actually viewed: Pause title and Resume, Restart, Camera, Settings and Main menu buttons are visible and separated from the expanded controller card; complete wrapped ID is readable."
+    },
+    {
+      "path": "joystick-windows-evidence-night-racer/runtime-occupied/diagnostics/reconnected.png",
+      "bytes": 420161,
+      "sha256": "344dc69a914203672a44d4f7e202faa9f7792d45fb0eefda2f994f44a57b33a3",
+      "width": 1280,
+      "height": 720,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": "virtual-da4516288a59",
+      "observation": "Actually viewed: connected controller card and complete wrapped ID are visible while the Pause menu remains on screen; Resume and the other actions are unobscured. This still does not by itself establish temporal behavior."
+    },
+    {
+      "path": "joystick-windows-evidence-penguintrack/runtime-normal/diagnostics/minimum-window.png",
+      "bytes": 418152,
+      "sha256": "22925184b576af6e3266f928892a64bf176481af1081d57fd755366da79ee061",
+      "width": 960,
+      "height": 540,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": null,
+      "observation": "Actually viewed: 960x540 menu shows full Penguintrack title, Play/Race Friends and all eight secondary menu choices, Controller and guest badge. Host card does not overlap the menu buttons. Footer guidance is legible; no connected ID is expected at this stage."
+    },
+    {
+      "path": "joystick-windows-evidence-penguintrack/runtime-normal/diagnostics/playing.png",
+      "bytes": 551457,
+      "sha256": "daeb228278a51aae23099493c8c2f2dc22323a593d64070e4e02d15daf9293da",
+      "width": 1280,
+      "height": 720,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": "virtual-ff2136ae073d",
+      "observation": "Actually viewed: snowy 3D track, penguin kart, track/medal/map/timer/speed HUD and controller guidance are visible. Side card shows controller icon, 1P connected and complete wrapped ID. Displayed speed is 44 km/h; the still alone does not prove motion."
+    },
+    {
+      "path": "joystick-windows-evidence-penguintrack/runtime-normal/diagnostics/paused.png",
+      "bytes": 322159,
+      "sha256": "888298901ba2ea79e91863a46684ece5cd977f077bfc46acd894862205d45b54",
+      "width": 1280,
+      "height": 720,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": "virtual-ff2136ae073d",
+      "observation": "Actually viewed: Paused title, Resume/Restart/Settings/Quit and ghost choices are fully visible. Expanded controller card with complete wrapped ID overlaps part of the background minimap while paused, but does not obscure any pause action or the player viewport center."
+    },
+    {
+      "path": "joystick-windows-evidence-penguintrack/runtime-normal/diagnostics/reconnected.png",
+      "bytes": 299753,
+      "sha256": "b6272443f83b8f34ff711ef556da5756e18843a8bb5bb317f9e296b9a919d1db",
+      "width": 1280,
+      "height": 720,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": "virtual-ff2136ae073d",
+      "observation": "Actually viewed: complete connected ID and expanded card remain readable while Paused menu stays visible. Resume/Restart/Settings/Quit and ghost choices are unobscured. Background minimap is partly covered by the card; no gameplay motion claim is made from this still."
+    },
+    {
+      "path": "joystick-windows-evidence-penguintrack/runtime-occupied/diagnostics/minimum-window.png",
+      "bytes": 379328,
+      "sha256": "4192a603c835b4f77b4fed25b6e6e94ac03879c10b8b0a798fa4cac922dd3cf7",
+      "width": 960,
+      "height": 540,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": null,
+      "observation": "Actually viewed: 960x540 menu shows full Penguintrack title, Play/Race Friends and all eight secondary menu choices, Controller and guest badge. Host card does not overlap the menu buttons. Footer guidance is legible; no connected ID is expected at this stage."
+    },
+    {
+      "path": "joystick-windows-evidence-penguintrack/runtime-occupied/diagnostics/playing.png",
+      "bytes": 544509,
+      "sha256": "b6cf2471a2f576682be459cc74b4ee4ecbde43fe8218a6c29bfb969cfd157e93",
+      "width": 1280,
+      "height": 720,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": "virtual-3b7ddf560ba2",
+      "observation": "Actually viewed: snowy 3D track, penguin kart, track/medal/map/timer/speed HUD and controller guidance are visible. Side card shows controller icon, 1P connected and complete wrapped ID. Displayed speed is 47 km/h; the still alone does not prove motion."
+    },
+    {
+      "path": "joystick-windows-evidence-penguintrack/runtime-occupied/diagnostics/paused.png",
+      "bytes": 318882,
+      "sha256": "81b49e10f5429ed30515b6516b62c7700fce7e4531dbe9be718ba75d593e490e",
+      "width": 1280,
+      "height": 720,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": "virtual-3b7ddf560ba2",
+      "observation": "Actually viewed: Paused title, Resume/Restart/Settings/Quit and ghost choices are fully visible. Expanded controller card with complete wrapped ID overlaps part of the background minimap while paused, but does not obscure any pause action or the player viewport center."
+    },
+    {
+      "path": "joystick-windows-evidence-penguintrack/runtime-occupied/diagnostics/reconnected.png",
+      "bytes": 268262,
+      "sha256": "b4dc918404fd3feacd47dbc53e3a15626c2c4723781dfca13f7c2cd3372d5cb4",
+      "width": 1280,
+      "height": 720,
+      "viewedWith": "view_image",
+      "actualImageViewed": true,
+      "controllerIdVisuallyRead": "virtual-3b7ddf560ba2",
+      "observation": "Actually viewed: complete connected ID and expanded card remain readable while Paused menu stays visible. Resume/Restart/Settings/Quit and ghost choices are unobscured. Background minimap is partly covered by the card; no gameplay motion claim is made from this still."
+    }
+  ]
+}
