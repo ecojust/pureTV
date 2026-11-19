@@ -44,6 +44,11 @@ def file_info(path):
 OBSERVER_REQUEST_TIMEOUT = 15
 OBSERVER_SNAPSHOT_TIMEOUT = 45
 OBSERVER_SNAPSHOT_ATTEMPTS = 3
+NIGHT_LOW_RELOAD_APK = '66e2589ece8a13bc03d9796259b2662aef34c56c166265db0a63d3baa2b72c91'
+NIGHT_LOW_RELOAD_SOURCES = {
+    'joystick-games/night-racer/src/src/main.js': 'ad1edb9d785799db5cd357d614005d2e044b79bed7c7635e019e693e65b49004',
+    'joystick-games/night-racer/src/src/tv-adapter.js': 'e6feee4583e79cebcabf86a038699ca7062cd960d7a732386c5817ed28164d23',
+}
 
 
 def install_timeout(apk_bytes):
@@ -657,12 +662,140 @@ class Acceptance:
             sequence = client.seq
         self.wait_sent_ack(client, sequence)
 
+    def menu_player(self, snapshot):
+        players = [p for p in self.game(snapshot).get('controller', {}).get('players', []) if p.get('connected') is True]
+        return players[0] if len(players) == 1 and players[0].get('controllerId') == self.clients[0].identity else {}
+
+    def menu_released(self, snapshot, before):
+        owner, player = self.menu_player(before), self.menu_player(snapshot)
+        controller = self.game(snapshot).get('controller', {})
+        return bool(owner.get('session') and player.get('session') == owner['session']
+                    and player.get('id') == owner.get('id') and player.get('cancelSeq') == owner.get('cancelSeq')
+                    and player.get('inputActive') is True and controller.get('cancelled') is False
+                    and all(player.get('buttons', {}).get(k) is False and controller.get('buttons', {}).get(k) is False for k in KEYS)
+                    and snapshot.get('activityState') == 'resumed' and snapshot.get('windowFocused') is True
+                    and snapshot.get('page', {}).get('hidden') is False and snapshot.get('page', {}).get('focused') is True)
+
+    def menu_reload_basis(self, step, before):
+        # Original Android observations have no document epoch or native button
+        # counters. This exact APK's module-constant gfxId can change only after
+        # the normal Low preference handler reloads the document. Do not infer
+        # a reload from a decreasing poll counter or an arbitrary changed field.
+        game = self.game(before)
+        expected = [{'path': 'gameplay.renderPreset', 'op': 'eq', 'value': 'low'},
+                    {'path': 'gameplay.menu.root', 'op': 'eq', 'value': 'title'},
+                    {'path': 'gameplay.menu.focusId', 'op': 'eq', 'value': 'start'},
+                    {'path': 'gameplay.ready', 'op': 'eq', 'value': True}]
+        if not (self.args.game == 'night-racer' and game.get('game') == 'night-racer'
+                and self.report.get('apk', {}).get('sha256') == NIGHT_LOW_RELOAD_APK
+                and self.report.get('apk', {}).get('bytes') == 22465268
+                and step.get('keys') == ['A'] and step.get('expect') == expected
+                and game.get('gameplay', {}).get('renderPreset') == 'high'
+                and game.get('gameplay', {}).get('menu', {}).get('root') == 'volume'
+                and game.get('gameplay', {}).get('menu', {}).get('focusIndex') == 1):
+            return None
+        for name, digest in NIGHT_LOW_RELOAD_SOURCES.items():
+            assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, 'Night reload source proof changed'
+        return {'kind': 'exact-apk-module-constant-high-to-low', 'apkSha256': NIGHT_LOW_RELOAD_APK,
+                'sourceSha256': dict(NIGHT_LOW_RELOAD_SOURCES), 'documentEpochAvailable': False,
+                'postReloadFreshPollsRequired': 2}
+
+    def menu_wire_pair(self, key, down_seq, release_seq):
+        identity = self.clients[0].identity
+        with self.proxy.lock:
+            rows = list(self.proxy.records)
+        sent = [r for r in rows if r['direction'] == 'sdk-to-game' and r['message'].get('controller_id') == identity
+                and down_seq <= r['message'].get('seq', -1) <= release_seq and r['message'].get('type') == 'button']
+        assert len(sent) == 2 and sent[0]['connection'] == sent[1]['connection'], 'Exact menu SDK wire pair missing or duplicated'
+        expected = [(down_seq, 'down', True), (release_seq, 'tap', False)]
+        assert [(r['message'].get('seq'), r['message'].get('action'), r['message'].get('pressed')) for r in sent] == expected, 'Unexpected menu SDK actions'
+        assert all(r['message'].get('key') == key for r in sent), 'Unexpected additional menu key'
+        for row in sent:
+            acks = [r for r in rows if r['direction'] == 'game-to-sdk' and r['connection'] == row['connection']
+                    and r['message'].get('type') == 'ack' and r['message'].get('seq') == row['message']['seq']]
+            assert len(acks) == 1, 'Menu SDK action needs exactly one original same-connection ACK'
+        return {'controllerId': identity, 'connection': sent[0]['connection'], 'downSequence': down_seq,
+                'releaseSequence': release_seq, 'downCounts': {k: int(k == key) for k in KEYS},
+                'matchingAcks': 2, 'countScope': 'Original SDK wire; native Android button counters are unavailable',
+                'observedWireHeldMs': (sent[1]['monotonic'] - sent[0]['monotonic']) * 1000}
+
+    def catalog_menu_tap(self, step, before):
+        assert step.get('menuTap') is True and len(step['keys']) == 1
+        assert self.game(before).get('stage') == 'menu', 'menuTap starts only in an actual menu'
+        assert not plan.matches(step['expect'], self.game(before), self.game(before)), 'menuTap expectation is already satisfied'
+        assert self.menu_released(before, before), 'Menu must start focused with the original SDK owner and all keys released'
+        key, client = step['keys'][0], self.clients[0]
+        basis = self.menu_reload_basis(step, before)
+        record = {'name': step['name'], 'key': key, 'status': 'running', 'requestedTapMs': 16,
+                  'declaredHoldMs': step['holdMs'], 'beforePollCount': self.game(before)['controller']['pollCount'],
+                  'reloadBasis': basis, 'samples': [], 'sampleCount': 0, 'samplesTruncated': False}
+        self.report.setdefault('menuTapObservations', []).append(record)
+        started = time.monotonic(); deadline = started + step.get('timeoutSeconds', 15)
+        candidate = None; stable = 0; down_sent = False; released = False
+        try:
+            with client.lock:
+                down_at = time.monotonic(); self.button(key); down_seq = client.seq; down_sent = True
+            try:
+                time.sleep(.016)
+            finally:
+                with client.lock:
+                    self.button(key, False); release_seq = client.seq; released = True
+            record.update(sdkCallHeldMs=(time.monotonic() - down_at) * 1000, downSequence=down_seq, releaseSequence=release_seq)
+            for sequence in (down_seq, release_seq):
+                remaining = deadline - time.monotonic()
+                assert remaining > 0, 'Menu tap ACK deadline expired'
+                self.wait_sent_ack(client, sequence, timeout=min(10, remaining))
+            record['wire'] = self.menu_wire_pair(key, down_seq, release_seq)
+            while time.monotonic() < deadline:
+                state = self.snapshot(timeout=min(OBSERVER_SNAPSHOT_TIMEOUT, max(.001, deadline - time.monotonic())))
+                game = self.game(state); count = game.get('controller', {}).get('pollCount')
+                assert not game.get('error') and not game.get('errors'), 'Game error during menu tap'
+                release_seen = self.menu_released(state, before)
+                expected = bool(game) and plan.matches(step['expect'], game, self.game(before))
+                # In the one source-proven reload, the first new Low document
+                # snapshot is only a baseline, never itself a successful frame.
+                fresh = self.frame_advanced(state, before) or (basis is not None and type(count) is int and count > 0)
+                qualified = fresh and release_seen and expected
+                record['sampleCount'] += 1
+                record['samples'].append({'pollCount': count, 'released': release_seen, 'expectationMatches': expected,
+                                          'qualified': qualified, 'elapsedSeconds': time.monotonic() - started})
+                if len(record['samples']) > 64:
+                    del record['samples'][16]; record['samplesTruncated'] = True
+                if qualified:
+                    if candidate is None:
+                        candidate = state; stable = 0
+                    elif self.frame_advanced(state, candidate):
+                        candidate = state; stable += 1
+                    elif type(count) is int and count < self.game(candidate)['controller']['pollCount']:
+                        candidate = None; stable = 0
+                else:
+                    candidate = None; stable = 0
+                if stable >= 2:
+                    self.validate_catalog_snapshot(state)
+                    record.update(status='passed', stableFreshSamples=stable, afterPollCount=count,
+                                  elapsedSeconds=time.monotonic() - started)
+                    return state
+                time.sleep(min(.08, max(0, deadline - time.monotonic())))
+            raise AssertionError(step['name'] + ' released menu tap did not remain stable across two subsequent fresh polls')
+        except Exception as error:
+            record.update(status='failed', errorType=type(error).__name__, elapsedSeconds=time.monotonic() - started)
+            raise
+        finally:
+            if down_sent and not released:
+                try: self.button(key, False)
+                except Exception: pass
+
     def catalog_scenarios(self):
         # The per-game plan owns startup/menu navigation as well as gameplay inputs.
         assert self.game(self.snapshot()).get('stage') == 'menu'
         for step in self.plan['steps']:
             self.release()
             before = self.record('before-plan-' + step['name'])
+            if step.get('menuTap') is True:
+                after = self.catalog_menu_tap(step, before)
+                self.record('after-plan-' + step['name'], after)
+                self.passed('actual SDK gameplay: ' + step['name'], {'expect': step['expect'], 'holdMs': step['holdMs'], 'menuTap': True})
+                continue
             for key in step['keys']: self.button(key)
             held = self.wait_fresh(before, lambda s: all(self.native_buttons(s).get(k) is True for k in step['keys']),
                                    label='plan-held-' + step['name'])

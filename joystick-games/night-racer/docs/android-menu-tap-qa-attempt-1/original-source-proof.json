@@ -1,0 +1,52 @@
+{
+  "sourceCommit": "315f8889ea677ed6a9211bf7d66c8c78dff57f01",
+  "scope": "Read-only original source, not a new execution",
+  "facts": [
+    "The original graphics key low is labelled T(流畅); English translation is Smooth.",
+    "The original settings callback stores nr-gfx and invokes location.reload after 30 ms while on title.",
+    "The actual original observer reports renderPreset:gfxId and ready:booted; the recorded low/ready true state after A is an observation of ordinary reload, not a QA model write."
+  ],
+  "sourceFiles": [
+    {
+      "sourcePath": "joystick-games/night-racer/src/src/main.js",
+      "bytes": 98145,
+      "sha256": "ad1edb9d785799db5cd357d614005d2e044b79bed7c7635e019e693e65b49004",
+      "permanentUrl": "https://github.com/ecojust/pureTV/blob/315f8889ea677ed6a9211bf7d66c8c78dff57f01/joystick-games/night-racer/src/src/main.js",
+      "quotes": [
+        {
+          "startLine": 62,
+          "endLine": 78,
+          "text": "// the adaptive loop below can still step down at run time.\nconst GFX_LEVELS = {\n  low:  { label: T('流畅'),   pr: 0.8, aa: false, bloom: false, shadow: 0,    trees: 0.4, rain: 1200, smoke: 0.35 },\n  mid:  { label: T('均衡'),   pr: 1.1, aa: false, bloom: true,  shadow: 1024, trees: 0.7, rain: 2500, smoke: 0.7 },\n  high: { label: T('高画质'), pr: 1.5, aa: true,  bloom: true,  shadow: 2048, trees: 1,   rain: 5000, smoke: 1 },\n  ultra: { label: T('极高'),  pr: 2.0, aa: true,  bloom: true,  shadow: 2048, trees: 1,   rain: 5000, smoke: 1 },\n  // computers only: real grass, ambient occlusion, sharp wide shadows (too heavy for phones)\n  max:  { label: T('极致'),   pr: 2.0, aa: true,  bloom: true,  shadow: 4096, trees: 1.3, rain: 6000, smoke: 1, grass: true, ao: false },   // (GTAO's depth/normal pass ignores alphaTest: card trees became pale walls in the sky)\n};\nfunction autoGfx() {\n  if (!TOUCH) return 'high';\n  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);\n  if (ios) return 'ultra';\n  return (navigator.deviceMemory || 4) <= 4 || (navigator.hardwareConcurrency || 4) <= 4 ? 'low' : 'mid';\n}\nconst gfxId = GFX_LEVELS[store.get('nr-gfx')] && !(TOUCH && store.get('nr-gfx') === 'max') ? store.get('nr-gfx') : autoGfx();\nconst GFX = GFX_LEVELS[gfxId];"
+        },
+        {
+          "startLine": 604,
+          "endLine": 609,
+          "text": "  seg(T('画质'), Object.entries(GFX_LEVELS).filter(([k]) => k !== 'max' || !TOUCH).map(([k, v]) => [k, v.label]), gfxId, v => {\n    if (v === gfxId) return;\n    store.set('nr-gfx', v);\n    if (state === 'title') { $('loading').hidden = false; setTimeout(() => location.reload(), 30); }\n    else flash(T('回到主菜单后生效'));\n  }, T('卡顿或手机发烫时选「流畅」。切换后会重新载入。'));"
+        },
+        {
+          "startLine": 1618,
+          "endLine": 1622,
+          "text": "  snapshot: () => ({ stage: state === 'paused' ? 'paused' : ['race', 'countdown'].includes(state) ? 'playing' : state === 'finished' ? 'ended' : 'menu', paused: state === 'paused',\n    gameplay: { state, map: mapId, mode, raceTime, countT, playerX: player.car.x, playerZ: player.car.z, heading: player.car.h, speed: player.car.speed, steer: player.car.steer,\n      drift: player.car.drifting, driftTime: player.car.driftTime, miniT: player.car.miniT, nitro: player.car.nitro, bottles: player.car.bottles, camera: camMode,\n      coins: profile.data.coins, laps: player.lapsDone, renderPreset: gfxId, ready: booted }, audioState: sound.ctx?.state || 'not_created' })\n});"
+        }
+      ]
+    },
+    {
+      "sourcePath": "joystick-games/night-racer/src/src/i18n.js",
+      "bytes": 21766,
+      "sha256": "6191d9dda3c98d402b4dcc75bb22bf68cfea07f39b1f725acecdca8157f7cf67",
+      "permanentUrl": "https://github.com/ecojust/pureTV/blob/315f8889ea677ed6a9211bf7d66c8c78dff57f01/joystick-games/night-racer/src/src/i18n.js",
+      "quotes": [
+        {
+          "startLine": 98,
+          "endLine": 98,
+          "text": "  '流畅': 'Smooth', '均衡': 'Balanced', '高画质': 'High', '极高': 'Ultra', '极致': 'Max',"
+        },
+        {
+          "startLine": 108,
+          "endLine": 109,
+          "text": "  '画面': 'Graphics', '画质': 'Quality', '回到主菜单后生效': 'Takes effect back in the main menu', '卡顿或手机发烫时选「流畅」。切换后会重新载入。': 'Pick \"Smooth\" if it stutters or your phone gets hot. Changing it reloads the page.',\n  '卡顿时自动降画质': 'Lower quality when it stutters', '开': 'On', '关': 'Off', '关掉后始终保持你选的画质，哪怕掉帧。': 'When off, your chosen quality stays even if the frame rate drops.',"
+        }
+      ]
+    }
+  ]
+}
