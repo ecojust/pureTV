@@ -1,0 +1,103 @@
+{
+  "status": "ready-for-root-isolated-source-construction",
+  "parent": "467670b4e43189dc8fc4786a5c6b3a14b6f9b2bd",
+  "rootOnlyCreateRefAndDispatch": true,
+  "exactSourceFiles": [
+    {
+      "path": ".github/workflows/joystick-catalog-android-runtime.yml",
+      "bytes": 28325,
+      "sha256": "d6586c776085ca6855815db763c05ea6d024584cfc6f5d89398fd83b38f004b7",
+      "parentExists": true,
+      "parentSha256": "3fc28805e7f23958b1068b97e12c59810bc90d5e2719a2fa1c99407e40846009",
+      "preIntegrationCoreMatchesV8": true
+    },
+    {
+      "path": "joystick-games/tools/android-emulator-supervisor.py",
+      "bytes": 26589,
+      "sha256": "35e7ab50c5d44a0a32bf3985a752bb5889573b6e2bc3e98ddf8b34743ff9cc24",
+      "parentExists": true,
+      "parentSha256": "03b50fff82e96f37903ebcc7df877fb216012f691cf87f60701f1390e3b65fd0",
+      "preIntegrationCoreMatchesV8": true
+    },
+    {
+      "path": "joystick-games/tools/android-qemu-stack.py",
+      "bytes": 51405,
+      "sha256": "c2acd26eb58d8173b916e7896a1b6b990b076acffe14d07b1cf35a3c36ced509",
+      "parentExists": false,
+      "parentSha256": null,
+      "preIntegrationCoreMatchesV8": false
+    },
+    {
+      "path": "joystick-games/qa/android/test_emulator_supervisor.py",
+      "bytes": 28270,
+      "sha256": "f3c941207eda7b6a13fa4ff01b1605896da7a452e427fb3c3c24def02f5ce4d7",
+      "parentExists": true,
+      "parentSha256": "cfd9ff85f21665564ebeb6bfa40512aae7b4c46fd191d3c2cfbcfca51191af64",
+      "preIntegrationCoreMatchesV8": true
+    },
+    {
+      "path": "joystick-games/qa/android/test_qemu_permission.py",
+      "bytes": 13528,
+      "sha256": "f4d54b9a172596554867759ff8062de0af03e4889a449cc7980eafbf78874e98",
+      "parentExists": false,
+      "parentSha256": null,
+      "preIntegrationCoreMatchesV8": false
+    },
+    {
+      "path": "joystick-games/qa/android/test_qemu_stack_integration.py",
+      "bytes": 8696,
+      "sha256": "d8dce5e443c4caafb6b956415ef89b5f93549652e1da134118042675de68a497",
+      "parentExists": false,
+      "parentSha256": null,
+      "preIntegrationCoreMatchesV8": false
+    }
+  ],
+  "reviewSha256": "16dfa99c08b0ff68f02def426c6e561200bce90457b3af502523ee13d6fde4bf",
+  "originalPackage": {
+    "packageName": "com.ecojust.joystick.ponpokokart",
+    "versionName": "0.1.0",
+    "versionCode": 1,
+    "bytes": 1602736,
+    "sha256": "a1c9a0f6de56fd5ec87e25d4a6b5be541c9a04686e76b31484d99cc890b86e22",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23"
+  },
+  "originalObserver": {
+    "packageName": "com.ecojust.joystickqa.ponpokokart",
+    "versionCode": 1,
+    "versionName": "1.0",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "bytes": 16783,
+    "sha256": "a422410ffa96249b4cc2d56d1ff1da90e29ddab6c99f8353c64b3a12aece170a"
+  },
+  "dispatchTemplate": {
+    "workflow": "joystick-catalog-android-runtime.yml",
+    "ref": null,
+    "inputs": {
+      "qa_source_sha": null,
+      "artifact_source": "8f283c73f52f857777306eafc88f710262367834",
+      "artifact_export": "4249f5c0ec3053a1dec652a7880a040e1bb143f0",
+      "artifact_run": "44597115244",
+      "artifact_id": "",
+      "artifact_attempt": "",
+      "batch": "racing-01",
+      "games": "ponpoko-kart",
+      "confirm_backroad_install": "false",
+      "supervise_pon_emulator": "true",
+      "pon_disable_vulkan": "true",
+      "pon_capture_qemu_stack": "true"
+    }
+  },
+  "mandatoryBeforeDispatch": [
+    "Native final freeze and Arcade review",
+    "Exact six candidate hashes match final inventory",
+    "Root constructs sole-parent isolated tree with git write-tree --missing-ok; no main production/runner overlay",
+    "qa_source_sha must equal new exact isolated commit and workflow ref"
+  ],
+  "expectedFirstExecutionGate": "No AVD may start unless same-user actual PR_SET_PTRACER permission test completes all ten cases without skipped/failure/error. Local EINVAL is blocked, not positive evidence.",
+  "nativeAcceptanceAllowed": false,
+  "apkRebuildOrResign": false,
+  "noPostPerformed": true,
+  "nativeFinalInventory": "docs/racing-nine/native-readiness/qemu-stack-integration-attempt-1/inventory.json",
+  "nativeFinalInventorySha256": "75641abb827a27fcc1c63d3104ed138e88466a1b20912b3c5a4e54de2da71fc5",
+  "finalReviewSha256": "26e01f3539ad4660537356ee679bfdfeb1b35c4383b84ca300139d9bbe094270"
+}

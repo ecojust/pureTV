@@ -1,0 +1,17 @@
+test_01_fatal (__main__.PermissionELF.test_01_fatal) ... FAIL
+
+======================================================================
+FAIL: test_01_fatal (__main__.PermissionELF.test_01_fatal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/dev/shm/puretv-submit/joystick-games/qa/android/test_qemu_permission.py", line 132, in test_01_fatal
+    prepared, child, expected = self.launch('fatal'); session = self.attach(prepared, expected)
+                                ^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/puretv-submit/joystick-games/qa/android/test_qemu_permission.py", line 100, in launch
+    self.assertTrue(prepared.grant_succeeded, prepared.report)
+AssertionError: False is not true : {'schemaVersion': 1, 'status': 'blocked', 'sudoUsed': False, 'globalSettingsChanged': False, 'PR_SET_PTRACER_ANYUsed': False, 'grantScope': 'One named GDB PID; Linux Yama also permits its descendants', 'actualTracerMustBeExactGdbPid': True, 'startedAtEpoch': 1795131018.0060332, 'grant': {'status': 'rejected', 'errno': 22, 'debuggerPid': 169290, 'debuggerStarttimeTicks': 4183367, 'ownedChildPid': 169295, 'singleThreadPrecondition': True, 'ownedChildStarttimeTicks': 4183372, 'debuggerKeptUnreaped': True}, 'errors': [], 'yamaMode': None, 'debuggerIdentity': {'pid': 169290, 'starttimeTicks': 4183367, 'parentPid': 169284, 'state': 'S', 'tracerPid': 0, 'uid': 1000, 'executablePath': '/dev/shm/racing-native-readiness/gdb-local/minimal/usr/bin/gdb', 'executableSha256': 'da85196fbbe6337116ad3d96ed5ebbc3cf4d0351d62e046253b13dfe1683979b'}}
+
+----------------------------------------------------------------------
+Ran 1 test in 0.145s
+
+FAILED (failures=1)

@@ -1,0 +1,361 @@
+{
+  "schemaVersion": 1,
+  "status": "completed",
+  "scope": "Debugger-intervened diagnostic, never gameplay acceptance",
+  "expectedOwnedIdentity": {
+    "pid": 170551,
+    "starttimeTicks": 4214766,
+    "parentPid": 170532,
+    "state": "S",
+    "tracerPid": 0,
+    "uid": 1000,
+    "executablePath": "/dev/shm/racing-native-readiness/qemu-permission-elf-c_qx59ao/fixture",
+    "executableSha256": "c83a9e594e6fa5f2ccb5870a04421278e84b394b6eddef9c1cc1c9ed05bef984"
+  },
+  "startedAtEpoch": 1795131332.015824,
+  "debuggerAttached": true,
+  "diagnosticIntervened": true,
+  "sudoUsed": false,
+  "gdb": {
+    "basename": "gdb",
+    "sha256": "da85196fbbe6337116ad3d96ed5ebbc3cf4d0351d62e046253b13dfe1683979b",
+    "bytes": 9709920
+  },
+  "limits": {
+    "seconds": 300,
+    "events": 4,
+    "threadsPerEvent": 4,
+    "framesPerThread": 12,
+    "reportBytes": 131072,
+    "rawReadBytes": 2097152
+  },
+  "events": [
+    {
+      "atEpoch": 1795131332.0686193,
+      "signal": "SIGSEGV",
+      "terminalCauseProven": false,
+      "threads": [
+        {
+          "id": "1",
+          "frames": [
+            {
+              "level": 0,
+              "address": "0x00005627b865e1f1",
+              "function": "fault",
+              "module": {
+                "basename": "fixture",
+                "fileOffset": "0x11f1",
+                "sha256": "c83a9e594e6fa5f2ccb5870a04421278e84b394b6eddef9c1cc1c9ed05bef984"
+              }
+            },
+            {
+              "level": 1,
+              "address": "0x00005627b865e2f9",
+              "function": "main",
+              "module": {
+                "basename": "fixture",
+                "fileOffset": "0x12f9",
+                "sha256": "c83a9e594e6fa5f2ccb5870a04421278e84b394b6eddef9c1cc1c9ed05bef984"
+              }
+            }
+          ],
+          "frameLimit": 12
+        }
+      ],
+      "captureStatus": "complete",
+      "faultingThreadId": "1",
+      "totalThreadCount": 1,
+      "omittedThreads": 0
+    },
+    {
+      "atEpoch": 1795131332.1064813,
+      "signal": "SIGSEGV",
+      "terminalCauseProven": false,
+      "threads": [
+        {
+          "id": "1",
+          "frames": [
+            {
+              "level": 0,
+              "address": "0x00005627b865e1f1",
+              "function": "fault",
+              "module": {
+                "basename": "fixture",
+                "fileOffset": "0x11f1",
+                "sha256": "c83a9e594e6fa5f2ccb5870a04421278e84b394b6eddef9c1cc1c9ed05bef984"
+              }
+            },
+            {
+              "level": 1,
+              "address": "0x00005627b865e335",
+              "function": "main",
+              "module": {
+                "basename": "fixture",
+                "fileOffset": "0x1335",
+                "sha256": "c83a9e594e6fa5f2ccb5870a04421278e84b394b6eddef9c1cc1c9ed05bef984"
+              }
+            }
+          ],
+          "frameLimit": 12
+        }
+      ],
+      "captureStatus": "complete",
+      "faultingThreadId": "1",
+      "totalThreadCount": 1,
+      "omittedThreads": 0
+    }
+  ],
+  "otherStops": [],
+  "errors": [],
+  "coreCreated": false,
+  "rawMemoryRecorded": false,
+  "environmentRecorded": false,
+  "frameArgumentsRecorded": false,
+  "localsRecorded": false,
+  "rootCauseProven": false,
+  "originalWaitRequiredForTerminalSignal": true,
+  "processLocalGrant": {
+    "status": "granted",
+    "errno": 0,
+    "debuggerPid": 170546,
+    "debuggerStarttimeTicks": 4214762,
+    "ownedChildPid": 170551,
+    "singleThreadPrecondition": true,
+    "ownedChildStarttimeTicks": 4214766,
+    "debuggerKeptUnreaped": true
+  },
+  "actualDebuggerIdentity": {
+    "pid": 170546,
+    "starttimeTicks": 4214762,
+    "parentPid": 170532,
+    "uid": 1000,
+    "executableSha256": "da85196fbbe6337116ad3d96ed5ebbc3cf4d0351d62e046253b13dfe1683979b"
+  },
+  "attachedAtEpoch": 1795131332.04668,
+  "initialAttachStop": {
+    "reason": null,
+    "signal": null,
+    "threadId": "1"
+  },
+  "originalAttachCommandResult": "done",
+  "cleanup": {
+    "detachCommandResult": "not-needed-original-exited",
+    "originalTargetUntracedOrExited": true,
+    "debuggerExited": true,
+    "blindKillSent": false,
+    "artificialInterruptSent": false,
+    "debuggerReturnCode": 0,
+    "confirmed": true
+  },
+  "finishedAtEpoch": 1795131332.1309237,
+  "attachmentResolved": true,
+  "mi": {
+    "commands": [
+      {
+        "sequence": 1,
+        "command": "-gdb-set pagination off",
+        "startedAtEpoch": 1795131331.9540858,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131331.971314
+      },
+      {
+        "sequence": 2,
+        "command": "-gdb-set confirm off",
+        "startedAtEpoch": 1795131331.9713216,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131331.9713986
+      },
+      {
+        "sequence": 3,
+        "command": "-gdb-set auto-load off",
+        "startedAtEpoch": 1795131331.9714005,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131331.9714558
+      },
+      {
+        "sequence": 4,
+        "command": "-gdb-set debuginfod enabled off",
+        "startedAtEpoch": 1795131331.9714572,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131331.9715
+      },
+      {
+        "sequence": 5,
+        "command": "-gdb-set print frame-arguments none",
+        "startedAtEpoch": 1795131331.971501,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131331.9715352
+      },
+      {
+        "sequence": 6,
+        "command": "-gdb-set print entry-values no",
+        "startedAtEpoch": 1795131331.9715362,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131331.9715688
+      },
+      {
+        "sequence": 7,
+        "command": "-gdb-set print thread-events off",
+        "startedAtEpoch": 1795131331.97157,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131331.9716027
+      },
+      {
+        "sequence": 8,
+        "command": "-gdb-set mi-async on",
+        "startedAtEpoch": 1795131331.971604,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131331.971642
+      },
+      {
+        "sequence": 9,
+        "command": "-interpreter-exec console \"handle all nostop noprint pass\"",
+        "startedAtEpoch": 1795131331.9716449,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131331.9721544
+      },
+      {
+        "sequence": 10,
+        "command": "-interpreter-exec console \"handle SIGINT stop print pass\"",
+        "startedAtEpoch": 1795131331.9721565,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131331.9722285
+      },
+      {
+        "sequence": 11,
+        "command": "-interpreter-exec console \"handle SIGTRAP stop print pass\"",
+        "startedAtEpoch": 1795131331.972233,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131331.972286
+      },
+      {
+        "sequence": 12,
+        "command": "-interpreter-exec console \"handle SIGSEGV stop print pass\"",
+        "startedAtEpoch": 1795131331.9722872,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131331.9723272
+      },
+      {
+        "sequence": 13,
+        "command": "-target-attach 170551",
+        "startedAtEpoch": 1795131332.0244439,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131332.0302992
+      },
+      {
+        "sequence": 14,
+        "command": "-exec-continue",
+        "startedAtEpoch": 1795131332.0466952,
+        "cleanup": false,
+        "resultClass": "running",
+        "finishedAtEpoch": 1795131332.0468483
+      },
+      {
+        "sequence": 15,
+        "command": "-thread-list-ids",
+        "startedAtEpoch": 1795131332.0686648,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131332.0688381
+      },
+      {
+        "sequence": 16,
+        "command": "-thread-select 1",
+        "startedAtEpoch": 1795131332.0689552,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131332.06926
+      },
+      {
+        "sequence": 17,
+        "command": "-stack-list-frames --no-frame-filters 0 11",
+        "startedAtEpoch": 1795131332.0777152,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131332.0782175
+      },
+      {
+        "sequence": 18,
+        "command": "-thread-select 1",
+        "startedAtEpoch": 1795131332.0787344,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131332.0788994
+      },
+      {
+        "sequence": 19,
+        "command": "-exec-continue",
+        "startedAtEpoch": 1795131332.0874178,
+        "cleanup": false,
+        "resultClass": "running",
+        "finishedAtEpoch": 1795131332.0875719
+      },
+      {
+        "sequence": 20,
+        "command": "-thread-list-ids",
+        "startedAtEpoch": 1795131332.1064873,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131332.10668
+      },
+      {
+        "sequence": 21,
+        "command": "-thread-select 1",
+        "startedAtEpoch": 1795131332.1067624,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131332.1069543
+      },
+      {
+        "sequence": 22,
+        "command": "-stack-list-frames --no-frame-filters 0 11",
+        "startedAtEpoch": 1795131332.115519,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131332.116079
+      },
+      {
+        "sequence": 23,
+        "command": "-thread-select 1",
+        "startedAtEpoch": 1795131332.1167166,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795131332.1169307
+      },
+      {
+        "sequence": 24,
+        "command": "-exec-continue",
+        "startedAtEpoch": 1795131332.1269171,
+        "cleanup": false,
+        "resultClass": "running",
+        "finishedAtEpoch": 1795131332.1271296
+      },
+      {
+        "sequence": 25,
+        "command": "-gdb-exit",
+        "startedAtEpoch": 1795131332.1275823,
+        "cleanup": true,
+        "resultClass": "exit",
+        "finishedAtEpoch": 1795131332.1276696
+      }
+    ],
+    "rawBytesRead": 13762,
+    "rawStreamSha256": "f9642a80cfed8e153adde6df863a0300824f0a314cdcafe2ef1600429b0bd01c",
+    "rawStreamsRetained": false,
+    "protocolErrors": [],
+    "cleanupBytesRead": 279
+  }
+}

@@ -2,6 +2,7 @@
 """Default-off owned-QEMU stack diagnostics. Never produces a core or accepts arbitrary GDB commands."""
 from pathlib import Path
 import collections
+import ctypes
 import hashlib
 import json
 import os
@@ -9,6 +10,7 @@ import re
 import selectors
 import stat
 import subprocess
+import threading
 import time
 
 GDB = Path('/usr/bin/gdb')
@@ -23,6 +25,10 @@ MAX_SECONDS = 300
 COMMAND_SECONDS = 3
 HANDSHAKE_SECONDS = 8
 FINAL_REPORT_RESERVE = 24576
+PR_SET_PTRACER = 0x59616D61
+SETTINGS = ['pagination off', 'confirm off', 'auto-load off', 'debuginfod enabled off',
+            'print frame-arguments none', 'print entry-values no', 'print thread-events off', 'mi-async on']
+SIGNAL_POLICIES = ['all nostop noprint pass', 'SIGINT stop print pass', 'SIGTRAP stop print pass', 'SIGSEGV stop print pass']
 
 
 class Rejected(Exception):
@@ -195,6 +201,7 @@ class MIClient:
         self.commands = []
         self.protocol_errors = []
         self.closed = False
+        self.hold_reaping = False
 
     def read(self, timeout, cleanup=False):
         if self.pending:
@@ -257,7 +264,14 @@ class MIClient:
                     entry['resultClass'] = record['class']
                     require(record['class'] != 'error', 'GDB command rejected: ' + value.split()[0])
                     return record['data']
-                if self.process.poll() is not None and not self.pending:
+                if self.hold_reaping:
+                    try:
+                        exited = proc_status(self.process.pid)['state'] == 'Z'
+                    except FileNotFoundError:
+                        exited = True
+                else:
+                    exited = self.process.poll() is not None
+                if exited and not self.pending:
                     raise Rejected('GDB exited before command response')
             raise TimeoutError('GDB command deadline: ' + value.split()[0])
         finally:
@@ -298,10 +312,226 @@ def symbol(value, limit=200):
     return ''.join(c if 32 <= ord(c) < 127 else '?' for c in value)[:limit]
 
 
+def debugger_command(path):
+    return [str(path), '-q', '-nx', '-nh', '--interpreter=mi2',
+            '-iex', 'set auto-load off', '-iex', 'set debuginfod enabled off']
+
+
+def configure_debugger(mi, deadline):
+    for setting in SETTINGS:
+        mi.command('-gdb-set ' + setting, deadline=deadline)
+    for policy in SIGNAL_POLICIES:
+        mi.command('-interpreter-exec console "handle ' + policy + '"', deadline=deadline)
+
+
+def verify_permission_gate(path, test_path, environment=os.environ, *, gdb_path=GDB):
+    path = Path(path)
+    require(path.is_file() and not path.is_symlink() and path.stat().st_size <= MAX_REPORT, 'Missing bounded permission gate')
+    value = json.loads(path.read_text())
+    require(value['status'] == 'passed' and value['failures'] == 0 and value['errors'] == 0 and value['skipped'] == 0,
+            'Real same-permission ELF gate did not pass')
+    required = ['fatal', 'handled', 'external-signals', 'deadline-detach', 'pending-fault-detach',
+                'wrong-start', 'constructor-rejection', 'exit-before-start', 'exit-during-attach', 'supervisor-original-wait']
+    require(value['realPermissionCases'] == required and value['testsRun'] == len(required), 'Incomplete permission cases')
+    for key, name in [('qaSourceSha', 'GITHUB_SHA'), ('qaRunId', 'GITHUB_RUN_ID'), ('qaRunAttempt', 'GITHUB_RUN_ATTEMPT')]:
+        require(value[key] == environment[name], 'Permission gate belongs to a different job')
+    require(value['runnerName'] == environment['RUNNER_NAME'], 'Permission gate runner mismatch')
+    require(value['helperSha256'] == digest(__file__) and value['testSha256'] == digest(test_path), 'Permission gate source mismatch')
+    require(value['gdbSha256'] == digest(gdb_path) and value['gdbPath'] == str(Path(gdb_path).resolve()), 'Permission gate tool mismatch')
+    require(value['permissionMethod'] == 'same-user-exact-PR_SET_PTRACER' and value['globalSettingsChanged'] is False,
+            'Wrong permission method')
+    return value
+
+
+class PreparedDebugger:
+    """Keep the exact same-user GDB child unreaped across the owned child's grant/exec window."""
+    def __init__(self, output, *, gdb_path=GDB, environment=None):
+        self.output = Path(output)
+        require(not self.output.exists() and not self.output.is_symlink(), 'Existing debugger preparation output')
+        self.output.mkdir(parents=True)
+        self.gdb = Path(gdb_path).resolve(strict=True)
+        require(stat.S_ISREG(self.gdb.stat().st_mode), 'GDB is not regular')
+        self.gdb_sha = digest(self.gdb)
+        self.environment = environment or {'PATH': '/usr/bin:/bin', 'LANG': 'C', 'LC_ALL': 'C', 'DEBUGINFOD_URLS': ''}
+        self.started = time.monotonic()
+        self.mi = None
+        self.child = None
+        self.adopted = False
+        self.grant_succeeded = False
+        self.report = {'schemaVersion': 1, 'status': 'preparing', 'sudoUsed': False, 'globalSettingsChanged': False,
+                       'PR_SET_PTRACER_ANYUsed': False, 'grantScope': 'One named GDB PID; Linux Yama also permits its descendants',
+                       'actualTracerMustBeExactGdbPid': True, 'startedAtEpoch': time.time(), 'grant': None, 'errors': []}
+        # Resolve the C function and prebuild all receipt bytes in the parent.
+        # The child callback imports nothing, allocates no locks and runs only
+        # after both Python and kernel confirm this parent has one thread.
+        self.libc = ctypes.CDLL(None, use_errno=True)
+        self.prctl = self.libc.prctl
+        self.prctl.argtypes = [ctypes.c_int, ctypes.c_ulong, ctypes.c_ulong, ctypes.c_ulong, ctypes.c_ulong]
+        self.prctl.restype = ctypes.c_int
+        self.failure_receipts = tuple(b'F' + bytes([number]) for number in range(256))
+        try:
+            policy = Path('/proc/sys/kernel/yama/ptrace_scope')
+            self.report['yamaMode'] = int(policy.read_text().strip()) if policy.exists() else None
+            require(self.report['yamaMode'] in [None, 0, 1], 'Yama policy does not permit this process-local path')
+            self.mi = MIClient(debugger_command(self.gdb), environment=self.environment)
+            configure_debugger(self.mi, self.started + HANDSHAKE_SECONDS)
+            self.identity = proc_identity(self.mi.process.pid)
+            require(self.identity['parentPid'] == os.getpid() and self.identity['uid'] == os.getuid(), 'GDB is not the owned same-user child')
+            require(self.identity['executablePath'] == str(self.gdb) and self.identity['executableSha256'] == self.gdb_sha, 'GDB executable mismatch')
+            self.report.update(status='prepared', debuggerIdentity=self.identity)
+            self.save()
+        except Exception as error:
+            self.report['errors'].append({'phase': 'prepare', 'type': type(error).__name__})
+            self.close()
+            raise
+
+    def save(self):
+        value = dict(self.report)
+        if self.mi:
+            value['mi'] = self.mi.summary()
+        data = (json.dumps(value, indent=2) + '\n').encode()
+        require(len(data) <= MAX_REPORT, 'Preparation report budget')
+        temporary = self.output / 'report.tmp'
+        temporary.write_bytes(data)
+        os.replace(temporary, self.output / 'report.json')
+
+    def validate_debugger(self):
+        actual = proc_identity(self.identity['pid'])
+        for key in ['pid', 'starttimeTicks', 'parentPid', 'uid', 'executablePath', 'executableSha256']:
+            require(actual[key] == self.identity[key], 'Prepared debugger identity changed: ' + key)
+        return actual
+
+    def spawn(self, command, executable):
+        require(self.child is None and not self.adopted, 'Only one owned child can receive this grant')
+        require(threading.active_count() == 1 and len(list(Path('/proc/self/task').iterdir())) == 1,
+                'Process-local preexec requires a single-threaded supervisor')
+        self.validate_debugger()
+        self.mi.hold_reaping = True
+        read_fd, write_fd = os.pipe2(os.O_CLOEXEC)
+        debugger_pid = self.identity['pid']
+        require(type(debugger_pid) is int and debugger_pid > 1 and debugger_pid != os.getpid(), 'Invalid named ptracer')
+        call = self.prctl
+        failures = self.failure_receipts
+
+        def grant_exact_debugger():
+            result = call(PR_SET_PTRACER, debugger_pid, 0, 0, 0)
+            error = ctypes.get_errno() if result != 0 else 0
+            os.write(write_fd, b'G\x00' if result == 0 else failures[min(error, 255)])
+            os.close(write_fd)
+            if result != 0:
+                os._exit(125)
+
+        try:
+            # Same original argv, executable, UID, stdio and session behavior.
+            # No GDB poll/wait occurs until the target's actual exec is checked.
+            self.validate_debugger()
+            self.child = subprocess.Popen(command, executable=str(executable), stdout=subprocess.PIPE,
+                                          stderr=subprocess.PIPE, start_new_session=True,
+                                          preexec_fn=grant_exact_debugger, pass_fds=(write_fd,))
+            self.child_identity = proc_status(self.child.pid)
+            require(self.child_identity['parentPid'] == os.getpid(), 'Grant child parent mismatch')
+            os.close(write_fd)
+            write_fd = None
+            with selectors.DefaultSelector() as selector:
+                selector.register(read_fd, selectors.EVENT_READ)
+                require(selector.select(COMMAND_SECONDS), 'Grant receipt deadline')
+                receipt = os.read(read_fd, 3)
+            require(len(receipt) == 2 and receipt[:1] in [b'G', b'F'], 'Invalid grant receipt')
+            self.grant_succeeded = receipt == b'G\x00'
+            self.report['grant'] = {'status': 'granted' if self.grant_succeeded else 'rejected',
+                                    'errno': receipt[1], 'debuggerPid': debugger_pid,
+                                    'debuggerStarttimeTicks': self.identity['starttimeTicks'],
+                                    'ownedChildPid': self.child.pid, 'singleThreadPrecondition': True,
+                                    'ownedChildStarttimeTicks': self.child_identity['starttimeTicks'],
+                                    'debuggerKeptUnreaped': True}
+            self.report['status'] = 'grant-written-awaiting-observed-exec' if self.grant_succeeded else 'blocked'
+            if not self.grant_succeeded:
+                # The child exits 125 before exec. There is no attach command.
+                self.mi.hold_reaping = False
+            self.save()
+            return self.child
+        except Exception as error:
+            self.report['errors'].append({'phase': 'grant', 'type': type(error).__name__})
+            self.report['status'] = 'blocked'
+            self.save()
+            if self.child is not None:
+                # Preserve the real child owner even if its receipt is invalid.
+                # No attach is issued; the caller still observes its actual wait.
+                return self.child
+            self.mi.hold_reaping = False
+            raise
+        finally:
+            if write_fd is not None:
+                os.close(write_fd)
+            os.close(read_fd)
+
+    def session(self, expected, output, **kwargs):
+        require(self.grant_succeeded and self.child is not None and not self.adopted, 'No unique successful grant to adopt')
+        require(expected['pid'] == self.child.pid, 'Different child after grant')
+        require(expected['starttimeTicks'] == self.child_identity['starttimeTicks'], 'Different child start after grant')
+        self.validate_debugger()
+        require_owned(expected)
+        self.report['observedExecIdentity'] = expected
+        self.report['status'] = 'observed-exec'
+        self.save()
+        session = TraceSession(expected, output, gdb_path=self.gdb, environment=self.environment, prepared=self, **kwargs)
+        self.mi.hold_reaping = False
+        self.adopted = True
+        return session
+
+    def observe_exec_or_exit(self):
+        """Release only the GDB PID hold, never reap the original target here."""
+        if not self.mi.hold_reaping:
+            return True
+        require(self.child is not None, 'No grant child')
+        state = proc_status(self.child.pid)
+        require(state['parentPid'] == os.getpid(), 'Grant child owner changed')
+        require(state['starttimeTicks'] == self.child_identity['starttimeTicks'], 'Grant child start changed')
+        if state['state'] == 'Z':
+            self.report['grantWindowEnded'] = 'original-child-exited-unreaped'
+        else:
+            actual = proc_identity(self.child.pid)
+            require(actual['executablePath'] != str(Path('/proc/self/exe').resolve()), 'Child has not execed')
+            self.report['observedExecIdentity'] = actual
+            self.report['grantWindowEnded'] = 'actual-owned-exec-observed'
+        self.mi.hold_reaping = False
+        self.save()
+        return True
+
+    def close(self):
+        require(not self.adopted, 'The attached session owns debugger cleanup')
+        if self.report.get('cleanup', {}).get('confirmed'):
+            return True
+        if self.mi and self.mi.hold_reaping:
+            self.observe_exec_or_exit()
+        confirmed = self.mi is None
+        if self.mi:
+            self.mi.begin_cleanup()
+            try:
+                self.mi.command('-gdb-exit', cleanup=True)
+            except Exception as error:
+                self.report['errors'].append({'phase': 'gdb-exit', 'type': type(error).__name__})
+                try:
+                    self.mi.process.stdin.close()
+                except OSError:
+                    pass
+            try:
+                self.mi.process.wait(timeout=COMMAND_SECONDS)
+                confirmed = True
+                self.mi.close_pipes()
+            except subprocess.TimeoutExpired as error:
+                self.report['errors'].append({'phase': 'gdb-exit-wait', 'type': type(error).__name__})
+        self.report['cleanup'] = {'confirmed': confirmed, 'blindKillSent': False, 'attachCommandEverIssued': False}
+        if self.report['status'] != 'blocked':
+            self.report['status'] = 'closed' if confirmed else 'blocked'
+        self.save()
+        return confirmed
+
+
 class TraceSession:
     """One attachment attempt. Caller must not reap its child until attachment_resolved is true."""
     def __init__(self, expected, output, *, gdb_path=GDB, use_sudo=False, seconds=MAX_SECONDS,
-                 environment=None, module_roots=()):
+                 environment=None, module_roots=(), prepared=None):
         require(0 < seconds <= MAX_SECONDS, 'Stack diagnostic deadline')
         require(use_sudo is False, 'Only same-user process-local debugging is permitted')
         require_owned(expected)
@@ -317,7 +547,9 @@ class TraceSession:
         self.environment = environment or {'PATH': '/usr/bin:/bin', 'LANG': 'C', 'LC_ALL': 'C', 'DEBUGINFOD_URLS': ''}
         self.module_roots = [Path(p).resolve() for p in module_roots]
         self.module_hashes = {}
-        self.mi = None
+        self.mi = prepared.mi if prepared else None
+        self.prepared = prepared
+        self.start_called = False
         self.attach_issued = False
         self.attach_token = None
         self.attachment_resolved = False
@@ -377,15 +609,11 @@ class TraceSession:
         actual = proc_identity(pid)
         require(actual['executablePath'] == str(self.gdb) and actual['executableSha256'] == self.gdb_sha, 'Unexpected tracer executable')
         require(actual['uid'] == os.getuid(), 'Unexpected tracer owner')
-        cursor = actual
-        for _ in range(4):
-            if cursor['pid'] == self.mi.process.pid:
-                require(cursor['starttimeTicks'] == self.gdb_outer['starttimeTicks'], 'Debugger launcher identity changed')
-                self.debugger_pid = pid
-                self.report['actualDebuggerIdentity'] = {k: actual[k] for k in ['pid', 'starttimeTicks', 'parentPid', 'uid', 'executableSha256']}
-                return
-            cursor = proc_status(cursor['parentPid'])
-        raise Rejected('Tracer is outside the owned debugger process tree')
+        require(actual['parentPid'] == os.getpid(), 'Tracer is not the direct owned debugger child')
+        require(actual['pid'] == self.mi.process.pid and actual['starttimeTicks'] == self.gdb_outer['starttimeTicks'],
+                'Tracer is not the exact owned GDB process')
+        self.debugger_pid = pid
+        self.report['actualDebuggerIdentity'] = {k: actual[k] for k in ['pid', 'starttimeTicks', 'parentPid', 'uid', 'executableSha256']}
 
     def verify_attached(self):
         actual = proc_identity(self.debugger_pid)
@@ -410,21 +638,21 @@ class TraceSession:
                 self.report['originalAttachCommandResult'] = result
 
     def start(self):
-        require(self.mi is None, 'A second attachment is forbidden')
+        require(not self.start_called, 'A second attachment is forbidden')
+        self.start_called = True
         try:
             require_owned(self.expected)
-            command = [str(self.gdb), '-q', '-nx', '-nh', '--interpreter=mi2',
-                       '-iex', 'set auto-load off', '-iex', 'set debuginfod enabled off']
-            self.mi = MIClient(command, environment=self.environment)
-            self.gdb_outer = proc_status(self.mi.process.pid)
-            for setting in ['pagination off', 'confirm off', 'auto-load off', 'debuginfod enabled off',
-                            'print frame-arguments none', 'print entry-values no', 'print thread-events off', 'mi-async on']:
-                self.command('-gdb-set ' + setting, handshake=True)
-            # "all" excludes SIGINT and SIGTRAP. There are no breakpoints or
-            # artificial interrupts here; explicitly preserve external signals.
-            for policy in ['all nostop noprint pass', 'SIGINT stop print pass',
-                           'SIGTRAP stop print pass', 'SIGSEGV stop print pass']:
-                self.command('-interpreter-exec console "handle ' + policy + '"', handshake=True)
+            if self.prepared:
+                require(self.prepared.adopted and self.prepared.child.pid == self.expected['pid'], 'Prepared grant ownership mismatch')
+                self.prepared.validate_debugger()
+                require(self.prepared.gdb_sha == self.gdb_sha, 'Prepared GDB bytes changed')
+                self.mi = self.prepared.mi
+                self.gdb_outer = self.prepared.identity
+                self.report['processLocalGrant'] = self.prepared.report['grant']
+            else:
+                self.mi = MIClient(debugger_command(self.gdb), environment=self.environment)
+                self.gdb_outer = proc_status(self.mi.process.pid)
+                configure_debugger(self.mi, self.started + HANDSHAKE_SECONDS)
             require_owned(self.expected)
             self.attach_issued = True
             self.attach_token = self.mi.sequence + 1
@@ -646,3 +874,140 @@ class TraceSession:
         self.done = True
         self.save()
         return self.report
+
+
+class OwnedDiagnostic:
+    """One opt-in supervisor child; diagnostics never replace the parent's wait result."""
+    def __init__(self, output, *, gdb_path=GDB, environment=None, qemu_sha=QEMU_SHA, module_roots=()):
+        self.output = Path(output)
+        self.output.mkdir(exist_ok=False)
+        self.expected_qemu_sha = qemu_sha
+        self.module_roots = module_roots
+        self.prepared = PreparedDebugger(self.output / 'prepared', gdb_path=gdb_path, environment=environment)
+        self.session = None
+        self.child = None
+        self.started = time.monotonic()
+        self.finished = False
+        self.report = {'schemaVersion': 1, 'diagnosticIntervened': True, 'nativeAcceptanceAllowed': False,
+                       'status': 'prepared', 'originalWaitIsSoleTerminalEvidence': True,
+                       'internalErrorKilledTarget': False, 'errors': []}
+        self.save()
+
+    def save(self):
+        value = dict(self.report)
+        value['preparationStatus'] = self.prepared.report['status']
+        if self.session:
+            value['attachmentResolved'] = self.session.attachment_resolved
+            value['traceStatus'] = self.session.report['status']
+            value['traceCleanup'] = self.session.report.get('cleanup')
+        data = (json.dumps(value, indent=2) + '\n').encode()
+        require(len(data) <= MAX_REPORT, 'Owner report budget')
+        temporary = self.output / 'report.tmp'
+        temporary.write_bytes(data)
+        os.replace(temporary, self.output / 'report.json')
+
+    def error(self, phase, error):
+        if len(self.report['errors']) < 16:
+            self.report['errors'].append({'phase': phase, 'type': type(error).__name__})
+        self.report['status'] = 'blocked'
+        self.save()
+
+    def spawn(self, command, executable):
+        self.child = self.prepared.spawn(command, executable)
+        self.report['childPid'] = self.child.pid
+        if not self.prepared.grant_succeeded:
+            self.report['status'] = 'blocked'
+        self.save()
+        return self.child
+
+    def observe(self, value):
+        if self.finished or self.session or not self.prepared.grant_succeeded:
+            return
+        if not value or not value.get('qemuExecutable') or not value.get('insideSdk'):
+            return
+        try:
+            require(value['pid'] == self.child.pid and value['sha256'] == self.expected_qemu_sha,
+                    'Observed QEMU does not match the fixed binary')
+            expected = proc_identity(self.child.pid)
+            require(expected['executableSha256'] == self.expected_qemu_sha and expected['starttimeTicks'] == value['starttimeTicks'],
+                    'Actual QEMU exec identity differs')
+            self.session = self.prepared.session(expected, self.output / 'trace', module_roots=self.module_roots)
+            self.session.start()  # synchronous handshake: no parent poll/wait in this window
+            self.report['status'] = 'observing' if not self.session.done else self.session.report['status']
+            self.save()
+        except Exception as error:
+            self.error('observe-and-attach', error)
+            self.finish()
+
+    def reap_allowed(self):
+        if self.prepared.mi.hold_reaping:
+            try:
+                self.prepared.observe_exec_or_exit()
+            except (OSError, Rejected):
+                return False
+        if self.session and not self.session.attachment_resolved:
+            # Keep the original target unreaped until the exact GDB process has
+            # exited or its original attach command is conclusively resolved.
+            self.session.refresh_attachment_resolution()
+            if not self.session.attachment_resolved and self.session.mi.process.poll() is not None:
+                self.session.attachment_resolved = True
+                self.report['lateDebuggerExitObserved'] = True
+                self.save()
+            if not self.session.attachment_resolved:
+                return False
+        return True
+
+    def poll(self, child):
+        require(child is self.child, 'Different supervisor child')
+        return child.poll() if self.reap_allowed() else None
+
+    def tick(self):
+        if self.finished:
+            return
+        try:
+            if self.session:
+                self.session.tick()
+                if self.session.done:
+                    self.finished = True
+                    self.report['status'] = self.session.report['status']
+                    self.save()
+            elif time.monotonic() - self.started >= MAX_SECONDS or not self.prepared.grant_succeeded:
+                self.report['stopReason'] = 'no-verified-qemu-within-window' if self.prepared.grant_succeeded else 'grant-rejected'
+                self.report['status'] = 'blocked'
+                self.finish()
+        except Exception as error:
+            self.error('tick', error)
+            self.finish()
+
+    def finish(self):
+        if self.finished:
+            return
+        try:
+            if self.session:
+                result = self.session.finish()
+                self.report['cleanupConfirmed'] = result['cleanup']['confirmed']
+                self.report['status'] = result['status']
+            else:
+                self.report['cleanupConfirmed'] = self.prepared.close()
+                if self.report['status'] != 'blocked':
+                    self.report['status'] = 'closed-without-attachment'
+            self.finished = True
+            self.save()
+        except Exception as error:
+            self.error('cleanup', error)
+
+    def wait_for_reap_permission(self, save_status, external_control=None):
+        # Exceptional protocol-loss quarantine: do not kill a target because a
+        # diagnostic failed, or release its PID while a delayed attach exists.
+        # The job's external cancellation limit still applies. No bounded
+        # successful cleanup is claimed if GDB never exits/responds.
+        self.finish()
+        if not self.reap_allowed():
+            self.report['cleanupIncomplete'] = True
+            self.report['quarantine'] = 'Holding original child unreaped; waiting for actual GDB exit without reading further MI; external job timeout remains a boundary'
+            self.save()
+            save_status()
+        while not self.reap_allowed():
+            if external_control:
+                external_control()
+            time.sleep(.05)
