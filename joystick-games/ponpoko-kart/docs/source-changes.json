@@ -1,0 +1,41 @@
+{
+  "upstreamCommit": "88edb72d25c2f957431cc4d12547d3138d1bca48",
+  "baselineFileCount": 104,
+  "unchangedFileCount": 100,
+  "changes": [
+    {
+      "path": "src/upstream/src/core/Game.js",
+      "originalSha256": "036768a706bf319d6d74de195608a4149e19ad4a6fda29d3a3d94731971f5290",
+      "adaptedSha256": "55d78587cdc6ee2336758a6ea12470951ad4e8f46f4ad7b390f76878150f9270",
+      "adaptedBytes": 21492,
+      "reason": "One native poll per original animation frame, read-only completion count, explicit pause/resume hooks and standard-gamepad disconnection cancellation; physics/rendering preserved."
+    },
+    {
+      "path": "src/upstream/src/core/Input.js",
+      "originalSha256": "80984de0b5ddf6fe34199f9ddfcefa577cfb81891a370a0abe00efeab0ef029f",
+      "adaptedSha256": "f4246f0ac471dfa6f5b36bc575ca770789eb5476dcc52745006defdd86364612",
+      "adaptedBytes": 5990,
+      "reason": "Nine independent native keys, original keyboard and Gamepad retained, inactive menu/action quarantine, no rewarded release on cancellation."
+    },
+    {
+      "path": "src/upstream/src/core/Race.js",
+      "originalSha256": "5991ac840459e13c2927a72ef69945d0441db808c3f2914d8352c974a917eee9",
+      "adaptedSha256": "195d30a04f772d9a66a179ae73b155c7250834509db1c752446d0dafbe6445c5",
+      "adaptedBytes": 11132,
+      "reason": "Neutral pending player controls, pending item/jump latches and charged drift without calling reward-producing release; existing earned state preserved."
+    },
+    {
+      "path": "src/upstream/src/ui/UI.js",
+      "originalSha256": "bc8c0f1ef9463f4bea87318d326cc738315923ec2a74ae73e817434d5c98ed92",
+      "adaptedSha256": "90bd659a4eef9181a3efdc9b7d01e62e88c60e9f85fefdb432315df81ead852a",
+      "adaptedBytes": 64030,
+      "reason": "Remove runtime Google Fonts links; original families bundled locally. Original UI layout and visuals preserved."
+    }
+  ],
+  "entry": "src/main.js supplies original Game/UI/menus/audio composition without upstream developer/autopilot hooks.",
+  "three": {
+    "version": "0.186.1",
+    "integrity": "sha512-blFeqb49wRCSGUGj7gtpfnSGHy2lwDk94RhUmS1c/hTby70kvChbWpkJ4Pm1390LqzzvTmzgXKHPEafJwCb8jA==",
+    "matchesOriginalLock": true
+  }
+}
