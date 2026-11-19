@@ -525,10 +525,16 @@ export function buildHeroCarPBR({ color = 0xc8501a, accent = 0x35e6ff, number = 
     const ax = st.ax || 0, ay = st.ay || 0;
     const tp2 = clamp(-ax * 0.0075, -0.08, 0.08), trl = clamp(-ay * 0.0062, -0.09, 0.09);
     const rough = (st.rough || 0) * 0.014 * Math.sin(S.spin * 5.3 + 1.7) + (st.slip || 0) * 0.008 * Math.sin(S.spin * 9.1);
-    S.pitchV += (90 * (tp2 - S.pitch) - 11 * S.pitchV) * dt; S.pitch += S.pitchV * dt;
-    S.rollV += (110 * (trl - S.roll) - 12 * S.rollV) * dt; S.roll += S.rollV * dt;
     const th = -Math.abs(ay) * 0.0015 - Math.max(0, st.throttle || 0) * 0.012 + (st.speed || 0) * 0.00012;
-    S.heaveV += (160 * (th + rough - S.heave) - 16 * S.heaveV) * dt; S.heave += S.heaveV * dt;
+    // The original explicit springs become unstable at the allowed 0.1 s render
+    // step (the body flies away while root-level wheels remain). Subdivide only
+    // these visual springs; preserve total dt, constants and every >=30 FPS step.
+    const springSteps = Math.max(1, Math.ceil(dt / (1 / 30))), springDt = dt / springSteps;
+    for (let i = 0; i < springSteps; i++) {
+      S.pitchV += (90 * (tp2 - S.pitch) - 11 * S.pitchV) * springDt; S.pitch += S.pitchV * springDt;
+      S.rollV += (110 * (trl - S.roll) - 12 * S.rollV) * springDt; S.roll += S.rollV * springDt;
+      S.heaveV += (160 * (th + rough - S.heave) - 16 * S.heaveV) * springDt; S.heave += S.heaveV * springDt;
+    }
     sprung.position.y = S.heave; sprung.rotation.z = -S.pitch; sprung.rotation.x = S.roll;
     // wheels + heat
     S.heat = stepHeat(S.heat, st.braking || 0, st.speed || 0, dt);

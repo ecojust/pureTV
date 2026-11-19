@@ -1,6 +1,6 @@
 {
-  "reviewedAt": "2026-11-19T19:44:11.599842+00:00",
-  "qaPlanSha256": "0019667c29f13f5746751cd746795dd328d896aa61cbaf3833020a8d61f3340f",
+  "reviewedAt": "2026-11-19T20:08:16.522088+00:00",
+  "qaPlanSha256": "2dda477fb4acaaa0773a3c8682d57ff7973a37beca167ae8cf142b19414ad10e",
   "schemaValidatorSha256": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
   "schemaValid": true,
   "stepCount": 21,
@@ -57,5 +57,23 @@
   "modelOrClockModified": false,
   "planChangedDuringAudit": true,
   "limitation": "Native runtime not yet executed. The 60-second step limit fails closed if original warmup/countdown takes longer; browser software-GPU budget is separately documented.",
-  "menuNavigationEvidence": "menu-layout-fixture/report.json"
+  "menuNavigationEvidence": "menu-layout-fixture/report.json",
+  "shortMenuHolds": {
+    "changedSteps": [
+      "Focus settings from original New Game focus",
+      "Focus original Low preset",
+      "Focus New Game",
+      "Move from armor purchase to engine purchase",
+      "Move from engine purchase to tyre purchase",
+      "Move to original track-selection action"
+    ],
+    "fromMs": 100,
+    "toMs": 16,
+    "schemaValid": true,
+    "nativeVerifier": "joystick-games/tools/macos-verify.py",
+    "nativeVerifierSha256": "2db317fa9672df20992af6b4d6a31f9910e2876e4644c0cffca6b99df8709290",
+    "observationBeforeHold": "Existing gameplay verifier waits for fresh timestamp plus advanced controller poll, same SDK session, native raw button held and incremented button counter before holdMs then release; all original option/scene expectations and controls-released settling remain. It does not explicitly assert each semantic button=true in this pre-hold predicate.",
+    "unchanged": "Gameplay UP3000ms/fire600ms/drift800ms/nitro500ms and START100ms, option/scene/racing predicates and 60s bounded wait.",
+    "scope": "Plan data only; no game input repeat thresholds, model or clock changes. Not yet executed by native runtime."
+  }
 }

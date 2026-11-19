@@ -11,7 +11,8 @@
     "src/ui/dom.js",
     "src/ui/input.js",
     "src/ui/screens/settingsSheet.js",
-    "src/ui/screens/title.js"
+    "src/ui/screens/title.js",
+    "src/render/pbr/heroCarPBR.js"
   ],
   "addedFiles": [
     "src/puretv.js"
@@ -679,8 +680,8 @@
       "path": "src/render/pbr/heroCarPBR.js",
       "originalGitBlob": "b12316643042276d0498351044a2b2710efe9ef6",
       "originalSha256": "ac41c62621a5076c830228784763fecb9bd390fc995e6467bcc7db995cde286f",
-      "currentSha256": "ac41c62621a5076c830228784763fecb9bd390fc995e6467bcc7db995cde286f",
-      "changed": false
+      "currentSha256": "4a64519c14c608c7c44ec825e3851bf012619ee2f8a2700fa7f007cefb51c0a9",
+      "changed": true
     },
     {
       "path": "src/render/pbr/manhattan.js",
@@ -1944,5 +1945,16 @@
     ],
     "qa": "Three original DOWN navigation steps after original garage autofocus, no focus() jump",
     "additional": "Playing card64% avoids leaderboard; modal directional selection edge-only except range horizontal hold"
+  },
+  "visualSpringFix": {
+    "file": "src/render/pbr/heroCarPBR.js",
+    "reason": "Original visual body heave diverges at allowed0.1s render dt",
+    "change": "Only3 visual spring integrations subdivide dt>1/30 preserving originalconstants and totaldt",
+    "unchanged": [
+      "Racing simulation/physics",
+      "Game/frame clocks",
+      "Wheelspin/time/effects updates",
+      "At>=30fps each sampled spring value exactly original"
+    ]
   }
 }
