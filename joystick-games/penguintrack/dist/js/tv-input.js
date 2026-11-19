@@ -82,7 +82,8 @@ export function installTV(app) {
         app.controls.setTV(raceInput(frame, driving));
         if (lastPlaying !== driving) { controller.setPlaying(driving); lastPlaying = driving; }
         document.documentElement.dataset.tvDriving = String(driving);
-        const text = driving ? '↑ / A Gas   ↓ / B Brake   ← → Steer   X Respawn   Y Camera   START Pause' : app.screenId === 'editor' && editorGrid ? 'D-pad Grid   A Place   X Rotate   Y Controls   B Back   START Actions' : 'D-pad Focus   A Select   B Back   X / Y Previous / Next   START Menu';
+        let text = driving ? '↑ / A Gas   ↓ / B Brake   ← → Steer   X Respawn   Y Camera   START Pause' : app.screenId === 'editor' && editorGrid ? 'D-pad Grid   A Place   X Rotate   Y Controls   B Back   START Actions' : 'D-pad Focus   A Select   B Back   X / Y Previous / Next   START Menu';
+        if (app.screenId === 'editor' && !editorGrid && !modalOpen()) { const label = document.activeElement?.getAttribute('aria-label') || document.activeElement?.getAttribute('title'); if (label) text += ' · ' + label; }
         if (hint.textContent !== text) hint.textContent = text;
         if (frame.cancelled) return;
         if (frame.pressed.START) {

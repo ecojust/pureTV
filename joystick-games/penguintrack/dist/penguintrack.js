@@ -44019,7 +44019,11 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
         lastPlaying = driving;
       }
       document.documentElement.dataset.tvDriving = String(driving);
-      const text = driving ? "\u2191 / A Gas   \u2193 / B Brake   \u2190 \u2192 Steer   X Respawn   Y Camera   START Pause" : app2.screenId === "editor" && editorGrid ? "D-pad Grid   A Place   X Rotate   Y Controls   B Back   START Actions" : "D-pad Focus   A Select   B Back   X / Y Previous / Next   START Menu";
+      let text = driving ? "\u2191 / A Gas   \u2193 / B Brake   \u2190 \u2192 Steer   X Respawn   Y Camera   START Pause" : app2.screenId === "editor" && editorGrid ? "D-pad Grid   A Place   X Rotate   Y Controls   B Back   START Actions" : "D-pad Focus   A Select   B Back   X / Y Previous / Next   START Menu";
+      if (app2.screenId === "editor" && !editorGrid && !modalOpen()) {
+        const label = document.activeElement?.getAttribute("aria-label") || document.activeElement?.getAttribute("title");
+        if (label) text += " \xB7 " + label;
+      }
       if (hint.textContent !== text) hint.textContent = text;
       if (frame.cancelled) return;
       if (frame.pressed.START) {
