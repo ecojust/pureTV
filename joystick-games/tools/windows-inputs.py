@@ -141,13 +141,13 @@ def declared_package_outputs(scope,game):
             size=item.get('bytes');digest=item.get('sha256')
             assert type(size) is int and size>0 and isinstance(digest,str) and re.fullmatch('[a-f0-9]{64}',digest),'Invalid published package size/hash'
             if 'storage' in item:
-                # A published Mac release asset is metadata, not a local build
+                # A published release asset is metadata, not a local build
                 # output. Never add its name to the exclusion set: otherwise a
                 # remote declaration could conceal a missing tracked input.
-                assert platform=='macos' and item['storage']=='github-release-asset','Unsupported published package storage'
+                assert platform in ('android','macos') and item['storage']=='github-release-asset','Unsupported published package storage'
                 tag=descriptor.get('releaseTag');version=descriptor.get('version')
-                assert isinstance(version,str) and re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+',version),'Invalid remote Mac release version'
-                assert tag=='joystick-'+game.name+'-v'+version,'Remote Mac release tag differs from game/version'
+                assert isinstance(version,str) and re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+',version),'Invalid remote release version'
+                assert tag=='joystick-'+game.name+'-v'+version,'Remote release tag differs from game/version'
                 assert len(parts)==1,'Remote package name must be a basename'
                 assert item.get('url')=='https://github.com/ecojust/pureTV/releases/download/'+tag+'/'+name,'Remote package URL differs from exact release identity'
                 assert all(type(value) is int and 0<value<2**63 for value in (descriptor.get('releaseId'),item.get('assetId'))),'Invalid remote release/asset ID'

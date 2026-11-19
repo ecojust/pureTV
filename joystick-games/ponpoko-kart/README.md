@@ -2,6 +2,14 @@
 
 日本乡村、樱花鸟居、夏祭花火三条原版赛道；八位动物车手、三档难度、道具、蓄力漂移、跳跃特技和和伞滑翔。保留 [たぬ的原作](https://github.com/tanuu5/ponpoko-kart/tree/88edb72d25c2f957431cc4d12547d3138d1bca48) 的完整程序生成场景、原 HUD 与日文菜单，不依赖在线模型、图片、音频或字体。
 
+## Windows 下载
+
+0.1.0 x64：[安装程序](PonpokoKart-0.1.0-windows-x64-setup.exe) · [便携 ZIP](PonpokoKart-0.1.0-windows-x64.zip) · [SHA256 校验](SHA256SUMS.txt)。需要 **Windows 10 1903 或更新版本、Microsoft Edge WebView2 Runtime 和 WebGL 2**；缺少 WebView2 时程序会提示前往微软页面安装。游戏资源随包离线提供，安装程序没有捆绑 WebView2 运行时，也未作 Authenticode 签名。
+
+实际 Windows 检查已通过默认端口与占用回退两种模式各 10 项，包括原 SDK 驾驶、暂停冻结、三次后台/恢复、断线重连不自动继续、正常安装卸载，以及清空浏览器缓存后恢复 `ponpoko.prefs` 的角色/赛道/难度选择。12 张原图已逐张检查：960×540 为未连接菜单，连接与游戏画面为 1280×720；两张驾驶图分别显示 67 / 79 km/h，卡片未遮住主要 HUD 与暂停按钮。仅验证 96 DPI，未做其他缩放、实体手柄或全赛道通关测试。详见[原包、运行与逐图证据](docs/windows-delivery/README.md)。
+
+此前 Windows bootstrap 超时原件保持，新一轮通过不等于已经证明旧失败原因；同批 Backroad / Royale 的失败也没有改成通过。
+
 ## macOS 下载
 
 0.1.0 Universal：[DMG](macos/PonpokoKart-0.1.0-macos-universal.dmg) · [ZIP](macos/PonpokoKart-0.1.0-macos-universal.zip) · [SHA256 校验](macos/SHA256SUMS.txt) · [包来源与验证范围](packages.json)。DMG 内的应用可拖入 Applications；ZIP 解压后也可运行同一个应用。

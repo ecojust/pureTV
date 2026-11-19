@@ -204,6 +204,34 @@ class SourceScope(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError,'Ambiguous local and remote'):self.selection()
         meta['macos']['files'].pop();(self.game/'packages.json').write_text(json.dumps(meta));(target.parent/'SHA256SUMS.txt').write_text(row['sha256']+'  '+row['file']+'\n')
         with self.assertRaisesRegex(AssertionError,'Undeclared file'):self.selection()
+    def remote_android_fixture(self):
+        name='sample-0.1.0.apk';tag='joystick-sample-v0.1.0'
+        row={'version':'0.1.0','file':name,'storage':'github-release-asset','url':'https://github.com/ecojust/pureTV/releases/download/'+tag+'/'+name,'releaseTag':tag,'releaseId':456,'assetId':123,'bytes':105024551,'sha256':'b'*64}
+        meta={'schemaVersion':1,'game':'sample','android':row};self.put('joystick-games/sample/packages.json',json.dumps(meta));return meta,row
+    def test_remote_android_keeps_exact_index_and_cannot_hide_missing_input(self):
+        meta,row=self.remote_android_fixture();readme=self.put('joystick-games/sample/android/README.md','Original APK download');sums=self.put('joystick-games/sample/android/SHA256SUMS.txt',row['sha256']+'  '+row['file']+'\n')
+        result=self.selection();name='joystick-games/sample/'+row['file'];self.assertNotIn(name,result['excluded']);self.assertNotIn(name,result['files'])
+        for path in (readme,sums):self.assertIn('scope-configuration',result['files'][path.relative_to(self.root).as_posix()]['roles'])
+        blobs={name:{} for name in result['files']};scope.verify_complete_git_selection(result,blobs);blobs[name]={}
+        with self.assertRaisesRegex(AssertionError,'missing'):scope.verify_complete_git_selection(result,blobs)
+        sums.write_text('0'*64+'  '+row['file']+'\n')
+        with self.assertRaisesRegex(AssertionError,'checksum list differs'):self.selection()
+    def test_remote_android_exact_identity_and_local_conflicts_remain_rejected(self):
+        meta,row=self.remote_android_fixture();path=self.game/'packages.json'
+        for update in [{'releaseTag':'other'},{'releaseId':True},{'assetId':0},{'version':'../0.1.0'},{'url':row['url']+'?other=1'},{'storage':'external'},{'file':'android/'+row['file']},{'file':'build.mjs'},{'bytes':0},{'sha256':'B'*64}]:
+            changed=copy.deepcopy(meta);changed['android'].update(update);path.write_text(json.dumps(changed))
+            with self.subTest(update=update),self.assertRaises(AssertionError):self.selection()
+        path.write_text(json.dumps(meta));target=self.game/row['file'];target.write_text('local source')
+        with self.assertRaisesRegex(AssertionError,'conflicts with a local node'):self.selection()
+        target.unlink();target.mkdir()
+        with self.assertRaisesRegex(AssertionError,'conflicts with a local node'):self.selection()
+        target.rmdir()
+        try:target.symlink_to(self.root/'missing')
+        except OSError:return
+        with self.assertRaisesRegex(AssertionError,'conflicts with a local node'):self.selection()
+    def test_remote_android_does_not_exempt_undeclared_index_source(self):
+        meta,row=self.remote_android_fixture();self.put('joystick-games/sample/android/SHA256SUMS.txt',row['sha256']+'  '+row['file']+'\n');self.put('joystick-games/sample/android/build.mjs','production code')
+        with self.assertRaisesRegex(AssertionError,'Undeclared file'):self.selection()
     def test_local_packages_recursive_cycle_and_original_lock(self):
         self.package('local/one',{'dependencies':{'two':'file:../two'}});self.package('local/two',{'dependencies':{'one':'file:../one'}})
         (self.game/'package.json').write_text(json.dumps({'dependencies':{'one':'file:../../local/one'}}))

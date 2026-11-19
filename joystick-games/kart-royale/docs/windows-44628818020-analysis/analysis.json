@@ -1,0 +1,728 @@
+{
+  "status": "read-only-original-failure-analysis",
+  "originalRun": 44628818020,
+  "attempt": 1,
+  "source": "232d544079a472aa0ffb259c1bc73c692b94504d",
+  "immutableExport": "b7803b7f811e8eb45b511cc44dfa0f1d13de9c4c",
+  "originalFilesIndependentlyChecked": {
+    "export-manifest.json": {
+      "bytes": 68215,
+      "sha256": "9b7979697d3f2c34342dc3d69321186539a28d637d33185a3aa4ecbec83bb1fd"
+    },
+    "joystick-windows-evidence-kart-royale/evidence-manifest.json": {
+      "bytes": 19822,
+      "sha256": "defcf1d6ccfc577ee45e88ca42603de98184cb92047b786026fb7ae61000ea9b"
+    },
+    "joystick-windows-evidence-kart-royale/runtime-normal/report.json": {
+      "bytes": 772358,
+      "sha256": "42d4e983f00e665d01215ae35e7f382af7b7667d6b18496a49a960bb3c08b80a"
+    },
+    "joystick-windows-evidence-kart-royale/runtime-normal/diagnostics/state.json": {
+      "bytes": 4950,
+      "sha256": "bcdc0b993ff12adcc2460107dd734b543258bf6f29d38f6e63f7fd40429b92fc"
+    },
+    "joystick-windows-evidence-kart-royale/runtime-occupied/report.json": {
+      "bytes": 778482,
+      "sha256": "9fd51b9103377456cbb8df4b1e6436414bfc45945004f63f75392e7d1eee042a"
+    },
+    "joystick-windows-evidence-kart-royale/runtime-occupied/diagnostics/state.json": {
+      "bytes": 4948,
+      "sha256": "da535b62c2a1e2833f000b8e02bc7ceb6fd0357473ad525202bb8a310d6385f7"
+    }
+  },
+  "originalSourceFiles": {
+    "joystick-games/kart-royale/qa-plan.json": {
+      "bytes": 7616,
+      "sha256": "4a08d2b6d44bcda68d9311740d717ada4cbd7d1cb429c9055a47ea3a56afbde4"
+    },
+    "joystick-games/tools/windows-verify.py": {
+      "bytes": 38128,
+      "sha256": "4d967b72972782acf9210415b757796c540039f37c00c33a99f16eb6a163091c"
+    },
+    "joystick-games/tools/macos-verify.py": {
+      "bytes": 56639,
+      "sha256": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 7106,
+      "sha256": "8fa99646235d8d3369e6606b94b1facaafda934dcc1df3ad693233f9bcfe6e54"
+    },
+    "joystick-games/kart-royale/src/src/main.ts": {
+      "bytes": 52111,
+      "sha256": "9dd91077642b48ab39b3516cff3218351bed85f87817057f4653761024ebd188"
+    },
+    "joystick-games/kart-royale/src/src/tv-input.ts": {
+      "bytes": 6144,
+      "sha256": "01cbe3f146320be7552c1fbc8a960ba70a0f397738540be8553b781b2d4c6ecc"
+    }
+  },
+  "modes": [
+    {
+      "mode": "normal",
+      "status": "failed-original-runtime",
+      "topLevelChecks": [
+        {
+          "name": "Native DPI-scaled minimum and initial viewport",
+          "status": "passed"
+        },
+        {
+          "name": "DNS-SD resolves actual listener and TXT",
+          "status": "passed"
+        },
+        {
+          "name": "Official SDK and single controller seat",
+          "status": "passed"
+        },
+        {
+          "name": "Actual gameplay and pause model freeze",
+          "status": "failed"
+        }
+      ],
+      "menus": [
+        {
+          "name": "Focus original Controls menu",
+          "key": "DOWN",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 26.6400000000001,
+          "focus": "Controls",
+          "menu": "title",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 132,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Open original Controls",
+          "key": "A",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 29.85900000000015,
+          "focus": "Done",
+          "menu": "controls",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 162,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Focus controls option Floating stick",
+          "key": "Y",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 24.937000000000126,
+          "focus": "Floating stickAppears wherever your thumb lands. Never look for it.",
+          "menu": "controls",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 129,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Focus controls option Fixed stick",
+          "key": "Y",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 30.21900000000005,
+          "focus": "Fixed stickAlways in the same place. Muscle memory, no drift.",
+          "menu": "controls",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 169,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Focus controls option Tilt to steer",
+          "key": "Y",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 30.6400000000001,
+          "focus": "Tilt to steerRoll the phone. Both thumbs free for the buttons.",
+          "menu": "controls",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 179,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Focus controls option Steer buttons",
+          "key": "Y",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 31.01599999999985,
+          "focus": "Steer buttonsTwo big pads. Nothing to hold steady.",
+          "menu": "controls",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 161,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Focus controls option Right",
+          "key": "Y",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 31.34400000000005,
+          "focus": "Right",
+          "menu": "controls",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 177,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Focus controls option Left",
+          "key": "Y",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 31.093000000000075,
+          "focus": "Left",
+          "menu": "controls",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 178,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Save original left-handed preference through Controls",
+          "key": "A",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 31.25,
+          "focus": "Left",
+          "menu": "controls",
+          "controlHand": "left",
+          "savedControls": true,
+          "sampleCount": 170,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Close Controls explicitly",
+          "key": "B",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 31.281999999999925,
+          "focus": "Start",
+          "menu": "title",
+          "controlHand": "left",
+          "savedControls": true,
+          "sampleCount": 182,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Open original roster from Start button",
+          "key": "A",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 47.156999999999925,
+          "focus": "Start race",
+          "menu": "select",
+          "controlHand": "left",
+          "savedControls": true,
+          "sampleCount": 276,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        }
+      ],
+      "startup": {
+        "status": "passed",
+        "elapsedSeconds": 431.0930000000001,
+        "firstMatchedAtSeconds": 419.8900000000001,
+        "releasedFreshFrames": 2,
+        "snapshotReads": 2290,
+        "recordedFreshSamples": 92,
+        "timeAtCompletion": 0.1
+      },
+      "failure": {
+        "stepIndex": 12,
+        "step": {
+          "name": "Accelerate original kart from grid",
+          "keys": [
+            "UP"
+          ],
+          "holdMs": 3500,
+          "timeoutSeconds": 60,
+          "expect": [
+            {
+              "path": "gameplay.speed",
+              "op": "gt",
+              "value": 1
+            },
+            {
+              "path": "gameplay.position",
+              "op": "changed"
+            }
+          ]
+        },
+        "failureKind": "actual gameplay observation timed out",
+        "originalThreeObservations": [
+          {
+            "label": "Start race and wait original countdown bounded released observation",
+            "at": "2026-11-19T22:47:58.173603+00:00",
+            "nativeTimestamp": 1928.375,
+            "active": true,
+            "ready": true,
+            "documentEpoch": 1,
+            "frames": 188,
+            "pollCount": 188,
+            "phase": "racing",
+            "raceTime": 0.1,
+            "speed": 3.989690617690265e-19,
+            "position": [
+              -5.690552343086235,
+              4.0724789712749345,
+              -9.98221542927644
+            ],
+            "nativeUp": false,
+            "cachedSemanticUp": false,
+            "gameAccel": 0,
+            "gameAutoAccel": false,
+            "paused": false,
+            "renderer": "webgl2",
+            "errors": []
+          },
+          {
+            "label": "Accelerate original kart from grid actual SDK input",
+            "at": "2026-11-19T22:48:03.570183+00:00",
+            "nativeTimestamp": 1933.906,
+            "active": true,
+            "ready": true,
+            "documentEpoch": 1,
+            "frames": 189,
+            "pollCount": 189,
+            "phase": "racing",
+            "raceTime": 0.15000000000000002,
+            "speed": -1.9673250098654934e-19,
+            "position": [
+              -5.690552343038005,
+              4.0724789734524185,
+              -9.982215429196028
+            ],
+            "nativeUp": true,
+            "cachedSemanticUp": false,
+            "gameAccel": 0,
+            "gameAutoAccel": false,
+            "paused": false,
+            "renderer": "webgl2",
+            "errors": []
+          },
+          {
+            "label": "original final diagnostics/state.json",
+            "at": null,
+            "nativeTimestamp": 1997.125,
+            "active": true,
+            "ready": true,
+            "documentEpoch": 1,
+            "frames": 200,
+            "pollCount": 200,
+            "phase": "racing",
+            "raceTime": 0.7000000000000001,
+            "speed": 0.45711511313266795,
+            "position": [
+              -5.506501915383793,
+              4.060620260982126,
+              -9.810799772850318
+            ],
+            "nativeUp": false,
+            "cachedSemanticUp": false,
+            "gameAccel": 0,
+            "gameAutoAccel": false,
+            "paused": false,
+            "renderer": "webgl2",
+            "errors": []
+          }
+        ],
+        "wireDown": {
+          "at": "2026-11-19T22:47:58.174604+00:00",
+          "connection": 1,
+          "direction": "sdk-to-game",
+          "message": {
+            "type": "button",
+            "seq": 245,
+            "controller_id": "virtual-698b99999e6e",
+            "key": "UP",
+            "action": "down",
+            "pressed": true,
+            "duration_ms": 0
+          }
+        },
+        "wireRelease": {
+          "at": "2026-11-19T22:48:07.084795+00:00",
+          "connection": 1,
+          "direction": "sdk-to-game",
+          "message": {
+            "type": "button",
+            "seq": 248,
+            "controller_id": "virtual-698b99999e6e",
+            "key": "UP",
+            "action": "tap",
+            "pressed": false,
+            "duration_ms": 100
+          }
+        },
+        "wireHoldSeconds": 8.910191,
+        "wireAckPairVerified": true,
+        "finalPositionChanged": true,
+        "finalSpeedPredicatePassed": false,
+        "finalModelDtPerPoll": 0.05,
+        "nativeSecondsPerPollFromInputToFinal": 5.747181818181823,
+        "unobservedIntermediateSpeedNotClaimed": true
+      },
+      "notReached": "remaining driving, pause model stability, disconnect/resume and other later gameplay acceptance were not completed; whole runtime stays failed"
+    },
+    {
+      "mode": "occupied",
+      "status": "failed-original-runtime",
+      "topLevelChecks": [
+        {
+          "name": "Native DPI-scaled minimum and initial viewport",
+          "status": "passed"
+        },
+        {
+          "name": "DNS-SD resolves actual listener and TXT",
+          "status": "passed"
+        },
+        {
+          "name": "Official SDK and single controller seat",
+          "status": "passed"
+        },
+        {
+          "name": "Actual gameplay and pause model freeze",
+          "status": "failed"
+        }
+      ],
+      "menus": [
+        {
+          "name": "Focus original Controls menu",
+          "key": "DOWN",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 25.516000000000076,
+          "focus": "Controls",
+          "menu": "title",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 129,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Open original Controls",
+          "key": "A",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 29.889999999999873,
+          "focus": "Done",
+          "menu": "controls",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 150,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Focus controls option Floating stick",
+          "key": "Y",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 30.047000000000025,
+          "focus": "Floating stickAppears wherever your thumb lands. Never look for it.",
+          "menu": "controls",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 143,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Focus controls option Fixed stick",
+          "key": "Y",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 30.40599999999995,
+          "focus": "Fixed stickAlways in the same place. Muscle memory, no drift.",
+          "menu": "controls",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 172,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Focus controls option Tilt to steer",
+          "key": "Y",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 30.813000000000102,
+          "focus": "Tilt to steerRoll the phone. Both thumbs free for the buttons.",
+          "menu": "controls",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 184,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Focus controls option Steer buttons",
+          "key": "Y",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 31.061999999999898,
+          "focus": "Steer buttonsTwo big pads. Nothing to hold steady.",
+          "menu": "controls",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 164,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Focus controls option Right",
+          "key": "Y",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 31.34400000000005,
+          "focus": "Right",
+          "menu": "controls",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 177,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Focus controls option Left",
+          "key": "Y",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 30.938000000000102,
+          "focus": "Left",
+          "menu": "controls",
+          "controlHand": "right",
+          "savedControls": false,
+          "sampleCount": 174,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Save original left-handed preference through Controls",
+          "key": "A",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 31.516000000000076,
+          "focus": "Left",
+          "menu": "controls",
+          "controlHand": "left",
+          "savedControls": true,
+          "sampleCount": 177,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Close Controls explicitly",
+          "key": "B",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 31.5,
+          "focus": "Start",
+          "menu": "title",
+          "controlHand": "left",
+          "savedControls": true,
+          "sampleCount": 176,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        },
+        {
+          "name": "Open original roster from Start button",
+          "key": "A",
+          "status": "passed",
+          "stableFreshSamples": 2,
+          "elapsedSeconds": 47.077999999999975,
+          "focus": "Start race",
+          "menu": "select",
+          "controlHand": "left",
+          "savedControls": true,
+          "sampleCount": 279,
+          "samplesTruncated": true,
+          "exactWireDownReleaseAndAcksVerified": true
+        }
+      ],
+      "startup": {
+        "status": "passed",
+        "elapsedSeconds": 432.84400000000005,
+        "firstMatchedAtSeconds": 421.90599999999995,
+        "releasedFreshFrames": 2,
+        "snapshotReads": 2287,
+        "recordedFreshSamples": 92,
+        "timeAtCompletion": 0.1
+      },
+      "failure": {
+        "stepIndex": 12,
+        "step": {
+          "name": "Accelerate original kart from grid",
+          "keys": [
+            "UP"
+          ],
+          "holdMs": 3500,
+          "timeoutSeconds": 60,
+          "expect": [
+            {
+              "path": "gameplay.speed",
+              "op": "gt",
+              "value": 1
+            },
+            {
+              "path": "gameplay.position",
+              "op": "changed"
+            }
+          ]
+        },
+        "failureKind": "actual gameplay observation timed out",
+        "originalThreeObservations": [
+          {
+            "label": "Start race and wait original countdown bounded released observation",
+            "at": "2026-11-19T23:04:56.862829+00:00",
+            "nativeTimestamp": 2947.187,
+            "active": true,
+            "ready": true,
+            "documentEpoch": 1,
+            "frames": 189,
+            "pollCount": 189,
+            "phase": "racing",
+            "raceTime": 0.1,
+            "speed": 2.208290994108316e-19,
+            "position": [
+              -5.690552343086416,
+              4.072478971266881,
+              -9.982215429276721
+            ],
+            "nativeUp": false,
+            "cachedSemanticUp": false,
+            "gameAccel": 0,
+            "gameAutoAccel": false,
+            "paused": false,
+            "renderer": "webgl2",
+            "errors": []
+          },
+          {
+            "label": "Accelerate original kart from grid actual SDK input",
+            "at": "2026-11-19T23:05:02.593003+00:00",
+            "nativeTimestamp": 2952.937,
+            "active": true,
+            "ready": true,
+            "documentEpoch": 1,
+            "frames": 190,
+            "pollCount": 190,
+            "phase": "racing",
+            "raceTime": 0.15000000000000002,
+            "speed": -2.7633622723558996e-20,
+            "position": [
+              -5.6905523430381875,
+              4.0724789734443565,
+              -9.982215429196309
+            ],
+            "nativeUp": true,
+            "cachedSemanticUp": false,
+            "gameAccel": 0,
+            "gameAutoAccel": false,
+            "paused": false,
+            "renderer": "webgl2",
+            "errors": []
+          },
+          {
+            "label": "original final diagnostics/state.json",
+            "at": null,
+            "nativeTimestamp": 3015.875,
+            "active": true,
+            "ready": true,
+            "documentEpoch": 1,
+            "frames": 201,
+            "pollCount": 201,
+            "phase": "racing",
+            "raceTime": 0.7000000000000001,
+            "speed": 0.4571151077610387,
+            "position": [
+              -5.506501908315743,
+              4.06062026108142,
+              -9.810799782452287
+            ],
+            "nativeUp": false,
+            "cachedSemanticUp": false,
+            "gameAccel": 0,
+            "gameAutoAccel": false,
+            "paused": false,
+            "renderer": "webgl2",
+            "errors": []
+          }
+        ],
+        "wireDown": {
+          "at": "2026-11-19T23:04:56.866955+00:00",
+          "connection": 1,
+          "direction": "sdk-to-game",
+          "message": {
+            "type": "button",
+            "seq": 247,
+            "controller_id": "virtual-4731889e1140",
+            "key": "UP",
+            "action": "down",
+            "pressed": true,
+            "duration_ms": 0
+          }
+        },
+        "wireRelease": {
+          "at": "2026-11-19T23:05:06.096194+00:00",
+          "connection": 1,
+          "direction": "sdk-to-game",
+          "message": {
+            "type": "button",
+            "seq": 250,
+            "controller_id": "virtual-4731889e1140",
+            "key": "UP",
+            "action": "tap",
+            "pressed": false,
+            "duration_ms": 100
+          }
+        },
+        "wireHoldSeconds": 9.229239,
+        "wireAckPairVerified": true,
+        "finalPositionChanged": true,
+        "finalSpeedPredicatePassed": false,
+        "finalModelDtPerPoll": 0.05,
+        "nativeSecondsPerPollFromInputToFinal": 5.721636363636373,
+        "unobservedIntermediateSpeedNotClaimed": true
+      },
+      "notReached": "remaining driving, pause model stability, disconnect/resume and other later gameplay acceptance were not completed; whole runtime stays failed"
+    }
+  ],
+  "conclusions": [
+    "Both original modes passed all11 menuTap steps including all6 exact-focus Y steps, persisted left hand and opened roster. Previous roster stability issue did not recur here (both under48s). Whole gameplay check still failed.",
+    "Both actual600s startup gates completed naturally after431/433s; this failure occurs after racing starts, not during countdown. Model time progresses by0.05 per consumed poll, matching original main.ts Math.min(raw,1/20).",
+    "Default Windows gameplay input gate looks at native raw button/counter with new frame, then sleeps declared3500ms and releases. Its successful input snapshot still has cached semanticUP=false and gameAccel=0. Actual wire holds are8.910191/9.229239s including the raw observation wait; no missing input/ACK is demonstrated.",
+    "Final snapshots show active/ready WebGL2 racing, raceTime0.7, speed0.4571 and changed position; no automatic gas. The speed>1 predicate was not observed. Raw-native acceptance did not establish semantic/model consumption before the fixed hold interval began. Unrecorded intermediate speed/precise number of acceleration frames are not asserted."
+  ],
+  "minimalNextCandidateNotApplied": {
+    "path": "joystick-games/kart-royale/qa-plan.json",
+    "stepIndex": 12,
+    "change": "windowsHoldUntilExpect:true for Accelerate original kart from grid only",
+    "reason": "Reuse existing audited Windows observer to hold original UP until actual fresh semantic input plus unchanged speed>1/position-changed predicate, then release and require two fresh released frames and complete exact ACKs. Preserve original60s hard deadline and all original physics/renderer/gameclock.",
+    "limits": "Requires root authorization/review and native revalidation. Later steps are not assumed to pass. No shared or game source change proposed in this read-only investigation."
+  },
+  "actions": {
+    "networkRequests": 0,
+    "newNativeRun": false,
+    "gameOrPlanOrSharedChanged": false,
+    "packageRebuilt": false,
+    "workflowPost": false,
+    "screenshotsViewedByThisAnalysis": false
+  }
+}
