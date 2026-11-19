@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 1,
+  "storageRestartRequired": true,
+  "renderer": "webgl2",
+  "compatibleRenderers": [
+    "webgl2",
+    "webgl1"
+  ],
+  "pauseStablePaths": [
+    "gameplay.time",
+    "gameplay.x",
+    "gameplay.z",
+    "gameplay.lap"
+  ],
+  "steps": [
+    {
+      "name": "Focus first key on original name keyboard",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "Q"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Type Q with original keyboard action",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "Q"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Save real player name using original form",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.profileName",
+          "op": "eq",
+          "value": "Q"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Start original single race and wait for its real countdown",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.phase",
+          "op": "eq",
+          "value": "race"
+        },
+        {
+          "path": "gameplay.countdown",
+          "op": "lte",
+          "value": 0
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Explicit throttle accelerates kart",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 2000,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "gt",
+          "value": 3
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Right steering changes original world position",
+      "keys": [
+        "UP",
+        "RIGHT"
+      ],
+      "holdMs": 900,
+      "expect": [
+        {
+          "path": "gameplay.x",
+          "op": "changed"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Left steering and separate item keys use original rules",
+      "keys": [
+        "UP",
+        "LEFT",
+        "A",
+        "B"
+      ],
+      "holdMs": 800,
+      "expect": [
+        {
+          "path": "gameplay.z",
+          "op": "changed"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Reset through original reset action",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.phase",
+          "op": "eq",
+          "value": "race"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Open original help from race",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "help-screen"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Return to original pause menu",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "pause-screen"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Resume with START (hold START; remain running)",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 1200,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Manual brake available",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 900,
+      "expect": [
+        {
+          "path": "gameplay.phase",
+          "op": "eq",
+          "value": "race"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Pause with START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Resume explicitly (hold START; remain running)",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 1200,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "timeoutSeconds": 60
+    }
+  ]
+}
