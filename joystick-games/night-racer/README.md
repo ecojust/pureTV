@@ -2,7 +2,15 @@
 
 来自 [zhuqipaopao-maker/night-racer-public](https://github.com/zhuqipaopao-maker/night-racer-public) 的非官方 pureTV 手柄适配，固定上游 `3a432cd3bf059dbaaa00d700f0f83e0e5313d40b`。保留雨夜街道、山路、海岸、长安等原场景，以及竞速／计时、漂移氮气、车库改装、金币任务和本地幽灵。
 
-已提供下方 Windows 和 macOS 安装包；Android TV 仍在验证。画面比较与来源见[赛车评审](../../docs/racing-nine/reviews/driving/comparison.json)，浏览器实际输入与画面检查见[验证记录](docs/VERIFICATION.md)。
+已提供下方 Android TV、Windows 和 macOS 安装包，各平台要求与验证范围分别列明。画面比较与来源见[赛车评审](../../docs/racing-nine/reviews/driving/comparison.json)，浏览器实际输入与画面检查见[验证记录](docs/VERIFICATION.md)。
+
+## Android TV 下载
+
+[Night Racer 0.1.0 APK](night-racer-0.1.0.apk)（22,465,268 字节）· [SHA256 校验](SHA256SUMS.txt) · [原包与运行核验](docs/android-delivery/README.md)
+
+需要 **Android 8.0 / API 26 或更新版本，以及支持 WebGL 2 的系统 WebView**。APK 沿用固定发布证书的原签名文件，未重新打包或签名。原生模拟器正常端口与占用回退两种模式各通过 58 项检查，覆盖原菜单、实际驾驶、左右转向、氮气、视角、复位、九键、暂停恢复、断线与真实手柄 ID。测试通过原菜单选择原有 Low 画质，安装包默认 High 保持不变。
+
+已逐张检查 14 张原截图，逻辑视口为 960×540、截图为 1920×1080。菜单底部部分键盘提示被固定手柄提示条遮住，实际九键说明与可操作按钮仍可读。原视频仅录制最初约 180 秒，涵盖菜单、倒计时和初始比赛，不作为完整驾驶录像。原首次 reload 验证失败记录保留；本次未做专项持久存档、完整职业或实体电视／ESP32 手柄测试。
 
 ## Windows 下载
 
@@ -39,4 +47,4 @@ npm run build
 npm run build:check
 ```
 
-`dist/` 包含离线页面和原始模型／纹理，测试不会更改游戏时钟或物理规则。Windows 与 macOS 的原 SDK、原生图形、存档与安装包验证见上方；Android TV 仍在验证；实体电视和 ESP32 尚未测试。运行要求 WebGL2。
+`dist/` 包含离线页面和原始模型／纹理，测试不会更改游戏时钟或物理规则。各平台的原包、原 SDK 运行及验证范围见上方；Android 尚未专项测试持久存档，实体电视和 ESP32 尚未测试。运行要求 WebGL2。

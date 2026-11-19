@@ -1,0 +1,1254 @@
+{
+  "status": "passed",
+  "verifiedAt": "2026-11-19T22:03:01.015296+00:00",
+  "method": "Read-only full original APK, immutable Git source and original runtime export cross-check; no rebuild or native rerun",
+  "artifactSourceSha": "315f8889ea677ed6a9211bf7d66c8c78dff57f01",
+  "artifactRunId": 44613335670,
+  "artifactRunAttempt": 1,
+  "artifactId": 14571679832,
+  "artifactOriginZip": {
+    "bytes": 21294870,
+    "sha256": "6280d5423f06c5533d5578656fd34daef6a71687940495dd48e6e10f612187b6",
+    "downloadedAgainLocally": false,
+    "note": "Original CI input verifier checked full signed Actions ZIP. This local audit independently retrieved complete APK/receipts through immutable Git export and matched same ZIP file references."
+  },
+  "originalApkGitExport": "8a27f4906bd9e3c29c91500ffd593d36a1889bd1",
+  "qaSourceSha": "f3e1e9f6634e35d1c9ae0cfbf1f8a51d42de7965",
+  "qaRunId": 44618869289,
+  "qaRunAttempt": 1,
+  "runtimeExportCommit": "c6328e03941bbc70a650f33dabcdbd7c555f15c0",
+  "signedApk": {
+    "packageName": "com.ecojust.joystick.nightracer",
+    "versionCode": 1,
+    "versionName": "0.1.0",
+    "bytes": 22465268,
+    "sha256": "66e2589ece8a13bc03d9796259b2662aef34c56c166265db0a63d3baa2b72c91",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23"
+  },
+  "actualMinSdk": 26,
+  "sourceInputsComparedToFixedGitAndOriginalArchive": 200,
+  "actualApkAssetsVerified": 30,
+  "actualApkContentEntriesVerified": 36,
+  "currentDistFilesUnchanged": 25,
+  "executedQaSourcesComparedToFixedGitAndOriginalArchive": 35,
+  "actualSignerAndAaptLogHashesRechecked": {
+    "apksigner.txt": {
+      "bytes": 971,
+      "sha256": "233d2b399c3d24586f2175842b3e33344a29988c187fe5f50293c4b574e8b3db"
+    },
+    "aapt-badging.txt": {
+      "bytes": 1243,
+      "sha256": "23682983e5ce16096e183a1817046f5164b44412888d6391fea32d869f5c00dd"
+    }
+  },
+  "runtimeModes": [
+    {
+      "mode": "normal",
+      "status": "passed",
+      "report": {
+        "bytes": 1441401,
+        "sha256": "4b56981744e644007630fc4d1c674d6da231cf725be68488bb59baed902f49b5"
+      },
+      "checks": 58,
+      "port": 63485,
+      "planExpectationsIndependentlyRecomputed": [
+        {
+          "name": "Move up from Start to the original Standard class control",
+          "keys": [
+            "UP"
+          ],
+          "beforeFrame": 38,
+          "afterFrame": 51,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "title",
+              "after": "title"
+            },
+            {
+              "path": "gameplay.menu.focusIndex",
+              "before": 18,
+              "after": 16
+            }
+          ]
+        },
+        {
+          "name": "Move right to the original Tuned class control without activating it",
+          "keys": [
+            "RIGHT"
+          ],
+          "beforeFrame": 59,
+          "afterFrame": 72,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "title",
+              "after": "title"
+            },
+            {
+              "path": "gameplay.menu.focusIndex",
+              "before": 16,
+              "after": 17
+            }
+          ]
+        },
+        {
+          "name": "Move down from the class controls to the original Garage button",
+          "keys": [
+            "DOWN"
+          ],
+          "beforeFrame": 80,
+          "afterFrame": 95,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "title",
+              "after": "title"
+            },
+            {
+              "path": "gameplay.menu.focusId",
+              "before": null,
+              "after": "garagebtn"
+            }
+          ]
+        },
+        {
+          "name": "Move from Garage to the original Settings button",
+          "keys": [
+            "RIGHT"
+          ],
+          "beforeFrame": 105,
+          "afterFrame": 118,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "title",
+              "after": "title"
+            },
+            {
+              "path": "gameplay.menu.focusId",
+              "before": "garagebtn",
+              "after": "volbtn"
+            }
+          ]
+        },
+        {
+          "name": "Open the original Settings panel",
+          "keys": [
+            "A"
+          ],
+          "beforeFrame": 129,
+          "afterFrame": 146,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "title",
+              "after": "volume"
+            },
+            {
+              "path": "gameplay.menu.focusId",
+              "before": "volbtn",
+              "after": "volclose"
+            }
+          ]
+        },
+        {
+          "name": "Move down from Close to the original Max quality option",
+          "keys": [
+            "DOWN"
+          ],
+          "beforeFrame": 154,
+          "afterFrame": 168,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "volume",
+              "after": "volume"
+            },
+            {
+              "path": "gameplay.menu.focusIndex",
+              "before": 0,
+              "after": 5
+            }
+          ]
+        },
+        {
+          "name": "Move left to the original Ultra quality option",
+          "keys": [
+            "LEFT"
+          ],
+          "beforeFrame": 178,
+          "afterFrame": 193,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "volume",
+              "after": "volume"
+            },
+            {
+              "path": "gameplay.menu.focusIndex",
+              "before": 5,
+              "after": 4
+            }
+          ]
+        },
+        {
+          "name": "Move left to the original High quality option",
+          "keys": [
+            "LEFT"
+          ],
+          "beforeFrame": 206,
+          "afterFrame": 220,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "volume",
+              "after": "volume"
+            },
+            {
+              "path": "gameplay.menu.focusIndex",
+              "before": 4,
+              "after": 3
+            }
+          ]
+        },
+        {
+          "name": "Move left to the original Balanced quality option",
+          "keys": [
+            "LEFT"
+          ],
+          "beforeFrame": 232,
+          "afterFrame": 249,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "volume",
+              "after": "volume"
+            },
+            {
+              "path": "gameplay.menu.focusIndex",
+              "before": 3,
+              "after": 2
+            }
+          ]
+        },
+        {
+          "name": "Move left to the original Low quality option",
+          "keys": [
+            "LEFT"
+          ],
+          "beforeFrame": 260,
+          "afterFrame": 274,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "volume",
+              "after": "volume"
+            },
+            {
+              "path": "gameplay.menu.focusIndex",
+              "before": 2,
+              "after": 1
+            }
+          ]
+        },
+        {
+          "name": "Confirm original Low quality and wait for its ordinary page reload",
+          "keys": [
+            "A"
+          ],
+          "beforeFrame": 282,
+          "afterFrame": 11,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.renderPreset",
+              "before": "high",
+              "after": "low"
+            },
+            {
+              "path": "gameplay.menu.root",
+              "before": "volume",
+              "after": "title"
+            },
+            {
+              "path": "gameplay.menu.focusId",
+              "before": null,
+              "after": "start"
+            },
+            {
+              "path": "gameplay.ready",
+              "before": true,
+              "after": true
+            }
+          ]
+        },
+        {
+          "name": "Start and wait for the original countdown to finish",
+          "keys": [
+            "START"
+          ],
+          "beforeFrame": 14,
+          "afterFrame": 79,
+          "beforeStage": "menu",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "gameplay.state",
+              "before": "title",
+              "after": "race"
+            },
+            {
+              "path": "paused",
+              "before": false,
+              "after": false
+            },
+            {
+              "path": "gameplay.renderPreset",
+              "before": "low",
+              "after": "low"
+            }
+          ]
+        },
+        {
+          "name": "Accelerate after the original countdown",
+          "keys": [
+            "UP"
+          ],
+          "beforeFrame": 91,
+          "afterFrame": 134,
+          "beforeStage": "playing",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "gameplay.state",
+              "before": "race",
+              "after": "race"
+            },
+            {
+              "path": "gameplay.speed",
+              "before": 0,
+              "after": 24.802712953204026
+            },
+            {
+              "path": "gameplay.playerX",
+              "before": -36.357958843559025,
+              "after": -8.979793645665838
+            }
+          ]
+        },
+        {
+          "name": "Steer left while accelerating",
+          "keys": [
+            "UP",
+            "LEFT"
+          ],
+          "beforeFrame": 153,
+          "afterFrame": 166,
+          "beforeStage": "playing",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "gameplay.heading",
+              "before": 1.4696373324314131,
+              "after": 1.9022942279189912
+            }
+          ]
+        },
+        {
+          "name": "Steer right while accelerating",
+          "keys": [
+            "UP",
+            "RIGHT"
+          ],
+          "beforeFrame": 187,
+          "afterFrame": 205,
+          "beforeStage": "playing",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "gameplay.heading",
+              "before": 2.441712640121866,
+              "after": 1.1378605995228082
+            }
+          ]
+        },
+        {
+          "name": "Use one original nitro bottle with B",
+          "keys": [
+            "B"
+          ],
+          "beforeFrame": 222,
+          "afterFrame": 230,
+          "beforeStage": "playing",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "gameplay.bottles",
+              "before": 1,
+              "after": 0
+            }
+          ]
+        },
+        {
+          "name": "Change the original camera with Y",
+          "keys": [
+            "Y"
+          ],
+          "beforeFrame": 244,
+          "afterFrame": 252,
+          "beforeStage": "playing",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "gameplay.camera",
+              "before": 0,
+              "after": 1
+            }
+          ]
+        },
+        {
+          "name": "Reset to the original track with X",
+          "keys": [
+            "X"
+          ],
+          "beforeFrame": 276,
+          "afterFrame": 288,
+          "beforeStage": "playing",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "gameplay.speed",
+              "before": 13.778942781074845,
+              "after": 0
+            }
+          ]
+        },
+        {
+          "name": "Pause the actual race",
+          "keys": [
+            "START"
+          ],
+          "beforeFrame": 308,
+          "afterFrame": 319,
+          "beforeStage": "playing",
+          "afterStage": "paused",
+          "predicates": [
+            {
+              "path": "stage",
+              "before": "playing",
+              "after": "paused"
+            }
+          ]
+        },
+        {
+          "name": "Resume only on explicit input",
+          "keys": [
+            "START"
+          ],
+          "beforeFrame": 340,
+          "afterFrame": 352,
+          "beforeStage": "paused",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "stage",
+              "before": "paused",
+              "after": "playing"
+            }
+          ]
+        }
+      ],
+      "menuTapObservations": 11,
+      "wireIndependentlyRecomputed": {
+        "sdkMessages": 654,
+        "acceptedSdkMessages": 644,
+        "rejectedSdkMessages": 10,
+        "hostReplies": 645,
+        "matchingAcks": 644,
+        "missingAcks": 0,
+        "duplicateAcks": 0,
+        "unexpectedReplies": 0,
+        "primaryControllerId": "virtual-c2b94290332b",
+        "rejectedControllerIds": [
+          "virtual-653b7566832d"
+        ],
+        "connections": {
+          "1": "virtual-c2b94290332b",
+          "2": "virtual-653b7566832d",
+          "3": "virtual-c2b94290332b"
+        },
+        "keysSent": [
+          "A",
+          "B",
+          "DOWN",
+          "LEFT",
+          "RIGHT",
+          "START",
+          "UP",
+          "X",
+          "Y"
+        ],
+        "originalWire": {
+          "bytes": 373349,
+          "sha256": "91518a0643313db11bb400c0f05ba3203c83f011b06a04eaec0df12151eee7e5"
+        }
+      },
+      "captures": [
+        {
+          "path": "connected.png",
+          "bytes": 1469637,
+          "sha256": "81f37e466fb0af8de0bb155c556c0dcefe9615766f4eb71bcaebea026f2e5e25",
+          "pixelSize": [
+            1920,
+            1080
+          ],
+          "logicalViewport": [
+            960,
+            540
+          ]
+        },
+        {
+          "path": "playing.png",
+          "bytes": 1158672,
+          "sha256": "fb008270df7828b5326e68f480957152ed4525480db0835bf8954e77c62f642b",
+          "pixelSize": [
+            1920,
+            1080
+          ],
+          "logicalViewport": [
+            960,
+            540
+          ]
+        },
+        {
+          "path": "paused.png",
+          "bytes": 827497,
+          "sha256": "402ee7ee3a123185c731e35be27c81356f8123b850af2689091bd3b06bbb689a",
+          "pixelSize": [
+            1920,
+            1080
+          ],
+          "logicalViewport": [
+            960,
+            540
+          ]
+        },
+        {
+          "path": "second-rejected.png",
+          "bytes": 722347,
+          "sha256": "e247ba6c4fd9cbbbae4bdd6b79be5425cbc1c60755ce0513ccc5bb9acaec8783",
+          "pixelSize": [
+            1920,
+            1080
+          ],
+          "logicalViewport": [
+            960,
+            540
+          ]
+        },
+        {
+          "path": "focus-restored-paused.png",
+          "bytes": 822704,
+          "sha256": "a0a20bebbcb060c89d48118725835ee9e2a395d72a3f88133ff6b5b948a9d2c6",
+          "pixelSize": [
+            1920,
+            1080
+          ],
+          "logicalViewport": [
+            960,
+            540
+          ]
+        },
+        {
+          "path": "disconnected.png",
+          "bytes": 834559,
+          "sha256": "b3340c97954e3a37a44ac166c1faa0665da87929330cebf4e36d52628d14fe31",
+          "pixelSize": [
+            1920,
+            1080
+          ],
+          "logicalViewport": [
+            960,
+            540
+          ]
+        },
+        {
+          "path": "reconnected.png",
+          "bytes": 656902,
+          "sha256": "73f6df82584ef4130c2ffa02afff45c72a0c4411c7c5fba160aec4be2c104b3e",
+          "pixelSize": [
+            1920,
+            1080
+          ],
+          "logicalViewport": [
+            960,
+            540
+          ]
+        }
+      ],
+      "video": {
+        "path": "controller-gameplay.mp4",
+        "bytes": 4372253,
+        "sha256": "80887c587f9066b5f74678a166152534de1635523ea394eee278417a1e4a9ca5",
+        "scope": "Actual screen recording of SDK-driven acceptance; no model or clock changes",
+        "probe": {
+          "programs": [],
+          "stream_groups": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "width": 1920,
+              "height": 1080
+            },
+            {},
+            {}
+          ],
+          "format": {
+            "duration": "179.391156",
+            "size": "4372253"
+          }
+        },
+        "probeCommand": [
+          "ffprobe",
+          "-v",
+          "error",
+          "-show_entries",
+          "format=duration,size:stream=width,height,codec_name",
+          "-of",
+          "json",
+          "/dev/shm/puretv-submit/joystick-games/night-racer/docs/android-delivery/original-export/evidence/joystick-android-runtime-night-racer/night-racer-normal/controller-gameplay.mp4"
+        ]
+      },
+      "qaSourceFilesVerified": 9
+    },
+    {
+      "mode": "occupied",
+      "status": "passed",
+      "report": {
+        "bytes": 1431771,
+        "sha256": "6f183e9899c3899cfc7d426def7e0239254376d523cea469f6c2863faf3a2ddd"
+      },
+      "checks": 58,
+      "port": 32849,
+      "planExpectationsIndependentlyRecomputed": [
+        {
+          "name": "Move up from Start to the original Standard class control",
+          "keys": [
+            "UP"
+          ],
+          "beforeFrame": 21,
+          "afterFrame": 35,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "title",
+              "after": "title"
+            },
+            {
+              "path": "gameplay.menu.focusIndex",
+              "before": 18,
+              "after": 16
+            }
+          ]
+        },
+        {
+          "name": "Move right to the original Tuned class control without activating it",
+          "keys": [
+            "RIGHT"
+          ],
+          "beforeFrame": 47,
+          "afterFrame": 58,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "title",
+              "after": "title"
+            },
+            {
+              "path": "gameplay.menu.focusIndex",
+              "before": 16,
+              "after": 17
+            }
+          ]
+        },
+        {
+          "name": "Move down from the class controls to the original Garage button",
+          "keys": [
+            "DOWN"
+          ],
+          "beforeFrame": 70,
+          "afterFrame": 84,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "title",
+              "after": "title"
+            },
+            {
+              "path": "gameplay.menu.focusId",
+              "before": null,
+              "after": "garagebtn"
+            }
+          ]
+        },
+        {
+          "name": "Move from Garage to the original Settings button",
+          "keys": [
+            "RIGHT"
+          ],
+          "beforeFrame": 93,
+          "afterFrame": 105,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "title",
+              "after": "title"
+            },
+            {
+              "path": "gameplay.menu.focusId",
+              "before": "garagebtn",
+              "after": "volbtn"
+            }
+          ]
+        },
+        {
+          "name": "Open the original Settings panel",
+          "keys": [
+            "A"
+          ],
+          "beforeFrame": 114,
+          "afterFrame": 128,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "title",
+              "after": "volume"
+            },
+            {
+              "path": "gameplay.menu.focusId",
+              "before": "volbtn",
+              "after": "volclose"
+            }
+          ]
+        },
+        {
+          "name": "Move down from Close to the original Max quality option",
+          "keys": [
+            "DOWN"
+          ],
+          "beforeFrame": 136,
+          "afterFrame": 147,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "volume",
+              "after": "volume"
+            },
+            {
+              "path": "gameplay.menu.focusIndex",
+              "before": 0,
+              "after": 5
+            }
+          ]
+        },
+        {
+          "name": "Move left to the original Ultra quality option",
+          "keys": [
+            "LEFT"
+          ],
+          "beforeFrame": 160,
+          "afterFrame": 173,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "volume",
+              "after": "volume"
+            },
+            {
+              "path": "gameplay.menu.focusIndex",
+              "before": 5,
+              "after": 4
+            }
+          ]
+        },
+        {
+          "name": "Move left to the original High quality option",
+          "keys": [
+            "LEFT"
+          ],
+          "beforeFrame": 181,
+          "afterFrame": 193,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "volume",
+              "after": "volume"
+            },
+            {
+              "path": "gameplay.menu.focusIndex",
+              "before": 4,
+              "after": 3
+            }
+          ]
+        },
+        {
+          "name": "Move left to the original Balanced quality option",
+          "keys": [
+            "LEFT"
+          ],
+          "beforeFrame": 204,
+          "afterFrame": 220,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "volume",
+              "after": "volume"
+            },
+            {
+              "path": "gameplay.menu.focusIndex",
+              "before": 3,
+              "after": 2
+            }
+          ]
+        },
+        {
+          "name": "Move left to the original Low quality option",
+          "keys": [
+            "LEFT"
+          ],
+          "beforeFrame": 229,
+          "afterFrame": 246,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.menu.root",
+              "before": "volume",
+              "after": "volume"
+            },
+            {
+              "path": "gameplay.menu.focusIndex",
+              "before": 2,
+              "after": 1
+            }
+          ]
+        },
+        {
+          "name": "Confirm original Low quality and wait for its ordinary page reload",
+          "keys": [
+            "A"
+          ],
+          "beforeFrame": 256,
+          "afterFrame": 8,
+          "beforeStage": "menu",
+          "afterStage": "menu",
+          "predicates": [
+            {
+              "path": "gameplay.renderPreset",
+              "before": "high",
+              "after": "low"
+            },
+            {
+              "path": "gameplay.menu.root",
+              "before": "volume",
+              "after": "title"
+            },
+            {
+              "path": "gameplay.menu.focusId",
+              "before": null,
+              "after": "start"
+            },
+            {
+              "path": "gameplay.ready",
+              "before": true,
+              "after": true
+            }
+          ]
+        },
+        {
+          "name": "Start and wait for the original countdown to finish",
+          "keys": [
+            "START"
+          ],
+          "beforeFrame": 17,
+          "afterFrame": 87,
+          "beforeStage": "menu",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "gameplay.state",
+              "before": "title",
+              "after": "race"
+            },
+            {
+              "path": "paused",
+              "before": false,
+              "after": false
+            },
+            {
+              "path": "gameplay.renderPreset",
+              "before": "low",
+              "after": "low"
+            }
+          ]
+        },
+        {
+          "name": "Accelerate after the original countdown",
+          "keys": [
+            "UP"
+          ],
+          "beforeFrame": 96,
+          "afterFrame": 134,
+          "beforeStage": "playing",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "gameplay.state",
+              "before": "race",
+              "after": "race"
+            },
+            {
+              "path": "gameplay.speed",
+              "before": 0,
+              "after": 22.618554084963236
+            },
+            {
+              "path": "gameplay.playerX",
+              "before": -36.357958843559025,
+              "after": -14.684607917724184
+            }
+          ]
+        },
+        {
+          "name": "Steer left while accelerating",
+          "keys": [
+            "UP",
+            "LEFT"
+          ],
+          "beforeFrame": 153,
+          "afterFrame": 169,
+          "beforeStage": "playing",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "gameplay.heading",
+              "before": 1.4628088437354918,
+              "after": 2.163360014123707
+            }
+          ]
+        },
+        {
+          "name": "Steer right while accelerating",
+          "keys": [
+            "UP",
+            "RIGHT"
+          ],
+          "beforeFrame": 186,
+          "afterFrame": 202,
+          "beforeStage": "playing",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "gameplay.heading",
+              "before": 2.55430246869966,
+              "after": 1.5201612480884603
+            }
+          ]
+        },
+        {
+          "name": "Use one original nitro bottle with B",
+          "keys": [
+            "B"
+          ],
+          "beforeFrame": 222,
+          "afterFrame": 230,
+          "beforeStage": "playing",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "gameplay.bottles",
+              "before": 1,
+              "after": 0
+            }
+          ]
+        },
+        {
+          "name": "Change the original camera with Y",
+          "keys": [
+            "Y"
+          ],
+          "beforeFrame": 246,
+          "afterFrame": 253,
+          "beforeStage": "playing",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "gameplay.camera",
+              "before": 0,
+              "after": 1
+            }
+          ]
+        },
+        {
+          "name": "Reset to the original track with X",
+          "keys": [
+            "X"
+          ],
+          "beforeFrame": 273,
+          "afterFrame": 281,
+          "beforeStage": "playing",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "gameplay.speed",
+              "before": 13.811012080115573,
+              "after": 0
+            }
+          ]
+        },
+        {
+          "name": "Pause the actual race",
+          "keys": [
+            "START"
+          ],
+          "beforeFrame": 301,
+          "afterFrame": 310,
+          "beforeStage": "playing",
+          "afterStage": "paused",
+          "predicates": [
+            {
+              "path": "stage",
+              "before": "playing",
+              "after": "paused"
+            }
+          ]
+        },
+        {
+          "name": "Resume only on explicit input",
+          "keys": [
+            "START"
+          ],
+          "beforeFrame": 329,
+          "afterFrame": 338,
+          "beforeStage": "paused",
+          "afterStage": "playing",
+          "predicates": [
+            {
+              "path": "stage",
+              "before": "paused",
+              "after": "playing"
+            }
+          ]
+        }
+      ],
+      "menuTapObservations": 11,
+      "wireIndependentlyRecomputed": {
+        "sdkMessages": 651,
+        "acceptedSdkMessages": 641,
+        "rejectedSdkMessages": 10,
+        "hostReplies": 642,
+        "matchingAcks": 641,
+        "missingAcks": 0,
+        "duplicateAcks": 0,
+        "unexpectedReplies": 0,
+        "primaryControllerId": "virtual-e2b016e2baab",
+        "rejectedControllerIds": [
+          "virtual-63798082c5bc"
+        ],
+        "connections": {
+          "1": "virtual-e2b016e2baab",
+          "2": "virtual-63798082c5bc",
+          "3": "virtual-e2b016e2baab"
+        },
+        "keysSent": [
+          "A",
+          "B",
+          "DOWN",
+          "LEFT",
+          "RIGHT",
+          "START",
+          "UP",
+          "X",
+          "Y"
+        ],
+        "originalWire": {
+          "bytes": 373155,
+          "sha256": "d92fa3f075680eb600c1a4afa648448758bdc2f09265df6b80845cf79d37efb9"
+        }
+      },
+      "captures": [
+        {
+          "path": "connected.png",
+          "bytes": 1078251,
+          "sha256": "e799c3e6796acda9158e20d65ace918305687b990c4b083c22a9551445d4f775",
+          "pixelSize": [
+            1920,
+            1080
+          ],
+          "logicalViewport": [
+            960,
+            540
+          ]
+        },
+        {
+          "path": "playing.png",
+          "bytes": 1190358,
+          "sha256": "356346cd4aff2784505741c11c8ae02cbb08abebabfc3a96694b13ae9bd069e7",
+          "pixelSize": [
+            1920,
+            1080
+          ],
+          "logicalViewport": [
+            960,
+            540
+          ]
+        },
+        {
+          "path": "paused.png",
+          "bytes": 840652,
+          "sha256": "50d9ce742fb9a39d4eac0f6f5df9a973bd23ce9a38f2056bc6e845da81a71e02",
+          "pixelSize": [
+            1920,
+            1080
+          ],
+          "logicalViewport": [
+            960,
+            540
+          ]
+        },
+        {
+          "path": "second-rejected.png",
+          "bytes": 721207,
+          "sha256": "8f9f1013d7a2a6369c8d9bf7afdaa97a38f4f2e9fd764f7a3bd9c42072d80fb1",
+          "pixelSize": [
+            1920,
+            1080
+          ],
+          "logicalViewport": [
+            960,
+            540
+          ]
+        },
+        {
+          "path": "focus-restored-paused.png",
+          "bytes": 650304,
+          "sha256": "d880169345c09755c7ee8b0522f17484e29fe31167efd5195b04c42b2127cd8b",
+          "pixelSize": [
+            1920,
+            1080
+          ],
+          "logicalViewport": [
+            960,
+            540
+          ]
+        },
+        {
+          "path": "disconnected.png",
+          "bytes": 831997,
+          "sha256": "a9da94e1214c08a6982b3cb07653022c6b9096f5b27d1802bf17731809b8ccc5",
+          "pixelSize": [
+            1920,
+            1080
+          ],
+          "logicalViewport": [
+            960,
+            540
+          ]
+        },
+        {
+          "path": "reconnected.png",
+          "bytes": 716029,
+          "sha256": "3762a20dc0d34fba935c02840d7e69f8dfbd1a498d20203957207e6bf0a334f8",
+          "pixelSize": [
+            1920,
+            1080
+          ],
+          "logicalViewport": [
+            960,
+            540
+          ]
+        }
+      ],
+      "video": {
+        "path": "controller-gameplay.mp4",
+        "bytes": 3994843,
+        "sha256": "8f5f784bd17170b9cc984cac7576fec787786933f47227377c5287d74f690d5a",
+        "scope": "Actual screen recording of SDK-driven acceptance; no model or clock changes",
+        "probe": {
+          "programs": [],
+          "stream_groups": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "width": 1920,
+              "height": 1080
+            },
+            {},
+            {}
+          ],
+          "format": {
+            "duration": "180.257756",
+            "size": "3994843"
+          }
+        },
+        "probeCommand": [
+          "ffprobe",
+          "-v",
+          "error",
+          "-show_entries",
+          "format=duration,size:stream=width,height,codec_name",
+          "-of",
+          "json",
+          "/dev/shm/puretv-submit/joystick-games/night-racer/docs/android-delivery/original-export/evidence/joystick-android-runtime-night-racer/night-racer-occupied/controller-gameplay.mp4"
+        ]
+      },
+      "qaSourceFilesVerified": 9
+    }
+  ],
+  "oldProductionRuntimeFailurePreserved": true,
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "fullCareerCompleted": false,
+  "storagePersistenceScenarioTested": false,
+  "visualReview": "visual-review.json"
+}
