@@ -37,4 +37,6 @@ npm run build:check
 
 上游未提供自动化单元测试套件。本适配的测试覆盖九键独立、跨菜单输入隔离、断线/重连、键盘取消与原有漂移奖励函数的取消边界。正式 Android、macOS、Windows 包及其签名、启动、原生 SDK 和显示验证由仓库的对应构建流程另行记录；源码构建通过不代表这些平台已验收。
 
+[浏览器验证记录](docs/browser-validation.json)保留了前两次超时及第三次完整验证：正常菜单进入比赛、两种分辨率实际驾驶、暂停冻结、漂移中断线和手动恢复。[逐图检查](docs/visual-review.json)与[缩略图来源](docs/thumb-source.json)记录实际截图及散列。
+
 授权见 [LICENSE](LICENSE) 与 [NOTICE.md](NOTICE.md)。原作 MIT；Three.js MIT；三组字体 SIL OFL 1.1。

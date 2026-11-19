@@ -1,0 +1,38 @@
+{
+  "recordedAt": "2026-11-19T18:50:56.199536+00:00",
+  "exitCode": 0,
+  "semanticStatus": "completed",
+  "startedAt": "2026-11-19T18:40:41.378Z",
+  "endedAt": "2026-11-19T18:50:48.056Z",
+  "scriptSha256": "9425d20fba54ede361ed5b974e5a45944225777695a7415518be7fe29a725d5f",
+  "screenshots": {
+    "11-focus-paused.png": "f5ab0f3b5bafff545c53ad5603546e753f0545c4f98a11a7cd24d016a0be3486",
+    "10-manual-resume-960.png": "81c99aa524c3070b58f012991895aa8c3dbfec55cba5153038bfde563ea1c9b7",
+    "09-disconnected-paused.png": "129cdf9f7cde936fb90ce48e77285c431284bc15d55013fbcee900efb003389e",
+    "08-drift-960.png": "3951fcd2576b22058eaf5dcd317ef1ce63c92994f1c7a9223a23c09040f2eec6",
+    "07-paused-960.png": "14061630d76b9153b52481ed4b35cbe4c68fa32c6293f737a0a3692c4a5ffd85",
+    "06-drive-1280.png": "fe0e5e081d98442f41b4e02123ef69535eafa3c686d6e82c51d1cf1227f387f6",
+    "05-drive-960.png": "47c9789dcdf41adff6bf2a71156a085c7cd90b0dc9bd7025fffc6e7387ef297a",
+    "04-course-960.png": "8f5d009d785e09a265e08b00b49d9bfe5bb192b518dc3b444a5927b98b508013",
+    "03-character-1280.png": "f3d731cfe5d53c59df9946550e14035eb1eb595007d0a7bbd7c81745fd1bdc5c",
+    "02-character-960.png": "3658e4870949edf7282b47fe5ea0cd87835195683a9edb8127f472c2c8572cea",
+    "01-title-960.png": "c41981647394f6ea722a89ed551f1de89b310c8d385e0ec295a7a117aa9e7993"
+  },
+  "scope": "Synthetic PureGameHost bridge in Chromium SwiftShader. Original menus, model, clock, renderer quality unchanged. No native SDK/TCP/device acceptance.",
+  "priorAttempts": [
+    "../browser-attempt-1/process.json",
+    "../browser-attempt-2/process.json"
+  ],
+  "checks": [
+    "normal throttle changes original position and speed",
+    "pause freezes original simulation while controller frames advance",
+    "disconnect cancels active drift without release boost"
+  ],
+  "additionalAssertions": [
+    "Reconnection with held input remains paused and quarantined",
+    "Fresh START explicitly resumes",
+    "Focus return does not auto-resume",
+    "20 read-only QA snapshots do not poll native bridge"
+  ],
+  "limitation": "Browser script was frozen before held-START regression was added. That edge case is covered by unit composition tests; next Turbo Rush browser case includes sustained held START."
+}
