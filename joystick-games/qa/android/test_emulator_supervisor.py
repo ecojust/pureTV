@@ -145,8 +145,11 @@ class SupervisorTests(unittest.TestCase):
                            ('ARTIFACT_EXPORT', 'c'*40), ('ARTIFACT_ID', '1'), ('PON_CAPTURE_QEMU_STACK', '1')]:
             with self.subTest(key=key), self.assertRaises(AssertionError):
                 m.capture_stack(dict(environment, **{key: value}))
-        with patch.dict(os.environ, environment), self.assertRaises((AssertionError, KeyError, FileNotFoundError)):
-            m.prepare(self.sdk, self.output)
+        helper = m.stack_module(MODULE.with_name('android-qemu-stack.py'))
+        environment['RUNNER_TEMP'] = str(self.root / 'runner-temp-without-gate')
+        with patch.dict(os.environ, environment), patch.object(m, 'stack_module', return_value=helper):
+            with self.assertRaisesRegex(helper.Rejected, '^Missing bounded permission gate$'):
+                m.prepare(self.sdk, self.output)
         self.assertEqual(self.entry.read_bytes(), self.original)
         self.assertFalse(self.entry.with_name(m.BACKUP_NAME).exists())
 
