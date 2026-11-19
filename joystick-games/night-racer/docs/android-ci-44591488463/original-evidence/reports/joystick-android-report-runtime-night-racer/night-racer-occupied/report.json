@@ -1,0 +1,2004 @@
+{
+  "game": "night-racer",
+  "targetPackage": "com.ecojust.joystick.nightracer",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": true,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "032924026f00dba24133ae6cfbf1e99b704c1011",
+  "apk": {
+    "path": "/home/runner/work/_temp/signed/packages/night-racer/night-racer-0.1.0.apk",
+    "bytes": 22465268,
+    "sha256": "7b7bc090f30a28da72e9fae5a5ff3dcc1ed34bdd2ecedc92918a1c208933bf12"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/signed/observers/night-racer/observer-night-racer.apk",
+    "bytes": 16783,
+    "sha256": "2b6f53d60fed673842c6a70d19b97df7e5bf8fceb25fabaeb0bcbaafd2e51405"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 45715,
+      "sha256": "8c59d19cf55ee793f3a09ff7671062e8eeecbc74144884a1a79461d14390eaaf"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11264,
+      "sha256": "c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 12693,
+      "sha256": "3bf677cf2634fe364325e37a1439afab82a8a1f993efa77b64d56e14fe10bb8d"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 5101,
+      "sha256": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582"
+    },
+    "joystick-games/night-racer/qa-plan.json": {
+      "bytes": 2742,
+      "sha256": "ab2d3930f42b9bb10fc782f19b3ff6b59856dbd225a1caf71122f552f58a1ae5"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 7735,
+      "sha256": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d"
+    }
+  },
+  "tests": [
+    {
+      "name": "catalog scenario starts with fresh app data before launch",
+      "status": "passed",
+      "details": {
+        "mode": "fresh-install-app-data",
+        "targetPackage": "com.ecojust.joystick.nightracer",
+        "method": "pm clear",
+        "phase": "before-target-launch",
+        "status": "passed",
+        "stdout": "Success"
+      }
+    },
+    {
+      "name": "installed target launches initialized game menu with no controller card",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "original SDK hello and nine sync messages create actual controller ID card",
+      "status": "passed",
+      "details": {
+        "identity": "virtual-4d31d3c28f38"
+      }
+    },
+    {
+      "name": "actual SDK gameplay: Start the original three-light countdown",
+      "status": "passed",
+      "details": {
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ],
+        "holdMs": 200
+      }
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "initial-menu",
+      "wallTime": 1795114704.0396428,
+      "snapshot": {
+        "game": {
+          "game": "night-racer",
+          "renderer": "webgl2",
+          "webglVersion": 2,
+          "frames": 2,
+          "stage": "menu",
+          "paused": false,
+          "gameplay": {
+            "state": "title",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 0,
+            "countT": 0,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "audioState": "not_created",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:37847/?room=KofCT7GG9Sho9W7YQrTqAFCCeJXJ5qB-",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Night Racer",
+                "port": 34173,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 2,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37847/?room=KofCT7GG9Sho9W7YQrTqAFCCeJXJ5qB-",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Night Racer",
+            "port": 34173,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1440,
+              "height": 810,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 420,
+              "height": 340,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 13,
+                  "top": 221,
+                  "right": 201,
+                  "bottom": 339
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.nightracer"
+      }
+    },
+    {
+      "label": "before-plan-Start the original three-light countdown",
+      "wallTime": 1795114723.5552094,
+      "snapshot": {
+        "game": {
+          "game": "night-racer",
+          "renderer": "webgl2",
+          "webglVersion": 2,
+          "frames": 23,
+          "stage": "menu",
+          "paused": false,
+          "gameplay": {
+            "state": "title",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 0,
+            "countT": 0,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "audioState": "not_created",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-4d31d3c28f38",
+                "session": "wifi-3b30a622-6f5b-43b5-865c-b1021065cb48-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-4d31d3c28f38\",\"wifi-3b30a622-6f5b-43b5-865c-b1021065cb48-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37847/?room=KofCT7GG9Sho9W7YQrTqAFCCeJXJ5qB-",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Night Racer",
+                "port": 34173,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 23,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37847/?room=KofCT7GG9Sho9W7YQrTqAFCCeJXJ5qB-",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Night Racer",
+            "port": 34173,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1440,
+              "height": 810,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 420,
+              "height": 340,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 23,
+                  "top": 255.5,
+                  "right": 191,
+                  "bottom": 321.4921875,
+                  "width": 168,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 13,
+                  "top": 221,
+                  "right": 201,
+                  "bottom": 409
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-4d31d3c28f38",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-4d31d3c28f38",
+                    "idText": "ID: virtual-4d31d3c28f38",
+                    "visible": true,
+                    "rect": {
+                      "left": 23,
+                      "top": 255.5,
+                      "right": 191,
+                      "bottom": 321.4921875,
+                      "width": 168,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 13,
+                      "top": 221,
+                      "right": 201,
+                      "bottom": 409
+                    },
+                    "idRect": {
+                      "left": 64,
+                      "top": 282.6953125,
+                      "right": 182,
+                      "bottom": 313.4921875,
+                      "width": 118,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 13,
+                      "top": 221,
+                      "right": 201,
+                      "bottom": 409
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 64,
+                        "top": 283.6953125,
+                        "right": 176.21875,
+                        "bottom": 296.1953125,
+                        "width": 112.21875,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 64,
+                        "top": 299.09375,
+                        "right": 110.2109375,
+                        "bottom": 311.59375,
+                        "width": 46.2109375,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 118,
+                    "idScrollWidth": 118,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 32,
+                      "top": 263.5,
+                      "right": 56,
+                      "bottom": 287.5,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.nightracer"
+      }
+    },
+    {
+      "label": "after-plan-Start the original three-light countdown",
+      "wallTime": 1795114735.0887485,
+      "snapshot": {
+        "game": {
+          "game": "night-racer",
+          "renderer": "webgl2",
+          "webglVersion": 2,
+          "frames": 30,
+          "stage": "playing",
+          "paused": false,
+          "gameplay": {
+            "state": "countdown",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 0,
+            "countT": 0.22200000000000003,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "audioState": "running",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": true,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-4d31d3c28f38",
+                "session": "wifi-3b30a622-6f5b-43b5-865c-b1021065cb48-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": true,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": true,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-4d31d3c28f38\",\"wifi-3b30a622-6f5b-43b5-865c-b1021065cb48-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37847/?room=KofCT7GG9Sho9W7YQrTqAFCCeJXJ5qB-",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Night Racer",
+                "port": 34173,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 30,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37847/?room=KofCT7GG9Sho9W7YQrTqAFCCeJXJ5qB-",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Night Racer",
+            "port": 34173,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1440,
+              "height": 810,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 420,
+              "height": 340,
+              "clientWidth": 210,
+              "clientHeight": 170,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 12,
+                  "top": 220,
+                  "right": 202,
+                  "bottom": 285.9921875,
+                  "width": 190,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 12,
+                  "top": 220,
+                  "right": 202,
+                  "bottom": 286
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-4d31d3c28f38",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-4d31d3c28f38",
+                    "idText": "ID: virtual-4d31d3c28f38",
+                    "visible": true,
+                    "rect": {
+                      "left": 12,
+                      "top": 220,
+                      "right": 202,
+                      "bottom": 285.9921875,
+                      "width": 190,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 12,
+                      "top": 220,
+                      "right": 202,
+                      "bottom": 286
+                    },
+                    "idRect": {
+                      "left": 53,
+                      "top": 247.1953125,
+                      "right": 193,
+                      "bottom": 277.9921875,
+                      "width": 140,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 12,
+                      "top": 220,
+                      "right": 202,
+                      "bottom": 286
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 53,
+                        "top": 248.1953125,
+                        "right": 191.625,
+                        "bottom": 260.6953125,
+                        "width": 138.625,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 53,
+                        "top": 263.59375,
+                        "right": 72.8046875,
+                        "bottom": 276.09375,
+                        "width": 19.8046875,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 140,
+                    "idScrollWidth": 140,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 21,
+                      "top": 228,
+                      "right": 45,
+                      "bottom": 252,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.nightracer"
+      }
+    },
+    {
+      "label": "before-plan-Accelerate through the original countdown",
+      "wallTime": 1795114741.9073458,
+      "snapshot": {
+        "game": {
+          "game": "night-racer",
+          "renderer": "webgl2",
+          "webglVersion": 2,
+          "frames": 48,
+          "stage": "playing",
+          "paused": false,
+          "gameplay": {
+            "state": "countdown",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 0,
+            "countT": 1.1220000000000006,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "audioState": "running",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-4d31d3c28f38",
+                "session": "wifi-3b30a622-6f5b-43b5-865c-b1021065cb48-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-4d31d3c28f38\",\"wifi-3b30a622-6f5b-43b5-865c-b1021065cb48-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37847/?room=KofCT7GG9Sho9W7YQrTqAFCCeJXJ5qB-",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Night Racer",
+                "port": 34173,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 48,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37847/?room=KofCT7GG9Sho9W7YQrTqAFCCeJXJ5qB-",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdrSURBVHic7d3BjqM4FEDRyaj//5cz68miUcllnsk9Z1uqAIFcefFkXu/3+/0PQNC/0ycAMEUAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLL+3H3A1+t19yFv9X6///r3q+s//f+vrN7f3cdf/fzp49d/P7/NChDIEkAgSwCBLAEEsgQQyBJAIEsAgazb5wCv3D0H9FO759xWP3/6/6evb3rOb/X/V8//238/v80KEMgSQCBLAIEsAQSyBBDIEkAgSwCBrOPmAK/sniM6fY7sytP309tt9fp2zznudvrzdzcrQCBLAIEsAQSyBBDIEkAgSwCBLAEEsh43B8ia3XNg5sx4EitAIEsAgSwBBLIEEMgSQCBLAIEsAQSyzAEeZvd+fqum97s7fT+/p+8XWGMFCGQJIJAlgECWAAJZAghkCSCQJYBA1uPmAJ++H9z0nN/0HNyqp5//tG+/vp+yAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOu4OcBv3y9tdT+7K6tzcrvn7HYf//Tz3+3bfz+/zQoQyBJAIEsAgSwBBLIEEMgSQCBLAIGs2+cAp+ekpj39+nefvzm2v3v683MaK0AgSwCBLAEEsgQQyBJAIEsAgSwBBLJunwOcnvPa/V7e3fvZXTl9v7vp61s1vV/h6d/f9PX9lBUgkCWAQJYAAlkCCGQJIJAlgECWAAJZx70XeNXuOaTT55x2vxd32unf/26r989+jv9nBQhkCSCQJYBAlgACWQIIZAkgkCWAQNbj3gs8PQd1+n5tT5vD+rR7TnP38Z9u9+/rtOfTChDIEkAgSwCBLAEEsgQQyBJAIEsAgazj3gt8+n5l03N+V6bn1KbnyJ6+X+D081+bo7QCBLIEEMgSQCBLAIEsAQSyBBDIEkAg67j3Ak/PyV0d/2lzTp9On6P79vP7dk+7fitAIEsAgSwBBLIEEMgSQCBLAIEsAQSyHvde4CvT75W9Mn39005/7/H0HOGV1eM//fx/mxUgkCWAQJYAAlkCCGQJIJAlgECWAAJZX/de4On3yl6Z3s9u+virdt+f0337nOLdrACBLAEEsgQQyBJAIEsAgSwBBLIEEMg67r3AV6bn1Ha/V/jK6e9NXv38K9P3//TrX/3/2pylFSCQJYBAlgACWQIIZAkgkCWAQJYAAlmv99M28LowPad0+tdpDmyv6f0on37/7v79WAECWQIIZAkgkCWAQJYAAlkCCGQJIJD1uPcCT///brv3m5veL3HV9P1f3e9x+vna7WlziFaAQJYAAlkCCGQJIJAlgECWAAJZAghkPe69wKum55RW58Cm5+xW///06181PWc5/fw+bQ7SChDIEkAgSwCBLAEEsgQQyBJAIEsAgazb5wCn54im55R2z9ldOW0O69Pp773d/fytHv/085v+/X2yAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOtx7wVedfqc1LebnoPcbXqO8fQ52tOefytAIEsAgSwBBLIEEMgSQCBLAIEsAQSyXu+bB3Om9xtb/fwru+fATpuj+jT9/V85/fnbbXoO9or9AAFuIoBAlgACWQIIZAkgkCWAQJYAAlm3zwGuOn3OatXpt2N6v7vpOcHT5wCn50xPv7+frACBLAEEsgQQyBJAIEsAgSwBBLIEEMi6/b3AV+r74T19Du3K6XNm08/X6v09/fczffxPVoBAlgACWQIIZAkgkCWAQJYAAlkCCGQd917g+pzbldP3W5ueQ5t+Pp7+/F6Zfm/2b7MCBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/b9AFfnfE7bT+ynTpuD+lR/b+z0HF99TvJuVoBAlgACWQIIZAkgkCWAQJYAAlkCCGTdPgc4PYe02+p7Z3fPye3ej/G0Oa/fNj0nuPv7//b798kKEMgSQCBLAIEsAQSyBBDIEkAgSwCBrNvnAK+cPof09P3grtTn/Favf3rOc7enn/8nK0AgSwCBLAEEsgQQyBJAIEsAgSwBBLKOmwO88u1zeFe+bQ7r0/R+iKtWP396v8zp49/NChDIEkAgSwCBLAEEsgQQyBJAIEsAgazHzQE+3fQc4+lzhKufP319u89/9/c/PYd595yqFSCQJYBAlgACWQIIZAkgkCWAQJYAAlnmAB/m9Dm/6TnH3d/P9H55u+/v6XOev80KEMgSQCBLAIEsAQSyBBDIEkAgSwCBrMfNAZ42R3S31f3UpufYpuf0pufcps/vyu7zO+36rQCBLAEEsgQQyBJAIEsAgSwBBLIEEMh6vW8evJmeQ9tter++6f34rkzPMU7P2V2ZnsNbdfr3+8kKEMgSQCBLAIEsAQSyBBDIEkAgSwCBrNvnAAFOYQUIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQNZ/xjHlh/ixDZYAAAAASUVORK5CYII=",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Night Racer",
+            "port": 34173,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1440,
+              "height": 810,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 420,
+              "height": 340,
+              "clientWidth": 210,
+              "clientHeight": 170,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 12,
+                  "top": 220,
+                  "right": 202,
+                  "bottom": 285.9921875,
+                  "width": 190,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 12,
+                  "top": 220,
+                  "right": 202,
+                  "bottom": 286
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-4d31d3c28f38",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-4d31d3c28f38",
+                    "idText": "ID: virtual-4d31d3c28f38",
+                    "visible": true,
+                    "rect": {
+                      "left": 12,
+                      "top": 220,
+                      "right": 202,
+                      "bottom": 285.9921875,
+                      "width": 190,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 12,
+                      "top": 220,
+                      "right": 202,
+                      "bottom": 286
+                    },
+                    "idRect": {
+                      "left": 53,
+                      "top": 247.1953125,
+                      "right": 193,
+                      "bottom": 277.9921875,
+                      "width": 140,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 12,
+                      "top": 220,
+                      "right": 202,
+                      "bottom": 286
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 53,
+                        "top": 248.1953125,
+                        "right": 191.625,
+                        "bottom": 260.6953125,
+                        "width": 138.625,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 53,
+                        "top": 263.59375,
+                        "right": 72.8046875,
+                        "bottom": 276.09375,
+                        "width": 19.8046875,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 140,
+                    "idScrollWidth": 140,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 21,
+                      "top": 228,
+                      "right": 45,
+                      "bottom": 252,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.nightracer"
+      }
+    },
+    {
+      "label": "timeout-plan-gameplay-Accelerate through the original countdown",
+      "snapshot": {
+        "game": {
+          "game": "night-racer",
+          "renderer": "webgl2",
+          "webglVersion": 2,
+          "frames": 177,
+          "stage": "playing",
+          "paused": false,
+          "gameplay": {
+            "state": "race",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 4.458333333333345,
+            "countT": 3.0219999999999976,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "audioState": "running",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-4d31d3c28f38",
+                "session": "wifi-3b30a622-6f5b-43b5-865c-b1021065cb48-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-4d31d3c28f38\",\"wifi-3b30a622-6f5b-43b5-865c-b1021065cb48-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37847/?room=KofCT7GG9Sho9W7YQrTqAFCCeJXJ5qB-",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Night Racer",
+                "port": 34173,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 177,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37847/?room=KofCT7GG9Sho9W7YQrTqAFCCeJXJ5qB-",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdrSURBVHic7d3BjqM4FEDRyaj//5cz68miUcllnsk9Z1uqAIFcefFkXu/3+/0PQNC/0ycAMEUAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLL+3H3A1+t19yFv9X6///r3q+s//f+vrN7f3cdf/fzp49d/P7/NChDIEkAgSwCBLAEEsgQQyBJAIEsAgazb5wCv3D0H9FO759xWP3/6/6evb3rOb/X/V8//238/v80KEMgSQCBLAIEsAQSyBBDIEkAgSwCBrOPmAK/sniM6fY7sytP309tt9fp2zznudvrzdzcrQCBLAIEsAQSyBBDIEkAgSwCBLAEEsh43B8ia3XNg5sx4EitAIEsAgSwBBLIEEMgSQCBLAIEsAQSyzAEeZvd+fqum97s7fT+/p+8XWGMFCGQJIJAlgECWAAJZAghkCSCQJYBA1uPmAJ++H9z0nN/0HNyqp5//tG+/vp+yAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOu4OcBv3y9tdT+7K6tzcrvn7HYf//Tz3+3bfz+/zQoQyBJAIEsAgSwBBLIEEMgSQCBLAIGs2+cAp+ekpj39+nefvzm2v3v683MaK0AgSwCBLAEEsgQQyBJAIEsAgSwBBLJunwOcnvPa/V7e3fvZXTl9v7vp61s1vV/h6d/f9PX9lBUgkCWAQJYAAlkCCGQJIJAlgECWAAJZx70XeNXuOaTT55x2vxd32unf/26r989+jv9nBQhkCSCQJYBAlgACWQIIZAkgkCWAQNbj3gs8PQd1+n5tT5vD+rR7TnP38Z9u9+/rtOfTChDIEkAgSwCBLAEEsgQQyBJAIEsAgazj3gt8+n5l03N+V6bn1KbnyJ6+X+D081+bo7QCBLIEEMgSQCBLAIEsAQSyBBDIEkAg67j3Ak/PyV0d/2lzTp9On6P79vP7dk+7fitAIEsAgSwBBLIEEMgSQCBLAIEsAQSyHvde4CvT75W9Mn39005/7/H0HOGV1eM//fx/mxUgkCWAQJYAAlkCCGQJIJAlgECWAAJZX/de4On3yl6Z3s9u+virdt+f0337nOLdrACBLAEEsgQQyBJAIEsAgSwBBLIEEMg67r3AV6bn1Ha/V/jK6e9NXv38K9P3//TrX/3/2pylFSCQJYBAlgACWQIIZAkgkCWAQJYAAlmv99M28LowPad0+tdpDmyv6f0on37/7v79WAECWQIIZAkgkCWAQJYAAlkCCGQJIJD1uPcCT///brv3m5veL3HV9P1f3e9x+vna7WlziFaAQJYAAlkCCGQJIJAlgECWAAJZAghkPe69wKum55RW58Cm5+xW///06181PWc5/fw+bQ7SChDIEkAgSwCBLAEEsgQQyBJAIEsAgazb5wCn54im55R2z9ldOW0O69Pp773d/fytHv/085v+/X2yAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOtx7wVedfqc1LebnoPcbXqO8fQ52tOefytAIEsAgSwBBLIEEMgSQCBLAIEsAQSyXu+bB3Om9xtb/fwru+fATpuj+jT9/V85/fnbbXoO9or9AAFuIoBAlgACWQIIZAkgkCWAQJYAAlm3zwGuOn3OatXpt2N6v7vpOcHT5wCn50xPv7+frACBLAEEsgQQyBJAIEsAgSwBBLIEEMi6/b3AV+r74T19Du3K6XNm08/X6v09/fczffxPVoBAlgACWQIIZAkgkCWAQJYAAlkCCGQd917g+pzbldP3W5ueQ5t+Pp7+/F6Zfm/2b7MCBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/b9AFfnfE7bT+ynTpuD+lR/b+z0HF99TvJuVoBAlgACWQIIZAkgkCWAQJYAAlkCCGTdPgc4PYe02+p7Z3fPye3ej/G0Oa/fNj0nuPv7//b798kKEMgSQCBLAIEsAQSyBBDIEkAgSwCBrNvnAK+cPof09P3grtTn/Favf3rOc7enn/8nK0AgSwCBLAEEsgQQyBJAIEsAgSwBBLKOmwO88u1zeFe+bQ7r0/R+iKtWP396v8zp49/NChDIEkAgSwCBLAEEsgQQyBJAIEsAgazHzQE+3fQc4+lzhKufP319u89/9/c/PYd595yqFSCQJYBAlgACWQIIZAkgkCWAQJYAAlnmAB/m9Dm/6TnH3d/P9H55u+/v6XOev80KEMgSQCBLAIEsAQSyBBDIEkAgSwCBrMfNAZ42R3S31f3UpufYpuf0pufcps/vyu7zO+36rQCBLAEEsgQQyBJAIEsAgSwBBLIEEMh6vW8evJmeQ9tter++6f34rkzPMU7P2V2ZnsNbdfr3+8kKEMgSQCBLAIEsAQSyBBDIEkAgSwCBrNvnAAFOYQUIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQNZ/xjHlh/ixDZYAAAAASUVORK5CYII=",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Night Racer",
+            "port": 34173,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1248,
+              "height": 702,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 420,
+              "height": 340,
+              "clientWidth": 210,
+              "clientHeight": 170,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 12,
+                  "top": 220,
+                  "right": 202,
+                  "bottom": 285.9921875,
+                  "width": 190,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 12,
+                  "top": 220,
+                  "right": 202,
+                  "bottom": 286
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-4d31d3c28f38",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-4d31d3c28f38",
+                    "idText": "ID: virtual-4d31d3c28f38",
+                    "visible": true,
+                    "rect": {
+                      "left": 12,
+                      "top": 220,
+                      "right": 202,
+                      "bottom": 285.9921875,
+                      "width": 190,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 12,
+                      "top": 220,
+                      "right": 202,
+                      "bottom": 286
+                    },
+                    "idRect": {
+                      "left": 53,
+                      "top": 247.1953125,
+                      "right": 193,
+                      "bottom": 277.9921875,
+                      "width": 140,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 12,
+                      "top": 220,
+                      "right": 202,
+                      "bottom": 286
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 53,
+                        "top": 248.1953125,
+                        "right": 191.625,
+                        "bottom": 260.6953125,
+                        "width": 138.625,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 53,
+                        "top": 263.59375,
+                        "right": 72.8046875,
+                        "bottom": 276.09375,
+                        "width": 19.8046875,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 140,
+                    "idScrollWidth": 140,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 21,
+                      "top": 228,
+                      "right": 45,
+                      "bottom": 252,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.nightracer"
+      },
+      "error": null
+    }
+  ],
+  "captures": [
+    {
+      "path": "connected.png",
+      "bytes": 1087856,
+      "sha256": "67b924a0c2d062536d021e4ec87672e2fc57c7049f9159d3151606cbcf1b4fce",
+      "startedAt": 1795114712.9025962,
+      "endedAt": 1795114715.7580538,
+      "before": {
+        "game": {
+          "game": "night-racer",
+          "renderer": "webgl2",
+          "webglVersion": 2,
+          "frames": 8,
+          "stage": "menu",
+          "paused": false,
+          "gameplay": {
+            "state": "title",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 0,
+            "countT": 0,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "audioState": "not_created",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-4d31d3c28f38",
+                "session": "wifi-3b30a622-6f5b-43b5-865c-b1021065cb48-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-4d31d3c28f38\",\"wifi-3b30a622-6f5b-43b5-865c-b1021065cb48-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37847/?room=KofCT7GG9Sho9W7YQrTqAFCCeJXJ5qB-",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Night Racer",
+                "port": 34173,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 8,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37847/?room=KofCT7GG9Sho9W7YQrTqAFCCeJXJ5qB-",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Night Racer",
+            "port": 34173,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1440,
+              "height": 810,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 420,
+              "height": 340,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 23,
+                  "top": 255.5,
+                  "right": 191,
+                  "bottom": 321.4921875,
+                  "width": 168,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 13,
+                  "top": 221,
+                  "right": 201,
+                  "bottom": 409
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-4d31d3c28f38",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-4d31d3c28f38",
+                    "idText": "ID: virtual-4d31d3c28f38",
+                    "visible": true,
+                    "rect": {
+                      "left": 23,
+                      "top": 255.5,
+                      "right": 191,
+                      "bottom": 321.4921875,
+                      "width": 168,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 13,
+                      "top": 221,
+                      "right": 201,
+                      "bottom": 409
+                    },
+                    "idRect": {
+                      "left": 64,
+                      "top": 282.6953125,
+                      "right": 182,
+                      "bottom": 313.4921875,
+                      "width": 118,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 13,
+                      "top": 221,
+                      "right": 201,
+                      "bottom": 409
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 64,
+                        "top": 283.6953125,
+                        "right": 176.21875,
+                        "bottom": 296.1953125,
+                        "width": 112.21875,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 64,
+                        "top": 299.09375,
+                        "right": 110.2109375,
+                        "bottom": 311.59375,
+                        "width": 46.2109375,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 118,
+                    "idScrollWidth": 118,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 32,
+                      "top": 263.5,
+                      "right": 56,
+                      "bottom": 287.5,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.nightracer"
+      },
+      "after": {
+        "game": {
+          "game": "night-racer",
+          "renderer": "webgl2",
+          "webglVersion": 2,
+          "frames": 13,
+          "stage": "menu",
+          "paused": false,
+          "gameplay": {
+            "state": "title",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 0,
+            "countT": 0,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "audioState": "not_created",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-4d31d3c28f38",
+                "session": "wifi-3b30a622-6f5b-43b5-865c-b1021065cb48-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-4d31d3c28f38\",\"wifi-3b30a622-6f5b-43b5-865c-b1021065cb48-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37847/?room=KofCT7GG9Sho9W7YQrTqAFCCeJXJ5qB-",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Night Racer",
+                "port": 34173,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 13,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37847/?room=KofCT7GG9Sho9W7YQrTqAFCCeJXJ5qB-",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Night Racer",
+            "port": 34173,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1440,
+              "height": 810,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 420,
+              "height": 340,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 23,
+                  "top": 255.5,
+                  "right": 191,
+                  "bottom": 321.4921875,
+                  "width": 168,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 13,
+                  "top": 221,
+                  "right": 201,
+                  "bottom": 409
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-4d31d3c28f38",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-4d31d3c28f38",
+                    "idText": "ID: virtual-4d31d3c28f38",
+                    "visible": true,
+                    "rect": {
+                      "left": 23,
+                      "top": 255.5,
+                      "right": 191,
+                      "bottom": 321.4921875,
+                      "width": 168,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 13,
+                      "top": 221,
+                      "right": 201,
+                      "bottom": 409
+                    },
+                    "idRect": {
+                      "left": 64,
+                      "top": 282.6953125,
+                      "right": 182,
+                      "bottom": 313.4921875,
+                      "width": 118,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 13,
+                      "top": 221,
+                      "right": 201,
+                      "bottom": 409
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 64,
+                        "top": 283.6953125,
+                        "right": 176.21875,
+                        "bottom": 296.1953125,
+                        "width": 112.21875,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 64,
+                        "top": 299.09375,
+                        "right": 110.2109375,
+                        "bottom": 311.59375,
+                        "width": 46.2109375,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 118,
+                    "idScrollWidth": 118,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 32,
+                      "top": 263.5,
+                      "right": 56,
+                      "bottom": 287.5,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.nightracer"
+      },
+      "manualPixelReviewRequired": true
+    }
+  ],
+  "installationSetup": {
+    "mode": "fresh-install-app-data",
+    "targetPackage": "com.ecojust.joystick.nightracer",
+    "method": "pm clear",
+    "phase": "before-target-launch",
+    "status": "passed",
+    "stdout": "Success"
+  },
+  "adbForwards": {
+    "observer": 40833,
+    "controller": 40891
+  },
+  "controllerService": {
+    "state": "available",
+    "serviceName": "Night Racer",
+    "port": 34173,
+    "serviceType": "_puretv._tcp",
+    "version": "1",
+    "error": 0
+  },
+  "targetPid": "4021",
+  "freshnessChecks": [
+    {
+      "label": "all-released",
+      "startedAt": 1795114718.4231434,
+      "endedAt": 1795114721.541918,
+      "beforePollCount": 15,
+      "afterPollCount": 20,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "plan-held-Start the original three-light countdown",
+      "startedAt": 1795114723.5556862,
+      "endedAt": 1795114724.518518,
+      "beforePollCount": 23,
+      "afterPollCount": 26,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795114732.5707264,
+      "endedAt": 1795114735.0886636,
+      "beforePollCount": 34,
+      "afterPollCount": 37,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795114737.0631623,
+      "endedAt": 1795114739.6585648,
+      "beforePollCount": 40,
+      "afterPollCount": 45,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "plan-held-Accelerate through the original countdown",
+      "startedAt": 1795114741.9074204,
+      "endedAt": 1795114745.888218,
+      "beforePollCount": 48,
+      "afterPollCount": 53,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795114757.1261737,
+      "endedAt": 1795114761.0530982,
+      "beforePollCount": 71,
+      "afterPollCount": 77,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    }
+  ],
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 754, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n                        ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 444, in scenarios\n    return self.catalog_scenarios()\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 576, in catalog_scenarios\n    after = observed if plan.matches(step['expect'], self.game(observed), self.game(before)) else self.wait_fresh(\n                                                                                                  ^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 228, in wait_fresh\n    after = self.wait(lambda s: self.frame_advanced(s, before, frames) and predicate(s), timeout=timeout, label=label)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 218, in wait\n    raise AssertionError(label + ' timed out; last snapshot retained')\nAssertionError: plan-gameplay-Accelerate through the original countdown timed out; last snapshot retained\n",
+  "wire": {
+    "sdkMessages": 107,
+    "acceptedSdkMessages": 107,
+    "rejectedSdkMessages": 0,
+    "hostReplies": 107,
+    "matchingAcks": 107,
+    "missingAcks": [],
+    "expectedBusyIds": [],
+    "rejectedConnections": [],
+    "unexpectedReplies": [],
+    "duplicateAcks": [],
+    "keysSent": [
+      "A",
+      "B",
+      "DOWN",
+      "LEFT",
+      "RIGHT",
+      "START",
+      "UP",
+      "X",
+      "Y"
+    ],
+    "errors": []
+  },
+  "video": {
+    "path": "controller-gameplay.mp4",
+    "bytes": 2038888,
+    "sha256": "6fdf4fdbae6be68be4c58f23c7a3a230e282800a08602a5d02cd6f0d0564c74c",
+    "scope": "Actual screen recording of SDK-driven acceptance; no model or clock changes"
+  },
+  "finishedAt": 1795114825.083866
+}

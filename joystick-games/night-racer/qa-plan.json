@@ -13,7 +13,7 @@
   ],
   "steps": [
     {
-      "name": "Start the original three-light countdown",
+      "name": "Start and wait for the original countdown to finish",
       "keys": [
         "START"
       ],
@@ -21,14 +21,19 @@
       "timeoutSeconds": 60,
       "expect": [
         {
-          "path": "stage",
+          "path": "gameplay.state",
           "op": "eq",
-          "value": "playing"
+          "value": "race"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
         }
       ]
     },
     {
-      "name": "Accelerate through the original countdown",
+      "name": "Accelerate after the original countdown",
       "keys": [
         "UP"
       ],
