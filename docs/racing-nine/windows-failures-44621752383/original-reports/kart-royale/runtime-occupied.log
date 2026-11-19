@@ -1,0 +1,17 @@
+Native DPI-scaled minimum and initial viewport: passed
+DNS-SD resolves actual listener and TXT: passed
+Official SDK and single controller seat: passed
+Actual gameplay and pause model freeze: failed
+Traceback (most recent call last):
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-verify.py", line 358, in run
+    self.check('Actual gameplay and pause model freeze',self.gameplay)
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 204, in check
+    try:r['details']=fn();r['status']='passed'
+                     ^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-verify.py", line 158, in gameplay
+    cases.append(self.menu_tap(step,before));self.settle_input('Plan controls released: '+step['name']);continue
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 685, in menu_tap
+    raise AssertionError(step['name']+' released menuTap expectation did not remain stable across two fresh game frames')
+AssertionError: Save original left-handed preference through Controls released menuTap expectation did not remain stable across two fresh game frames
+
