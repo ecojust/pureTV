@@ -1,0 +1,634 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "e7ba7d87faee02316200b3dc5dd36ab04cee493b",
+  "artifactSourceCommit": "68d343d22c762c904eb83854d4ab9c4113a7c30f",
+  "artifactRunId": "44608415225",
+  "startedAt": "2026-11-19T21:34:15.333935+00:00",
+  "game": "night-racer",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "47d65e9e50b0630dab7e6c0957293be5b0a511b8db11b290a6a0ff3d08dc9d6f",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/night-racer/qa-plan.json": "b6acedaaa50bfaa326b1dc7296c2b08a9e975bb4b34c2c15099b9c6ce6c07abc",
+    "joystick-games/tools/qa-plan.py": "26888d21e6cb2dd4b0da8a835af79d6fa0b02506b2e7f8264607c300f3390fb3",
+    "joystick-games/tools/macos-build.py": "4fa65936293a5d6c5e728577780edc30429a500627e8799c1c83a5095470b853",
+    "joystick-games/catalog-registry.json": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaRunId": 44617061184,
+  "qaRunAttempt": 1,
+  "runnerKind": "macos-15-intel",
+  "runnerName": "GitHub Actions 1000011191",
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "webgl2",
+    "storageRestartRequired": true,
+    "pauseStablePaths": [
+      "gameplay.raceTime",
+      "gameplay.playerX",
+      "gameplay.playerZ",
+      "gameplay.heading",
+      "gameplay.speed",
+      "gameplay.nitro",
+      "gameplay.coins"
+    ],
+    "steps": [
+      {
+        "name": "Move up from Start to the original Standard class control",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.menu.root",
+            "op": "eq",
+            "value": "title"
+          },
+          {
+            "path": "gameplay.menu.focusIndex",
+            "op": "eq",
+            "value": 16
+          }
+        ],
+        "menuTap": true
+      },
+      {
+        "name": "Move right to the original Tuned class control without activating it",
+        "keys": [
+          "RIGHT"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.menu.root",
+            "op": "eq",
+            "value": "title"
+          },
+          {
+            "path": "gameplay.menu.focusIndex",
+            "op": "eq",
+            "value": 17
+          }
+        ],
+        "menuTap": true
+      },
+      {
+        "name": "Move down from the class controls to the original Garage button",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.menu.root",
+            "op": "eq",
+            "value": "title"
+          },
+          {
+            "path": "gameplay.menu.focusId",
+            "op": "eq",
+            "value": "garagebtn"
+          }
+        ],
+        "menuTap": true
+      },
+      {
+        "name": "Move from Garage to the original Settings button",
+        "keys": [
+          "RIGHT"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.menu.root",
+            "op": "eq",
+            "value": "title"
+          },
+          {
+            "path": "gameplay.menu.focusId",
+            "op": "eq",
+            "value": "volbtn"
+          }
+        ],
+        "menuTap": true
+      },
+      {
+        "name": "Open the original Settings panel",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.menu.root",
+            "op": "eq",
+            "value": "volume"
+          },
+          {
+            "path": "gameplay.menu.focusId",
+            "op": "eq",
+            "value": "volclose"
+          }
+        ],
+        "menuTap": true
+      },
+      {
+        "name": "Move down from Close to the original Max quality option",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.menu.root",
+            "op": "eq",
+            "value": "volume"
+          },
+          {
+            "path": "gameplay.menu.focusIndex",
+            "op": "eq",
+            "value": 5
+          }
+        ],
+        "menuTap": true
+      },
+      {
+        "name": "Move left to the original Ultra quality option",
+        "keys": [
+          "LEFT"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.menu.root",
+            "op": "eq",
+            "value": "volume"
+          },
+          {
+            "path": "gameplay.menu.focusIndex",
+            "op": "eq",
+            "value": 4
+          }
+        ],
+        "menuTap": true
+      },
+      {
+        "name": "Move left to the original High quality option",
+        "keys": [
+          "LEFT"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.menu.root",
+            "op": "eq",
+            "value": "volume"
+          },
+          {
+            "path": "gameplay.menu.focusIndex",
+            "op": "eq",
+            "value": 3
+          }
+        ],
+        "menuTap": true
+      },
+      {
+        "name": "Move left to the original Balanced quality option",
+        "keys": [
+          "LEFT"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.menu.root",
+            "op": "eq",
+            "value": "volume"
+          },
+          {
+            "path": "gameplay.menu.focusIndex",
+            "op": "eq",
+            "value": 2
+          }
+        ],
+        "menuTap": true
+      },
+      {
+        "name": "Move left to the original Low quality option",
+        "keys": [
+          "LEFT"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.menu.root",
+            "op": "eq",
+            "value": "volume"
+          },
+          {
+            "path": "gameplay.menu.focusIndex",
+            "op": "eq",
+            "value": 1
+          }
+        ],
+        "menuTap": true
+      },
+      {
+        "name": "Confirm original Low quality and wait for its ordinary page reload",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 80,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.renderPreset",
+            "op": "eq",
+            "value": "low"
+          },
+          {
+            "path": "gameplay.menu.root",
+            "op": "eq",
+            "value": "title"
+          },
+          {
+            "path": "gameplay.menu.focusId",
+            "op": "eq",
+            "value": "start"
+          },
+          {
+            "path": "gameplay.ready",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "menuTap": true
+      },
+      {
+        "name": "Start and wait for the original countdown to finish",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 200,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.state",
+            "op": "eq",
+            "value": "race"
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          },
+          {
+            "path": "gameplay.renderPreset",
+            "op": "eq",
+            "value": "low"
+          }
+        ]
+      },
+      {
+        "name": "Accelerate after the original countdown",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 7000,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.state",
+            "op": "eq",
+            "value": "race"
+          },
+          {
+            "path": "gameplay.speed",
+            "op": "gt",
+            "value": 1
+          },
+          {
+            "path": "gameplay.playerX",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Steer left while accelerating",
+        "keys": [
+          "UP",
+          "LEFT"
+        ],
+        "holdMs": 1400,
+        "expect": [
+          {
+            "path": "gameplay.heading",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Steer right while accelerating",
+        "keys": [
+          "UP",
+          "RIGHT"
+        ],
+        "holdMs": 1400,
+        "expect": [
+          {
+            "path": "gameplay.heading",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Use one original nitro bottle with B",
+        "keys": [
+          "B"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.bottles",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Change the original camera with Y",
+        "keys": [
+          "Y"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.camera",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Reset to the original track with X",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "lt",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "name": "Pause the actual race",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "paused"
+          }
+        ]
+      },
+      {
+        "name": "Resume only on explicit input",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      }
+    ]
+  },
+  "acceptedRenderers": [
+    "webgl2"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "297390ad24ccb0e310937e3756f79b3dec5a6d9d5eb32a9645e28bc9234b053d",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.night-racer.1a7b94b1a7374e76b4a8a33910461429",
+    "reusedAcrossRestartOnly": true
+  },
+  "nativeProcessArchitecture": "x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 467, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 201, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": true, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"霓虹街区\", \"url\": \"http://127.0.0.1:52016/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.ecojust.joystick.nightracer\", \"name\": \"Night Racer · 霓虹街区\"}, \"game\": null, \"input\": {\"connections\": 0, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 4, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 4}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"night-racer.v1\", \"night-racer.ghost.city.std\", \"night-racer.ghost.city.mod\", \"night-racer.ghost.mountain.std\", \"night-racer.ghost.mountain.mod\", \"night-racer.ghost.bridge.std\", \"night-racer.ghost.bridge.mod\", \"night-racer.ghost.changan.std\", \"night-racer.ghost.changan.mod\", \"night-racer.ghost.sky.std\", \"night-racer.ghost.sky.mod\", \"night-racer.ghost.canyon.std\", \"night-racer.ghost.canyon.mod\", \"night-racer.ghost.metro.std\", \"night-racer.ghost.metro.mod\", \"night-racer.ghost.reef.std\", \"night-racer.ghost.reef.mod\", \"night-racer.ghost.ice.std\", \"night-racer.ghost.ice.mod\", \"night-racer.ghost.colossus.std\", \"night-racer.ghost.colossus.mod\", \"night-racer.ghost.dream.std\", \"night-racer.ghost.dream.mod\", \"night-racer.ghost.deep.std\", \"night-racer.ghost.deep.mod\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.5\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"Night Racer · 霓虹街区\", \"state\": \"available\"}}, \"storage\": {\"current\": {\"night-racer.ghost.bridge.mod\": null, \"night-racer.ghost.bridge.std\": null, \"night-racer.ghost.canyon.mod\": null, \"night-racer.ghost.canyon.std\": null, \"night-racer.ghost.changan.mod\": null, \"night-racer.ghost.changan.std\": null, \"night-racer.ghost.city.mod\": null, \"night-racer.ghost.city.std\": null, \"night-racer.ghost.colossus.mod\": null, \"night-racer.ghost.colossus.std\": null, \"night-racer.ghost.deep.mod\": null, \"night-racer.ghost.deep.std\": null, \"night-racer.ghost.dream.mod\": null, \"night-racer.ghost.dream.std\": null, \"night-racer.ghost.ice.mod\": null, \"night-racer.ghost.ice.std\": null, \"night-racer.ghost.metro.mod\": null, \"night-racer.ghost.metro.std\": null, \"night-racer.ghost.mountain.mod\": null, \"night-racer.ghost.mountain.std\": null, \"night-racer.ghost.reef.mod\": null, \"night-racer.ghost.reef.std\": null, \"night-racer.ghost.sky.mod\": null, \"night-racer.ghost.sky.std\": null, \"night-racer.v1\": null}, \"initial\": {\"night-racer.ghost.bridge.mod\": null, \"night-racer.ghost.bridge.std\": null, \"night-racer.ghost.canyon.mod\": null, \"night-racer.ghost.canyon.std\": null, \"night-racer.ghost.changan.mod\": null, \"night-racer.ghost.changan.std\": null, \"night-racer.ghost.city.mod\": null, \"night-racer.ghost.city.std\": null, \"night-racer.ghost.colossus.mod\": null, \"night-racer.ghost.colossus.std\": null, \"night-racer.ghost.deep.mod\": null, \"night-racer.ghost.deep.st\n",
+  "lastState": {
+    "active": true,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "en",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "霓虹街区",
+      "url": "http://127.0.0.1:52016/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystick.nightracer",
+      "name": "Night Racer · 霓虹街区"
+    },
+    "game": null,
+    "input": {
+      "connections": 0,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 4,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 4
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "night-racer.v1",
+        "night-racer.ghost.city.std",
+        "night-racer.ghost.city.mod",
+        "night-racer.ghost.mountain.std",
+        "night-racer.ghost.mountain.mod",
+        "night-racer.ghost.bridge.std",
+        "night-racer.ghost.bridge.mod",
+        "night-racer.ghost.changan.std",
+        "night-racer.ghost.changan.mod",
+        "night-racer.ghost.sky.std",
+        "night-racer.ghost.sky.mod",
+        "night-racer.ghost.canyon.std",
+        "night-racer.ghost.canyon.mod",
+        "night-racer.ghost.metro.std",
+        "night-racer.ghost.metro.mod",
+        "night-racer.ghost.reef.std",
+        "night-racer.ghost.reef.mod",
+        "night-racer.ghost.ice.std",
+        "night-racer.ghost.ice.mod",
+        "night-racer.ghost.colossus.std",
+        "night-racer.ghost.colossus.mod",
+        "night-racer.ghost.dream.std",
+        "night-racer.ghost.dream.mod",
+        "night-racer.ghost.deep.std",
+        "night-racer.ghost.deep.mod"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.5"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "Night Racer · 霓虹街区",
+        "state": "available"
+      }
+    },
+    "storage": {
+      "current": {
+        "night-racer.ghost.bridge.mod": null,
+        "night-racer.ghost.bridge.std": null,
+        "night-racer.ghost.canyon.mod": null,
+        "night-racer.ghost.canyon.std": null,
+        "night-racer.ghost.changan.mod": null,
+        "night-racer.ghost.changan.std": null,
+        "night-racer.ghost.city.mod": null,
+        "night-racer.ghost.city.std": null,
+        "night-racer.ghost.colossus.mod": null,
+        "night-racer.ghost.colossus.std": null,
+        "night-racer.ghost.deep.mod": null,
+        "night-racer.ghost.deep.std": null,
+        "night-racer.ghost.dream.mod": null,
+        "night-racer.ghost.dream.std": null,
+        "night-racer.ghost.ice.mod": null,
+        "night-racer.ghost.ice.std": null,
+        "night-racer.ghost.metro.mod": null,
+        "night-racer.ghost.metro.std": null,
+        "night-racer.ghost.mountain.mod": null,
+        "night-racer.ghost.mountain.std": null,
+        "night-racer.ghost.reef.mod": null,
+        "night-racer.ghost.reef.std": null,
+        "night-racer.ghost.sky.mod": null,
+        "night-racer.ghost.sky.std": null,
+        "night-racer.v1": null
+      },
+      "initial": {
+        "night-racer.ghost.bridge.mod": null,
+        "night-racer.ghost.bridge.std": null,
+        "night-racer.ghost.canyon.mod": null,
+        "night-racer.ghost.canyon.std": null,
+        "night-racer.ghost.changan.mod": null,
+        "night-racer.ghost.changan.std": null,
+        "night-racer.ghost.city.mod": null,
+        "night-racer.ghost.city.std": null,
+        "night-racer.ghost.colossus.mod": null,
+        "night-racer.ghost.colossus.std": null,
+        "night-racer.ghost.deep.mod": null,
+        "night-racer.ghost.deep.std": null,
+        "night-racer.ghost.dream.mod": null,
+        "night-racer.ghost.dream.std": null,
+        "night-racer.ghost.ice.mod": null,
+        "night-racer.ghost.ice.std": null,
+        "night-racer.ghost.metro.mod": null,
+        "night-racer.ghost.metro.std": null,
+        "night-racer.ghost.mountain.mod": null,
+        "night-racer.ghost.mountain.std": null,
+        "night-racer.ghost.reef.mod": null,
+        "night-racer.ghost.reef.std": null,
+        "night-racer.ghost.sky.mod": null,
+        "night-racer.ghost.sky.std": null,
+        "night-racer.v1": null
+      },
+      "origin": "http://127.0.0.1:52016"
+    },
+    "timestamp": 1795124145.3703
+  },
+  "failurePhase": "initialization",
+  "nativeProcessAlive": true,
+  "lastStateFresh": true,
+  "phase": "initialization",
+  "finishedAt": "2026-11-19T21:35:45.622298+00:00"
+}

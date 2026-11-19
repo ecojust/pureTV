@@ -1,0 +1,978 @@
+{
+  "originalRun": 44617061184,
+  "runAttempt": 1,
+  "qaSourceCommit": "e7ba7d87faee02316200b3dc5dd36ab04cee493b",
+  "packageSourceCommit": "68d343d22c762c904eb83854d4ab9c4113a7c30f",
+  "immutablePreservedExport": "6ef42c7a623fa87b93f2e5491e6c75634e695ada",
+  "originalReportsModified": false,
+  "nativeRerun": false,
+  "exactQaSourceHashesVerified": {
+    "joystick-games/tools/macos-verify.py": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "47d65e9e50b0630dab7e6c0957293be5b0a511b8db11b290a6a0ff3d08dc9d6f",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/backroad-rally/qa-plan.json": "58fa8a5d1e497f79d454f89cbacc313d75159c4ab31c80f11788a34884b8115e",
+    "joystick-games/tools/qa-plan.py": "26888d21e6cb2dd4b0da8a835af79d6fa0b02506b2e7f8264607c300f3390fb3",
+    "joystick-games/tools/macos-build.py": "4fa65936293a5d6c5e728577780edc30429a500627e8799c1c83a5095470b853",
+    "joystick-games/catalog-registry.json": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b",
+    "joystick-games/night-racer/qa-plan.json": "b6acedaaa50bfaa326b1dc7296c2b08a9e975bb4b34c2c15099b9c6ce6c07abc",
+    "joystick-games/ponpoko-kart/qa-plan.json": "111e1ed85b2e1374c64cdb8e1ac397f6523c4b645ebbebc111587df5686e1490"
+  },
+  "reports": [
+    {
+      "game": "backroad-rally",
+      "mode": "native",
+      "runnerKind": "macos-15-intel",
+      "status": "failed",
+      "originalReport": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/backroad-rally/native/report.json",
+        "bytes": 118111,
+        "sha256": "e1c069c473963ad4ec4e297a5c5f40740244a1b2836b6fb0e73654916fef3f36"
+      },
+      "tests": [],
+      "failurePhase": "initialization",
+      "binarySha256": "f1726ff1d388ca320a0187b067f94b841ad42ef27efe101c13c5c7fce5a2494f",
+      "errorLeadingTrace": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 467, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 201, in until\n    raise AssertionError(label+' timed out",
+      "terminalObservation": {
+        "ready": true,
+        "active": true,
+        "frontmostApplication": {
+          "bundleIdentifier": "com.ecojust.joystick.backroadrally",
+          "name": "Backroad Rally · 乡野拉力"
+        },
+        "nativeProcessAlive": true,
+        "lastStateFresh": true,
+        "game": {
+          "renderer": "loading",
+          "webglVersion": 0,
+          "stage": "menu",
+          "frames": 0,
+          "errors": [],
+          "gameplay": {
+            "careerStarted": false,
+            "carIndex": 0,
+            "flow": "quick",
+            "menuFocus": "career",
+            "menuValue": "",
+            "phase": "menu",
+            "quality": "auto",
+            "screen": "title",
+            "stageIndex": 0
+          }
+        },
+        "pollCount": 2250
+      }
+    },
+    {
+      "game": "night-racer",
+      "mode": "native",
+      "runnerKind": "macos-15-intel",
+      "status": "failed",
+      "originalReport": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/night-racer/native/report.json",
+        "bytes": 21927,
+        "sha256": "002faac8c408bb891ff867879687f3c95ccb578be627d5bf72c03814e909321c"
+      },
+      "tests": [],
+      "failurePhase": "initialization",
+      "binarySha256": "297390ad24ccb0e310937e3756f79b3dec5a6d9d5eb32a9645e28bc9234b053d",
+      "errorLeadingTrace": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 467, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 201, in until\n    raise AssertionError(label+' timed out",
+      "terminalObservation": {
+        "ready": true,
+        "active": true,
+        "frontmostApplication": {
+          "bundleIdentifier": "com.ecojust.joystick.nightracer",
+          "name": "Night Racer · 霓虹街区"
+        },
+        "nativeProcessAlive": true,
+        "lastStateFresh": true,
+        "game": {
+          "renderer": null,
+          "webglVersion": null,
+          "stage": null,
+          "frames": null,
+          "errors": null,
+          "gameplay": null
+        },
+        "pollCount": null
+      }
+    },
+    {
+      "game": "ponpoko-kart",
+      "mode": "native",
+      "runnerKind": "macos-15-intel",
+      "status": "failed",
+      "originalReport": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/ponpoko-kart/native/report.json",
+        "bytes": 12375,
+        "sha256": "f3ba9e20ab1f426fdb8cda8f17e13302fa07f0a4904bdcfdbeb54cff3eb1c9e5"
+      },
+      "tests": [],
+      "failurePhase": "initialization",
+      "binarySha256": "5be1d4bb67d96e02cac8090d52699fb784c45d109df961a0839454034bbd8964",
+      "errorLeadingTrace": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 467, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 198, in until\n    s=self.read()\n      ^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 572, in read\n    assert not state['game'].get('errors'),'Game runtime errors: '+json.dumps(state['game']['errors'],ensure_ascii=False)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Game runtime errors: [\"null is not an object (evaluating 'i.getShaderPrecisionFormat(i.VERTEX_SHADER,i.HIGH_FLOAT).precision')\"]\n",
+      "terminalObservation": {
+        "ready": true,
+        "active": false,
+        "frontmostApplication": {
+          "bundleIdentifier": "com.apple.UserNotificationCenter",
+          "name": "UserNotificationCenter"
+        },
+        "nativeProcessAlive": true,
+        "lastStateFresh": true,
+        "game": {
+          "renderer": "webgl2",
+          "webglVersion": null,
+          "stage": "error",
+          "frames": 0,
+          "errors": [
+            "null is not an object (evaluating 'i.getShaderPrecisionFormat(i.VERTEX_SHADER,i.HIGH_FLOAT).precision')"
+          ],
+          "gameplay": {
+            "boost": 0,
+            "character": "",
+            "countdown": 0,
+            "course": "",
+            "driftActive": false,
+            "driftCharge": 0,
+            "driftLevel": 0,
+            "framePolls": 0,
+            "helpOpen": false,
+            "item": "",
+            "itemPending": false,
+            "jumpHeld": false,
+            "lap": 0,
+            "lookBack": false,
+            "mode": "boot",
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "position": 0,
+            "progress": 0,
+            "renderCalls": 0,
+            "screen": "boot",
+            "speed": 0,
+            "tick": 0,
+            "time": 0,
+            "worldTime": 0
+          }
+        },
+        "pollCount": 0
+      }
+    },
+    {
+      "game": "backroad-rally",
+      "mode": "native",
+      "runnerKind": "macos-latest",
+      "status": "failed",
+      "originalReport": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/backroad-rally/native/report.json",
+        "bytes": 16349923,
+        "sha256": "59fe728d8a9df047acbe688561ca42f8aad0e63489db6a1c631dd664ad391a57"
+      },
+      "tests": [
+        {
+          "name": "Bonjour actual port and version",
+          "status": "passed"
+        },
+        {
+          "name": "Original SDK and complete identity card",
+          "status": "passed"
+        },
+        {
+          "name": "Real gameplay actions and START pause/resume",
+          "status": "passed"
+        },
+        {
+          "name": "Three foreground cycles keep transport stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect, held sync and same-ID reconnect",
+          "status": "passed"
+        },
+        {
+          "name": "Real game storage reaches native persistence",
+          "status": "passed"
+        },
+        {
+          "name": "Same-sequence ACK for every SDK message",
+          "status": "passed"
+        },
+        {
+          "name": "Normal quit closes TCP",
+          "status": "passed"
+        },
+        {
+          "name": "Native relaunch restores actual saves at a different origin",
+          "status": "failed"
+        }
+      ],
+      "failurePhase": "storage_restart",
+      "binarySha256": "f1726ff1d388ca320a0187b067f94b841ad42ef27efe101c13c5c7fce5a2494f",
+      "errorLeadingTrace": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 484, in run\n    self.check('Native relaunch restores actual saves at a different origin',self.restart_storage)\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 204, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 558, in restart_storage\n    state=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),renderer=self.renderers)=='ready','Native restart initialized from real persisted data',90)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 201, in until\n    raise AssertionError(label+' timed out",
+      "terminalObservation": {
+        "ready": true,
+        "active": false,
+        "frontmostApplication": {
+          "bundleIdentifier": "com.apple.UserNotificationCenter",
+          "name": "UserNotificationCenter"
+        },
+        "nativeProcessAlive": true,
+        "lastStateFresh": true,
+        "game": {
+          "renderer": "webgl2",
+          "webglVersion": 2,
+          "stage": "menu",
+          "frames": 2400,
+          "errors": [],
+          "gameplay": {
+            "careerStarted": true,
+            "carIndex": 0,
+            "flow": "quick",
+            "menuFocus": "career",
+            "menuValue": "",
+            "phase": "menu",
+            "quality": "low",
+            "screen": "title",
+            "stageIndex": 0
+          }
+        },
+        "pollCount": 2420
+      },
+      "storageAtFailedForegroundGate": {
+        "actualStoredKeys": [
+          "backroad-rally.autoquality",
+          "backroad-rally.display",
+          "backroad-rally.run",
+          "backroad-rally.save"
+        ],
+        "beforeOrigin": "http://127.0.0.1:49296",
+        "afterOrigin": "http://127.0.0.1:49297",
+        "initialValuesEqualForAllStoredKeys": true,
+        "currentValuesEqualForAllStoredKeys": true,
+        "exactValueHashes": {
+          "backroad-rally.autoquality": {
+            "before": "3bed6572cb5c77956aece2143f68506f6ea7a306df6ad61ea6d09a8257d8857e",
+            "initial": "3bed6572cb5c77956aece2143f68506f6ea7a306df6ad61ea6d09a8257d8857e",
+            "current": "3bed6572cb5c77956aece2143f68506f6ea7a306df6ad61ea6d09a8257d8857e"
+          },
+          "backroad-rally.display": {
+            "before": "ad76e134f6f826e64604cb35247ecdb7972612cc533b6949bfcc49e0db21874d",
+            "initial": "ad76e134f6f826e64604cb35247ecdb7972612cc533b6949bfcc49e0db21874d",
+            "current": "ad76e134f6f826e64604cb35247ecdb7972612cc533b6949bfcc49e0db21874d"
+          },
+          "backroad-rally.run": {
+            "before": "8b03e16ccb1c755f39c69977d2e3d547ff8cbee9a2d67b166ab0fd8dbe96284b",
+            "initial": "8b03e16ccb1c755f39c69977d2e3d547ff8cbee9a2d67b166ab0fd8dbe96284b",
+            "current": "8b03e16ccb1c755f39c69977d2e3d547ff8cbee9a2d67b166ab0fd8dbe96284b"
+          },
+          "backroad-rally.save": {
+            "before": "38b721d39e0aa45c288d2fdfe780a15fd3e93f1d626b6192eec094536910884a",
+            "initial": "38b721d39e0aa45c288d2fdfe780a15fd3e93f1d626b6192eec094536910884a",
+            "current": "38b721d39e0aa45c288d2fdfe780a15fd3e93f1d626b6192eec094536910884a"
+          }
+        },
+        "originalRestartStatus": "pending",
+        "interpretation": "The final state is ready/rendering with saved values restored, but active=false and UserNotificationCenter frontmost. The original foreground+initialization gate timed out; remaining restart assertions did not run. This observation does not convert the original failure into a pass or prove a unique cause."
+      }
+    },
+    {
+      "game": "backroad-rally",
+      "mode": "occupied-port",
+      "runnerKind": "macos-latest",
+      "status": "passed",
+      "originalReport": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/backroad-rally/occupied-port/report.json",
+        "bytes": 16501631,
+        "sha256": "26709c7a98aa2d32020ad9f22154cdb3474e6db51a44e699da85495e6daa0ece"
+      },
+      "tests": [
+        {
+          "name": "Bonjour actual port and version",
+          "status": "passed"
+        },
+        {
+          "name": "Original SDK and complete identity card",
+          "status": "passed"
+        },
+        {
+          "name": "Real gameplay actions and START pause/resume",
+          "status": "passed"
+        },
+        {
+          "name": "Three foreground cycles keep transport stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect, held sync and same-ID reconnect",
+          "status": "passed"
+        },
+        {
+          "name": "Real game storage reaches native persistence",
+          "status": "passed"
+        },
+        {
+          "name": "Same-sequence ACK for every SDK message",
+          "status": "passed"
+        },
+        {
+          "name": "Normal quit closes TCP",
+          "status": "passed"
+        },
+        {
+          "name": "Native relaunch restores actual saves at a different origin",
+          "status": "passed"
+        }
+      ],
+      "failurePhase": null,
+      "binarySha256": "f1726ff1d388ca320a0187b067f94b841ad42ef27efe101c13c5c7fce5a2494f",
+      "errorLeadingTrace": "",
+      "terminalObservation": {
+        "ready": null,
+        "active": null,
+        "frontmostApplication": null,
+        "nativeProcessAlive": null,
+        "lastStateFresh": null,
+        "game": {
+          "renderer": null,
+          "webglVersion": null,
+          "stage": null,
+          "frames": null,
+          "errors": null,
+          "gameplay": null
+        },
+        "pollCount": null
+      }
+    },
+    {
+      "game": "backroad-rally",
+      "mode": "rosetta",
+      "runnerKind": "macos-latest",
+      "status": "passed",
+      "originalReport": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/backroad-rally/rosetta/report.json",
+        "bytes": 16505523,
+        "sha256": "bc08381f7787a4770d2873c0be2bfd202d1b242bcae88c62221e6ccb9c56100a"
+      },
+      "tests": [
+        {
+          "name": "Bonjour actual port and version",
+          "status": "passed"
+        },
+        {
+          "name": "Original SDK and complete identity card",
+          "status": "passed"
+        },
+        {
+          "name": "Real gameplay actions and START pause/resume",
+          "status": "passed"
+        },
+        {
+          "name": "Three foreground cycles keep transport stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect, held sync and same-ID reconnect",
+          "status": "passed"
+        },
+        {
+          "name": "Real game storage reaches native persistence",
+          "status": "passed"
+        },
+        {
+          "name": "Same-sequence ACK for every SDK message",
+          "status": "passed"
+        },
+        {
+          "name": "Normal quit closes TCP",
+          "status": "passed"
+        },
+        {
+          "name": "Native relaunch restores actual saves at a different origin",
+          "status": "passed"
+        }
+      ],
+      "failurePhase": null,
+      "binarySha256": "f1726ff1d388ca320a0187b067f94b841ad42ef27efe101c13c5c7fce5a2494f",
+      "errorLeadingTrace": "",
+      "terminalObservation": {
+        "ready": null,
+        "active": null,
+        "frontmostApplication": null,
+        "nativeProcessAlive": null,
+        "lastStateFresh": null,
+        "game": {
+          "renderer": null,
+          "webglVersion": null,
+          "stage": null,
+          "frames": null,
+          "errors": null,
+          "gameplay": null
+        },
+        "pollCount": null
+      }
+    },
+    {
+      "game": "night-racer",
+      "mode": "native",
+      "runnerKind": "macos-latest",
+      "status": "passed",
+      "originalReport": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/night-racer/native/report.json",
+        "bytes": 1941414,
+        "sha256": "6e01212f28e87e20f391a356909a1d889a22e0ec0fa880793af5eaa318b69b4c"
+      },
+      "tests": [
+        {
+          "name": "Bonjour actual port and version",
+          "status": "passed"
+        },
+        {
+          "name": "Original SDK and complete identity card",
+          "status": "passed"
+        },
+        {
+          "name": "Real gameplay actions and START pause/resume",
+          "status": "passed"
+        },
+        {
+          "name": "Three foreground cycles keep transport stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect, held sync and same-ID reconnect",
+          "status": "passed"
+        },
+        {
+          "name": "Real game storage reaches native persistence",
+          "status": "passed"
+        },
+        {
+          "name": "Same-sequence ACK for every SDK message",
+          "status": "passed"
+        },
+        {
+          "name": "Normal quit closes TCP",
+          "status": "passed"
+        },
+        {
+          "name": "Native relaunch restores actual saves at a different origin",
+          "status": "passed"
+        }
+      ],
+      "failurePhase": null,
+      "binarySha256": "297390ad24ccb0e310937e3756f79b3dec5a6d9d5eb32a9645e28bc9234b053d",
+      "errorLeadingTrace": "",
+      "terminalObservation": {
+        "ready": null,
+        "active": null,
+        "frontmostApplication": null,
+        "nativeProcessAlive": null,
+        "lastStateFresh": null,
+        "game": {
+          "renderer": null,
+          "webglVersion": null,
+          "stage": null,
+          "frames": null,
+          "errors": null,
+          "gameplay": null
+        },
+        "pollCount": null
+      }
+    },
+    {
+      "game": "night-racer",
+      "mode": "occupied-port",
+      "runnerKind": "macos-latest",
+      "status": "passed",
+      "originalReport": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/night-racer/occupied-port/report.json",
+        "bytes": 1934286,
+        "sha256": "944d8d07fcfa26af92ca7df7f2dfc4b78e3b78d07b22805e48254f1524f990ad"
+      },
+      "tests": [
+        {
+          "name": "Bonjour actual port and version",
+          "status": "passed"
+        },
+        {
+          "name": "Original SDK and complete identity card",
+          "status": "passed"
+        },
+        {
+          "name": "Real gameplay actions and START pause/resume",
+          "status": "passed"
+        },
+        {
+          "name": "Three foreground cycles keep transport stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect, held sync and same-ID reconnect",
+          "status": "passed"
+        },
+        {
+          "name": "Real game storage reaches native persistence",
+          "status": "passed"
+        },
+        {
+          "name": "Same-sequence ACK for every SDK message",
+          "status": "passed"
+        },
+        {
+          "name": "Normal quit closes TCP",
+          "status": "passed"
+        },
+        {
+          "name": "Native relaunch restores actual saves at a different origin",
+          "status": "passed"
+        }
+      ],
+      "failurePhase": null,
+      "binarySha256": "297390ad24ccb0e310937e3756f79b3dec5a6d9d5eb32a9645e28bc9234b053d",
+      "errorLeadingTrace": "",
+      "terminalObservation": {
+        "ready": null,
+        "active": null,
+        "frontmostApplication": null,
+        "nativeProcessAlive": null,
+        "lastStateFresh": null,
+        "game": {
+          "renderer": null,
+          "webglVersion": null,
+          "stage": null,
+          "frames": null,
+          "errors": null,
+          "gameplay": null
+        },
+        "pollCount": null
+      }
+    },
+    {
+      "game": "night-racer",
+      "mode": "rosetta",
+      "runnerKind": "macos-latest",
+      "status": "passed",
+      "originalReport": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/night-racer/rosetta/report.json",
+        "bytes": 1936968,
+        "sha256": "c6016f25667dced3f445df71e561a1272d04737c9f77ecd069c408ff66376bf0"
+      },
+      "tests": [
+        {
+          "name": "Bonjour actual port and version",
+          "status": "passed"
+        },
+        {
+          "name": "Original SDK and complete identity card",
+          "status": "passed"
+        },
+        {
+          "name": "Real gameplay actions and START pause/resume",
+          "status": "passed"
+        },
+        {
+          "name": "Three foreground cycles keep transport stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect, held sync and same-ID reconnect",
+          "status": "passed"
+        },
+        {
+          "name": "Real game storage reaches native persistence",
+          "status": "passed"
+        },
+        {
+          "name": "Same-sequence ACK for every SDK message",
+          "status": "passed"
+        },
+        {
+          "name": "Normal quit closes TCP",
+          "status": "passed"
+        },
+        {
+          "name": "Native relaunch restores actual saves at a different origin",
+          "status": "passed"
+        }
+      ],
+      "failurePhase": null,
+      "binarySha256": "297390ad24ccb0e310937e3756f79b3dec5a6d9d5eb32a9645e28bc9234b053d",
+      "errorLeadingTrace": "",
+      "terminalObservation": {
+        "ready": null,
+        "active": null,
+        "frontmostApplication": null,
+        "nativeProcessAlive": null,
+        "lastStateFresh": null,
+        "game": {
+          "renderer": null,
+          "webglVersion": null,
+          "stage": null,
+          "frames": null,
+          "errors": null,
+          "gameplay": null
+        },
+        "pollCount": null
+      }
+    },
+    {
+      "game": "ponpoko-kart",
+      "mode": "native",
+      "runnerKind": "macos-latest",
+      "status": "passed",
+      "originalReport": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/ponpoko-kart/native/report.json",
+        "bytes": 997568,
+        "sha256": "474b51b048527aa55993fe18a7109c90cc5f90410ecb7595ee0cfe7190e991a7"
+      },
+      "tests": [
+        {
+          "name": "Bonjour actual port and version",
+          "status": "passed"
+        },
+        {
+          "name": "Original SDK and complete identity card",
+          "status": "passed"
+        },
+        {
+          "name": "Real gameplay actions and START pause/resume",
+          "status": "passed"
+        },
+        {
+          "name": "Three foreground cycles keep transport stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect, held sync and same-ID reconnect",
+          "status": "passed"
+        },
+        {
+          "name": "Real game storage reaches native persistence",
+          "status": "passed"
+        },
+        {
+          "name": "Same-sequence ACK for every SDK message",
+          "status": "passed"
+        },
+        {
+          "name": "Normal quit closes TCP",
+          "status": "passed"
+        },
+        {
+          "name": "Native relaunch restores actual saves at a different origin",
+          "status": "passed"
+        }
+      ],
+      "failurePhase": null,
+      "binarySha256": "5be1d4bb67d96e02cac8090d52699fb784c45d109df961a0839454034bbd8964",
+      "errorLeadingTrace": "",
+      "terminalObservation": {
+        "ready": null,
+        "active": null,
+        "frontmostApplication": null,
+        "nativeProcessAlive": null,
+        "lastStateFresh": null,
+        "game": {
+          "renderer": null,
+          "webglVersion": null,
+          "stage": null,
+          "frames": null,
+          "errors": null,
+          "gameplay": null
+        },
+        "pollCount": null
+      }
+    },
+    {
+      "game": "ponpoko-kart",
+      "mode": "occupied-port",
+      "runnerKind": "macos-latest",
+      "status": "passed",
+      "originalReport": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/ponpoko-kart/occupied-port/report.json",
+        "bytes": 995928,
+        "sha256": "9736e9a9fca5b2b738013e8845b86ad04e1537e994ca59bdd7434ba9743fe8ab"
+      },
+      "tests": [
+        {
+          "name": "Bonjour actual port and version",
+          "status": "passed"
+        },
+        {
+          "name": "Original SDK and complete identity card",
+          "status": "passed"
+        },
+        {
+          "name": "Real gameplay actions and START pause/resume",
+          "status": "passed"
+        },
+        {
+          "name": "Three foreground cycles keep transport stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect, held sync and same-ID reconnect",
+          "status": "passed"
+        },
+        {
+          "name": "Real game storage reaches native persistence",
+          "status": "passed"
+        },
+        {
+          "name": "Same-sequence ACK for every SDK message",
+          "status": "passed"
+        },
+        {
+          "name": "Normal quit closes TCP",
+          "status": "passed"
+        },
+        {
+          "name": "Native relaunch restores actual saves at a different origin",
+          "status": "passed"
+        }
+      ],
+      "failurePhase": null,
+      "binarySha256": "5be1d4bb67d96e02cac8090d52699fb784c45d109df961a0839454034bbd8964",
+      "errorLeadingTrace": "",
+      "terminalObservation": {
+        "ready": null,
+        "active": null,
+        "frontmostApplication": null,
+        "nativeProcessAlive": null,
+        "lastStateFresh": null,
+        "game": {
+          "renderer": null,
+          "webglVersion": null,
+          "stage": null,
+          "frames": null,
+          "errors": null,
+          "gameplay": null
+        },
+        "pollCount": null
+      }
+    },
+    {
+      "game": "ponpoko-kart",
+      "mode": "rosetta",
+      "runnerKind": "macos-latest",
+      "status": "passed",
+      "originalReport": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/ponpoko-kart/rosetta/report.json",
+        "bytes": 995277,
+        "sha256": "0a8299638898285f3bd9a1dfa18fc9c31edb967bcde6ba4788f50b9d7c0ab155"
+      },
+      "tests": [
+        {
+          "name": "Bonjour actual port and version",
+          "status": "passed"
+        },
+        {
+          "name": "Original SDK and complete identity card",
+          "status": "passed"
+        },
+        {
+          "name": "Real gameplay actions and START pause/resume",
+          "status": "passed"
+        },
+        {
+          "name": "Three foreground cycles keep transport stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect, held sync and same-ID reconnect",
+          "status": "passed"
+        },
+        {
+          "name": "Real game storage reaches native persistence",
+          "status": "passed"
+        },
+        {
+          "name": "Same-sequence ACK for every SDK message",
+          "status": "passed"
+        },
+        {
+          "name": "Normal quit closes TCP",
+          "status": "passed"
+        },
+        {
+          "name": "Native relaunch restores actual saves at a different origin",
+          "status": "passed"
+        }
+      ],
+      "failurePhase": null,
+      "binarySha256": "5be1d4bb67d96e02cac8090d52699fb784c45d109df961a0839454034bbd8964",
+      "errorLeadingTrace": "",
+      "terminalObservation": {
+        "ready": null,
+        "active": null,
+        "frontmostApplication": null,
+        "nativeProcessAlive": null,
+        "lastStateFresh": null,
+        "game": {
+          "renderer": null,
+          "webglVersion": null,
+          "stage": null,
+          "frames": null,
+          "errors": null,
+          "gameplay": null
+        },
+        "pollCount": null
+      }
+    }
+  ],
+  "capabilityReports": [
+    {
+      "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/backroad-rally/capability/after/report.json",
+      "status": "observed",
+      "game": "backroad-rally",
+      "phase": "after",
+      "runnerKind": null,
+      "report": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/backroad-rally/capability/after/report.json",
+        "bytes": 7630,
+        "sha256": "44641a9071a0f89be9481aa5033a64369f75c50a849e95608642efe8525f3b9c"
+      }
+    },
+    {
+      "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/backroad-rally/capability/before/report.json",
+      "status": "observed",
+      "game": "backroad-rally",
+      "phase": "before",
+      "runnerKind": null,
+      "report": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/backroad-rally/capability/before/report.json",
+        "bytes": 7631,
+        "sha256": "d851b214ef16348af84cecdc98929b14c3148223b6552b4bac9efa27638406fb"
+      }
+    },
+    {
+      "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/night-racer/capability/after/report.json",
+      "status": "observed",
+      "game": "night-racer",
+      "phase": "after",
+      "runnerKind": null,
+      "report": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/night-racer/capability/after/report.json",
+        "bytes": 7624,
+        "sha256": "c8c8c43dd59f486328130807137ac36ecc92f415d2940eb5d63b29114c4ab062"
+      }
+    },
+    {
+      "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/night-racer/capability/before/report.json",
+      "status": "observed",
+      "game": "night-racer",
+      "phase": "before",
+      "runnerKind": null,
+      "report": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/night-racer/capability/before/report.json",
+        "bytes": 7625,
+        "sha256": "134b29eea9f35562205d06265b315e5d0681c3cbb4822858733ddc7464ba0b62"
+      }
+    },
+    {
+      "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/ponpoko-kart/capability/after/report.json",
+      "status": "observed",
+      "game": "ponpoko-kart",
+      "phase": "after",
+      "runnerKind": null,
+      "report": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/ponpoko-kart/capability/after/report.json",
+        "bytes": 7626,
+        "sha256": "536e0a96505cb2f9ff7c8c49897aba0205604cf2ef034b94079b04fcbb1fe37b"
+      }
+    },
+    {
+      "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/ponpoko-kart/capability/before/report.json",
+      "status": "observed",
+      "game": "ponpoko-kart",
+      "phase": "before",
+      "runnerKind": null,
+      "report": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-15-intel/ponpoko-kart/capability/before/report.json",
+        "bytes": 7627,
+        "sha256": "5abb47c5358ff05b0732c2a8a5ac18a23223060e0d8d0f8e5e11c590ab1878bb"
+      }
+    },
+    {
+      "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/backroad-rally/capability/after/report.json",
+      "status": "observed",
+      "game": "backroad-rally",
+      "phase": "after",
+      "runnerKind": null,
+      "report": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/backroad-rally/capability/after/report.json",
+        "bytes": 8346,
+        "sha256": "cbec930605045d2337be00c165a94e6b7571eeb2cf187eb02e8c84e4efb86611"
+      }
+    },
+    {
+      "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/backroad-rally/capability/before/report.json",
+      "status": "observed",
+      "game": "backroad-rally",
+      "phase": "before",
+      "runnerKind": null,
+      "report": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/backroad-rally/capability/before/report.json",
+        "bytes": 8347,
+        "sha256": "00835809414364463c73cd15c5010dcf692a6afa420ce593044908e68ffeef7d"
+      }
+    },
+    {
+      "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/night-racer/capability/after/report.json",
+      "status": "observed",
+      "game": "night-racer",
+      "phase": "after",
+      "runnerKind": null,
+      "report": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/night-racer/capability/after/report.json",
+        "bytes": 8340,
+        "sha256": "36dd3ff1a53eb3de44df8b37fa9faf2e66fcbe15a4d11acf9419baaf5939c063"
+      }
+    },
+    {
+      "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/night-racer/capability/before/report.json",
+      "status": "observed",
+      "game": "night-racer",
+      "phase": "before",
+      "runnerKind": null,
+      "report": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/night-racer/capability/before/report.json",
+        "bytes": 8341,
+        "sha256": "8c8b304297a4f4ce1fbe6045b63b7b8e11632aa2156de176ed38227131dc7a64"
+      }
+    },
+    {
+      "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/ponpoko-kart/capability/after/report.json",
+      "status": "observed",
+      "game": "ponpoko-kart",
+      "phase": "after",
+      "runnerKind": null,
+      "report": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/ponpoko-kart/capability/after/report.json",
+        "bytes": 8342,
+        "sha256": "4c2d5bb54bc1c253be0c33bf5e0ffbe9ff583f7bb910203fd948641c46d5b7a0"
+      }
+    },
+    {
+      "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/ponpoko-kart/capability/before/report.json",
+      "status": "observed",
+      "game": "ponpoko-kart",
+      "phase": "before",
+      "runnerKind": null,
+      "report": {
+        "path": "docs/racing-nine/native-readiness/ci-44617061184-attempt-1/original-preserved-runtime/evidence/joystick-catalog-macos-runtime-racing-01-macos-latest/ponpoko-kart/capability/before/report.json",
+        "bytes": 8343,
+        "sha256": "d53119d68ac6dfa47145e590bdce1824a1402d74b3ce0d60cf4e60fe0e7a8060"
+      }
+    }
+  ],
+  "summary": "ARM/Rosetta: Night and Pon all three modes pass all nine tests; Backroad occupied-port/Rosetta pass all nine, native fails only the final storage-restart foreground/initialization wait after the first eight passed. Original native Intel initialization failures remain failures.",
+  "classificationUnchanged": true,
+  "deliveryDecision": "Owned by root; no full or partial classification is substituted by this factual summary."
+}

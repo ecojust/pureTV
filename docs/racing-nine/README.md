@@ -2,7 +2,7 @@
 
 已检查扩充前 README 中的 **31 个赛车候选**，以画面与玩法各 **50 分**选出以下 **9 款**。30款有分，F1因缺少足够清晰的赛中画面暂不评分；分数是本次有范围限制的评审估计，不是外部评分或 GitHub 星标。
 
-**九款三平台适配进行中：Kart Rush、Dirt Crown 已有 Android TV、macOS 与 Windows 三平台下载。** 当前提供 2 款 Android、6 款 Mac 与 5 款 Windows 赛车包，逐款下载见[手柄游戏目录](../../joystick-games/README.md)。Night Racer、Penguintrack、Last Track、Dirt Crown 的新 Windows 包均沿用已验原始构建；正常端口与占用回退模式各通过 10 项检查，安装／卸载和存档重启通过。
+**九款三平台适配进行中：Kart Rush、Dirt Crown 已有 Android TV、macOS 与 Windows 三平台下载。** 当前提供 2 款 Android、8 款 Mac 与 5 款 Windows 赛车包，逐款下载见[手柄游戏目录](../../joystick-games/README.md)。Night Racer、Penguintrack、Last Track、Dirt Crown 的新 Windows 包均沿用已验原始构建；正常端口与占用回退模式各通过 10 项检查，安装／卸载和存档重启通过。
 
 目标是 Android TV、macOS 通用包（Apple Silicon／Intel）与 Windows x64，支持 pureTV 九键手柄、默认 TCP 63485、真实连接 ID、断线／失焦取消和手动恢复。已发布 Mac 包通过 Apple Silicon 原生、端口占用及 Rosetta 检查，Intel 图形运行仍未验证，尚未 Apple 公证。Windows 未做 Authenticode 签名；检查覆盖 96 DPI，其他显示缩放与实体手柄未测试。其余原生验证继续，九款完整交付尚未完成。
 

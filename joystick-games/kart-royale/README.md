@@ -2,6 +2,15 @@
 
 基于 [ryancampbell/kart-royale](https://github.com/ryancampbell/kart-royale/tree/036c0efb025f5ecf8fc31c405e9d818c61e03e21) 的 pureTV 手柄版。固定原源为 `036c0efb025f5ecf8fc31c405e9d818c61e03e21`，保留 Sunset Bay Circuit、八辆卡丁车、AI 对手、道具、原轮胎/悬架物理和漂移奖励规则。网上后来替换的 homie 多人版本不属于本次移植。
 
+
+## macOS 下载
+
+0.1.0 Universal：[DMG](macos/KartRoyale-0.1.0-macos-universal.dmg)（2,046,696 字节）· [ZIP](macos/KartRoyale-0.1.0-macos-universal.zip)（1,540,639 字节）· [SHA256 校验](SHA256SUMS.txt)。DMG 内应用可拖入 Applications；ZIP 解压后提供相同应用。需要 **macOS 11 或更新版本及 WebGL 2**，包包含 arm64 / x86_64，采用 ad-hoc 签名，未经过 Apple 公证。
+
+Apple Silicon 原生、默认端口占用回退及 Rosetta 三种模式各通过 9 项原 SDK 和实际游戏检查。**Intel Mac 图形运行仍未验证**；Intel 原失败和初始化分类结果保留，独立探针的 context-loss 不能证明游戏失败原因。原控制设置 `kr.controls.v1` 已完成真实保存、退出和换本地地址重启恢复验证。 未做实体手柄或完整通关测试。
+
+原三种模式的菜单、手柄 ID、比赛 HUD 和四个暂停按钮清楚可见；Rosetta 的赛中原图有近处赛道墙遮挡部分车身，属于原镜头中的场景遮挡。 本次 Mac 原截图为 1024×642／1024×645，浏览器的 960×540／1280×720 布局检查是另一组证据。详情见 [Mac 交付核验](docs/macos-delivery/) 与 [逐张目视记录](docs/macos-ci-44615880581-visual-review.json)。安装文件沿用源码 `6c7cb4fdb99dce236b634c842326bae6aed5f232`、原流程 [44615880581](https://github.com/ecojust/pureTV/actions/runs/44615880581) 的原始字节，未重新打包；Android、Windows 仍待各自验收。
+
 | 按键 | 比赛 | 菜单 |
 | --- | --- | --- |
 | ↑ / A | 油门 | 方向选择，A 确认 |
@@ -31,4 +40,4 @@ python3 -m http.server 8080 --directory dist
 
 需要 WebGL2 和现代 WebView。发布默认沿用原设备质量判断；原 `?quality=low` 渲染预设可用于软件 GPU 验证，不改变比赛时钟、物理、赛道或发布默认。Linux SwiftShader 不代表实体电视性能。
 
-当前是源码适配/浏览器验收阶段，尚无本目录的正式 Android、macOS、Windows 安装包或实体电视验收。原 SDK TCP、三平台原生与浏览器模拟桥接结果将分别保存。
+已提供上方 macOS 原包和限定验证范围；Android、Windows 仍待各自验收，实体电视尚未测试。原 SDK TCP、各平台原生与浏览器模拟桥接结果分别保存。

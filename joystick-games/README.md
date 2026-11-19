@@ -33,11 +33,11 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 | [Penguintrack](penguintrack/) | 验证中 | [DMG](penguintrack/macos/Penguintrack-0.1.0-macos-universal.dmg) · [ZIP](penguintrack/macos/Penguintrack-0.1.0-macos-universal.zip) | [EXE](penguintrack/Penguintrack-0.1.0-windows-x64-setup.exe) · [ZIP](penguintrack/Penguintrack-0.1.0-windows-x64.zip) |
 | [Last Track](last-track/) | 验证中 | [DMG](last-track/macos/LastTrack-0.1.0-macos-universal.dmg) · [ZIP](last-track/macos/LastTrack-0.1.0-macos-universal.zip) | [EXE](last-track/LastTrack-0.1.0-windows-x64-setup.exe) · [ZIP](last-track/LastTrack-0.1.0-windows-x64.zip) |
 | [Dirt Crown](dirt-crown/) | [APK](dirt-crown/dirt-crown-0.1.0.apk) | [DMG](dirt-crown/macos/DirtCrown-0.1.0-macos-universal.dmg) · [ZIP](dirt-crown/macos/DirtCrown-0.1.0-macos-universal.zip) | [EXE](dirt-crown/DirtCrown-0.1.0-windows-x64-setup.exe) · [ZIP](dirt-crown/DirtCrown-0.1.0-windows-x64.zip) |
-| [Turbo Kart Rush](turbo-kart-rush/) | 验证中 | 验证中 | 验证中 |
+| [Turbo Kart Rush](turbo-kart-rush/) | 验证中 | [DMG](turbo-kart-rush/macos/TurboKartRush-0.1.0-macos-universal.dmg) · [ZIP](turbo-kart-rush/macos/TurboKartRush-0.1.0-macos-universal.zip) | 验证中 |
 | [Kart Rush](kart-rush/) | [APK](kart-rush/kart-rush-0.1.0.apk) | [DMG](kart-rush/macos/KartRush-0.1.0-macos-universal.dmg) · [ZIP](kart-rush/macos/KartRush-0.1.0-macos-universal.zip) | [EXE](kart-rush/KartRush-0.1.0-windows-x64-setup.exe) · [ZIP](kart-rush/KartRush-0.1.0-windows-x64.zip) |
-| [Kart Royale](kart-royale/) | 验证中 | 验证中 | 验证中 |
+| [Kart Royale](kart-royale/) | 验证中 | [DMG](kart-royale/macos/KartRoyale-0.1.0-macos-universal.dmg) · [ZIP](kart-royale/macos/KartRoyale-0.1.0-macos-universal.zip) | 验证中 |
 
-目前 Kart Rush、Dirt Crown 已具备三个平台的下载文件；共有 2 款 Android、6 款 Mac 与 5 款 Windows 赛车包，其余继续验证。
+目前 Kart Rush、Dirt Crown 已具备三个平台的下载文件；共有 2 款 Android、8 款 Mac 与 5 款 Windows 赛车包，其余继续验证。
 
 以上 Mac 赛车需要 macOS 11+ 与 WebGL2；Apple Silicon 原生、端口占用及 Rosetta 检查通过，**Intel 图形运行仍未验证**。包采用 ad-hoc 签名，未经过 Apple 公证。Windows 需要 Windows 10 1903+ x64／Windows 11、WebView2 Runtime 和相应 WebGL 支持；未做 Authenticode 签名，原生检查覆盖 96 DPI，其他显示缩放和实体手柄未测试。各游戏目录列出原包哈希、实际测试范围和保留的失败记录。
 

@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "game": "kart-royale",
+  "status": "original_package_and_apple_silicon_runtime_verified_intel_unverified",
+  "sourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+  "buildRunId": 44615880581,
+  "qaSourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+  "runtimeRunId": 44615880581,
+  "runAttempt": 1,
+  "runtimeExportCommit": "9789c5a17e338df15728b3aec502bfbb42dce6a6",
+  "intelEvidenceExportCommit": "5779100b7c50df0a666c4fe5433f890f6a013bfe",
+  "originalRunConclusion": "failure",
+  "originalPackageBytesUnchanged": true,
+  "binarySha256": "68c5219f0e2097d958a1317bf1af1334e25ce161eb434a4e5583bd4e4d117f78",
+  "originalInputFilesVerified": 1392,
+  "currentDistFilesVerified": 5,
+  "currentDistMatches": true,
+  "files": [
+    {
+      "file": "macos/KartRoyale-0.1.0-macos-universal.zip",
+      "bytes": 1540639,
+      "sha256": "af502a52f05cc99274ed0f2893ec83ce111bd4ff21cd068c40547f581f9f7000"
+    },
+    {
+      "file": "macos/KartRoyale-0.1.0-macos-universal.dmg",
+      "bytes": 2046696,
+      "sha256": "ccc238be1aa9ac1376df8c585b375e3717261b6b1a12062755116aa9d63edb77"
+    }
+  ],
+  "runtimeReports": [
+    {
+      "mode": "native",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/kart-royale/native/report.json",
+      "bytes": 1387543,
+      "sha256": "86a13e05cc3f474e0edecbbed59ae433b8e7d5eb4b180096b579920e18ef5a74",
+      "testsPassed": 9,
+      "processArchitecture": "arm64",
+      "binarySha256": "68c5219f0e2097d958a1317bf1af1334e25ce161eb434a4e5583bd4e4d117f78",
+      "storageRequired": true,
+      "storageStatus": "passed",
+      "storedKeys": [
+        "kr.controls.v1"
+      ],
+      "newOriginVerified": true,
+      "initialHydrationEqual": true,
+      "realStorageRestartVerified": true
+    },
+    {
+      "mode": "occupied-port",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/kart-royale/occupied-port/report.json",
+      "bytes": 1387535,
+      "sha256": "231257f38cde8a3448e204daec22573151454eccd220cfaf6640ba8da78c3b49",
+      "testsPassed": 9,
+      "processArchitecture": "arm64",
+      "binarySha256": "68c5219f0e2097d958a1317bf1af1334e25ce161eb434a4e5583bd4e4d117f78",
+      "storageRequired": true,
+      "storageStatus": "passed",
+      "storedKeys": [
+        "kr.controls.v1"
+      ],
+      "newOriginVerified": true,
+      "initialHydrationEqual": true,
+      "realStorageRestartVerified": true
+    },
+    {
+      "mode": "rosetta",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/kart-royale/rosetta/report.json",
+      "bytes": 1387404,
+      "sha256": "14b3eaf173282ae7b35f765fdd87e50ca9ad8a2e89d796f99e5f855a8a21d220",
+      "testsPassed": 9,
+      "processArchitecture": "x86_64",
+      "binarySha256": "68c5219f0e2097d958a1317bf1af1334e25ce161eb434a4e5583bd4e4d117f78",
+      "storageRequired": true,
+      "storageStatus": "passed",
+      "storedKeys": [
+        "kr.controls.v1"
+      ],
+      "newOriginVerified": true,
+      "initialHydrationEqual": true,
+      "realStorageRestartVerified": true
+    }
+  ],
+  "runtimeReportPathBase": "repository root",
+  "packageAudit": "../../../../docs/racing-nine/native-readiness/ci-44615880581-attempt-1/package-source-audit/audit.json",
+  "packageAuditManifest": "../../../../docs/racing-nine/native-readiness/ci-44615880581-attempt-1/package-source-audit-manifest.json",
+  "originalBuildManifest": "original-build-manifest.json",
+  "originalBuildManifestSha256": "6ddf1f78a956f001f7fa479180e302e075212fb8e0e557e392a8644a9b696818",
+  "visualReview": "../macos-ci-44615880581-visual-review.json",
+  "visualReviewSha256": "5638259b5388ff44df8d0fe781cd177e316f54c1f454290be7659b3306c96e94",
+  "imagesActuallyViewedByNativeAgent": 9,
+  "nativeScreenshotPixelSizes": [
+    [
+      1024,
+      642
+    ],
+    [
+      1024,
+      645
+    ]
+  ],
+  "notNew960x540Or1280x720MacCaptureSet": true,
+  "knownVisualFindings": [
+    {
+      "kind": "scene_geometry_occlusion",
+      "affectedScenes": "Rosetta playing still",
+      "description": "Foreground track wall occludes part of the kart in the original camera view. Race HUD, minimap, controller ID and pause actions remain readable."
+    }
+  ],
+  "deliveryPolicy": "Universal original bytes may be distributed with three Apple Silicon native/occupied/Rosetta modes verified and explicit Intel graphics unverified. This delivery scope is separate from the original classifier; original failed reports and blocked initialization boundary remain unchanged, and probe context loss does not prove the game failure cause.",
+  "intelNative": {
+    "status": "unverified",
+    "originalGameQaStatus": "failed",
+    "originalInitializationBoundary": "blocked_by_initialization_boundary",
+    "originalFullCoverageAssessmentReclassified": false,
+    "sameRunIndependentProbeStatus": "observed_context_loss",
+    "gameFailureCauseProven": false,
+    "evidence": "../../../../docs/racing-nine/native-readiness/ci-44615880581-attempt-1/intel-findings.json"
+  },
+  "realStorageRestartVerified": true,
+  "storageScope": "Actual kr.controls.v1 settings persisted and rehydrated after native quit/relaunch at a different origin.",
+  "physicalEsp32Tested": false,
+  "physicalControllerTested": false,
+  "fullGameCompletionTested": false,
+  "appleNotarized": false,
+  "signature": "ad-hoc",
+  "gameOrClassifierModifiedForDelivery": false,
+  "nativeRerunForDelivery": false
+}
