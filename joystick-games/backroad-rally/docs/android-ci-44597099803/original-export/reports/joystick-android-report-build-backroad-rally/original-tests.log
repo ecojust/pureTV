@@ -1,0 +1,139 @@
+{"originalNpmTestConfigured":true,"scope":"Configured original tests only; an absent script is recorded, not claimed as tested"}
+
+> puretv-backroad-rally@0.1.0 test
+> vitest run --root src/upstream --configLoader runner --no-cache --no-fsModuleCache
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/home/runner/work/pureTV/pureTV/joystick-games/backroad-rally/src/upstream[39m
+
+ [31m❯[39m test/audio.test.ts [2m([22m[2m0 test[22m[2m)[22m
+ [32m✓[39m test/career.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 157[2mms[22m[39m
+[90mstderr[2m | test/fx.test.ts[2m > [22m[2mevents[2m > [22m[2mdelivers to listeners, unsubscribes, and survives a throwing listener
+[22m[39mevent a: Error: listener bug
+    at [90m/home/runner/work/pureTV/pureTV/joystick-games/backroad-rally/[39msrc/upstream/test/fx.test.ts:40:13
+    at Emitter.emit [90m(/home/runner/work/pureTV/pureTV/joystick-games/backroad-rally/[39msrc/upstream/src/game/events.ts:74:9[90m)[39m
+    at [90m/home/runner/work/pureTV/pureTV/joystick-games/backroad-rally/[39msrc/upstream/test/fx.test.ts:47:7
+    at [90mfile:///home/runner/work/pureTV/pureTV/joystick-games/backroad-rally/[39mnode_modules/[4mvitest[24m/dist/chunks/run.Cm2sd7-x.js:1632:35
+    at [90mfile:///home/runner/work/pureTV/pureTV/joystick-games/backroad-rally/[39mnode_modules/[4mvitest[24m/dist/chunks/run.Cm2sd7-x.js:2794:26
+    at [90mfile:///home/runner/work/pureTV/pureTV/joystick-games/backroad-rally/[39mnode_modules/[4mvitest[24m/dist/chunks/run.Cm2sd7-x.js:3334:20
+    at new Promise (<anonymous>)
+    at runWithCancel [90m(file:///home/runner/work/pureTV/pureTV/joystick-games/backroad-rally/[39mnode_modules/[4mvitest[24m/dist/chunks/run.Cm2sd7-x.js:3329:10[90m)[39m
+    at [90mfile:///home/runner/work/pureTV/pureTV/joystick-games/backroad-rally/[39mnode_modules/[4mvitest[24m/dist/chunks/run.Cm2sd7-x.js:3314:20
+    at new Promise (<anonymous>)
+
+ [32m✓[39m test/fx.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+ [32m✓[39m test/weather.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+ [31m❯[39m test/menus.test.ts [2m([22m[2m0 test[22m[2m)[22m
+ [32m✓[39m test/damage.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 958[2mms[22m[39m
+   [32m✓[39m crashing into a rock (Rapier contact impulses) [2m(4)[22m
+     [33m[2m✓[22m[39m at 30 km/h[33m 557[2mms[22m[39m
+ [32m✓[39m test/ghostCodec.test.ts [2m([22m[2m17 tests[22m[2m)[22m[33m 365[2mms[22m[39m
+ [32m✓[39m test/save.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m test/rivalGhosts.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 477[2mms[22m[39m
+ [32m✓[39m test/autoQuality.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+ [32m✓[39m test/flow.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m test/rock.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1341[2mms[22m[39m
+   [32m✓[39m roadside rocks [2m(4)[22m
+     [33m[2m✓[22m[39m stop the swift hitting SM_Rock_B at 40 km/h[33m 744[2mms[22m[39m
+ [32m✓[39m test/road.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m test/autopilot.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m test/puretvStorage.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+ [32m✓[39m test/lod.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [31m❯[39m test/tuning.test.ts [2m([22m[2m0 test[22m[2m)[22m
+ [32m✓[39m test/ue.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+[90mstdout[2m | test/stageSeams.test.ts[2m > [22m[2mstage finland terrain[2m > [22m[2mhas cracks as converted, and none after weldSeams
+[22m[39mfinland: 8413 vertices welded, largest move 2.3 cm, 182 ms
+
+[90mstdout[2m | test/stageSeams.test.ts[2m > [22m[2mstage japan terrain[2m > [22m[2mhas cracks as converted, and none after weldSeams
+[22m[39mjapan: 9059 vertices welded, largest move 2.6 cm, 85 ms
+
+[90mstdout[2m | test/stageSeams.test.ts[2m > [22m[2mstage alps terrain[2m > [22m[2mhas cracks as converted, and none after weldSeams
+[22m[39malps: 9100 vertices welded, largest move 2.6 cm, 71 ms
+
+[90mstdout[2m | test/stageSeams.test.ts[2m > [22m[2mstage wales terrain[2m > [22m[2mhas cracks as converted, and none after weldSeams
+[22m[39mwales: 8035 vertices welded, largest move 2.4 cm, 61 ms
+
+[90mstdout[2m | test/stageSeams.test.ts[2m > [22m[2mstage arizona terrain[2m > [22m[2mhas cracks as converted, and none after weldSeams
+[22m[39marizona: 10512 vertices welded, largest move 2.6 cm, 85 ms
+
+[90mstdout[2m | test/stageSeams.test.ts[2m > [22m[2mstage vermont terrain[2m > [22m[2mhas cracks as converted, and none after weldSeams
+[22m[39mvermont: 9035 vertices welded, largest move 2.5 cm, 73 ms
+
+ [32m✓[39m test/stageSeams.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 10644[2mms[22m[39m
+   [32m✓[39m stage finland terrain [2m(1)[22m
+     [33m[2m✓[22m[39m has cracks as converted, and none after weldSeams[33m 2923[2mms[22m[39m
+   [32m✓[39m stage japan terrain [2m(1)[22m
+     [33m[2m✓[22m[39m has cracks as converted, and none after weldSeams[33m 1859[2mms[22m[39m
+   [32m✓[39m stage alps terrain [2m(1)[22m
+     [33m[2m✓[22m[39m has cracks as converted, and none after weldSeams[33m 1331[2mms[22m[39m
+   [32m✓[39m stage wales terrain [2m(1)[22m
+     [33m[2m✓[22m[39m has cracks as converted, and none after weldSeams[33m 1629[2mms[22m[39m
+   [32m✓[39m stage arizona terrain [2m(1)[22m
+     [33m[2m✓[22m[39m has cracks as converted, and none after weldSeams[33m 1641[2mms[22m[39m
+   [32m✓[39m stage vermont terrain [2m(1)[22m
+     [33m[2m✓[22m[39m has cracks as converted, and none after weldSeams[33m 1258[2mms[22m[39m
+ [32m✓[39m test/stages.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 17060[2mms[22m[39m
+   [32m✓[39m stage finland [2m(2)[22m
+     [33m[2m✓[22m[39m decodes the instance table onto the stage[33m 4581[2mms[22m[39m
+   [32m✓[39m stage japan [2m(2)[22m
+     [33m[2m✓[22m[39m decodes the instance table onto the stage[33m 3624[2mms[22m[39m
+   [32m✓[39m stage alps [2m(2)[22m
+     [33m[2m✓[22m[39m decodes the instance table onto the stage[33m 2856[2mms[22m[39m
+   [32m✓[39m stage wales [2m(2)[22m
+     [33m[2m✓[22m[39m decodes the instance table onto the stage[33m 2153[2mms[22m[39m
+   [32m✓[39m stage arizona [2m(2)[22m
+     [33m[2m✓[22m[39m decodes the instance table onto the stage[33m 1001[2mms[22m[39m
+   [32m✓[39m stage vermont [2m(2)[22m
+     [33m[2m✓[22m[39m decodes the instance table onto the stage[33m 2829[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Suites 3 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m test/audio.test.ts[2m [ test/audio.test.ts ][22m
+[31m[1mError[22m: ENOENT: no such file or directory, open 'public/audio/mix.json'[39m
+[36m [2m❯[22m test/audio.test.ts:[2m9:24[22m[39m
+    [90m  7|[39m import type { AudioManifest } from '../src/audio/system';
+    [90m  8|[39m
+    [90m  9|[39m const mix = JSON.parse(readFileSync('public/audio/mix.json', 'utf8')) …
+    [90m   |[39m                        [31m^[39m
+    [90m 10|[39m const manifest = JSON.parse(readFileSync('public/audio/manifest.json',…
+    [90m 11|[39m const tuning = JSON.parse(readFileSync('public/data/cars_tuning.json',…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/menus.test.ts[2m [ test/menus.test.ts ][22m
+[31m[1mError[22m: ENOENT: no such file or directory, open 'public/data/menu.json'[39m
+[36m [2m❯[22m test/menus.test.ts:[2m121:27[22m[39m
+    [90m119|[39m
+    [90m120|[39m describe('menu data', () => {
+    [90m121|[39m   const menu = JSON.parse(readFileSync('public/data/menu.json', 'utf8'…
+    [90m   |[39m                           [31m^[39m
+    [90m122|[39m   const career = JSON.parse(readFileSync('public/data/career.json', 'u…
+    [90m123|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/tuning.test.ts[2m [ test/tuning.test.ts ][22m
+[31m[1mError[22m: ENOENT: no such file or directory, open 'public/data/cars_tuning.json'[39m
+[36m [2m❯[22m d test/tuning.test.ts:[2m5:37[22m[39m
+    [90m  3|[39m import { loadCarTuning, torqueShare } from '../src/sim/tuning';
+    [90m  4|[39m
+    [90m  5|[39m const d = (f: string) => JSON.parse(readFileSync(`public/data/${f}`, '…
+    [90m   |[39m                                     [31m^[39m
+    [90m  6|[39m const tuning = d('cars_tuning.json');
+    [90m  7|[39m
+[90m [2m❯[22m test/tuning.test.ts:[2m6:16[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m17 passed[39m[22m[90m (20)[39m
+[2m      Tests [22m [1m[32m138 passed[39m[22m[90m (138)[39m
+[2m   Start at [22m 19:21:27
+[2m   Duration [22m 20.80s[2m (tests 91%, import 6%, transform 3%)[22m
+
+
+::error file=/home/runner/work/pureTV/pureTV/joystick-games/backroad-rally/src/upstream/test/audio.test.ts,title=test/audio.test.ts,line=9,column=24::Error: ENOENT: no such file or directory, open 'public/audio/mix.json'%0A ❯ test/audio.test.ts:9:24%0A%0A⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%0ASerialized Error: { errno: -2, code: 'ENOENT', syscall: 'open', path: 'public/audio/mix.json' }%0A
+
+::error file=/home/runner/work/pureTV/pureTV/joystick-games/backroad-rally/src/upstream/test/menus.test.ts,title=test/menus.test.ts,line=121,column=27::Error: ENOENT: no such file or directory, open 'public/data/menu.json'%0A ❯ test/menus.test.ts:121:27%0A%0A⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%0ASerialized Error: { errno: -2, code: 'ENOENT', syscall: 'open', path: 'public/data/menu.json' }%0A
+
+::error file=/home/runner/work/pureTV/pureTV/joystick-games/backroad-rally/src/upstream/test/tuning.test.ts,title=test/tuning.test.ts,line=5,column=37::Error: ENOENT: no such file or directory, open 'public/data/cars_tuning.json'%0A ❯ d test/tuning.test.ts:5:37%0A ❯ test/tuning.test.ts:6:16%0A%0A⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%0ASerialized Error: { errno: -2, code: 'ENOENT', syscall: 'open', path: 'public/data/cars_tuning.json' }%0A
