@@ -1,0 +1,86 @@
+{
+  "reviewer": "racing_review_rally",
+  "scope": "Independent readonly review of fixed Windows production document bootstrap, query policy, diagnostics and actual-native fixture; no test rerun or native execution",
+  "freezeManifestSHA256": "2a653c5d483bb4f9c2a7c8c91129f07bac6b9cc858af606fcf6315df09162044",
+  "reviewedFiles": [
+    {
+      "path": "joystick-games/shared/windows/Sources/main.cpp",
+      "bytes": 30168,
+      "sha256": "eb8b7f2ae8bf2ca817f51efa4f7c6ddcdaedeb760cdd78e57834a482de08f73e"
+    },
+    {
+      "path": "joystick-games/shared/windows/Sources/EntryURL.hpp",
+      "bytes": 1351,
+      "sha256": "94b5efc011bac9d1153157d5da9d5df454e8cba6d73e409828389d03fee9cec8"
+    },
+    {
+      "path": "joystick-games/shared/windows/Web/bootstrap.js",
+      "bytes": 803,
+      "sha256": "a7f6dfc2a1055bcd29c92922d8ef55117c56fdf368775bcb54400f9ebcd53e75"
+    },
+    {
+      "path": "joystick-games/shared/windows/Web/diagnostics.js",
+      "bytes": 3123,
+      "sha256": "574c29d5223ecbb2e2ae0e76756ce6f68824541b66bb3a6dd99edc371a2c9486"
+    },
+    {
+      "path": "joystick-games/shared/windows/CMakeLists.txt",
+      "bytes": 1675,
+      "sha256": "7af7e5a45982292245c1da7dc1bb2b1b66a243eee9036a6b0c358b8b34d8b1aa"
+    },
+    {
+      "path": "joystick-games/shared/windows/tests/entry-url.test.cpp",
+      "bytes": 1215,
+      "sha256": "dac1920734823e13ecb26ae948d073556fd3a84b51d6ad256d1c6ed320a248e8"
+    },
+    {
+      "path": "joystick-games/shared/windows/tests/bootstrap.test.mjs",
+      "bytes": 3107,
+      "sha256": "9ae4986f6e363b9f97a7813e7a3b5b410cff6d1e082b4f241ec81279de2b8aa5"
+    },
+    {
+      "path": "joystick-games/shared/windows/tests/navigation-storage.test.py",
+      "bytes": 6419,
+      "sha256": "0ab0f4d4006d1d04f7344286d7698b7c94c6b1ddb311fe79014a671087a9b60a"
+    },
+    {
+      "path": "joystick-games/shared/windows/Web/bridge.js",
+      "bytes": 5693,
+      "sha256": "14b63ff99f549312e6ae5cc2a157d81234647067b74379d5edff431fec12fc1c",
+      "unchanged": true
+    },
+    {
+      "path": "joystick-games/tools/windows-build.py",
+      "bytes": 15878,
+      "sha256": "eee38e0d3510bb25bdc54475e5ffc077c57d46186a4acfbb523e4910b6f5fd71"
+    },
+    {
+      "path": "joystick-games/shared/windows/tests/assets.test.py",
+      "bytes": 9107,
+      "sha256": "0559b804d3fcaaef11278b97234c8f8bcf18d1c2e8e5a050cc74f8fe9cd9cfc2"
+    }
+  ],
+  "status": "no_blocking_static_findings",
+  "blockingFindings": [],
+  "checks": [
+    "IDispatch exposes only DISPATCH_PROPERTYGET for snapshot with zero arguments; bad interfaces/members/arguments fail with HRESULT. The returned VT_BSTR is allocated with SysAllocStringLen; exceptions return E_FAIL rather than leaking across COM.",
+    "The ComPtr retains the host object throughout browser lifetime. The snapshot closure refers to the static Application, checks closed state and accepted entry, and is released after browser/controller shutdown. Existing STA initialization and OleAut32 linkage cover the COM/BSTR calls; this is source review, not MSVC proof.",
+    "Both main navigation and WebMessage source use the same exact HTTPS host and tv.html path predicate. Query is bounded to 4096 encoded ASCII characters with malformed escapes, controls and backslashes rejected; no query is interpreted as a filesystem path.",
+    "bridge.js precedes bootstrap.js in DocumentCreated. The top-frame exact-origin/path bootstrap reads current native preferences synchronously and sets immutable document identity before ordinary page scripts. Native snapshots are no longer embedded once at launch.",
+    "Accepted navigation increments the bounded epoch and disables input. Completion is bound to NavigationId and bootstrap epoch; asynchronous diagnostics from older documents are discarded. Script registration and host-object installation failure are not treated as success.",
+    "The actual Windows fixture uses the built production EXE and byte-identical host JS in a separate copied page/profile, checks first-script storage across immediate write/remove/clear/reload/query navigation, and verifies ordinary query-page exit. It is a required workflow step before original-game QA; failures are preserved by the always evidence collector.",
+    "Windows source scope recursively includes shared Sources/Web/tests and CMake. The existing builder copies every shared Web file with a collision assertion, so bootstrap.js reaches the package; no new build dependency or generic source exclusion is introduced.",
+    "The final reserved-name addition case-folds and rejects a game-supplied root bootstrap.js before host copying, alongside bridge.js and diagnostics.js. The existing host-phase allowance and copy collision guard remain; its meaningful rejection/allowance boundary test was reviewed, not rerun."
+  ],
+  "existingValidationReviewed": {
+    "compiledPortableEntryURLCases": 27,
+    "portableBootstrapTests": 4,
+    "existingBridgeTests": 10,
+    "testsRerunByReviewer": false,
+    "reservedHostAssetBoundaryTests": 1
+  },
+  "limitations": [
+    "MSVC compilation, real IDispatch binding and real WebView2 preference-message versus immediate-navigation ordering remain pending exact-source Windows CI; Linux mocks do not prove them.",
+    "No original game package, clock, physics or signed APK was modified or reclassified by this review."
+  ]
+}

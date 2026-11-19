@@ -1,0 +1,9 @@
+# Windows document freshness and native bootstrap gate
+
+The original Night Racer run `44607480315` remains failed. Its ordinary Low-quality menu reload reset the game's frame/poll counters; the previous static startup storage seed is repaired separately in the native host. This QA change recognizes the host's per-document identity without changing the game, its clock, its original expectations, or held gameplay inputs.
+
+`WindowsCheck.fresh` always requires a newer native timestamp. When document identities are present, both the native callback epoch and the document-start immutable epoch must agree in both snapshots. Regressing, missing, mismatched or malformed identities fail. A newer document may reset its poll counter only after its actual expected renderer has initialized and performed its initial input polls. The same document still requires poll growth for gameplay observations. Old hosts retain the previous counter rule only when both snapshots omit document identity entirely.
+
+Sixteen synthetic lifecycle/freshness tests passed: the existing eight pause boundaries and eight new document boundaries. These are Python observations, not Windows execution. Actionlint also passed. The separate evidence-collector smoke test preserved a synthetic failed bootstrap report, original log, diagnostic state and native preference record with exact manifest hashes, while excluding its browser profile and copied fixture application.
+
+The Windows workflow now invokes the actual `navigation-storage.test.py` fixture after package installation and before game acceptance. A fixture failure blocks gameplay/package publication, while the always-run collector retains its raw evidence under `runtime-bootstrap/`. Actual COM/WebView2 behavior and immediate storage-write/reload ordering remain pending the next frozen-source Windows run; no native success is claimed here. Source hashes and executed source copies are retained in this directory.

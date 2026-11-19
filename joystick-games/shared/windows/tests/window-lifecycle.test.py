@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Synthetic timing boundaries; native lifecycle evidence still requires Windows."""
-import importlib.util,unittest
+import copy,importlib.util,unittest
 from pathlib import Path
 from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[4]
@@ -45,4 +45,53 @@ class PauseTiming(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError,'Insufficient fresh'):self.observe(False,native_interval=4)
     def test_model_motion_late_in_extended_window_remains_a_failure(self):
         with self.assertRaisesRegex(AssertionError,'Gameplay progressed'):self.observe(False,native_interval=3.5,model_change_at=12)
+class DocumentFreshness(unittest.TestCase):
+    def setUp(self):
+        self.subject=object.__new__(verify.WindowsCheck);self.subject.renderers=['webgl2']
+    def state(self,epoch=1,polls=100,timestamp=1):
+        return {'timestamp':timestamp,'documentEpoch':epoch,'document':{'epoch':epoch},'ready':True,'game':{'stage':'menu','paused':False,'renderer':'webgl2','webglVersion':'WebGL 2.0','frames':polls,'controller':{'pollCount':polls},'gameplay':{'menu':'title'}}}
+    def test_same_document_still_requires_native_timestamp_and_poll_growth(self):
+        before=self.state();self.assertTrue(self.subject.fresh(self.state(polls=101,timestamp=2),before,True))
+        self.assertFalse(self.subject.fresh(self.state(polls=101),before,True))
+        self.assertFalse(self.subject.fresh(self.state(timestamp=2),before,True))
+        self.assertTrue(self.subject.fresh(self.state(timestamp=2),before))
+    def test_reload_accepts_new_rendered_document_without_comparing_old_poll_counter(self):
+        before=self.state();after=self.state(epoch=2,polls=2,timestamp=2);original=copy.deepcopy((before,after))
+        self.assertTrue(self.subject.fresh(after,before,True));self.assertEqual((before,after),original)
+    def test_native_epoch_cannot_relabel_old_dom_snapshot(self):
+        before=self.state();after=self.state(polls=101,timestamp=2);after['documentEpoch']=2
+        self.assertFalse(self.subject.fresh(after,before,True));self.assertFalse(self.subject.fresh(after,before))
+        before['documentEpoch']=2;after=self.state(epoch=2,polls=102,timestamp=3)
+        self.assertFalse(self.subject.fresh(after,before,True))
+    def test_missing_or_malformed_identity_is_not_legacy_compatibility(self):
+        before=self.state()
+        for value in [None,0,-1,True,1.0,'1',9007199254740992]:
+            after=self.state(polls=101,timestamp=2);after['documentEpoch']=after['document']['epoch']=value
+            with self.subTest(value=value):self.assertFalse(self.subject.fresh(after,before,True))
+        for which in ['native','document','both']:
+            after=self.state(polls=101,timestamp=2)
+            if which in ['native','both']:after.pop('documentEpoch')
+            if which in ['document','both']:after['document'].pop('epoch')
+            with self.subTest(which=which):self.assertFalse(self.subject.fresh(after,before,True));self.assertFalse(self.subject.fresh(before,after,True))
+        for document in [None,[],1]:
+            after=self.state(polls=101,timestamp=2);after['document']=document
+            with self.subTest(document=document):self.assertFalse(self.subject.fresh(after,before,True))
+    def test_epoch_regression_is_never_fresh(self):
+        self.assertFalse(self.subject.fresh(self.state(1,200,3),self.state(2,100,2),True))
+    def test_reload_requires_real_initialized_renderer_and_polls(self):
+        before=self.state()
+        for update in [{'ready':False},{'lastJavaScriptError':'failure'},{'diagnosticError':'failure'}]:
+            after=self.state(2,2,2);after.update(update)
+            with self.subTest(update=update):self.assertFalse(self.subject.fresh(after,before,True))
+        for update in [{'stage':'boot'},{'renderer':'canvas2d'},{'webglVersion':None},{'frames':0},{'controller':{'pollCount':0}},{'errors':['unrelated failure']},{'stage':'error'},{'paused':True}]:
+            after=self.state(2,2,2);after['game'].update(update)
+            with self.subTest(update=update):self.assertFalse(self.subject.fresh(after,before,True))
+    def test_bad_or_stale_timestamp_is_rejected_after_reload(self):
+        for timestamp in [0,1,None,True,float('nan'),float('inf'),'2']:
+            with self.subTest(timestamp=timestamp):self.assertFalse(self.subject.fresh(self.state(2,2,timestamp),self.state(),True))
+    def test_legacy_hosts_keep_old_counter_rule_only_when_both_omit_identity(self):
+        before=self.state();after=self.state(polls=101,timestamp=2)
+        for state in [before,after]:state.pop('documentEpoch');state['document'].pop('epoch')
+        self.assertTrue(self.subject.fresh(after,before,True));after['game']['controller']['pollCount']=2
+        self.assertFalse(self.subject.fresh(after,before,True));self.assertTrue(self.subject.fresh(after,before))
 if __name__=='__main__':unittest.main()

@@ -78,9 +78,13 @@ class Assets(unittest.TestCase):
         asset.write_bytes(b'x'*12);(self.web/'extra.bin').write_bytes(b'x'*8)
         with self.assertRaisesRegex(AssertionError,'total budget'):builder.verify_web_assets(self.web,self.meta,self.identity)
     def test_reserved_host_files_and_mismatched_policy_rejected(self):
-        self.policy();(self.web/'bridge.js').write_text('wrong bridge')
-        with self.assertRaisesRegex(AssertionError,'Reserved host asset'):builder.verify_web_assets(self.web,self.meta,self.identity)
-        (self.web/'bridge.js').unlink();self.identity['assetPolicy']['maxTotalBytes']=127
+        self.policy()
+        for name in ('bridge.js','bootstrap.js','Bootstrap.JS','diagnostics.js'):
+            path=self.web/name;path.write_text('wrong host script')
+            with self.subTest(name=name),self.assertRaisesRegex(AssertionError,'Reserved host asset'):builder.verify_web_assets(self.web,self.meta,self.identity)
+            self.assertIn(name,builder.verify_web_assets(self.web,self.meta,self.identity,with_host=True)['assetFiles'])
+            path.unlink()
+        self.identity['assetPolicy']['maxTotalBytes']=127
         with self.assertRaisesRegex(AssertionError,'match exactly'):builder.verify_web_assets(self.web,self.meta,self.identity)
     def test_cache_named_asset_directory_is_rejected_instead_of_unfrozen(self):
         (self.web/'node_modules').mkdir();(self.web/'node_modules/image.png').write_bytes(b'image')

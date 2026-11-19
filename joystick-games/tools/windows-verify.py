@@ -37,6 +37,31 @@ class WindowsCheck(base.CatalogCheck):
             if isinstance(state.get('game'),dict):assert not state['game'].get('errors'),'Game runtime errors: '+json.dumps(state['game']['errors'])
             self.last=state
         return state
+    def fresh(self,state,before,game_frame=False):
+        # Poll counters belong to a document. A normal location.reload() resets
+        # them; a late snapshot from the old document must not pass as the new
+        # document merely because its native callback timestamp is newer.
+        def has_epoch(value):
+            document=value.get('document')
+            return 'documentEpoch' in value or isinstance(document,dict) and 'epoch' in document
+        if not has_epoch(state) and not has_epoch(before):
+            return super().fresh(state,before,game_frame)
+        def epoch(value):
+            native=value.get('documentEpoch');document=value.get('document')
+            if not isinstance(document,dict):return None
+            document=document.get('epoch')
+            return native if type(native) is int and 0<native<=9007199254740991 and type(document) is int and document==native else None
+        current_epoch=epoch(state);previous_epoch=epoch(before)
+        if current_epoch is None or previous_epoch is None or current_epoch<previous_epoch:return False
+        timestamp=state.get('timestamp');previous_timestamp=before.get('timestamp')
+        if not plan_api.numeric(timestamp) or not plan_api.numeric(previous_timestamp) or timestamp<=previous_timestamp:return False
+        if current_epoch>previous_epoch:
+            # New-document freshness requires its actual renderer and initial
+            # input polls. It does not waive the caller's original expectation.
+            return state.get('ready') is True and not state.get('lastJavaScriptError') and not state.get('diagnosticError') and base.initialization(state.get('game'),renderer=self.renderers)=='ready'
+        if not game_frame:return True
+        current_poll=state.get('game',{}).get('controller',{}).get('pollCount');previous_poll=before.get('game',{}).get('controller',{}).get('pollCount')
+        return plan_api.numeric(current_poll) and plan_api.numeric(previous_poll) and current_poll>previous_poll
     def connect(self):
         connected=super().connect();self.report['additionalBusyRejections']=[]
         # Repeat actual independent SDK clients after the original check. Each

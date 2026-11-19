@@ -91,6 +91,11 @@ jobs:
         run: |
           python joystick-games/tools/windows-packages.py --source "$env:RUNNER_TEMP/packages" --output "$env:RUNNER_TEMP/install-verification" *> "$env:RUNNER_TEMP/install.log"
           exit $LASTEXITCODE
+      - name: Verify actual document-start storage and query navigation
+        shell: pwsh
+        run: |
+          python -B joystick-games/shared/windows/tests/navigation-storage.test.py --app "$env:RUNNER_TEMP/install-verification/installed" --output "$env:RUNNER_TEMP/runtime-bootstrap" *> "$env:RUNNER_TEMP/runtime-bootstrap.log"
+          exit $LASTEXITCODE
       - name: Actual original SDK gameplay normal and occupied port
         shell: pwsh
         env:

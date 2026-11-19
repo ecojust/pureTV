@@ -127,7 +127,7 @@ def verify_web_assets(folder,meta,identity,with_host=False):
         assert path.is_file(),'Non-regular distribution asset: '+relative
         text_notice=explicit is not None and re.fullmatch(r'(?:[A-Za-z0-9][A-Za-z0-9_-]*_)?(?:LICENSE|NOTICE|COPYING)',path.name) is not None
         assert path.suffix.lower() in types or text_notice,'Unsupported distribution asset: '+relative
-        assert with_host or relative.casefold() not in ('bridge.js','diagnostics.js'),'Reserved host asset: '+relative
+        assert with_host or relative.casefold() not in ('bridge.js','bootstrap.js','diagnostics.js'),'Reserved host asset: '+relative
         assert path.stat().st_size<=limits['maxAssetBytes'],'Asset exceeds declared budget: '+relative
         files[relative]={'bytes':path.stat().st_size,'sha256':digest(path)}
     assert 'tv.html' in files,'Missing exact TV entry page'

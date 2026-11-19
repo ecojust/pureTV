@@ -3,13 +3,13 @@
 import hashlib,importlib.util,json,os,shutil,traceback
 from pathlib import Path
 root=Path(__file__).resolve().parents[2];temp=Path(os.environ['RUNNER_TEMP']);out=temp/'evidence';out.mkdir(exist_ok=False)
-for name in ['build.log','install.log','runtime-normal.log','runtime-occupied.log','installer-tests.log','web-bridge-tests.log','source-inputs-tests.log','source-scope-tests.log','assets-tests.log','display-tests.log','observation-tests.log','window-lifecycle-tests.log','observation-replace-evidence.json']:
+for name in ['build.log','install.log','runtime-normal.log','runtime-occupied.log','runtime-bootstrap.log','installer-tests.log','web-bridge-tests.log','source-inputs-tests.log','source-scope-tests.log','assets-tests.log','display-tests.log','observation-tests.log','window-lifecycle-tests.log','observation-replace-evidence.json']:
     if (temp/name).is_file():shutil.copy2(temp/name,out/name)
-for mode in ['runtime-normal','runtime-occupied']:
+for mode in ['runtime-normal','runtime-occupied','runtime-bootstrap']:
     if not (temp/mode).is_dir():continue
     for path in (temp/mode).rglob('*'):
         relative=path.relative_to(temp/mode)
-        if path.is_file() and 'profile' not in relative.parts and path.suffix in {'.json','.jsonl','.log','.txt','.png','.py'}:
+        if path.is_file() and not {'profile','fixture-app'}.intersection(relative.parts) and path.suffix in {'.json','.jsonl','.log','.txt','.png','.py'}:
             target=out/mode/relative;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(path,target)
     if (temp/mode/'profile/preferences.json').is_file():shutil.copy2(temp/mode/'profile/preferences.json',out/mode/'native-preferences-after-run.json')
 for source,name in [('packages/build-manifest.json','build-manifest.json'),('install-verification/package-verification.json','package-verification.json')]:

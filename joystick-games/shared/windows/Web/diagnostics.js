@@ -23,5 +23,5 @@
   });
   const storageKeys=JSON.parse(window.PureGameHost?.getInfo()||'{}').storageKeys||[];
   const storage={origin:location.origin,initial:window.JoystickDesktop?.initialStorage()||{},current:Object.fromEntries(storageKeys.map(key=>[key,localStorage.getItem(key)]))};
-  return {game:window.JoystickGameQA?.snapshot()||null,storage,document:{url:location.href,title:document.title,width:innerWidth,height:innerHeight,scrollWidth:document.documentElement.scrollWidth,scrollHeight:document.documentElement.scrollHeight,webglError:!!window.JoystickGameQA?.snapshot()?.webglError,primaryText:document.getElementById('primary')?.textContent||'',language:document.documentElement.lang,controllerClients}};
+  return {game:window.JoystickGameQA?.snapshot()||null,storage,document:{epoch:window.__puretvDocumentEpoch??null,url:location.href,title:document.title,width:innerWidth,height:innerHeight,scrollWidth:document.documentElement.scrollWidth,scrollHeight:document.documentElement.scrollHeight,webglError:!!window.JoystickGameQA?.snapshot()?.webglError,primaryText:document.getElementById('primary')?.textContent||'',language:document.documentElement.lang,controllerClients}};
 })()
