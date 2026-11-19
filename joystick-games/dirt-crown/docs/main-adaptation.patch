@@ -1,0 +1,101 @@
+--- fixed-upstream/main.js
++++ adaptation/main.js
+@@ -34,13 +34,14 @@
+ import { Rng, hashStr } from './rng.js';
+ import { Input } from './input.js';
+ import * as save from './save.js';
+-import { initAudio, sfx, setVolumes, startRaceAudio, stopRaceAudio, raceAudio, playMusic, duckMusic } from './audio.js';
++import { initAudio, sfx, setVolumes, startRaceAudio, stopRaceAudio, raceAudio, playMusic, duckMusic, setLifecyclePaused } from './audio.js';
+ import { Hud, ordinal, fmtTime } from './ui/hud.js';
+ import * as UI from './ui/screens.js';
++import { installDirtTV } from './tv.js';
+ 
+ const params = new URLSearchParams(location.search);
+-const DEBUG = params.has('debug');
+-const FAST = Math.max(1, Number(params.get('fast')) || 1);
++const DEBUG = false;
++const FAST = 1;
+ const $ = (id) => document.getElementById(id);
+ 
+ // ------------------------------------------------------------------ boot
+@@ -60,13 +61,14 @@
+     acc: 0, t: 0, frameNo: 0, paused: false, doneT: 0, introT: 0, envId: 'flats',
+     storyBg: null, title: null, resetCD: 0, rexDone: false, finishShown: false,
+ };
+-window.__dcApp = app;
++
+ 
+ // ------------------------------------------------------------------ settings
+ app.applySettings = () => {
+     setVolumes({ master: settings.master, music: settings.music, sfx: settings.sfx, muted: settings.muted });
+     chase.mode = settings.camera | 0;
+-    input.autoGas = !!settings.autoGas;
++    settings.autoGas = false;
++    input.autoGas = false;
+     document.body.classList.toggle('autogas', !!settings.autoGas);
+     const q = params.has('q') ? Number(params.get('q')) : qualityOf();
+     if (q !== quality) { quality = q; setQuality(q); if (app.fx) app.fx.setView(renderer, camera); }
+@@ -327,12 +329,13 @@
+ app.toTitleOrHub = () => { if (app.profile && !app.profile.guest) app.toHub('races'); else { app.profile = save.loadProfile(); app.toTitle(); } };
+ 
+ function pause() {
++    input.clear();
+     if (app.mode !== 'race' || app.paused || UI.storyActive()) return;
+     app.paused = true;
+     sfx.click();
+     UI.pauseMenu(() => { app.paused = false; }, () => { app.paused = false; app.startEvent(app.ev); }, () => { app.paused = false; stopRaceAudio(); hud.show(false); if (app.ev.free) app.toTitleOrHub(); else app.toHub('races'); }, app.ev.free);
+ }
+-document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
++// pureTV lifecycle owns background/focus cancellation and explicit resume.
+ $('h-pause').addEventListener('click', (e) => { e.stopPropagation(); pause(); });
+ 
+ // ------------------------------------------------------------------ input presses
+@@ -564,11 +567,14 @@
+ }
+ 
+ // ------------------------------------------------------------------ the loop
++const tv = installDirtTV({ app, input, UI, pause, renderer, unlock, setLifecyclePaused });
+ let last = performance.now();
+ function frame(now) {
+     requestAnimationFrame(frame);
++    tv.tick();
+     const dt = Math.min(0.05, (now - last) / 1000);
+     last = now;
++    if (tv.suspended()) return;
+     app.t += dt;
+     app.frameNo++;
+     resize();
+@@ -631,33 +637,3 @@
+ requestAnimationFrame(frame);
+ boot().catch((e) => { console.error(e); $('load-msg').textContent = 'Something went wrong: ' + e.message; });
+ 
+-// ------------------------------------------------------------------ debug hooks
+-if (DEBUG) {
+-    window.__dc = {
+-        app, input, settings, UI, CIRCUITS, EVENTS, DRIVERS, LOCALS, PAINTS, LIVERIES,
+-        get race() { return app.race; },
+-        coins(n) { app.profile.coins += n; persist(); if (app.mode === 'hub') UI.refreshHub(); },
+-        levels(lv) { Object.assign(app.profile.levels, lv); persist(); if (app.mode === 'hub') { garage.setCar(playerLook(app.profile)); UI.refreshHub(); } },
+-        go(id) { app.startEvent(EVENTS[id]); },
+-        skipStory() { while (UI.storyActive()) UI.storyAdvance(); },
+-        /** Finish the current race in first place (or `pos`). */
+-        win(pos = 1) {
+-            const r = app.race, P = r.player;
+-            if (r.type === 'tt') { P.finished = true; P.lap = r.laps; P.finishT = r.targets ? r.targets[0] - 1 : 30; r.t = P.finishT; r.finishOrder.unshift(P); r.playerDone = true; r.results = r.makeResults(); r.events.push({ type: 'finish', car: 0, pos: 1 }); handleEvents(r); return; }
+-            const others = r.cars.filter((c) => c !== P && !c.out);
+-            others.forEach((c, k) => { if (k < pos - 1) { c.finished = true; c.lap = r.laps; c.finishT = r.t + 0.5 + k; r.finishOrder.push(c); } });
+-            P.finished = true; P.lap = r.laps; P.finishT = r.t + pos; r.finishOrder.push(P);
+-            r.t += pos + 1;
+-            r.playerDone = true;
+-            r.results = r.makeResults();
+-            r.events.length = 0;
+-            r.events.push({ type: 'finish', car: 0, pos: r.results.pos });
+-            handleEvents(r);
+-        },
+-        playerLook: () => playerLook(app.profile),
+-        /** Let the AI drive the player's car (for screenshots and soak tests). */
+-        autopilot(skill = 0.9) { const r = app.race; r.drivers[0] = new Driver(r.player, { skill, lane: 0, nitroHappy: 0.8 }, 9); },
+-        hideUI() { for (const id of ['hud', 'title', 'hub']) document.getElementById(id).classList.add('hidden'); },
+-        cam: chase,
+-    };
+-}

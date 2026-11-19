@@ -365,16 +365,21 @@
       "timeoutSeconds": 60
     },
     {
-      "name": "Resume by deliberate START",
+      "name": "Resume by deliberate START, hold without re-pausing",
       "keys": [
         "START"
       ],
-      "holdMs": 180,
+      "holdMs": 1200,
       "expect": [
         {
           "path": "stage",
           "op": "eq",
           "value": "playing"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
         }
       ],
       "timeoutSeconds": 60

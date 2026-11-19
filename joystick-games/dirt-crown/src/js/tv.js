@@ -1,8 +1,9 @@
 import { createController, BUTTONS } from '../shared/web/input.js';
-import { drivingHeld, edges } from './tv-input.js';
+import { drivingHeld, edges, createMenuGate } from './tv-input.js';
 
 export function installDirtTV({app,input,UI,pause,renderer,unlock,setLifecyclePaused}) {
  let frozen=false, focus=null, focusKey='', frames=0, local={}, localPulse={}, previous={}, editing=null;
+ const gate=createMenuGate();
  const errors=[];
  window.addEventListener('error',e=>errors.push(String(e.error?.message||e.message)));
  window.addEventListener('unhandledrejection',e=>errors.push(String(e.reason?.message||e.reason)));
@@ -12,7 +13,7 @@ export function installDirtTV({app,input,UI,pause,renderer,unlock,setLifecyclePa
  const editor=document.createElement('aside');editor.id='tv-editor';editor.hidden=true;document.body.append(editor);
  function clear(){input.clear();local={};localPulse={};previous={};}
  function freeze(){clear();editing=null;editor.hidden=true;if(app.mode==='loading')return;setLifecyclePaused(true);frozen=true;layer.hidden=false;focus=null;}
- function resume(){clear();setLifecyclePaused(false);frozen=false;layer.hidden=true;focus=null;}
+ function resume(){const held={...previous};clear();previous=held;setLifecyclePaused(false);frozen=false;layer.hidden=true;focus=null;}
  layer.querySelector('button').onclick=resume;
  const controller=createController({width:170,side:'right',top:'42%',onSuspend:freeze,onCancel:freeze});
  const help=document.createElement('aside');help.id='tv-help';help.textContent='方向选择 · A确认 B返回 · START暂停/继续 · ↑油门 ↓刹车 A漂移 B氮气 X复位 Y镜头';document.body.append(help);
@@ -36,10 +37,10 @@ export function installDirtTV({app,input,UI,pause,renderer,unlock,setLifecyclePa
  function tick(){
   frames++;
   const frame=controller.poll();
-  const buttons=Object.fromEntries(BUTTONS.map(k=>[k,!!frame.buttons[k]||!!local[k]||!!localPulse[k]]));
+  const menu=frozen||UI.modalOpen()||UI.storyActive()||app.mode!=='race'||app.paused;
+  const buttons=gate(menu,Object.fromEntries(BUTTONS.map(k=>[k,!!frame.buttons[k]||!!local[k]||!!localPulse[k]])));
   localPulse={};
   const pressed=edges(buttons,previous);previous=buttons;
-  const menu=frozen||UI.modalOpen()||UI.storyActive()||app.mode!=='race'||app.paused;
   controller.setPlaying(!menu);help.hidden=!menu;
   document.body.classList.toggle('tv-menu',menu);
   if(frame.cancelled){input.clear();return;}

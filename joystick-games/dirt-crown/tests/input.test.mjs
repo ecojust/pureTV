@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {Input} from '../src/js/input.js';import {drivingHeld,edges} from '../src/js/tv-input.js';
+import {Input} from '../src/js/input.js';import {drivingHeld,edges,createMenuGate} from '../src/js/tv-input.js';
 import {createInputReducer,BUTTONS} from '../../shared/web/input.js';
 const empty=()=>Object.fromEntries(BUTTONS.map(k=>[k,false]));
 globalThis.addEventListener=()=>{};globalThis.matchMedia=()=>({matches:false});globalThis.document={querySelectorAll:()=>[],body:{classList:{add(){}}}};
@@ -10,3 +10,5 @@ test('TV input drives original controls and autoGas remains disabled even with t
 test('disconnect cancels, never creates action release; held reconnect is quarantined',()=>{const r=createInputReducer();r.read(sample({UP:true,A:true,B:true}));let f=r.read(sample({},false));assert.equal(f.cancelled,true);assert.ok(Object.values(f.buttons).every(x=>!x));assert.ok(Object.values(f.released).every(x=>!x));f=r.read(sample({UP:true,A:true,START:true}));assert.ok(Object.values(f.buttons).every(x=>!x));r.read(sample({}));f=r.read(sample({UP:true}));assert.equal(f.buttons.UP,true);assert.equal(f.buttons.A,false);});
 test('background cancellation requires release before repeat action',()=>{const r=createInputReducer();r.read(sample({START:true}));r.cancel();let f=r.read(sample({START:true}));assert.equal(f.cancelled,true);assert.equal(f.pressed.START,false);f=r.read(sample({START:true}));assert.equal(f.buttons.START,false);r.read(sample());assert.equal(r.read(sample({START:true})).pressed.START,true);});
 test('edge computation does not merge simultaneous independent buttons',()=>{assert.deepEqual(edges({A:true,B:true,X:true,Y:true},{}),{A:true,B:true,X:true,Y:true});assert.equal(edges({A:true},{A:true}).A,false);});
+
+test('menu confirmation and navigation holds cannot leak throttle/actions into a race',()=>{const gate=createMenuGate();gate(true,{UP:true,A:true,B:true,START:true});const first=gate(false,{UP:true,A:true,B:true,START:true});assert.ok(Object.values(first).every(v=>!v));const held=gate(false,{UP:true,A:true,B:true,START:true,RIGHT:true});assert.equal(held.RIGHT,true);assert.equal(held.A,false);gate(false,{});assert.equal(gate(false,{UP:true}).UP,true);});
