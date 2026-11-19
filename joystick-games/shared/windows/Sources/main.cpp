@@ -30,7 +30,21 @@ static PDNS_SERVICE_INSTANCE registrationInstance=nullptr;
 std::wstring wide(const std::string& s) { if(s.empty())return {};int n=MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,s.data(),int(s.size()),nullptr,0);if(!n)throw std::runtime_error("Invalid UTF-8");std::wstring v(n,0);MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,s.data(),int(s.size()),v.data(),n);return v; }
 std::string utf8(const std::wstring& s) {int n=WideCharToMultiByte(CP_UTF8,0,s.data(),int(s.size()),nullptr,0,nullptr,nullptr);std::string v(n,0);WideCharToMultiByte(CP_UTF8,0,s.data(),int(s.size()),v.data(),n,nullptr,nullptr);return v;}
 std::string read(const fs::path& p,size_t limit=16*1024*1024) {std::ifstream f(p,std::ios::binary);if(!f)throw std::runtime_error("Missing file: "+p.u8string());if(fs::file_size(p)>limit)throw std::runtime_error("File too large");return std::string(std::istreambuf_iterator<char>(f),{});}
-void write(const fs::path& p,const std::string& data) {fs::create_directories(p.parent_path());auto tmp=p;tmp+=L".tmp";{std::ofstream f(tmp,std::ios::binary|std::ios::trunc);f.write(data.data(),data.size());if(!f)throw std::runtime_error("Cannot save file");}if(!MoveFileExW(tmp.c_str(),p.c_str(),MOVEFILE_REPLACE_EXISTING|MOVEFILE_WRITE_THROUGH))throw std::runtime_error("Cannot replace saved file");}
+void write(const fs::path& p,const std::string& data) {
+ fs::create_directories(p.parent_path());auto tmp=p;tmp+=L".tmp";
+ {std::ofstream f(tmp,std::ios::binary|std::ios::trunc);f.write(data.data(),data.size());if(!f)throw std::runtime_error("Cannot save file");}
+ const ULONGLONG started=GetTickCount64();
+ for(;;){
+  if(MoveFileExW(tmp.c_str(),p.c_str(),MOVEFILE_REPLACE_EXISTING|MOVEFILE_WRITE_THROUGH))return;
+  const DWORD error=GetLastError();
+  // Win32 can temporarily deny replacement even when the reader permits
+  // deletion. Retain the complete temporary file and retry only contention;
+  // persistent failures must never be reported as a successful save.
+  if((error!=ERROR_ACCESS_DENIED&&error!=ERROR_SHARING_VIOLATION&&error!=ERROR_LOCK_VIOLATION)||GetTickCount64()-started>=500)
+   throw std::runtime_error("Cannot replace saved file (Windows error "+std::to_string(error)+")");
+  Sleep(1);
+ }
+}
 double now(){return GetTickCount64()/1000.0;}
 UINT windowDpi(HWND window){UINT dpi=window?GetDpiForWindow(window):GetDpiForSystem();return dpi?dpi:96;}
 RECT clientSizeForDpi(int width,int height,DWORD style,DWORD extended,UINT dpi){RECT rect={0,0,MulDiv(width,int(dpi),96),MulDiv(height,int(dpi),96)};if(!AdjustWindowRectExForDpi(&rect,style,FALSE,extended,dpi))throw std::runtime_error("Cannot calculate DPI-aware window size");return rect;}

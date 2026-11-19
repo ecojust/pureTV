@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Bounded original-byte reads; atomic replacement test requires real Windows."""
-import importlib.util,json,os,sys,tempfile,threading,time,unittest
+import ctypes,importlib.util,json,os,sys,tempfile,threading,time,unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[4]
 spec=importlib.util.spec_from_file_location('observation',ROOT/'joystick-games/tools/windows-observation.py');observation=importlib.util.module_from_spec(spec);spec.loader.exec_module(observation)
@@ -32,16 +32,37 @@ class Reads(unittest.TestCase):
     @unittest.skipUnless(sys.platform=='win32','Requires real Win32 CreateFile sharing and replacement')
     def test_real_windows_reader_allows_atomic_replacement_without_torn_json(self):
         with tempfile.TemporaryDirectory() as temporary:
-            root=Path(temporary);path=root/'state.json';path.write_text(json.dumps({'timestamp':0,'value':'糖梅'*5000}),encoding='utf-8');failures=[]
+            root=Path(temporary);path=root/'state.json';path.write_text(json.dumps({'timestamp':0,'value':'糖梅'*5000}),encoding='utf-8');failures=[];events=[];completed=[];stop=threading.Event()
+            api=ctypes.WinDLL('kernel32',use_last_error=True)
+            api.MoveFileExW.argtypes=[ctypes.c_wchar_p,ctypes.c_wchar_p,ctypes.c_uint32];api.MoveFileExW.restype=ctypes.c_int
             def replace():
                 try:
                     for number in range(1,101):
-                        temporary_path=root/'state.tmp';temporary_path.write_text(json.dumps({'timestamp':number,'value':'糖梅'*5000},ensure_ascii=False),encoding='utf-8');os.replace(temporary_path,path);time.sleep(.001)
+                        if stop.is_set():return
+                        temporary_path=root/'state.tmp';temporary_path.write_text(json.dumps({'timestamp':number,'value':'糖梅'*5000},ensure_ascii=False),encoding='utf-8')
+                        # The actual production writer uses MoveFileExW with
+                        # REPLACE_EXISTING|WRITE_THROUGH, not os.replace. Keep
+                        # its 500 ms bound and exact transient-error whitelist.
+                        started=time.monotonic()
+                        while True:
+                            success=api.MoveFileExW(str(temporary_path),str(path),1|8);error=0 if success else ctypes.get_last_error();elapsed=(time.monotonic()-started)*1000
+                            events.append({'write':number,'success':bool(success),'winerror':error,'elapsedMilliseconds':elapsed})
+                            if success:completed.append(number);break
+                            if error not in (5,32,33) or elapsed>=500:raise ctypes.WinError(error)
+                            time.sleep(.001)
+                        time.sleep(.001)
                 except Exception as error:failures.append(str(error))
-            writer=threading.Thread(target=replace);writer.start();errors=[];samples=0
+            writer=threading.Thread(target=replace);writer.start();errors=[];samples=0;deadline=time.monotonic()+15
             try:
                 while writer.is_alive() or samples<100:
+                    self.assertLess(time.monotonic(),deadline,'Native atomic-replacement observation exceeded 15 seconds')
                     state=observation.read_state(path,errors,required=True,alive=lambda:None);self.assertEqual(state['value'],'糖梅'*5000);self.assertIn(state['timestamp'],range(101));samples+=1
-            finally:writer.join(timeout=10)
-            self.assertFalse(writer.is_alive());self.assertEqual(failures,[])
+                    time.sleep(.001)
+            finally:
+                stop.set();writer.join(timeout=2)
+                record={'method':'Actual Windows MoveFileExW and CreateFileW, original JSON bytes under concurrent replacement','sourceCommit':os.environ.get('GITHUB_SHA'),'moveFlags':9,'retryLimitMilliseconds':500,'retryableWindowsErrors':[5,32,33],'completedWrites':len(completed),'readSamples':samples,'writeFailures':failures,'readErrors':errors,'moveAttempts':events,'writerStillAlive':writer.is_alive()}
+                if os.environ.get('RUNNER_TEMP'):(Path(os.environ['RUNNER_TEMP'])/'observation-replace-evidence.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8')
+                print(json.dumps({key:record[key] for key in ['completedWrites','readSamples','writeFailures','writerStillAlive']}),flush=True)
+            self.assertFalse(writer.is_alive());self.assertEqual(failures,[]);self.assertEqual(completed,list(range(1,101)))
+            final=observation.read_state(path,errors,required=True,alive=lambda:None);self.assertEqual(final['timestamp'],100);self.assertEqual(final['value'],'糖梅'*5000)
 if __name__=='__main__':unittest.main()

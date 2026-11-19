@@ -1,0 +1,24 @@
+.....F.
+======================================================================
+FAIL: test_real_windows_reader_allows_atomic_replacement_without_torn_json (__main__.Reads.test_real_windows_reader_allows_atomic_replacement_without_torn_json)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\a\pureTV\pureTV\joystick-games\shared\windows\tests\observation.test.py", line 46, in test_real_windows_reader_allows_atomic_replacement_without_torn_json
+    self.assertFalse(writer.is_alive());self.assertEqual(failures,[])
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["[WinError 5] Access is denied: 'C:\\\\Us[155 chars]on'"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"[WinError 5] Access is denied: 'C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\\\tmpnlxe73dv\\\\state.tmp' -> 'C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\\\tmpnlxe73dv\\\\state.json'"
+
++ []
+- ['[WinError 5] Access is denied: '
+-  "'C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\\\tmpnlxe73dv\\\\state.tmp' "
+-  '-> '
+-  "'C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\\\tmpnlxe73dv\\\\state.json'"]
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.011s
+
+FAILED (failures=1)

@@ -1,0 +1,17 @@
+{
+  "runId": 44598806610,
+  "runAttempt": 1,
+  "sourceCommit": "af1cb4e92b4e1306ece161209e4291f133b15217",
+  "exportCommit": "573dd6711bb20e981801150c357262ffc10bbc47",
+  "originalFilesVerified": 95,
+  "originalBytesVerified": 720674,
+  "requestedGames": [
+    "sugarplum-drop",
+    "night-racer"
+  ],
+  "verifiedGames": [],
+  "nativeHostCompilationReached": false,
+  "actualGameRuntimeReached": false,
+  "diagnosis": "Both actual Windows jobs failed in the new concurrent atomic-replacement test. The original writer used os.replace and failed with WinError 5 while the native CreateFile reader explicitly allowed READ/WRITE/DELETE sharing. This proves that the stress test encountered replacement contention; it does not establish the suppressed original v7 diagnostic read exception.",
+  "nextChange": "Production MoveFileExW keeps REPLACE_EXISTING|WRITE_THROUGH and retries only Windows errors 5/32/33 for at most 500 ms. The native test uses the same Windows API/flags/retry bound, retains each raw result, requires all 100 complete writes and exact final contents. Persistent failures remain failures."
+}
