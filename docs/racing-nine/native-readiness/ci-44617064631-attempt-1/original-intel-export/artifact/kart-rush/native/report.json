@@ -1,0 +1,445 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "dc49ea1db63aa373f9408b9142725293a9885573",
+  "artifactSourceCommit": "b7b7af12f1eb61f777d89edad7368a69a14bb9e3",
+  "artifactRunId": "44605303936",
+  "startedAt": "2026-11-19T21:28:39.774303+00:00",
+  "game": "kart-rush",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "fcf968cd99187d950205aaf35b9ed3071cc44c78ef5d1023ccca4bba3181c3f1",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/kart-rush/qa-plan.json": "283b3687535f0112e576b8584a62a7eccf37be2df2c3bc9420b6297fc64dd244",
+    "joystick-games/tools/qa-plan.py": "26888d21e6cb2dd4b0da8a835af79d6fa0b02506b2e7f8264607c300f3390fb3",
+    "joystick-games/tools/macos-build.py": "4fa65936293a5d6c5e728577780edc30429a500627e8799c1c83a5095470b853",
+    "joystick-games/catalog-registry.json": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaRunId": 44617064631,
+  "qaRunAttempt": 1,
+  "runnerKind": "macos-15-intel",
+  "runnerName": "GitHub Actions 1000011190",
+  "qaPlan": {
+    "schemaVersion": 1,
+    "storageRestartRequired": true,
+    "renderer": "webgl2",
+    "compatibleRenderers": [
+      "webgl2",
+      "webgl1"
+    ],
+    "pauseStablePaths": [
+      "gameplay.time",
+      "gameplay.x",
+      "gameplay.z",
+      "gameplay.lap"
+    ],
+    "steps": [
+      {
+        "name": "Focus first key on original name keyboard",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focus",
+            "op": "eq",
+            "value": "Q"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Type Q with original keyboard action",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focus",
+            "op": "eq",
+            "value": "Q"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Save real player name using original form",
+        "keys": [
+          "Y"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.profileName",
+            "op": "eq",
+            "value": "Q"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Start original single race and wait for its real countdown",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.phase",
+            "op": "eq",
+            "value": "race"
+          },
+          {
+            "path": "gameplay.countdown",
+            "op": "lte",
+            "value": 0
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Explicit throttle accelerates kart",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 2000,
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "gt",
+            "value": 3
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Right steering changes original world position",
+        "keys": [
+          "UP",
+          "RIGHT"
+        ],
+        "holdMs": 900,
+        "expect": [
+          {
+            "path": "gameplay.x",
+            "op": "changed"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Left steering and separate item keys use original rules",
+        "keys": [
+          "UP",
+          "LEFT",
+          "A",
+          "B"
+        ],
+        "holdMs": 800,
+        "expect": [
+          {
+            "path": "gameplay.z",
+            "op": "changed"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Reset through original reset action",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.phase",
+            "op": "eq",
+            "value": "race"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Open original help from race",
+        "keys": [
+          "Y"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "help-screen"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Return to original pause menu",
+        "keys": [
+          "B"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "pause-screen"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Resume with START (hold START; remain running)",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 1200,
+        "expect": [
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Manual brake available",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 900,
+        "expect": [
+          {
+            "path": "gameplay.phase",
+            "op": "eq",
+            "value": "race"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Pause with START",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Resume explicitly (hold START; remain running)",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 1200,
+        "expect": [
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          }
+        ],
+        "timeoutSeconds": 60
+      }
+    ]
+  },
+  "acceptedRenderers": [
+    "webgl2",
+    "webgl1"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "4af8f6b45c89d68fe2135f08e5f295528382b187935fff3e5cdd1b0472f23dff",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.kart-rush.0db0c9ae56084e86bb9eb073bd48336c",
+    "reusedAcrossRestartOnly": true
+  },
+  "nativeProcessArchitecture": "x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 467, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 201, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": true, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"Kart Rush\", \"url\": \"http://127.0.0.1:60625/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.ecojust.joystick.kartrush\", \"name\": \"Kart Rush\"}, \"game\": null, \"input\": {\"connections\": 0, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 4, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 4}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"kartrush.profile\", \"kartrush.records\", \"kartrush.track\", \"kartrush.mode\", \"kartrush.cupBest\", \"kartrush.driver\", \"kartrush.paint\", \"kartrush.body\", \"kartrush.steering\", \"kartrush.diff\", \"kartrush.view\", \"kartrush.flip\", \"kartrush.sitOut\", \"kartrush.volume.music\", \"kartrush.volume.sfx\", \"kart-rush-muted\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.3\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"Kart Rush\", \"state\": \"available\"}}, \"storage\": {\"current\": {\"kart-rush-muted\": null, \"kartrush.body\": null, \"kartrush.cupBest\": null, \"kartrush.diff\": null, \"kartrush.driver\": null, \"kartrush.flip\": null, \"kartrush.mode\": null, \"kartrush.paint\": null, \"kartrush.profile\": null, \"kartrush.records\": null, \"kartrush.sitOut\": null, \"kartrush.steering\": null, \"kartrush.track\": null, \"kartrush.view\": null, \"kartrush.volume.music\": null, \"kartrush.volume.sfx\": null}, \"initial\": {\"kart-rush-muted\": null, \"kartrush.body\": null, \"kartrush.cupBest\": null, \"kartrush.diff\": null, \"kartrush.driver\": null, \"kartrush.flip\": null, \"kartrush.mode\": null, \"kartrush.paint\": null, \"kartrush.profile\": null, \"kartrush.records\": null, \"kartrush.sitOut\": null, \"kartrush.steering\": null, \"kartrush.track\": null, \"kartrush.view\": null, \"kartrush.volume.music\": null, \"kartrush.volume.sfx\": null}, \"origin\": \"http://127.0.0.1:60625\"}, \"timestamp\": 1795123809.6930718}\n",
+  "lastState": {
+    "active": true,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "en",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "Kart Rush",
+      "url": "http://127.0.0.1:60625/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystick.kartrush",
+      "name": "Kart Rush"
+    },
+    "game": null,
+    "input": {
+      "connections": 0,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 4,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 4
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "kartrush.profile",
+        "kartrush.records",
+        "kartrush.track",
+        "kartrush.mode",
+        "kartrush.cupBest",
+        "kartrush.driver",
+        "kartrush.paint",
+        "kartrush.body",
+        "kartrush.steering",
+        "kartrush.diff",
+        "kartrush.view",
+        "kartrush.flip",
+        "kartrush.sitOut",
+        "kartrush.volume.music",
+        "kartrush.volume.sfx",
+        "kart-rush-muted"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.3"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "Kart Rush",
+        "state": "available"
+      }
+    },
+    "storage": {
+      "current": {
+        "kart-rush-muted": null,
+        "kartrush.body": null,
+        "kartrush.cupBest": null,
+        "kartrush.diff": null,
+        "kartrush.driver": null,
+        "kartrush.flip": null,
+        "kartrush.mode": null,
+        "kartrush.paint": null,
+        "kartrush.profile": null,
+        "kartrush.records": null,
+        "kartrush.sitOut": null,
+        "kartrush.steering": null,
+        "kartrush.track": null,
+        "kartrush.view": null,
+        "kartrush.volume.music": null,
+        "kartrush.volume.sfx": null
+      },
+      "initial": {
+        "kart-rush-muted": null,
+        "kartrush.body": null,
+        "kartrush.cupBest": null,
+        "kartrush.diff": null,
+        "kartrush.driver": null,
+        "kartrush.flip": null,
+        "kartrush.mode": null,
+        "kartrush.paint": null,
+        "kartrush.profile": null,
+        "kartrush.records": null,
+        "kartrush.sitOut": null,
+        "kartrush.steering": null,
+        "kartrush.track": null,
+        "kartrush.view": null,
+        "kartrush.volume.music": null,
+        "kartrush.volume.sfx": null
+      },
+      "origin": "http://127.0.0.1:60625"
+    },
+    "timestamp": 1795123809.6930718
+  },
+  "failurePhase": "initialization",
+  "nativeProcessAlive": true,
+  "lastStateFresh": true,
+  "phase": "initialization",
+  "finishedAt": "2026-11-19T21:30:10.009733+00:00"
+}
