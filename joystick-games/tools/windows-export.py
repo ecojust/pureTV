@@ -134,7 +134,11 @@ def assess_reports(game,source,binary_sha,installed,reports,job_conclusion):
         if report['status']!='passed':reasons.append(mode+'_'+report['status']);continue
         assert len(report['tests'])==10 and all(t['status']=='passed' for t in report['tests']),'Incomplete successful runtime checks'
         storage=report['storageRestart'];assert storage['initialHydrationEqual'] is True and storage['cleanBrowserCacheVerified'] is True
-        if report['qaPlan'].get('storageRestartRequired'):assert storage['status']=='passed' and storage['nativeSavedAfterQuit'] is True
+        if report['qaPlan'].get('storageRestartRequired'):
+            # The native verifier records the actual persisted string map,
+            # not a boolean success flag. Empty/placeholder values are no save.
+            saved=storage['nativeSavedAfterQuit']
+            assert storage['status']=='passed' and isinstance(saved,dict) and saved and all(isinstance(k,str) and isinstance(v,str) for k,v in saved.items()),'Missing actual persisted native storage'
     if job_conclusion!='success':reasons.append('producer_job_'+str(job_conclusion))
     return {'status':'built-unverified' if reasons else 'runtime-verified','runtimeVerified':not reasons,'unverifiedReasons':reasons,'sourceReports':normalizations_needed,'publicPackageDeliveryComplete':False}
 

@@ -121,7 +121,7 @@ def retention_fixture():
 
 def report_fixture():
     installed={'status':'passed','game':GAME,'sourceCommit':SOURCE,'binarySha256':BINARY,'installedBytesMatchPortable':True,'completeFileSetVerified':True,'uninstallPreservesUnrelatedFiles':True,'uninstallRemovesOnlyPackagedFiles':True}
-    report={'status':'passed','game':GAME,'qaSourceCommit':SOURCE,'binarySha256':BINARY,'sourceHashes':{PATH:DIGEST},'tests':[{'status':'passed'} for _ in range(10)],'storageRestart':{'status':'passed','initialHydrationEqual':True,'cleanBrowserCacheVerified':True,'nativeSavedAfterQuit':True},'qaPlan':{'storageRestartRequired':True}}
+    report={'status':'passed','game':GAME,'qaSourceCommit':SOURCE,'binarySha256':BINARY,'sourceHashes':{PATH:DIGEST},'tests':[{'status':'passed'} for _ in range(10)],'storageRestart':{'status':'passed','initialHydrationEqual':True,'cleanBrowserCacheVerified':True,'nativeSavedAfterQuit':{'fixture.save':'{"level":1}'}},'qaPlan':{'storageRestartRequired':True}}
     return {'game':GAME,'source':SOURCE,'binary_sha':BINARY,'installed':installed,'reports':{'runtime-normal':copy.deepcopy(report),'runtime-occupied':copy.deepcopy(report)},'job_conclusion':'success'}
 
 class RetentionIdentityTests(unittest.TestCase):
@@ -220,6 +220,25 @@ class DownloadLayoutTests(unittest.TestCase):
             with self.assertRaisesRegex(AssertionError,'real directory'):m.validate_download_layout(root,[GAME])
 
 class QaStatusSeparationTests(unittest.TestCase):
+    def test_eight_original_reports_preserve_actual_native_saved_string_maps(self):
+        fixture=json.loads((Path(__file__).parent/'fixtures/windows-runtime-storage-44615299245.json').read_text())
+        self.assertEqual(fixture['sourceRunId'],44615299245)
+        self.assertEqual(len(fixture['games']),4)
+        count=0
+        for game,original in fixture['games'].items():
+            before=copy.deepcopy(original)
+            for report in original['reports'].values():
+                self.assertIsInstance(report['storageRestart']['nativeSavedAfterQuit'],dict)
+                self.assertTrue(report['storageRestart']['nativeSavedAfterQuit']);count+=1
+            result=m.assess_reports(game,fixture['sourceCommit'],original['installation']['binarySha256'],original['installation'],original['reports'],'success')
+            self.assertEqual(result['status'],'runtime-verified')
+            self.assertTrue(result['runtimeVerified']);self.assertFalse(result['publicPackageDeliveryComplete'])
+            self.assertEqual(original,before)
+        self.assertEqual(count,8)
+    def test_saved_storage_requires_actual_nonempty_string_map_not_boolean_placeholder(self):
+        for saved in [True,False,None,{},[],{'save':1},{'save':True},{1:'value'},'saved']:
+            value=report_fixture();value['reports']['runtime-normal']['storageRestart']['nativeSavedAfterQuit']=saved
+            with self.subTest(saved=saved),self.assertRaisesRegex(AssertionError,'actual persisted'):m.assess_reports(**value)
     def test_mixed_success_and_failure_never_promotes_failed_original_package(self):
         success=report_fixture();failed=copy.deepcopy(success);failed['reports']['runtime-occupied']['status']='failed';failed['reports']['runtime-occupied']['tests'][0]['status']='failed';failed['job_conclusion']='failure';before=copy.deepcopy(failed)
         results=[m.assess_reports(**success),m.assess_reports(**failed)]

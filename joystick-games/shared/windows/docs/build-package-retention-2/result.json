@@ -1,0 +1,35 @@
+{
+  "status": "corrected_actual_storage_map_schema_local_tests_passed",
+  "at": "2026-11-19T21:46:15.176321+00:00",
+  "files": {
+    "joystick-games/tools/windows-export.py": {
+      "bytes": 22039,
+      "sha256": "ae36160f6a3c5cc64c1b5279e6c564fc405568e75b229892f6079111d87e66c8"
+    },
+    "joystick-games/shared/windows/tests/export.test.py": {
+      "bytes": 21686,
+      "sha256": "c79f5e1d53412b3a5d5b96e4b1c2475870639ce8a387f7d52e1bad96a260162b"
+    },
+    "joystick-games/shared/windows/tests/fixtures/windows-runtime-storage-44615299245.json": {
+      "bytes": 36584,
+      "sha256": "1eb0f2476e1a1f41fc36b81233cc853ef3f94c2d3c7944eb92265f0bade2d3d9"
+    }
+  },
+  "tests": {
+    "count": 32,
+    "log": "export-tests.log",
+    "scope": "All prior exporter boundaries plus actual eight-report shape acceptance and invalid/empty storage-map rejection"
+  },
+  "oldFailureReplay": "original-shape-replay.json",
+  "workflowChanged": false,
+  "failureRetentionRulesChanged": false,
+  "originalReportsModified": false,
+  "newNativeExecution": false,
+  "workflowDispatches": 0,
+  "existingWindowsRun": {
+    "runId": 44621752383,
+    "sourcePrefix": "039d210",
+    "note": "Already accepted at 21:44:14 per root. Not cancelled or repeated. If old exporter rejects successful reports, a later fixed evidence reader must recover the same original artifact, never rebuild to replace this evidence."
+  },
+  "correction": "4d71ccf and the first synthetic fixture incorrectly expected literal True for nativeSavedAfterQuit. The actual Windows producer records a nonempty map of persisted string keys/values. The fix requires that actual map and keeps original passed/status/hydration/cache and source/package checks. Prior independent review is retained unchanged and superseded only for this identified schema error."
+}
