@@ -496,6 +496,21 @@ class Acceptance:
                               'before': before, 'after': after, 'manualPixelReviewRequired': True})
         self.save()
 
+    def initial_menu_ready(self, snapshot):
+        game = self.game(snapshot)
+        poll = game.get('controller', {}).get('pollCount', 0)
+        if not (game.get('stage') == 'menu' and game.get('loading') is not True
+                and poll > 0 and (snapshot.get('info') or {}).get('wifiController', {}).get('port', 0) > 0):
+            return False
+        if not self.plan:
+            return True
+        # An adapter can expose its menu/first input poll before asynchronous
+        # renderer initialization. Keep the same deadline and strict validation
+        # below; a loading observation is not an initialized catalog menu.
+        frames = game.get('frames')
+        return (game.get('renderer') in plan.accepted_renderers(self.plan)
+                and type(frames) is int and frames > 0 and type(poll) is int)
+
     def setup(self):
         self.command('wait-for-device')
         self.command('install', '-r', str(self.args.apk))
@@ -524,9 +539,7 @@ class Acceptance:
         component = 'com.ecojust.joystickqa.' + self.args.game.replace('-', '') + '/com.ecojust.controllerqa.Observer'
         self.instrument = subprocess.Popen(self.adb + ['shell', 'am', 'instrument', '-w', '-r', '-e', 'diagnosticPort', '63486',
                                                         '-e', 'occupyDefaultPort', str(self.args.occupy_default_port).lower(), component], stdout=self.instrument_log, stderr=subprocess.STDOUT)
-        initial = self.wait(lambda s: self.game(s).get('stage') == 'menu' and self.game(s).get('loading') is not True
-                            and self.game(s).get('controller', {}).get('pollCount', 0) > 0
-                            and (s.get('info') or {}).get('wifiController', {}).get('port', 0) > 0, timeout=150, label='initial-menu')
+        initial = self.wait(self.initial_menu_ready, timeout=150, label='initial-menu')
         # Keep the actual observation even when the renderer/port assertions below fail.
         self.record('initial-menu', initial)
         self.save()

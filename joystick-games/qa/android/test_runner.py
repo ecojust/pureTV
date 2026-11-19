@@ -479,6 +479,94 @@ class CatalogContracts(unittest.TestCase):
         with self.assertRaises(AssertionError): runner.plan.validate_plan(plan)
 
 
+class InitialMenuReadiness(unittest.TestCase):
+    def acceptance(self):
+        a = runner.Acceptance.__new__(runner.Acceptance)
+        a.plan = {'renderer': 'webgl2', 'pauseStablePaths': []}
+        a.args = SimpleNamespace(game='backroad-rally')
+        a.snapshots = []; a.report = {}
+        return a
+
+    def state(self, renderer='webgl2', frames=1, poll=2):
+        return {'game': {'game': 'backroad-rally', 'renderer': renderer, 'webglVersion': 2,
+            'stage': 'menu', 'paused': False, 'frames': frames, 'gameplay': {'menuFocus': 'start'},
+            'errors': [], 'controller': {'pollCount': poll}},
+            'info': {'wifiController': {'port': 63485}},
+            'page': {'canvases': [{'width': 960, 'height': 540, 'visible': True}]}}
+
+    def test_original_async_loading_samples_are_not_ready(self):
+        fixture = json.loads((HERE/'fixtures/backroad-initial-loading-44625676430.json').read_text())
+        self.assertEqual(fixture['sourceRun'], 44625676430)
+        for case in fixture['cases']:
+            state = case['snapshot']
+            self.assertEqual((state['game']['renderer'], state['game']['frames'], state['game']['controller']['pollCount']), ('loading', 0, 1))
+            self.assertFalse(self.acceptance().initial_menu_ready(state))
+
+    def test_async_loading_then_rendered_menu_uses_actual_later_sample(self):
+        a = self.acceptance(); values = [self.state('loading', 0, 1), self.state(frames=0), self.state(frames=1, poll=3)]
+        observed = []
+        def snapshot(**kwargs):
+            value = values.pop(0); observed.append(value); return value
+        a.snapshot = snapshot
+        result = a.wait(a.initial_menu_ready, timeout=1, label='initial-menu')
+        self.assertIs(result, observed[-1]); self.assertEqual(len(observed), 3)
+        a.validate_catalog_snapshot(result)
+
+    def test_expected_renderer_positive_integer_frames_and_polls_are_required(self):
+        a = self.acceptance()
+        for value in (0, -1, True, False, 1.0, None):
+            self.assertFalse(a.initial_menu_ready(self.state(frames=value)))
+        for value in (0, -1, True, 1.0):
+            self.assertFalse(a.initial_menu_ready(self.state(poll=value)))
+        for renderer in ('loading', 'webgl1', 'canvas2d', None):
+            self.assertFalse(a.initial_menu_ready(self.state(renderer)))
+        for mutation in ('loading', 'playing', 'port'):
+            state = self.state()
+            if mutation == 'loading': state['game']['loading'] = True
+            if mutation == 'playing': state['game']['stage'] = 'playing'
+            if mutation == 'port': state['info']['wifiController']['port'] = 0
+            self.assertFalse(a.initial_menu_ready(state))
+
+    def test_ready_gate_does_not_replace_strict_context_error_and_identity_validation(self):
+        a = self.acceptance()
+        for mutation in ('context', 'error', 'identity', 'canvas'):
+            state = self.state()
+            if mutation == 'context': state['game']['webglVersion'] = 1
+            if mutation == 'error': state['game']['errors'] = ['original initialization failure']
+            if mutation == 'identity': state['game']['game'] = 'wrong-game'
+            if mutation == 'canvas': state['page']['canvases'] = []
+            self.assertTrue(a.initial_menu_ready(state))
+            with self.assertRaises(AssertionError): a.validate_catalog_snapshot(state)
+
+    def test_loading_timeout_preserves_the_last_original_state(self):
+        a = self.acceptance(); state = self.state('loading', 0, 1)
+        state['game']['errors'] = ['original loading diagnostic']
+        a.snapshot = lambda **kwargs: state
+        with self.assertRaisesRegex(AssertionError, 'initial-menu timed out'):
+            a.wait(a.initial_menu_ready, timeout=.02, label='initial-menu')
+        self.assertEqual(a.snapshots[-1]['label'], 'timeout-initial-menu')
+        self.assertIs(a.snapshots[-1]['snapshot'], state)
+        self.assertEqual(a.snapshots[-1]['snapshot']['game']['errors'], ['original loading diagnostic'])
+
+    def test_device_loss_after_loading_does_not_pass_cached_state(self):
+        a = self.acceptance(); state = self.state('loading', 0, 1); calls = []
+        def snapshot(**kwargs):
+            calls.append(kwargs)
+            if len(calls) == 1: return state
+            raise ConnectionRefusedError('original observer connection lost')
+        a.snapshot = snapshot
+        with self.assertRaisesRegex(AssertionError, 'initial-menu timed out'):
+            a.wait(a.initial_menu_ready, timeout=.16, label='initial-menu')
+        self.assertGreater(len(calls), 1)
+        self.assertIs(a.snapshots[-1]['snapshot'], state)
+        self.assertIn('ConnectionRefusedError', a.snapshots[-1]['error'])
+
+    def test_legacy_startup_gate_does_not_gain_catalog_renderer_requirements(self):
+        a = self.acceptance(); a.plan = None
+        state = self.state('legacy-value', 0, 1)
+        self.assertTrue(a.initial_menu_ready(state))
+
+
 class InstallationSetup(unittest.TestCase):
     class LaunchReached(Exception):
         pass
