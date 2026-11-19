@@ -1,0 +1,54 @@
+{
+  "title": "Math Racing",
+  "slug": "math-racing",
+  "sourceCommit": "9aaf1c8575e28c9e3259dae22ceaa03f0c0d2f88",
+  "reviewedAt": "2026-11-19",
+  "assessmentType": "Fixed-source local browser, normal keyboard, no model/time/state writes",
+  "graphics": {
+    "sceneAndArtDirection": 9,
+    "vehicleDesign": 3,
+    "lightingAndEffects": 4,
+    "readability": 6,
+    "motionPresentation": 3
+  },
+  "gameplay": {
+    "drivingAndControl": 4,
+    "competitionAndFeedback": 2,
+    "trackAndModeVariety": 3,
+    "progressionAndReplay": 5,
+    "completeRaceLoop": 3
+  },
+  "graphicsScore": 25,
+  "gameplayScore": 17,
+  "totalScore": 42,
+  "scopeNote": "The score measures suitability and quality as a racing game; this is primarily an educational arithmetic lane-selection game, not an AI circuit racer. It is not a general rating of its value as a learning app.",
+  "observed": [
+    "正常按方向翻页选g03_racing，Enter进入教程/开始，1选乘法。",
+    "实际三车道座舱，题目2×8，普通方向输入向左换道，错误答案触发停顿讲解与扣25燃料。",
+    "Space实际消耗20燃料并令boost状态开始，之后原有燃料/题门继续推进；没有写分数、车道、题目或时间。"
+  ],
+  "visualFindings": [
+    "儿童绘本色彩、三色车道、风车/山坡/树木明确，文字和选项较清楚。",
+    "原生竖屏在1280×720横屏中仅占中心窄区域；没有车身/对手或丰富赛道景观。"
+  ],
+  "sourceOnlyFeatures": [
+    "乘法/除法、combo/fever倍率、最高分及燃料无尽模式由固定源码确认；本次只体验乘法与两次题门，未做全部模式或终局验收。"
+  ],
+  "confidence": "medium: actual short gameplay with fixed source, limited racing scope",
+  "evidence": [
+    "live-attempt-2/report.json",
+    "live-attempt-2/executed-probe.cjs",
+    "source-inspection.json"
+  ],
+  "viewedImages": [
+    "live-attempt-1/01-menu.png",
+    "live-attempt-2/03-driving.png",
+    "live-attempt-2/04-boost.png"
+  ],
+  "packagingNotes": [
+    "Canvas/本地ES modules可离线；若适配电视需重做横屏布局及九键模式选择。",
+    "固定源未发现明确根许可证，保持原资料未知状态。"
+  ],
+  "physicalTvTested": false,
+  "physicalControllerTested": false
+}
