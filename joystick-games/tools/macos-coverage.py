@@ -275,7 +275,7 @@ def runtime_http(evidence,batch,plan,source,qa,architecture):
             evidence.bytes(folder+'/'+stem+'-stdout.log');evidence.bytes(folder+'/'+stem+'-stderr.log')
 
 
-def assess_game(game,meta,plan,entry,arm_folder,intel_folder):
+def assess_game(game,meta,plan,entry,arm_folder,intel_folder,*,per_game=False):
     """Return complete/explicitly partial coverage, or fail closed with AssertionError."""
     source=commit(meta['sourceCommit']);qa=commit(plan.get('qaSourceCommit',plan['sourceCommit']))
     assert plan['sourceCommit']==source and game in plan['games']
@@ -288,7 +288,12 @@ def assess_game(game,meta,plan,entry,arm_folder,intel_folder):
     inputs={**meta['inputFiles'],**plan['inputFiles']}
     expected_batch=next(item for item in plan['batches'] if game in item['games'])
     kart_fallback=selected_policy==PARTIAL and game=='kart-rush' and renderers==KART_RUSH_RENDERERS
-    all_refs={};coverage={}
+    assert type(per_game) is bool,'Assessment scope must be explicit'
+    if per_game:
+        assert game in RACING_NINE and len(expected_batch['games'])==3 and len(set(expected_batch['games']))==3,'Per-game assessment requires the complete original racing triple'
+        assert set(expected_batch['games'])<=RACING_NINE and sum(game in item['games'] for item in plan['batches'])==1,'Ambiguous or unknown racing batch'
+        positive(plan['runId']);positive(plan['runAttempt'])
+    all_refs={};coverage={};batch_states={};failed_others=[]
     for runner,folder in [('macos-latest',arm_folder),('macos-15-intel',intel_folder)]:
         evidence=Evidence(folder);batch=evidence.read('batch-report.json')
         assert batch['sourceCommit']==source and batch.get('qaSourceCommit',source)==qa and batch['runner']==runner
@@ -297,6 +302,8 @@ def assess_game(game,meta,plan,entry,arm_folder,intel_folder):
         assert batch['batch']==expected_batch['batch'] and [item['game'] for item in batch['games']]==expected_batch['games']
         assert all(item['status'] in ('passed','failed') for item in batch['games']),'Incomplete batch game record'
         assert batch['status']==('passed' if all(item['status']=='passed' for item in batch['games']) else 'failed'),'Unexplained batch status'
+        batch_states[runner]=batch['status']
+        failed_others.extend({'runner':runner,'game':item['game'],'status':item['status']} for item in batch['games'] if item['game']!=game and item['status']=='failed')
         record=next(item for item in batch['games'] if item['game']==game);modes=['native','occupied-port','rosetta'] if runner=='macos-latest' else ['native']
         assert len(record['checks'])==len(modes)+1 and record['checks'][0]['status']=='passed' and record['checks'][0]['returncode']==0
         installed=evidence.read(game+'/package-verification.json')
@@ -307,7 +314,7 @@ def assess_game(game,meta,plan,entry,arm_folder,intel_folder):
             assert installed['artifactRunId']==plan['artifactRunId'] and installed['artifactRunAttempt']==plan['artifactRunAttempt'] and installed['originalPackageBytesReused'] is True
         for index,mode in enumerate(modes,1):
             relative=game+'/'+mode;report=evidence.read(relative+'/report.json');same_provenance(report,game,source,qa,binary)
-            if selected_policy==PARTIAL:
+            if selected_policy==PARTIAL or per_game:
                 assert positive(report['qaRunId'])==plan['runId'] and positive(report['qaRunAttempt'])==plan['runAttempt']
                 assert report['runnerKind']==runner and isinstance(report['runnerName'],str) and report['runnerName'],'Missing actual game runner identity'
             if 'artifactRunId' in plan:assert str(report['artifactRunId'])==str(plan['artifactRunId'])
@@ -330,9 +337,9 @@ def assess_game(game,meta,plan,entry,arm_folder,intel_folder):
                     coverage['intelNative']['actualGameRendererVerified']=False
                 if bounded is not None:coverage['intelNative']['boundedInitializationEvidence']=bounded
             else:
-                assert (batch['status']=='passed' or (runner=='macos-15-intel' and selected_policy==PARTIAL and batch['status']=='failed')) and record['status']=='passed' and record['checks'][index]['status']=='passed' and record['checks'][index]['returncode']==0
+                assert (batch['status']=='passed' or per_game or (runner=='macos-15-intel' and selected_policy==PARTIAL and batch['status']=='failed')) and record['status']=='passed' and record['checks'][index]['status']=='passed' and record['checks'][index]['returncode']==0, 'Original batch or target game checks did not pass under the selected assessment scope'
                 strict_game(report,architecture,renderers)
-                if selected_policy==PARTIAL:screenshots(evidence,relative,report)
+                if selected_policy==PARTIAL or per_game:screenshots(evidence,relative,report)
                 if runner=='macos-15-intel' and selected_policy==PARTIAL:
                     before=capability(evidence,'before',game,meta,plan,binary,report,inputs,require_context_loss=False)
                     after=capability(evidence,'after',game,meta,plan,binary,report,inputs,require_context_loss=False)
@@ -343,15 +350,18 @@ def assess_game(game,meta,plan,entry,arm_folder,intel_folder):
         all_refs.update(evidence.references)
     partial=coverage['intelNative']['status']=='unverified'
     result={'schemaVersion':2,'game':game,'coveragePolicy':selected_policy,'artifactSourceCommit':source,'qaSourceCommit':qa,'runId':plan['runId'],'runAttempt':plan['runAttempt'],'installPackagesValidated':True,'packageArchitectures':['arm64','x86_64'],'binarySha256':binary,'verificationCoverage':coverage,'overallGameplayVerification':'partial' if partial else 'complete','deliveryEligibility':'eligible_with_intel_unverified' if partial else 'eligible','originalGameReportsModified':False,'physicalControllerTested':False,'appleNotarized':False,'evidenceFiles':all_refs}
+    if per_game:
+        result.update(assessmentScope='per-game',batchFailed=any(status=='failed' for status in batch_states.values()),originalBatchStatuses=batch_states,targetVerified=True,targetVerificationMeaning='Target meets its unchanged coverage policy; consult verificationCoverage for any explicitly unverified Intel mode',failedOtherGames=failed_others)
     if kart_fallback:result['rendererPlan']={'primary':'webgl2','accepted':list(KART_RUSH_RENDERERS),'fallbackPreserved':True}
     return result
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ('game','meta','plan','entry','arm','intel','output'):parser.add_argument('--'+name,required=True)
+    parser.add_argument('--per-game',action='store_true',help='Assess one approved racing game using its complete original triple reports; retain all original batch failures')
     args=parser.parse_args();output=Path(args.output).resolve()
     assert not any(output.is_relative_to(Path(folder).resolve()) for folder in (args.arm,args.intel))
     assert output not in {Path(p).resolve() for p in (args.meta,args.plan,args.entry)},'Never overwrite input evidence'
-    try:result=assess_game(args.game,*[json.loads(Path(p).read_text()) for p in (args.meta,args.plan,args.entry)],Path(args.arm),Path(args.intel));code=0
+    try:result=assess_game(args.game,*[json.loads(Path(p).read_text()) for p in (args.meta,args.plan,args.entry)],Path(args.arm),Path(args.intel),per_game=args.per_game);code=0
     except (AssertionError,KeyError,ValueError,StopIteration) as error:result={'schemaVersion':2,'game':args.game,'deliveryEligibility':'blocked','error':str(error),'originalGameReportsModified':False};code=1
     output.parent.mkdir(parents=True,exist_ok=True);assert not output.exists(),'Use a fresh coverage output path';output.write_text(json.dumps(result,indent=2)+'\n');raise SystemExit(code)

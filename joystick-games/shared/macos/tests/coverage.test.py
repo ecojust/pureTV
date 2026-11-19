@@ -320,6 +320,75 @@ class Coverage(unittest.TestCase):
         for name in ('local-assets.log','executed-source/'+coverage.HTTP_SOURCE,'executed-source/'+coverage.AUDIO+'backfire.opus','local-assets-compile/main.swift','local-assets-compile/cases/test_fixture/0-stdout.log'):
             path=self.intel/name;original=path.read_bytes();path.unlink();self.blocked();path.write_bytes(original)
         self.change(self.intel/'local-assets-compile/compile-context.json',lambda value:value.update(architecture='arm64'));self.blocked()
+    def mixed_triple(self):
+        others=[game for game in ('backroad-rally','night-racer','last-track') if game!=self.game][:2]
+        self.plan['games']=[self.game,*others];self.plan['batches'][0]['games']=[self.game,*others]
+        for folder,runner in [(self.arm,'macos-latest'),(self.intel,'macos-15-intel')]:
+            def mixed(value):
+                value['games'] += [{'game':others[0],'status':'failed','checks':[]},{'game':others[1],'status':'passed','checks':[]}]
+                value['status']='failed'
+            self.change(folder/'batch-report.json',mixed)
+            for path in (folder/self.game).glob('*/report.json'):
+                self.change(path,lambda value:value.update(qaRunId=901,qaRunAttempt=2,runnerKind=runner,runnerName='Apple runner fixture' if runner=='macos-latest' else 'Intel runner fixture'))
+        return others
+    def assess_per_game(self):return coverage.assess_game(self.game,self.meta,self.plan,self.entry,self.arm,self.intel,per_game=True)
+    def blocked_per_game(self):
+        with self.assertRaises((AssertionError,KeyError,ValueError,StopIteration)):self.assess_per_game()
+    def test_per_game_true_target_in_failed_mixed_batch_preserves_every_original(self):
+        others=self.mixed_triple();before=self.fingerprints();self.blocked()
+        result=self.assess_per_game()
+        self.assertEqual(result['deliveryEligibility'],'eligible');self.assertTrue(result['batchFailed']);self.assertTrue(result['targetVerified'])
+        self.assertEqual(result['originalBatchStatuses'],{'macos-latest':'failed','macos-15-intel':'failed'})
+        self.assertEqual(result['failedOtherGames'],[{'runner':runner,'game':others[0],'status':'failed'} for runner in ('macos-latest','macos-15-intel')])
+        self.assertEqual(result['overallGameplayVerification'],'complete');self.assertEqual(before,self.fingerprints())
+    def test_per_game_partial_target_keeps_intel_unverified_and_failed_batch(self):
+        self.pon_fixture();self.mixed_triple();before=self.fingerprints();self.blocked()
+        result=self.assess_per_game()
+        self.assertEqual(result['deliveryEligibility'],'eligible_with_intel_unverified');self.assertTrue(result['targetVerified'])
+        self.assertEqual(result['verificationCoverage']['intelNative']['originalGameQaStatus'],'failed')
+        self.assertEqual(result['verificationCoverage']['intelNative']['status'],'unverified');self.assertTrue(result['batchFailed'])
+        self.assertEqual(before,self.fingerprints())
+    def test_per_game_failed_target_record_cannot_borrow_other_success(self):
+        self.mixed_triple();self.change(self.arm/'batch-report.json',lambda value:value['games'][0].update(status='failed'));self.blocked_per_game()
+    def test_per_game_failed_target_mode_still_blocks(self):
+        self.mixed_triple()
+        for mode in ('native','occupied-port','rosetta'):
+            path=self.arm/self.game/mode/'report.json';old=path.read_bytes()
+            self.change(path,lambda value:value.update(status='failed'));self.blocked_per_game();path.write_bytes(old)
+    def test_per_game_false_passed_target_test_still_blocks(self):
+        self.mixed_triple();self.change(self.arm/self.game/'native/report.json',lambda value:value['tests'][2].update(status='failed'));self.blocked_per_game()
+    def test_per_game_missing_target_mode_or_image_still_blocks(self):
+        self.mixed_triple()
+        for relative in ('rosetta/report.json','occupied-port/diagnostics/playing.png'):
+            path=self.arm/self.game/relative;old=path.read_bytes();path.unlink();self.blocked_per_game();path.write_bytes(old)
+        self.change(self.arm/'batch-report.json',lambda value:value['games'][0]['checks'].pop());self.blocked_per_game()
+    def test_per_game_source_and_actual_run_identity_cannot_change(self):
+        self.mixed_triple();path=self.arm/self.game/'native/report.json';old=path.read_bytes()
+        for change in ({'artifactSourceCommit':'b'*40},{'qaSourceCommit':'b'*40},{'qaRunId':902},{'qaRunAttempt':1},{'runnerKind':'macos-15-intel'}):
+            self.change(path,lambda value:value.update(change));self.blocked_per_game();path.write_bytes(old)
+        self.plan['sourceCommit']='b'*40;self.blocked_per_game()
+    def test_per_game_missing_original_package_validation_still_blocks(self):
+        self.mixed_triple();self.change(self.arm/self.game/'package-verification.json',lambda value:value.update(completeFileSetVerified=False));self.blocked_per_game()
+    def test_per_game_incomplete_or_reordered_original_triple_blocks(self):
+        self.mixed_triple();path=self.arm/'batch-report.json';old=path.read_bytes()
+        self.change(path,lambda value:value['games'].pop());self.blocked_per_game();path.write_bytes(old)
+        self.change(path,lambda value:value['games'].reverse());self.blocked_per_game();path.write_bytes(old)
+        self.plan['batches'][0]['games'].pop();self.blocked_per_game()
+    def test_per_game_unexplained_original_batch_failure_still_blocks(self):
+        self.mixed_triple()
+        def conceal(value):
+            for game in value['games']:game['status']='passed'
+        self.change(self.arm/'batch-report.json',conceal);self.blocked_per_game()
+    def test_per_game_true_target_in_passed_batch_reports_no_other_failures(self):
+        self.mixed_triple()
+        for folder in (self.arm,self.intel):
+            def passed(value):
+                value['status']='passed'
+                for game in value['games']:game['status']='passed'
+            self.change(folder/'batch-report.json',passed)
+        result=self.assess_per_game();self.assertFalse(result['batchFailed']);self.assertEqual(result['failedOtherGames'],[])
+    def test_per_game_default_full_policy_cannot_waive_failed_intel(self):
+        self.partial_fixture();self.mixed_triple();self.entry.pop('macosCoveragePolicy');self.plan.pop('coveragePolicies');self.blocked_per_game()
     def test_runtime_reuse_needs_exact_original_source_run_attempt_and_bytes(self):
         self.plan.update(artifactRunId=801,artifactRunAttempt=3)
         self.blocked()
