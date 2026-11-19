@@ -253,9 +253,24 @@
       "holdMs": 180,
       "expect": [
         {
+          "path": "gameplay.mode",
+          "op": "eq",
+          "value": "race"
+        },
+        {
           "path": "gameplay.phase",
           "op": "eq",
           "value": "race"
+        },
+        {
+          "path": "gameplay.countdown",
+          "op": "lte",
+          "value": 0
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
         }
       ],
       "timeoutSeconds": 60
