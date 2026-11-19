@@ -2,7 +2,7 @@
 
 来自 [zhuqipaopao-maker/night-racer-public](https://github.com/zhuqipaopao-maker/night-racer-public) 的非官方 pureTV 手柄适配，固定上游 `3a432cd3bf059dbaaa00d700f0f83e0e5313d40b`。保留雨夜街道、山路、海岸、长安等原场景，以及竞速／计时、漂移氮气、车库改装、金币任务和本地幽灵。
 
-**目前为源码适配阶段，尚无完成三平台验收的安装包。** 画面比较与来源见[赛车评审](../../docs/racing-nine/reviews/driving/comparison.json)。
+**目前为源码适配阶段，尚无完成三平台验收的安装包。** 画面比较与来源见[赛车评审](../../docs/racing-nine/reviews/driving/comparison.json)，当前实际输入与画面检查见[验证记录](docs/VERIFICATION.md)。
 
 | 手柄按键 | 驾驶 | 菜单 |
 | --- | --- | --- |

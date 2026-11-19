@@ -80,6 +80,19 @@
       ]
     },
     {
+      "name": "Use one original nitro bottle with B",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.bottles",
+          "op": "changed"
+        }
+      ]
+    },
+    {
       "name": "Change the original camera with Y",
       "keys": [
         "Y"
@@ -89,6 +102,20 @@
         {
           "path": "gameplay.camera",
           "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Reset to the original track with X",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "lt",
+          "value": 1
         }
       ]
     },

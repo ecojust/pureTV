@@ -1,8 +1,10 @@
 import { createController } from '../../../shared/web/input.js';
+import { createDrivingGate } from './tv-controls.js';
 
 const visible = element => !!element && !element.closest('[hidden]') && element.getClientRects().length > 0 && getComputedStyle(element).visibility !== 'hidden';
 export function createTVAdapter(game) {
   let frames = 0, lastFrame = { buttons: {}, pressed: {} }, activeRoot = null, focus = null;
+  const gate = createDrivingGate(); let driveFrame = gate(lastFrame, true);
   const controller = createController({ side: 'left', width: 190, top: '220px', onSuspend: () => game.pause(true), onCancel: () => game.pause(true) });
   const help = document.createElement('div'); help.id = 'tv-help';
   help.textContent = '↑ 油门 · ↓ 刹车 · ← → 转向 · A 漂移 / 确认 · B 氮气 / 返回 · X 复位 · Y 视角 · START 暂停';
@@ -76,12 +78,13 @@ export function createTVAdapter(game) {
   Object.defineProperty(window, 'JoystickGameQA', { value: Object.freeze({ snapshot }), writable: false, configurable: false });
   return {
     poll() {
+      const menuBefore = !!root();
       frames++; if(root() && ['race','countdown'].includes(game.state())) game.pause(true);
       controller.setPlaying(['race', 'countdown'].includes(game.state())); lastFrame = controller.poll();
       help.hidden = !root();
-      if (lastFrame.cancelled) return;
-      for (const [key, down] of Object.entries(lastFrame.pressed)) if (down) action(key);
+      if (!lastFrame.cancelled) for (const [key, down] of Object.entries(lastFrame.pressed)) if (down) action(key);
+      driveFrame = gate(lastFrame, menuBefore || !!root());
       const parent = root(); if (parent && (activeRoot !== parent || !visible(focus))) { activeRoot = parent; const list = options(parent); select(list.find(el => el.id === 'start' || el.id === 'resume') || list[0]); }
-    }, frame: () => lastFrame
+    }, frame: () => driveFrame
   };
 }

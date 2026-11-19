@@ -1,6 +1,6 @@
 import { tvStore as store } from './tv-storage.js';
 import { createTVAdapter } from './tv-adapter.js';
-import { drivingInput, cancelDrift } from './tv-controls.js';
+import { drivingInput, cancelDrift, createActionLatch } from './tv-controls.js';
 import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -392,6 +392,7 @@ function resetRacer(r, i, off, lapsDone, halfway) {
 // ---------- input ----------
 const keys = new Set();
 let nitroLatch = false;
+const nitroAction = createActionLatch();
 addEventListener('keydown', e => {
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ShiftLeft', 'ShiftRight'].includes(e.code)) e.preventDefault();
   if (e.repeat) return;
@@ -409,6 +410,7 @@ let touch = null;
 function readInput() {
   const nitroNow = down('Space');
   const pressed = nitroNow && !nitroLatch; nitroLatch = nitroNow;
+  nitroAction.press(pressed || tv.frame().pressed.B);
   const brake = down('KeyS', 'ArrowDown');
   const keySteer = (down('KeyD', 'ArrowRight') ? 1 : 0) - (down('KeyA', 'ArrowLeft') ? 1 : 0);
   return drivingInput(tv.frame(), {
@@ -417,7 +419,7 @@ function readInput() {
     steer: keySteer || (touch ? Math.max(-1, Math.min(1, touch.steer * steerSens)) : 0),
     // Shift, or J / X: on Windows, Shift can be taken by the Chinese input method (中/英 switch) or Sticky Keys
     drift: down('ShiftLeft', 'ShiftRight', 'KeyJ', 'KeyX'),
-    nitroPressed: pressed,
+    nitroPressed: nitroAction.peek(),
   });
 }
 const idle = { throttle: false, brake: false, steer: 0, drift: false, nitroPressed: false };
@@ -555,6 +557,7 @@ if (dreamScene || deepScene) {
 }
 
 function startRace() {
+  nitroAction.clear(); nitroLatch = false;
   resetRun(); lastPay = null;
   sound.init();
   if (ancientScene) sound.bank();   // pre-render firework/drum sounds before the lights go out
@@ -653,7 +656,7 @@ function setPaused(p) {
   if (!['race', 'countdown', 'finished', 'paused'].includes(state)) { keys.clear(); if (p) sound.ctx?.suspend().catch(() => {}); return; }
   if (p && state !== 'paused') pauseReturn = state;
   state = p ? 'paused' : pauseReturn; platform.gameplay(!p);
-  cancelDrift(player.car); nitroLatch = false;
+  cancelDrift(player.car); nitroLatch = false; nitroAction.clear();
   if (p) sound.ctx?.suspend().catch(() => {}); else sound.ctx?.resume().catch(() => {});
   $('pause').hidden = !p;
   if (!p) $('volume').hidden = true;
@@ -1118,7 +1121,7 @@ function frame(now) {
     const pc = player.car, big = track.layered && pc.air && pc.airT > 0.15 && track.bigAir[pc.trackI] && !pc.fell;
     timeScale += ((big && !mp ? 0.45 : 1) - timeScale) * Math.min(1, dt * (big ? 6 : 3));
     acc += dt * timeScale;
-    while (acc >= STEP) { stepRace(STEP, inp); acc -= STEP; }
+    while (acc >= STEP) { stepRace(STEP, inp); nitroAction.clear(); acc -= STEP; }
     // the player fell: watch the car drop for a moment, fade to black, put it back before the jump
     if (pc.fell) {
       if (!fallCam) { fallCam = camera.position.clone(); flash(T('掉下去了！'), '#ff3d7f'); }

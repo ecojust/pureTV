@@ -1,0 +1,982 @@
+{
+  "game": "night-racer",
+  "method": "Normal menu clicks and synthetic native-bridge buttons; read-only QA; no model/time/storage writes by harness.",
+  "syntheticBridge": true,
+  "physicalControllerTested": false,
+  "inputs": {
+    "THIRD-PARTY-LICENSES.txt": {
+      "bytes": 2182,
+      "sha256": "9fe542d49fadf321c035c145d40c124adf1a60162cc6ade4db264441537f216f"
+    },
+    "THIRD-PARTY-NOTICES.txt": {
+      "bytes": 1501,
+      "sha256": "511e486cd2fcaba5d4d231c83dd9e22bd3cdfe3712c765a93e5bfb81aad1c410"
+    },
+    "fonts/OFL.txt": {
+      "bytes": 4396,
+      "sha256": "13831d02389d917d22fcfa6c79f98f8acbf61d230add0e73a4d4dc5f3bfb9e56"
+    },
+    "fonts/chakra-0.ttf": {
+      "bytes": 70252,
+      "sha256": "ba224f677484f7ed6ef4bca2d18a353bccb5a68093e2e35a1502f1c14807f5db"
+    },
+    "fonts/chakra-1.ttf": {
+      "bytes": 70140,
+      "sha256": "c9c2ee076c89bce96fe318e91d1ff06f0b5217175373755adb70365a66d4ec64"
+    },
+    "fonts/chakra.css": {
+      "bytes": 310,
+      "sha256": "f4db85ea22a15b356f68362c9b6de7b58ea71cf9693b5a332f84b04d362c8720"
+    },
+    "models/canyon.glb": {
+      "bytes": 2547368,
+      "sha256": "ec9cb44336d4d44c4a6725635edc7a8db16bbad0de40b5ccac7b5881c948732d"
+    },
+    "models/film.glb": {
+      "bytes": 2558572,
+      "sha256": "c63192655a55570784cc488b16ec4363ed857003e1c2be10e5b97cedd201f6bf"
+    },
+    "models/forest/LICENSE-textures.txt": {
+      "bytes": 270,
+      "sha256": "e54f2392247351e1f07e7d5e6f12838abf5e9d02920f21be5ba84db21c985c62"
+    },
+    "models/forest/dirt_diff.webp": {
+      "bytes": 391480,
+      "sha256": "89b7dc6813014ddbe1b1870bb49d57eceb025c2fb1778bb3293197e1535dce83"
+    },
+    "models/forest/dirt_nor.webp": {
+      "bytes": 487486,
+      "sha256": "70552782f14d9f25eb83c86ed65013fc9c84d767167237db719ed4966854cdc4"
+    },
+    "models/forest/fern.webp": {
+      "bytes": 16640,
+      "sha256": "c03cdbf12e29e0574cd377eee9153aabc706ce9b9c60a2bdfc6b063c1ff8bef6"
+    },
+    "models/forest/floor_plants.webp": {
+      "bytes": 34534,
+      "sha256": "7ae47d388baae21315259211684b60081fc7ecae6d30350600b7427a841ed348"
+    },
+    "models/forest/grass_tuft.webp": {
+      "bytes": 8830,
+      "sha256": "8c4784ae8ea2fccb4cd3da64cd9513472e39c750486a9365226ff08d0e18072c"
+    },
+    "models/forest/leaf_litter.webp": {
+      "bytes": 62800,
+      "sha256": "ecab7e0ae1c6b2766a89e0fc2a95ee81d5676e520a66b14b2292e31c6bbb515d"
+    },
+    "models/forest/moss_mound.webp": {
+      "bytes": 43338,
+      "sha256": "b13b6d8191f44e2acdd5dd34a248b5429fe32864bcce1f82d48aa16d7a866dfd"
+    },
+    "models/forest/pebbles.webp": {
+      "bytes": 15280,
+      "sha256": "d752f22dadb7ea9dc13d6e0309e2823191118d5b713f78925bcb8dee078501dd"
+    },
+    "models/forest/pine.webp": {
+      "bytes": 163782,
+      "sha256": "40b73beb4f6bc92f02e4aa7a53da5ebba82cd64ba35e2aa5e976afefa84e2560"
+    },
+    "models/forest/young_pine.webp": {
+      "bytes": 93686,
+      "sha256": "d7dd0bfbc5125446227c6505a0823bb03d6d49e58307922996426e9d57ad94a6"
+    },
+    "models/forest.glb": {
+      "bytes": 4074232,
+      "sha256": "8e811f45feb6fbea66041dce5b335ed5cae2de22844c2698f65a73f0e7a9177a"
+    },
+    "models/gt.glb": {
+      "bytes": 1419608,
+      "sha256": "e22a6b704c3d515190a8cbcfcdc0fd70a0fdabcd04472cc8ddb89197b1c4c378"
+    },
+    "models/hyper.glb": {
+      "bytes": 1254072,
+      "sha256": "dbeab906d4162ae0e77dd8869583bd5c43b4fba8c9bfab8cf980131c252cb3dc"
+    },
+    "models/ice.glb": {
+      "bytes": 2601552,
+      "sha256": "d0dadcc5be49f6ebccc179e224b6c372d24c68cd8af229077f5ca60e937585cb"
+    },
+    "models/ruins.glb": {
+      "bytes": 6235800,
+      "sha256": "02e7e8793a7093a8fdaf6934ca087fb1702fdc3c5427ee275146fcc6ff54b621"
+    },
+    "tv.html": {
+      "bytes": 1245661,
+      "sha256": "ee6815e29953b3d86bb35aa49893ff8fd5a8599759e259ebbbd868cd86a1d302"
+    }
+  },
+  "steps": [
+    {
+      "name": "Original Smooth preset selected through settings",
+      "after": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 4,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "map": "city",
+          "mode": "race",
+          "raceTime": 0,
+          "countT": 0,
+          "playerX": -36.357958843559025,
+          "playerZ": 3.225297576189041,
+          "heading": 1.4554841714141133,
+          "speed": 0,
+          "steer": 0,
+          "drift": false,
+          "driftTime": 0,
+          "miniT": 0,
+          "nitro": 0,
+          "bottles": 1,
+          "camera": 0,
+          "coins": 400,
+          "laps": -1,
+          "renderPreset": "low",
+          "ready": true
+        },
+        "audioState": "not_created",
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "controllerId": "QA-NIGHT-01",
+              "session": "night-1",
+              "connected": true,
+              "transport": "wifi",
+              "inputActive": true,
+              "cancelSeq": 0,
+              "buttons": {
+                "UP": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "A": false,
+                "B": false,
+                "X": false,
+                "Y": false
+              }
+            }
+          ],
+          "source": "[1,\"QA-NIGHT-01\",\"night-1\"]",
+          "info": {
+            "wifiController": {
+              "state": "available",
+              "port": 63485,
+              "serviceName": "pureTV browser fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 4,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      }
+    },
+    {
+      "name": "Original countdown and real model movement under throttle",
+      "before": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 72,
+        "stage": "playing",
+        "paused": false,
+        "gameplay": {
+          "state": "race",
+          "map": "city",
+          "mode": "race",
+          "raceTime": 0.15,
+          "countT": 3.0141999999992524,
+          "playerX": -36.16047577173383,
+          "playerZ": 3.248171247760742,
+          "heading": 1.4554841714141133,
+          "speed": 2.4924757904503885,
+          "steer": 0,
+          "drift": false,
+          "driftTime": 0,
+          "miniT": 0,
+          "nitro": 0,
+          "bottles": 1,
+          "camera": 0,
+          "coins": 400,
+          "laps": -1,
+          "renderPreset": "low",
+          "ready": true
+        },
+        "audioState": "running",
+        "controller": {
+          "buttons": {
+            "UP": true,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "controllerId": "QA-NIGHT-01",
+              "session": "night-1",
+              "connected": true,
+              "transport": "wifi",
+              "inputActive": true,
+              "cancelSeq": 0,
+              "buttons": {
+                "UP": true,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "A": false,
+                "B": false,
+                "X": false,
+                "Y": false
+              }
+            }
+          ],
+          "source": "[1,\"QA-NIGHT-01\",\"night-1\"]",
+          "info": {
+            "wifiController": {
+              "state": "available",
+              "port": 63485,
+              "serviceName": "pureTV browser fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 72,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "after": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 73,
+        "stage": "playing",
+        "paused": false,
+        "gameplay": {
+          "state": "race",
+          "map": "city",
+          "mode": "race",
+          "raceTime": 0.19999999999999998,
+          "countT": 3.0141999999992524,
+          "playerX": -36.0133147307648,
+          "playerZ": 3.2652163204759095,
+          "heading": 1.4554841714141133,
+          "speed": 3.297119780655496,
+          "steer": 0,
+          "drift": false,
+          "driftTime": 0,
+          "miniT": 0,
+          "nitro": 0,
+          "bottles": 1,
+          "camera": 0,
+          "coins": 400,
+          "laps": -1,
+          "renderPreset": "low",
+          "ready": true
+        },
+        "audioState": "running",
+        "controller": {
+          "buttons": {
+            "UP": true,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "controllerId": "QA-NIGHT-01",
+              "session": "night-1",
+              "connected": true,
+              "transport": "wifi",
+              "inputActive": true,
+              "cancelSeq": 0,
+              "buttons": {
+                "UP": true,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "A": false,
+                "B": false,
+                "X": false,
+                "Y": false
+              }
+            }
+          ],
+          "source": "[1,\"QA-NIGHT-01\",\"night-1\"]",
+          "info": {
+            "wifiController": {
+              "state": "available",
+              "port": 63485,
+              "serviceName": "pureTV browser fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 73,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      }
+    },
+    {
+      "name": "Disconnect cancels drift, reconnect waits for explicit resume",
+      "drift": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 81,
+        "stage": "playing",
+        "paused": false,
+        "gameplay": {
+          "state": "race",
+          "map": "city",
+          "mode": "race",
+          "raceTime": 0.5333333333333339,
+          "countT": 3.0141999999992524,
+          "playerX": -34.86636205859357,
+          "playerZ": 3.3962431718943704,
+          "heading": 1.485300272236821,
+          "speed": 4.326370030212903,
+          "steer": -0.2727007722547379,
+          "drift": false,
+          "driftTime": 0,
+          "miniT": 0,
+          "nitro": 0,
+          "bottles": 1,
+          "camera": 0,
+          "coins": 400,
+          "laps": -1,
+          "renderPreset": "low",
+          "ready": true
+        },
+        "audioState": "running",
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": true,
+            "DOWN": false,
+            "LEFT": true,
+            "RIGHT": false,
+            "START": false,
+            "A": true,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "controllerId": "QA-NIGHT-01",
+              "session": "night-1",
+              "connected": true,
+              "transport": "wifi",
+              "inputActive": true,
+              "cancelSeq": 0,
+              "buttons": {
+                "UP": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "A": false,
+                "B": false,
+                "X": false,
+                "Y": false
+              }
+            }
+          ],
+          "source": "[1,\"QA-NIGHT-01\",\"night-1\"]",
+          "info": {
+            "wifiController": {
+              "state": "available",
+              "port": 63485,
+              "serviceName": "pureTV browser fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 81,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "charged": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 104,
+        "stage": "playing",
+        "paused": false,
+        "gameplay": {
+          "state": "race",
+          "map": "city",
+          "mode": "race",
+          "raceTime": 1.6833333333333298,
+          "countT": 3.0141999999992524,
+          "playerX": -23.536078961276033,
+          "playerZ": -1.8610944432409329,
+          "heading": 2.98308077474211,
+          "speed": 15.532876276203067,
+          "steer": -0.9993868444603846,
+          "drift": true,
+          "driftTime": 0.7333333333333332,
+          "miniT": 0,
+          "nitro": 17.519874463215775,
+          "bottles": 1,
+          "camera": 0,
+          "coins": 400,
+          "laps": -1,
+          "renderPreset": "low",
+          "ready": true
+        },
+        "audioState": "running",
+        "controller": {
+          "buttons": {
+            "UP": true,
+            "DOWN": false,
+            "LEFT": true,
+            "RIGHT": false,
+            "START": false,
+            "A": true,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "controllerId": "QA-NIGHT-01",
+              "session": "night-1",
+              "connected": true,
+              "transport": "wifi",
+              "inputActive": true,
+              "cancelSeq": 0,
+              "buttons": {
+                "UP": true,
+                "DOWN": false,
+                "LEFT": true,
+                "RIGHT": false,
+                "START": false,
+                "A": true,
+                "B": false,
+                "X": false,
+                "Y": false
+              }
+            }
+          ],
+          "source": "[1,\"QA-NIGHT-01\",\"night-1\"]",
+          "info": {
+            "wifiController": {
+              "state": "available",
+              "port": 63485,
+              "serviceName": "pureTV browser fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 104,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "cancelled": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 105,
+        "stage": "paused",
+        "paused": true,
+        "gameplay": {
+          "state": "paused",
+          "map": "city",
+          "mode": "race",
+          "raceTime": 1.6833333333333298,
+          "countT": 3.0141999999992524,
+          "playerX": -23.536078961276033,
+          "playerZ": -1.8610944432409329,
+          "heading": 2.98308077474211,
+          "speed": 15.532876276203067,
+          "steer": -0.9993868444603846,
+          "drift": false,
+          "driftTime": 0,
+          "miniT": 0,
+          "nitro": 17.519874463215775,
+          "bottles": 1,
+          "camera": 0,
+          "coins": 400,
+          "laps": -1,
+          "renderPreset": "low",
+          "ready": true
+        },
+        "audioState": "suspended",
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": false,
+          "cancelled": true,
+          "players": [
+            {
+              "id": 1,
+              "controllerId": "QA-NIGHT-01",
+              "session": "night-1",
+              "connected": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "cancelSeq": 0,
+              "buttons": {
+                "UP": true,
+                "DOWN": false,
+                "LEFT": true,
+                "RIGHT": false,
+                "START": false,
+                "A": true,
+                "B": false,
+                "X": false,
+                "Y": false
+              }
+            }
+          ],
+          "source": "",
+          "info": {
+            "wifiController": {
+              "state": "available",
+              "port": 63485,
+              "serviceName": "pureTV browser fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 105,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "resumed": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 108,
+        "stage": "playing",
+        "paused": false,
+        "gameplay": {
+          "state": "race",
+          "map": "city",
+          "mode": "race",
+          "raceTime": 1.7833333333333294,
+          "countT": 3.0141999999992524,
+          "playerX": -22.9011342685358,
+          "playerZ": -3.081949421026815,
+          "heading": 3.1157465837560547,
+          "speed": 12.884340452120421,
+          "steer": -0.35177979994489983,
+          "drift": false,
+          "driftTime": 0,
+          "miniT": 0,
+          "nitro": 17.519874463215775,
+          "bottles": 1,
+          "camera": 0,
+          "coins": 400,
+          "laps": -1,
+          "renderPreset": "low",
+          "ready": true
+        },
+        "audioState": "running",
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": true,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "controllerId": "QA-NIGHT-01",
+              "session": "night-2",
+              "connected": true,
+              "transport": "wifi",
+              "inputActive": true,
+              "cancelSeq": 0,
+              "buttons": {
+                "UP": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "A": false,
+                "B": false,
+                "X": false,
+                "Y": false
+              }
+            }
+          ],
+          "source": "[1,\"QA-NIGHT-01\",\"night-2\"]",
+          "info": {
+            "wifiController": {
+              "state": "available",
+              "port": 63485,
+              "serviceName": "pureTV browser fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 108,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      }
+    },
+    {
+      "name": "Paused viewport 960",
+      "layout": {
+        "identity": "pureTV 手柄\n1P\n已连接\nID: QA-NIGHT-01\n\n单人游戏 · 1P 手柄操作\npureTV browser fixture\n127.0.0.1\nTCP 63485",
+        "left": 12,
+        "right": 202,
+        "top": 220,
+        "bottom": 395.078125,
+        "scrollWidth": 188,
+        "clientWidth": 188,
+        "scrollHeight": 173,
+        "clientHeight": 173,
+        "pageWidth": 960,
+        "width": 960,
+        "height": 540,
+        "frames": 112,
+        "polls": 112,
+        "reads": 112
+      }
+    },
+    {
+      "name": "Paused viewport 1280",
+      "layout": {
+        "identity": "pureTV 手柄\n1P\n已连接\nID: QA-NIGHT-01\n\n单人游戏 · 1P 手柄操作\npureTV browser fixture\n127.0.0.1\nTCP 63485",
+        "left": 12,
+        "right": 202,
+        "top": 220,
+        "bottom": 395.078125,
+        "scrollWidth": 188,
+        "clientWidth": 188,
+        "scrollHeight": 173,
+        "clientHeight": 173,
+        "pageWidth": 1280,
+        "width": 1280,
+        "height": 720,
+        "frames": 120,
+        "polls": 120,
+        "reads": 120
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "menu-1280.png",
+      "sha256": "3c793bfaf222d10d0fddfc73fdf93f60489fd65fff09b992be5ca31cfc5866cc"
+    },
+    {
+      "path": "driving-1280.png",
+      "sha256": "6eabb04902c03bc9749d75cbd1865ec90e9be61554f0d2174d0fb05074edda97"
+    },
+    {
+      "path": "paused-1280.png",
+      "sha256": "6aa1061c75f1cec47c978fd54c8b928d36bc518a745b3f2dd31c53c17109bd38"
+    },
+    {
+      "path": "paused-960.png",
+      "sha256": "b4d7f1e4a02129856f0cb9abbc2d3c4b149faaea0b16685ddb5477a27b79cc3a"
+    },
+    {
+      "path": "paused-1280.png",
+      "sha256": "6852d1c306cd83007d32b99228c4854b17c73858a4d45be2931d51b09dfcd41c"
+    }
+  ],
+  "pageErrors": [],
+  "externalRequests": [],
+  "responses": [
+    {
+      "path": "tv.html",
+      "bytes": 1245661,
+      "sha256": "ee6815e29953b3d86bb35aa49893ff8fd5a8599759e259ebbbd868cd86a1d302"
+    },
+    {
+      "path": "fonts/chakra.css",
+      "bytes": 310,
+      "sha256": "f4db85ea22a15b356f68362c9b6de7b58ea71cf9693b5a332f84b04d362c8720"
+    },
+    {
+      "path": "fonts/chakra-0.ttf",
+      "bytes": 70252,
+      "sha256": "ba224f677484f7ed6ef4bca2d18a353bccb5a68093e2e35a1502f1c14807f5db"
+    },
+    {
+      "path": "fonts/chakra-1.ttf",
+      "bytes": 70140,
+      "sha256": "c9c2ee076c89bce96fe318e91d1ff06f0b5217175373755adb70365a66d4ec64"
+    },
+    {
+      "path": "models/gt.glb",
+      "bytes": 1419608,
+      "sha256": "e22a6b704c3d515190a8cbcfcdc0fd70a0fdabcd04472cc8ddb89197b1c4c378"
+    },
+    {
+      "path": "models/hyper.glb",
+      "bytes": 1254072,
+      "sha256": "dbeab906d4162ae0e77dd8869583bd5c43b4fba8c9bfab8cf980131c252cb3dc"
+    },
+    {
+      "path": "tv.html",
+      "bytes": 1245661,
+      "sha256": "ee6815e29953b3d86bb35aa49893ff8fd5a8599759e259ebbbd868cd86a1d302"
+    },
+    {
+      "path": "fonts/chakra.css",
+      "bytes": 310,
+      "sha256": "f4db85ea22a15b356f68362c9b6de7b58ea71cf9693b5a332f84b04d362c8720"
+    },
+    {
+      "path": "models/gt.glb",
+      "bytes": 1419608,
+      "sha256": "e22a6b704c3d515190a8cbcfcdc0fd70a0fdabcd04472cc8ddb89197b1c4c378"
+    },
+    {
+      "path": "models/hyper.glb",
+      "bytes": 1254072,
+      "sha256": "dbeab906d4162ae0e77dd8869583bd5c43b4fba8c9bfab8cf980131c252cb3dc"
+    },
+    {
+      "path": "fonts/chakra-0.ttf",
+      "bytes": 70252,
+      "sha256": "ba224f677484f7ed6ef4bca2d18a353bccb5a68093e2e35a1502f1c14807f5db"
+    },
+    {
+      "path": "fonts/chakra-1.ttf",
+      "bytes": 70140,
+      "sha256": "c9c2ee076c89bce96fe318e91d1ff06f0b5217175373755adb70365a66d4ec64"
+    }
+  ],
+  "failures": [],
+  "status": "passed"
+}

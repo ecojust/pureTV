@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { drivingInput, cancelDrift } from '../src/src/tv-controls.js';
+import { drivingInput, cancelDrift, createDrivingGate, createActionLatch } from '../src/src/tv-controls.js';
 import { createStore, STORAGE_KEY } from '../src/src/tv-storage.js';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const idle={throttle:false,brake:false,steer:0,drift:false,nitroPressed:false};
@@ -16,6 +16,18 @@ test('nine physical keys keep steering, throttle, brake, drift and nitro indepen
 test('held nitro does not repeat without a new press; camera and reset do not spend it',()=>{
  assert.equal(drivingInput({buttons:{B:true,X:true,Y:true},pressed:{X:true,Y:true}},idle).nitroPressed,false);
  assert.equal(drivingInput({pressed:{B:true}},idle).nitroPressed,true);
+});
+test('B closing a pause menu cannot spend nitro; menu throttle/drift wait for release',()=>{
+ const gate=createDrivingGate(), held={buttons:{B:true,A:true,UP:true},pressed:{B:true,A:true,UP:true}};
+ assert.deepEqual(drivingInput(gate(held,true),idle),idle);
+ assert.deepEqual(drivingInput(gate({...held,pressed:{}},false),idle),idle);
+ gate({buttons:{},pressed:{}},false);
+ assert.equal(drivingInput(gate(held,false),idle).nitroPressed,true);
+});
+test('nitro edge survives render-only frames and is cleared by a physics step or cancel',()=>{
+ const latch=createActionLatch();latch.press(true);latch.press(false);latch.press(false);
+ assert.equal(latch.peek(),true);latch.clear();assert.equal(latch.peek(),false);
+ latch.press(true);latch.clear();latch.press(false);assert.equal(latch.peek(),false);
 });
 test('ordinary keyboard driving and original steering sign remain available',()=>{
  assert.deepEqual(drivingInput({}, {...idle,throttle:true,steer:-1}),{...idle,throttle:true,steer:-1});
