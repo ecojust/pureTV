@@ -1,0 +1,576 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "ed27d8e4cd5fadc037dac718afb958f1727f63fe",
+  "artifactSourceCommit": "ed27d8e4cd5fadc037dac718afb958f1727f63fe",
+  "artifactRunId": "44605769518",
+  "startedAt": "2026-11-19T20:17:51.531512+00:00",
+  "game": "penguintrack",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "2db317fa9672df20992af6b4d6a31f9910e2876e4644c0cffca6b99df8709290",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "fcf968cd99187d950205aaf35b9ed3071cc44c78ef5d1023ccca4bba3181c3f1",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/penguintrack/qa-plan.json": "8fdf8fbc3832581477cc5afac78e1b8b21f3fad08e266e0458e664b238eb1651",
+    "joystick-games/tools/qa-plan.py": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+    "joystick-games/tools/macos-build.py": "4fa65936293a5d6c5e728577780edc30429a500627e8799c1c83a5095470b853",
+    "joystick-games/catalog-registry.json": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaRunId": 44605769518,
+  "qaRunAttempt": 1,
+  "runnerKind": "macos-15-intel",
+  "runnerName": "GitHub Actions 1000011074",
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "webgl2",
+    "storageRestartRequired": true,
+    "pauseStablePaths": [
+      "gameplay.tick",
+      "gameplay.time",
+      "gameplay.car.pos",
+      "gameplay.car.vel",
+      "gameplay.speed"
+    ],
+    "steps": [
+      {
+        "name": "Open original campaign",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "campaign"
+          }
+        ]
+      },
+      {
+        "name": "Start first original campaign track and wait natural countdown",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.phase",
+            "op": "eq",
+            "value": "racing"
+          }
+        ]
+      },
+      {
+        "name": "Accelerate using original car physics",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 3500,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "gt",
+            "value": 1
+          },
+          {
+            "path": "gameplay.car.pos",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Steer left under throttle",
+        "keys": [
+          "UP",
+          "LEFT"
+        ],
+        "holdMs": 900,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.car.pos",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Steer right with separate A throttle",
+        "keys": [
+          "A",
+          "RIGHT"
+        ],
+        "holdMs": 900,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.car.pos",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Brake with independent DOWN and B controls",
+        "keys": [
+          "DOWN",
+          "B"
+        ],
+        "holdMs": 800,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Cycle original camera",
+        "keys": [
+          "Y"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.camera",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Return to original checkpoint",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "lt",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "name": "Pause original simulation",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Focus pause option Restart",
+        "keys": [
+          "Y"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Focus pause option Settings",
+        "keys": [
+          "Y"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Focus pause option Quit",
+        "keys": [
+          "Y"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Focus pause option Pure",
+        "keys": [
+          "Y"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Toggle original Pure ghost preference and save settings",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.showGhost",
+            "op": "changed"
+          },
+          {
+            "path": "gameplay.savedSettings",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Deliberately resume with held START without re-pausing",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 1200,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          }
+        ]
+      },
+      {
+        "name": "Continue driving after saved preference",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 2000,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "gt",
+            "value": 1
+          },
+          {
+            "path": "gameplay.car.pos",
+            "op": "changed"
+          }
+        ]
+      }
+    ]
+  },
+  "acceptedRenderers": [
+    "webgl2"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "849ae99fb476961b8b936d6213092dd22278cde243f93de50a3c426587d21a28",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.penguintrack.e6804179d6384782bcad600bcdb06382",
+    "reusedAcrossRestartOnly": true
+  },
+  "nativeProcessArchitecture": "x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 407, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 201, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": true, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"Penguintrack\", \"url\": \"http://127.0.0.1:55114/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.ecojust.joystick.penguintrack\", \"name\": \"Penguintrack · 雪地竞速\"}, \"game\": {\"controller\": {\"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelled\": false, \"connected\": false, \"info\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"penguintrack:ai\", \"penguintrack:boards\", \"penguintrack:devPro\", \"penguintrack:editor\", \"penguintrack:entitlements\", \"penguintrack:mp\", \"penguintrack:records\", \"penguintrack:replays\", \"penguintrack:settings\", \"penguintrack:tas\", \"penguintrack:tasMode\", \"penguintrack:tracks\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.10\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"Penguintrack · 雪地竞速\", \"state\": \"available\"}}, \"inputAvailable\": true, \"native\": true, \"players\": [], \"pollCount\": 2454, \"pressed\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"released\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"source\": \"\"}, \"focused\": \"Look around anyway\", \"frames\": 2454, \"game\": \"penguintrack\", \"gameplay\": {\"camera\": null, \"car\": null, \"controls\": {\"brake\": false, \"gas\": false, \"left\": false, \"right\": false}, \"editorBlocks\": null, \"editorGrid\": false, \"focus\": \"Look around anyway\", \"ghostCount\": null, \"phase\": null, \"savedSettings\": false, \"screen\": \"menu\", \"showGhost\": true, \"speed\": null, \"tick\": null, \"time\": null, \"track\": null}, \"panel\": {\"clientHeight\": 109, \"height\": 111, \"hidden\": false, \"scrollHeight\": 109, \"width\": 178, \"x\": 12, \"y\": 124}, \"paused\": false, \"renderer\": null, \"stage\": \"menu\", \"webglVersion\": null}, \"input\": {\"connections\": 0, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 4, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 4}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"penguintrack:ai\", \"penguintrack:boards\", \"penguintrack:devPro\", \"penguintrack:editor\", \"penguintrack:entitlements\", \"penguintrack:mp\", \"penguintrack:records\", \"penguintrack:replays\", \"penguintrack:settings\", \"penguintrack:tas\", \"penguintrack:tasMode\", \"penguintrack:tracks\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.10\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"Penguintrack · 雪地竞速\", \"state\": \"available\"}}, \"storage\": {\"current\": {\"penguintrack:ai\": null, \"penguintrack:boards\": null, \"penguintrack:devPro\": null, \"penguintrack:editor\": null, \n",
+  "lastState": {
+    "active": true,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "en",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "Penguintrack",
+      "url": "http://127.0.0.1:55114/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystick.penguintrack",
+      "name": "Penguintrack · 雪地竞速"
+    },
+    "game": {
+      "controller": {
+        "buttons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "cancelled": false,
+        "connected": false,
+        "info": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "storageKeys": [
+            "penguintrack:ai",
+            "penguintrack:boards",
+            "penguintrack:devPro",
+            "penguintrack:editor",
+            "penguintrack:entitlements",
+            "penguintrack:mp",
+            "penguintrack:records",
+            "penguintrack:replays",
+            "penguintrack:settings",
+            "penguintrack:tas",
+            "penguintrack:tasMode",
+            "penguintrack:tracks"
+          ],
+          "storageMaxBytes": 1048576,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.10"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "Penguintrack · 雪地竞速",
+            "state": "available"
+          }
+        },
+        "inputAvailable": true,
+        "native": true,
+        "players": [],
+        "pollCount": 2454,
+        "pressed": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "released": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "source": ""
+      },
+      "focused": "Look around anyway",
+      "frames": 2454,
+      "game": "penguintrack",
+      "gameplay": {
+        "camera": null,
+        "car": null,
+        "controls": {
+          "brake": false,
+          "gas": false,
+          "left": false,
+          "right": false
+        },
+        "editorBlocks": null,
+        "editorGrid": false,
+        "focus": "Look around anyway",
+        "ghostCount": null,
+        "phase": null,
+        "savedSettings": false,
+        "screen": "menu",
+        "showGhost": true,
+        "speed": null,
+        "tick": null,
+        "time": null,
+        "track": null
+      },
+      "panel": {
+        "clientHeight": 109,
+        "height": 111,
+        "hidden": false,
+        "scrollHeight": 109,
+        "width": 178,
+        "x": 12,
+        "y": 124
+      },
+      "paused": false,
+      "renderer": null,
+      "stage": "menu",
+      "webglVersion": null
+    },
+    "input": {
+      "connections": 0,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 4,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 4
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "penguintrack:ai",
+        "penguintrack:boards",
+        "penguintrack:devPro",
+        "penguintrack:editor",
+        "penguintrack:entitlements",
+        "penguintrack:mp",
+        "penguintrack:records",
+        "penguintrack:replays",
+        "penguintrack:settings",
+        "penguintrack:tas",
+        "penguintrack:tasMode",
+        "penguintrack:tracks"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.10"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "Penguintrack · 雪地竞速",
+        "state": "available"
+      }
+    },
+    "storage": {
+      "current": {
+        "penguintrack:ai": null,
+        "penguintrack:boards": null,
+        "penguintrack:devPro": null,
+        "penguintrack:editor": null,
+        "penguintrack:entitlements": null,
+        "penguintrack:mp": null,
+        "penguintrack:records": null,
+        "penguintrack:replays": null,
+        "penguintrack:settings": null,
+        "penguintrack:tas": null,
+        "penguintrack:tasMode": null,
+        "penguintrack:tracks": null
+      },
+      "initial": {
+        "penguintrack:ai": null,
+        "penguintrack:boards": null,
+        "penguintrack:devPro": null,
+        "penguintrack:editor": null,
+        "penguintrack:entitlements": null,
+        "penguintrack:mp": null,
+        "penguintrack:records": null,
+        "penguintrack:replays": null,
+        "penguintrack:settings": null,
+        "penguintrack:tas": null,
+        "penguintrack:tasMode": null,
+        "penguintrack:tracks": null
+      },
+      "origin": "http://127.0.0.1:55114"
+    },
+    "timestamp": 1795119561.464052
+  },
+  "failurePhase": "initialization",
+  "nativeProcessAlive": true,
+  "lastStateFresh": true,
+  "phase": "initialization",
+  "finishedAt": "2026-11-19T20:19:21.903176+00:00"
+}

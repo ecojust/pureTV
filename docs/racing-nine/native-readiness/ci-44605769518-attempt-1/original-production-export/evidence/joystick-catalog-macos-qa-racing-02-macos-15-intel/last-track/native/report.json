@@ -1,0 +1,622 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "ed27d8e4cd5fadc037dac718afb958f1727f63fe",
+  "artifactSourceCommit": "ed27d8e4cd5fadc037dac718afb958f1727f63fe",
+  "artifactRunId": "44605769518",
+  "startedAt": "2026-11-19T20:20:26.903257+00:00",
+  "game": "last-track",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "2db317fa9672df20992af6b4d6a31f9910e2876e4644c0cffca6b99df8709290",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "fcf968cd99187d950205aaf35b9ed3071cc44c78ef5d1023ccca4bba3181c3f1",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/last-track/qa-plan.json": "2dda477fb4acaaa0773a3c8682d57ff7973a37beca167ae8cf142b19414ad10e",
+    "joystick-games/tools/qa-plan.py": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+    "joystick-games/tools/macos-build.py": "4fa65936293a5d6c5e728577780edc30429a500627e8799c1c83a5095470b853",
+    "joystick-games/catalog-registry.json": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaRunId": 44605769518,
+  "qaRunAttempt": 1,
+  "runnerKind": "macos-15-intel",
+  "runnerName": "GitHub Actions 1000011074",
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "webgl2",
+    "storageRestartRequired": true,
+    "pauseStablePaths": [
+      "gameplay.x",
+      "gameplay.y",
+      "gameplay.time",
+      "gameplay.ammo",
+      "gameplay.armor",
+      "gameplay.cash"
+    ],
+    "steps": [
+      {
+        "name": "Focus settings from original New Game focus",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 16,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.menuFocus",
+            "op": "eq",
+            "value": "SETTINGSGraphics · audio · controls"
+          }
+        ]
+      },
+      {
+        "name": "Open original settings",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.modal",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Focus original Low preset",
+        "keys": [
+          "LEFT"
+        ],
+        "holdMs": 16,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.menuFocus",
+            "op": "eq",
+            "value": "LOW"
+          }
+        ]
+      },
+      {
+        "name": "Select original Low preset",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.quality",
+            "op": "eq",
+            "value": "low"
+          }
+        ]
+      },
+      {
+        "name": "Close settings",
+        "keys": [
+          "B"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.modal",
+            "op": "eq",
+            "value": false
+          }
+        ]
+      },
+      {
+        "name": "Focus New Game",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 16,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "title"
+          }
+        ]
+      },
+      {
+        "name": "Start new game normally",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "carSelect"
+          }
+        ]
+      },
+      {
+        "name": "Confirm original car choice",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "garage"
+          }
+        ]
+      },
+      {
+        "name": "Move from armor purchase to engine purchase",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 16,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.menuFocus",
+            "op": "eq",
+            "value": "$1,200"
+          }
+        ]
+      },
+      {
+        "name": "Move from engine purchase to tyre purchase",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 16,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.menuFocus",
+            "op": "eq",
+            "value": "$1,200"
+          }
+        ]
+      },
+      {
+        "name": "Move to original track-selection action",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 16,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.menuFocus",
+            "op": "eq",
+            "value": "TO THE TRACK"
+          }
+        ]
+      },
+      {
+        "name": "Open track selection",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "trackSelect"
+          }
+        ]
+      },
+      {
+        "name": "Select first unlocked track",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "raceSettings"
+          }
+        ]
+      },
+      {
+        "name": "Next original setup screen",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.menuFocus",
+            "op": "eq",
+            "value": "START RACE"
+          }
+        ]
+      },
+      {
+        "name": "Start race and wait for original countdown",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.phase",
+            "op": "eq",
+            "value": "racing"
+          },
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      },
+      {
+        "name": "Accelerate original simulation",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 3000,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "changed"
+          },
+          {
+            "path": "gameplay.speed",
+            "op": "gt",
+            "value": 2
+          }
+        ]
+      },
+      {
+        "name": "Fire the original machine gun",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 600,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.ammo",
+            "op": "lt",
+            "value": 200
+          }
+        ]
+      },
+      {
+        "name": "Turn and drift with independent B",
+        "keys": [
+          "UP",
+          "RIGHT",
+          "B"
+        ],
+        "holdMs": 800,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.heading",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Use independent nitro Y",
+        "keys": [
+          "UP",
+          "Y"
+        ],
+        "holdMs": 500,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.nitro",
+            "op": "lt",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "name": "Pause explicitly",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "paused"
+          }
+        ]
+      },
+      {
+        "name": "Resume explicitly",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      }
+    ]
+  },
+  "acceptedRenderers": [
+    "webgl2"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "2f006d4703569d48ed6f2c3c0d5c78b38400335a5e8ce50aac10f77ce2860b18",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.last-track.f01f1ccaa814445d9d4b1cc0b5fd7ed5",
+    "reusedAcrossRestartOnly": true
+  },
+  "nativeProcessArchitecture": "x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 407, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 201, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": true, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"Last Track\", \"url\": \"http://127.0.0.1:50865/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.ecojust.joystick.lasttrack\", \"name\": \"Last Track · 末路战车\"}, \"game\": {\"audioState\": \"suspended\", \"controller\": {\"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelled\": false, \"connected\": false, \"info\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"lasttrack.save.v1\", \"lasttrack.settings\", \"lasttrack.quality\", \"lasttrack.started\", \"lasttrack.save.v1.corrupt\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.10\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"Last Track · 末路战车\", \"state\": \"available\"}}, \"inputAvailable\": true, \"native\": true, \"players\": [], \"pollCount\": 2581, \"pressed\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"released\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"source\": \"\"}, \"errors\": [], \"frames\": 2581, \"game\": \"last-track\", \"gameplay\": {\"activeWeapon\": 0, \"ammo\": 0, \"armor\": 0, \"cash\": 5000, \"controls\": {\"brake\": false, \"cycle\": false, \"drift\": false, \"fire\": false, \"left\": false, \"nitro\": false, \"right\": false, \"throttle\": false}, \"countdown\": 0, \"drift\": 0, \"heading\": 0, \"lap\": 0, \"menuFocus\": \"NEW GAMEPick a car, start with $5,000\", \"modal\": false, \"nitro\": 0, \"nitroOn\": false, \"phase\": \"menu\", \"projectiles\": 0, \"quality\": \"unknown\", \"screen\": \"title\", \"speed\": 0, \"tick\": 0, \"time\": 0, \"x\": 0, \"y\": 0}, \"paused\": false, \"renderer\": \"unavailable\", \"stage\": \"menu\", \"webglVersion\": 0}, \"input\": {\"connections\": 0, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 4, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 4}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"lasttrack.save.v1\", \"lasttrack.settings\", \"lasttrack.quality\", \"lasttrack.started\", \"lasttrack.save.v1.corrupt\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.10\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"Last Track · 末路战车\", \"state\": \"available\"}}, \"storage\": {\"current\": {\"lasttrack.quality\": null, \"lasttrack.save.v1\": null, \"lasttrack.save.v1.corrupt\": null, \"lasttrack.settings\": null, \"lasttrack.started\": null}, \"initial\": {\"lasttrack.quality\": null, \"lasttrack.save.v1\": null, \"lasttrack.save.v1.corrupt\": null, \"lasttrack.settings\": null, \"lasttrack.started\": null}, \"origin\": \"http://127.0.0.1:50865\"}, \"timestamp\": 1795119716.890304}\n",
+  "lastState": {
+    "active": true,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "en",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "Last Track",
+      "url": "http://127.0.0.1:50865/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystick.lasttrack",
+      "name": "Last Track · 末路战车"
+    },
+    "game": {
+      "audioState": "suspended",
+      "controller": {
+        "buttons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "cancelled": false,
+        "connected": false,
+        "info": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "storageKeys": [
+            "lasttrack.save.v1",
+            "lasttrack.settings",
+            "lasttrack.quality",
+            "lasttrack.started",
+            "lasttrack.save.v1.corrupt"
+          ],
+          "storageMaxBytes": 1048576,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.10"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "Last Track · 末路战车",
+            "state": "available"
+          }
+        },
+        "inputAvailable": true,
+        "native": true,
+        "players": [],
+        "pollCount": 2581,
+        "pressed": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "released": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "source": ""
+      },
+      "errors": [],
+      "frames": 2581,
+      "game": "last-track",
+      "gameplay": {
+        "activeWeapon": 0,
+        "ammo": 0,
+        "armor": 0,
+        "cash": 5000,
+        "controls": {
+          "brake": false,
+          "cycle": false,
+          "drift": false,
+          "fire": false,
+          "left": false,
+          "nitro": false,
+          "right": false,
+          "throttle": false
+        },
+        "countdown": 0,
+        "drift": 0,
+        "heading": 0,
+        "lap": 0,
+        "menuFocus": "NEW GAMEPick a car, start with $5,000",
+        "modal": false,
+        "nitro": 0,
+        "nitroOn": false,
+        "phase": "menu",
+        "projectiles": 0,
+        "quality": "unknown",
+        "screen": "title",
+        "speed": 0,
+        "tick": 0,
+        "time": 0,
+        "x": 0,
+        "y": 0
+      },
+      "paused": false,
+      "renderer": "unavailable",
+      "stage": "menu",
+      "webglVersion": 0
+    },
+    "input": {
+      "connections": 0,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 4,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 4
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "lasttrack.save.v1",
+        "lasttrack.settings",
+        "lasttrack.quality",
+        "lasttrack.started",
+        "lasttrack.save.v1.corrupt"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.10"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "Last Track · 末路战车",
+        "state": "available"
+      }
+    },
+    "storage": {
+      "current": {
+        "lasttrack.quality": null,
+        "lasttrack.save.v1": null,
+        "lasttrack.save.v1.corrupt": null,
+        "lasttrack.settings": null,
+        "lasttrack.started": null
+      },
+      "initial": {
+        "lasttrack.quality": null,
+        "lasttrack.save.v1": null,
+        "lasttrack.save.v1.corrupt": null,
+        "lasttrack.settings": null,
+        "lasttrack.started": null
+      },
+      "origin": "http://127.0.0.1:50865"
+    },
+    "timestamp": 1795119716.890304
+  },
+  "failurePhase": "initialization",
+  "nativeProcessAlive": true,
+  "lastStateFresh": true,
+  "phase": "initialization",
+  "finishedAt": "2026-11-19T20:21:57.245540+00:00"
+}
