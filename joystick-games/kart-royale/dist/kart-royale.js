@@ -348,7 +348,7 @@
     }
   });
 
-  // src/node_modules/three/build/three.core.js
+  // node_modules/three/build/three.core.js
   function arrayNeedsUint32(array) {
     for (let i = array.length - 1; i >= 0; --i) {
       if (array[i] >= 65535) return true;
@@ -1105,7 +1105,7 @@
   }
   var REVISION, CullFaceNone, CullFaceBack, CullFaceFront, PCFShadowMap, PCFSoftShadowMap, VSMShadowMap, FrontSide, BackSide, DoubleSide, NoBlending, NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending, CustomBlending, AddEquation, SubtractEquation, ReverseSubtractEquation, MinEquation, MaxEquation, ZeroFactor, OneFactor, SrcColorFactor, OneMinusSrcColorFactor, SrcAlphaFactor, OneMinusSrcAlphaFactor, DstAlphaFactor, OneMinusDstAlphaFactor, DstColorFactor, OneMinusDstColorFactor, SrcAlphaSaturateFactor, ConstantColorFactor, OneMinusConstantColorFactor, ConstantAlphaFactor, OneMinusConstantAlphaFactor, NeverDepth, AlwaysDepth, LessDepth, LessEqualDepth, EqualDepth, GreaterEqualDepth, GreaterDepth, NotEqualDepth, MultiplyOperation, MixOperation, AddOperation, NoToneMapping, LinearToneMapping, ReinhardToneMapping, CineonToneMapping, ACESFilmicToneMapping, CustomToneMapping, AgXToneMapping, NeutralToneMapping, UVMapping, CubeReflectionMapping, CubeRefractionMapping, EquirectangularReflectionMapping, EquirectangularRefractionMapping, CubeUVReflectionMapping, RepeatWrapping, ClampToEdgeWrapping, MirroredRepeatWrapping, NearestFilter, NearestMipmapNearestFilter, NearestMipmapLinearFilter, LinearFilter, LinearMipmapNearestFilter, LinearMipmapLinearFilter, UnsignedByteType, ByteType, ShortType, UnsignedShortType, IntType, UnsignedIntType, FloatType, HalfFloatType, UnsignedShort4444Type, UnsignedShort5551Type, UnsignedInt248Type, UnsignedInt5999Type, UnsignedInt101111Type, AlphaFormat, RGBFormat, RGBAFormat, DepthFormat, DepthStencilFormat, RedFormat, RedIntegerFormat, RGFormat, RGIntegerFormat, RGBAIntegerFormat, RGB_S3TC_DXT1_Format, RGBA_S3TC_DXT1_Format, RGBA_S3TC_DXT3_Format, RGBA_S3TC_DXT5_Format, RGB_PVRTC_4BPPV1_Format, RGB_PVRTC_2BPPV1_Format, RGBA_PVRTC_4BPPV1_Format, RGBA_PVRTC_2BPPV1_Format, RGB_ETC1_Format, RGB_ETC2_Format, RGBA_ETC2_EAC_Format, R11_EAC_Format, SIGNED_R11_EAC_Format, RG11_EAC_Format, SIGNED_RG11_EAC_Format, RGBA_ASTC_4x4_Format, RGBA_ASTC_5x4_Format, RGBA_ASTC_5x5_Format, RGBA_ASTC_6x5_Format, RGBA_ASTC_6x6_Format, RGBA_ASTC_8x5_Format, RGBA_ASTC_8x6_Format, RGBA_ASTC_8x8_Format, RGBA_ASTC_10x5_Format, RGBA_ASTC_10x6_Format, RGBA_ASTC_10x8_Format, RGBA_ASTC_10x10_Format, RGBA_ASTC_12x10_Format, RGBA_ASTC_12x12_Format, RGBA_BPTC_Format, RGB_BPTC_SIGNED_Format, RGB_BPTC_UNSIGNED_Format, RED_RGTC1_Format, SIGNED_RED_RGTC1_Format, RED_GREEN_RGTC2_Format, SIGNED_RED_GREEN_RGTC2_Format, InterpolateDiscrete, InterpolateLinear, InterpolateSmooth, InterpolateBezier, ZeroCurvatureEnding, ZeroSlopeEnding, WrapAroundEnding, BasicDepthPacking, RGBADepthPacking, TangentSpaceNormalMap, ObjectSpaceNormalMap, NoColorSpace, SRGBColorSpace, LinearSRGBColorSpace, LinearTransfer, SRGBTransfer, KeepStencilOp, AlwaysStencilFunc, NeverCompare, LessCompare, EqualCompare, LessEqualCompare, GreaterCompare, NotEqualCompare, GreaterEqualCompare, AlwaysCompare, StaticDrawUsage, DynamicDrawUsage, GLSL3, WebGLCoordinateSystem, WebGPUCoordinateSystem, _cache, _setConsoleFunction, ReversedDepthFuncs, EventDispatcher, _lut, _seed, DEG2RAD, RAD2DEG, MathUtils, _Vector2, Vector2, Quaternion, _Vector3, Vector3, _vector$c, _quaternion$5, _Matrix3, Matrix3, _m3, LINEAR_REC709_TO_XYZ, XYZ_TO_LINEAR_REC709, ColorManagement, _canvas, ImageUtils, _sourceId, Source, _textureId, _tempVec3, Texture, _Vector4, Vector4, RenderTarget, WebGLRenderTarget, DataArrayTexture, Data3DTexture, _Matrix4, Matrix4, _v1$7, _m1$2, _zero, _one, _x, _y, _z, _matrix$2, _quaternion$4, Euler, Layers, _object3DId, _v1$6, _q1, _m1$1, _target, _position$4, _scale$3, _quaternion$3, _xAxis, _yAxis, _zAxis, _addedEvent, _removedEvent, _childaddedEvent, _childremovedEvent, Object3D, Group, _moveEvent, WebXRController, _colorKeywords, _hslA, _hslB, Color, _color, FogExp2, Scene, _v0$2, _v1$5, _v2$4, _v3$2, _vab, _vac, _vbc, _vap, _vbp, _vcp, _v40, _v41, _v42, Triangle, Box3, _points, _vector$b, _box$4, _v0$1, _v1$4, _v2$3, _f0, _f1, _f2, _center, _extents, _triangleNormal, _testAxis, _tables, DataUtils, _vector$a, _vector2$1, _id$2, BufferAttribute, Uint16BufferAttribute, Uint32BufferAttribute, Float32BufferAttribute, _box$3, _v1$3, _v2$2, Sphere, _id$1, _m1, _obj, _offset, _box$2, _boxMorphTargets, _vector$9, BufferGeometry, InterleavedBuffer, _vector$8, InterleavedBufferAttribute, _materialId, Material, _vector$7, _segCenter, _segDir, _diff, _edge1, _edge2, _normal$1, Ray, MeshBasicMaterial, _inverseMatrix$3, _ray$3, _sphere$6, _sphereHitAt, _vA, _vB, _vC, _tempA, _morphA, _intersectionPoint, _intersectionPointWorld, Mesh, DataTexture, InstancedBufferAttribute, _instanceLocalMatrix, _instanceWorldMatrix, _instanceIntersects, _box3, _identity, _mesh$1, _sphere$4, InstancedMesh, _vector1, _vector2, _normalMatrix, Plane, _sphere$3, _defaultSpriteCenter, _vector$6, Frustum, CubeTexture, CanvasTexture, DepthTexture, CubeDepthTexture, ExternalTexture, BoxGeometry, CircleGeometry, CylinderGeometry, PolyhedronGeometry, Curve, tmp, tmp2, px, py, pz, CatmullRomCurve3, LatheGeometry, OctahedronGeometry, PlaneGeometry, SphereGeometry, TorusGeometry, UniformsUtils, default_vertex, default_fragment, ShaderMaterial, RawShaderMaterial, MeshStandardMaterial, MeshPhysicalMaterial, MeshNormalMaterial, MeshLambertMaterial, MeshDepthMaterial, MeshDistanceMaterial, Interpolant, CubicInterpolant, LinearInterpolant, DiscreteInterpolant, BezierInterpolant, KeyframeTrack, BooleanKeyframeTrack, ColorKeyframeTrack, NumberKeyframeTrack, QuaternionLinearInterpolant, QuaternionKeyframeTrack, StringKeyframeTrack, VectorKeyframeTrack, LoadingManager, DefaultLoadingManager, Loader, Light, _projScreenMatrix, _lightPositionWorld, _lookTarget, LightShadow, _position$2, _quaternion$2, _scale$2, Camera, _v3$1, _minTarget, _maxTarget, PerspectiveCamera, PointLightShadow, PointLight, OrthographicCamera, DirectionalLightShadow, DirectionalLight, AmbientLight, SphericalHarmonics3, LightProbe, InstancedBufferGeometry, fov, aspect, CubeCamera, ArrayCamera, _RESERVED_CHARS_RE, _reservedRe, _wordChar, _wordCharOrDot, _directoryRe, _nodeRe, _objectRe, _propertyRe, _trackRe, _supportedObjectNames, Composite, PropertyBinding, _controlInterpolantsResultBuffer, Uniform, InstancedInterleavedBuffer, _matrix, Raycaster, _Matrix2, Matrix2;
   var init_three_core = __esm({
-    "src/node_modules/three/build/three.core.js"() {
+    "node_modules/three/build/three.core.js"() {
       /**
        * @license
        * Copyright 2010-2026 Three.js Authors
@@ -18999,7 +18999,7 @@
     }
   });
 
-  // src/node_modules/three/build/three.module.js
+  // node_modules/three/build/three.module.js
   function WebGLAnimation() {
     let context = null;
     let isAnimating = false;
@@ -26244,7 +26244,7 @@
   }
   var alphahash_fragment, alphahash_pars_fragment, alphamap_fragment, alphamap_pars_fragment, alphatest_fragment, alphatest_pars_fragment, aomap_fragment, aomap_pars_fragment, batching_pars_vertex, batching_vertex, begin_vertex, beginnormal_vertex, bsdfs, iridescence_fragment, bumpmap_pars_fragment, clipping_planes_fragment, clipping_planes_pars_fragment, clipping_planes_pars_vertex, clipping_planes_vertex, color_fragment, color_pars_fragment, color_pars_vertex, color_vertex, common, cube_uv_reflection_fragment, defaultnormal_vertex, displacementmap_pars_vertex, displacementmap_vertex, emissivemap_fragment, emissivemap_pars_fragment, colorspace_fragment, colorspace_pars_fragment, envmap_fragment, envmap_common_pars_fragment, envmap_pars_fragment, envmap_pars_vertex, envmap_vertex, fog_vertex, fog_pars_vertex, fog_fragment, fog_pars_fragment, gradientmap_pars_fragment, lightmap_pars_fragment, lights_lambert_fragment, lights_lambert_pars_fragment, lights_pars_begin, envmap_physical_pars_fragment, lights_toon_fragment, lights_toon_pars_fragment, lights_phong_fragment, lights_phong_pars_fragment, lights_physical_fragment, lights_physical_pars_fragment, lights_fragment_begin, lights_fragment_maps, lights_fragment_end, lightprobes_pars_fragment, logdepthbuf_fragment, logdepthbuf_pars_fragment, logdepthbuf_pars_vertex, logdepthbuf_vertex, map_fragment, map_pars_fragment, map_particle_fragment, map_particle_pars_fragment, metalnessmap_fragment, metalnessmap_pars_fragment, morphinstance_vertex, morphcolor_vertex, morphnormal_vertex, morphtarget_pars_vertex, morphtarget_vertex, normal_fragment_begin, normal_fragment_maps, normal_pars_fragment, normal_pars_vertex, normal_vertex, normalmap_pars_fragment, clearcoat_normal_fragment_begin, clearcoat_normal_fragment_maps, clearcoat_pars_fragment, iridescence_pars_fragment, opaque_fragment, packing, premultiplied_alpha_fragment, project_vertex, dithering_fragment, dithering_pars_fragment, roughnessmap_fragment, roughnessmap_pars_fragment, shadowmap_pars_fragment, shadowmap_pars_vertex, shadowmap_vertex, shadowmask_pars_fragment, skinbase_vertex, skinning_pars_vertex, skinning_vertex, skinnormal_vertex, specularmap_fragment, specularmap_pars_fragment, tonemapping_fragment, tonemapping_pars_fragment, transmission_fragment, transmission_pars_fragment, uv_pars_fragment, uv_pars_vertex, uv_vertex, worldpos_vertex, vertex$h, fragment$h, vertex$g, fragment$g, vertex$f, fragment$f, vertex$e, fragment$e, vertex$d, fragment$d, vertex$c, fragment$c, vertex$b, fragment$b, vertex$a, fragment$a, vertex$9, fragment$9, vertex$8, fragment$8, vertex$7, fragment$7, vertex$6, fragment$6, vertex$5, fragment$5, vertex$4, fragment$4, vertex$3, fragment$3, vertex$2, fragment$2, vertex$1, fragment$1, ShaderChunk, UniformsLib, ShaderLib, _rgb, _m1$12, _m$1, LOD_MIN, EXTRA_LOD_SIGMA, MAX_SAMPLES, GGX_SAMPLES, _flatCamera, _clearColor, _oldTarget, _oldActiveCubeFace, _oldActiveMipmapLevel, _oldXrEnabled, _origin, PMREMGenerator, WebGLCubeRenderTarget, toneMappingMap, emptyTexture, emptyShadowTexture, emptyArrayTexture, empty3dTexture, emptyCubeTexture, arrayCacheF32, arrayCacheI32, mat4array, mat3array, mat2array, SingleUniform, PureArrayUniform, StructuredUniform, RePathPart, WebGLUniforms, COMPLETION_STATUS_KHR, programIdCount, _m0, toneMappingFunctions, _v0, includePattern, shaderChunkMap, unrollLoopPattern, shadowMapTypeDefines, envMapTypeDefines, envMapModeDefines, envMapBlendingDefines, _id, WebGLShaderCache, WebGLShaderStage, nextVersion, vertex, fragment, _cubeDirections, _cubeUps, _projScreenMatrix2, _lightPositionWorld2, _lookTarget2, _occlusion_vertex, _occlusion_fragment, WebXRDepthSensing, WebXRManager, _m12, _m, DATA, lut, WebGLRenderer;
   var init_three_module = __esm({
-    "src/node_modules/three/build/three.module.js"() {
+    "node_modules/three/build/three.module.js"() {
       init_three_core();
       init_three_core();
       /**
@@ -34326,7 +34326,7 @@ box-shadow:0 0 10px rgba(255,75,75,.9); animation:recpulse 1.1s ease-in-out infi
     }
   });
 
-  // src/node_modules/postprocessing/build/index.js
+  // node_modules/postprocessing/build/index.js
   function prefixSubstrings(prefix, substrings, strings) {
     for (const substring of substrings) {
       const prefixed = "$1" + prefix + substring.charAt(0).toUpperCase() + substring.slice(1);
@@ -34452,7 +34452,7 @@ box-shadow:0 0 10px rgba(255,75,75,.9); animation:recpulse 1.1s ease-in-out infi
   }
   var fullscreenGeometry, Pass, ClearMaskPass, copy_default, common_default, CopyMaterial, CopyPass, color, ClearPass, MaskPass, MILLISECONDS_TO_SECONDS, SECONDS_TO_MILLISECONDS, Timer2, EffectComposer, EffectAttribute, EffectShaderSection, EffectShaderData, workaroundEnabled, OverrideMaterialManager, AUTO_SIZE, Resolution, BlendFunction, add_default, alpha_default, average_default, color_default, color_burn_default, color_dodge_default, darken_default, difference_default, divide_default, exclusion_default, hard_light_default, hard_mix_default, hue_default, invert_default, invert_rgb_default, lighten_default, linear_burn_default, linear_dodge_default, linear_light_default, luminosity_default, multiply_default, negation_default, normal_default, overlay_default, pin_light_default, reflect_default, saturation_default, screen_default, soft_light_default, src_default, subtract_default, vivid_light_default, blendFunctions, BlendMode, Effect, KernelSize, convolution_kawase_default, convolution_kawase_default2, kernelPresets, KawaseBlurMaterial, KawaseBlurPass, luminance_default, LuminanceMaterial, LuminancePass, convolution_downsampling_default, convolution_downsampling_default2, DownsamplingMaterial, convolution_upsampling_default, convolution_upsampling_default2, UpsamplingMaterial, MipmapBlurPass, bloom_default, BloomEffect, ColorChannel, MaskFunction, convolution_bokeh_default, BokehMaterial, circle_of_confusion_default, CircleOfConfusionMaterial, mask_default, MaskMaterial, ShaderPass, depth_of_field_default, v, DepthOfFieldEffect, RenderPass, EdgeDetectionMode, PredicationMode, SMAAPreset, HALF_PI, edge_detection_default, edge_detection_default2, EdgeDetectionMaterial, smaa_weights_default, smaa_weights_default2, SMAAWeightsMaterial, searchImageDataURL_default, areaImageDataURL_default, smaa_default, smaa_default2, SMAAEffect, effect_default, effect_default2, EffectMaterial, threeRevision, unpackDownscale, unpackFactorsLegacy, unpackFactors, EffectPass, P, C, T, area, orthogonalSubsamplingOffsets, diagonalSubsamplingOffsets, orthogonalEdges, diagonalEdges, edges;
   var init_build = __esm({
-    "src/node_modules/postprocessing/build/index.js"() {
+    "node_modules/postprocessing/build/index.js"() {
       init_three_module();
       init_three_module();
       init_three_module();
@@ -40847,7 +40847,7 @@ return orthographicDepthToViewZ(depth,cameraNear,cameraFar);
     }
   });
 
-  // src/node_modules/n8ao/dist/N8AO.js
+  // node_modules/n8ao/dist/N8AO.js
   function $parcel$interopDefault(a) {
     return a && a.__esModule ? a.default : a;
   }
@@ -40864,7 +40864,7 @@ return orthographicDepthToViewZ(depth,cameraNear,cameraFar);
   }
   var $e4ca8dcb0218f846$var$FullScreenTriangleGeometry, $e4ca8dcb0218f846$var$_geometry, $e4ca8dcb0218f846$var$_camera, $e4ca8dcb0218f846$export$dcd670d73db751f5, $1ed45968c1160c3c$export$c9b263b9a17dffd7, $12b21d24d1192a04$export$a815acccbd2c9a49, $62561e92e160ec9a$exports, $1193f60a44983e43$var$MATRIX_LAYOUTS, $1193f60a44983e43$var$scale, $1193f60a44983e43$var$glslFloat, $1193f60a44983e43$var$COMPONENTS, $1193f60a44983e43$var$tokenAccessors, $1193f60a44983e43$var$weightedTerm, $1193f60a44983e43$var$floatWeightedTerm, $1193f60a44983e43$var$sumTerms, $1193f60a44983e43$var$quantizedRow, $1193f60a44983e43$var$vec4, $1193f60a44983e43$var$tokenLayer, $1193f60a44983e43$var$foldedBias, $1193f60a44983e43$var$tapInputScale, $1193f60a44983e43$var$tapInputBias, $1193f60a44983e43$var$tapScaledAccessors, $1193f60a44983e43$var$tapInputRows, $1193f60a44983e43$var$tapInputShader, $1193f60a44983e43$var$globalScale, $1193f60a44983e43$var$globalBias, $1193f60a44983e43$var$globalInputs, $1193f60a44983e43$var$globalRows, $1193f60a44983e43$var$globalInputShader, $1193f60a44983e43$var$queryInputs, $1193f60a44983e43$var$queryRows, $1193f60a44983e43$var$queryShader, $1193f60a44983e43$var$summaryInputs, $1193f60a44983e43$var$headScale, $1193f60a44983e43$var$headRows, $1193f60a44983e43$var$headShader, $1193f60a44983e43$var$outputExpression, $1193f60a44983e43$var$outputShader, $1193f60a44983e43$export$d75ad64dd346ec0e, $1193f60a44983e43$export$788ba311f03a5564, $1193f60a44983e43$export$dd4eb4d1095a3d82, $e52378cd0f5a973d$export$57856b59f317262e, $26aca173e0984d99$export$1efdf491687cd442, $06269ad78f3c5fdf$var$BlueNoise, $06269ad78f3c5fdf$var$bluenoiseBits, $06269ad78f3c5fdf$export$2e2bcd8739ae039, $ff9437d9c7577f11$var$version, $ff9437d9c7577f11$export$156f6a58f569aa09, $87431ee93b037844$export$2489f9981ab0fa82, $05f6997e4b65da14$export$ed4ee5d1e55474a5;
   var init_N8AO = __esm({
-    "src/node_modules/n8ao/dist/N8AO.js"() {
+    "node_modules/n8ao/dist/N8AO.js"() {
       init_three_module();
       init_build();
       $e4ca8dcb0218f846$var$FullScreenTriangleGeometry = class extends BufferGeometry {
@@ -44935,7 +44935,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
     }
   });
 
-  // src/node_modules/simplex-noise/dist/esm/simplex-noise.js
+  // node_modules/simplex-noise/dist/esm/simplex-noise.js
   function createNoise2D(random = Math.random) {
     const perm = buildPermutationTable(random);
     const permGrad2x = new Float64Array(perm).map((v2) => grad2[v2 % 12 * 2]);
@@ -45137,7 +45137,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
   }
   var SQRT3, SQRT5, F2, G2, F3, G3, F4, G4, fastFloor, grad2, grad4;
   var init_simplex_noise = __esm({
-    "src/node_modules/simplex-noise/dist/esm/simplex-noise.js"() {
+    "node_modules/simplex-noise/dist/esm/simplex-noise.js"() {
       SQRT3 = /* @__PURE__ */ Math.sqrt(3);
       SQRT5 = /* @__PURE__ */ Math.sqrt(5);
       F2 = 0.5 * (SQRT3 - 1);

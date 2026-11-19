@@ -7,7 +7,7 @@ import {pathToFileURL,fileURLToPath} from 'node:url';
 import {build} from 'esbuild';
 const root=path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const temp=fs.mkdtempSync(path.join(os.tmpdir(),'kart-controller-tests-'));
-const bundled=await build({absWorkingDir:root,stdin:{contents:"export {Input} from './src/src/core/Input';export {Kart} from './src/src/kart/Kart';export {Race} from './src/src/game/Race';",resolveDir:root,loader:'ts'},bundle:true,platform:'node',format:'esm',write:false});
+const bundled=await build({absWorkingDir:root,preserveSymlinks:true,alias:Object.fromEntries(['three','n8ao','postprocessing','simplex-noise'].map(name=>[name,path.join(root,'node_modules',name)])),stdin:{contents:"export {Input} from './src/src/core/Input';export {Kart} from './src/src/kart/Kart';export {Race} from './src/src/game/Race';",resolveDir:root,loader:'ts'},bundle:true,platform:'node',format:'esm',write:false});
 fs.writeFileSync(path.join(temp,'fixture.mjs'),bundled.outputFiles[0].contents);
 const{Input,Kart,Race}=await import(pathToFileURL(path.join(temp,'fixture.mjs')));
 test.after(()=>fs.rmSync(temp,{recursive:true,force:true}));

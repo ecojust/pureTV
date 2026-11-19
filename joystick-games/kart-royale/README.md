@@ -27,7 +27,7 @@ python3 -m http.server 8080 --directory dist
 # http://127.0.0.1:8080/tv.html
 ```
 
-`src/` 保留完整 103 个原源文件及其原 package-lock；新增桥接也在该目录维护。根适配包固定原四个运行依赖的精确版本，额外使用 esbuild 0.28.2 生成离线 IIFE/CSS。所有网格、纹理、声音由原代码生成，没有运行时 CDN。根 LICENSE 是 MIT（Ryan Campbell），原 package.json 标记 ISC，两者事实均保留；依赖许可随 dist/THIRD-PARTY-NOTICES.txt 打包。
+`src/` 保留完整 103 个原源文件及其原 package-lock；新增桥接也在该目录维护。根适配包固定原四个运行依赖的精确版本，额外使用 esbuild 0.28.2 生成离线 IIFE/CSS。构建明确从根依赖锁解析，忽略原源目录里可能存在的旧 node_modules；干净 npm ci 与本地缓存安装的资产一致性见 docs/build-reproducibility/。所有网格、纹理、声音由原代码生成，没有运行时 CDN。根 LICENSE 是 MIT（Ryan Campbell），原 package.json 标记 ISC，两者事实均保留；依赖许可随 dist/THIRD-PARTY-NOTICES.txt 打包。
 
 需要 WebGL2 和现代 WebView。发布默认沿用原设备质量判断；原 `?quality=low` 渲染预设可用于软件 GPU 验证，不改变比赛时钟、物理、赛道或发布默认。Linux SwiftShader 不代表实体电视性能。
 
