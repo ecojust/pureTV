@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "storageRestartRequired": false,
+  "pauseStablePaths": [
+    "gameplay.time",
+    "gameplay.countdown",
+    "gameplay.playerX",
+    "gameplay.playerY",
+    "gameplay.playerZ",
+    "gameplay.speed",
+    "gameplay.heading",
+    "gameplay.progress",
+    "gameplay.lap",
+    "gameplay.boost"
+  ],
+  "steps": [
+    {
+      "name": "Open original racer selection",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 500,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.mode",
+          "op": "eq",
+          "value": "characterSelect"
+        }
+      ]
+    },
+    {
+      "name": "Choose another original racer",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 250,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.mode",
+          "op": "eq",
+          "value": "characterSelect"
+        }
+      ]
+    },
+    {
+      "name": "Confirm racer and open four-track selector",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 500,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.mode",
+          "op": "eq",
+          "value": "trackSelect"
+        }
+      ]
+    },
+    {
+      "name": "Start selected original course and wait real countdown",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 700,
+      "timeoutSeconds": 240,
+      "expect": [
+        {
+          "path": "gameplay.mode",
+          "op": "eq",
+          "value": "racing"
+        }
+      ]
+    },
+    {
+      "name": "Accelerate on original race physics",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 2500,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "gt",
+          "value": 2
+        },
+        {
+          "path": "gameplay.progress",
+          "op": "changed"
+        }
+      ],
+      "windowsHoldUntilExpect": true
+    },
+    {
+      "name": "Hop and steer left with original drift controls",
+      "keys": [
+        "UP",
+        "LEFT",
+        "A"
+      ],
+      "holdMs": 900,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.heading",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Steer right with independent throttle",
+      "keys": [
+        "UP",
+        "RIGHT"
+      ],
+      "holdMs": 700,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.playerX",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Open pureTV control help",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 250,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.helpOpen",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Pause manually",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 350,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Continue with fresh START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 350,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        },
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ]
+}
