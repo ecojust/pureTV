@@ -11,6 +11,8 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
+import types
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -132,6 +134,28 @@ def archive_content(apk):
         return {n: sha(z.read(n)) for n in z.namelist() if not n.endswith('/') and not n.startswith('META-INF/')}
 
 
+def frozen_payload(meta, registered, files, slug):
+    """Use the exact original GameKit payload rules and explicit bounded policy."""
+    policy = build.asset_policy.android_limits(meta, registered)
+    with tempfile.TemporaryDirectory(prefix='frozen-android-assets-') as tmp:
+        stage = Path(tmp); game = stage / 'game'; kit = stage / 'kit'
+        original = types.ModuleType('original_frozen_gamekit')
+        original.__file__ = str(stage / 'resource/game-kit/build.py')
+        exec(compile(files['resource/game-kit/build.py'], original.__file__, 'exec'), original.__dict__)
+        original.KIT = kit
+        prefix = 'joystick-games/' + slug + '/dist/'
+        for name, data in files.items():
+            if name.startswith(prefix):
+                target = game / 'src/main/assets' / safe_name(name[len(prefix):])
+            elif name in PHONE:
+                target = kit / 'web' / Path(name).name
+            else:
+                continue
+            target.parent.mkdir(parents=True, exist_ok=True); target.write_bytes(data)
+        (game / 'game.json').write_text(json.dumps(meta, ensure_ascii=False))
+        return original.payload(game, policy)
+
+
 def verify(args):
     for value in (args.artifact_source, args.export_commit):
         assert re.fullmatch('[a-f0-9]{40}', value)
@@ -185,12 +209,7 @@ def verify(args):
         assert identity['certificateSha256'] == pin and 0 < identity['bytes'] < budget['maxApkBytes']
         assert all(receipt[k] == v for k, v in identity.items())
         assert archive_content(apk) == receipt['contentSha256']
-        prefix = 'joystick-games/' + slug + '/dist/'
-        expected_assets = {name[len(prefix):]: value for name, value in frozen_files.items() if name.startswith(prefix)}
-        assert all('/' not in name for name in expected_assets)
-        expected_assets.update({Path(name).name: frozen_files[name] for name in PHONE})
-        expected_assets['game-config.json'] = (json.dumps(meta, ensure_ascii=False, separators=(',', ':')) + '\n').encode()
-        expected_assets['assets-index.json'] = (json.dumps(sorted(expected_assets), separators=(',', ':')) + '\n').encode()
+        expected_assets = frozen_payload(meta, registered, frozen_files, slug)
         with zipfile.ZipFile(apk) as z:
             actual_assets = {n[7:]: z.read(n) for n in z.namelist() if n.startswith('assets/')}
         assert actual_assets == expected_assets, 'Signed assets differ from artifact source'
