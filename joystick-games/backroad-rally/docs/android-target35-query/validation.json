@@ -1,0 +1,140 @@
+{
+  "at": "2026-11-19T22:03:56.559402+00:00",
+  "scope": "Production build parameter and exact local URL policy only; no game metadata/assets/physics/controller protocol changes",
+  "sourceFiles": [
+    {
+      "path": "resource/game-kit/build.py",
+      "bytes": 16982,
+      "sha256": "27b4c26e054ffc37bb309f4edf90aac1a065b53ccc249635cfaf32a9abe344b0"
+    },
+    {
+      "path": "resource/game-kit/android/src/main/java/com/ecojust/gamekit/LocalGameUrl.java",
+      "bytes": 2501,
+      "sha256": "398eceef5f75395d1e64c6b55ee0181719f35d07aae73761dfd566bda7eaf4bb"
+    },
+    {
+      "path": "resource/game-kit/android/src/main/java/com/ecojust/gamekit/MainActivity.java",
+      "bytes": 25896,
+      "sha256": "bff7e64d78a6e50120dddb12800fa5ed5ed09023f155e175ebfd3474943a13a6"
+    },
+    {
+      "path": "resource/game-kit/android/src/test/java/com/ecojust/gamekit/MainActivityTest.java",
+      "bytes": 34925,
+      "sha256": "da2ac7013d8d2a7334e1e0aa69dcf95ad68b5000085883872721391ff402c97f"
+    },
+    {
+      "path": "joystick-games/tools/android-build.py",
+      "bytes": 13049,
+      "sha256": "be47887c8fa964e0a17c8fc3d8ba3195e5ae503af4bbd728afab24bd9453277b"
+    },
+    {
+      "path": "joystick-games/tools/android-release.py",
+      "bytes": 11274,
+      "sha256": "354cf65440987b4d3411d879056bbe94493ab3219acd91432beef4c421e97f0e"
+    },
+    {
+      "path": "joystick-games/tools/android-tests.py",
+      "bytes": 14572,
+      "sha256": "a41a72b3a129e23478ba2e58186a2c0e1e9da32cfc63f846de1109b0de85a20e"
+    },
+    {
+      "path": "joystick-games/tools/android-url-tests.py",
+      "bytes": 4834,
+      "sha256": "58237276d1575b462c9d5c8eb301aec09cefb765cc272734cff49583bb8c1101"
+    },
+    {
+      "path": ".github/workflows/joystick-catalog-android.yml",
+      "bytes": 20171,
+      "sha256": "ecf8812ec4744112891ccfdd2efaefb7c4a8181837bfe2717ee646a6e4792cb9"
+    }
+  ],
+  "checks": {
+    "javaUrlPolicy": {
+      "passed": true,
+      "checks": 105,
+      "actualProductionJavaCompiledAndExecuted": true,
+      "log": {
+        "path": "joystick-games/backroad-rally/docs/android-target35-query/java-url-tests-attempt-1.log",
+        "bytes": 550,
+        "sha256": "184948075402a53f43e71965f9b1af2a15149f2b533cbc8214d9558990e85ea4"
+      }
+    },
+    "packagingBoundaries": {
+      "passed": true,
+      "tests": 19,
+      "log": {
+        "path": "joystick-games/backroad-rally/docs/android-target35-query/android-contracts-final.log",
+        "bytes": 2919,
+        "sha256": "9295600cc1ca90581b3f8a703bd7e5f18fa8c32af8cf588a51f78881f5578870"
+      }
+    },
+    "nativeBuildFixture": {
+      "passed": true,
+      "result": {
+        "path": "joystick-games/backroad-rally/docs/android-target35-query/native-fixture/result.json",
+        "bytes": 2722,
+        "sha256": "906091339de5bb4bc06dcf966735c62295695a80208228b62022846835a0d1d0"
+      },
+      "actualTools": [
+        "aapt2",
+        "javac",
+        "d8",
+        "zipalign",
+        "aapt"
+      ],
+      "minimumSdks": [
+        26,
+        26
+      ],
+      "targetSdks": [
+        29,
+        35
+      ],
+      "compileSdks": [
+        35,
+        35
+      ],
+      "onlyDifferentApkEntry": "AndroidManifest.xml",
+      "signed": false,
+      "productionBackroadBuild": false,
+      "firstAttempt": "Tiny fixture initially duplicated shared tv.html. Exact failed driver/log retained; second uses same phone-only composition as joystick builder."
+    },
+    "unchangedProductionAssets": {
+      "count": 338,
+      "comparison": {
+        "path": "joystick-games/backroad-rally/docs/android-target35-query/unchanged-game-assets.json",
+        "bytes": 35434,
+        "sha256": "6dd3bb41dfd0a9316dff084e5d2f7df0eeb38db93b2cfaa0ef56b6c07791ad78"
+      },
+      "equalToOriginalSignedApkAssets": true
+    },
+    "actionlint": {
+      "exitCode": 0,
+      "log": {
+        "path": "joystick-games/backroad-rally/docs/android-target35-query/actionlint.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "robolectricCallbacksAndResourceTests": {
+      "addedTests": 2,
+      "existingBoundaryExpectationsUpdated": true,
+      "executed": false,
+      "reason": "This checkout has no Gradle/Robolectric distribution or dependency cache; no large dependency download into the nearly full filesystem. Actual shipping host was compiled into both small fixtures and its extracted Java URL policy executed; neither substitutes for actual WebView lifecycle tests."
+    }
+  },
+  "compatibilityReview": {
+    "manifest": "Launcher activity already exported=true; original two permissions retained; min26 fixed.",
+    "receivers": "No BroadcastReceiver/registerReceiver/PendingIntent/foreground service in current shipping host or read-only Observer; no API34 receiver-flags change needed.",
+    "nsd": "Existing NsdManager.registerService advertises current TCP port; no Wi-Fi discovery/scanning API added. Target35 does not adopt the newer target37 local-network permission requirement.",
+    "storage": "WebView DOM storage remains enabled at fixed https://game-kit.invalid origin; file/content access disabled, no external-storage API or migration.",
+    "insets": "Android15 enforces edge-to-edge at target35; existing immersive fullscreen remains, but actual TV screenshot/inset/focus/resume validation is required.",
+    "query": "Bounded same-origin entry query; exact indexed resource path independent of query. Fragment, authority/userinfo/port/scheme changes, encoded or dot-segment paths, invalid/control/backslash escapes rejected.",
+    "target35Meaning": "Separate compatibility trial; not proof that Play Protect will accept this APK. No claimed install/driver/gameplay success.",
+    "sourceReuse": "Shared production source changes mean old packages must continue using their existing frozen production/QA refs; new HEAD is not proof of source identity for old APKs."
+  },
+  "physicalTvTested": false,
+  "actualWebViewTested": false,
+  "productionWorkflowDispatched": false,
+  "newSignedApk": false
+}

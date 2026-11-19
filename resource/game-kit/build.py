@@ -189,8 +189,10 @@ def run(args, env=None):
     subprocess.run([str(a) for a in args], check=True, env=env)
 
 
-def main(argv=None, *, limits=None):
+def main(argv=None, *, limits=None, target_sdk=29):
     global KIT
+    # Programmatic opt-in only; the normal Game Kit CLI retains target 29/min 26.
+    require(type(target_sdk) is int and target_sdk in (29, 35), 'Unsupported explicit target SDK')
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--kit', type=Path, default=KIT, help='Shared source directory; the builder itself stays pinned by CI')
     parser.add_argument('--game', required=True, type=Path)
@@ -244,7 +246,7 @@ def main(argv=None, *, limits=None):
         run([tools / 'aapt2', 'compile', '--dir', res, '-o', work / 'compiled.zip'], env)
         run([tools / 'aapt2', 'link', '--manifest', work / 'AndroidManifest.xml', '-I', android_jar,
              '--java', generated, '--custom-package', 'com.ecojust.gamekit', '--min-sdk-version', '26',
-             '--target-sdk-version', '29', '--version-code', str(meta['versionCode']), '--version-name', meta['version'],
+             '--target-sdk-version', str(target_sdk), '--version-code', str(meta['versionCode']), '--version-name', meta['version'],
              '-A', asset_dir, '-o', work / 'resources.apk', work / 'compiled.zip'], env)
         java = sorted((KIT / 'android/src/main/java').rglob('*.java')) + sorted(generated.rglob('*.java'))
         cache_key = hashlib.sha256(b'game-kit-d8-api26-jdk17-v1' + bytes.fromhex(digest(zxing)) + bytes.fromhex(digest(android_jar)) + b''.join(path.read_bytes() for path in java)).hexdigest()
@@ -278,7 +280,7 @@ def main(argv=None, *, limits=None):
                 require(archive.read('assets/' + name) == content, 'Packaged asset differs: ' + name)
         receipt = {'schema': 1, 'game': meta['id'], 'packageName': meta['packageName'], 'version': meta['version'],
                    'versionCode': meta['versionCode'], 'unsigned': True, 'bytes': apk.stat().st_size, 'sha256': digest(apk),
-                   'minSdk': 26, 'assets': {name: hashlib.sha256(value).hexdigest() for name, value in data.items()},
+                   'minSdk': 26, 'targetSdk': target_sdk, 'assets': {name: hashlib.sha256(value).hexdigest() for name, value in data.items()},
                    'hostDexCacheKey': cache_key, 'gameIconSha256': hashlib.sha256(icon).hexdigest() if icon is not None else None,
                    'physicalTvTested': False, 'assetLimits': limits}
         (output / 'build-receipt.json').write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n')

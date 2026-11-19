@@ -50,7 +50,7 @@ import java.util.concurrent.Executors;
 
 /** Hosts an offline game screen and a short-lived LAN controller room. */
 public class MainActivity extends Activity {
-    static final String GAME_URL = "https://game-kit.invalid/tv.html";
+    static final String GAME_URL = LocalGameUrl.ENTRY;
     private final Handler main = new Handler(Looper.getMainLooper());
     private final ExecutorService worker = Executors.newSingleThreadExecutor();
     private final Object roomLock = new Object();
@@ -126,16 +126,16 @@ public class MainActivity extends Activity {
         value.addJavascriptInterface(new HostBridge(), "PureGameHost");
         value.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return !GAME_URL.equals(request.getUrl().toString());
+                return !LocalGameUrl.isEntry(request.getUrl().toString());
             }
             @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return !GAME_URL.equals(url);
+                return !LocalGameUrl.isEntry(url);
             }
             @Override public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 return localAsset(request.getUrl());
             }
             @Override public void onPageFinished(WebView view, String url) {
-                if (GAME_URL.equals(url) && active) {
+                if (LocalGameUrl.isEntry(url) && active) {
                     status.setVisibility(View.GONE);
                     view.requestFocus();
                 }
@@ -175,15 +175,7 @@ public class MainActivity extends Activity {
     }
 
     static boolean validBundledAssetPath(String path) {
-        if (path == null || path.length() == 0 || path.length() > 1024) return false;
-        String[] parts = path.split("/", -1);
-        if (parts.length > 16) return false;
-        for (String part : parts) {
-            if (!part.matches("[A-Za-z0-9][A-Za-z0-9_.-]*") || part.endsWith(".")) return false;
-            String stem = part.split("\\.", 2)[0].toUpperCase(java.util.Locale.ROOT);
-            if (stem.matches("CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9]")) return false;
-        }
-        return true;
+        return LocalGameUrl.validAssetPath(path);
     }
 
     static String bundledAssetMime(String path) {
@@ -219,17 +211,16 @@ public class MainActivity extends Activity {
     }
 
     WebResourceResponse localAsset(Uri uri) {
-        String name = uri.getPath();
+        String assetPath = uri == null ? null : LocalGameUrl.assetPath(uri.toString());
+        String name = assetPath == null ? null : "/" + assetPath;
         String mime = bundledAssetMime(name);
-        if ("https".equals(uri.getScheme()) && "game-kit.invalid".equals(uri.getEncodedAuthority())
-            && uri.getQuery() == null && uri.getFragment() == null && name != null && name.startsWith("/")
-            && name.equals(uri.getEncodedPath()) && mime != null && bundledAssets.contains(name.substring(1))) {
+        if (assetPath != null && mime != null && bundledAssets.contains(assetPath)) {
             String encoding = mime.startsWith("text/") || mime.equals("application/javascript")
                 || mime.equals("application/json") || mime.equals("application/manifest+json") || mime.equals("model/gltf+json") ? "UTF-8" : null;
             Map<String,String> headers = new java.util.HashMap<>();
             headers.put("Cache-Control","no-store");
             headers.put("X-Content-Type-Options","nosniff");
-            try { return new WebResourceResponse(mime,encoding,200,"OK",headers,getAssets().open(name.substring(1))); }
+            try { return new WebResourceResponse(mime,encoding,200,"OK",headers,getAssets().open(assetPath)); }
             catch (IOException ignored) { }
         }
         return new WebResourceResponse("text/plain","UTF-8",403,"Forbidden",Collections.emptyMap(),new ByteArrayInputStream(new byte[0]));

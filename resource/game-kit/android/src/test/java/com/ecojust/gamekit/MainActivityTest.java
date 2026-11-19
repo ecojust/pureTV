@@ -148,7 +148,7 @@ public class MainActivityTest {
         assertNotNull(bridge());
         assertNull(browser().getJavascriptInterface("Android"));
         assertFalse(browser().getWebViewClient().shouldOverrideUrlLoading(web(),MainActivity.GAME_URL));
-        for (String url:new String[]{"https://outside.example/","http://game-kit.invalid/tv.html","file:///sdcard/secret","content://private","https://game-kit.invalid/controller.html","https://game-kit.invalid/tv.html?external=1"})
+        for (String url:new String[]{"https://outside.example/","http://game-kit.invalid/tv.html","file:///sdcard/secret","content://private","https://game-kit.invalid/controller.html","https://game-kit.invalid/tv.html?external=%00"})
             assertTrue(url,browser().getWebViewClient().shouldOverrideUrlLoading(web(),url));
     }
 
@@ -170,7 +170,7 @@ public class MainActivityTest {
             "https://game-kit.invalid/../private","https://game-kit.invalid:443/game.js",
             "https://evil.example/game.js","http://game-kit.invalid/game.js",
             "file:///android_asset/game.js","content://private/data",
-            "https://game-kit.invalid/game.js?other=1","https://game-kit.invalid/game.js#fragment",
+            "https://game-kit.invalid/game.js?other=%5c","https://game-kit.invalid/game.js#fragment",
             "https://user@game-kit.invalid/game.js","https://game-kit.invalid/%67ame.js",
             "https://game-kit.invalid/audio/../game.js","https://game-kit.invalid/audio/%2e%2e/game.js",
             "https://game-kit.invalid/nested/worker/../worker/physics.js",
@@ -180,6 +180,43 @@ public class MainActivityTest {
         }) {
             WebResourceResponse response=activity.localAsset(Uri.parse(url));
             assertEquals(url,403,response.getStatusCode());assertEquals(-1,response.getData().read());response.getData().close();
+        }
+    }
+
+    @Test public void backroadQueryNavigationKeepsLocalBridgeRoomAndFinishesLoading() throws Exception {
+        start();
+        String url=MainActivity.GAME_URL+"?mode=quick&stage=finland&car=swift&cond=sunset&weather=clear";
+        Object originalBridge=bridge();
+        WifiControllerServer server=ReflectionHelpers.getField(activity,"wifiServer");
+        int port=server.getPort();
+        android.view.View status=ReflectionHelpers.getField(activity,"status");
+        status.setVisibility(android.view.View.VISIBLE);
+        assertFalse(browser().getWebViewClient().shouldOverrideUrlLoading(web(),url));
+        browser().getWebViewClient().onPageFinished(web(),url);
+        assertEquals(android.view.View.GONE,status.getVisibility());
+        assertSame(originalBridge,bridge());
+        assertEquals(port,server.getPort());
+        assertTrue(web().getSettings().getDomStorageEnabled());
+        status.setVisibility(android.view.View.VISIBLE);
+        browser().getWebViewClient().onPageFinished(web(),"https://outside.example/tv.html?mode=quick");
+        assertEquals(android.view.View.VISIBLE,status.getVisibility());
+    }
+
+    @Test public void cacheQueriesReadOnlyTheExactIndexedBytes() throws Exception {
+        for (String name:new String[]{"tv.html","game.js","nested/worker/physics.js","texture.png"}) {
+            WebResourceResponse response=activity.localAsset(Uri.parse("https://game-kit.invalid/"+name+"?v=9c1a&label=%E4%B8%AD"));
+            assertEquals(200,response.getStatusCode());
+            try (java.io.InputStream bundled=activity.getAssets().open(name)) {
+                assertArrayEquals(bundled.readAllBytes(),response.getData().readAllBytes());
+            }
+            response.getData().close();
+        }
+        for(String url:new String[]{"https://game-kit.invalid/controller.js?v=1","https://game-kit.invalid/unindexed.js?v=1",
+                "https://game-kit.invalid/nested/../game.js?v=1","https://game-kit.invalid/%67ame.js?v=1",
+                "https://game-kit.invalid/game.js?v=%","https://game-kit.invalid/game.js?v=%0a",
+                "https://game-kit.invalid/game.js?v=%5C","https://game-kit.invalid/game.js?v=1#fragment"}) {
+            WebResourceResponse response=activity.localAsset(Uri.parse(url));
+            assertEquals(url,403,response.getStatusCode());response.getData().close();
         }
     }
 

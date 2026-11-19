@@ -109,6 +109,13 @@ def metadata(slug):
     return value
 
 
+def target_sdk(slug):
+    # This one registered APK is a separate target-35 compatibility trial.
+    # Game metadata/payload and the shared default target are not changed.
+    assert slug in registered_packages(), 'Unregistered target SDK selection'
+    return 35 if slug == 'backroad-rally' else 29
+
+
 def policy_registration(slug):
     if slug in LEGACY_PACKAGES:
         return None
@@ -238,7 +245,8 @@ def main():
         builder().main(['--kit', str(kit), '--game', str(staged),
                         '--output', str(out / 'build'), '--cache', str(a.cache), '--sdk', str(a.sdk),
                         '--jdk', str(a.jdk), '--zxing', str(a.zxing)],
-                       limits=asset_policy.android_limits(metadata(a.game), policy_registration(a.game)))
+                       limits=asset_policy.android_limits(metadata(a.game), policy_registration(a.game)),
+                       target_sdk=target_sdk(a.game))
     apk = out / 'unsigned.apk'
     shutil.move(out / 'build/unsigned.apk', apk)
     receipt = json.loads((out / 'build/build-receipt.json').read_text())

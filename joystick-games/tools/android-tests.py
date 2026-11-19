@@ -91,6 +91,33 @@ class PayloadBoundaries(unittest.TestCase):
             self.prepare()
 
 
+class TargetSdkBoundaries(unittest.TestCase):
+    def test_only_registered_backroad_uses_35_and_all_other_targets_remain_29(self):
+        self.assertEqual(build.target_sdk('backroad-rally'), 35)
+        for slug in build.registered_packages():
+            if slug != 'backroad-rally': self.assertEqual(build.target_sdk(slug), 29)
+        with self.assertRaises(AssertionError): build.target_sdk('unregistered')
+
+    def test_low_level_programmatic_override_rejects_unknown_values_before_building(self):
+        original = build.builder()
+        for value in (None, True, False, '35', 35.0, 26, 28, 30, 34, 36, -1):
+            with self.subTest(value=value), self.assertRaises(ValueError): original.main([], target_sdk=value)
+
+    def test_package_verification_checks_actual_sdk_badging(self):
+        meta = {'packageName': 'com.ecojust.joystick.backroadrally', 'version': '0.1.0', 'versionCode': 1}
+        info = {'packageName': meta['packageName'], 'versionName': meta['version'], 'versionCode': 1,
+                'bytes': 100, 'certificateSha256': None}
+        with patch.object(release, 'apk_info', return_value=info), patch.object(build, 'metadata', return_value=meta), \
+             patch.object(build, 'limits', return_value={'maxApkBytes': 1000}):
+            for text in ("sdkVersion:'26'\ntargetSdkVersion:'29'\n", "sdkVersion:'27'\ntargetSdkVersion:'35'\n",
+                         "sdkVersion:'26'\n", "sdkVersion:'26'\ntargetSdkVersion:'35'\ntargetSdkVersion:'35'\n"):
+                with patch.object(release.subprocess, 'check_output', return_value=text), self.assertRaises(AssertionError):
+                    release.identity(Path('fixture.apk'), Path('tools'), 'backroad-rally', False)
+            with patch.object(release.subprocess, 'check_output', return_value="sdkVersion:'26'\ntargetSdkVersion:'35'\n"):
+                result = release.identity(Path('fixture.apk'), Path('tools'), 'backroad-rally', False)
+                self.assertEqual((result['minSdk'], result['targetSdk']), (26, 35))
+
+
 class SignatureInputBoundaries(unittest.TestCase):
     def test_workflow_must_be_present_in_sparse_source_checkout(self):
         with tempfile.TemporaryDirectory(prefix='joystick-sparse-contract-') as tmp:

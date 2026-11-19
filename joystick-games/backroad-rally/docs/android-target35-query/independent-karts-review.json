@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "racing_review_karts",
+  "reviewedAt": "2026-11-19T22:06:24.127473+00:00",
+  "reviewType": "independent read-only static review and original/current byte comparison; no test rerun, build, install or workflow dispatch",
+  "status": "no_static_blocker_for_one_native_build_and_runtime_trial",
+  "sourceHeadAtReview": "99212340429ea1db8a4143a93edd7da49c363f69",
+  "freezeSha256": "5a230cba88f9a5dde587de408389f047cdbee4d2d0947600c488dbafde9ca9f3",
+  "sourceFilesVerified": [
+    {
+      "path": "resource/game-kit/build.py",
+      "bytes": 16982,
+      "sha256": "27b4c26e054ffc37bb309f4edf90aac1a065b53ccc249635cfaf32a9abe344b0"
+    },
+    {
+      "path": "resource/game-kit/android/src/main/java/com/ecojust/gamekit/LocalGameUrl.java",
+      "bytes": 2501,
+      "sha256": "398eceef5f75395d1e64c6b55ee0181719f35d07aae73761dfd566bda7eaf4bb"
+    },
+    {
+      "path": "resource/game-kit/android/src/main/java/com/ecojust/gamekit/MainActivity.java",
+      "bytes": 25896,
+      "sha256": "bff7e64d78a6e50120dddb12800fa5ed5ed09023f155e175ebfd3474943a13a6"
+    },
+    {
+      "path": "resource/game-kit/android/src/test/java/com/ecojust/gamekit/MainActivityTest.java",
+      "bytes": 34925,
+      "sha256": "da2ac7013d8d2a7334e1e0aa69dcf95ad68b5000085883872721391ff402c97f"
+    },
+    {
+      "path": "joystick-games/tools/android-build.py",
+      "bytes": 13049,
+      "sha256": "be47887c8fa964e0a17c8fc3d8ba3195e5ae503af4bbd728afab24bd9453277b"
+    },
+    {
+      "path": "joystick-games/tools/android-release.py",
+      "bytes": 11274,
+      "sha256": "354cf65440987b4d3411d879056bbe94493ab3219acd91432beef4c421e97f0e"
+    },
+    {
+      "path": "joystick-games/tools/android-tests.py",
+      "bytes": 14572,
+      "sha256": "a41a72b3a129e23478ba2e58186a2c0e1e9da32cfc63f846de1109b0de85a20e"
+    },
+    {
+      "path": "joystick-games/tools/android-url-tests.py",
+      "bytes": 4834,
+      "sha256": "58237276d1575b462c9d5c8eb301aec09cefb765cc272734cff49583bb8c1101"
+    },
+    {
+      "path": ".github/workflows/joystick-catalog-android.yml",
+      "bytes": 20171,
+      "sha256": "ecf8812ec4744112891ccfdd2efaefb7c4a8181837bfe2717ee646a6e4792cb9"
+    }
+  ],
+  "frozenEvidenceFilesVerified": 26,
+  "executedCopiesMatchCurrent": true,
+  "findings": [
+    {
+      "topic": "Exact local URL and path boundary",
+      "status": "passed-static",
+      "detail": "LocalGameUrl accepts only the literal HTTPS origin and unchanged safe relative path grammar. Encoded/dot-segment/backslash paths, fragments, alternate authority/port/userinfo/scheme are rejected. Query is bounded at 4096, ASCII/percent syntax checked, control/DEL/backslash escapes rejected. Query is never decoded or concatenated into the asset name; getAssets.open receives only exact indexed assetPath. Unindexed/controller files remain denied. Query content can contain slash-like text without changing the selected local file."
+    },
+    {
+      "topic": "Navigation and PageFinished/bridge lifecycle",
+      "status": "passed-static-not-runtime",
+      "detail": "Both navigation overloads and onPageFinished now recognize only tv.html with the accepted optional query. PageFinished still only hides the existing loading status and requests focus while active; it does not recreate the bridge, room, TCP port, DOM storage or clocks. HostBridge remains installed once on that WebView and retrieves the same room state. Native WebView reload/JS-interface availability and lifecycle behavior are not proven by this static review."
+    },
+    {
+      "topic": "Target SDK selection and actual package enforcement",
+      "status": "passed-static",
+      "detail": "Low-level builder defaults to target29/min26 and permits only explicit integer29/35 keyword opt-in. Registered joystick caller selects35 only for backroad-rally,29 for all others. No game.json metadata/permissions/runtime input fields changed. Signing validation now checks min26/selected target against actual aapt badging both before and after signing, in addition to original certificate/source/payload checks; unsigned receipt must agree."
+    },
+    {
+      "topic": "New Java production file included in source and package closure",
+      "status": "passed-static",
+      "detail": "android-build.sources recursively includes android/src/main and android-*.py; prepare copies the full native main tree; builder compiles all *.java. LocalGameUrl is covered by committed source checks, host DEX cache-key source bytes and compilation, with no hidden dependency path."
+    },
+    {
+      "topic": "Recorded local validation",
+      "status": "read-recorded-evidence-not-rerun",
+      "detail": "Read exact recorded 105 production Java URL checks,19 packaging tests, actionlint and aapt2/javac/d8/zipalign tiny unsigned fixtures. Both actual min26/compile35; targets29/35 differ only in AndroidManifest.xml, with identical DEX/assets. These do not demonstrate real WebView callbacks, installation, Play Protect acceptance, target35 insets or gameplay."
+    },
+    {
+      "topic": "Robolectric coverage gap explicitly retained",
+      "status": "not-executed-locally-or-current-ci",
+      "detail": "Two MainActivityTest additions and adjusted prior query assertions are present but no current workflow invokes Gradle/Robolectric/MainActivityTest/testDebugUnitTest. The catalog Android workflow runs only the standalone actual Java URL policy plus existing Python/web/build checks. The Robolectric fixture itself is configured sdk28/target29; even a later successful execution would not validate Android15 target35 edge-to-edge/insets. This is a documented limitation, not a claim that callback tests passed."
+    },
+    {
+      "topic": "Unchanged original game payload",
+      "status": "passed-independent-hash-comparison",
+      "detail": "Independently streamed current dist file SHA256 values, unchanged shared controller bytes, deterministic metadata/index hashes and compared the complete map to the preserved original signed-build receipt. All338 entries matched. game.json matched the original source Git blob. No giant staged copy or APK rebuild was made."
+    }
+  ],
+  "assetVerification": {
+    "count": 338,
+    "distFiles": 333,
+    "distBytesRead": 115296845,
+    "originalRun": 44599353036,
+    "originalSource": "d548bccbe816bd4c03620388556ceef507b67d30",
+    "originalReceipt": "joystick-games/backroad-rally/docs/signed-artifact-audit-44599353036/original-receipts/packages/backroad-rally/build-receipt.json",
+    "originalReceiptSha256": "9297f5623866a26eb5151d775ddf1e05ab62710ed9dbf54c7b496d49c7f95b7b",
+    "allEqual": true
+  },
+  "currentWorkflowRobolectricMatches": [],
+  "nativeBuildFixtureNotRerun": true,
+  "unitTestsNotRerun": true,
+  "actualWebViewTestedByReviewer": false,
+  "physicalDeviceTested": false,
+  "sourceFilesModifiedByReviewer": false,
+  "workflowDispatchedByReviewer": false,
+  "remainingAcceptance": [
+    "One real signed Backroad native runtime trial must exercise ordinary query-based menu/course navigation, query-bearing resources, controller input/focus/resume/storage and loading completion.",
+    "Target35 requires actual installation and screenshot/inset checks; neither Play Protect acceptance nor production bug resolution is claimed before those results.",
+    "Old original APK reuse must continue using original frozen production source references; these changed shared production bytes cannot masquerade as old package source."
+  ]
+}
