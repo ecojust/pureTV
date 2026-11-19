@@ -97,7 +97,7 @@ class SignatureInputBoundaries(unittest.TestCase):
             root = Path(tmp); kit = root / 'resource/game-kit'; game = root / 'joystick-games/cf-transport-ship'
             for folder in (kit / 'android/src/main', game / 'src', game / 'dist', root / 'joystick-games/shared/web'):
                 folder.mkdir(parents=True)
-            files = [kit / 'build.py', root / 'tools/resource_catalog.py', root / 'tools/puretv-release-certificate-v2.sha256',
+            files = [kit / 'build.py', root / build.POLICY_PATH, root / 'tools/resource_catalog.py', root / 'tools/puretv-release-certificate-v2.sha256',
                      *[game / n for n in ('game.json', 'package.json', 'package-lock.json', 'build.mjs')],
                      *[kit / 'web' / n for n in build.PHONE]]
             for path in files:
@@ -178,7 +178,7 @@ class CatalogRegistrationBoundaries(unittest.TestCase):
             root = Path(tmp); kit = root / 'resource/game-kit'; game = root / 'joystick-games/fixture-game'
             for directory in ('resource/game-kit/android/src/main', 'joystick-games/shared/web', 'joystick-games/fixture-game/src', 'joystick-games/fixture-game/dist'):
                 (root / directory).mkdir(parents=True)
-            files = ['resource/game-kit/build.py', 'tools/resource_catalog.py', 'tools/puretv-release-certificate-v2.sha256',
+            files = ['resource/game-kit/build.py', build.POLICY_PATH, 'tools/resource_catalog.py', 'tools/puretv-release-certificate-v2.sha256',
                      '.github/workflows/joystick-games-android.yml', build.CATALOG_WORKFLOW, 'joystick-games/tools/qa-plan.py',
                      'joystick-games/tools/android-build.py', 'joystick-games/shared/crisp/vendor/engine.js',
                      'joystick-games/shared/triptych/build.mjs', 'joystick-games/shared/web/input.js',

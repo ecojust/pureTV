@@ -145,7 +145,7 @@ jobs:
       - name: Run each installed app with real native gameplay and original SDK
         run: |
           python3 - <<'PY'
-          import datetime,importlib.util,json,os,signal,subprocess,sys,traceback
+          import datetime,hashlib,importlib.util,json,os,signal,subprocess,sys,traceback
           from pathlib import Path
           temp=Path(os.environ['RUNNER_TEMP']);out=temp/'qa';out.mkdir();source=os.environ['ARTIFACT_SOURCE_COMMIT'];qa_source=os.environ['GITHUB_SHA']
           spec=importlib.util.spec_from_file_location('qa_plan','joystick-games/tools/qa-plan.py');qa_plan=importlib.util.module_from_spec(spec);spec.loader.exec_module(qa_plan)
@@ -165,6 +165,17 @@ jobs:
                 result.update(returncode=process.returncode,status='passed' if process.returncode==0 else 'failed')
               except Exception:result.update(status='failed',error=traceback.format_exc());stream.write(result['error'])
             print(str(log)+': '+result['status'],flush=True);return result
+          # Reuse jobs do not execute the build's shared suite. Compile and run
+          # the unchanged production HTTP server on this actual QA runner too.
+          asset_inputs={}
+          for name in ['.github/workflows/joystick-catalog-macos-runtime.yml','joystick-games/shared/macos/Sources/LocalAssetServer.swift','joystick-games/shared/macos/tests/local-assets.test.py']:
+            data=Path(name).read_bytes();assert data==subprocess.check_output(['git','show',qa_source+':'+name]), 'Uncommitted asset HTTP test input'
+            target=out/'executed-source'/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
+            asset_inputs[name]={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
+          (out/'local-assets-source-inputs.json').write_text(json.dumps({'qaSourceCommit':qa_source,'artifactSourceCommit':source,'runnerArchitecture':expected_arch,'files':asset_inputs},indent=2)+'\n')
+          os.environ['PURETV_ASSET_TEST_EVIDENCE']=str(out/'local-assets-compile')
+          report['localAssetHttp']=execute(['python3','joystick-games/shared/macos/tests/local-assets.test.py'],out/'local-assets.log')
+          save()
           if arm:
             available=subprocess.run(['/usr/bin/arch','-x86_64','/usr/bin/true'],capture_output=True).returncode==0
             if not available:report['rosettaInstallation']=execute(['sudo','/usr/sbin/softwareupdate','--install-rosetta','--agree-to-license'],out/'rosetta-install.log',1200)
@@ -191,7 +202,7 @@ jobs:
               record['status']='passed' if record['checks'] and all(item['status']=='passed' for item in record['checks']) else 'failed'
             except Exception:record.update(status='failed',error=traceback.format_exc())
             save()
-          report['status']='passed' if all(item['status']=='passed' for item in report['games']) else 'failed';save()
+          report['status']='passed' if report['localAssetHttp']['status']=='passed' and all(item['status']=='passed' for item in report['games']) else 'failed';save()
           sys.exit(0 if report['status']=='passed' else 1)
           PY
       - uses: actions/upload-artifact@v4

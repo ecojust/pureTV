@@ -47,7 +47,7 @@ def identity(apk, tools, slug, signed):
     info = apk_info(apk, tools, allow_unsigned=not signed)
     meta = build.metadata(slug)
     assert info['packageName'] == meta['packageName'] and info['versionName'] == meta['version'] and info['versionCode'] == meta['versionCode']
-    assert 0 < info['bytes'] < 10_000_000
+    assert 0 < info['bytes'] < build.limits(slug)['maxApkBytes']
     assert info['certificateSha256'] == (pin() if signed else None)
     return info
 

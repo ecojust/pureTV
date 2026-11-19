@@ -19,6 +19,10 @@ LEGACY_PACKAGES = {'cf-transport-ship': 'com.ecojust.joystickcf', 'qq-speed': 'c
 REGISTRY = 'joystick-games/catalog-registry.json'
 CATALOG_WORKFLOW = '.github/workflows/joystick-catalog-android.yml'
 PHONE = ('controller.html', 'controller.js', 'controller.css')
+POLICY_PATH = 'joystick-games/tools/asset-policy.py'
+policy_spec = importlib.util.spec_from_file_location('joystick_asset_policy', Path(__file__).with_name('asset-policy.py'))
+asset_policy = importlib.util.module_from_spec(policy_spec)
+policy_spec.loader.exec_module(asset_policy)
 
 
 def registry_data(raw):
@@ -101,11 +105,22 @@ def metadata(slug):
     assert slug in packages, 'Unregistered joystick game'
     value = builder().metadata(ROOT / 'joystick-games' / slug)
     assert value['id'] == slug and value['packageName'] == packages[slug]
+    asset_policy.declaration(value, policy_registration(slug))
     return value
 
 
+def policy_registration(slug):
+    if slug in LEGACY_PACKAGES:
+        return None
+    return registry_data((ROOT / REGISTRY).read_text())['games'][slug]
+
+
+def limits(slug):
+    return asset_policy.limits(metadata(slug), policy_registration(slug))
+
+
 def observer_sources(slug):
-    names = {'joystick-games/qa/android/build-observer.py', 'joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java'}
+    names = {'joystick-games/qa/android/build-observer.py', 'joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java', POLICY_PATH}
     if slug not in LEGACY_PACKAGES:
         names |= {REGISTRY, 'joystick-games/tools/android-build.py'}
     return {name: record(ROOT / name) for name in sorted(names)}
@@ -114,7 +129,7 @@ def observer_sources(slug):
 def sources(slug):
     metadata(slug)
     game = ROOT / 'joystick-games' / slug
-    paths = [KIT / 'build.py', ROOT / 'tools/resource_catalog.py', ROOT / 'tools/puretv-release-certificate-v2.sha256',
+    paths = [KIT / 'build.py', ROOT / POLICY_PATH, ROOT / 'tools/resource_catalog.py', ROOT / 'tools/puretv-release-certificate-v2.sha256',
              game / 'game.json', game / 'package.json', game / 'package-lock.json', game / 'build.mjs']
     paths += [KIT / 'web' / name for name in PHONE]
     for folder in [KIT / 'android/src/main', game / 'src', game / 'dist', ROOT / 'joystick-games/shared/web']:
@@ -160,6 +175,8 @@ def prepare(slug, directory):
     original = builder()
     game = ROOT / 'joystick-games' / slug
     meta = metadata(slug)
+    policy = asset_policy.android_limits(meta, policy_registration(slug))
+    extensions = original.ASSET_EXTENSIONS | set((policy or {}).get('extraExtensions', ()))
     kit = directory / 'kit'
     staged = directory / 'game'
     shutil.copytree(KIT / 'android/src/main', kit / 'android/src/main')
@@ -171,7 +188,7 @@ def prepare(slug, directory):
     dist = original.checked_directory(game / 'dist', 'game distribution')
     for path in sorted(dist.iterdir()):
         assert path.is_file() and not path.is_symlink(), 'Distribution assets must be flat regular files'
-        assert original.SAFE_ASSET.fullmatch(path.name) and path.suffix.lower() in original.ASSET_EXTENSIONS
+        assert original.SAFE_ASSET.fullmatch(path.name) and path.suffix.lower() in extensions
         assert path.name not in PHONE and path.name not in ('game-config.json', 'assets-index.json')
         shutil.copyfile(path, assets / path.name)
     assert (assets / 'tv.html').is_file(), 'Build the committed Web game first'
@@ -179,7 +196,7 @@ def prepare(slug, directory):
     if (game / 'icon.xml').exists():
         shutil.copyfile(game / 'icon.xml', staged / 'icon.xml')
     original.KIT = kit
-    return kit, staged, original.payload(staged)
+    return kit, staged, original.payload(staged, policy)
 
 
 def payload(slug):
@@ -211,9 +228,12 @@ def main():
     with tempfile.TemporaryDirectory(prefix='compose-', dir=out) as temp:
         kit, staged, expected = prepare(a.game, Path(temp))
         write(out / 'payload-sha256.json', {n: {'bytes': len(v), 'sha256': sha(v)} for n, v in expected.items()})
-        subprocess.run([sys.executable, str(KIT / 'build.py'), '--kit', str(kit), '--game', str(staged),
+        # The original CLI has no budget override. Only this registered caller
+        # passes the policy after validating matching game and registry fields.
+        builder().main(['--kit', str(kit), '--game', str(staged),
                         '--output', str(out / 'build'), '--cache', str(a.cache), '--sdk', str(a.sdk),
-                        '--jdk', str(a.jdk), '--zxing', str(a.zxing)], check=True)
+                        '--jdk', str(a.jdk), '--zxing', str(a.zxing)],
+                       limits=asset_policy.android_limits(metadata(a.game), policy_registration(a.game)))
     apk = out / 'unsigned.apk'
     shutil.move(out / 'build/unsigned.apk', apk)
     receipt = json.loads((out / 'build/build-receipt.json').read_text())

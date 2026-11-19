@@ -174,6 +174,7 @@ public class MainActivity extends Activity {
 
     static String bundledAssetMime(String path) {
         if (path == null) return null;
+        path = path.toLowerCase(java.util.Locale.ROOT);
         if (path.endsWith(".html")) return "text/html";
         if (path.endsWith(".css")) return "text/css";
         if (path.endsWith(".js")) return "application/javascript";
@@ -185,6 +186,16 @@ public class MainActivity extends Activity {
         if (path.endsWith(".ogg")) return "audio/ogg";
         if (path.endsWith(".wav")) return "audio/wav";
         if (path.endsWith(".mp3")) return "audio/mpeg";
+        if (path.endsWith(".glb")) return "model/gltf-binary";
+        if (path.endsWith(".gltf")) return "model/gltf+json";
+        if (path.endsWith(".bin") || path.endsWith(".hdr")) return "application/octet-stream";
+        if (path.endsWith(".wasm")) return "application/wasm";
+        if (path.endsWith(".ktx2")) return "image/ktx2";
+        if (path.endsWith(".woff")) return "font/woff";
+        if (path.endsWith(".woff2")) return "font/woff2";
+        if (path.endsWith(".ttf")) return "font/ttf";
+        if (path.endsWith(".otf")) return "font/otf";
+        if (path.endsWith(".ico")) return "image/x-icon";
         return null;
     }
 
@@ -194,7 +205,8 @@ public class MainActivity extends Activity {
         if ("https".equals(uri.getScheme()) && "game-kit.invalid".equals(uri.getEncodedAuthority())
             && uri.getQuery() == null && uri.getFragment() == null && name != null
             && name.equals(uri.getEncodedPath()) && mime != null && bundledAssets.contains(name.substring(1))) {
-            String encoding = mime.startsWith("audio/") || mime.startsWith("image/") ? null : "UTF-8";
+            String encoding = mime.startsWith("text/") || mime.equals("application/javascript")
+                || mime.equals("application/json") || mime.equals("model/gltf+json") ? "UTF-8" : null;
             Map<String,String> headers = new java.util.HashMap<>();
             headers.put("Cache-Control","no-store");
             headers.put("X-Content-Type-Options","nosniff");

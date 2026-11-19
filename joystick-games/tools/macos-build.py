@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Build registered upstream games as standalone universal macOS clients."""
-import argparse, hashlib, json, platform, plistlib, re, shutil, subprocess, tempfile
+import argparse, hashlib, importlib.util, json, platform, plistlib, re, shutil, subprocess, tempfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 SHARED=ROOT/'joystick-games/shared/macos'
 LEGACY_GAMES={'cf-transport-ship':('CF Transport Ship','CFTransportShip','CF'), 'qq-speed':('QQ Speed','QQSpeed','QQ')}
 REGISTRY=ROOT/'joystick-games/catalog-registry.json'
+POLICY_PATH='joystick-games/tools/asset-policy.py'
+policy_spec=importlib.util.spec_from_file_location('macos_asset_policy',Path(__file__).with_name('asset-policy.py'))
+asset_policy=importlib.util.module_from_spec(policy_spec);policy_spec.loader.exec_module(asset_policy)
 def registry_data(raw):
     def unique(pairs):
         result={}
@@ -38,6 +41,29 @@ def game_identity(slug,meta):
     if slug in LEGACY_GAMES:return LEGACY_GAMES[slug]
     registered=registry_games()[slug];assert meta['packageName']==registered['packageName'],'Game package differs from registry'
     return tuple(registered[k] for k in ['appName','executable','initials'])
+def resource_policy(slug,meta):
+    registered=None if slug in LEGACY_GAMES else registry_games()[slug]
+    return asset_policy.declaration(meta,registered),asset_policy.limits(meta,registered,'macos')
+
+def copy_web_assets(source,web,limits,explicit=False):
+    assert source.is_dir() and not any(p.is_symlink() for p in [source,*source.parents]),'Invalid distribution directory'
+    types={'.html','.js','.css','.json','.txt','.svg','.png','.webp','.jpg','.jpeg','.ico','.woff','.woff2','.ttf','.otf','.ogg','.wav','.mp3'}
+    if explicit:types.update(asset_policy.EXTRA_EXTENSIONS)
+    paths=list(source.iterdir());assert len(paths)<=asset_policy.MAX_FILES,'Too many bundled assets'
+    for path in paths:
+        assert path.is_file() and not path.is_symlink() and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]*',path.name),path
+        assert path.suffix.lower() in types,'Unsupported distribution asset: '+path.name
+        assert path.name not in ('bridge.js','game-config.json'),'Reserved distribution asset: '+path.name
+        size=path.stat().st_size
+        assert (size<=limits['maxAssetBytes'] if explicit else size<limits['maxAssetBytes']),path
+        shutil.copy2(path,web/path.name)
+    assert (web/'tv.html').is_file(),'Missing TV entry page'
+
+def verify_web_budget(web,limits):
+    paths=list(web.iterdir())
+    assert len(paths)<=asset_policy.MAX_FILES,'Too many bundled assets'
+    assert all(p.stat().st_size<=limits['maxAssetBytes'] for p in paths),'Generated resource exceeds asset budget'
+    assert sum(p.stat().st_size for p in paths)<=limits['maxTotalBytes'],'Resources exceed total budget'
 def storage_keys(slug,meta):
     if slug in LEGACY_GAMES and 'storageKeys' not in meta:return None
     value=meta.get('storageKeys')
@@ -79,6 +105,7 @@ def inputs(game):
     selected.extend(p for p in game.iterdir() if p.name!='node_modules' and (p.is_file() or p.is_symlink()))
     selected.extend(p for p in (ROOT/'joystick-games/tools').glob('macos-*') if p.is_file())
     selected.append(ROOT/'.github/workflows/joystick-games-macos.yml')
+    selected.append(ROOT/POLICY_PATH)
     if game.name not in LEGACY_GAMES:
         selected.extend([REGISTRY,ROOT/'joystick-games/tools/qa-plan.py',ROOT/'puretv-joystick/joystick_sdk.py'])
         selected.extend((ROOT/'.github/workflows').glob('joystick-catalog-macos*.yml'))
@@ -162,17 +189,16 @@ def main():
     out=args.output.resolve();assert not out.is_relative_to(ROOT),'Use an output outside the repository'
     out.mkdir(parents=True,exist_ok=True);assert not any(out.iterdir()),'Retain previous builds; select a fresh output'
     app=out/(name+'.app');contents=app/'Contents';resources=contents/'Resources';web=resources/'Web';binary=contents/'MacOS';web.mkdir(parents=True);binary.mkdir()
-    source=game/'dist';assert (source/'tv.html').is_file(),'Build game web assets first'
-    for path in source.iterdir():
-        assert path.is_file() and not path.is_symlink() and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]*',path.name),path
-        assert path.stat().st_size<10*1024*1024,path
-        shutil.copy2(path,web/path.name)
+    declaration,limits=resource_policy(args.game,meta)
+    copy_web_assets(game/'dist',web,limits,explicit=declaration is not None)
     assert not (web/'bridge.js').exists();shutil.copy2(SHARED/'Web/bridge.js',web/'bridge.js')
     (web/'game-config.json').write_text(json.dumps(meta,ensure_ascii=False)+'\n')
+    verify_web_budget(web,limits)
     for p in [game/'NOTICE.md',game/'LICENSE',game/'LICENSE.txt',game/'UPSTREAM.md',game/'upstream.json']:
         if p.is_file():shutil.copy2(p,resources/p.name)
     info={'CFBundleName':name,'CFBundleDisplayName':meta['name'],'CFBundleIdentifier':meta['packageName'],'CFBundleExecutable':executable,'CFBundlePackageType':'APPL','CFBundleShortVersionString':meta['version'],'CFBundleVersion':str(meta['versionCode']),'CFBundleIconFile':'Game','LSMinimumSystemVersion':'11.0','NSHighResolutionCapable':True,'NSSupportsAutomaticGraphicsSwitching':True,'NSPrincipalClass':'NSApplication','NSLocalNetworkUsageDescription':'Connect the pureTV Wi-Fi controller to this game on your Mac.','NSBonjourServices':['_puretv._tcp'],'NSAppTransportSecurity':{'NSAllowsLocalNetworking':True},'PureTVUpstreamAttribution':meta.get('upstreamAttribution',meta.get('upstream','See bundled source notices')),'NSHumanReadableCopyright':'Upstream authors; pureTV controller adaptation. See bundled source and license notices.'}
     if persistent_keys is not None:info['PureTVStorageKeys']=persistent_keys
+    if declaration is not None:info['PureTVAssetPolicy']=declaration
     (contents/'Info.plist').write_bytes(plistlib.dumps(info));(contents/'PkgInfo').write_bytes(b'APPL????')
     sdk=Path(capture('xcrun','--sdk','macosx','--show-sdk-path')).resolve()
     with tempfile.TemporaryDirectory(dir=out,prefix='build-') as temporary:
@@ -186,6 +212,7 @@ def main():
         staging=Path(temporary);run('ditto',app,staging/app.name);(staging/'Applications').symlink_to('/Applications')
         run('hdiutil','create','-volname',name,'-srcfolder',staging,'-format','UDZO','-ov',dmg)
     run('hdiutil','verify',dmg)
+    assert all(0<p.stat().st_size<100_000_000 for p in [zipfile,dmg]),'Package exceeds Git export limit; preserve output and use an approved large-package delivery path'
     packages={p.name:{'bytes':p.stat().st_size,'sha256':digest(p)} for p in [zipfile,dmg]}
     assert capture('git','-C',ROOT,'rev-parse','HEAD')==source_commit, 'HEAD changed during build'
     assert inputs(game)==source_inputs, 'Source files or input set changed during build'

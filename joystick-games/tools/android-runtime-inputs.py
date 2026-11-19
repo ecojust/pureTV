@@ -60,7 +60,7 @@ def tree(root, commit, *paths):
 
 def expected_inputs(root, commit, slug):
     game = 'joystick-games/' + slug + '/'
-    exact = {'resource/game-kit/build.py', 'tools/resource_catalog.py', 'tools/puretv-release-certificate-v2.sha256',
+    exact = {'resource/game-kit/build.py', build.POLICY_PATH, 'tools/resource_catalog.py', 'tools/puretv-release-certificate-v2.sha256',
              '.github/workflows/joystick-games-android.yml', *PHONE,
              *[game + name for name in ('game.json', 'package.json', 'package-lock.json', 'build.mjs')]}
     required = tree(root, commit, 'resource/game-kit/android/src/main', game + 'src', game + 'dist', 'joystick-games/shared/web')
@@ -81,7 +81,7 @@ def expected_inputs(root, commit, slug):
 
 def production_path(name, slug):
     game = 'joystick-games/' + slug + '/'
-    return (name == build.REGISTRY or name.startswith(('joystick-games/shared/crisp/', 'joystick-games/shared/triptych/')) or
+    return (name in (build.REGISTRY, build.POLICY_PATH) or name.startswith(('joystick-games/shared/crisp/', 'joystick-games/shared/triptych/')) or
             name.startswith('resource/game-kit/android/src/main/') or name in PHONE or
             (name.startswith('joystick-games/shared/web/') and '.test.' not in name) or
             name.startswith(game + 'src/') or name.startswith(game + 'dist/') or
@@ -179,7 +179,9 @@ def verify(args):
         identity = apk_info(apk, args.build_tools)
         assert identity['packageName'] == package == meta['packageName']
         assert identity['versionCode'] == meta['versionCode'] and identity['versionName'] == meta['version']
-        assert identity['certificateSha256'] == pin and 0 < identity['bytes'] < 10_000_000
+        registered = None if slug in GAMES else build.registry_data(frozen(ROOT, args.artifact_source, build.REGISTRY))['games'][slug]
+        budget = build.asset_policy.limits(meta, registered)
+        assert identity['certificateSha256'] == pin and 0 < identity['bytes'] < budget['maxApkBytes']
         assert all(receipt[k] == v for k, v in identity.items())
         assert archive_content(apk) == receipt['contentSha256']
         prefix = 'joystick-games/' + slug + '/dist/'
@@ -201,7 +203,7 @@ def verify(args):
         observer_identity = apk_info(observer_apk, args.build_tools)
         assert observer_identity == observer['apkIdentity'] and observer_identity['certificateSha256'] == pin
         assert observer_identity['packageName'] == observer['observerPackage']
-        required_observer = {'joystick-games/qa/android/build-observer.py', 'joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java'}
+        required_observer = {'joystick-games/qa/android/build-observer.py', 'joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java', build.POLICY_PATH}
         if slug not in GAMES:
             required_observer |= {build.REGISTRY, 'joystick-games/tools/android-build.py'}
         assert set(observer['sourceFiles']) == required_observer

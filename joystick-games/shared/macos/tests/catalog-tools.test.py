@@ -214,7 +214,7 @@ class CatalogTools(unittest.TestCase):
             root = Path(directory).resolve()
             shared = root / 'joystick-games/shared/macos'
             game = root / 'joystick-games/sample'
-            for name in ['joystick-games/shared/macos/Sources/main.swift', 'joystick-games/shared/web/input.js', 'joystick-games/shared/crisp/vendor/engine.js', 'joystick-games/shared/crisp/tv.js', 'joystick-games/sample/src/game.js', 'joystick-games/sample/dist/tv.html', 'joystick-games/sample/game.json', 'joystick-games/sample/qa-plan.json', 'puretv-joystick/joystick_sdk.py', 'joystick-games/tools/macos-build.py', 'joystick-games/tools/qa-plan.py', 'joystick-games/catalog-registry.json', '.github/workflows/joystick-games-macos.yml', '.github/workflows/joystick-catalog-macos.yml']:
+            for name in ['joystick-games/shared/macos/Sources/main.swift', 'joystick-games/shared/web/input.js', 'joystick-games/shared/crisp/vendor/engine.js', 'joystick-games/shared/crisp/tv.js', 'joystick-games/sample/src/game.js', 'joystick-games/sample/dist/tv.html', 'joystick-games/sample/game.json', 'joystick-games/sample/qa-plan.json', 'puretv-joystick/joystick_sdk.py', 'joystick-games/tools/macos-build.py', 'joystick-games/tools/asset-policy.py', 'joystick-games/tools/qa-plan.py', 'joystick-games/catalog-registry.json', '.github/workflows/joystick-games-macos.yml', '.github/workflows/joystick-catalog-macos.yml']:
                 path = root / name
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(name)

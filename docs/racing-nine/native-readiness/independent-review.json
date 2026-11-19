@@ -1,0 +1,92 @@
+{
+  "reviewer": "racing_native_review",
+  "scope": "Independent read-only review of the 16-file resource/native pipeline change",
+  "sourceInventoryMatches": true,
+  "mismatches": [],
+  "blockingFindings": [],
+  "reviewedAreas": [
+    "explicit per-game/registry policy and unchanged default GameKit limits",
+    "APK signature/source/payload reuse boundaries",
+    "Mac flat asset inventory, 64 KiB reads, single Range, HEAD, callbacks and file lifecycle",
+    "Mac CI real Swift compilation/HTTP test failure propagation and hidden source retention"
+  ],
+  "executedTests": {
+    "androidAssetBoundaries": 9,
+    "actualJavaMimeMethod": 1,
+    "macCatalogTools": 11,
+    "macCatalogReuse": 3,
+    "macLegacyReuseSource": 4
+  },
+  "totalTestsPassed": 28,
+  "initialDefaultPathJdkSkipResolved": true,
+  "swiftCompiled": false,
+  "macNativeHttpExecuted": false,
+  "recommendedSmokeBatch": "adventure-01",
+  "reason": "Two existing delivered games (GLUP DOM and Emberbrood Canvas2D) avoid the diagnosed Intel WebGL limitation while checking shared compilation, both app packages and original SDK input. This does not validate new WebGL racing gameplay.",
+  "files": {
+    "resource/game-kit/build.py": {
+      "bytes": 14563,
+      "sha256": "4e3e07df8ec33d3d1ae404bdf24a331ce58dfbaf89fc78475f1faaae066bcd71"
+    },
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/MainActivity.java": {
+      "bytes": 25210,
+      "sha256": "4e0873d5c7d7e056ac7a83411eb4bb26d902efd0429d8817f9c6449ebbe5bb88"
+    },
+    "joystick-games/tools/asset-policy.py": {
+      "bytes": 2601,
+      "sha256": "a09fd501e97a5852abc9d73c30eb7d586beb06ba2f2ce00ce7f3dff7f1c234e0"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 12507,
+      "sha256": "6c093a5ee43bd6273c80b64a3c37c6d0426b264793baaa9ffdcbd15ba8ba9daf"
+    },
+    "joystick-games/tools/android-release.py": {
+      "bytes": 10798,
+      "sha256": "9b7073c8acd41661e7364f625a50e5898d7b8fbfec3dfd072c03f055a3a249a7"
+    },
+    "joystick-games/tools/android-runtime-inputs.py": {
+      "bytes": 14231,
+      "sha256": "07f271ecd038a5377d0d6b68be79fdc149daa7d74ea3e075ad6eb012b0e57e2c"
+    },
+    "joystick-games/tools/macos-build.py": {
+      "bytes": 17789,
+      "sha256": "5fe40a41a1612fcba72a6746ce9515a714b22cb9d97285b08e47b7d1ec35ccc2"
+    },
+    "joystick-games/tools/android-tests.py": {
+      "bytes": 12554,
+      "sha256": "ab5e20b40af8668a9bfd757448b620a6ca00288a3ae5790e3369fbecf26e0b83"
+    },
+    "joystick-games/tools/android-asset-tests.py": {
+      "bytes": 10219,
+      "sha256": "f1e6be974f4f51e66ac085ad1adfd77e33ba550c908736a6316488a127abc460"
+    },
+    "joystick-games/shared/macos/Sources/LocalAssetServer.swift": {
+      "bytes": 20017,
+      "sha256": "11df44fe2cd607ca09c69aa872e4b7834bba53b865bca64b4b16bd22f64e8651"
+    },
+    "joystick-games/shared/macos/tests/local-assets.test.py": {
+      "bytes": 11887,
+      "sha256": "d7c99604f1a2f626ae7d5648ab2b1355a3b90865f252fa14451ab59ee51d20a5"
+    },
+    "joystick-games/shared/macos/tests/catalog-reuse.test.py": {
+      "bytes": 8173,
+      "sha256": "8cb1fe829243389371b4455c2feb458d3429329b3d11655427b738ca3c3be705"
+    },
+    "joystick-games/shared/macos/tests/reuse-source.test.py": {
+      "bytes": 6390,
+      "sha256": "5f095b24d5feb157c77f51aa4fa3879f95680b10f8faf4c23afee1cc1e8d4b62"
+    },
+    "joystick-games/shared/macos/tests/catalog-tools.test.py": {
+      "bytes": 15299,
+      "sha256": "84243b21e519772895a20daaee1544b77085bf713f7125708bfaab15bac5f898"
+    },
+    ".github/workflows/joystick-catalog-macos.yml": {
+      "bytes": 27241,
+      "sha256": "470faed6b0cb2fb148ca4a48fd11b120f86491a488ed63b5019762ebb1952760"
+    },
+    ".github/workflows/joystick-catalog-macos-runtime.yml": {
+      "bytes": 27141,
+      "sha256": "f1db4214237c4539f4f6f943a8c4e61bd11bc08dc4476a98675d2425fbd1a420"
+    }
+  }
+}

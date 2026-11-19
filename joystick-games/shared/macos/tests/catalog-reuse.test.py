@@ -75,6 +75,7 @@ class CatalogReuse(unittest.TestCase):
                 path.write_text(name + '\n')
             (frozen / 'joystick-games/catalog-registry.json').write_text(json.dumps(registry))
             shutil.copy2(ROOT / 'joystick-games/tools/macos-build.py', frozen / 'joystick-games/tools/macos-build.py')
+            shutil.copy2(ROOT / 'joystick-games/tools/asset-policy.py', frozen / 'joystick-games/tools/asset-policy.py')
             def git(root, *args):
                 return subprocess.check_output(['git', '-C', str(root), *args], stderr=subprocess.DEVNULL, text=True).strip()
             def commit(root, message):

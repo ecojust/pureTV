@@ -39,6 +39,7 @@ class Provenance(unittest.TestCase):
    names.extend(['joystick-games/qq-speed/src/main.js','joystick-games/qq-speed/dist/tv.html','joystick-games/qq-speed/game.json'])
    for name in names:p=frozen/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(name+'\n')
    target=frozen/'joystick-games/tools/macos-build.py';target.parent.mkdir();shutil.copy2(ROOT/'joystick-games/tools/macos-build.py',target)
+   shutil.copy2(ROOT/'joystick-games/tools/asset-policy.py',target.with_name('asset-policy.py'))
    def git(*args):return subprocess.check_output(['git','-C',str(frozen),*args],stderr=subprocess.DEVNULL,text=True).strip()
    git('init');git('-c','user.name=Test','-c','user.email=test@example.invalid','add','.');git('-c','user.name=Test','-c','user.email=test@example.invalid','commit','-m','frozen')
    commit=git('rev-parse','HEAD');old=reuse.SOURCE;reuse.SOURCE=commit

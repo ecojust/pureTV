@@ -103,7 +103,7 @@ jobs:
       - name: Preserve every game's regressions and build independent universal packages
         run: |
           python3 - <<'PY'
-          import datetime,json,os,shutil,signal,subprocess,sys,traceback
+          import datetime,hashlib,json,os,shutil,signal,subprocess,sys,traceback
           from pathlib import Path
           temp=Path(os.environ['RUNNER_TEMP']);evidence=temp/'build-evidence';packages=temp/'packages';evidence.mkdir();packages.mkdir()
           source=os.environ['GITHUB_SHA'];assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==source
@@ -123,9 +123,21 @@ jobs:
               except Exception:
                 result.update(status='failed',error=traceback.format_exc());stream.write(result['error'])
             print(str(log)+': '+result['status'],flush=True);return result
+          # The existing *.test.py discovery executes the real HTTP suite once.
+          # Preserve its exact executed source before any native compilation,
+          # including failures; the always-uploaded build artifact owns these.
+          asset_sources=['.github/workflows/joystick-catalog-macos.yml','joystick-games/shared/macos/Sources/LocalAssetServer.swift','joystick-games/shared/macos/tests/local-assets.test.py']
+          asset_inputs={}
+          for name in asset_sources:
+            data=Path(name).read_bytes();assert data==subprocess.check_output(['git','show',source+':'+name]), 'Uncommitted asset HTTP test input'
+            target=evidence/'executed-source'/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
+            asset_inputs[name]={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
+          (evidence/'local-assets-source-inputs.json').write_text(json.dumps({'sourceCommit':source,'runnerArchitecture':'arm64','files':asset_inputs},indent=2)+'\n')
+          os.environ['PURETV_ASSET_TEST_EVIDENCE']=str(evidence/'local-assets-compile')
           shared=[['node','--test','joystick-games/shared/macos/tests/web-bridge.test.mjs']]
           shared += [['python3',str(path)] for path in sorted(Path('joystick-games/shared/macos/tests').glob('*.test.py'))]
           assert any('catalog-tools.test.py' in str(arg) for command in shared for arg in command), 'Catalog source/cache/QA regression must exist'
+          assert sum('local-assets.test.py' in str(arg) for command in shared for arg in command)==1, 'Native local-asset HTTP suite must run exactly once'
           shared += [['xcrun','swiftc','-swift-version','5','joystick-games/shared/macos/Sources/ControllerServer.swift','joystick-games/shared/macos/tests/ControllerServerTests.swift','-o',str(temp/'controller-tests')],[str(temp/'controller-tests')]]
           shared += [['xcrun','swiftc','-swift-version','5','joystick-games/shared/macos/Sources/GameStorage.swift','joystick-games/shared/macos/tests/GameStorageTests.swift','-o',str(temp/'storage-tests')],[str(temp/'storage-tests')]]
           for index,command in enumerate(shared):report['shared'].append(execute(command,evidence/'shared'/f'{index:02d}.log'));save()

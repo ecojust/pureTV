@@ -1,5 +1,7 @@
 import Foundation
 import Network
+import CoreFoundation
+import Darwin
 
 /// A private origin for the bundled game. It never listens on LAN interfaces.
 /// All public methods and Network callbacks execute on the main queue.
@@ -17,7 +19,8 @@ final class LocalAssetServer {
         }
     }
     private struct Asset {
-        let bytes: Data
+        let url: URL
+        let size: Int
         let mime: String
     }
     private final class Client {
@@ -25,9 +28,12 @@ final class LocalAssetServer {
         var input = Data()
         var lastActivity = ProcessInfo.processInfo.systemUptime
         var responding = false
+        var file: FileHandle?
+        var remaining = 0
         init(_ socket: NWConnection) { self.socket = socket }
     }
     private let root: URL
+    private let policy: Any?
     private var listener: NWListener?
     private var generation = 0
     private var entryURL: URL?
@@ -38,6 +44,7 @@ final class LocalAssetServer {
     private static let headerLimit = 8 * 1024
     private static let assetLimit = 10 * 1024 * 1024
     private static let totalAssetLimit = 32 * 1024 * 1024
+    private static let chunkSize = 64 * 1024
     private static let mimeTypes: [String: String] = [
         "html": "text/html; charset=utf-8", "js": "application/javascript; charset=utf-8",
         "css": "text/css; charset=utf-8", "json": "application/json; charset=utf-8",
@@ -45,10 +52,36 @@ final class LocalAssetServer {
         "png": "image/png", "webp": "image/webp", "jpg": "image/jpeg", "jpeg": "image/jpeg",
         "ico": "image/x-icon", "woff": "font/woff", "woff2": "font/woff2",
         "ttf": "font/ttf", "otf": "font/otf", "ogg": "audio/ogg", "wav": "audio/wav",
-        "mp3": "audio/mpeg"
+        "mp3": "audio/mpeg", "glb": "model/gltf-binary", "gltf": "model/gltf+json",
+        "bin": "application/octet-stream", "wasm": "application/wasm",
+        "hdr": "application/octet-stream", "ktx2": "image/ktx2"
     ]
 
-    init(root: URL) { self.root = root }
+    init(root: URL, policy: Any? = Bundle.main.object(forInfoDictionaryKey: "PureTVAssetPolicy")) {
+        self.root = root
+        self.policy = policy
+    }
+
+    private func limits() throws -> (asset: Int, total: Int) {
+        guard let raw = policy else { return (Self.assetLimit, Self.totalAssetLimit) }
+        guard let value = raw as? [String: Any],
+              Set(value.keys) == Set(["schemaVersion", "maxAssetBytes", "maxTotalBytes", "maxApkBytes"]) else {
+            throw Failure.assetBudget
+        }
+        func number(_ key: String, maximum: Int) throws -> Int {
+            guard let n = value[key] as? NSNumber, CFGetTypeID(n) != CFBooleanGetTypeID(),
+                  ["c", "s", "i", "l", "q", "C", "S", "I", "L", "Q"].contains(String(cString: n.objCType)),
+                  n.doubleValue.isFinite, n.doubleValue.rounded(.towardZero) == n.doubleValue,
+                  n.doubleValue > 0, n.doubleValue <= Double(maximum) else { throw Failure.assetBudget }
+            return n.intValue
+        }
+        guard try number("schemaVersion", maximum: 1) == 1 else { throw Failure.assetBudget }
+        let asset = try number("maxAssetBytes", maximum: 64 * 1024 * 1024)
+        let total = try number("maxTotalBytes", maximum: 256 * 1024 * 1024)
+        _ = try number("maxApkBytes", maximum: 100_000_000)
+        guard asset <= total else { throw Failure.assetBudget }
+        return (asset, total)
+    }
 
     func start(completion: @escaping (Result<URL, Error>) -> Void) {
         precondition(Thread.isMainThread)
@@ -104,7 +137,7 @@ final class LocalAssetServer {
         generation += 1
         watchdog?.invalidate(); watchdog = nil
         listener?.cancel(); listener = nil
-        for client in clients.values { client.socket.cancel() }
+        for client in clients.values { try? client.file?.close(); client.socket.cancel() }
         clients.removeAll()
         entryURL = nil
         assets.removeAll()
@@ -122,30 +155,36 @@ final class LocalAssetServer {
     }
 
     private func loadAssets() throws {
+        let budget = try limits()
         guard root.isFileURL else { throw Failure.invalidRoot }
+        guard try root.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink != true else {
+            throw Failure.invalidRoot
+        }
         let canonical = root.standardizedFileURL.resolvingSymlinksInPath()
         let rootValues = try canonical.resourceValues(forKeys: [.isDirectoryKey])
         guard rootValues.isDirectory == true else { throw Failure.invalidRoot }
         let files = try FileManager.default.contentsOfDirectory(at: canonical,
             includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey],
-            options: [.skipsHiddenFiles])
+            options: [])
+        guard files.count <= 2048 else { throw Failure.assetBudget }
         var loaded: [String: Asset] = [:]
         var total = 0
         for file in files {
             let name = file.lastPathComponent
-            guard !name.isEmpty, !name.contains("/"), !name.contains("\\"),
-                  let mime = Self.mimeTypes[file.pathExtension.lowercased()] else { continue }
+            guard name.range(of: "^[A-Za-z0-9][A-Za-z0-9_.-]*$", options: .regularExpression) != nil,
+                  let mime = Self.mimeTypes[file.pathExtension.lowercased()] else { throw Failure.invalidRoot }
+            if policy == nil && ["glb", "gltf", "bin", "wasm", "hdr", "ktx2"].contains(file.pathExtension.lowercased()) {
+                throw Failure.invalidRoot
+            }
             let values = try file.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
             guard values.isRegularFile == true, values.isSymbolicLink != true,
                   file.resolvingSymlinksInPath().deletingLastPathComponent().path == canonical.path else {
                 throw Failure.invalidRoot
             }
-            guard let size = values.fileSize, size >= 0, size <= Self.assetLimit else { throw Failure.assetBudget }
-            let bytes = try Data(contentsOf: file)
-            guard bytes.count == size, bytes.count <= Self.assetLimit else { throw Failure.assetBudget }
-            total += bytes.count
-            guard total <= Self.totalAssetLimit else { throw Failure.assetBudget }
-            loaded[name] = Asset(bytes: bytes, mime: mime)
+            guard let size = values.fileSize, size >= 0, size <= budget.asset else { throw Failure.assetBudget }
+            total += size
+            guard total <= budget.total else { throw Failure.assetBudget }
+            loaded[name] = Asset(url: file, size: size, mime: mime)
         }
         guard loaded["tv.html"] != nil else { throw Failure.missingEntry }
         assets = loaded
@@ -229,7 +268,7 @@ final class LocalAssetServer {
         }
         let target = request[1]
         guard target.hasPrefix("/"), !target.contains("?"), !target.contains("#"),
-              let decoded = target.removingPercentEncoding else {
+              let decoded = target.removingPercentEncoding, decoded == target else {
             respond(id, status: 400, message: "Bad Request"); return
         }
         let name = String(decoded.dropFirst())
@@ -239,21 +278,95 @@ final class LocalAssetServer {
             respond(id, status: 404, message: "Not Found"); return
         }
         guard let asset = assets[name] else { respond(id, status: 404, message: "Not Found"); return }
-        respond(id, status: 200, message: "OK", body: asset.bytes, mime: asset.mime, head: method == "HEAD")
+        // A single byte range is enough for local audio/video seek requests.
+        // Range applies to GET only. Without validators If-Range falls back to
+        // the complete representation, as required by its conditional meaning.
+        var lower = 0, length = asset.size, status = 200
+        if method == "GET", headers["if-range"] == nil, let range = headers["range"] {
+            guard let selected = Self.byteRange(range, size: asset.size) else {
+                respond(id, status: 416, message: "Range Not Satisfiable",
+                        extraHeaders: "Content-Range: bytes */\(asset.size)\r\n"); return
+            }
+            lower = selected.lowerBound; length = selected.count; status = 206
+        }
+        stream(id, asset: asset, offset: lower, length: length, status: status, head: method == "HEAD")
+    }
+
+    static func byteRange(_ value: String, size: Int) -> Range<Int>? {
+        guard size > 0, value.hasPrefix("bytes=") else { return nil }
+        let parts = value.dropFirst(6).split(separator: "-", omittingEmptySubsequences: false)
+        guard parts.count == 2, parts.allSatisfy({ $0.utf8.allSatisfy({ $0 >= 48 && $0 <= 57 }) }) else { return nil }
+        if parts[0].isEmpty {
+            guard let suffix = Int(parts[1]), suffix > 0 else { return nil }
+            return max(0, size - min(size, suffix))..<size
+        }
+        guard let lower = Int(parts[0]), lower < size else { return nil }
+        if parts[1].isEmpty { return lower..<size }
+        guard let upper = Int(parts[1]), upper >= lower else { return nil }
+        return lower..<(min(upper, size - 1) + 1)
+    }
+
+    private func stream(_ id: UUID, asset: Asset, offset: Int, length: Int, status: Int, head: Bool) {
+        guard let client = clients[id], !client.responding else { return }
+        // O_NOFOLLOW rejects a file replaced by a symlink after indexing.
+        let descriptor = open(asset.url.path, O_RDONLY | O_NOFOLLOW)
+        guard descriptor >= 0 else { respond(id, status: 404, message: "Not Found"); return }
+        var info = stat()
+        guard fstat(descriptor, &info) == 0, (info.st_mode & mode_t(S_IFMT)) == mode_t(S_IFREG),
+              info.st_size == Int64(asset.size) else {
+            Darwin.close(descriptor); respond(id, status: 404, message: "Not Found"); return
+        }
+        let file = FileHandle(fileDescriptor: descriptor, closeOnDealloc: true)
+        do { try file.seek(toOffset: UInt64(offset)) }
+        catch { try? file.close(); respond(id, status: 500, message: "Read Error"); return }
+        client.file = file; client.remaining = head ? 0 : length
+        client.responding = true; client.input.removeAll()
+        let message = status == 206 ? "Partial Content" : "OK"
+        var extra = "Accept-Ranges: bytes\r\n"
+        if status == 206 { extra += "Content-Range: bytes \(offset)-\(offset + length - 1)/\(asset.size)\r\n" }
+        send(id, bytes: responseHeader(status: status, message: message, mime: asset.mime, length: length, extra: extra)) {
+            [weak self] in self?.sendChunk(id)
+        }
+    }
+
+    private func sendChunk(_ id: UUID) {
+        guard let client = clients[id], let file = client.file else { return }
+        guard client.remaining > 0 else { close(id); return }
+        do {
+            let count = min(client.remaining, Self.chunkSize)
+            guard let bytes = try file.read(upToCount: count), bytes.count == count else { close(id); return }
+            client.remaining -= bytes.count
+            send(id, bytes: bytes) { [weak self] in self?.sendChunk(id) }
+        } catch { close(id) }
+    }
+
+    private func responseHeader(status: Int, message: String, mime: String, length: Int, extra: String = "") -> Data {
+        var header = "HTTP/1.1 \(status) \(message)\r\nContent-Type: \(mime)\r\nContent-Length: \(length)\r\n"
+        header += "Cache-Control: no-store\r\nConnection: close\r\nX-Content-Type-Options: nosniff\r\n"
+        header += "Cross-Origin-Resource-Policy: same-origin\r\nReferrer-Policy: no-referrer\r\n"
+        if status == 405 { header += "Allow: GET, HEAD\r\n" }
+        return Data((header + extra + "\r\n").utf8)
+    }
+
+    private func send(_ id: UUID, bytes: Data, then completion: @escaping () -> Void) {
+        guard let client = clients[id] else { return }
+        client.lastActivity = ProcessInfo.processInfo.systemUptime
+        let expected = generation
+        client.socket.send(content: bytes, completion: .contentProcessed { [weak self, weak client] error in
+            guard let self = self, let client = client, self.generation == expected,
+                  self.clients[id] === client else { return }
+            if error != nil { self.close(id) } else { completion() }
+        })
     }
 
     private func respond(_ id: UUID, status: Int, message: String, body: Data? = nil,
-                         mime: String = "text/plain; charset=utf-8", head: Bool = false) {
+                         mime: String = "text/plain; charset=utf-8", head: Bool = false,
+                         extraHeaders: String = "") {
         guard let client = clients[id], !client.responding else { return }
         client.responding = true
         client.input.removeAll()
         let bytes = body ?? Data((message + "\n").utf8)
-        var header = "HTTP/1.1 \(status) \(message)\r\nContent-Type: \(mime)\r\nContent-Length: \(bytes.count)\r\n"
-        header += "Cache-Control: no-store\r\nConnection: close\r\nX-Content-Type-Options: nosniff\r\n"
-        header += "Cross-Origin-Resource-Policy: same-origin\r\nReferrer-Policy: no-referrer\r\n"
-        if status == 405 { header += "Allow: GET, HEAD\r\n" }
-        header += "\r\n"
-        var response = Data(header.utf8)
+        var response = responseHeader(status: status, message: message, mime: mime, length: bytes.count, extra: extraHeaders)
         if !head { response.append(bytes) }
         client.lastActivity = ProcessInfo.processInfo.systemUptime
         let expected = generation
@@ -265,6 +378,9 @@ final class LocalAssetServer {
     }
 
     private func close(_ id: UUID) {
-        clients.removeValue(forKey: id)?.socket.cancel()
+        if let client = clients.removeValue(forKey: id) {
+            try? client.file?.close()
+            client.socket.cancel()
+        }
     }
 }
