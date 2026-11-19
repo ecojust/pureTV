@@ -1,0 +1,14 @@
+Bonjour actual port and version: passed
+Original SDK and complete identity card: failed
+Traceback (most recent call last):
+  File "/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py", line 417, in run
+    self.screenshot('menu.png');self.check('Bonjour actual port and version',self.discovery);self.check('Original SDK and complete identity card' if self.graphics else 'Original SDK native receiver without renderer',self.connect)
+                                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py", line 204, in check
+    try:r['details']=fn();r['status']='passed'
+                     ^^^^
+  File "/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py", line 517, in connect
+    assert self.last['game'].get('game')==self.args.game,'Observed game identity mismatch'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Observed game identity mismatch
+
