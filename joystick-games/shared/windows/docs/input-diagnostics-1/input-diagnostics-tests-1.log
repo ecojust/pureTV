@@ -1,0 +1,40 @@
+✔ each document reads live native preferences before the first game read (8.039382ms)
+✔ document epoch is immutable and cannot be relabeled by later native info (1.785222ms)
+✔ non-entry or subframe bootstrap never calls the host object (3.423367ms)
+✔ invalid native epoch fails closed before seed (4.98555ms)
+✔ observes actual document and invokes original cancellation exactly once (3.136965ms)
+✔ missing bridge is observed without inventing a document epoch or game (0.591312ms)
+✔ original suspend failure propagates and is never replaced by a successful result (1.373174ms)
+✔ observation failure does not prevent the original cancellation (1.353375ms)
+file:///dev/shm/puretv-submit/joystick-games/shared/windows/tests/web-bridge.test.mjs:87
+   documentEpoch:2,diagnosticsEnabled:flag,info:{preferences:{secret:'never-log-preferences'},wifiController:{inputEnabled:false}},input:sample(4,false,4)});}}}}};
+                                                                                                                                                                  ^
+
+SyntaxError: Unexpected token ';'
+    at compileSourceTextModule (node:internal/modules/esm/utils:319:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:89:18)
+    at #translate (node:internal/modules/esm/loader:438:20)
+    at afterLoad (node:internal/modules/esm/loader:506:29)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:511:12)
+    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:564:36)
+    at afterResolve (node:internal/modules/esm/loader:611:52)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:617:12)
+    at node:internal/modules/esm/loader:636:32
+    at TracingChannel.tracePromise (node:diagnostics_channel:370:14)
+
+Node.js v24.22.1
+✖ joystick-games/shared/windows/tests/web-bridge.test.mjs (33.511618ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 8
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 195.611202
+
+✖ failing tests:
+
+test at joystick-games/shared/windows/tests/web-bridge.test.mjs:1:1
+✖ joystick-games/shared/windows/tests/web-bridge.test.mjs (33.511618ms)
+  'test failed'

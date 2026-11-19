@@ -72,3 +72,83 @@ test('storage allowlists isolate games and never mirror session, unknown or over
 });
 
 test('Windows native bridge reports its own platform',()=>{const x=setup();assert.equal(JSON.parse(x.w.PureGameHost.getInfo()).platform,'windows');});
+
+function diagnosticPage(flag) {
+ const handlers={window:new Map(),document:new Map()},suspends=[];let nativeReads=0;
+ const add=(where,name,fn)=>{const list=handlers[where].get(name)||[];list.push(fn);handlers[where].set(name,list);};
+ const w={document:{hidden:false,hasFocus:()=>true,addEventListener:(name,fn)=>add('document',name,fn)},
+   addEventListener:(name,fn)=>add('window',name,fn),performance:{now:()=>12.5},
+   location:{origin:'https://puretv.local',pathname:'/tv.html',hash:''}};
+ w.top=w;
+ const sample=(revision,enabled,cancelSeq,held={},counts={})=>({revision,inputEnabled:enabled,players:[{
+   connected:true,controllerId:'private-controller-id',session:'private-session',cancelSeq,
+   buttons:Object.fromEntries(KEYS.map(k=>[k,!!held[k]])),buttonCounters:Object.fromEntries(KEYS.map(k=>[k,counts[k]||0]))}]});
+ const native={get snapshot(){nativeReads++;return JSON.stringify({
+   documentEpoch:2,diagnosticsEnabled:flag,info:{preferences:{secret:'never-log-preferences'},wifiController:{inputEnabled:false}},input:sample(4,false,4)});}};
+ w.chrome={webview:{postMessage(){},hostObjects:{sync:{puretvBootstrap:native}}}};
+ const bootstrap=fs.readFileSync(new URL('../Web/bootstrap.js',import.meta.url),'utf8');
+ vm.runInNewContext(source+'\n'+bootstrap,{window:w,location:w.location});
+ w.PureGame={suspend(value){suspends.push(value);}};
+ return {w,sample,suspends,handlers,nativeReads:()=>nativeReads,
+   emit:(where,name)=>{for(const fn of handlers[where].get(name)||[])fn();},
+   receive:s=>w.JoystickDesktop.receive({wifiController:{inputEnabled:s.inputEnabled}},s),
+   read:()=>JSON.parse(w.PureGameHost.snapshot()),logs:()=>w.JoystickDesktop.inputDiagnostics()};
+}
+test('document-start input diagnostics stay disabled unless the native flag is exactly true',()=>{
+ for(const flag of [undefined,false,0,1,'true']){
+  const x=diagnosticPage(flag);assert.equal(x.logs(),null);assert.equal(x.handlers.window.size,0);
+  assert.equal(x.handlers.document.has('visibilitychange'),false);x.read();assert.equal(x.nativeReads(),1);
+ }
+ const x=diagnosticPage(true);assert.equal(x.logs().enabled,true);assert.equal(x.nativeReads(),1);
+ assert.equal(x.handlers.window.get('blur').length,1);x.w.JoystickDesktop.enableInputDiagnostics();assert.equal(x.handlers.window.get('blur').length,1);
+});
+test('diagnostics preserve connected disabled seed to first active poll and do not consume taps',()=>{
+ const x=diagnosticPage(true);assert.equal(x.read().connections,0);
+ x.receive(x.sample(5,true,5));assert.equal(x.read().connections,1);
+ x.receive(x.sample(6,true,5,{}, {A:1}));
+ for(let i=0;i<20;i++)x.logs();assert.equal(x.read().players[0].buttons.A,true);assert.equal(x.read().players[0].buttons.A,false);
+ const log=x.logs(),events=Array.from(log.events,e=>e.event);assert.deepEqual(events,['diagnostics_enabled','input_transition','suspend_called','first_poll','input_transition','first_active_poll']);
+ const transitions=log.events.filter(e=>e.event==='input_transition');assert.equal(transitions[0].cancelSeq,4);assert.equal(transitions[0].inputEnabled,false);assert.equal(transitions[0].hasPureGame,false);
+ assert.equal(transitions[1].cancelSeq,5);assert.equal(transitions[1].previousCancelSeq,4);assert.equal(transitions[1].sourceChanged,false);assert.equal(transitions[1].hasPureGame,true);
+ assert.equal(x.suspends.length,0,'no new cancellation when enabling the first connected document');assert.equal(x.nativeReads(),1);
+ assert.equal(x.logs().events.filter(e=>e.event==='first_active_poll').length,1);
+});
+test('blur and visibility observation is passive, bounded and contains no identity or storage',()=>{
+ const x=diagnosticPage(true);for(let i=0;i<80;i++){x.w.document.hidden=!!(i%2);x.emit('document','visibilitychange');x.emit('window','blur');}
+ const log=x.logs();assert.equal(log.events.length,64);assert.equal(log.discarded,log.total-64);
+ assert.equal(log.events[0].sequence,log.total-63);assert.equal(log.events.at(-1).event,'window_blur');assert.equal(log.events.at(-1).documentEpoch,2);
+ assert.equal(x.suspends.length,0);assert.equal(x.nativeReads(),1);
+ const encoded=JSON.stringify(log);for(const secret of ['private-controller-id','private-session','never-log-preferences'])assert.equal(encoded.includes(secret),false);
+ log.events[0].event='mutated';log.events.pop();assert.equal(x.logs().events.length,64);assert.notEqual(x.logs().events[0].event,'mutated');
+});
+test('observation exceptions never skip or duplicate the existing suspend hook',()=>{
+ const x=diagnosticPage(true);x.receive(x.sample(5,true,5));x.read();x.w.document.hasFocus=()=>{throw new Error('secret diagnostic exception');};
+ x.receive(x.sample(6,false,6));assert.deepEqual(x.suspends,[true]);assert.equal(x.read().connections,0);
+ x.receive(x.sample(7,false,6));assert.deepEqual(x.suspends,[true]);x.w.JoystickDesktop.suspend();assert.deepEqual(x.suspends,[true,true]);
+ assert.equal(x.logs().events.at(-1).observationFailed,true);assert.equal(JSON.stringify(x.logs()).includes('secret diagnostic exception'),false);
+});
+test('observation tracks cancellation and replacement without accepting stale revisions',()=>{
+ const x=diagnosticPage(true);x.receive(x.sample(5,true,5));x.read();x.receive(x.sample(6,true,6));x.read();
+ const replacement=x.sample(7,true,7);replacement.players[0].session='other-private-session';x.receive(replacement);x.read();
+ const before=JSON.stringify(x.logs());assert.equal(x.receive(x.sample(2,false,2)),false);assert.equal(JSON.stringify(x.logs()),before);
+ const transitions=x.logs().events.filter(e=>e.event==='input_transition');assert.equal(transitions.at(-2).sourceChanged,false);assert.equal(transitions.at(-2).cancelSeq,6);
+ assert.equal(transitions.at(-1).sourceChanged,true);assert.equal(JSON.stringify(x.logs()).includes('other-private-session'),false);
+});
+test('diagnostics enabled and disabled preserve the same nine-key input and suspend results',()=>{
+ const off=diagnosticPage(false),on=diagnosticPage(true);let revision=5,cancel=5,counts=Object.fromEntries(KEYS.map(k=>[k,0]));
+ const compare=sample=>{off.receive(sample);on.receive(sample);on.logs();assert.deepEqual(on.read(),off.read());assert.deepEqual(on.suspends,off.suspends);};
+ compare(off.sample(revision++,true,cancel));
+ for(const key of KEYS){counts[key]++;compare(off.sample(revision++,true,cancel,{[key]:true},counts));compare(off.sample(revision++,false,++cancel,{},counts));compare(off.sample(revision++,true,++cancel,{},counts));}
+ assert.equal(off.nativeReads(),1);assert.equal(on.nativeReads(),1);
+});
+test('actual diagnostics script reads the event cache without consuming native input',()=>{
+ const x=diagnosticPage(true);x.receive(x.sample(5,true,5));x.receive(x.sample(6,true,5,{}, {Y:1}));
+ Object.assign(x.w.document,{querySelectorAll:()=>[],getElementById:()=>null,title:'fixture',documentElement:{scrollWidth:1280,scrollHeight:720,lang:'en'}});
+ const script=fs.readFileSync(new URL('../Web/diagnostics.js',import.meta.url),'utf8');
+ for(let i=0;i<10;i++){
+  const state=vm.runInNewContext(script,{window:x.w,document:x.w.document,location:x.w.location,innerWidth:1280,innerHeight:720,localStorage:{getItem:()=>null}});
+  assert.equal(state.inputEvents.enabled,true);state.inputEvents.events.length=0;
+ }
+ assert.equal(x.logs().events.some(e=>e.event==='first_poll'),false);
+ assert.equal(x.read().players[0].buttons.Y,true);assert.equal(x.read().players[0].buttons.Y,false);assert.equal(x.nativeReads(),1);
+});

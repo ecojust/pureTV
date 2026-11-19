@@ -1,0 +1,59 @@
+{
+  "status": "passed-independent-root-review",
+  "reviewedAt": "2026-11-19T23:17:43.511815+00:00",
+  "freezeSha256": "e9ef10591677b38d2d2883ec679604fd59718f8e6780c80f117fdaf1e701d691",
+  "sources": {
+    "joystick-games/shared/windows/Sources/main.cpp": {
+      "bytes": 34903,
+      "sha256": "53ab3af86bdd9d203fc2fe604fcc60ebe44bbc619825cfb7f8725d51e5ce20bf"
+    },
+    "joystick-games/shared/windows/Web/bridge.js": {
+      "bytes": 8739,
+      "sha256": "e4de0862673f30c254e02597f45b8fbac0382b2e2e6a5ae8aee819ad4d1f0a89"
+    },
+    "joystick-games/shared/windows/Web/bootstrap.js": {
+      "bytes": 895,
+      "sha256": "b2064db9df208f80bcf5cb24c82bede7c99cbc06faa8a4573895050ad663dfc7"
+    },
+    "joystick-games/shared/windows/Web/diagnostics.js": {
+      "bytes": 3184,
+      "sha256": "fcd8094568b6e48ab78bcdc1e11b7f12d320e7fa6a938e587e1cc2a716fc787e"
+    },
+    "joystick-games/shared/windows/tests/web-bridge.test.mjs": {
+      "bytes": 14650,
+      "sha256": "cdb32152e4616328ea99d494c1e1445c118de0788c8533c4510e89e5fdbb7bec"
+    }
+  },
+  "evidenceFilesBound": 13,
+  "originalBehaviorComparison": {
+    "status": "passed",
+    "comparisonSourceCommit": "2ea1383fa59c30abac7e07df8f4b9dfae343abf9",
+    "checks": {
+      "Sources/main.cpp": "Only diagnostic opt-in boolean added to existing bootstrap JSON",
+      "Web/bootstrap.js": "Only strict true opt-in before unchanged original receive",
+      "Web/diagnostics.js": "Only cached observer result added; original game/storage/geometry reads unchanged",
+      "Web/bridge.js": "All original input/storage/suspend statements byte-identical after removing observation-only insertions",
+      "tests/web-bridge.test.mjs": "All original tests preserved as exact prefix; seven additional observation boundary cases"
+    },
+    "nativeWindowsExecution": false
+  },
+  "reviewedProperties": [
+    "Only exact native diagnosticsEnabled true enables observers; ordinary startup remains disabled.",
+    "Input snapshot is consumed in the existing original method only; diagnostics serializes the event cache.",
+    "At most 64 fixed-field entries are retained with an explicit discarded count. Native controller IDs/session values are compared internally but never emitted.",
+    "Blur/focus/visibility listeners only record observations; suspend/cancel calls and original input, storage, callback and timeout statements stay unchanged.",
+    "Incoming input transitions include flags, revision and cancel sequence, and observations bind the document epoch and presence of the game hook.",
+    "Observation exceptions are caught without skipping or duplicating the original suspend callback."
+  ],
+  "validation": {
+    "originalLog": "input-diagnostics-tests-3.log",
+    "passedLocalGroups": 25,
+    "newBoundaryCases": 7,
+    "testsRerunForReview": false,
+    "nativeWindowsExecutedForThisChange": false
+  },
+  "limitations": [
+    "The recording has not yet identified the actual Backroad Windows pause cause.",
+    "A new bounded native run is still required; no game behavior fix is claimed."
+  ]
+}

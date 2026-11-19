@@ -13,6 +13,53 @@
   let player = null, identity = null, revision = -1, suspendedRevision = -1;
   let counters = {}, pending = {}, blocked = {}, initialized = false, everConnected = false, disabled = false, seeded = false;
   const integer = n => Number.isSafeInteger(n) && n >= 0;
+  // Optional observation only. Never read another native snapshot, invoke a
+  // game hook, export preferences/identities, or change cancellation behavior.
+  let diagnostic = null, diagnosticInput = null, firstPoll = false, firstActivePoll = false;
+  function observe(event, detail = {}) {
+    if (!diagnostic) return;
+    try {
+      const row = {event, sequence: ++diagnostic.total, ...detail};
+      try {
+        row.documentEpoch = integer(root.__puretvDocumentEpoch) ? root.__puretvDocumentEpoch : null;
+        const time = root.performance?.now(); row.performanceMilliseconds = Number.isFinite(time) ? time : null;
+        row.hidden = typeof root.document?.hidden === 'boolean' ? root.document.hidden : null;
+        row.focused = typeof root.document?.hasFocus === 'function' ? !!root.document.hasFocus() : null;
+        row.hasPureGame = !!root.PureGame;
+        row.cachedRevision = revision; row.cachedCancelSeq = player?.cancelSeq ?? null;
+        row.cachedConnected = !!player; row.disabled = disabled;
+      } catch (_) { row.observationFailed = true; }
+      diagnostic.events.push(row);
+      if (diagnostic.events.length > 64) diagnostic.events.shift();
+    } catch (_) {}
+  }
+  function observeInput(sample) {
+    if (!diagnostic) return;
+    try {
+      const next = sample.players?.find(p => p?.connected === true);
+      const state = {enabled: sample.inputEnabled !== false && info.wifiController?.inputEnabled !== false,
+        connected: !!next, source: next ? JSON.stringify([next.controllerId,next.session]) : '',
+        cancelSeq: integer(next?.cancelSeq) ? next.cancelSeq : null};
+      if (!diagnosticInput || Object.keys(state).some(k => state[k] !== diagnosticInput[k])) {
+        observe('input_transition', {incomingRevision: sample.revision, inputEnabled: state.enabled,
+          connected: state.connected, sourceChanged: !!diagnosticInput && state.source !== diagnosticInput.source,
+          cancelSeq: state.cancelSeq, previousCancelSeq: diagnosticInput?.cancelSeq ?? null});
+        diagnosticInput = state;
+      }
+    } catch (_) {}
+  }
+  function enableInputDiagnostics() {
+    if (diagnostic) return;
+    diagnostic = {total: 0, events: []};
+    try { root.addEventListener?.('blur', () => observe('window_blur')); } catch (_) {}
+    try { root.addEventListener?.('focus', () => observe('window_focus')); } catch (_) {}
+    try { root.document?.addEventListener('visibilitychange', () => observe('visibilitychange')); } catch (_) {}
+    observe('diagnostics_enabled');
+  }
+  function inputDiagnostics() {
+    return diagnostic ? JSON.parse(JSON.stringify({enabled: true, total: diagnostic.total,
+      discarded: Math.max(0, diagnostic.total - diagnostic.events.length), events: diagnostic.events})) : null;
+  }
   function send(message) { try { root.chrome?.webview?.postMessage(message); } catch (_) {} }
   function fits(value) { return typeof value === 'string' && value.length <= storageMaxBytes && new root.TextEncoder().encode(value).length <= storageMaxBytes; }
   if (originalSet) root.Storage.prototype.setItem = function(key, value) {
@@ -42,6 +89,7 @@
       }
       try { root.PureGame?.roomInfo(info); } catch (_) {}
     }
+    observeInput(sample);
     if (sample.inputEnabled === false || info.wifiController?.inputEnabled === false) {
       if (!disabled) suspend();
       disabled = true; revision = sample.revision; suspendedRevision = revision; initialized = true;
@@ -73,16 +121,19 @@
     revision=sample.revision; initialized=true; return true;
   }
   function snapshot() {
+    if (diagnostic && !firstPoll) { firstPoll = true; observe('first_poll'); }
+    if (diagnostic && player && !firstActivePoll) { firstActivePoll = true; observe('first_active_poll'); }
     if(!player) return JSON.stringify({players:[],connections:0});
     const buttons={}; for(const key of keys) buttons[key]=player.buttons[key] || !!pending[key];
     const sample={...player,buttons,x:Number(buttons.RIGHT)-Number(buttons.LEFT),y:Number(buttons.DOWN)-Number(buttons.UP),a:buttons.A,b:buttons.B,start:buttons.START,select:buttons.Y};
     pending={}; return JSON.stringify({players:[sample],connections:1});
   }
   function suspend() {
+    observe('suspend_called');
     player=null;identity=null;counters={};pending={};blocked={};suspendedRevision=revision;
     try { root.PureGame?.suspend(true); } catch (_) {}
   }
   root.PureGameHost=Object.freeze({getInfo(){return JSON.stringify(info);},snapshot,publish(value){if(typeof value==='string' && value.length<=8192) try {send({type:'publish',value:JSON.parse(value)});}catch(_){}},exit(){send({type:'exit'});}});
-  root.JoystickDesktop=Object.freeze({receive,suspend,initialStorage(){return {...initialStorage};}});
+  root.JoystickDesktop=Object.freeze({receive,suspend,enableInputDiagnostics,inputDiagnostics,initialStorage(){return {...initialStorage};}});
   root.document?.addEventListener('DOMContentLoaded',()=>send({type:'ready'}),{once:true});
 })(window);

@@ -147,7 +147,7 @@ public:
  void resize(){if(controller){RECT r;GetClientRect(window,&r);controller->put_Bounds(r);}}
  std::wstring bootstrapSnapshot(){
   if(closed||!documentEpoch||!puretv::allowsEntryURL(documentURL))throw std::runtime_error("Bootstrap outside local entry");
-  auto value=Json{{"info",info()},{"input",protocol.snapshot()},{"documentEpoch",documentEpoch}};
+  auto value=Json{{"info",info()},{"input",protocol.snapshot()},{"documentEpoch",documentEpoch},{"diagnosticsEnabled",!diagnostics.empty()}};
   bootstrappedEpoch=documentEpoch;trace("document_bootstrap_snapshot",{{"inputEnabled",protocol.inputEnabled}});return wide(value.dump());
  }
  void startWebView(){

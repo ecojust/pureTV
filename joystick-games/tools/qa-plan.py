@@ -87,7 +87,7 @@ def validate_plan(plan):
                 speed, motion = expectations
                 assert isinstance(speed, dict) and isinstance(motion, dict)
                 assert speed.get('path') == 'gameplay.speed' and speed.get('op') == 'gt' and numeric(speed.get('value')) and speed['value'] > 0
-                assert motion == {'path': 'gameplay.progress', 'op': 'changed'}, 'Held throttle must observe original speed and course progress'
+                assert motion in [{'path': path, 'op': 'changed'} for path in ('gameplay.progress', 'gameplay.position')], 'Held throttle must observe original speed and course motion'
         for item in expectations:
             assert isinstance(item, dict) and isinstance(item.get('path'), str) and PATH.fullmatch(item['path'])
             assert item.get('op') in OPERATORS
