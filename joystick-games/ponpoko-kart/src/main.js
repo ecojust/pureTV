@@ -24,8 +24,8 @@ try {
   adapter.attach(game, ui, audio);
   game.tv = adapter;
   const unlock = () => { if (!game.paused) audio.unlock(); };
-  addEventListener('pointerdown', unlock, { once: true, capture: true });
-  addEventListener('keydown', unlock, { once: true, capture: true });
+  addEventListener('pointerdown', unlock, { capture: true });
+  addEventListener('keydown', unlock, { capture: true });
   runMenus(game, { ui, audio, characters: CHARACTERS, stages: STAGES });
 } catch (error) {
   adapter.fail(error);

@@ -71,6 +71,8 @@ export function createTVAdapter() {
       frames++;
       controller.setPlaying(!!game && RACE_MODES.has(game.mode) && !game.paused);
       const frame = controller.poll();
+      panel.dataset.screen = ui?._screen?.name || game?.mode || 'boot';
+      panel.dataset.connected = String(frame.connected);
       if (!game || frame.cancelled) return;
       if (pendingPause && game.race && RACE_MODES.has(game.mode)) {
         pendingPause = false;

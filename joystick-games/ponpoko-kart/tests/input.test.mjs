@@ -64,6 +64,25 @@ test('keyboard cancellation blocks repeated held keys until keyup', () => {
   fire('keyup','Space'); fire('keydown','Space'); assert.equal(input.controls().jumpPressed,true);
 });
 
+test('resume input reset preserves the shared START edge until physical release', () => {
+  const {input} = setup(); const reducer = createInputReducer();
+  const sample = keys => ({players:[{id:1,controllerId:'resume-test',session:'same',connected:true,transport:'wifi',buttons:frame(keys).buttons}]});
+  assert.equal(reducer.read(sample(['START'])).pressed.START, true);
+  reducer.cancel(); input.cancel(); // Pause cancels held inputs.
+  assert.equal(reducer.read(sample(['START'])).pressed.START, false);
+  reducer.read(sample([]));
+  const resume = reducer.read(sample(['START']));
+  assert.equal(resume.pressed.START, true);
+  input.cancel(); // The original input reset on explicit resume is independent of the reducer.
+  for (let i = 0; i < 12; i++) {
+    const held = reducer.read(sample(['START'])); input.applyPureTV(held, true);
+    assert.equal(held.pressed.START, false, `held resume frame ${i}`);
+    assert.equal(input.controls().jumpPressed, false);
+  }
+  reducer.read(sample([]));
+  assert.equal(reducer.read(sample(['START'])).pressed.START, true);
+});
+
 test('standard Gamepad disconnect cancels rather than synthesizing drift release', () => {
   const {input} = setup();
   let cancelled = 0, connected = true;
