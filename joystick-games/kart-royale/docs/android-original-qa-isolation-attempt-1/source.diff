@@ -1,0 +1,388 @@
+--- 6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/kart-royale/qa-plan.json
++++ candidate/joystick-games/kart-royale/qa-plan.json
+@@ -55,8 +55,14 @@
+           "path": "gameplay.menu",
+           "op": "eq",
+           "value": "controls"
+-        }
+-      ]
++        },
++        {
++          "path": "gameplay.focus",
++          "op": "eq",
++          "value": "Floating stickAppears wherever your thumb lands. Never look for it."
++        }
++      ],
++      "menuTap": true
+     },
+     {
+       "name": "Focus controls option Fixed stick",
+@@ -70,8 +76,14 @@
+           "path": "gameplay.menu",
+           "op": "eq",
+           "value": "controls"
+-        }
+-      ]
++        },
++        {
++          "path": "gameplay.focus",
++          "op": "eq",
++          "value": "Fixed stickAlways in the same place. Muscle memory, no drift."
++        }
++      ],
++      "menuTap": true
+     },
+     {
+       "name": "Focus controls option Tilt to steer",
+@@ -85,8 +97,14 @@
+           "path": "gameplay.menu",
+           "op": "eq",
+           "value": "controls"
+-        }
+-      ]
++        },
++        {
++          "path": "gameplay.focus",
++          "op": "eq",
++          "value": "Tilt to steerRoll the phone. Both thumbs free for the buttons."
++        }
++      ],
++      "menuTap": true
+     },
+     {
+       "name": "Focus controls option Steer buttons",
+@@ -100,8 +118,14 @@
+           "path": "gameplay.menu",
+           "op": "eq",
+           "value": "controls"
+-        }
+-      ]
++        },
++        {
++          "path": "gameplay.focus",
++          "op": "eq",
++          "value": "Steer buttonsTwo big pads. Nothing to hold steady."
++        }
++      ],
++      "menuTap": true
+     },
+     {
+       "name": "Focus controls option Right",
+@@ -115,8 +139,14 @@
+           "path": "gameplay.menu",
+           "op": "eq",
+           "value": "controls"
+-        }
+-      ]
++        },
++        {
++          "path": "gameplay.focus",
++          "op": "eq",
++          "value": "Right"
++        }
++      ],
++      "menuTap": true
+     },
+     {
+       "name": "Focus controls option Left",
+@@ -130,8 +160,14 @@
+           "path": "gameplay.menu",
+           "op": "eq",
+           "value": "controls"
+-        }
+-      ]
++        },
++        {
++          "path": "gameplay.focus",
++          "op": "eq",
++          "value": "Left"
++        }
++      ],
++      "menuTap": true
+     },
+     {
+       "name": "Save original left-handed preference through Controls",
+--- 6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/qa/android/run.py
++++ candidate/joystick-games/qa/android/run.py
+@@ -657,12 +657,116 @@
+             sequence = client.seq
+         self.wait_sent_ack(client, sequence)
+ 
++    def menu_player(self, snapshot):
++        players = [p for p in self.game(snapshot).get('controller', {}).get('players', []) if p.get('connected') is True]
++        return players[0] if len(players) == 1 and players[0].get('controllerId') == self.clients[0].identity else {}
++
++    def menu_released(self, snapshot, before):
++        owner, player = self.menu_player(before), self.menu_player(snapshot)
++        controller = self.game(snapshot).get('controller', {})
++        return bool(owner.get('session') and player.get('session') == owner['session']
++                    and player.get('id') == owner.get('id') and player.get('cancelSeq') == owner.get('cancelSeq')
++                    and player.get('inputActive') is True and controller.get('cancelled') is False
++                    and all(player.get('buttons', {}).get(k) is False and controller.get('buttons', {}).get(k) is False for k in KEYS)
++                    and snapshot.get('activityState') == 'resumed' and snapshot.get('windowFocused') is True
++                    and snapshot.get('page', {}).get('hidden') is False and snapshot.get('page', {}).get('focused') is True)
++
++    def menu_wire_pair(self, key, down_seq, release_seq):
++        identity = self.clients[0].identity
++        with self.proxy.lock:
++            rows = list(self.proxy.records)
++        sent = [r for r in rows if r['direction'] == 'sdk-to-game' and r['message'].get('controller_id') == identity
++                and down_seq <= r['message'].get('seq', -1) <= release_seq and r['message'].get('type') == 'button']
++        assert len(sent) == 2 and sent[0]['connection'] == sent[1]['connection'], 'Exact menu SDK wire pair missing or duplicated'
++        expected = [(down_seq, 'down', True), (release_seq, 'tap', False)]
++        assert [(r['message'].get('seq'), r['message'].get('action'), r['message'].get('pressed')) for r in sent] == expected, 'Unexpected menu SDK actions'
++        assert all(r['message'].get('key') == key for r in sent), 'Unexpected additional menu key'
++        for row in sent:
++            acks = [r for r in rows if r['direction'] == 'game-to-sdk' and r['connection'] == row['connection']
++                    and r['message'].get('type') == 'ack' and r['message'].get('seq') == row['message']['seq']]
++            assert len(acks) == 1, 'Menu SDK action needs exactly one original same-connection ACK'
++        return {'controllerId': identity, 'connection': sent[0]['connection'], 'downSequence': down_seq,
++                'releaseSequence': release_seq, 'downCounts': {k: int(k == key) for k in KEYS},
++                'matchingAcks': 2, 'countScope': 'Original SDK wire; native Android button counters are unavailable',
++                'observedWireHeldMs': (sent[1]['monotonic'] - sent[0]['monotonic']) * 1000}
++
++    def catalog_menu_tap(self, step, before):
++        assert step.get('menuTap') is True and len(step['keys']) == 1
++        assert self.game(before).get('stage') == 'menu', 'menuTap starts only in an actual menu'
++        assert not plan.matches(step['expect'], self.game(before), self.game(before)), 'menuTap expectation is already satisfied'
++        assert self.menu_released(before, before), 'Menu must start focused with the original SDK owner and all keys released'
++        key, client = step['keys'][0], self.clients[0]
++        basis = None  # This isolated Royale QA accepts no document/poll reset exception.
++        record = {'name': step['name'], 'key': key, 'status': 'running', 'requestedTapMs': 16,
++                  'declaredHoldMs': step['holdMs'], 'beforePollCount': self.game(before)['controller']['pollCount'],
++                  'reloadBasis': basis, 'samples': [], 'sampleCount': 0, 'samplesTruncated': False}
++        self.report.setdefault('menuTapObservations', []).append(record)
++        started = time.monotonic(); deadline = started + step.get('timeoutSeconds', 15)
++        candidate = None; stable = 0; down_sent = False; released = False
++        try:
++            with client.lock:
++                down_at = time.monotonic(); self.button(key); down_seq = client.seq; down_sent = True
++            try:
++                time.sleep(.016)
++            finally:
++                with client.lock:
++                    self.button(key, False); release_seq = client.seq; released = True
++            record.update(sdkCallHeldMs=(time.monotonic() - down_at) * 1000, downSequence=down_seq, releaseSequence=release_seq)
++            for sequence in (down_seq, release_seq):
++                remaining = deadline - time.monotonic()
++                assert remaining > 0, 'Menu tap ACK deadline expired'
++                self.wait_sent_ack(client, sequence, timeout=min(10, remaining))
++            record['wire'] = self.menu_wire_pair(key, down_seq, release_seq)
++            while time.monotonic() < deadline:
++                state = self.snapshot(timeout=min(OBSERVER_SNAPSHOT_TIMEOUT, max(.001, deadline - time.monotonic())))
++                game = self.game(state); count = game.get('controller', {}).get('pollCount')
++                assert not game.get('error') and not game.get('errors'), 'Game error during menu tap'
++                release_seen = self.menu_released(state, before)
++                expected = bool(game) and plan.matches(step['expect'], game, self.game(before))
++                # A released matching observation is only the baseline;
++                # require two later fresh polls in this same document.
++                fresh = self.frame_advanced(state, before)
++                qualified = fresh and release_seen and expected
++                record['sampleCount'] += 1
++                record['samples'].append({'pollCount': count, 'released': release_seen, 'expectationMatches': expected,
++                                          'qualified': qualified, 'elapsedSeconds': time.monotonic() - started})
++                if len(record['samples']) > 64:
++                    del record['samples'][16]; record['samplesTruncated'] = True
++                if qualified:
++                    if candidate is None:
++                        candidate = state; stable = 0
++                    elif self.frame_advanced(state, candidate):
++                        candidate = state; stable += 1
++                    elif type(count) is int and count < self.game(candidate)['controller']['pollCount']:
++                        candidate = None; stable = 0
++                else:
++                    candidate = None; stable = 0
++                if stable >= 2:
++                    self.validate_catalog_snapshot(state)
++                    record.update(status='passed', stableFreshSamples=stable, afterPollCount=count,
++                                  elapsedSeconds=time.monotonic() - started)
++                    return state
++                time.sleep(min(.08, max(0, deadline - time.monotonic())))
++            raise AssertionError(step['name'] + ' released menu tap did not remain stable across two subsequent fresh polls')
++        except Exception as error:
++            record.update(status='failed', errorType=type(error).__name__, elapsedSeconds=time.monotonic() - started)
++            raise
++        finally:
++            if down_sent and not released:
++                try: self.button(key, False)
++                except Exception: pass
++
+     def catalog_scenarios(self):
+         # The per-game plan owns startup/menu navigation as well as gameplay inputs.
+         assert self.game(self.snapshot()).get('stage') == 'menu'
+         for step in self.plan['steps']:
+             self.release()
+             before = self.record('before-plan-' + step['name'])
++            if step.get('menuTap') is True:
++                after = self.catalog_menu_tap(step, before)
++                self.record('after-plan-' + step['name'], after)
++                self.passed('actual SDK gameplay: ' + step['name'], {'expect': step['expect'], 'holdMs': step['holdMs'], 'menuTap': True})
++                continue
+             for key in step['keys']: self.button(key)
+             held = self.wait_fresh(before, lambda s: all(self.native_buttons(s).get(k) is True for k in step['keys']),
+                                    label='plan-held-' + step['name'])
+--- 6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/qa/android/test_runner.py
++++ candidate/joystick-games/qa/android/test_runner.py
+@@ -38,6 +38,162 @@
+ class Server(socketserver.ThreadingTCPServer):
+     allow_reuse_address = True
+     daemon_threads = True
++
++class MenuTapContracts(unittest.TestCase):
++
++    """Real original SDK/TCP ACK fixtures; synthetic Royale DOM observations."""
++
++    def setUp(self):
++        self.directory = tempfile.TemporaryDirectory(prefix='android-menu-tap-')
++        self.server = Server(('127.0.0.1', 0), AckFixture); self.server.drop_key = None
++        threading.Thread(target=self.server.serve_forever, daemon=True).start()
++        self.proxy = runner.WireProxy(self.server.server_address, Path(self.directory.name) / 'wire.jsonl')
++        self.client = runner.JoystickClient('127.0.0.1', self.proxy.port); self.client.connect()
++        self.acceptance = runner.Acceptance.__new__(runner.Acceptance)
++        self.acceptance.args = SimpleNamespace(game='kart-royale')
++        self.acceptance.clients = [self.client]; self.acceptance.proxy = self.proxy
++        self.acceptance.report = {'apk': {'bytes': 1221895, 'sha256': '63b39ff300811e00401239ab5a4ec1206b6f96bfd8877e78399911e023038712'}}
++        self.acceptance.plan = {'renderer': 'webgl2', 'pauseStablePaths': []}
++        self.acceptance.snapshots = []
++        self.acceptance.wait_sent_ack(self.client, self.client.seq)
++        self.step = {'name': 'fixture released menu step', 'keys': ['Y'], 'menuTap': True,
++                     'holdMs': 180, 'timeoutSeconds': 2,
++                     'expect': [{'path': 'gameplay.focus', 'op': 'eq', 'value': 'Left'}]}
++
++    def tearDown(self):
++        self.client.disconnect(); self.proxy.close(); self.server.shutdown(); self.server.server_close(); self.directory.cleanup()
++
++    def state(self, count, *, index=1):
++        buttons = {key: False for key in runner.KEYS}
++        return {'activityState': 'resumed', 'windowFocused': True,
++                'game': {'game': 'kart-royale', 'stage': 'menu', 'paused': False, 'renderer': 'webgl2',
++                         'webglVersion': 2, 'frames': count, 'errors': [],
++                         'controller': {'pollCount': count, 'buttons': buttons.copy(), 'cancelled': False,
++                                        'players': [{'id': 1, 'connected': True, 'controllerId': self.client.identity,
++                                                     'session': 'original-session', 'cancelSeq': 1, 'inputActive': True,
++                                                     'buttons': buttons.copy()}]},
++                         'gameplay': {'menu': 'controls', 'focus': 'Right' if index == 1 else 'Left'}},
++                'page': {'hidden': False, 'focused': True, 'canvases': [{'width': 1280, 'height': 720, 'visible': True}]}}
++
++    def use_samples(self, values):
++        self.samples = list(values); self.reads = 0; self.budgets = []
++        def snapshot(**kwargs):
++            self.budgets.append(kwargs.get('timeout')); self.reads += 1
++            return self.samples.pop(0) if len(self.samples) > 1 else self.samples[0]
++        self.acceptance.snapshot = snapshot
++
++    def test_real_sdk_short_pair_ack_and_two_subsequent_fresh_polls(self):
++        self.use_samples([{'game': None}, self.state(101, index=2), self.state(101, index=2),
++                          self.state(102, index=2), self.state(103, index=2)])
++        result = self.acceptance.catalog_menu_tap(self.step, self.state(100))
++        self.assertEqual(result['game']['controller']['pollCount'], 103)
++        record = self.acceptance.report['menuTapObservations'][0]
++        self.assertEqual(record['stableFreshSamples'], 2)
++        self.assertEqual(record['wire']['matchingAcks'], 2)
++        self.assertEqual(record['wire']['downCounts'], {key: int(key == 'Y') for key in runner.KEYS})
++        self.assertGreaterEqual(record['sdkCallHeldMs'], 16)
++        self.assertIsNone(record['reloadBasis'])
++        self.assertEqual(self.reads, 5)
++        self.assertTrue(all(0 < value <= self.step['timeoutSeconds'] for value in self.budgets))
++
++    def test_counter_reset_without_exact_reload_proof_never_passes(self):
++        self.step['timeoutSeconds'] = .2
++        self.use_samples([self.state(2, index=2), self.state(3, index=2), self.state(4, index=2)])
++        with self.assertRaisesRegex(AssertionError, 'two subsequent fresh polls'):
++            self.acceptance.catalog_menu_tap(self.step, self.state(288))
++        self.assertEqual(self.acceptance.report['menuTapObservations'][0]['status'], 'failed')
++
++    def test_expectation_must_remain_true_for_both_fresh_polls(self):
++        self.use_samples([self.state(101, index=2), self.state(102, index=2), self.state(103, index=1),
++                          self.state(104, index=2), self.state(105, index=2), self.state(106, index=2)])
++        after = self.acceptance.catalog_menu_tap(self.step, self.state(100))
++        self.assertEqual(after['game']['controller']['pollCount'], 106)
++        self.assertEqual(self.reads, 6)
++
++    def test_identity_session_cancel_focus_and_every_raw_semantic_key_are_required(self):
++        before = self.state(100); after = self.state(101, index=2)
++        self.assertTrue(self.acceptance.menu_released(after, before))
++        for field, value in [('controllerId', 'other'), ('session', 'new'), ('cancelSeq', 2), ('inputActive', False), ('connected', False)]:
++            bad = copy.deepcopy(after); bad['game']['controller']['players'][0][field] = value
++            self.assertFalse(self.acceptance.menu_released(bad, before), field)
++        for key in runner.KEYS:
++            for raw in (True, False):
++                bad = copy.deepcopy(after)
++                target = bad['game']['controller']['players'][0] if raw else bad['game']['controller']
++                target['buttons'][key] = True
++                self.assertFalse(self.acceptance.menu_released(bad, before), (key, raw))
++        for field, value in [('windowFocused', False), ('activityState', 'paused')]:
++            bad = copy.deepcopy(after); bad[field] = value
++            self.assertFalse(self.acceptance.menu_released(bad, before))
++        bad = copy.deepcopy(after); bad['game']['controller']['players'].append(copy.deepcopy(bad['game']['controller']['players'][0]))
++        self.assertFalse(self.acceptance.menu_released(bad, before))
++
++    def test_wire_pair_rejects_duplicate_or_wrong_connection_ack_and_extra_key(self):
++        self.use_samples([self.state(101, index=2), self.state(102, index=2), self.state(103, index=2)])
++        self.acceptance.catalog_menu_tap(self.step, self.state(100))
++        record = self.acceptance.report['menuTapObservations'][0]; down, up = record['downSequence'], record['releaseSequence']
++        original = copy.deepcopy(self.proxy.records)
++        for mutation in ['duplicate-ack', 'wrong-connection', 'extra-key', 'wrong-id']:
++            changed = copy.deepcopy(original)
++            ack = next(r for r in changed if r['direction'] == 'game-to-sdk' and r['message'].get('seq') == down)
++            sent = next(r for r in changed if r['direction'] == 'sdk-to-game' and r['message'].get('seq') == down)
++            if mutation == 'duplicate-ack': changed.append(copy.deepcopy(ack))
++            elif mutation == 'wrong-connection': ack['connection'] += 1
++            elif mutation == 'extra-key': sent['message']['key'] = 'A'
++            else: sent['message']['controller_id'] = 'other'
++            with self.proxy.lock: self.proxy.records = changed
++            with self.assertRaises(AssertionError, msg=mutation): self.acceptance.menu_wire_pair('Y', down, up)
++        with self.proxy.lock: self.proxy.records = original
++
++    def test_menu_that_is_already_satisfied_sends_no_new_input(self):
++        before = self.state(100, index=2); sequence = self.client.seq
++        with self.assertRaisesRegex(AssertionError, 'already satisfied'):
++            self.acceptance.catalog_menu_tap(self.step, before)
++        self.assertEqual(self.client.seq, sequence)
++
++    def test_constant_matching_counter_cannot_supply_two_fresh_polls(self):
++        self.step['timeoutSeconds'] = .2
++        self.use_samples([self.state(101, index=2)])
++        with self.assertRaisesRegex(AssertionError, 'two subsequent fresh polls'):
++            self.acceptance.catalog_menu_tap(self.step, self.state(100))
++
++    def test_observer_disconnect_preserves_failure_after_releasing_input(self):
++        def broken(**kwargs): raise ConnectionResetError('original observer disconnect fixture')
++        self.acceptance.snapshot = broken
++        with self.assertRaisesRegex(ConnectionResetError, 'original observer disconnect fixture'):
++            self.acceptance.catalog_menu_tap(self.step, self.state(100))
++        record = self.acceptance.report['menuTapObservations'][0]
++        self.assertEqual(record['status'], 'failed')
++        self.assertEqual(record['wire']['matchingAcks'], 2)
++        self.assertEqual(self.acceptance.menu_wire_pair('Y', record['downSequence'], record['releaseSequence'])['downCounts']['Y'], 1)
++
++    def test_missing_ack_cannot_pass_and_original_y_is_released(self):
++        before_sequence = self.client.seq
++        self.server.drop_key = 'Y'; self.step['timeoutSeconds'] = .15
++        self.use_samples([self.state(101, index=2), self.state(102, index=2), self.state(103, index=2)])
++        with self.assertRaisesRegex(AssertionError, 'Actual host ACK'):
++            self.acceptance.catalog_menu_tap(self.step, self.state(100))
++        self.assertEqual(self.acceptance.report['menuTapObservations'][0]['status'], 'failed')
++        with self.proxy.lock:
++            sent = [r['message'] for r in self.proxy.records if r['direction'] == 'sdk-to-game' and r['message'].get('type') == 'button' and r['message'].get('seq', -1) > before_sequence]
++        self.assertEqual([(r['key'],r['action'],r['pressed']) for r in sent], [('Y','down',True),('Y','tap',False)])
++
++
++    def test_all_twelve_original_windows_stale_focus_samples_fail_new_plan(self):
++        # Exact selected fields from original run 44621752383/source039d/exportf559;
++        # these are Windows failure observations of the same original menu source,
++        # not fabricated Android gameplay or a claim that Android already passed.
++        cases = json.loads('[{"mode":"normal","name":"Focus controls option Floating stick","originalReport":{"bytes":582174,"sha256":"0fea20f7e7fa5b93630607bbeebe2e468dfb521f6c31a9bec48dcb34ef3f9dfe"},"gameplay":{"menu":"controls","focus":"Done"}},{"mode":"normal","name":"Focus controls option Fixed stick","originalReport":{"bytes":582174,"sha256":"0fea20f7e7fa5b93630607bbeebe2e468dfb521f6c31a9bec48dcb34ef3f9dfe"},"gameplay":{"menu":"controls","focus":"Floating stickAppears wherever your thumb lands. Never look for it."}},{"mode":"normal","name":"Focus controls option Tilt to steer","originalReport":{"bytes":582174,"sha256":"0fea20f7e7fa5b93630607bbeebe2e468dfb521f6c31a9bec48dcb34ef3f9dfe"},"gameplay":{"menu":"controls","focus":"Fixed stickAlways in the same place. Muscle memory, no drift."}},{"mode":"normal","name":"Focus controls option Steer buttons","originalReport":{"bytes":582174,"sha256":"0fea20f7e7fa5b93630607bbeebe2e468dfb521f6c31a9bec48dcb34ef3f9dfe"},"gameplay":{"menu":"controls","focus":"Tilt to steerRoll the phone. Both thumbs free for the buttons."}},{"mode":"normal","name":"Focus controls option Right","originalReport":{"bytes":582174,"sha256":"0fea20f7e7fa5b93630607bbeebe2e468dfb521f6c31a9bec48dcb34ef3f9dfe"},"gameplay":{"menu":"controls","focus":"Steer buttonsTwo big pads. Nothing to hold steady."}},{"mode":"normal","name":"Focus controls option Left","originalReport":{"bytes":582174,"sha256":"0fea20f7e7fa5b93630607bbeebe2e468dfb521f6c31a9bec48dcb34ef3f9dfe"},"gameplay":{"menu":"controls","focus":"Right"}},{"mode":"occupied","name":"Focus controls option Floating stick","originalReport":{"bytes":497075,"sha256":"0c3215e29c1e176cd06bd7064867a0ba7ca54cf0cc7314235b091045a8696cf6"},"gameplay":{"menu":"controls","focus":"Done"}},{"mode":"occupied","name":"Focus controls option Fixed stick","originalReport":{"bytes":497075,"sha256":"0c3215e29c1e176cd06bd7064867a0ba7ca54cf0cc7314235b091045a8696cf6"},"gameplay":{"menu":"controls","focus":"Floating stickAppears wherever your thumb lands. Never look for it."}},{"mode":"occupied","name":"Focus controls option Tilt to steer","originalReport":{"bytes":497075,"sha256":"0c3215e29c1e176cd06bd7064867a0ba7ca54cf0cc7314235b091045a8696cf6"},"gameplay":{"menu":"controls","focus":"Fixed stickAlways in the same place. Muscle memory, no drift."}},{"mode":"occupied","name":"Focus controls option Steer buttons","originalReport":{"bytes":497075,"sha256":"0c3215e29c1e176cd06bd7064867a0ba7ca54cf0cc7314235b091045a8696cf6"},"gameplay":{"menu":"controls","focus":"Fixed stickAlways in the same place. Muscle memory, no drift."}},{"mode":"occupied","name":"Focus controls option Right","originalReport":{"bytes":497075,"sha256":"0c3215e29c1e176cd06bd7064867a0ba7ca54cf0cc7314235b091045a8696cf6"},"gameplay":{"menu":"controls","focus":"Tilt to steerRoll the phone. Both thumbs free for the buttons."}},{"mode":"occupied","name":"Focus controls option Left","originalReport":{"bytes":497075,"sha256":"0c3215e29c1e176cd06bd7064867a0ba7ca54cf0cc7314235b091045a8696cf6"},"gameplay":{"menu":"controls","focus":"Steer buttonsTwo big pads. Nothing to hold steady."}}]')
++        plan = runner.plan.load_plan(runner.ROOT/'joystick-games/kart-royale/qa-plan.json')
++        legacy = [{'path':'gameplay.menu','op':'eq','value':'controls'}]
++        self.assertEqual(len(cases),12)
++        for case in cases:
++            step = next(s for s in plan['steps'] if s['name']==case['name'])
++            game = {'gameplay':case['gameplay']}
++            self.assertTrue(runner.plan.matches(legacy,game,game),case['name'])
++            self.assertFalse(runner.plan.matches(step['expect'],game,game),case['name'])
++            self.assertTrue(step['menuTap'])
++
+ 
+ class Contracts(unittest.TestCase):
+     def proxy_case(self, drop=None):

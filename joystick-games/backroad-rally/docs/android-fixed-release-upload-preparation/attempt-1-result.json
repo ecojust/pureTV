@@ -1,0 +1,65 @@
+{
+  "status": "prepared-not-dispatched",
+  "networkWrites": 0,
+  "workflowDispatches": 0,
+  "releaseUploads": 0,
+  "newOfflineTests": 20,
+  "existingTransferTests": 22,
+  "actualNativeAcceptanceByThisWork": false,
+  "originalQaObservation": {
+    "run": 44630023214,
+    "source": "382de3792628050773abec8821920348503f72ce",
+    "status": "in_progress",
+    "conclusion": null,
+    "rejectedWith": "qa_not_completed_successfully",
+    "notALiveStatusRefresh": true
+  },
+  "files": {
+    "joystick-games/tools/backroad-android-release-upload.py": {
+      "bytes": 30189,
+      "sha256": "92356cd67f0567beeee762fb0f43bf7e01160df5d48f03d9dff6f4fe3486e84d"
+    },
+    "joystick-games/tools/backroad-android-release-upload-test.py": {
+      "bytes": 25323,
+      "sha256": "d5cdf2987890bcb635778b89e121ff191857a6a93212db565554c0f9939d3c1b"
+    },
+    ".github/workflows/joystick-backroad-android-release-upload.yml": {
+      "bytes": 1642,
+      "sha256": "7094d92538c24a3c36b28f38eaaf355e070c50d858b7fd4b31ca041c4509e78c"
+    },
+    "joystick-games/tools/fixtures/backroad-android-release-upload/release.json": {
+      "bytes": 6308,
+      "sha256": "e901bf3f8ba9ecd7d478f1526ab06d6b2c5a4f17f15835a4138f15bd1d153003"
+    },
+    "joystick-games/tools/fixtures/backroad-android-release-upload/pending-qa-run.json": {
+      "bytes": 11898,
+      "sha256": "20e2c10d28a38bfd4b617fc9787bb7699d8b051bb5f6d9efbb2d13d45128c9fd"
+    }
+  },
+  "importedHelperClosure": {
+    "artifact-draft-transfer.py": {
+      "bytes": 22122,
+      "sha256": "3a6e98adaa7b560650ccffe0c7c50c7bc3900f7342b73bafee535b464b8ed983"
+    },
+    "android-runtime-artifact.py": {
+      "bytes": 9210,
+      "sha256": "ee5d128e3510ed59778e7e871978fc8a8345e6d7e5a8436c5bf531a0879543d5"
+    }
+  },
+  "testLogs": {
+    "offline-boundaries.log": {
+      "bytes": 3235,
+      "sha256": "c14e5cc5cf6197416f4e3a08edd2e26c7f4c0e2a3b44cc6eebe9be52e47b851f"
+    },
+    "existing-transfer-tests.log": {
+      "bytes": 121,
+      "sha256": "480b9a4c5788c8d70c8b9d2a7d87fbec46adef912a895996309f5d92310cd2a9"
+    }
+  },
+  "limitations": [
+    "No real upload executed; local uploads domain failure is not claimed repaired by offline fixtures.",
+    "Pinned QA must actually complete successfully and its original export pass every gate; pending is refused.",
+    "No physical TV/handheld testing or new native run occurred.",
+    "Existing Release body and assets are intentionally strict; changes require a new reviewed source, not arbitrary inputs."
+  ]
+}
