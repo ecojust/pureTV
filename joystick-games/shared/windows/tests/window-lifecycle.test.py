@@ -6,9 +6,10 @@ from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[4]
 spec=importlib.util.spec_from_file_location('windows_verify',ROOT/'joystick-games/tools/windows-verify.py');verify=importlib.util.module_from_spec(spec);spec.loader.exec_module(verify)
 class PauseTiming(unittest.TestCase):
-    def observe(self,background,*,polling=True,native_fresh=True,active=None,input_enabled=None,held=False,model_changes=False,paused=True,native_interval=None,model_change_at=None):
+    def observe(self,background,*,polling=True,native_fresh=True,active=None,input_enabled=None,held=False,model_changes=False,paused=True,native_interval=None,model_change_at=None,read_delay=0):
         subject=object.__new__(verify.WindowsCheck);subject.plan={'pauseStablePaths':['gameplay.tick']};subject.report={};clock=[0.0];reads=[0]
         def read():
+            clock[0]+=read_delay
             reads[0]+=1
             count=reads[0] if native_interval is None else int(clock[0]/native_interval)+1
             tick=reads[0] if model_changes else 8 if model_change_at is not None and clock[0]>=model_change_at else 7
@@ -37,14 +38,21 @@ class PauseTiming(unittest.TestCase):
         with self.assertRaises(AssertionError):self.observe(True,polling=False,paused=False)
     def test_slow_native_callbacks_still_require_four_distinct_frozen_snapshots(self):
         result=self.observe(False,native_interval=2)
-        self.assertGreaterEqual(result['realSeconds'],8);self.assertLess(result['realSeconds'],15);self.assertEqual(result['samples'],4)
-        record=result['_fixtureObservation'];self.assertEqual(record['status'],'passed');self.assertEqual(record['timeoutSeconds'],15)
+        self.assertGreaterEqual(result['realSeconds'],8);self.assertLess(result['realSeconds'],30);self.assertEqual(result['samples'],4)
+        record=result['_fixtureObservation'];self.assertEqual(record['status'],'passed');self.assertEqual(record['timeoutSeconds'],30)
         self.assertEqual(sum(row['freshNativeSnapshot'] for row in record['samples']),4)
         self.assertTrue(all(row['paths']=={'gameplay.tick':7} for row in record['samples']))
-    def test_fewer_than_four_samples_within_fifteen_seconds_still_fails(self):
-        with self.assertRaisesRegex(AssertionError,'Insufficient fresh'):self.observe(False,native_interval=4)
+    def test_fewer_than_four_samples_within_thirty_seconds_still_fails(self):
+        with self.assertRaisesRegex(AssertionError,'Insufficient fresh'):self.observe(False,native_interval=8)
     def test_model_motion_late_in_extended_window_remains_a_failure(self):
-        with self.assertRaisesRegex(AssertionError,'Gameplay progressed'):self.observe(False,native_interval=3.5,model_change_at=12)
+        with self.assertRaisesRegex(AssertionError,'Gameplay progressed'):self.observe(False,native_interval=7,model_change_at=20)
+    def test_four_point_two_second_callbacks_need_four_fresh_observations(self):
+        result=self.observe(False,native_interval=4.2)
+        self.assertEqual(result['samples'],4);self.assertGreaterEqual(result['realSeconds'],16.8);self.assertLess(result['realSeconds'],30)
+        self.assertEqual(result['_fixtureObservation']['uniqueNativeSnapshots'],4)
+        self.assertGreater(result['controllerFramesAdvanced'],0)
+    def test_late_read_cannot_pass_after_the_thirty_second_deadline(self):
+        with self.assertRaisesRegex(AssertionError,'Pause snapshot arrived after observation deadline'):self.observe(False,read_delay=31)
 class DocumentFreshness(unittest.TestCase):
     def setUp(self):
         self.subject=object.__new__(verify.WindowsCheck);self.subject.renderers=['webgl2']

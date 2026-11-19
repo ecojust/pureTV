@@ -1,0 +1,66 @@
+{
+  "status": "failed_original_runtime_preserved",
+  "reviewer": "racing_review_arcade",
+  "at": "2026-11-19T21:30:50.840790+00:00",
+  "run": 44616011172,
+  "attempt": 1,
+  "source": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+  "exportCommit": "5fe9ceda41c134619c613ac352ac8f22ed5d96bb",
+  "build": "success",
+  "sign": "success",
+  "runtime": "failure",
+  "export": "success",
+  "modes": [
+    {
+      "mode": "normal",
+      "status": "failed",
+      "passedChecks": 1,
+      "reportSha256": "9ca8f5f1cd3956cdf936789e3ee007337072d2ee8803f670c97c28567a584030",
+      "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 851, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 509, in setup\n    initial = self.wait(lambda s: self.game(s).get('stage') == 'menu' and self.game(s).get('loading') is not True\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 315, in wait\n    raise AssertionError(label + ' timed out; last snapshot retained')\nAssertionError: initial-menu timed out; last snapshot retained\n",
+      "apk": {
+        "bytes": 1221895,
+        "sha256": "63b39ff300811e00401239ab5a4ec1206b6f96bfd8877e78399911e023038712"
+      },
+      "lastRetainedGame": {
+        "game": "kart-royale",
+        "stage": "menu",
+        "renderer": "webgl2",
+        "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "frames": 0,
+        "loading": null,
+        "pollCount": 0,
+        "connected": false,
+        "phase": "menu",
+        "focus": "KARTROYALE\n        \n        drawing the hud\n      \n    \n    \n      #boot {\n        position: fixed; "
+      },
+      "observerTransportEvents": 512,
+      "lastObserverTransportError": "<urlopen error [Errno 111] Connection refused>"
+    },
+    {
+      "mode": "occupied",
+      "status": "failed",
+      "passedChecks": 0,
+      "reportSha256": "95c484d48faaf98d7ea984a7682a2f04e54e6348a6c279c3a066898921a75b3b",
+      "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 851, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 482, in setup\n    self.command('wait-for-device')\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 270, in command\n    result = subprocess.run(record['command'], capture_output=True, check=False, timeout=timeout)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 550, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 1209, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 2116, in _communicate\n    self._check_timeout(endtime, orig_timeout, stdout, stderr)\n  File \"/usr/lib/python3.12/subprocess.py\", line 1253, in _check_timeout\n    raise TimeoutExpired(\nsubprocess.TimeoutExpired: Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'wait-for-device']' timed out after 45 seconds\n",
+      "apk": {
+        "bytes": 1221895,
+        "sha256": "63b39ff300811e00401239ab5a4ec1206b6f96bfd8877e78399911e023038712"
+      }
+    }
+  ],
+  "runtimeJob": 135887825021,
+  "runtimeLog": {
+    "bytes": 433323,
+    "sha256": "dc04ddbbfa32eca7128a9ec5f72639bf70ccfa5dc7443e088158a63a1267b43c",
+    "method": "gh run view exact completed run/job --log; CLI-formatted original log, not a claim of raw signed-URL byte equivalence"
+  },
+  "finding": "The original APK launches far enough to expose WebGL2 and a boot/HUD initialization snapshot, but no original initialized menu or gameplay is verified. Later observer TCP requests and final ADB 5554 connection fail; occupied mode cannot obtain the device. No game menu-tap or driving scenario was reached.",
+  "cause": "unknown",
+  "emulatorVersion": "37.3.10",
+  "environmentSamplerExportPresent": false,
+  "crashpadExportPresent": false,
+  "noConfirmedOomOrOwnedEmulatorExit": true,
+  "apksDownloaded": false,
+  "completeExportDownloaded": false,
+  "newProductionDispatched": false
+}

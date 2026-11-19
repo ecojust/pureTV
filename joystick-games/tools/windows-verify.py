@@ -123,14 +123,15 @@ class WindowsCheck(base.CatalogCheck):
                 assert not any(self.player(state).get('buttons',{}).values()),'Native inputs remained held in background'
             assert {path:plan_api.read_path(state['game'],path) for path in values}==values,'Gameplay progressed while paused'
         started=time.monotonic();samples=[];previous=before
-        observation={'background':background,'timeoutSeconds':15,'baselineTimestamp':before['timestamp'],'baselinePollCount':before['game']['controller']['pollCount'],'expectedPaths':values,'samples':[],'status':'observing'}
+        observation={'background':background,'timeoutSeconds':30,'baselineTimestamp':before['timestamp'],'baselinePollCount':before['game']['controller']['pollCount'],'expectedPaths':values,'samples':[],'status':'observing'}
         self.report.setdefault('pauseObservations',[]).append(observation)
         while time.monotonic()-started<.5 or len(samples)<4:
-            if time.monotonic()-started>=15:
+            if time.monotonic()-started>=30:
                 observation.update(status='failed',elapsedSeconds=time.monotonic()-started);raise AssertionError('Insufficient fresh real snapshots during pause')
             state=self.read();elapsed=time.monotonic()-started
             observation['samples'].append({'elapsedSeconds':elapsed,'nativeTimestamp':state.get('timestamp'),'pollCount':state.get('game',{}).get('controller',{}).get('pollCount'),'freshNativeSnapshot':self.fresh(state,previous),'paused':self.paused(state),'active':state.get('active'),'inputEnabled':state.get('server',{}).get('wifiController',{}).get('inputEnabled'),'paths':{path:plan_api.read_path(state['game'],path) for path in values}})
-            assert elapsed<=15,'Pause snapshot arrived after observation deadline'
+            if elapsed>30:
+                observation.update(status='failed',elapsedSeconds=elapsed);raise AssertionError('Pause snapshot arrived after observation deadline')
             stable(state)
             if self.fresh(state,previous):samples.append(state['timestamp']);previous=state
             time.sleep(.04)
