@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-19T19:13:36.196519+00:00",
+  "game": "turbo-kart-rush",
+  "status": "passed-static-review",
+  "scope": "Data-plan schema and source control-flow review; no browser, native package, SDK session, CI, model mutation, clock mutation or storage fixture writes executed in this audit.",
+  "changedProductionFiles": [],
+  "qaPlanChanged": false,
+  "qaPlanSha256Before": "64190352ff374685ca910298e0ae87e5df0bad02ca97e938262ec5e406665fb3",
+  "qaPlanSha256After": "64190352ff374685ca910298e0ae87e5df0bad02ca97e938262ec5e406665fb3",
+  "schemaValidation": {
+    "validator": "joystick-games/tools/qa-plan.py",
+    "sha256": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+    "result": "passed",
+    "steps": 10
+  },
+  "raceReadiness": {
+    "gateStep": 4,
+    "gateName": "Start selected original course and wait real countdown",
+    "expect": [
+      {
+        "path": "gameplay.mode",
+        "op": "eq",
+        "value": "racing"
+      }
+    ],
+    "timeoutSeconds": 60,
+    "nextThrottleStep": 5,
+    "nextThrottleHoldMs": 2500,
+    "introRejected": true,
+    "countdownRejected": true,
+    "racingAccepted": true,
+    "finding": "Step 4 waits for original mode=racing, which is set by the original race:start event after countdown, before step 5 sends UP."
+  },
+  "storage": {
+    "required": false,
+    "declaredKeys": [],
+    "naturalWriteSteps": [],
+    "finding": "Original TypeScript source has no localStorage use and metadata declares no storage keys. storageRestartRequired=false is intentional; no persistence acceptance is claimed.",
+    "actualNativeRestartExecutedInThisAudit": false
+  },
+  "menuInput": {
+    "normalPlanKeys": [
+      "START",
+      "RIGHT",
+      "A",
+      "START"
+    ],
+    "finding": "InputManager maps cached A/START pressed edges to confirm and directions to menu actions. Original MainMenu.handleInput confirms character selection and calls start() from trackSelect independently of which visible row is focused. No pointer click or hidden button is required.",
+    "historicalBrowserEvidence": "joystick-games/turbo-kart-rush/docs/browser-attempt-1/report.json",
+    "historicalEvidenceScope": "Existing synthetic bridge run exercised normal menus and actual racing; it is not an original SDK/native persistence result."
+  },
+  "limitations": [
+    "This is static source/plan validation, not a rerun of gameplay or native packages.",
+    "Real native countdown may exceed the existing 60 second plan limit on slow hardware; such a timeout must be retained as a failure and must not be bypassed by changing model time.",
+    "The character-selection RIGHT step asserts the current menu, not the selected character identity; this audit does not claim a native selection-specific assertion."
+  ],
+  "sourceInventory": [
+    {
+      "path": "joystick-games/turbo-kart-rush/qa-plan.json",
+      "sha256": "64190352ff374685ca910298e0ae87e5df0bad02ca97e938262ec5e406665fb3"
+    },
+    {
+      "path": "joystick-games/turbo-kart-rush/game.json",
+      "sha256": "3ba7704fb8b8ebdcc276f4cc453a5cf42c3527b795b05598a24653778704eef7"
+    },
+    {
+      "path": "joystick-games/turbo-kart-rush/src/tv-adapter.ts",
+      "sha256": "53d1d08488d3a77f0806fd70cdc089cc673095d80e41ed82050b96b75cf8943e"
+    },
+    {
+      "path": "joystick-games/turbo-kart-rush/src/upstream/src/game/Game.ts",
+      "sha256": "089144c886294e876653b24922db13a8c24630d7c5f5b26fb9992cade3eb9bc3"
+    },
+    {
+      "path": "joystick-games/turbo-kart-rush/src/upstream/src/ui/MainMenu.ts",
+      "sha256": "e044bac792254d7f84b12522b985e1ecff5f4d95501a748e39ee6083712cc0c4"
+    },
+    {
+      "path": "joystick-games/turbo-kart-rush/src/upstream/src/kart/InputManager.ts",
+      "sha256": "ff5f63711c27412e64b8a8c7161f4463f0de8ccc5737737e200ee60036ff04a5"
+    },
+    {
+      "path": "joystick-games/tools/qa-plan.py",
+      "sha256": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582"
+    },
+    {
+      "path": "joystick-games/tools/macos-verify.py",
+      "sha256": "2db317fa9672df20992af6b4d6a31f9910e2876e4644c0cffca6b99df8709290"
+    },
+    {
+      "path": "joystick-games/qa/android/run.py",
+      "sha256": "8c59d19cf55ee793f3a09ff7671062e8eeecbc74144884a1a79461d14390eaaf"
+    }
+  ]
+}

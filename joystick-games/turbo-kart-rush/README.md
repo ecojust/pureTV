@@ -30,4 +30,6 @@ npm run build:check
 
 `upstream.json` 固定原始 72 文件与提交；`docs/source-changes.json` 记录有限输入/取消改动。原 `package-lock.json` 运行依赖及工具版本保留，额外 esbuild 0.28.2 用于平铺打包。初期 npm HTTP 503 的尝试保留在 `docs/dependency-attempts.json`；网络恢复后精确依赖安装、原配置及完整源码的 TypeScript 检查均通过，见 `docs/npm-ci-attempt-3.json` 与 `docs/typecheck-exact.log`。这些结果不代表平台安装包已经通过。
 
+[浏览器验证记录](docs/browser-validation.json)包含两种分辨率实际驾驶、暂停冻结、持续 START 恢复、回看、说明展开与漂移断线。[角色页面布局记录](docs/character-layout-validation.json)单独记录实测发现的 960×540 溢出及后续 CSS 修正；保留原八位车手、属性和确认操作。[缩略图来源](docs/thumb-source.json)记录未编辑的实际比赛截图。
+
 许可证见 [LICENSE](LICENSE) 与 [NOTICE.md](NOTICE.md)。源码 MIT，Three.js MIT；构建工具许可证单独保留。没有为适配新增商业模型或在线资源。

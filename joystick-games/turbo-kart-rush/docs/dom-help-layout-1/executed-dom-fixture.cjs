@@ -1,0 +1,19 @@
+const fs=require('fs'),path=require('path'),http=require('http'),crypto=require('crypto');
+const {chromium}=require('/workspace/scratch/market-download-20261115/ui/node_modules-before/playwright');
+const root='/dev/shm/puretv-submit/joystick-games';
+const fixtures={};
+for(const [slug,ext,width,cls] of [['ponpoko-kart','js',186,'tv-control-help'],['turbo-kart-rush','ts',190,'tv-help']]){
+ const source=fs.readFileSync(path.join(root,slug,'src/tv-adapter.'+ext),'utf8');const html=/help\.innerHTML = ('.*');/.exec(source)[1];
+ fixtures['/'+slug]=`<!doctype html><html><head><link rel="stylesheet" href="/${slug}/dist/game.css"></head><body><script>window.PureGameHost={getInfo:()=>JSON.stringify({wifiController:{port:63485,serviceName:'${slug}',addresses:['192.0.2.1']}}),snapshot:()=>JSON.stringify({players:[{id:1,controllerId:'layout-only-controller-with-long-id',session:'fixture',transport:'wifi',connected:true,buttons:{}}]})};</script><script type="module">import {createController} from '/shared/web/input.js';const c=createController({width:${width}});const p=document.getElementById('puretv-controller-panel');const help=document.createElement('div');help.className='${cls}';help.innerHTML=${html};p.appendChild(help);c.poll();c.setPlaying(true);p.dataset.connected='true';p.dataset.mode='racing';p.dataset.screen='racing';p.dataset.help='true';window.fixtureReady=true;</script></body></html>`;
+}
+(async()=>{
+ const server=http.createServer((req,res)=>{if(fixtures[req.url]){res.setHeader('Content-Type','text/html');return res.end(fixtures[req.url]);}const file=path.normalize(path.join(root,req.url));if(!file.startsWith(root)||!fs.existsSync(file)){res.writeHead(404);return res.end();}res.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':'application/octet-stream');res.end(fs.readFileSync(file));});await new Promise(r=>server.listen(18267,'127.0.0.1',r));
+ const browser=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,args:['--no-sandbox','--disable-gpu','--disable-dev-shm-usage']});
+ try{for(const slug of ['ponpoko-kart','turbo-kart-rush']){
+  const out=path.join(root,slug,'docs/dom-help-layout-1');fs.mkdirSync(out,{recursive:true});fs.copyFileSync(__filename,path.join(out,'executed-dom-fixture.cjs'));
+  const report={scope:'DOM-only layout fixture, not gameplay; exact built CSS and production help markup; --disable-gpu, no WebGL/game model loaded.',cssSha256:crypto.createHash('sha256').update(fs.readFileSync(path.join(root,slug,'dist/game.css'))).digest('hex'),rows:[]};
+  const page=await browser.newPage();await page.goto('http://127.0.0.1:18267/'+slug);await page.waitForFunction(()=>window.fixtureReady);await page.evaluate(()=>document.fonts.ready);
+  for(const [width,height]of [[960,540],[1280,720]]){await page.setViewportSize({width,height});const bounds=await page.evaluate(()=>{const p=document.getElementById('puretv-controller-panel'),r=p.getBoundingClientRect(),h=p.querySelector('.tv-help,.tv-control-help').getBoundingClientRect();return{viewport:[innerWidth,innerHeight],panel:{x:r.x,y:r.y,width:r.width,height:r.height,clientHeight:p.clientHeight,scrollHeight:p.scrollHeight,clientWidth:p.clientWidth,scrollWidth:p.scrollWidth},help:{x:h.x,y:h.y,width:h.width,height:h.height},text:p.innerText};});const file=`help-${width}.png`;await page.screenshot({path:path.join(out,file)});report.rows.push({...bounds,image:file,sha256:crypto.createHash('sha256').update(fs.readFileSync(path.join(out,file))).digest('hex')});}
+  fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(report,null,2)+'\n');console.log(slug,JSON.stringify(report));await page.close();
+ }}finally{await browser.close();server.close();}
+})();

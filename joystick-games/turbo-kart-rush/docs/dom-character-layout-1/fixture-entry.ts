@@ -1,0 +1,13 @@
+import { MainMenu } from '/dev/shm/puretv-submit/joystick-games/turbo-kart-rush/src/upstream/src/ui/MainMenu.ts';
+import { CHARACTERS } from '/dev/shm/puretv-submit/joystick-games/turbo-kart-rush/src/upstream/src/kart/roster.ts';
+import { TRACKS } from '/dev/shm/puretv-submit/joystick-games/turbo-kart-rush/src/upstream/src/track/tracks/index.ts';
+import { createEmptyInput } from '/dev/shm/puretv-submit/joystick-games/turbo-kart-rush/src/upstream/src/core/types.ts';
+import { createController } from '/dev/shm/puretv-submit/joystick-games/shared/web/input.js';
+window.PureGameHost={getInfo:()=>JSON.stringify({wifiController:{port:63485}}),snapshot:()=>JSON.stringify({players:[{id:1,controllerId:'rush-test-controller-960-long-id',session:'dom-only',connected:true,transport:'wifi',buttons:{}}]})};
+const controller=createController({width:190});controller.poll();
+const panel=document.getElementById('puretv-controller-panel');panel.dataset.connected='true';
+const menu=new MainMenu(document.getElementById('ui'),CHARACTERS,TRACKS);
+menu.onPanelChange=mode=>panel.dataset.mode=mode;
+menu.show('characterSelect');panel.dataset.mode='characterSelect';
+window.fixture={open:(mode)=>{menu.show(mode);panel.dataset.mode=mode;},nav:(key)=>menu.handleInput({...createEmptyInput(),[key]:true})};
+window.fixtureReady=true;
