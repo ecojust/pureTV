@@ -1,0 +1,404 @@
+{
+  "game": "backroad-rally",
+  "targetPackage": "com.ecojust.joystick.backroadrally",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": true,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "4b6cf0b8cba288eae66bcae2ef2784acc279a695",
+  "apk": {
+    "path": "/home/runner/work/_temp/signed/packages/backroad-rally/backroad-rally-0.1.0.apk",
+    "bytes": 105024551,
+    "sha256": "2cd35f145f5362264a720708325c22e283a3828d21899058f17422ba87103c08"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/signed/observers/backroad-rally/observer-backroad-rally.apk",
+    "bytes": 16783,
+    "sha256": "c8402dcc9b204e4aa405a9edae4efa72d8a2b7621f0df989b9e4bcf96ad0c4f2"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 62517,
+      "sha256": "5fb0fbb8b14995ea757f2b9bfd5e89fd08b51c24810657b8d5b3e368a1b8826a"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11264,
+      "sha256": "c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 13049,
+      "sha256": "be47887c8fa964e0a17c8fc3d8ba3195e5ae503af4bbd728afab24bd9453277b"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 7106,
+      "sha256": "8fa99646235d8d3369e6606b94b1facaafda934dcc1df3ad693233f9bcfe6e54"
+    },
+    "joystick-games/backroad-rally/qa-plan.json": {
+      "bytes": 12109,
+      "sha256": "8306e5b2ad54cf35eb2602db045711572e35a728478e668fc65a6fb962ad157f"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 7735,
+      "sha256": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d"
+    }
+  },
+  "tests": [
+    {
+      "name": "catalog scenario starts with fresh app data before launch",
+      "status": "passed",
+      "details": {
+        "mode": "fresh-install-app-data",
+        "targetPackage": "com.ecojust.joystick.backroadrally",
+        "method": "pm clear",
+        "phase": "before-target-launch",
+        "status": "passed",
+        "stdout": "Success"
+      }
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "initial-menu",
+      "wallTime": 1795126781.59361,
+      "snapshot": {
+        "game": {
+          "game": "backroad-rally",
+          "renderer": "loading",
+          "webglVersion": 0,
+          "stage": "menu",
+          "paused": false,
+          "frames": 0,
+          "gameplay": {
+            "menuFocus": "",
+            "menuValue": ""
+          },
+          "audioState": "unknown",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:45005/?room=wy8JiHNIwnzatuJtpsc8SqDdY20fgGtv",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "registering",
+                "serviceName": "Backroad Rally",
+                "port": 35631,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 1,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:45005/?room=wy8JiHNIwnzatuJtpsc8SqDdY20fgGtv",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "registering",
+            "serviceName": "Backroad Rally",
+            "port": 35631,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 765,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 257
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.backroadrally"
+      }
+    }
+  ],
+  "captures": [],
+  "installationSetup": {
+    "mode": "fresh-install-app-data",
+    "targetPackage": "com.ecojust.joystick.backroadrally",
+    "method": "pm clear",
+    "phase": "before-target-launch",
+    "status": "passed",
+    "stdout": "Success"
+  },
+  "observerTransportEvents": [
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795126779.580192,
+      "endedAt": 1795126779.6114264,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795126779.7319908,
+      "endedAt": 1795126779.7342615,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795126779.8549852,
+      "endedAt": 1795126779.8638933,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795126779.984693,
+      "endedAt": 1795126779.9862611,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795126780.109786,
+      "endedAt": 1795126780.1138735,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795126780.2359898,
+      "endedAt": 1795126780.239828,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795126780.360695,
+      "endedAt": 1795126780.3624475,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795126780.483249,
+      "endedAt": 1795126780.486207,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795126780.6070087,
+      "endedAt": 1795126780.6129978,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795126780.7338583,
+      "endedAt": 1795126780.736962,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795126780.8587008,
+      "endedAt": 1795126780.871705,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-recovered",
+      "attempt": 3,
+      "priorTransportFailures": 2,
+      "startedAt": 1795126780.9957407,
+      "endedAt": 1795126781.188752,
+      "responseFromNewGet": true
+    }
+  ],
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1000, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 538, in setup\n    self.validate_catalog_snapshot(initial)\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 625, in validate_catalog_snapshot\n    assert game.get('renderer') in plan.accepted_renderers(self.plan), 'Actual renderer differs from QA plan'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Actual renderer differs from QA plan\n",
+  "finishedAt": 1795126781.9816766
+}
