@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/home/runner/work/pureTV/pureTV/joystick-games/tools/android-build.py", line 264, in <module>
+    main()
+  File "/home/runner/work/pureTV/pureTV/joystick-games/tools/android-build.py", line 227, in main
+    inputs = sources(a.game)
+             ^^^^^^^^^^^^^^^
+  File "/home/runner/work/pureTV/pureTV/joystick-games/tools/android-build.py", line 165, in sources
+    return {p.relative_to(ROOT).as_posix(): record(p) for p in sorted(set(paths))}
+                                            ^^^^^^^^^
+  File "/home/runner/work/pureTV/pureTV/joystick-games/tools/android-build.py", line 86, in record
+    assert path.is_file() and not path.is_symlink(), str(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: /home/runner/work/pureTV/pureTV/joystick-games/last-track/NOTICE.md
