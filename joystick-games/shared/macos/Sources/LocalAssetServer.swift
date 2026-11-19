@@ -46,6 +46,7 @@ final class LocalAssetServer {
     private static let assetLimit = 10 * 1024 * 1024
     private static let totalAssetLimit = 32 * 1024 * 1024
     private static let chunkSize = 64 * 1024
+    private static let queryLimit = 4096
     private static let mimeTypes: [String: String] = [
         "html": "text/html; charset=utf-8", "js": "application/javascript; charset=utf-8",
         "css": "text/css; charset=utf-8", "json": "application/json; charset=utf-8",
@@ -322,12 +323,10 @@ final class LocalAssetServer {
               headers["content-length"] == nil || headers["content-length"] == "0" else {
             respond(id, status: 400, message: "Bad Request"); return
         }
-        let target = request[1]
-        guard target.hasPrefix("/"), !target.contains("?"), !target.contains("#"),
-              let decoded = target.removingPercentEncoding, decoded == target else {
+        guard let path = Self.requestPath(request[1]) else {
             respond(id, status: 400, message: "Bad Request"); return
         }
-        let name = String(decoded.dropFirst())
+        let name = String(path.dropFirst())
         guard Self.safePath(name, nested: policy != nil) else {
             respond(id, status: 404, message: "Not Found"); return
         }
@@ -344,6 +343,52 @@ final class LocalAssetServer {
             lower = selected.lowerBound; length = selected.count; status = 206
         }
         stream(id, asset: asset, offset: lower, length: length, status: status, head: method == "HEAD")
+    }
+
+    // Queries are cache keys and client-side navigation state, never filesystem
+    // paths. Keep their encoded bytes for the browser; only route the path.
+    static func requestPath(_ target: String) -> String? {
+        guard target.hasPrefix("/"), !target.contains("#") else { return nil }
+        let parts = target.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: false)
+        let path = String(parts[0])
+        guard let decoded = path.removingPercentEncoding, decoded == path else { return nil }
+        if parts.count == 2 {
+            let query = Array(parts[1].utf8)
+            guard query.count <= queryLimit else { return nil }
+            func hex(_ value: UInt8) -> UInt8? {
+                if value >= 48 && value <= 57 { return value - 48 }
+                if value >= 65 && value <= 70 { return value - 65 + 10 }
+                if value >= 97 && value <= 102 { return value - 97 + 10 }
+                return nil
+            }
+            let punctuation = Set("-._~!$&'()*+,;=:@/?".utf8)
+            var index = 0
+            while index < query.count {
+                let byte = query[index]
+                if byte == 37 {
+                    guard index + 2 < query.count, let high = hex(query[index + 1]),
+                          let low = hex(query[index + 2]) else { return nil }
+                    let value = high * 16 + low
+                    guard value >= 32, value != 127, value != 92 else { return nil }
+                    index += 3
+                } else {
+                    guard (byte >= 48 && byte <= 57) || (byte >= 65 && byte <= 90)
+                        || (byte >= 97 && byte <= 122) || punctuation.contains(byte) else { return nil }
+                    index += 1
+                }
+            }
+        }
+        return path
+    }
+
+    static func allowsEntryNavigation(_ url: URL, entry: URL, isMainFrame: Bool) -> Bool {
+        guard isMainFrame, url.user == nil, url.password == nil,
+              url.scheme == entry.scheme, url.host == entry.host, url.port == entry.port,
+              let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              let original = URLComponents(url: entry, resolvingAgainstBaseURL: false),
+              original.percentEncodedPath == "/tv.html" else { return false }
+        let target = components.percentEncodedPath + (components.percentEncodedQuery.map { "?" + $0 } ?? "")
+        return requestPath(target) == original.percentEncodedPath
     }
 
     static func byteRange(_ value: String, size: Int) -> Range<Int>? {

@@ -219,8 +219,8 @@ final class JoystickApplication: NSObject, NSApplicationDelegate, NSWindowDelega
     }
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url, let pageURL = pageURL,
-              url.scheme == pageURL.scheme, url.host == pageURL.host, url.port == pageURL.port,
-              url.path == pageURL.path, url.query == nil, navigationAction.targetFrame?.isMainFrame == true else { decisionHandler(.cancel); return }
+              LocalAssetServer.allowsEntryNavigation(url, entry: pageURL,
+                  isMainFrame: navigationAction.targetFrame?.isMainFrame == true) else { decisionHandler(.cancel); return }
         if ready { suspend(); ready = false; loading.isHidden = false }
         configureBootstrap()
         decisionHandler(.allow)

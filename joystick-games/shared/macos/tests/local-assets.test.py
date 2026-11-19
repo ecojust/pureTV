@@ -190,12 +190,42 @@ class NativeLocalAssets(unittest.TestCase):
     def test_paths_host_method_and_body_boundaries(self):
         port = self.start()
         for target in ['/../tv.html', '//tv.html', '/nested/tv.html', '/%74v.html', '/%2e%2e/tv.html',
-                       '/tv.html?x=1', '/tv.html#x', '/tv\\.html', '/.hidden']:
+                       '/tv.html#x', '/tv\\.html', '/.hidden']:
             self.assertIn(self.request(port, target)[0], [400, 404], target)
         self.assertEqual(self.request(port, headers={'Host': 'attacker.invalid'})[0], 403)
         self.assertEqual(self.request(port, method='POST')[0], 405)
         self.assertEqual(self.request(port, headers={'Content-Length': '1'})[0], 400)
         self.assertEqual(self.request(port, headers={'Transfer-Encoding': 'chunked'})[0], 400)
+
+    def test_cache_and_navigation_queries_keep_original_registered_bytes(self):
+        expected=(self.root/'tv.html').read_bytes();port=self.start()
+        for query in ['', '?', '?v=0123456789', '?mode=quick&stage=finland&car=swift&cond=day',
+                      '?name=%E4%B9%A1%E9%87%8E%20rally&url=../outside?value=one', '?'+('v'*4096)]:
+            status,headers,body=self.request(port,'/tv.html'+query)
+            self.assertEqual((status,body),(200,expected));self.assertEqual(headers['Content-Type'],'text/html; charset=utf-8')
+        (self.root/'data').mkdir();data=b'{"original":"menu"}';(self.root/'data/menu.json').write_bytes(data)
+        self.assertEqual(self.request(port,'/data/menu.json?v=0123456789')[0],404)
+        nested=self.start(self.policy)
+        status,headers,body=self.request(nested,'/data/menu.json?v=0123456789')
+        self.assertEqual((status,body),(200,data));self.assertEqual(headers['Content-Type'],'application/json; charset=utf-8')
+
+    def test_query_range_and_head_preserve_exact_file_offsets(self):
+        data=bytes(range(256))*1024;(self.root/'music.mp3').write_bytes(data);port=self.start()
+        status,headers,body=self.request(port,'/music.mp3?v=0123456789',headers={'Range':'bytes=65530-131080'})
+        self.assertEqual((status,body),(206,data[65530:131081]));self.assertEqual(headers['Content-Range'],f'bytes 65530-131080/{len(data)}')
+        status,headers,body=self.request(port,'/music.mp3?v=0123456789','HEAD')
+        self.assertEqual((status,body,int(headers['Content-Length'])),(200,b'',len(data)))
+
+    def test_queries_do_not_bypass_path_index_symlink_or_request_boundaries(self):
+        (self.root/'music.mp3').write_bytes(b'inside!');port=self.start()
+        for target in ['/../tv.html?v=ok','/%2e%2e/tv.html?v=ok','//tv.html?v=ok','/tv\\.html?v=ok',
+                       '/%74v.html?v=ok','/unknown.js?path=tv.html','/?file=tv.html','/tv.html/?v=ok']:
+            self.assertIn(self.request(port,target)[0],[400,404],target)
+        for query in ['x=%','x=%0','x=%GG','x=%00','x=%0d%0a','x=%7f','x=%5c','x=\\value','x=#fragment','x=<tag>','x='+('v'*4095)]:
+            self.assertEqual(self.request(port,'/tv.html?'+query)[0],400,query[:60])
+        (self.root/'music.mp3').unlink();outside=self.root.parent/'outside.mp3';outside.write_bytes(b'outside')
+        (self.root/'music.mp3').symlink_to(outside)
+        self.assertEqual(self.request(port,'/music.mp3?v=0123456789')[0],404)
 
     def test_symlinks_and_changed_file_size_cannot_escape_index(self):
         (self.root / 'music.mp3').write_bytes(b'original')
