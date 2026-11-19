@@ -78,6 +78,14 @@ class DocumentFreshness(unittest.TestCase):
             with self.subTest(document=document):self.assertFalse(self.subject.fresh(after,before,True))
     def test_epoch_regression_is_never_fresh(self):
         self.assertFalse(self.subject.fresh(self.state(1,200,3),self.state(2,100,2),True))
+    def test_temporary_absent_game_or_controller_remains_pending(self):
+        before=self.state();after=self.state(polls=101,timestamp=2)
+        for side in ['before','after']:
+            for field in ['game','controller']:
+                left=copy.deepcopy(before);right=copy.deepcopy(after);target=left if side=='before' else right
+                if field=='game':target['game']=None
+                else:target['game']['controller']=None
+                with self.subTest(side=side,field=field):self.assertFalse(self.subject.fresh(right,left,True))
     def test_reload_requires_real_initialized_renderer_and_polls(self):
         before=self.state()
         for update in [{'ready':False},{'lastJavaScriptError':'failure'},{'diagnosticError':'failure'}]:
@@ -89,6 +97,22 @@ class DocumentFreshness(unittest.TestCase):
     def test_bad_or_stale_timestamp_is_rejected_after_reload(self):
         for timestamp in [0,1,None,True,float('nan'),float('inf'),'2']:
             with self.subTest(timestamp=timestamp):self.assertFalse(self.subject.fresh(self.state(2,2,timestamp),self.state(),True))
+    def test_query_page_can_render_race_directly_but_countdown_never_satisfies_running_expectation(self):
+        before=self.state();after=self.state(2,2,2);after['game'].update(stage='playing',gameplay={'phase':'warmup'})
+        expectation=[{'path':'stage','op':'eq','value':'playing'},{'path':'gameplay.phase','op':'eq','value':'running'}]
+        self.assertTrue(self.subject.fresh(after,before,True));self.assertFalse(verify.plan_api.matches(expectation,after['game'],before['game']))
+        after['game']['gameplay']['phase']='countdown'
+        self.assertTrue(self.subject.fresh(after,before,True));self.assertFalse(verify.plan_api.matches(expectation,after['game'],before['game']))
+        after['game']['gameplay']['phase']='running'
+        self.assertTrue(self.subject.fresh(after,before,True));self.assertTrue(verify.plan_api.matches(expectation,after['game'],before['game']))
+    def test_direct_race_still_requires_actual_renderer_identity_frames_and_clean_epoch(self):
+        before=self.state();original=self.state(2,2,2);original['game'].update(stage='playing',gameplay={'phase':'running'})
+        for update in [{'renderer':'canvas2d'},{'webglVersion':'WebGL 1.0'},{'frames':1},{'controller':None},{'controller':{'pollCount':1}},{'controller':{'pollCount':True}},{'controller':{'pollCount':float('inf')}},{'errors':['runtime failure']},{'error':'runtime failure'},{'paused':True},{'stage':'boot'},{'gameplay':None}]:
+            after=copy.deepcopy(original);after['game'].update(update)
+            with self.subTest(update=update):self.assertFalse(self.subject.fresh(after,before,True))
+        for update in [{'ready':False},{'lastJavaScriptError':'failure'},{'diagnosticError':'failure'},{'document':{'epoch':1}},{'documentEpoch':1},{'timestamp':1}]:
+            after=copy.deepcopy(original);after.update(update)
+            with self.subTest(update=update):self.assertFalse(self.subject.fresh(after,before,True))
     def test_legacy_hosts_keep_old_counter_rule_only_when_both_omit_identity(self):
         before=self.state();after=self.state(polls=101,timestamp=2)
         for state in [before,after]:state.pop('documentEpoch');state['document'].pop('epoch')

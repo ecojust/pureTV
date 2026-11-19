@@ -24,7 +24,7 @@ def info(path):
 def complete_png(data):
     if data[:8] != b'\x89PNG\r\n\x1a\n':
         return False
-    offset, first = 8, True
+    offset, first, image_data = 8, True, False
     while offset + 12 <= len(data):
         size = struct.unpack('>I', data[offset:offset + 4])[0]
         end = offset + 12 + size
@@ -35,8 +35,10 @@ def complete_png(data):
             return False
         if zlib.crc32(data[offset + 4:end - 4]) & 0xffffffff != struct.unpack('>I', data[end - 4:end])[0]:
             return False
+        if kind == b'IDAT':
+            image_data = True
         if kind == b'IEND':
-            return size == 0 and end == len(data) and not first
+            return size == 0 and end == len(data) and not first and image_data
         first, offset = False, end
     return False
 

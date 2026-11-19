@@ -652,7 +652,7 @@ class InstallFailureEvidence(unittest.TestCase):
     def test_png_requires_complete_chunks_crc_and_iend(self):
         image = self.png()
         self.assertTrue(runner.install_failure.complete_png(image))
-        for bad in [image[:-1], image[:30], image + b'extra', image[:-5] + b'xxxxx', b'not-png']:
+        for bad in [image[:-1], image[:30], image + b'extra', image[:-5] + b'xxxxx', image[:33] + image[-12:], b'not-png']:
             self.assertFalse(runner.install_failure.complete_png(bad))
 
     def test_real_diagnostic_process_is_bounded_by_time_and_output_and_failure_is_retained(self):

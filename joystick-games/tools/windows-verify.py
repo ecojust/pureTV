@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Run the actual Windows WebView2 app through the unchanged official TCP SDK."""
-import argparse,ctypes,hashlib,importlib.util,json,os,shutil,socket,subprocess,sys,threading,time,traceback
+import argparse,ctypes,hashlib,importlib.util,json,os,re,shutil,socket,subprocess,sys,threading,time,traceback
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def module(name,path):
@@ -57,10 +57,29 @@ class WindowsCheck(base.CatalogCheck):
         if not plan_api.numeric(timestamp) or not plan_api.numeric(previous_timestamp) or timestamp<=previous_timestamp:return False
         if current_epoch>previous_epoch:
             # New-document freshness requires its actual renderer and initial
-            # input polls. It does not waive the caller's original expectation.
-            return state.get('ready') is True and not state.get('lastJavaScriptError') and not state.get('diagnosticError') and base.initialization(state.get('game'),renderer=self.renderers)=='ready'
+            # input polls. A query navigation may open a race directly, so the
+            # initial-menu gate is not the document-rendering gate. The caller
+            # must still satisfy its original gameplay/phase expectation.
+            game=state.get('game')
+            if state.get('ready') is not True or state.get('lastJavaScriptError') or state.get('diagnosticError') or not isinstance(game,dict):return False
+            stage=game.get('stage');paused=game.get('paused');renderer=game.get('renderer')
+            if stage not in ('menu','playing','race','game','paused','pause','ended') or type(paused) is not bool or game.get('errors') or game.get('error'):return False
+            if stage in ('menu','playing','race','game') and paused:return False
+            if stage in ('paused','pause') and not paused:return False
+            if renderer not in self.renderers:return False
+            if renderer.startswith('webgl'):
+                version=game.get('webglVersion');major=2 if renderer=='webgl2' else 1
+                if not ((type(version) is int and version==major) or (isinstance(version,str) and re.match(r'^WebGL '+str(major)+r'(?:\.0)?(?:\s|\(|$)',version))):return False
+            controller=game.get('controller')
+            if not isinstance(controller,dict):return False
+            frames=game.get('frames');poll=controller.get('pollCount')
+            return plan_api.numeric(frames) and frames>1 and type(poll) is int and poll>1 and isinstance(game.get('gameplay'),dict)
         if not game_frame:return True
-        current_poll=state.get('game',{}).get('controller',{}).get('pollCount');previous_poll=before.get('game',{}).get('controller',{}).get('pollCount')
+        current_game=state.get('game');previous_game=before.get('game')
+        if not isinstance(current_game,dict) or not isinstance(previous_game,dict):return False
+        current_controller=current_game.get('controller');previous_controller=previous_game.get('controller')
+        if not isinstance(current_controller,dict) or not isinstance(previous_controller,dict):return False
+        current_poll=current_controller.get('pollCount');previous_poll=previous_controller.get('pollCount')
         return plan_api.numeric(current_poll) and plan_api.numeric(previous_poll) and current_poll>previous_poll
     def connect(self):
         connected=super().connect();self.report['additionalBusyRejections']=[]
