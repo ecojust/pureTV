@@ -1,0 +1,249 @@
+{
+  "sourceCommit": "b7b7af12f1eb61f777d89edad7368a69a14bb9e3",
+  "qaSourceCommit": "3768b3c81a26e525bca94e289b139396e0328fee",
+  "artifactRunId": 44605303936,
+  "batch": "racing-03",
+  "runner": "macos-15-intel",
+  "expectedArchitecture": "x86_64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "turbo-kart-rush",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/turbo-kart-rush",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/turbo-kart-rush/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "turbo-kart-rush/package-verification.log",
+          "startedAt": "2026-11-19T21:11:26.225477+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "turbo-kart-rush",
+            "--app",
+            "/Users/runner/work/_temp/packages/turbo-kart-rush/installed/Turbo Kart Rush.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/turbo-kart-rush/native"
+          ],
+          "status": "failed",
+          "log": "turbo-kart-rush/native.log",
+          "startedAt": "2026-11-19T21:12:59.859822+00:00",
+          "returncode": 1
+        }
+      ],
+      "capability": {
+        "before": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "turbo-kart-rush",
+            "--phase",
+            "before",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/turbo-kart-rush/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/turbo-kart-rush/capability/before"
+          ],
+          "status": "failed",
+          "log": "turbo-kart-rush/capability-before.log",
+          "startedAt": "2026-11-19T21:12:58.812661+00:00",
+          "returncode": 1
+        },
+        "after": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "turbo-kart-rush",
+            "--phase",
+            "after",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/turbo-kart-rush/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/turbo-kart-rush/capability/after"
+          ],
+          "status": "failed",
+          "log": "turbo-kart-rush/capability-after.log",
+          "startedAt": "2026-11-19T21:13:06.265898+00:00",
+          "returncode": 1
+        }
+      }
+    },
+    {
+      "game": "kart-rush",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/kart-rush",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-rush/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "kart-rush/package-verification.log",
+          "startedAt": "2026-11-19T21:13:07.128587+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kart-rush",
+            "--app",
+            "/Users/runner/work/_temp/packages/kart-rush/installed/Kart Rush.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-rush/native"
+          ],
+          "status": "failed",
+          "log": "kart-rush/native.log",
+          "startedAt": "2026-11-19T21:14:32.092421+00:00",
+          "returncode": 1
+        }
+      ],
+      "capability": {
+        "before": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "kart-rush",
+            "--phase",
+            "before",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/kart-rush/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-rush/capability/before"
+          ],
+          "status": "failed",
+          "log": "kart-rush/capability-before.log",
+          "startedAt": "2026-11-19T21:14:31.289575+00:00",
+          "returncode": 1
+        },
+        "after": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "kart-rush",
+            "--phase",
+            "after",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/kart-rush/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-rush/capability/after"
+          ],
+          "status": "failed",
+          "log": "kart-rush/capability-after.log",
+          "startedAt": "2026-11-19T21:16:02.611880+00:00",
+          "returncode": 1
+        }
+      }
+    },
+    {
+      "game": "kart-royale",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/kart-royale",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-royale/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "kart-royale/package-verification.log",
+          "startedAt": "2026-11-19T21:16:03.653694+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kart-royale",
+            "--app",
+            "/Users/runner/work/_temp/packages/kart-royale/installed/Kart Royale.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-royale/native"
+          ],
+          "status": "failed",
+          "log": "kart-royale/native.log",
+          "startedAt": "2026-11-19T21:17:39.456630+00:00",
+          "returncode": 1
+        }
+      ],
+      "capability": {
+        "before": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "kart-royale",
+            "--phase",
+            "before",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/kart-royale/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-royale/capability/before"
+          ],
+          "status": "failed",
+          "log": "kart-royale/capability-before.log",
+          "startedAt": "2026-11-19T21:17:38.862268+00:00",
+          "returncode": 1
+        },
+        "after": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "kart-royale",
+            "--phase",
+            "after",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/kart-royale/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-royale/capability/after"
+          ],
+          "status": "failed",
+          "log": "kart-royale/capability-after.log",
+          "startedAt": "2026-11-19T21:19:09.875019+00:00",
+          "returncode": 1
+        }
+      }
+    }
+  ],
+  "localAssetHttp": {
+    "command": [
+      "python3",
+      "joystick-games/shared/macos/tests/local-assets.test.py"
+    ],
+    "status": "passed",
+    "log": "local-assets.log",
+    "startedAt": "2026-11-19T21:10:45.125195+00:00",
+    "returncode": 0
+  }
+}
