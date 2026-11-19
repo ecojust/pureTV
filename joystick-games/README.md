@@ -21,6 +21,8 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 
 ## 新候选适配进度
 
+另有正在进行的[九款赛车三平台适配](../docs/racing-nine/README.md)：从 31 个赛车候选中比较画面与玩法，选出 Backroad Rally、Ponpoko Kart、Night Racer、Penguintrack、Last Track、Dirt Crown、Turbo Kart Rush、Kart Rush 和 Kart Royale。九款源码已提交，Android TV、macOS 通用包及 Windows x64 正在实际构建和运行验证，暂不计入下面已交付的安装包数量。
+
 原清单的 **93 款**已完成逐项[电视适配评估](../docs/claude-games/tv-assessment.md)：51 款可继续使用现有 Web 宿主，42 款需补齐许可、素材或其他引擎运行方案。后续新增的 GitHub 参考清单与这 93 款适配范围分开记录。
 
 已提交 **20 款**候选的适配源码，批次见[游戏注册表](catalog-registry.json)，逐款状态、来源和构建记录见[适配进度](porting-progress.json)。已完成安装包列在下方；源码已提交与双平台正式包已完成分别记录。其余适配按用户要求暂停，等待下一步指令。
