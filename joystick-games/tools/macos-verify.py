@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Observe the actual native app; drive it only through the unchanged TCP SDK."""
-import argparse,datetime,hashlib,importlib.util,json,math,os,platform,plistlib,re,select,shutil,socket,subprocess,sys,threading,time,traceback,uuid
+import argparse,datetime,hashlib,importlib.util,json,math,os,platform,plistlib,re,select,shutil,socket,stat,subprocess,sys,threading,time,traceback,uuid
 from urllib.parse import urlsplit
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
@@ -206,17 +206,77 @@ class Check:
         finally:print(name+': '+r['status'],flush=True)
     def player(self,s):return next((p for p in s.get('input',{}).get('players',[]) if p.get('connected')), {})
     def screenshot(self,name):
-        time.sleep(1.5);(self.diag/'screenshot-request.txt').write_text(name)
-        end=time.monotonic()+20
-        while time.monotonic()<end:
-            p=self.diag/name
-            if p.is_file() and p.stat().st_size>1000:self.report['screenshots'].append({'path':'diagnostics/'+name,'bytes':p.stat().st_size,'sha256':digest(p)});return
-            time.sleep(.1)
-        raise AssertionError('Missing native screenshot '+name)
+        assert re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,70}\.png',name),'Unsafe screenshot name'
+        p=self.diag/name;request=self.diag/'screenshot-request.txt';journal=self.out/('screenshot-'+name[:-4]+'.log')
+        attempt={'name':name,'status':'waiting','deadlineSeconds':60,'requestsWritten':0,
+                 'journal':journal.name,'nativeCallbackObserved':False,'hostCallbackReportingAvailable':False,
+                 'meaning':'Observe one original host request and PNG; request consumption is not a snapshot callback'}
+        self.report.setdefault('screenshotObservations',[]).append(attempt)
+        started=time.monotonic();observations=0
+        def emit(event,**details):
+            nonlocal observations
+            observations+=1
+            with journal.open('a',encoding='utf-8') as stream:
+                stream.write(json.dumps({'event':event,'at':now(),'elapsedSeconds':round(time.monotonic()-started,3),**details},ensure_ascii=False)+'\n')
+            attempt['observations']=observations
+        def observe():
+            result={'requestPresent':request.exists(),'outputPresent':p.exists()}
+            def scalar(value):
+                if value is None or type(value) in (bool,int):return value
+                if type(value) is float:return value if math.isfinite(value) else str(value)
+                return value[:160] if isinstance(value,str) else '<'+type(value).__name__+'>'
+            try:
+                state=json.loads((self.diag/'state.json').read_text());game=state.get('game') or {};controller=game.get('controller') or {}
+                result['state']={key:scalar(state.get(key)) for key in ('timestamp','ready','active','processArchitecture')}
+                result['state'].update(renderer=scalar(game.get('renderer')),frames=scalar(game.get('frames')),pollCount=scalar(controller.get('pollCount')),paused=scalar(game.get('paused')))
+                for key in ('diagnosticError','lastJavaScriptError'):
+                    if state.get(key):result['state'][key]=str(state[key])[:2000]
+                if game.get('errors'):result['state']['gameErrors']=str(game['errors'])[:2000]
+            except (OSError,ValueError,TypeError,AttributeError) as error:
+                result['stateReadError']=type(error).__name__+': '+str(error)[:500]
+            return result
+        try:
+            emit('preflight')
+            assert not p.exists() and not p.is_symlink(),'Pre-existing screenshot cannot satisfy a new request: '+name
+            assert not request.exists() and not request.is_symlink(),'Previous screenshot request is still present'
+            time.sleep(1.5)
+            assert not p.exists() and not p.is_symlink(),'Screenshot appeared before request: '+name
+            with request.open('x',encoding='utf-8') as stream:stream.write(name)
+            attempt['requestsWritten']=1;started=time.monotonic();end=started+60;last_second=-1;consumed=False
+            emit('requested')
+            while time.monotonic()<end:
+                code=self.app.poll() if self.app else None
+                if code is not None:raise RuntimeError('App exited while capturing screenshot: '+str(code))
+                second=int(time.monotonic()-started)
+                if second!=last_second:
+                    emit('observation',nativeProcessAlive=True,**observe());last_second=second
+                if not consumed and not request.exists():emit('request_consumed');consumed=True
+                assert not p.is_symlink(),'Symlinked screenshot output: '+name
+                if p.exists():
+                    assert stat.S_ISREG(p.lstat().st_mode),'Nonregular screenshot output'
+                    with os.fdopen(os.open(p,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK),'rb') as stream:
+                        info=os.fstat(stream.fileno());assert stat.S_ISREG(info.st_mode),'Nonregular screenshot output'
+                        if info.st_size>1000:
+                            data=stream.read();assert len(data)==info.st_size and data.startswith(b'\x89PNG\r\n\x1a\n'),'Invalid native PNG: '+name
+                            record={'path':'diagnostics/'+name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
+                            self.report['screenshots'].append(record);attempt.update(status='captured',elapsedSeconds=round(time.monotonic()-started,3))
+                            emit('png_captured',**record,**observe());return
+                time.sleep(.1)
+            raise AssertionError('Missing native screenshot '+name+' after 60 seconds')
+        except Exception as error:
+            attempt.update(status='failed',elapsedSeconds=round(time.monotonic()-started,3),error=type(error).__name__+': '+str(error))
+            try:emit('failed',error=attempt['error'],**observe())
+            except OSError as journal_error:attempt['journalWriteError']=str(journal_error)
+            raise
     def press(self,k):self.client.button(k,'down');self.held.add(k)
     def release(self,k):self.client.button(k,'tap',duration=100);self.held.discard(k)
     def fresh(self,s,before,game_frame=False):
-        return s.get('timestamp',0)>before.get('timestamp',0) and (not game_frame or s.get('game',{}).get('controller',{}).get('pollCount',0)>before.get('game',{}).get('controller',{}).get('pollCount',0))
+        if s.get('timestamp',0)<=before.get('timestamp',0):return False
+        if not game_frame:return True
+        # A real document navigation can temporarily have no game observation.
+        # It is pending, never a new consumed game frame.
+        if s.get('game') is None or before.get('game') is None:return False
+        return s['game'].get('controller',{}).get('pollCount',0)>before['game'].get('controller',{}).get('pollCount',0)
     def observed_button(self,k,held):
         before=self.read();(self.press if held else self.release)(k)
         return self.until(lambda s:self.fresh(s,before,True) and s.get('game',{}).get('controller',{}).get('buttons',{}).get(k) is held,'Game consumes '+k+(' down' if held else ' release'))
@@ -565,12 +625,76 @@ class CatalogCheck(Check):
         assert {path:qa_plan.read_path(after['game'],path) for path in values}==values
         return {'paths':values,'samples':samples,'controllerFramesAdvanced':after['game']['controller']['pollCount']-before['game']['controller']['pollCount']}
 
+    def menu_release_observed(self,state,before,key):
+        game=state.get('game')
+        if not isinstance(game,dict):return False
+        owner=self.player(before);player=self.player(state);controller=game.get('controller') or {}
+        if not owner.get('controllerId') or not owner.get('session'):return False
+        if player.get('controllerId')!=owner['controllerId'] or player.get('session')!=owner['session']:return False
+        counts=owner.get('buttonCounters',{});current=player.get('buttonCounters',{})
+        if not all(type(counts.get(k)) is int and type(current.get(k)) is int and current[k]==counts[k]+(1 if k==key else 0) for k in KEYS):return False
+        if not all(player.get('buttons',{}).get(k) is False and controller.get('buttons',{}).get(k) is False for k in KEYS):return False
+        return type(controller.get('pollCount')) is int and controller['pollCount']>0 and not self.held
+
+    def menu_tap(self,step,before):
+        assert step.get('menuTap') is True and len(step['keys'])==1,'Explicit single-key menuTap required'
+        assert before.get('game',{}).get('stage')=='menu','menuTap begins only in the actual menu'
+        assert not qa_plan.matches(step['expect'],before['game'],before['game']),'menuTap cannot certify an already satisfied expectation'
+        key=step['keys'][0];owner=self.player(before)
+        assert not self.held and all(owner.get('buttons',{}).get(k) is False for k in KEYS),'Menu input must begin released'
+        assert owner.get('controllerId')==self.client.identity and owner.get('session'),'Menu tap requires the original connected SDK owner'
+        assert all(before['game'].get('controller',{}).get('buttons',{}).get(k) is False for k in KEYS),'Previous semantic menu input is not released'
+        record={'name':step['name'],'key':key,'status':'running','declaredHoldMs':step['holdMs'],'requestedTapMs':16,
+                'before':before['game'],'beforeOwner':{k:owner.get(k) for k in ('controllerId','session','buttonCounters')},
+                'samples':[],'sampleCount':0,'samplesTruncated':False}
+        self.report.setdefault('menuTapObservations',[]).append(record);started=time.monotonic();candidate=None;stable=0
+        try:
+            with self.client.lock:
+                down=time.monotonic();self.press(key);down_seq=self.client.seq
+            try:time.sleep(.016)
+            finally:
+                with self.client.lock:self.release(key);release_seq=self.client.seq
+            record.update(sdkDownSequence=down_seq,sdkReleaseSequence=release_seq,sdkCallHeldMs=(time.monotonic()-down)*1000)
+            deadline=time.monotonic()+step.get('timeoutSeconds',15)
+            while time.monotonic()<deadline:
+                state=self.read()
+                if state:
+                    game=state.get('game');controller=game.get('controller',{}) if isinstance(game,dict) else {}
+                    released=self.menu_release_observed(state,before,key)
+                    expected=isinstance(game,dict) and qa_plan.matches(step['expect'],game,before['game'])
+                    qualified=self.fresh(state,before) and released and expected
+                    record['sampleCount']+=1;record['samples'].append({'at':now(),'timestamp':state.get('timestamp'),'pollCount':controller.get('pollCount'),
+                        'releasedAndCounterExact':released,'expectationMatches':expected,'qualified':qualified})
+                    if len(record['samples'])>64:del record['samples'][16];record['samplesTruncated']=True
+                    if qualified:
+                        # The first post-release candidate is only a baseline.
+                        # Require two subsequent fresh polls; a page reload may
+                        # legitimately reset its counter below the old menu.
+                        if candidate is None:stable=0;candidate=state
+                        elif self.fresh(state,candidate,True):stable+=1;candidate=state
+                    else:stable=0;candidate=None
+                    if stable>=2:
+                        messages=[row for row in self.report['wire'] if row['direction']=='sdk-to-game' and row['message'].get('seq') in (down_seq,record['sdkReleaseSequence'])]
+                        assert len(messages)==2 and messages[0]['connection']==messages[1]['connection'],'Exact menu tap wire pair missing'
+                        assert [(row['message'].get('type'),row['message'].get('key'),row['message'].get('action'),row['message'].get('pressed'),row['message'].get('controller_id')) for row in messages]==[('button',key,'down',True,self.client.identity),('button',key,'tap',False,self.client.identity)],'Unexpected menu tap wire actions'
+                        record.update(status='passed',stableFreshSamples=stable,elapsedSeconds=time.monotonic()-started,
+                            observedWireHeldMs=(datetime.datetime.fromisoformat(messages[1]['at'])-datetime.datetime.fromisoformat(messages[0]['at'])).total_seconds()*1000,
+                            after=game)
+                        return {'name':step['name'],'keys':step['keys'],'holdMs':step['holdMs'],'menuTap':True,'actualTapMs':record['sdkCallHeldMs'],'before':before['game'],'after':game,'stableFreshSamples':stable}
+                time.sleep(.08)
+            raise AssertionError(step['name']+' released menuTap expectation did not remain stable across two fresh game frames')
+        except Exception as error:
+            record.update(status='failed',elapsedSeconds=time.monotonic()-started,error=type(error).__name__+': '+str(error));raise
+        finally:self.clear()
+
     def gameplay(self):
         self.display()
         assert self.read()['game']['stage']=='menu','QA plan must begin at the actual menu'
         cases=[]
         for step in self.plan['steps']:
             before=self.read();owner=self.player(before)
+            if step.get('menuTap') is True:
+                cases.append(self.menu_tap(step,before));self.settle_input('Plan controls released: '+step['name']);continue
             for key in step['keys']:self.press(key)
             try:
                 consumed=self.until(lambda s:self.fresh(s,before,True) and self.player(s).get('session')==owner['session'] and all(self.player(s).get('buttons',{}).get(k) is True and self.player(s).get('buttonCounters',{}).get(k)==owner['buttonCounters'][k]+1 for k in step['keys']),step['name']+' actual SDK input')

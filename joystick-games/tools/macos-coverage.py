@@ -133,12 +133,16 @@ def failed_initialization(report,game=None,meta=None):
     assert report.get('initialization',{}).get('classification')!='ready' and report.get('renderingAvailable') is not True,'A later failure after renderer readiness cannot have limited coverage'
     error=report['error'];assert isinstance(error,str)
     terminal=error.strip().splitlines()[-1]
-    state=report['lastState'];assert state['ready'] is True and state['active'] is True and state['processArchitecture']=='x86_64'
+    state=report['lastState'];assert state['ready'] is True and type(state['active']) is bool and state['processArchitecture']=='x86_64'
     for key in ('diagnosticError','lastJavaScriptError','navigationError','lastNavigationError'):
         assert not state.get(key),'Non-graphics native/JavaScript failure: '+key
     assert not state.get('earlyJavaScriptErrors') and not state.get('resourceErrors')
     assert report['tests']==[],'Gameplay/protocol/storage execution already began; this is not initialization-only'
     observed=state.get('game');bounded=None
+    if isinstance(observed,dict):
+        gameplay=observed.get('gameplay')
+        focus=[observed.get('focused'),gameplay.get('focus') if isinstance(gameplay,dict) else None]
+        assert not any(isinstance(value,str) and 'boot failed' in value.casefold() for value in focus),'Explicit boot failure in focused UI requires investigation'
     if isinstance(observed,dict) and observed.get('errors'):
         # This exact frozen constructor expression was reviewed against the
         # original Pon bundle. It is not a general TypeError/precision waiver.
@@ -160,6 +164,17 @@ def failed_initialization(report,game=None,meta=None):
         allowed={'Error creating WebGL context.','THREE.WebGLRenderer: Error creating WebGL context.','WebGL2 is required','WebGL 2 is required'}
         for key in ('error','message'):
             value=observed.get(key);assert not value or value in allowed,'Unclassified game error cannot be attributed to graphics'
+    if bounded is None:
+        assert state['active'] is True,'Ordinary initialization timeout requires an active native window'
+    else:
+        # The exact reviewed constructor failed before the verifier's foreground
+        # predicate. Preserve inactive terminal state as unverified, never as a
+        # foreground/gameplay pass. Independent before/after probes are still
+        # mandatory in assess_game before any limited-coverage result is emitted.
+        front=state.get('frontmostApplication')
+        if state['active'] is False:
+            assert isinstance(front,dict) and set(front)=={'name','bundleIdentifier'} and all(isinstance(value,str) and value for value in front.values()),'Inactive constructor evidence requires the original frontmost application observation'
+        bounded.update(terminalWindowActive=state['active'],frontmostApplication=front,foregroundVerification='active_at_terminal_observation' if state['active'] else 'unverified')
     timestamp(report['startedAt']);timestamp(report['finishedAt'])
     return bounded
 
@@ -335,7 +350,9 @@ def assess_game(game,meta,plan,entry,arm_folder,intel_folder,*,per_game=False):
                 if kart_fallback:
                     coverage['intelNative']['rendererObservations']={'webgl2':'independent_probe_context_lost','webgl1':'unobserved'}
                     coverage['intelNative']['actualGameRendererVerified']=False
-                if bounded is not None:coverage['intelNative']['boundedInitializationEvidence']=bounded
+                if bounded is not None:
+                    coverage['intelNative']['boundedInitializationEvidence']=bounded
+                    coverage['intelNative'].update({key:bounded[key] for key in ('terminalWindowActive','frontmostApplication','foregroundVerification')})
             else:
                 assert (batch['status']=='passed' or per_game or (runner=='macos-15-intel' and selected_policy==PARTIAL and batch['status']=='failed')) and record['status']=='passed' and record['checks'][index]['status']=='passed' and record['checks'][index]['returncode']==0, 'Original batch or target game checks did not pass under the selected assessment scope'
                 strict_game(report,architecture,renderers)

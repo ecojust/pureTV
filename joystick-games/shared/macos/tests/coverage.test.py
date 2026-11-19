@@ -320,6 +320,42 @@ class Coverage(unittest.TestCase):
         for name in ('local-assets.log','executed-source/'+coverage.HTTP_SOURCE,'executed-source/'+coverage.AUDIO+'backfire.opus','local-assets-compile/main.swift','local-assets-compile/cases/test_fixture/0-stdout.log'):
             path=self.intel/name;original=path.read_bytes();path.unlink();self.blocked();path.write_bytes(original)
         self.change(self.intel/'local-assets-compile/compile-context.json',lambda value:value.update(architecture='arm64'));self.blocked()
+    def inactive_pon(self):
+        self.pon_fixture()
+        self.change(self.intel/self.game/'native/report.json',lambda value:value['lastState'].update(active=False,frontmostApplication={'name':'UserNotificationCenter','bundleIdentifier':'com.apple.UserNotificationCenter'}))
+    def test_original_inactive_pon_observation_keeps_foreground_unverified(self):
+        fixtures=Path(__file__).with_name('fixtures');proof=json.loads((fixtures/'constructor-observations-provenance.json').read_text())
+        data=(fixtures/'pon-inactive-renderer-44602407034.json').read_bytes();self.assertEqual(coverage.digest(data),proof['pon-inactive-renderer-44602407034']['sha256'])
+        record=coverage.failed_initialization(json.loads(data),'ponpoko-kart',proof['ponOriginalPackageBundle'])
+        self.assertIs(record['terminalWindowActive'],False);self.assertEqual(record['foregroundVerification'],'unverified')
+        self.assertEqual(record['frontmostApplication']['bundleIdentifier'],'com.apple.UserNotificationCenter');self.assertFalse(record['gameplayStarted'])
+    def test_inactive_exact_pon_requires_all_original_capability_and_arm_checks(self):
+        self.inactive_pon();before=self.fingerprints();result=self.assess();intel=result['verificationCoverage']['intelNative']
+        self.assertEqual(intel['status'],'unverified');self.assertFalse(intel['terminalWindowActive']);self.assertEqual(intel['foregroundVerification'],'unverified');self.assertFalse(intel['gameFailureCauseProven'])
+        self.assertEqual(before,self.fingerprints())
+        for path in [self.intel/self.game/'capability/after/probe.json',self.arm/self.game/'rosetta/report.json']:
+            original=path.read_bytes();path.unlink();self.blocked();path.write_bytes(original)
+    def test_inactive_ordinary_timeout_and_unknown_exception_are_not_waived(self):
+        self.partial_fixture();self.change(self.intel/self.game/'native/report.json',lambda value:value['lastState'].update(active=False,frontmostApplication={'name':'UserNotificationCenter','bundleIdentifier':'com.apple.UserNotificationCenter'}));self.blocked()
+        self.inactive_pon();self.change(self.intel/self.game/'native/report.json',lambda value:value['lastState']['game'].update(errors=['Unknown failure']));self.blocked()
+    def test_inactive_pon_still_requires_exact_bundle_zero_frames_alive_ready_fresh(self):
+        self.inactive_pon();path=self.intel/self.game/'native/report.json';old=path.read_bytes()
+        for mutate in (lambda v:v.update(nativeProcessAlive=False),lambda v:v.update(lastStateFresh=False),lambda v:v['lastState'].update(ready=False),lambda v:v['lastState']['game'].update(frames=1),lambda v:v['lastState']['game']['gameplay'].update(worldTime=1)):
+            self.change(path,mutate);self.blocked();path.write_bytes(old)
+        self.meta['webFiles']['game.js']['sha256']='0'*64;self.blocked()
+    def test_inactive_pon_frontmost_observation_and_boolean_state_are_required(self):
+        self.inactive_pon();path=self.intel/self.game/'native/report.json';old=path.read_bytes()
+        for change in ({'frontmostApplication':None},{'frontmostApplication':{}},{'frontmostApplication':{'name':'Unknown'}},{'active':None},{'active':'false'}):
+            self.change(path,lambda value:value['lastState'].update(change));self.blocked();path.write_bytes(old)
+    def test_original_royale_boot_failed_ui_is_not_an_ordinary_timeout(self):
+        fixtures=Path(__file__).with_name('fixtures');proof=json.loads((fixtures/'constructor-observations-provenance.json').read_text())
+        data=(fixtures/'royale-boot-failed-44605303936.json').read_bytes();self.assertEqual(coverage.digest(data),proof['royale-boot-failed-44605303936']['sha256'])
+        with self.assertRaisesRegex(AssertionError,'Explicit boot failure'):
+            coverage.failed_initialization(json.loads(data),'kart-royale',{'game':'kart-royale'})
+    def test_boot_failed_in_either_focused_field_blocks_even_with_empty_errors(self):
+        self.partial_fixture();path=self.intel/self.game/'native/report.json';old=path.read_bytes()
+        for observed in ({'errors':[],'focused':'Boot failed: unavailable'}, {'errors':[],'gameplay':{'focus':'Main menu BOOT FAILED Retry'}}):
+            self.change(path,lambda value:value['lastState'].update(game=observed));self.blocked();path.write_bytes(old)
     def mixed_triple(self):
         others=[game for game in ('backroad-rally','night-racer','last-track') if game!=self.game][:2]
         self.plan['games']=[self.game,*others];self.plan['batches'][0]['games']=[self.game,*others]
