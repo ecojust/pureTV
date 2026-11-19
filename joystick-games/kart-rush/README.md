@@ -2,7 +2,13 @@
 
 固定源为 [stevkazt/kart-rush](https://github.com/stevkazt/kart-rush/tree/4b0cf276d84e76171feb765d87b5e8a6159cc421)。保留原始程序化 3D 美术、8 条正式赛道、7 场大奖赛、8 名车手、车辆与涂装选择、道具、自动漂移、三圈规则、原创合成音效及存档。每场仍为玩家和 5 名 AI。
 
-已提供 [Android TV 0.1.0 APK](kart-rush-0.1.0.apk)（948,563 字节，Android 8.0+），使用固定发布证书。原生模拟器正常端口与端口占用两种模式各通过52项实际手柄检查，详见[签名、源码及运行核验](docs/android-attempt-2/)。macOS 与 Windows 包仍在验证。未在实体电视或手机上测试。
+已提供 [Android TV 0.1.0 APK](kart-rush-0.1.0.apk)（948,563 字节，Android 8.0+），使用固定发布证书。原生模拟器正常端口与端口占用两种模式各通过52项实际手柄检查，详见[签名、源码及运行核验](docs/android-attempt-2/)。macOS 下载及验证范围见下方；Windows 包仍在验证。未在实体电视或手机上测试。
+
+## macOS 下载
+
+0.1.0 Universal：[DMG](macos/KartRush-0.1.0-macos-universal.dmg) · [ZIP](macos/KartRush-0.1.0-macos-universal.zip) · [SHA256 校验](SHA256SUMS.txt)。DMG 内应用可拖入 Applications；ZIP 提供相同应用。需要 **macOS 11 或更新版本和可用的 WebGL**，保留原版 WebGL 2 首选与 WebGL 1 回退。
+
+Apple Silicon 原生、默认端口占用回退及 Rosetta 三种模式的实际游戏与 pureTV SDK 检查通过，实际观察到 WebGL 2。**Intel 原生图形与玩法未验证，WebGL 1 回退未观察**；独立 WebGL 2 探针的 context-loss 记录不等于证明游戏失败原因。包包含 arm64 / x86_64，采用 ad-hoc 签名、未经过 Apple 公证；未做实体手柄或用户设备测试。原包、源码和同批失败保留情况见[逐款审计](../../docs/racing-nine/native-readiness/ci-44605303936-attempt-1/kart-rush-assessment/README.md)。
 
 | 按键 | 比赛 | 菜单 |
 | --- | --- | --- |

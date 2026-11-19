@@ -1,0 +1,31 @@
+Native DPI-scaled minimum and initial viewport: passed
+DNS-SD resolves actual listener and TXT: passed
+Official SDK and single controller seat: failed
+Traceback (most recent call last):
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-verify.py", line 163, in run
+    self.check('Official SDK and single controller seat',self.connect)
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 204, in check
+    try:r['details']=fn();r['status']='passed'
+                     ^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-verify.py", line 41, in connect
+    connected=super().connect();self.report['additionalBusyRejections']=[]
+              ^^^^^^^^^^^^^^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 516, in connect
+    connected=super().connect()
+              ^^^^^^^^^^^^^^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 286, in connect
+    self.screenshot('connected-menu.png')
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 213, in screenshot
+    if p.is_file() and p.stat().st_size>1000:self.report['screenshots'].append({'path':'diagnostics/'+name,'bytes':p.stat().st_size,'sha256':digest(p)});return
+                                                                                                                                             ^^^^^^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 13, in digest
+    def digest(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+                                        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'D:\\a\\_temp\\runtime-normal\\diagnostics\\connected-menu.png'
+

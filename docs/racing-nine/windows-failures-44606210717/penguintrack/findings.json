@@ -1,0 +1,447 @@
+{
+  "game": "penguintrack",
+  "sourceSha": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+  "originalRunId": 44606210717,
+  "attempt": 1,
+  "exportCommit": "499d960bcc6879ffc7cba2e0c0ea6bcfa4e8993b",
+  "evidenceIntegrity": "all original exported files verified against immutable Git blobs and both manifests",
+  "modes": [
+    {
+      "mode": "runtime-normal",
+      "originalStatus": "failed",
+      "failedTest": "Actual gameplay and pause model freeze",
+      "failedError": "AssertionError: Insufficient fresh real snapshots during pause",
+      "report": "penguintrack/original-export/evidence/runtime-normal/report.json",
+      "reportSha256": "4e7d52e61097143f3703910f066bdbadadd854b7b29b1c1f3470635a09f323be",
+      "finalNativeState": "penguintrack/original-export/evidence/runtime-normal/diagnostics/state.json",
+      "finalNativeStateSha256": "221c9fd1a8600ef65aeb8f2364c29cad7b09f2915ddbadb4ac464ec805cff0c6",
+      "lastRecordedSnapshot": {
+        "label": "Paused before model stability observation",
+        "at": "2026-11-19T20:19:47.693055+00:00",
+        "nativeTimestamp": 657.546,
+        "frame": 110,
+        "gameplay": {
+          "camera": 1,
+          "car": {
+            "pos": [
+              272,
+              0.6518852013231508,
+              168.4879967100288
+            ],
+            "vel": [
+              0,
+              0.00016128085197967702,
+              7.740668539711579
+            ]
+          },
+          "controls": {
+            "brake": false,
+            "gas": false,
+            "left": false,
+            "right": false
+          },
+          "editorBlocks": null,
+          "editorGrid": false,
+          "focus": "ResumeEsc",
+          "ghostCount": 0,
+          "phase": "paused",
+          "savedSettings": true,
+          "screen": "play",
+          "showGhost": false,
+          "speed": 27.86640674901035,
+          "tick": 1223,
+          "time": 12230,
+          "track": "A01"
+        }
+      },
+      "finalState": {
+        "nativeTimestamp": 660.046,
+        "frames": 113,
+        "renderer": "webgl2",
+        "stage": "paused",
+        "gameplay": {
+          "camera": 1,
+          "car": {
+            "pos": [
+              272,
+              0.6518852013231508,
+              168.4879967100288
+            ],
+            "vel": [
+              0,
+              0.00016128085197967702,
+              7.740668539711579
+            ]
+          },
+          "controls": {
+            "brake": false,
+            "gas": false,
+            "left": false,
+            "right": false
+          },
+          "editorBlocks": null,
+          "editorGrid": false,
+          "focus": "ResumeEsc",
+          "ghostCount": 0,
+          "phase": "paused",
+          "savedSettings": true,
+          "screen": "play",
+          "showGhost": false,
+          "speed": 27.86640674901035,
+          "tick": 1223,
+          "time": 12230,
+          "track": "A01"
+        },
+        "controllerPollCount": 113,
+        "heldButtons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "errorsField": null
+      },
+      "modelWrites": false,
+      "clockOverrides": false,
+      "category": "pause-observation-budget",
+      "confidence": "high for failing guard and unchanged available model samples",
+      "finding": "Original Windows guard requires four distinct native timestamps within three seconds. No paused-model-change assertion failed. Available before/final samples remain paused with exactly unchanged declared model fields; loop-internal reads were not individually archived, so their exact sample count is not reconstructed.",
+      "pauseEvidence": {
+        "beforeAt": "2026-11-19T20:19:47.693055+00:00",
+        "finishedAt": "2026-11-19T20:19:51.189673+00:00",
+        "beforeNativeTimestamp": 657.546,
+        "finalNativeTimestamp": 660.046,
+        "nativeTimestampDelta": 2.5,
+        "beforeControllerPoll": 110,
+        "finalControllerPoll": 113,
+        "observedPollDelta": 3,
+        "unchangedModel": {
+          "gameplay.tick": 1223,
+          "gameplay.time": 12230,
+          "gameplay.car.pos": [
+            272,
+            0.6518852013231508,
+            168.4879967100288
+          ],
+          "gameplay.car.vel": [
+            0,
+            0.00016128085197967702,
+            7.740668539711579
+          ],
+          "gameplay.speed": 27.86640674901035
+        },
+        "nearbyOriginalObservations": [
+          {
+            "label": "Plan controls released: Toggle original Pure ghost preference and save settings",
+            "at": "2026-11-19T20:19:28.832477+00:00",
+            "timestamp": 638.875,
+            "poll": 88,
+            "stage": "paused"
+          },
+          {
+            "label": "Deliberately resume with held START without re-pausing actual SDK input",
+            "at": "2026-11-19T20:19:29.710054+00:00",
+            "timestamp": 639.75,
+            "poll": 89,
+            "stage": "paused"
+          },
+          {
+            "label": "Deliberately resume with held START without re-pausing actual gameplay observation",
+            "at": "2026-11-19T20:19:30.982166+00:00",
+            "timestamp": 640.625,
+            "poll": 90,
+            "stage": "playing"
+          },
+          {
+            "label": "Plan controls released: Deliberately resume with held START without re-pausing",
+            "at": "2026-11-19T20:19:33.215869+00:00",
+            "timestamp": 643.25,
+            "poll": 93,
+            "stage": "playing"
+          },
+          {
+            "label": "Continue driving after saved preference actual SDK input",
+            "at": "2026-11-19T20:19:34.101786+00:00",
+            "timestamp": 644.14,
+            "poll": 94,
+            "stage": "playing"
+          },
+          {
+            "label": "Continue driving after saved preference actual gameplay observation",
+            "at": "2026-11-19T20:19:36.136586+00:00",
+            "timestamp": 645.843,
+            "poll": 96,
+            "stage": "playing"
+          },
+          {
+            "label": "Plan controls released: Continue driving after saved preference",
+            "at": "2026-11-19T20:19:37.465880+00:00",
+            "timestamp": 647.5,
+            "poll": 98,
+            "stage": "playing"
+          },
+          {
+            "label": "Catalog controls released",
+            "at": "2026-11-19T20:19:38.300876+00:00",
+            "timestamp": 648.343,
+            "poll": 99,
+            "stage": "playing"
+          },
+          {
+            "label": "Catalog controls released",
+            "at": "2026-11-19T20:19:43.396113+00:00",
+            "timestamp": 653.437,
+            "poll": 105,
+            "stage": "playing"
+          },
+          {
+            "label": "START pauses with native START counter",
+            "at": "2026-11-19T20:19:45.888183+00:00",
+            "timestamp": 655.921,
+            "poll": 108,
+            "stage": "paused"
+          },
+          {
+            "label": "START pauses raw and semantic START released",
+            "at": "2026-11-19T20:19:47.526251+00:00",
+            "timestamp": 657.546,
+            "poll": 110,
+            "stage": "paused"
+          },
+          {
+            "label": "Paused before model stability observation",
+            "at": "2026-11-19T20:19:47.693055+00:00",
+            "timestamp": 657.546,
+            "poll": 110,
+            "stage": "paused"
+          }
+        ]
+      }
+    },
+    {
+      "mode": "runtime-occupied",
+      "originalStatus": "failed",
+      "failedTest": "Actual gameplay and pause model freeze",
+      "failedError": "AssertionError: Insufficient fresh real snapshots during pause",
+      "report": "penguintrack/original-export/evidence/runtime-occupied/report.json",
+      "reportSha256": "e90e80074980e79cdd5f79b8e090642f0f33cf21e6ff4eb5d3e61e88b5c06e19",
+      "finalNativeState": "penguintrack/original-export/evidence/runtime-occupied/diagnostics/state.json",
+      "finalNativeStateSha256": "7296025f146e168df5bb75f50894726f5e9c92a0bdd3e5043b935524b8ae4797",
+      "lastRecordedSnapshot": {
+        "label": "Paused before model stability observation",
+        "at": "2026-11-19T20:21:27.823333+00:00",
+        "nativeTimestamp": 757.859,
+        "frame": 103,
+        "gameplay": {
+          "camera": 1,
+          "car": {
+            "pos": [
+              272,
+              0.6518439094137152,
+              166.50760006438216
+            ],
+            "vel": [
+              0,
+              0.0001693894445990539,
+              8.117723057464769
+            ]
+          },
+          "controls": {
+            "brake": false,
+            "gas": false,
+            "left": false,
+            "right": false
+          },
+          "editorBlocks": null,
+          "editorGrid": false,
+          "focus": "ResumeEsc",
+          "ghostCount": 0,
+          "phase": "paused",
+          "savedSettings": true,
+          "screen": "play",
+          "showGhost": false,
+          "speed": 29.22380301323542,
+          "tick": 1149,
+          "time": 11490,
+          "track": "A01"
+        }
+      },
+      "finalState": {
+        "nativeTimestamp": 760.234,
+        "frames": 106,
+        "renderer": "webgl2",
+        "stage": "paused",
+        "gameplay": {
+          "camera": 1,
+          "car": {
+            "pos": [
+              272,
+              0.6518439094137152,
+              166.50760006438216
+            ],
+            "vel": [
+              0,
+              0.0001693894445990539,
+              8.117723057464769
+            ]
+          },
+          "controls": {
+            "brake": false,
+            "gas": false,
+            "left": false,
+            "right": false
+          },
+          "editorBlocks": null,
+          "editorGrid": false,
+          "focus": "ResumeEsc",
+          "ghostCount": 0,
+          "phase": "paused",
+          "savedSettings": true,
+          "screen": "play",
+          "showGhost": false,
+          "speed": 29.22380301323542,
+          "tick": 1149,
+          "time": 11490,
+          "track": "A01"
+        },
+        "controllerPollCount": 106,
+        "heldButtons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "errorsField": null
+      },
+      "modelWrites": false,
+      "clockOverrides": false,
+      "category": "pause-observation-budget",
+      "confidence": "high for failing guard and unchanged available model samples",
+      "finding": "Original Windows guard requires four distinct native timestamps within three seconds. No paused-model-change assertion failed. Available before/final samples remain paused with exactly unchanged declared model fields; loop-internal reads were not individually archived, so their exact sample count is not reconstructed.",
+      "pauseEvidence": {
+        "beforeAt": "2026-11-19T20:21:27.823333+00:00",
+        "finishedAt": "2026-11-19T20:21:31.694724+00:00",
+        "beforeNativeTimestamp": 757.859,
+        "finalNativeTimestamp": 760.234,
+        "nativeTimestampDelta": 2.375,
+        "beforeControllerPoll": 103,
+        "finalControllerPoll": 106,
+        "observedPollDelta": 3,
+        "unchangedModel": {
+          "gameplay.tick": 1149,
+          "gameplay.time": 11490,
+          "gameplay.car.pos": [
+            272,
+            0.6518439094137152,
+            166.50760006438216
+          ],
+          "gameplay.car.vel": [
+            0,
+            0.0001693894445990539,
+            8.117723057464769
+          ],
+          "gameplay.speed": 29.22380301323542
+        },
+        "nearbyOriginalObservations": [
+          {
+            "label": "Plan controls released: Toggle original Pure ghost preference and save settings",
+            "at": "2026-11-19T20:21:10.521904+00:00",
+            "timestamp": 740.562,
+            "poll": 82,
+            "stage": "paused"
+          },
+          {
+            "label": "Deliberately resume with held START without re-pausing actual SDK input",
+            "at": "2026-11-19T20:21:11.387028+00:00",
+            "timestamp": 741.421,
+            "poll": 83,
+            "stage": "paused"
+          },
+          {
+            "label": "Deliberately resume with held START without re-pausing actual gameplay observation",
+            "at": "2026-11-19T20:21:12.641148+00:00",
+            "timestamp": 742.281,
+            "poll": 84,
+            "stage": "playing"
+          },
+          {
+            "label": "Plan controls released: Deliberately resume with held START without re-pausing",
+            "at": "2026-11-19T20:21:14.815015+00:00",
+            "timestamp": 744.859,
+            "poll": 87,
+            "stage": "playing"
+          },
+          {
+            "label": "Continue driving after saved preference actual SDK input",
+            "at": "2026-11-19T20:21:15.585871+00:00",
+            "timestamp": 745.718,
+            "poll": 88,
+            "stage": "playing"
+          },
+          {
+            "label": "Continue driving after saved preference actual gameplay observation",
+            "at": "2026-11-19T20:21:17.727350+00:00",
+            "timestamp": 747.39,
+            "poll": 90,
+            "stage": "playing"
+          },
+          {
+            "label": "Plan controls released: Continue driving after saved preference",
+            "at": "2026-11-19T20:21:18.871895+00:00",
+            "timestamp": 749.0,
+            "poll": 92,
+            "stage": "playing"
+          },
+          {
+            "label": "Catalog controls released",
+            "at": "2026-11-19T20:21:19.774445+00:00",
+            "timestamp": 749.812,
+            "poll": 93,
+            "stage": "playing"
+          },
+          {
+            "label": "Catalog controls released",
+            "at": "2026-11-19T20:21:24.552467+00:00",
+            "timestamp": 754.687,
+            "poll": 99,
+            "stage": "playing"
+          },
+          {
+            "label": "START pauses with native START counter",
+            "at": "2026-11-19T20:21:26.230298+00:00",
+            "timestamp": 756.265,
+            "poll": 101,
+            "stage": "paused"
+          },
+          {
+            "label": "START pauses raw and semantic START released",
+            "at": "2026-11-19T20:21:27.822333+00:00",
+            "timestamp": 757.859,
+            "poll": 103,
+            "stage": "paused"
+          },
+          {
+            "label": "Paused before model stability observation",
+            "at": "2026-11-19T20:21:27.823333+00:00",
+            "timestamp": 757.859,
+            "poll": 103,
+            "stage": "paused"
+          }
+        ]
+      }
+    }
+  ],
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "productionChanged": false
+}

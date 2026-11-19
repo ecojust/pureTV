@@ -1,0 +1,340 @@
+{
+  "sourceCommit": "b7b7af12f1eb61f777d89edad7368a69a14bb9e3",
+  "batch": "racing-03",
+  "status": "passed",
+  "shared": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "joystick-games/shared/macos/tests/web-bridge.test.mjs"
+      ],
+      "status": "passed",
+      "log": "shared/00.log",
+      "startedAt": "2026-11-19T20:08:04.563456+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/build-source.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/01.log",
+      "startedAt": "2026-11-19T20:08:04.783313+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/capability.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/02.log",
+      "startedAt": "2026-11-19T20:08:05.214444+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-reuse.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/03.log",
+      "startedAt": "2026-11-19T20:08:05.455618+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-tools.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/04.log",
+      "startedAt": "2026-11-19T20:08:09.144206+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/coverage.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/05.log",
+      "startedAt": "2026-11-19T20:08:11.204954+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/local-assets.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/06.log",
+      "startedAt": "2026-11-19T20:08:14.185600+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/local-network-prompts.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/07.log",
+      "startedAt": "2026-11-19T20:08:32.828851+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/native-observation.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/08.log",
+      "startedAt": "2026-11-19T20:08:32.975860+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/reuse-source.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/09.log",
+      "startedAt": "2026-11-19T20:08:33.605522+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "5",
+        "joystick-games/shared/macos/Sources/ControllerServer.swift",
+        "joystick-games/shared/macos/tests/ControllerServerTests.swift",
+        "-o",
+        "/Users/runner/work/_temp/controller-tests"
+      ],
+      "status": "passed",
+      "log": "shared/10.log",
+      "startedAt": "2026-11-19T20:08:34.678151+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/runner/work/_temp/controller-tests"
+      ],
+      "status": "passed",
+      "log": "shared/11.log",
+      "startedAt": "2026-11-19T20:08:40.578631+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "5",
+        "joystick-games/shared/macos/Sources/GameStorage.swift",
+        "joystick-games/shared/macos/tests/GameStorageTests.swift",
+        "-o",
+        "/Users/runner/work/_temp/storage-tests"
+      ],
+      "status": "passed",
+      "log": "shared/12.log",
+      "startedAt": "2026-11-19T20:08:40.618538+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/runner/work/_temp/storage-tests"
+      ],
+      "status": "passed",
+      "log": "shared/13.log",
+      "startedAt": "2026-11-19T20:08:41.458160+00:00",
+      "returncode": 0
+    }
+  ],
+  "games": [
+    {
+      "game": "turbo-kart-rush",
+      "status": "passed",
+      "originalTestScript": "node tests/run.mjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "turbo-kart-rush/dependencies.log",
+          "startedAt": "2026-11-19T20:08:41.500736+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "turbo-kart-rush/original-tests.log",
+          "startedAt": "2026-11-19T20:08:45.092023+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "turbo-kart-rush/frozen-dist.log",
+          "startedAt": "2026-11-19T20:08:45.718474+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "command": [
+          "python3",
+          "joystick-games/tools/macos-build.py",
+          "--game",
+          "turbo-kart-rush",
+          "--output",
+          "/Users/runner/work/_temp/build/turbo-kart-rush",
+          "--host-cache",
+          "/Users/runner/work/_temp/host-cache"
+        ],
+        "status": "passed",
+        "log": "turbo-kart-rush/native-build.log",
+        "startedAt": "2026-11-19T20:08:46.098391+00:00",
+        "returncode": 0
+      }
+    },
+    {
+      "game": "kart-rush",
+      "status": "passed",
+      "originalTestScript": "node --test tests/*.test.mjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "kart-rush/dependencies.log",
+          "startedAt": "2026-11-19T20:10:26.299997+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "kart-rush/original-tests.log",
+          "startedAt": "2026-11-19T20:10:27.658576+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "kart-rush/frozen-dist.log",
+          "startedAt": "2026-11-19T20:10:28.202220+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "command": [
+          "python3",
+          "joystick-games/tools/macos-build.py",
+          "--game",
+          "kart-rush",
+          "--output",
+          "/Users/runner/work/_temp/build/kart-rush",
+          "--host-cache",
+          "/Users/runner/work/_temp/host-cache"
+        ],
+        "status": "passed",
+        "log": "kart-rush/native-build.log",
+        "startedAt": "2026-11-19T20:10:28.579247+00:00",
+        "returncode": 0
+      }
+    },
+    {
+      "game": "kart-royale",
+      "status": "passed",
+      "originalTestScript": "node --test tests/*.test.mjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "kart-royale/dependencies.log",
+          "startedAt": "2026-11-19T20:11:03.667611+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "kart-royale/original-tests.log",
+          "startedAt": "2026-11-19T20:11:05.279467+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "kart-royale/frozen-dist.log",
+          "startedAt": "2026-11-19T20:11:05.899175+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "command": [
+          "python3",
+          "joystick-games/tools/macos-build.py",
+          "--game",
+          "kart-royale",
+          "--output",
+          "/Users/runner/work/_temp/build/kart-royale",
+          "--host-cache",
+          "/Users/runner/work/_temp/host-cache"
+        ],
+        "status": "passed",
+        "log": "kart-royale/native-build.log",
+        "startedAt": "2026-11-19T20:11:06.455497+00:00",
+        "returncode": 0
+      }
+    }
+  ]
+}

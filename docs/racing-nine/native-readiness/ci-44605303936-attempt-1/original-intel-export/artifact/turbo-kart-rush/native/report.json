@@ -1,0 +1,381 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "b7b7af12f1eb61f777d89edad7368a69a14bb9e3",
+  "artifactSourceCommit": "b7b7af12f1eb61f777d89edad7368a69a14bb9e3",
+  "artifactRunId": "44605303936",
+  "startedAt": "2026-11-19T20:15:04.891213+00:00",
+  "game": "turbo-kart-rush",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "2db317fa9672df20992af6b4d6a31f9910e2876e4644c0cffca6b99df8709290",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "fcf968cd99187d950205aaf35b9ed3071cc44c78ef5d1023ccca4bba3181c3f1",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/turbo-kart-rush/qa-plan.json": "64190352ff374685ca910298e0ae87e5df0bad02ca97e938262ec5e406665fb3",
+    "joystick-games/tools/qa-plan.py": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+    "joystick-games/tools/macos-build.py": "4fa65936293a5d6c5e728577780edc30429a500627e8799c1c83a5095470b853",
+    "joystick-games/catalog-registry.json": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaRunId": 44605303936,
+  "qaRunAttempt": 1,
+  "runnerKind": "macos-15-intel",
+  "runnerName": "GitHub Actions 1000011051",
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "webgl2",
+    "storageRestartRequired": false,
+    "pauseStablePaths": [
+      "gameplay.time",
+      "gameplay.countdown",
+      "gameplay.playerX",
+      "gameplay.playerY",
+      "gameplay.playerZ",
+      "gameplay.speed",
+      "gameplay.heading",
+      "gameplay.progress",
+      "gameplay.lap",
+      "gameplay.boost"
+    ],
+    "steps": [
+      {
+        "name": "Open original racer selection",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 500,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "characterSelect"
+          }
+        ]
+      },
+      {
+        "name": "Choose another original racer",
+        "keys": [
+          "RIGHT"
+        ],
+        "holdMs": 250,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "characterSelect"
+          }
+        ]
+      },
+      {
+        "name": "Confirm racer and open four-track selector",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 500,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "trackSelect"
+          }
+        ]
+      },
+      {
+        "name": "Start selected original course and wait real countdown",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 700,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "racing"
+          }
+        ]
+      },
+      {
+        "name": "Accelerate on original race physics",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 2500,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "gt",
+            "value": 2
+          },
+          {
+            "path": "gameplay.progress",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Hop and steer left with original drift controls",
+        "keys": [
+          "UP",
+          "LEFT",
+          "A"
+        ],
+        "holdMs": 900,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "gameplay.heading",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Steer right with independent throttle",
+        "keys": [
+          "UP",
+          "RIGHT"
+        ],
+        "holdMs": 700,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "gameplay.playerX",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Open pureTV control help",
+        "keys": [
+          "Y"
+        ],
+        "holdMs": 250,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "gameplay.helpOpen",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Pause manually",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 350,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Continue with fresh START",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 350,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          },
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      }
+    ]
+  },
+  "acceptedRenderers": [
+    "webgl2"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "ac0d22401b6b1b48207f7a95ba877f49e9ebe14898c3e90a143f940bedf1f7ed",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.turbo-kart-rush.afe77e470da349c2bf8d00da6c7a1d8d",
+    "reusedAcrossRestartOnly": true
+  },
+  "nativeProcessArchitecture": "x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 407, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 198, in until\n    s=self.read()\n      ^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 512, in read\n    assert not state['game'].get('errors'),'Game runtime errors: '+json.dumps(state['game']['errors'],ensure_ascii=False)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Game runtime errors: [\"null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')\"]\n",
+  "lastState": {
+    "active": true,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "en",
+      "primaryText": "",
+      "scrollHeight": 728,
+      "scrollWidth": 1288,
+      "title": "Turbo Kart Rush",
+      "url": "http://127.0.0.1:58151/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystick.turbokartrush",
+      "name": "Turbo Kart Rush"
+    },
+    "game": {
+      "controller": {
+        "buttons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "cancelled": false,
+        "connected": false,
+        "info": {},
+        "players": [],
+        "pollCount": 0,
+        "pressed": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "released": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "source": ""
+      },
+      "errors": [
+        "null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')"
+      ],
+      "frames": 0,
+      "game": "turbo-kart-rush",
+      "helpOpen": false
+    },
+    "input": {
+      "connections": 0,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 2,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 2
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.5"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "Turbo Kart Rush",
+        "state": "registering"
+      }
+    },
+    "storage": {
+      "current": {},
+      "initial": {},
+      "origin": "http://127.0.0.1:58151"
+    },
+    "timestamp": 1795119308.97035
+  },
+  "failurePhase": "initialization",
+  "nativeProcessAlive": true,
+  "lastStateFresh": true,
+  "phase": "initialization",
+  "finishedAt": "2026-11-19T20:15:09.311029+00:00"
+}

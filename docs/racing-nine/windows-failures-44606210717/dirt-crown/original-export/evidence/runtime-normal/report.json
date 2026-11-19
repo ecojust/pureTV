@@ -1,0 +1,3203 @@
+{
+  "status": "failed",
+  "game": "dirt-crown",
+  "platform": "windows",
+  "qaSourceCommit": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+  "startedAt": "2026-11-19T20:14:43.892818+00:00",
+  "method": "Actual Win32/WebView2 app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostics. No model/time/storage writes.",
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "tests": [
+    {
+      "name": "Native DPI-scaled minimum and initial viewport",
+      "status": "passed",
+      "details": {
+        "observedDpi": 96,
+        "minimumViewport": [
+          960,
+          540
+        ],
+        "restoredViewport": [
+          1280,
+          720
+        ],
+        "physicalPixels": {
+          "height": 540,
+          "width": 960
+        },
+        "otherDpiScalesTested": false
+      }
+    },
+    {
+      "name": "DNS-SD resolves actual listener and TXT",
+      "status": "passed",
+      "details": {
+        "serviceName": "Dirt Crown-8056._puretv._tcp.local.",
+        "port": 63485,
+        "addresses": [
+          "172.27.80.1",
+          "fe80::a5c8:83ca:1c8d:4443"
+        ],
+        "txtVersion": "1"
+      }
+    },
+    {
+      "name": "Official SDK and single controller seat",
+      "status": "failed",
+      "error": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 204, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 41, in connect\n    connected=super().connect();self.report['additionalBusyRejections']=[]\n              ^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 516, in connect\n    connected=super().connect()\n              ^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 286, in connect\n    self.screenshot('connected-menu.png')\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 213, in screenshot\n    if p.is_file() and p.stat().st_size>1000:self.report['screenshots'].append({'path':'diagnostics/'+name,'bytes':p.stat().st_size,'sha256':digest(p)});return\n                                                                                                                                             ^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 13, in digest\n    def digest(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()\n                                        ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\pathlib.py\", line 1019, in read_bytes\n    with self.open(mode='rb') as f:\n         ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\pathlib.py\", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nPermissionError: [Errno 13] Permission denied: 'D:\\\\a\\\\_temp\\\\runtime-normal\\\\diagnostics\\\\connected-menu.png'\n"
+    }
+  ],
+  "wire": [
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-45f148ef165c"
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-45f148ef165c",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-45f148ef165c",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-45f148ef165c",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-45f148ef165c",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-45f148ef165c",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-45f148ef165c",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-45f148ef165c",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-45f148ef165c",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-45f148ef165c",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 1,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 2,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 3,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 4,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 5,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 6,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 7,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 8,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 9,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:07.309848+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 10,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:11.313197+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 11,
+        "controller_id": "virtual-45f148ef165c"
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:11.313197+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 11,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:15.504217+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 12,
+        "controller_id": "virtual-45f148ef165c"
+      }
+    },
+    {
+      "at": "2026-11-19T20:15:15.504217+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 12,
+        "type": "ack"
+      }
+    }
+  ],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [
+    {
+      "label": "Actual renderer initialized",
+      "at": "2026-11-19T20:14:53.758390+00:00",
+      "state": {
+        "active": true,
+        "clientPixels": {
+          "height": 720,
+          "width": 1280
+        },
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "en",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "Dirt Crown",
+          "url": "https://puretv.local/tv.html",
+          "webglError": false,
+          "width": 1280
+        },
+        "game": {
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {
+              "appVersion": "0.1.0",
+              "language": "zh",
+              "platform": "windows",
+              "preferences": {},
+              "qr": "",
+              "storageKeys": [
+                "dirt-crown.v1.profile",
+                "dirt-crown.v1.settings"
+              ],
+              "storageMaxBytes": 1048576,
+              "storageMaxTotalBytes": 67108864,
+              "url": "",
+              "wifiController": {
+                "addresses": [
+                  "10.1.0.101",
+                  "172.27.80.1"
+                ],
+                "inputEnabled": false,
+                "port": 63485,
+                "serviceName": "Dirt Crown-8056",
+                "state": "available"
+              }
+            },
+            "inputAvailable": true,
+            "native": true,
+            "players": [],
+            "pollCount": 2,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "errors": [],
+          "frames": 2,
+          "game": "dirt-crown",
+          "gameplay": {
+            "autoGas": false,
+            "camera": 0,
+            "coins": 0,
+            "controls": {
+              "brake": 0,
+              "drift": false,
+              "nitro": false,
+              "steer": 0,
+              "throttle": 0
+            },
+            "countdown": 0,
+            "focus": "",
+            "focusId": "",
+            "ghost": 0,
+            "guest": false,
+            "heading": 0,
+            "lap": 0,
+            "levels": {},
+            "modal": false,
+            "mode": "loading",
+            "nitro": 0,
+            "phase": null,
+            "profileName": null,
+            "quality": "auto",
+            "results": {},
+            "speed": 0,
+            "story": false,
+            "time": 0,
+            "track": null,
+            "x": 0,
+            "z": 0
+          },
+          "paused": false,
+          "renderer": "webgl2",
+          "stage": "menu",
+          "ui": {
+            "editing": false,
+            "focusId": "",
+            "panelOverflow": false
+          },
+          "webglVersion": 2
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 2,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 2
+        },
+        "lastJavaScriptError": "",
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "windows",
+          "preferences": {
+            "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+          },
+          "qr": "",
+          "storageKeys": [
+            "dirt-crown.v1.profile",
+            "dirt-crown.v1.settings"
+          ],
+          "storageMaxBytes": 1048576,
+          "storageMaxTotalBytes": 67108864,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "10.1.0.101",
+              "172.27.80.1"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "Dirt Crown-8056",
+            "state": "available"
+          }
+        },
+        "storage": {
+          "current": {
+            "dirt-crown.v1.profile": null,
+            "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+          },
+          "initial": {
+            "dirt-crown.v1.profile": null,
+            "dirt-crown.v1.settings": null
+          },
+          "origin": "https://puretv.local"
+        },
+        "timestamp": 413.656,
+        "windowDpi": 96
+      }
+    },
+    {
+      "label": "Foreground game ready",
+      "at": "2026-11-19T20:14:53.759420+00:00",
+      "state": {
+        "active": true,
+        "clientPixels": {
+          "height": 720,
+          "width": 1280
+        },
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "en",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "Dirt Crown",
+          "url": "https://puretv.local/tv.html",
+          "webglError": false,
+          "width": 1280
+        },
+        "game": {
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {
+              "appVersion": "0.1.0",
+              "language": "zh",
+              "platform": "windows",
+              "preferences": {},
+              "qr": "",
+              "storageKeys": [
+                "dirt-crown.v1.profile",
+                "dirt-crown.v1.settings"
+              ],
+              "storageMaxBytes": 1048576,
+              "storageMaxTotalBytes": 67108864,
+              "url": "",
+              "wifiController": {
+                "addresses": [
+                  "10.1.0.101",
+                  "172.27.80.1"
+                ],
+                "inputEnabled": false,
+                "port": 63485,
+                "serviceName": "Dirt Crown-8056",
+                "state": "available"
+              }
+            },
+            "inputAvailable": true,
+            "native": true,
+            "players": [],
+            "pollCount": 2,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "errors": [],
+          "frames": 2,
+          "game": "dirt-crown",
+          "gameplay": {
+            "autoGas": false,
+            "camera": 0,
+            "coins": 0,
+            "controls": {
+              "brake": 0,
+              "drift": false,
+              "nitro": false,
+              "steer": 0,
+              "throttle": 0
+            },
+            "countdown": 0,
+            "focus": "",
+            "focusId": "",
+            "ghost": 0,
+            "guest": false,
+            "heading": 0,
+            "lap": 0,
+            "levels": {},
+            "modal": false,
+            "mode": "loading",
+            "nitro": 0,
+            "phase": null,
+            "profileName": null,
+            "quality": "auto",
+            "results": {},
+            "speed": 0,
+            "story": false,
+            "time": 0,
+            "track": null,
+            "x": 0,
+            "z": 0
+          },
+          "paused": false,
+          "renderer": "webgl2",
+          "stage": "menu",
+          "ui": {
+            "editing": false,
+            "focusId": "",
+            "panelOverflow": false
+          },
+          "webglVersion": 2
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 2,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 2
+        },
+        "lastJavaScriptError": "",
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "windows",
+          "preferences": {
+            "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+          },
+          "qr": "",
+          "storageKeys": [
+            "dirt-crown.v1.profile",
+            "dirt-crown.v1.settings"
+          ],
+          "storageMaxBytes": 1048576,
+          "storageMaxTotalBytes": 67108864,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "10.1.0.101",
+              "172.27.80.1"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "Dirt Crown-8056",
+            "state": "available"
+          }
+        },
+        "storage": {
+          "current": {
+            "dirt-crown.v1.profile": null,
+            "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+          },
+          "initial": {
+            "dirt-crown.v1.profile": null,
+            "dirt-crown.v1.settings": null
+          },
+          "origin": "https://puretv.local"
+        },
+        "timestamp": 413.656,
+        "windowDpi": 96
+      }
+    },
+    {
+      "label": "Actual minimum logical viewport",
+      "at": "2026-11-19T20:14:59.961950+00:00",
+      "state": {
+        "active": true,
+        "clientPixels": {
+          "height": 540,
+          "width": 960
+        },
+        "document": {
+          "controllerClients": [],
+          "height": 540,
+          "language": "en",
+          "primaryText": "",
+          "scrollHeight": 540,
+          "scrollWidth": 960,
+          "title": "Dirt Crown",
+          "url": "https://puretv.local/tv.html",
+          "webglError": false,
+          "width": 960
+        },
+        "game": {
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {
+              "appVersion": "0.1.0",
+              "language": "zh",
+              "platform": "windows",
+              "preferences": {
+                "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+              },
+              "qr": "",
+              "storageKeys": [
+                "dirt-crown.v1.profile",
+                "dirt-crown.v1.settings"
+              ],
+              "storageMaxBytes": 1048576,
+              "storageMaxTotalBytes": 67108864,
+              "url": "",
+              "wifiController": {
+                "addresses": [
+                  "10.1.0.101",
+                  "172.27.80.1"
+                ],
+                "inputEnabled": true,
+                "port": 63485,
+                "serviceName": "Dirt Crown-8056",
+                "state": "available"
+              }
+            },
+            "inputAvailable": true,
+            "native": true,
+            "players": [],
+            "pollCount": 7,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "errors": [],
+          "frames": 7,
+          "game": "dirt-crown",
+          "gameplay": {
+            "autoGas": false,
+            "camera": 0,
+            "coins": 0,
+            "controls": {
+              "brake": 0,
+              "drift": false,
+              "nitro": false,
+              "steer": 0,
+              "throttle": 0
+            },
+            "countdown": 3.2,
+            "focus": "🏁 New Career",
+            "focusId": "t-new",
+            "ghost": 0,
+            "guest": false,
+            "heading": 0.6475880781752137,
+            "lap": 0,
+            "levels": {},
+            "modal": false,
+            "mode": "title",
+            "nitro": 1,
+            "phase": "race",
+            "profileName": null,
+            "quality": "auto",
+            "results": {},
+            "speed": 0.612507695366805,
+            "story": false,
+            "time": 0.05833333333333333,
+            "track": null,
+            "x": 142.86840737750535,
+            "z": -22.228195237995436
+          },
+          "paused": false,
+          "renderer": "webgl2",
+          "stage": "menu",
+          "ui": {
+            "editing": false,
+            "focusId": "t-new",
+            "panelOverflow": false
+          },
+          "webglVersion": 2
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 2,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 2
+        },
+        "lastJavaScriptError": "",
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "windows",
+          "preferences": {
+            "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+          },
+          "qr": "",
+          "storageKeys": [
+            "dirt-crown.v1.profile",
+            "dirt-crown.v1.settings"
+          ],
+          "storageMaxBytes": 1048576,
+          "storageMaxTotalBytes": 67108864,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "10.1.0.101",
+              "172.27.80.1"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "Dirt Crown-8056",
+            "state": "available"
+          }
+        },
+        "storage": {
+          "current": {
+            "dirt-crown.v1.profile": null,
+            "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+          },
+          "initial": {
+            "dirt-crown.v1.profile": null,
+            "dirt-crown.v1.settings": null
+          },
+          "origin": "https://puretv.local"
+        },
+        "timestamp": 419.546,
+        "windowDpi": 96
+      }
+    },
+    {
+      "label": "Actual initial logical viewport restored",
+      "at": "2026-11-19T20:15:05.618752+00:00",
+      "state": {
+        "active": true,
+        "clientPixels": {
+          "height": 720,
+          "width": 1280
+        },
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "en",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "Dirt Crown",
+          "url": "https://puretv.local/tv.html",
+          "webglError": false,
+          "width": 1280
+        },
+        "game": {
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {
+              "appVersion": "0.1.0",
+              "language": "zh",
+              "platform": "windows",
+              "preferences": {
+                "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+              },
+              "qr": "",
+              "storageKeys": [
+                "dirt-crown.v1.profile",
+                "dirt-crown.v1.settings"
+              ],
+              "storageMaxBytes": 1048576,
+              "storageMaxTotalBytes": 67108864,
+              "url": "",
+              "wifiController": {
+                "addresses": [
+                  "10.1.0.101",
+                  "172.27.80.1"
+                ],
+                "inputEnabled": true,
+                "port": 63485,
+                "serviceName": "Dirt Crown-8056",
+                "state": "available"
+              }
+            },
+            "inputAvailable": true,
+            "native": true,
+            "players": [],
+            "pollCount": 14,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "errors": [],
+          "frames": 14,
+          "game": "dirt-crown",
+          "gameplay": {
+            "autoGas": false,
+            "camera": 0,
+            "coins": 0,
+            "controls": {
+              "brake": 0,
+              "drift": false,
+              "nitro": false,
+              "steer": 0,
+              "throttle": 0
+            },
+            "countdown": 3.2,
+            "focus": "🏁 New Career",
+            "focusId": "t-new",
+            "ghost": 0,
+            "guest": false,
+            "heading": 0.4202144001232559,
+            "lap": 0,
+            "levels": {},
+            "modal": false,
+            "mode": "title",
+            "nitro": 1,
+            "phase": "race",
+            "profileName": null,
+            "quality": "auto",
+            "results": {},
+            "speed": 4.207052009446177,
+            "story": false,
+            "time": 0.40833333333333377,
+            "track": null,
+            "x": 143.3436288522773,
+            "z": -21.50746395872945
+          },
+          "paused": false,
+          "renderer": "webgl2",
+          "stage": "menu",
+          "ui": {
+            "editing": false,
+            "focusId": "t-new",
+            "panelOverflow": false
+          },
+          "webglVersion": 2
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 2,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 2
+        },
+        "lastJavaScriptError": "",
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "windows",
+          "preferences": {
+            "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+          },
+          "qr": "",
+          "storageKeys": [
+            "dirt-crown.v1.profile",
+            "dirt-crown.v1.settings"
+          ],
+          "storageMaxBytes": 1048576,
+          "storageMaxTotalBytes": 67108864,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "10.1.0.101",
+              "172.27.80.1"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "Dirt Crown-8056",
+            "state": "available"
+          }
+        },
+        "storage": {
+          "current": {
+            "dirt-crown.v1.profile": null,
+            "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+          },
+          "initial": {
+            "dirt-crown.v1.profile": null,
+            "dirt-crown.v1.settings": null
+          },
+          "origin": "https://puretv.local"
+        },
+        "timestamp": 425.203,
+        "windowDpi": 96
+      }
+    },
+    {
+      "label": "Windows DNS-SD registration",
+      "at": "2026-11-19T20:15:07.254751+00:00",
+      "state": {
+        "active": true,
+        "clientPixels": {
+          "height": 720,
+          "width": 1280
+        },
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "en",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "Dirt Crown",
+          "url": "https://puretv.local/tv.html",
+          "webglError": false,
+          "width": 1280
+        },
+        "game": {
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {
+              "appVersion": "0.1.0",
+              "language": "zh",
+              "platform": "windows",
+              "preferences": {
+                "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+              },
+              "qr": "",
+              "storageKeys": [
+                "dirt-crown.v1.profile",
+                "dirt-crown.v1.settings"
+              ],
+              "storageMaxBytes": 1048576,
+              "storageMaxTotalBytes": 67108864,
+              "url": "",
+              "wifiController": {
+                "addresses": [
+                  "10.1.0.101",
+                  "172.27.80.1"
+                ],
+                "inputEnabled": true,
+                "port": 63485,
+                "serviceName": "Dirt Crown-8056",
+                "state": "available"
+              }
+            },
+            "inputAvailable": true,
+            "native": true,
+            "players": [],
+            "pollCount": 15,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "errors": [],
+          "frames": 15,
+          "game": "dirt-crown",
+          "gameplay": {
+            "autoGas": false,
+            "camera": 0,
+            "coins": 0,
+            "controls": {
+              "brake": 0,
+              "drift": false,
+              "nitro": false,
+              "steer": 0,
+              "throttle": 0
+            },
+            "countdown": 3.2,
+            "focus": "🏁 New Career",
+            "focusId": "t-new",
+            "ghost": 0,
+            "guest": false,
+            "heading": 0.368466691613645,
+            "lap": 0,
+            "levels": {},
+            "modal": false,
+            "mode": "title",
+            "nitro": 1,
+            "phase": "race",
+            "profileName": null,
+            "quality": "auto",
+            "results": {},
+            "speed": 4.698332724285267,
+            "story": false,
+            "time": 0.4583333333333339,
+            "track": null,
+            "x": 143.44653278473797,
+            "z": -21.30772250051436
+          },
+          "paused": false,
+          "renderer": "webgl2",
+          "stage": "menu",
+          "ui": {
+            "editing": false,
+            "focusId": "t-new",
+            "panelOverflow": false
+          },
+          "webglVersion": 2
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 2,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 2
+        },
+        "lastJavaScriptError": "",
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "windows",
+          "preferences": {
+            "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+          },
+          "qr": "",
+          "storageKeys": [
+            "dirt-crown.v1.profile",
+            "dirt-crown.v1.settings"
+          ],
+          "storageMaxBytes": 1048576,
+          "storageMaxTotalBytes": 67108864,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "10.1.0.101",
+              "172.27.80.1"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "Dirt Crown-8056",
+            "state": "available"
+          }
+        },
+        "storage": {
+          "current": {
+            "dirt-crown.v1.profile": null,
+            "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+          },
+          "initial": {
+            "dirt-crown.v1.profile": null,
+            "dirt-crown.v1.settings": null
+          },
+          "origin": "https://puretv.local"
+        },
+        "timestamp": 426.265,
+        "windowDpi": 96
+      }
+    },
+    {
+      "label": "SDK hello",
+      "at": "2026-11-19T20:15:07.485562+00:00",
+      "state": {
+        "active": true,
+        "clientPixels": {
+          "height": 720,
+          "width": 1280
+        },
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "en",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "Dirt Crown",
+          "url": "https://puretv.local/tv.html",
+          "webglError": false,
+          "width": 1280
+        },
+        "game": {
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {
+              "appVersion": "0.1.0",
+              "language": "zh",
+              "platform": "windows",
+              "preferences": {
+                "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+              },
+              "qr": "",
+              "storageKeys": [
+                "dirt-crown.v1.profile",
+                "dirt-crown.v1.settings"
+              ],
+              "storageMaxBytes": 1048576,
+              "storageMaxTotalBytes": 67108864,
+              "url": "",
+              "wifiController": {
+                "addresses": [
+                  "10.1.0.101",
+                  "172.27.80.1"
+                ],
+                "inputEnabled": true,
+                "port": 63485,
+                "serviceName": "Dirt Crown-8056",
+                "state": "available"
+              }
+            },
+            "inputAvailable": true,
+            "native": true,
+            "players": [],
+            "pollCount": 16,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "errors": [],
+          "frames": 16,
+          "game": "dirt-crown",
+          "gameplay": {
+            "autoGas": false,
+            "camera": 0,
+            "coins": 0,
+            "controls": {
+              "brake": 0,
+              "drift": false,
+              "nitro": false,
+              "steer": 0,
+              "throttle": 0
+            },
+            "countdown": 3.2,
+            "focus": "🏁 New Career",
+            "focusId": "t-new",
+            "ghost": 0,
+            "guest": false,
+            "heading": 0.3203786960131156,
+            "lap": 0,
+            "levels": {},
+            "modal": false,
+            "mode": "title",
+            "nitro": 1,
+            "phase": "race",
+            "profileName": null,
+            "quality": "auto",
+            "results": {},
+            "speed": 5.183479519339083,
+            "story": false,
+            "time": 0.508333333333334,
+            "track": null,
+            "x": 143.5504251334071,
+            "z": -21.08135750322751
+          },
+          "paused": false,
+          "renderer": "webgl2",
+          "stage": "menu",
+          "ui": {
+            "editing": false,
+            "focusId": "t-new",
+            "panelOverflow": false
+          },
+          "webglVersion": 2
+        },
+        "input": {
+          "connections": 1,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 3,
+              "connected": true,
+              "controllerId": "virtual-45f148ef165c",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-100560f3fca907e0fd706bfe059941f4-1",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 12
+        },
+        "lastJavaScriptError": "",
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "windows",
+          "preferences": {
+            "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+          },
+          "qr": "",
+          "storageKeys": [
+            "dirt-crown.v1.profile",
+            "dirt-crown.v1.settings"
+          ],
+          "storageMaxBytes": 1048576,
+          "storageMaxTotalBytes": 67108864,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "10.1.0.101",
+              "172.27.80.1"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "Dirt Crown-8056",
+            "state": "available"
+          }
+        },
+        "storage": {
+          "current": {
+            "dirt-crown.v1.profile": null,
+            "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+          },
+          "initial": {
+            "dirt-crown.v1.profile": null,
+            "dirt-crown.v1.settings": null
+          },
+          "origin": "https://puretv.local"
+        },
+        "timestamp": 427.328,
+        "windowDpi": 96
+      }
+    },
+    {
+      "label": "Identity card True",
+      "at": "2026-11-19T20:15:09.604633+00:00",
+      "state": {
+        "active": true,
+        "clientPixels": {
+          "height": 720,
+          "width": 1280
+        },
+        "document": {
+          "controllerClients": [
+            {
+              "clip": {
+                "bottom": 492.859375,
+                "left": 1098,
+                "right": 1268,
+                "top": 302.390625
+              },
+              "containerId": "puretv-controller-clients",
+              "controllerId": "virtual-45f148ef165c",
+              "fullyVisible": true,
+              "iconRect": {
+                "bottom": 369.890625,
+                "height": 24,
+                "left": 1118,
+                "right": 1142,
+                "top": 345.890625,
+                "width": 24
+              },
+              "iconVisible": true,
+              "idText": "ID: virtual-45f148ef165c",
+              "idTextFullyVisible": true,
+              "idTextOverflow": "clip",
+              "idTextRects": [
+                {
+                  "bottom": 379.078125,
+                  "height": 13,
+                  "left": 1150,
+                  "right": 1246.765625,
+                  "top": 366.078125,
+                  "width": 96.765625
+                },
+                {
+                  "bottom": 394.46875,
+                  "height": 13,
+                  "left": 1150,
+                  "right": 1198.390625,
+                  "top": 381.46875,
+                  "width": 48.390625
+                }
+              ],
+              "playerId": "1",
+              "rect": {
+                "bottom": 403.859375,
+                "height": 65.96875,
+                "left": 1109,
+                "right": 1257,
+                "top": 337.890625,
+                "width": 148
+              },
+              "statusText": "已连接",
+              "visible": true
+            }
+          ],
+          "height": 720,
+          "language": "en",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "Dirt Crown",
+          "url": "https://puretv.local/tv.html",
+          "webglError": false,
+          "width": 1280
+        },
+        "game": {
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": true,
+            "info": {
+              "appVersion": "0.1.0",
+              "language": "zh",
+              "platform": "windows",
+              "preferences": {
+                "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+              },
+              "qr": "",
+              "storageKeys": [
+                "dirt-crown.v1.profile",
+                "dirt-crown.v1.settings"
+              ],
+              "storageMaxBytes": 1048576,
+              "storageMaxTotalBytes": 67108864,
+              "url": "",
+              "wifiController": {
+                "addresses": [
+                  "10.1.0.101",
+                  "172.27.80.1"
+                ],
+                "inputEnabled": true,
+                "port": 63485,
+                "serviceName": "Dirt Crown-8056",
+                "state": "available"
+              }
+            },
+            "inputAvailable": true,
+            "native": true,
+            "players": [
+              {
+                "a": false,
+                "b": false,
+                "buttons": {
+                  "A": false,
+                  "B": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "UP": false,
+                  "X": false,
+                  "Y": false
+                },
+                "cancelSeq": 3,
+                "connected": true,
+                "controllerId": "virtual-45f148ef165c",
+                "id": 1,
+                "select": false,
+                "session": "wifi-100560f3fca907e0fd706bfe059941f4-1",
+                "start": false,
+                "transport": "wifi",
+                "x": 0,
+                "y": 0
+              }
+            ],
+            "pollCount": 18,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": "[1,\"virtual-45f148ef165c\",\"wifi-100560f3fca907e0fd706bfe059941f4-1\"]"
+          },
+          "errors": [],
+          "frames": 18,
+          "game": "dirt-crown",
+          "gameplay": {
+            "autoGas": false,
+            "camera": 0,
+            "coins": 0,
+            "controls": {
+              "brake": 0,
+              "drift": false,
+              "nitro": false,
+              "steer": 0,
+              "throttle": 0
+            },
+            "countdown": 3.2,
+            "focus": "🏁 New Career",
+            "focusId": "t-new",
+            "ghost": 0,
+            "guest": false,
+            "heading": 0.24089065771389645,
+            "lap": 0,
+            "levels": {},
+            "modal": false,
+            "mode": "title",
+            "nitro": 1,
+            "phase": "race",
+            "profileName": null,
+            "quality": "auto",
+            "results": {},
+            "speed": 6.1415611084979895,
+            "story": false,
+            "time": 0.6083333333333336,
+            "track": null,
+            "x": 143.75263681993985,
+            "z": -20.54825220480614
+          },
+          "paused": false,
+          "renderer": "webgl2",
+          "stage": "menu",
+          "ui": {
+            "editing": false,
+            "focusId": "t-new",
+            "panelOverflow": false
+          },
+          "webglVersion": 2
+        },
+        "input": {
+          "connections": 1,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 3,
+              "connected": true,
+              "controllerId": "virtual-45f148ef165c",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-100560f3fca907e0fd706bfe059941f4-1",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 12
+        },
+        "lastJavaScriptError": "",
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "windows",
+          "preferences": {
+            "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+          },
+          "qr": "",
+          "storageKeys": [
+            "dirt-crown.v1.profile",
+            "dirt-crown.v1.settings"
+          ],
+          "storageMaxBytes": 1048576,
+          "storageMaxTotalBytes": 67108864,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "10.1.0.101",
+              "172.27.80.1"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "Dirt Crown-8056",
+            "state": "available"
+          }
+        },
+        "storage": {
+          "current": {
+            "dirt-crown.v1.profile": null,
+            "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":0,\"autoGas\":false,\"shake\":true}"
+          },
+          "initial": {
+            "dirt-crown.v1.profile": null,
+            "dirt-crown.v1.settings": null
+          },
+          "origin": "https://puretv.local"
+        },
+        "timestamp": 429.484,
+        "windowDpi": 96
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "diagnostics/minimum-window.png",
+      "bytes": 375954,
+      "sha256": "ad3d5d2ed94ec6fd3f72987ac4010b15a6b84442e0b7ae614bea70991c563073"
+    }
+  ],
+  "qaPlan": {
+    "schemaVersion": 1,
+    "storageRestartRequired": true,
+    "renderer": "webgl2",
+    "pauseStablePaths": [
+      "gameplay.time",
+      "gameplay.x",
+      "gameplay.z",
+      "gameplay.coins",
+      "gameplay.levels"
+    ],
+    "steps": [
+      {
+        "name": "Open original new-career form",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-name"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Car number",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-num"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Back button",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-back"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Confirm career",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-go"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Create real career and show authored introduction",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.profileName",
+            "op": "eq",
+            "value": "Kit"
+          },
+          {
+            "path": "gameplay.story",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Skip authored introduction with original skip button",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "hub"
+          },
+          {
+            "path": "gameplay.story",
+            "op": "eq",
+            "value": false
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Open garage menu",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.modal",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Settings",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-set"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Credits",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-cred"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Title",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-title"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Return to title",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "title"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Select new-career tile",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "t-new"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Select free race",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "t-free"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Open original free race options",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.modal",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Wrap focus to Race button",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-go"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Start original race and wait real countdown",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "race"
+          },
+          {
+            "path": "gameplay.phase",
+            "op": "eq",
+            "value": "race"
+          },
+          {
+            "path": "gameplay.countdown",
+            "op": "lte",
+            "value": 0
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Explicit throttle accelerates player",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 3000,
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "increased"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Right steer changes heading",
+        "keys": [
+          "UP",
+          "RIGHT"
+        ],
+        "holdMs": 900,
+        "expect": [
+          {
+            "path": "gameplay.heading",
+            "op": "changed"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Left steer and drift remain separate",
+        "keys": [
+          "UP",
+          "LEFT",
+          "A"
+        ],
+        "holdMs": 900,
+        "expect": [
+          {
+            "path": "gameplay.heading",
+            "op": "changed"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Consume nitro through separate B button",
+        "keys": [
+          "UP",
+          "B"
+        ],
+        "holdMs": 700,
+        "expect": [
+          {
+            "path": "gameplay.nitro",
+            "op": "changed"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Recover to the track with X",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.ghost",
+            "op": "gt",
+            "value": 0
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Switch original camera",
+        "keys": [
+          "Y"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.camera",
+            "op": "changed"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Pause race",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "paused"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Resume by deliberate START, hold without re-pausing",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 1200,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          }
+        ],
+        "timeoutSeconds": 60
+      }
+    ]
+  },
+  "binarySha256": "1037596d746c351be0ebc897d6aedc38cb086c4c997d22dfe95d3dd1c67a67f3",
+  "sourceHashes": {
+    "joystick-games\\tools\\windows-verify.py": "5b235e7bdf55b8cde2d64bbe2a765fb7b7b2c1522258eae27a28c5636397c755",
+    "joystick-games\\tools\\macos-verify.py": "2db317fa9672df20992af6b4d6a31f9910e2876e4644c0cffca6b99df8709290",
+    "joystick-games\\tools\\qa-plan.py": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+    "puretv-joystick\\joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games\\dirt-crown\\qa-plan.json": "855370c4bf7b823192d4f4bef6b546be70186bc8e313dda08345657c008d29be",
+    "joystick-games/tools/windows-display.py": "3a4bca5a17fd0cf33385812678d00dfd0cdde39d59f3342d906f5fb7b7b9ced1",
+    "joystick-games/tools/windows-observation.py": "4a0c015cfffbb4d5238d6d3b03a0bc69eeb939bbddf3209e9312eaedeaf2d9c8"
+  },
+  "nativeDisplay": {
+    "status": "prepared",
+    "method": "EnumDisplaySettingsExW, CDS_TEST, temporary ChangeDisplaySettingsExW; original mode restored in finally",
+    "persistentRegistryChange": false,
+    "before": {
+      "currentMode": {
+        "width": 1024,
+        "height": 768,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 544997536,
+        "rawDevModeHex": "4300440044000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc000000a0007c20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600020000000000400000003000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "screenPixels": [
+        1024,
+        768
+      ],
+      "virtualScreenPixels": [
+        1024,
+        768
+      ],
+      "workArea": {
+        "left": 0,
+        "top": 0,
+        "right": 1024,
+        "bottom": 728
+      }
+    },
+    "enumeratedModes": [
+      {
+        "width": 640,
+        "height": 480,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000080020000e001000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 800,
+        "height": 600,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000200300005802000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1024,
+        "height": 768,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000400000003000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1152,
+        "height": 864,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000800400006003000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1280,
+        "height": 720,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000050000d002000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1280,
+        "height": 800,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000500002003000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1280,
+        "height": 1024,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000500000004000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1366,
+        "height": 768,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000560500000003000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000a00500008403000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1600,
+        "height": 900,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000400600008403000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1600,
+        "height": 1200,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000040060000b004000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1680,
+        "height": 1050,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000900600001a04000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000800700003804000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "selectedMode": {
+      "width": 1600,
+      "height": 900,
+      "bitsPerPixel": 32,
+      "frequency": 64,
+      "orientation": 0,
+      "displayFlags": 0,
+      "dmFields": 8126592,
+      "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000400600008403000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "testReturnCode": 0,
+    "applyReturnCode": 0,
+    "after": {
+      "currentMode": {
+        "width": 1600,
+        "height": 900,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 544997536,
+        "rawDevModeHex": "4300440044000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc000000a0007c20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600020000000400600008403000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "screenPixels": [
+        1600,
+        900
+      ],
+      "virtualScreenPixels": [
+        1600,
+        900
+      ],
+      "workArea": {
+        "left": 0,
+        "top": 0,
+        "right": 1600,
+        "bottom": 860
+      }
+    },
+    "restoreReturnCode": 0,
+    "restored": {
+      "currentMode": {
+        "width": 1024,
+        "height": 768,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 544997536,
+        "rawDevModeHex": "4300440044000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc000000a0007c20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600020000000000400000003000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "screenPixels": [
+        1024,
+        768
+      ],
+      "virtualScreenPixels": [
+        1024,
+        768
+      ],
+      "workArea": {
+        "left": 0,
+        "top": 0,
+        "right": 1024,
+        "bottom": 728
+      }
+    },
+    "originalModeRestored": true
+  },
+  "diagnosticReadErrors": [
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    }
+  ],
+  "nativeWindowSetup": {
+    "originalOuterPixels": {
+      "left": 104,
+      "top": 104,
+      "right": 1400,
+      "bottom": 863
+    },
+    "originalClientPixels": {
+      "height": 720,
+      "width": 1280
+    },
+    "originalDocumentViewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "windowDpi": 96,
+    "resizeFlags": 22,
+    "resizeFlagsMeaning": "SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE"
+  },
+  "error": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 163, in run\n    self.check('Official SDK and single controller seat',self.connect)\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 204, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 41, in connect\n    connected=super().connect();self.report['additionalBusyRejections']=[]\n              ^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 516, in connect\n    connected=super().connect()\n              ^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 286, in connect\n    self.screenshot('connected-menu.png')\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 213, in screenshot\n    if p.is_file() and p.stat().st_size>1000:self.report['screenshots'].append({'path':'diagnostics/'+name,'bytes':p.stat().st_size,'sha256':digest(p)});return\n                                                                                                                                             ^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 13, in digest\n    def digest(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()\n                                        ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\pathlib.py\", line 1019, in read_bytes\n    with self.open(mode='rb') as f:\n         ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\pathlib.py\", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nPermissionError: [Errno 13] Permission denied: 'D:\\\\a\\\\_temp\\\\runtime-normal\\\\diagnostics\\\\connected-menu.png'\n",
+  "finishedAt": "2026-11-19T20:15:15.980439+00:00"
+}

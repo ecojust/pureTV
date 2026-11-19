@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: every physical short tap is independent and consumed exactly once
+ok 1 - every physical short tap is independent and consumed exactly once
+  ---
+  duration_ms: 8.446667
+  type: 'test'
+  ...
+# Subtest: X/Y never drive A/B fields and native pushes preserve queued pulses
+ok 2 - X/Y never drive A/B fields and native pushes preserve queued pulses
+  ---
+  duration_ms: 0.802541
+  type: 'test'
+  ...
+# Subtest: held keys survive reads and releasing one never releases its former alias
+ok 3 - held keys survive reads and releasing one never releases its former alias
+  ---
+  duration_ms: 1.848166
+  type: 'test'
+  ...
+# Subtest: repeated and stale revisions cannot replay a consumed short tap
+ok 4 - repeated and stale revisions cannot replay a consumed short tap
+  ---
+  duration_ms: 1.887541
+  type: 'test'
+  ...
+# Subtest: disconnect clears pending input; reconnect held keys require fresh release
+ok 5 - disconnect clears pending input; reconnect held keys require fresh release
+  ---
+  duration_ms: 2.539959
+  type: 'test'
+  ...
+# Subtest: foreground cancellation suppresses all nine held keys and background pulses
+ok 6 - foreground cancellation suppresses all nine held keys and background pulses
+  ---
+  duration_ms: 3.07425
+  type: 'test'
+  ...
+# Subtest: identity and port are native values and do not consume input
+ok 7 - identity and port are native values and do not consume input
+  ---
+  duration_ms: 1.188083
+  type: 'test'
+  ...
+# Subtest: actual bridge restores a different origin before game code, then mirrors writes and deletion
+ok 8 - actual bridge restores a different origin before game code, then mirrors writes and deletion
+  ---
+  duration_ms: 1.612292
+  type: 'test'
+  ...
+# Subtest: storage allowlists isolate games and never mirror session, unknown or oversized values
+ok 9 - storage allowlists isolate games and never mirror session, unknown or oversized values
+  ---
+  duration_ms: 2.439166
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 121.574125

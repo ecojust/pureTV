@@ -27,7 +27,7 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 
 | 游戏 | Android TV | macOS |
 | --- | --- | --- |
-| [Kart Rush](kart-rush/) | [APK](kart-rush/kart-rush-0.1.0.apk) | 验证中 |
+| [Kart Rush](kart-rush/) | [APK](kart-rush/kart-rush-0.1.0.apk) | [DMG](kart-rush/macos/KartRush-0.1.0-macos-universal.dmg) · [ZIP](kart-rush/macos/KartRush-0.1.0-macos-universal.zip) |
 | [Ponpoko Kart](ponpoko-kart/) | 验证中 | [DMG](ponpoko-kart/macos/PonpokoKart-0.1.0-macos-universal.dmg) · [ZIP](ponpoko-kart/macos/PonpokoKart-0.1.0-macos-universal.zip) |
 | [Penguintrack](penguintrack/) | 验证中 | [DMG](penguintrack/macos/Penguintrack-0.1.0-macos-universal.dmg) · [ZIP](penguintrack/macos/Penguintrack-0.1.0-macos-universal.zip) |
 | [Last Track](last-track/) | 验证中 | [DMG](last-track/macos/LastTrack-0.1.0-macos-universal.dmg) · [ZIP](last-track/macos/LastTrack-0.1.0-macos-universal.zip) |

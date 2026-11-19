@@ -1,0 +1,19 @@
+Bonjour actual port and version: passed
+Original SDK and complete identity card: passed
+Real gameplay actions and START pause/resume: passed
+Three foreground cycles keep transport stable: passed
+Disconnect, held sync and same-ID reconnect: failed
+Traceback (most recent call last):
+  File "/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py", line 419, in run
+    self.check('Three foreground cycles keep transport stable',self.focus);self.check('Disconnect, held sync and same-ID reconnect',self.reconnect)
+                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py", line 204, in check
+    try:r['details']=fn();r['status']='passed'
+                     ^^^^
+  File "/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py", line 365, in reconnect
+    self.screenshot('reconnected.png');return {'sameIdentity':self.client.identity,'disconnectBarrierAck':disconnect_ack,'heldSyncNoResume':True,'observedState':synced['game']}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py", line 215, in screenshot
+    raise AssertionError('Missing native screenshot '+name)
+AssertionError: Missing native screenshot reconnected.png
+

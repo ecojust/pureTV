@@ -1,0 +1,407 @@
+{
+  "game": "backroad-rally",
+  "sourceSha": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+  "originalRunId": 44606210717,
+  "attempt": 1,
+  "exportCommit": "494d36b5e25eeef96ad389515fcdbe1abe8898bf",
+  "evidenceIntegrity": "all original exported files verified against immutable Git blobs and both manifests",
+  "modes": [
+    {
+      "mode": "runtime-normal",
+      "originalStatus": "failed",
+      "failedTest": "Actual gameplay and pause model freeze",
+      "failedError": "AssertionError: Focus traction assist actual gameplay observation timed out",
+      "report": "backroad-rally/original-export/evidence/runtime-normal/report.json",
+      "reportSha256": "421c595ef523408f4db6f8fd389279331a32a538684cc83769974a8702fabd15",
+      "finalNativeState": "backroad-rally/original-export/evidence/runtime-normal/diagnostics/state.json",
+      "finalNativeStateSha256": "90bf4c229c3881251f65cdae99d60764569af753c1eb53df30a2d59e69a10769",
+      "lastRecordedSnapshot": {
+        "label": "Focus traction assist actual SDK input",
+        "at": "2026-11-19T20:16:55.955517+00:00",
+        "nativeTimestamp": 469.843,
+        "frame": 58,
+        "gameplay": {
+          "carIndex": 0,
+          "careerStarted": false,
+          "flow": "quick",
+          "menuFocus": "traction assist",
+          "menuValue": "on",
+          "phase": "menu",
+          "quality": "auto",
+          "screen": "settings",
+          "stageIndex": 0
+        }
+      },
+      "finalState": {
+        "nativeTimestamp": 501.921,
+        "frames": 81,
+        "renderer": "webgl2",
+        "stage": "menu",
+        "gameplay": {
+          "carIndex": 0,
+          "careerStarted": false,
+          "flow": "quick",
+          "menuFocus": "speed display",
+          "menuValue": "number",
+          "phase": "menu",
+          "quality": "auto",
+          "screen": "settings",
+          "stageIndex": 0
+        },
+        "controllerPollCount": 96,
+        "heldButtons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "errorsField": []
+      },
+      "modelWrites": false,
+      "clockOverrides": false,
+      "category": "menu-focus-or-input-observation-order",
+      "confidence": "high for focus drift; exact causal ordering requires shared observer/input review",
+      "finding": "Observed menu focus changes again after a successful expected-focus sample and/or release settling. The normal run first reaches traction assist then ends at speed display. The occupied run passes livery/choose-stage observations, then A is observed while game snapshot still carries DOWN, and the final screen is title. This supports menu-repeat/observation-order investigation, not an initialization failure.",
+      "menuTimeline": [
+        {
+          "label": "Focus stability assist actual SDK input",
+          "at": "2026-11-19T20:16:49.775689+00:00",
+          "timestamp": 463.312,
+          "frame": 53,
+          "screen": "settings",
+          "focus": "stability assist",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "Focus stability assist actual gameplay observation",
+          "at": "2026-11-19T20:16:50.620036+00:00",
+          "timestamp": 463.312,
+          "frame": 53,
+          "screen": "settings",
+          "focus": "stability assist",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "Plan controls released: Focus stability assist",
+          "at": "2026-11-19T20:16:50.833055+00:00",
+          "timestamp": 464.609,
+          "frame": 54,
+          "screen": "settings",
+          "focus": "stability assist",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "Focus counter-steer assist actual SDK input",
+          "at": "2026-11-19T20:16:52.203904+00:00",
+          "timestamp": 465.89,
+          "frame": 55,
+          "screen": "settings",
+          "focus": "counter-steer assist",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": true,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "Focus counter-steer assist actual gameplay observation",
+          "at": "2026-11-19T20:16:53.306903+00:00",
+          "timestamp": 465.89,
+          "frame": 55,
+          "screen": "settings",
+          "focus": "counter-steer assist",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": true,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "Plan controls released: Focus counter-steer assist",
+          "at": "2026-11-19T20:16:54.538460+00:00",
+          "timestamp": 467.218,
+          "frame": 56,
+          "screen": "settings",
+          "focus": "counter-steer assist",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "Focus traction assist actual SDK input",
+          "at": "2026-11-19T20:16:55.955517+00:00",
+          "timestamp": 469.843,
+          "frame": 58,
+          "screen": "settings",
+          "focus": "traction assist",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        }
+      ]
+    },
+    {
+      "mode": "runtime-occupied",
+      "originalStatus": "failed",
+      "failedTest": "Actual gameplay and pause model freeze",
+      "failedError": "AssertionError: Open original stage selection actual gameplay observation timed out",
+      "report": "backroad-rally/original-export/evidence/runtime-occupied/report.json",
+      "reportSha256": "7fe6ab148c99918ff3f4c7617b454d7828067684dc5f9fd72b9906af8e36fc76",
+      "finalNativeState": "backroad-rally/original-export/evidence/runtime-occupied/diagnostics/state.json",
+      "finalNativeStateSha256": "6be7c7173d8e0871ce4b632b094c8ae7188dcfea142f9b444999971a8ba92dd3",
+      "lastRecordedSnapshot": {
+        "label": "Open original stage selection actual SDK input",
+        "at": "2026-11-19T20:21:21.789138+00:00",
+        "nativeTimestamp": 735.562,
+        "frame": 127,
+        "gameplay": {
+          "carIndex": 0,
+          "careerStarted": true,
+          "flow": "quick",
+          "menuFocus": "back",
+          "menuValue": "",
+          "phase": "menu",
+          "quality": "low",
+          "screen": "garage",
+          "stageIndex": 0
+        }
+      },
+      "finalState": {
+        "nativeTimestamp": 764.546,
+        "frames": 139,
+        "renderer": "webgl2",
+        "stage": "menu",
+        "gameplay": {
+          "carIndex": 0,
+          "careerStarted": true,
+          "flow": "quick",
+          "menuFocus": "career",
+          "menuValue": "",
+          "phase": "menu",
+          "quality": "low",
+          "screen": "title",
+          "stageIndex": 0
+        },
+        "controllerPollCount": 152,
+        "heldButtons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "errorsField": []
+      },
+      "modelWrites": false,
+      "clockOverrides": false,
+      "category": "menu-focus-or-input-observation-order",
+      "confidence": "high for focus drift; exact causal ordering requires shared observer/input review",
+      "finding": "Observed menu focus changes again after a successful expected-focus sample and/or release settling. The normal run first reaches traction assist then ends at speed display. The occupied run passes livery/choose-stage observations, then A is observed while game snapshot still carries DOWN, and the final screen is title. This supports menu-repeat/observation-order investigation, not an initialization failure.",
+      "menuTimeline": [
+        {
+          "label": "Focus livery actual SDK input",
+          "at": "2026-11-19T20:21:04.488668+00:00",
+          "timestamp": 718.265,
+          "frame": 121,
+          "screen": "garage",
+          "focus": "car",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "Focus livery actual gameplay observation",
+          "at": "2026-11-19T20:21:07.425228+00:00",
+          "timestamp": 721.187,
+          "frame": 122,
+          "screen": "garage",
+          "focus": "livery",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": true,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "Plan controls released: Focus livery",
+          "at": "2026-11-19T20:21:13.193817+00:00",
+          "timestamp": 726.984,
+          "frame": 124,
+          "screen": "garage",
+          "focus": "choose stage",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "Focus choose stage actual SDK input",
+          "at": "2026-11-19T20:21:16.101333+00:00",
+          "timestamp": 729.89,
+          "frame": 125,
+          "screen": "garage",
+          "focus": "choose stage",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "Focus choose stage actual gameplay observation",
+          "at": "2026-11-19T20:21:16.206331+00:00",
+          "timestamp": 729.89,
+          "frame": 125,
+          "screen": "garage",
+          "focus": "choose stage",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "Plan controls released: Focus choose stage",
+          "at": "2026-11-19T20:21:18.948650+00:00",
+          "timestamp": 732.734,
+          "frame": 126,
+          "screen": "garage",
+          "focus": "choose stage",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "Open original stage selection actual SDK input",
+          "at": "2026-11-19T20:21:21.789138+00:00",
+          "timestamp": 735.562,
+          "frame": 127,
+          "screen": "garage",
+          "focus": "back",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": true,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        }
+      ]
+    }
+  ],
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "productionChanged": false
+}

@@ -1,0 +1,9 @@
+# Kart Rush original macOS package assessment
+
+Original source `b7b7af12f1eb61f777d89edad7368a69a14bb9e3`, run 44605303936, attempt 1. The original three-game batch remains failed. The original plan was recovered, not regenerated, and all original build/ARM/Intel reports remain byte-for-byte unchanged.
+
+The frozen assessor from `f30cc70cf2ed99949908bc3797f0b7b66274ee4d` was run with the explicitly approved `per_game=True` scope. The default strict batch scope was also checked and still rejects this failed batch. Kart Rush meets the limited coverage policy: original native ARM, occupied-port ARM and Rosetta x86_64 all passed the complete nine gameplay/controller/storage checks. Native Intel remains unverified and its original initialization timeout is unchanged; independent WebGL2 context-loss observations do not prove the game failure cause, and WebGL1 remains unobserved.
+
+Both actual ZIP/DMG byte hashes, 1,087 unique frozen source inputs, all 31 application files and 23 Web assets inside the ZIP, and actual universal Mach-O slices were independently verified. Linux did not rerun Apple codesign or mount DMG: the original macOS package verification records supply those checks and are required by the assessor. The packages remain at the original root download paths in audit.json; no package copies were made.
+
+Distinct-name hardlink views prevent the two read-only export folders named `artifact` from colliding in evidence reference keys. All 130 resulting references are verified against their mapped original paths; all 957 original files were hashed before and after and are unchanged. Raw build/QA reports and screenshots are not rewritten. The separate game-owner visual review is `joystick-games/kart-rush/docs/macos-ci-44605303936/visual-review.json`. Physical ESP32 and Intel hardware gameplay were not tested; the application is ad hoc signed and not Apple notarized.

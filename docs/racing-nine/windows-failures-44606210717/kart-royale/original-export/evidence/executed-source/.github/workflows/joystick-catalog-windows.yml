@@ -1,0 +1,149 @@
+name: Build and verify joystick catalog Windows games
+on:
+  workflow_dispatch:
+    inputs:
+      games:
+        description: 'JSON array of registered game slugs'
+        required: true
+        type: string
+env:
+  PYTHONUTF8: "1"
+permissions:
+  contents: read
+concurrency:
+  group: joystick-windows-${{ github.ref }}-${{ inputs.games }}
+  cancel-in-progress: false
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    outputs:
+      games: ${{ steps.plan.outputs.games }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: joystick-games/catalog-registry.json
+          sparse-checkout-cone-mode: false
+      - id: plan
+        env:
+          GAMES: ${{ inputs.games }}
+        run: |
+          python3 - <<'PY'
+          import json,os,re
+          from pathlib import Path
+          requested=json.loads(os.environ['GAMES'])
+          registry=json.loads(Path('joystick-games/catalog-registry.json').read_text())['games']
+          assert isinstance(requested,list) and 1<=len(requested)<=9 and len(set(requested))==len(requested)
+          assert all(isinstance(g,str) and re.fullmatch('[a-z0-9-]+',g) and g in registry for g in requested)
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:out.write('games='+json.dumps(requested,separators=(',',':'))+'\n')
+          PY
+  verify:
+    needs: plan
+    runs-on: windows-2022
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        game: ${{ fromJSON(needs.plan.outputs.games) }}
+    steps:
+      - name: Preserve exact source paths and bytes before checkout
+        shell: pwsh
+        run: |
+          git config --global core.longpaths true
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned test and installer tools
+        shell: pwsh
+        run: |
+          python -m pip install zeroconf==0.148.0
+          if (-not (Test-Path "${env:ProgramFiles(x86)}\NSIS\makensis.exe")) {
+            choco install nsis --version=3.10 -y --no-progress
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+      - name: Build frozen app and installation packages
+        shell: pwsh
+        env:
+          GAME: ${{ matrix.game }}
+        run: |
+          python -B joystick-games/shared/windows/tests/display.test.py *> "$env:RUNNER_TEMP/display-tests.log"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B joystick-games/shared/windows/tests/observation.test.py *> "$env:RUNNER_TEMP/observation-tests.log"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B joystick-games/shared/windows/tests/window-lifecycle.test.py *> "$env:RUNNER_TEMP/window-lifecycle-tests.log"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B joystick-games/shared/windows/tests/assets.test.py *> "$env:RUNNER_TEMP/assets-tests.log"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B joystick-games/shared/windows/tests/source-scope.test.py *> "$env:RUNNER_TEMP/source-scope-tests.log"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B joystick-games/shared/windows/tests/source-inputs.test.py *> "$env:RUNNER_TEMP/source-inputs-tests.log"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B joystick-games/shared/windows/tests/installer.test.py *> "$env:RUNNER_TEMP/installer-tests.log"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node --test joystick-games/shared/windows/tests/web-bridge.test.mjs *> "$env:RUNNER_TEMP/web-bridge-tests.log"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python joystick-games/tools/windows-build.py --game $env:GAME --output "$env:RUNNER_TEMP/packages" --dependencies "$env:RUNNER_TEMP/windows-dependencies" *> "$env:RUNNER_TEMP/build.log"
+          exit $LASTEXITCODE
+      - name: Verify portable archive and actual installed files
+        shell: pwsh
+        run: |
+          python joystick-games/tools/windows-packages.py --source "$env:RUNNER_TEMP/packages" --output "$env:RUNNER_TEMP/install-verification" *> "$env:RUNNER_TEMP/install.log"
+          exit $LASTEXITCODE
+      - name: Actual original SDK gameplay normal and occupied port
+        shell: pwsh
+        env:
+          GAME: ${{ matrix.game }}
+        run: |
+          $failed = 0
+          python joystick-games/tools/windows-verify.py --game $env:GAME --app "$env:RUNNER_TEMP/install-verification/installed" --output "$env:RUNNER_TEMP/runtime-normal" *> "$env:RUNNER_TEMP/runtime-normal.log"
+          if ($LASTEXITCODE -ne 0) { $failed = 1 }
+          python joystick-games/tools/windows-verify.py --game $env:GAME --app "$env:RUNNER_TEMP/install-verification/installed" --output "$env:RUNNER_TEMP/runtime-occupied" --occupy-default-port *> "$env:RUNNER_TEMP/runtime-occupied.log"
+          if ($LASTEXITCODE -ne 0) { $failed = 1 }
+          exit $failed
+      - name: Collect original reports and package evidence
+        if: ${{ always() }}
+        shell: pwsh
+        env:
+          GAME: ${{ matrix.game }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          python joystick-games/tools/windows-evidence.py
+          exit $LASTEXITCODE
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: joystick-windows-evidence-${{ matrix.game }}
+          include-hidden-files: true
+          path: ${{ runner.temp }}/evidence/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ success() }}
+        with:
+          name: joystick-windows-packages-${{ matrix.game }}
+          path: |
+            ${{ runner.temp }}/packages/*-windows-x64.zip
+            ${{ runner.temp }}/packages/*-setup.exe
+            ${{ runner.temp }}/packages/build-manifest.json
+          if-no-files-found: error
+
+  export:
+    needs: [plan, verify]
+    if: ${{ always() && !cancelled() && needs.plan.result == 'success' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: joystick-windows-*
+          path: ${{ runner.temp }}/export
+      - name: Validate and retain immutable original evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED_GAMES: ${{ needs.plan.outputs.games }}
+        run: |
+          python3 joystick-games/tools/windows-export.py --directory "$RUNNER_TEMP/export"

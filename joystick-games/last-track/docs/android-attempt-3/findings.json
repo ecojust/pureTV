@@ -1,0 +1,447 @@
+{
+  "game": "last-track",
+  "sourceRun": 44606071748,
+  "sourceAttempt": 1,
+  "sourceCommit": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+  "originalExportCommit": "35fca55f5a05d38785fb531004eca9add6913f04",
+  "originalStatus": {
+    "normal": "failed",
+    "occupied": "failed"
+  },
+  "normalPassedTests": [
+    {
+      "name": "catalog scenario starts with fresh app data before launch",
+      "status": "passed",
+      "details": {
+        "mode": "fresh-install-app-data",
+        "targetPackage": "com.ecojust.joystick.lasttrack",
+        "method": "pm clear",
+        "phase": "before-target-launch",
+        "status": "passed",
+        "stdout": "Success"
+      }
+    },
+    {
+      "name": "installed target launches initialized game menu with no controller card",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "original SDK hello and nine sync messages create actual controller ID card",
+      "status": "passed",
+      "details": {
+        "identity": "virtual-d57526aafd03"
+      }
+    },
+    {
+      "name": "actual SDK gameplay: Focus settings from original New Game focus",
+      "status": "passed",
+      "details": {
+        "expect": [
+          {
+            "path": "gameplay.menuFocus",
+            "op": "eq",
+            "value": "SETTINGSGraphics · audio · controls"
+          }
+        ],
+        "holdMs": 16
+      }
+    },
+    {
+      "name": "actual SDK gameplay: Open original settings",
+      "status": "passed",
+      "details": {
+        "expect": [
+          {
+            "path": "gameplay.modal",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "holdMs": 100
+      }
+    }
+  ],
+  "normalTimeline": [
+    {
+      "label": "initial-menu",
+      "wallTime": 1795119927.7107284,
+      "utc": "2026-11-19T20:25:27.710728+00:00",
+      "frames": 1,
+      "pollCount": 1,
+      "screen": "title",
+      "menuFocus": "\n  \n  \n  \n  1st/8LAP1/30KPHARMOUR0SHIELD0BOOST0LOCKDRIFTWPNCAMBRAKEFIREGASSETTINGSGRAPHICS QUALITYLOWMEDHIGHMASTER VOLUMEMUSICSFXMUTE ALLCONTROL HINTSRIVAL NAMEPLATESDEFAULT CAMERA",
+      "modal": false,
+      "quality": "med",
+      "buttons": {
+        "UP": false,
+        "DOWN": false,
+        "LEFT": false,
+        "RIGHT": false,
+        "START": false,
+        "A": false,
+        "B": false,
+        "X": false,
+        "Y": false
+      },
+      "error": null
+    },
+    {
+      "label": "before-plan-Focus settings from original New Game focus",
+      "wallTime": 1795119952.916238,
+      "utc": "2026-11-19T20:25:52.916238+00:00",
+      "frames": 35,
+      "pollCount": 35,
+      "screen": "title",
+      "menuFocus": "NEW GAMEPick a car, start with $5,000",
+      "modal": false,
+      "quality": "med",
+      "buttons": {
+        "UP": false,
+        "DOWN": false,
+        "LEFT": false,
+        "RIGHT": false,
+        "START": false,
+        "A": false,
+        "B": false,
+        "X": false,
+        "Y": false
+      },
+      "error": null
+    },
+    {
+      "label": "after-plan-Focus settings from original New Game focus",
+      "wallTime": 1795119964.3842976,
+      "utc": "2026-11-19T20:26:04.384298+00:00",
+      "frames": 44,
+      "pollCount": 44,
+      "screen": "title",
+      "menuFocus": "SETTINGSGraphics · audio · controls",
+      "modal": false,
+      "quality": "med",
+      "buttons": {
+        "UP": false,
+        "DOWN": true,
+        "LEFT": false,
+        "RIGHT": false,
+        "START": false,
+        "A": false,
+        "B": false,
+        "X": false,
+        "Y": false
+      },
+      "error": null
+    },
+    {
+      "label": "before-plan-Open original settings",
+      "wallTime": 1795119970.9280388,
+      "utc": "2026-11-19T20:26:10.928039+00:00",
+      "frames": 63,
+      "pollCount": 63,
+      "screen": "title",
+      "menuFocus": "SETTINGSGraphics · audio · controls",
+      "modal": false,
+      "quality": "med",
+      "buttons": {
+        "UP": false,
+        "DOWN": false,
+        "LEFT": false,
+        "RIGHT": false,
+        "START": false,
+        "A": false,
+        "B": false,
+        "X": false,
+        "Y": false
+      },
+      "error": null
+    },
+    {
+      "label": "after-plan-Open original settings",
+      "wallTime": 1795119981.8026202,
+      "utc": "2026-11-19T20:26:21.802620+00:00",
+      "frames": 69,
+      "pollCount": 69,
+      "screen": "title",
+      "menuFocus": "MED",
+      "modal": true,
+      "quality": "med",
+      "buttons": {
+        "UP": false,
+        "DOWN": false,
+        "LEFT": false,
+        "RIGHT": false,
+        "START": false,
+        "A": true,
+        "B": false,
+        "X": false,
+        "Y": false
+      },
+      "error": null
+    },
+    {
+      "label": "before-plan-Focus original Low preset",
+      "wallTime": 1795119989.7871947,
+      "utc": "2026-11-19T20:26:29.787195+00:00",
+      "frames": 86,
+      "pollCount": 86,
+      "screen": "title",
+      "menuFocus": "MED",
+      "modal": true,
+      "quality": "med",
+      "buttons": {
+        "UP": false,
+        "DOWN": false,
+        "LEFT": false,
+        "RIGHT": false,
+        "START": false,
+        "A": false,
+        "B": false,
+        "X": false,
+        "Y": false
+      },
+      "error": null
+    },
+    {
+      "label": "timeout-plan-held-Focus original Low preset",
+      "wallTime": null,
+      "utc": null,
+      "frames": null,
+      "pollCount": null,
+      "screen": null,
+      "menuFocus": "",
+      "modal": null,
+      "quality": null,
+      "buttons": null,
+      "error": "URLError(ConnectionRefusedError(111, 'Connection refused'))"
+    }
+  ],
+  "observedInput": {
+    "leftDown": {
+      "seq": 89,
+      "utc": "2026-11-19T20:26:29.787251+00:00",
+      "wallTime": 1795119989.787251
+    },
+    "leftAck": {
+      "utc": "2026-11-19T20:26:29.790840+00:00",
+      "wallTime": 1795119989.7908404
+    },
+    "laterPingsWithoutRecordedAck": [
+      {
+        "seq": 90,
+        "utc": "2026-11-19T20:26:31.782848+00:00"
+      },
+      {
+        "seq": 91,
+        "utc": "2026-11-19T20:26:33.783257+00:00"
+      },
+      {
+        "seq": 92,
+        "utc": "2026-11-19T20:26:35.783667+00:00"
+      },
+      {
+        "seq": 93,
+        "utc": "2026-11-19T20:26:37.783762+00:00"
+      },
+      {
+        "seq": 94,
+        "utc": "2026-11-19T20:26:39.783989+00:00"
+      },
+      {
+        "seq": 95,
+        "utc": "2026-11-19T20:26:41.784263+00:00"
+      },
+      {
+        "seq": 96,
+        "utc": "2026-11-19T20:26:43.784450+00:00"
+      },
+      {
+        "seq": 97,
+        "utc": "2026-11-19T20:26:45.784790+00:00"
+      },
+      {
+        "seq": 98,
+        "utc": "2026-11-19T20:26:47.784905+00:00"
+      },
+      {
+        "seq": 99,
+        "utc": "2026-11-19T20:26:49.785118+00:00"
+      },
+      {
+        "seq": 100,
+        "utc": "2026-11-19T20:26:51.785373+00:00"
+      },
+      {
+        "seq": 101,
+        "utc": "2026-11-19T20:26:53.785620+00:00"
+      },
+      {
+        "seq": 102,
+        "utc": "2026-11-19T20:26:55.785855+00:00"
+      },
+      {
+        "seq": 103,
+        "utc": "2026-11-19T20:26:57.786090+00:00"
+      },
+      {
+        "seq": 104,
+        "utc": "2026-11-19T20:26:59.786341+00:00"
+      },
+      {
+        "seq": 105,
+        "utc": "2026-11-19T20:27:01.786698+00:00"
+      },
+      {
+        "seq": 106,
+        "utc": "2026-11-19T20:27:03.786844+00:00"
+      },
+      {
+        "seq": 107,
+        "utc": "2026-11-19T20:27:05.787092+00:00"
+      }
+    ]
+  },
+  "releaseEvidence": [
+    {
+      "label": "all-released",
+      "startedAt": 1795119948.3028479,
+      "endedAt": 1795119949.8212178,
+      "beforePollCount": 29,
+      "afterPollCount": 32,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "plan-held-Focus settings from original New Game focus",
+      "startedAt": 1795119952.9162889,
+      "endedAt": 1795119955.1900885,
+      "beforePollCount": 35,
+      "afterPollCount": 39,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795119961.1896322,
+      "endedAt": 1795119964.3842366,
+      "beforePollCount": 47,
+      "afterPollCount": 52,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795119966.4383235,
+      "endedAt": 1795119968.9846988,
+      "beforePollCount": 55,
+      "afterPollCount": 60,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "plan-held-Open original settings",
+      "startedAt": 1795119970.9280965,
+      "endedAt": 1795119973.8355696,
+      "beforePollCount": 63,
+      "afterPollCount": 65,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795119978.8937988,
+      "endedAt": 1795119981.8025641,
+      "beforePollCount": 73,
+      "afterPollCount": 76,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795119983.95127,
+      "endedAt": 1795119986.971184,
+      "beforePollCount": 79,
+      "afterPollCount": 82,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    }
+  ],
+  "failedSnapshot": {
+    "label": "timeout-plan-held-Focus original Low preset",
+    "snapshot": null,
+    "error": "URLError(ConnectionRefusedError(111, 'Connection refused'))"
+  },
+  "subsequentDeviceCommands": [
+    {
+      "command": [
+        "/usr/local/lib/android/sdk/platform-tools/adb",
+        "shell",
+        "pidof",
+        "screenrecord"
+      ],
+      "startedAt": 1795120050.045751,
+      "timeoutSeconds": 45,
+      "endedAt": 1795120050.048084,
+      "status": "completed",
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "adb: device 'emulator-5554' not found\n"
+    },
+    {
+      "command": [
+        "/usr/local/lib/android/sdk/platform-tools/adb",
+        "pull",
+        "/sdcard/joystick-qa-last-track.mp4",
+        "/home/runner/work/_temp/runtime/last-track-normal/controller-gameplay.mp4"
+      ],
+      "startedAt": 1795120050.0482812,
+      "timeoutSeconds": 45,
+      "endedAt": 1795120050.049568,
+      "status": "completed",
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "adb: error: failed to get feature set: device 'emulator-5554' not found\n"
+    },
+    {
+      "command": [
+        "/usr/local/lib/android/sdk/platform-tools/adb",
+        "logcat",
+        "-d",
+        "-v",
+        "threadtime"
+      ],
+      "startedAt": 1795120050.0496237,
+      "timeoutSeconds": 45,
+      "endedAt": 1795120095.0964983,
+      "status": "timed-out",
+      "exitCode": null,
+      "errorType": "TimeoutExpired",
+      "error": "Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'logcat', '-d', '-v', 'threadtime']' timed out after 45 seconds",
+      "stdout": "",
+      "stderr": "- waiting for device -\n"
+    }
+  ],
+  "occupiedFailure": {
+    "passedTests": 0,
+    "captures": 0,
+    "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 840, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 471, in setup\n    self.command('wait-for-device')\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 268, in command\n    result = subprocess.run(record['command'], capture_output=True, check=False, timeout=timeout)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 550, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 1209, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 2116, in _communicate\n    self._check_timeout(endtime, orig_timeout, stdout, stderr)\n  File \"/usr/lib/python3.12/subprocess.py\", line 1253, in _check_timeout\n    raise TimeoutExpired(\nsubprocess.TimeoutExpired: Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'wait-for-device']' timed out after 45 seconds\n",
+    "phase": "setup wait-for-device before install/launch/SDK/graphics"
+  },
+  "interpretation": [
+    "Normal mode installed and launched the exact signed APK, connected the original SDK, focused SETTINGS and opened the original settings modal.",
+    "Before LEFT, the original last usable snapshot is frame/poll86, title/modal=true, focus MED, quality med, every cached game-controller button false. The preceding release was confirmed by a fresh frame.",
+    "LEFT seq89 is acknowledged, but the recorded subsequent 18 ping requests have no ACK. The failed observer sample is null with connection refused; cleanup then reports emulator-5554 not found. This is not evidence of an incorrect LOW focus or of a still-running game ignoring LEFT.",
+    "Occupied mode independently fails adb wait-for-device for45seconds before any game checks. It is not an observed game rendering or menu failure.",
+    "The complete original job log contains boot-time ColorBuffer errors followed by a completed boot and successful app installation. Those earlier messages do not establish the cause of the later device loss. No OOM, process-exit status or contemporaneous resource trace establishes a unique root cause."
+  ],
+  "decision": {
+    "gameSourceChange": false,
+    "qaPlanChange": false,
+    "reason": "Current actual evidence does not justify changing Last Track menu QA or weakening held/freshness assertions. A future authorized original-package runtime can retain this plan and collect the newly available environment diagnostics."
+  },
+  "limitations": [
+    "Original failed results are preserved. No APK/source/clock/model changes, new workflow dispatch, or gameplay rerun.",
+    "Normal mode did not reach driving; no Android gameplay/body-fix claim.",
+    "Connected.png is retained with original hashes but was not visually inspected in this investigation.",
+    "The observer/TCP/ADB loss establishes unavailable observation/transport, not which host or emulator process failed or why."
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "tv.html": "<!doctype html><meta charset=\"utf-8\"><title>Original entry query fixture</title>\n<a id=\"race\" href=\"./tv.html?mode=quick&amp;stage=finland&amp;car=swift&amp;cond=stage&amp;weather=clear\">Race</a>\n<a id=\"return\" href=\"./tv.html\">Return</a>\n<script>\n(async()=>{try{\n const response=await fetch('./menu.json?v=198988baa6');\n if(!response.ok)throw new Error('HTTP '+response.status);\n const data=await response.json();\n window.webkit.messageHandlers.fixture.postMessage({status:'ready',search:location.search,path:location.pathname,data});\n}catch(error){window.webkit.messageHandlers.fixture.postMessage({status:'failed',error:String(error)});}})();\n</script>",
+  "menu.json": "{\"original\":\"menu fixture\"}",
+  "raceQuery": "?mode=quick&stage=finland&car=swift&cond=stage&weather=clear"
+}
