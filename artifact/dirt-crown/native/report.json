@@ -1,0 +1,566 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "ed27d8e4cd5fadc037dac718afb958f1727f63fe",
+  "artifactSourceCommit": "ed27d8e4cd5fadc037dac718afb958f1727f63fe",
+  "artifactRunId": "44605769518",
+  "startedAt": "2026-11-19T20:22:37.799698+00:00",
+  "game": "dirt-crown",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "2db317fa9672df20992af6b4d6a31f9910e2876e4644c0cffca6b99df8709290",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "fcf968cd99187d950205aaf35b9ed3071cc44c78ef5d1023ccca4bba3181c3f1",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/dirt-crown/qa-plan.json": "855370c4bf7b823192d4f4bef6b546be70186bc8e313dda08345657c008d29be",
+    "joystick-games/tools/qa-plan.py": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+    "joystick-games/tools/macos-build.py": "4fa65936293a5d6c5e728577780edc30429a500627e8799c1c83a5095470b853",
+    "joystick-games/catalog-registry.json": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaRunId": 44605769518,
+  "qaRunAttempt": 1,
+  "runnerKind": "macos-15-intel",
+  "runnerName": "GitHub Actions 1000011074",
+  "qaPlan": {
+    "schemaVersion": 1,
+    "storageRestartRequired": true,
+    "renderer": "webgl2",
+    "pauseStablePaths": [
+      "gameplay.time",
+      "gameplay.x",
+      "gameplay.z",
+      "gameplay.coins",
+      "gameplay.levels"
+    ],
+    "steps": [
+      {
+        "name": "Open original new-career form",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-name"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Car number",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-num"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Back button",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-back"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Confirm career",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-go"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Create real career and show authored introduction",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.profileName",
+            "op": "eq",
+            "value": "Kit"
+          },
+          {
+            "path": "gameplay.story",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Skip authored introduction with original skip button",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "hub"
+          },
+          {
+            "path": "gameplay.story",
+            "op": "eq",
+            "value": false
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Open garage menu",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.modal",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Settings",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-set"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Credits",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-cred"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Title",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-title"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Return to title",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "title"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Select new-career tile",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "t-new"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Select free race",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "t-free"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Open original free race options",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.modal",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Wrap focus to Race button",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.focusId",
+            "op": "eq",
+            "value": "m-go"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Start original race and wait real countdown",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "race"
+          },
+          {
+            "path": "gameplay.phase",
+            "op": "eq",
+            "value": "race"
+          },
+          {
+            "path": "gameplay.countdown",
+            "op": "lte",
+            "value": 0
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Explicit throttle accelerates player",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 3000,
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "increased"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Right steer changes heading",
+        "keys": [
+          "UP",
+          "RIGHT"
+        ],
+        "holdMs": 900,
+        "expect": [
+          {
+            "path": "gameplay.heading",
+            "op": "changed"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Left steer and drift remain separate",
+        "keys": [
+          "UP",
+          "LEFT",
+          "A"
+        ],
+        "holdMs": 900,
+        "expect": [
+          {
+            "path": "gameplay.heading",
+            "op": "changed"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Consume nitro through separate B button",
+        "keys": [
+          "UP",
+          "B"
+        ],
+        "holdMs": 700,
+        "expect": [
+          {
+            "path": "gameplay.nitro",
+            "op": "changed"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Recover to the track with X",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.ghost",
+            "op": "gt",
+            "value": 0
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Switch original camera",
+        "keys": [
+          "Y"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.camera",
+            "op": "changed"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Pause race",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "paused"
+          }
+        ],
+        "timeoutSeconds": 60
+      },
+      {
+        "name": "Resume by deliberate START, hold without re-pausing",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 1200,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          }
+        ],
+        "timeoutSeconds": 60
+      }
+    ]
+  },
+  "acceptedRenderers": [
+    "webgl2"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "25132fdec03d50c0f298a53f914cee9b8e15aeddd2f5747ba9af4376892e3d77",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.dirt-crown.6dfeb2c508a54414b270a0bf494a78b5",
+    "reusedAcrossRestartOnly": true
+  },
+  "nativeProcessArchitecture": "x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 407, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 201, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": true, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"Dirt Crown\", \"url\": \"http://127.0.0.1:49519/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.ecojust.joystick.dirtcrown\", \"name\": \"Dirt Crown\"}, \"game\": null, \"input\": {\"connections\": 0, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 4, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 4}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"dirt-crown.v1.profile\", \"dirt-crown.v1.settings\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.10\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"Dirt Crown\", \"state\": \"available\"}}, \"storage\": {\"current\": {\"dirt-crown.v1.profile\": null, \"dirt-crown.v1.settings\": null}, \"initial\": {\"dirt-crown.v1.profile\": null, \"dirt-crown.v1.settings\": null}, \"origin\": \"http://127.0.0.1:49519\"}, \"timestamp\": 1795119847.7095718}\n",
+  "lastState": {
+    "active": true,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "en",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "Dirt Crown",
+      "url": "http://127.0.0.1:49519/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystick.dirtcrown",
+      "name": "Dirt Crown"
+    },
+    "game": null,
+    "input": {
+      "connections": 0,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 4,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 4
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "dirt-crown.v1.profile",
+        "dirt-crown.v1.settings"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.10"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "Dirt Crown",
+        "state": "available"
+      }
+    },
+    "storage": {
+      "current": {
+        "dirt-crown.v1.profile": null,
+        "dirt-crown.v1.settings": null
+      },
+      "initial": {
+        "dirt-crown.v1.profile": null,
+        "dirt-crown.v1.settings": null
+      },
+      "origin": "http://127.0.0.1:49519"
+    },
+    "timestamp": 1795119847.7095718
+  },
+  "failurePhase": "initialization",
+  "nativeProcessAlive": true,
+  "lastStateFresh": true,
+  "phase": "initialization",
+  "finishedAt": "2026-11-19T20:24:08.070725+00:00"
+}
