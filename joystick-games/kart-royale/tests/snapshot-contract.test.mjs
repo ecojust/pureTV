@@ -25,7 +25,7 @@ function freeze(value) {
     return value;
 }
 
-function fixture({ version = 'WebGL 2.0 contract context', state = 2 } = {}) {
+function fixture({ version = 'WebGL 2.0 contract context', state = 2, contextAvailable = true } = {}) {
     const calls = { peek: 0, poll: 0, storageWrites: 0, glReads: 0 };
     let frame = freeze({ pollCount: 41, buttons: {}, pressed: {}, released: {}, connected: true });
     let contextVersion = version;
@@ -38,7 +38,7 @@ function fixture({ version = 'WebGL 2.0 contract context', state = 2 } = {}) {
         race: { state, raceTime: 12.5, setPaused: forbidden('setPaused'), update: forbidden('race update'),
             player: { forwardSpeed: 57, position, lap: 2, place: 3, driftDir: -1, driftTier: 2,
                 driftCharge: 0.6, boostTime: 0.2, cancelControllerDrift: forbidden('cancelControllerDrift') } },
-        renderer: { getContext: () => contextVersion === null ? null : gl },
+        renderer: { getContext: () => contextAvailable ? gl : null },
     });
     const input = freeze({ pad: { prefs: { hand: 'left' } }, state: { accel: 1, steer: -1, drift: true },
         cancelTV: forbidden('cancelTV'), setTV: forbidden('setTV'), update: forbidden('input update') });
@@ -65,6 +65,19 @@ test('production snapshot identifies Kart Royale and reads the current renderer 
         assert.equal(snapshot.renderer, renderer); assert.equal(snapshot.webglVersion, version);
     }
     assert.ok(f.calls.glReads > 0); assert.equal(f.calls.poll, 0);
+});
+
+test('missing, lost or unknown contexts cannot report an available WebGL renderer', () => {
+    const absent = fixture({ contextAvailable: false });
+    assert.equal(absent.snapshot().renderer, null);
+    assert.equal(absent.snapshot().webglVersion, null);
+    assert.equal(absent.calls.glReads, 0);
+    for (const version of [null, '', 'unknown', 'OpenGL ES 3.0', 'WebGL 10.0', 2]) {
+        const f = fixture({ version });
+        assert.equal(f.snapshot().renderer, null);
+        assert.equal(f.snapshot().webglVersion, version);
+        assert.equal(f.calls.poll, 0);
+    }
 });
 
 test('snapshot uses peek pollCount without consuming another native frame', () => {

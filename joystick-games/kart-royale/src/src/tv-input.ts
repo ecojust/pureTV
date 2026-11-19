@@ -54,7 +54,13 @@ export function installTV(ctx: Ctx, input: Input) {
       return;
     }
     if (playing) return;
-    if (root !== previousRoot) { const items = controls(root); focus(items.find(e => e.matches('.puretv-start,.kr-s-select .kr-menu-list .kr-btn')) || items[0]); previousRoot = root; repeat.clear(); }
+    // An entering screen may not accept focus on its first visible frame.
+    // Retry only while focus is outside it; keep the player's in-menu choice.
+    if (root !== previousRoot || (root && !root.contains(document.activeElement))) {
+      const items = controls(root); focus(items.find(e => e.matches('.puretv-start,.kr-s-select .kr-menu-list .kr-btn')) || items[0]);
+      if (root !== previousRoot) repeat.clear();
+      previousRoot = root;
+    }
     for (const key of ['UP','DOWN','LEFT','RIGHT']) {
       if (!frame.buttons[key]) { repeat.delete(key); continue; }
       if (frame.pressed[key] || now >= (repeat.get(key) ?? 0)) { move(root, key === 'UP' || key === 'LEFT' ? -1 : 1); repeat.set(key, now + (frame.pressed[key] ? 380 : 130)); }
@@ -69,8 +75,10 @@ export function installTV(ctx: Ctx, input: Input) {
   (window as any).JoystickGameQA = { snapshot() {
     const p = ctx.race.player, panel = document.getElementById('puretv-controller-panel'), rect = panel?.getBoundingClientRect();
     const frame = controller.peek(), gl = ctx.renderer?.getContext();
+    const webglVersion = gl?.getParameter(gl.VERSION) ?? null;
+    const renderer = typeof webglVersion !== 'string' ? null : /^WebGL 2(?:\.|\s)/.test(webglVersion) ? 'webgl2' : /^WebGL 1(?:\.|\s)/.test(webglVersion) ? 'webgl1' : null;
     let savedControls = false; try { savedControls = !!localStorage.getItem('kr.controls.v1'); } catch {}
-    return { game: 'kart-royale', stage: ctx.race.state === RaceState.Paused ? 'paused' : ctx.race.state === RaceState.Menu ? 'menu' : ctx.race.state === RaceState.Results ? 'ended' : 'playing', renderer: gl ? (String(gl.getParameter(gl.VERSION)).startsWith('WebGL 2') ? 'webgl2' : 'webgl1') : null, webglVersion: gl ? gl.getParameter(gl.VERSION) : null, frames: frame.pollCount, controller: frame, paused: ctx.race.state === RaceState.Paused,
+    return { game: 'kart-royale', stage: ctx.race.state === RaceState.Paused ? 'paused' : ctx.race.state === RaceState.Menu ? 'menu' : ctx.race.state === RaceState.Results ? 'ended' : 'playing', renderer, webglVersion, frames: frame.pollCount, controller: frame, paused: ctx.race.state === RaceState.Paused,
       gameplay: { menu: activeRoot()?.matches('.kc-root') ? 'controls' : activeRoot()?.matches('.kr-s-title') ? 'title' : activeRoot()?.matches('.kr-s-select') ? 'select' : '', focus: document.activeElement?.textContent?.trim().slice(0, 100) || '', savedControls, controlHand: input.pad.prefs.hand, state: ctx.race.state, phase: ['menu','countdown','racing','finished','results','paused'][ctx.race.state], time: ctx.race.raceTime, speed: p?.forwardSpeed, position: p?.position.toArray(), lap: p?.lap, place: p?.place, driftDir: p?.driftDir, driftTier: p?.driftTier, driftCharge: p?.driftCharge, boostTime: p?.boostTime, controls: { ...input.state } },
       panel: rect ? { x: rect.x, y: rect.y, width: rect.width, height: rect.height, scrollHeight: panel!.scrollHeight, clientHeight: panel!.clientHeight, hidden: panel!.hidden } : null,
       focused: document.activeElement?.textContent?.slice(0,100), boot: document.querySelector('.boot-step')?.textContent,

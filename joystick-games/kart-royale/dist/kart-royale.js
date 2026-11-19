@@ -30553,11 +30553,11 @@ void main() {
         return;
       }
       if (playing) return;
-      if (root !== previousRoot) {
+      if (root !== previousRoot || root && !root.contains(document.activeElement)) {
         const items = controls(root);
         focus(items.find((e) => e.matches(".puretv-start,.kr-s-select .kr-menu-list .kr-btn")) || items[0]);
+        if (root !== previousRoot) repeat.clear();
         previousRoot = root;
-        repeat.clear();
       }
       for (const key2 of ["UP", "DOWN", "LEFT", "RIGHT"]) {
         if (!frame.buttons[key2]) {
@@ -30581,6 +30581,8 @@ void main() {
     window.JoystickGameQA = { snapshot() {
       const p = ctx.race.player, panel2 = document.getElementById("puretv-controller-panel"), rect = panel2?.getBoundingClientRect();
       const frame = controller.peek(), gl = ctx.renderer?.getContext();
+      const webglVersion = gl?.getParameter(gl.VERSION) ?? null;
+      const renderer = typeof webglVersion !== "string" ? null : /^WebGL 2(?:\.|\s)/.test(webglVersion) ? "webgl2" : /^WebGL 1(?:\.|\s)/.test(webglVersion) ? "webgl1" : null;
       let savedControls = false;
       try {
         savedControls = !!localStorage.getItem("kr.controls.v1");
@@ -30589,8 +30591,8 @@ void main() {
       return {
         game: "kart-royale",
         stage: ctx.race.state === 5 /* Paused */ ? "paused" : ctx.race.state === 0 /* Menu */ ? "menu" : ctx.race.state === 4 /* Results */ ? "ended" : "playing",
-        renderer: gl ? String(gl.getParameter(gl.VERSION)).startsWith("WebGL 2") ? "webgl2" : "webgl1" : null,
-        webglVersion: gl ? gl.getParameter(gl.VERSION) : null,
+        renderer,
+        webglVersion,
         frames: frame.pollCount,
         controller: frame,
         paused: ctx.race.state === 5 /* Paused */,
