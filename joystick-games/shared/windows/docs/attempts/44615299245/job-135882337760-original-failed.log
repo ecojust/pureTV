@@ -1,0 +1,18 @@
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	﻿2026-11-19T21:09:20.5031681Z ##[group]Run $failed = 0
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5032568Z [36;1m$failed = 0[0m
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5033793Z [36;1mpython joystick-games/tools/windows-verify.py --game $env:GAME --app "$env:RUNNER_TEMP/install-verification/installed" --output "$env:RUNNER_TEMP/runtime-normal" *> "$env:RUNNER_TEMP/runtime-normal.log"[0m
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5035119Z [36;1mif ($LASTEXITCODE -ne 0) { $failed = 1 }[0m
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5036922Z [36;1mpython joystick-games/tools/windows-verify.py --game $env:GAME --app "$env:RUNNER_TEMP/install-verification/installed" --output "$env:RUNNER_TEMP/runtime-occupied" --occupy-default-port *> "$env:RUNNER_TEMP/runtime-occupied.log"[0m
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5038610Z [36;1mif ($LASTEXITCODE -ne 0) { $failed = 1 }[0m
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5039160Z [36;1mexit $failed[0m
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5091694Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5092314Z env:
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5092916Z   PYTHONUTF8: 1
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5093442Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5094399Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5095354Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5096046Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5096722Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5097210Z   GAME: kart-royale
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:20.5097557Z ##[endgroup]
+verify (kart-royale)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:25:23.9693002Z ##[error]Process completed with exit code 1.

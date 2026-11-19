@@ -1,0 +1,18 @@
+Native DPI-scaled minimum and initial viewport: passed
+DNS-SD resolves actual listener and TXT: passed
+Official SDK and single controller seat: passed
+Actual gameplay and pause model freeze: failed
+Traceback (most recent call last):
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-verify.py", line 224, in run
+    self.check('Actual gameplay and pause model freeze',self.gameplay)
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 204, in check
+    try:r['details']=fn();r['status']='passed'
+                     ^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 709, in gameplay
+    stable=self.pause_stability();self.display();self.screenshot('paused.png')
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-verify.py", line 130, in pause_stability
+    observation.update(status='failed',elapsedSeconds=time.monotonic()-started);raise AssertionError('Insufficient fresh real snapshots during pause')
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Insufficient fresh real snapshots during pause
+
