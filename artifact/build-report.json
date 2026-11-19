@@ -1,0 +1,350 @@
+{
+  "sourceCommit": "68d343d22c762c904eb83854d4ab9c4113a7c30f",
+  "batch": "racing-01",
+  "status": "passed",
+  "shared": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "joystick-games/shared/macos/tests/web-bridge.test.mjs"
+      ],
+      "status": "passed",
+      "log": "shared/00.log",
+      "startedAt": "2026-11-19T20:26:24.366025+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/build-source.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/01.log",
+      "startedAt": "2026-11-19T20:26:24.601308+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/capability.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/02.log",
+      "startedAt": "2026-11-19T20:26:25.051970+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-reuse.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/03.log",
+      "startedAt": "2026-11-19T20:26:25.338721+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-tools.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/04.log",
+      "startedAt": "2026-11-19T20:26:29.381323+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/coverage.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/05.log",
+      "startedAt": "2026-11-19T20:26:31.284079+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/entry-navigation.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/06.log",
+      "startedAt": "2026-11-19T20:26:34.126042+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/local-assets.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/07.log",
+      "startedAt": "2026-11-19T20:26:58.588956+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/local-network-prompts.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/08.log",
+      "startedAt": "2026-11-19T20:27:11.609298+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/native-observation.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/09.log",
+      "startedAt": "2026-11-19T20:27:11.815527+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/reuse-source.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/10.log",
+      "startedAt": "2026-11-19T20:27:12.475385+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "5",
+        "joystick-games/shared/macos/Sources/ControllerServer.swift",
+        "joystick-games/shared/macos/tests/ControllerServerTests.swift",
+        "-o",
+        "/Users/runner/work/_temp/controller-tests"
+      ],
+      "status": "passed",
+      "log": "shared/11.log",
+      "startedAt": "2026-11-19T20:27:13.583610+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/runner/work/_temp/controller-tests"
+      ],
+      "status": "passed",
+      "log": "shared/12.log",
+      "startedAt": "2026-11-19T20:27:16.731521+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "5",
+        "joystick-games/shared/macos/Sources/GameStorage.swift",
+        "joystick-games/shared/macos/tests/GameStorageTests.swift",
+        "-o",
+        "/Users/runner/work/_temp/storage-tests"
+      ],
+      "status": "passed",
+      "log": "shared/13.log",
+      "startedAt": "2026-11-19T20:27:16.830053+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/runner/work/_temp/storage-tests"
+      ],
+      "status": "passed",
+      "log": "shared/14.log",
+      "startedAt": "2026-11-19T20:27:17.836246+00:00",
+      "returncode": 0
+    }
+  ],
+  "games": [
+    {
+      "game": "backroad-rally",
+      "status": "passed",
+      "originalTestScript": "cd src/upstream && vitest run --configLoader runner --no-cache --no-fsModuleCache",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "backroad-rally/dependencies.log",
+          "startedAt": "2026-11-19T20:27:17.915745+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "backroad-rally/original-tests.log",
+          "startedAt": "2026-11-19T20:27:23.953322+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "backroad-rally/frozen-dist.log",
+          "startedAt": "2026-11-19T20:27:42.656578+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "command": [
+          "python3",
+          "joystick-games/tools/macos-build.py",
+          "--game",
+          "backroad-rally",
+          "--output",
+          "/Users/runner/work/_temp/build/backroad-rally",
+          "--host-cache",
+          "/Users/runner/work/_temp/host-cache"
+        ],
+        "status": "passed",
+        "log": "backroad-rally/native-build.log",
+        "startedAt": "2026-11-19T20:27:46.813452+00:00",
+        "returncode": 0
+      }
+    },
+    {
+      "game": "ponpoko-kart",
+      "status": "passed",
+      "originalTestScript": "node --test tests/input.test.mjs tests/cancellation.test.mjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "ponpoko-kart/dependencies.log",
+          "startedAt": "2026-11-19T20:29:36.917814+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "ponpoko-kart/original-tests.log",
+          "startedAt": "2026-11-19T20:29:39.084277+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "ponpoko-kart/frozen-dist.log",
+          "startedAt": "2026-11-19T20:29:39.540285+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "command": [
+          "python3",
+          "joystick-games/tools/macos-build.py",
+          "--game",
+          "ponpoko-kart",
+          "--output",
+          "/Users/runner/work/_temp/build/ponpoko-kart",
+          "--host-cache",
+          "/Users/runner/work/_temp/host-cache"
+        ],
+        "status": "passed",
+        "log": "ponpoko-kart/native-build.log",
+        "startedAt": "2026-11-19T20:29:40.300668+00:00",
+        "returncode": 0
+      }
+    },
+    {
+      "game": "night-racer",
+      "status": "passed",
+      "originalTestScript": "node --test tests/*.test.mjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "night-racer/dependencies.log",
+          "startedAt": "2026-11-19T20:30:13.908263+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "night-racer/original-tests.log",
+          "startedAt": "2026-11-19T20:30:15.877308+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "night-racer/frozen-dist.log",
+          "startedAt": "2026-11-19T20:30:16.250708+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "command": [
+          "python3",
+          "joystick-games/tools/macos-build.py",
+          "--game",
+          "night-racer",
+          "--output",
+          "/Users/runner/work/_temp/build/night-racer",
+          "--host-cache",
+          "/Users/runner/work/_temp/host-cache"
+        ],
+        "status": "passed",
+        "log": "night-racer/native-build.log",
+        "startedAt": "2026-11-19T20:30:16.891219+00:00",
+        "returncode": 0
+      }
+    }
+  ]
+}
