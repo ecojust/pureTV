@@ -58,7 +58,7 @@ def validate_plan(plan):
         keys = step.get('keys')
         assert isinstance(keys, list) and keys and len(keys) == len(set(keys)) and set(keys) <= KEYS
         assert type(step.get('holdMs')) is int and 16 <= step['holdMs'] <= 10000
-        assert numeric(step.get('timeoutSeconds', 15)) and 0 < step.get('timeoutSeconds', 15) <= 60
+        assert numeric(step.get('timeoutSeconds', 15)) and 0 < step.get('timeoutSeconds', 15) <= 240
         expectations = step.get('expect')
         assert isinstance(expectations, list) and expectations
         for item in expectations:

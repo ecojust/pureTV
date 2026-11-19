@@ -1,0 +1,403 @@
+{
+  "schemaVersion": 1,
+  "storageRestartRequired": true,
+  "renderer": "webgl2",
+  "pauseStablePaths": [
+    "gameplay.time",
+    "gameplay.x",
+    "gameplay.z",
+    "gameplay.coins",
+    "gameplay.levels"
+  ],
+  "steps": [
+    {
+      "name": "Open original new-career form",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.focusId",
+          "op": "eq",
+          "value": "m-name"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Car number",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.focusId",
+          "op": "eq",
+          "value": "m-num"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Back button",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.focusId",
+          "op": "eq",
+          "value": "m-back"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Confirm career",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.focusId",
+          "op": "eq",
+          "value": "m-go"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Create real career and show authored introduction",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.profileName",
+          "op": "eq",
+          "value": "Kit"
+        },
+        {
+          "path": "gameplay.story",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Skip authored introduction with original skip button",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.mode",
+          "op": "eq",
+          "value": "hub"
+        },
+        {
+          "path": "gameplay.story",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Open garage menu",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.modal",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Settings",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.focusId",
+          "op": "eq",
+          "value": "m-set"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Credits",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.focusId",
+          "op": "eq",
+          "value": "m-cred"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Title",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.focusId",
+          "op": "eq",
+          "value": "m-title"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Return to title",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.mode",
+          "op": "eq",
+          "value": "title"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Select new-career tile",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.focusId",
+          "op": "eq",
+          "value": "t-new"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Select free race",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.focusId",
+          "op": "eq",
+          "value": "t-free"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Open original free race options",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.modal",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Wrap focus to Race button",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.focusId",
+          "op": "eq",
+          "value": "m-go"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Start original race and wait real countdown",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.mode",
+          "op": "eq",
+          "value": "race"
+        },
+        {
+          "path": "gameplay.phase",
+          "op": "eq",
+          "value": "race"
+        },
+        {
+          "path": "gameplay.countdown",
+          "op": "lte",
+          "value": 0
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "timeoutSeconds": 240
+    },
+    {
+      "name": "Explicit throttle accelerates player",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 3000,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "increased"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Right steer changes heading",
+      "keys": [
+        "UP",
+        "RIGHT"
+      ],
+      "holdMs": 900,
+      "expect": [
+        {
+          "path": "gameplay.heading",
+          "op": "changed"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Left steer and drift remain separate",
+      "keys": [
+        "UP",
+        "LEFT",
+        "A"
+      ],
+      "holdMs": 900,
+      "expect": [
+        {
+          "path": "gameplay.heading",
+          "op": "changed"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Consume nitro through separate B button",
+      "keys": [
+        "UP",
+        "B"
+      ],
+      "holdMs": 700,
+      "expect": [
+        {
+          "path": "gameplay.nitro",
+          "op": "changed"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Recover to the track with X",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.ghost",
+          "op": "gt",
+          "value": 0
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Switch original camera",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.camera",
+          "op": "changed"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Pause race",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ],
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "Resume by deliberate START, hold without re-pausing",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 1200,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "timeoutSeconds": 60
+    }
+  ]
+}

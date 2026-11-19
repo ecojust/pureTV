@@ -60,6 +60,15 @@ class WindowsCheck(base.CatalogCheck):
             finally:
                 second.disconnect();proxy.close();self.report['additionalBusyRejections'].append(dict(rejection,identity=second.identity))
         return dict(connected,independentBusyRejections=3)
+    def screenshot(self,name):
+        assert Path(name).name==name and '/' not in name and '\\' not in name and name.endswith('.png')
+        path=self.diag/name;assert not path.exists(),'A new capture must not reuse an existing PNG'
+        time.sleep(1.5);(self.diag/'screenshot-request.txt').write_text(name,encoding='utf-8')
+        record={'path':'diagnostics/'+name,'requestedAt':base.now()};self.report.setdefault('screenshotObservations',[]).append(record)
+        def alive():
+            if self.app and self.app.poll() is not None:raise RuntimeError('App exited during screenshot '+str(self.app.returncode))
+        data=observation_api.read_png(path,record,alive=alive)
+        self.report['screenshots'].append({'path':'diagnostics/'+name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()})
     def pause_stability(self,background=False):
         before=self.until(self.paused,'Paused before model stability observation');values={path:plan_api.read_path(before['game'],path) for path in self.plan['pauseStablePaths']}
         assert any(plan_api.numeric(value) for value in values.values()),'Pause observations require a finite model counter or coordinate'
@@ -70,9 +79,15 @@ class WindowsCheck(base.CatalogCheck):
                 assert not any(self.player(state).get('buttons',{}).values()),'Native inputs remained held in background'
             assert {path:plan_api.read_path(state['game'],path) for path in values}==values,'Gameplay progressed while paused'
         started=time.monotonic();samples=[];previous=before
+        observation={'background':background,'timeoutSeconds':15,'baselineTimestamp':before['timestamp'],'baselinePollCount':before['game']['controller']['pollCount'],'expectedPaths':values,'samples':[],'status':'observing'}
+        self.report.setdefault('pauseObservations',[]).append(observation)
         while time.monotonic()-started<.5 or len(samples)<4:
-            assert time.monotonic()-started<3,'Insufficient fresh real snapshots during pause'
-            state=self.read();stable(state)
+            if time.monotonic()-started>=15:
+                observation.update(status='failed',elapsedSeconds=time.monotonic()-started);raise AssertionError('Insufficient fresh real snapshots during pause')
+            state=self.read();elapsed=time.monotonic()-started
+            observation['samples'].append({'elapsedSeconds':elapsed,'nativeTimestamp':state.get('timestamp'),'pollCount':state.get('game',{}).get('controller',{}).get('pollCount'),'freshNativeSnapshot':self.fresh(state,previous),'paused':self.paused(state),'active':state.get('active'),'inputEnabled':state.get('server',{}).get('wifiController',{}).get('inputEnabled'),'paths':{path:plan_api.read_path(state['game'],path) for path in values}})
+            assert elapsed<=15,'Pause snapshot arrived after observation deadline'
+            stable(state)
             if self.fresh(state,previous):samples.append(state['timestamp']);previous=state
             time.sleep(.04)
         # WebView2 may suspend requestAnimationFrame while minimized. The
@@ -80,6 +95,7 @@ class WindowsCheck(base.CatalogCheck):
         # frame/input polling remains mandatory in front and after restoration.
         after=self.until(lambda state:self.fresh(state,before,not background),'Fresh native background observation' if background else 'Controller keeps polling during pause')
         stable(after)
+        observation.update(status='passed',elapsedSeconds=time.monotonic()-started,uniqueNativeSnapshots=len(samples),finalTimestamp=after['timestamp'],finalPollCount=after['game']['controller']['pollCount'])
         return {'paths':values,'samples':len(samples),'freshSnapshotTimestamps':samples,'realSeconds':time.monotonic()-started,'background':background,'controllerPollingRequired':not background,'controllerFramesAdvanced':after['game']['controller']['pollCount']-before['game']['controller']['pollCount']}
     def hwnd(self):
         title=json.loads((self.args.app/'game.json').read_text(encoding='utf-8'))['name'];window=self.user.FindWindowW('PureTVGameWindow',title)

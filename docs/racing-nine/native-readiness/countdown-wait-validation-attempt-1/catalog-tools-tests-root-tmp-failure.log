@@ -1,0 +1,20 @@
+....E............
+======================================================================
+ERROR: test_nested_resource_depth_file_node_and_index_limits (__main__.CatalogTools.test_nested_resource_depth_file_node_and_index_limits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/dev/shm/puretv-submit/joystick-games/shared/macos/tests/catalog-tools.test.py", line 250, in test_nested_resource_depth_file_node_and_index_limits
+    for index in range(2049):(root/(str(index)+'.js')).write_bytes(b'x')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1036, in write_bytes
+    with self.open(mode='wb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/tmp/tmp2wb1aabv/964.js'
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.126s
+
+FAILED (errors=1)

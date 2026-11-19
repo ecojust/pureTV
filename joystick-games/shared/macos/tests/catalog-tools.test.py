@@ -67,6 +67,20 @@ class CatalogTools(unittest.TestCase):
         state.update(stage='error', error='Error creating WebGL context.')
         self.assertEqual(verify.initialization(state, renderer=['webgl1', 'webgl2']), 'initialization_error')
 
+    def test_plan_wait_is_finite_positive_and_bounded_without_changing_actions(self):
+        for seconds in [60, 240]:
+            value = self.good_plan()
+            value['steps'][0]['timeoutSeconds'] = seconds
+            original = copy.deepcopy(value)
+            with self.subTest(seconds=seconds):
+                self.assertEqual(plan.validate_plan(value), original)
+                self.assertEqual(value, original)
+        for seconds in [0, -1, 241, True, '240', float('nan'), float('inf')]:
+            value = self.good_plan()
+            value['steps'][0]['timeoutSeconds'] = seconds
+            with self.subTest(seconds=seconds), self.assertRaises(AssertionError):
+                plan.validate_plan(value)
+
     def test_renderer_contract_has_no_catalog_graphics_exception(self):
         state = {'game': 'sample', 'renderer': 'canvas2d', 'stage': 'menu', 'paused': False, 'frames': 3, 'gameplay': {'tick': 0}, 'controller': {'pollCount': 3}}
         self.assertEqual(verify.initialization(state, renderer='canvas2d'), 'ready')

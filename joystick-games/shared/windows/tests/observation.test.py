@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Bounded original-byte reads; atomic replacement test requires real Windows."""
-import ctypes,importlib.util,json,os,sys,tempfile,threading,time,unittest
+import ctypes,importlib.util,json,os,struct,sys,tempfile,threading,time,unittest,zlib
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[4]
 spec=importlib.util.spec_from_file_location('observation',ROOT/'joystick-games/tools/windows-observation.py');observation=importlib.util.module_from_spec(spec);spec.loader.exec_module(observation)
@@ -65,4 +65,40 @@ class Reads(unittest.TestCase):
                 print(json.dumps({key:record[key] for key in ['completedWrites','readSamples','writeFailures','writerStillAlive']}),flush=True)
             self.assertFalse(writer.is_alive());self.assertEqual(failures,[]);self.assertEqual(completed,list(range(1,101)))
             final=observation.read_state(path,errors,required=True,alive=lambda:None);self.assertEqual(final['timestamp'],100);self.assertEqual(final['value'],'糖梅'*5000)
+def png_fixture():
+    def chunk(kind,payload):return struct.pack('>I',len(payload))+kind+payload+struct.pack('>I',zlib.crc32(kind+payload)&0xffffffff)
+    return b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',1,1,8,6,0,0,0))+chunk(b'IDAT',zlib.compress(b'\0\x11\x22\x33\xff'))+chunk(b'IEND',b'')
+
+class PngReads(unittest.TestCase):
+    def run_png(self,values,*,timeout=60,delay=0,alive=lambda:None):
+        clock=[0.0];record={}
+        def reader(path):
+            clock[0]+=delay;value=values.pop(0) if len(values)>1 else values[0]
+            if isinstance(value,Exception):raise value
+            return value
+        def wait(seconds):clock[0]+=seconds
+        data=observation.read_png('native.png',record,alive=alive,reader=reader,clock=lambda:clock[0],wait=wait,timeout=timeout)
+        return data,record
+    def test_exclusive_stream_and_partial_original_png_are_retried(self):
+        data=png_fixture();returned,record=self.run_png([PermissionError('native stream open'),data[:40],data[:-12],data])
+        self.assertEqual(returned,data);self.assertEqual(record['status'],'complete');self.assertEqual(record['attempts'],4);self.assertEqual(record['pixelSize'],[1,1]);self.assertEqual(len(record['errors']),3)
+    def test_crc_iend_and_extra_trailing_bytes_are_rejected(self):
+        data=png_fixture();corrupt=bytearray(data);corrupt[45]^=1
+        for invalid in [bytes(corrupt),data[:-12],data+b'x',data[:33]+data[-12:]]:
+            with self.subTest(bytes=len(invalid)),self.assertRaises(AssertionError):self.run_png([invalid],timeout=.3)
+    def test_late_but_bounded_original_capture_is_read_without_cached_success(self):
+        data,record=self.run_png([FileNotFoundError('pending capture')]*250+[png_fixture()])
+        self.assertEqual(data,png_fixture());self.assertGreater(record['elapsedSeconds'],20);self.assertLessEqual(record['elapsedSeconds'],60)
+    def test_missing_or_exclusively_locked_png_fails_at_deadline(self):
+        for error in [FileNotFoundError('no capture'),PermissionError('still writing')]:
+            with self.assertRaisesRegex(AssertionError,'complete readable native PNG'):self.run_png([error],timeout=.3)
+    def test_bytes_arriving_after_deadline_are_not_accepted(self):
+        with self.assertRaises(AssertionError):self.run_png([png_fixture()],timeout=.3,delay=.4)
+    def test_native_process_exit_is_not_hidden_by_png_retries(self):
+        def exited():raise RuntimeError('App exited 1')
+        with self.assertRaisesRegex(RuntimeError,'App exited'):self.run_png([png_fixture()],alive=exited)
+    def test_png_deadline_cannot_be_disabled_or_extended_past_sixty_seconds(self):
+        for timeout in [0,-1,61,True,float('inf'),float('nan')]:
+            with self.subTest(timeout=timeout),self.assertRaises(AssertionError):self.run_png([png_fixture()],timeout=timeout)
+
 if __name__=='__main__':unittest.main()
