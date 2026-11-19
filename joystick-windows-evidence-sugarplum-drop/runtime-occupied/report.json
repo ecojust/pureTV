@@ -1,0 +1,748 @@
+{
+  "status": "failed",
+  "game": "sugarplum-drop",
+  "platform": "windows",
+  "qaSourceCommit": "2fc11b94bdf0d5eda3fbc84fb5dbc6c39d4cf446",
+  "startedAt": "2026-11-19T18:56:34.566326+00:00",
+  "method": "Actual Win32/WebView2 app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostics. No model/time/storage writes.",
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "tests": [
+    {
+      "name": "Native DPI-scaled minimum and initial viewport",
+      "status": "failed",
+      "error": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 197, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 48, in window_bounds\n    restored=self.until(lambda s:self.fresh(s,before) and s['document']['width']>=1279 and s['document']['height']>=719,'Actual initial logical viewport restored')\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 194, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Actual initial logical viewport restored timed out: {\"active\": true, \"clientPixels\": {\"height\": 720, \"width\": 1028}, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1028, \"title\": \"Sugarplum Drop\", \"url\": \"https://puretv.local/tv.html\", \"webglError\": false, \"width\": 1028}, \"game\": {\"controller\": {\"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelled\": false, \"connected\": false, \"info\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"windows\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"sugarplum-drop.v1\", \"sugarplum-drop.v1.settings\", \"sugarplum-drop.v1.best\"], \"storageMaxBytes\": 1048576, \"storageMaxTotalBytes\": 67108864, \"url\": \"\", \"wifiController\": {\"addresses\": [\"10.1.0.248\", \"172.27.80.1\"], \"inputEnabled\": true, \"port\": 65339, \"serviceName\": \"糖梅落落-8100\", \"state\": \"available\"}}, \"inputAvailable\": true, \"native\": true, \"players\": [], \"pollCount\": 1706, \"pressed\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"released\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"source\": \"\"}, \"errors\": [], \"frames\": 1706, \"game\": \"sugarplum-drop\", \"gameplay\": {\"aimX\": 7.912142857142857, \"bodies\": [{\"id\": 22, \"tier\": 3, \"x\": 0.74, \"y\": 13.26}, {\"id\": 33, \"tier\": 4, \"x\": 9.08, \"y\": 13.08}, {\"id\": 44, \"tier\": 3, \"x\": 7.285517994485552, \"y\": 13.26}, {\"id\": 50, \"tier\": 1, \"x\": 7.912142857142857, \"y\": 3.7100507652255104}, {\"id\": 51, \"tier\": 6, \"x\": 4.576248655288664, \"y\": 12.7}], \"drops\": 28, \"merges\": 23, \"score\": 173, \"screen\": \"title\", \"tick\": 26.68333333333246, \"topTier\": 6}, \"paused\": false, \"renderer\": \"canvas2d\", \"stage\": \"menu\", \"webglVersion\": null}, \"input\": {\"connections\": 0, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 2, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 2}, \"lastJavaScriptError\": \"\", \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"windows\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"sugarplum-drop.v1\", \"sugarplum-drop.v1.settings\", \"sugarplum-drop.v1.best\"], \"storageMaxBytes\": 1048576, \"storageMaxTotalBytes\": 67108864, \"url\": \"\", \"wifiController\": {\"addresses\": [\"10.1.0.248\", \"172.27.80.1\"], \"inputEnabled\": true, \"port\": 65339, \"serviceName\": \"糖梅落落-8100\", \"state\": \"available\"}}, \"storage\": {\"current\": {\"sugarplum-drop.v1\": null, \"sugarplum-drop.v1.best\": null, \"sugarplum-drop.v1.settings\": null}, \"initial\": {\"sugarplum-drop.v1\": null, \"sugarplum-drop.v1.best\": null, \"sugarplum-drop.v1.settings\": null}, \"origin\": \"https://puretv.local\"}, \"timestamp\": 728.718, \"windowDpi\": 96}\n"
+    }
+  ],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [
+    {
+      "label": "Actual renderer initialized",
+      "at": "2026-11-19T18:56:37.052917+00:00",
+      "state": {
+        "active": true,
+        "clientPixels": {
+          "height": 720,
+          "width": 1028
+        },
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "en",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1028,
+          "title": "Sugarplum Drop",
+          "url": "https://puretv.local/tv.html",
+          "webglError": false,
+          "width": 1028
+        },
+        "game": {
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {
+              "appVersion": "0.1.0",
+              "language": "zh",
+              "platform": "windows",
+              "preferences": {},
+              "qr": "",
+              "storageKeys": [
+                "sugarplum-drop.v1",
+                "sugarplum-drop.v1.settings",
+                "sugarplum-drop.v1.best"
+              ],
+              "storageMaxBytes": 1048576,
+              "storageMaxTotalBytes": 67108864,
+              "url": "",
+              "wifiController": {
+                "addresses": [
+                  "10.1.0.248",
+                  "172.27.80.1"
+                ],
+                "inputEnabled": true,
+                "port": 65339,
+                "serviceName": "糖梅落落-8100",
+                "state": "available"
+              }
+            },
+            "inputAvailable": true,
+            "native": true,
+            "players": [],
+            "pollCount": 5,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "errors": [],
+          "frames": 5,
+          "game": "sugarplum-drop",
+          "gameplay": {
+            "aimX": 4.241666666666664,
+            "bodies": [],
+            "drops": 0,
+            "merges": 0,
+            "score": 0,
+            "screen": "title",
+            "tick": 0.10833333333333332,
+            "topTier": 0
+          },
+          "paused": false,
+          "renderer": "canvas2d",
+          "stage": "menu",
+          "webglVersion": null
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 2,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 2
+        },
+        "lastJavaScriptError": "",
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "windows",
+          "preferences": {},
+          "qr": "",
+          "storageKeys": [
+            "sugarplum-drop.v1",
+            "sugarplum-drop.v1.settings",
+            "sugarplum-drop.v1.best"
+          ],
+          "storageMaxBytes": 1048576,
+          "storageMaxTotalBytes": 67108864,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "10.1.0.248",
+              "172.27.80.1"
+            ],
+            "inputEnabled": true,
+            "port": 65339,
+            "serviceName": "糖梅落落-8100",
+            "state": "available"
+          }
+        },
+        "storage": {
+          "current": {
+            "sugarplum-drop.v1": null,
+            "sugarplum-drop.v1.best": null,
+            "sugarplum-drop.v1.settings": null
+          },
+          "initial": {
+            "sugarplum-drop.v1": null,
+            "sugarplum-drop.v1.best": null,
+            "sugarplum-drop.v1.settings": null
+          },
+          "origin": "https://puretv.local"
+        },
+        "timestamp": 702.14,
+        "windowDpi": 96
+      }
+    },
+    {
+      "label": "Foreground game ready",
+      "at": "2026-11-19T18:56:37.053930+00:00",
+      "state": {
+        "active": true,
+        "clientPixels": {
+          "height": 720,
+          "width": 1028
+        },
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "en",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1028,
+          "title": "Sugarplum Drop",
+          "url": "https://puretv.local/tv.html",
+          "webglError": false,
+          "width": 1028
+        },
+        "game": {
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {
+              "appVersion": "0.1.0",
+              "language": "zh",
+              "platform": "windows",
+              "preferences": {},
+              "qr": "",
+              "storageKeys": [
+                "sugarplum-drop.v1",
+                "sugarplum-drop.v1.settings",
+                "sugarplum-drop.v1.best"
+              ],
+              "storageMaxBytes": 1048576,
+              "storageMaxTotalBytes": 67108864,
+              "url": "",
+              "wifiController": {
+                "addresses": [
+                  "10.1.0.248",
+                  "172.27.80.1"
+                ],
+                "inputEnabled": true,
+                "port": 65339,
+                "serviceName": "糖梅落落-8100",
+                "state": "available"
+              }
+            },
+            "inputAvailable": true,
+            "native": true,
+            "players": [],
+            "pollCount": 5,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "errors": [],
+          "frames": 5,
+          "game": "sugarplum-drop",
+          "gameplay": {
+            "aimX": 4.241666666666664,
+            "bodies": [],
+            "drops": 0,
+            "merges": 0,
+            "score": 0,
+            "screen": "title",
+            "tick": 0.10833333333333332,
+            "topTier": 0
+          },
+          "paused": false,
+          "renderer": "canvas2d",
+          "stage": "menu",
+          "webglVersion": null
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 2,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 2
+        },
+        "lastJavaScriptError": "",
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "windows",
+          "preferences": {},
+          "qr": "",
+          "storageKeys": [
+            "sugarplum-drop.v1",
+            "sugarplum-drop.v1.settings",
+            "sugarplum-drop.v1.best"
+          ],
+          "storageMaxBytes": 1048576,
+          "storageMaxTotalBytes": 67108864,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "10.1.0.248",
+              "172.27.80.1"
+            ],
+            "inputEnabled": true,
+            "port": 65339,
+            "serviceName": "糖梅落落-8100",
+            "state": "available"
+          }
+        },
+        "storage": {
+          "current": {
+            "sugarplum-drop.v1": null,
+            "sugarplum-drop.v1.best": null,
+            "sugarplum-drop.v1.settings": null
+          },
+          "initial": {
+            "sugarplum-drop.v1": null,
+            "sugarplum-drop.v1.best": null,
+            "sugarplum-drop.v1.settings": null
+          },
+          "origin": "https://puretv.local"
+        },
+        "timestamp": 702.14,
+        "windowDpi": 96
+      }
+    },
+    {
+      "label": "Actual minimum logical viewport",
+      "at": "2026-11-19T18:56:37.139529+00:00",
+      "state": {
+        "active": true,
+        "clientPixels": {
+          "height": 540,
+          "width": 960
+        },
+        "document": {
+          "controllerClients": [],
+          "height": 540,
+          "language": "en",
+          "primaryText": "",
+          "scrollHeight": 540,
+          "scrollWidth": 960,
+          "title": "Sugarplum Drop",
+          "url": "https://puretv.local/tv.html",
+          "webglError": false,
+          "width": 960
+        },
+        "game": {
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {
+              "appVersion": "0.1.0",
+              "language": "zh",
+              "platform": "windows",
+              "preferences": {},
+              "qr": "",
+              "storageKeys": [
+                "sugarplum-drop.v1",
+                "sugarplum-drop.v1.settings",
+                "sugarplum-drop.v1.best"
+              ],
+              "storageMaxBytes": 1048576,
+              "storageMaxTotalBytes": 67108864,
+              "url": "",
+              "wifiController": {
+                "addresses": [
+                  "10.1.0.248",
+                  "172.27.80.1"
+                ],
+                "inputEnabled": true,
+                "port": 65339,
+                "serviceName": "糖梅落落-8100",
+                "state": "available"
+              }
+            },
+            "inputAvailable": true,
+            "native": true,
+            "players": [],
+            "pollCount": 12,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "errors": [],
+          "frames": 12,
+          "game": "sugarplum-drop",
+          "gameplay": {
+            "aimX": 3.483333333333331,
+            "bodies": [],
+            "drops": 0,
+            "merges": 0,
+            "score": 0,
+            "screen": "title",
+            "tick": 0.21666666666666665,
+            "topTier": 0
+          },
+          "paused": false,
+          "renderer": "canvas2d",
+          "stage": "menu",
+          "webglVersion": null
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 2,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 2
+        },
+        "lastJavaScriptError": "",
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "windows",
+          "preferences": {},
+          "qr": "",
+          "storageKeys": [
+            "sugarplum-drop.v1",
+            "sugarplum-drop.v1.settings",
+            "sugarplum-drop.v1.best"
+          ],
+          "storageMaxBytes": 1048576,
+          "storageMaxTotalBytes": 67108864,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "10.1.0.248",
+              "172.27.80.1"
+            ],
+            "inputEnabled": true,
+            "port": 65339,
+            "serviceName": "糖梅落落-8100",
+            "state": "available"
+          }
+        },
+        "storage": {
+          "current": {
+            "sugarplum-drop.v1": null,
+            "sugarplum-drop.v1.best": null,
+            "sugarplum-drop.v1.settings": null
+          },
+          "initial": {
+            "sugarplum-drop.v1": null,
+            "sugarplum-drop.v1.best": null,
+            "sugarplum-drop.v1.settings": null
+          },
+          "origin": "https://puretv.local"
+        },
+        "timestamp": 702.25,
+        "windowDpi": 96
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "diagnostics/minimum-window.png",
+      "bytes": 139739,
+      "sha256": "641a86cee0dfc828ec446b99656f5e2b18bbbb1085d92d86ab4c8986d3c0d7d6"
+    }
+  ],
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "canvas2d",
+    "pauseStablePaths": [
+      "gameplay.tick",
+      "gameplay.score",
+      "gameplay.aimX",
+      "gameplay.drops"
+    ],
+    "steps": [
+      {
+        "name": "Start a candy jar",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      },
+      {
+        "name": "Move the actual dropper",
+        "keys": [
+          "RIGHT"
+        ],
+        "holdMs": 450,
+        "expect": [
+          {
+            "path": "gameplay.aimX",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Drop a treat into the physics simulation",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.drops",
+            "op": "increased"
+          }
+        ]
+      },
+      {
+        "name": "Pause the jar",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "paused"
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Resume explicitly",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          }
+        ]
+      }
+    ],
+    "storageRestartRequired": true
+  },
+  "binarySha256": "5bc257c1bd81ad4df16589c749ecfc85bd76629633083a095967787ded666bea",
+  "sourceHashes": {
+    "joystick-games\\tools\\windows-verify.py": "c918c770a76fa39ff527ea4f78b3fee3fa945376b3301648df669f5ecb1d6262",
+    "joystick-games\\tools\\macos-verify.py": "03157d96dea6098ac336020d1627d9e4f9ae872590fee59bc6d5ba9f0e1af048",
+    "joystick-games\\tools\\qa-plan.py": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+    "puretv-joystick\\joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games\\sugarplum-drop\\qa-plan.json": "f0ee75bc6ea2519e1e6df27d64c1134b49957736c2f1c0faf4144bc8056e2b09"
+  },
+  "error": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 101, in run\n    self.check('Native DPI-scaled minimum and initial viewport',self.window_bounds)\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 197, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 48, in window_bounds\n    restored=self.until(lambda s:self.fresh(s,before) and s['document']['width']>=1279 and s['document']['height']>=719,'Actual initial logical viewport restored')\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 194, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Actual initial logical viewport restored timed out: {\"active\": true, \"clientPixels\": {\"height\": 720, \"width\": 1028}, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1028, \"title\": \"Sugarplum Drop\", \"url\": \"https://puretv.local/tv.html\", \"webglError\": false, \"width\": 1028}, \"game\": {\"controller\": {\"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelled\": false, \"connected\": false, \"info\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"windows\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"sugarplum-drop.v1\", \"sugarplum-drop.v1.settings\", \"sugarplum-drop.v1.best\"], \"storageMaxBytes\": 1048576, \"storageMaxTotalBytes\": 67108864, \"url\": \"\", \"wifiController\": {\"addresses\": [\"10.1.0.248\", \"172.27.80.1\"], \"inputEnabled\": true, \"port\": 65339, \"serviceName\": \"糖梅落落-8100\", \"state\": \"available\"}}, \"inputAvailable\": true, \"native\": true, \"players\": [], \"pollCount\": 1706, \"pressed\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"released\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"source\": \"\"}, \"errors\": [], \"frames\": 1706, \"game\": \"sugarplum-drop\", \"gameplay\": {\"aimX\": 7.912142857142857, \"bodies\": [{\"id\": 22, \"tier\": 3, \"x\": 0.74, \"y\": 13.26}, {\"id\": 33, \"tier\": 4, \"x\": 9.08, \"y\": 13.08}, {\"id\": 44, \"tier\": 3, \"x\": 7.285517994485552, \"y\": 13.26}, {\"id\": 50, \"tier\": 1, \"x\": 7.912142857142857, \"y\": 3.7100507652255104}, {\"id\": 51, \"tier\": 6, \"x\": 4.576248655288664, \"y\": 12.7}], \"drops\": 28, \"merges\": 23, \"score\": 173, \"screen\": \"title\", \"tick\": 26.68333333333246, \"topTier\": 6}, \"paused\": false, \"renderer\": \"canvas2d\", \"stage\": \"menu\", \"webglVersion\": null}, \"input\": {\"connections\": 0, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 2, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 2}, \"lastJavaScriptError\": \"\", \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"windows\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"sugarplum-drop.v1\", \"sugarplum-drop.v1.settings\", \"sugarplum-drop.v1.best\"], \"storageMaxBytes\": 1048576, \"storageMaxTotalBytes\": 67108864, \"url\": \"\", \"wifiController\": {\"addresses\": [\"10.1.0.248\", \"172.27.80.1\"], \"inputEnabled\": true, \"port\": 65339, \"serviceName\": \"糖梅落落-8100\", \"state\": \"available\"}}, \"storage\": {\"current\": {\"sugarplum-drop.v1\": null, \"sugarplum-drop.v1.best\": null, \"sugarplum-drop.v1.settings\": null}, \"initial\": {\"sugarplum-drop.v1\": null, \"sugarplum-drop.v1.best\": null, \"sugarplum-drop.v1.settings\": null}, \"origin\": \"https://puretv.local\"}, \"timestamp\": 728.718, \"windowDpi\": 96}\n",
+  "finishedAt": "2026-11-19T18:57:03.775494+00:00"
+}
