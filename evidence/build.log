@@ -1,0 +1,14 @@
+fatal: failed to stat 'dbb84be8f6a981606ec9f2c7436d43c9486fb9ea:joystick-games/sugarplum-drop/docs/native-delivery/raw/android/reports/joystick-android-report-runtime-sugarplum-drop/sugarplum-drop/executed-source/joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java': Filename too long
+Traceback (most recent call last):
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-build.py", line 129, in <module>
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--game',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--dependencies',type=Path,required=True);build(p.parse_args())
+                                                                                                                                                                                                      ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-build.py", line 104, in build
+    assert raw==subprocess.check_output(['git','show',source+':'+name],cwd=ROOT),'Uncommitted build input: '+name
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', 'show', 'dbb84be8f6a981606ec9f2c7436d43c9486fb9ea:joystick-games/sugarplum-drop/docs/native-delivery/raw/android/reports/joystick-android-report-runtime-sugarplum-drop/sugarplum-drop/executed-source/joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java']' returned non-zero exit status 128.
