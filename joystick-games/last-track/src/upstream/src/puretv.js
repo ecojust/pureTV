@@ -39,11 +39,30 @@ export function createPureTv(game, root) {
     const i = nextFocus(rects, els.indexOf(focus), button.toLowerCase());
     els[i]?.focus();
   }
+  const menuArea = () => modal() || root.querySelector('.screen:not(.hidden)') || root;
+  const visible = element => element && !element.disabled && element.offsetParent !== null;
+  function primary(area) {
+    return [...area.querySelectorAll('.btn-primary,button')].filter(visible).sort((a,b) => Number(b.classList.contains('btn-primary')) - Number(a.classList.contains('btn-primary')))[0];
+  }
+  function focusVisible() {
+    const area = menuArea(), focus = document.activeElement;
+    if (!area.contains(focus) || !visible(focus)) primary(area)?.focus();
+  }
   function select() {
-    const area = modal() || root.querySelector('.screen:not(.hidden)') || root;
-    const focus = document.activeElement;
-    if (focus && area.contains(focus) && !focus.disabled && typeof focus.click === 'function') focus.click();
-    else area.querySelector('.btn-primary:not(:disabled),button:not(:disabled)')?.click();
+    const area = menuArea(), focus = document.activeElement;
+    const selected = area.contains(focus) && visible(focus) && typeof focus.click === 'function' ? focus : primary(area);
+    selected?.click();
+    // Original wizards retain their hidden first-page buttons in the DOM.
+    // Advance focus to the new visible primary action after its normal click.
+    focusVisible();
+  }
+  function back() {
+    if (modal()) { emit('Escape',true); emit('Escape',false); }
+    else {
+      const button = [...menuArea().querySelectorAll('.btn-back')].find(visible);
+      if (button) button.click(); else { emit('Escape',true); emit('Escape',false); }
+    }
+    focusVisible();
   }
   function snapshot() {
     // getSnapshot is the game's existing cached snapB. Never call sim.snapshot(): that consumes events.
@@ -84,7 +103,7 @@ export function createPureTv(game, root) {
         } else if (held) {
           if (['UP','DOWN','LEFT','RIGHT'].includes(b) && (f.pressed[b] || now >= (repeatAt.get(b) ?? Infinity))) { menuMove(b,!f.pressed[b]); repeatAt.set(b,now+(f.pressed[b]?420:130)); }
           else if (f.pressed[b] && b==='A') select();
-          else if (f.pressed[b] && b==='B') { emit('Escape',true); emit('Escape',false); }
+          else if (f.pressed[b] && b==='B') back();
         } else repeatAt.delete(b);
       }
       controller.setPlaying(playing);
