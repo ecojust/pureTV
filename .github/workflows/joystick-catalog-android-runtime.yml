@@ -46,6 +46,11 @@ on:
         required: false
         default: false
         type: boolean
+      pon_disable_vulkan:
+        description: Optional single-variable Vulkan-off comparison for the exact supervised original Pon APK only
+        required: false
+        default: false
+        type: boolean
 
 concurrency:
   group: joystick-catalog-android-runtime-${{ github.ref }}-${{ inputs.batch }}
@@ -65,6 +70,7 @@ env:
   ARTIFACT_ATTEMPT: ${{ inputs.artifact_attempt }}
   CONFIRM_BACKROAD_INSTALL: ${{ inputs.confirm_backroad_install && 'true' || 'false' }}
   SUPERVISE_PON_EMULATOR: ${{ inputs.supervise_pon_emulator && 'true' || 'false' }}
+  PON_DISABLE_VULKAN: ${{ inputs.pon_disable_vulkan && 'true' || 'false' }}
 
 jobs:
   select:
@@ -108,6 +114,9 @@ jobs:
               assert os.environ['ARTIFACT_RUN']=='44599353036' and os.environ['ARTIFACT_ID']=='14567692465'
               assert os.environ['ARTIFACT_ATTEMPT']=='1' and not os.environ['ARTIFACT_EXPORT']
           assert os.environ['SUPERVISE_PON_EMULATOR'] in ('true','false')
+          assert os.environ['PON_DISABLE_VULKAN'] in ('true','false')
+          if os.environ['PON_DISABLE_VULKAN']=='true':
+              assert os.environ['SUPERVISE_PON_EMULATOR']=='true', 'Vulkan comparison requires exact Pon supervision'
           if os.environ['SUPERVISE_PON_EMULATOR']=='true':
               assert os.environ['GAMES']=='ponpoko-kart' and os.environ['BATCH']=='racing-01'
               assert os.environ['ARTIFACT_SOURCE']=='8f283c73f52f857777306eafc88f710262367834'
@@ -115,7 +124,7 @@ jobs:
               assert not os.environ['ARTIFACT_ID'] and not os.environ['ARTIFACT_ATTEMPT']
               assert os.environ['CONFIRM_BACKROAD_INSTALL']=='false'
           out=Path(os.environ['RUNNER_TEMP'])/'provenance';out.mkdir()
-          (out/'requested-inputs.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'batch':os.environ['BATCH'],'games':os.environ['GAMES'],'confirmBackroadInstall':os.environ['CONFIRM_BACKROAD_INSTALL']=='true','supervisePonEmulator':os.environ['SUPERVISE_PON_EMULATOR']=='true'},indent=2)+'\n')
+          (out/'requested-inputs.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'batch':os.environ['BATCH'],'games':os.environ['GAMES'],'confirmBackroadInstall':os.environ['CONFIRM_BACKROAD_INSTALL']=='true','supervisePonEmulator':os.environ['SUPERVISE_PON_EMULATOR']=='true','ponDisableVulkan':os.environ['PON_DISABLE_VULKAN']=='true'},indent=2)+'\n')
           PY
           python3 joystick-games/tools/android-catalog.py select --batch "$BATCH" --games "$GAMES" | tee "$RUNNER_TEMP/provenance/selection.json"
       - uses: actions/checkout@v4
@@ -253,7 +262,8 @@ jobs:
           force-avd-creation: true
           disable-animations: true
           # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
-          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          # Optional controlled Vulkan-off comparison; not an established crash cause or fix.
+          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}
           pre-emulator-launch-script: >-
             python3 joystick-games/tools/android-emulator-supervisor.py prepare
             --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"

@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "racing_review_karts",
+  "reviewedAt": "2026-11-19T22:12:13.419629+00:00",
+  "status": "no_static_blocker_for_one_controlled_native_comparison",
+  "scope": "Independent read-only source, provenance and existing fixture-result review; no repeat test execution or workflow POST",
+  "inventory": {
+    "path": "docs/racing-nine/native-readiness/pon-vulkan-control-attempt-1/inventory.json",
+    "sha256": "800d8d913f020cd80e3c7b6bf8d0fec64fff0a8e56384ed2d8f02de2a86bfba0",
+    "allFilesVerified": 14
+  },
+  "exactSourceFiles": {
+    ".github/workflows/joystick-catalog-android-runtime.yml": {
+      "bytes": 26240,
+      "sha256": "3fc28805e7f23958b1068b97e12c59810bc90d5e2719a2fa1c99407e40846009"
+    },
+    "joystick-games/tools/android-emulator-supervisor.py": {
+      "bytes": 21468,
+      "sha256": "03b50fff82e96f37903ebcc7df877fb216012f691cf87f60701f1390e3b65fd0"
+    },
+    "joystick-games/qa/android/test_emulator_supervisor.py": {
+      "bytes": 21958,
+      "sha256": "83abdb0c22e062cb50b95ea61a4e45086d7ef718c6f5f0fe461b52d1ce2488db"
+    }
+  },
+  "baseline": "d3b9178bfc4748ef0d8b983f4c6775969f946625",
+  "astComparison": {
+    "unchangedFunctions": [
+      "digest",
+      "atomic_json",
+      "process_identity",
+      "owned_supervisor_identity",
+      "matches_supervisor",
+      "executable_identity",
+      "run_child",
+      "query",
+      "load_state",
+      "restore",
+      "main"
+    ],
+    "changedFunctions": [
+      "enabled",
+      "prepare",
+      "assert_ready",
+      "launch"
+    ],
+    "newFunctions": [
+      "disable_vulkan",
+      "expected_arguments"
+    ]
+  },
+  "findings": [
+    {
+      "topic": "Default off and exact original-package scope",
+      "status": "passed-static",
+      "detail": "workflow boolean pon_disable_vulkan defaults false; absent helper environment also defaults false. True requires supervisor=true. Workflow select binds single Pon/racing-01 and original source8f/run44597115244/export4249f, empty alternativeartifactID/attempt and Backroad confirmation false. Helper independently validates disposable Actions scope, Pon game and original artifact provenance. Invalid/missing-as-true string values are rejected before SDK changes."
+    },
+    {
+      "topic": "Single launch-variable contract",
+      "status": "passed-static",
+      "detail": "Default EXPECTED_ARGS remains byte-for-byte the d3b baseline. Enabled mode only appends two argv tokens: -feature and -Vulkan. GPU swiftshader_indirect, guest2048MiB, API36 android-tv x86_64, emulator-build16970787, source APK and acceptance rules are unchanged by these 3 QA files. Workflow expression and helper expected list agree; actual fixture stdout confirms original argv0 and every expected argument, not just a constructed list."
+    },
+    {
+      "topic": "State and command drift fails closed",
+      "status": "passed-static-and-recorded-fixtures",
+      "detail": "prepare stores disableVulkan and the selected argument list; assert_ready verifies current flag identity and exact expected arguments alongside original source/run/attempt/shim/binary hashes. launch checks this before exact argv equality. Missing flag under enabled-state, changed state arguments, omission/duplication/wrong Vulkan spelling or extra memory override are rejected. The direct original non-AVD query whitelist is unchanged."
+    },
+    {
+      "topic": "Exit, signal, restore and evidence semantics",
+      "status": "passed-static",
+      "detail": "AST comparison to d3b shows run_child/query/restore/main and all PID/executable identity and cleanup helpers unchanged. Actual child wait status, QEMU exec-vs-fork distinction, signal interventions, output limits, restoration and unknown-cause semantics are preserved. The flag does not reinterpret original SIGSEGV or synthesize successful native results."
+    },
+    {
+      "topic": "Recorded validation and supporting documentation",
+      "status": "reviewed-not-rerun",
+      "detail": "Read original19 ELF/process fixture tests (6.829s), unchanged prior15 coverage plus4 control cases, and actionlint log. Official troubleshooting documents the supported -feature -Vulkan control. Neither that documentation nor prior Vulkan fixes supplies a native stack proving this Pon crash cause; proposal explicitly retains that limitation."
+    },
+    {
+      "topic": "Isolated QA source required before dispatch",
+      "status": "required-root-integration-boundary",
+      "detail": "The proposed parent is d3b9178bfc4748ef0d8b983f4c6775969f946625, overlaying exactly these3 QA files. Current shared HEAD includes later Backroad Java/target35 production changes; those must not enter the original-Pon comparison. This review validates candidate files and their d3b diff; it does not claim a not-yet-created isolated commit or actual native comparison has already passed."
+    }
+  ],
+  "unitTestsRerun": false,
+  "sourceModifiedByReviewer": false,
+  "nativeComparisonRunByReviewer": false,
+  "workflowPostedByReviewer": false,
+  "vulkanEstablishedAsCrashCause": false,
+  "vulkanOffEstablishedAsFix": false,
+  "remaining": [
+    "Root must verify the isolated QA commit changes only the3 reviewed QA paths relative to d3b before its sole dispatch.",
+    "Actual hosted emulator launch, original signed APK verification, native game behavior and resulting wait status remain evidence to collect."
+  ]
+}
