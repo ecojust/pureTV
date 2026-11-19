@@ -1,0 +1,56 @@
+{
+  "nativeWindowsVerification": false,
+  "checks": [
+    {
+      "test": "joystick-games/shared/windows/tests/observation.test.py",
+      "returncode": 0
+    },
+    {
+      "test": "joystick-games/shared/windows/tests/source-scope.test.py",
+      "returncode": 0
+    },
+    {
+      "test": "joystick-games/shared/windows/tests/protocol.test.cpp",
+      "compiler": "g++ -std=c++17 -Wall -Wextra -Werror -pedantic",
+      "compileReturncode": 0,
+      "returncode": 0,
+      "portableGroupsPassed": 32,
+      "newWin32TransportCompiledOrRun": false
+    }
+  ],
+  "sources": {
+    "joystick-games/shared/windows/Sources/main.cpp": {
+      "bytes": 26594,
+      "sha256": "32b651a33ab71d43ae956d106e7b67676ac6958ba142dfce5b6f9bf5d653fc57"
+    },
+    "joystick-games/tools/windows-observation.py": {
+      "bytes": 2512,
+      "sha256": "4a0c015cfffbb4d5238d6d3b03a0bc69eeb939bbddf3209e9312eaedeaf2d9c8"
+    },
+    "joystick-games/tools/windows-inputs.py": {
+      "bytes": 9731,
+      "sha256": "8afaec22626f8432b0c08ac0a60664bab54ed00874d3ee1eecdd6a9a8c73d8e6"
+    },
+    "joystick-games/tools/windows-verify.py": {
+      "bytes": 17744,
+      "sha256": "eba41c8c941b978461dd731ef625349b0afd5927ca8e6754bd64005349db84fc"
+    },
+    "joystick-games/tools/windows-evidence.py": {
+      "bytes": 2983,
+      "sha256": "dbad758ae45445857a6a08ec0db31c6cf27807d9ec992588b0f51204a0a1433b"
+    },
+    "joystick-games/shared/windows/tests/observation.test.py": {
+      "bytes": 3739,
+      "sha256": "32ece679e1e3824c81b0586e6a688fb5c89e128ebcd682c60876dab2a9700630"
+    },
+    ".github/workflows/joystick-catalog-windows.yml": {
+      "bytes": 6459,
+      "sha256": "6afcde204a5a34d56da0390c39455f92671563aafbf951bef0145c01490df7e7"
+    }
+  },
+  "independentStaticReview": {
+    "agent": "racing_review_karts",
+    "result": "No blocking issue found in current main.cpp, windows-observation.py, windows-verify.py and observation.test.py",
+    "nativeExecutionPerformed": false
+  }
+}

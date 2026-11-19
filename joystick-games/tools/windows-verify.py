@@ -7,6 +7,7 @@ def module(name,path):
     spec=importlib.util.spec_from_file_location(name,path);value=importlib.util.module_from_spec(spec);spec.loader.exec_module(value);return value
 base=module('macos_observation',Path(__file__).with_name('macos-verify.py'))
 display_api=module('windows_display',Path(__file__).with_name('windows-display.py'))
+observation_api=module('windows_observation',Path(__file__).with_name('windows-observation.py'))
 plan_api=base.qa_plan
 class WindowsCheck(base.CatalogCheck):
     def __init__(self,args):
@@ -19,6 +20,7 @@ class WindowsCheck(base.CatalogCheck):
         assert self.user.SetThreadDpiAwarenessContext(ctypes.c_void_p(-4)), 'Cannot disable DPI virtualization for native window measurement'
         self.display_session=display_api.DisplaySession(self.out/'display-setup.json');self.report['nativeDisplay']=self.display_session.report
         self.report['sourceHashes']['joystick-games/tools/windows-display.py']=base.digest(display_api.__file__)
+        self.report['sourceHashes']['joystick-games/tools/windows-observation.py']=base.digest(observation_api.__file__);self.report['diagnosticReadErrors']=[]
         self.user.FindWindowW.argtypes=[ctypes.c_wchar_p,ctypes.c_wchar_p];self.user.FindWindowW.restype=ctypes.c_void_p
         self.user.PostMessageW.argtypes=[ctypes.c_void_p,ctypes.c_uint,ctypes.c_size_t,ctypes.c_ssize_t]
         self.user.ShowWindow.argtypes=[ctypes.c_void_p,ctypes.c_int];self.user.SetForegroundWindow.argtypes=[ctypes.c_void_p]
@@ -26,11 +28,56 @@ class WindowsCheck(base.CatalogCheck):
         self.user.SendMessageW.argtypes=[ctypes.c_void_p,ctypes.c_uint,ctypes.c_size_t,ctypes.c_ssize_t]
         self.user.SetWindowPos.argtypes=[ctypes.c_void_p,ctypes.c_void_p,ctypes.c_int,ctypes.c_int,ctypes.c_int,ctypes.c_int,ctypes.c_uint]
         self.user.GetWindowRect.argtypes=[ctypes.c_void_p,ctypes.c_void_p]
-        for p in [Path(__file__),Path(base.__file__),Path(display_api.__file__),Path(plan_api.__file__),base.SDK,ROOT/'joystick-games'/args.game/'qa-plan.json']:shutil.copy2(p,self.out/('executed-'+p.name))
+        for p in [Path(__file__),Path(base.__file__),Path(display_api.__file__),Path(observation_api.__file__),Path(plan_api.__file__),base.SDK,ROOT/'joystick-games'/args.game/'qa-plan.json']:shutil.copy2(p,self.out/('executed-'+p.name))
+    def read(self):
+        def alive():
+            if self.app and self.app.poll() is not None:raise RuntimeError('App exited '+str(self.app.returncode))
+        state=observation_api.read_state(self.diag/'state.json',self.report['diagnosticReadErrors'],required=self.last is not None,alive=alive)
+        if state:
+            if isinstance(state.get('game'),dict):assert not state['game'].get('errors'),'Game runtime errors: '+json.dumps(state['game']['errors'])
+            self.last=state
+        return state
+    def connect(self):
+        connected=super().connect();self.report['additionalBusyRejections']=[]
+        # Repeat actual independent SDK clients after the original check. Each
+        # sends hello plus all nine syncs while the host half-closes its reply.
+        owner=self.player(self.read())
+        for attempt in range(2):
+            rejection={'wire':[],'observerErrors':[],'observerConnectionEnds':[]};proxy=base.RejectionObserver(('127.0.0.1',self.port),rejection)
+            sdk=module('windows_second_sdk_'+str(attempt),base.SDK);second=sdk.JoystickClient('127.0.0.1',proxy.port)
+            try:
+                assert second.identity!=self.client.identity
+                try:second.connect()
+                except OSError as error:rejection['connectError']=str(error)
+                deadline=time.monotonic()+5
+                while time.monotonic()<deadline:
+                    if any(row['direction']=='game-to-sdk' and row['message']=={'type':'error','message':'controller_busy','seq':1} for row in rejection['wire']):break
+                    time.sleep(.05)
+                else:raise AssertionError('Repeated second SDK did not receive controller_busy before close')
+                current=self.until(lambda state:self.player(state).get('controllerId')==owner['controllerId'] and self.player(state).get('session')==owner['session'],'Owner retains seat after repeated rejected SDK')
+                assert len([player for player in current['input']['players'] if player.get('connected')])==1
+                self.ping_ack()
+            finally:
+                second.disconnect();proxy.close();self.report['additionalBusyRejections'].append(dict(rejection,identity=second.identity))
+        return dict(connected,independentBusyRejections=3)
+    def pause_stability(self):
+        before=self.until(self.paused,'Paused before model stability observation');values={path:plan_api.read_path(before['game'],path) for path in self.plan['pauseStablePaths']}
+        assert any(plan_api.numeric(value) for value in values.values()),'Pause observations require a finite model counter or coordinate'
+        started=time.monotonic();samples=[];previous=before
+        while time.monotonic()-started<.5 or len(samples)<4:
+            assert time.monotonic()-started<3,'Insufficient fresh real snapshots during pause'
+            state=self.read();assert self.paused(state),'Pause ended without fresh START'
+            assert {path:plan_api.read_path(state['game'],path) for path in values}==values,'Gameplay progressed while paused'
+            if self.fresh(state,previous):samples.append(state['timestamp']);previous=state
+            time.sleep(.04)
+        after=self.until(lambda state:self.fresh(state,before,True),'Controller keeps polling during pause')
+        assert {path:plan_api.read_path(after['game'],path) for path in values}==values
+        return {'paths':values,'samples':len(samples),'freshSnapshotTimestamps':samples,'realSeconds':time.monotonic()-started,'controllerFramesAdvanced':after['game']['controller']['pollCount']-before['game']['controller']['pollCount']}
     def hwnd(self):
         title=json.loads((self.args.app/'game.json').read_text(encoding='utf-8'))['name'];window=self.user.FindWindowW('PureTVGameWindow',title)
         assert window,'Actual game window missing';pid=ctypes.c_ulong();self.user.GetWindowThreadProcessId(window,ctypes.byref(pid));assert pid.value==self.app.pid,'Wrong game window process';return window
     def launch(self):
+        self.last=None
         self.app=self.process([self.args.app/'PureTVGame.exe','--diagnostics',self.diag,'--profile',self.profile],'native-'+self.diag.name+'.log')
         state=self.until(lambda s:s.get('ready') and base.initialization(s.get('game'),renderer=self.renderers)=='ready','Actual renderer initialized',90)
         self.user.ShowWindow(self.hwnd(),9);self.user.SetForegroundWindow(self.hwnd());return self.until(lambda s:s.get('active') and s['server']['wifiController']['inputEnabled'],'Foreground game ready',30)

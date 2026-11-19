@@ -3,7 +3,7 @@
 import hashlib,importlib.util,json,os,shutil,traceback
 from pathlib import Path
 root=Path(__file__).resolve().parents[2];temp=Path(os.environ['RUNNER_TEMP']);out=temp/'evidence';out.mkdir(exist_ok=False)
-for name in ['build.log','install.log','runtime-normal.log','runtime-occupied.log','installer-tests.log','web-bridge-tests.log','source-inputs-tests.log','source-scope-tests.log','assets-tests.log','display-tests.log']:
+for name in ['build.log','install.log','runtime-normal.log','runtime-occupied.log','installer-tests.log','web-bridge-tests.log','source-inputs-tests.log','source-scope-tests.log','assets-tests.log','display-tests.log','observation-tests.log']:
     if (temp/name).is_file():shutil.copy2(temp/name,out/name)
 for mode in ['runtime-normal','runtime-occupied']:
     if not (temp/mode).is_dir():continue
