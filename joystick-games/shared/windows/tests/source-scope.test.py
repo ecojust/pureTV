@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Behavior tests for bounded source inventories, real local deps and omissions."""
-import copy,importlib.util,json,tempfile,unittest
+import copy,hashlib,importlib.util,io,json,struct,tempfile,unittest,zipfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[4]
 spec=importlib.util.spec_from_file_location('windows_inputs',ROOT/'joystick-games/tools/windows-inputs.py');scope=importlib.util.module_from_spec(spec);spec.loader.exec_module(scope)
@@ -50,6 +50,97 @@ class SourceScope(unittest.TestCase):
     def test_release_descriptor_cannot_hide_build_script(self):
         self.put('joystick-games/sample/macos-release.json',json.dumps({'game':'sample','packages':{'build.mjs':{}}}))
         with self.assertRaisesRegex(AssertionError,'Unrecognized release output'):self.selection()
+    def release_fixture(self,platform='macos',nested=True):
+        # Small structural containers exercise source selection, not real package
+        # execution, signing, gameplay, or platform installation.
+        pe=bytearray(70);pe[:2]=b'MZ';struct.pack_into('<I',pe,60,64);pe[64:68]=b'PE\0\0'
+        archive=io.BytesIO()
+        with zipfile.ZipFile(archive,'w') as z:
+            if platform=='macos':
+                z.writestr('Sample.app/Contents/Info.plist',b'plist fixture');z.writestr('Sample.app/Contents/MacOS/Sample',b'\xca\xfe\xba\xbe'+b'fixture')
+            elif platform=='android':z.writestr('AndroidManifest.xml',b'manifest fixture');z.writestr('classes.dex',b'dex\n035\0fixture')
+            else:z.writestr('Sample/PureTVGame.exe',pe)
+        basename='sample.apk' if platform=='android' else 'Sample-0.1.0-'+('macos-universal.zip' if platform=='macos' else 'windows-x64.zip')
+        name=(platform+'/' if nested else '')+basename;data=archive.getvalue();target=self.game/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
+        row={'file':name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()};meta={'schemaVersion':1,'game':'sample',platform:row if platform=='android' else {'files':[row]}}
+        self.put('joystick-games/sample/packages.json',json.dumps(meta));return target,meta,row
+    def test_exact_published_packages_are_excluded_but_metadata_is_bound(self):
+        target,meta,row=self.release_fixture();sums=target.parent/'SHA256SUMS.txt';sums.write_text(row['sha256']+'  '+target.name+'\n')
+        result=self.selection();name=target.relative_to(self.root).as_posix();self.assertNotIn(name,result['files']);self.assertIn(name,result['excluded'])
+        for name in ['joystick-games/sample/packages.json','joystick-games/sample/macos/SHA256SUMS.txt']:self.assertIn('scope-configuration',result['files'][name]['roles'])
+        git_files={name:{} for name in result['files']};git_files.update({name:{} for name in result['excluded']});scope.verify_complete_git_selection(result,git_files)
+        sums.write_text('0'*64+'  '+target.name+'\n')
+        with self.assertRaisesRegex(AssertionError,'checksum list differs'):self.selection()
+    def test_declared_android_and_windows_structural_packages(self):
+        for platform in ['android','windows']:
+            with self.subTest(platform=platform):
+                target,meta,row=self.release_fixture(platform,nested=False);result=self.selection();self.assertIn(target.relative_to(self.root).as_posix(),result['excluded']);target.unlink()
+    def test_new_release_metadata_does_not_hide_undeclared_source_in_directory(self):
+        target,meta,row=self.release_fixture();extra=self.put('joystick-games/sample/macos/build.mjs','real derivation source')
+        with self.assertRaisesRegex(AssertionError,'Undeclared file'):self.selection()
+        extra.unlink();extra=self.put('joystick-games/sample/macos/assets/data.js')
+        with self.assertRaisesRegex(AssertionError,'Unexpected node'):self.selection()
+    def test_missing_changed_and_wrong_size_package_fails_before_exclusion(self):
+        target,meta,row=self.release_fixture();original=target.read_bytes()
+        target.unlink()
+        with self.assertRaisesRegex(AssertionError,'Missing or symlinked'):self.selection()
+        target.write_bytes(original+b'changed')
+        with self.assertRaisesRegex(AssertionError,'size mismatch'):self.selection()
+        target.write_bytes(b'X'+original[1:])
+        with self.assertRaisesRegex(AssertionError,'hash mismatch'):self.selection()
+    def test_declaration_cannot_hide_source_or_cross_platform_paths(self):
+        target,meta,row=self.release_fixture();path=self.game/'packages.json'
+        for name in ['build.mjs','macos/build.mjs','src/Sample-macos-universal.zip','windows/Sample-macos-universal.zip','../Sample-macos-universal.zip','/Sample-macos-universal.zip','macos/nested/Sample-macos-universal.zip','macos\\Sample-macos-universal.zip','macos/Sample-windows-x64.zip']:
+            changed=copy.deepcopy(meta);changed['macos']['files'][0]['file']=name;path.write_text(json.dumps(changed))
+            with self.subTest(name=name),self.assertRaises(AssertionError):self.selection()
+    def test_source_disguised_with_release_suffix_and_matching_hash_is_rejected(self):
+        target,meta,row=self.release_fixture();data=b'export function build(){return 1;}';target.write_bytes(data);row.update(bytes=len(data),sha256=hashlib.sha256(data).hexdigest());(self.game/'packages.json').write_text(json.dumps(meta))
+        with self.assertRaisesRegex(AssertionError,'Invalid published archive'):self.selection()
+        buffer=io.BytesIO()
+        with zipfile.ZipFile(buffer,'w') as z:z.writestr('build.mjs',data)
+        data=buffer.getvalue();target.write_bytes(data);row.update(bytes=len(data),sha256=hashlib.sha256(data).hexdigest());(self.game/'packages.json').write_text(json.dumps(meta))
+        with self.assertRaisesRegex(AssertionError,'lacks app payload'):self.selection()
+    def test_new_descriptor_identity_duplicates_and_pending_output_are_rejected(self):
+        target,meta,row=self.release_fixture();path=self.game/'packages.json'
+        for mutate in [lambda d:d.update(game='other'),lambda d:d.update(schemaVersion=True),lambda d:d['macos'].update(status='pending'),lambda d:d['macos']['files'].append(copy.deepcopy(row))]:
+            changed=copy.deepcopy(meta);mutate(changed);path.write_text(json.dumps(changed))
+            with self.assertRaises(AssertionError):self.selection()
+        path.write_text('{"schemaVersion":1,"game":"sample","game":"sample"}')
+        with self.assertRaisesRegex(AssertionError,'Duplicate'):self.selection()
+    def test_new_package_hash_record_requires_exact_positive_size_and_sha(self):
+        target,meta,row=self.release_fixture();path=self.game/'packages.json'
+        for update in [{'bytes':True},{'bytes':0},{'bytes':str(row['bytes'])},{'sha256':'A'*64},{'sha256':'bad'}]:
+            changed=copy.deepcopy(meta);changed['macos']['files'][0].update(update);path.write_text(json.dumps(changed))
+            with self.assertRaisesRegex(AssertionError,'Invalid published package size/hash'):self.selection()
+    def test_published_package_symlink_cannot_escape_scope(self):
+        target,meta,row=self.release_fixture();data=target.read_bytes();target.unlink();outside=self.put('outside.zip','unused');outside.write_bytes(data)
+        try:target.symlink_to(outside)
+        except OSError:self.skipTest('Symlink creation unavailable')
+        with self.assertRaisesRegex(AssertionError,'symlinked published'):self.selection()
+    def test_checksum_list_cannot_hide_missing_extra_or_duplicate_members(self):
+        target,meta,row=self.release_fixture();sums=target.parent/'SHA256SUMS.txt'
+        for text in ['',row['sha256']+'  missing.zip\n',(row['sha256']+'  '+target.name+'\n')*2]:
+            sums.write_text(text)
+            with self.assertRaises(AssertionError):self.selection()
+    def test_matching_hash_does_not_make_text_an_exe_or_dmg(self):
+        for platform,name in [('windows','Sample-windows-x64-setup.exe'),('macos','Sample-macos-universal.dmg')]:
+            data=b'export function build() {}'+b' '*600;target=self.game/name;target.write_bytes(data)
+            row={'file':name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
+            (self.game/'packages.json').write_text(json.dumps({'schemaVersion':1,'game':'sample',platform:{'files':[row]}}))
+            with self.subTest(platform=platform),self.assertRaises(AssertionError):self.selection()
+            target.unlink()
+    def test_archive_traversal_is_rejected_even_with_matching_declared_hash(self):
+        target,meta,row=self.release_fixture();buffer=io.BytesIO()
+        with zipfile.ZipFile(buffer,'w') as z:z.writestr('../build.mjs','source')
+        data=buffer.getvalue();target.write_bytes(data);row.update(bytes=len(data),sha256=hashlib.sha256(data).hexdigest());(self.game/'packages.json').write_text(json.dumps(meta))
+        with self.assertRaisesRegex(AssertionError,'Unsafe published archive path'):self.selection()
+    def test_pending_platform_cannot_hide_an_unclassified_macos_directory(self):
+        self.put('joystick-games/sample/packages.json',json.dumps({'schemaVersion':1,'game':'sample','macos':{'status':'pending'}}));self.put('joystick-games/sample/macos/engine.js','source')
+        with self.assertRaisesRegex(AssertionError,'Unclassified game root directory'):self.selection()
+    def test_deleted_tracked_source_cannot_be_masked_by_valid_mac_release(self):
+        target,meta,row=self.release_fixture();initial=self.selection();blobs={name:{} for name in initial['files']};blobs[target.relative_to(self.root).as_posix()]={}
+        (self.game/'src/nested/engine.js').unlink()
+        with self.assertRaisesRegex(AssertionError,'missing'):scope.verify_complete_git_selection(self.selection(),blobs)
     def test_local_packages_recursive_cycle_and_original_lock(self):
         self.package('local/one',{'dependencies':{'two':'file:../two'}});self.package('local/two',{'dependencies':{'one':'file:../one'}})
         (self.game/'package.json').write_text(json.dumps({'dependencies':{'one':'file:../../local/one'}}))

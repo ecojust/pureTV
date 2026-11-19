@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Explicit Windows build/derivation/QA closure, excluding historical outputs."""
-import hashlib,json,os,re
+import hashlib,json,os,re,stat,struct,zipfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 HOST='joystick-games/shared/windows'
@@ -71,6 +71,101 @@ class Scope:
     def result(self):
         return {'schemaVersion':1,'files':{p.relative_to(self.root).as_posix():dict(regular(self.root,p),roles=sorted(roles)) for p,roles in sorted(self.paths.items())},'excluded':dict(sorted(self.excluded.items()))}
 
+def package_json(raw):
+    def unique(pairs):
+        value={}
+        for key,item in pairs:
+            assert key not in value,'Duplicate packages.json key: '+key
+            value[key]=item
+        return value
+    return json.loads(raw,object_pairs_hook=unique)
+
+def pe_header(stream,size):
+    assert size>=64 and stream.read(2)==b'MZ','Published EXE is not PE'
+    stream.seek(60);offset=struct.unpack('<I',stream.read(4))[0]
+    assert 64<=offset<=min(size-6,1_048_576),'Invalid published PE header offset'
+    stream.seek(offset);assert stream.read(4)==b'PE\0\0','Published EXE is not PE'
+
+def published_format(path,platform):
+    if path.suffix=='.exe':
+        with path.open('rb') as stream:pe_header(stream,path.stat().st_size)
+    elif path.suffix=='.dmg':
+        assert path.stat().st_size>=512,'Published DMG is truncated'
+        with path.open('rb') as stream:stream.seek(-512,2);assert stream.read(4)==b'koly','Published DMG lacks UDIF trailer'
+    else:
+        try:
+            with zipfile.ZipFile(path) as archive:
+                items=archive.infolist();names=set();files={}
+                for item in items:
+                    name=item.filename;parts=name.rstrip('/').split('/')
+                    assert name and not name.startswith('/') and '\\' not in name and all(p not in ('','..','.') for p in parts),'Unsafe published archive path'
+                    assert name.casefold() not in names and not item.flag_bits&1 and not stat.S_ISLNK(item.external_attr>>16),'Aliased/encrypted/symlinked published archive'
+                    names.add(name.casefold())
+                    if not item.is_dir():files[name]=item
+                if platform=='android':
+                    assert 'AndroidManifest.xml' in files and 'classes.dex' in files,'Published APK lacks Android payload'
+                    with archive.open('classes.dex') as stream:assert stream.read(4)==b'dex\n','Published APK lacks DEX payload'
+                elif platform=='macos':
+                    binaries=[name for name in files if re.fullmatch(r'[^/]+\.app/Contents/MacOS/[^/]+',name)]
+                    assert len(binaries)==1 and binaries[0].split('/Contents/')[0]+'/Contents/Info.plist' in files,'Published Mac ZIP lacks app payload'
+                    with archive.open(binaries[0]) as stream:assert stream.read(4) in (b'\xca\xfe\xba\xbe',b'\xbe\xba\xfe\xca',b'\xca\xfe\xba\xbf',b'\xcf\xfa\xed\xfe',b'\xfe\xed\xfa\xcf'),'Published Mac ZIP lacks Mach-O payload'
+                else:
+                    binaries=[name for name in files if name.split('/')[-1]=='PureTVGame.exe']
+                    assert len(binaries)==1,'Published Windows ZIP lacks host payload'
+                    with archive.open(binaries[0]) as stream:pe_header(stream,files[binaries[0]].file_size)
+        except (OSError,zipfile.BadZipFile,RuntimeError) as error:raise AssertionError('Invalid published archive: '+str(path)) from error
+
+def declared_package_outputs(scope,game):
+    path=game/'packages.json'
+    if not path.exists():return {}
+    scope.add(path,'scope-configuration');meta=package_json(path.read_text(encoding='utf-8'))
+    assert type(meta.get('schemaVersion')) is int and meta['schemaVersion']==1 and meta.get('game')==game.name,'Invalid packages.json identity'
+    endings={'android':('.apk',),'macos':('-macos-universal.zip','-macos-universal.dmg'),'windows':('-windows-x64.zip','-windows-x64-setup.exe')}
+    result={};aliases=set()
+    for platform in ('android','macos','windows'):
+        if platform not in meta:continue
+        descriptor=meta[platform];assert isinstance(descriptor,dict),'Invalid platform package descriptor'
+        if descriptor.get('status')=='pending':
+            assert 'files' not in descriptor and 'file' not in descriptor,'Pending platform declares artifacts';continue
+        if platform=='android':
+            assert 'files' not in descriptor,'Android package uses its exact file record';items=[descriptor]
+        else:
+            assert 'file' not in descriptor and isinstance(descriptor.get('files'),list) and descriptor['files'],'Platform package files missing';items=descriptor['files']
+        for item in items:
+            assert isinstance(item,dict),'Invalid published package record'
+            name=item.get('file');assert isinstance(name,str),'Published package path missing'
+            parts=name.split('/')
+            assert len(parts) in (1,2) and (len(parts)==1 or parts[0]==platform) and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]*',parts[-1]),'Unsafe published package path'
+            assert parts[-1].endswith(endings[platform]),'Published package platform suffix mismatch'
+            assert name.casefold() not in aliases,'Duplicate published package path';aliases.add(name.casefold())
+            size=item.get('bytes');digest=item.get('sha256')
+            assert type(size) is int and size>0 and isinstance(digest,str) and re.fullmatch('[a-f0-9]{64}',digest),'Invalid published package size/hash'
+            target=game/name;assert target.is_file() and not any(is_link(p) for p in [target,*target.parents]),'Missing or symlinked published package'
+            assert target.stat().st_size==size,'Published package size mismatch: '+name
+            h=hashlib.sha256()
+            with target.open('rb') as stream:
+                for block in iter(lambda:stream.read(1024*1024),b''):h.update(block)
+            assert h.hexdigest()==digest,'Published package hash mismatch: '+name
+            published_format(target,platform);result[name]={'bytes':size,'sha256':digest}
+    return result
+
+def published_directory(scope,game,path,declared):
+    """Every child must be an exact verified package or its exact checksum list."""
+    expected={name:record for name,record in declared.items() if name.startswith(path.name+'/')}
+    assert expected,'Unclassified game root directory: '+str(path)
+    for item in sorted(path.iterdir()):
+        assert item.is_file() and not is_link(item),'Unexpected node in published package directory: '+str(item)
+        name=item.relative_to(game).as_posix()
+        if name in expected:scope.exclude(item,'published artifact verified by packages.json');continue
+        assert item.name=='SHA256SUMS.txt','Undeclared file in published package directory: '+name
+        lines=item.read_text(encoding='utf-8').splitlines();checks={}
+        for line in lines:
+            match=re.fullmatch(r'([a-f0-9]{64})  ([A-Za-z0-9][A-Za-z0-9_.-]*)',line)
+            assert match and match[2] not in checks,'Invalid published checksum list'
+            checks[match[2]]=match[1]
+        assert checks=={Path(name).name:r['sha256'] for name,r in expected.items()},'Published checksum list differs from packages.json'
+        scope.add(item,'scope-configuration')
+
 def release_outputs(scope,game):
     outputs=set()
     for platform in ('android','macos','windows'):
@@ -101,13 +196,15 @@ def select(game,root=ROOT):
     for name in GAME_REQUIRED:scope.add(game/name,'game-metadata' if name=='game.json' else 'game-derivation')
     for name in ('src','dist'):assert (game/name).is_dir(),'Required game tree missing: '+name
     licenses=[game/name for name in ('LICENSE','LICENSE.txt') if (game/name).exists()];assert len(licenses)==1,'Exactly one original LICENSE required'
-    outputs=release_outputs(scope,game)
+    declared=declared_package_outputs(scope,game);outputs=release_outputs(scope,game)|set(declared)
     for name in outputs:scope.exclude(game/name,'published artifact declared by platform release descriptor')
     for path in sorted(game.iterdir()):
         if path.name in CACHE or path.name=='docs':scope.exclude(path,'installed dependency/cache' if path.name in CACHE else 'historical evidence');continue
         if path.name in outputs:scope.exclude(path,'published artifact declared by platform release descriptor');continue
         assert not is_link(path),'Symlink game input: '+str(path)
         if path.is_dir():
+            if path.name in PLATFORMS and any(name.startswith(path.name+'/') for name in declared):
+                published_directory(scope,game,path,declared);continue
             assert path.name in GAME_DIRS,'Unclassified game root directory: '+str(path)
             scope.tree(path,'packaged-assets' if path.name=='dist' else 'game-derivation')
         else:scope.add(path,'game-derivation')
