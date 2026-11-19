@@ -1,0 +1,74 @@
+{
+  "status": "passed-dom-only",
+  "command": "TMPDIR=/dev/shm/racing-review-arcade/tmp timeout --signal=TERM --kill-after=5s 90s node joystick-games/penguintrack/tests/menu-entry-dom.mjs 1",
+  "exitCode": 0,
+  "sourceHeadAtValidation": "0bcffa50757a6002497c4a9f2f0dcf38255ea43b",
+  "cases": 6,
+  "viewports": [
+    [
+      960,
+      540
+    ],
+    [
+      1024,
+      645
+    ],
+    [
+      1280,
+      720
+    ]
+  ],
+  "startingFocusFixtures": [
+    "Play",
+    "Controller"
+  ],
+  "observedRoute": [
+    "UP: Controller",
+    "DOWN: Play",
+    "A: original Menu Play handler calls app.goto(campaign) once"
+  ],
+  "originalPlanSteps": 16,
+  "newPlanSteps": 18,
+  "oldStepsUnchanged": true,
+  "strictPlanValidation": true,
+  "inputHashesRechecked": 14,
+  "captureHashesAndDimensionsRechecked": 6,
+  "visuallyReviewed": [
+    "play-960-from-controller.png",
+    "play-1280-from-play.png"
+  ],
+  "productionBytesChanged": false,
+  "nativeCalibrationOfNewPlan": false,
+  "limitations": [
+    "DOM fixture sets only the starting focus to reproduce both observed native states; synthetic bridge connection itself keeps Play focused. Native focus migration cause remains unproven.",
+    "The actual Menu module, UI navigation, TV adapter and shared controller bridge consume ordinary UP/DOWN/A pulses. app.goto records the original menu callback; campaign, WebGL, physics and countdown are not initialized or tested.",
+    "Native host timing and the new 80 ms QA holds remain pending native calibration. Original Android failure and original successful Mac reports remain unchanged.",
+    "Build warnings are preserved in execution.log: unused fixture import.meta under iife, and shared controller CommonJS export in ESM. No page errors were observed."
+  ],
+  "files": {
+    "execution.log": {
+      "bytes": 2824,
+      "sha256": "b329c017018c8285cb95fc3c2e9915794def2be9aa100b34d62a951bb34ba277"
+    },
+    "executed-menu-entry-dom.mjs": {
+      "bytes": 7270,
+      "sha256": "67d980cbd783f239150779c6a89b63ac83b108bdb95abef27f865766548ae4a2"
+    },
+    "executed-fixture.js": {
+      "bytes": 1123,
+      "sha256": "020d6ea9cdac6a7b7cfd716acf5da69f83edcb2e0283c603645fb43706789c28"
+    },
+    "report.json": {
+      "bytes": 40817,
+      "sha256": "643754288085e1de84dea2b3bdf1f7bc6dee8264fb6357760ca8546c92e65154"
+    },
+    "qa-plan-before.json": {
+      "bytes": 5013,
+      "sha256": "8fdf8fbc3832581477cc5afac78e1b8b21f3fad08e266e0458e664b238eb1651"
+    },
+    "qa-plan.json": {
+      "bytes": 5866,
+      "sha256": "7c33fea5c547b8bf6a9e3ad43679c2ba43ad178e3269481488d23234cad2f720"
+    }
+  }
+}
