@@ -23,6 +23,7 @@ AUDIO='joystick-games/tools/fixtures/audio/'
 PON_PRECISION_ERROR="null is not an object (evaluating 'i.getShaderPrecisionFormat(i.VERTEX_SHADER,i.HIGH_FLOAT).precision')"
 PON_BUNDLE={'bytes':1561049,'sha256':'b26270b854a7672d67e36e987c2a5c938044556d5b91fc480c41211a5b959729'}
 PON_BUNDLE_SOURCE='joystick-games/ponpoko-kart/dist/game.js'
+KART_RUSH_RENDERERS=['webgl2','webgl1']
 
 def digest(data):return hashlib.sha256(data).hexdigest()
 def canonical(value):return json.dumps(value,sort_keys=True,separators=(',',':')).encode()
@@ -39,7 +40,7 @@ def policy(game,entry,renderers):
     assert value in (FULL,PARTIAL),'Unknown macOS coverage policy'
     if value==PARTIAL:
         assert game in RACING_NINE,'Limited coverage is restricted to the approved nine racers'
-        assert renderers==['webgl2'],'Limited coverage requires the exact WebGL2 renderer plan'
+        assert renderers==['webgl2'] or game=='kart-rush' and renderers==KART_RUSH_RENDERERS,'Limited coverage requires the exact WebGL2 plan or the approved Kart Rush fallback plan'
     return value
 
 class Evidence:
@@ -286,6 +287,7 @@ def assess_game(game,meta,plan,entry,arm_folder,intel_folder):
     binary=sha(meta['appFiles']['Contents/MacOS/'+entry['executable']]['sha256'])
     inputs={**meta['inputFiles'],**plan['inputFiles']}
     expected_batch=next(item for item in plan['batches'] if game in item['games'])
+    kart_fallback=selected_policy==PARTIAL and game=='kart-rush' and renderers==KART_RUSH_RENDERERS
     all_refs={};coverage={}
     for runner,folder in [('macos-latest',arm_folder),('macos-15-intel',intel_folder)]:
         evidence=Evidence(folder);batch=evidence.read('batch-report.json')
@@ -310,6 +312,11 @@ def assess_game(game,meta,plan,entry,arm_folder,intel_folder):
                 assert report['runnerKind']==runner and isinstance(report['runnerName'],str) and report['runnerName'],'Missing actual game runner identity'
             if 'artifactRunId' in plan:assert str(report['artifactRunId'])==str(plan['artifactRunId'])
             inspect_sources(evidence,relative,report,inputs,game)
+            if kart_fallback:
+                # The plan-stage renderer list alone cannot identify the primary.
+                # Require every original source-bound QA plan to retain both the
+                # reviewed primary and the original fallback before eligibility.
+                assert report['qaPlan']['renderer']=='webgl2' and report['qaPlan']['compatibleRenderers']==KART_RUSH_RENDERERS,'Kart Rush must retain its original WebGL2 primary and WebGL1 fallback'
             architecture='x86_64' if runner=='macos-15-intel' or mode=='rosetta' else 'arm64'
             if runner=='macos-15-intel' and report['status']!='passed':
                 assert selected_policy==PARTIAL,'Default full policy never waives Intel native failure'
@@ -318,6 +325,9 @@ def assess_game(game,meta,plan,entry,arm_folder,intel_folder):
                 before=capability(evidence,'before',game,meta,plan,binary,report,inputs);after=capability(evidence,'after',game,meta,plan,binary,report,inputs)
                 assert before['jobId']==after['jobId'] and before['runnerName']==after['runnerName'] and before['host']==after['host'] and before['runnerImage']==after['runnerImage'],'Capability observations came from different execution hosts'
                 coverage['intelNative']={'status':'unverified','processArchitecture':'x86_64','originalGameQaStatus':'failed','capabilityObservation':'webgl2_context_lost','gameFailureCauseProven':False}
+                if kart_fallback:
+                    coverage['intelNative']['rendererObservations']={'webgl2':'independent_probe_context_lost','webgl1':'unobserved'}
+                    coverage['intelNative']['actualGameRendererVerified']=False
                 if bounded is not None:coverage['intelNative']['boundedInitializationEvidence']=bounded
             else:
                 assert (batch['status']=='passed' or (runner=='macos-15-intel' and selected_policy==PARTIAL and batch['status']=='failed')) and record['status']=='passed' and record['checks'][index]['status']=='passed' and record['checks'][index]['returncode']==0
@@ -329,9 +339,12 @@ def assess_game(game,meta,plan,entry,arm_folder,intel_folder):
                     assert before['jobId']==after['jobId'] and before['runnerName']==after['runnerName'] and before['host']==after['host'] and before['runnerImage']==after['runnerImage'],'Capability observations came from different execution hosts'
                 label='intelNative' if runner=='macos-15-intel' else {'native':'appleSiliconNative','occupied-port':'appleSiliconOccupiedPort','rosetta':'appleSiliconRosetta'}[mode]
                 coverage[label]={'status':'passed','processArchitecture':architecture,'originalGameQaStatus':'passed'}
+                if kart_fallback:coverage[label]['observedRenderer']=report['initialization']['observedGame']['renderer']
         all_refs.update(evidence.references)
     partial=coverage['intelNative']['status']=='unverified'
-    return {'schemaVersion':2,'game':game,'coveragePolicy':selected_policy,'artifactSourceCommit':source,'qaSourceCommit':qa,'runId':plan['runId'],'runAttempt':plan['runAttempt'],'installPackagesValidated':True,'packageArchitectures':['arm64','x86_64'],'binarySha256':binary,'verificationCoverage':coverage,'overallGameplayVerification':'partial' if partial else 'complete','deliveryEligibility':'eligible_with_intel_unverified' if partial else 'eligible','originalGameReportsModified':False,'physicalControllerTested':False,'appleNotarized':False,'evidenceFiles':all_refs}
+    result={'schemaVersion':2,'game':game,'coveragePolicy':selected_policy,'artifactSourceCommit':source,'qaSourceCommit':qa,'runId':plan['runId'],'runAttempt':plan['runAttempt'],'installPackagesValidated':True,'packageArchitectures':['arm64','x86_64'],'binarySha256':binary,'verificationCoverage':coverage,'overallGameplayVerification':'partial' if partial else 'complete','deliveryEligibility':'eligible_with_intel_unverified' if partial else 'eligible','originalGameReportsModified':False,'physicalControllerTested':False,'appleNotarized':False,'evidenceFiles':all_refs}
+    if kart_fallback:result['rendererPlan']={'primary':'webgl2','accepted':list(KART_RUSH_RENDERERS),'fallbackPreserved':True}
+    return result
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)

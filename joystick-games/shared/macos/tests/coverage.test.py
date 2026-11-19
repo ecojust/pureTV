@@ -116,6 +116,47 @@ class Coverage(unittest.TestCase):
             case=folder/'local-assets-compile/cases/test_fixture';self.put(case/'0-process.json',{'command':['/private/tmp/fixture/asset-server-test','/private/tmp/fixture/Web'],'exitCode':-15,'terminationAfterTestIsExpected':True});self.put(case/'0-stdout.log',b'READY synthetic fixture');self.put(case/'0-stderr.log',b'')
     def blocked(self):
         with self.assertRaises((AssertionError,KeyError,ValueError,StopIteration)):self.assess()
+    def kart_fallback_fixture(self,intel_pass=False,primary='webgl2'):
+        self.tearDown();self.setUp('kart-rush')
+        self.qa_plan.update(renderer=primary,compatibleRenderers=['webgl2','webgl1'])
+        name='joystick-games/'+self.game+'/qa-plan.json';data=json.dumps(self.qa_plan).encode();record={'bytes':len(data),'sha256':coverage.digest(data)}
+        self.sources[name]=data;self.inputs[name]=record;self.meta['inputFiles'][name]=record;self.plan['inputFiles'][name]=record
+        self.plan['renderers'][self.game]=['webgl2','webgl1']
+        for folder in (self.arm,self.intel):
+            for path in (folder/self.game).glob('*/report.json'):
+                def update(value):value['qaPlan']=copy.deepcopy(self.qa_plan);value['sourceHashes'][name]=record['sha256']
+                self.change(path,update);self.put(path.parent/'executed-qa-plan.json',data)
+        self.partial_fixture(intel_pass=intel_pass)
+    def test_only_kart_rush_exact_fallback_plan_is_approved(self):
+        entry={'macosCoveragePolicy':coverage.PARTIAL}
+        self.assertEqual(coverage.policy('kart-rush',entry,['webgl2','webgl1']),coverage.PARTIAL)
+        for game,renderers in [('turbo-kart-rush',['webgl2','webgl1']),('dirt-crown',['webgl2','webgl1']),('old-game',['webgl2','webgl1']),('kart-rush',['webgl1','webgl2']),('kart-rush',['webgl1']),('kart-rush',['webgl2','webgl1','canvas']),('kart-rush',['webgl2','webgl1','webgl1'])]:
+            with self.subTest(game=game,renderers=renderers),self.assertRaises(AssertionError):coverage.policy(game,entry,renderers)
+    def test_kart_rush_intel_observation_never_claims_webgl1_or_failure_cause(self):
+        self.kart_fallback_fixture();before=self.fingerprints();result=self.assess();intel=result['verificationCoverage']['intelNative']
+        self.assertEqual(result['deliveryEligibility'],'eligible_with_intel_unverified');self.assertEqual(result['rendererPlan'],{'primary':'webgl2','accepted':['webgl2','webgl1'],'fallbackPreserved':True})
+        self.assertEqual(intel['status'],'unverified');self.assertEqual(intel['originalGameQaStatus'],'failed');self.assertFalse(intel['gameFailureCauseProven']);self.assertFalse(intel['actualGameRendererVerified']);self.assertEqual(intel['rendererObservations'],{'webgl2':'independent_probe_context_lost','webgl1':'unobserved'})
+        for mode in ('appleSiliconNative','appleSiliconOccupiedPort','appleSiliconRosetta'):self.assertEqual(result['verificationCoverage'][mode]['observedRenderer'],'webgl2')
+        self.assertEqual(self.fingerprints(),before)
+    def test_kart_rush_actual_webgl1_remains_valid_and_is_recorded_without_inference(self):
+        self.kart_fallback_fixture(intel_pass=True)
+        for folder,modes in ((self.arm,('native','occupied-port','rosetta')),(self.intel,('native',))):
+            for mode in modes:self.change(folder/self.game/mode/'report.json',lambda value:value['initialization']['observedGame'].update(renderer='webgl1'))
+        result=self.assess();self.assertEqual(result['overallGameplayVerification'],'complete')
+        for value in result['verificationCoverage'].values():self.assertEqual(value['observedRenderer'],'webgl1');self.assertEqual(value['status'],'passed');self.assertNotIn('rendererObservations',value)
+    def test_kart_rush_source_bound_primary_and_fallback_are_required(self):
+        self.kart_fallback_fixture(primary='webgl1');self.blocked()
+        self.kart_fallback_fixture();path=self.intel/self.game/'native/report.json';self.change(path,lambda value:value['qaPlan'].pop('compatibleRenderers'));self.blocked()
+    def test_kart_rush_unknown_renderer_failed_actual_checks_and_intel_errors_block(self):
+        self.kart_fallback_fixture()
+        for mode in ('native','occupied-port','rosetta'):
+            path=self.arm/self.game/mode/'report.json';original=path.read_bytes()
+            for mutate in (lambda value:value['initialization']['observedGame'].update(renderer='canvas'),lambda value:value['tests'][2].update(status='failed'),lambda value:value.update(renderingAvailable=False)):
+                self.change(path,mutate);self.blocked();path.write_bytes(original)
+        path=self.intel/self.game/'native/report.json';original=path.read_bytes()
+        for update in ({'game':{'errors':['WebGL1 failed']}},{'game':{'errors':[coverage.PON_PRECISION_ERROR]}},{'resourceErrors':['missing fallback module']},{'lastJavaScriptError':'TypeError'}):
+            self.change(path,lambda value:value['lastState'].update(update));self.blocked();path.write_bytes(original)
+        self.entry.pop('macosCoveragePolicy');self.plan.pop('coveragePolicies');self.blocked()
     def test_real_probe_fixture_retains_original_bytes_and_provenance(self):
         self.assertEqual(hashlib.sha256(REAL_PROBE_BYTES).hexdigest(),REAL_PROBE_SHA256);self.assertEqual(json.loads(REAL_PROBE_BYTES)['samples'][0]['glError'],37442);self.assertEqual(REAL_PROBE_PROVENANCE['runId'],44159596612)
     def test_default_full_still_needs_no_probe_but_limited_policy_binds_intel_hardware(self):
