@@ -2,7 +2,13 @@
 
 固定源为 [stevkazt/kart-rush](https://github.com/stevkazt/kart-rush/tree/4b0cf276d84e76171feb765d87b5e8a6159cc421)。保留原始程序化 3D 美术、8 条正式赛道、7 场大奖赛、8 名车手、车辆与涂装选择、道具、自动漂移、三圈规则、原创合成音效及存档。每场仍为玩家和 5 名 AI。
 
-已提供 [Android TV 0.1.0 APK](kart-rush-0.1.0.apk)（948,563 字节，Android 8.0+），使用固定发布证书。原生模拟器正常端口与端口占用两种模式各通过52项实际手柄检查，详见[签名、源码及运行核验](docs/android-attempt-2/)。macOS 下载及验证范围见下方；Windows 包仍在验证。未在实体电视或手机上测试。
+已提供 [Android TV 0.1.0 APK](kart-rush-0.1.0.apk)（948,563 字节，Android 8.0+），使用固定发布证书。原生模拟器正常端口与端口占用两种模式各通过52项实际手柄检查，详见[签名、源码及运行核验](docs/android-attempt-2/)。macOS、Windows 下载及各自验证范围见下方。未在实体电视或手机上测试。
+
+## Windows 下载
+
+0.1.0 x64：[安装 EXE](KartRush-0.1.0-windows-x64-setup.exe)（1,037,069 字节）· [便携 ZIP](KartRush-0.1.0-windows-x64.zip)（957,533 字节）· [SHA256 校验](SHA256SUMS.txt)。需要 Windows 10 1903 或更新版本、Windows 11 x64 和已安装的 Microsoft Edge WebView2 Runtime；便携版请完整解压后运行 `PureTVGame.exe`。安装包未做 Authenticode 签名。
+
+原 Windows CI 的正常端口与占用端口两种模式各通过 10 项检查，包含实际赛车、原 SDK 手柄、失焦／断线取消、原生存档重启和窗口验证；安装／卸载／重装也通过。检查覆盖 96 DPI 下 960×540、1280×720，未做其他 DPI 缩放或实体手柄测试。同批其他游戏失败与原流程导出失败仍保留，以上结论仅针对 Kart Rush。安装文件为原始包，未重新编译，详见 [Windows 交付记录](docs/windows-delivery/) 和 [版本清单](windows-release.json)。
 
 ## macOS 下载
 

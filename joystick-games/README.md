@@ -33,7 +33,9 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 | [Last Track](last-track/) | 验证中 | [DMG](last-track/macos/LastTrack-0.1.0-macos-universal.dmg) · [ZIP](last-track/macos/LastTrack-0.1.0-macos-universal.zip) |
 | [Dirt Crown](dirt-crown/) | 验证中 | [DMG](dirt-crown/macos/DirtCrown-0.1.0-macos-universal.dmg) · [ZIP](dirt-crown/macos/DirtCrown-0.1.0-macos-universal.zip) |
 
-以上 Mac 赛车需要 macOS 11+ 与 WebGL2；Apple Silicon 原生、端口占用及 Rosetta 检查通过，**Intel 图形运行仍未验证**。包采用 ad-hoc 签名，未经过 Apple 公证；各目录列出原包哈希和具体验证范围。Windows 包继续验证。
+Kart Rush Windows：[安装 EXE](kart-rush/KartRush-0.1.0-windows-x64-setup.exe) · [便携 ZIP](kart-rush/KartRush-0.1.0-windows-x64.zip)，需要 Windows 10 1903+ x64 与 WebView2 Runtime；未做 Authenticode 签名。它已具备三个平台的下载文件，其他八款继续验证。
+
+以上 Mac 赛车需要 macOS 11+ 与 WebGL2；Apple Silicon 原生、端口占用及 Rosetta 检查通过，**Intel 图形运行仍未验证**。包采用 ad-hoc 签名，未经过 Apple 公证；各目录列出原包哈希和具体验证范围。其他 Windows 包继续验证。
 
 原清单的 **93 款**已完成逐项[电视适配评估](../docs/claude-games/tv-assessment.md)：51 款可继续使用现有 Web 宿主，42 款需补齐许可、素材或其他引擎运行方案。后续新增的 GitHub 参考清单与这 93 款适配范围分开记录。
 
@@ -48,6 +50,8 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 | [Sugarplum Drop](sugarplum-drop/) | [APK](sugarplum-drop/sugarplum-drop-0.1.0.apk) | [DMG](sugarplum-drop/SugarplumDrop-0.1.0-macos-universal.dmg) · [ZIP](sugarplum-drop/SugarplumDrop-0.1.0-macos-universal.zip) |
 | [Emberbrood · 余烬龙裔](emberbrood/) | [APK](emberbrood/emberbrood-0.1.0.apk) | [DMG](emberbrood/Emberbrood-0.1.0-macos-universal.dmg) · [ZIP](emberbrood/Emberbrood-0.1.0-macos-universal.zip) |
 | [GLUP · 沼泽猫鱼](glup/) | [APK](glup/glup-0.1.0.apk) | [DMG](glup/Glup-0.1.0-macos-universal.dmg) · [ZIP](glup/Glup-0.1.0-macos-universal.zip) |
+
+Sugarplum Drop 另提供 [Windows x64 安装版](sugarplum-drop/SugarplumDrop-0.1.0-windows-x64-setup.exe) 和 [便携版](sugarplum-drop/SugarplumDrop-0.1.0-windows-x64.zip)，原生运行与安装／卸载已验证；它是共享宿主样本，不计入九款赛车。
 
 以上均为 **0.1.0**，Android 8.0+、macOS 11+；三款使用 Canvas 2D 或 DOM，不要求 WebGL2。APK 使用固定发布证书，Mac 包包含 Apple Silicon 与 Intel，采用 ad-hoc 签名，尚未 Apple 公证。两平台原 SDK 手柄输入、暂停／断线、端口占用回退，以及 Mac 原生／Rosetta 和非空存档重启均有既有运行证据；实体电视与 ESP32 尚未联调。
 
