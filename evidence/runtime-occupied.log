@@ -1,0 +1,21 @@
+Native DPI-scaled minimum and initial viewport: passed
+DNS-SD resolves actual listener and TXT: passed
+Official SDK and single controller seat: failed
+Traceback (most recent call last):
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-verify.py", line 163, in run
+    self.check('Official SDK and single controller seat',self.connect)
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 204, in check
+    try:r['details']=fn();r['status']='passed'
+                     ^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-verify.py", line 41, in connect
+    connected=super().connect();self.report['additionalBusyRejections']=[]
+              ^^^^^^^^^^^^^^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 516, in connect
+    connected=super().connect()
+              ^^^^^^^^^^^^^^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 286, in connect
+    self.screenshot('connected-menu.png')
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 215, in screenshot
+    raise AssertionError('Missing native screenshot '+name)
+AssertionError: Missing native screenshot connected-menu.png
+

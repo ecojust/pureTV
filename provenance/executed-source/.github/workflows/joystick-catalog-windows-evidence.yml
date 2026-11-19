@@ -1,0 +1,48 @@
+name: Read original joystick catalog Windows evidence
+on:
+  workflow_dispatch:
+    inputs:
+      source_run:
+        description: Completed original Windows build run ID
+        required: true
+        type: string
+      source_sha:
+        description: Exact original source commit
+        required: true
+        type: string
+      source_attempt:
+        description: Original run attempt
+        required: true
+        default: '1'
+        type: string
+      game:
+        description: Registered game slug from original matrix
+        required: true
+        type: string
+permissions:
+  contents: write
+  actions: read
+jobs:
+  read:
+    runs-on: ubuntu-24.04
+    env:
+      SOURCE_RUN: ${{ inputs.source_run }}
+      SOURCE_SHA: ${{ inputs.source_sha }}
+      SOURCE_ATTEMPT: ${{ inputs.source_attempt }}
+      GAME: ${{ inputs.game }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify original run and select its artifact
+        id: select
+        run: |
+          python3 joystick-games/tools/windows-read-evidence.py select
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.source_run }}
+          name: joystick-windows-evidence-${{ inputs.game }}
+          path: ${{ runner.temp }}/windows-original/evidence
+      - name: Preserve verified existing bytes and explicit missing original files
+        run: |
+          python3 joystick-games/tools/windows-read-evidence.py export
