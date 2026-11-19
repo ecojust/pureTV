@@ -25,7 +25,7 @@ on:
         description: Completed original batch
         required: true
         type: choice
-        options: [triptych-01, triptych-02, one-button-01, capability]
+        options: [triptych-01, triptych-02, one-button-01, adventure-01, capability]
       evidence_kind:
         description: Completed original job evidence (never installation packages)
         required: true
@@ -62,7 +62,7 @@ jobs:
           assert re.fullmatch('[1-9][0-9]*',run) and re.fullmatch('[1-9][0-9]*',attempt) and re.fullmatch('[a-f0-9]{40}',source)
           assert re.fullmatch('[a-f0-9]{40}',package_source)
           assert os.environ['GITHUB_REPOSITORY']=='ecojust/pureTV'
-          assert batch in ['triptych-01','triptych-02','one-button-01','capability'] and kind in ['build','qa-arm64','qa-intel','capability-arm64','capability-intel']
+          assert batch in ['triptych-01','triptych-02','one-button-01','adventure-01','capability'] and kind in ['build','qa-arm64','qa-intel','capability-arm64','capability-intel']
           def api(path):return json.loads(subprocess.check_output(['gh','api','repos/ecojust/pureTV/'+path]))
           original=api('actions/runs/'+run)
           assert original['path'] in ['.github/workflows/joystick-catalog-macos.yml','.github/workflows/joystick-catalog-macos-runtime.yml','.github/workflows/joystick-macos-capability.yml'] and original['event']=='workflow_dispatch'
@@ -113,7 +113,7 @@ jobs:
           out=Path(os.environ['RUNNER_TEMP'])/'catalog-macos-evidence';artifact=out/'artifact';job=os.environ['ORIGINAL_JOB_ID']
           assert re.fullmatch('[1-9][0-9]*',job) and artifact.is_dir() and any(artifact.iterdir())
           original=json.loads((out/'original-artifact.json').read_text());capability=original['independentCapabilityDiagnostic']
-          allowed={'.json','.log','.txt','.png','.py','.swift','.plist'}
+          allowed={'.json','.log','.txt','.png','.py','.swift','.plist','.yml'}
           if capability:allowed|={'.js','.patch','.yml'}
           total=0
           for path in artifact.rglob('*'):
@@ -124,14 +124,20 @@ jobs:
                   total+=path.stat().st_size
           assert total<250_000_000
           report_name='observation-report.json' if capability else 'build-report.json' if os.environ['EVIDENCE_KIND']=='build' else 'batch-report.json'
-          report=json.loads((artifact/report_name).read_text())
-          assert report['sourceCommit']==original['sourceCommit']
-          if capability:
-              assert report['workflowSourceCommit']==original['workflowSourceCommit'] and report['runId']==original['sourceRunId'] and report['runAttempt']==original['sourceRunAttempt']
-              assert report['gamesOpened'] is False and report['gameAssetsChanged'] is False and report['installationPackagesIncluded'] is False
-              assert hashlib.sha256((artifact/'executed-webgl-probe.swift').read_bytes()).hexdigest()==report['probeSourceSha256']
-          else:assert report['batch']==os.environ['BATCH']
-          if original['separateRuntimeQa']:assert report['qaSourceCommit']==original['workflowSourceCommit']
+          report_path=artifact/report_name
+          report=json.loads(report_path.read_text()) if report_path.is_file() else None
+          if report is None:
+              assert os.environ['EVIDENCE_KIND']=='build' and original['originalJobConclusion']!='success', 'Successful jobs and runtime/capability evidence require their original report'
+              report_status='early_failure_missing_report'
+          else:
+              assert report['sourceCommit']==original['sourceCommit']
+              if capability:
+                  assert report['workflowSourceCommit']==original['workflowSourceCommit'] and report['runId']==original['sourceRunId'] and report['runAttempt']==original['sourceRunAttempt']
+                  assert report['gamesOpened'] is False and report['gameAssetsChanged'] is False and report['installationPackagesIncluded'] is False
+                  assert hashlib.sha256((artifact/'executed-webgl-probe.swift').read_bytes()).hexdigest()==report['probeSourceSha256']
+              else:assert report['batch']==os.environ['BATCH']
+              if original['separateRuntimeQa']:assert report['qaSourceCommit']==original['workflowSourceCommit']
+              report_status=report.get('status')
           # This fixed workflow has no signing step, credentials or environment dumps.
           # Preserve raw logs without rendering their control sequences in the console.
           result=subprocess.run(['gh','api','--allow-escape-sequences','repos/ecojust/pureTV/actions/jobs/'+job+'/logs?cachebust='+os.environ['GITHUB_RUN_ID']],capture_output=True)
@@ -155,6 +161,9 @@ jobs:
               assert not path.is_symlink()
               if path.is_file():rows[path.relative_to(out).as_posix()]={'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
           manifest={'sourceRunId':int(os.environ['SOURCE_RUN']),'sourceCommit':original['sourceCommit'],'workflowSourceCommit':original['workflowSourceCommit'],'originalWorkflow':original['originalWorkflow'],'sourceRunAttempt':int(os.environ['SOURCE_ATTEMPT']),'batch':os.environ['BATCH'],'kind':os.environ['EVIDENCE_KIND'],'independentCapabilityDiagnostic':capability,'sourceMeaning':original['sourceMeaning'],'exporterSourceCommit':os.environ['GITHUB_SHA'],'exportRunId':int(os.environ['GITHUB_RUN_ID']),'exportRunAttempt':int(os.environ['GITHUB_RUN_ATTEMPT']),'gamesRerun':False,'installPackagesValidated':False,'files':rows}
+          manifest.update(originalReportPresent=report is not None,originalReportStatus=report_status)
+          if os.environ['EVIDENCE_KIND']=='build':
+              manifest['compiledTestExecutableRetention']='Compiled test executables are outside the original build-evidence upload directory; this export retains every original artifact file, including binary hashes if compilation recorded them. No executable is reconstructed or claimed as included.'
           (out/'export-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
           print(json.dumps({'evidenceFiles':len(rows),'originalJobLogDownloaded':status['downloaded'],'gamesRerun':False,'installPackagesValidated':False}))
           PY
