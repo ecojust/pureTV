@@ -11,7 +11,13 @@ export function createPureTv(game, root) {
   const sent = new Map(), blocked = new Set(), repeatAt = new Map(), errors = [];
   const emit = (code, down, repeat = false) => (document.activeElement || window).dispatchEvent(new KeyboardEvent(down ? 'keydown' : 'keyup', { code, key: keyNames[code], bubbles: true, cancelable: true, repeat }));
   const release = () => { for (const code of sent.values()) emit(code, false); sent.clear(); repeatAt.clear(); game.input.clear(); };
-  const cancel = () => { release(); pendingPause = true; if (game.flow.state === 'race') { game.pause(); pendingPause = false; } };
+  const cancel = () => {
+    release();
+    // Only loading can enter a race without another deliberate menu action. Losing focus
+    // while already paused must not leave a latch that re-pauses the user's next resume.
+    pendingPause = game.flow.state === 'loading';
+    if (game.flow.state === 'race') game.pause();
+  };
   const controller = createController({ side: 'right', top: '42%', width: 184, onSuspend: cancel, onCancel: cancel });
   const panel = document.getElementById('puretv-controller-panel');
   const help = document.createElement('p'); help.className = 'lasttrack-controller-help';

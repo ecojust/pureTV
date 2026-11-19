@@ -7,6 +7,8 @@ const isTextTarget = (t) => !!t && !!t.tagName && (t.tagName === 'INPUT' || t.ta
 export function createInput({ target = window, isRaceActive = () => false, onAction = () => {} } = {}) {
   const pressed = new Set();
   let cycleEdge = false;
+  let fireEdge = false;
+  let nitroEdge = false;
   let selectEdge = null;
   let override = null;
   let touchSource = null;
@@ -14,10 +16,12 @@ export function createInput({ target = window, isRaceActive = () => false, onAct
   const onKeyDown = (e) => {
     if (isTextTarget(e.target)) return;
     if (isRaceActive() && isGameKey(e.code)) e.preventDefault();
-    if (e.metaKey) pressed.clear();
+    if (e.metaKey) clearAll();
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     if (!e.repeat) {
       if (isRaceActive()) {
+        if (e.code === 'Space') fireEdge = true;
+        if (e.code === 'KeyF' || e.code === 'KeyX') nitroEdge = true;
         if (isCycleKey(e.code)) cycleEdge = true;
         const slot = weaponSlotForKey(e.code);
         if (slot !== null) selectEdge = slot;
@@ -28,7 +32,7 @@ export function createInput({ target = window, isRaceActive = () => false, onAct
     pressed.add(e.code);
   };
   const onKeyUp = (e) => { pressed.delete(e.code); };
-  const clearAll = () => { pressed.clear(); };
+  const clearAll = () => { pressed.clear(); cycleEdge = false; fireEdge = false; nitroEdge = false; selectEdge = null; };
   const onVis = () => { if (document.hidden) clearAll(); };
   target.addEventListener('keydown', onKeyDown);
   target.addEventListener('keyup', onKeyUp);
@@ -41,8 +45,10 @@ export function createInput({ target = window, isRaceActive = () => false, onAct
     read() {
       let inp = keysToInput(pressed);
       if (touchSource) inp = mergeInputs(inp, touchSource());
-      inp = { ...inp, cycleWeapon: inp.cycleWeapon || cycleEdge, selectWeapon: selectEdge ?? inp.selectWeapon ?? null };
+      inp = { ...inp, fire: inp.fire || fireEdge, nitro: nitroEdge || pressed.has('KeyF') || pressed.has('KeyX'), cycleWeapon: inp.cycleWeapon || cycleEdge, selectWeapon: selectEdge ?? inp.selectWeapon ?? null };
       cycleEdge = false;
+      fireEdge = false;
+      nitroEdge = false;
       selectEdge = null;
       if (override) inp = { ...inp, ...override };
       return inp;
@@ -50,7 +56,7 @@ export function createInput({ target = window, isRaceActive = () => false, onAct
     setTouchSource(fn) { touchSource = typeof fn === 'function' ? fn : null; },
     pulseCycle() { cycleEdge = true; },
     setOverride(partial) { override = partial ? { ...partial } : null; },
-    clear() { clearAll(); cycleEdge = false; selectEdge = null; },
+    clear() { clearAll(); },
     dispose() {
       target.removeEventListener('keydown', onKeyDown);
       target.removeEventListener('keyup', onKeyUp);

@@ -420,7 +420,8 @@ export function createGame({ root, canvas, storage, onError = () => {}, quality 
       const ts = controller && controller.stepTime ? controller.stepTime(dt) : 1;
       const { steps, acc: a } = advanceAccumulator(acc, dt * ts, SIM_HZ);
       acc = a;
-      const inp = input.read();
+      // A render frame without a physics step must not consume short fire/cycle/nitro taps.
+      const inp = steps > 0 ? input.read() : {};
       inp.nitro = inp.nitro || input.pressed.has('KeyF') || input.pressed.has('KeyX');   // nitro: F / X (Shift is the drift key)
       let events = [];
       for (let i = 0; i < steps; i++) {
