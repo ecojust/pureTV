@@ -34,3 +34,38 @@ test('throttle cannot resume a paused original race; explicit resume can',()=>{
  race.update(c,0.05);c.input.state.accel=1;race.update(c,0.05);assert.equal(race.state,5);assert.equal(race.raceTime,42);
  race.setPaused(false);assert.equal(race.state,2);assert.equal(events.at(-1).name,'resume');
 });
+
+test('Wi-Fi seat isolates touch AUTO gas; cancellation clears touch pointer latches',()=>{
+ const input=new Input();input.touch=true;
+ input.pad.state.accel=1;input.pad.state.drift=true;input.pad.state.item=true;
+ const button={pointer:7,tapped:true,el:{classList:{remove(){}}}};input.pad.buttons.push(button);
+ input.setTV({...frame({}),connected:true},true);input.update(ctx,0.05);
+ assert.equal(input.state.accel,0);assert.equal(input.state.drift,false);assert.equal(input.state.itemPressed,false);
+ input.cancelTV();assert.equal(button.pointer,-1);assert.equal(button.tapped,false);assert.equal(input.pad.state.accel,0);assert.equal(input.pad.state.drift,false);assert.equal(input.pad.state.item,false);
+ input.setTV({...frame({}),connected:false},false);input.update({...ctx,race:{state:5,player:null}},0.05);assert.equal(input.state.accel,0);
+});
+
+test('held standard gamepad confirm/pause cannot become fresh after cancellation',()=>{
+ const buttons=Array.from({length:16},()=>({pressed:false,value:0}));buttons[2]={pressed:true,value:1};buttons[9]={pressed:true,value:1};
+ Object.defineProperty(navigator,'getGamepads',{configurable:true,value:()=>[{index:0,connected:true,axes:[0,0],buttons}]});
+ try {
+  const input=new Input();input.update(ctx,0.05);input.cancelTV();input.update({...ctx,race:{state:5,player:null}},0.05);
+  assert.equal(input.state.itemPressed,false);assert.equal(input.state.pausePressed,false);
+  buttons[2]={pressed:false,value:0};buttons[9]={pressed:false,value:0};input.update(ctx,0.05);
+  buttons[2]={pressed:true,value:1};input.update(ctx,0.05);assert.equal(input.state.itemPressed,true);
+ } finally { delete navigator.getGamepads; }
+});
+test('cancelled keyboard OS repeat cannot auto-confirm; fresh keydown still works',()=>{
+ const input=new Input(),event={code:'Enter',repeat:false,preventDefault(){}};
+ input.onDown(event);input.update(ctx,0.05);input.cancelTV();input.onDown({...event,repeat:true});input.update({...ctx,race:{state:5,player:null}},0.05);assert.equal(input.state.itemPressed,false);
+ input.onUp(event);input.onDown(event);input.update(ctx,0.05);assert.equal(input.state.itemPressed,true);
+});
+
+test('desktop settings save before optional touch DOM is mounted',()=>{
+ const saved=new Map(),oldDocument=globalThis.document,oldStorage=globalThis.localStorage;
+ globalThis.document={documentElement:{setAttribute(){},removeAttribute(){}}};
+ globalThis.localStorage={getItem:k=>saved.get(k)||null,setItem:(k,v)=>saved.set(k,v)};
+ try{const input=new Input();input.pad.setHand('left');input.pad.setAuto(false);input.pad.setScheme('buttons');
+  const prefs=JSON.parse(saved.get('kr.controls.v1'));assert.equal(prefs.hand,'left');assert.equal(prefs.autoAccel,false);assert.equal(prefs.scheme,'buttons');
+ }finally{if(oldDocument===undefined)delete globalThis.document;else globalThis.document=oldDocument;if(oldStorage===undefined)delete globalThis.localStorage;else globalThis.localStorage=oldStorage;}
+});

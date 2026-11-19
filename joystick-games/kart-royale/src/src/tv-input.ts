@@ -41,7 +41,9 @@ export function installTV(ctx: Ctx, input: Input) {
     input.setTV(frame, playing);
     if (playing !== lastPlaying) { controller.setPlaying(playing); lastPlaying = playing; }
     document.documentElement.dataset.tvDriving = String(playing);
-    hint.textContent = playing ? '↑ / A Gas   ↓ Brake   ← → Steer   B Drift   X Item   Y Look back   START Pause' : 'D-pad Focus   A Select   B Back   X / Y Previous / Next   START Back';
+    document.documentElement.dataset.tvConnected = String(frame.connected);
+    const help = playing ? '↑ / A Gas   ↓ Brake   ← → Steer   B Drift   X Item   Y Look back   START Pause' : 'D-pad Focus   A Select   B Back   X / Y Previous / Next   START Back';
+    if (hint.textContent !== help) hint.textContent = help;
     if (frame.cancelled) return;
     if (frame.pressed.START) {
       if (root?.matches('.kc-root')) back(root);
@@ -66,8 +68,10 @@ export function installTV(ctx: Ctx, input: Input) {
   }
   (window as any).JoystickGameQA = { snapshot() {
     const p = ctx.race.player, panel = document.getElementById('puretv-controller-panel'), rect = panel?.getBoundingClientRect();
-    return { controller: controller.peek(), paused: ctx.race.state === RaceState.Paused,
-      gameplay: { state: ctx.race.state, phase: ['menu','countdown','racing','finished','results','paused'][ctx.race.state], time: ctx.race.raceTime, speed: p?.forwardSpeed, position: p?.position.toArray(), lap: p?.lap, place: p?.place, driftDir: p?.driftDir, driftTier: p?.driftTier, driftCharge: p?.driftCharge, boostTime: p?.boostTime, controls: { ...input.state } },
+    const frame = controller.peek(), gl = ctx.renderer?.getContext();
+    let savedControls = false; try { savedControls = !!localStorage.getItem('kr.controls.v1'); } catch {}
+    return { stage: ctx.race.state === RaceState.Paused ? 'paused' : ctx.race.state === RaceState.Menu ? 'menu' : ctx.race.state === RaceState.Results ? 'ended' : 'playing', renderer: gl ? (String(gl.getParameter(gl.VERSION)).startsWith('WebGL 2') ? 'webgl2' : 'webgl1') : null, webglVersion: gl ? gl.getParameter(gl.VERSION) : null, frames: frame.pollCount, controller: frame, paused: ctx.race.state === RaceState.Paused,
+      gameplay: { menu: activeRoot()?.matches('.kc-root') ? 'controls' : activeRoot()?.matches('.kr-s-title') ? 'title' : activeRoot()?.matches('.kr-s-select') ? 'select' : '', focus: document.activeElement?.textContent?.trim().slice(0, 100) || '', savedControls, controlHand: input.pad.prefs.hand, state: ctx.race.state, phase: ['menu','countdown','racing','finished','results','paused'][ctx.race.state], time: ctx.race.raceTime, speed: p?.forwardSpeed, position: p?.position.toArray(), lap: p?.lap, place: p?.place, driftDir: p?.driftDir, driftTier: p?.driftTier, driftCharge: p?.driftCharge, boostTime: p?.boostTime, controls: { ...input.state } },
       panel: rect ? { x: rect.x, y: rect.y, width: rect.width, height: rect.height, scrollHeight: panel!.scrollHeight, clientHeight: panel!.clientHeight, hidden: panel!.hidden } : null,
       focused: document.activeElement?.textContent?.slice(0,100), boot: document.querySelector('.boot-step')?.textContent,
     };

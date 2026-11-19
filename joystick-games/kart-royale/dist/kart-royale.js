@@ -30540,7 +30540,9 @@ void main() {
         lastPlaying = playing;
       }
       document.documentElement.dataset.tvDriving = String(playing);
-      hint.textContent = playing ? "\u2191 / A Gas   \u2193 Brake   \u2190 \u2192 Steer   B Drift   X Item   Y Look back   START Pause" : "D-pad Focus   A Select   B Back   X / Y Previous / Next   START Back";
+      document.documentElement.dataset.tvConnected = String(frame.connected);
+      const help = playing ? "\u2191 / A Gas   \u2193 Brake   \u2190 \u2192 Steer   B Drift   X Item   Y Look back   START Pause" : "D-pad Focus   A Select   B Back   X / Y Previous / Next   START Back";
+      if (hint.textContent !== help) hint.textContent = help;
       if (frame.cancelled) return;
       if (frame.pressed.START) {
         if (root?.matches(".kc-root")) back(root);
@@ -30578,10 +30580,20 @@ void main() {
     }
     window.JoystickGameQA = { snapshot() {
       const p = ctx.race.player, panel2 = document.getElementById("puretv-controller-panel"), rect = panel2?.getBoundingClientRect();
+      const frame = controller.peek(), gl = ctx.renderer?.getContext();
+      let savedControls = false;
+      try {
+        savedControls = !!localStorage.getItem("kr.controls.v1");
+      } catch {
+      }
       return {
-        controller: controller.peek(),
+        stage: ctx.race.state === 5 /* Paused */ ? "paused" : ctx.race.state === 0 /* Menu */ ? "menu" : ctx.race.state === 4 /* Results */ ? "ended" : "playing",
+        renderer: gl ? String(gl.getParameter(gl.VERSION)).startsWith("WebGL 2") ? "webgl2" : "webgl1" : null,
+        webglVersion: gl ? gl.getParameter(gl.VERSION) : null,
+        frames: frame.pollCount,
+        controller: frame,
         paused: ctx.race.state === 5 /* Paused */,
-        gameplay: { state: ctx.race.state, phase: ["menu", "countdown", "racing", "finished", "results", "paused"][ctx.race.state], time: ctx.race.raceTime, speed: p?.forwardSpeed, position: p?.position.toArray(), lap: p?.lap, place: p?.place, driftDir: p?.driftDir, driftTier: p?.driftTier, driftCharge: p?.driftCharge, boostTime: p?.boostTime, controls: { ...input.state } },
+        gameplay: { menu: activeRoot()?.matches(".kc-root") ? "controls" : activeRoot()?.matches(".kr-s-title") ? "title" : activeRoot()?.matches(".kr-s-select") ? "select" : "", focus: document.activeElement?.textContent?.trim().slice(0, 100) || "", savedControls, controlHand: input.pad.prefs.hand, state: ctx.race.state, phase: ["menu", "countdown", "racing", "finished", "results", "paused"][ctx.race.state], time: ctx.race.raceTime, speed: p?.forwardSpeed, position: p?.position.toArray(), lap: p?.lap, place: p?.place, driftDir: p?.driftDir, driftTier: p?.driftTier, driftCharge: p?.driftCharge, boostTime: p?.boostTime, controls: { ...input.state } },
         panel: rect ? { x: rect.x, y: rect.y, width: rect.width, height: rect.height, scrollHeight: panel2.scrollHeight, clientHeight: panel2.clientHeight, hidden: panel2.hidden } : null,
         focused: document.activeElement?.textContent?.slice(0, 100),
         boot: document.querySelector(".boot-step")?.textContent
@@ -32174,9 +32186,9 @@ void main() {
         }
         setAuto(on) {
           this.auto = on;
-          this.autoChip.classList.toggle("on", on);
-          this.autoChip.textContent = on ? "AUTO" : "MAN";
-          this.gasBtn.style.display = on ? "none" : "";
+          this.autoChip?.classList.toggle("on", on);
+          if (this.autoChip) this.autoChip.textContent = on ? "AUTO" : "MAN";
+          if (this.gasBtn) this.gasBtn.style.display = on ? "none" : "";
           if (on && this.bGas) {
             this.bGas.pointer = -1;
             this.bGas.tapped = false;
@@ -32233,8 +32245,15 @@ void main() {
           this.deadzonePx = scheme === "fixed" ? DEADZONE_PX_FIXED : DEADZONE_PX;
           this.dirty = true;
           this.layout();
-          if (scheme === "fixed") this.showFixedRosette();
-          else this.stickWrap.classList.remove("rosette");
+          if (this.mounted && scheme === "fixed") this.showFixedRosette();
+          else this.stickWrap?.classList.remove("rosette");
+        }
+        /** Native cancellation clears held pointers without issuing a gameplay release. */
+        cancelHeld() {
+          this.releaseEverything();
+          this.state.accel = 0;
+          this.state.autoAccel = false;
+          this.state.pause = false;
         }
         /** Release every live pointer and zero every output. Cannot leave a latch. */
         releaseEverything() {
@@ -32567,6 +32586,7 @@ void main() {
          * requested from a user gesture. Called from the controls screen's own tap.
          */
         async requestTilt() {
+          if (typeof DeviceOrientationEvent === "undefined") return false;
           const D = DeviceOrientationEvent;
           if (typeof D?.requestPermission === "function") {
             try {
@@ -33217,7 +33237,9 @@ html[data-menu][data-touch-preview][data-touch-scheme="buttons"] .tc-pads { disp
           __publicField(this, "touch", false);
           __publicField(this, "tv", { buttons: {}, pressed: {} });
           __publicField(this, "tvEnabled", false);
+          __publicField(this, "tvConnected", false);
           __publicField(this, "keys", /* @__PURE__ */ new Set());
+          __publicField(this, "cancelledKeys", /* @__PURE__ */ new Set());
           /**
            * Keys that went down since the last `update`, whether or not they are still
            * held. Edges are otherwise derived by polling `keys` once a frame, so a
@@ -33285,12 +33307,17 @@ html[data-menu][data-touch-preview][data-touch-scheme="buttons"] .tc-pads { disp
             }
           });
           __publicField(this, "onDown", (e) => {
+            if (this.cancelledKeys.has(e.code)) {
+              if (e.repeat) return;
+              this.cancelledKeys.delete(e.code);
+            }
             if (!e.repeat) this.latched.add(e.code);
             this.keys.add(e.code);
             if (SWALLOW.has(e.code)) e.preventDefault();
           });
           __publicField(this, "onUp", (e) => {
             this.keys.delete(e.code);
+            this.cancelledKeys.delete(e.code);
           });
           /** Losing focus mid-corner must not leave a key stuck down. */
           __publicField(this, "onBlur", () => {
@@ -33307,14 +33334,17 @@ html[data-menu][data-touch-preview][data-touch-scheme="buttons"] .tc-pads { disp
         }
         setTV(frame, enabled) {
           this.tv = frame;
+          this.tvConnected = frame.connected === true;
           this.tvEnabled = enabled && !frame.cancelled;
         }
         cancelTV() {
           this.tv = { buttons: {}, pressed: {} };
           this.tvEnabled = false;
+          for (const key2 of this.keys) this.cancelledKeys.add(key2);
           this.keys.clear();
           this.latched.clear();
-          this.wasDrift = this.wasItem = this.wasPause = this.wasAny = false;
+          this.pad.cancelHeld();
+          this.wasDrift = this.wasItem = this.wasPause = this.wasAny = true;
           this.driftMin = this.itemBuf = this.driftFloorT = 0;
           this.itemSig = -1;
           Object.assign(this.state, { steer: 0, accel: 0, brake: 0, accelAuto: false, drift: false, driftPressed: false, itemPressed: false, lookBack: false, pausePressed: false, anyPressed: false });
@@ -33554,7 +33584,7 @@ html[data-menu][data-touch-preview][data-touch-scheme="buttons"] .tc-pads { disp
           let pause = hit("Escape", "KeyP");
           let acted = k.size > 0;
           let analogue = null;
-          if (this.touch) {
+          if (this.touch && !this.tvConnected && ctx.race.state !== 5 /* Paused */) {
             this.pad.update(ctx, dt);
             const t = this.pad.state;
             if (t.active) {

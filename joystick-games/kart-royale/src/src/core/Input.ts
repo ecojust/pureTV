@@ -160,16 +160,20 @@ export class Input implements IInput {
   touch = false;
   private tv: any = { buttons: {}, pressed: {} };
   private tvEnabled = false;
-  setTV(frame: any, enabled: boolean) { this.tv = frame; this.tvEnabled = enabled && !frame.cancelled; }
+  private tvConnected = false;
+  setTV(frame: any, enabled: boolean) { this.tv = frame; this.tvConnected = frame.connected === true; this.tvEnabled = enabled && !frame.cancelled; }
   cancelTV() {
     this.tv = { buttons: {}, pressed: {} }; this.tvEnabled = false;
-    this.keys.clear(); this.latched.clear();
-    this.wasDrift = this.wasItem = this.wasPause = this.wasAny = false;
+    for (const key of this.keys) this.cancelledKeys.add(key);
+    this.keys.clear(); this.latched.clear(); this.pad.cancelHeld();
+    // A still-held standard gamepad button must first report released.
+    this.wasDrift = this.wasItem = this.wasPause = this.wasAny = true;
     this.driftMin = this.itemBuf = this.driftFloorT = 0; this.itemSig = -1;
     Object.assign(this.state, { steer: 0, accel: 0, brake: 0, accelAuto: false, drift: false, driftPressed: false, itemPressed: false, lookBack: false, pausePressed: false, anyPressed: false });
   }
 
   private keys = new Set<string>();
+  private cancelledKeys = new Set<string>();
   /**
    * Keys that went down since the last `update`, whether or not they are still
    * held. Edges are otherwise derived by polling `keys` once a frame, so a
@@ -389,12 +393,16 @@ export class Input implements IInput {
   }
 
   private onDown = (e: KeyboardEvent) => {
+    if (this.cancelledKeys.has(e.code)) {
+      if (e.repeat) return;
+      this.cancelledKeys.delete(e.code); // a new physical keydown, not OS repeat
+    }
     if (!e.repeat) this.latched.add(e.code);
     this.keys.add(e.code);
     // Space and the arrows scroll the page; the game owns them.
     if (SWALLOW.has(e.code)) e.preventDefault();
   };
-  private onUp = (e: KeyboardEvent) => { this.keys.delete(e.code); };
+  private onUp = (e: KeyboardEvent) => { this.keys.delete(e.code); this.cancelledKeys.delete(e.code); };
   /** Losing focus mid-corner must not leave a key stuck down. */
   private onBlur = () => { this.keys.clear(); this.latched.clear(); };
   private onPad = (e: GamepadEvent) => { this.padIndex = e.gamepad.index; };
@@ -567,7 +575,7 @@ export class Input implements IInput {
     let analogue: number | null = null;
 
     // --- on-screen pad, if this is a touch device ----------------------------
-    if (this.touch) {
+    if (this.touch && !this.tvConnected && ctx.race.state !== RaceState.Paused) {
       this.pad.update(ctx, dt);
       const t = this.pad.state;
       if (t.active) { this.padUsed = true; acted = true; }

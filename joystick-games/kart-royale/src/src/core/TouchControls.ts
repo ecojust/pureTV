@@ -484,11 +484,11 @@ export class TouchControls {
 
   setAuto(on: boolean) {
     this.auto = on;
-    this.autoChip.classList.toggle('on', on);
-    this.autoChip.textContent = on ? 'AUTO' : 'MAN';
+    this.autoChip?.classList.toggle('on', on);
+    if (this.autoChip) this.autoChip.textContent = on ? 'AUTO' : 'MAN';
     // With auto off the player needs a throttle; with it on that space is dead
     // weight under the thumb, so the pedal is removed rather than just dimmed.
-    this.gasBtn.style.display = on ? 'none' : '';
+    if (this.gasBtn) this.gasBtn.style.display = on ? 'none' : '';
     if (on && this.bGas) {
       this.bGas.pointer = -1;
       this.bGas.tapped = false;
@@ -553,8 +553,16 @@ export class TouchControls {
     this.deadzonePx = scheme === 'fixed' ? DEADZONE_PX_FIXED : DEADZONE_PX;
     this.dirty = true;
     this.layout();
-    if (scheme === 'fixed') this.showFixedRosette();
-    else this.stickWrap.classList.remove('rosette');
+    if (this.mounted && scheme === 'fixed') this.showFixedRosette();
+    else this.stickWrap?.classList.remove('rosette');
+  }
+
+  /** Native cancellation clears held pointers without issuing a gameplay release. */
+  cancelHeld() {
+    this.releaseEverything();
+    this.state.accel = 0;
+    this.state.autoAccel = false;
+    this.state.pause = false;
   }
 
   /** Release every live pointer and zero every output. Cannot leave a latch. */
@@ -1229,6 +1237,7 @@ export class TouchControls {
    * requested from a user gesture. Called from the controls screen's own tap.
    */
   async requestTilt(): Promise<boolean> {
+    if (typeof DeviceOrientationEvent === 'undefined') return false;
     const D = DeviceOrientationEvent as unknown as { requestPermission?: () => Promise<string> };
     if (typeof D?.requestPermission === 'function') {
       try {
