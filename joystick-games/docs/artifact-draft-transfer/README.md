@@ -53,3 +53,7 @@ python3 joystick-games/tools/artifact-draft-transfer-test.py
 ```
 
 The tests use fake APIs, fake HTTPS connections and temporary files. They do not require a token or contact GitHub. Coverage includes wrong run/source/attempt/repository, name and expiry rules, exact producer/upload binding, size/digest failures, non-draft and mismatched destinations, duplicate assets, stripped redirect credentials, forbidden redirect hosts, stream bounds, one fixed upload operation, upload failure redaction/no retry, final API digest mismatch, and receipt-only create-only Git export. Real Android/macOS/Windows package or physical-device acceptance is outside these tests.
+
+## First actual transfer, operator-triggered
+
+Run [44602586551](https://github.com/ecojust/pureTV/actions/runs/44602586551), frozen transfer-tool source `8554f453898632594c7cd98e3c58ab0209318950`, completed successfully. Original artifact `14567692465` was copied to the existing draft Release `451851848` as asset `769042251`. Its API size is 104,995,469 bytes and digest is `sha256:7266f2a123eda2c8196abf6f9156fcacc453f3d70258dba75ca3b3afa6a7bd95`, matching the original Actions ZIP. A separate read-only review confirmed the release remained a draft with the exact source/tag. The receipt-only export commit is `11f82589d20d32b01947787f34a23ef7183dac02`. Untouched receipt/API metadata and their hashes are retained in [run-44602586551/review.json](run-44602586551/review.json). This reviewer did not download the ZIP or verify its inner APK/signature/gameplay; those are separate operator steps.

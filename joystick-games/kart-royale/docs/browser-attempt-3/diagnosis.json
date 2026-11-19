@@ -1,0 +1,66 @@
+{
+  "reviewedAt": "2026-11-19T19:57:55.233925+00:00",
+  "status": "failed",
+  "observedToolExitCode": 1,
+  "actualFailure": "page.screenshot timed out after15seconds in Controls menu. Later failure screenshot also produced no file. No JavaScript error or failed HTTP response was recorded.",
+  "sourceCommit": "14755fca44d60e71406987d0bf283e596751babc",
+  "testedBuildManifestSha256": "647f997168d0b1060d3e89e49c934959e8f5f9438ae1546919e19d7c8cb0cb38",
+  "allFiveFrozenDistributionFilesMatchSourceCommit": true,
+  "executedScriptSha256": "122378ada905ff4a919c3b7293bf3d820a86cd6eae3d96299bfc61d725c40c61",
+  "reportSha256": "77b3bf4f3a69e75620c6e3e3b34077206088bdbf5998caf72aa823d763deebb1",
+  "actualObserved": [
+    "Original initialization reached __gameReady with120s budget",
+    "Fixed snapshot.game identity matched kart-royale",
+    "Ordinary DOWN selected Controls from Start",
+    "Ordinary A entered Controls; final focus Done, all nine keys released",
+    "Actual final frame count43 and cached pollCount43; original WebGL2 context present"
+  ],
+  "notVerified": [
+    "Actual race entry and natural countdown",
+    "Driving, items, drift, pause and reconnection",
+    "Saved preference and restart",
+    "Controls screenshot and1280layout",
+    "Default shipping-quality screenshot",
+    "Native/physical devices"
+  ],
+  "qualityScope": "Only original ?quality=low preset was used for this software-GPU probe. Shipping defaults, physics, clocks and original dynamic resolution were not changed. No device-performance conclusion.",
+  "captures": [
+    {
+      "name": "title-low-960",
+      "width": 960,
+      "height": 540,
+      "bytes": 758090,
+      "sha256": "64654de6b464ed42064034904db784c74ab28f8c6e18bbeb0b66844c50eac278",
+      "visualReview": "Viewed actual title image: original track/karts background, visible Start and Controls; connected ID card fits left margin and text stays within its measured bounds. This is a menu screenshot, not gameplay."
+    }
+  ],
+  "loadedResponses": [
+    {
+      "url": "http://127.0.0.1:18866/tv.html?quality=low",
+      "status": 200,
+      "bytes": 5796,
+      "sha256": "7e1ac038f3986bf37fe439cc50105c2c538b6eae8a62054a0895667af9beaafb",
+      "expected": true,
+      "matchesExpected": true
+    },
+    {
+      "url": "http://127.0.0.1:18866/kart-royale.css",
+      "status": 200,
+      "bytes": 50294,
+      "sha256": "ede1072cb1bce48382ab04f6ff88f8e50644e3c340cc49f4107556e9f54565c4",
+      "expected": true,
+      "matchesExpected": true
+    },
+    {
+      "url": "http://127.0.0.1:18866/kart-royale.js",
+      "status": 200,
+      "bytes": 3893952,
+      "sha256": "d59b112cbb3207f5eff3ae86c4fea5b9dda76217282537ecac4db44ab687a08b",
+      "expected": true,
+      "matchesExpected": true
+    }
+  ],
+  "nativePassed": false,
+  "physicalTvTested": false,
+  "next": "Do not repeat a broad software-GPU case automatically. Preserve this failure and use actual native-platform observations or a separately bounded targeted remaining-input probe."
+}

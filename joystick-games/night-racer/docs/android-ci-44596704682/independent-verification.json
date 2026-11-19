@@ -1,0 +1,2002 @@
+{
+  "verifiedAt": "2026-11-19T19:56:52.656477+00:00",
+  "sourceSha": "d8358bfe78f154d0e67220c9405c3ba1fdbad375",
+  "runId": 44596704682,
+  "runAttempt": 1,
+  "exportCommit": "25468d5b09fe68af7560c20fdda8055b1c8fccc2",
+  "exportedFilesVerified": 279,
+  "sourceFilesComparedToGit": 195,
+  "apk": {
+    "packageName": "com.ecojust.joystick.nightracer",
+    "versionName": "0.1.0",
+    "versionCode": 1,
+    "bytes": 22465268,
+    "sha256": "8fc545424b8262f6845f7d15d85fc0ba77337cf9399acdd8315fcea25fc04bab",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23"
+  },
+  "apkLocalPath": "/dev/shm/racing-review-driving/night/android-ci-44596704682/pureTV-25468d5b09fe68af7560c20fdda8055b1c8fccc2/packages/night-racer/night-racer-0.1.0.apk",
+  "apkKeptInScratchOnly": true,
+  "assetCount": 30,
+  "allAssetsEqualExactFrozenSource": true,
+  "certificateIndependentlyVerified": true,
+  "exportInstallPackagesValidated": true,
+  "runtimeResult": "success",
+  "runtimeReports": [
+    {
+      "path": "reports/joystick-android-report-runtime-night-racer/night-racer-normal/report.json",
+      "status": "passed",
+      "game": "night-racer",
+      "sourceCommit": "d8358bfe78f154d0e67220c9405c3ba1fdbad375",
+      "modelWrites": false,
+      "clockOverrides": false,
+      "defaultPortOccupiedFixture": false,
+      "error": null,
+      "tests": [
+        {
+          "name": "catalog scenario starts with fresh app data before launch",
+          "status": "passed",
+          "details": {
+            "mode": "fresh-install-app-data",
+            "targetPackage": "com.ecojust.joystick.nightracer",
+            "method": "pm clear",
+            "phase": "before-target-launch",
+            "status": "passed",
+            "stdout": "Success"
+          }
+        },
+        {
+          "name": "installed target launches initialized game menu with no controller card",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "original SDK hello and nine sync messages create actual controller ID card",
+          "status": "passed",
+          "details": {
+            "identity": "virtual-4c491f43335b"
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Start and wait for the original countdown to finish",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.state",
+                "op": "eq",
+                "value": "race"
+              },
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": false
+              }
+            ],
+            "holdMs": 200
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Accelerate after the original countdown",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.state",
+                "op": "eq",
+                "value": "race"
+              },
+              {
+                "path": "gameplay.speed",
+                "op": "gt",
+                "value": 1
+              },
+              {
+                "path": "gameplay.playerX",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 7000
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Steer left while accelerating",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.heading",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 1400
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Steer right while accelerating",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.heading",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 1400
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Use one original nitro bottle with B",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.bottles",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Change the original camera with Y",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.camera",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Reset to the original track with X",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.speed",
+                "op": "lt",
+                "value": 1
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Pause the actual race",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "paused"
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Resume only on explicit input",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "playing"
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 10.700000000000033,
+              "after": 10.700000000000033
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 10.700000000000033,
+              "after": 10.700000000000033
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 10.700000000000033,
+              "after": 10.700000000000033
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release UP",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 10.700000000000033,
+              "after": 10.700000000000033
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 10.700000000000033,
+              "after": 10.700000000000033
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release DOWN",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 10.700000000000033,
+              "after": 10.700000000000033
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 10.700000000000033,
+              "after": 10.700000000000033
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release LEFT",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 10.700000000000033,
+              "after": 10.700000000000033
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 10.700000000000033,
+              "after": 10.700000000000033
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release RIGHT",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 10.700000000000033,
+              "after": 10.700000000000033
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 11.949999999999962,
+              "after": 11.949999999999962
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release START",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 11.949999999999962,
+              "after": 11.949999999999962
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.playerX": {
+              "before": -36.357958843559025,
+              "after": -36.357958843559025
+            },
+            "gameplay.playerZ": {
+              "before": 3.225297576189041,
+              "after": 3.225297576189041
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release A",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.playerX": {
+              "before": -36.357958843559025,
+              "after": -36.357958843559025
+            },
+            "gameplay.playerZ": {
+              "before": 3.225297576189041,
+              "after": 3.225297576189041
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.playerX": {
+              "before": -36.357958843559025,
+              "after": -36.357958843559025
+            },
+            "gameplay.playerZ": {
+              "before": 3.225297576189041,
+              "after": 3.225297576189041
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release B",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.playerX": {
+              "before": -36.357958843559025,
+              "after": -36.357958843559025
+            },
+            "gameplay.playerZ": {
+              "before": 3.225297576189041,
+              "after": 3.225297576189041
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.playerX": {
+              "before": -36.357958843559025,
+              "after": -36.357958843559025
+            },
+            "gameplay.playerZ": {
+              "before": 3.225297576189041,
+              "after": 3.225297576189041
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release X",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.playerX": {
+              "before": -36.357958843559025,
+              "after": -36.357958843559025
+            },
+            "gameplay.playerZ": {
+              "before": 3.225297576189041,
+              "after": 3.225297576189041
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 0.35000000000000026,
+              "after": 0.35000000000000026
+            },
+            "gameplay.playerX": {
+              "before": -36.357958843559025,
+              "after": -36.357958843559025
+            },
+            "gameplay.playerZ": {
+              "before": 3.225297576189041,
+              "after": 3.225297576189041
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release Y",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "single-seat host rejects second SDK with controller_busy and preserves active primary input",
+          "status": "passed",
+          "details": {
+            "connection": 2,
+            "controllerId": "virtual-29851c10c6ce",
+            "helloSeq": 1,
+            "sdkMessages": 10,
+            "response": {
+              "type": "error",
+              "message": "controller_busy",
+              "seq": 1
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 2.5499999999999936,
+              "after": 2.5499999999999936
+            },
+            "gameplay.playerX": {
+              "before": -34.69617251220617,
+              "after": -34.69617251220617
+            },
+            "gameplay.playerZ": {
+              "before": 3.4177756170377855,
+              "after": 3.4177756170377855
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 7.130830664001086,
+              "after": 7.130830664001086
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "native exit dialog and focus return cancel input and never automatically resume gameplay",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "disconnect clears keys; reconnect keeps original ID and remains paused",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "held START reconnect sync cannot resume gameplay",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "every accepted SDK message has exactly one original host ACK; busy rejection separately verified",
+          "status": "passed",
+          "details": {
+            "sdkMessages": 728,
+            "acceptedSdkMessages": 718,
+            "rejectedSdkMessages": 10,
+            "hostReplies": 719,
+            "matchingAcks": 718,
+            "missingAcks": [],
+            "expectedBusyIds": [
+              "virtual-29851c10c6ce"
+            ],
+            "rejectedConnections": [
+              {
+                "connection": 2,
+                "controllerId": "virtual-29851c10c6ce",
+                "helloSeq": 1,
+                "sdkMessages": 10,
+                "response": {
+                  "type": "error",
+                  "message": "controller_busy",
+                  "seq": 1
+                }
+              }
+            ],
+            "unexpectedReplies": [],
+            "duplicateAcks": [],
+            "keysSent": [
+              "A",
+              "B",
+              "DOWN",
+              "LEFT",
+              "RIGHT",
+              "START",
+              "UP",
+              "X",
+              "Y"
+            ],
+            "errors": []
+          }
+        },
+        {
+          "name": "same native process and service port survive focus, disconnect and reconnect",
+          "status": "passed",
+          "details": 63485
+        }
+      ]
+    },
+    {
+      "path": "reports/joystick-android-report-runtime-night-racer/night-racer-occupied/report.json",
+      "status": "passed",
+      "game": "night-racer",
+      "sourceCommit": "d8358bfe78f154d0e67220c9405c3ba1fdbad375",
+      "modelWrites": false,
+      "clockOverrides": false,
+      "defaultPortOccupiedFixture": true,
+      "error": null,
+      "tests": [
+        {
+          "name": "catalog scenario starts with fresh app data before launch",
+          "status": "passed",
+          "details": {
+            "mode": "fresh-install-app-data",
+            "targetPackage": "com.ecojust.joystick.nightracer",
+            "method": "pm clear",
+            "phase": "before-target-launch",
+            "status": "passed",
+            "stdout": "Success"
+          }
+        },
+        {
+          "name": "installed target launches initialized game menu with no controller card",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "original SDK hello and nine sync messages create actual controller ID card",
+          "status": "passed",
+          "details": {
+            "identity": "virtual-4af468fcce74"
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Start and wait for the original countdown to finish",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.state",
+                "op": "eq",
+                "value": "race"
+              },
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": false
+              }
+            ],
+            "holdMs": 200
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Accelerate after the original countdown",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.state",
+                "op": "eq",
+                "value": "race"
+              },
+              {
+                "path": "gameplay.speed",
+                "op": "gt",
+                "value": 1
+              },
+              {
+                "path": "gameplay.playerX",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 7000
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Steer left while accelerating",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.heading",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 1400
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Steer right while accelerating",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.heading",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 1400
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Use one original nitro bottle with B",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.bottles",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Change the original camera with Y",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.camera",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Reset to the original track with X",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.speed",
+                "op": "lt",
+                "value": 1
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Pause the actual race",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "paused"
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Resume only on explicit input",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "playing"
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 11.808333333333303,
+              "after": 11.808333333333303
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 11.808333333333303,
+              "after": 11.808333333333303
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 11.808333333333303,
+              "after": 11.808333333333303
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release UP",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 11.808333333333303,
+              "after": 11.808333333333303
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 11.808333333333303,
+              "after": 11.808333333333303
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release DOWN",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 11.808333333333303,
+              "after": 11.808333333333303
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 11.808333333333303,
+              "after": 11.808333333333303
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release LEFT",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 11.808333333333303,
+              "after": 11.808333333333303
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 11.808333333333303,
+              "after": 11.808333333333303
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release RIGHT",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 11.808333333333303,
+              "after": 11.808333333333303
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 12.808333333333247,
+              "after": 12.808333333333247
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release START",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 12.808333333333247,
+              "after": 12.808333333333247
+            },
+            "gameplay.playerX": {
+              "before": 94.28665161132812,
+              "after": 94.28665161132812
+            },
+            "gameplay.playerZ": {
+              "before": 0.4613720178604126,
+              "after": 0.4613720178604126
+            },
+            "gameplay.heading": {
+              "before": 1.5728560182576727,
+              "after": 1.5728560182576727
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.playerX": {
+              "before": -36.357958843559025,
+              "after": -36.357958843559025
+            },
+            "gameplay.playerZ": {
+              "before": 3.225297576189041,
+              "after": 3.225297576189041
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release A",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.playerX": {
+              "before": -36.357958843559025,
+              "after": -36.357958843559025
+            },
+            "gameplay.playerZ": {
+              "before": 3.225297576189041,
+              "after": 3.225297576189041
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.playerX": {
+              "before": -36.357958843559025,
+              "after": -36.357958843559025
+            },
+            "gameplay.playerZ": {
+              "before": 3.225297576189041,
+              "after": 3.225297576189041
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release B",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.playerX": {
+              "before": -36.357958843559025,
+              "after": -36.357958843559025
+            },
+            "gameplay.playerZ": {
+              "before": 3.225297576189041,
+              "after": 3.225297576189041
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.playerX": {
+              "before": -36.357958843559025,
+              "after": -36.357958843559025
+            },
+            "gameplay.playerZ": {
+              "before": 3.225297576189041,
+              "after": 3.225297576189041
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release X",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.playerX": {
+              "before": -36.357958843559025,
+              "after": -36.357958843559025
+            },
+            "gameplay.playerZ": {
+              "before": 3.225297576189041,
+              "after": 3.225297576189041
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 0.35000000000000026,
+              "after": 0.35000000000000026
+            },
+            "gameplay.playerX": {
+              "before": -36.357958843559025,
+              "after": -36.357958843559025
+            },
+            "gameplay.playerZ": {
+              "before": 3.225297576189041,
+              "after": 3.225297576189041
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release Y",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "single-seat host rejects second SDK with controller_busy and preserves active primary input",
+          "status": "passed",
+          "details": {
+            "connection": 2,
+            "controllerId": "virtual-4164e8000112",
+            "helloSeq": 1,
+            "sdkMessages": 10,
+            "response": {
+              "type": "error",
+              "message": "controller_busy",
+              "seq": 1
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.raceTime": {
+              "before": 2.949999999999992,
+              "after": 2.949999999999992
+            },
+            "gameplay.playerX": {
+              "before": -35.60084841779421,
+              "after": -35.60084841779421
+            },
+            "gameplay.playerZ": {
+              "before": 3.312990637991237,
+              "after": 3.312990637991237
+            },
+            "gameplay.heading": {
+              "before": 1.4554841714141133,
+              "after": 1.4554841714141133
+            },
+            "gameplay.speed": {
+              "before": 4.868048666936458,
+              "after": 4.868048666936458
+            },
+            "gameplay.nitro": {
+              "before": 0,
+              "after": 0
+            },
+            "gameplay.coins": {
+              "before": 400,
+              "after": 400
+            }
+          }
+        },
+        {
+          "name": "native exit dialog and focus return cancel input and never automatically resume gameplay",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "disconnect clears keys; reconnect keeps original ID and remains paused",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "held START reconnect sync cannot resume gameplay",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "every accepted SDK message has exactly one original host ACK; busy rejection separately verified",
+          "status": "passed",
+          "details": {
+            "sdkMessages": 732,
+            "acceptedSdkMessages": 722,
+            "rejectedSdkMessages": 10,
+            "hostReplies": 723,
+            "matchingAcks": 722,
+            "missingAcks": [],
+            "expectedBusyIds": [
+              "virtual-4164e8000112"
+            ],
+            "rejectedConnections": [
+              {
+                "connection": 2,
+                "controllerId": "virtual-4164e8000112",
+                "helloSeq": 1,
+                "sdkMessages": 10,
+                "response": {
+                  "type": "error",
+                  "message": "controller_busy",
+                  "seq": 1
+                }
+              }
+            ],
+            "unexpectedReplies": [],
+            "duplicateAcks": [],
+            "keysSent": [
+              "A",
+              "B",
+              "DOWN",
+              "LEFT",
+              "RIGHT",
+              "START",
+              "UP",
+              "X",
+              "Y"
+            ],
+            "errors": []
+          }
+        },
+        {
+          "name": "same native process and service port survive focus, disconnect and reconnect",
+          "status": "passed",
+          "details": 35163
+        }
+      ]
+    }
+  ],
+  "runtimeVerification": {
+    "status": "passed",
+    "runtimeResult": "success",
+    "sourceSha": "d8358bfe78f154d0e67220c9405c3ba1fdbad375",
+    "games": [
+      "night-racer"
+    ],
+    "observations": [
+      {
+        "game": "night-racer",
+        "mode": "normal",
+        "status": "passed",
+        "apkSha256": "8fc545424b8262f6845f7d15d85fc0ba77337cf9399acdd8315fcea25fc04bab",
+        "videoSha256": "467cf2e70204598f4e2fc6392dab3047662846d7ab96df29173b6cb6d4a2b2fd"
+      },
+      {
+        "game": "night-racer",
+        "mode": "occupied",
+        "status": "passed",
+        "apkSha256": "8fc545424b8262f6845f7d15d85fc0ba77337cf9399acdd8315fcea25fc04bab",
+        "videoSha256": "5b2ec2ee8c3be271f5795d8c927b5104f6a3372ef6616ba01815e4f08a441d99"
+      }
+    ],
+    "errors": []
+  },
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "scriptSha256": "26c250b7cd0ec902f71ac8e1609377d505238b541390031729b91f430a99e831"
+}
