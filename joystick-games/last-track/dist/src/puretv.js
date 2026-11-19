@@ -18,7 +18,7 @@ export function createPureTv(game, root) {
     pendingPause = game.flow.state === 'loading';
     if (game.flow.state === 'race') game.pause();
   };
-  const controller = createController({ side: 'right', top: '42%', width: 184, onSuspend: cancel, onCancel: cancel });
+  const controller = createController({ side: 'right', top: '64%', width: 184, onSuspend: cancel, onCancel: cancel });
   const panel = document.getElementById('puretv-controller-panel');
   const help = document.createElement('p'); help.className = 'lasttrack-controller-help';
   help.textContent = '方向键：驾驶 / 选择\nA：射击 / 确认\nB：漂移 / 返回\nX：切换武器\nY：氮气\nSTART：暂停 / 继续';
@@ -110,13 +110,20 @@ export function createPureTv(game, root) {
           if (held && !sent.has(b)) { sent.set(b,driving[b]); emit(driving[b],true); }
           else if (!held && sent.has(b)) { emit(sent.get(b),false); sent.delete(b); }
         } else if (held) {
-          if (['UP','DOWN','LEFT','RIGHT'].includes(b) && (f.pressed[b] || now >= (repeatAt.get(b) ?? Infinity))) { menuMove(b,!f.pressed[b]); repeatAt.set(b,now+(f.pressed[b]?420:130)); }
+          if (['UP','DOWN','LEFT','RIGHT'].includes(b) && (f.pressed[b] || now >= (repeatAt.get(b) ?? Infinity))) {
+            // One physical press selects one settings control. Holding a direction
+            // must not leave a quality preset before A confirms it. Volume sliders
+            // still support holding LEFT/RIGHT to adjust their value continuously.
+            const focus = document.activeElement;
+            const repeat = !modal() || (focus?.tagName === 'INPUT' && focus.type === 'range' && ['LEFT','RIGHT'].includes(b));
+            menuMove(b,!f.pressed[b]); repeatAt.set(b,repeat ? now+(f.pressed[b]?420:130) : Infinity);
+          }
           else if (f.pressed[b] && b==='A') select();
           else if (f.pressed[b] && b==='B') back();
         } else repeatAt.delete(b);
       }
       controller.setPlaying(playing);
-      help.hidden = playing; panel.style.top = playing ? '42%' : '12px';
+      help.hidden = playing; panel.style.top = playing ? '64%' : '12px';
       // Shop/garage/setup screens use the full width for controls. Keep their
       // identity card compact and reserve its header space instead of covering buys.
       const compact = !playing && (state !== 'title' && state !== 'paused' || !!modal());
