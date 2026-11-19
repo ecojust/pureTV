@@ -110,16 +110,13 @@ jobs:
           python3 ../../resource/game-kit/build-strings-test.py --sdk "$ANDROID_HOME" | tee "$RUNNER_TEMP/string-resource-tests.json"
       - name: Fetch the existing pinned QR encoder
         run: |
-          curl --fail --silent --show-error --location \
-            --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 120 \
-            --connect-timeout 15 --max-time 90 \
-            https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar \
-            --output "$RUNNER_TEMP/zxing.jar" 2> >(tee "$RUNNER_TEMP/zxing-download.log" >&2)
-          python3 - <<'PY'
-          import hashlib,os
-          from pathlib import Path
-          assert hashlib.sha256((Path(os.environ['RUNNER_TEMP'])/'zxing.jar').read_bytes()).hexdigest() == '8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82'
-          PY
+          set -euo pipefail
+          cp joystick-games/tools/android-zxing.py "$RUNNER_TEMP/executed-zxing-download.py"
+          cp joystick-games/tools/android-zxing-tests.py "$RUNNER_TEMP/executed-zxing-tests.py"
+          python3 joystick-games/tools/android-zxing-tests.py 2>&1 | tee "$RUNNER_TEMP/zxing-tests.log"
+          python3 joystick-games/tools/android-zxing.py \
+            --output "$RUNNER_TEMP/zxing.jar" --receipt "$RUNNER_TEMP/zxing-download.json" \
+            2>&1 | tee "$RUNNER_TEMP/zxing-download.log"
       - name: Build immutable package inputs and read-only Observer
         env:
           GAME: ${{ matrix.game }}
@@ -145,6 +142,10 @@ jobs:
           path: |
             ${{ runner.temp }}/build.log
             ${{ runner.temp }}/zxing-download.log
+            ${{ runner.temp }}/zxing-download.json
+            ${{ runner.temp }}/zxing-tests.log
+            ${{ runner.temp }}/executed-zxing-download.py
+            ${{ runner.temp }}/executed-zxing-tests.py
             ${{ runner.temp }}/observer-build.log
             ${{ runner.temp }}/web-build-check.log
             ${{ runner.temp }}/original-tests.log
