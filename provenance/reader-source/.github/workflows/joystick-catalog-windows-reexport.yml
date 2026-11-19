@@ -1,0 +1,77 @@
+name: Re-export verified original Windows packages
+on:
+  workflow_dispatch:
+    inputs:
+      source_run:
+        description: Completed original Windows production run ID
+        required: true
+        type: string
+      source_attempt:
+        description: Original attempt number
+        required: true
+        default: '1'
+        type: string
+      source_sha:
+        description: Exact 40-character original source commit
+        required: true
+        type: string
+      games:
+        description: JSON array of explicitly selected originally successful games
+        required: true
+        type: string
+permissions:
+  actions: read
+  contents: write
+jobs:
+  verify-original:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      SOURCE_RUN: ${{ inputs.source_run }}
+      SOURCE_ATTEMPT: ${{ inputs.source_attempt }}
+      SOURCE_SHA: ${{ inputs.source_sha }}
+      REQUESTED_GAMES: ${{ inputs.games }}
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - name: Checkout frozen reader code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: reader
+          sparse-checkout: |
+            .github/workflows
+            joystick-games/tools
+            joystick-games/shared/windows/tests
+      - name: Verify offline identity and extraction boundaries
+        run: python3 reader/joystick-games/shared/windows/tests/reexport.test.py
+      - name: Download only original selected successful artifacts
+        id: original
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 reader/joystick-games/tools/windows-reexport.py fetch
+      - name: Checkout exact original input files
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+          path: original
+          sparse-checkout-cone-mode: false
+          sparse-checkout: ${{ steps.original.outputs.source_paths }}
+      - name: Verify original source, packages and retained native results
+        env:
+          ORIGINAL_ROOT: ${{ github.workspace }}/original
+        run: python3 reader/joystick-games/tools/windows-reexport.py verify
+      - name: Export immutable verified bytes and explicit large-file references
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 reader/joystick-games/tools/windows-reexport.py publish
+      - name: Preserve reader receipts and any validation failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: joystick-windows-original-reexport
+          path: |
+            ${{ runner.temp }}/windows-reexport/export/
+            ${{ runner.temp }}/windows-reexport/failure.json
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 30
