@@ -1,0 +1,29 @@
+<!doctype html><meta charset="utf-8"><title>Hero harness</title>
+<script type="importmap">{"imports":{"three":"../vendor/three.module.js"}}</script>
+<style>body{margin:0;background:#000}canvas{display:block;width:100vw;height:100vh}#i{position:fixed;left:4px;top:4px;color:#fff;font:12px monospace}</style>
+<canvas id="c"></canvas><div id="i"></div>
+<script type="module">
+// Close-up harness for the hero Hammer (fake snapshot, no sim). ?view=side|front|rear|top&dmg=0..1&frac=0..1&wrecked=1&brake=1&speed=30&ay=8
+import * as THREE from 'three';
+import { createRenderHost } from '../src/render/renderHost.js';
+import { buildHeroCar } from '../src/render/heroCar.js';
+import { PALETTE } from '../src/data/palette.js';
+const q = new URLSearchParams(location.search), num = (k, d) => (q.has(k) ? +q.get(k) : d);
+const host = createRenderHost(document.getElementById('c'), { palettePass: q.get('pal') !== '0' });
+host.resize(innerWidth, innerHeight);
+const scene = host.scene; scene.background = new THREE.Color(PALETTE[2]);
+scene.add(new THREE.HemisphereLight(PALETTE[14], PALETTE[2], 1.9)); const sun = new THREE.DirectionalLight(0xffb070, 2.1); sun.position.set(-90, 40, 40); scene.add(sun);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200).rotateX(-Math.PI / 2), new THREE.MeshLambertMaterial({ color: PALETTE[5] })); scene.add(ground);
+const car = buildHeroCar({ color: 9, helmetColor: 7, number: '9' }); scene.add(car);
+const dmg = num('dmg', 0), frac = num('frac', 1);
+const st = { speed: num('speed', 20), steer: num('steer', 0), ax: q.has('brake') ? -12 : num('ax', 0), ay: num('ay', 0), throttle: 0.5, braking: q.has('brake') ? 1 : 0, frac,
+  dmg: [dmg, dmg * 0.3, dmg * 0.6, dmg * 0.2], wrecked: q.has('wrecked'), firing: q.has('fire'), aim: num('aim', 0.4) };
+for (let i = 0; i < 120; i++) car.userData.hero.update(st, 1 / 60);
+const view = q.get('view') || 'side', cam = host.camera;
+const P = { side: [0, 1.5, 6.5], front: [7, 1.6, 3], rear: [-7, 1.8, -3.5], top: [0.1, 9, 0.1], q34: [5, 2.4, 5.5] }[view] || [0, 1.5, 6.5];
+cam.position.set(...P); cam.lookAt(0, 0.8, 0); cam.fov = 40; cam.updateProjectionMatrix();
+host.render();
+const r = host.renderer; r.info.autoReset = false; r.info.reset(); host.render();
+document.getElementById('i').textContent = `tris(body)=${car.userData.triCount() | 0} drawcalls(scene)=${r.info.render.calls} stage=${car.userData.hero.stage}`;
+window.__calls = r.info.render.calls; window.__tris = car.userData.triCount();
+</script>
