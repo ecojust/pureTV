@@ -14,10 +14,15 @@ class WindowsCheck(base.CatalogCheck):
         self.plan=plan_api.load_plan(ROOT/'joystick-games'/args.game/'qa-plan.json');self.renderers=plan_api.accepted_renderers(self.plan)
         self.report={'status':'running','game':args.game,'platform':'windows','qaSourceCommit':os.environ.get('GITHUB_SHA'),'startedAt':base.now(),'method':'Actual Win32/WebView2 app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostics. No model/time/storage writes.','physicalTvTested':False,'physicalEsp32Tested':False,'tests':[],'wire':[],'observerErrors':[],'observerConnectionEnds':[],'snapshots':[],'screenshots':[],'qaPlan':self.plan,'binarySha256':base.digest(args.app/'PureTVGame.exe'),'sourceHashes':{str(p.relative_to(ROOT)):base.digest(p) for p in [Path(__file__),Path(base.__file__),Path(plan_api.__file__),base.SDK,ROOT/'joystick-games'/args.game/'qa-plan.json']}}
         self.user=ctypes.WinDLL('user32',use_last_error=True)
+        self.user.SetThreadDpiAwarenessContext.argtypes=[ctypes.c_void_p];self.user.SetThreadDpiAwarenessContext.restype=ctypes.c_void_p
+        assert self.user.SetThreadDpiAwarenessContext(ctypes.c_void_p(-4)), 'Cannot disable DPI virtualization for native window measurement'
         self.user.FindWindowW.argtypes=[ctypes.c_wchar_p,ctypes.c_wchar_p];self.user.FindWindowW.restype=ctypes.c_void_p
         self.user.PostMessageW.argtypes=[ctypes.c_void_p,ctypes.c_uint,ctypes.c_size_t,ctypes.c_ssize_t]
         self.user.ShowWindow.argtypes=[ctypes.c_void_p,ctypes.c_int];self.user.SetForegroundWindow.argtypes=[ctypes.c_void_p]
         self.user.GetWindowThreadProcessId.argtypes=[ctypes.c_void_p,ctypes.POINTER(ctypes.c_ulong)]
+        self.user.SendMessageW.argtypes=[ctypes.c_void_p,ctypes.c_uint,ctypes.c_size_t,ctypes.c_ssize_t]
+        self.user.SetWindowPos.argtypes=[ctypes.c_void_p,ctypes.c_void_p,ctypes.c_int,ctypes.c_int,ctypes.c_int,ctypes.c_int,ctypes.c_uint]
+        self.user.GetWindowRect.argtypes=[ctypes.c_void_p,ctypes.c_void_p]
         for p in [Path(__file__),Path(base.__file__),Path(plan_api.__file__),base.SDK,ROOT/'joystick-games'/args.game/'qa-plan.json']:shutil.copy2(p,self.out/('executed-'+p.name))
     def hwnd(self):
         title=json.loads((self.args.app/'game.json').read_text(encoding='utf-8'))['name'];window=self.user.FindWindowW('PureTVGameWindow',title)
@@ -26,6 +31,22 @@ class WindowsCheck(base.CatalogCheck):
         self.app=self.process([self.args.app/'PureTVGame.exe','--diagnostics',self.diag,'--profile',self.profile],'native-'+self.diag.name+'.log')
         state=self.until(lambda s:s.get('ready') and base.initialization(s.get('game'),renderer=self.renderers)=='ready','Actual renderer initialized',90)
         self.user.ShowWindow(self.hwnd(),9);self.user.SetForegroundWindow(self.hwnd());return self.until(lambda s:s.get('active') and s['server']['wifiController']['inputEnabled'],'Foreground game ready',30)
+    def window_bounds(self):
+        from ctypes import wintypes
+        class Point(ctypes.Structure):_fields_=[('x',ctypes.c_long),('y',ctypes.c_long)]
+        class Minimum(ctypes.Structure):_fields_=[('reserved',Point),('maximumSize',Point),('maximumPosition',Point),('minimumTrack',Point),('maximumTrack',Point)]
+        handle=self.hwnd();outer=wintypes.RECT();assert self.user.GetWindowRect(handle,ctypes.byref(outer))
+        minimum=Minimum();self.user.SendMessageW(handle,0x0024,0,ctypes.addressof(minimum))
+        assert minimum.minimumTrack.x>=960 and minimum.minimumTrack.y>=540
+        before=self.read();assert self.user.SetWindowPos(handle,None,0,0,minimum.minimumTrack.x,minimum.minimumTrack.y,0x0016)
+        state=self.until(lambda s:self.fresh(s,before) and 959<=s['document']['width']<=961 and 539<=s['document']['height']<=541,'Actual minimum logical viewport')
+        dpi=state['windowDpi'];assert type(dpi) is int and dpi>=96
+        assert abs(state['clientPixels']['width']*96/dpi-state['document']['width'])<=2
+        assert abs(state['clientPixels']['height']*96/dpi-state['document']['height'])<=2
+        self.screenshot('minimum-window.png');before=self.read()
+        assert self.user.SetWindowPos(handle,None,0,0,outer.right-outer.left,outer.bottom-outer.top,0x0016)
+        restored=self.until(lambda s:self.fresh(s,before) and s['document']['width']>=1279 and s['document']['height']>=719,'Actual initial logical viewport restored')
+        return {'observedDpi':dpi,'minimumViewport':[state['document']['width'],state['document']['height']],'restoredViewport':[restored['document']['width'],restored['document']['height']],'physicalPixels':state['clientPixels'],'otherDpiScalesTested':False}
     def discovery(self):
         from zeroconf import Zeroconf,IPVersion
         state=self.until(lambda s:s.get('server',{}).get('wifiController',{}).get('state')=='available','Windows DNS-SD registration',40);info=state['server']['wifiController'];self.port=info['port'];self.service=info['serviceName']
@@ -77,6 +98,7 @@ class WindowsCheck(base.CatalogCheck):
             if self.args.occupy_default_port:
                 self.blocker=socket.socket();self.blocker.setsockopt(socket.SOL_SOCKET,socket.SO_EXCLUSIVEADDRUSE,1);self.blocker.bind(('0.0.0.0',63485));self.blocker.listen(1)
             initial=self.launch();assert all(v is None for v in initial['storage']['initial'].values()),'Fresh profile had saves'
+            self.check('Native DPI-scaled minimum and initial viewport',self.window_bounds)
             self.check('DNS-SD resolves actual listener and TXT',self.discovery)
             self.check('Official SDK and single controller seat',self.connect)
             self.check('Actual gameplay and pause model freeze',self.gameplay)

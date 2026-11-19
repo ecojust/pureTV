@@ -17,7 +17,7 @@ for game in games:
     installed=json.loads((evidence/'package-verification.json').read_text(encoding='utf-8'));assert installed['status']=='passed' and installed['sourceCommit']==source and installed['installedBytesMatchPortable'] and installed['completeFileSetVerified'] and installed['uninstallPreservesUnrelatedFiles'] and installed['uninstallRemovesOnlyPackagedFiles']
     for mode in ['runtime-normal','runtime-occupied']:
         report=json.loads((evidence/mode/'report.json').read_text(encoding='utf-8'));assert report['status']=='passed' and report['game']==game and report['qaSourceCommit']==source and report['binarySha256']==installed['binarySha256']
-        assert len(report['tests'])==9 and all(t['status']=='passed' for t in report['tests'])
+        assert len(report['tests'])==10 and all(t['status']=='passed' for t in report['tests'])
         assert report['storageRestart']['initialHydrationEqual'] and report['storageRestart']['cleanBrowserCacheVerified']
         if report['qaPlan'].get('storageRestartRequired'):assert report['storageRestart']['status']=='passed' and report['storageRestart']['nativeSavedAfterQuit']
         for name,hash_value in report['sourceHashes'].items():assert sha(root/name)==hash_value,name
