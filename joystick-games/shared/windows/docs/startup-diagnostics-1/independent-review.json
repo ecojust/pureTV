@@ -1,0 +1,118 @@
+{
+  "status": "passed_no_blocking_findings",
+  "reviewer": "racing_review_rally",
+  "reviewedAt": "2026-11-19T22:26:24.242520+00:00",
+  "scope": "Independent static review and frozen-byte cross-check. Read original failure and already executed local logs; no rerun of local suites or native Windows/CI.",
+  "freezeInventory": {
+    "path": "/dev/shm/windows-host-tmp/startup-diagnostics-freeze.json",
+    "bytes": 6829,
+    "sha256": "0427eddb1d13289610e4bb1778927a41a74186f6f0718c90e92be89f2caa26f1"
+  },
+  "sourceInventory": {
+    "joystick-games/shared/windows/Sources/main.cpp": {
+      "bytes": 34859,
+      "sha256": "ec7511d3da5ad0aa5134b2e60215841c33d19c6b503e581743d1511d6b922dba"
+    },
+    "joystick-games/shared/windows/Sources/DiagnosticLog.hpp": {
+      "bytes": 1010,
+      "sha256": "e81581fdf9ac3412f84a9b1b8beed188d8f54afcf167936ccf0b39662388c86d"
+    },
+    "joystick-games/shared/windows/CMakeLists.txt": {
+      "bytes": 1819,
+      "sha256": "6a75ece5a523651ddb485996e5d8aab5da9bdcbbf1c0d867c63ef48d23d9bd32"
+    },
+    "joystick-games/shared/windows/tests/diagnostic-log.test.cpp": {
+      "bytes": 2165,
+      "sha256": "55e0fe7248069a01f68f718683e7063ce3ccf5c6583dae58bf7e2f6ef40ce1b7"
+    },
+    "joystick-games/shared/windows/tests/navigation-storage.test.py": {
+      "bytes": 8079,
+      "sha256": "c57f0090974cb697360d1ddad6b5baae9e810537e25ee945f34a250483f0089c"
+    },
+    "joystick-games/shared/windows/tests/navigation-observation.py": {
+      "bytes": 5557,
+      "sha256": "e366ff0260e5b517250fd5cd69ecd5f999cb1739fe7e0b910447a9c085dd8217"
+    },
+    "joystick-games/shared/windows/tests/navigation-observation.test.py": {
+      "bytes": 3122,
+      "sha256": "406733543680ffd369de0b90aa71776ae8b3f8e83e59639f335966a69e16c89c"
+    },
+    "joystick-games/shared/windows/tests/diagnostic-suspend.test.mjs": {
+      "bytes": 2412,
+      "sha256": "3daa9020c0368797e09a2f22da13b9a86873dbb1c4d41292bac6b83e75ce71af"
+    }
+  },
+  "evidenceFilesRehashed": 24,
+  "executedSourceCopiesMatch": true,
+  "baselineSourceCommit": "039d210cfa4cc65f59adf0859a777f3591853a70",
+  "originalFailure": {
+    "runId": 44621752383,
+    "exportCommit": "f559a71e99ff27c8f262ed2a82a70674ee90f9dc",
+    "ponFixtureStatus": "failed",
+    "noFinalState": true,
+    "nativeLogBytes": 0,
+    "originalFilesMatchedProducerManifest": 5,
+    "rootCauseProven": false,
+    "backNavigationCancelCauseProven": false
+  },
+  "fixtureContract": {
+    "originalEmbeddedFourDocumentPageByteIdentical": true,
+    "sevenOriginalAssertionsAstIdentical": true,
+    "original60SecondDeadlineUnchanged": true,
+    "firstScriptStorageAndBridgeEpochAssertionsUnchanged": true,
+    "normalExitAndFinalPreferencesAssertionsUnchanged": true,
+    "failureObservationOnlyAfterOriginalFailure": true,
+    "originalFailureReraisedAndCleanupRetained": true
+  },
+  "nativeTraceReview": {
+    "enabledOnlyWithDiagnosticsDirectory": true,
+    "fields": "Fixed event/cause labels, HRESULT/status numbers, process ID, document/navigation epochs, readiness/foreground/minimized flags, runtime version and fixed document-state observations. No environment, command line, query URL, preferences or exception context copied into JSONL.",
+    "limits": {
+      "entriesPerProcess": 256,
+      "lineBytes": 8192,
+      "fileBytes": 1048576,
+      "diagnosticFailureMessages": 8
+    },
+    "failureDialogsAndExistingFailBranchesRetained": true,
+    "noNewImmediateHresultFailureBranchesOrDiagnosticRequestRetry": true,
+    "noNewAutomaticResumeOrFocusChange": true,
+    "cancellation": "Same original native input-disable and suspend calls. Diagnostic expression records the actual executing document and invokes original suspend exactly once. Observation exceptions are caught before cancellation; original suspend exceptions still propagate. No QA/model/controller snapshot consumption.",
+    "appendOnlyLimitsDoNotDeleteOriginalRecords": true
+  },
+  "ownProcessObservationReview": {
+    "readsOnlyCurrentMatchingLaunchedPid": true,
+    "topWindows": 16,
+    "staticChildren": 64,
+    "visitedWindows": 4096,
+    "textCharacters": 1024,
+    "textRequestTimeoutMilliseconds": 100,
+    "collectionAdmissionDeadlineSeconds": 3,
+    "deadlineQualification": "Checks deadline between callbacks; an admitted WM_GETTEXT call has its own 100ms bound. This is bounded observation, not a claim of exactly three seconds including every OS call.",
+    "noClicksOrFocusOrInputInjection": true,
+    "foreignWindowTextNotRead": true,
+    "errorsCapped": 16
+  },
+  "localValidationReviewed": {
+    "portableCppBoundaryGroups": 8,
+    "injectedWindowApiTests": 6,
+    "actualDiagnosticExpressionTests": 4,
+    "compileWarningsInRecordedLog": false,
+    "logsMatchRecordedHashes": true,
+    "localTestsRerunByReviewer": false,
+    "msvcOrNativeWindowsTested": false
+  },
+  "preFreezeReviewIssuesResolved": [
+    "Removed new HRESULT-based fail branches and diagnostic retry state changes, keeping this change observational.",
+    "Removed arbitrary exception/reason strings from trace records; original UI error text remains unchanged.",
+    "Guarded document-property observation so failure cannot prevent the existing suspend action; exact expression regression covers it."
+  ],
+  "remainingLimitations": [
+    "Original Pon no-state initialization and Back navigation cancellation causes remain unproven.",
+    "Native JSONL timing/phase evidence and own-process window observation still require an actual Windows run.",
+    "Local C++/injected WinAPI/JS tests do not establish MSVC compilation or WebView2 runtime success."
+  ],
+  "findings": [],
+  "sharedSourcesModifiedByReviewer": false,
+  "workflowDispatched": false,
+  "publishedOrCommitted": false
+}
