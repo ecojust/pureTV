@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Offline boundary tests: fake API only; no token, network or Release writes."""
 import copy
+import base64
 import datetime as dt
 import hashlib
 import importlib.util
@@ -18,6 +19,13 @@ spec.loader.exec_module(m)
 REQ = {'run': 71, 'attempt': 2, 'source': 'a' * 40, 'artifact': 91, 'release': 81}
 BODY = b'PK\x03\x04original immutable archive bytes'
 DIGEST = hashlib.sha256(BODY).hexdigest()
+MAC_GAMES = ['backroad-rally', 'ponpoko-kart', 'night-racer']
+
+def registry_item(raw=None):
+    if raw is None:
+        raw = json.dumps({'schemaVersion': 1, 'games': {game: {} for game in MAC_GAMES}, 'batches': {'racing-01': MAC_GAMES}}, indent=2).encode()
+    blob = hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest()
+    return {'type': 'file', 'path': m.REGISTRY_PATH, 'name': 'catalog-registry.json', 'url': f'{m.API}/repos/{m.REPO}/contents/{m.REGISTRY_PATH}?ref={REQ["source"]}', 'sha': blob, 'git_url': f'{m.API}/repos/{m.REPO}/git/blobs/{blob}', 'size': len(raw), 'encoding': 'base64', 'content': base64.encodebytes(raw).decode()}
 
 def fixture():
     run = {'id': 71, 'run_attempt': 2, 'head_sha': 'a'*40, 'head_branch': 'source/frozen', 'repository': {'id': 7, 'full_name': m.REPO}, 'head_repository': {'id': 7, 'full_name': m.REPO}, 'path': '.github/workflows/joystick-catalog-android.yml', 'event': 'workflow_dispatch', 'status': 'in_progress', 'conclusion': None}
@@ -38,7 +46,13 @@ class Fake:
         self.release_reads = 0
         self.publish_at_read = None
         self.listed_artifact = None
+        self.registry = registry_item()
+        self.reads = []
     def get(self, path):
+        self.reads.append(path)
+        if '/contents/' in path:
+            assert path == f'/repos/{m.REPO}/contents/{m.REGISTRY_PATH}?ref={REQ["source"]}'
+            return copy.deepcopy(self.registry)
         if '/actions/runs/' in path: return copy.deepcopy(self.run)
         if '/actions/artifacts/' in path: return copy.deepcopy(self.artifact)
         if '/releases/assets/' in path: return copy.deepcopy(self.assets[0])
@@ -134,11 +148,130 @@ class TransferTests(unittest.TestCase):
         self.assertFalse(passed); self.assertEqual(len(f.uploads), 1)
         self.assertNotIn('SECRET', json.dumps(record)); self.assertNotIn('signed.example', json.dumps(record))
     def test_allowed_platform_artifact_names_bind_producer_job(self):
-        cases = [('android', 'joystick-android-unsigned-backroad-rally', 'build (backroad-rally)'), ('macos', 'joystick-catalog-macos-packages-racing-01', 'build (racing-01)'), ('windows', 'joystick-windows-packages-backroad-rally', 'verify (backroad-rally)')]
+        cases = [('android', 'joystick-android-unsigned-backroad-rally', 'build (backroad-rally)'), ('macos', 'joystick-catalog-macos-packages-racing-01', 'build (racing-01, backroad-rally, ponpoko-kart, night-racer)'), ('windows', 'joystick-windows-packages-backroad-rally', 'verify (backroad-rally)')]
         for platform, name, job in cases:
             f = Fake(); f.run['path'] = f'.github/workflows/joystick-catalog-{platform}.yml'; f.artifact['name'] = name; f.jobs[0]['name'] = job
             if platform in ('macos', 'windows'): f.artifact['created_at'] = '2026-11-19T00:00:50Z'
-            self.assertTrue(self.execute(f)[0])
+            passed, record = self.execute(f)
+            self.assertTrue(passed)
+            if platform == 'macos':
+                matrix = record['source']['producerMatrix']
+                self.assertEqual(matrix['games'], MAC_GAMES)
+                self.assertEqual(matrix['registry']['sourceCommit'], REQ['source'])
+                self.assertEqual(matrix['registry']['gitBlobSha'], f.registry['sha'])
+                self.assertEqual(matrix['registry']['sha256'], hashlib.sha256(base64.b64decode(f.registry['content'])).hexdigest())
+                self.assertEqual([p for p in f.reads if '/contents/' in p], [matrix['registry']['apiPath']])
+            else:
+                self.assertNotIn('producerMatrix', record['source'])
+                self.assertFalse(any('/contents/' in p for p in f.reads))
+
+    def macos_fake(self):
+        f = Fake()
+        f.run['path'] = m.MACOS_WORKFLOW
+        f.artifact.update(name='joystick-catalog-macos-packages-racing-01', created_at='2026-11-19T00:00:50Z')
+        f.jobs[0]['name'] = 'build (racing-01, backroad-rally, ponpoko-kart, night-racer)'
+        return f
+
+    def test_macos_job_must_match_entire_ordered_frozen_matrix(self):
+        for name in ['build (racing-01)', 'build (racing-01, backroad-rally)', 'build (racing-01, ponpoko-kart, backroad-rally, night-racer)', 'build (racing-01, backroad-rally, ponpoko-kart, night-racer, extra)', 'build (racing-01, backroad-rally, ponpoko-kart, night-racer) suffix']:
+            with self.subTest(name=name):
+                f = self.macos_fake(); f.jobs[0]['name'] = name
+                self.assertFalse(self.execute(f)[0]); self.assertFalse(f.uploads)
+        f = self.macos_fake(); f.jobs.append(copy.deepcopy(f.jobs[0]))
+        self.assertFalse(self.execute(f)[0]); self.assertFalse(f.uploads)
+
+    def test_macos_registry_unknown_ambiguous_or_unregistered_batch_rejected(self):
+        valid = json.loads(base64.b64decode(registry_item()['content']))
+        mutations = [
+            lambda r: r.update(schemaVersion=True),
+            lambda r: r.update(schemaVersion=2),
+            lambda r: r.update(batches={}),
+            lambda r: r['batches'].update({'racing-01': []}),
+            lambda r: r['batches'].update({'racing-01': MAC_GAMES + [MAC_GAMES[0]]}),
+            lambda r: r['batches'].update({'racing-01': 'backroad-rally'}),
+            lambda r: r['batches'].update({'racing-01': ['bad, game']}),
+            lambda r: r['games'].pop('night-racer'),
+            lambda r: r['games'].update({'night-racer': None}),
+        ]
+        for mutate in mutations:
+            f = self.macos_fake(); registry = copy.deepcopy(valid); mutate(registry)
+            f.registry = registry_item(json.dumps(registry).encode())
+            self.assertFalse(self.execute(f)[0]); self.assertFalse(f.uploads)
+        # Duplicate JSON keys cannot silently select a different batch or game.
+        f = self.macos_fake()
+        f.registry = registry_item(b'{"schemaVersion":1,"games":{},"batches":{"racing-01":[],"racing-01":["night-racer"]}}')
+        passed, record = self.execute(f)
+        self.assertFalse(passed); self.assertFalse(f.uploads)
+        self.assertEqual(record['failureCode'], 'registry_duplicate_json_key')
+
+    def test_macos_registry_original_source_and_bytes_are_bound(self):
+        mutations = [
+            lambda r: r.update(type='symlink'),
+            lambda r: r.update(path='other/catalog-registry.json'),
+            lambda r: r.update(url=r['url'].replace(REQ['source'], 'master')),
+            lambda r: r.update(url=r['url'].replace(REQ['source'], 'b'*40)),
+            lambda r: r.update(git_url=r['git_url'].replace(m.REPO, 'attacker/repo')),
+            lambda r: r.update(sha='b'*40),
+            lambda r: r.update(encoding='none'),
+            lambda r: r.update(size=True),
+            lambda r: r.update(size=r['size']+1),
+            lambda r: r.update(content=base64.b64encode(b'x'*r['size']).decode()),
+        ]
+        for mutate in mutations:
+            f = self.macos_fake(); mutate(f.registry)
+            self.assertFalse(self.execute(f)[0]); self.assertFalse(f.uploads)
+        f = self.macos_fake()
+        registry, evidence = m.source_registry(f, REQ['source'])
+        evidence['sourceCommit'] = 'b'*40
+        with self.assertRaisesRegex(m.Rejected, 'registry_source_mismatch'):
+            m.source_identity(f.run, f.artifact, f.jobs, REQ, registry_source=(registry, evidence))
+
+    def test_macos_uses_original_registry_order_not_current_checkout(self):
+        f = self.macos_fake()
+        registry = json.loads(base64.b64decode(f.registry['content']))
+        registry['batches']['racing-01'] = list(reversed(MAC_GAMES))
+        f.registry = registry_item(json.dumps(registry).encode())
+        self.assertFalse(self.execute(f)[0]); self.assertFalse(f.uploads)
+        f.jobs[0]['name'] = 'build (racing-01, night-racer, ponpoko-kart, backroad-rally)'
+        with mock.patch.object(Path, 'read_text', side_effect=AssertionError('No current checkout registry')):
+            info = m.source_identity(f.run, f.artifact, f.jobs, REQ, registry_source=m.source_registry(f, REQ['source']))
+        self.assertEqual(info['producerMatrix']['games'], list(reversed(MAC_GAMES)))
+
+    def test_macos_exact_name_still_requires_original_attempt_source_and_upload(self):
+        for mutate in [lambda f: f.jobs[0].update(head_sha='b'*40), lambda f: f.jobs[0].update(run_attempt=1), lambda f: f.jobs[0].update(run_id=72), lambda f: f.jobs[0]['steps'][1].update(conclusion='failure'), lambda f: f.artifact.update(created_at='2026-11-19T00:00:30Z')]:
+            f = self.macos_fake(); mutate(f)
+            self.assertFalse(self.execute(f)[0]); self.assertFalse(f.uploads)
+
+    def test_original_upload_end_registration_offset_is_explicit_and_bounded(self):
+        for seconds, passed in [(1, True), (2, True), (3, False)]:
+            with self.subTest(offset=seconds):
+                f = self.macos_fake()
+                f.artifact['created_at'] = f'2026-11-19T00:00:{55+seconds}Z'
+                actual, record = self.execute(f)
+                self.assertEqual(actual, passed)
+                self.assertEqual(len(f.uploads), 1 if passed else 0)
+                if passed:
+                    binding = record['source']['uploadTimestampBinding']
+                    self.assertEqual(binding['offsetSeconds'], seconds)
+                    self.assertEqual(binding['maxEndOffsetSeconds'], 2)
+                    self.assertEqual(binding['startToleranceSeconds'], 0)
+                    self.assertTrue(binding['jobBoundsStrict'])
+                    self.assertTrue(binding['toleranceApplied'])
+                    self.assertIn('44602407034', binding['toleranceBasis'])
+
+    def test_upload_registration_tolerance_does_not_relax_job_start_or_source(self):
+        mutations = [
+            lambda f: f.jobs[0].update(completed_at='2026-11-19T00:00:55Z'),
+            lambda f: f.jobs[0].update(head_sha='b'*40),
+            lambda f: f.jobs[0].update(run_attempt=1),
+            lambda f: f.jobs[0]['steps'][1].update(conclusion='failure'),
+            lambda f: f.jobs[0]['steps'][1].update(started_at='2026-11-19T00:00:57Z'),
+            lambda f: f.jobs[0]['steps'][1].update(started_at='2026-11-19T00:00:56Z'),
+            lambda f: f.jobs[0]['steps'].append(copy.deepcopy(f.jobs[0]['steps'][1])),
+        ]
+        for mutate in mutations:
+            f = self.macos_fake(); f.artifact['created_at'] = '2026-11-19T00:00:56Z'; mutate(f)
+            self.assertFalse(self.execute(f)[0]); self.assertFalse(f.uploads)
     def test_foreign_and_invalid_inputs_fail_before_upload(self):
         for key, value in [('run', True), ('attempt', 0), ('source', 'main'), ('artifact', -1), ('release', 0)]:
             f = Fake(); r = dict(REQ); r[key] = value

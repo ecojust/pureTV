@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Copy one immutable Actions ZIP to an existing draft. Never creates/publishes releases."""
 import argparse
+import base64
 import datetime as dt
 import hashlib
 import http.client
@@ -19,12 +20,15 @@ REPO = 'ecojust/pureTV'
 API = 'https://api.github.com'
 MAX_BYTES = 1_000_000_000
 MAX_JSON = 2_000_000
+MACOS_WORKFLOW = '.github/workflows/joystick-catalog-macos.yml'
+REGISTRY_PATH = 'joystick-games/catalog-registry.json'
+UPLOAD_END_TOLERANCE_SECONDS = 2
 WORKFLOWS = {
     '.github/workflows/joystick-catalog-android.yml': [
         (r'joystick-android-signed', lambda m: ('sign', 0)),
         (r'joystick-android-unsigned-([a-z0-9]+(?:-[a-z0-9]+)*)', lambda m: (f'build ({m[1]})', 0))],
-    '.github/workflows/joystick-catalog-macos.yml': [
-        (r'joystick-catalog-macos-packages-([a-z0-9]+(?:-[a-z0-9]+)*)', lambda m: (f'build ({m[1]})', 1))],
+    MACOS_WORKFLOW: [
+        (r'joystick-catalog-macos-packages-([a-z0-9]+(?:-[a-z0-9]+)*)', lambda m: (m[1], 1))],
     '.github/workflows/joystick-catalog-windows.yml': [
         (r'joystick-windows-packages-([a-z0-9]+(?:-[a-z0-9]+)*)', lambda m: (f'verify ({m[1]})', 1))],
 }
@@ -52,7 +56,34 @@ def sha(value):
     require(isinstance(value, str) and re.fullmatch(r'sha256:[0-9a-f]{64}', value), 'missing_or_invalid_digest')
     return value[7:]
 
-def source_identity(run, artifact, jobs, request, now=None):
+def source_registry(client, source):
+    """Read data from the original immutable commit, never the exporter checkout."""
+    require(isinstance(source, str) and re.fullmatch('[a-f0-9]{40}', source), 'invalid_source_sha')
+    endpoint = f'/repos/{REPO}/contents/{REGISTRY_PATH}?ref={source}'
+    item = client.get(endpoint)
+    require(item.get('type') == 'file' and item.get('path') == REGISTRY_PATH and item.get('name') == 'catalog-registry.json', 'invalid_registry_file')
+    require(item.get('url') == API + endpoint, 'registry_source_url_mismatch')
+    blob = item.get('sha')
+    require(isinstance(blob, str) and re.fullmatch('[a-f0-9]{40}', blob), 'invalid_registry_blob_sha')
+    require(item.get('git_url') == f'{API}/repos/{REPO}/git/blobs/{blob}', 'registry_blob_url_mismatch')
+    size = item.get('size')
+    require(type(size) is int and 0 < size <= MAX_JSON, 'registry_size_out_of_bounds')
+    require(item.get('encoding') == 'base64' and isinstance(item.get('content'), str), 'invalid_registry_encoding')
+    raw = base64.b64decode(item['content'].replace('\n', ''), validate=True)
+    require(len(raw) == size, 'registry_size_mismatch')
+    require(hashlib.sha1(b'blob ' + str(size).encode('ascii') + b'\0' + raw).hexdigest() == blob, 'registry_blob_mismatch')
+    def unique_object(pairs):
+        obj = {}
+        for key, value in pairs:
+            require(key not in obj, 'registry_duplicate_json_key')
+            obj[key] = value
+        return obj
+    registry = json.loads(raw.decode('utf-8'), object_pairs_hook=unique_object)
+    require(isinstance(registry, dict) and type(registry.get('schemaVersion')) is int and registry['schemaVersion'] == 1 and isinstance(registry.get('games'), dict) and isinstance(registry.get('batches'), dict), 'invalid_registry_schema')
+    evidence = {'sourceCommit': source, 'path': REGISTRY_PATH, 'bytes': size, 'sha256': hashlib.sha256(raw).hexdigest(), 'gitBlobSha': blob, 'apiPath': endpoint}
+    return registry, evidence
+
+def source_identity(run, artifact, jobs, request, now=None, registry_source=None):
     now = now or dt.datetime.now(dt.timezone.utc)
     for number in (run['id'], run['run_attempt'], run['repository']['id'], run['head_repository']['id'], artifact['id']):
         positive(number)
@@ -75,6 +106,20 @@ def source_identity(run, artifact, jobs, request, now=None):
     names = [make(m) for pattern, make in WORKFLOWS[run['path']] if (m := re.fullmatch(pattern, artifact['name']))]
     require(len(names) == 1, 'artifact_name_not_allowed')
     producer_name, upload_index = names[0]
+    matrix = None
+    if run['path'] == MACOS_WORKFLOW:
+        require(registry_source is not None, 'frozen_registry_required')
+        registry, registry_evidence = registry_source
+        require(registry_evidence['sourceCommit'] == request['source'], 'registry_source_mismatch')
+        batch = producer_name
+        games = registry['batches'].get(batch)
+        require(isinstance(games, list) and bool(games), 'unknown_or_empty_registry_batch')
+        require(all(isinstance(game, str) and re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', game) and isinstance(registry['games'].get(game), dict) for game in games), 'invalid_registry_batch_game')
+        require(len(games) == len(set(games)), 'duplicate_registry_batch_game')
+        # The frozen plan's include row is {'batch': batch, 'games': games}.
+        # GitHub includes every ordered value in the automatic matrix job name.
+        producer_name = 'build (' + ', '.join([batch, *games]) + ')'
+        matrix = {'batch': batch, 'games': list(games), 'registry': registry_evidence}
     matches = [j for j in jobs if j['name'] == producer_name]
     require(len(matches) == 1, 'producer_job_not_unique')
     job = matches[0]
@@ -88,9 +133,19 @@ def source_identity(run, artifact, jobs, request, now=None):
     all_uploads = [s for s in job['steps'] if s['name'] == 'Run actions/upload-artifact@v4']
     require(len(all_uploads) == 2 and all_uploads[0]['number'] < all_uploads[1]['number'], 'producer_upload_layout_changed')
     selected = all_uploads[upload_index]
-    require(selected['status'] == 'completed' and selected['conclusion'] == 'success' and stamp(selected['started_at']) <= created <= stamp(selected['completed_at']), 'artifact_outside_successful_upload')
+    upload_start = stamp(selected['started_at'])
+    upload_end = stamp(selected['completed_at'])
+    offset = (created - upload_end).total_seconds()
+    # GitHub records artifact registration and step timestamps separately.
+    # Run 44602407034/artifact 14568572279 records creation one second after the
+    # successful upload step. Keep the start and containing job bounds exact.
+    require(selected['status'] == 'completed' and selected['conclusion'] == 'success' and upload_start <= upload_end and upload_start <= created <= upload_end + dt.timedelta(seconds=UPLOAD_END_TOLERANCE_SECONDS), 'artifact_outside_successful_upload')
     uploads = [selected]
-    return {'workflow': run['path'], 'runStatus': run['status'], 'runConclusion': run.get('conclusion'), 'jobId': positive(job['id']), 'jobName': job['name'], 'jobConclusion': job.get('conclusion'), 'uploadStepNumbers': [s['number'] for s in uploads], 'artifactName': artifact['name'], 'artifactBytes': size, 'artifactSha256': digest}
+    identity = {'workflow': run['path'], 'runStatus': run['status'], 'runConclusion': run.get('conclusion'), 'jobId': positive(job['id']), 'jobName': job['name'], 'jobConclusion': job.get('conclusion'), 'uploadStepNumbers': [s['number'] for s in uploads], 'artifactName': artifact['name'], 'artifactBytes': size, 'artifactSha256': digest}
+    identity['uploadTimestampBinding'] = {'artifactCreatedAt': artifact['created_at'], 'stepStartedAt': selected['started_at'], 'stepCompletedAt': selected['completed_at'], 'offsetSeconds': offset, 'maxEndOffsetSeconds': UPLOAD_END_TOLERANCE_SECONDS, 'startToleranceSeconds': 0, 'jobBoundsStrict': True, 'toleranceApplied': offset > 0, 'toleranceBasis': 'Independent GitHub artifact registration and step timestamps; a one-second offset was observed in original run 44602407034 / artifact 14568572279.'}
+    if matrix is not None:
+        identity['producerMatrix'] = matrix
+    return identity
 
 def draft_identity(release, request):
     positive(release['id'])
@@ -208,7 +263,8 @@ def execute(client, request, output):
         run = client.get(f"{base}/actions/runs/{request['run']}/attempts/{request['attempt']}")
         artifact = client.get(f"{base}/actions/artifacts/{request['artifact']}")
         jobs = client.pages(f"{base}/actions/runs/{request['run']}/attempts/{request['attempt']}/jobs", 'jobs')
-        info = source_identity(run, artifact, jobs, request)
+        registry_source = source_registry(client, request['source']) if run.get('path') == MACOS_WORKFLOW else None
+        info = source_identity(run, artifact, jobs, request, registry_source=registry_source)
         # Direct artifact metadata plus membership in the exact original run.
         listed = client.pages(f"{base}/actions/runs/{request['run']}/artifacts", 'artifacts')
         matches = [a for a in listed if a['id'] == request['artifact']]
