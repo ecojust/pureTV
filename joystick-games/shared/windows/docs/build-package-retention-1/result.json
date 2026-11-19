@@ -1,0 +1,72 @@
+{
+  "checkedAt": "2026-11-19T21:36:20.504057+00:00",
+  "baseCommit": "0a2e0bd93067b4945892ebccd7a3329dcde7675f",
+  "sourceFiles": {
+    ".github/workflows/joystick-catalog-windows.yml": {
+      "bytes": 7283,
+      "sha256": "6227b95ac5aca470699fbb5366accbea303445e8d23e6dbbb230d9b8b5e0ed5a"
+    },
+    "joystick-games/tools/windows-export.py": {
+      "bytes": 21712,
+      "sha256": "6e8ef677776e88f1dec3b05aad05497604f48bd8f0ca1b8bc6a583597755fe33"
+    },
+    "joystick-games/shared/windows/tests/export.test.py": {
+      "bytes": 20144,
+      "sha256": "da0212951f069b61969df6b97f0ed692d275281a1342cb2fd4c967df1627fde7"
+    }
+  },
+  "checks": [
+    {
+      "command": "TMPDIR=/dev/shm/racing-review-rally/tmp python3 -B joystick-games/shared/windows/tests/export.test.py -v",
+      "status": "passed",
+      "count": 30,
+      "log": "export-tests.log",
+      "scope": "Synthetic API/QA records plus actual local Git and sparse-file staging, not native runtime or live upload"
+    },
+    {
+      "command": "python3 -B joystick-games/shared/windows/tests/reexport.test.py",
+      "status": "passed",
+      "count": 17,
+      "log": "reexport-regression.log",
+      "scope": "Existing immutable successful-game reexport remains unchanged"
+    },
+    {
+      "command": "/dev/shm/racing-tooling/actionlint .github/workflows/joystick-catalog-windows.yml",
+      "status": "passed",
+      "log": "actionlint.log"
+    },
+    {
+      "command": "git diff --check -- <three source files>",
+      "status": "passed"
+    },
+    {
+      "command": "ast.parse of both Python source files",
+      "status": "passed"
+    }
+  ],
+  "priorExecution": {
+    "exporterTests": 27,
+    "status": "passed",
+    "evidence": "Original tool output reported Ran 27 tests in 0.167s / OK; that first invocation was not redirected to a log. This record is a transcription, not an original shell log. Three downloaded-layout boundaries were then added, justifying the logged 30-test run."
+  },
+  "limitations": [
+    "No workflow dispatch, native rebuild, artifact upload, release creation/publication or Git commit/push executed by this change validation.",
+    "Original Actions artifact digest is recorded from authenticated GitHub metadata; download-artifact validates its own archive digest. This exporter independently verifies every original package against its frozen build manifest and records artifact identity; it does not claim a second local hash of the outer Actions ZIP.",
+    "Files at or above 100000000 bytes stay in the original Actions artifact with its expiry; preserving a reference is not permanent package publication or QA completion.",
+    "Only future builds using the changed workflow retain packages after failed QA. Previously skipped uploads do not create recoverable original bytes."
+  ],
+  "logs": {
+    "export-tests.log": {
+      "bytes": 4995,
+      "sha256": "4d4f3abb13ec66bea1df4c222f10ec2fefdb0a3655c8ddd7673c018d38fbc348"
+    },
+    "reexport-regression.log": {
+      "bytes": 2682,
+      "sha256": "0bf8ea2b0544368186c72cdaaba3d6f4edeb3bd68a8c8f1a3e388cd9a26c9e6b"
+    },
+    "actionlint.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

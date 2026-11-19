@@ -102,4 +102,147 @@ class GitBindingTests(unittest.TestCase):
         with self.assertRaises(AssertionError):self.verify(source='HEAD')
         with self.assertRaises(AssertionError):self.verify({'other.py':DIGEST},{'other.py':self.inputs[PATH]})
 
+
+
+GAME='dirt-crown'
+SOURCE='a'*40
+BINARY='b'*64
+ZIP='DirtCrown-0.1.0-windows-x64.zip'
+EXE='DirtCrown-0.1.0-windows-x64-setup.exe'
+
+def retention_fixture():
+    repository={'id':9,'full_name':m.REPO}
+    run={'id':123,'run_attempt':2,'head_sha':SOURCE,'head_branch':'build-source/fixture','path':m.WORKFLOW,'event':'workflow_dispatch','status':'in_progress','repository':repository,'head_repository':copy.deepcopy(repository)}
+    def step(name,number,start,end,conclusion='success'):
+        return {'name':name,'number':number,'status':'completed','conclusion':conclusion,'started_at':'2026-11-19T09:'+start+':00Z','completed_at':'2026-11-19T09:'+end+':00Z'}
+    job={'id':456,'name':'verify ('+GAME+')','run_id':123,'run_attempt':2,'head_sha':SOURCE,'status':'completed','conclusion':'failure','started_at':'2026-11-19T09:00:00Z','completed_at':'2026-11-19T09:10:00Z','steps':[step(m.BUILD_STEP,6,'01','04'),step('Run actions/upload-artifact@v4',11,'07','08'),step('Run actions/upload-artifact@v4',12,'08','09')]}
+    artifact={'id':789,'name':'joystick-windows-packages-'+GAME,'expired':False,'expires_at':'2099-01-01T00:00:00Z','created_at':'2026-11-19T09:09:00Z','size_in_bytes':1234,'digest':'sha256:'+'c'*64,'workflow_run':{'id':123,'head_sha':SOURCE,'head_branch':run['head_branch'],'repository_id':9,'head_repository_id':9}}
+    return {'run':run,'jobs':[job],'artifacts':[artifact],'game':GAME,'source':SOURCE,'run_id':123,'attempt':2}
+
+def report_fixture():
+    installed={'status':'passed','game':GAME,'sourceCommit':SOURCE,'binarySha256':BINARY,'installedBytesMatchPortable':True,'completeFileSetVerified':True,'uninstallPreservesUnrelatedFiles':True,'uninstallRemovesOnlyPackagedFiles':True}
+    report={'status':'passed','game':GAME,'qaSourceCommit':SOURCE,'binarySha256':BINARY,'sourceHashes':{PATH:DIGEST},'tests':[{'status':'passed'} for _ in range(10)],'storageRestart':{'status':'passed','initialHydrationEqual':True,'cleanBrowserCacheVerified':True,'nativeSavedAfterQuit':True},'qaPlan':{'storageRestartRequired':True}}
+    return {'game':GAME,'source':SOURCE,'binary_sha':BINARY,'installed':installed,'reports':{'runtime-normal':copy.deepcopy(report),'runtime-occupied':copy.deepcopy(report)},'job_conclusion':'success'}
+
+class RetentionIdentityTests(unittest.TestCase):
+    def reject(self,change):
+        value=retention_fixture();change(value)
+        with self.assertRaises((AssertionError,ValueError,KeyError,TypeError)):m.retained_artifact(**value)
+    def test_failed_runtime_job_retains_original_successful_build_and_upload_without_verifying(self):
+        value=retention_fixture();before=copy.deepcopy(value);result=m.retained_artifact(**value)
+        self.assertEqual(result['producerJobConclusion'],'failure');self.assertEqual(result['artifactId'],789)
+        self.assertEqual(result['artifactDigest'],'sha256:'+'c'*64);self.assertTrue(result['retentionIsNotRuntimeVerification']);self.assertNotIn('runtimeVerified',result);self.assertEqual(value,before)
+    def test_source_attempt_repository_workflow_and_unique_producer_are_mandatory(self):
+        for field,wrong in [('id',124),('run_attempt',3),('head_sha','d'*40),('path','.github/workflows/other.yml'),('event','push'),('status','queued')]:
+            with self.subTest(field=field):self.reject(lambda v:v['run'].__setitem__(field,wrong))
+        self.reject(lambda v:v['run']['repository'].__setitem__('full_name','other/pureTV'))
+        self.reject(lambda v:v['jobs'].append(copy.deepcopy(v['jobs'][0])))
+        self.reject(lambda v:v['jobs'][0].__setitem__('run_attempt',1))
+        self.reject(lambda v:v['jobs'][0].__setitem__('head_sha','d'*40))
+        self.reject(lambda v:v['jobs'][0].__setitem__('status','in_progress'))
+    def test_failed_build_or_upload_never_qualifies_for_retention(self):
+        for index in (0,2):
+            for value in ('failure','skipped','cancelled'):
+                with self.subTest(step=index,value=value):self.reject(lambda v:v['jobs'][0]['steps'][index].__setitem__('conclusion',value))
+        self.reject(lambda v:v['jobs'][0]['steps'].append(copy.deepcopy(v['jobs'][0]['steps'][0])))
+    def test_wrong_expired_missing_digest_and_duplicate_artifact_rejected(self):
+        for field,value in [('expired',True),('expires_at','2000-01-01T00:00:00Z'),('digest',None),('digest','sha256:'+'C'*64),('size_in_bytes',0),('size_in_bytes',1000000001),('size_in_bytes',True),('name','joystick-windows-packages-other')]:
+            with self.subTest(field=field,value=value):self.reject(lambda v:v['artifacts'][0].__setitem__(field,value))
+        self.reject(lambda v:v['artifacts'].append(copy.deepcopy(v['artifacts'][0])))
+        for field,value in [('id',122),('head_sha','d'*40),('repository_id',8),('head_branch','other')]:
+            with self.subTest(field=field):self.reject(lambda v:v['artifacts'][0]['workflow_run'].__setitem__(field,value))
+    def test_artifact_creation_binds_successful_upload_with_only_existing_two_second_tolerance(self):
+        value=retention_fixture();value['artifacts'][0]['created_at']='2026-11-19T09:09:02Z';self.assertEqual(m.retained_artifact(**value)['uploadEndOffsetSeconds'],2)
+        self.reject(lambda v:v['artifacts'][0].__setitem__('created_at','2026-11-19T09:09:03Z'))
+        self.reject(lambda v:v['artifacts'][0].__setitem__('created_at','2026-11-19T09:07:59Z'))
+        self.reject(lambda v:v['jobs'][0]['steps'][0].__setitem__('completed_at','2026-11-19T09:08:01Z'))
+
+class RetainedPackageTests(unittest.TestCase):
+    def artifact(self):return m.retained_artifact(**retention_fixture())
+    def packages(self,first=99999999,second=100000000):return {ZIP:{'bytes':first,'sha256':'d'*64},EXE:{'bytes':second,'sha256':'e'*64}}
+    def test_exact_git_boundary_retains_large_original_as_explicit_unpublished_reference(self):
+        packages=self.packages();before=copy.deepcopy(packages);result=m.package_export_plan(packages,self.artifact())
+        self.assertEqual(result['included'],{ZIP:packages[ZIP]});ref=result['references'][EXE]
+        self.assertEqual(ref['sha256'],packages[EXE]['sha256']);self.assertEqual(ref['bytes'],100000000)
+        self.assertEqual(ref['sourceRunAttempt'],2);self.assertEqual(ref['artifactDigest'],'sha256:'+'c'*64)
+        self.assertFalse(ref['gitBytesIncluded']);self.assertFalse(ref['publicPackageDeliveryComplete']);self.assertEqual(packages,before)
+        self.assertEqual(len(m.package_export_plan(self.packages(127999999,127999999),self.artifact())['references']),2)
+    def test_limits_names_and_hashes_cannot_be_relaxed_for_failed_qa(self):
+        for value in [0,-1,True,128000000]:
+            with self.subTest(bytes=value),self.assertRaises(AssertionError):m.package_export_plan(self.packages(value),self.artifact())
+        for change in [lambda p:p[ZIP].__setitem__('sha256','bad'),lambda p:p.__setitem__('../'+ZIP,p.pop(ZIP)),lambda p:p.__setitem__('source.py',p.pop(ZIP)),lambda p:p.__setitem__('Other-windows-x64-setup.exe',p.pop(EXE))]:
+            value=self.packages();change(value)
+            with self.assertRaises(AssertionError):m.package_export_plan(value,self.artifact())
+    def test_real_staging_omits_large_package_but_never_removes_original_or_rewrites_evidence(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);original=root/'download';folder=original/('joystick-windows-packages-'+GAME);folder.mkdir(parents=True)
+            (folder/ZIP).write_bytes(b'exact small original zip fixture');large=folder/EXE
+            with large.open('wb') as stream:stream.truncate(m.GIT_FILE_LIMIT)
+            evidence=original/'evidence.json';evidence.write_bytes(b'{"status":"failed"}\r\n')
+            records=m.stage_export(original,root/'git',[str(large.relative_to(original))])
+            self.assertTrue(large.is_file());self.assertEqual(large.stat().st_size,m.GIT_FILE_LIMIT)
+            self.assertFalse((root/'git'/large.relative_to(original)).exists());self.assertEqual((root/'git/evidence.json').read_bytes(),evidence.read_bytes())
+            self.assertEqual(records['evidence.json']['sha256'],hashlib.sha256(evidence.read_bytes()).hexdigest())
+    def test_nonpackage_large_file_or_missing_omission_cannot_enter_git(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);original=root/'download';original.mkdir()
+            with (original/'evidence.log').open('wb') as stream:stream.truncate(m.GIT_FILE_LIMIT)
+            with self.assertRaisesRegex(AssertionError,'Non-package'):m.stage_export(original,root/'git',[])
+            with self.assertRaisesRegex(AssertionError,'Only original package'):m.stage_export(original,root/'git',['evidence.log'])
+            (original/'evidence.log').unlink()
+            with self.assertRaisesRegex(AssertionError,'Missing referenced'):m.stage_export(original,root/'git',['joystick-windows-packages-'+GAME+'/'+EXE])
+    def test_package_bytes_must_match_before_any_status_assessment(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/ZIP;path.write_bytes(b'original');item={'bytes':8,'sha256':hashlib.sha256(b'original').hexdigest()};m.same(path,item)
+            path.write_bytes(b'modified')
+            with self.assertRaisesRegex(AssertionError,'Original bytes differ'):m.same(path,item)
+
+class DownloadLayoutTests(unittest.TestCase):
+    def fixture(self,directory):
+        root=Path(directory);(root/('joystick-windows-evidence-'+GAME)).mkdir()
+        return root
+    def test_failed_build_may_omit_packages_but_every_game_requires_original_evidence(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=self.fixture(directory);m.validate_download_layout(root,[GAME])
+            (root/('joystick-windows-packages-'+GAME)).mkdir();m.validate_download_layout(root,[GAME])
+            with self.assertRaisesRegex(AssertionError,'Missing evidence'):m.validate_download_layout(root,[GAME,'other-game'])
+    def test_unrequested_artifacts_and_loose_files_cannot_enter_export(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=self.fixture(directory)
+            for name in ('joystick-windows-packages-other-game','source.py','retention-provenance'):
+                path=root/name;path.write_text('not an original requested artifact')
+                with self.subTest(name=name),self.assertRaisesRegex(AssertionError,'unrelated'):m.validate_download_layout(root,[GAME])
+                path.unlink()
+    @unittest.skipIf(os.name=='nt','Creating symlinks requires Windows privileges; export runs on Linux')
+    def test_package_root_symlink_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=self.fixture(directory);(root/('joystick-windows-packages-'+GAME)).symlink_to(root/('joystick-windows-evidence-'+GAME),target_is_directory=True)
+            with self.assertRaisesRegex(AssertionError,'real directory'):m.validate_download_layout(root,[GAME])
+
+class QaStatusSeparationTests(unittest.TestCase):
+    def test_mixed_success_and_failure_never_promotes_failed_original_package(self):
+        success=report_fixture();failed=copy.deepcopy(success);failed['reports']['runtime-occupied']['status']='failed';failed['reports']['runtime-occupied']['tests'][0]['status']='failed';failed['job_conclusion']='failure';before=copy.deepcopy(failed)
+        results=[m.assess_reports(**success),m.assess_reports(**failed)]
+        self.assertEqual([r['status'] for r in results],['runtime-verified','built-unverified']);self.assertEqual([r['runtimeVerified'] for r in results],[True,False]);self.assertEqual(failed,before)
+        self.assertTrue(all(r['publicPackageDeliveryComplete'] is False for r in results))
+    def test_missing_installation_or_runtime_is_retained_unverified(self):
+        value=report_fixture();value['installed']=None;value['reports']['runtime-normal']=None
+        result=m.assess_reports(**value);self.assertFalse(result['runtimeVerified']);self.assertIn('installation_report_missing',result['unverifiedReasons']);self.assertIn('runtime-normal_report_missing',result['unverifiedReasons'])
+    def test_failed_reports_with_wrong_source_or_executable_are_rejected_not_hidden(self):
+        for key,wrong in [('game','other'),('qaSourceCommit','c'*40),('binarySha256','c'*64)]:
+            value=report_fixture();value['reports']['runtime-normal']['status']='failed';value['reports']['runtime-normal'][key]=wrong
+            with self.subTest(key=key),self.assertRaisesRegex(AssertionError,'identity'):m.assess_reports(**value)
+    def test_claimed_pass_still_requires_all_old_checks_and_storage_guards(self):
+        for change in [lambda v:v['reports']['runtime-normal']['tests'].pop(),lambda v:v['reports']['runtime-normal']['tests'][0].__setitem__('status','failed'),lambda v:v['reports']['runtime-normal']['storageRestart'].__setitem__('nativeSavedAfterQuit',False),lambda v:v['installed'].__setitem__('completeFileSetVerified',False)]:
+            value=report_fixture();change(value)
+            with self.assertRaises(AssertionError):m.assess_reports(**value)
+        value=report_fixture();value['job_conclusion']='failure';self.assertFalse(m.assess_reports(**value)['runtimeVerified'])
+    def test_workflow_requires_actual_build_success_but_preserves_two_upload_identity_layout(self):
+        workflow=(Path(__file__).resolve().parents[4]/m.WORKFLOW).read_text()
+        self.assertIn('name: '+m.BUILD_STEP+'\n        id: build\n',workflow)
+        self.assertIn("if: ${{ always() && steps.build.outcome == 'success' }}",workflow)
+        self.assertEqual(workflow.count('uses: actions/upload-artifact@v4'),2)
+        self.assertNotIn('continue-on-error:',workflow)
+        self.assertLess(workflow.index('name: joystick-windows-evidence-'),workflow.index('name: joystick-windows-packages-'))
+
 if __name__=='__main__':unittest.main()
