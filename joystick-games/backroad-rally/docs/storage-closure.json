@@ -1,0 +1,49 @@
+{
+  "scope": "Exact finite native persistence keys; original storage and ghost rules unchanged",
+  "fixedKeys": [
+    "backroad-rally.save",
+    "backroad-rally.game",
+    "backroad-rally.display",
+    "backroad-rally.hud",
+    "backroad-rally.audio",
+    "backroad-rally.run",
+    "backroad-rally.autoquality"
+  ],
+  "ghostKeyCount": 360,
+  "modes": [
+    "quick",
+    "attack"
+  ],
+  "stages": [
+    "alps",
+    "arizona",
+    "finland",
+    "japan",
+    "vermont",
+    "wales"
+  ],
+  "directions": [
+    "fwd",
+    "rev"
+  ],
+  "cars": [
+    "kaze",
+    "lama",
+    "pip",
+    "quint",
+    "swift"
+  ],
+  "weather": [
+    "clear",
+    "rain",
+    "snow"
+  ],
+  "maxSimultaneouslyStoredGhosts": 60,
+  "evidence": [
+    "src/upstream/src/game/ghostStore.ts PREFIX/MAX_GHOSTS",
+    "src/upstream/src/game/save.ts bestKey",
+    "src/upstream/src/main.ts timeKey excludes career",
+    "src/upstream/src/look/autoQuality.ts MEMORY_KEY"
+  ],
+  "nativeBuilderRequirement": "Exact key list limit >=367; no prefix permissions or arbitrary keys"
+}
