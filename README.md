@@ -149,14 +149,20 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 第三方应用见 [fork/ 分类目录](fork/README.md)：收录 TVAPP 中小于 10 MB 的 14 款应用、23 个 APK，另按指定加入儿歌多多TV、宝宝趣学、茉莉音乐、淘知学堂TV和七星戏曲，共 19 款应用、28 个 APK，提供图标、介绍封面与 manifest。[超限文件与复刻参考](fork/OVERSIZED.md)保留全部 205 个超限文件，其中 5 份已收录，其余 200 份未收录。
 
-## 手柄游戏专用目录（2）
+## 手柄游戏专用目录（5）
 
-[joystick-games/](joystick-games/) 集中放置 Android TV 与 macOS 手柄游戏。首批为基于 riba2534 演示项目适配的[运输船 CF](joystick-games/cf-transport-ship/)和[QQ 飞车](joystick-games/qq-speed/)，保留各自地图与玩法，接入 pureTV 九键、开始／暂停及完整客户端 ID 显示。安装包和验证状态见[目录说明](joystick-games/README.md)。两款需要 WebGL2；现有应用资源继续保留原下载地址。
+[joystick-games/](joystick-games/) 提供以下 5 款游戏的 Android TV APK 与 macOS 通用安装包，均支持 pureTV 九键、开始／暂停及完整客户端 ID 显示。保留各自的玩法和画面，来源、操作与验证范围见[目录说明](joystick-games/README.md)。Android 要求 8.0+；运输船 CF 与 QQ 飞车还需要 WebGL2，新增三款使用 Canvas 2D 或 DOM。
 
 <table>
 <tr>
 <td width="25%" align="center"><a href="joystick-games/cf-transport-ship/"><img src="joystick-games/cf-transport-ship/thumb.png" alt="运输船 CF" width="240" /><br />运输船 CF</a></td>
 <td width="25%" align="center"><a href="joystick-games/qq-speed/"><img src="joystick-games/qq-speed/thumb.png" alt="QQ 飞车" width="240" /><br />QQ 飞车</a></td>
+<td width="25%" align="center"><a href="joystick-games/sugarplum-drop/"><img src="joystick-games/sugarplum-drop/docs/browser-attempt-3/playing-1280.png" alt="Sugarplum Drop" width="240" /><br />Sugarplum Drop</a></td>
+<td width="25%" align="center"><a href="joystick-games/emberbrood/"><img src="joystick-games/emberbrood/thumb.png" alt="Emberbrood" width="240" /><br />Emberbrood</a></td>
+</tr>
+<tr>
+<td width="25%" align="center"><a href="joystick-games/glup/"><img src="joystick-games/glup/thumb.png" alt="GLUP · 沼泽猫鱼" width="240" /><br />GLUP · 沼泽猫鱼</a></td>
+<td width="25%"></td>
 <td width="25%"></td>
 <td width="25%"></td>
 </tr>
@@ -170,7 +176,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 本轮新增 **208 项**。点击分类展开完整清单，每项列出源码、实际玩法、试玩或下载入口、Claude 依据和许可。相近棋类变体按家族合并，镜像和同一游戏的多个版本不重复计数；合集中的独立玩法可以分列。**⭐ 是所在仓库的当日星标数**。
 
-这是一份源码与资料初筛清单，尚未逐款完整试玩；HTTP 可达不等于已验证游戏运行。原93项的电视端与macOS适配正在推进，见[逐项评估](docs/claude-games/tv-assessment.md)。新增候选不计入已发布数量，已适配的运输船 CF、QQ 飞车不重复列入。完整依赖、操作难点和核查记录见[来源说明](docs/claude-games/README.md)。
+这是一份源码与资料初筛清单，尚未逐款完整试玩；HTTP 可达不等于已验证游戏运行。原93项已完成[逐项评估](docs/claude-games/tv-assessment.md)，已提交源码和安装包见[适配进度](joystick-games/README.md)；剩余适配按用户要求暂停。新增候选不计入已发布数量，已适配的运输船 CF、QQ 飞车不重复列入。完整依赖、操作难点和核查记录见[来源说明](docs/claude-games/README.md)。
 
 优先关注 **Ponpoko Kart、Sky Rings、PHOENIX ∞、Loop Clear、Kart Royale、Nova Lancer、Sugarplum Drop、CELADON**：分别涵盖地面与空中竞速、弹幕、管线解谜、飞行射击、物理合成和经营。更多低门槛作品见单键、益智和休闲分类。
 

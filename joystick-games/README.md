@@ -23,7 +23,21 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 
 原清单的 **93 款**已完成逐项[电视适配评估](../docs/claude-games/tv-assessment.md)：51 款可继续使用现有 Web 宿主，42 款需补齐许可、素材或其他引擎运行方案。后续新增的 GitHub 参考清单与这 93 款适配范围分开记录。
 
-已提交的适配源码和批次见[游戏注册表](catalog-registry.json)，逐款状态、来源和构建记录见[适配进度](porting-progress.json)。其中 [GLUP](glup/) 与 [Emberbrood](emberbrood/) 已完成浏览器操作与画面检查，正在进行 Android TV 和 macOS 原生验收。新安装包在签名、实际运行与下载校验通过后加入各游戏目录。
+已提交 **20 款**候选的适配源码，批次见[游戏注册表](catalog-registry.json)，逐款状态、来源和构建记录见[适配进度](porting-progress.json)。已完成安装包列在下方；源码已提交与双平台正式包已完成分别记录。其余适配按用户要求暂停，等待下一步指令。
+
+环境重启后，未提交的 Dirt Crown、Hexapod Rising、Munch Maze、Wiggle Snakes 版本未能恢复，因此未计入本次交付；其他草稿及未提交修正的状态见[收尾恢复记录](docs/submission-2026-11-19/recovery.json)。
+
+### 本次完成的安装包（3）
+
+| 游戏 | Android TV | macOS 通用安装包 |
+| --- | --- | --- |
+| [Sugarplum Drop](sugarplum-drop/) | [APK](sugarplum-drop/sugarplum-drop-0.1.0.apk) | [DMG](sugarplum-drop/SugarplumDrop-0.1.0-macos-universal.dmg) · [ZIP](sugarplum-drop/SugarplumDrop-0.1.0-macos-universal.zip) |
+| [Emberbrood · 余烬龙裔](emberbrood/) | [APK](emberbrood/emberbrood-0.1.0.apk) | [DMG](emberbrood/Emberbrood-0.1.0-macos-universal.dmg) · [ZIP](emberbrood/Emberbrood-0.1.0-macos-universal.zip) |
+| [GLUP · 沼泽猫鱼](glup/) | [APK](glup/glup-0.1.0.apk) | [DMG](glup/Glup-0.1.0-macos-universal.dmg) · [ZIP](glup/Glup-0.1.0-macos-universal.zip) |
+
+以上均为 **0.1.0**，Android 8.0+、macOS 11+；三款使用 Canvas 2D 或 DOM，不要求 WebGL2。APK 使用固定发布证书，Mac 包包含 Apple Silicon 与 Intel，采用 ad-hoc 签名，尚未 Apple 公证。两平台原 SDK 手柄输入、暂停／断线、端口占用回退，以及 Mac 原生／Rosetta 和非空存档重启均有既有运行证据；实体电视与 ESP32 尚未联调。
+
+GLUP 的 Android 重验工作流整体被取消，但归档中两个运行模式的完整检查报告均通过；这一限制及独立复核记录保留在游戏目录中。其余未完成游戏不计入安装包数量。
 
 ## 连接与操作
 
