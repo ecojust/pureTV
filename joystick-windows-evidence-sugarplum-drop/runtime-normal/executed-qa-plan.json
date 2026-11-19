@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "renderer": "canvas2d",
+  "pauseStablePaths": [
+    "gameplay.tick",
+    "gameplay.score",
+    "gameplay.aimX",
+    "gameplay.drops"
+  ],
+  "steps": [
+    {
+      "name": "Start a candy jar",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Move the actual dropper",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 450,
+      "expect": [
+        {
+          "path": "gameplay.aimX",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Drop a treat into the physics simulation",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.drops",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Pause the jar",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Resume explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    }
+  ],
+  "storageRestartRequired": true
+}
