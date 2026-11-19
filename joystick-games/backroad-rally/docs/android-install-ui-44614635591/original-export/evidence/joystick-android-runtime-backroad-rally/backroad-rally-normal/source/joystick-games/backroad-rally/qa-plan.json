@@ -1,0 +1,613 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "storageRestartRequired": true,
+  "pauseStablePaths": [
+    "gameplay.x",
+    "gameplay.y",
+    "gameplay.z",
+    "gameplay.clock",
+    "gameplay.penalties",
+    "gameplay.recovers"
+  ],
+  "steps": [
+    {
+      "name": "Focus quick stage",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "quick stage"
+        }
+      ]
+    },
+    {
+      "name": "Focus time attack",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "time attack"
+        }
+      ]
+    },
+    {
+      "name": "Focus settings",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "settings"
+        }
+      ]
+    },
+    {
+      "name": "Open original settings",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "camera"
+        }
+      ]
+    },
+    {
+      "name": "Focus field of view",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "field of view"
+        }
+      ]
+    },
+    {
+      "name": "Focus stability assist",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "stability assist"
+        }
+      ]
+    },
+    {
+      "name": "Focus counter-steer assist",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "counter-steer assist"
+        }
+      ]
+    },
+    {
+      "name": "Focus traction assist",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "traction assist"
+        }
+      ]
+    },
+    {
+      "name": "Focus sound  ›",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "sound  ›"
+        }
+      ]
+    },
+    {
+      "name": "Focus speed units",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "speed units"
+        }
+      ]
+    },
+    {
+      "name": "Focus speed display",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "speed display"
+        }
+      ]
+    },
+    {
+      "name": "Focus hud size",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "hud size"
+        }
+      ]
+    },
+    {
+      "name": "Focus ghost of best run",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "ghost of best run"
+        }
+      ]
+    },
+    {
+      "name": "Focus rival ghosts",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "rival ghosts"
+        }
+      ]
+    },
+    {
+      "name": "Focus display & graphics  ›",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "display & graphics  ›"
+        }
+      ]
+    },
+    {
+      "name": "Open original graphics settings",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "display"
+        }
+      ]
+    },
+    {
+      "name": "Focus graphics quality",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "graphics quality"
+        }
+      ]
+    },
+    {
+      "name": "Choose original Low quality",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuValue",
+          "op": "eq",
+          "value": "low"
+        }
+      ]
+    },
+    {
+      "name": "Back to settings",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "display & graphics  ›"
+        }
+      ]
+    },
+    {
+      "name": "Back to title",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "title"
+        }
+      ]
+    },
+    {
+      "name": "Open career",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "career"
+        },
+        {
+          "path": "gameplay.careerStarted",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "Create original career save",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.careerStarted",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Return to title",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "title"
+        }
+      ]
+    },
+    {
+      "name": "Focus quick stage",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "quick stage"
+        }
+      ]
+    },
+    {
+      "name": "Open original garage",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "garage"
+        }
+      ]
+    },
+    {
+      "name": "Focus livery",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "livery"
+        }
+      ]
+    },
+    {
+      "name": "Focus choose stage",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "choose stage"
+        }
+      ]
+    },
+    {
+      "name": "Open original stage selection",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "stageselect"
+        }
+      ]
+    },
+    {
+      "name": "Focus direction",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "direction"
+        }
+      ]
+    },
+    {
+      "name": "Focus time of day",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "time of day"
+        }
+      ]
+    },
+    {
+      "name": "Focus weather",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "weather"
+        }
+      ]
+    },
+    {
+      "name": "Focus start",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "start"
+        }
+      ]
+    },
+    {
+      "name": "Start and wait for untouched warm-up/countdown",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.phase",
+          "op": "eq",
+          "value": "running"
+        },
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Accelerate original Rapier car",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 3000,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "changed"
+        },
+        {
+          "path": "gameplay.speed",
+          "op": "gt",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Steer right with original handbrake",
+      "keys": [
+        "UP",
+        "RIGHT",
+        "A"
+      ],
+      "holdMs": 800,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.yaw",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Cycle original chase camera",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.camera",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Toggle traction assist",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.tractionAssist",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Pause explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Resume explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ]
+}

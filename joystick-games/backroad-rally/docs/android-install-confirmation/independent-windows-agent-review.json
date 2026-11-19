@@ -1,0 +1,59 @@
+{
+  "status": "no_blocking_findings",
+  "scope": "Independent static review of six frozen source/fixture files; no installation, UI action, test repetition, or workflow dispatch",
+  "freezeManifestSha256": "54092cce89962dd77c27f889c7188f9994b7bf8057d677f8af97ea9964331619",
+  "sourceFiles": [
+    {
+      "path": "joystick-games/qa/android/install_confirmation.py",
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    {
+      "path": "joystick-games/qa/android/test_install_confirmation.py",
+      "bytes": 17321,
+      "sha256": "067ede33a39abe6dc00a8eb5160c0212976166684f66291d81c0cefdead2c166"
+    },
+    {
+      "path": "joystick-games/qa/android/fixtures/backroad-install-ui-44614635591.json",
+      "bytes": 67490,
+      "sha256": "7cfde92ad3db6406c808292774497e90537f861ae1ba4ad8f4665f22a1b1e2ee"
+    },
+    {
+      "path": "joystick-games/qa/android/run.py",
+      "bytes": 62517,
+      "sha256": "5fb0fbb8b14995ea757f2b9bfd5e89fd08b51c24810657b8d5b3e368a1b8826a"
+    },
+    {
+      "path": "joystick-games/tools/android-catalog.py",
+      "bytes": 3374,
+      "sha256": "5aad93b6435e631b20d047d4adcd268d42de4679d2c0b4933d4b33b7d14567be"
+    },
+    {
+      "path": ".github/workflows/joystick-catalog-android-runtime.yml",
+      "bytes": 23522,
+      "sha256": "da7da9f05787befeedd3b1a861cd79e721f03fb7717ca2b19bfba863fdf1a83c"
+    }
+  ],
+  "findings": {
+    "defaultDisabledAndSingleFrozenArtifactGate": true,
+    "originalTimeoutAndCapturePreserved": true,
+    "localApkAndUniqueCurrentStagedApkHashBound": true,
+    "explicitKnownAppReasonAndUniqueXmlButton": true,
+    "freshForegroundAndSameSessionBeforeEachTap": true,
+    "expandedButtonMustActuallyExist": true,
+    "atMostTwoOrdinaryTapsAndNoInstallRetryOrSettingsWrites": true,
+    "attemptedTapRetainedOnCommandTimeout": true,
+    "pmPathInstalledBaseApkHashAndSizeRequired": true,
+    "unknownOrMissingEvidenceStops": true
+  },
+  "validationReviewedNotRepeated": {
+    "newBoundaryTests": 18,
+    "existingSharedTests": 53,
+    "actionlint": "passed as recorded by owner"
+  },
+  "limitations": [
+    "Expanded Install anyway has not been observed on the actual Android runner.",
+    "Actual shell readability of the staged APK remains unverified.",
+    "Synthetic expanded-page tests do not constitute installation or native gameplay success."
+  ]
+}

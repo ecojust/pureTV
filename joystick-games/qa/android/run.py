@@ -35,6 +35,8 @@ spec = importlib.util.spec_from_file_location('joystick_qa_plan', ROOT / 'joysti
 plan = importlib.util.module_from_spec(spec); spec.loader.exec_module(plan)
 spec = importlib.util.spec_from_file_location('joystick_install_failure', HERE / 'install_failure.py')
 install_failure = importlib.util.module_from_spec(spec); spec.loader.exec_module(install_failure)
+spec = importlib.util.spec_from_file_location('joystick_install_confirmation', HERE / 'install_confirmation.py')
+install_confirmation = importlib.util.module_from_spec(spec); spec.loader.exec_module(install_confirmation)
 
 
 def file_info(path):
@@ -254,7 +256,7 @@ class Acceptance:
                        'apk': {'path': str(args.apk), **file_info(args.apk)}, 'observer': {'path': str(args.observer), **file_info(args.observer)},
                        'sourceFiles': {}, 'tests': self.tests, 'snapshots': self.snapshots, 'captures': self.captures}
         provenance = self.out / 'source'; provenance.mkdir()
-        source_paths = [Path(__file__), HERE / 'install_failure.py', HERE / 'build-observer.py', HERE / 'src/com/ecojust/controllerqa/Observer.java', ROOT / 'puretv-joystick/joystick_sdk.py', ROOT / 'joystick-games/tools/android-build.py', ROOT / 'joystick-games/tools/qa-plan.py']
+        source_paths = [Path(__file__), HERE / 'install_failure.py', HERE / 'install_confirmation.py', HERE / 'build-observer.py', HERE / 'src/com/ecojust/controllerqa/Observer.java', ROOT / 'puretv-joystick/joystick_sdk.py', ROOT / 'joystick-games/tools/android-build.py', ROOT / 'joystick-games/tools/qa-plan.py']
         if self.plan: source_paths += [self.plan_path, ROOT / build.REGISTRY]
         for source in source_paths:
             relative = source.relative_to(ROOT)
@@ -278,14 +280,25 @@ class Acceptance:
                  'error': str(error), 'stdout': (error.stdout or b'').decode(errors='replace'),
                  'stderr': (error.stderr or b'').decode(errors='replace')})
             if args[:2] == ('install', '-r') and str(getattr(getattr(self, 'args', None), 'apk', '')) == args[-1]:
+                failed_record = dict(record, status='timed-out', endedAt=time.time())
                 try:
                     self.report['installFailureEvidence'] = install_failure.capture(
                         self.adb, self.args.apk, self.package, self.out / 'install-failure',
-                        dict(record, status='timed-out', endedAt=time.time()), expected_apk=self.report.get('apk'))
+                        failed_record, expected_apk=self.report.get('apk'))
                     self.save()
                 except Exception as diagnostic_error:
                     self.report['installFailureEvidence'] = {'status': 'unavailable', 'errorType': type(diagnostic_error).__name__,
                                                             'originalFailurePreserved': True, 'uiActionsSent': False}
+                if (getattr(self.args, 'confirm_backroad_install', False) and self.args.game == 'backroad-rally'
+                        and self.report['installFailureEvidence'].get('status') != 'unavailable'):
+                    self.report['installConfirmation'] = install_confirmation.confirm(
+                        self.adb, self.args.apk, self.package, self.out / 'install-confirmation',
+                        failed_record, expected_apk=self.report['apk'], original_evidence=self.out / 'install-failure')
+                    self.save()
+                    if self.report['installConfirmation']['status'] == 'installed-exact-apk':
+                        # The original install command still timed out. Continue only because the
+                        # separately recorded per-app flow verified actual installed APK SHA/size.
+                        return b''
             raise  # Do not retry installation or treat an uncertain install as successful.
         log({'status': 'completed', 'exitCode': result.returncode,
              'stdout': result.stdout.decode(errors='replace'), 'stderr': result.stderr.decode(errors='replace')})
@@ -977,8 +990,11 @@ def main():
     p.add_argument('--game', choices=PACKAGES, required=True)
     for name in ['apk', 'observer', 'output']: p.add_argument('--' + name, required=True, type=Path)
     p.add_argument('--adb', default='adb'); p.add_argument('--serial')
+    p.add_argument('--confirm-backroad-install', action='store_true',
+                   help='Opt in to bounded per-app confirmation for the one frozen Backroad APK only')
     p.add_argument('--occupy-default-port', action='store_true', help='Bind 63485 in the instrumentation launch fixture before starting the unchanged game')
     a = p.parse_args()
+    assert not a.confirm_backroad_install or a.game == 'backroad-rally', 'Per-app confirmation is Backroad-only'
     acceptance = Acceptance(a)
     try:
         acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'
