@@ -244,8 +244,12 @@ class CatalogTools(unittest.TestCase):
             for index in range(400):(root/(str(index)+'a'*180+'.js')).write_bytes(b'x')
             with self.assertRaisesRegex(AssertionError,'index'):builder.web_asset_paths(root,explicit=True)
         with tempfile.TemporaryDirectory() as directory:
-            root=Path(directory).resolve();path=root/('/'.join(['a'*150]*7))/'a.js';path.parent.mkdir(parents=True);path.write_bytes(b'x')
-            with self.assertRaisesRegex(AssertionError,'path exceeds'):builder.web_asset_paths(root,explicit=True)
+            # Darwin rejects an over-PATH_MAX fixture before the builder can
+            # inspect it. Supply the exact Path through directory enumeration;
+            # all path parsing/length validation remains the real builder code.
+            root=Path(directory).resolve();path=root/('/'.join(['a'*150]*7))/'a.js'
+            with patch.object(Path,'iterdir',return_value=iter([path])):
+                with self.assertRaisesRegex(AssertionError,'path exceeds'):builder.web_asset_paths(root,explicit=True)
 
     def test_package_manifest_binds_full_nested_paths_and_rejects_aliases(self):
         with tempfile.TemporaryDirectory() as directory:

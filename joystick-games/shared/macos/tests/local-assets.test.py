@@ -284,8 +284,11 @@ class NativeLocalAssets(unittest.TestCase):
                 if name=='nodes':path.mkdir()
                 else:path.write_bytes(b'x')
             self.start(self.policy,success=False);shutil.rmtree(folder)
-        long=self.root/('/'.join(['a'*150]*7));long.mkdir(parents=True);(long/'fail.js').write_bytes(b'x')
-        self.start(self.policy,success=False)
+        # macOS cannot create this filesystem path (PATH_MAX includes the
+        # temporary root). Exercise the real server's oversized request path
+        # instead of failing in fixture creation before contacting the server.
+        port=self.start(self.policy)
+        self.assertEqual(self.request(port,'/'+('/'.join(['a'*150]*7))+'/fail.js')[0],404)
 
     def test_nested_case_collision_is_rejected_on_case_sensitive_volume(self):
         (self.root/'models').mkdir();(self.root/'Models').mkdir(exist_ok=True)
