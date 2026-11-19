@@ -1,0 +1,194 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "storageRestartRequired": true,
+  "pauseStablePaths": [
+    "gameplay.tick",
+    "gameplay.time",
+    "gameplay.worldTime",
+    "gameplay.playerX",
+    "gameplay.playerY",
+    "gameplay.playerZ",
+    "gameplay.speed",
+    "gameplay.progress",
+    "gameplay.lap",
+    "gameplay.boost"
+  ],
+  "steps": [
+    {
+      "name": "Open original character selection",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 700,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "chars"
+        }
+      ]
+    },
+    {
+      "name": "Choose next original character",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 200,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "chars"
+        }
+      ]
+    },
+    {
+      "name": "Confirm character and open course selection",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 700,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "course"
+        }
+      ]
+    },
+    {
+      "name": "Start selected original three-lap course",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 700,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Skip authored intro with jump and wait for real countdown",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 700,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.mode",
+          "op": "eq",
+          "value": "racing"
+        }
+      ]
+    },
+    {
+      "name": "Accelerate on original course",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 2500,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "gt",
+          "value": 2
+        },
+        {
+          "path": "gameplay.progress",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Jump and steer left while accelerating",
+      "keys": [
+        "UP",
+        "LEFT",
+        "A"
+      ],
+      "holdMs": 800,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.playerX",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Steer right on original physics",
+      "keys": [
+        "UP",
+        "RIGHT"
+      ],
+      "holdMs": 700,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.playerZ",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Display pureTV action help",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 250,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.helpOpen",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Pause from physical START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 350,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Resume only with fresh physical START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 350,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        },
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ]
+}
