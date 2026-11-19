@@ -30,7 +30,7 @@ on:
         description: Completed original job evidence (never installation packages)
         required: true
         type: choice
-        options: [build, qa-arm64, qa-intel, capability-arm64, capability-intel]
+        options: [plan, build, qa-arm64, qa-intel, capability-arm64, capability-intel]
 
 permissions:
   contents: read
@@ -62,7 +62,7 @@ jobs:
           assert re.fullmatch('[1-9][0-9]*',run) and re.fullmatch('[1-9][0-9]*',attempt) and re.fullmatch('[a-f0-9]{40}',source)
           assert re.fullmatch('[a-f0-9]{40}',package_source)
           assert os.environ['GITHUB_REPOSITORY']=='ecojust/pureTV'
-          assert batch in ['triptych-01','triptych-02','one-button-01','adventure-01','racing-01','racing-02','racing-03','capability'] and kind in ['build','qa-arm64','qa-intel','capability-arm64','capability-intel']
+          assert batch in ['triptych-01','triptych-02','one-button-01','adventure-01','racing-01','racing-02','racing-03','capability'] and kind in ['plan','build','qa-arm64','qa-intel','capability-arm64','capability-intel']
           def api(path):return json.loads(subprocess.check_output(['gh','api','repos/ecojust/pureTV/'+path]))
           original=api('actions/runs/'+run)
           assert original['path'] in ['.github/workflows/joystick-catalog-macos.yml','.github/workflows/joystick-catalog-macos-runtime.yml','.github/workflows/joystick-macos-capability.yml'] and original['event']=='workflow_dispatch'
@@ -70,24 +70,35 @@ jobs:
           assert capability is kind.startswith('capability-') and capability is (batch=='capability')
           runtime=original['path'].endswith('-runtime.yml')
           if capability:assert os.environ['ARTIFACT_SOURCE_SHA'], 'Capability evidence requires the exact original frozen probe source'
-          elif runtime:assert kind!='build' and os.environ['ARTIFACT_SOURCE_SHA'], 'Separate runtime evidence requires the explicit original package source'
+          elif runtime:assert kind not in ['build','plan'] and os.environ['ARTIFACT_SOURCE_SHA'], 'Separate runtime evidence requires the explicit original package source'
           else:assert package_source==source, 'Original build/runtime workflow package source must match its workflow commit'
           assert original['head_sha']==source and original['run_attempt']==int(attempt), 'Run source or attempt changed'
           assert original['repository']['full_name']==original['head_repository']['full_name']=='ecojust/pureTV'
-          jobs=api(f'actions/runs/{run}/attempts/{attempt}/jobs?per_page=100')['jobs']
+          plan=kind=='plan'
+          if plan:assert original['path']=='.github/workflows/joystick-catalog-macos.yml', 'Plan evidence is restricted to the original catalog build workflow'
+          jobs_response=api(f'actions/runs/{run}/attempts/{attempt}/jobs?per_page=100');jobs=jobs_response['jobs']
+          if plan:assert jobs_response['total_count']==len(jobs), 'Incomplete original job identity list'
           runner={'qa-arm64':'macos-latest','qa-intel':'macos-15-intel','capability-arm64':'macos-latest','capability-intel':'macos-15-intel'}.get(kind)
           prefix=('observe ('+runner+')') if capability else ('build' if kind=='build' else 'verify')+' ('+batch+','
-          selected_jobs=[job for job in jobs if job['name'].startswith(prefix) and (runner is None or runner in job['labels'])]
+          selected_jobs=[job for job in jobs if (job['name']=='plan' if plan else job['name'].startswith(prefix) and (runner is None or runner in job['labels']))]
           assert len(selected_jobs)==1 and selected_jobs[0]['status']=='completed', 'Expected one completed original job'
           job=selected_jobs[0]
-          name='joystick-macos-capability-'+runner if capability else 'joystick-catalog-macos-'+('build-'+batch if kind=='build' else ('runtime-' if runtime else 'qa-')+batch+'-'+runner)
-          artifacts=api('actions/runs/'+run+'/artifacts?per_page=100')['artifacts']
+          if plan:
+              assert job['conclusion']=='success' and job['run_id']==int(run) and job['head_sha']==source and job['run_attempt']==int(attempt)
+              uploads=[step for step in job['steps'] if step['name']=='Run actions/upload-artifact@v4']
+              assert len(uploads)==1 and uploads[0]['status']=='completed' and uploads[0]['conclusion']=='success', 'Expected one successful original plan upload'
+          name='joystick-catalog-macos-plan' if plan else 'joystick-macos-capability-'+runner if capability else 'joystick-catalog-macos-'+('build-'+batch if kind=='build' else ('runtime-' if runtime else 'qa-')+batch+'-'+runner)
+          artifact_response=api('actions/runs/'+run+'/artifacts?per_page=100');artifacts=artifact_response['artifacts']
+          if plan:assert artifact_response['total_count']==len(artifacts), 'Incomplete original artifact identity list'
           selected=[item for item in artifacts if item['name']==name and not item['expired']]
           assert len(selected)==1, 'Expected one non-expired evidence artifact'
           artifact=selected[0]
           assert artifact['workflow_run']['id']==int(run) and artifact['workflow_run']['head_sha']==source
           assert job['started_at']<=artifact['created_at']<=job['completed_at'], 'Artifact is not from this completed job attempt'
           assert artifact['size_in_bytes']<250_000_000
+          if plan:
+              assert uploads[0]['started_at']<=artifact['created_at']<=uploads[0]['completed_at'], 'Plan artifact is outside its successful upload step'
+              assert 0<artifact['size_in_bytes']<8_000_000 and re.fullmatch('sha256:[a-f0-9]{64}',artifact.get('digest','')), 'Invalid original plan artifact size or digest'
           out=Path(os.environ['RUNNER_TEMP'])/'catalog-macos-evidence';out.mkdir()
           record={'sourceRunId':int(run),'sourceCommit':package_source,'workflowSourceCommit':source,'sourceRunAttempt':int(attempt),'originalWorkflow':original['path'],'separateRuntimeQa':runtime,'independentCapabilityDiagnostic':capability,'sourceMeaning':'frozen probe source' if capability else 'original package source','batch':batch,'kind':kind,'originalJobId':job['id'],'originalJobConclusion':job['conclusion'],'artifact':{key:artifact.get(key) for key in ['id','name','size_in_bytes','digest','created_at','updated_at']}}
           (out/'original-artifact.json').write_text(json.dumps(record,indent=2)+'\n')
@@ -108,7 +119,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           python3 - <<'PY'
-          import hashlib,json,os,re,subprocess,urllib.parse
+          import base64,hashlib,json,os,re,subprocess,urllib.parse
           from pathlib import Path
           out=Path(os.environ['RUNNER_TEMP'])/'catalog-macos-evidence';artifact=out/'artifact';job=os.environ['ORIGINAL_JOB_ID']
           assert re.fullmatch('[1-9][0-9]*',job) and artifact.is_dir() and any(artifact.iterdir())
@@ -123,7 +134,10 @@ jobs:
                   assert path.stat().st_size<50_000_000
                   total+=path.stat().st_size
           assert total<250_000_000
-          report_name='observation-report.json' if capability else 'build-report.json' if os.environ['EVIDENCE_KIND']=='build' else 'batch-report.json'
+          plan=os.environ['EVIDENCE_KIND']=='plan'
+          if plan:
+              assert total<8_000_000 and {p.relative_to(artifact).as_posix() for p in artifact.rglob('*') if p.is_file()}=={'plan.json','catalog-registry.json','executed-workflow.yml'}, 'Expected only the complete original plan artifact'
+          report_name='plan.json' if plan else 'observation-report.json' if capability else 'build-report.json' if os.environ['EVIDENCE_KIND']=='build' else 'batch-report.json'
           report_path=artifact/report_name
           report=json.loads(report_path.read_text()) if report_path.is_file() else None
           if report is None:
@@ -131,7 +145,29 @@ jobs:
               report_status='early_failure_missing_report'
           else:
               assert report['sourceCommit']==original['sourceCommit']
-              if capability:
+              if plan:
+                  assert report['runId']==original['sourceRunId'] and report['runAttempt']==original['sourceRunAttempt'], 'Original plan run or attempt mismatch'
+                  assert report['batches'] and len({item['batch'] for item in report['batches']})==len(report['batches'])
+                  assert sum(item['batch']==os.environ['BATCH'] for item in report['batches'])==1, 'Requested original batch is absent or ambiguous'
+                  bindings={}
+                  for filename,source_path in [('catalog-registry.json','joystick-games/catalog-registry.json'),('executed-workflow.yml','.github/workflows/joystick-catalog-macos.yml')]:
+                      data=(artifact/filename).read_bytes();expected={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
+                      assert report['inputFiles'][source_path]==expected, 'Original plan/file hash mismatch: '+source_path
+                      endpoint='repos/ecojust/pureTV/contents/'+source_path+'?ref='+original['sourceCommit']
+                      fixed=json.loads(subprocess.check_output(['gh','api',endpoint],timeout=60))
+                      assert fixed['type']=='file' and fixed['path']==source_path and fixed['encoding']=='base64'
+                      frozen=base64.b64decode(fixed['content']);assert frozen==data and fixed['size']==len(data), 'Original plan artifact differs from fixed Git source: '+source_path
+                      assert fixed['sha']==hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest(), 'Fixed Git blob identity mismatch'
+                      bindings[source_path]={**expected,'gitBlob':fixed['sha']}
+                  registry=json.loads((artifact/'catalog-registry.json').read_text());games=[]
+                  for selected in report['batches']:
+                      assert selected['games']==registry['batches'][selected['batch']] and selected['games'], 'Original batch differs from frozen registry'
+                      games.extend(selected['games'])
+                  assert len(games)==len(set(games)) and report['games']==sorted(games) and all(game in registry['games'] for game in games)
+                  assert set(report['renderers'])==set(report['coveragePolicies'])==set(report['originalTestScripts'])==set(games)
+                  verification={'sourceCommit':original['sourceCommit'],'sourceRunId':original['sourceRunId'],'sourceRunAttempt':original['sourceRunAttempt'],'originalPlanBytesPreserved':True,'fixedSourceFiles':bindings,'requestedBatch':os.environ['BATCH'],'allOriginalBatches':report['batches']}
+                  (out/'plan-source-verification.json').write_text(json.dumps(verification,indent=2)+'\n')
+              elif capability:
                   assert report['workflowSourceCommit']==original['workflowSourceCommit'] and report['runId']==original['sourceRunId'] and report['runAttempt']==original['sourceRunAttempt']
                   assert report['gamesOpened'] is False and report['gameAssetsChanged'] is False and report['installationPackagesIncluded'] is False
                   assert hashlib.sha256((artifact/'executed-webgl-probe.swift').read_bytes()).hexdigest()==report['probeSourceSha256']
