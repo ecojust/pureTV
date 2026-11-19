@@ -146,4 +146,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REQUESTED_GAMES: ${{ needs.plan.outputs.games }}
         run: |
+          python3 joystick-games/shared/windows/tests/export.test.py
           python3 joystick-games/tools/windows-export.py --directory "$RUNNER_TEMP/export"
