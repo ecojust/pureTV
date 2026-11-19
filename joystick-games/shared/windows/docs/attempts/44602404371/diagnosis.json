@@ -1,0 +1,285 @@
+{
+  "runId": 44602404371,
+  "runAttempt": 1,
+  "sourceCommit": "66df67f17d361cc9eda14f7a06d20064bd59ba8d",
+  "exportCommit": "93b6fc98da9ef5f186c1b13cc8c17dec3f985e12",
+  "originalFilesVerified": 179,
+  "originalBytesVerified": 6997018,
+  "verifiedGames": [],
+  "games": {
+    "sugarplum-drop": {
+      "actualAtomicReplacement": {
+        "completedWrites": 100,
+        "readSamples": 200,
+        "writeFailures": [],
+        "writerStillAlive": false
+      },
+      "actualReplacementAttempts": 100,
+      "actualTransientRetries": 0,
+      "runtime": {
+        "runtime-normal": {
+          "status": "failed",
+          "tests": [
+            {
+              "name": "Native DPI-scaled minimum and initial viewport",
+              "status": "passed"
+            },
+            {
+              "name": "DNS-SD resolves actual listener and TXT",
+              "status": "passed"
+            },
+            {
+              "name": "Official SDK and single controller seat",
+              "status": "passed"
+            },
+            {
+              "name": "Actual gameplay and pause model freeze",
+              "status": "passed"
+            },
+            {
+              "name": "Three minimize and restore cycles keep endpoint stable",
+              "status": "failed"
+            }
+          ],
+          "additionalOriginalSdkBusyRejections": 2,
+          "final": {
+            "active": false,
+            "nativeInputEnabled": false,
+            "nativeTimestamp": 536.656,
+            "actualRenderer": "canvas2d",
+            "actualWebglVersion": null,
+            "stage": "paused",
+            "paused": true,
+            "frames": 753,
+            "controllerPollCount": 753,
+            "model": {
+              "aimX": 9.53,
+              "bodies": [
+                {
+                  "id": 1,
+                  "tier": 0,
+                  "x": 9.66,
+                  "y": 13.66
+                },
+                {
+                  "id": 2,
+                  "tier": 1,
+                  "x": 9.53,
+                  "y": 1.4272830512506212
+                }
+              ],
+              "drops": 2,
+              "merges": 0,
+              "score": 0,
+              "screen": "pause",
+              "tick": 4.308333333333337,
+              "topTier": 0
+            },
+            "errors": [],
+            "lastJavaScriptError": ""
+          },
+          "originalFailure": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 157, in run\n    self.check('Three minimize and restore cycles keep endpoint stable',self.focus)\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 204, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 113, in focus\n    self.pause_stability();counts=self.player(background)['buttonCounters']\n    ^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 73, in pause_stability\n    after=self.until(lambda state:self.fresh(state,before,True),'Controller keeps polling during pause')\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 201, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Controller keeps polling during pause timed out: {\"active\": false, \"clientPixels\": {\"height\": 0, \"width\": 0}, \"document\": {\"controllerClients\": [{\"clip\": {\"bottom\": 77.96875, \"left\": 1076, \"right\": 1268, \"top\": 12}, \"containerId\": \"puretv-controller-clients\", \"controllerId\": \"virtual-d1250284268e\", \"fullyVisible\": true, \"iconRect\": {\"bottom\": 44, \"height\": 24, \"left\": 1085, \"right\": 1109, \"top\": 20, \"width\": 24}, \"iconVisible\": true, \"idText\": \"ID: virtual-d1250284268e\", \"idTextFullyVisible\": true, \"idTextOverflow\": \"clip\", \"idTextRects\": [{\"bottom\": 53.1875, \"height\": 13, \"left\": 1117, \"right\": 1256.109375, \"top\": 40.1875, \"width\": 139.109375}, {\"bottom\": 68.578125, \"height\": 13, \"left\": 1117, \"right\": 1123.0625, \"top\": 55.578125, \"width\": 6.0625}], \"playerId\": \"1\", \"rect\": {\"bottom\": 77.96875, \"height\": 65.96875, \"left\": 1076, \"right\": 1268, \"top\": 12, \"width\": 192}, \"statusText\": \"\u5df2\u8fde\u63a5\", \"visible\": true}], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"Sugarplum Drop\", \"url\": \"https://puretv.local/tv.html\", \"webglError\": false, \"width\": 1280}, \"game\": {\"controller\": {\"buttons\": {\"A\": true, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": true, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelled\": false, \"connected\": true, \"info\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"windows\", \"preferences\": {\"sugarplum-drop.v1\": \"{\\\"savedAt\\\":1795117977679,\\\"data\\\":{\\\"v\\\":1,\\\"seed\\\":117973543,\\\"t\\\":3.7333333333333227,\\\"score\\\":0,\\\"over\\\":false,\\\"drops\\\":1,\\\"merges\\\":0,\\\"miracles\\\":0,\\\"topTier\\\":0,\\\"nextId\\\":2,\\\"bodies\\\":[{\\\"id\\\":1,\\\"tier\\\":0,\\\"x\\\":9.66,\\\"y\\\":13.66,\\\"vx\\\":-1.998401444325282e-15,\\\"vy\\\":-1.9930077901517678e-15,\\\"a\\\":-0.22377856690438006,\\\"w\\\":-5.876972915217942e-15,\\\"age\\\":2.5499999999999936,\\\"grow\\\":1,\\\"r\\\":0.34,\\\"im\\\":5.044076033603201,\\\"iI\\\":87.26775144642215,\\\"impact\\\":0.2492729538845035}],\\\"dropper\\\":{\\\"x\\\":9.53,\\\"tier\\\":1,\\\"cool\\\":0,\\\"pending\\\":false},\\\"next\\\":1,\\\"danger\\\":0,\\\"chain\\\":0,\\\"lastMerge\\\":-99,\\\"rngState\\\":1317703686}}\"}, \"qr\": \"\", \"storageKeys\": [\"sugarplum-drop.v1\", \"sugarplum-drop.v1.settings\", \"sugarplum-drop.v1.best\"], \"storageMaxBytes\": 1048576, \"storageMaxTotalBytes\": 67108864, \"url\": \"\", \"wifiController\": {\"addresses\": [\"10.1.0.107\", \"172.22.0.1\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"\u7cd6\u6885\u843d\u843d-5924\", \"state\": \"available\"}}, \"inputAvailable\": true, \"native\": true, \"players\": [{\"a\": true, \"b\": false, \"buttons\": {\"A\": true, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": true, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 3, \"connected\": true, \"controllerId\": \"virtual-d1250284268e\", \"id\": 1, \"select\": false, \"session\": \"wifi-d721bb37acdc1f3cc9ae583e4069bfac-1\", \"start\": false, \"transport\": \"wifi\", \"x\": 1, \"y\": 0}], \"pollCount\": 753, \"pressed\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"released\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"source\": \"[1,\\\"virtual-d1250284268e\\\",\\\"wifi-d721bb37acdc1f3cc9ae583e4069bfac-1\\\"]\"}, \"errors\": [], \"frames\": 753, \"game\": \"sugarplum-drop\", \"gameplay\": {\"aimX\": 9.53, \"bodies\": [{\"id\": 1, \"tier\": 0, \"x\": 9.66, \"y\": 13.66}, {\"id\": 2, \"tier\": 1, \"x\": 9.53, \"y\": 1.4272830512506212}], \"drops\": 2, \"merges\": 0, \"score\": 0, \"screen\": \"pause\", \"tick\": 4.308333333333337, \"topTier\": 0}, \"paused\": true, \"renderer\": \"canvas2d\", \"stage\": \"paused\", \"webglV\n"
+        },
+        "runtime-occupied": {
+          "status": "failed",
+          "tests": [
+            {
+              "name": "Native DPI-scaled minimum and initial viewport",
+              "status": "passed"
+            },
+            {
+              "name": "DNS-SD resolves actual listener and TXT",
+              "status": "passed"
+            },
+            {
+              "name": "Official SDK and single controller seat",
+              "status": "passed"
+            },
+            {
+              "name": "Actual gameplay and pause model freeze",
+              "status": "passed"
+            },
+            {
+              "name": "Three minimize and restore cycles keep endpoint stable",
+              "status": "failed"
+            }
+          ],
+          "additionalOriginalSdkBusyRejections": 2,
+          "final": {
+            "active": false,
+            "nativeInputEnabled": false,
+            "nativeTimestamp": 577.203,
+            "actualRenderer": "canvas2d",
+            "actualWebglVersion": null,
+            "stage": "paused",
+            "paused": true,
+            "frames": 769,
+            "controllerPollCount": 769,
+            "model": {
+              "aimX": 9.38,
+              "bodies": [
+                {
+                  "id": 1,
+                  "tier": 0,
+                  "x": 9.66,
+                  "y": 13.66
+                },
+                {
+                  "id": 2,
+                  "tier": 3,
+                  "x": 9.26,
+                  "y": 1.791274329820875
+                }
+              ],
+              "drops": 2,
+              "merges": 0,
+              "score": 0,
+              "screen": "pause",
+              "tick": 4.775000000000027,
+              "topTier": 0
+            },
+            "errors": [],
+            "lastJavaScriptError": ""
+          },
+          "originalFailure": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 157, in run\n    self.check('Three minimize and restore cycles keep endpoint stable',self.focus)\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 204, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 113, in focus\n    self.pause_stability();counts=self.player(background)['buttonCounters']\n    ^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 73, in pause_stability\n    after=self.until(lambda state:self.fresh(state,before,True),'Controller keeps polling during pause')\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 201, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Controller keeps polling during pause timed out: {\"active\": false, \"clientPixels\": {\"height\": 0, \"width\": 0}, \"document\": {\"controllerClients\": [{\"clip\": {\"bottom\": 77.96875, \"left\": 1076, \"right\": 1268, \"top\": 12}, \"containerId\": \"puretv-controller-clients\", \"controllerId\": \"virtual-e9a2f704efb6\", \"fullyVisible\": true, \"iconRect\": {\"bottom\": 44, \"height\": 24, \"left\": 1085, \"right\": 1109, \"top\": 20, \"width\": 24}, \"iconVisible\": true, \"idText\": \"ID: virtual-e9a2f704efb6\", \"idTextFullyVisible\": true, \"idTextOverflow\": \"clip\", \"idTextRects\": [{\"bottom\": 53.1875, \"height\": 13, \"left\": 1117, \"right\": 1256.109375, \"top\": 40.1875, \"width\": 139.109375}, {\"bottom\": 68.578125, \"height\": 13, \"left\": 1117, \"right\": 1123.0625, \"top\": 55.578125, \"width\": 6.0625}], \"playerId\": \"1\", \"rect\": {\"bottom\": 77.96875, \"height\": 65.96875, \"left\": 1076, \"right\": 1268, \"top\": 12, \"width\": 192}, \"statusText\": \"\u5df2\u8fde\u63a5\", \"visible\": true}], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"Sugarplum Drop\", \"url\": \"https://puretv.local/tv.html\", \"webglError\": false, \"width\": 1280}, \"game\": {\"controller\": {\"buttons\": {\"A\": true, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": true, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelled\": false, \"connected\": true, \"info\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"windows\", \"preferences\": {\"sugarplum-drop.v1\": \"{\\\"savedAt\\\":1795118018038,\\\"data\\\":{\\\"v\\\":1,\\\"seed\\\":118013544,\\\"t\\\":4.124999999999995,\\\"score\\\":0,\\\"over\\\":false,\\\"drops\\\":1,\\\"merges\\\":0,\\\"miracles\\\":0,\\\"topTier\\\":0,\\\"nextId\\\":2,\\\"bodies\\\":[{\\\"id\\\":1,\\\"tier\\\":0,\\\"x\\\":9.66,\\\"y\\\":13.66,\\\"vx\\\":-1.998401444325282e-15,\\\"vy\\\":-1.9930077901517678e-15,\\\"a\\\":0.23943843971936227,\\\"w\\\":-5.876972915217942e-15,\\\"age\\\":2.949999999999992,\\\"grow\\\":1,\\\"r\\\":0.34,\\\"im\\\":5.044076033603201,\\\"iI\\\":87.26775144642215,\\\"impact\\\":0.2492729538845035}],\\\"dropper\\\":{\\\"x\\\":9.26,\\\"tier\\\":3,\\\"cool\\\":0,\\\"pending\\\":false},\\\"next\\\":2,\\\"danger\\\":0,\\\"chain\\\":0,\\\"lastMerge\\\":-99,\\\"rngState\\\":1317743687}}\"}, \"qr\": \"\", \"storageKeys\": [\"sugarplum-drop.v1\", \"sugarplum-drop.v1.settings\", \"sugarplum-drop.v1.best\"], \"storageMaxBytes\": 1048576, \"storageMaxTotalBytes\": 67108864, \"url\": \"\", \"wifiController\": {\"addresses\": [\"10.1.0.107\", \"172.22.0.1\"], \"inputEnabled\": true, \"port\": 49291, \"serviceName\": \"\u7cd6\u6885\u843d\u843d-7460\", \"state\": \"available\"}}, \"inputAvailable\": true, \"native\": true, \"players\": [{\"a\": true, \"b\": false, \"buttons\": {\"A\": true, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": true, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 3, \"connected\": true, \"controllerId\": \"virtual-e9a2f704efb6\", \"id\": 1, \"select\": false, \"session\": \"wifi-d65d5c505b149d4d12117c4ee8976045-1\", \"start\": false, \"transport\": \"wifi\", \"x\": 1, \"y\": 0}], \"pollCount\": 769, \"pressed\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"released\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"source\": \"[1,\\\"virtual-e9a2f704efb6\\\",\\\"wifi-d65d5c505b149d4d12117c4ee8976045-1\\\"]\"}, \"errors\": [], \"frames\": 769, \"game\": \"sugarplum-drop\", \"gameplay\": {\"aimX\": 9.38, \"bodies\": [{\"id\": 1, \"tier\": 0, \"x\": 9.66, \"y\": 13.66}, {\"id\": 2, \"tier\": 3, \"x\": 9.26, \"y\": 1.791274329820875}], \"drops\": 2, \"merges\": 0, \"score\": 0, \"screen\": \"pause\", \"tick\": 4.775000000000027, \"topTier\": 0}, \"paused\": true, \"renderer\": \"canvas2d\", \"stage\": \"paused\", \"webglVersi\n"
+        }
+      }
+    },
+    "night-racer": {
+      "actualAtomicReplacement": {
+        "completedWrites": 100,
+        "readSamples": 172,
+        "writeFailures": [],
+        "writerStillAlive": false
+      },
+      "actualReplacementAttempts": 155,
+      "actualTransientRetries": 55,
+      "runtime": {
+        "runtime-normal": {
+          "status": "failed",
+          "tests": [
+            {
+              "name": "Native DPI-scaled minimum and initial viewport",
+              "status": "passed"
+            },
+            {
+              "name": "DNS-SD resolves actual listener and TXT",
+              "status": "passed"
+            },
+            {
+              "name": "Official SDK and single controller seat",
+              "status": "passed"
+            },
+            {
+              "name": "Actual gameplay and pause model freeze",
+              "status": "failed"
+            }
+          ],
+          "additionalOriginalSdkBusyRejections": 2,
+          "final": {
+            "active": true,
+            "nativeInputEnabled": true,
+            "nativeTimestamp": 1040.328,
+            "actualRenderer": "webgl2",
+            "actualWebglVersion": 2,
+            "stage": "playing",
+            "paused": false,
+            "frames": 52,
+            "controllerPollCount": 52,
+            "model": {
+              "bottles": 1,
+              "camera": 0,
+              "coins": 400,
+              "countT": 1.4500000000000006,
+              "drift": false,
+              "driftTime": 0,
+              "heading": 1.4554841714141133,
+              "laps": -1,
+              "map": "city",
+              "miniT": 0,
+              "mode": "race",
+              "nitro": 0,
+              "playerX": -36.357958843559025,
+              "playerZ": 3.225297576189041,
+              "raceTime": 0,
+              "ready": true,
+              "renderPreset": "high",
+              "speed": 0,
+              "state": "countdown",
+              "steer": 0
+            },
+            "errors": [],
+            "lastJavaScriptError": ""
+          },
+          "originalFailure": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 156, in run\n    self.check('Actual gameplay and pause model freeze',self.gameplay)\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 204, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 579, in gameplay\n    after=self.until(lambda s:self.fresh(s,before,True) and qa_plan.matches(step['expect'],s['game'],before['game']),step['name']+' actual gameplay observation',step.get('timeoutSeconds',15))\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 201, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Start and wait for the original countdown to finish actual gameplay observation timed out: {\"active\": true, \"clientPixels\": {\"height\": 720, \"width\": 1280}, \"document\": {\"controllerClients\": [{\"clip\": {\"bottom\": 285.96875, \"left\": 12, \"right\": 202, \"top\": 220}, \"containerId\": \"puretv-controller-clients\", \"controllerId\": \"virtual-2333f32ad314\", \"fullyVisible\": true, \"iconRect\": {\"bottom\": 252, \"height\": 24, \"left\": 21, \"right\": 45, \"top\": 228, \"width\": 24}, \"iconVisible\": true, \"idText\": \"ID: virtual-2333f32ad314\", \"idTextFullyVisible\": true, \"idTextOverflow\": \"clip\", \"idTextRects\": [{\"bottom\": 261.1875, \"height\": 13, \"left\": 53, \"right\": 192.109375, \"top\": 248.1875, \"width\": 139.109375}, {\"bottom\": 276.578125, \"height\": 13, \"left\": 53, \"right\": 59.0625, \"top\": 263.578125, \"width\": 6.0625}], \"playerId\": \"1\", \"rect\": {\"bottom\": 285.96875, \"height\": 65.96875, \"left\": 12, \"right\": 202, \"top\": 220, \"width\": 190}, \"statusText\": \"\u5df2\u8fde\u63a5\", \"visible\": true}], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"\u9713\u8679\u8857\u533a\", \"url\": \"https://puretv.local/tv.html\", \"webglError\": false, \"width\": 1280}, \"game\": {\"audioState\": \"running\", \"controller\": {\"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelled\": false, \"connected\": true, \"info\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"windows\", \"preferences\": {\"night-racer.v1\": \"{\\\"nr-profile\\\":{\\\"coins\\\":400,\\\"sel\\\":\\\"gt\\\",\\\"cars\\\":{\\\"gt\\\":{\\\"upg\\\":{\\\"engine\\\":0,\\\"tires\\\":0,\\\"nitro\\\":0},\\\"paint\\\":13111342,\\\"glow\\\":0}},\\\"paints\\\":[13111342,15263456,1447450],\\\"glows\\\":[0,5],\\\"streak\\\":{\\\"day\\\":20261119,\\\"n\\\":1},\\\"daily\\\":{\\\"day\\\":20261119,\\\"tasks\\\":[{\\\"id\\\":\\\"nitro\\\",\\\"prog\\\":0,\\\"claimed\\\":false},{\\\"id\\\":\\\"drift\\\",\\\"prog\\\":0,\\\"claimed\\\":false},{\\\"id\\\":\\\"branch\\\",\\\"prog\\\":0,\\\"claimed\\\":false}]},\\\"priceCuts\\\":{\\\"hyper\\\":true}},\\\"nr-uid\\\":\\\"l89b2rwfxpynmwnyw4v9\\\"}\"}, \"qr\": \"\", \"storageKeys\": [\"night-racer.v1\", \"night-racer.ghost.city.std\", \"night-racer.ghost.city.mod\", \"night-racer.ghost.mountain.std\", \"night-racer.ghost.mountain.mod\", \"night-racer.ghost.bridge.std\", \"night-racer.ghost.bridge.mod\", \"night-racer.ghost.changan.std\", \"night-racer.ghost.changan.mod\", \"night-racer.ghost.sky.std\", \"night-racer.ghost.sky.mod\", \"night-racer.ghost.canyon.std\", \"night-racer.ghost.canyon.mod\", \"night-racer.ghost.metro.std\", \"night-racer.ghost.metro.mod\", \"night-racer.ghost.reef.std\", \"night-racer.ghost.reef.mod\", \"night-racer.ghost.ice.std\", \"night-racer.ghost.ice.mod\", \"night-racer.ghost.colossus.std\", \"night-racer.ghost.colossus.mod\", \"night-racer.ghost.dream.std\", \"night-racer.ghost.dream.mod\", \"night-racer.ghost.deep.std\", \"night-racer.ghost.deep.mod\"], \"storageMaxBytes\": 1048576, \"storageMaxTotalBytes\": 67108864, \"url\": \"\", \"wifiController\": {\"addresses\": [\"10.1.0.102\", \"172.23.224.1\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"Night Racer \u00b7 \u9713\u8679\u8857\u533a-5280\", \"state\": \"available\"}}, \"inputAvailable\": true, \"native\": true, \"players\": [{\"a\": false, \"b\": false, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 3, \"connected\": true, \"controllerId\": \"virtual-2333f32ad314\", \"id\": 1, \"select\": false, \"session\": \"wifi-747fa8f5afae3abbcd9f219f5c47870e-1\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"pollCount\": 52, \"pressed\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"relea\n"
+        },
+        "runtime-occupied": {
+          "status": "failed",
+          "tests": [
+            {
+              "name": "Native DPI-scaled minimum and initial viewport",
+              "status": "passed"
+            },
+            {
+              "name": "DNS-SD resolves actual listener and TXT",
+              "status": "passed"
+            },
+            {
+              "name": "Official SDK and single controller seat",
+              "status": "passed"
+            },
+            {
+              "name": "Actual gameplay and pause model freeze",
+              "status": "failed"
+            }
+          ],
+          "additionalOriginalSdkBusyRejections": 2,
+          "final": {
+            "active": true,
+            "nativeInputEnabled": true,
+            "nativeTimestamp": 1144.0,
+            "actualRenderer": "webgl2",
+            "actualWebglVersion": 2,
+            "stage": "playing",
+            "paused": false,
+            "frames": 51,
+            "controllerPollCount": 51,
+            "model": {
+              "bottles": 1,
+              "camera": 0,
+              "coins": 400,
+              "countT": 1.4500000000000006,
+              "drift": false,
+              "driftTime": 0,
+              "heading": 1.4554841714141133,
+              "laps": -1,
+              "map": "city",
+              "miniT": 0,
+              "mode": "race",
+              "nitro": 0,
+              "playerX": -36.357958843559025,
+              "playerZ": 3.225297576189041,
+              "raceTime": 0,
+              "ready": true,
+              "renderPreset": "high",
+              "speed": 0,
+              "state": "countdown",
+              "steer": 0
+            },
+            "errors": [],
+            "lastJavaScriptError": ""
+          },
+          "originalFailure": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 156, in run\n    self.check('Actual gameplay and pause model freeze',self.gameplay)\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 204, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 579, in gameplay\n    after=self.until(lambda s:self.fresh(s,before,True) and qa_plan.matches(step['expect'],s['game'],before['game']),step['name']+' actual gameplay observation',step.get('timeoutSeconds',15))\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 201, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Start and wait for the original countdown to finish actual gameplay observation timed out: {\"active\": true, \"clientPixels\": {\"height\": 720, \"width\": 1280}, \"document\": {\"controllerClients\": [{\"clip\": {\"bottom\": 285.96875, \"left\": 12, \"right\": 202, \"top\": 220}, \"containerId\": \"puretv-controller-clients\", \"controllerId\": \"virtual-daf7757505d7\", \"fullyVisible\": true, \"iconRect\": {\"bottom\": 252, \"height\": 24, \"left\": 21, \"right\": 45, \"top\": 228, \"width\": 24}, \"iconVisible\": true, \"idText\": \"ID: virtual-daf7757505d7\", \"idTextFullyVisible\": true, \"idTextOverflow\": \"clip\", \"idTextRects\": [{\"bottom\": 261.1875, \"height\": 13, \"left\": 53, \"right\": 192.109375, \"top\": 248.1875, \"width\": 139.109375}, {\"bottom\": 276.578125, \"height\": 13, \"left\": 53, \"right\": 59.0625, \"top\": 263.578125, \"width\": 6.0625}], \"playerId\": \"1\", \"rect\": {\"bottom\": 285.96875, \"height\": 65.96875, \"left\": 12, \"right\": 202, \"top\": 220, \"width\": 190}, \"statusText\": \"\u5df2\u8fde\u63a5\", \"visible\": true}], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"\u9713\u8679\u8857\u533a\", \"url\": \"https://puretv.local/tv.html\", \"webglError\": false, \"width\": 1280}, \"game\": {\"audioState\": \"running\", \"controller\": {\"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelled\": false, \"connected\": true, \"info\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"windows\", \"preferences\": {\"night-racer.v1\": \"{\\\"nr-profile\\\":{\\\"coins\\\":400,\\\"sel\\\":\\\"gt\\\",\\\"cars\\\":{\\\"gt\\\":{\\\"upg\\\":{\\\"engine\\\":0,\\\"tires\\\":0,\\\"nitro\\\":0},\\\"paint\\\":13111342,\\\"glow\\\":0}},\\\"paints\\\":[13111342,15263456,1447450],\\\"glows\\\":[0,5],\\\"streak\\\":{\\\"day\\\":20261119,\\\"n\\\":1},\\\"daily\\\":{\\\"day\\\":20261119,\\\"tasks\\\":[{\\\"id\\\":\\\"nitro\\\",\\\"prog\\\":0,\\\"claimed\\\":false},{\\\"id\\\":\\\"drift\\\",\\\"prog\\\":0,\\\"claimed\\\":false},{\\\"id\\\":\\\"branch\\\",\\\"prog\\\":0,\\\"claimed\\\":false}]},\\\"priceCuts\\\":{\\\"hyper\\\":true}},\\\"nr-uid\\\":\\\"6srt5x987tl1mwnyye4s\\\"}\"}, \"qr\": \"\", \"storageKeys\": [\"night-racer.v1\", \"night-racer.ghost.city.std\", \"night-racer.ghost.city.mod\", \"night-racer.ghost.mountain.std\", \"night-racer.ghost.mountain.mod\", \"night-racer.ghost.bridge.std\", \"night-racer.ghost.bridge.mod\", \"night-racer.ghost.changan.std\", \"night-racer.ghost.changan.mod\", \"night-racer.ghost.sky.std\", \"night-racer.ghost.sky.mod\", \"night-racer.ghost.canyon.std\", \"night-racer.ghost.canyon.mod\", \"night-racer.ghost.metro.std\", \"night-racer.ghost.metro.mod\", \"night-racer.ghost.reef.std\", \"night-racer.ghost.reef.mod\", \"night-racer.ghost.ice.std\", \"night-racer.ghost.ice.mod\", \"night-racer.ghost.colossus.std\", \"night-racer.ghost.colossus.mod\", \"night-racer.ghost.dream.std\", \"night-racer.ghost.dream.mod\", \"night-racer.ghost.deep.std\", \"night-racer.ghost.deep.mod\"], \"storageMaxBytes\": 1048576, \"storageMaxTotalBytes\": 67108864, \"url\": \"\", \"wifiController\": {\"addresses\": [\"10.1.0.102\", \"172.23.224.1\"], \"inputEnabled\": true, \"port\": 51481, \"serviceName\": \"Night Racer \u00b7 \u9713\u8679\u8857\u533a-7844\", \"state\": \"available\"}}, \"inputAvailable\": true, \"native\": true, \"players\": [{\"a\": false, \"b\": false, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 3, \"connected\": true, \"controllerId\": \"virtual-daf7757505d7\", \"id\": 1, \"select\": false, \"session\": \"wifi-4e848c9b0ba6230f2d152db62f592ad2-1\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"pollCount\": 51, \"pressed\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"relea\n"
+        }
+      }
+    }
+  },
+  "diagnosis": {
+    "sugarplum-drop": "Both modes passed actual gameplay/foreground pause, three independent SDK rejection checks, DNS-SD and window sizing. The minimized WebView2 stopped animation-frame/controller polling while native diagnostic snapshots continued, native held input cleared and model stayed paused/frozen. Requiring game poll growth during minimization was not valid; it remains mandatory in foreground and after restore.",
+    "night-racer": "Both modes rendered WebGL2 and consumed actual START but remained in the original countdown with high graphics preset. The original run advanced only about 30 game frames during the 60-second observation, countT reached 1.45, and actual race never began. Root owns selecting the existing Low preset through real UI; no clock or game-state modification is used."
+  },
+  "nativeRuntimeValidated": false,
+  "originalReportsChanged": false,
+  "originalPackageReuseAvailable": false,
+  "packageReuseReason": "No existing Windows runtime-reuse workflow, and this workflow uploads package bytes only after full job success; v9 failed package artifacts are absent."
+}

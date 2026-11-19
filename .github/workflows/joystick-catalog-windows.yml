@@ -72,6 +72,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -B joystick-games/shared/windows/tests/observation.test.py *> "$env:RUNNER_TEMP/observation-tests.log"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B joystick-games/shared/windows/tests/window-lifecycle.test.py *> "$env:RUNNER_TEMP/window-lifecycle-tests.log"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -B joystick-games/shared/windows/tests/assets.test.py *> "$env:RUNNER_TEMP/assets-tests.log"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -B joystick-games/shared/windows/tests/source-scope.test.py *> "$env:RUNNER_TEMP/source-scope-tests.log"

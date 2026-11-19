@@ -60,19 +60,27 @@ class WindowsCheck(base.CatalogCheck):
             finally:
                 second.disconnect();proxy.close();self.report['additionalBusyRejections'].append(dict(rejection,identity=second.identity))
         return dict(connected,independentBusyRejections=3)
-    def pause_stability(self):
+    def pause_stability(self,background=False):
         before=self.until(self.paused,'Paused before model stability observation');values={path:plan_api.read_path(before['game'],path) for path in self.plan['pauseStablePaths']}
         assert any(plan_api.numeric(value) for value in values.values()),'Pause observations require a finite model counter or coordinate'
+        def stable(state):
+            assert self.paused(state),'Pause ended without fresh START'
+            if background:
+                assert state['active'] is False and state['server']['wifiController']['inputEnabled'] is False,'Background observation unexpectedly regained input'
+                assert not any(self.player(state).get('buttons',{}).values()),'Native inputs remained held in background'
+            assert {path:plan_api.read_path(state['game'],path) for path in values}==values,'Gameplay progressed while paused'
         started=time.monotonic();samples=[];previous=before
         while time.monotonic()-started<.5 or len(samples)<4:
             assert time.monotonic()-started<3,'Insufficient fresh real snapshots during pause'
-            state=self.read();assert self.paused(state),'Pause ended without fresh START'
-            assert {path:plan_api.read_path(state['game'],path) for path in values}==values,'Gameplay progressed while paused'
+            state=self.read();stable(state)
             if self.fresh(state,previous):samples.append(state['timestamp']);previous=state
             time.sleep(.04)
-        after=self.until(lambda state:self.fresh(state,before,True),'Controller keeps polling during pause')
-        assert {path:plan_api.read_path(after['game'],path) for path in values}==values
-        return {'paths':values,'samples':len(samples),'freshSnapshotTimestamps':samples,'realSeconds':time.monotonic()-started,'controllerFramesAdvanced':after['game']['controller']['pollCount']-before['game']['controller']['pollCount']}
+        # WebView2 may suspend requestAnimationFrame while minimized. The
+        # native receiver and read-only diagnostics must still run; actual
+        # frame/input polling remains mandatory in front and after restoration.
+        after=self.until(lambda state:self.fresh(state,before,not background),'Fresh native background observation' if background else 'Controller keeps polling during pause')
+        stable(after)
+        return {'paths':values,'samples':len(samples),'freshSnapshotTimestamps':samples,'realSeconds':time.monotonic()-started,'background':background,'controllerPollingRequired':not background,'controllerFramesAdvanced':after['game']['controller']['pollCount']-before['game']['controller']['pollCount']}
     def hwnd(self):
         title=json.loads((self.args.app/'game.json').read_text(encoding='utf-8'))['name'];window=self.user.FindWindowW('PureTVGameWindow',title)
         assert window,'Actual game window missing';pid=ctypes.c_ulong();self.user.GetWindowThreadProcessId(window,ctypes.byref(pid));assert pid.value==self.app.pid,'Wrong game window process';return window
@@ -110,15 +118,15 @@ class WindowsCheck(base.CatalogCheck):
         for i in range(3):
             self.ensure_playing();self.observed_button('RIGHT',True);self.observed_button('A',True);before=self.read();self.user.ShowWindow(self.hwnd(),6)
             background=self.until(lambda s:self.fresh(s,before) and not s.get('active') and not s['server']['wifiController']['inputEnabled'] and not any(self.player(s).get('buttons',{}).values()) and self.paused(s),'Minimize cancels actual gameplay')
-            self.pause_stability();counts=self.player(background)['buttonCounters']
+            background_stability=self.pause_stability(background=True);counts=self.player(background)['buttonCounters']
             for k in base.KEYS:
                 if k not in self.held:self.press(k)
             ack=self.ping_ack();self.until(lambda s:self.fresh(s,background) and self.player(s)['buttonCounters']==counts and not any(self.player(s)['buttons'].values()),'Background presses suppressed')
             before=self.read();self.user.ShowWindow(self.hwnd(),9);self.user.SetForegroundWindow(self.hwnd())
-            restored=self.until(lambda s:self.fresh(s,before) and s.get('active') and s['server']['wifiController']['inputEnabled'] and self.paused(s) and not any(self.player(s)['buttons'].values()),'Restore remains paused and quarantined')
+            restored=self.until(lambda s:self.fresh(s,before,True) and s.get('active') and s['server']['wifiController']['inputEnabled'] and self.paused(s) and not any(self.player(s)['buttons'].values()) and not any(s['game']['controller']['buttons'].values()),'Restore resumes actual polling but stays paused and quarantined')
             assert restored['server']['wifiController']['port']==self.port and self.player(restored)['session']==session and self.client.sock is connection
             self.clear();self.settle_input('Fresh release after restore');self.start_transition(self.playing,'Fresh START resumes after restore')
-            cycles.append({'cycle':i+1,'samePort':True,'sameSocket':True,'sameSession':True,'backgroundPingAck':ack,'heldSuppressed':True,'freshStartRequired':True})
+            cycles.append({'cycle':i+1,'samePort':True,'sameSocket':True,'sameSession':True,'backgroundStability':background_stability,'backgroundPingAck':ack,'heldSuppressed':True,'restoredPollingVerified':True,'freshStartRequired':True})
         return {'cycles':cycles}
     def quit(self):
         if self.client:self.client.disconnect()
