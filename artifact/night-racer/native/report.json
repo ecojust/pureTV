@@ -1,0 +1,388 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "e347d691d94042021717bd0a331371451d113a48",
+  "artifactSourceCommit": "e347d691d94042021717bd0a331371451d113a48",
+  "artifactRunId": "44596707197",
+  "startedAt": "2026-11-19T19:23:23.248950+00:00",
+  "game": "night-racer",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "2db317fa9672df20992af6b4d6a31f9910e2876e4644c0cffca6b99df8709290",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "fcf968cd99187d950205aaf35b9ed3071cc44c78ef5d1023ccca4bba3181c3f1",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/night-racer/qa-plan.json": "8c0f87186438e0891af380d6dcd7b31be9b5614d504084f7c4c355adae465740",
+    "joystick-games/tools/qa-plan.py": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+    "joystick-games/tools/macos-build.py": "4fa65936293a5d6c5e728577780edc30429a500627e8799c1c83a5095470b853",
+    "joystick-games/catalog-registry.json": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaRunId": 44596707197,
+  "qaRunAttempt": 1,
+  "runnerKind": "macos-15-intel",
+  "runnerName": "GitHub Actions 1000010962",
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "webgl2",
+    "storageRestartRequired": true,
+    "pauseStablePaths": [
+      "gameplay.raceTime",
+      "gameplay.playerX",
+      "gameplay.playerZ",
+      "gameplay.heading",
+      "gameplay.speed",
+      "gameplay.nitro",
+      "gameplay.coins"
+    ],
+    "steps": [
+      {
+        "name": "Start and wait for the original countdown to finish",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 200,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.state",
+            "op": "eq",
+            "value": "race"
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          }
+        ]
+      },
+      {
+        "name": "Accelerate after the original countdown",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 7000,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.state",
+            "op": "eq",
+            "value": "race"
+          },
+          {
+            "path": "gameplay.speed",
+            "op": "gt",
+            "value": 1
+          },
+          {
+            "path": "gameplay.playerX",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Steer left while accelerating",
+        "keys": [
+          "UP",
+          "LEFT"
+        ],
+        "holdMs": 1400,
+        "expect": [
+          {
+            "path": "gameplay.heading",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Steer right while accelerating",
+        "keys": [
+          "UP",
+          "RIGHT"
+        ],
+        "holdMs": 1400,
+        "expect": [
+          {
+            "path": "gameplay.heading",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Use one original nitro bottle with B",
+        "keys": [
+          "B"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.bottles",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Change the original camera with Y",
+        "keys": [
+          "Y"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.camera",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Reset to the original track with X",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "lt",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "name": "Pause the actual race",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "paused"
+          }
+        ]
+      },
+      {
+        "name": "Resume only on explicit input",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      }
+    ]
+  },
+  "acceptedRenderers": [
+    "webgl2"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "35e4b55340cb66112ee54c07dd442049643675cc2bd6ef7621776545067a84b8",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.night-racer.055dbfa7e375438498f48f0b43237b75",
+    "reusedAcrossRestartOnly": true
+  },
+  "nativeProcessArchitecture": "x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 407, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 201, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": true, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"霓虹街区\", \"url\": \"http://127.0.0.1:52058/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.ecojust.joystick.nightracer\", \"name\": \"Night Racer · 霓虹街区\"}, \"game\": null, \"input\": {\"connections\": 0, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 4, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 4}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"night-racer.v1\", \"night-racer.ghost.city.std\", \"night-racer.ghost.city.mod\", \"night-racer.ghost.mountain.std\", \"night-racer.ghost.mountain.mod\", \"night-racer.ghost.bridge.std\", \"night-racer.ghost.bridge.mod\", \"night-racer.ghost.changan.std\", \"night-racer.ghost.changan.mod\", \"night-racer.ghost.sky.std\", \"night-racer.ghost.sky.mod\", \"night-racer.ghost.canyon.std\", \"night-racer.ghost.canyon.mod\", \"night-racer.ghost.metro.std\", \"night-racer.ghost.metro.mod\", \"night-racer.ghost.reef.std\", \"night-racer.ghost.reef.mod\", \"night-racer.ghost.ice.std\", \"night-racer.ghost.ice.mod\", \"night-racer.ghost.colossus.std\", \"night-racer.ghost.colossus.mod\", \"night-racer.ghost.dream.std\", \"night-racer.ghost.dream.mod\", \"night-racer.ghost.deep.std\", \"night-racer.ghost.deep.mod\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.5\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"Night Racer · 霓虹街区\", \"state\": \"available\"}}, \"storage\": {\"current\": {\"night-racer.ghost.bridge.mod\": null, \"night-racer.ghost.bridge.std\": null, \"night-racer.ghost.canyon.mod\": null, \"night-racer.ghost.canyon.std\": null, \"night-racer.ghost.changan.mod\": null, \"night-racer.ghost.changan.std\": null, \"night-racer.ghost.city.mod\": null, \"night-racer.ghost.city.std\": null, \"night-racer.ghost.colossus.mod\": null, \"night-racer.ghost.colossus.std\": null, \"night-racer.ghost.deep.mod\": null, \"night-racer.ghost.deep.std\": null, \"night-racer.ghost.dream.mod\": null, \"night-racer.ghost.dream.std\": null, \"night-racer.ghost.ice.mod\": null, \"night-racer.ghost.ice.std\": null, \"night-racer.ghost.metro.mod\": null, \"night-racer.ghost.metro.std\": null, \"night-racer.ghost.mountain.mod\": null, \"night-racer.ghost.mountain.std\": null, \"night-racer.ghost.reef.mod\": null, \"night-racer.ghost.reef.std\": null, \"night-racer.ghost.sky.mod\": null, \"night-racer.ghost.sky.std\": null, \"night-racer.v1\": null}, \"initial\": {\"night-racer.ghost.bridge.mod\": null, \"night-racer.ghost.bridge.std\": null, \"night-racer.ghost.canyon.mod\": null, \"night-racer.ghost.canyon.std\": null, \"night-racer.ghost.changan.mod\": null, \"night-racer.ghost.changan.std\": null, \"night-racer.ghost.city.mod\": null, \"night-racer.ghost.city.std\": null, \"night-racer.ghost.colossus.mod\": null, \"night-racer.ghost.colossus.std\": null, \"night-racer.ghost.deep.mod\": null, \"night-racer.ghost.deep.st\n",
+  "lastState": {
+    "active": true,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "en",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "霓虹街区",
+      "url": "http://127.0.0.1:52058/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystick.nightracer",
+      "name": "Night Racer · 霓虹街区"
+    },
+    "game": null,
+    "input": {
+      "connections": 0,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 4,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 4
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "night-racer.v1",
+        "night-racer.ghost.city.std",
+        "night-racer.ghost.city.mod",
+        "night-racer.ghost.mountain.std",
+        "night-racer.ghost.mountain.mod",
+        "night-racer.ghost.bridge.std",
+        "night-racer.ghost.bridge.mod",
+        "night-racer.ghost.changan.std",
+        "night-racer.ghost.changan.mod",
+        "night-racer.ghost.sky.std",
+        "night-racer.ghost.sky.mod",
+        "night-racer.ghost.canyon.std",
+        "night-racer.ghost.canyon.mod",
+        "night-racer.ghost.metro.std",
+        "night-racer.ghost.metro.mod",
+        "night-racer.ghost.reef.std",
+        "night-racer.ghost.reef.mod",
+        "night-racer.ghost.ice.std",
+        "night-racer.ghost.ice.mod",
+        "night-racer.ghost.colossus.std",
+        "night-racer.ghost.colossus.mod",
+        "night-racer.ghost.dream.std",
+        "night-racer.ghost.dream.mod",
+        "night-racer.ghost.deep.std",
+        "night-racer.ghost.deep.mod"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.5"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "Night Racer · 霓虹街区",
+        "state": "available"
+      }
+    },
+    "storage": {
+      "current": {
+        "night-racer.ghost.bridge.mod": null,
+        "night-racer.ghost.bridge.std": null,
+        "night-racer.ghost.canyon.mod": null,
+        "night-racer.ghost.canyon.std": null,
+        "night-racer.ghost.changan.mod": null,
+        "night-racer.ghost.changan.std": null,
+        "night-racer.ghost.city.mod": null,
+        "night-racer.ghost.city.std": null,
+        "night-racer.ghost.colossus.mod": null,
+        "night-racer.ghost.colossus.std": null,
+        "night-racer.ghost.deep.mod": null,
+        "night-racer.ghost.deep.std": null,
+        "night-racer.ghost.dream.mod": null,
+        "night-racer.ghost.dream.std": null,
+        "night-racer.ghost.ice.mod": null,
+        "night-racer.ghost.ice.std": null,
+        "night-racer.ghost.metro.mod": null,
+        "night-racer.ghost.metro.std": null,
+        "night-racer.ghost.mountain.mod": null,
+        "night-racer.ghost.mountain.std": null,
+        "night-racer.ghost.reef.mod": null,
+        "night-racer.ghost.reef.std": null,
+        "night-racer.ghost.sky.mod": null,
+        "night-racer.ghost.sky.std": null,
+        "night-racer.v1": null
+      },
+      "initial": {
+        "night-racer.ghost.bridge.mod": null,
+        "night-racer.ghost.bridge.std": null,
+        "night-racer.ghost.canyon.mod": null,
+        "night-racer.ghost.canyon.std": null,
+        "night-racer.ghost.changan.mod": null,
+        "night-racer.ghost.changan.std": null,
+        "night-racer.ghost.city.mod": null,
+        "night-racer.ghost.city.std": null,
+        "night-racer.ghost.colossus.mod": null,
+        "night-racer.ghost.colossus.std": null,
+        "night-racer.ghost.deep.mod": null,
+        "night-racer.ghost.deep.std": null,
+        "night-racer.ghost.dream.mod": null,
+        "night-racer.ghost.dream.std": null,
+        "night-racer.ghost.ice.mod": null,
+        "night-racer.ghost.ice.std": null,
+        "night-racer.ghost.metro.mod": null,
+        "night-racer.ghost.metro.std": null,
+        "night-racer.ghost.mountain.mod": null,
+        "night-racer.ghost.mountain.std": null,
+        "night-racer.ghost.reef.mod": null,
+        "night-racer.ghost.reef.std": null,
+        "night-racer.ghost.sky.mod": null,
+        "night-racer.ghost.sky.std": null,
+        "night-racer.v1": null
+      },
+      "origin": "http://127.0.0.1:52058"
+    },
+    "timestamp": 1795116293.049024
+  },
+  "failurePhase": "initialization",
+  "nativeProcessAlive": true,
+  "lastStateFresh": true,
+  "phase": "initialization",
+  "finishedAt": "2026-11-19T19:24:53.426263+00:00"
+}
