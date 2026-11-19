@@ -1,0 +1,31 @@
+{
+  "reviewer": "racing_review_rally",
+  "status": "no_blocking_static_findings",
+  "blockingFindings": [],
+  "reviewedFiles": {
+    "joystick-games/tools/windows-verify.py": {
+      "bytes": 24211,
+      "sha256": "eff977f2423c02bf77e827d00694d39d299739b296c3dae1f69b773a8caece64"
+    },
+    "joystick-games/shared/windows/tests/window-lifecycle.test.py": {
+      "bytes": 11296,
+      "sha256": "16f6c169923abe9486a81db3644dba3a69db4ec7bd910ec72df472429c2a775d"
+    }
+  },
+  "method": "Independent readonly diff and test-boundary review; no repeated tests or native Windows execution",
+  "checks": [
+    "New-document readiness checks renderer initialization independently from initial menu entry, permitting direct query navigation into an actually rendered race.",
+    "Native epoch must exactly match immutable DOM epoch, advance monotonically, and carry a newer finite timestamp. New document requires ready, allowed renderer and matching WebGL major, finite frames>1, integer poll>1, known consistent stage/paused state, dictionary gameplay and no reported errors.",
+    "Same-document reads retain actual poll-growth requirements and reject game/controller null safely. Old-host fallback applies only when both snapshots omit epoch; partial identity does not become legacy compatibility.",
+    "Freshness does not change any original plan expectation. Warmup and countdown may be fresh but still fail the running expectation; only actual running satisfies both.",
+    "Tests cover wrong renderer/version, missing frames/polls, runtime error, stale timestamp, old DOM identity and null snapshots. Original attempt1 and attempt2 initial source/results remain retained."
+  ],
+  "validationReviewed": {
+    "existingTestResult": 19,
+    "testsRerun": false,
+    "nativeWindowsRun": false
+  },
+  "limitations": [
+    "The exact native document/bootstrap/SDK sequence remains subject to the next frozen-source Windows run."
+  ]
+}

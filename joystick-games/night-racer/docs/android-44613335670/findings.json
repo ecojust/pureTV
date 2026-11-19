@@ -1,0 +1,147 @@
+{
+  "runId": 44613335670,
+  "attempt": 1,
+  "sourceCommit": "315f8889ea677ed6a9211bf7d66c8c78dff57f01",
+  "exportCommit": "8a27f4906bd9e3c29c91500ffd593d36a1889bd1",
+  "jobs": [
+    {
+      "id": 135875372895,
+      "name": "select",
+      "status": "completed",
+      "conclusion": "success",
+      "active": []
+    },
+    {
+      "id": 135875890262,
+      "name": "build (night-racer)",
+      "status": "completed",
+      "conclusion": "success",
+      "active": []
+    },
+    {
+      "id": 135876782805,
+      "name": "sign",
+      "status": "completed",
+      "conclusion": "success",
+      "active": []
+    },
+    {
+      "id": 135877480918,
+      "name": "runtime (night-racer)",
+      "status": "completed",
+      "conclusion": "failure",
+      "active": [
+        [
+          "Operate the actual APK using the original pureTV TCP SDK",
+          "completed",
+          "failure"
+        ]
+      ]
+    },
+    {
+      "id": 135886671105,
+      "name": "export",
+      "status": "completed",
+      "conclusion": "success",
+      "active": []
+    }
+  ],
+  "zxing": {
+    "status": "passed",
+    "selectedUrl": "https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar",
+    "httpStatus": "200",
+    "bytes": 607650,
+    "sha256": "8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82"
+  },
+  "modes": [
+    {
+      "mode": "night-racer-normal",
+      "originalStatus": "failed",
+      "passedChecks": 13,
+      "failure": "all-released timed out after confirming original Low preset and ordinary reload",
+      "lastHeldFreshness": {
+        "label": "plan-held-Confirm original Low quality and wait for its ordinary page reload",
+        "startedAt": 1795122489.2234366,
+        "endedAt": 1795122489.3596852,
+        "beforePollCount": 285,
+        "afterPollCount": 288,
+        "minimumFrames": 1,
+        "maximumWallSeconds": 60
+      },
+      "finalPollCount": 250,
+      "finalStage": "menu",
+      "finalPreset": "low",
+      "finalMenu": {
+        "root": "title",
+        "focusId": "start",
+        "focusText": "Start race \u00b7 3 laps \u25b8",
+        "focusIndex": 18
+      },
+      "allRawAndSemanticKeysReleased": true,
+      "activityResumedAndFocused": true,
+      "sdkMessages": 322,
+      "matchingAcks": 322,
+      "report": {
+        "bytes": 364414,
+        "sha256": "6c7e9057a67b4459fd01eb97c8269e33136944107ced4f90f3a427e191b793d8"
+      },
+      "drivingReached": false
+    },
+    {
+      "mode": "night-racer-occupied",
+      "originalStatus": "failed",
+      "passedChecks": 13,
+      "failure": "all-released timed out after confirming original Low preset and ordinary reload",
+      "lastHeldFreshness": {
+        "label": "plan-held-Confirm original Low quality and wait for its ordinary page reload",
+        "startedAt": 1795122722.7181804,
+        "endedAt": 1795122724.1956174,
+        "beforePollCount": 303,
+        "afterPollCount": 306,
+        "minimumFrames": 1,
+        "maximumWallSeconds": 60
+      },
+      "finalPollCount": 253,
+      "finalStage": "menu",
+      "finalPreset": "low",
+      "finalMenu": {
+        "root": "title",
+        "focusId": "start",
+        "focusText": "Start race \u00b7 3 laps \u25b8",
+        "focusIndex": 18
+      },
+      "allRawAndSemanticKeysReleased": true,
+      "activityResumedAndFocused": true,
+      "sdkMessages": 325,
+      "matchingAcks": 325,
+      "report": {
+        "bytes": 361542,
+        "sha256": "bd2d7f72469268c9c85b1ebbaf9fa1700a0ecfc1e484f99c488410215cb0d595"
+      },
+      "drivingReached": false
+    }
+  ],
+  "completeExportDownloaded": false,
+  "apksDownloaded": false,
+  "physicalTvTested": false,
+  "physicalControllerTested": false,
+  "newProductionDispatched": false,
+  "findings": [
+    "The fixed two-source dependency helper succeeded in the actual production job using the primary Central endpoint, exact original size and SHA.",
+    "Both modes passed setup, SDK identity and the first ten menu operations through focus on Low. The subsequent A changed the original preset to low and reloaded normally.",
+    "The old Android runner uses only monotonically increasing controller pollCount for wait_fresh. After reload the final counts are 250/253, below prior held counts 288/306, even though all raw and semantic buttons are released. The failure is at self.release before recording the Low-reload step as passed.",
+    "This is evidence of a cross-reload freshness check failure; it does not establish an AVD disconnect or prove gameplay passed. Both original runtime reports remain failed.",
+    "No old report, game source or shared QA implementation was changed by this read-only monitoring task. The separate future menuTap plan does not retroactively change this run."
+  ],
+  "fullCliLogs": {
+    "original-build-cli.log": {
+      "bytes": 313676,
+      "sha256": "82d9765840a326c2a72a8cb49af4873b6aaaf911b674d8ed100b931959ff6a9b"
+    },
+    "original-runtime-cli.log": {
+      "bytes": 435271,
+      "sha256": "40d23503daf04f63190288547d4785d03693043d7eacc4cb01add1ef46a8cfec"
+    }
+  },
+  "cliFormat": "Original gh run view CLI text export; no claim of byte identity with raw REST log responses."
+}
