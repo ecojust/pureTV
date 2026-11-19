@@ -1,0 +1,104 @@
+{
+  "scope": "QA-only initial asynchronous menu readiness; no APK/production source change",
+  "status": "passed",
+  "tests": 60,
+  "newTests": 7,
+  "preservedOriginalTests": 53,
+  "testLogSha256": "4dc9b28c5b5b72965376ceea1a6fb35d3d547afb788e64db2544ad80ad794275",
+  "source": [
+    {
+      "path": "joystick-games/qa/android/run.py",
+      "bytes": 63089,
+      "sha256": "51f6aad21a8e9963a0ebd71d5de9f57fd67db924253464dd59565efc7d5f93a9"
+    },
+    {
+      "path": "joystick-games/qa/android/test_runner.py",
+      "bytes": 60913,
+      "sha256": "44472f1807ce77822732e8e61022f0dfd248ea2df4c3535d1e25822035c32fb5"
+    },
+    {
+      "path": "joystick-games/qa/android/fixtures/backroad-initial-loading-44625676430.json",
+      "bytes": 5797,
+      "sha256": "54ef61c650db99d065747283ddb8da7a6be299b4b6f91d7ee6465fa4007f97d5"
+    }
+  ],
+  "unchangedAcceptanceMethods": [
+    "__init__",
+    "ack_barrier",
+    "button",
+    "button_state",
+    "capture",
+    "catalog_menu_tap",
+    "catalog_pause",
+    "catalog_playing",
+    "catalog_scenarios",
+    "cf_gameplay",
+    "cleanup",
+    "command",
+    "frame_advanced",
+    "full_id_text",
+    "game",
+    "heartbeat",
+    "menu_player",
+    "menu_released",
+    "menu_reload_basis",
+    "menu_wire_pair",
+    "native_buttons",
+    "passed",
+    "paused",
+    "press_observed",
+    "qq_gameplay",
+    "record",
+    "reject_second_controller",
+    "release",
+    "release_observed",
+    "save",
+    "scenarios",
+    "single_seat_session",
+    "snapshot",
+    "tap",
+    "validate_catalog_snapshot",
+    "visible_ids",
+    "wait",
+    "wait_fresh",
+    "wait_sent_ack"
+  ],
+  "changedExistingMethods": [
+    "setup"
+  ],
+  "addedMethods": [
+    "initial_menu_ready"
+  ],
+  "originalTimeoutSeconds": 150,
+  "newTimeoutSeconds": 150,
+  "strictCatalogValidationUnchanged": true,
+  "genericWaitAndTransportHandlingUnchanged": true,
+  "originalProductionSourceEvidence": [
+    {
+      "path": "joystick-games/backroad-rally/src/upstream/src/puretv-observation.ts",
+      "bytes": 384,
+      "sha256": "9084a8984eb454cfa83215759b5e80f651ab5a0e442467e1e73620507764ef27"
+    },
+    {
+      "path": "joystick-games/backroad-rally/src/upstream/src/boot.ts",
+      "bytes": 8279,
+      "sha256": "5faaa028f7162a64c2fbe32c46377762f09149535774f77dd46a889fb3d67863"
+    },
+    {
+      "path": "joystick-games/backroad-rally/src/upstream/src/menu/menuPage.ts",
+      "bytes": 20957,
+      "sha256": "3193f742779ee642be868a6b42c5a0c04172b1f752e4879879648471bc2cd624"
+    }
+  ],
+  "originalSourceSequence": [
+    "puretv-observation starts renderer loading/frames0.",
+    "boot.createRenderer awaits actual renderer.init, then appends canvas and publishes actual backend.",
+    "menuPage original animation loop increments frames only after limiter allows an actual original render loop iteration.",
+    "Thus adapter stage menu and first controller poll can exist before renderer initialization; the original v6 snapshots observe exactly this state."
+  ],
+  "validationLimitations": [
+    "No new real WebView/game runtime ran with this QA-only gate.",
+    "The original 61 files still show failure; query navigation and target35 insets were not reached.",
+    "The same 150-second wait retains last loading state and original transport error if initialization/device availability never succeeds; no cached state is promoted to acceptance."
+  ]
+}

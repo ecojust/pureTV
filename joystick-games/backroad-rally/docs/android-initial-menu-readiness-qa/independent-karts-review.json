@@ -1,0 +1,72 @@
+{
+  "reviewer": "racing_review_karts",
+  "timestamp": "2026-11-19T22:28:08.230604+00:00",
+  "conclusion": "no static blocker in the frozen three-source QA-only readiness change",
+  "freezeSha256": "129b49c869dae8431e7c7d539b546563b46312d2f4ff3bf22eb951786feb4b9f",
+  "source": [
+    {
+      "path": "joystick-games/qa/android/run.py",
+      "bytes": 63089,
+      "sha256": "51f6aad21a8e9963a0ebd71d5de9f57fd67db924253464dd59565efc7d5f93a9"
+    },
+    {
+      "path": "joystick-games/qa/android/test_runner.py",
+      "bytes": 60913,
+      "sha256": "44472f1807ce77822732e8e61022f0dfd248ea2df4c3535d1e25822035c32fb5"
+    },
+    {
+      "path": "joystick-games/qa/android/fixtures/backroad-initial-loading-44625676430.json",
+      "bytes": 5797,
+      "sha256": "54ef61c650db99d065747283ddb8da7a6be299b4b6f91d7ee6465fa4007f97d5"
+    }
+  ],
+  "originalParent": "4b6cf0b8cba288eae66bcae2ef2784acc279a695",
+  "observedOriginalSnapshots": [
+    {
+      "mode": "normal",
+      "reportSha256": "ee2b40bec90caf3c360e846bb7a434e4a9bdb50ca6723c80a6582d6e665a958f",
+      "fixtureSubsetOfOriginal": true,
+      "labels": [
+        "initial-menu"
+      ]
+    },
+    {
+      "mode": "occupied",
+      "reportSha256": "f39f1e45d62022833843417e21129ead1dc3ad49b61b9158d064df37ef8d699f",
+      "fixtureSubsetOfOriginal": true,
+      "labels": [
+        "initial-menu"
+      ]
+    }
+  ],
+  "verified": {
+    "sourceAndExecutedCopiesMatch": true,
+    "frozenProductionReferenceMatchesOriginalGitBytes": true,
+    "unchangedAcceptanceMethods": 39,
+    "changedExistingMethods": [
+      "setup"
+    ],
+    "addedMethods": [
+      "initial_menu_ready"
+    ],
+    "initialDeadlineSeconds": 150,
+    "strictValidationUnchanged": true,
+    "transportSnapshotAndWaitUnchanged": true,
+    "allExisting53TestsRetained": true,
+    "sevenAddedTestsRecordedInOriginalPassing60TestLog": true,
+    "isolatedRequestArtifactSourceEqualsFullParent": true
+  },
+  "findings": [
+    "The original adapter exposes stage=menu and pollCount=1 while renderer=loading, frames=0 and no canvas. The new gate keeps waiting for a plan-accepted renderer plus positive integer frames/poll instead of prematurely calling strict validation.",
+    "Original stage/loading/service-port conditions remain; legacy games without plans keep their existing readiness behavior. Wrong renderer, boolean/float counters or zero frames cannot become ready. Malformed observations can still time out through the unchanged bounded wait.",
+    "Once ready, the unchanged strict validation still rejects wrong game/context, runtime errors and missing/undersized canvas. The new gate is not a replacement acceptance predicate.",
+    "The original 150-second monotonic outer wait, actual snapshot GETs, failure last-state/error retention and input/SDK/pause/storage routines remain unchanged. No game clock, native host, APK, schema, or package acceptance is modified.",
+    "The fixture is a verified subset of the two hashed original reports; it omits unrelated QR/storage but preserves all included readiness observations.",
+    "The request is correctly bound to full 4b6cf0b8cba288eae66bcae2ef2784acc279a695. The earlier transcription issue is metadata-only and is absent from the frozen request."
+  ],
+  "limits": [
+    "Independent static and evidence review only; did not rerun the 60 tests or start an emulator/CI.",
+    "No result yet demonstrates successful real initialization, later query navigation, target35 insets, gameplay, or package publication with this QA change.",
+    "Root may combine a separately reviewed supervisor-test-only fix; this review covers exactly the three frozen readiness sources, not an uncreated final isolated commit."
+  ]
+}

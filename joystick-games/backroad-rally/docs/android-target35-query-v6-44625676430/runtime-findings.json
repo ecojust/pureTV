@@ -1,0 +1,337 @@
+{
+  "scope": "Original failed production runtime evidence, not a successful native acceptance",
+  "sourceRun": 44625676430,
+  "sourceAttempt": 1,
+  "sourceCommit": "4b6cf0b8cba288eae66bcae2ef2784acc279a695",
+  "runtimeJob": 135922407996,
+  "readonlyRecoveryRun": 44627746931,
+  "immutableRecoveryExport": "5f16d7a757f1c54a07b4cef521018b00b2c921d7",
+  "originalOutcome": {
+    "select": "success",
+    "build": "success",
+    "sign": "success",
+    "runtime": "failure",
+    "export": "failure"
+  },
+  "actualBuild": {
+    "originalVitestSuites": 20,
+    "originalVitestTests": 176,
+    "sharedQaTests": 53,
+    "actualJavaUrlPolicyChecks": 105
+  },
+  "modes": [
+    {
+      "mode": "normal",
+      "status": "failed",
+      "apk": {
+        "path": "/home/runner/work/_temp/signed/packages/backroad-rally/backroad-rally-0.1.0.apk",
+        "bytes": 105024551,
+        "sha256": "2cd35f145f5362264a720708325c22e283a3828d21899058f17422ba87103c08"
+      },
+      "passedTests": [
+        {
+          "name": "catalog scenario starts with fresh app data before launch",
+          "status": "passed",
+          "details": {
+            "mode": "fresh-install-app-data",
+            "targetPackage": "com.ecojust.joystick.backroadrally",
+            "method": "pm clear",
+            "phase": "before-target-launch",
+            "status": "passed",
+            "stdout": "Success"
+          }
+        }
+      ],
+      "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1000, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 538, in setup\n    self.validate_catalog_snapshot(initial)\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 625, in validate_catalog_snapshot\n    assert game.get('renderer') in plan.accepted_renderers(self.plan), 'Actual renderer differs from QA plan'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Actual renderer differs from QA plan\n",
+      "initial": {
+        "label": "initial-menu",
+        "game": {
+          "game": "backroad-rally",
+          "renderer": "loading",
+          "webglVersion": 0,
+          "stage": "menu",
+          "paused": false,
+          "frames": 0,
+          "gameplay": {
+            "menuFocus": "",
+            "menuValue": ""
+          },
+          "audioState": "unknown",
+          "errors": []
+        },
+        "pollCount": 1,
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 765,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 257
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "activityState": "resumed",
+        "windowFocused": true
+      },
+      "captures": [],
+      "commands": [
+        {
+          "command": [
+            "/usr/local/lib/android/sdk/platform-tools/adb",
+            "wait-for-device"
+          ],
+          "status": "completed",
+          "exitCode": 0,
+          "seconds": 0.005,
+          "stdoutExcerpt": "",
+          "stderrExcerpt": ""
+        },
+        {
+          "command": [
+            "/usr/local/lib/android/sdk/platform-tools/adb",
+            "install",
+            "-r",
+            "/home/runner/work/_temp/signed/packages/backroad-rally/backroad-rally-0.1.0.apk"
+          ],
+          "status": "completed",
+          "exitCode": 0,
+          "seconds": 15.414,
+          "stdoutExcerpt": "Performing Streamed Install\nSuccess\n",
+          "stderrExcerpt": ""
+        },
+        {
+          "command": [
+            "/usr/local/lib/android/sdk/platform-tools/adb",
+            "install",
+            "-r",
+            "-t",
+            "/home/runner/work/_temp/signed/observers/backroad-rally/observer-backroad-rally.apk"
+          ],
+          "status": "completed",
+          "exitCode": 0,
+          "seconds": 0.816,
+          "stdoutExcerpt": "Performing Streamed Install\nSuccess\n",
+          "stderrExcerpt": ""
+        },
+        {
+          "command": [
+            "/usr/local/lib/android/sdk/platform-tools/adb",
+            "shell",
+            "pm",
+            "clear",
+            "com.ecojust.joystick.backroadrally"
+          ],
+          "status": "completed",
+          "exitCode": 0,
+          "seconds": 0.079,
+          "stdoutExcerpt": "Success\n",
+          "stderrExcerpt": ""
+        },
+        {
+          "command": [
+            "/usr/local/lib/android/sdk/platform-tools/adb",
+            "logcat",
+            "-d",
+            "-v",
+            "threadtime"
+          ],
+          "status": "completed",
+          "exitCode": 0,
+          "seconds": 0.351,
+          "stdoutExcerpt": "--------- beginning of system\n11-19 22:18:33.194   218   218 I vold    : Vold 3.0 (the awakening) firing up\n11-19 22:18:",
+          "stderrExcerpt": ""
+        }
+      ]
+    },
+    {
+      "mode": "occupied",
+      "status": "failed",
+      "apk": {
+        "path": "/home/runner/work/_temp/signed/packages/backroad-rally/backroad-rally-0.1.0.apk",
+        "bytes": 105024551,
+        "sha256": "2cd35f145f5362264a720708325c22e283a3828d21899058f17422ba87103c08"
+      },
+      "passedTests": [
+        {
+          "name": "catalog scenario starts with fresh app data before launch",
+          "status": "passed",
+          "details": {
+            "mode": "fresh-install-app-data",
+            "targetPackage": "com.ecojust.joystick.backroadrally",
+            "method": "pm clear",
+            "phase": "before-target-launch",
+            "status": "passed",
+            "stdout": "Success"
+          }
+        }
+      ],
+      "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1000, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 538, in setup\n    self.validate_catalog_snapshot(initial)\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 625, in validate_catalog_snapshot\n    assert game.get('renderer') in plan.accepted_renderers(self.plan), 'Actual renderer differs from QA plan'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Actual renderer differs from QA plan\n",
+      "initial": {
+        "label": "initial-menu",
+        "game": {
+          "game": "backroad-rally",
+          "renderer": "loading",
+          "webglVersion": 0,
+          "stage": "menu",
+          "paused": false,
+          "frames": 0,
+          "gameplay": {
+            "menuFocus": "",
+            "menuValue": ""
+          },
+          "audioState": "unknown",
+          "errors": []
+        },
+        "pollCount": 1,
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 765,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 257
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "activityState": "resumed",
+        "windowFocused": true
+      },
+      "captures": [],
+      "commands": [
+        {
+          "command": [
+            "/usr/local/lib/android/sdk/platform-tools/adb",
+            "wait-for-device"
+          ],
+          "status": "completed",
+          "exitCode": 0,
+          "seconds": 0.004,
+          "stdoutExcerpt": "",
+          "stderrExcerpt": ""
+        },
+        {
+          "command": [
+            "/usr/local/lib/android/sdk/platform-tools/adb",
+            "install",
+            "-r",
+            "/home/runner/work/_temp/signed/packages/backroad-rally/backroad-rally-0.1.0.apk"
+          ],
+          "status": "completed",
+          "exitCode": 0,
+          "seconds": 12.125,
+          "stdoutExcerpt": "Performing Streamed Install\nSuccess\n",
+          "stderrExcerpt": ""
+        },
+        {
+          "command": [
+            "/usr/local/lib/android/sdk/platform-tools/adb",
+            "install",
+            "-r",
+            "-t",
+            "/home/runner/work/_temp/signed/observers/backroad-rally/observer-backroad-rally.apk"
+          ],
+          "status": "completed",
+          "exitCode": 0,
+          "seconds": 1.405,
+          "stdoutExcerpt": "Performing Streamed Install\nSuccess\n",
+          "stderrExcerpt": ""
+        },
+        {
+          "command": [
+            "/usr/local/lib/android/sdk/platform-tools/adb",
+            "shell",
+            "pm",
+            "clear",
+            "com.ecojust.joystick.backroadrally"
+          ],
+          "status": "completed",
+          "exitCode": 0,
+          "seconds": 0.09,
+          "stdoutExcerpt": "Success\n",
+          "stderrExcerpt": ""
+        },
+        {
+          "command": [
+            "/usr/local/lib/android/sdk/platform-tools/adb",
+            "logcat",
+            "-d",
+            "-v",
+            "threadtime"
+          ],
+          "status": "completed",
+          "exitCode": 0,
+          "seconds": 0.127,
+          "stdoutExcerpt": "--------- beginning of system\n11-19 22:18:33.194   218   218 I vold    : Vold 3.0 (the awakening) firing up\n11-19 22:18:",
+          "stderrExcerpt": ""
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    "The new target35 APK installs normally in both recorded modes (15.414s and12.125s), with no UI confirmation helper or system verification changes in this original production workflow. The earlier installation blocker is not reproduced in this run.",
+    "Both runs launch the app and obtain the first adapter/menu snapshot while renderer remains loading, frames0 and controller poll1. The original gate only required menu/loadingFlag/firstPoll/port; it immediately calls strict renderer validation and fails before asynchronous renderer initialization is observed.",
+    "The fixed source starts renderer=loading/frames0; createRenderer awaits renderer.init before publishing backend; the original menu render loop increments frames. Therefore an adapter/menu observation alone is insufficient evidence of initialized graphics.",
+    "Both ADB cleanup logcat commands still completed successfully. This particular reported failure is not device disappearance or an installation timeout.",
+    "No query navigation, driving, SDK connection/card, screenshot/video or target35 inset verification was reached. No overall renderer success is inferred from the early snapshot.",
+    "The separate original production exporter also failed at its file-size guard; the original signed package exceeds100,000,000bytes. This packaging/export limitation is distinct from runtime failure."
+  ],
+  "packageCustody": {
+    "signedActionsArtifact": 14579726223,
+    "signedWrapperBytes": 104996375,
+    "signedWrapperSha256": "b6690049690175943c906ddd4277705c46c5e235770aa5c1ffbd6da1ab4c94fc",
+    "draftRelease": 452000118,
+    "transferredAsset": 769487716,
+    "transferRun": 44627760017,
+    "transferReceiptExport": "9a7470975e4ca4c1beb6edbdd0c5851b6549bf3d",
+    "localApkAuditCompleted": false,
+    "localPartialDownloadFailure": "signed-download-attempt-1-failure.json",
+    "published": false
+  },
+  "nextStep": "Separate frozen QA-only initial readiness change retains150-second budget and strict validation, then root may run unchanged original signed APK. No production/game/APK rewrite or dispatch in this investigation."
+}
