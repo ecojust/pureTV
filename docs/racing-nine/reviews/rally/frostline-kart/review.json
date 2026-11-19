@@ -1,0 +1,63 @@
+{
+  "reviewedAt": "2026-11-19",
+  "slug": "frostline-kart",
+  "title": "Frostline Kart",
+  "upstream": {
+    "slug": "frostline-kart",
+    "title": "Frostline Kart",
+    "repository": "sorrycc/fable-arcade",
+    "commit": "6ab9de3122600e9c9dbe5daf3e77f7fe9361e335",
+    "sourceUrl": "https://raw.githubusercontent.com/sorrycc/fable-arcade/6ab9de3122600e9c9dbe5daf3e77f7fe9361e335/games/mario-kart-snow/index.html",
+    "sourceSha256": "b5fac1d4da8e978abb181bc433f36c177be0c05b231cad1163d139db295476e4",
+    "bytes": 85459,
+    "demo": "https://sorrycc.github.io/fable-arcade/games/mario-kart-snow/"
+  },
+  "graphics": {
+    "sceneAndArtDirection": 12,
+    "vehicleDesign": 6,
+    "lightingAndEffects": 5,
+    "readability": 8,
+    "motionPresentation": 3,
+    "total": 34
+  },
+  "gameplay": {
+    "drivingAndControl": 10,
+    "competitionAndFeedback": 8,
+    "trackAndModeVariety": 3,
+    "progressionAndReplay": 3,
+    "completeRaceLoop": 4,
+    "total": 28
+  },
+  "totalScore": 62,
+  "evidenceKind": "本轮正常启动与倒计时画面；玩法由源码核实，尚未实际驾驶",
+  "confidence": "medium for visible art; low for driving feel because software renderer kept the original countdown running slowly",
+  "actualPlayObserved": [
+    "正常Enter开始后，看到3→2的原倒计时、8辆车的起跑队列、观众席、雪人、积雪树林、山体、小地图、速度/圈数/名次HUD。",
+    "油门/方向/道具键已正常发出，但观察截止时计时仍0:00、车速0，因此不宣称完成加速/转向/道具实战。",
+    "菜单和起跑场景色彩统一、车辆和车手结构清楚；光照材质较简单，雪地程序几何感明显。"
+  ],
+  "sourceConfirmedNotFullyPlayed": [
+    "源码实现单雪地赛道、8名车手/7AI、3圈检查点、碰撞、6种道具与名次结算。",
+    "没有找到生涯、多车购买或多赛道选择；持续内容主要是重复竞速。",
+    "原帧dt上限0.05秒，软件渲染的慢倒计时不能当电视性能结论。"
+  ],
+  "packagingAssessment": [
+    "单HTML+Three.js0.169模块CDN，程序化场景和WebAudio可离线封装。",
+    "需补TV菜单/显式暂停和失焦冻结；原blur只清方向，不自动暂停。",
+    "根许可证未明确；这与画面/玩法评分分开记录。"
+  ],
+  "demoIndexMatchesFixedSource": true,
+  "actualReport": "attempt-1/report.json",
+  "bestGameplayImage": "attempt-1/driving-straight.png",
+  "screenshotsVisuallyReviewed": [
+    "attempt-1/menu.png",
+    "attempt-1/driving-straight.png"
+  ],
+  "limitations": [
+    "Screenshot label driving-straight is a probe step name; it does not establish that the vehicle had begun driving. Actual view is the starting grid.",
+    "Short assessment; no complete race or item-use validation.",
+    "Software rendering timing is not device performance."
+  ],
+  "physicalDeviceTested": false,
+  "recommendedTopNine": false
+}

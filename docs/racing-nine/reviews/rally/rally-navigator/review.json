@@ -1,0 +1,70 @@
+{
+  "reviewedAt": "2026-11-19",
+  "slug": "rally-navigator",
+  "title": "Rally Navigator",
+  "upstream": {
+    "slug": "rally-navigator",
+    "title": "Rally Navigator",
+    "repository": "swan4er/opus-100-projects",
+    "commit": "6c98846c00d667b8958c4c777025025a57fda0e9",
+    "sourceUrl": "https://raw.githubusercontent.com/swan4er/opus-100-projects/6c98846c00d667b8958c4c777025025a57fda0e9/038-rally-navigator/index.html",
+    "sourceSha256": "05343b78e94237598f080f5381b5815fc37f1d76ce452421c518924cea92ad21",
+    "bytes": 7642,
+    "demo": "https://swan4er.github.io/opus-100-projects/038-rally-navigator/"
+  },
+  "graphics": {
+    "sceneAndArtDirection": 12,
+    "vehicleDesign": 5,
+    "lightingAndEffects": 7,
+    "readability": 8,
+    "motionPresentation": 3,
+    "total": 35
+  },
+  "gameplay": {
+    "drivingAndControl": 12,
+    "competitionAndFeedback": 7,
+    "trackAndModeVariety": 4,
+    "progressionAndReplay": 5,
+    "completeRaceLoop": 4,
+    "total": 32
+  },
+  "totalScore": 67,
+  "evidenceKind": "本轮正常开始/跳过可选API后的起点场景；未到驾驶，玩法由源码核实",
+  "confidence": "medium for rendered scene; low for player driving, countdown not completed during bounded software-renderer observation",
+  "actualPlayObserved": [
+    "正常点击开始，再点击 Играть в демо 跳过可选OpenRouter键；原游戏进入倒计时3→2，显示4.1km赛段、路书和车况HUD。",
+    "源代码帧时间封顶导致SwiftShader下倒计时慢；观察截止时计时0:00、速度0。实际正常方向和油门输入已发送，不能声称完成驾驶。",
+    "起点画面有多种针阔叶树、黄昏光影、纹理土路、草石与纸质路书；红色赛车较简单，角色头像和纸张UI具有自己的美术风格。",
+    "菜单背景是游戏自带吸引演示；Escape后显示73 km/h是吸引模式，不计入玩家驾驶证据。"
+  ],
+  "sourceConfirmedNotFullyPlayed": [
+    "真实车体/轮胎/地面响应模型、油门刹车手刹、路书、三视角、损伤、跳跃/碰撞/切弯遥测、R复位+5秒罚时。",
+    "固定森林赛段约4.1km和3检查点，3个副驾人物，终点评价及最近6场历史；未找到多地区赛事或购车升级。",
+    "预设副驾无需账号和API即可运行；实时AI性格回应/分析可调用OpenRouter，属于可选能力，付费额度随用户所选服务。",
+    "本轮未跑完赛段、未验证语音播放、复位罚时、终点评价或历史持久化。"
+  ],
+  "packagingAssessment": [
+    "Three.js0.170.0、共享_ai脚本、程序化场景/声音；将CDN固定到本地后基本驾驶与预设副驾可离线。",
+    "AI网络能力需要清楚标注可选并保留demo路径，默认启动不得强迫填写Key；本轮没有输入密钥或付费调用。",
+    "需要中文路书/TV焦点、手柄键图、原菜单与失焦取消回归；仅俄文UI影响直接上电视易用性。",
+    "未确认根许可证；许可问题独立于画面玩法分。"
+  ],
+  "demoIndexMatchesFixedSource": true,
+  "actualReport": "attempt-1/report.json",
+  "bestGameplayImage": "attempt-1/steering.png",
+  "screenshotsVisuallyReviewed": [
+    "attempt-1/menu.png",
+    "attempt-1/started.png",
+    "attempt-1/driving-straight.png",
+    "attempt-1/steering.png",
+    "attempt-1/after-pause-key.png"
+  ],
+  "limitations": [
+    "Image steering.png shows countdown 2 at the start line, not actual driving.",
+    "Demo choice means optional AI fallback, not a demonstration of completed driving or finish.",
+    "Menu/after-Escape attract mode uses original autonomous driving; its speed is not normal-player input evidence.",
+    "Software rendering is not physical device performance; no actual full race, API, voice or physical controller validation."
+  ],
+  "physicalDeviceTested": false,
+  "recommendedTopNine": false
+}
