@@ -1,0 +1,33 @@
+# Turbo Kart Rush
+
+[BridgeMind 原作](https://github.com/bridge-mind/turbo-kart-rush/tree/6c0456c7642447eae29e0832e7e542fec07ec07d)的独立 pureTV 适配：八位车手、四条赛道、三档难度，保留程序生成场景、道具的全部变体、漂移加速、跳跃、原版音乐与后处理。原资源无需网络即可运行；不是 pureTV 自创游戏。
+
+| pureTV 键 | 比赛 | 菜单 |
+| --- | --- | --- |
+| ↑ / ↓ | 加速 / 刹车与倒车 | 上 / 下 |
+| ← / → | 转向 | 左 / 右 |
+| A | 跳跃 / 按住漂移 | 确认 |
+| B | 使用道具；配合刹车或回看向后投掷 | — |
+| X | 回看 | — |
+| Y | 操作说明 | 返回 |
+| START | 暂停 / 手动继续 | 确认 |
+
+共享原生宿主默认监听 TCP **63485**，占用时显示实际回退端口。侧边卡片展示真实席位与 controller ID；无 RSSI 数据时不显示虚构信号。原键盘和标准 Gamepad 继续有效。菜单可用方向与确认操作，无需鼠标或指针锁。
+
+断线、后台和失焦会取消动作、道具待处理输入与未释放的蓄力漂移，并暂停比赛；不奖励漂移释放。已获得的道具、加速、位置和速度不会被重置。重连不能自动继续，需重新确认。加载中断线也会在进入比赛后保持暂停。
+
+需要 **WebGL 2**。当前源码/浏览器验证不代表 Android 4.4 或未测电视可用，也不代表 Android、macOS、Windows 正式安装包已经验收。
+
+```sh
+npm ci --ignore-scripts
+npm run typecheck
+npm test
+npm run build
+npm run build:check
+```
+
+`dist/tv.html` 可用本地 HTTP 服务离线预览；浏览器预览没有原生 TCP 服务器。生产包排除上游可写调试全局和开发自动驾驶入口；`window.JoystickGameQA.snapshot()` 只读取状态与缓存控制器帧。
+
+`upstream.json` 固定原始 72 文件与提交；`docs/source-changes.json` 记录有限输入/取消改动。原 `package-lock.json` 运行依赖及工具版本保留，额外 esbuild 0.28.2 用于平铺打包。初期 npm HTTP 503 与尚未完成的检查独立记录在 `docs/dependency-attempts.json`，不把缓存构建视为原依赖安装或平台通过。
+
+许可证见 [LICENSE](LICENSE) 与 [NOTICE.md](NOTICE.md)。源码 MIT，Three.js MIT；构建工具许可证单独保留。没有为适配新增商业模型或在线资源。
