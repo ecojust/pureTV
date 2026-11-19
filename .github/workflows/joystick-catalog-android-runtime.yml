@@ -12,12 +12,20 @@ on:
         required: true
         type: string
       artifact_export:
-        description: Immutable package export commit (40 characters, not a branch)
-        required: true
+        description: Immutable Git package export commit, or empty when using an Actions artifact
+        required: false
         type: string
       artifact_run:
         description: Original package workflow run ID
         required: true
+        type: string
+      artifact_id:
+        description: Original signed Actions artifact ID, mutually exclusive with artifact_export
+        required: false
+        type: string
+      artifact_attempt:
+        description: Exact original Actions attempt, required with artifact_id
+        required: false
         type: string
       batch:
         description: Registered catalog batch
@@ -43,6 +51,8 @@ env:
   ARTIFACT_SOURCE: ${{ inputs.artifact_source }}
   ARTIFACT_EXPORT: ${{ inputs.artifact_export }}
   ARTIFACT_RUN: ${{ inputs.artifact_run }}
+  ARTIFACT_ID: ${{ inputs.artifact_id }}
+  ARTIFACT_ATTEMPT: ${{ inputs.artifact_attempt }}
 
 jobs:
   select:
@@ -71,19 +81,26 @@ jobs:
           python3 - <<'PY'
           import json,os,re,subprocess
           from pathlib import Path
-          for key in ['REQUESTED_QA','ARTIFACT_SOURCE','ARTIFACT_EXPORT']:assert re.fullmatch('[a-f0-9]{40}',os.environ[key]), key
+          for key in ['REQUESTED_QA','ARTIFACT_SOURCE']:assert re.fullmatch('[a-f0-9]{40}',os.environ[key]), key
           assert re.fullmatch('[1-9][0-9]*',os.environ['ARTIFACT_RUN'])
+          assert bool(os.environ['ARTIFACT_EXPORT']) != bool(os.environ['ARTIFACT_ID']), 'Choose exactly one original artifact origin'
+          if os.environ['ARTIFACT_EXPORT']:
+              assert re.fullmatch('[a-f0-9]{40}',os.environ['ARTIFACT_EXPORT']) and not os.environ['ARTIFACT_ATTEMPT']
+          else:
+              for key in ['ARTIFACT_ID','ARTIFACT_ATTEMPT']:assert re.fullmatch('[1-9][0-9]*',os.environ[key])
           assert os.environ['REQUESTED_QA']==os.environ['GITHUB_SHA']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
           out=Path(os.environ['RUNNER_TEMP'])/'provenance';out.mkdir()
-          (out/'requested-inputs.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'batch':os.environ['BATCH'],'games':os.environ['GAMES']},indent=2)+'\n')
+          (out/'requested-inputs.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'batch':os.environ['BATCH'],'games':os.environ['GAMES']},indent=2)+'\n')
           PY
           python3 joystick-games/tools/android-catalog.py select --batch "$BATCH" --games "$GAMES" | tee "$RUNNER_TEMP/provenance/selection.json"
       - uses: actions/checkout@v4
+        if: inputs.artifact_export != ''
         with:
           ref: ${{ inputs.artifact_export }}
           path: artifact
           persist-credentials: false
       - name: Confirm the immutable export and original successful build/sign jobs
+        if: inputs.artifact_export != ''
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -107,6 +124,16 @@ jobs:
           (out/'original-run.json').write_text(json.dumps(run,indent=2)+'\n');(out/'original-jobs.json').write_text(json.dumps(jobs,indent=2)+'\n')
           (out/'original-export-manifest.json').write_bytes((artifact/'export-manifest.json').read_bytes())
           PY
+      - name: Confirm the exact original Actions signed artifact producer
+        if: inputs.artifact_id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GAMES: ${{ steps.select.outputs.games }}
+        run: >-
+          python3 joystick-games/tools/android-runtime-artifact.py
+          --run "$ARTIFACT_RUN" --attempt "$ARTIFACT_ATTEMPT" --source "$ARTIFACT_SOURCE"
+          --artifact "$ARTIFACT_ID" --games "$GAMES" --metadata-only
+          --output "$RUNNER_TEMP/provenance/actions-artifact"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -139,10 +166,19 @@ jobs:
             tools
             puretv-joystick
       - uses: actions/checkout@v4
+        if: inputs.artifact_export != ''
         with:
           ref: ${{ inputs.artifact_export }}
           path: artifact
           persist-credentials: false
+      - name: Download the unchanged original signed Actions ZIP
+        if: inputs.artifact_id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          python3 joystick-games/tools/android-runtime-artifact.py
+          --run "$ARTIFACT_RUN" --attempt "$ARTIFACT_ATTEMPT" --source "$ARTIFACT_SOURCE"
+          --artifact "$ARTIFACT_ID" --games "$GAME" --output "$RUNNER_TEMP/original-signed"
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -155,14 +191,21 @@ jobs:
           set -euo pipefail
           python3 joystick-games/qa/android/test_runner.py 2>&1 | tee "$RUNNER_TEMP/qa-contracts.log"
           python3 joystick-games/tools/android-tests.py 2>&1 | tee "$RUNNER_TEMP/artifact-contracts.log"
+          python3 joystick-games/tools/android-runtime-artifact-tests.py 2>&1 | tee "$RUNNER_TEMP/reuse-contracts.log"
+          python3 -B joystick-games/qa/android/test_environment_diagnostics.py 2>&1 | tee "$RUNNER_TEMP/environment-diagnostics-tests.log"
       - name: Bind original signed packages to their frozen source and current QA checkout
         run: |
           set -euo pipefail
           git fetch --no-tags --depth=1 origin "$ARTIFACT_SOURCE"
+          if [ -n "$ARTIFACT_ID" ]; then
+            origin_args=(--actions-artifact-id "$ARTIFACT_ID" --artifact-attempt "$ARTIFACT_ATTEMPT" --artifact "$RUNNER_TEMP/original-signed/artifact")
+          else
+            origin_args=(--export-commit "$ARTIFACT_EXPORT" --artifact "$GITHUB_WORKSPACE/artifact")
+          fi
           python3 joystick-games/tools/android-runtime-inputs.py --games "$GAME" \
-            --artifact-source "$ARTIFACT_SOURCE" --export-commit "$ARTIFACT_EXPORT" --artifact-run-id "$ARTIFACT_RUN" \
-            --artifact "$GITHUB_WORKSPACE/artifact" --output "$RUNNER_TEMP/input" \
-            --build-tools "$ANDROID_HOME/build-tools/34.0.0" 2>&1 | tee "$RUNNER_TEMP/input-verification.log"
+            --artifact-source "$ARTIFACT_SOURCE" --artifact-run-id "$ARTIFACT_RUN" "${origin_args[@]}" \
+            --output "$RUNNER_TEMP/input" --build-tools "$ANDROID_HOME/build-tools/34.0.0" \
+            2>&1 | tee "$RUNNER_TEMP/input-verification.log"
       - name: Enable disposable emulator acceleration
         run: |
           test -e /dev/kvm
@@ -180,27 +223,36 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           script: >-
+            python3 joystick-games/tools/android-environment-diagnostics.py
+            --output "$RUNNER_TEMP/runtime/$GAME/environment-diagnostics" --
             python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
             --input "$RUNNER_TEMP/input" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
       - name: Preserve both immutable source identities, every result and exact executed scripts
         if: always()
         run: |
           python3 - <<'PY'
-          import hashlib,json,os,shutil,subprocess
+          import hashlib,importlib.util,json,os,shutil,subprocess
           from pathlib import Path
           scratch=Path(os.environ['RUNNER_TEMP']);out=scratch/'runtime'/os.environ['GAME'];out.mkdir(parents=True,exist_ok=True)
           inputs=scratch/'input'
-          if inputs.is_dir():shutil.copytree(inputs,out/'verified-inputs')
-          for name in ['qa-contracts.log','artifact-contracts.log','input-verification.log']:
+          original_origin=scratch/'original-signed/artifact/actions-artifact-origin.json'
+          if original_origin.is_file():shutil.copyfile(original_origin,out/'original-actions-artifact-origin.json')
+          if inputs.is_dir():
+              spec=importlib.util.spec_from_file_location('runtime_inputs',Path('joystick-games/tools/android-runtime-inputs.py'))
+              verifier=importlib.util.module_from_spec(spec);spec.loader.exec_module(verifier)
+              verifier.preserve_evidence(inputs,out/'verified-inputs')
+          for name in ['qa-contracts.log','artifact-contracts.log','reuse-contracts.log','environment-diagnostics-tests.log','input-verification.log']:
               if (scratch/name).is_file():shutil.copyfile(scratch/name,out/name)
           paths=list(Path('joystick-games/qa/android').rglob('*.py'))+list(Path('joystick-games/qa/android').rglob('*.java'))+list(Path('joystick-games/qa/android/fixtures').glob('*.json'))
           paths+=list(Path('joystick-games/tools').glob('android-*.py'))
+          paths+=[Path('joystick-games/tools/artifact-draft-transfer.py'),Path('joystick-games/tools/asset-policy.py')]
+          paths+=list(Path('joystick-games/tools/fixtures/android-runtime-artifact').glob('*.json'))
           paths += [Path('puretv-joystick/joystick_sdk.py'),Path('tools/resource_catalog.py'),Path('.github/workflows/joystick-catalog-android-runtime.yml'),Path('joystick-games/catalog-registry.json'),Path('joystick-games/tools/qa-plan.py'),Path('joystick-games')/os.environ['GAME']/'qa-plan.json']
           files={}
           for path in paths:
               target=out/'executed-source'/path;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
               files[path.as_posix()]={'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
-          (out/'executed-source.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'files':files},indent=2)+'\n')
+          (out/'executed-source.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'files':files},indent=2)+'\n')
           command=Path(os.environ['ANDROID_HOME'])/'emulator/emulator'
           if command.is_file():
               process=subprocess.run([str(command),'-version'],text=True,capture_output=True);(out/'emulator-version.txt').write_text(process.stdout+process.stderr)
@@ -273,7 +325,10 @@ jobs:
               try:
                   evidence=out/'evidence'/('joystick-android-runtime-'+game);inputs=evidence/game/'verified-inputs'
                   binding=json.loads((inputs/'input-verification.json').read_text());assert binding['status']=='passed' and binding['qaSourceSha']==os.environ['GITHUB_SHA']
-                  assert binding['artifactSourceSha']==os.environ['ARTIFACT_SOURCE'] and binding['artifactExportCommit']==os.environ['ARTIFACT_EXPORT'] and str(binding['artifactRunId'])==os.environ['ARTIFACT_RUN']
+                  assert binding['artifactSourceSha']==os.environ['ARTIFACT_SOURCE'] and str(binding['artifactRunId'])==os.environ['ARTIFACT_RUN']
+                  if os.environ['ARTIFACT_ID']:
+                      origin=binding['artifactOrigin'];assert origin['kind']=='github-actions-signed-artifact' and origin['artifactId']==int(os.environ['ARTIFACT_ID']) and origin['artifactRunAttempt']==int(os.environ['ARTIFACT_ATTEMPT']) and binding['artifactExportCommit'] is None
+                  else:assert binding['artifactExportCommit']==os.environ['ARTIFACT_EXPORT']
                   outcomes=json.loads((evidence/(game+'-outcomes.json')).read_text());assert [item['mode'] for item in outcomes]==['normal','occupied'] and all(item['exitCode']==0 for item in outcomes)
                   receipt=json.loads((inputs/'packages'/game/'signing-receipt.json').read_text());observer=json.loads((inputs/'observers'/game/'observer-signing-receipt.json').read_text())
                   for mode in ['normal','occupied']:
@@ -297,7 +352,7 @@ jobs:
               if path.is_file():
                   assert path.stat().st_size<100_000_000
                   files[path.relative_to(out).as_posix()]=record(path)
-          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'qaRunAttempt':os.environ['GITHUB_RUN_ATTEMPT'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'games':games,'runtimeResult':os.environ['RUNTIME_RESULT'],'runtimeAccepted':accepted,'files':files,'reusedSignedPackagesAndObservers':True,'physicalTvTested':False,'physicalEsp32Tested':False},indent=2)+'\n')
+          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'qaRunAttempt':os.environ['GITHUB_RUN_ATTEMPT'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'games':games,'runtimeResult':os.environ['RUNTIME_RESULT'],'runtimeAccepted':accepted,'files':files,'reusedSignedPackagesAndObservers':True,'physicalTvTested':False,'physicalEsp32Tested':False},indent=2)+'\n')
           PY
           export_branch="build-assets/joystick-catalog-android-runtime-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
           test -z "$(git ls-remote --heads origin "refs/heads/$export_branch")"
