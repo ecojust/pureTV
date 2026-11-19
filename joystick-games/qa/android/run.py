@@ -6,6 +6,7 @@ only reads cached production diagnostics and DOM; it cannot set model state.
 """
 import argparse
 import importlib.util
+from http.client import RemoteDisconnected
 from collections import Counter
 import hashlib
 import json
@@ -19,6 +20,7 @@ import threading
 import time
 import traceback
 from pathlib import Path
+from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
 HERE = Path(__file__).resolve().parent
@@ -35,6 +37,69 @@ plan = importlib.util.module_from_spec(spec); spec.loader.exec_module(plan)
 
 def file_info(path):
     return {'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
+
+
+OBSERVER_REQUEST_TIMEOUT = 15
+OBSERVER_SNAPSHOT_TIMEOUT = 45
+OBSERVER_SNAPSHOT_ATTEMPTS = 3
+
+
+def install_timeout(apk_bytes):
+    """Bound installation transfer/verification time; never change game clocks."""
+    assert type(apk_bytes) is int and 0 < apk_bytes < build.asset_policy.HARD_LIMITS['maxApkBytes'], 'APK exceeds existing hard size limit'
+    # 30 seconds of installer overhead plus two seconds per decimal MB; the
+    # original small-package floor remains 45 seconds and all installs cap at 4m.
+    return min(240, max(45, 30 + 2 * math.ceil(apk_bytes / 1_000_000)))
+
+
+def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None):
+    """Retry only failed read-only transports; never reuse a previous snapshot.
+
+    The original Observer closes its HTTP request after a 10-second WebView
+    callback timeout, but keeps accepting requests. A successful response must
+    therefore come from a new GET; HTTP/JSON/model errors are not retried here.
+    """
+    assert 0 < timeout <= OBSERVER_SNAPSHOT_TIMEOUT
+    deadline = time.monotonic() + timeout
+    failures = 0
+    transport_errors = (RemoteDisconnected, ConnectionResetError, ConnectionAbortedError,
+                        ConnectionRefusedError, TimeoutError)
+    caught_errors = transport_errors + (URLError,)
+    for attempt in range(1, OBSERVER_SNAPSHOT_ATTEMPTS + 1):
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError('Read-only observer snapshot wall deadline expired')
+        started = time.time()
+        request_timeout = min(OBSERVER_REQUEST_TIMEOUT, remaining)
+        try:
+            with urlopen(url, timeout=request_timeout) as response:
+                value = json.load(response)
+            if time.monotonic() > deadline:
+                raise TimeoutError('Read-only observer snapshot wall deadline expired')
+        except caught_errors as error:
+            # HTTPError is also a URLError: a valid HTTP error is not a dropped
+            # connection. Unknown URL errors and malformed JSON remain fatal.
+            if isinstance(error, HTTPError) or (isinstance(error, URLError) and not isinstance(error.reason, transport_errors)):
+                raise
+            failures += 1
+            remaining = deadline - time.monotonic()
+            retry = attempt < OBSERVER_SNAPSHOT_ATTEMPTS and remaining > 0
+            if event:
+                event({'status': 'transport-failed', 'attempt': attempt,
+                       'maximumAttempts': OBSERVER_SNAPSHOT_ATTEMPTS,
+                       'maximumWallSeconds': timeout, 'requestTimeoutSeconds': request_timeout,
+                       'startedAt': started, 'endedAt': time.time(),
+                       'errorType': type(error).__name__, 'error': str(error), 'retryScheduled': retry})
+            if not retry:
+                raise
+            time.sleep(min(0.12, remaining / 2))
+            continue
+        if event and failures:
+            event({'status': 'transport-recovered', 'attempt': attempt,
+                   'priorTransportFailures': failures, 'startedAt': started,
+                   'endedAt': time.time(), 'responseFromNewGet': True})
+        return value
+    raise AssertionError('Unreachable observer retry state')
 
 
 class WireProxy:
@@ -190,16 +255,37 @@ class Acceptance:
             dest = provenance / relative; dest.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(source, dest)
 
     def command(self, *args, check=True):
-        result = subprocess.run(self.adb + list(args), capture_output=True, check=False, timeout=45)
-        with (self.out / 'adb-commands.jsonl').open('a') as f:
-            f.write(json.dumps({'command': self.adb + list(args), 'exitCode': result.returncode, 'stdout': result.stdout.decode(errors='replace'), 'stderr': result.stderr.decode(errors='replace')}) + '\n')
+        timeout = 45
+        record = {'command': self.adb + list(args), 'startedAt': time.time()}
+        if args and args[0] == 'install':
+            record['apkBytes'] = Path(args[-1]).stat().st_size
+            timeout = install_timeout(record['apkBytes'])
+        record['timeoutSeconds'] = timeout
+        def log(value):
+            with (self.out / 'adb-commands.jsonl').open('a') as f:
+                f.write(json.dumps({**record, 'endedAt': time.time(), **value}) + '\n')
+        try:
+            result = subprocess.run(record['command'], capture_output=True, check=False, timeout=timeout)
+        except subprocess.TimeoutExpired as error:
+            log({'status': 'timed-out', 'exitCode': None, 'errorType': type(error).__name__,
+                 'error': str(error), 'stdout': (error.stdout or b'').decode(errors='replace'),
+                 'stderr': (error.stderr or b'').decode(errors='replace')})
+            raise  # Do not retry installation or treat an uncertain install as successful.
+        log({'status': 'completed', 'exitCode': result.returncode,
+             'stdout': result.stdout.decode(errors='replace'), 'stderr': result.stderr.decode(errors='replace')})
         if check and result.returncode:
             raise RuntimeError('ADB command failed: ' + ' '.join(args) + ': ' + result.stderr.decode(errors='replace'))
         return result.stdout
 
-    def snapshot(self):
-        with urlopen('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout=15) as response:
-            value = json.load(response)
+    def snapshot(self, timeout=OBSERVER_SNAPSHOT_TIMEOUT):
+        self._snapshot_calls = getattr(self, '_snapshot_calls', 0) + 1
+        call = self._snapshot_calls
+        def event(value):
+            self.report.setdefault('observerTransportEvents', []).append(
+                {'snapshotCall': call, 'operation': 'GET /snapshot', **value})
+            if hasattr(self, 'out'):
+                self.save()
+        value = read_observer_snapshot('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout, event)
         port = (value.get('info') or {}).get('wifiController', {}).get('port')
         if hasattr(self, 'service_port') and port and port != self.service_port:
             raise AssertionError('Live game changed controller TCP port within the same process/session')
@@ -209,11 +295,11 @@ class Acceptance:
         until = time.monotonic() + timeout; last = None; error = None
         while time.monotonic() < until:
             try:
-                last = self.snapshot()
+                last = self.snapshot(timeout=min(OBSERVER_SNAPSHOT_TIMEOUT, max(0.001, until - time.monotonic())))
                 if predicate(last): return last
             except Exception as caught:
                 error = repr(caught)
-            time.sleep(0.12)
+            time.sleep(min(0.12, max(0, until - time.monotonic())))
         self.snapshots.append({'label': 'timeout-' + label, 'snapshot': last, 'error': error})
         raise AssertionError(label + ' timed out; last snapshot retained')
 

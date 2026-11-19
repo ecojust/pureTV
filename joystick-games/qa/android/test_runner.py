@@ -2,6 +2,7 @@
 """Contract/proxy tests. These do not claim actual Android gameplay acceptance."""
 import importlib.util
 import copy
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import socketserver
 import tempfile
@@ -138,7 +139,7 @@ class Contracts(unittest.TestCase):
         acceptance.report = {}; acceptance.snapshots = []
         def snapshot(count, action): return {'game': {'controller': {'pollCount': count}, 'actualAction': action}}
         samples = iter([snapshot(8, True), snapshot(9, False), snapshot(10, True)])
-        acceptance.snapshot = lambda: next(samples)
+        acceptance.snapshot = lambda **_kwargs: next(samples)
         found = acceptance.wait_fresh(snapshot(8, False), lambda s: s['game']['actualAction'], timeout=2, label='fixture-action')
         self.assertEqual(found['game']['controller']['pollCount'], 10)
         self.assertEqual(acceptance.report['freshnessChecks'][0]['beforePollCount'], 8)
@@ -148,7 +149,7 @@ class Contracts(unittest.TestCase):
         acceptance = runner.Acceptance.__new__(runner.Acceptance)
         acceptance.report = {}; acceptance.snapshots = []
         stale = {'game': {'controller': {'pollCount': 8}, 'actualAction': True}}
-        acceptance.snapshot = lambda: stale
+        acceptance.snapshot = lambda **_kwargs: stale
         with self.assertRaisesRegex(AssertionError, 'timed out'):
             acceptance.wait_fresh(stale, lambda s: s['game']['actualAction'], timeout=.02, label='stalled-fixture')
         self.assertEqual(acceptance.snapshots[0]['snapshot'], stale)
@@ -338,6 +339,8 @@ class InstallationSetup(unittest.TestCase):
         acceptance.adb = ['fixture-adb', '-s', 'isolated-tv']
         acceptance.args = SimpleNamespace(game=slug, apk=Path('/fixture/game.apk'),
             observer=Path('/fixture/observer.apk'), occupy_default_port=occupied)
+        acceptance.args.apk = acceptance.out/'game.apk'; acceptance.args.apk.write_bytes(b'fixture-game')
+        acceptance.args.observer = acceptance.out/'observer.apk'; acceptance.args.observer.write_bytes(b'fixture-observer')
         acceptance.package = runner.PACKAGES[slug]
         acceptance.plan = None if slug in runner.build.LEGACY_PACKAGES else {'renderer': 'canvas2d'}
         acceptance.snapshots = []; acceptance.report = {'snapshots': acceptance.snapshots}; acceptance.tests = []
@@ -446,5 +449,195 @@ class InstallationSetup(unittest.TestCase):
             self.assertEqual(state['cleared'], [])
             self.assertTrue(state['storySeen'])
             self.assertNotIn('installationSetup', acceptance.report)
+
+class InstallationBudgetTests(unittest.TestCase):
+    def test_actual_size_budget_preserves_small_floor_and_existing_hard_limit(self):
+        for size, expected in [(1, 45), (1_124_106, 45), (7_000_000, 45),
+                               (8_000_000, 46), (10_000_000, 50),
+                               (105_020_455, 240), (127_999_999, 240)]:
+            self.assertEqual(runner.install_timeout(size), expected)
+        for size in [0, -1, True, 1.5, 128_000_000, 128_000_001]:
+            with self.assertRaises(AssertionError): runner.install_timeout(size)
+
+    def fixture(self):
+        directory = tempfile.TemporaryDirectory(prefix='joystick-install-budget-')
+        self.addCleanup(directory.cleanup)
+        a = runner.Acceptance.__new__(runner.Acceptance)
+        a.out = Path(directory.name); a.adb = ['fixture-adb']
+        apk = a.out/'original-large.apk'
+        with apk.open('wb') as stream: stream.truncate(105_020_455)
+        return a, apk
+
+    def test_only_install_uses_file_size_and_nonzero_exit_still_fails(self):
+        a, apk = self.fixture()
+        outputs = [SimpleNamespace(returncode=0, stdout=b'Success\n', stderr=b''),
+                   SimpleNamespace(returncode=0, stdout=b'', stderr=b''),
+                   SimpleNamespace(returncode=1, stdout=b'', stderr=b'INSTALL_FAILED_INVALID_APK')]
+        with mock.patch.object(runner.subprocess, 'run', side_effect=outputs) as process:
+            self.assertEqual(a.command('install', '-r', str(apk)), b'Success\n')
+            a.command('shell', 'am', 'force-stop', 'com.ecojust.joystick.backroadrally')
+            with self.assertRaisesRegex(RuntimeError, 'INSTALL_FAILED_INVALID_APK'):
+                a.command('install', '-r', str(apk))
+            self.assertEqual([call.kwargs['timeout'] for call in process.call_args_list], [240, 45, 240])
+            with apk.open('r+b') as stream: stream.truncate(128_000_000)
+            with self.assertRaises(AssertionError): a.command('install', '-r', str(apk))
+            self.assertEqual(process.call_count, 3)
+        rows = [json.loads(s) for s in (a.out/'adb-commands.jsonl').read_text().splitlines()]
+        self.assertEqual(rows[0]['apkBytes'], 105_020_455)
+        self.assertNotIn('apkBytes', rows[1])
+        self.assertEqual(rows[2]['exitCode'], 1)
+
+    def test_real_process_timeout_preserves_partial_output_and_does_not_retry(self):
+        a, apk = self.fixture()
+        script = a.out/'slow-adb.py'
+        script.write_text("import sys,time\nprint('Performing Streamed Install',flush=True)\nprint('still pending',file=sys.stderr,flush=True)\ntime.sleep(10)\n")
+        a.adb = [runner.sys.executable, str(script)]
+        started = time.monotonic()
+        with mock.patch.object(runner, 'install_timeout', return_value=.2):
+            with self.assertRaises(runner.subprocess.TimeoutExpired):
+                a.command('install', '-r', str(apk))
+        self.assertLess(time.monotonic()-started, 3)
+        rows = [json.loads(s) for s in (a.out/'adb-commands.jsonl').read_text().splitlines()]
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]['status'], 'timed-out')
+        self.assertIsNone(rows[0]['exitCode'])
+        self.assertEqual(rows[0]['errorType'], 'TimeoutExpired')
+        self.assertIn('Performing Streamed Install', rows[0]['stdout'])
+        self.assertIn('still pending', rows[0]['stderr'])
+
+    def test_original_backroad_install_failures_remain_failures(self):
+        fixture = json.loads((HERE/'fixtures/install-timeout-run-44599353036.json').read_text())
+        self.assertEqual(fixture['runId'], 44599353036)
+        self.assertEqual(fixture['apk']['bytes'], 105_020_455)
+        for mode in fixture['modes']:
+            self.assertEqual(mode['originalStatus'], 'failed')
+            self.assertEqual(mode['pythonException'], 'TimeoutExpired')
+            self.assertEqual(mode['originalInstallTimeoutSeconds'], 45)
+            self.assertEqual(mode['testsExecuted'], 0)
+            self.assertEqual(mode['snapshotsCaptured'], 0)
+            self.assertEqual(mode['gameplayScenariosExecuted'], False)
+
+
+class ObserverTransportTests(unittest.TestCase):
+    class HttpFixture(BaseHTTPRequestHandler):
+        def log_message(self, *args): pass
+        def do_GET(self):
+            with self.server.action_lock:
+                self.server.requests.append((self.command, self.path))
+                action, value = self.server.actions.pop(0)
+            if action == 'close':
+                self.close_connection = True
+                return  # Same EOF-before-status behavior as the original Observer timeout.
+            if action == 'slow':
+                time.sleep(value)
+                action, value = 'json', {'late': True}
+            body = value if action == 'invalid' else json.dumps(value).encode()
+            try:
+                self.send_response(503 if action == 'status' else 200)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Content-Length', str(len(body)))
+                self.end_headers(); self.wfile.write(body)
+            except (BrokenPipeError, ConnectionResetError):
+                pass  # The bounded-timeout negative test deliberately closes its socket.
+
+    def serve(self, actions):
+        server = ThreadingHTTPServer(('127.0.0.1', 0), self.HttpFixture)
+        server.daemon_threads = True
+        server.actions = list(actions); server.requests = []; server.action_lock = threading.Lock()
+        thread = threading.Thread(target=lambda: server.serve_forever(poll_interval=.01), daemon=True)
+        thread.start()
+        self.addCleanup(server.server_close); self.addCleanup(server.shutdown)
+        return server
+
+    def acceptance(self, server):
+        a = runner.Acceptance.__new__(runner.Acceptance)
+        a.observer_port = server.server_address[1]; a.service_port = 63485
+        a.report = {}; a.snapshots = []
+        return a
+
+    def value(self, count=12):
+        return {'info': {'wifiController': {'port': 63485}},
+                'game': {'game': 'dirt-crown', 'renderer': 'webgl2', 'webglVersion': 2,
+                         'stage': 'playing', 'paused': False, 'frames': count,
+                         'gameplay': {'time': 2}, 'controller': {'pollCount': count}},
+                'page': {'canvases': [{'width': 1280, 'height': 720, 'visible': True}]}}
+
+    def test_real_http_eof_is_recorded_then_new_response_returned(self):
+        expected = self.value(31)
+        server = self.serve([('close', None), ('json', expected)])
+        acceptance = self.acceptance(server)
+        self.assertEqual(acceptance.snapshot(), expected)
+        self.assertEqual(server.requests, [('GET', '/snapshot')]*2)
+        events = acceptance.report['observerTransportEvents']
+        self.assertEqual([x['status'] for x in events], ['transport-failed', 'transport-recovered'])
+        self.assertEqual(events[0]['errorType'], 'RemoteDisconnected')
+        self.assertIn('Remote end closed connection without response', events[0]['error'])
+        self.assertTrue(events[1]['responseFromNewGet'])
+
+    def test_permanent_eof_exhausts_three_attempts_and_never_uses_prior_snapshot(self):
+        server = self.serve([('json', self.value(12)), *[('close', None)]*3])
+        acceptance = self.acceptance(server)
+        self.assertEqual(acceptance.snapshot(), self.value(12))
+        with self.assertRaises(runner.RemoteDisconnected): acceptance.snapshot()
+        self.assertEqual(len(server.requests), 4)
+        events = acceptance.report['observerTransportEvents']
+        self.assertEqual([x['attempt'] for x in events], [1, 2, 3])
+        self.assertFalse(events[-1]['retryScheduled'])
+        self.assertTrue(all(x['snapshotCall'] == 2 for x in events))
+
+    def test_real_socket_timeout_is_recorded_and_recovers_with_fresh_get(self):
+        server = self.serve([('slow', .1), ('json', self.value(44))])
+        acceptance = self.acceptance(server)
+        with mock.patch.object(runner, 'OBSERVER_REQUEST_TIMEOUT', .03):
+            self.assertEqual(acceptance.snapshot(timeout=.8), self.value(44))
+        events = acceptance.report['observerTransportEvents']
+        self.assertIn(events[0]['errorType'], ('TimeoutError', 'URLError'))
+        self.assertEqual(events[1]['status'], 'transport-recovered')
+
+    def test_invalid_json_and_explicit_http_error_are_not_retried(self):
+        for action, value, error in [('invalid', b'{', json.JSONDecodeError), ('status', {'error': 'observer failure'}, runner.HTTPError)]:
+            server = self.serve([(action, value), ('json', self.value())])
+            acceptance = self.acceptance(server)
+            with self.assertRaises(error): acceptance.snapshot()
+            self.assertEqual(len(server.requests), 1)
+            self.assertNotIn('observerTransportEvents', acceptance.report)
+
+    def test_recovered_response_still_rejects_changed_service_port(self):
+        wrong = self.value(); wrong['info']['wifiController']['port'] = 63500
+        server = self.serve([('close', None), ('json', wrong)])
+        with self.assertRaisesRegex(AssertionError, 'changed controller TCP port'):
+            self.acceptance(server).snapshot()
+        self.assertEqual(len(server.requests), 2)
+
+    def test_recovered_response_still_requires_correct_game_identity(self):
+        wrong = self.value(); wrong['game']['game'] = 'another-game'
+        server = self.serve([('close', None), ('json', wrong)])
+        acceptance = self.acceptance(server)
+        acceptance.args = SimpleNamespace(game='dirt-crown')
+        acceptance.plan = {'renderer': 'webgl2', 'pauseStablePaths': ['gameplay.time']}
+        with self.assertRaisesRegex(AssertionError, 'identity mismatch'):
+            acceptance.validate_catalog_snapshot(acceptance.snapshot())
+        self.assertEqual(len(server.requests), 2)
+
+    def test_wait_deadline_bounds_nested_snapshot_request(self):
+        server = self.serve([('slow', .3)])
+        acceptance = self.acceptance(server); started = time.monotonic()
+        with self.assertRaisesRegex(AssertionError, 'timed out'):
+            acceptance.wait(lambda _value: True, timeout=.08, label='bounded-observer')
+        self.assertLess(time.monotonic()-started, .6)
+        self.assertEqual(len(server.requests), 1)
+        event = acceptance.report['observerTransportEvents'][0]
+        self.assertLessEqual(event['requestTimeoutSeconds'], .08)
+        self.assertFalse(event['retryScheduled'])
+
+    def test_original_ci_failure_fixture_is_transport_timeout_not_a_pass(self):
+        fixture = json.loads((HERE/'fixtures/observer-timeout-run-44600442272.json').read_text())
+        self.assertEqual(fixture['runId'], 44600442272)
+        self.assertEqual(len(fixture['modes']), 2)
+        for mode in fixture['modes']:
+            self.assertEqual(mode['originalStatus'], 'failed')
+            self.assertEqual(mode['pythonException'], 'RemoteDisconnected')
+            self.assertIn('WebView snapshot timed out', mode['observerLog'])
+            self.assertEqual(mode['originalGameplayScenariosExecuted'], False)
 
 if __name__=='__main__': unittest.main(verbosity=2)

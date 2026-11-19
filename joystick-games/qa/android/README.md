@@ -35,6 +35,10 @@ ID 文本接受完整 `controller_id` 或共享组件的精确 `ID: ` 标签加�
 
 屏幕录像记录本轮最初最多 180 秒；慢速模拟器上后续步骤可能超出录像长度，后续原始快照和 PNG 单独保留，不能把短录像当作整个流程的视频覆盖。
 
+只读 `/snapshot` 传输最多尝试三次，总预算 45 秒、单次请求最多 15 秒，并受外层等待的剩余预算约束。原 Observer 在 WebView 回调等待超过 10 秒时会记录超时并关闭请求，继续接受后续请求；客户端只对这类断连、连接重置或传输超时重新发送 GET。每次失败及后续恢复写入 `observerTransportEvents`，从不返回之前缓存的 HTTP 快照。有效 HTTP 错误、JSON 错误、游戏身份、端口稳定和模型断言不因此放宽。Dirt 首次实际触发该问题的两个失败模式及 Java 日志保留在 `../../dirt-crown/docs/android-attempt-2/`，原报告不会被本地回归改成通过。
+
+`adb install` 单独根据实际 APK 字节计算等待预算：`min(240, max(45, 30 + 2 × ceil(bytes / 1,000,000)))` 秒。安装仍拒绝达到原 128,000,000 字节硬限的包；此预算不替代原签名、来源或逐款包大小校验。普通 ADB 命令仍为 45 秒，玩法等待和游戏时钟不变。安装超时不自动重试，原命令、包大小、预算、时间及已返回的输出写入 `adb-commands.jsonl` 后继续失败。Backroad 原 105,020,455 字节 APK 的两次 45 秒安装超时见 `../../backroad-rally/docs/android-attempt-2/`；这些失败发生在游戏启动、手柄连接和录像之前。
+
 动作等待使用生产缓存的 `controller.pollCount`：按下后必须看到更新帧中的对应九键输入，再等更新帧中的实际位置、角度、射击或漂移变化，才松开。暂停和 held-sync 抑制也要跨越真实新帧；held-sync 先匹配同 TCP 连接和 seq 的真实 ACK。等待有墙钟上限，不以固定按住毫秒数推算已渲染帧数。工具修正来源及陈旧快照负例见 `../../docs/qa/android/freshness-correction/summary.json`。
 
 本地 `python3 joystick-games/qa/android/test_runner.py` 仅验证 SDK 透传/ACK、只读工具和快照契约，不能替代 Android 实包运行；实体电视、ESP32 及发现广播测试仍需单独进行。

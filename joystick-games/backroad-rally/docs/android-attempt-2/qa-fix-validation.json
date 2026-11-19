@@ -1,0 +1,57 @@
+{
+  "scope": "Combined pure QA observer transport and install-timeout corrections; not native gameplay acceptance",
+  "sharedTests": 39,
+  "passed": 39,
+  "newInstallTests": 4,
+  "existingObserverTransportTests": 8,
+  "actualSubprocessTimeoutTest": true,
+  "actualHttpNegativeTests": true,
+  "testedSourceFiles": {
+    "run.py": {
+      "bytes": 50358,
+      "sha256": "b20a1054a1e84e7e8fba29da6426e37d6348c3241a9bcb0ec73a963a8d4002cb"
+    },
+    "test_runner.py": {
+      "bytes": 39129,
+      "sha256": "68bc942707bc0452444adf3e66fa5561966fd69b9c30aa6ff46ea0fc973e53ab"
+    },
+    "fixtures/observer-timeout-run-44600442272.json": {
+      "bytes": 2593,
+      "sha256": "2f902a0411ec0a2f21198819c229db64882d45544116e0d1c929a267b28a1f6a"
+    },
+    "fixtures/install-timeout-run-44599353036.json": {
+      "bytes": 1355,
+      "sha256": "fdb7521cb924151e8573c69f0da59ceed9867ded74d0aea436cc6de82cd53473"
+    }
+  },
+  "isolatedHistoricalFixtureProvenance": "historical-fixture-inputs.json",
+  "unacceptedPreparationAttempt": "Initial copy used the sandbox as its relative source and raised SameFileError; the subsequent log only reran its prior 35-test snapshot. local-regression-initial.log is retained but excluded from new-source validation. Correct absolute paths were copied and byte-checked before the 39-test run.",
+  "installBudget": {
+    "minSeconds": 45,
+    "maxSeconds": 240,
+    "formula": "min(240,max(45,30+2*ceil(actualFileBytes/1000000)))",
+    "existingHardApkBytesExclusive": 128000000,
+    "originalBackroadBytes": 105020455,
+    "originalBackroadBudgetSeconds": 240,
+    "nonInstallTimeoutSeconds": 45,
+    "automaticInstallRetry": false
+  },
+  "unchangedObserverSha256": "c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305",
+  "originalSignedApkSha256": "8596350c7868352a9494d0667037ef4a75709af25cf50066df137bab3bcd8808",
+  "gameSourceChanged": false,
+  "signedPackageChanged": false,
+  "nativeRerunPerformed": false,
+  "nativeRerunPassed": false,
+  "portabilityFollowup": {
+    "change": "New installation fixture uses tempfile default instead of hardcoded /dev/shm; local TMPDIR chooses scratch. No runtime behavior changes.",
+    "previousFull39TestRunner": {
+      "bytes": 39145,
+      "sha256": "9bece9ecdffa932b4cbb209e6f27ff171d87fac884f2159dbb6933bb3411be6c"
+    },
+    "previousFull39TestRunnerArchive": "qa-fix/test_runner.before-tempdir-portability.py",
+    "currentTargetedTests": 4,
+    "currentTargetedTestsPassed": 4,
+    "log": "install-portability-regression.log",
+    "other35NotRepeated": true
+  }
+}
