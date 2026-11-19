@@ -1,0 +1,263 @@
+[
+  {
+    "title": "F1 Racing Game",
+    "slug": "f1",
+    "repository": "hirosichen/ai-f1-racing-game",
+    "commit": "f07c7036075132528377108491d2fff19ee70d5e",
+    "graphicsScore": null,
+    "gameplayScore": null,
+    "totalScore": null,
+    "graphicsBreakdown": null,
+    "gameplayBreakdown": null,
+    "reviewEvidencePaths": [
+      "docs/racing-nine/reviews/driving/f1/attempt-1/report.json",
+      "docs/racing-nine/reviews/driving/f1/source-inventory.json",
+      "docs/racing-nine/reviews/driving/f1/source-read-checks.json",
+      "docs/racing-nine/reviews/driving/f1/attempt-2/report.json",
+      "docs/racing-nine/reviews/driving/f1/attempt-2/initial.png",
+      "docs/racing-nine/reviews/driving/f1/attempt-3/report.json"
+    ],
+    "bestGameplayImage": null,
+    "evidenceKind": "本轮起跑菜单，尚无无遮挡赛中图",
+    "confidence": "insufficient for comparable scoring",
+    "rationale": "第二试已渲染起跑格与菜单，但 Playwright 4 秒按钮稳定等待超时，尚未驾驶。固定源码本地正常鼠标点击补充排队。",
+    "limitations": [
+      "未完整跑完比赛/生涯；源码确认的模式不等于都已实玩。",
+      "线上演示版本未证明与固定commit相同，固定源码与实际浏览器图分别记录。",
+      "软件GPU观测不代表实体电视帧率；未做实体手柄/电视测试。",
+      "Fixed-source attempt 3 also timed out on initial screenshot after obtaining exclusive browser lock. No further comparison attempts; graphics/gameplay/total remain null. This is an evidence-coverage limit, not a judgment that the game has poor graphics."
+    ],
+    "packagingNotes": "MIT；静态HTML+Three CDN需本地化。程序车/单赛道、20车、DRS及结算；车队/F1标识来源说明要保留。",
+    "status": "insufficient_clear_gameplay_visual_evidence"
+  },
+  {
+    "title": "Night Racer",
+    "slug": "night",
+    "repository": "zhuqipaopao-maker/night-racer-public",
+    "commit": "3a432cd3bf059dbaaa00d700f0f83e0e5313d40b",
+    "graphicsScore": 41,
+    "gameplayScore": 43,
+    "totalScore": 84,
+    "graphicsBreakdown": {
+      "sceneAndArtDirection": 13,
+      "vehicleDesign": 8,
+      "lightingAndEffects": 9,
+      "readability": 7,
+      "motionPresentation": 4
+    },
+    "gameplayBreakdown": {
+      "drivingAndControl": 13,
+      "competitionAndFeedback": 9,
+      "trackAndModeVariety": 9,
+      "progressionAndReplay": 9,
+      "completeRaceLoop": 3
+    },
+    "reviewEvidencePaths": [
+      "docs/racing-nine/reviews/driving/night/attempt-1/report.json",
+      "docs/racing-nine/reviews/driving/night/source-inventory.json",
+      "docs/racing-nine/reviews/driving/night/source-read-checks.json",
+      "docs/racing-nine/reviews/driving/night/attempt-2/report.json",
+      "docs/racing-nine/reviews/driving/night/attempt-2/started.png",
+      "docs/racing-nine/reviews/driving/night/attempt-2/after-input.png",
+      "docs/racing-nine/reviews/driving/night/additional-source-checks.json",
+      "docs/racing-nine/reviews/driving/night/attempt-3/not-executed.json"
+    ],
+    "bestGameplayImage": "docs/racing-nine/reviews/driving/night/attempt-2/started.png",
+    "evidenceKind": "本轮实际起跑赛场画面 + 固定源码玩法审查，尚未实际驾驶",
+    "confidence": "medium; graphics observed, control feel and finish not verified",
+    "rationale": "霓虹雨夜、金属车模和灯光较完整；场景建筑重复、部分高光过亮，1280x720 菜单赛道行右侧被截断。固定源码有漂移蓄氮气/小喷、5 AI、计时幽灵、多场景赛道和车库成长。60秒正常油门后仍在倒计时，不把慢模拟等同低画质或电视性能。",
+    "limitations": [
+      "未完整跑完比赛/生涯；源码确认的模式不等于都已实玩。",
+      "线上演示版本未证明与固定commit相同，固定源码与实际浏览器图分别记录。",
+      "软件GPU观测不代表实体电视帧率；未做实体手柄/电视测试。",
+      "只实际观察默认霓虹街区起跑画面。倒计时 3→2，速度与比赛计时仍为0；不声称本轮已实际驾驶。最后一次原生“流畅”画质菜单预览排队。",
+      "线上菜单含 Film Road，而固定 maps.js 没有该条目；冻结源码有11个常规+1个隐藏场景定义，不能把线上新增路线算进固定包。",
+      "1280x720 菜单赛道横排超出右边界，TV适配必须修复焦点与布局。",
+      "源 main.js 的 countdown 和 fpsT 都累加被 Math.min(...,0.05) 封顶的 dt；图中 22 FPS 不能当真实墙钟帧率。本轮没有改动时钟、时间倍率或模型。"
+    ],
+    "packagingNotes": "MIT代码及作者声明覆盖public模型；22MB模型需本地完整打包；联机/排行榜后台未公开，独立本地AI/计时可用。全菜单焦点与九键映射需改造。",
+    "status": "reviewed_with_start_grid_and_source"
+  },
+  {
+    "title": "CarRace",
+    "slug": "carrace",
+    "repository": "alexander-uspenskiy/carrace",
+    "commit": "8cc3f2b7dee27e13b848fc48afd73acb6ab58e19",
+    "graphicsScore": 37,
+    "gameplayScore": 41,
+    "totalScore": 78,
+    "graphicsBreakdown": {
+      "sceneAndArtDirection": 10,
+      "vehicleDesign": 8,
+      "lightingAndEffects": 6,
+      "readability": 9,
+      "motionPresentation": 4
+    },
+    "gameplayBreakdown": {
+      "drivingAndControl": 13,
+      "competitionAndFeedback": 9,
+      "trackAndModeVariety": 8,
+      "progressionAndReplay": 8,
+      "completeRaceLoop": 3
+    },
+    "reviewEvidencePaths": [
+      "docs/racing-nine/reviews/driving/carrace/author-images/05-race-chase.jpg",
+      "docs/racing-nine/reviews/driving/carrace/source-inventory.json",
+      "docs/racing-nine/reviews/driving/carrace/source-read-checks.json",
+      "docs/racing-nine/reviews/driving/carrace/attempt-1/report.json",
+      "docs/racing-nine/reviews/driving/carrace/attempt-1/started.png",
+      "docs/racing-nine/reviews/driving/carrace/attempt-1/after-input.png",
+      "docs/racing-nine/reviews/driving/carrace/attempt-2/report.json"
+    ],
+    "bestGameplayImage": "docs/racing-nine/reviews/driving/carrace/attempt-2/after-input.png",
+    "evidenceKind": "本轮实玩（正常菜单进入起跑，尚未实到驾驶）与固定源码审查",
+    "confidence": "medium: actual start-grid visuals and normal menus; gameplay depth corroborated in frozen source, no completed race",
+    "rationale": "Recognizable Formula geometry, coastal circuit and coherent broadcast HUD; simpler block scenery and lighting than stronger candidates; live browser pending.",
+    "limitations": [
+      "未完整跑完比赛/生涯；源码确认的模式不等于都已实玩。",
+      "线上演示版本未证明与固定commit相同，固定源码与实际浏览器图分别记录。",
+      "软件GPU观测不代表实体电视帧率；未做实体手柄/电视测试。",
+      "质量分暂以固定commit作者赛中图和原规则为依据，未冒称本轮实玩评分。",
+      "本轮首试按正常菜单选车/赛道/开始后仍停留赛前镜头，HUD尚无实际车速；不能把发出的方向输入说成已驾驶。已按屏幕提示Enter跳过镜头的第二次预览排队。线上v1.4.0·10152354与固定commit不同。",
+      "Actual Formula starting grid after normal menus and Enter intro skip. Red lights still showing, 0 km/h and lap clock 0:00.0; no driving observed. Readable HUD, orange Formula car, simple low-poly trees/grandstands and flat green verges."
+    ],
+    "packagingNotes": "MIT；vendor已本地Three1.31MB，src0.43MB；无需收录29.9MB营销录像。标准手柄已有部分支持，但电视全菜单/失焦取消需验。",
+    "status": "reviewed_with_start_grid_and_source"
+  },
+  {
+    "title": "Last Track",
+    "slug": "lasttrack",
+    "repository": "alexander-uspenskiy/lasttrack",
+    "commit": "7fdf7cfb6affb84748e11980f837255b12130bb7",
+    "graphicsScore": 39,
+    "gameplayScore": 43,
+    "totalScore": 82,
+    "graphicsBreakdown": {
+      "sceneAndArtDirection": 11,
+      "vehicleDesign": 8,
+      "lightingAndEffects": 8,
+      "readability": 8,
+      "motionPresentation": 4
+    },
+    "gameplayBreakdown": {
+      "drivingAndControl": 13,
+      "competitionAndFeedback": 9,
+      "trackAndModeVariety": 9,
+      "progressionAndReplay": 9,
+      "completeRaceLoop": 3
+    },
+    "reviewEvidencePaths": [
+      "docs/racing-nine/reviews/driving/lasttrack/author-images/race-hud.jpg",
+      "docs/racing-nine/reviews/driving/lasttrack/author-images/garage.jpg",
+      "docs/racing-nine/reviews/driving/lasttrack/source-inventory.json",
+      "docs/racing-nine/reviews/driving/lasttrack/source-read-checks.json",
+      "docs/racing-nine/reviews/driving/lasttrack/attempt-1/report.json",
+      "docs/racing-nine/reviews/driving/lasttrack/attempt-1/initial.png",
+      "docs/racing-nine/reviews/driving/lasttrack/attempt-2/report.json"
+    ],
+    "bestGameplayImage": "docs/racing-nine/reviews/driving/lasttrack/attempt-2/after-input.png",
+    "evidenceKind": "本轮实玩（正常菜单进入起跑，尚未实到驾驶）与固定源码审查",
+    "confidence": "medium: actual start-grid visuals and normal menus; gameplay depth corroborated in frozen source, no completed race",
+    "rationale": "Detailed neon showroom and distinct weapon HUD, but author race image has sparse block buildings and less material detail than garage; live browser pending.",
+    "limitations": [
+      "未完整跑完比赛/生涯；源码确认的模式不等于都已实玩。",
+      "线上演示版本未证明与固定commit相同，固定源码与实际浏览器图分别记录。",
+      "软件GPU观测不代表实体电视帧率；未做实体手柄/电视测试。",
+      "质量分暂以固定commit作者赛中图和原规则为依据，未冒称本轮实玩评分。",
+      "本轮首试只观察主菜单：正常NEW GAME点击在12秒预算内未完成，已排原生q=low显示设置重试，不据此推断实体机性能。",
+      "Actual original Low setting, normal menus to race. Countdown reached GO after 60-second ArrowUp, but 0 KPH and ammunition 200: driving/shooting not observed. Warm orange skyline, sparse geometric buildings, detailed road texture, clear cyan weapon/armour HUD and minimap.",
+      "Live demo displays v0.6.0, while fixed source package.json identifies v0.10.6; source-reviewed features cannot all be claimed demonstrated in that older live build."
+    ],
+    "packagingNotes": "MIT；实际assets7.99MB（音乐7.62MB）+src0.89MB+vendor1.31MB，不需34.8MBtrailer。需要九键驾驶/瞄准前射/武器选择及多级商店焦点。",
+    "status": "reviewed_with_start_grid_and_source"
+  },
+  {
+    "title": "Neuro Rivals",
+    "slug": "neuro",
+    "repository": "chloudde/neuro-rivals",
+    "commit": "f5129dd9534c4dfe7af1f4a7e4418e290658a245",
+    "graphicsScore": 33,
+    "gameplayScore": 41,
+    "totalScore": 74,
+    "graphicsBreakdown": {
+      "sceneAndArtDirection": 10,
+      "vehicleDesign": 5,
+      "lightingAndEffects": 5,
+      "readability": 9,
+      "motionPresentation": 4
+    },
+    "gameplayBreakdown": {
+      "drivingAndControl": 12,
+      "competitionAndFeedback": 9,
+      "trackAndModeVariety": 8,
+      "progressionAndReplay": 9,
+      "completeRaceLoop": 3
+    },
+    "reviewEvidencePaths": [
+      "docs/racing-nine/reviews/driving/neuro/attempt-2/initial.png",
+      "docs/racing-nine/reviews/driving/neuro/attempt-2/started.png",
+      "docs/racing-nine/reviews/driving/neuro/attempt-2/after-input.png",
+      "docs/racing-nine/reviews/driving/neuro/assessment.json",
+      "docs/racing-nine/reviews/driving/neuro/source-inventory.json",
+      "docs/racing-nine/reviews/driving/neuro/source-read-checks.json"
+    ],
+    "bestGameplayImage": "docs/racing-nine/reviews/driving/neuro/attempt-2/after-input.png",
+    "evidenceKind": "本轮实玩",
+    "confidence": "medium-high",
+    "rationale": "清楚的俯视2D赛场和HUD；神经网络对手、五赛道、冠军赛、训练及赛道编辑提供重玩性。",
+    "limitations": [
+      "未完整跑完比赛/生涯；源码确认的模式不等于都已实玩。",
+      "线上演示版本未证明与固定commit相同，固定源码与实际浏览器图分别记录。",
+      "软件GPU观测不代表实体电视帧率；未做实体手柄/电视测试。"
+    ],
+    "packagingNotes": "MIT；Canvas2D、程序图形和合成音效；浏览器标准手柄可复用，训练/赛道编辑还需电视交互方案。",
+    "status": "review_complete"
+  },
+  {
+    "title": "backroad rally",
+    "slug": "backroad",
+    "repository": "jason-c-dev/backroad-rally",
+    "commit": "e5542f96b9a9a2912fdaa160396054e81f022f23",
+    "graphicsScore": 44,
+    "gameplayScore": 43,
+    "totalScore": 87,
+    "graphicsBreakdown": {
+      "sceneAndArtDirection": 14,
+      "vehicleDesign": 8,
+      "lightingAndEffects": 9,
+      "readability": 9,
+      "motionPresentation": 4
+    },
+    "gameplayBreakdown": {
+      "drivingAndControl": 14,
+      "competitionAndFeedback": 8,
+      "trackAndModeVariety": 9,
+      "progressionAndReplay": 9,
+      "completeRaceLoop": 3
+    },
+    "reviewEvidencePaths": [
+      "docs/racing-nine/reviews/driving/backroad/author-images/slide-sunset.jpg",
+      "docs/racing-nine/reviews/driving/backroad/author-images/night.jpg",
+      "docs/racing-nine/reviews/driving/backroad/author-images/hud-fog.jpg",
+      "docs/racing-nine/reviews/driving/backroad/source-inventory.json",
+      "docs/racing-nine/reviews/driving/backroad/source-read-checks.json",
+      "docs/racing-nine/reviews/driving/backroad/attempt-1/report.json",
+      "docs/racing-nine/reviews/driving/backroad/attempt-1/initial.png",
+      "docs/racing-nine/reviews/driving/backroad/attempt-2/report.json"
+    ],
+    "bestGameplayImage": "docs/racing-nine/reviews/driving/backroad/author-images/slide-sunset.jpg",
+    "evidenceKind": "作者图 + 固定源码审查",
+    "confidence": "medium; live browser queued",
+    "rationale": "Consistent diorama forest/terrain, distinct weather/daylight and legible classic gauges; author gameplay images, live browser pending.",
+    "limitations": [
+      "未完整跑完比赛/生涯；源码确认的模式不等于都已实玩。",
+      "线上演示版本未证明与固定commit相同，固定源码与实际浏览器图分别记录。",
+      "软件GPU观测不代表实体电视帧率；未做实体手柄/电视测试。",
+      "质量分暂以固定commit作者赛中图和原规则为依据，未冒称本轮实玩评分。",
+      "本轮首试只观察主菜单：原菜单项是可交互文本而非button角色，初试选择器不匹配，已按真实可见文字纠正重试；这不是游戏错误。",
+      "Normal menu retry reached selected stage but bounded SwiftShader observation ended with original warm-up curtain still visible and speed 0. Author gameplay images remain the visual scoring basis, not the loading screenshot."
+    ],
+    "packagingNotes": "MIT代码；需保留Blender/ElevenLabs素材来源和字体许可证。public109.52MB，其中音频79.49MB、场景模型17.60MB；原生宿主需支持完整离线资源。已有标准Gamepad和菜单导航，纯数字九键需映射扳机/手刹/恢复。",
+    "status": "reviewed_with_author_gameplay_and_actual_menus"
+  }
+]

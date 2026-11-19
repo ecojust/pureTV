@@ -1,0 +1,647 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-19",
+  "reviewer": "racing_static_check (independent child of racing_review_arcade)",
+  "scope": "仅固定源码静态审读；未启动浏览器、未执行游戏、未改生产代码、未修改 comparison 或评分。",
+  "comparisonPath": "docs/racing-nine/reviews/arcade/comparison.json",
+  "comparisonSha256AtReport": "1eedf29fb6a8aab248efa5aa941d78c395cd45f6224452e221b91afcb563c357",
+  "comparisonMutableNote": "父代理正在补充比赛实测，comparison 后续哈希与分数可变；本文件结论只针对所列固定源码及描述。",
+  "summary": {
+    "games": 6,
+    "materialGameplayContradictionFound": false,
+    "corrections": "KART 字体依赖、Turbo 三种油门行为与车库用语已修正；Poly 构建与 Suburban 数量证据层次、Penguin 远程字体已精确化。",
+    "countsVerified": {
+      "penguintrackBakedTracks": 35,
+      "turboRushChallengeTypes": 14,
+      "turboRushLevelsPerType": 5,
+      "turboRushChallenges": 70
+    },
+    "licensePolicy": "许可未知与分发可行性单列，不用于画面/玩法分数；本审查不生成质量分。"
+  },
+  "reviews": [
+    {
+      "title": "Neon Racer",
+      "slug": "neon-racer",
+      "repository": "machuiwen/neon-racer",
+      "commit": "ea16989410c883baedd7062c359a0d54c826d3d6",
+      "claimsChecked": [
+        {
+          "claim": "3 名 AI、3 难度、1/3/5 圈",
+          "result": "confirmed_source",
+          "evidence": [
+            "js/main.js:48",
+            "js/main.js:71",
+            "js/main.js:78",
+            "js/main.js:94"
+          ],
+          "detail": "ais 由 [0,1,2] 创建；难度 easy/normal/hard，圈数白名单 [1,3,5]。单个 new Track() 与无赛道选择入口支持单赛道描述；未下载 track.js，不独立核几何闭合形状。"
+        },
+        {
+          "claim": "漂移蓄能、boost、拾取物、计时与本地最好成绩",
+          "result": "confirmed_source",
+          "evidence": [
+            "js/car.js:185",
+            "js/car.js:193",
+            "js/car.js:231",
+            "js/main.js:108",
+            "js/main.js:253",
+            "js/main.js:372"
+          ],
+          "detail": "漂移速度阈值与蓄 boost、boost 消耗、拾取物更新、圈完成和 bestLap 存储均有实际逻辑；不是仅菜单文案。"
+        },
+        {
+          "claim": "自动油门行为",
+          "result": "confirmed_source",
+          "evidence": [
+            "index.html:96",
+            "js/main.js:78",
+            "js/main.js:339",
+            "js/main.js:665"
+          ],
+          "detail": "初始设置默认随 IS_TOUCH，按钮可切换且持久化；开启后未制动会给油。因此不应推广为“只有触控才能自动油门”。当前 comparison 未作该错误断言。"
+        },
+        {
+          "claim": "Three.js 0.160 CDN/addons 与 importmap 依赖",
+          "result": "confirmed_source",
+          "evidence": [
+            "index.html:15"
+          ],
+          "detail": "HTML importmap 指向 jsDelivr three@0.160.0 和 addons；离线包需要固定本地依赖，老 WebView 能力仍需实际适配。"
+        }
+      ],
+      "sourcePaths": [
+        {
+          "path": "/dev/shm/racing-review-arcade/neon-racer/README.md",
+          "repositoryPath": "README.md",
+          "url": "https://github.com/machuiwen/neon-racer/blob/ea16989410c883baedd7062c359a0d54c826d3d6/README.md",
+          "bytes": 1295,
+          "sha256": "52453d6c2f4e43812a320aa7acbf79e0adfbedbdd598d45ee1456fc87e7ced8a"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/neon-racer/index.html",
+          "repositoryPath": "index.html",
+          "url": "https://github.com/machuiwen/neon-racer/blob/ea16989410c883baedd7062c359a0d54c826d3d6/index.html",
+          "bytes": 6239,
+          "sha256": "a5bf6056b84e3901e8f84af9f2ff6a9ae1f17247dde6eea0ba460c5ae2432db9"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/neon-racer/js/main.js",
+          "repositoryPath": "js/main.js",
+          "url": "https://github.com/machuiwen/neon-racer/blob/ea16989410c883baedd7062c359a0d54c826d3d6/js/main.js",
+          "bytes": 32014,
+          "sha256": "1f5b2e3bcebb11697bc61f478aa81d2c6754410e4e9d11b66bf3bfe7e7fbe870"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/neon-racer/js/car.js",
+          "repositoryPath": "js/car.js",
+          "url": "https://github.com/machuiwen/neon-racer/blob/ea16989410c883baedd7062c359a0d54c826d3d6/js/car.js",
+          "bytes": 13981,
+          "sha256": "c906ff175ffcbdd501a747bc2ec3c915ccae3d4e69093aa47d2133cfda29558c"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/neon-racer/js/scenery.js",
+          "repositoryPath": "js/scenery.js",
+          "url": "https://github.com/machuiwen/neon-racer/blob/ea16989410c883baedd7062c359a0d54c826d3d6/js/scenery.js",
+          "bytes": 12685,
+          "sha256": "43381015643b507c4d213dc0ec7cb697da81f106355ff43f64122b180e7c9f42"
+        }
+      ],
+      "mismatches": [],
+      "limitations": [
+        "本次只读已下载源码子集，未独立重抓完整 Git tree 或 LICENSE；许可结论沿用 source-audit.json 的原始核查，不把“本地未下载”当成“仓库不存在”。依赖及素材权利需在实际分发前按原始文件确认。",
+        "未执行游戏；此文件不验证截图、比赛手感、终点可达性或性能。"
+      ]
+    },
+    {
+      "title": "KART RACER",
+      "slug": "kart-racer",
+      "repository": "hungungworld/kart-racer",
+      "commit": "45f9c4979bb7c7d38c25df7cae3f328f10dcd42f",
+      "claimsChecked": [
+        {
+          "claim": "3 主题赛道、5 角色、4 车、6 色、道具/竞速模式",
+          "result": "confirmed_source",
+          "evidence": [
+            "index.html:176",
+            "index.html:395",
+            "index.html:399",
+            "index.html:407",
+            "index.html:414"
+          ],
+          "detail": "TRACKS 为 forest/desert/snow；CHARS 5 条、KARTS 4 条、COLORS 6 条，MODES 为 item/speed。"
+        },
+        {
+          "claim": "漂移蓄能与道具是已实现逻辑",
+          "result": "confirmed_source",
+          "evidence": [
+            "index.html:361",
+            "index.html:846",
+            "index.html:906",
+            "index.html:991"
+          ],
+          "detail": "Shift 漂移、Control/Z 加速、X/Space 道具；漂移状态按速度与输入启动，松开按蓄能时间给 boost。普通 playerInput.up/down 控制油门/制动。"
+        },
+        {
+          "claim": "Three.js 与可选 PeerJS 需要本地化",
+          "result": "confirmed_source",
+          "evidence": [
+            "index.html:142",
+            "index.html:2425"
+          ],
+          "detail": "Three r128 经外部脚本载入；PeerJS 1.5.4 在在线房间流程中延迟载入。单机与在线依赖应区分。"
+        },
+        {
+          "claim": "字体依赖",
+          "result": "confirmed_source",
+          "evidence": [
+            "index.html:9"
+          ],
+          "detail": "仅 Apple SD Gothic Neo、Malgun Gothic、Noto Sans KR、sans-serif 系统回退栈；固定 HTML 未含远程字体请求。"
+        }
+      ],
+      "sourcePaths": [
+        {
+          "path": "/dev/shm/racing-review-arcade/kart-racer/README.md",
+          "repositoryPath": "README.md",
+          "url": "https://github.com/hungungworld/kart-racer/blob/45f9c4979bb7c7d38c25df7cae3f328f10dcd42f/README.md",
+          "bytes": 5089,
+          "sha256": "8e3e7f885cfc84a55f2ee8d589daf630c3ee3a21de2ec52bbd9b99bc77dea924"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/kart-racer/index.html",
+          "repositoryPath": "index.html",
+          "url": "https://github.com/hungungworld/kart-racer/blob/45f9c4979bb7c7d38c25df7cae3f328f10dcd42f/index.html",
+          "bytes": 157001,
+          "sha256": "0a5000d085214567394ee62e3994f127c2e70c826d71a4f6a0346f4a4edf8d37"
+        }
+      ],
+      "mismatches": [
+        {
+          "originalStatement": "字体需要本地化",
+          "finding": "固定 HTML 只有系统字体栈，没有待下载字体资源。",
+          "status": "已告知父代理；父代理修正 comparison，复读确认已删除该说法。"
+        }
+      ],
+      "limitations": [
+        "本次只读已下载源码子集，未独立重抓完整 Git tree 或 LICENSE；许可结论沿用 source-audit.json 的原始核查，不把“本地未下载”当成“仓库不存在”。依赖及素材权利需在实际分发前按原始文件确认。",
+        "未运行 PeerJS 房间、物品命中或完整竞赛；源代码功能存在不代表这些流程已通过本轮实测。"
+      ]
+    },
+    {
+      "title": "Poly GT",
+      "slug": "poly-gt",
+      "repository": "hakanalverson-cyber/polytourismo",
+      "commit": "1ad6148bd97ecf303c180401fbd00d63b0fbe715",
+      "claimsChecked": [
+        {
+          "claim": "Python 组装 base/layers/assets",
+          "result": "confirmed_readme",
+          "evidence": [
+            "README.md:29",
+            "README.md:39"
+          ],
+          "detail": "README 明确 python3 build.py 并说明组装层、补丁和内嵌 car_pack2。build.py 未在本次下载子集中，不能称为本次独立代码验证；父代理已将 comparison 标为 README 声明。"
+        },
+        {
+          "claim": "Career、Quick Play、Time Trial、Versus、Elimination 当前入口",
+          "result": "confirmed_source",
+          "evidence": [
+            "src/layers/ui.js:233",
+            "src/layers/ui.js:255"
+          ],
+          "detail": "TABS 有 Career/Quick Play/Garage/Brand Central；Quick Play 子项为 Time Trial/Versus/Elimination，Cut Up 标 locked。存在 UI 及游戏层代码，但本次不运行各分支。"
+        },
+        {
+          "claim": "Free Roam 和旧赛道不能按 README 全算当前玩法",
+          "result": "confirmed_source",
+          "evidence": [
+            "src/layers/ui.js:165",
+            "src/layers/ui.js:233"
+          ],
+          "detail": "代码注释明确 Free Roam vaulted，旧 rally/generated maps vaulted，Quick Play 使用 imported circuits。保留代码不等于当前可用入口。"
+        },
+        {
+          "claim": "136 车型与部署 131 差异未解决",
+          "result": "partially_verified",
+          "evidence": [
+            "README.md:98"
+          ],
+          "detail": "136 是固定 README 的声明；未下载 cars10.js，未复验父代理观察的部署 131 辆，不将两者混为同一版本。"
+        },
+        {
+          "claim": "模型许可仍需逐项确认",
+          "result": "confirmed_readme",
+          "evidence": [
+            "README.md:56"
+          ],
+          "detail": "作者明确要求发布前确认每个 car pack license 并添加项目 LICENSE。该限制与画面/玩法评分分开。"
+        }
+      ],
+      "sourcePaths": [
+        {
+          "path": "/dev/shm/racing-review-arcade/poly-gt/README.md",
+          "repositoryPath": "README.md",
+          "url": "https://github.com/hakanalverson-cyber/polytourismo/blob/1ad6148bd97ecf303c180401fbd00d63b0fbe715/README.md",
+          "bytes": 8086,
+          "sha256": "b6edf91f33421366411c9b3ba28cc7af6538d92ebca0abadb05f240217571f52"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/poly-gt/base/Poly-Tourismo-v7.html",
+          "repositoryPath": "base/Poly-Tourismo-v7.html",
+          "url": "https://github.com/hakanalverson-cyber/polytourismo/blob/1ad6148bd97ecf303c180401fbd00d63b0fbe715/base/Poly-Tourismo-v7.html",
+          "bytes": 121632,
+          "sha256": "51f8f0196d8661cc6a1f46ac96744f7328b0abb4dd0a97ab9566a00946c35ad7"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/poly-gt/src/layers/bkworld.js",
+          "repositoryPath": "src/layers/bkworld.js",
+          "url": "https://github.com/hakanalverson-cyber/polytourismo/blob/1ad6148bd97ecf303c180401fbd00d63b0fbe715/src/layers/bkworld.js",
+          "bytes": 53516,
+          "sha256": "a37724591c172383a901384c6eae7363d5d0b51c07d083877f70fd50492e3e93"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/poly-gt/src/layers/frworld.js",
+          "repositoryPath": "src/layers/frworld.js",
+          "url": "https://github.com/hakanalverson-cyber/polytourismo/blob/1ad6148bd97ecf303c180401fbd00d63b0fbe715/src/layers/frworld.js",
+          "bytes": 35388,
+          "sha256": "3722ed24544d8a791262b1fb1b596c1d11a2544deb53dbb8c3e1271db1f2d96b"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/poly-gt/src/layers/race2.js",
+          "repositoryPath": "src/layers/race2.js",
+          "url": "https://github.com/hakanalverson-cyber/polytourismo/blob/1ad6148bd97ecf303c180401fbd00d63b0fbe715/src/layers/race2.js",
+          "bytes": 8233,
+          "sha256": "c07f4da45d836b069ac4f49dd3fc1281d758412243c522b62cbc62ea5f68cc11"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/poly-gt/src/layers/sim.js",
+          "repositoryPath": "src/layers/sim.js",
+          "url": "https://github.com/hakanalverson-cyber/polytourismo/blob/1ad6148bd97ecf303c180401fbd00d63b0fbe715/src/layers/sim.js",
+          "bytes": 7492,
+          "sha256": "9494e865d25f156b66ff7966776aa166a16948379710ebc36a4aa84b5441be9c"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/poly-gt/src/layers/ui.js",
+          "repositoryPath": "src/layers/ui.js",
+          "url": "https://github.com/hakanalverson-cyber/polytourismo/blob/1ad6148bd97ecf303c180401fbd00d63b0fbe715/src/layers/ui.js",
+          "bytes": 197911,
+          "sha256": "f9eb70656fe5162a011a8ec711637acd41cdc1104937c7d766aa69882be60068"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/poly-gt/src/layers/modes.js",
+          "repositoryPath": "src/layers/modes.js",
+          "url": "https://github.com/hakanalverson-cyber/polytourismo/blob/1ad6148bd97ecf303c180401fbd00d63b0fbe715/src/layers/modes.js",
+          "bytes": 33211,
+          "sha256": "a1e663896087741380589ea3e1fa5b670ec8ae900b27622712d361869a3b30fc"
+        }
+      ],
+      "mismatches": [
+        {
+          "originalStatement": "固定 build 用 Python 组装",
+          "finding": "本次语料无 build.py，依据仅为 README 的构建说明。",
+          "status": "已告知父代理；父代理确认 comparison 已明确 README-only。"
+        }
+      ],
+      "limitations": [
+        "本次只读已下载源码子集，未独立重抓完整 Git tree 或 LICENSE；许可结论沿用 source-audit.json 的原始核查，不把“本地未下载”当成“仓库不存在”。依赖及素材权利需在实际分发前按原始文件确认。",
+        "车型数量、完整依赖闭包、组装产物及所有模式实际可玩性未独立验证。",
+        "未将遗留代码或锁定菜单当作本轮实际体验。"
+      ]
+    },
+    {
+      "title": "Suburban Turismo",
+      "slug": "suburban-turismo",
+      "repository": "mtd-public/suburban-turismo",
+      "commit": "7469b708ed332c727f4c86e29b20eba2b420cc62",
+      "claimsChecked": [
+        {
+          "claim": "普通竞速 5 AI、终段 7 警车、战斗 6 车、TT ghost",
+          "result": "confirmed_source",
+          "evidence": [
+            "js/game.js:180",
+            "js/game.js:188",
+            "js/game.js:198",
+            "js/game.js:209",
+            "js/game.js:219"
+          ],
+          "detail": "普通赛 slot<6 含玩家，警车 slot=2..8 共7，战斗 k<6；TT 选择 proGhost/个人 best 并显示 ghost。路障、战斗更新与结束判断有逻辑。"
+        },
+        {
+          "claim": "6 路线、5 车",
+          "result": "confirmed_readme_menu_not_definition",
+          "evidence": [
+            "README.md:58",
+            "js/game.js:15",
+            "js/game.js:17",
+            "js/game.js:613",
+            "js/game.js:624"
+          ],
+          "detail": "README 列出6路线与5车型，game.js 使用外部 ROUTES/VEHICLE_ORDER 遍历菜单；routes.js/cars.js 未在子集。父代理报告 circuits/cars 实际菜单可作为另一证据，本审查未复验截图。"
+        },
+        {
+          "claim": "刹车＋转向漂移、碰撞、圈次/结果、最好成绩",
+          "result": "confirmed_source",
+          "evidence": [
+            "js/game.js:314",
+            "js/game.js:328",
+            "js/game.js:635",
+            "js/race.js"
+          ],
+          "detail": "漂移条件 brake>0.1、abs(steer)>0.25、speed>7，修改抓地力/偏航并保持油门；赛车更新、碰撞和结果/存储代码存在。?auto=1 是可选 CPU 测试模式，不是默认自动驾驶。"
+        },
+        {
+          "claim": "程序化城镇、季节和时间设置",
+          "result": "confirmed_source",
+          "evidence": [
+            "js/town.js:145",
+            "js/town.js:543",
+            "js/game.js:37",
+            "js/game.js:604"
+          ],
+          "detail": "town.js 生成郊区场景；秋/冬设置改变贴图和雪，时间菜单遍历 LIGHTS。只核设置连接，不声称已独立验证每个光照预设。"
+        },
+        {
+          "claim": "行人布娃娃/追逐仍属计划",
+          "result": "confirmed_readme",
+          "evidence": [
+            "README.md:8"
+          ],
+          "detail": "README phase2 状态明确把 pedestrian ragdoll/yell/chase 放在 next，comparison 正确未算成已完成体验。"
+        },
+        {
+          "claim": "本地 Three 与字体有利离线打包",
+          "result": "confirmed_source",
+          "evidence": [
+            "index.html:10",
+            "index.html:12"
+          ],
+          "detail": "importmap 指向 ./js/vendor/three.module.min.js，字体 preload 是本地 assets/fonts/LuckiestGuy.ttf；文件授权与包体仍需完整资源清点。"
+        }
+      ],
+      "sourcePaths": [
+        {
+          "path": "/dev/shm/racing-review-arcade/suburban-turismo/README.md",
+          "repositoryPath": "README.md",
+          "url": "https://github.com/mtd-public/suburban-turismo/blob/7469b708ed332c727f4c86e29b20eba2b420cc62/README.md",
+          "bytes": 8095,
+          "sha256": "449b6c3f7ace0cc0d8044a9ab544851ffb2491e721cbc29cffa6792ae52cf822"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/suburban-turismo/index.html",
+          "repositoryPath": "index.html",
+          "url": "https://github.com/mtd-public/suburban-turismo/blob/7469b708ed332c727f4c86e29b20eba2b420cc62/index.html",
+          "bytes": 2036,
+          "sha256": "faabcc29a1915c52bedd92032f104ba51ade198dd95f827ea718af921eda8b5a"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/suburban-turismo/js/game.js",
+          "repositoryPath": "js/game.js",
+          "url": "https://github.com/mtd-public/suburban-turismo/blob/7469b708ed332c727f4c86e29b20eba2b420cc62/js/game.js",
+          "bytes": 52414,
+          "sha256": "da1eaf60300f43e288581a45e6258c4ac168c8bee9b65653acf291e9001c937b"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/suburban-turismo/js/race.js",
+          "repositoryPath": "js/race.js",
+          "url": "https://github.com/mtd-public/suburban-turismo/blob/7469b708ed332c727f4c86e29b20eba2b420cc62/js/race.js",
+          "bytes": 10863,
+          "sha256": "26774b14c2481a295df8a6ddeda10b391303cd2418fb0628a8123a6bbe812e24"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/suburban-turismo/js/town.js",
+          "repositoryPath": "js/town.js",
+          "url": "https://github.com/mtd-public/suburban-turismo/blob/7469b708ed332c727f4c86e29b20eba2b420cc62/js/town.js",
+          "bytes": 54627,
+          "sha256": "d5bd744def5a255aa082b07fe159619ccdfe684c83792f2fd8a444b2581a7b85"
+        }
+      ],
+      "mismatches": [
+        {
+          "originalStatement": "game.js/race.js 有6路线、5车",
+          "finding": "这两个文件引用外部定义，确切数量在本地子集直接可核为 README；不能把未下载定义说成本次已读代码。",
+          "status": "已告知父代理；父代理已明确为实际菜单与固定 README 依据。"
+        }
+      ],
+      "limitations": [
+        "本次只读已下载源码子集，未独立重抓完整 Git tree 或 LICENSE；许可结论沿用 source-audit.json 的原始核查，不把“本地未下载”当成“仓库不存在”。依赖及素材权利需在实际分发前按原始文件确认。",
+        "combat.js、routes.js、cars.js、controls.js、drive.js 不在本次子集；战斗内部武器规则和全部驾驶模型未作二次审读。",
+        "未运行本轮任何游戏，不评实机兼容或帧率。"
+      ]
+    },
+    {
+      "title": "Penguintrack",
+      "slug": "penguintrack",
+      "repository": "silverninja71/penguin-track",
+      "commit": "0369367ff5aa76902bdf0736e4644efbbd3f1d82",
+      "claimsChecked": [
+        {
+          "claim": "35 关：25 Race、5 Platform、5 Training",
+          "result": "confirmed_source_readme",
+          "evidence": [
+            "js/levels/baked.js",
+            "js/game/campaign.js:12",
+            "README.md:47"
+          ],
+          "detail": "独立正则枚举 baked.js 顶层关卡 ID，共35：A01–E05 各5、P01–P05 及 T01–T05 各5；README 和 campaign 分类一致。未逐关通关。"
+        },
+        {
+          "claim": "奖牌、checkpoint/重生、PB、ghost 与回放",
+          "result": "confirmed_source",
+          "evidence": [
+            "js/game/campaign.js:151",
+            "js/game/race.js",
+            "js/game/replayer.js"
+          ],
+          "detail": "奖牌阈值展示、检查点/重生和记录/回放流程有代码。具体运动体验、每关可达性及0.25–4倍播放不计为本次实测。"
+        },
+        {
+          "claim": "编辑器/分享/多人不是本轮实玩",
+          "result": "confirmed_readme_scope",
+          "evidence": [
+            "README.md:47",
+            "README.md:80"
+          ],
+          "detail": "README 描述编辑器、分享、热座/分屏/PeerJS；本次未下载所有相关模块，保留为 README 功能声明与待验适配范围。"
+        },
+        {
+          "claim": "基础功能与可选 Pro TAS/Pro AI 付费范围分开",
+          "result": "confirmed_readme",
+          "evidence": [
+            "README.md:123"
+          ],
+          "detail": "Quick TAS 与 AI Lab presets 免费；Pro TAS 扩展逐帧编辑/优化/状态槽；Pro AI 扩展世代/线程/自定义网络/导入导出。README 标价 $3各/$5合购，说明 Firebase/Stripe/Worker；未读取真实配置、不确认当前部署实际收费状态、不使用开发解锁参数。"
+        },
+        {
+          "claim": "现代浏览器与离线依赖",
+          "result": "confirmed_source",
+          "evidence": [
+            "index.html:10",
+            "index.html:15",
+            "index.html:40"
+          ],
+          "detail": "Three/addons 为本地 importmap，旧浏览器检测依赖 module/importmap；同时 Google Fonts Baloo 2 仍远程请求，离线需要本地化字体。"
+        }
+      ],
+      "sourcePaths": [
+        {
+          "path": "/dev/shm/racing-review-arcade/penguintrack/README.md",
+          "repositoryPath": "README.md",
+          "url": "https://github.com/silverninja71/penguin-track/blob/0369367ff5aa76902bdf0736e4644efbbd3f1d82/README.md",
+          "bytes": 10005,
+          "sha256": "905d1c14f5bb17d8aefc71752d17fc8708e651ef199a1aac227bafb6b4b8d958"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/penguintrack/index.html",
+          "repositoryPath": "index.html",
+          "url": "https://github.com/silverninja71/penguin-track/blob/0369367ff5aa76902bdf0736e4644efbbd3f1d82/index.html",
+          "bytes": 2353,
+          "sha256": "c465ae4a454e2b62d9bfd966daa3a0576fad66f8c5d8851a297cd313a9cef4da"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/penguintrack/js/main.js",
+          "repositoryPath": "js/main.js",
+          "url": "https://github.com/silverninja71/penguin-track/blob/0369367ff5aa76902bdf0736e4644efbbd3f1d82/js/main.js",
+          "bytes": 15843,
+          "sha256": "f0244c291ecca51afe644ce3a272a88a64ca307150a564e64417992946502f63"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/penguintrack/js/game/race.js",
+          "repositoryPath": "js/game/race.js",
+          "url": "https://github.com/silverninja71/penguin-track/blob/0369367ff5aa76902bdf0736e4644efbbd3f1d82/js/game/race.js",
+          "bytes": 28848,
+          "sha256": "165fbd876a4a2c650d61888f19d6cc0e35e49aae93f8114b6539789964f249d7"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/penguintrack/js/game/replayer.js",
+          "repositoryPath": "js/game/replayer.js",
+          "url": "https://github.com/silverninja71/penguin-track/blob/0369367ff5aa76902bdf0736e4644efbbd3f1d82/js/game/replayer.js",
+          "bytes": 13403,
+          "sha256": "aeb05c4cb281c984ca6f44b320ad785d02879345816242c688f3d3b90035dff4"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/penguintrack/js/game/campaign.js",
+          "repositoryPath": "js/game/campaign.js",
+          "url": "https://github.com/silverninja71/penguin-track/blob/0369367ff5aa76902bdf0736e4644efbbd3f1d82/js/game/campaign.js",
+          "bytes": 9557,
+          "sha256": "51ab9f615a34c501210be0b06a5009b32eb5e1751273ff12815a30a6802215ee"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/penguintrack/js/game/menu.js",
+          "repositoryPath": "js/game/menu.js",
+          "url": "https://github.com/silverninja71/penguin-track/blob/0369367ff5aa76902bdf0736e4644efbbd3f1d82/js/game/menu.js",
+          "bytes": 6425,
+          "sha256": "9a1b184ad90c956b235cd5997c4f18a81235d20f167e27c9651feea699be6c2a"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/penguintrack/js/levels/baked.js",
+          "repositoryPath": "js/levels/baked.js",
+          "url": "https://github.com/silverninja71/penguin-track/blob/0369367ff5aa76902bdf0736e4644efbbd3f1d82/js/levels/baked.js",
+          "bytes": 151866,
+          "sha256": "f03235622a195a7dcac9227df82ee905f587f6d74b61a0ccf3d63d7c2fd0f81e"
+        }
+      ],
+      "mismatches": [
+        {
+          "originalStatement": "离线说明未单独列字体",
+          "finding": "index.html 有 Google Fonts Baloo 2 依赖；原笼统第三方依赖说明无冲突，但补明更准确。",
+          "status": "已告知父代理；父代理确认 comparison 已补 Baloo 2 本地化。"
+        }
+      ],
+      "limitations": [
+        "本次只读已下载源码子集，未独立重抓完整 Git tree 或 LICENSE；许可结论沿用 source-audit.json 的原始核查，不把“本地未下载”当成“仓库不存在”。依赖及素材权利需在实际分发前按原始文件确认。",
+        "MIT 与 Spear-Mace PVP Contributors 版权行沿用 source-audit 的既有读取；本审查本地未有 LICENSE 原文，不冒称二次读取。",
+        "Pro 权限、支付、账号、联机与编辑器未运行或完整审读；不把付费功能算成必须绕过的离线玩法。"
+      ]
+    },
+    {
+      "title": "Turbo Rush (ATEAMROCKX)",
+      "slug": "turbo-rush",
+      "repository": "ateamrockx/turbo-rush",
+      "commit": "c622197a3bedaba27ca94b9362672dbbc98b31fa",
+      "claimsChecked": [
+        {
+          "claim": "6 人比赛、15 场、前三解锁下一场",
+          "result": "confirmed_source",
+          "evidence": [
+            "index.html:437",
+            "index.html:455",
+            "index.html:485",
+            "index.html:1452",
+            "index.html:1837"
+          ],
+          "detail": "RACES 15 条分 day/sunset/night 三组，RIVAL_SETS 每组5 AI；raceUnlocked 依据上一场名次<=3。finishRace 记录名次、奖励并触发新场次显示。"
+        },
+        {
+          "claim": "70 个挑战",
+          "result": "confirmed_source",
+          "evidence": [
+            "index.html:1864",
+            "index.html:1906",
+            "index.html:2411"
+          ],
+          "detail": "CH_TYPES 有14个类型，各类 L=1..5，共70；chalDef 中各类型有实际参数与规则，startChal 构建对象、更新与结算逻辑存在。不是70条菜单占位。"
+        },
+        {
+          "claim": "单人键盘与触控油门、双人自动加速",
+          "result": "confirmed_source",
+          "evidence": [
+            "index.html:1522",
+            "index.html:2943"
+          ],
+          "detail": "单人 input.gas 或 touchMode 触发加速；双人 duoStep 在未制动时自动加速，不限定触控。当前 comparison 已准确分开三种情况。"
+        },
+        {
+          "claim": "车库成长与定制",
+          "result": "confirmed_source",
+          "evidence": [
+            "index.html:426",
+            "index.html:486",
+            "index.html:3402"
+          ],
+          "detail": "8款车型具有不同价格/极速/加速度/倍率，赛内金币购车；车漆、贴花、装饰可以购买/切换。未见独立发动机/氮气等级升级树，因此“金币购车与外观定制”比“车库升级”精确。"
+        },
+        {
+          "claim": "Canvas 2D、单 HTML 与远程字体",
+          "result": "confirmed_source",
+          "evidence": [
+            "index.html:11",
+            "index.html:420"
+          ],
+          "detail": "Canvas getContext(2d) 与程序化精灵/道路在同一 HTML；Google Fonts Bungee/Rubik 需本地化。浏览器布局与1280×720画面不由本审查重新验证。"
+        }
+      ],
+      "sourcePaths": [
+        {
+          "path": "/dev/shm/racing-review-arcade/turbo-rush/README.md",
+          "repositoryPath": "README.md",
+          "url": "https://github.com/ateamrockx/turbo-rush/blob/c622197a3bedaba27ca94b9362672dbbc98b31fa/README.md",
+          "bytes": 300,
+          "sha256": "9a52082f2ae1469c50a59d2e8b0491869a8532711bac3193b475a439ad5308a7"
+        },
+        {
+          "path": "/dev/shm/racing-review-arcade/turbo-rush/index.html",
+          "repositoryPath": "index.html",
+          "url": "https://github.com/ateamrockx/turbo-rush/blob/c622197a3bedaba27ca94b9362672dbbc98b31fa/index.html",
+          "bytes": 263393,
+          "sha256": "fb3b07e0e588df8a1622f8be9b64eb2d2aebdee61396aa0285a4ffe353f2e15a"
+        }
+      ],
+      "mismatches": [
+        {
+          "originalStatement": "自动油门只在触控模式",
+          "finding": "该说法忽略双人模式在非制动时自动加速；仅单人模式有触控/键盘之分。",
+          "status": "已告知父代理；父代理修正 comparison，复读确认三种情况已明确。"
+        },
+        {
+          "originalStatement": "车库升级",
+          "finding": "真实实现为金币购买性能不同车型和外观定制，不是独立零件等级升级。",
+          "status": "已告知父代理；父代理确认 comparison 已改为金币购车与外观定制，limitations 亦移除含糊升级表述。"
+        }
+      ],
+      "limitations": [
+        "本次只读已下载源码子集，未独立重抓完整 Git tree 或 LICENSE；许可结论沿用 source-audit.json 的原始核查，不把“本地未下载”当成“仓库不存在”。依赖及素材权利需在实际分发前按原始文件确认。",
+        "未实测任何挑战、购车、双人分屏或完整比赛；上述均为静态功能核查。"
+      ]
+    }
+  ]
+}
