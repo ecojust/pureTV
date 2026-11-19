@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Real short-child and synthetic proc boundaries; no Android/game run."""
 import importlib.util
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -125,7 +126,8 @@ class EnvironmentDiagnostics(unittest.TestCase):
         returned = diagnostics.run_wrapper([sys.executable, '-c', code, 'private-command-argument'], out,
                                            proc_root=self.root / 'missing-proc', cgroup_root=self.root / 'missing-cgroup',
                                            interval=.02, max_samples=samples, log_budget=budget,
-                                           kernel_reader=kernel or (lambda: {'status': 'unavailable', 'reason': 'TestFixture'}))
+                                           kernel_reader=kernel or (lambda: {'status': 'unavailable', 'reason': 'TestFixture'}),
+                                           oomd_reader=lambda _since: {'status': 'unavailable', 'reason': 'TestFixture'})
         return returned, out, json.loads((out / 'report.json').read_text())
 
     def test_real_short_lived_child_success_and_source_are_preserved(self):
@@ -184,11 +186,25 @@ class EnvironmentDiagnostics(unittest.TestCase):
         fields[0], fields[1], fields[19], fields[21] = 'S', '7', '123456', '32'
         (pid / 'stat').write_text('42 (qemu with spaces) ' + ' '.join(fields) + '\n')
         (pid / 'status').write_text('VmRSS: 128 kB\nVmHWM: 256 kB\nThreads: 4\nToken: private-token\n')
+        (pid / 'limits').write_text('Max address space         unlimited            unlimited            bytes\n'
+                                    'Max resident set          5000000000           5000000000           bytes\n'
+                                    'Token                     private-value\n')
+        (pid / 'cgroup').write_text('0::/private-ancestor/private-qemu\n')
+        actual_group = self.root / 'cgroup/private-ancestor/private-qemu'
+        actual_group.mkdir(parents=True)
+        for directory, count in [(actual_group, 3), (actual_group.parent, 4), (actual_group.parent.parent, 5)]:
+            (directory / 'memory.events').write_text('oom 0\noom_kill ' + str(count) + '\nprivate_token 99\n')
+            (directory / 'memory.max').write_text('5000000000\n')
         sampler = diagnostics.ProcSampler(proc, self.root / 'cgroup')
         first = sampler.sample()
         process = first['emulator']['observed'][0]
         self.assertEqual((process['pid'], process['starttimeTicks'], process['memory']['VmRSS']['value']), (42, 123456, 128))
         self.assertEqual(first['cgroup']['files']['memory.events']['fields'], {'oom': 2, 'oom_kill': 1})
+        self.assertEqual(process['limits']['values']['Max resident set']['soft'], '5000000000')
+        groups = process['cgroupAncestors']['groups']
+        self.assertEqual([group['files']['memory.events']['fields']['oom_kill'] for group in groups], [3, 4, 5])
+        self.assertEqual(groups[0]['pathSha256'], hashlib.sha256(b'/private-ancestor/private-qemu').hexdigest())
+        self.assertTrue(groups[-1]['namespaceRoot'])
         self.assertNotIn('private', json.dumps(first))
         fields[0], fields[49] = 'Z', '9'
         (pid / 'stat').write_text('42 (qemu with spaces) ' + ' '.join(fields) + '\n')
@@ -198,10 +214,73 @@ class EnvironmentDiagnostics(unittest.TestCase):
         for f in pid.iterdir():
             f.unlink()
         pid.rmdir()
+        (actual_group / 'memory.events').write_text('oom 1\noom_kill 9\n')
         gone = sampler.sample()['emulator']['gone'][0]
         self.assertEqual(gone['observation'], 'gone')
         self.assertEqual(gone['cause'], 'unknown')
         self.assertIsNone(gone['exitCode'])
+        self.assertEqual(gone['cgroupAfterDisappearance']['groups'][0]['files']['memory.events']['fields']['oom_kill'], 9)
+
+    def test_process_cgroup_ancestor_bound_and_unsafe_membership_are_explicit(self):
+        proc = self.root / 'proc/42'
+        proc.mkdir(parents=True)
+        group_root = self.root / 'groups'
+        deep = group_root.joinpath(*(['private-level'] * 12))
+        deep.mkdir(parents=True)
+        sampler = diagnostics.ProcSampler(proc.parent, group_root)
+        (proc / 'cgroup').write_text('0::/' + '/'.join(['private-level'] * 12) + '\n')
+        result = sampler.process_cgroup(proc, (42, 1))
+        self.assertEqual(len(result['groups']), 8)
+        self.assertEqual(result['omittedMiddleAncestors'], 5)
+        self.assertTrue(result['groups'][-1]['namespaceRoot'])
+        self.assertNotIn('private-level', json.dumps(result))
+        (proc / 'cgroup').write_text('0::/../../private-escape\n')
+        self.assertEqual(sampler.process_cgroup(proc, (42, 2))['reason'], 'UnsafeCgroupMembership')
+        (group_root / 'alias').symlink_to(self.root, target_is_directory=True)
+        (proc / 'cgroup').write_text('0::/alias\n')
+        self.assertEqual(sampler.process_cgroup(proc, (42, 3))['reason'], 'CgroupPathOutsideRoot')
+
+    def test_oomd_journal_summary_keeps_only_numeric_fields_and_hashes(self):
+        event = {'_SYSTEMD_UNIT': 'systemd-oomd.service', '_PID': '55', '__REALTIME_TIMESTAMP': '1234567',
+                 'MESSAGE': 'Killed /private-group/private-qemu due to memory pressure private-token'}
+        result = diagnostics.oomd_event(json.dumps(event).encode())
+        self.assertEqual(result['kind'], 'kill')
+        self.assertEqual(result['journalProcessId'], 55)
+        self.assertEqual(result['realtimeMicroseconds'], 1234567)
+        self.assertEqual(result['reportedCgroupPathSha256'], hashlib.sha256(b'/private-group/private-qemu').hexdigest())
+        self.assertNotIn('private', json.dumps(result))
+        self.assertIsNone(diagnostics.oomd_event(b'not-json private-token'))
+        self.assertIsNone(diagnostics.oomd_event(b'[]'))
+        self.assertIsNone(diagnostics.oomd_event(b'{"_SYSTEMD_UNIT":"private-unit","MESSAGE":"Killed /private-group"}'))
+
+    def test_real_oomd_reader_is_bounded_and_permission_failure_is_not_hidden(self):
+        actual_popen = subprocess.Popen
+        event = {'_SYSTEMD_UNIT': 'systemd-oomd.service', 'MESSAGE': 'Killed /private-group due to pressure'}
+        program = 'import sys\nfor i in range(100): print(' + repr(json.dumps(event)) + ')\nprint("private-stderr",file=sys.stderr)'
+        commands = []
+        def substitute(command, **kwargs):
+            commands.append(command)
+            return actual_popen([sys.executable, '-c', program], **kwargs)
+        with patch.object(diagnostics.subprocess, 'Popen', side_effect=substitute):
+            result = diagnostics.oomd_snapshot(1234)
+        self.assertEqual(result['exitCode'], 0)
+        self.assertEqual(len(result['events']), 32)
+        self.assertEqual(result['omittedEvents'], 68)
+        self.assertNotIn('private', json.dumps(result))
+        self.assertIn('--since=@1234', commands[0])
+        program = 'import sys;print("sudo: a password is required; private-token",file=sys.stderr);sys.exit(1)'
+        with patch.object(diagnostics.subprocess, 'Popen', side_effect=substitute):
+            denied = diagnostics.oomd_snapshot(1234)
+        self.assertEqual(denied['status'], 'unavailable')
+        self.assertTrue(denied['permissionDenied'])
+        self.assertNotIn('private', json.dumps(denied))
+        program = 'import sys,time;sys.stdout.write("x"*300000);sys.stdout.flush();time.sleep(10)'
+        started = time.monotonic()
+        with patch.object(diagnostics.subprocess, 'Popen', side_effect=substitute):
+            bounded = diagnostics.oomd_snapshot(1234)
+        self.assertLess(time.monotonic() - started, 5)
+        self.assertTrue(bounded['captureLimited'])
+        self.assertLessEqual(bounded['unfilteredBytesRead'], 256 * 1024)
 
     def test_kernel_filter_bounds_matching_lines_and_omits_unrelated_text(self):
         actual_popen = subprocess.Popen
@@ -226,7 +305,7 @@ class EnvironmentDiagnostics(unittest.TestCase):
         driver = self.root / 'driver.py'
         driver.write_text('import importlib.util,sys\nfrom pathlib import Path\n'
                           + 's=importlib.util.spec_from_file_location("diagnostics",' + repr(str(MODULE_PATH)) + ');m=importlib.util.module_from_spec(s);s.loader.exec_module(m)\n'
-                          + 'sys.exit(m.run_wrapper([sys.executable,"-c",' + repr(child_code) + '],Path(' + repr(str(out)) + '),interval=.02,max_samples=4,kernel_reader=lambda:{"status":"test-fixture"}))\n')
+                          + 'sys.exit(m.run_wrapper([sys.executable,"-c",' + repr(child_code) + '],Path(' + repr(str(out)) + '),interval=.02,max_samples=4,kernel_reader=lambda:{"status":"test-fixture"},oomd_reader=lambda since:{"status":"test-fixture"}))\n')
         process = subprocess.Popen([sys.executable, str(driver)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         try:
             deadline = time.monotonic() + 5

@@ -224,7 +224,8 @@ jobs:
           avd-name: JoystickGamesValidation
           force-avd-creation: true
           disable-animations: true
-          emulator-options: -no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
+          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           script: >-
             python3 joystick-games/tools/android-environment-diagnostics.py
             --output "$RUNNER_TEMP/runtime/$GAME/environment-diagnostics" --

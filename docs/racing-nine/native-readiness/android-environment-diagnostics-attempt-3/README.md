@@ -1,0 +1,9 @@
+# Android process-limit diagnostic comparison
+
+This is local validation of the next controlled original-signed-APK runtime reuse attempt. The only emulator option changed is guest RAM from 3072 to 2048 MiB; stable build 16970787, GPU option, original APK, game clock and assets remain outside this patch. This tests an unproven resource-limit hypothesis after Pon runs 44608428271 and 44611956100 both lost QEMU near 4,891,7xx KiB RSS. Host available memory, the previous wrapper cgroup, and kernel output did not establish why it disappeared.
+
+The wrapper now reads each observed QEMU PID's own whitelisted limits and unified cgroup membership. It records numerical memory counters from that group and up to eight ancestors (leaf, nearby parents, and namespace root); deeper omitted groups are explicit. Only SHA256 identities of group paths are retained. It rereads the last observed group once when the PID disappears; an absent PID still has unknown exit code/cause.
+
+The bounded read-only systemd-oomd journal query starts at the earliest initial observed emulator start time (or wrapper start). Its export contains numerical timestamps/PIDs, event classification, message hashes and an optional reported group path hash, never raw messages, paths, environment or command arguments. Missing permissions/nonzero exit/read/time budgets remain explicit. The diagnostic is not proof that any retained event caused the emulator exit. No OOM policy or security setting is changed.
+
+All 14 local tests passed, including real short-lived child success/failure/signal handling, synthetic per-PID groups differing from the wrapper, ancestor limits, disappearance counters, path rejection, journal redaction/permission/budget, and existing crash-summary boundaries. actionlint passed. These are diagnostic helper tests, not Android/game acceptance. Exact executed source copies, SHA256 inventory and logs are retained here. Root alone controls the subsequent single CI dispatch.

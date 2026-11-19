@@ -22,7 +22,7 @@ import time
 INTERVAL_SECONDS = 5
 MAX_SAMPLES = 540
 MAX_LOG_BYTES = 2 * 1024 * 1024
-MAX_SAMPLE_BYTES = 16 * 1024
+MAX_SAMPLE_BYTES = 32 * 1024
 MAX_PROCESSES = 16
 MAX_SCANNED_PIDS = 4096
 MAX_SOURCE_BYTES = 64 * 1024
@@ -40,6 +40,9 @@ CRASH_FILE = re.compile(r'[a-fA-F0-9-]{16,64}\.(?:dmp|meta)\Z')
 MAX_CRASH_FILE_BYTES = 16 * 1024 * 1024
 MAX_CRASH_TOTAL_BYTES = 32 * 1024 * 1024
 MAX_CRASH_FILES = 32
+PROCESS_LIMIT_NAMES = ('Max address space', 'Max data size', 'Max resident set', 'Max cpu time',
+                       'Max core file size', 'Max locked memory', 'Max processes', 'Max open files')
+MAX_CGROUP_ANCESTORS = 8
 
 
 def now():
@@ -78,6 +81,75 @@ class ProcSampler:
         self.proc_root = Path(proc_root)
         self.cgroup_root = Path(cgroup_root)
         self.previous = {}
+        self.process_cgroups = {}
+
+    def limits(self, path):
+        text, error = bounded_text(path / 'limits', 16384)
+        if error:
+            return {'status': 'unavailable', 'error': error}
+        values = {}
+        for line in text.splitlines():
+            for name in PROCESS_LIMIT_NAMES:
+                if line.startswith(name + ' '):
+                    fields = line[len(name):].split()
+                    if len(fields) in (2, 3) and all(re.fullmatch(r'[0-9]+|unlimited', x) for x in fields[:2]) and (len(fields) == 2 or fields[2] in ('bytes', 'seconds', 'processes', 'files')):
+                        values[name] = {'soft': fields[0], 'hard': fields[1], 'unit': fields[2] if len(fields) == 3 else None}
+        return {'status': 'read', 'values': values}
+
+    def cgroup_ancestors(self, directory):
+        root = self.cgroup_root.resolve()
+        directory = directory.resolve()
+        if not directory.is_relative_to(root):
+            return {'status': 'unavailable', 'reason': 'CgroupPathOutsideRoot'}
+        paths = [directory]
+        while paths[-1] != root:
+            paths.append(paths[-1].parent)
+        selected = list(enumerate(paths))
+        omitted = max(0, len(selected) - MAX_CGROUP_ANCESTORS)
+        if omitted:
+            selected = selected[:MAX_CGROUP_ANCESTORS - 1] + [selected[-1]]
+        groups = []
+        for depth, path in selected:
+            relative = path.relative_to(root).as_posix()
+            identity = '/' if relative == '.' else '/' + relative
+            group = {'depth': depth, 'namespaceRoot': path == root,
+                     'pathSha256': hashlib.sha256(identity.encode()).hexdigest(), 'files': {}}
+            for name in CGROUP_FILES + ('memory.high', 'memory.oom.group'):
+                text, error = bounded_text(path / name, 4096)
+                if error:
+                    value = {'status': 'unavailable', 'error': error}
+                elif name in ('memory.events', 'memory.events.local'):
+                    values = {}
+                    for line in text.splitlines():
+                        fields = line.split()
+                        if len(fields) == 2 and fields[0] in {'low', 'high', 'max', 'oom', 'oom_kill', 'oom_group_kill', 'sock_throttled'} and fields[1].isdigit():
+                            values[fields[0]] = int(fields[1])
+                    value = {'status': 'read', 'fields': values}
+                elif re.fullmatch(r'(?:[0-9]+|max)\s*', text):
+                    value = {'status': 'read', 'value': text.strip()}
+                else:
+                    value = {'status': 'unavailable', 'reason': 'UnexpectedCounterFormat'}
+                group['files'][name] = value
+            groups.append(group)
+        return {'status': 'sampled', 'groups': groups, 'omittedMiddleAncestors': omitted,
+                'pathNamesRecorded': False, 'maximumGroups': MAX_CGROUP_ANCESTORS}
+
+    def process_cgroup(self, path, key):
+        text, error = bounded_text(path / 'cgroup', 16384)
+        if error:
+            return {'status': 'unavailable', 'error': error}
+        memberships = [line.split(':', 2)[2] for line in text.splitlines() if line.startswith('0::')]
+        if len(memberships) != 1:
+            return {'status': 'unavailable', 'reason': 'UnifiedCgroupMembershipUnavailable'}
+        relative = Path(memberships[0].lstrip('/'))
+        if '..' in relative.parts or len(relative.parts) > 64:
+            return {'status': 'unavailable', 'reason': 'UnsafeCgroupMembership'}
+        directory = (self.cgroup_root / relative).resolve()
+        if not directory.is_relative_to(self.cgroup_root.resolve()):
+            return {'status': 'unavailable', 'reason': 'CgroupPathOutsideRoot'}
+        if key in self.process_cgroups or len(self.process_cgroups) < MAX_PROCESSES:
+            self.process_cgroups[key] = directory
+        return self.cgroup_ancestors(directory)
 
     def memory(self):
         text, error = bounded_text(self.proc_root / 'meminfo')
@@ -163,6 +235,8 @@ class ProcSampler:
                     starttime = None
                     entry['statError'] = {'type': 'UnexpectedProcStatFormat'}
             entry['memory'] = {'error': status_error} if status_error else numeric_fields(status_text, PROCESS_KEYS)
+            entry['limits'] = self.limits(path)
+            entry['cgroupAncestors'] = self.process_cgroup(path, (pid, starttime))
             found[(pid, starttime)] = entry
         # Only absence from proc is called gone; read failures or PID reuse stay explicit.
         gone = []
@@ -171,6 +245,8 @@ class ProcSampler:
                 exists = (self.proc_root / str(pid)).exists()
                 gone.append({'pid': pid, 'starttimeTicks': started, 'observation': 'not_observed' if exists else 'gone',
                              'exitCode': None, 'cause': 'unknown'})
+                if (pid, started) in self.process_cgroups:
+                    gone[-1]['cgroupAfterDisappearance'] = self.cgroup_ancestors(self.process_cgroups[(pid, started)])
         self.previous = found
         return {'status': 'sampled', 'observed': list(found.values()), 'gone': gone,
                 'scanTruncated': truncated, 'exitCode': None, 'exitCodeReason': 'EmulatorIsNotAnOwnedChild'}
@@ -416,6 +492,97 @@ def kernel_oom_snapshot():
     return result
 
 
+def oomd_event(raw):
+    """Keep numeric journal fields and hashes, never arbitrary message/path text."""
+    try:
+        event = json.loads(raw)
+    except (ValueError, UnicodeError):
+        return None
+    if not isinstance(event, dict) or (event.get('_SYSTEMD_UNIT') != 'systemd-oomd.service'
+                                      and event.get('SYSLOG_IDENTIFIER') != 'systemd-oomd'):
+        return None
+    message = event.get('MESSAGE')
+    if not isinstance(message, str):
+        return None
+    lowered = message.lower()
+    kind = 'kill' if re.search(r'\bkill(?:ed|ing)?\b', lowered) else 'pressure' if 'pressure' in lowered else 'swap' if 'swap' in lowered else 'other'
+    result = {'kind': kind, 'messageSha256': hashlib.sha256(message.encode()).hexdigest()}
+    for source, target in [('__REALTIME_TIMESTAMP', 'realtimeMicroseconds'), ('_PID', 'journalProcessId')]:
+        value = event.get(source)
+        result[target] = int(value) if isinstance(value, str) and re.fullmatch(r'[0-9]{1,20}', value) else None
+    group = re.search(r'\bKill(?:ed|ing)\s+[\'\"]?(/[^\s\'\"]+)', message)
+    if group and len(group[1]) <= 4096:
+        result['reportedCgroupPathSha256'] = hashlib.sha256(group[1].encode()).hexdigest()
+    return result
+
+
+def oomd_snapshot(since_epoch):
+    assert type(since_epoch) is int and since_epoch >= 0
+    result = {'at': now(), 'sinceEpochSeconds': since_epoch, 'events': [],
+              'method': 'Read-only systemd-oomd journal numeric/hash summary',
+              'rawMessagesRecorded': False, 'rootCauseProven': False}
+    command = ['sudo', '-n', 'journalctl', '--no-pager', '--quiet', '-o', 'json',
+               '-u', 'systemd-oomd.service', '--since=@' + str(since_epoch)]
+    try:
+        child = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except OSError as error:
+        return dict(result, status='unavailable', error=error_record(error))
+    selector = selectors.DefaultSelector()
+    selector.register(child.stdout, selectors.EVENT_READ, 'stdout')
+    selector.register(child.stderr, selectors.EVENT_READ, 'stderr')
+    started, total, omitted = time.monotonic(), 0, 0
+    pending, stderr = b'', bytearray()
+    limited, dropping = False, False
+    try:
+        while selector.get_map():
+            if time.monotonic() - started >= 3 or total >= 256 * 1024:
+                limited = True
+                child.terminate()
+                break
+            for key, _ in selector.select(.05):
+                data = os.read(key.fileobj.fileno(), min(16384, 256 * 1024 - total))
+                if not data:
+                    selector.unregister(key.fileobj)
+                    continue
+                total += len(data)
+                if key.data == 'stderr':
+                    stderr.extend(data[:max(0, 1024 - len(stderr))])
+                    continue
+                for part in data.splitlines(keepends=True):
+                    complete = part.endswith(b'\n')
+                    if not dropping:
+                        pending += part
+                        if len(pending) > 32768:
+                            pending, dropping = b'', True
+                            omitted += 1
+                    if complete:
+                        event = None if dropping else oomd_event(pending)
+                        if event:
+                            if len(result['events']) < 32:
+                                result['events'].append(event)
+                            else:
+                                omitted += 1
+                        pending, dropping = b'', False
+        try:
+            code = child.wait(timeout=1)
+        except subprocess.TimeoutExpired:
+            limited = True
+            child.kill()
+            code = child.wait(timeout=1)
+    finally:
+        selector.close()
+        child.stdout.close()
+        child.stderr.close()
+        if child.poll() is None:
+            child.kill()
+            child.wait(timeout=1)
+    result.update(status='read' if code == 0 and not limited else 'unavailable', exitCode=code,
+                  captureLimited=limited, unfilteredBytesRead=total, omittedEvents=omitted,
+                  stderrBytesRetained=len(stderr), stderrSha256=hashlib.sha256(stderr).hexdigest(),
+                  permissionDenied=any(word in stderr.lower() for word in (b'permission denied', b'password is required', b'not allowed')))
+    return result
+
+
 class BoundedLog:
     def __init__(self, path, budget):
         self.stream = path.open('xb')
@@ -441,7 +608,8 @@ class BoundedLog:
 
 def run_wrapper(command, output, *, proc_root=Path('/proc'), cgroup_root=Path('/sys/fs/cgroup'),
                 interval=INTERVAL_SECONDS, max_samples=MAX_SAMPLES, log_budget=MAX_LOG_BYTES,
-                kernel_reader=kernel_oom_snapshot, crash_root=Path('/tmp/android-runner')):
+                kernel_reader=kernel_oom_snapshot, crash_root=Path('/tmp/android-runner'),
+                oomd_reader=oomd_snapshot):
     assert command and 0 < interval <= INTERVAL_SECONDS and 2 <= max_samples <= MAX_SAMPLES
     assert 0 < log_budget <= MAX_LOG_BYTES
     output = Path(output)
@@ -470,6 +638,7 @@ def run_wrapper(command, output, *, proc_root=Path('/proc'), cgroup_root=Path('/
     forwarded_at = None
     code = None
     sampled = 0
+    journal_since = int(time.time())
 
     def handle_signal(number, _frame):
         if not signals:
@@ -488,6 +657,10 @@ def run_wrapper(command, output, *, proc_root=Path('/proc'), cgroup_root=Path('/
             previous_handlers[number] = signal.signal(number, handle_signal)
         report['kernelBefore'] = diagnostic(kernel_reader, {'status': 'unavailable'})
         before = diagnostic(sampler.sample, {'at': now(), 'status': 'unavailable'})
+        for process in before.get('emulator', {}).get('observed', []):
+            stamp = process.get('startTimeEpochSeconds')
+            if isinstance(stamp, (int, float)) and 0 <= stamp <= journal_since:
+                journal_since = min(journal_since, int(stamp))
         crashes.remember(before)
         diagnostic(lambda: log.append(dict(before, phase='before-child')), False)
         sampled = 1
@@ -532,6 +705,7 @@ def run_wrapper(command, output, *, proc_root=Path('/proc'), cgroup_root=Path('/
         sampled += 1
         diagnostic(log.close, None)
         report['kernelAfter'] = diagnostic(kernel_reader, {'status': 'unavailable'})
+        report['systemdOomdAfter'] = diagnostic(lambda: oomd_reader(journal_since), {'status': 'unavailable'})
         def write_crashes():
             value = crashes.collect()
             raw = (json.dumps(value, ensure_ascii=True, indent=2) + '\n').encode()
