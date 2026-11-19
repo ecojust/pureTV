@@ -41,6 +41,11 @@ on:
         required: false
         default: false
         type: boolean
+      supervise_pon_emulator:
+        description: Opt in to default-off launcher exit diagnostics for the exact original Pon APK only
+        required: false
+        default: false
+        type: boolean
 
 concurrency:
   group: joystick-catalog-android-runtime-${{ github.ref }}-${{ inputs.batch }}
@@ -59,6 +64,7 @@ env:
   ARTIFACT_ID: ${{ inputs.artifact_id }}
   ARTIFACT_ATTEMPT: ${{ inputs.artifact_attempt }}
   CONFIRM_BACKROAD_INSTALL: ${{ inputs.confirm_backroad_install && 'true' || 'false' }}
+  SUPERVISE_PON_EMULATOR: ${{ inputs.supervise_pon_emulator && 'true' || 'false' }}
 
 jobs:
   select:
@@ -101,8 +107,15 @@ jobs:
               assert os.environ['ARTIFACT_SOURCE']=='d548bccbe816bd4c03620388556ceef507b67d30'
               assert os.environ['ARTIFACT_RUN']=='44599353036' and os.environ['ARTIFACT_ID']=='14567692465'
               assert os.environ['ARTIFACT_ATTEMPT']=='1' and not os.environ['ARTIFACT_EXPORT']
+          assert os.environ['SUPERVISE_PON_EMULATOR'] in ('true','false')
+          if os.environ['SUPERVISE_PON_EMULATOR']=='true':
+              assert os.environ['GAMES']=='ponpoko-kart' and os.environ['BATCH']=='racing-01'
+              assert os.environ['ARTIFACT_SOURCE']=='8f283c73f52f857777306eafc88f710262367834'
+              assert os.environ['ARTIFACT_RUN']=='44597115244' and os.environ['ARTIFACT_EXPORT']=='4249f5c0ec3053a1dec652a7880a040e1bb143f0'
+              assert not os.environ['ARTIFACT_ID'] and not os.environ['ARTIFACT_ATTEMPT']
+              assert os.environ['CONFIRM_BACKROAD_INSTALL']=='false'
           out=Path(os.environ['RUNNER_TEMP'])/'provenance';out.mkdir()
-          (out/'requested-inputs.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'batch':os.environ['BATCH'],'games':os.environ['GAMES'],'confirmBackroadInstall':os.environ['CONFIRM_BACKROAD_INSTALL']=='true'},indent=2)+'\n')
+          (out/'requested-inputs.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'batch':os.environ['BATCH'],'games':os.environ['GAMES'],'confirmBackroadInstall':os.environ['CONFIRM_BACKROAD_INSTALL']=='true','supervisePonEmulator':os.environ['SUPERVISE_PON_EMULATOR']=='true'},indent=2)+'\n')
           PY
           python3 joystick-games/tools/android-catalog.py select --batch "$BATCH" --games "$GAMES" | tee "$RUNNER_TEMP/provenance/selection.json"
       - uses: actions/checkout@v4
@@ -206,6 +219,7 @@ jobs:
           python3 joystick-games/tools/android-runtime-artifact-tests.py 2>&1 | tee "$RUNNER_TEMP/reuse-contracts.log"
           python3 -B joystick-games/qa/android/test_environment_diagnostics.py 2>&1 | tee "$RUNNER_TEMP/environment-diagnostics-tests.log"
           python3 -B joystick-games/qa/android/test_install_confirmation.py 2>&1 | tee "$RUNNER_TEMP/install-confirmation-tests.log"
+          python3 -B joystick-games/qa/android/test_emulator_supervisor.py 2>&1 | tee "$RUNNER_TEMP/emulator-supervisor-tests.log"
       - name: Bind original signed packages to their frozen source and current QA checkout
         run: |
           set -euo pipefail
@@ -225,7 +239,8 @@ jobs:
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
       - name: Run normal and occupied-port QA independently against unchanged signed bytes
-        uses: reactivecircus/android-emulator-runner@v2
+        # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
           # Controlled original-APK comparison: official stable 37.3.10 (2026-11-19), not a claimed crash fix.
           # https://dl.google.com/android/repository/repository2-3.xml — emulator-linux_x64-16970787.zip
@@ -239,12 +254,22 @@ jobs:
           disable-animations: true
           # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
           emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          pre-emulator-launch-script: >-
+            python3 joystick-games/tools/android-emulator-supervisor.py prepare
+            --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
           script: >-
+            python3 joystick-games/tools/android-emulator-supervisor.py assert-ready
+            --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor" &&
             python3 joystick-games/tools/android-environment-diagnostics.py
             --output "$RUNNER_TEMP/runtime/$GAME/environment-diagnostics" --
             python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
             --input "$RUNNER_TEMP/input" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
             --confirm-backroad-install "$CONFIRM_BACKROAD_INSTALL"
+      - name: Restore the exact disposable SDK launcher after optional supervision
+        if: always() && inputs.supervise_pon_emulator
+        run: >-
+          python3 joystick-games/tools/android-emulator-supervisor.py restore
+          --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
       - name: Preserve both immutable source identities, every result and exact executed scripts
         if: always()
         run: |
@@ -259,7 +284,7 @@ jobs:
               spec=importlib.util.spec_from_file_location('runtime_inputs',Path('joystick-games/tools/android-runtime-inputs.py'))
               verifier=importlib.util.module_from_spec(spec);spec.loader.exec_module(verifier)
               verifier.preserve_evidence(inputs,out/'verified-inputs')
-          for name in ['qa-contracts.log','artifact-contracts.log','reuse-contracts.log','environment-diagnostics-tests.log','install-confirmation-tests.log','input-verification.log']:
+          for name in ['qa-contracts.log','artifact-contracts.log','reuse-contracts.log','environment-diagnostics-tests.log','install-confirmation-tests.log','emulator-supervisor-tests.log','input-verification.log']:
               if (scratch/name).is_file():shutil.copyfile(scratch/name,out/name)
           paths=list(Path('joystick-games/qa/android').rglob('*.py'))+list(Path('joystick-games/qa/android').rglob('*.java'))+list(Path('joystick-games/qa/android/fixtures').glob('*.json'))
           paths+=list(Path('joystick-games/tools').glob('android-*.py'))

@@ -1,0 +1,56 @@
+{
+  "status": "no_blocking_findings",
+  "reviewedAt": "2026-11-19T21:47:16.684566+00:00",
+  "scope": "Independent read-only review of three frozen sources, exact executed copies and existing evidence; no tests repeated, emulator launched, SDK changed or workflow dispatched",
+  "sourceFiles": [
+    {
+      "path": "joystick-games/tools/android-emulator-supervisor.py",
+      "bytes": 20509,
+      "sha256": "7822a7e077adbdcc187f437c651bf1a5c536093e28f10015423f414085cd17c1",
+      "copy": "executed-source/joystick-games/tools/android-emulator-supervisor.py"
+    },
+    {
+      "path": "joystick-games/qa/android/test_emulator_supervisor.py",
+      "bytes": 15863,
+      "sha256": "b87a0d47702e1abe763fcddc8cd64e6036564ca314181818f8ea0190eb790102",
+      "copy": "executed-source/joystick-games/qa/android/test_emulator_supervisor.py"
+    },
+    {
+      "path": ".github/workflows/joystick-catalog-android-runtime.yml",
+      "bytes": 25496,
+      "sha256": "582a5fe30c8d497ef1a4712fc99a89c5f2058526a209efd4a676b964cde75fa5",
+      "copy": "executed-source/.github/workflows/joystick-catalog-android-runtime.yml"
+    }
+  ],
+  "checks": {
+    "defaultOffAndExactPonOriginalArtifactGate": true,
+    "existingBackroadOptInPreserved": true,
+    "sameResolvedUpstreamActionPinned": true,
+    "originalLauncherHashModeAndBytesPreserved": true,
+    "prelaunchOriginalWrappedVersionExitStdoutStderrCompared": true,
+    "mismatchedQueryOrPreparationFailureRestoresOriginal": true,
+    "failedPrelaunchHookCannotRunQaDueToAssertReadyAndAndGate": true,
+    "fixedOriginalArgv0AndAvdArguments": true,
+    "sameDirectoryOriginalExecutableAndWhitelistedQueries": true,
+    "actualOwnedLauncherWaitSeparatedFromQemuInference": true,
+    "qemuExitNullWithoutObservedSamePidStarttimeSdkQemuExec": true,
+    "originalActionStdoutStderrForwardingPreserved": true,
+    "archivedOutputPerStreamBoundedWhileDraining": true,
+    "cleanupTargetsVerifiedSupervisorIdentityAndOwnedChildGroup": true,
+    "unexpectedSdkEntryOrBackupNeverOverwritten": true,
+    "alwaysRestorePrecedesEvidencePreservation": true,
+    "originalApkAndObserverUnaffected": true
+  },
+  "validationReviewedNotRepeated": {
+    "actualLocalElfProcessTests": 15,
+    "actionlint": "passed as recorded; shellcheck disabled by owner command",
+    "embeddedPythonBlocksParsed": 6,
+    "sourceAndExecutedCopyHashesAllEqual": true
+  },
+  "limitations": [
+    "No actual Android emulator has been supervised by this source yet; local fixtures are compiled small ELF executables.",
+    "Actual SDK launcher/QEMU exec/fork behavior, signal cause and restoration on the hosted runner remain for the single controlled CI run.",
+    "An unobserved QEMU descendant or abrupt loss of the supervisor must remain unknown; retained launcher exit does not prove a descendant cause.",
+    "The upstream action can continue trying the restored unwrapped AVD after pre-hook failure, but the explicit assert-ready gate blocks gameplay QA."
+  ]
+}
