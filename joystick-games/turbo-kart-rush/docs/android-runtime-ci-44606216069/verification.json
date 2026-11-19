@@ -1,0 +1,736 @@
+{
+  "verifiedAt": "2026-11-19T20:28:54.420392+00:00",
+  "exportCommit": "dc8ec7aadcd7ea2357abf4c168a197a2c17b9371",
+  "qaRunId": 44606216069,
+  "qaRunAttempt": 1,
+  "qaSourceSha": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+  "originalArtifactRunId": 44600152694,
+  "originalArtifactRunAttempt": 1,
+  "originalArtifactSourceSha": "06f1ab2b77e45d5fabcbd7233f8d3e9279a9d5c7",
+  "originalArtifactExportCommit": "e01ab3ba25008cbbcbfa718321afa49fe6eb2331",
+  "exportFilesVerified": 237,
+  "originalAppSourceInputsComparedToGit": 165,
+  "uniqueOriginalAndExecutedSourceFilesComparedToGit": 188,
+  "originalSignedApkUnchanged": {
+    "bytes": 545968,
+    "sha256": "f4663f43839f45a24a913a93067e77c07528439cdc6f234aba6df1e877d03e6c"
+  },
+  "signatureAuditReusedFrom": {
+    "path": "joystick-games/turbo-kart-rush/docs/android-ci-44600152694/independent-verification.json",
+    "record": {
+      "bytes": 3118,
+      "sha256": "89eb9cd74e49b06afc69181a789db467a12fc801816dde0afe4dd1ec512e5d72"
+    }
+  },
+  "newApkSigningOrBuild": false,
+  "originalInputBinding": {
+    "status": "passed",
+    "artifactSourceSha": "06f1ab2b77e45d5fabcbd7233f8d3e9279a9d5c7",
+    "artifactExportCommit": "e01ab3ba25008cbbcbfa718321afa49fe6eb2331",
+    "artifactRunId": "44600152694",
+    "qaSourceSha": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+    "qaRunId": "44606216069",
+    "workingTreeBaseSha": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+    "localPreflightOnly": false,
+    "originalRuntimeResult": "failure",
+    "originalExportFilesVerified": 544,
+    "originalExportManifestSha256": "650bcda32032b9634d630bec1b80a6d312d0bef7fc6cd03d5aa68f1d00bf65ce",
+    "reusedSignedPackagesAndObservers": true,
+    "games": [
+      {
+        "game": "turbo-kart-rush",
+        "package": {
+          "packageName": "com.ecojust.joystick.turbokartrush",
+          "versionCode": 1,
+          "versionName": "0.1.0",
+          "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+          "bytes": 545968,
+          "sha256": "f4663f43839f45a24a913a93067e77c07528439cdc6f234aba6df1e877d03e6c"
+        },
+        "observer": {
+          "packageName": "com.ecojust.joystickqa.turbokartrush",
+          "versionCode": 1,
+          "versionName": "1.0",
+          "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+          "bytes": 16783,
+          "sha256": "e074acca21cb37412300640a70d008d728a812f64594dd823fc670b9f4bb4637"
+        },
+        "frozenSourceInputsVerified": 165,
+        "currentProductionInputsUnchanged": 145,
+        "assetsVerified": 9,
+        "signingReceiptSha256": "ea657511b2e488fb2c67e21aee0bcec1f638e6cdda66219aa4c1886336c038a6"
+      }
+    ],
+    "physicalTvTested": false,
+    "physicalEsp32Tested": false
+  },
+  "originalRuntimeResult": "failure",
+  "runtimeAccepted": false,
+  "modes": [
+    {
+      "mode": "normal",
+      "status": "failed",
+      "report": {
+        "bytes": 121255,
+        "sha256": "b76024a11a51467e6d6691f5863dac7242ecf11a9eddcc530e06bab6954553f3"
+      },
+      "tests": [
+        {
+          "name": "catalog scenario starts with fresh app data before launch",
+          "status": "passed"
+        },
+        {
+          "name": "installed target launches initialized game menu with no controller card",
+          "status": "passed"
+        },
+        {
+          "name": "original SDK hello and nine sync messages create actual controller ID card",
+          "status": "passed"
+        },
+        {
+          "name": "actual SDK gameplay: Open original racer selection",
+          "status": "passed"
+        },
+        {
+          "name": "actual SDK gameplay: Choose another original racer",
+          "status": "passed"
+        }
+      ],
+      "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 840, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n                        ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 530, in scenarios\n    return self.catalog_scenarios()\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 660, in catalog_scenarios\n    observed = self.snapshot()\n               ^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 288, in snapshot\n    value = read_observer_snapshot('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout, event)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 75, in read_observer_snapshot\n    with urlopen(url, timeout=request_timeout) as response:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 515, in open\n    response = self._open(req, data)\n               ^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 532, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1373, in http_open\n    return self.do_open(http.client.HTTPConnection, req)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1348, in do_open\n    r = h.getresponse()\n        ^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 1457, in getresponse\n    response.begin()\n  File \"/usr/lib/python3.12/http/client.py\", line 336, in begin\n    version, status, reason = self._read_status()\n                              ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 305, in _read_status\n    raise RemoteDisconnected(\"Remote end closed connection without\"\nhttp.client.RemoteDisconnected: Remote end closed connection without response\n",
+      "snapshots": [
+        {
+          "label": "initial-menu",
+          "game": {
+            "game": "turbo-kart-rush",
+            "stage": "menu",
+            "frames": 4,
+            "gameplay": {
+              "mode": "title",
+              "course": "",
+              "character": "",
+              "time": 0,
+              "countdown": 0,
+              "playerX": 0,
+              "playerY": 0,
+              "playerZ": 0,
+              "speed": 0,
+              "heading": 0,
+              "progress": 0,
+              "lap": 0,
+              "place": 0,
+              "checkpoint": 0,
+              "driftActive": false,
+              "driftCharge": 0,
+              "driftStage": 0,
+              "boost": 0,
+              "item": "none",
+              "itemCount": 0,
+              "itemPending": false,
+              "driftHeld": false,
+              "lookBack": false,
+              "helpOpen": false,
+              "postfxEnabled": true,
+              "renderCalls": 1
+            }
+          },
+          "page": {
+            "width": 960,
+            "height": 540,
+            "canvases": [
+              {
+                "width": 1920,
+                "height": 1080,
+                "clientWidth": 960,
+                "clientHeight": 540,
+                "visible": true
+              }
+            ]
+          },
+          "windowFocused": true,
+          "activityState": "resumed",
+          "error": null
+        },
+        {
+          "label": "before-plan-Open original racer selection",
+          "game": {
+            "game": "turbo-kart-rush",
+            "stage": "menu",
+            "frames": 36,
+            "gameplay": {
+              "mode": "title",
+              "course": "",
+              "character": "",
+              "time": 0,
+              "countdown": 0,
+              "playerX": 0,
+              "playerY": 0,
+              "playerZ": 0,
+              "speed": 0,
+              "heading": 0,
+              "progress": 0,
+              "lap": 0,
+              "place": 0,
+              "checkpoint": 0,
+              "driftActive": false,
+              "driftCharge": 0,
+              "driftStage": 0,
+              "boost": 0,
+              "item": "none",
+              "itemCount": 0,
+              "itemPending": false,
+              "driftHeld": false,
+              "lookBack": false,
+              "helpOpen": false,
+              "postfxEnabled": true,
+              "renderCalls": 1
+            }
+          },
+          "page": {
+            "width": 960,
+            "height": 540,
+            "canvases": [
+              {
+                "width": 1920,
+                "height": 1080,
+                "clientWidth": 960,
+                "clientHeight": 540,
+                "visible": true
+              }
+            ]
+          },
+          "windowFocused": true,
+          "activityState": "resumed",
+          "error": null
+        },
+        {
+          "label": "after-plan-Open original racer selection",
+          "game": {
+            "game": "turbo-kart-rush",
+            "stage": "menu",
+            "frames": 44,
+            "gameplay": {
+              "mode": "characterSelect",
+              "course": "",
+              "character": "",
+              "time": 0,
+              "countdown": 0,
+              "playerX": 0,
+              "playerY": 0,
+              "playerZ": 0,
+              "speed": 0,
+              "heading": 0,
+              "progress": 0,
+              "lap": 0,
+              "place": 0,
+              "checkpoint": 0,
+              "driftActive": false,
+              "driftCharge": 0,
+              "driftStage": 0,
+              "boost": 0,
+              "item": "none",
+              "itemCount": 0,
+              "itemPending": false,
+              "driftHeld": false,
+              "lookBack": false,
+              "helpOpen": false,
+              "postfxEnabled": true,
+              "renderCalls": 1
+            }
+          },
+          "page": {
+            "width": 960,
+            "height": 540,
+            "canvases": [
+              {
+                "width": 1920,
+                "height": 1080,
+                "clientWidth": 960,
+                "clientHeight": 540,
+                "visible": true
+              }
+            ]
+          },
+          "windowFocused": true,
+          "activityState": "resumed",
+          "error": null
+        },
+        {
+          "label": "before-plan-Choose another original racer",
+          "game": {
+            "game": "turbo-kart-rush",
+            "stage": "menu",
+            "frames": 63,
+            "gameplay": {
+              "mode": "characterSelect",
+              "course": "",
+              "character": "",
+              "time": 0,
+              "countdown": 0,
+              "playerX": 0,
+              "playerY": 0,
+              "playerZ": 0,
+              "speed": 0,
+              "heading": 0,
+              "progress": 0,
+              "lap": 0,
+              "place": 0,
+              "checkpoint": 0,
+              "driftActive": false,
+              "driftCharge": 0,
+              "driftStage": 0,
+              "boost": 0,
+              "item": "none",
+              "itemCount": 0,
+              "itemPending": false,
+              "driftHeld": false,
+              "lookBack": false,
+              "helpOpen": false,
+              "postfxEnabled": true,
+              "renderCalls": 1
+            }
+          },
+          "page": {
+            "width": 960,
+            "height": 540,
+            "canvases": [
+              {
+                "width": 1920,
+                "height": 1080,
+                "clientWidth": 960,
+                "clientHeight": 540,
+                "visible": true
+              }
+            ]
+          },
+          "windowFocused": true,
+          "activityState": "resumed",
+          "error": null
+        },
+        {
+          "label": "after-plan-Choose another original racer",
+          "game": {
+            "game": "turbo-kart-rush",
+            "stage": "menu",
+            "frames": 73,
+            "gameplay": {
+              "mode": "characterSelect",
+              "course": "",
+              "character": "",
+              "time": 0,
+              "countdown": 0,
+              "playerX": 0,
+              "playerY": 0,
+              "playerZ": 0,
+              "speed": 0,
+              "heading": 0,
+              "progress": 0,
+              "lap": 0,
+              "place": 0,
+              "checkpoint": 0,
+              "driftActive": false,
+              "driftCharge": 0,
+              "driftStage": 0,
+              "boost": 0,
+              "item": "none",
+              "itemCount": 0,
+              "itemPending": false,
+              "driftHeld": false,
+              "lookBack": false,
+              "helpOpen": false,
+              "postfxEnabled": true,
+              "renderCalls": 1
+            }
+          },
+          "page": {
+            "width": 960,
+            "height": 540,
+            "canvases": [
+              {
+                "width": 1920,
+                "height": 1080,
+                "clientWidth": 960,
+                "clientHeight": 540,
+                "visible": true
+              }
+            ]
+          },
+          "windowFocused": true,
+          "activityState": "resumed",
+          "error": null
+        },
+        {
+          "label": "before-plan-Confirm racer and open four-track selector",
+          "game": {
+            "game": "turbo-kart-rush",
+            "stage": "menu",
+            "frames": 94,
+            "gameplay": {
+              "mode": "characterSelect",
+              "course": "",
+              "character": "",
+              "time": 0,
+              "countdown": 0,
+              "playerX": 0,
+              "playerY": 0,
+              "playerZ": 0,
+              "speed": 0,
+              "heading": 0,
+              "progress": 0,
+              "lap": 0,
+              "place": 0,
+              "checkpoint": 0,
+              "driftActive": false,
+              "driftCharge": 0,
+              "driftStage": 0,
+              "boost": 0,
+              "item": "none",
+              "itemCount": 0,
+              "itemPending": false,
+              "driftHeld": false,
+              "lookBack": false,
+              "helpOpen": false,
+              "postfxEnabled": true,
+              "renderCalls": 1
+            }
+          },
+          "page": {
+            "width": 960,
+            "height": 540,
+            "canvases": [
+              {
+                "width": 1920,
+                "height": 1080,
+                "clientWidth": 960,
+                "clientHeight": 540,
+                "visible": true
+              }
+            ]
+          },
+          "windowFocused": true,
+          "activityState": "resumed",
+          "error": null
+        }
+      ],
+      "captures": [
+        {
+          "path": "connected.png",
+          "bytes": 3040457,
+          "sha256": "581b039e81688b671d4299c69a37de8bc1467e80c086e38577ad64e71b46d7bb"
+        }
+      ],
+      "observerTransportEvents": [
+        {
+          "snapshotCall": 1,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 1,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119401.2085297,
+          "endedAt": 1795119401.2831988,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": true
+        },
+        {
+          "snapshotCall": 1,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 2,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119401.4037309,
+          "endedAt": 1795119401.4052377,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": true
+        },
+        {
+          "snapshotCall": 1,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 3,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119401.5260081,
+          "endedAt": 1795119401.527373,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": false
+        },
+        {
+          "snapshotCall": 2,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 1,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119401.6482158,
+          "endedAt": 1795119401.6538963,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": true
+        },
+        {
+          "snapshotCall": 2,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 2,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119401.7788804,
+          "endedAt": 1795119401.782398,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": true
+        },
+        {
+          "snapshotCall": 2,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 3,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119401.9031339,
+          "endedAt": 1795119401.9046037,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": false
+        },
+        {
+          "snapshotCall": 3,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 1,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119402.025476,
+          "endedAt": 1795119402.0268154,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": true
+        },
+        {
+          "snapshotCall": 3,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 2,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119402.1475961,
+          "endedAt": 1795119402.1492682,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": true
+        },
+        {
+          "snapshotCall": 3,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 3,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119402.2704859,
+          "endedAt": 1795119402.2719846,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": false
+        },
+        {
+          "snapshotCall": 4,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 1,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119402.3929827,
+          "endedAt": 1795119402.3960054,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": true
+        },
+        {
+          "snapshotCall": 4,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 2,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119402.5173957,
+          "endedAt": 1795119402.5191557,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": true
+        },
+        {
+          "snapshotCall": 4,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 3,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119402.6412451,
+          "endedAt": 1795119402.6428542,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": false
+        },
+        {
+          "snapshotCall": 5,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 1,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119402.7637827,
+          "endedAt": 1795119402.766264,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": true
+        },
+        {
+          "snapshotCall": 5,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 2,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119402.888194,
+          "endedAt": 1795119402.8910594,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": true
+        },
+        {
+          "snapshotCall": 5,
+          "operation": "GET /snapshot",
+          "status": "transport-recovered",
+          "attempt": 3,
+          "priorTransportFailures": 2,
+          "startedAt": 1795119403.0169415,
+          "endedAt": 1795119403.4481635,
+          "responseFromNewGet": true
+        },
+        {
+          "snapshotCall": 6,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 1,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119403.5691948,
+          "endedAt": 1795119413.57802,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": true
+        },
+        {
+          "snapshotCall": 6,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 2,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119413.6990485,
+          "endedAt": 1795119423.7031896,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": true
+        },
+        {
+          "snapshotCall": 6,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 3,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119423.8248858,
+          "endedAt": 1795119433.830335,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": false
+        },
+        {
+          "snapshotCall": 32,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 1,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119571.619422,
+          "endedAt": 1795119586.634345,
+          "errorType": "TimeoutError",
+          "error": "timed out",
+          "retryScheduled": true
+        },
+        {
+          "snapshotCall": 32,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 2,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 15,
+          "startedAt": 1795119586.7591238,
+          "endedAt": 1795119601.7746696,
+          "errorType": "TimeoutError",
+          "error": "timed out",
+          "retryScheduled": true
+        },
+        {
+          "snapshotCall": 32,
+          "operation": "GET /snapshot",
+          "status": "transport-failed",
+          "attempt": 3,
+          "maximumAttempts": 3,
+          "maximumWallSeconds": 45,
+          "requestTimeoutSeconds": 14.703711756000018,
+          "startedAt": 1795119601.9157052,
+          "endedAt": 1795119612.5160675,
+          "errorType": "RemoteDisconnected",
+          "error": "Remote end closed connection without response",
+          "retryScheduled": false
+        }
+      ]
+    },
+    {
+      "mode": "occupied",
+      "status": "failed",
+      "report": {
+        "bytes": 3733,
+        "sha256": "834ecf1455f529906d7994d2f16d2a3286f19580725d77db436e406131d18bd7"
+      },
+      "tests": [],
+      "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 840, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 471, in setup\n    self.command('wait-for-device')\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 268, in command\n    result = subprocess.run(record['command'], capture_output=True, check=False, timeout=timeout)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 550, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 1209, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 2116, in _communicate\n    self._check_timeout(endtime, orig_timeout, stdout, stderr)\n  File \"/usr/lib/python3.12/subprocess.py\", line 1253, in _check_timeout\n    raise TimeoutExpired(\nsubprocess.TimeoutExpired: Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'wait-for-device']' timed out after 45 seconds\n",
+      "snapshots": [],
+      "captures": [],
+      "observerTransportEvents": []
+    }
+  ],
+  "archivedSubsetFiles": 68,
+  "archiveOmissions": "APK binaries and duplicate original artifact-source remain in immutable export/scratch; all files were verified before copying subset. Executed QA sources and original reports retained.",
+  "script": {
+    "bytes": 6355,
+    "sha256": "a253512dc867dd59e7bccdc2231e441d4f5ee2241c504842446a2874f2b66b52"
+  },
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false
+}

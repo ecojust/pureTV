@@ -1,0 +1,199 @@
+{
+  "readAt": "2026-11-19T20:29:23.714287+00:00",
+  "scope": "Read-only original runtime evidence; no games launched or packages rebuilt/signed.",
+  "runId": 44606216069,
+  "runAttempt": 1,
+  "qaSourceSha": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+  "artifactSourceSha": "06f1ab2b77e45d5fabcbd7233f8d3e9279a9d5c7",
+  "artifactRunId": 44600152694,
+  "exportCommit": "dc8ec7aadcd7ea2357abf4c168a197a2c17b9371",
+  "normal": {
+    "originalStatus": "failed",
+    "passedChecks": 5,
+    "failureStep": "Confirm racer and open four-track selector",
+    "failurePoint": "Frozen executed run.py:660 self.snapshot() after actual SDK key input; helper run.py:75 new GET exhausted transport attempts.",
+    "finalSnapshotTransportAttempts": [
+      {
+        "snapshotCall": 32,
+        "operation": "GET /snapshot",
+        "status": "transport-failed",
+        "attempt": 1,
+        "maximumAttempts": 3,
+        "maximumWallSeconds": 45,
+        "requestTimeoutSeconds": 15,
+        "startedAt": 1795119571.619422,
+        "endedAt": 1795119586.634345,
+        "errorType": "TimeoutError",
+        "error": "timed out",
+        "retryScheduled": true
+      },
+      {
+        "snapshotCall": 32,
+        "operation": "GET /snapshot",
+        "status": "transport-failed",
+        "attempt": 2,
+        "maximumAttempts": 3,
+        "maximumWallSeconds": 45,
+        "requestTimeoutSeconds": 15,
+        "startedAt": 1795119586.7591238,
+        "endedAt": 1795119601.7746696,
+        "errorType": "TimeoutError",
+        "error": "timed out",
+        "retryScheduled": true
+      },
+      {
+        "snapshotCall": 32,
+        "operation": "GET /snapshot",
+        "status": "transport-failed",
+        "attempt": 3,
+        "maximumAttempts": 3,
+        "maximumWallSeconds": 45,
+        "requestTimeoutSeconds": 14.703711756000018,
+        "startedAt": 1795119601.9157052,
+        "endedAt": 1795119612.5160675,
+        "errorType": "RemoteDisconnected",
+        "error": "Remote end closed connection without response",
+        "retryScheduled": false
+      }
+    ],
+    "normalLoopClockOrModelAltered": false,
+    "actualLastRetainedGame": {
+      "game": "turbo-kart-rush",
+      "stage": "menu",
+      "frames": 94,
+      "gameplay": {
+        "mode": "characterSelect",
+        "course": "",
+        "character": "",
+        "time": 0,
+        "countdown": 0,
+        "playerX": 0,
+        "playerY": 0,
+        "playerZ": 0,
+        "speed": 0,
+        "heading": 0,
+        "progress": 0,
+        "lap": 0,
+        "place": 0,
+        "checkpoint": 0,
+        "driftActive": false,
+        "driftCharge": 0,
+        "driftStage": 0,
+        "boost": 0,
+        "item": "none",
+        "itemCount": 0,
+        "itemPending": false,
+        "driftHeld": false,
+        "lookBack": false,
+        "helpOpen": false,
+        "postfxEnabled": true,
+        "renderCalls": 1
+      }
+    },
+    "captureNote": "connected.png is a menu image, not driving evidence. Video pull failed with device offline."
+  },
+  "occupied": {
+    "originalStatus": "failed",
+    "passedChecks": 0,
+    "failure": "adb wait-for-device exceeded 45 seconds before any initialization acceptance."
+  },
+  "adbFailures": {
+    "normal": [
+      {
+        "line": 9,
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "shell",
+          "pidof",
+          "screenrecord"
+        ],
+        "status": "completed",
+        "exitCode": 1,
+        "timeoutSeconds": 45,
+        "error": null,
+        "stderr": "adb: device offline\n"
+      },
+      {
+        "line": 10,
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "pull",
+          "/sdcard/joystick-qa-turbo-kart-rush.mp4",
+          "/home/runner/work/_temp/runtime/turbo-kart-rush-normal/controller-gameplay.mp4"
+        ],
+        "status": "completed",
+        "exitCode": 1,
+        "timeoutSeconds": 45,
+        "error": null,
+        "stderr": "adb: error: failed to get feature set: device offline\n"
+      },
+      {
+        "line": 11,
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "logcat",
+          "-d",
+          "-v",
+          "threadtime"
+        ],
+        "status": "timed-out",
+        "exitCode": null,
+        "timeoutSeconds": 45,
+        "error": "Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'logcat', '-d', '-v', 'threadtime']' timed out after 45 seconds",
+        "stderr": "- waiting for device -\n"
+      }
+    ],
+    "occupied": [
+      {
+        "line": 1,
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "wait-for-device"
+        ],
+        "status": "timed-out",
+        "exitCode": null,
+        "timeoutSeconds": 45,
+        "error": "Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'wait-for-device']' timed out after 45 seconds",
+        "stderr": ""
+      },
+      {
+        "line": 2,
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "logcat",
+          "-d",
+          "-v",
+          "threadtime"
+        ],
+        "status": "timed-out",
+        "exitCode": null,
+        "timeoutSeconds": 45,
+        "error": "Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'logcat', '-d', '-v', 'threadtime']' timed out after 45 seconds",
+        "stderr": "- waiting for device -\n"
+      }
+    ]
+  },
+  "jobLog": {
+    "bytes": 491580,
+    "sha256": "b20c0bb77849d86cc5beaacfb5eb164b9a0273a97f0f41c37afc9587cf2bdcbb",
+    "kernelDiagnosticTermCounts": {
+      "Out of memory": 0,
+      "Killed process": 0,
+      "oom-kill": 0,
+      "oom_kill": 0,
+      "memory.events": 0,
+      "MemAvailable:": 0,
+      "SIGKILL": 0
+    },
+    "termsNotProofOfAbsence": "Zero string matches do not establish absence of host OOM; this QA did not collect host memory/cgroup or own emulator exit status."
+  },
+  "conclusions": [
+    "Bounded snapshot retry was executed; final call used three fresh GET requests, so the original single-request failure does not describe this run.",
+    "After final observer failure, adb pidof and video pull explicitly reported device offline, followed by logcat and occupied startup timeouts.",
+    "Boot-time ColorBuffer errors do not establish the later failure cause. No owned emulator exit status or host memory metrics were collected.",
+    "Runtime failed in both modes; no driving, storage, focus or reconnect success is claimed."
+  ],
+  "runtimeAccepted": false,
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false
+}

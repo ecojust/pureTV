@@ -5,10 +5,13 @@ import copy
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import socketserver
+import struct
+import sys
 import tempfile
 import threading
 import time
 import unittest
+import zlib
 from unittest import mock
 from types import SimpleNamespace
 from pathlib import Path
@@ -639,5 +642,80 @@ class ObserverTransportTests(unittest.TestCase):
             self.assertEqual(mode['pythonException'], 'RemoteDisconnected')
             self.assertIn('WebView snapshot timed out', mode['observerLog'])
             self.assertEqual(mode['originalGameplayScenariosExecuted'], False)
+
+class InstallFailureEvidence(unittest.TestCase):
+    def png(self):
+        def chunk(kind, data):
+            return struct.pack('>I', len(data)) + kind + data + struct.pack('>I', zlib.crc32(kind + data) & 0xffffffff)
+        return b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', 1, 1, 8, 6, 0, 0, 0)) + chunk(b'IDAT', zlib.compress(b'\0\0\0\0\xff')) + chunk(b'IEND', b'')
+
+    def test_png_requires_complete_chunks_crc_and_iend(self):
+        image = self.png()
+        self.assertTrue(runner.install_failure.complete_png(image))
+        for bad in [image[:-1], image[:30], image + b'extra', image[:-5] + b'xxxxx', b'not-png']:
+            self.assertFalse(runner.install_failure.complete_png(bad))
+
+    def test_real_diagnostic_process_is_bounded_by_time_and_output_and_failure_is_retained(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            started = time.monotonic()
+            timed = runner.install_failure.bounded_command([sys.executable, '-c', 'import time;time.sleep(30)'], root/'time.txt', started + .15, 1024)
+            self.assertEqual(timed['status'], 'timed-out')
+            self.assertLess(time.monotonic() - started, 2)
+            large = runner.install_failure.bounded_command([sys.executable, '-c', 'import sys;sys.stdout.write("x"*10000)'], root/'large.txt', time.monotonic() + 2, 128)
+            self.assertEqual(large['status'], 'output-budget-exceeded')
+            self.assertEqual((root/'large.txt').stat().st_size, 128)
+            failed = runner.install_failure.bounded_command([sys.executable, '-c', 'raise SystemExit(9)'], root/'failure.txt', time.monotonic() + 2, 128)
+            self.assertEqual((failed['status'], failed['exitCode']), ('command-failed', 9))
+
+    def test_capture_is_read_only_binds_apk_and_never_reuses_xml_after_dump_failure(self):
+        for dump_success in (True, False):
+            with self.subTest(dump_success=dump_success), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory);apk = root/'game.apk';apk.write_bytes(b'original signed bytes fixture')
+                calls = []
+                def observe(argv, target, deadline, limit):
+                    calls.append(argv)
+                    data = self.png() if target.suffix == '.png' else b'<hierarchy><node text="Install anyway" /></hierarchy>' if target.suffix == '.xml' else b'fixture observation'
+                    target.write_bytes(data)
+                    failed = target.name == 'ui-dump-command.txt' and not dump_success
+                    return {'command': argv, 'status': 'command-failed' if failed else 'completed', 'exitCode': 1 if failed else 0, 'outputPath': target.name}
+                command = {'command': ['adb', 'install', '-r', str(apk)], 'timeoutSeconds': 240, 'status': 'timed-out'}
+                with mock.patch.object(runner.install_failure, 'bounded_command', side_effect=observe):
+                    result = runner.install_failure.capture(['adb'], apk, 'com.example.game', root/'evidence', command, expected_apk=runner.file_info(apk))
+                report = json.loads((root/'evidence/report.json').read_text())
+                self.assertEqual(report['apk'], runner.file_info(apk))
+                self.assertEqual(report['originalFailedInstallCommand'], command)
+                self.assertFalse(report['uiActionsSent']);self.assertFalse(report['settingsChanged']);self.assertFalse(report['installRetried'])
+                self.assertTrue(result['originalFailurePreserved'])
+                self.assertEqual(any(args[1:3] == ['exec-out', 'cat'] for args in calls), dump_success)
+                self.assertTrue(all('input' not in args and 'settings' not in args and 'install' not in args for args in calls))
+                self.assertEqual((root/'evidence/executed-install_failure.py').read_bytes(), Path(runner.install_failure.__file__).read_bytes())
+
+    def test_mismatched_apk_identity_and_expired_budget_do_not_run_ui_commands(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory);apk = root/'game.apk';apk.write_bytes(b'original')
+            command = {'command': ['adb', 'install', '-r', str(apk)]}
+            with mock.patch.object(runner.install_failure, 'bounded_command') as capture:
+                with self.assertRaises(AssertionError):
+                    runner.install_failure.capture(['adb'], apk, 'com.example.game', root/'mismatch', command, expected_apk={'bytes': 8, 'sha256': '0'*64})
+                with self.assertRaises(TimeoutError):
+                    runner.install_failure.capture(['adb'], apk, 'com.example.game', root/'expired', command, seconds=1)
+                capture.assert_not_called()
+
+    def test_install_timeout_and_failure_survive_failed_diagnostic_without_retry(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory);apk=root/'large.apk'
+            with apk.open('wb') as file:file.truncate(105020455)
+            acceptance = runner.Acceptance.__new__(runner.Acceptance)
+            acceptance.adb=['adb'];acceptance.out=root;acceptance.package='com.example.game'
+            acceptance.args=SimpleNamespace(apk=apk);acceptance.report={};acceptance.save=lambda:None
+            failure=runner.subprocess.TimeoutExpired(['adb','install','-r',str(apk)],240,output=b'original install stdout',stderr=b'original stderr')
+            with mock.patch.object(runner.subprocess,'run',side_effect=failure) as install, mock.patch.object(runner.install_failure,'capture',side_effect=RuntimeError('diagnostic failed')) as capture:
+                with self.assertRaises(runner.subprocess.TimeoutExpired) as caught:acceptance.command('install','-r',str(apk))
+                self.assertIs(caught.exception,failure);self.assertEqual(install.call_count,1);self.assertEqual(capture.call_count,1)
+                self.assertEqual(install.call_args.kwargs['timeout'],240)
+            row=json.loads((root/'adb-commands.jsonl').read_text())
+            self.assertEqual((row['status'],row['timeoutSeconds'],row['stdout']),('timed-out',240,'original install stdout'))
+            self.assertTrue(acceptance.report['installFailureEvidence']['originalFailurePreserved'])
 
 if __name__=='__main__': unittest.main(verbosity=2)

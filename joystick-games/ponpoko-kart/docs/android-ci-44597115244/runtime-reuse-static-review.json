@@ -1,0 +1,57 @@
+{
+  "reviewedAt": "2026-11-19T19:49:21.723456+00:00",
+  "workingTreeHead": "66df67f17d361cc9eda14f7a06d20064bd59ba8d",
+  "scope": "Static workflow and verifier read; no POST/build/sign/emulator/test was performed",
+  "reviewedFiles": {
+    ".github/workflows/joystick-catalog-android-runtime.yml": {
+      "bytes": 18072,
+      "sha256": "512c38ccc06fbd4c7f9c69f9673c1abe5ddb4e141635dbafe734c98786a991d4",
+      "matchesOriginalSource": true
+    },
+    "joystick-games/tools/android-runtime-inputs.py": {
+      "bytes": 14305,
+      "sha256": "15a5319bd512e9d32ac08fe6ee4b4e038074379a68e0c23273698981742b53c8",
+      "matchesOriginalSource": true
+    },
+    "joystick-games/qa/android/run.py": {
+      "bytes": 45715,
+      "sha256": "8c59d19cf55ee793f3a09ff7671062e8eeecbc74144884a1a79461d14390eaaf",
+      "matchesOriginalSource": true
+    },
+    "joystick-games/tools/android-catalog.py": {
+      "bytes": 3022,
+      "sha256": "80ab3fa70e3f8ba77992b7a3655b2a981a7976b96e5010c65cda5c593ddcb9d9",
+      "matchesOriginalSource": true
+    }
+  },
+  "requestProposal": {
+    "workflow": "joystick-catalog-android-runtime.yml",
+    "ref": "build-source/racing-android-pon-v1",
+    "inputs": {
+      "qa_source_sha": "8f283c73f52f857777306eafc88f710262367834",
+      "artifact_source": "8f283c73f52f857777306eafc88f710262367834",
+      "artifact_export": "4249f5c0ec3053a1dec652a7880a040e1bb143f0",
+      "artifact_run": "44597115244",
+      "batch": "racing-01",
+      "games": "ponpoko-kart"
+    }
+  },
+  "originalAttemptBinding": {
+    "runAttempt": 1,
+    "source": "Immutable original export manifest runAttempt, checked against GET actions/runs/44597115244/attempts/1 and exact jobs"
+  },
+  "verifiedByStaticRead": [
+    "Original run must be completed with exact repository/source/workflow and successful original build/sign jobs. Runtime failure does not invalidate original signed bytes.",
+    "Export entire file set, receipts, fixed certificate, package identity, original source inventory, production source equality and exact APK asset bytes are rechecked.",
+    "Original APK and test observer are copied without recompilation or resigning; the original pureTV SDK is required unchanged.",
+    "A new disposable API36 Android TV x86_64 emulator is force-created with no snapshots.",
+    "Normal and occupied modes run sequentially on that same new emulator; each clears application data.",
+    "Separate QA run/source and original package run/source/export identities are preserved; original failures remain unchanged."
+  ],
+  "limitations": [
+    "This is a request proposal only; no workflow dispatched by this agent.",
+    "Fresh AVD is per runtime job, not independently recreated between normal and occupied.",
+    "The original failed run remains unaccepted until separately identified runtime evidence passes; original failure cause is not proven."
+  ],
+  "productionSourceChanged": false
+}

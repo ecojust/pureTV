@@ -1,5 +1,5 @@
 {
-  "reviewedAt": "2026-11-19T19:44:11.328221+00:00",
+  "reviewedAt": "2026-11-19T19:49:21.658081+00:00",
   "sourceRunId": 44597115244,
   "sourceRunAttempt": 1,
   "sourceCommit": "8f283c73f52f857777306eafc88f710262367834",
@@ -73,16 +73,69 @@
     "Normal passed only fresh app-data clearing. Initial-menu wait timed out; the last retained successful diagnostic has game=null and zero canvases/controller cards; its final diagnostic request reports ConnectionRefused.",
     "Original normal instrumentation log records observer=ready and diagnosticPort=63486.",
     "Occupied never reached initialization: adb wait-for-device timed out after 45 seconds, with zero snapshots and captures.",
-    "Neither original mode produced a screenshot or video capture. There is no observed SDK connection or menu/racing action to diagnose."
+    "Neither original mode produced a screenshot or video capture. There is no observed SDK connection or menu/racing action to diagnose.",
+    "Full original runtime job log was recovered through gh run view after the earlier direct API log-download attempts failed.",
+    "Boot-time color buffer errors were followed by boot success and pm clear success. They are not sufficient to establish the later failure cause.",
+    "After initialization timed out, both adb logcat commands timed out; final emulator console TCP5554 returned Connection refused. No explicit emulator process exit code, OOM-kill, fatal signal, or WebView crash trace is present in the recovered job log."
   ],
   "unprovenCauses": [
     "Emulator OOM or process crash",
     "Game JavaScript parsing or initialization failure",
     "Graphics-driver failure"
   ],
-  "nextEvidenceNeeded": "Original runtime job 135821097274 complete logs, especially emulator exit/disconnection and any WebView/Android crash messages. Direct authenticated job-log downloads returned redirected-storage 403; existing Android evidence reader only carries the same runtime artifact and cannot add missing job logs.",
+  "nextEvidenceNeeded": "A separately identified QA-only run against the unchanged signed APK in a fresh emulator can test reproducibility. The recovered original log does not prove why the emulator/ADB/diagnostic connection became unavailable; new evidence must not retroactively turn this original failed run into a pass.",
   "gamesRerun": false,
   "productionSourceChanged": false,
   "physicalTvTested": false,
-  "physicalEsp32Tested": false
+  "physicalEsp32Tested": false,
+  "jobLog": {
+    "path": "original-runtime-job.log",
+    "bytes": 425227,
+    "sha256": "8cd2317364714b196430eb2a3ee3c271a9371a640dd72371cc25b89799760b4e",
+    "retrieval": "gh run view 44597115244 --repo ecojust/pureTV --job 135821097274 --log",
+    "format": "GitHub CLI full job-log rendering; not asserted byte-identical to raw redirected API download",
+    "runtimeJobId": 135821097274
+  },
+  "jobLogTimeline": [
+    {
+      "line": 2145,
+      "utc": "2026-11-19T19:29:35.8258658Z",
+      "fact": "Emulator reports Boot completed in 36604 ms."
+    },
+    {
+      "line": 2150,
+      "utc": "2026-11-19T19:29:37.3557244Z",
+      "fact": "Emulator logs Failed to find ColorBuffer: 25, followed by invalid color buffer. This is before the runner reports boot complete and before game launch."
+    },
+    {
+      "line": 2157,
+      "utc": "2026-11-19T19:29:39.5159945Z",
+      "fact": "Runner observes sys.boot_completed=1 and reports Emulator booted."
+    },
+    {
+      "line": 2165,
+      "utc": "2026-11-19T19:29:50.9166893Z",
+      "fact": "Normal scenario pm clear succeeds."
+    },
+    {
+      "line": 2166,
+      "utc": "2026-11-19T19:29:52.6981488Z",
+      "fact": "Emulator reports Created VkInstance, then Destroyed VkInstance 14ms later; no fatal status or exit code is attached."
+    },
+    {
+      "line": 2177,
+      "utc": "2026-11-19T19:33:06.0676870Z",
+      "fact": "Normal setup initial-menu timeout appears; failure cleanup adb logcat also times out after 45 seconds."
+    },
+    {
+      "line": 2222,
+      "utc": "2026-11-19T19:34:36.2684198Z",
+      "fact": "Occupied setup adb wait-for-device times out after 45 seconds; failure cleanup adb logcat also times out."
+    },
+    {
+      "line": 2262,
+      "utc": "2026-11-19T19:34:36.3429888Z",
+      "fact": "Final emulator stop command cannot connect to emulator console TCP5554: Connection refused."
+    }
+  ]
 }

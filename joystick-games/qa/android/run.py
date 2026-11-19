@@ -33,6 +33,8 @@ build = importlib.util.module_from_spec(spec); spec.loader.exec_module(build)
 PACKAGES = build.registered_packages()
 spec = importlib.util.spec_from_file_location('joystick_qa_plan', ROOT / 'joystick-games/tools/qa-plan.py')
 plan = importlib.util.module_from_spec(spec); spec.loader.exec_module(plan)
+spec = importlib.util.spec_from_file_location('joystick_install_failure', HERE / 'install_failure.py')
+install_failure = importlib.util.module_from_spec(spec); spec.loader.exec_module(install_failure)
 
 
 def file_info(path):
@@ -247,7 +249,7 @@ class Acceptance:
                        'apk': {'path': str(args.apk), **file_info(args.apk)}, 'observer': {'path': str(args.observer), **file_info(args.observer)},
                        'sourceFiles': {}, 'tests': self.tests, 'snapshots': self.snapshots, 'captures': self.captures}
         provenance = self.out / 'source'; provenance.mkdir()
-        source_paths = [Path(__file__), HERE / 'build-observer.py', HERE / 'src/com/ecojust/controllerqa/Observer.java', ROOT / 'puretv-joystick/joystick_sdk.py', ROOT / 'joystick-games/tools/android-build.py', ROOT / 'joystick-games/tools/qa-plan.py']
+        source_paths = [Path(__file__), HERE / 'install_failure.py', HERE / 'build-observer.py', HERE / 'src/com/ecojust/controllerqa/Observer.java', ROOT / 'puretv-joystick/joystick_sdk.py', ROOT / 'joystick-games/tools/android-build.py', ROOT / 'joystick-games/tools/qa-plan.py']
         if self.plan: source_paths += [self.plan_path, ROOT / build.REGISTRY]
         for source in source_paths:
             relative = source.relative_to(ROOT)
@@ -270,6 +272,15 @@ class Acceptance:
             log({'status': 'timed-out', 'exitCode': None, 'errorType': type(error).__name__,
                  'error': str(error), 'stdout': (error.stdout or b'').decode(errors='replace'),
                  'stderr': (error.stderr or b'').decode(errors='replace')})
+            if args[:2] == ('install', '-r') and str(getattr(getattr(self, 'args', None), 'apk', '')) == args[-1]:
+                try:
+                    self.report['installFailureEvidence'] = install_failure.capture(
+                        self.adb, self.args.apk, self.package, self.out / 'install-failure',
+                        dict(record, status='timed-out', endedAt=time.time()), expected_apk=self.report.get('apk'))
+                    self.save()
+                except Exception as diagnostic_error:
+                    self.report['installFailureEvidence'] = {'status': 'unavailable', 'errorType': type(diagnostic_error).__name__,
+                                                            'originalFailurePreserved': True, 'uiActionsSent': False}
             raise  # Do not retry installation or treat an uncertain install as successful.
         log({'status': 'completed', 'exitCode': result.returncode,
              'stdout': result.stdout.decode(errors='replace'), 'stderr': result.stderr.decode(errors='replace')})
