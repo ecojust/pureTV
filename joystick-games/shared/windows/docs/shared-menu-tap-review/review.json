@@ -1,0 +1,68 @@
+{
+  "status": "passed",
+  "scope": "Independent static review and one synthetic integration execution; no native game, package, TCP server, or CI execution",
+  "syntheticCommand": "TMPDIR=/dev/shm/windows-host-tmp PYTHONDONTWRITEBYTECODE=1 python3 /dev/shm/windows-host-tmp/menu-epoch-integration.py",
+  "executionExitCode": 0,
+  "cases": [
+    {
+      "case": "same document, actual shared helper with Windows override",
+      "status": "passed"
+    },
+    {
+      "case": "new query document resets polls and waits through warmup/countdown predicates",
+      "status": "passed",
+      "readSamples": 5,
+      "qualifiedSamples": [
+        false,
+        false,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "case": "old DOM mislabeled with new native epoch",
+      "status": "correctly_rejected"
+    },
+    {
+      "case": "different owner",
+      "status": "correctly_rejected"
+    },
+    {
+      "case": "extra key counted",
+      "status": "correctly_rejected"
+    },
+    {
+      "case": "one new poll after a post-reload baseline",
+      "status": "correctly_rejected"
+    }
+  ],
+  "staticReview": {
+    "sdkSendSequenceAttributionLocked": true,
+    "semanticAndNativeInitialKeysReleased": true,
+    "sameOwnerSessionAndExactAllNineCountersRequired": true,
+    "firstCandidateOnlyBaselineThenTwoFreshPolls": true,
+    "originalExpectationsRequired": true,
+    "unmarkedHeldGameplayBranchUnchanged": true,
+    "legacyWindowsOnlyFlagRejected": true,
+    "nativeOwner26TestsReadNotRerun": true
+  },
+  "files": {
+    "joystick-games/tools/macos-verify.py": {
+      "bytes": 56639,
+      "sha256": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17"
+    },
+    "joystick-games/tools/windows-verify.py": {
+      "bytes": 24211,
+      "sha256": "eff977f2423c02bf77e827d00694d39d299739b296c3dae1f69b773a8caece64"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 5385,
+      "sha256": "26888d21e6cb2dd4b0da8a835af79d6fa0b02506b2e7f8264607c300f3390fb3"
+    },
+    "joystick-games/shared/macos/tests/native-observation.test.py": {
+      "bytes": 20437,
+      "sha256": "818421ffb37648c9f9521bc906b91e299b5925120e794c5d3edf7a203223b853"
+    }
+  }
+}

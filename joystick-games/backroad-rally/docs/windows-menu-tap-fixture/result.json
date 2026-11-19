@@ -1,0 +1,196 @@
+{
+  "scope": "Actual Windows bridge, Backroad pureTV adapter and original MenuController/Row; synthesized native transport input in DOM-only fixture, not native SDK or gameplay acceptance.",
+  "checks": [
+    {
+      "name": "Counter-preserved down/release between polls moves original menu exactly one row",
+      "passed": true
+    },
+    {
+      "name": "Coalesced short tap emits one nonrepeat ArrowDown",
+      "passed": true
+    },
+    {
+      "name": "Cached semantic keys released after real frame polls",
+      "passed": true
+    },
+    {
+      "name": "Released tap does not repeat after original 420ms repeat delay",
+      "passed": true
+    },
+    {
+      "name": "Ordinary 16ms down/release reaches choose stage once",
+      "passed": true
+    },
+    {
+      "name": "Coalesced confirm invokes original selected row once",
+      "passed": true
+    },
+    {
+      "name": "Selection and released semantic input remain stable",
+      "passed": true
+    },
+    {
+      "name": "Normal adapter frame polling continues",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "errors": [],
+  "clockOverrides": false,
+  "gameModelLoaded": false,
+  "events": [
+    {
+      "code": "ArrowDown",
+      "repeat": false,
+      "at": 526.5
+    },
+    {
+      "code": "ArrowDown",
+      "repeat": false,
+      "at": 1492.5
+    },
+    {
+      "code": "Enter",
+      "repeat": false,
+      "at": 1558.699999999255
+    }
+  ],
+  "confirmations": [
+    "choose stage"
+  ],
+  "finalFocus": "choose stage",
+  "finalSnapshot": {
+    "game": "backroad-rally",
+    "renderer": "loading",
+    "webglVersion": 0,
+    "stage": "menu",
+    "paused": false,
+    "frames": 0,
+    "gameplay": {
+      "phase": "menu",
+      "menuFocus": "choose stage",
+      "menuValue": ""
+    },
+    "audioState": "fixture",
+    "controller": {
+      "buttons": {
+        "UP": false,
+        "DOWN": false,
+        "LEFT": false,
+        "RIGHT": false,
+        "START": false,
+        "A": false,
+        "B": false,
+        "X": false,
+        "Y": false
+      },
+      "pressed": {
+        "UP": false,
+        "DOWN": false,
+        "LEFT": false,
+        "RIGHT": false,
+        "START": false,
+        "A": false,
+        "B": false,
+        "X": false,
+        "Y": false
+      },
+      "released": {
+        "UP": false,
+        "DOWN": false,
+        "LEFT": false,
+        "RIGHT": false,
+        "START": false,
+        "A": false,
+        "B": false,
+        "X": false,
+        "Y": false
+      },
+      "connected": true,
+      "cancelled": false,
+      "players": [
+        {
+          "id": 1,
+          "connected": true,
+          "transport": "wifi",
+          "controllerId": "fixture-only",
+          "session": "fixture-session",
+          "cancelSeq": 0,
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "x": 0,
+          "y": 0,
+          "a": false,
+          "b": false,
+          "start": false,
+          "select": false
+        }
+      ],
+      "source": "[1,\"fixture-only\",\"fixture-session\"]",
+      "info": {
+        "wifiController": {
+          "inputEnabled": true,
+          "port": 63485
+        },
+        "platform": "windows"
+      },
+      "pollCount": 99,
+      "native": true,
+      "inputAvailable": true
+    },
+    "errors": []
+  },
+  "recordedAt": "2026-11-19T20:39:56.458Z",
+  "inputs": [
+    {
+      "path": "joystick-games/backroad-rally/docs/windows-menu-tap-fixture/run.cjs",
+      "sha256": "41540e4befe6bf01073c2e970ba517af9a3f5820671bc01cf55593a9db5e8120",
+      "bytes": 2653
+    },
+    {
+      "path": "joystick-games/backroad-rally/docs/windows-menu-tap-fixture/fixture.ts",
+      "sha256": "97abf500d1cbf1d4d2cadef821d048d6715a7ea60d4350b09d06ef1ed6e5f529",
+      "bytes": 4169
+    },
+    {
+      "path": "joystick-games/shared/windows/Web/bridge.js",
+      "sha256": "14b63ff99f549312e6ae5cc2a157d81234647067b74379d5edff431fec12fc1c",
+      "bytes": 5693
+    },
+    {
+      "path": "joystick-games/shared/web/controller-clients.js",
+      "sha256": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a",
+      "bytes": 7746
+    },
+    {
+      "path": "joystick-games/shared/web/input.js",
+      "sha256": "d33a301f082f0100db81c055b4773e2947cf4c166f76f68dfe06344d5a4660f6",
+      "bytes": 8423
+    },
+    {
+      "path": "joystick-games/backroad-rally/src/upstream/src/puretv-observation.ts",
+      "sha256": "9084a8984eb454cfa83215759b5e80f651ab5a0e442467e1e73620507764ef27",
+      "bytes": 384
+    },
+    {
+      "path": "joystick-games/backroad-rally/src/upstream/src/puretv.ts",
+      "sha256": "50c14107b00988559e20ba80035627e49f0eaa1723e0c34c1c200c2b8f115cc6",
+      "bytes": 5315
+    },
+    {
+      "path": "joystick-games/backroad-rally/src/upstream/src/menu/ui.ts",
+      "sha256": "eb20ef924da44c46c53bb715331be5c74cc23f09fc5682d56c16365b5e7e0495",
+      "bytes": 17824
+    }
+  ],
+  "bundleSha256": "d9c4b4a0d8ff28248157970cc33c685c8cf43fecb212bcb9c6115a1c58b7ea56"
+}

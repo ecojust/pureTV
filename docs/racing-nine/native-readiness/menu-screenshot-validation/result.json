@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-19T21:02:32.783797+00:00",
+  "baseHead": "cf26e19bf57524a9c4ce53ea77bd30824cbcd54d",
+  "sourceFiles": {
+    "joystick-games/tools/macos-verify.py": {
+      "bytes": 56639,
+      "sha256": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 5385,
+      "sha256": "26888d21e6cb2dd4b0da8a835af79d6fa0b02506b2e7f8264607c300f3390fb3"
+    },
+    "joystick-games/shared/macos/tests/native-observation.test.py": {
+      "bytes": 20437,
+      "sha256": "818421ffb37648c9f9521bc906b91e299b5925120e794c5d3edf7a203223b853"
+    }
+  },
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/native-observation.test.py"
+      ],
+      "tests": 26,
+      "status": "passed",
+      "stdout": "attempt-1-stdout.log",
+      "stderr": "attempt-1-stderr.log"
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-tools.test.py"
+      ],
+      "tests": 17,
+      "status": "passed",
+      "stdout": "catalog-tools-stdout.log",
+      "stderr": "catalog-tools-stderr.log"
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-reuse.test.py"
+      ],
+      "tests": 3,
+      "status": "passed",
+      "stdout": "catalog-reuse-stdout.log",
+      "stderr": "catalog-reuse-stderr.log"
+    }
+  ],
+  "totalTests": 46,
+  "gitDiffCheck": "passed for these three source files",
+  "logFiles": {
+    "attempt-1-stderr.log": {
+      "bytes": 125,
+      "sha256": "1e9c6fe11abc3a3530485a3ad23c77af77fe8953f08ee95518eeb25f7b246d24"
+    },
+    "attempt-1-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "catalog-reuse-stderr.log": {
+      "bytes": 101,
+      "sha256": "070cec69ca51dac663d7e308524874d8b177d181f00d03a2c4239c4e26b0395a"
+    },
+    "catalog-reuse-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "catalog-tools-stderr.log": {
+      "bytes": 116,
+      "sha256": "b4d22e4d1bdda8571a69b5b5ec7d8c025b3f371d5e0a2fca6456ad812aa23bd0"
+    },
+    "catalog-tools-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "scope": "QA only: bounded single screenshot request observation and explicit SDK short menu taps; native packages, game state, original reports and mandatory expectations unchanged. Unit fixtures are synthetic; no new native verification claimed.",
+  "independentReview": "joystick-games/shared/windows/docs/shared-menu-tap-review/",
+  "productionDispatchPerformed": false
+}

@@ -58,6 +58,10 @@ def validate_plan(plan):
         keys = step.get('keys')
         assert isinstance(keys, list) and keys and len(keys) == len(set(keys)) and set(keys) <= KEYS
         assert type(step.get('holdMs')) is int and 16 <= step['holdMs'] <= 10000
+        assert 'windowsMenuTap' not in step, 'Use the shared menuTap contract'
+        if 'menuTap' in step:
+            assert type(step['menuTap']) is bool, 'menuTap must be boolean'
+            if step['menuTap']:assert len(keys)==1, 'menuTap requires exactly one actual SDK key'
         assert numeric(step.get('timeoutSeconds', 15)) and 0 < step.get('timeoutSeconds', 15) <= 240
         expectations = step.get('expect')
         assert isinstance(expectations, list) and expectations

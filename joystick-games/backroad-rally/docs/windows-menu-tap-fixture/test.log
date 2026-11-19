@@ -1,0 +1,15 @@
+▲ [WARNING] The CommonJS "module" variable is treated as a global variable in an ECMAScript module and may not work as expected [commonjs-variable-in-esm]
+
+    joystick-games/shared/web/controller-clients.js:125:55:
+      125 │ ...defined' && module.exports) module.exports = root.PureTVContro...
+          ╵                                ~~~~~~
+
+  This file is considered to be an ECMAScript module because the enclosing "package.json" file sets the type of this file to "module":
+
+    joystick-games/shared/web/package.json:1:23:
+      1 │ {"private":true,"type":"module"}
+        ╵                        ~~~~~~~~
+
+  Node's package format requires that CommonJS files in a "type": "module" package use the ".cjs" file extension.
+
+{"passed":true,"checks":[{"name":"Counter-preserved down/release between polls moves original menu exactly one row","passed":true},{"name":"Coalesced short tap emits one nonrepeat ArrowDown","passed":true},{"name":"Cached semantic keys released after real frame polls","passed":true},{"name":"Released tap does not repeat after original 420ms repeat delay","passed":true},{"name":"Ordinary 16ms down/release reaches choose stage once","passed":true},{"name":"Coalesced confirm invokes original selected row once","passed":true},{"name":"Selection and released semantic input remain stable","passed":true},{"name":"Normal adapter frame polling continues","passed":true}],"errors":[]}
