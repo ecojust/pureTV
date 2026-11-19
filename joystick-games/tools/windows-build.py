@@ -23,6 +23,23 @@ def dependencies(output):
         package.extractall(output/'webview2')
     return lock
 
+def committed_blobs(source):
+    # Passing <sha>:<path> to `git show` can hit Windows path probing limits
+    # before Git parses the revision, even when Python can read that file.
+    # Resolve the unchanged complete input set to object IDs first instead.
+    tree=subprocess.check_output(['git','ls-tree','-r','-z',source],cwd=ROOT)
+    result={}
+    for row in tree.split(b'\0'):
+        if not row:continue
+        metadata,name=row.split(b'\t',1);mode,kind,oid=metadata.decode('ascii').split()
+        if kind=='blob':result[name.decode('utf-8')]={'mode':mode,'oid':oid}
+    return result
+
+def committed_bytes(source_blobs,name):
+    item=source_blobs.get(name)
+    assert item is not None and item['mode'] in ('100644','100755'),'Not a committed regular file: '+name
+    return subprocess.check_output(['git','cat-file','blob',item['oid']],cwd=ROOT)
+
 def installer_text(meta,identity,folder,installer,app_files):
     def quote(value):return str(value).replace('$','$$').replace('"','$\\"')
     lines=[]
@@ -98,10 +115,10 @@ def build(args):
             assert not p.is_symlink(),p
             if p.is_file():selected.append(p)
     source=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
-    source_files={}
+    source_files={};source_blobs=committed_blobs(source)
     for p in sorted(set(selected)):
         name=p.relative_to(ROOT).as_posix();raw=p.read_bytes()
-        assert raw==subprocess.check_output(['git','show',source+':'+name],cwd=ROOT),'Uncommitted build input: '+name
+        assert raw==committed_bytes(source_blobs,name),'Uncommitted build input: '+name
         source_files[name]={'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}
     out=args.output.resolve();assert not out.exists() or not any(out.iterdir()),'Output must be new/empty';out.mkdir(parents=True,exist_ok=True)
     deps=args.dependencies.resolve();lock=dependencies(deps)

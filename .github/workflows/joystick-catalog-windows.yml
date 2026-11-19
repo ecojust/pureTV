@@ -59,6 +59,8 @@ jobs:
         env:
           GAME: ${{ matrix.game }}
         run: |
+          python -B joystick-games/shared/windows/tests/source-inputs.test.py *> "$env:RUNNER_TEMP/source-inputs-tests.log"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -B joystick-games/shared/windows/tests/installer.test.py *> "$env:RUNNER_TEMP/installer-tests.log"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           node --test joystick-games/shared/windows/tests/web-bridge.test.mjs *> "$env:RUNNER_TEMP/web-bridge-tests.log"

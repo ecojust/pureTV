@@ -7,6 +7,7 @@
 #include <shlwapi.h>
 #include <wrl.h>
 #include <WebView2.h>
+#include <WebView2EnvironmentOptions.h>
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
@@ -81,7 +82,8 @@ public:
  void resize(){if(controller){RECT r;GetClientRect(window,&r);controller->put_Bounds(r);}}
  void startWebView(){
   LPWSTR version=nullptr;HRESULT found=GetAvailableCoreWebView2BrowserVersionString(nullptr,&version);CoTaskMemFree(version);if(FAILED(found)){if(MessageBoxW(window,L"需要 Microsoft Edge WebView2 Runtime 才能运行游戏。是否打开微软官方下载页面？\n\nMicrosoft Edge WebView2 Runtime is required. Open the official download page?",L"pureTV",MB_YESNO|MB_ICONINFORMATION)==IDYES)ShellExecuteW(window,L"open",L"https://developer.microsoft.com/microsoft-edge/webview2/",nullptr,nullptr,SW_SHOWNORMAL);DestroyWindow(window);return;}
-  HRESULT hr=CreateCoreWebView2EnvironmentWithOptions(nullptr,(data/L"WebView2").c_str(),nullptr,Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>([this](HRESULT status,ICoreWebView2Environment* value)->HRESULT{if(closed)return S_OK;if(FAILED(status)||!value){fail("Cannot initialize WebView2");return S_OK;}environment=value;environment->CreateCoreWebView2Controller(window,Callback<ICoreWebView2CreateCoreWebView2ControllerCompletedHandler>([this](HRESULT result,ICoreWebView2Controller* value)->HRESULT{if(closed)return S_OK;if(FAILED(result)||!value){fail("Cannot create game view");return S_OK;}controller=value;controller->get_CoreWebView2(&browser);resize();configureWebView();return S_OK;}).Get());return S_OK;}).Get());if(FAILED(hr))throw std::runtime_error("Cannot start WebView2 environment");
+  auto options=Microsoft::WRL::Make<CoreWebView2EnvironmentOptions>();options->put_AdditionalBrowserArguments(L"--autoplay-policy=no-user-gesture-required");
+  HRESULT hr=CreateCoreWebView2EnvironmentWithOptions(nullptr,(data/L"WebView2").c_str(),options.Get(),Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>([this](HRESULT status,ICoreWebView2Environment* value)->HRESULT{if(closed)return S_OK;if(FAILED(status)||!value){fail("Cannot initialize WebView2");return S_OK;}environment=value;environment->CreateCoreWebView2Controller(window,Callback<ICoreWebView2CreateCoreWebView2ControllerCompletedHandler>([this](HRESULT result,ICoreWebView2Controller* value)->HRESULT{if(closed)return S_OK;if(FAILED(result)||!value){fail("Cannot create game view");return S_OK;}controller=value;controller->get_CoreWebView2(&browser);resize();configureWebView();return S_OK;}).Get());return S_OK;}).Get());if(FAILED(hr))throw std::runtime_error("Cannot start WebView2 environment");
  }
  void configureWebView(){
   ComPtr<ICoreWebView2_3> mapping;if(FAILED(browser.As(&mapping))){fail("Please update Microsoft Edge WebView2 Runtime");return;}mapping->SetVirtualHostNameToFolderMapping(L"puretv.local",(root/L"Web").c_str(),COREWEBVIEW2_HOST_RESOURCE_ACCESS_KIND_DENY_CORS);
