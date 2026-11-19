@@ -1,0 +1,95 @@
+
+> puretv-backroad-rally@0.1.0 test
+> cd src/upstream && vitest run --configLoader runner --no-cache --no-fsModuleCache
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/Users/runner/work/pureTV/pureTV/joystick-games/backroad-rally/src/upstream[39m
+
+ [32m✓[39m test/career.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 123[2mms[22m[39m
+ [32m✓[39m test/audio.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 136[2mms[22m[39m
+[90mstderr[2m | test/fx.test.ts[2m > [22m[2mevents[2m > [22m[2mdelivers to listeners, unsubscribes, and survives a throwing listener
+[22m[39mevent a: Error: listener bug
+    at [90m/Users/runner/work/pureTV/pureTV/joystick-games/backroad-rally/src/upstream/[39mtest/fx.test.ts:40:13
+    at Emitter.emit [90m(/Users/runner/work/pureTV/pureTV/joystick-games/backroad-rally/src/upstream/[39msrc/game/events.ts:74:9[90m)[39m
+    at [90m/Users/runner/work/pureTV/pureTV/joystick-games/backroad-rally/src/upstream/[39mtest/fx.test.ts:47:7
+    at file:///Users/runner/work/pureTV/pureTV/joystick-games/backroad-rally/node_modules/[4mvitest[24m/dist/chunks/run.Cm2sd7-x.js:1632:35
+    at file:///Users/runner/work/pureTV/pureTV/joystick-games/backroad-rally/node_modules/[4mvitest[24m/dist/chunks/run.Cm2sd7-x.js:2794:26
+    at file:///Users/runner/work/pureTV/pureTV/joystick-games/backroad-rally/node_modules/[4mvitest[24m/dist/chunks/run.Cm2sd7-x.js:3334:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///Users/runner/work/pureTV/pureTV/joystick-games/backroad-rally/node_modules/[4mvitest[24m/dist/chunks/run.Cm2sd7-x.js:3329:10)
+    at file:///Users/runner/work/pureTV/pureTV/joystick-games/backroad-rally/node_modules/[4mvitest[24m/dist/chunks/run.Cm2sd7-x.js:3314:20
+    at new Promise (<anonymous>)
+
+ [32m✓[39m test/fx.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+ [32m✓[39m test/damage.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 733[2mms[22m[39m
+   [32m✓[39m crashing into a rock (Rapier contact impulses) [2m(4)[22m
+     [33m[2m✓[22m[39m at 30 km/h[33m 399[2mms[22m[39m
+ [32m✓[39m test/weather.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 67[2mms[22m[39m
+ [32m✓[39m test/menus.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m test/rivalGhosts.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 195[2mms[22m[39m
+ [32m✓[39m test/ghostCodec.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 198[2mms[22m[39m
+ [32m✓[39m test/save.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m test/rock.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 669[2mms[22m[39m
+   [32m✓[39m roadside rocks [2m(4)[22m
+     [33m[2m✓[22m[39m stop the swift hitting SM_Rock_B at 40 km/h[33m 324[2mms[22m[39m
+ [32m✓[39m test/autoQuality.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m test/flow.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m test/road.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m test/autopilot.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+[90mstdout[2m | test/stageSeams.test.ts[2m > [22m[2mstage finland terrain[2m > [22m[2mhas cracks as converted, and none after weldSeams
+[22m[39mfinland: 8413 vertices welded, largest move 2.3 cm, 109 ms
+
+[90mstdout[2m | test/stageSeams.test.ts[2m > [22m[2mstage japan terrain[2m > [22m[2mhas cracks as converted, and none after weldSeams
+[22m[39mjapan: 9059 vertices welded, largest move 2.6 cm, 90 ms
+
+[90mstdout[2m | test/stageSeams.test.ts[2m > [22m[2mstage alps terrain[2m > [22m[2mhas cracks as converted, and none after weldSeams
+[22m[39malps: 9100 vertices welded, largest move 2.6 cm, 73 ms
+
+[90mstdout[2m | test/stageSeams.test.ts[2m > [22m[2mstage wales terrain[2m > [22m[2mhas cracks as converted, and none after weldSeams
+[22m[39mwales: 8035 vertices welded, largest move 2.4 cm, 99 ms
+
+[90mstdout[2m | test/stageSeams.test.ts[2m > [22m[2mstage arizona terrain[2m > [22m[2mhas cracks as converted, and none after weldSeams
+[22m[39marizona: 10512 vertices welded, largest move 2.6 cm, 105 ms
+
+[90mstdout[2m | test/stageSeams.test.ts[2m > [22m[2mstage vermont terrain[2m > [22m[2mhas cracks as converted, and none after weldSeams
+[22m[39mvermont: 9035 vertices welded, largest move 2.5 cm, 72 ms
+
+ [32m✓[39m test/stageSeams.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 11214[2mms[22m[39m
+   [32m✓[39m stage finland terrain [2m(1)[22m
+     [33m[2m✓[22m[39m has cracks as converted, and none after weldSeams[33m 1955[2mms[22m[39m
+   [32m✓[39m stage japan terrain [2m(1)[22m
+     [33m[2m✓[22m[39m has cracks as converted, and none after weldSeams[33m 1561[2mms[22m[39m
+   [32m✓[39m stage alps terrain [2m(1)[22m
+     [33m[2m✓[22m[39m has cracks as converted, and none after weldSeams[33m 1675[2mms[22m[39m
+   [32m✓[39m stage wales terrain [2m(1)[22m
+     [33m[2m✓[22m[39m has cracks as converted, and none after weldSeams[33m 2171[2mms[22m[39m
+   [32m✓[39m stage arizona terrain [2m(1)[22m
+     [33m[2m✓[22m[39m has cracks as converted, and none after weldSeams[33m 2267[2mms[22m[39m
+   [32m✓[39m stage vermont terrain [2m(1)[22m
+     [33m[2m✓[22m[39m has cracks as converted, and none after weldSeams[33m 1582[2mms[22m[39m
+ [32m✓[39m test/puretvStorage.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 62[2mms[22m[39m
+ [32m✓[39m test/lod.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m test/tuning.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m test/ue.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m test/stages.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 16819[2mms[22m[39m
+   [32m✓[39m stage finland [2m(2)[22m
+     [33m[2m✓[22m[39m decodes the instance table onto the stage[33m 3552[2mms[22m[39m
+   [32m✓[39m stage japan [2m(2)[22m
+     [33m[2m✓[22m[39m decodes the instance table onto the stage[33m 3682[2mms[22m[39m
+   [32m✓[39m stage alps [2m(2)[22m
+     [33m[2m✓[22m[39m decodes the instance table onto the stage[33m 3152[2mms[22m[39m
+   [32m✓[39m stage wales [2m(2)[22m
+     [33m[2m✓[22m[39m decodes the instance table onto the stage[33m 2313[2mms[22m[39m
+   [32m✓[39m stage arizona [2m(2)[22m
+     [33m[2m✓[22m[39m decodes the instance table onto the stage[33m 987[2mms[22m[39m
+   [32m✓[39m stage vermont [2m(2)[22m
+     [33m[2m✓[22m[39m decodes the instance table onto the stage[33m 3093[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m20 passed[39m[22m[90m (20)[39m
+[2m      Tests [22m [1m[32m176 passed[39m[22m[90m (176)[39m
+[2m   Start at [22m 19:52:26
+[2m   Duration [22m 21.39s[2m (tests 91%, transform 5%, import 4%)[22m
+
+[2m    Isolate [22m [33m20 workers spawned[39m[2m · ~165ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~1.48s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
