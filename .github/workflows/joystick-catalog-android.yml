@@ -110,7 +110,11 @@ jobs:
           python3 ../../resource/game-kit/build-strings-test.py --sdk "$ANDROID_HOME" | tee "$RUNNER_TEMP/string-resource-tests.json"
       - name: Fetch the existing pinned QR encoder
         run: |
-          curl --fail --silent --show-error --location https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar --output "$RUNNER_TEMP/zxing.jar"
+          curl --fail --silent --show-error --location \
+            --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 120 \
+            --connect-timeout 15 --max-time 90 \
+            https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar \
+            --output "$RUNNER_TEMP/zxing.jar" 2> >(tee "$RUNNER_TEMP/zxing-download.log" >&2)
           python3 - <<'PY'
           import hashlib,os
           from pathlib import Path
@@ -140,6 +144,7 @@ jobs:
           name: joystick-android-report-build-${{ matrix.game }}
           path: |
             ${{ runner.temp }}/build.log
+            ${{ runner.temp }}/zxing-download.log
             ${{ runner.temp }}/observer-build.log
             ${{ runner.temp }}/web-build-check.log
             ${{ runner.temp }}/original-tests.log
