@@ -1,0 +1,431 @@
+verify (turbo-kart-rush)	Set up job	﻿2026-11-19T21:44:28.4009297Z Current runner version: '2.338.2'
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4244499Z ##[group]Runner Image Provisioner
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4245501Z Hosted Compute Agent
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4246057Z Version: 20261111.635
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4246656Z Commit: b8a594ea514ff44cadb5342986c68b1eac6e22ed
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4247401Z Build Date: 2026-11-11T01:49:01Z
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4248063Z Worker ID: {8b3c0570-e517-4e67-9448-a69347ad2a0a}
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4248789Z Region: eastus2
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4249305Z Cloud: Azure
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4249788Z ##[endgroup]
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4251069Z ##[group]Operating System
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4251718Z Microsoft Windows Server 2022
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4252327Z 10.0.20348
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4252817Z Datacenter
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4253300Z ##[endgroup]
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4253807Z ##[group]Runner Image
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4254355Z Image: windows-2022
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4254902Z Version: 20261116.370.1
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4255971Z Included Software: https://github.com/actions/runner-images/blob/win22/20261116.370/images/windows/Windows2022-Readme.md
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4257754Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261116.370
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4258677Z ##[endgroup]
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4259684Z ##[group]GITHUB_TOKEN Permissions
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4261417Z Contents: read
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4261982Z Metadata: read
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4262475Z ##[endgroup]
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4264867Z Secret source: Actions
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4265779Z Cache mode: write
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.4266414Z Prepare workflow directory
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.5224370Z Prepare all required actions
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.5276549Z Getting action download info
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.7164723Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:28.8846405Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:29.1103165Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+verify (turbo-kart-rush)	Set up job	2026-11-19T21:44:29.9496259Z Complete job name: verify (turbo-kart-rush)
+verify (turbo-kart-rush)	Preserve exact source paths and bytes before checkout	﻿2026-11-19T21:44:30.5833868Z ##[group]Run git config --global core.longpaths true
+verify (turbo-kart-rush)	Preserve exact source paths and bytes before checkout	2026-11-19T21:44:30.5835174Z [36;1mgit config --global core.longpaths true[0m
+verify (turbo-kart-rush)	Preserve exact source paths and bytes before checkout	2026-11-19T21:44:30.5836265Z [36;1mgit config --global core.autocrlf false[0m
+verify (turbo-kart-rush)	Preserve exact source paths and bytes before checkout	2026-11-19T21:44:30.5837164Z [36;1mgit config --global core.eol lf[0m
+verify (turbo-kart-rush)	Preserve exact source paths and bytes before checkout	2026-11-19T21:44:30.6040826Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+verify (turbo-kart-rush)	Preserve exact source paths and bytes before checkout	2026-11-19T21:44:30.6042178Z env:
+verify (turbo-kart-rush)	Preserve exact source paths and bytes before checkout	2026-11-19T21:44:30.6042969Z   PYTHONUTF8: 1
+verify (turbo-kart-rush)	Preserve exact source paths and bytes before checkout	2026-11-19T21:44:30.6043765Z ##[endgroup]
+verify (turbo-kart-rush)	Run actions/checkout@v4	﻿2026-11-19T21:44:37.1370108Z ##[group]Run actions/checkout@v4
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1370695Z with:
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1371075Z   repository: ecojust/pureTV
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1375341Z   token: ***
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1375666Z   ssh-strict: true
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1376005Z   ssh-user: git
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1376349Z   persist-credentials: true
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1376751Z   clean: true
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1377084Z   sparse-checkout-cone-mode: true
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1377479Z   fetch-depth: 1
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1377790Z   fetch-tags: false
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1378145Z   show-progress: true
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1378581Z   lfs: false
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1378900Z   submodules: false
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1379260Z   set-safe-directory: true
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1379668Z   allow-unsafe-pr-checkout: false
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1380081Z env:
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1380386Z   PYTHONUTF8: 1
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.1380710Z ##[endgroup]
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.2851255Z Syncing repository: ecojust/pureTV
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.2852682Z ##[group]Getting Git version info
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.2853149Z Working directory is 'D:\a\pureTV\pureTV'
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.3755369Z [command]"C:\Program Files\Git\bin\git.exe" version
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.4027191Z git version 2.56.1.windows.1
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.4068274Z ##[endgroup]
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.4080763Z Copying 'C:\Users\runneradmin\.gitconfig' to 'D:\a\_temp\7b36c5e5-ba85-44bb-b77e-8b842417643b\.gitconfig'
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.4099989Z Temporarily overriding HOME='D:\a\_temp\7b36c5e5-ba85-44bb-b77e-8b842417643b' before making global git config changes
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.4101014Z Adding repository directory to the temporary git global config as a safe directory
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.4110253Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\pureTV\pureTV
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.4390943Z Deleting the contents of 'D:\a\pureTV\pureTV'
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.4395673Z ##[group]Initializing the repository
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.4404012Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\pureTV\pureTV
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.5046931Z Initialized empty Git repository in D:/a/pureTV/pureTV/.git/
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.5082735Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/ecojust/pureTV
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.5672150Z ##[endgroup]
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.5672692Z ##[group]Disabling automatic garbage collection
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.5680948Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.5975657Z ##[endgroup]
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.5976214Z ##[group]Setting up auth
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.5976809Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:37.6259220Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:39.9925354Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:40.0216399Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:40.4807537Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:40.5101764Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:40.9980361Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:41.0268310Z ##[endgroup]
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:41.0269019Z ##[group]Fetching the repository
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:44:41.0279772Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +039d210cfa4cc65f59adf0859a777f3591853a70:refs/remotes/origin/build-source/racing-windows-four-v3
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:43.2617666Z From https://github.com/ecojust/pureTV
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:43.2618750Z  * [new ref]           039d210cfa4cc65f59adf0859a777f3591853a70 -> origin/build-source/racing-windows-four-v3
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:43.2649952Z ##[endgroup]
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:43.2650628Z ##[group]Determining the checkout info
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:43.2653559Z ##[endgroup]
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:43.2664392Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:43.3077684Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:43.3361801Z ##[group]Checking out the ref
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:43.3375342Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B build-source/racing-windows-four-v3 refs/remotes/origin/build-source/racing-windows-four-v3
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:44.4459367Z Updating files:   6% (2524/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:44.7038337Z Updating files:   7% (2575/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:44.8353852Z Updating files:   8% (2943/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:44.9190675Z Updating files:   9% (3311/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:45.0257040Z Updating files:  10% (3678/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:45.1355602Z Updating files:  11% (4046/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:45.1976516Z Updating files:  12% (4414/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:45.2738197Z Updating files:  13% (4782/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:45.3544136Z Updating files:  14% (5150/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:45.4389218Z Updating files:  15% (5517/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:45.4649926Z Updating files:  15% (5726/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:45.5272442Z Updating files:  16% (5885/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:45.6235517Z Updating files:  17% (6253/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:45.7441242Z Updating files:  18% (6621/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:45.8027796Z Updating files:  19% (6989/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:45.8598431Z Updating files:  20% (7356/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:45.9714594Z Updating files:  21% (7724/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:46.0807616Z Updating files:  22% (8092/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:46.1785805Z Updating files:  23% (8460/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:46.2371400Z Updating files:  24% (8828/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:46.3440187Z Updating files:  25% (9195/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:46.4403336Z Updating files:  26% (9563/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:46.5602485Z Updating files:  26% (9719/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:46.7055801Z Updating files:  27% (9931/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:46.8065091Z Updating files:  28% (10299/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:47.4438319Z Updating files:  29% (10667/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:47.5429623Z Updating files:  29% (10930/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:47.7914885Z Updating files:  30% (11034/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:48.0662080Z Updating files:  31% (11402/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:48.3357419Z Updating files:  32% (11770/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:48.4475832Z Updating files:  33% (12138/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:48.6160422Z Updating files:  33% (12354/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:48.9986736Z Updating files:  34% (12506/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:49.1379511Z Updating files:  35% (12873/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:49.3008201Z Updating files:  36% (13241/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:49.4438618Z Updating files:  37% (13609/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:49.5072662Z Updating files:  37% (13884/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:49.6555312Z Updating files:  38% (13977/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:49.7995517Z Updating files:  39% (14345/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:50.1705475Z Updating files:  40% (14712/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:50.3626818Z Updating files:  41% (15080/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:50.4461529Z Updating files:  42% (15448/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:50.5919164Z Updating files:  42% (15688/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:50.8603864Z Updating files:  43% (15816/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:51.0919280Z Updating files:  44% (16184/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:51.2393674Z Updating files:  45% (16551/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:51.4461423Z Updating files:  46% (16919/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:51.5379951Z Updating files:  46% (17009/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:51.6692881Z Updating files:  47% (17287/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:51.9213093Z Updating files:  48% (17655/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:52.1368912Z Updating files:  49% (18023/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:52.3227820Z Updating files:  50% (18390/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:52.4755591Z Updating files:  51% (18758/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:52.5552103Z Updating files:  51% (18973/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:52.8817954Z Updating files:  52% (19126/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:52.9724473Z Updating files:  53% (19494/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:53.0692339Z Updating files:  54% (19862/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:53.2587463Z Updating files:  55% (20229/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:53.4522884Z Updating files:  56% (20597/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:53.4582390Z Updating files:  56% (20935/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:53.6547644Z Updating files:  57% (20965/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:53.9391511Z Updating files:  58% (21333/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:54.4234342Z Updating files:  59% (21701/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:54.4539493Z Updating files:  60% (22068/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:54.7356004Z Updating files:  60% (22110/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:54.9628608Z Updating files:  61% (22436/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:55.2542796Z Updating files:  62% (22804/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:55.6170069Z Updating files:  63% (23172/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:55.7715942Z Updating files:  63% (23386/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:56.0127298Z Updating files:  64% (23540/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:56.2586447Z Updating files:  65% (23907/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:56.4598115Z Updating files:  66% (24275/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:56.4645067Z Updating files:  66% (24634/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:56.6006744Z Updating files:  67% (24643/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:57.0916618Z Updating files:  68% (25011/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:57.3099711Z Updating files:  69% (25379/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:57.4639621Z Updating files:  70% (25746/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:57.6153373Z Updating files:  70% (25974/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:57.7842168Z Updating files:  71% (26114/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:57.8991598Z Updating files:  72% (26482/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:58.5125221Z Updating files:  73% (26850/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:58.5144337Z Updating files:  73% (27216/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:58.7485093Z Updating files:  74% (27218/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:58.9693080Z Updating files:  75% (27585/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:59.2479258Z Updating files:  76% (27953/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:59.4696932Z Updating files:  77% (28321/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:45:59.5302362Z Updating files:  77% (28627/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:00.1537503Z Updating files:  78% (28689/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:00.4672280Z Updating files:  79% (29057/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:00.5290979Z Updating files:  79% (29317/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:00.6852194Z Updating files:  80% (29424/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:00.8733707Z Updating files:  81% (29792/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:01.3106475Z Updating files:  82% (30160/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:01.4695883Z Updating files:  83% (30528/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:01.5601128Z Updating files:  83% (30780/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:01.8502788Z Updating files:  84% (30896/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:02.0323409Z Updating files:  85% (31263/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:02.2235180Z Updating files:  86% (31631/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:02.6581362Z Updating files:  87% (31999/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:02.7433798Z Updating files:  87% (32158/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:02.8719873Z Updating files:  88% (32367/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:02.9774435Z Updating files:  89% (32735/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:03.1185091Z Updating files:  90% (33102/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:03.2175798Z Updating files:  91% (33470/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:03.4043056Z Updating files:  92% (33838/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:03.4712119Z Updating files:  93% (34206/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:03.5006711Z Updating files:  93% (34462/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:03.6438362Z Updating files:  94% (34574/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:04.1521585Z Updating files:  95% (34941/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:04.2351097Z Updating files:  96% (35309/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:04.3044113Z Updating files:  97% (35677/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:04.3923032Z Updating files:  98% (36045/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:04.4717420Z Updating files:  99% (36413/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:04.4746496Z Updating files:  99% (36764/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:04.4747099Z Updating files: 100% (36780/36780)
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:04.4747423Z Updating files: 100% (36780/36780), done.
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:04.5485076Z Switched to a new branch 'build-source/racing-windows-four-v3'
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:04.5499668Z branch 'build-source/racing-windows-four-v3' set up to track 'origin/build-source/racing-windows-four-v3'.
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:04.7437881Z ##[endgroup]
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:04.7747729Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+verify (turbo-kart-rush)	Run actions/checkout@v4	2026-11-19T21:46:04.8006812Z 039d210cfa4cc65f59adf0859a777f3591853a70
+verify (turbo-kart-rush)	Run actions/setup-python@v5	﻿2026-11-19T21:46:04.8340558Z ##[group]Run actions/setup-python@v5
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:04.8340970Z with:
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:04.8341213Z   python-version: 3.12
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:04.8341512Z   check-latest: false
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:04.8344115Z   token: ***
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:04.8344366Z   update-environment: true
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:04.8344647Z   allow-prereleases: false
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:04.8344928Z   freethreaded: false
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:04.8345165Z env:
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:04.8345395Z   PYTHONUTF8: 1
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:04.8345622Z ##[endgroup]
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:04.9928465Z ##[group]Installed versions
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:05.0103622Z (node:3508) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:05.0104929Z (Use `node --trace-deprecation ...` to show where the warning was created)
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:05.0105698Z Successfully set up CPython (3.12.10)
+verify (turbo-kart-rush)	Run actions/setup-python@v5	2026-11-19T21:46:05.0106518Z ##[endgroup]
+verify (turbo-kart-rush)	Install pinned test and installer tools	﻿2026-11-19T21:46:05.0330285Z ##[group]Run python -m pip install zeroconf==0.148.0
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:05.0330861Z [36;1mpython -m pip install zeroconf==0.148.0[0m
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:05.0331384Z [36;1mif (-not (Test-Path "${env:ProgramFiles(x86)}\NSIS\makensis.exe")) {[0m
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:05.0331930Z [36;1m  choco install nsis --version=3.10 -y --no-progress[0m
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:05.0332411Z [36;1m  if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:05.0332782Z [36;1m}[0m
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:05.0376313Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:05.0376732Z env:
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:05.0376957Z   PYTHONUTF8: 1
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:05.0377293Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:05.0377822Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:05.0378346Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:05.0378811Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:05.0379347Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:05.0379783Z ##[endgroup]
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:10.8903593Z Collecting zeroconf==0.148.0
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:11.1436744Z   Downloading zeroconf-0.148.0-cp312-cp312-win_amd64.whl.metadata (6.3 kB)
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:11.2161552Z Collecting ifaddr>=0.1.7 (from zeroconf==0.148.0)
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:11.2493453Z   Downloading ifaddr-0.2.0-py3-none-any.whl.metadata (4.9 kB)
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:11.3420890Z Downloading zeroconf-0.148.0-cp312-cp312-win_amd64.whl (1.5 MB)
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:11.5612160Z    ---------------------------------------- 1.5/1.5 MB 11.7 MB/s  0:00:00
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:11.5943849Z Downloading ifaddr-0.2.0-py3-none-any.whl (12 kB)
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:11.8777132Z Installing collected packages: ifaddr, zeroconf
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:12.1577326Z 
+verify (turbo-kart-rush)	Install pinned test and installer tools	2026-11-19T21:46:12.1594223Z Successfully installed ifaddr-0.2.0 zeroconf-0.148.0
+verify (turbo-kart-rush)	Build frozen app and installation packages	﻿2026-11-19T21:46:12.3192164Z ##[group]Run python -B joystick-games/shared/windows/tests/display.test.py *> "$env:RUNNER_TEMP/display-tests.log"
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3193217Z [36;1mpython -B joystick-games/shared/windows/tests/display.test.py *> "$env:RUNNER_TEMP/display-tests.log"[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3193883Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3194546Z [36;1mpython -B joystick-games/shared/windows/tests/observation.test.py *> "$env:RUNNER_TEMP/observation-tests.log"[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3195205Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3195901Z [36;1mpython -B joystick-games/shared/windows/tests/window-lifecycle.test.py *> "$env:RUNNER_TEMP/window-lifecycle-tests.log"[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3196658Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3197266Z [36;1mpython -B joystick-games/shared/windows/tests/assets.test.py *> "$env:RUNNER_TEMP/assets-tests.log"[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3197878Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3198614Z [36;1mpython -B joystick-games/shared/windows/tests/source-scope.test.py *> "$env:RUNNER_TEMP/source-scope-tests.log"[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3227189Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3227964Z [36;1mpython -B joystick-games/shared/windows/tests/source-inputs.test.py *> "$env:RUNNER_TEMP/source-inputs-tests.log"[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3229043Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3229989Z [36;1mpython -B joystick-games/shared/windows/tests/installer.test.py *> "$env:RUNNER_TEMP/installer-tests.log"[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3231687Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3232348Z [36;1mnode --test joystick-games/shared/windows/tests/web-bridge.test.mjs *> "$env:RUNNER_TEMP/web-bridge-tests.log"[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3232989Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3233918Z [36;1mpython joystick-games/tools/windows-build.py --game $env:GAME --output "$env:RUNNER_TEMP/packages" --dependencies "$env:RUNNER_TEMP/windows-dependencies" *> "$env:RUNNER_TEMP/build.log"[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3234778Z [36;1mexit $LASTEXITCODE[0m
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3273706Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3274063Z env:
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3274221Z   PYTHONUTF8: 1
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3274527Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3275008Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3275457Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3275851Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3276237Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3276546Z   GAME: turbo-kart-rush
+verify (turbo-kart-rush)	Build frozen app and installation packages	2026-11-19T21:46:12.3276790Z ##[endgroup]
+verify (turbo-kart-rush)	Verify portable archive and actual installed files	﻿2026-11-19T21:47:16.2429005Z ##[group]Run python joystick-games/tools/windows-packages.py --source "$env:RUNNER_TEMP/packages" --output "$env:RUNNER_TEMP/install-verification" *> "$env:RUNNER_TEMP/install.log"
+verify (turbo-kart-rush)	Verify portable archive and actual installed files	2026-11-19T21:47:16.2430427Z [36;1mpython joystick-games/tools/windows-packages.py --source "$env:RUNNER_TEMP/packages" --output "$env:RUNNER_TEMP/install-verification" *> "$env:RUNNER_TEMP/install.log"[0m
+verify (turbo-kart-rush)	Verify portable archive and actual installed files	2026-11-19T21:47:16.2431210Z [36;1mexit $LASTEXITCODE[0m
+verify (turbo-kart-rush)	Verify portable archive and actual installed files	2026-11-19T21:47:16.2470152Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+verify (turbo-kart-rush)	Verify portable archive and actual installed files	2026-11-19T21:47:16.2470487Z env:
+verify (turbo-kart-rush)	Verify portable archive and actual installed files	2026-11-19T21:47:16.2470674Z   PYTHONUTF8: 1
+verify (turbo-kart-rush)	Verify portable archive and actual installed files	2026-11-19T21:47:16.2470949Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Verify portable archive and actual installed files	2026-11-19T21:47:16.2471405Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+verify (turbo-kart-rush)	Verify portable archive and actual installed files	2026-11-19T21:47:16.2471854Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Verify portable archive and actual installed files	2026-11-19T21:47:16.2472267Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Verify portable archive and actual installed files	2026-11-19T21:47:16.2472695Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Verify portable archive and actual installed files	2026-11-19T21:47:16.2473011Z ##[endgroup]
+verify (turbo-kart-rush)	Verify actual document-start storage and query navigation	﻿2026-11-19T21:47:17.8034642Z ##[group]Run python -B joystick-games/shared/windows/tests/navigation-storage.test.py --app "$env:RUNNER_TEMP/install-verification/installed" --output "$env:RUNNER_TEMP/runtime-bootstrap" *> "$env:RUNNER_TEMP/runtime-bootstrap.log"
+verify (turbo-kart-rush)	Verify actual document-start storage and query navigation	2026-11-19T21:47:17.8036430Z [36;1mpython -B joystick-games/shared/windows/tests/navigation-storage.test.py --app "$env:RUNNER_TEMP/install-verification/installed" --output "$env:RUNNER_TEMP/runtime-bootstrap" *> "$env:RUNNER_TEMP/runtime-bootstrap.log"[0m
+verify (turbo-kart-rush)	Verify actual document-start storage and query navigation	2026-11-19T21:47:17.8037391Z [36;1mexit $LASTEXITCODE[0m
+verify (turbo-kart-rush)	Verify actual document-start storage and query navigation	2026-11-19T21:47:17.8077714Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+verify (turbo-kart-rush)	Verify actual document-start storage and query navigation	2026-11-19T21:47:17.8078051Z env:
+verify (turbo-kart-rush)	Verify actual document-start storage and query navigation	2026-11-19T21:47:17.8078220Z   PYTHONUTF8: 1
+verify (turbo-kart-rush)	Verify actual document-start storage and query navigation	2026-11-19T21:47:17.8078491Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Verify actual document-start storage and query navigation	2026-11-19T21:47:17.8078944Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+verify (turbo-kart-rush)	Verify actual document-start storage and query navigation	2026-11-19T21:47:17.8079390Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Verify actual document-start storage and query navigation	2026-11-19T21:47:17.8079832Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Verify actual document-start storage and query navigation	2026-11-19T21:47:17.8080222Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Verify actual document-start storage and query navigation	2026-11-19T21:47:17.8080527Z ##[endgroup]
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	﻿2026-11-19T21:47:37.1132353Z ##[group]Run $failed = 0
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1132745Z [36;1m$failed = 0[0m
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1133739Z [36;1mpython joystick-games/tools/windows-verify.py --game $env:GAME --app "$env:RUNNER_TEMP/install-verification/installed" --output "$env:RUNNER_TEMP/runtime-normal" *> "$env:RUNNER_TEMP/runtime-normal.log"[0m
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1135018Z [36;1mif ($LASTEXITCODE -ne 0) { $failed = 1 }[0m
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1136189Z [36;1mpython joystick-games/tools/windows-verify.py --game $env:GAME --app "$env:RUNNER_TEMP/install-verification/installed" --output "$env:RUNNER_TEMP/runtime-occupied" --occupy-default-port *> "$env:RUNNER_TEMP/runtime-occupied.log"[0m
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1137297Z [36;1mif ($LASTEXITCODE -ne 0) { $failed = 1 }[0m
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1137591Z [36;1mexit $failed[0m
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1178697Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1179080Z env:
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1179262Z   PYTHONUTF8: 1
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1179562Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1180126Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1180633Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1181073Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1181510Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1181862Z   GAME: turbo-kart-rush
+verify (turbo-kart-rush)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:47:37.1182076Z ##[endgroup]
+verify (turbo-kart-rush)	Collect original reports and package evidence	﻿2026-11-19T21:58:53.5721967Z ##[group]Run python joystick-games/tools/windows-evidence.py
+verify (turbo-kart-rush)	Collect original reports and package evidence	2026-11-19T21:58:53.5722660Z [36;1mpython joystick-games/tools/windows-evidence.py[0m
+verify (turbo-kart-rush)	Collect original reports and package evidence	2026-11-19T21:58:53.5723057Z [36;1mexit $LASTEXITCODE[0m
+verify (turbo-kart-rush)	Collect original reports and package evidence	2026-11-19T21:58:53.5764475Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+verify (turbo-kart-rush)	Collect original reports and package evidence	2026-11-19T21:58:53.5764880Z env:
+verify (turbo-kart-rush)	Collect original reports and package evidence	2026-11-19T21:58:53.5765114Z   PYTHONUTF8: 1
+verify (turbo-kart-rush)	Collect original reports and package evidence	2026-11-19T21:58:53.5765456Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Collect original reports and package evidence	2026-11-19T21:58:53.5765972Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+verify (turbo-kart-rush)	Collect original reports and package evidence	2026-11-19T21:58:53.5766574Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Collect original reports and package evidence	2026-11-19T21:58:53.5767144Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Collect original reports and package evidence	2026-11-19T21:58:53.5767916Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Collect original reports and package evidence	2026-11-19T21:58:53.5768561Z   GAME: turbo-kart-rush
+verify (turbo-kart-rush)	Collect original reports and package evidence	2026-11-19T21:58:53.5768866Z   JOB_STATUS: success
+verify (turbo-kart-rush)	Collect original reports and package evidence	2026-11-19T21:58:53.5769111Z ##[endgroup]
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	﻿2026-11-19T21:58:54.3594103Z ##[group]Run actions/upload-artifact@v4
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3594543Z with:
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3594864Z   name: joystick-windows-evidence-turbo-kart-rush
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3595239Z   include-hidden-files: true
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3595554Z   path: D:\a\_temp/evidence/
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3595829Z   if-no-files-found: error
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3596097Z   compression-level: 6
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3596345Z   overwrite: false
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3596571Z env:
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3596786Z   PYTHONUTF8: 1
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3597095Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3597620Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3598127Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3598554Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3599000Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.3599424Z ##[endgroup]
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.5398443Z (node:1100) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.5399335Z (Use `node --trace-deprecation ...` to show where the warning was created)
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.5912911Z With the provided path, there will be 113 files uploaded
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.5918914Z Artifact name is valid!
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.5921081Z Root directory input is valid!
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:54.7951525Z Beginning upload of artifact content to blob storage
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.1560348Z (node:1100) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.3575421Z Uploaded bytes 8388608
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.3887174Z Uploaded bytes 9470945
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.4008155Z Finished uploading artifact content to blob storage!
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.4010499Z SHA256 digest of uploaded artifact zip is ee7c65e8bd15dc9193380f840c6b2a0f63364e9d1b2de3d5807bc9d76727c5a6
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.4012584Z Finalizing artifact upload
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.7752967Z Artifact joystick-windows-evidence-turbo-kart-rush.zip successfully finalized. Artifact ID 14579046049
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.7755524Z Artifact joystick-windows-evidence-turbo-kart-rush has been successfully uploaded! Final size is 9470945 bytes. Artifact ID is 14579046049
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.7764126Z Artifact download URL: https://github.com/ecojust/pureTV/actions/runs/44621752383/artifacts/14579046049
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	﻿2026-11-19T21:58:55.8133087Z ##[group]Run actions/upload-artifact@v4
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8133779Z with:
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8134311Z   name: joystick-windows-packages-turbo-kart-rush
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8135383Z   path: D:\a\_temp/packages/*-windows-x64.zip
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	D:\a\_temp/packages/*-setup.exe
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	D:\a\_temp/packages/build-manifest.json
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8136376Z   if-no-files-found: error
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8136840Z   compression-level: 6
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8137317Z   overwrite: false
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8137751Z   include-hidden-files: false
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8138124Z env:
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8138402Z   PYTHONUTF8: 1
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8138915Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8139877Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8140793Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8141589Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8142566Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:55.8143236Z ##[endgroup]
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:56.0231050Z (node:5796) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:56.0232384Z (Use `node --trace-deprecation ...` to show where the warning was created)
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:56.0308853Z With the provided path, there will be 3 files uploaded
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:56.0314264Z Artifact name is valid!
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:56.0316808Z Root directory input is valid!
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:56.2497668Z Beginning upload of artifact content to blob storage
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:56.3305224Z (node:5796) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:56.3810877Z Uploaded bytes 1209458
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:56.3943434Z Finished uploading artifact content to blob storage!
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:56.3945376Z SHA256 digest of uploaded artifact zip is af6501d54e5881d799f19ffa4e616070f1b563aa262074248633e4c94082e6b3
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:56.3948146Z Finalizing artifact upload
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:56.7231591Z Artifact joystick-windows-packages-turbo-kart-rush.zip successfully finalized. Artifact ID 14578727152
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:56.7234005Z Artifact joystick-windows-packages-turbo-kart-rush has been successfully uploaded! Final size is 1209458 bytes. Artifact ID is 14578727152
+verify (turbo-kart-rush)	Run actions/upload-artifact@v4	2026-11-19T21:58:56.7245583Z Artifact download URL: https://github.com/ecojust/pureTV/actions/runs/44621752383/artifacts/14578727152
+verify (turbo-kart-rush)	Post Run actions/setup-python@v5	﻿2026-11-19T21:58:56.7595020Z Post job cleanup.
+verify (turbo-kart-rush)	Post Run actions/setup-python@v5	2026-11-19T21:58:56.9177323Z (node:6252) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+verify (turbo-kart-rush)	Post Run actions/setup-python@v5	2026-11-19T21:58:56.9178815Z (Use `node --trace-deprecation ...` to show where the warning was created)
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	﻿2026-11-19T21:58:56.9486727Z Post job cleanup.
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	2026-11-19T21:58:57.2080859Z [command]"C:\Program Files\Git\bin\git.exe" version
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	2026-11-19T21:58:57.2377541Z git version 2.56.1.windows.1
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	2026-11-19T21:58:57.2447090Z Copying 'C:\Users\runneradmin\.gitconfig' to 'D:\a\_temp\1885f93c-20f9-4bca-9004-50fd44afc231\.gitconfig'
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	2026-11-19T21:58:57.2471012Z Temporarily overriding HOME='D:\a\_temp\1885f93c-20f9-4bca-9004-50fd44afc231' before making global git config changes
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	2026-11-19T21:58:57.2472443Z Adding repository directory to the temporary git global config as a safe directory
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	2026-11-19T21:58:57.2483670Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\pureTV\pureTV
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	2026-11-19T21:58:57.2816175Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	2026-11-19T21:58:57.3124032Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	2026-11-19T21:58:57.8032007Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	2026-11-19T21:58:57.8303799Z http.https://github.com/.extraheader
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	2026-11-19T21:58:57.8346637Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	2026-11-19T21:58:57.8654432Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	2026-11-19T21:58:58.3662131Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+verify (turbo-kart-rush)	Post Run actions/checkout@v4	2026-11-19T21:58:58.3966844Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+verify (turbo-kart-rush)	Complete job	﻿2026-11-19T21:58:58.9028689Z Cleaning up orphan processes
+verify (turbo-kart-rush)	Complete job	2026-11-19T21:58:58.9454900Z Terminate orphan process: pid (6964) (vctip)
+verify (turbo-kart-rush)	Complete job	2026-11-19T21:58:58.9741927Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
