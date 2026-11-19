@@ -1,0 +1,36 @@
+[
+  {
+    "name": "header-compile",
+    "command": [
+      "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/javac",
+      "-cp",
+      "/dev/shm/racing-review-driving/graphics-observer-build-4/classes:/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar",
+      "-d",
+      "/dev/shm/racing-review-driving/graphics-observer-tests-4",
+      "/dev/shm/puretv-submit/joystick-games/qa/android/graphics-observer/tests/HeaderBudgetTest.java"
+    ],
+    "exitCode": 0,
+    "log": "header-compile-final.log"
+  },
+  {
+    "name": "header-test",
+    "command": [
+      "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/java",
+      "-cp",
+      "/dev/shm/racing-review-driving/graphics-observer-tests-4:/dev/shm/racing-review-driving/graphics-observer-build-4/classes:/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar",
+      "com.ecojust.graphicsqa.HeaderBudgetTest"
+    ],
+    "exitCode": 0,
+    "log": "header-test-final.log"
+  },
+  {
+    "name": "driver-tests",
+    "command": [
+      "python3",
+      "-B",
+      "/dev/shm/puretv-submit/joystick-games/qa/android/graphics-observer/tests/test_driver.py"
+    ],
+    "exitCode": 0,
+    "log": "driver-tests-final.log"
+  }
+]

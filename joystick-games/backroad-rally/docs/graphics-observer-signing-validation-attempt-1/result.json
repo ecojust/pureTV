@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "status": "local-boundaries-and-workflow-syntax-passed",
+  "sourceInventory": {
+    "bytes": 1317,
+    "sha256": "153e247abb2a64c99ab947b05d802f65749eec7bde835b0db04d222cd92c9bc2"
+  },
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "joystick-games/tools/backroad-graphics-observer-sign-tests.py"
+      ],
+      "startedAt": "2026-11-19T23:39:26.591950+00:00",
+      "endedAt": "2026-11-19T23:39:26.910652+00:00",
+      "exitCode": 0,
+      "log": {
+        "path": "final-command-1.log",
+        "bytes": 2725,
+        "sha256": "80b5b8a789ba77f7e53d407a3ccdcbe8bbaa63c920dd35d8e187c88ad7f8c7d5"
+      }
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "joystick-games/tools/backroad-graphics-diagnostic-export-tests.py"
+      ],
+      "startedAt": "2026-11-19T23:39:26.910713+00:00",
+      "endedAt": "2026-11-19T23:39:27.088313+00:00",
+      "exitCode": 0,
+      "log": {
+        "path": "final-command-2.log",
+        "bytes": 1147,
+        "sha256": "c34de806e20c9bf9d7e78a4dfb9c016db5f5664362232e4ce06fe8ebc42fff21"
+      }
+    },
+    {
+      "argv": [
+        "/dev/shm/racing-tooling/actionlint",
+        "-shellcheck=",
+        ".github/workflows/joystick-backroad-graphics-diagnostic.yml"
+      ],
+      "startedAt": "2026-11-19T23:39:27.088357+00:00",
+      "endedAt": "2026-11-19T23:39:27.091954+00:00",
+      "exitCode": 0,
+      "log": {
+        "path": "final-command-3.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "signerTests": 19,
+  "exportTests": 7,
+  "existingGuardsUnchanged": {
+    "joystick-games/tools/android-release.py": {
+      "before": {
+        "bytes": 11274,
+        "sha256": "354cf65440987b4d3411d879056bbe94493ab3219acd91432beef4c421e97f0e"
+      },
+      "current": {
+        "bytes": 11274,
+        "sha256": "354cf65440987b4d3411d879056bbe94493ab3219acd91432beef4c421e97f0e"
+      },
+      "equal": true
+    },
+    "joystick-games/tools/android-runtime-inputs.py": {
+      "before": {
+        "bytes": 20076,
+        "sha256": "369e15a89d6cdbf7f6ccc79064e01111e0018de83232d4a4de80d91842d1768f"
+      },
+      "current": {
+        "bytes": 20076,
+        "sha256": "369e15a89d6cdbf7f6ccc79064e01111e0018de83232d4a4de80d91842d1768f"
+      },
+      "equal": true
+    },
+    "joystick-games/tools/android-runtime-artifact.py": {
+      "before": {
+        "bytes": 9210,
+        "sha256": "ee5d128e3510ed59778e7e871978fc8a8345e6d7e5a8436c5bf531a0879543d5"
+      },
+      "current": {
+        "bytes": 9210,
+        "sha256": "ee5d128e3510ed59778e7e871978fc8a8345e6d7e5a8436c5bf531a0879543d5"
+      },
+      "equal": true
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "before": {
+        "bytes": 3661,
+        "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+      },
+      "current": {
+        "bytes": 3661,
+        "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+      },
+      "equal": true
+    }
+  },
+  "actualUnsignedInspection": {
+    "bytes": 1108,
+    "sha256": "10f6164e4a93f07ef661b29108230a412ad728aa9c75db4b26907cfa96296c38"
+  },
+  "syntheticSigningOnlyInTests": true,
+  "realSigningPerformed": false,
+  "signingSecretsRead": false,
+  "targetApkBuilt": false,
+  "targetApkSigned": false,
+  "originalApkDownloadedInThisTask": false,
+  "nativeRunPerformed": false,
+  "workflowDispatchPerformed": false,
+  "gitPushPerformed": false,
+  "formalAcceptance": false,
+  "limitations": [
+    "Synthetic signing tests model command outputs; they do not establish a real signature.",
+    "Original run/jobs/direct-artifact API fixture retains exact saved records; its one-item runArtifacts index is explicitly synthetic for offline validator tests.",
+    "First test attempt had a Python context-manager syntax error; original log is preserved. Later 16/18/19 signer boundary passes are separate recorded iterations.",
+    "Driving owns the separately frozen new Observer/builder/driver and its native behavior still requires the one authorized CI diagnostic.",
+    "Actual original Backroad blank-track image remains unresolved; diagnostic completion/export never confers delivery acceptance."
+  ],
+  "previousUnsignedInspection": {
+    "bytes": 1093,
+    "sha256": "d65769727ea34efc0c05f444219969c0108f668b4dd9b2c3deee3edccbf4b0ae"
+  },
+  "currentUnsignedObserver": {
+    "bytes": 11289,
+    "sha256": "8713e93eb26066465513537a6694b693344e46414ab51b9759f4904bd8beccaf",
+    "packageName": "com.ecojust.joystickgraphicsqa.backroadrally",
+    "versionCode": 1,
+    "versionName": "1.0",
+    "certificateSha256": null,
+    "minSdk": 26,
+    "targetSdk": 35,
+    "testOnly": true
+  },
+  "previousUnsignedObserver": {
+    "bytes": 11173,
+    "sha256": "1c03af2a828704eae0544e6c3928c9cc2e9d735544648b17bbb9e33df437122b",
+    "packageName": "com.ecojust.joystickgraphicsqa.backroadrally",
+    "versionCode": 1,
+    "versionName": "1.0",
+    "certificateSha256": null,
+    "minSdk": 26,
+    "targetSdk": 35,
+    "testOnly": true
+  },
+  "actualBuild4ToBuild5ChangedMembers": [
+    "assets/graphics.js"
+  ],
+  "documentationUpdateOnlyNoBoundaryRerun": true
+}

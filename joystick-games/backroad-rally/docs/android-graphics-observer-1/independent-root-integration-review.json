@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "root",
+  "scope": "Read-only integration review; no tests rerun, signing or native execution",
+  "sourceInventories": {
+    "joystick-games/backroad-rally/docs/android-graphics-observer-1/source-inventory.json": {
+      "bytes": 1852,
+      "sha256": "b26f82e342f3ba3ec02c904e01fc6e1678d6f3eeae6139c25fa68608561060b2",
+      "filesVerified": 9
+    },
+    "joystick-games/backroad-rally/docs/graphics-observer-signing-validation-attempt-1/source-inventory.json": {
+      "bytes": 1317,
+      "sha256": "153e247abb2a64c99ab947b05d802f65749eec7bde835b0db04d222cd92c9bc2",
+      "filesVerified": 6
+    }
+  },
+  "productionTreesUnchanged": {
+    "joystick-games/backroad-rally/src": "35dd60ce4b689dd5cf1f5df4b2541159928ad14e",
+    "joystick-games/backroad-rally/dist": "a81986c467254bb8a35673d272c7aff7c8e6d854",
+    "joystick-games/shared/android": "60cb27112386f279a08ba7be17168fb3a3fcb369",
+    "joystick-games/shared/web": "04dada4144f339ae08b15658e7fe734410ed956b"
+  },
+  "fixedTestFixtures": {
+    "joystick-games/backroad-rally/docs/android-initial-ready-v7-44630023214/original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-normal/report.json": {
+      "bytes": 1935876,
+      "sha256": "6e57d24349da8bc6eb86a0ff23dd4beffd60c0958a812d807a4d495a5483db00"
+    },
+    "joystick-games/backroad-rally/docs/android-initial-ready-v7-44630023214/original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally/verified-inputs/input-verification.json": {
+      "bytes": 2121,
+      "sha256": "5fdc9a33202c4267b192c1e7661a4af75eb378187da658fd66fdfc8f13be2395"
+    }
+  },
+  "findings": [
+    "Driver imports use Python standard library plus committed local modules. Existing pureTV SDK needs no pip or zeroconf package.",
+    "Workflow checkout includes puretv-joystick, Android QA, game-kit, helpers and fixed original v7 fixtures.",
+    "Observer and target APK have separate provenance and signatures; original target input guard is unchanged.",
+    "Initial exact about:blank is pending only during initial document wait. Later blank, foreign documents and actual game errors remain failures.",
+    "Bounded console/DOM observation does not call getContext or consume an additional native input snapshot.",
+    "Original normal-mode SDK menu subset retains original predicates; this diagnostic cannot mark the original visually blocked APK accepted."
+  ],
+  "formalAcceptance": false,
+  "nativeExecutionPerformed": false,
+  "targetApkChanged": false,
+  "signingEvidenceAddendum": {
+    "frozenFilesVerified": 26,
+    "freezeSha256": "0e0adb6bb252533e9ef1a83a9be8b194ccd51e788f796e97f12181e9024ace1a",
+    "earlierIndependentReviewCoversOriginal22Files": true,
+    "rootVerifiedLatest26Files": true,
+    "actualOriginalUnsignedPackagesChecked": [
+      {
+        "bytes": 11173,
+        "sha256": "1c03af2a828704eae0544e6c3928c9cc2e9d735544648b17bbb9e33df437122b",
+        "packageName": "com.ecojust.joystickgraphicsqa.backroadrally",
+        "versionCode": 1,
+        "versionName": "1.0",
+        "certificateSha256": null,
+        "minSdk": 26,
+        "targetSdk": 35,
+        "testOnly": true
+      },
+      {
+        "bytes": 11289,
+        "sha256": "8713e93eb26066465513537a6694b693344e46414ab51b9759f4904bd8beccaf",
+        "packageName": "com.ecojust.joystickgraphicsqa.backroadrally",
+        "versionCode": 1,
+        "versionName": "1.0",
+        "certificateSha256": null,
+        "minSdk": 26,
+        "targetSdk": 35,
+        "testOnly": true
+      }
+    ],
+    "onlyPayloadDifference": [
+      "assets/graphics.js"
+    ],
+    "sourceFilesUnchanged": 6,
+    "testsRerun": false
+  }
+}
