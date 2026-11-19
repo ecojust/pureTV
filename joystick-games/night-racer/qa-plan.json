@@ -13,6 +13,236 @@
   ],
   "steps": [
     {
+      "name": "Move up from Start to the original Standard class control",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu.root",
+          "op": "eq",
+          "value": "title"
+        },
+        {
+          "path": "gameplay.menu.focusIndex",
+          "op": "eq",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "name": "Move right to the original Tuned class control without activating it",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu.root",
+          "op": "eq",
+          "value": "title"
+        },
+        {
+          "path": "gameplay.menu.focusIndex",
+          "op": "eq",
+          "value": 17
+        }
+      ]
+    },
+    {
+      "name": "Move down from the class controls to the original Garage button",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu.root",
+          "op": "eq",
+          "value": "title"
+        },
+        {
+          "path": "gameplay.menu.focusId",
+          "op": "eq",
+          "value": "garagebtn"
+        }
+      ]
+    },
+    {
+      "name": "Move from Garage to the original Settings button",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu.root",
+          "op": "eq",
+          "value": "title"
+        },
+        {
+          "path": "gameplay.menu.focusId",
+          "op": "eq",
+          "value": "volbtn"
+        }
+      ]
+    },
+    {
+      "name": "Open the original Settings panel",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu.root",
+          "op": "eq",
+          "value": "volume"
+        },
+        {
+          "path": "gameplay.menu.focusId",
+          "op": "eq",
+          "value": "volclose"
+        }
+      ]
+    },
+    {
+      "name": "Move down from Close to the original Max quality option",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu.root",
+          "op": "eq",
+          "value": "volume"
+        },
+        {
+          "path": "gameplay.menu.focusIndex",
+          "op": "eq",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "name": "Move left to the original Ultra quality option",
+      "keys": [
+        "LEFT"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu.root",
+          "op": "eq",
+          "value": "volume"
+        },
+        {
+          "path": "gameplay.menu.focusIndex",
+          "op": "eq",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "name": "Move left to the original High quality option",
+      "keys": [
+        "LEFT"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu.root",
+          "op": "eq",
+          "value": "volume"
+        },
+        {
+          "path": "gameplay.menu.focusIndex",
+          "op": "eq",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "name": "Move left to the original Balanced quality option",
+      "keys": [
+        "LEFT"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu.root",
+          "op": "eq",
+          "value": "volume"
+        },
+        {
+          "path": "gameplay.menu.focusIndex",
+          "op": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Move left to the original Low quality option",
+      "keys": [
+        "LEFT"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu.root",
+          "op": "eq",
+          "value": "volume"
+        },
+        {
+          "path": "gameplay.menu.focusIndex",
+          "op": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Confirm original Low quality and wait for its ordinary page reload",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 80,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.renderPreset",
+          "op": "eq",
+          "value": "low"
+        },
+        {
+          "path": "gameplay.menu.root",
+          "op": "eq",
+          "value": "title"
+        },
+        {
+          "path": "gameplay.menu.focusId",
+          "op": "eq",
+          "value": "start"
+        },
+        {
+          "path": "gameplay.ready",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
       "name": "Start and wait for the original countdown to finish",
       "keys": [
         "START"
@@ -29,6 +259,11 @@
           "path": "paused",
           "op": "eq",
           "value": false
+        },
+        {
+          "path": "gameplay.renderPreset",
+          "op": "eq",
+          "value": "low"
         }
       ]
     },

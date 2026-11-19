@@ -74,7 +74,12 @@ export function createTVAdapter(game) {
     }
   }, true);
   const errors = []; addEventListener('error', event => errors.push(String(event.error?.message || event.message))); addEventListener('unhandledrejection', event => errors.push(String(event.reason?.message || event.reason)));
-  const snapshot = () => ({ game: 'night-racer', renderer: 'webgl2', webglVersion: 2, frames, ...game.snapshot(), controller: controller.peek(), errors: [...errors] });
+  const snapshot = () => {
+    const parent = root(), focused = parent?.contains(focus) ? focus : null, observed = game.snapshot();
+    return { game: 'night-racer', renderer: 'webgl2', webglVersion: 2, frames, ...observed,
+      gameplay: { ...observed.gameplay, menu: { root: parent?.id || null, focusId: focused?.id || null, focusText: focused?.textContent?.trim() || null, focusIndex: focused ? options(parent).indexOf(focused) : -1 } },
+      controller: controller.peek(), errors: [...errors] };
+  };
   Object.defineProperty(window, 'JoystickGameQA', { value: Object.freeze({ snapshot }), writable: false, configurable: false });
   return {
     poll() {
