@@ -30587,6 +30587,7 @@ void main() {
       } catch {
       }
       return {
+        game: "kart-royale",
         stage: ctx.race.state === 5 /* Paused */ ? "paused" : ctx.race.state === 0 /* Menu */ ? "menu" : ctx.race.state === 4 /* Results */ ? "ended" : "playing",
         renderer: gl ? String(gl.getParameter(gl.VERSION)).startsWith("WebGL 2") ? "webgl2" : "webgl1" : null,
         webglVersion: gl ? gl.getParameter(gl.VERSION) : null,
