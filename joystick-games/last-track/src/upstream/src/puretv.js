@@ -23,6 +23,15 @@ export function createPureTv(game, root) {
   const help = document.createElement('p'); help.className = 'lasttrack-controller-help';
   help.textContent = '方向键：驾驶 / 选择\nA：射击 / 确认\nB：漂移 / 返回\nX：切换武器\nY：氮气\nSTART：暂停 / 继续';
   help.style.cssText = 'white-space:pre-line;font-size:12px;line-height:1.65;margin:8px 0 0'; panel.append(help);
+  const layoutStyle = document.createElement('style');
+  layoutStyle.textContent = `
+    #puretv-controller-panel.lasttrack-compact{background:transparent;border:0;padding:0;box-shadow:none}
+    #puretv-controller-panel.lasttrack-compact .ptv-host-title,
+    #puretv-controller-panel.lasttrack-compact .ptv-host-info,
+    #puretv-controller-panel.lasttrack-compact .lasttrack-controller-help{display:none}
+    #ui-root[data-puretv-layout=compact] .screen-head{box-sizing:border-box;min-height:70px;padding-right:194px}
+  `;
+  document.head.append(layoutStyle);
   window.addEventListener('error', e => errors.push(String(e.message)));
   window.addEventListener('unhandledrejection', e => errors.push(String(e.reason)));
   game.bus.on('error', e => errors.push(String(e)));
@@ -108,7 +117,12 @@ export function createPureTv(game, root) {
       }
       controller.setPlaying(playing);
       help.hidden = playing; panel.style.top = playing ? '42%' : '12px';
+      // Shop/garage/setup screens use the full width for controls. Keep their
+      // identity card compact and reserve its header space instead of covering buys.
+      const compact = !playing && (state !== 'title' && state !== 'paused' || !!modal());
+      panel.classList.toggle('lasttrack-compact', compact);
+      root.dataset.puretvLayout = compact ? 'compact' : 'full';
     },
-    destroy() { release(); controller.destroy(); },
+    destroy() { release(); controller.destroy(); layoutStyle.remove(); delete root.dataset.puretvLayout; },
   };
 }

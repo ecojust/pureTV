@@ -22,7 +22,7 @@
         {
           "path": "gameplay.menuFocus",
           "op": "eq",
-          "value": "SETTINGSGraphics · audio · controls"
+          "value": "SETTINGSGraphics \u00b7 audio \u00b7 controls"
         }
       ]
     },
@@ -128,6 +128,51 @@
           "path": "gameplay.screen",
           "op": "eq",
           "value": "garage"
+        }
+      ]
+    },
+    {
+      "name": "Move from armor purchase to engine purchase",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "$1,200"
+        }
+      ]
+    },
+    {
+      "name": "Move from engine purchase to tyre purchase",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "$1,200"
+        }
+      ]
+    },
+    {
+      "name": "Move to original track-selection action",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 30,
+      "expect": [
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "TO THE TRACK"
         }
       ]
     },

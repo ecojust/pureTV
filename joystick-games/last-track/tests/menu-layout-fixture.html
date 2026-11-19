@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><title>Original garage DOM fixture — no game renderer</title>
+<link rel="stylesheet" href="../dist/styles.css"><div id="ui-root"></div>
+<script type="module">
+import {createPureTv} from '../dist/src/puretv.js';
+import {createInput} from '../dist/src/ui/input.js';
+import {createGarageScreen} from '../dist/src/ui/screens/garage.js';
+const raw={buttons:{}},root=document.getElementById('ui-root');
+window.PureGameHost={snapshot:()=>JSON.stringify({players:[{id:1,connected:true,transport:'wifi',controllerId:'LastTrack-Synthetic-29',session:'layout',buttons:raw.buttons}]}),getInfo:()=>JSON.stringify({wifiController:{port:63485}})};
+const save={carId:'wasp',cash:5000,upgrades:{},damage:0,weapons:[{id:'machinegun',ammo:200}]};
+const game={flow:{state:'garage',transition(s){this.state=s}},save,bus:{on(){}},getSnapshot:()=>null,getSave:()=>save,host:null,pbr:null,audio:null,buy(){throw Error('Layout fixture must not buy or mutate a save')}};
+game.input=createInput({isRaceActive:()=>false});
+const garage=createGarageScreen({game,flow:game.flow});root.append(garage.el);garage.show();
+const adapter=createPureTv(game,root);let n=0;
+const frame=()=>adapter.frame(++n*16);
+frame();await new Promise(r=>setTimeout(r,100));frame();
+window.layoutFixture={
+  tap(key){raw.buttons={[key]:true};frame();raw.buttons={};frame();return document.activeElement.textContent},
+  observe(){frame();const rect=e=>{const r=e.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height}};return{screen:game.flow.state,focus:document.activeElement.textContent,panel:rect(document.getElementById('puretv-controller-panel')),cash:rect(root.querySelector('.cash')),buttons:[...root.querySelectorAll('button')].filter(e=>e.offsetParent!==null).map(e=>({text:e.textContent,disabled:e.disabled,rect:rect(e)}))}},
+};
+</script>
