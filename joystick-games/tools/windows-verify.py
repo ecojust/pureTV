@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Run the actual Windows WebView2 app through the unchanged official TCP SDK."""
-import argparse,ctypes,hashlib,importlib.util,json,os,re,shutil,socket,subprocess,sys,threading,time,traceback
+import argparse,ctypes,hashlib,importlib.util,json,os,queue,re,shutil,socket,subprocess,sys,threading,time,traceback
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def module(name,path):
@@ -37,6 +37,139 @@ class WindowsCheck(base.CatalogCheck):
             if isinstance(state.get('game'),dict):assert not state['game'].get('errors'),'Game runtime errors: '+json.dumps(state['game']['errors'])
             self.last=state
         return state
+    def deadline_snapshot(self,deadline):
+        # The ordinary reader retries file replacement for up to 0.5 seconds.
+        # An opt-in step's hard wall-clock bound also covers a delayed read:
+        # the daemon worker is read-only and cannot prolong a held SDK button.
+        remaining=deadline-time.monotonic();assert remaining>0,'Gameplay observation deadline reached'
+        result=queue.Queue(maxsize=1)
+        def read_only():
+            try:result.put((True,self.read()))
+            except Exception as error:result.put((False,error))
+        threading.Thread(target=read_only,daemon=True).start()
+        try:ok,value=result.get(timeout=remaining)
+        except queue.Empty:raise AssertionError('Snapshot exceeded gameplay observation deadline') from None
+        assert time.monotonic()<deadline,'Snapshot arrived after gameplay observation deadline'
+        if not ok:raise value
+        return value
+    def bounded_gameplay_step(self,step,before):
+        startup=step.get('windowsStartupWait');held_mode=step.get('windowsHoldUntilExpect') is True
+        assert bool(startup)!=held_mode,'Exactly one explicit Windows observation mode required'
+        key=step['keys'][0];assert len(step['keys'])==1 and key in (['A','START'] if startup else ['UP'])
+        game=before.get('game',{});owner=self.player(before);controller=game.get('controller',{})
+        assert game.get('stage')==('menu' if startup else 'playing') and game.get('paused') is False,'Unexpected initial gameplay stage'
+        assert not plan_api.matches(step['expect'],game,game),'Original expectation already satisfied before input'
+        assert before.get('ready') is True and before.get('active') is True and before.get('server',{}).get('wifiController',{}).get('inputEnabled') is True
+        assert owner.get('controllerId')==self.client.identity and owner.get('session') and owner.get('connected') is True
+        assert not self.held and all(owner.get('buttons',{}).get(k) is False and controller.get('buttons',{}).get(k) is False for k in base.KEYS),'Input must begin raw and semantically released'
+        assert all(type(owner.get('buttonCounters',{}).get(k)) is int for k in base.KEYS),'Native counters required'
+        assert type(owner.get('cancelSeq')) is int and type(game.get('frames')) is int and game['frames']>0 and type(controller.get('pollCount')) is int and controller['pollCount']>0
+        epoch=before.get('documentEpoch');assert type(epoch) is int and epoch>0 and before.get('document',{}).get('epoch')==epoch,'Original document identity required'
+        seconds=startup['timeoutSeconds'] if startup else step.get('timeoutSeconds',15)
+        assert 0<seconds<=(600 if startup else 60)
+        started=time.monotonic();deadline=started+seconds;previous=before;progress_at=started
+        record={'name':step['name'],'mode':'startup-released' if startup else 'held-until-expect','status':'running','timeoutSeconds':seconds,
+                'declaredHoldMs':step['holdMs'],'originalExpect':step['expect'],'before':game,'beforeOwner':{k:owner[k] for k in ('controllerId','session','cancelSeq','buttonCounters')},
+                'documentEpoch':epoch,'samples':[],'snapshotReads':0,'semanticHeldObserved':False,'releasedFreshFrames':0}
+        self.report.setdefault('boundedGameplayObservations',[]).append(record)
+        release_seq=None;first_match=None;release_baseline=None;released_frames=0;consumed=None;counter_seen=False
+        def release():
+            nonlocal release_seq
+            if release_seq is None:
+                with self.client.lock:self.release(key);release_seq=self.client.seq
+                record['sdkReleaseSequence']=release_seq;record['releasedAtSeconds']=time.monotonic()-started
+        def wire_complete():
+            if release_seq is None:return False
+            rows=[r for r in self.report['wire'] if r['direction']=='sdk-to-game' and r['message'].get('seq') in (record['sdkDownSequence'],release_seq)]
+            if len(rows)<2:return False
+            assert len(rows)==2 and rows[0]['connection']==rows[1]['connection'],'Unexpected SDK connection or duplicate press/release'
+            assert [(r['message'].get('type'),r['message'].get('key'),r['message'].get('action'),r['message'].get('pressed'),r['message'].get('controller_id')) for r in rows]==[('button',key,'down',True,self.client.identity),('button',key,'tap',False,self.client.identity)],'Unexpected SDK press/release pair'
+            connection=rows[0]['connection'];sent=[r for r in self.report['wire'] if r['direction']=='sdk-to-game' and r['connection']==connection and r['message'].get('seq',release_seq+1)<=release_seq]
+            sequences=[r['message']['seq'] for r in sent];assert len(sequences)==len(set(sequences)),'Duplicate SDK sequence'
+            counts={seq:sum(r['direction']=='game-to-sdk' and r['connection']==connection and r['message'].get('type')=='ack' and r['message'].get('seq')==seq for r in self.report['wire']) for seq in sequences}
+            assert all(n<=1 for n in counts.values()) and not self.report['observerErrors'],'Duplicate ACK or observer error'
+            if not all(n==1 for n in counts.values()):return False
+            record.update(wireConnection=connection,wireHeldSeconds=(base.datetime.datetime.fromisoformat(rows[1]['at'])-base.datetime.datetime.fromisoformat(rows[0]['at'])).total_seconds(),sdkMessagesThroughRelease=len(sent),matchingAcksThroughRelease=len(counts))
+            return True
+        try:
+            with self.client.lock:self.press(key);record['sdkDownSequence']=self.client.seq
+            if startup:
+                time.sleep(min(.016,max(0,deadline-time.monotonic())));release()
+            while time.monotonic()<deadline:
+                state=self.deadline_snapshot(deadline);record['snapshotReads']+=1
+                assert isinstance(state,dict),'Missing real gameplay snapshot'
+                current=self.player(state);g=state.get('game') or {};c=g.get('controller') or {};semantic=c.get('buttons') or {};raw=current.get('buttons') or {}
+                assert state.get('documentEpoch')==epoch and state.get('document',{}).get('epoch')==epoch,'Unexpected document reload during bounded gameplay'
+                assert current.get('controllerId')==owner['controllerId'] and current.get('session')==owner['session'] and current.get('cancelSeq')==owner['cancelSeq'] and current.get('connected') is True,'Controller identity/session/cancel changed'
+                assert g.get('game')==game.get('game') and g.get('renderer')==game.get('renderer') and c.get('connected') is True and c.get('cancelled') is False,'Game or semantic controller identity changed'
+                assert state.get('ready') is True and state.get('active') is True and state.get('server',{}).get('wifiController',{}).get('inputEnabled') is True,'Gameplay lost foreground input'
+                assert not state.get('lastJavaScriptError') and not state.get('diagnosticError') and not g.get('errors') and not g.get('error') and g.get('paused') is False,'Runtime error or unexpected pause'
+                assert g.get('stage') in (['menu','playing'] if startup else ['playing']),'Unexpected gameplay phase'
+                counts=current.get('buttonCounters') or {}
+                assert all(type(counts.get(k)) is int and counts[k] in ([owner['buttonCounters'][k],owner['buttonCounters'][k]+1] if k==key else [owner['buttonCounters'][k]]) for k in base.KEYS),'Unexpected native button counter'
+                assert all(raw.get(k) is False and semantic.get(k) is False for k in base.KEYS if k!=key),'Unrequested input during bounded gameplay'
+                cached_players=c.get('players') or []
+                assert len(cached_players)==1 and cached_players[0].get('controllerId')==owner['controllerId'] and cached_players[0].get('session')==owner['session'] and cached_players[0].get('cancelSeq')==owner['cancelSeq'],'Cached semantic input belongs to another controller'
+                assert type(g.get('frames')) is int and type(c.get('pollCount')) is int and g['frames']>=previous['game']['frames'] and c['pollCount']>=previous['game']['controller']['pollCount'],'Game frame or poll regressed'
+                fresh=self.fresh(state,previous,True) and g['frames']>previous['game']['frames']
+                expected=plan_api.matches(step['expect'],g,game)
+                exact=counts[key]==owner['buttonCounters'][key]+1
+                assert not counter_seen or exact,'Native press counter regressed after consumption'
+                counter_seen=counter_seen or exact
+                if held_mode and release_seq is None and fresh and exact and raw.get(key) is True and semantic.get(key) is True:
+                    if consumed is None:consumed=state;record['semanticHeldObserved']=True;record['inputConsumed']=g
+                    if expected:
+                        first_match=state;record['firstMatchingHeldState']=g;record['firstMatchedAtSeconds']=time.monotonic()-started;release()
+                elif held_mode and consumed is not None and release_seq is None:
+                    assert raw.get(key) is True and semantic.get(key) is True,'Held throttle disappeared before original expectation'
+                if fresh:
+                    progress_at=time.monotonic();previous=state
+                    sample={'elapsedSeconds':progress_at-started,'timestamp':state.get('timestamp'),'frames':g['frames'],'pollCount':c['pollCount'],'stage':g.get('stage'),'phase':g.get('gameplay',{}).get('phase',g.get('gameplay',{}).get('mode')),'raw':raw.get(key),'semantic':semantic.get(key),'nativeCounterExact':exact,'expectationMatches':expected,'observedValues':{item['path']:plan_api.read_path(g,item['path']) for item in step['expect']}}
+                    record['samples'].append(sample)
+                    released=release_seq is not None and exact and not self.held and all(raw.get(k) is False and semantic.get(k) is False for k in base.KEYS)
+                    qualifies=released and (expected if startup else first_match is not None)
+                    if qualifies:
+                        if release_baseline is None:release_baseline=state;released_frames=0
+                        else:released_frames+=1;release_baseline=state
+                        if startup and first_match is None:first_match=state;record['firstMatchingReleasedState']=g;record['firstMatchedAtSeconds']=time.monotonic()-started
+                    else:release_baseline=None;released_frames=0
+                if released_frames>=2 and wire_complete():
+                    assert time.monotonic()<deadline,'Gameplay completion exceeded hard deadline'
+                    record.update(status='passed',elapsedSeconds=time.monotonic()-started,releasedFreshFrames=released_frames,after=state['game'])
+                    self.report['snapshots'].append({'label':step['name']+' bounded released observation','at':base.now(),'state':state})
+                    return {'name':step['name'],'keys':step['keys'],'holdMs':step['holdMs'],'windowsMode':record['mode'],'before':game,'inputObserved':consumed['game'] if consumed else None,'firstExpected':first_match['game'],'after':state['game'],'releasedFreshFrames':released_frames}
+                assert time.monotonic()-progress_at<min(60,seconds),'No fresh game frame and input poll within progress bound'
+                time.sleep(min(.08,max(0,deadline-time.monotonic())))
+            raise AssertionError('Original gameplay expectation/release did not complete within hard deadline')
+        except Exception as error:
+            record.update(status='failed',elapsedSeconds=time.monotonic()-started,error=type(error).__name__+': '+str(error));raise
+        finally:self.clear()
+    def gameplay(self):
+        # Ordinary/menuTap steps retain the shared verifier's exact behavior.
+        # Only the two explicit Windows plan modes select the bounded observer.
+        self.display()
+        assert self.read()['game']['stage']=='menu','QA plan must begin at the actual menu'
+        cases=[]
+        for step in self.plan['steps']:
+            before=self.read();owner=self.player(before)
+            if step.get('windowsStartupWait') or step.get('windowsHoldUntilExpect') is True:
+                cases.append(self.bounded_gameplay_step(step,before));continue
+            if step.get('menuTap') is True:
+                cases.append(self.menu_tap(step,before));self.settle_input('Plan controls released: '+step['name']);continue
+            for key in step['keys']:self.press(key)
+            try:
+                consumed=self.until(lambda s:self.fresh(s,before,True) and self.player(s).get('session')==owner['session'] and all(self.player(s).get('buttons',{}).get(k) is True and self.player(s).get('buttonCounters',{}).get(k)==owner['buttonCounters'][k]+1 for k in step['keys']),step['name']+' actual SDK input')
+                time.sleep(step['holdMs']/1000)
+                for key in step['keys']:self.release(key)
+                after=self.until(lambda s:self.fresh(s,before,True) and plan_api.matches(step['expect'],s['game'],before['game']),step['name']+' actual gameplay observation',step.get('timeoutSeconds',15))
+                cases.append({'name':step['name'],'keys':step['keys'],'holdMs':step['holdMs'],'before':before['game'],'inputObserved':consumed['game'],'after':after['game']})
+            finally:self.clear()
+            self.settle_input('Plan controls released: '+step['name'])
+        self.ensure_playing();self.screenshot('playing.png')
+        self.ensure_playing();self.start_transition(self.paused,'START pauses')
+        stable=self.pause_stability();self.display();self.screenshot('paused.png')
+        self.start_transition(self.playing,'START resumes')
+        return {'planSteps':cases,'pauseStability':stable,'fullGameCompleted':False}
     def fresh(self,state,before,game_frame=False):
         # Poll counters belong to a document. A normal location.reload() resets
         # them; a late snapshot from the old document must not pass as the new

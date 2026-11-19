@@ -1,0 +1,97 @@
+{
+  "reviewer": "racing_review_rally",
+  "reviewedAt": "2026-11-19T21:43:35.051027+00:00",
+  "status": "no_blocking_findings_static_review",
+  "sourceFiles": {
+    "joystick-games/tools/windows-verify.py": {
+      "bytes": 38128,
+      "sha256": "4d967b72972782acf9210415b757796c540039f37c00c33a99f16eb6a163091c"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 7106,
+      "sha256": "8fa99646235d8d3369e6606b94b1facaafda934dcc1df3ad693233f9bcfe6e54"
+    },
+    "joystick-games/shared/windows/tests/window-lifecycle.test.py": {
+      "bytes": 12453,
+      "sha256": "92c6ca63a4ddfda51adbe83d769e712905cda83e1f902a6503922697a8424f3d"
+    },
+    "joystick-games/shared/windows/tests/gameplay.test.py": {
+      "bytes": 13590,
+      "sha256": "e129f3711d84886f431907abff240282337c9d53dc3885a42e7dba91b30a0060"
+    },
+    "joystick-games/backroad-rally/qa-plan.json": {
+      "bytes": 12109,
+      "sha256": "8306e5b2ad54cf35eb2602db045711572e35a728478e668fc65a6fb962ad157f"
+    },
+    "joystick-games/kart-royale/qa-plan.json": {
+      "bytes": 6623,
+      "sha256": "e2c0c2fc404294b4cbf9ae737e0e6c2fe544b7b2f53f8c5324723f6eb63d81e8"
+    },
+    "joystick-games/turbo-kart-rush/qa-plan.json": {
+      "bytes": 3425,
+      "sha256": "526e03230f54a2e9147b0e697d07c5031e746b3924031b1d43c6c16f65866b7b"
+    }
+  },
+  "independentlyChecked": {
+    "frozenSourceAndExecutedCopies": 7,
+    "originalFixedGitSourceExcerpts": 12,
+    "originalFailedReportAndFinalSnapshotFiles": 8,
+    "defaultCatalogGameplayAstIdenticalAfterRemovingOnlyOptInBranch": true,
+    "exactPlanChanges": [
+      {
+        "game": "backroad-rally",
+        "stepIndex": 32,
+        "onlyField": "timeoutSeconds",
+        "before": 60,
+        "after": 240
+      },
+      {
+        "game": "kart-royale",
+        "stepIndex": 11,
+        "onlyField": "windowsStartupWait",
+        "before": null,
+        "after": {
+          "timeoutSeconds": 600
+        }
+      },
+      {
+        "game": "turbo-kart-rush",
+        "stepIndex": 4,
+        "onlyField": "windowsHoldUntilExpect",
+        "before": null,
+        "after": true
+      }
+    ],
+    "originalLogs": {
+      "combined-tests-final.log": {
+        "bytes": 6029,
+        "sha256": "b2493c39045b709f71d359e7ec2e64bffae7b5c239f60edeb9278c4499314f17",
+        "reportedPassedTests": 35,
+        "rerunByReviewer": false
+      },
+      "android-plan-contracts.log": {
+        "bytes": 1108,
+        "sha256": "18d49969ae044d9d6337551e553979c5a2df8c79cf0084bc587b5f019d1e9b25",
+        "reportedPassedTests": 6,
+        "rerunByReviewer": false
+      }
+    }
+  },
+  "findings": [],
+  "reviewNotes": [
+    "The ordinary timeout limit remains 240 seconds. Only Royale step 11 opts into a Windows-specific startup observation <=600 seconds with its original gameplay.phase == racing predicate. The normal A press is released after 16ms; fresh unchanged simulation must progress within 60 seconds, under the overall deadline. No clock/countdown/quality/game asset is modified.",
+    "Turbo step 4 retains original speed >2 plus course progress changed expectations. First matching fresh held state requires the same ID/session/cancel sequence, exact +1 raw press counter, actual semantic UP and advanced frame/input polls. It immediately sends the normal SDK release and requires two subsequent fully released fresh polls plus same-connection ACK accounting. Coasting after release does not erase the recorded original held-state proof.",
+    "Missing/stalled snapshots, unmet expectations, identity/cancel/focus/epoch changes, unexpected buttons and invalid ACK evidence fail; finally clears held SDK input. Bounded worker only reads native diagnostics and never writes game/model/store/clock. The unchanged SDK uses an RLock and a 2-second socket timeout; nested send sequence capture is reentrant. Network failure disconnects the SDK and cannot qualify as a pass.",
+    "The Windows gameplay override, after removing its single explicit opt-in branch and canonicalizing the existing plan module alias, is AST-identical to CatalogCheck.gameplay. No other ordinary/menuTap step changes. The initial reviewer AST lookup incorrectly selected the unrelated legacy Check.gameplay; correcting the class selector resolved that comparison without changing production source.",
+    "Backroad changes only step 32 timeout from 60 to 240; original keys, holdMs and phase predicate remain exact.",
+    "The existing CI lifecycle entrypoint imports both new test classes. Original combined 35-test and Android 6-test pass logs were inspected; the review did not rerun tests or native games."
+  ],
+  "limitations": [
+    "Static review and source/evidence binding do not establish a new native Windows pass.",
+    "Original run 44615299245 failed reports remain failed and byte-identical.",
+    "The 600-second bound is an observation budget for hosted software rendering, not a physical-device performance claim."
+  ],
+  "newNativeExecution": false,
+  "workflowDispatched": false,
+  "productionSourceEditedByReviewer": false
+}

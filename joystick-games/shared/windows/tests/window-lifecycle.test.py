@@ -126,4 +126,10 @@ class DocumentFreshness(unittest.TestCase):
         for state in [before,after]:state.pop('documentEpoch');state['document'].pop('epoch')
         self.assertTrue(self.subject.fresh(after,before,True));after['game']['controller']['pollCount']=2
         self.assertFalse(self.subject.fresh(after,before,True));self.assertTrue(self.subject.fresh(after,before))
+# Keep the opt-in gameplay boundaries in the existing CI entrypoint. The new
+# file is also selected by the shared Windows source closure.
+gameplay_spec=importlib.util.spec_from_file_location('windows_gameplay_boundaries',Path(__file__).with_name('gameplay.test.py'))
+gameplay_tests=importlib.util.module_from_spec(gameplay_spec);gameplay_spec.loader.exec_module(gameplay_tests)
+PlanBoundaries=gameplay_tests.PlanBoundaries
+BoundedObservation=gameplay_tests.BoundedObservation
 if __name__=='__main__':unittest.main()

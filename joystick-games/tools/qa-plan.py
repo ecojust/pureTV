@@ -65,6 +65,29 @@ def validate_plan(plan):
         assert numeric(step.get('timeoutSeconds', 15)) and 0 < step.get('timeoutSeconds', 15) <= 240
         expectations = step.get('expect')
         assert isinstance(expectations, list) and expectations
+        # These opt-ins are consumed only by the Windows verifier. Keep the
+        # ordinary/platform-shared budget unchanged; long startup observation
+        # is not a blanket extension for arbitrary actions or held buttons.
+        startup = step.get('windowsStartupWait')
+        if 'windowsStartupWait' in step:
+            assert isinstance(startup, dict) and set(startup) == {'timeoutSeconds'}
+            assert type(startup['timeoutSeconds']) is int and 240 < startup['timeoutSeconds'] <= 600
+            assert keys in [['A'], ['START']] and step['holdMs'] <= 1000
+            assert not step.get('menuTap') and not step.get('windowsHoldUntilExpect')
+            assert len(expectations) == 1 and expectations[0] in [
+                {'path': path, 'op': 'eq', 'value': phase}
+                for path in ['gameplay.phase', 'gameplay.mode'] for phase in ['racing', 'running']
+            ], 'Extended startup must observe the original running phase'
+        if 'windowsHoldUntilExpect' in step:
+            assert type(step['windowsHoldUntilExpect']) is bool
+            if step['windowsHoldUntilExpect']:
+                assert keys == ['UP'] and not step.get('menuTap') and startup is None
+                assert step.get('timeoutSeconds', 15) <= 60
+                assert len(expectations) == 2
+                speed, motion = expectations
+                assert isinstance(speed, dict) and isinstance(motion, dict)
+                assert speed.get('path') == 'gameplay.speed' and speed.get('op') == 'gt' and numeric(speed.get('value')) and speed['value'] > 0
+                assert motion == {'path': 'gameplay.progress', 'op': 'changed'}, 'Held throttle must observe original speed and course progress'
         for item in expectations:
             assert isinstance(item, dict) and isinstance(item.get('path'), str) and PATH.fullmatch(item['path'])
             assert item.get('op') in OPERATORS
