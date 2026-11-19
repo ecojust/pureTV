@@ -1,12 +1,12 @@
 import {createController,BUTTONS} from './shared/web/input.js';
-import {clearDrive,applyDrive} from './tv-input.js';
+import {clearDrive,applyDrive,createMenuGate} from './tv-input.js';
 export function installKartTV({state,input,getKart,getTrack,getCup,renderer,sound,hud,pauseGame,resumeGame,showMenu,typeKey,submitHello,openHelp,observe}){
- let frozen=false,wasPaused=false,focus=null,focusKey='',frames=0,local={},pulse={},previous={};const errors=[];
+ let frozen=false,wasPaused=false,focus=null,focusKey='',frames=0,local={},pulse={},previous={};const errors=[];const gate=createMenuGate();
  window.addEventListener('error',e=>errors.push(String(e.error?.message||e.message)));window.addEventListener('unhandledrejection',e=>errors.push(String(e.reason?.message||e.reason)));
  const layer=document.createElement('section');layer.id='tv-suspend';layer.hidden=true;layer.innerHTML='<div><h2>已暂停 · Kart Rush</h2><p>手柄连接变化或窗口失焦；请松开按键后继续。</p><button id="tv-resume">继续 · START / A</button></div>';document.body.append(layer);
  function clear(){clearDrive(input,getKart());local={};pulse={};previous={};}
  function freeze(){clear();if(frozen)return;wasPaused=state.paused;if(!state.paused)pauseGame();sound.suspend();frozen=true;layer.hidden=false;focus=null;}
- function resume(){clear();frozen=false;layer.hidden=true;if(!wasPaused&&state.paused)resumeGame();else if(!state.paused)sound.unlock();focus=null;}
+ function resume(){const held={...previous};clear();previous=held;frozen=false;layer.hidden=true;if(!wasPaused&&state.paused)resumeGame();else if(!state.paused)sound.unlock();focus=null;}
  layer.querySelector('button').onclick=resume;
  const controller=createController({width:170,side:'right',top:'36%',onSuspend:freeze,onCancel:freeze});
  const help=document.createElement('aside');help.id='tv-help';help.textContent='↑油门 ↓刹车 ←→转向 · A道具 B反向道具 X复位 Y帮助 · START暂停\n菜单方向选择 A确认 B返回 · 姓名：A选字，Y完成';document.body.append(help);
@@ -21,8 +21,8 @@ export function installKartTV({state,input,getKart,getTrack,getCup,renderer,soun
  function move(d){const opts=sync();if(opts.length)choose(opts[(Math.max(0,opts.indexOf(focus))+d+opts.length)%opts.length]);}
  function activate(){if(!focus)return;sound.unlock();if(focus.id==='hello-name'){choose(document.querySelector('#kbd [data-k]'));return;}if(focus.dataset.k!==undefined){typeKey(focus.dataset.k);return;}focus.click();}
  function back(){const s=activeScreen();if(s===hud.pickScreen)document.getElementById('btn-pick-done').click();else if(s===hud.settingsScreen)document.getElementById('btn-settings-back').click();else if(s===hud.helpScreen)document.getElementById('btn-help-back').click();else if(s===hud.pauseScreen)resumeGame();else if(s===hud.resultsScreen)document.getElementById('btn-menu').click();}
- function tick(){frames++;const frame=controller.poll();const held=Object.fromEntries(BUTTONS.map(k=>[k,!!frame.buttons[k]||!!local[k]||!!pulse[k]]));pulse={};const pressed=Object.fromEntries(BUTTONS.map(k=>[k,held[k]&&!previous[k]]));previous=held;
-  const menu=frozen||state.paused||!hud.overlay.classList.contains('hidden');controller.setPlaying(!menu);help.hidden=!menu;
+ function tick(){frames++;const frame=controller.poll();const menu=frozen||state.paused||!hud.overlay.classList.contains('hidden');const held=gate(menu,Object.fromEntries(BUTTONS.map(k=>[k,!!frame.buttons[k]||!!local[k]||!!pulse[k]])));pulse={};const pressed=Object.fromEntries(BUTTONS.map(k=>[k,held[k]&&!previous[k]]));previous=held;
+  controller.setPlaying(!menu);help.hidden=!menu;
   if(frame.cancelled){clearDrive(input,getKart());return;}
   if(frozen){sync();if(pressed.START||pressed.A)resume();return;}
   if(pressed.START){clearDrive(input,getKart());if(state.paused){if(activeScreen()===hud.pauseScreen)resumeGame();else back();}else if(state.phase==='race'||state.phase==='countdown')pauseGame();else if(activeScreen()===hud.helloScreen)submitHello();else if(activeScreen()===hud.menuScreen)document.getElementById('btn-start').click();else{sync();activate();}return;}

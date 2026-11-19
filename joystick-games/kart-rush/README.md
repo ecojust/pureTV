@@ -16,7 +16,7 @@
 
 所有视角均需明确按 ↑ 加速，默认横屏。手机手柄 ID 来自宿主实际连接数据，面板不生成示例身份，也不虚构信号强度。断线、后台或失焦取消油门、道具和漂移蓄力；重连不会自动恢复，松开按键后按 START / A 继续。原版漂移释放奖励保留，取消操作不奖励。
 
-首次运行通过原版姓名键盘设置名字：A 进入字母键、方向选择、A 输入、X 删除、Y 完成，全程不需鼠标。方向逐项遍历所有原版菜单。键盘方向/WASD、Enter/A（Space）、B/Q、X/R、Y/H、START/Esc/P 同样可用。
+首次运行通过原版姓名键盘设置名字：A 进入字母键、方向选择、A 输入、X 删除、Y 完成，全程不需鼠标。方向逐项遍历所有原版菜单。电脑键盘：方向/WASD 驾驶；Enter/Space/E 对应 A，B/Q 对应 B，X/R 对应 X，Y/H 对应 Y，Esc/P 对应 START。
 
 ```sh
 npm run build
@@ -24,6 +24,6 @@ npm run build:check
 npm test
 ```
 
-构建无 npm 依赖，直接复制固定本地模块。`upstream.json`、`dependency-lock.json` 与 `dist/asset-provenance.json` 记录逐文件来源和 SHA-256。原始规则/美术的保留由内容哈希与输入回归检查；`qa-plan.json` 是只读观察、正常输入的原生验收方案，并不代表已经在原生包中执行。
+构建无 npm 依赖，直接复制固定本地模块。`upstream.json`、`dependency-lock.json` 与 `dist/asset-provenance.json` 记录逐文件来源和 SHA-256。`game.json` 显式 assetPolicy 保留安全的嵌套资产路径，必须与根注册表镜像一致；原始规则/美术的保留由内容哈希与输入回归检查；`qa-plan.json` 是只读观察、正常输入的原生验收方案，并不代表已经在原生包中执行。
 
 **许可状态未明确**：检查的上游固定源码树没有项目 LICENSE/COPYING。根 `LICENSE.txt` 仅记录此事实，不向原游戏授予新许可；Three.js 与 cannon-es 分别保留 MIT 许可。正式对外分发前需要落实上游授权。详情见 [NOTICE.md](NOTICE.md)。

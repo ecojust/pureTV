@@ -9,6 +9,7 @@ function walk(dir,prefix=''){for(const n of fs.readdirSync(dir).sort()){const p=
 walk(path.join(root,'src'));
 for(const n of ['input.js','controller-clients.js'])files.set('shared/web/'+n,fs.readFileSync(path.join(root,'../shared/web',n)));
 files.set('THIRD-PARTY-NOTICES.txt',fs.readFileSync(path.join(root,'NOTICE.md')));
+files.set('UPSTREAM-LICENSE.txt',fs.readFileSync(path.join(root,'LICENSE.txt')));
 for(const [p,b] of files)if(/\.(html|css)$/.test(p)&&/\b(?:src|href)\s*=\s*["']https?:|url\(\s*["']?https?:/.test(b.toString()))throw Error('External runtime resource '+p);
 // Resolve every static module edge from the actual distribution, not only stage.js imports.
 for (const [p,b] of files) if (p.endsWith('.js')) {

@@ -1,0 +1,103 @@
+--- fixed-upstream/main.js
++++ adaptation/main.js
+@@ -1,3 +1,4 @@
++import { installKartTV } from './tv.js';
+ import * as THREE from 'three';
+ import * as CANNON from 'cannon-es';
+ import { sound } from './sound.js';
+@@ -560,7 +561,7 @@
+ const app = $('app');
+ // Debug tools (the DEBUG panel, the Test Lab track): on the LAN server (plain http) only (72.8). On the hosted copy, 5 quick taps on the build label switch them on for this phone.
+ const DEBUG_KEY = 'kartrush.debug';
+-const DEBUG = location.protocol === 'http:' || (() => { try { return localStorage.getItem(DEBUG_KEY) === '1'; } catch { return false; } })();
++const DEBUG = false; // Native packages never expose the developer driving/telemetry tools.
+ const VERSION_N = '80'; // the build shown on the title screen + in the race log: main number = sw.js VERSION, then +.1 for every change Claude makes (so the user can confirm the latest is running)
+ const canvas = $('game');
+ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+@@ -5178,7 +5179,7 @@
+  * (dev/telemetry/races.jsonl, a line with kind 'viewport'), once things have settled after a resize. */
+ let viewportT = 0;
+ function sendViewport() {
+-  if (location.protocol !== 'http:') return;
++  return; // No development telemetry in the offline native client.
+   clearTimeout(viewportT);
+   viewportT = setTimeout(() => {
+     const css = getComputedStyle(app), probe = $('vp-probe'), vv = window.visualViewport;
+@@ -6168,15 +6169,8 @@
+ }
+ 
+ // Settings -> VIEW: Landscape (the game turned sideways under portrait lock) or Vertical (upright, drag to steer, auto-gas). kartrush.view
+-function savedView() { // a first-time player (no view choice, no profile yet) starts vertical, and that is saved; everyone else keeps what they had
+-  try {
+-    const v = localStorage.getItem('kartrush.view');
+-    if (v) return v === 'vertical';
+-    if (localStorage.getItem('kartrush.profile')) return false; // literal key: PROFILE_KEY is declared later (TDZ at boot)
+-    localStorage.setItem('kartrush.view', 'vertical');
+-    return true;
+-  } catch { return false; }
+-}
++function savedView() { try { return localStorage.getItem('kartrush.view') === 'vertical'; } catch { return false; } }
++
+ function setView(vertical, save = true) {
+   if (save) try { localStorage.setItem('kartrush.view', vertical ? 'vertical' : 'landscape'); } catch { /* storage blocked */ }
+   app.classList.toggle('vertical', vertical);
+@@ -6212,7 +6206,7 @@
+ // ---------- Race telemetry: when the game comes from the Mac's LAN server (dev/serve.py), each race is sent
+ // there at the end and appended to dev/telemetry/races.jsonl, so tuning can use real races on the phone
+ // instead of only the headless autopilot. Never sent from GitHub Pages (or any https host).
+-const tele = { on: location.protocol === 'http:', race: null, nextT: 0 };
++const tele = { on: false, race: null, nextT: 0 };
+ function teleStart() {
+   if (!tele.on) return; // debug races are logged too, flagged debug: true
+   tele.nextT = 0;
+@@ -8367,9 +8361,7 @@
+       k.ctl.steer = clamp((input.right ? 1 : 0) - (input.left ? 1 : 0) + input.axis, -1, 1);
+       k.ctl.brake = input.brake;
+       // Vertical view: no gas button, always on; it lifts only for a really tight corner coming up too fast (build 64.27)
+-      k.ctl.gas = app.classList.contains('vertical')
+-        ? canDrive && !input.brake && !autoLift(k)
+-        : input.gas;
++      k.ctl.gas = input.gas; // pureTV always requires explicit throttle in every view.
+       if (input.item && canDrive && !k.finished) useItem(k);
+       else if (input.itemAlt && canDrive && !k.finished) useItem(k, true);
+     }
+@@ -9339,7 +9331,7 @@
+   const t = performance.now();
+   buildTaps = t - buildTapT < 500 ? buildTaps + 1 : 1;
+   buildTapT = t;
+-  if (buildTaps >= 5 && !DEBUG) { try { localStorage.setItem(DEBUG_KEY, '1'); } catch { /* storage blocked */ } location.reload(); }
++  // Developer tools cannot be enabled from the packaged client.
+   perf.on = !perf.on;
+   try { localStorage.setItem('kartrush.perf', perf.on ? '1' : '0'); } catch { /* storage blocked */ }
+   $('build').textContent = $('build').textContent.replace(/ · meter.*$/, '') + (perf.on ? ' · meter on' : '');
+@@ -9373,6 +9365,8 @@
+ let realDt = 0; // this frame's unscaled seconds (the gore eyeball runs on it while the world is in slow motion)
+ function loop(now) {
+   requestAnimationFrame(loop);
++  tv.tick();
++  if (tv.suspended()) { lastTime = now; return; }
+   jsStart = performance.now();
+   queueMicrotask(jsEnd); // (runs when this callback has returned, whichever way it returns)
+   updatePerf(now - lastTime);
+@@ -9415,10 +9409,7 @@
+ }
+ 
+ // Leaving the app (call, app switch, lock) pauses the race instead of dropping you back into it
+-document.addEventListener('visibilitychange', () => {
+-  lastTime = performance.now();
+-  if (document.hidden) pauseGame();
+-});
++// pureTV owns focus/background cancellation and manual resume.
+ 
+ /**
+  * iOS compiles a GPU program the first time each material is drawn (and again for its shadow pass),
+@@ -9514,7 +9505,6 @@
+ app.classList.add('booted'); // index.html shows only the loading splash until here (see #boot in style.css)
+ 
+ // PWA: offline cache (service workers need a secure context: https or localhost)
+-if ('serviceWorker' in navigator && window.isSecureContext) {
+-  navigator.serviceWorker.register('sw.js').catch(() => {});
+-}
++// Native host supplies the offline origin; no service worker cache.
++const tv = installKartTV({state,input,getKart:()=>kart,getTrack:()=>track,getCup:()=>cup,renderer,sound,hud,pauseGame,resumeGame,showMenu,typeKey,submitHello,openHelp:()=>{helpFrom=state.paused?hud.pauseScreen:hud.menuScreen;showOverlay(hud.helpScreen);},observe:()=>({profileName:profile?.name||null,picks:{...picks},difficulty:effectiveDiff(),trackCount:Object.values(CFG.tracks).filter(t=>!t.debug).length,grandPrixTracks:CUP_TRACKS.length,driverCount:CFG.racers.length})});
+ requestAnimationFrame(loop);
