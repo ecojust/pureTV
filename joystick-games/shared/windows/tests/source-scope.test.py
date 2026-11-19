@@ -232,6 +232,40 @@ class SourceScope(unittest.TestCase):
     def test_remote_android_does_not_exempt_undeclared_index_source(self):
         meta,row=self.remote_android_fixture();self.put('joystick-games/sample/android/SHA256SUMS.txt',row['sha256']+'  '+row['file']+'\n');self.put('joystick-games/sample/android/build.mjs','production code')
         with self.assertRaisesRegex(AssertionError,'Undeclared file'):self.selection()
+    def remote_windows_fixture(self):
+        tag='joystick-sample-v0.1.0';rows=[]
+        for index,suffix in enumerate(['windows-x64.zip','windows-x64-setup.exe']):
+            name='Sample-0.1.0-'+suffix;rows.append({'file':name,'storage':'github-release-asset','url':'https://github.com/ecojust/pureTV/releases/download/'+tag+'/'+name,'assetId':123+index,'bytes':104921739+index,'sha256':str(index+1)*64})
+        meta={'schemaVersion':1,'game':'sample','windows':{'version':'0.1.0','releaseTag':tag,'releaseId':456,'files':rows}}
+        self.put('joystick-games/sample/packages.json',json.dumps(meta))
+        self.put('joystick-games/sample/windows-release.json',json.dumps({'game':'sample','packages':{r['file']:{'bytes':r['bytes'],'sha256':r['sha256']} for r in rows}}))
+        return meta,rows
+    def test_remote_windows_pair_keeps_index_bound_and_does_not_hide_tracked_input(self):
+        meta,rows=self.remote_windows_fixture();readme=self.put('joystick-games/sample/windows/README.md','Original portable and setup downloads');sums=self.put('joystick-games/sample/windows/SHA256SUMS.txt',''.join(r['sha256']+'  '+r['file']+'\n' for r in rows));result=self.selection()
+        for p in (readme,sums):self.assertIn('scope-configuration',result['files'][p.relative_to(self.root).as_posix()]['roles'])
+        blobs={name:{} for name in result['files']};scope.verify_complete_git_selection(result,blobs)
+        for row in rows:
+            name='joystick-games/sample/'+row['file'];self.assertNotIn(name,result['excluded']);missing=dict(blobs);missing[name]={}
+            with self.assertRaisesRegex(AssertionError,'missing'):scope.verify_complete_git_selection(result,missing)
+        self.put('joystick-games/sample/windows/build.mjs','real production derivation')
+        with self.assertRaisesRegex(AssertionError,'Undeclared file'):self.selection()
+    def test_remote_windows_pair_keeps_exact_identities_and_local_conflict_guard(self):
+        meta,rows=self.remote_windows_fixture();path=self.game/'packages.json'
+        for update in [{'storage':'external'},{'url':rows[0]['url'].replace('ecojust/pureTV','other/pureTV')},{'file':'src/'+rows[0]['file']},{'assetId':True},{'bytes':0},{'sha256':'bad'}]:
+            changed=copy.deepcopy(meta);changed['windows']['files'][0].update(update);path.write_text(json.dumps(changed))
+            with self.subTest(update=update),self.assertRaises(AssertionError):self.selection()
+        path.write_text(json.dumps(meta));self.put('joystick-games/sample/'+rows[1]['file'],'local source')
+        with self.assertRaisesRegex(AssertionError,'conflicts with a local node'):self.selection()
+    def test_remote_android_and_mac_release_indexes_cannot_reintroduce_exclusions(self):
+        meta,mac=self.remote_mac_fixture();android_meta,android=self.remote_android_fixture();meta['android']=android_meta['android'];self.put('joystick-games/sample/packages.json',json.dumps(meta))
+        self.put('joystick-games/sample/macos-release.json',json.dumps({'game':'sample','packages':{mac['file']:{'bytes':mac['bytes'],'sha256':mac['sha256']}}}))
+        self.put('joystick-games/sample/android-release.json',json.dumps({'game':'sample','apk':{'file':android['file']}}))
+        result=self.selection();blobs={name:{} for name in result['files']};scope.verify_complete_git_selection(result,blobs)
+        for platform,row in [('macos',mac),('android',android)]:
+            name='joystick-games/sample/'+row['file'];self.assertNotIn(name,result['excluded'])
+            self.assertIn('scope-configuration',result['files']['joystick-games/sample/'+platform+'-release.json']['roles'])
+            missing=dict(blobs);missing[name]={}
+            with self.assertRaisesRegex(AssertionError,'missing'):scope.verify_complete_git_selection(result,missing)
     def test_local_packages_recursive_cycle_and_original_lock(self):
         self.package('local/one',{'dependencies':{'two':'file:../two'}});self.package('local/two',{'dependencies':{'one':'file:../one'}})
         (self.game/'package.json').write_text(json.dumps({'dependencies':{'one':'file:../../local/one'}}))

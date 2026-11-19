@@ -144,7 +144,7 @@ def declared_package_outputs(scope,game):
                 # A published release asset is metadata, not a local build
                 # output. Never add its name to the exclusion set: otherwise a
                 # remote declaration could conceal a missing tracked input.
-                assert platform in ('android','macos') and item['storage']=='github-release-asset','Unsupported published package storage'
+                assert item['storage']=='github-release-asset','Unsupported published package storage'
                 tag=descriptor.get('releaseTag');version=descriptor.get('version')
                 assert isinstance(version,str) and re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+',version),'Invalid remote release version'
                 assert tag=='joystick-'+game.name+'-v'+version,'Remote release tag differs from game/version'
@@ -216,6 +216,9 @@ def select(game,root=ROOT):
     for name in ('src','dist'):assert (game/name).is_dir(),'Required game tree missing: '+name
     licenses=[game/name for name in ('LICENSE','LICENSE.txt') if (game/name).exists()];assert len(licenses)==1,'Exactly one original LICENSE required'
     declared=declared_package_outputs(scope,game);outputs=release_outputs(scope,game)|set(declared)
+    # A release index may repeat a verified remote basename. It must not turn
+    # that metadata back into an exclusion that could hide a tracked deletion.
+    outputs-={Path(name).name for name in scope.remote_packages}
     for name in outputs:scope.exclude(game/name,'published artifact declared by platform release descriptor')
     for path in sorted(game.iterdir()):
         if path.name in CACHE or path.name=='docs':scope.exclude(path,'installed dependency/cache' if path.name in CACHE else 'historical evidence');continue

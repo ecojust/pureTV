@@ -1,0 +1,51 @@
+{
+  "status": "passed-local-source-scope-checks",
+  "baseline": "41f8db4dff81a26dc9374476e54c1e5c45b5007e",
+  "reason": "Actual existing Backroad Windows package sizes exceed Git single-file limit; future exact Release metadata must not break the next source inventory. This change publishes no package.",
+  "sources": {
+    "joystick-games/tools/windows-inputs.py": {
+      "bytes": 18634,
+      "sha256": "0e66faccc16aebc2215f8a18ae6a03fe80abac1c420ef1bad3eced86649d83c2",
+      "changedOriginalFunctions": [
+        "declared_package_outputs"
+      ],
+      "addedFunctions": []
+    },
+    "joystick-games/shared/windows/tests/source-scope.test.py": {
+      "bytes": 29948,
+      "sha256": "a8c40c15182508c147a05fa21f0ea8be190063c16d4feed0ba563f1637ebbc45",
+      "changedOriginalFunctions": [],
+      "addedFunctions": [
+        "remote_windows_fixture",
+        "test_remote_windows_pair_keeps_exact_identities_and_local_conflict_guard",
+        "test_remote_windows_pair_keeps_index_bound_and_does_not_hide_tracked_input"
+      ]
+    }
+  },
+  "originalPackageSizeEvidence": {
+    "path": "joystick-games/backroad-rally/docs/windows-v5-44630691787/original-small-export/joystick-windows-evidence-backroad-rally/package-verification.json",
+    "bytes": 954,
+    "sha256": "866ac3c6a528d0d7241a23bde6953c553b2edae2ba4017d167432863526eab33",
+    "packages": {
+      "BackroadRally-0.1.0-windows-x64.zip": {
+        "bytes": 104921739,
+        "sha256": "8afda86be90a7706b953e8f5b1ef385cbfb3fb7abe879ac67a99bcdecf3faab9"
+      },
+      "BackroadRally-0.1.0-windows-x64-setup.exe": {
+        "bytes": 104932414,
+        "sha256": "799b955765ece1a6cf2a8efb9a3004e6b5d909f0fd4c61eab8a487837a9bea51"
+      }
+    },
+    "nativeRuntimePassed": false
+  },
+  "tests": {
+    "passed": 37,
+    "log": "tests.log"
+  },
+  "scope": [
+    "Only already enumerated android/macos/windows descriptors are considered.",
+    "All remote URL/tag/version/positive asset IDs/size/SHA and local-node conflict guards remain identical.",
+    "Remote names never enter source exclusions; local package format/hash checks remain unchanged."
+  ],
+  "actualPublishedWindowsMetadataChecked": false
+}
