@@ -2,6 +2,14 @@
 
 基于 [SilverNinja71/Penguin-Track](https://github.com/SilverNinja71/Penguin-Track/tree/0369367ff5aa76902bdf0736e4644efbbd3f1d82) 的 pureTV 手柄适配。保留原作者的雪地赛车物理、画面和关卡；不是 pureTV 原创游戏。
 
+## Android TV 下载
+
+0.1.0：[签名 APK](penguintrack-0.1.0.apk)（2,342,332 字节）· [SHA256 校验](SHA256SUMS.txt) · [包与验收记录](android-release.json)。需要 **Android 8.0 / API 26 或更新版本，以及支持 WebGL 2 的系统 WebView**；不支持 Android 4.4/6 的旧 WebView。
+
+正常端口和端口占用回退两种 Android 模式各通过 56 项原生检查，包括实际首条赛道驾驶、九键原 SDK 输入、客户端 ID、暂停、失焦和断线取消、重连后手动恢复；两模式分别核对 602 / 598 条唯一 ACK。安装包沿用原固定证书字节，未重新构建或签名。原菜单路线失败记录保留，见 [Android 交付说明及原始录像](docs/android-delivery/)。
+
+原生检查在模拟器完成，未验证实体电视／ESP32、完整通关或退出应用后的存档恢复。原版触屏 Brake 按钮会遮住部分速度表；手柄操控和中央赛道画面可见。
+
 ## Windows 下载
 
 0.1.0 x64：[安装 EXE](Penguintrack-0.1.0-windows-x64-setup.exe)（2,424,280 字节）· [便携 ZIP](Penguintrack-0.1.0-windows-x64.zip)（2,360,273 字节）· [SHA256 校验](SHA256SUMS.txt)。需要 **Windows 10 1903 或更新版本／Windows 11 x64、Microsoft Edge WebView2 Runtime 和可用的 WebGL 2**；便携版请完整解压后运行 `PureTVGame.exe`。安装包未做 Authenticode 签名。
@@ -44,4 +52,4 @@ python3 -m http.server 8080 --directory dist
 
 `src/` 是可维护源码，`dist/` 为确切离线运行资产。`upstream.json` 保存原始 198 文件的固定提交/Git blob匹配与 SHA256；`docs/build-inputs.json` 保存编译输入和输出哈希。上游 MIT 版权行原为 “Spear-Mace PVP Contributors”，已原样保留；Three.js 为 MIT，Baloo 2 为 OFL 1.1，见 NOTICE 和 dist/THIRD-PARTY-NOTICES.txt。
 
-macOS、Windows 安装包及各自验证范围见上方；Android 仍待独立验收。需要 WebGL2 与现代系统 WebView，不承诺 Android 4.4/6 的旧 WebView 可用。实体电视、手机/ESP32 手柄及各平台原生验证状态见本目录证据，不把 Linux SwiftShader 当作设备性能。
+Android、macOS、Windows 安装包及各自验证范围见上方。需要 WebGL2 与现代系统 WebView，不承诺 Android 4.4/6 的旧 WebView 可用。实体电视、手机/ESP32 手柄及各平台原生验证状态见本目录证据，不把 Linux SwiftShader 当作设备性能。

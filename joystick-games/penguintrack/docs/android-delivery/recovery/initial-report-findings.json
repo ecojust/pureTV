@@ -1,0 +1,3052 @@
+{
+  "run": 44634808045,
+  "qaSource": "3cf2452db9853a3a189c47342a291f046e411b5a",
+  "export": "111c827624d21b4149079a4d9b453d29d7d4a7b6",
+  "modes": [
+    {
+      "path": "evidence/joystick-android-runtime-penguintrack/penguintrack-normal/report.json",
+      "bytes": 1389189,
+      "sha256": "eb5e8f068837fa96944436f0234eda256f23312997421dd29811a0b409cb401e",
+      "status": "passed",
+      "error": null,
+      "apk": {
+        "path": "/home/runner/work/_temp/input/packages/penguintrack/penguintrack-0.1.0.apk",
+        "bytes": 2342332,
+        "sha256": "e1f9aa255413819bda917543c2d2258dd685a8eff61f982f26a98dfcfc827827"
+      },
+      "tests": [
+        {
+          "name": "catalog scenario starts with fresh app data before launch",
+          "status": "passed",
+          "details": {
+            "mode": "fresh-install-app-data",
+            "targetPackage": "com.ecojust.joystick.penguintrack",
+            "method": "pm clear",
+            "phase": "before-target-launch",
+            "status": "passed",
+            "stdout": "Success"
+          }
+        },
+        {
+          "name": "installed target launches initialized game menu with no controller card",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "original SDK hello and nine sync messages create actual controller ID card",
+          "status": "passed",
+          "details": {
+            "identity": "virtual-bb9adddbe0d3"
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Move to the original Controller control from either native initial focus",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.screen",
+                "op": "eq",
+                "value": "menu"
+              },
+              {
+                "path": "gameplay.focus",
+                "op": "eq",
+                "value": "Controller"
+              }
+            ],
+            "holdMs": 80
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Move down to the original Play button before selecting the campaign",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.screen",
+                "op": "eq",
+                "value": "menu"
+              },
+              {
+                "path": "gameplay.focus",
+                "op": "eq",
+                "value": "Play"
+              }
+            ],
+            "holdMs": 80,
+            "menuTap": true
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Open original campaign",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.screen",
+                "op": "eq",
+                "value": "campaign"
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Start first original campaign track and wait natural countdown",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.phase",
+                "op": "eq",
+                "value": "racing"
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Accelerate using original car physics",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.speed",
+                "op": "gt",
+                "value": 1
+              },
+              {
+                "path": "gameplay.car.pos",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 3500
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Steer left under throttle",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.car.pos",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 900
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Steer right with separate A throttle",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.car.pos",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 900
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Brake with independent DOWN and B controls",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.speed",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 800
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Cycle original camera",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.camera",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Return to original checkpoint",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.speed",
+                "op": "lt",
+                "value": 1
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Pause original simulation",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": true
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Focus pause option Restart",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": true
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Focus pause option Settings",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": true
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Focus pause option Quit",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": true
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Focus pause option Pure",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": true
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Toggle original Pure ghost preference and save settings",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.showGhost",
+                "op": "changed"
+              },
+              {
+                "path": "gameplay.savedSettings",
+                "op": "eq",
+                "value": true
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Deliberately resume with held START without re-pausing",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "playing"
+              },
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": false
+              }
+            ],
+            "holdMs": 1200
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Continue driving after saved preference",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.speed",
+                "op": "gt",
+                "value": 1
+              },
+              {
+                "path": "gameplay.car.pos",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 2000
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 4946,
+              "after": 4946
+            },
+            "gameplay.time": {
+              "before": 49460,
+              "after": 49460
+            },
+            "gameplay.car.pos": {
+              "before": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ],
+              "after": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ],
+              "after": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ]
+            },
+            "gameplay.speed": {
+              "before": 70.36469358878709,
+              "after": 70.36469358878709
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 4946,
+              "after": 4946
+            },
+            "gameplay.time": {
+              "before": 49460,
+              "after": 49460
+            },
+            "gameplay.car.pos": {
+              "before": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ],
+              "after": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ],
+              "after": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ]
+            },
+            "gameplay.speed": {
+              "before": 70.36469358878709,
+              "after": 70.36469358878709
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 4946,
+              "after": 4946
+            },
+            "gameplay.time": {
+              "before": 49460,
+              "after": 49460
+            },
+            "gameplay.car.pos": {
+              "before": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ],
+              "after": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ],
+              "after": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ]
+            },
+            "gameplay.speed": {
+              "before": 70.36469358878709,
+              "after": 70.36469358878709
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release UP",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 4946,
+              "after": 4946
+            },
+            "gameplay.time": {
+              "before": 49460,
+              "after": 49460
+            },
+            "gameplay.car.pos": {
+              "before": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ],
+              "after": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ],
+              "after": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ]
+            },
+            "gameplay.speed": {
+              "before": 70.36469358878709,
+              "after": 70.36469358878709
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 4946,
+              "after": 4946
+            },
+            "gameplay.time": {
+              "before": 49460,
+              "after": 49460
+            },
+            "gameplay.car.pos": {
+              "before": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ],
+              "after": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ],
+              "after": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ]
+            },
+            "gameplay.speed": {
+              "before": 70.36469358878709,
+              "after": 70.36469358878709
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release DOWN",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 4946,
+              "after": 4946
+            },
+            "gameplay.time": {
+              "before": 49460,
+              "after": 49460
+            },
+            "gameplay.car.pos": {
+              "before": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ],
+              "after": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ],
+              "after": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ]
+            },
+            "gameplay.speed": {
+              "before": 70.36469358878709,
+              "after": 70.36469358878709
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 4946,
+              "after": 4946
+            },
+            "gameplay.time": {
+              "before": 49460,
+              "after": 49460
+            },
+            "gameplay.car.pos": {
+              "before": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ],
+              "after": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ],
+              "after": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ]
+            },
+            "gameplay.speed": {
+              "before": 70.36469358878709,
+              "after": 70.36469358878709
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release LEFT",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 4946,
+              "after": 4946
+            },
+            "gameplay.time": {
+              "before": 49460,
+              "after": 49460
+            },
+            "gameplay.car.pos": {
+              "before": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ],
+              "after": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ],
+              "after": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ]
+            },
+            "gameplay.speed": {
+              "before": 70.36469358878709,
+              "after": 70.36469358878709
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 4946,
+              "after": 4946
+            },
+            "gameplay.time": {
+              "before": 49460,
+              "after": 49460
+            },
+            "gameplay.car.pos": {
+              "before": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ],
+              "after": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ],
+              "after": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ]
+            },
+            "gameplay.speed": {
+              "before": 70.36469358878709,
+              "after": 70.36469358878709
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release RIGHT",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 4946,
+              "after": 4946
+            },
+            "gameplay.time": {
+              "before": 49460,
+              "after": 49460
+            },
+            "gameplay.car.pos": {
+              "before": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ],
+              "after": [
+                795.2004685673429,
+                0.6496801016369677,
+                574.5826958252128
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ],
+              "after": [
+                -0.0017998294720848315,
+                0.0004477219669557896,
+                19.54574813111291
+              ]
+            },
+            "gameplay.speed": {
+              "before": 70.36469358878709,
+              "after": 70.36469358878709
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5202,
+              "after": 5202
+            },
+            "gameplay.time": {
+              "before": 52020,
+              "after": 52020
+            },
+            "gameplay.car.pos": {
+              "before": [
+                795.196362128988,
+                0.6506796480592765,
+                619.1777038781084
+              ],
+              "after": [
+                795.196362128988,
+                0.6506796480592765,
+                619.1777038781084
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.0014129903437405257,
+                0.00033657395081908677,
+                15.344761155875384
+              ],
+              "after": [
+                -0.0014129903437405257,
+                0.00033657395081908677,
+                15.344761155875384
+              ]
+            },
+            "gameplay.speed": {
+              "before": 55.24114040864189,
+              "after": 55.24114040864189
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release START",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5202,
+              "after": 5202
+            },
+            "gameplay.time": {
+              "before": 52020,
+              "after": 52020
+            },
+            "gameplay.car.pos": {
+              "before": [
+                795.196362128988,
+                0.6506796480592765,
+                619.1777038781084
+              ],
+              "after": [
+                795.196362128988,
+                0.6506796480592765,
+                619.1777038781084
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.0014129903437405257,
+                0.00033657395081908677,
+                15.344761155875384
+              ],
+              "after": [
+                -0.0014129903437405257,
+                0.00033657395081908677,
+                15.344761155875384
+              ]
+            },
+            "gameplay.speed": {
+              "before": 55.24114040864189,
+              "after": 55.24114040864189
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5425,
+              "after": 5425
+            },
+            "gameplay.time": {
+              "before": 54250,
+              "after": 54250
+            },
+            "gameplay.car.pos": {
+              "before": [
+                795.1172279712496,
+                0.6541962846909419,
+                675.570875560781
+              ],
+              "after": [
+                795.1172279712496,
+                0.6541962846909419,
+                675.570875560781
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.8265792792738533,
+                -0.04858877766206516,
+                26.228363786151156
+              ],
+              "after": [
+                -0.8265792792738533,
+                -0.04858877766206516,
+                26.228363786151156
+              ]
+            },
+            "gameplay.speed": {
+              "before": 94.4691488662045,
+              "after": 94.4691488662045
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release A",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5425,
+              "after": 5425
+            },
+            "gameplay.time": {
+              "before": 54250,
+              "after": 54250
+            },
+            "gameplay.car.pos": {
+              "before": [
+                795.1172279712496,
+                0.6541962846909419,
+                675.570875560781
+              ],
+              "after": [
+                795.1172279712496,
+                0.6541962846909419,
+                675.570875560781
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.8265792792738533,
+                -0.04858877766206516,
+                26.228363786151156
+              ],
+              "after": [
+                -0.8265792792738533,
+                -0.04858877766206516,
+                26.228363786151156
+              ]
+            },
+            "gameplay.speed": {
+              "before": 94.4691488662045,
+              "after": 94.4691488662045
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5563,
+              "after": 5563
+            },
+            "gameplay.time": {
+              "before": 55630,
+              "after": 55630
+            },
+            "gameplay.car.pos": {
+              "before": [
+                791.6832697699398,
+                0.6550326309232106,
+                697.0146333561486
+              ],
+              "after": [
+                791.6832697699398,
+                0.6550326309232106,
+                697.0146333561486
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -3.237747385647511,
+                -0.045816650890972616,
+                11.673918083498409
+              ],
+              "after": [
+                -3.237747385647511,
+                -0.045816650890972616,
+                11.673918083498409
+              ]
+            },
+            "gameplay.speed": {
+              "before": 43.61284788360198,
+              "after": 43.61284788360198
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release B",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5563,
+              "after": 5563
+            },
+            "gameplay.time": {
+              "before": 55630,
+              "after": 55630
+            },
+            "gameplay.car.pos": {
+              "before": [
+                791.6832697699398,
+                0.6550326309232106,
+                697.0146333561486
+              ],
+              "after": [
+                791.6832697699398,
+                0.6550326309232106,
+                697.0146333561486
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -3.237747385647511,
+                -0.045816650890972616,
+                11.673918083498409
+              ],
+              "after": [
+                -3.237747385647511,
+                -0.045816650890972616,
+                11.673918083498409
+              ]
+            },
+            "gameplay.speed": {
+              "before": 43.61284788360198,
+              "after": 43.61284788360198
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5563,
+              "after": 5563
+            },
+            "gameplay.time": {
+              "before": 55630,
+              "after": 55630
+            },
+            "gameplay.car.pos": {
+              "before": [
+                791.6832697699398,
+                0.6550326309232106,
+                697.0146333561486
+              ],
+              "after": [
+                791.6832697699398,
+                0.6550326309232106,
+                697.0146333561486
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -3.237747385647511,
+                -0.045816650890972616,
+                11.673918083498409
+              ],
+              "after": [
+                -3.237747385647511,
+                -0.045816650890972616,
+                11.673918083498409
+              ]
+            },
+            "gameplay.speed": {
+              "before": 43.61284788360198,
+              "after": 43.61284788360198
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release X",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5563,
+              "after": 5563
+            },
+            "gameplay.time": {
+              "before": 55630,
+              "after": 55630
+            },
+            "gameplay.car.pos": {
+              "before": [
+                791.6832697699398,
+                0.6550326309232106,
+                697.0146333561486
+              ],
+              "after": [
+                791.6832697699398,
+                0.6550326309232106,
+                697.0146333561486
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -3.237747385647511,
+                -0.045816650890972616,
+                11.673918083498409
+              ],
+              "after": [
+                -3.237747385647511,
+                -0.045816650890972616,
+                11.673918083498409
+              ]
+            },
+            "gameplay.speed": {
+              "before": 43.61284788360198,
+              "after": 43.61284788360198
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5563,
+              "after": 5563
+            },
+            "gameplay.time": {
+              "before": 55630,
+              "after": 55630
+            },
+            "gameplay.car.pos": {
+              "before": [
+                791.6832697699398,
+                0.6550326309232106,
+                697.0146333561486
+              ],
+              "after": [
+                791.6832697699398,
+                0.6550326309232106,
+                697.0146333561486
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -3.237747385647511,
+                -0.045816650890972616,
+                11.673918083498409
+              ],
+              "after": [
+                -3.237747385647511,
+                -0.045816650890972616,
+                11.673918083498409
+              ]
+            },
+            "gameplay.speed": {
+              "before": 43.61284788360198,
+              "after": 43.61284788360198
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release Y",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "single-seat host rejects second SDK with controller_busy and preserves active primary input",
+          "status": "passed",
+          "details": {
+            "connection": 2,
+            "controllerId": "virtual-2e18bc886684",
+            "helloSeq": 1,
+            "sdkMessages": 10,
+            "response": {
+              "type": "error",
+              "message": "controller_busy",
+              "seq": 1
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 6170,
+              "after": 6170
+            },
+            "gameplay.time": {
+              "before": 61700,
+              "after": 61700
+            },
+            "gameplay.car.pos": {
+              "before": [
+                767.7408437411863,
+                0.6579166846729708,
+                737.2046517635365
+              ],
+              "after": [
+                767.7408437411863,
+                0.6579166846729708,
+                737.2046517635365
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -14.61514332314103,
+                -0.10870819015886232,
+                14.684318911181172
+              ],
+              "after": [
+                -14.61514332314103,
+                -0.10870819015886232,
+                14.684318911181172
+              ]
+            },
+            "gameplay.speed": {
+              "before": 74.58548893789848,
+              "after": 74.58548893789848
+            }
+          }
+        },
+        {
+          "name": "native exit dialog and focus return cancel input and never automatically resume gameplay",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "disconnect clears keys; reconnect keeps original ID and remains paused",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "held START reconnect sync cannot resume gameplay",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "every accepted SDK message has exactly one original host ACK; busy rejection separately verified",
+          "status": "passed",
+          "details": {
+            "sdkMessages": 612,
+            "acceptedSdkMessages": 602,
+            "rejectedSdkMessages": 10,
+            "hostReplies": 603,
+            "matchingAcks": 602,
+            "missingAcks": [],
+            "expectedBusyIds": [
+              "virtual-2e18bc886684"
+            ],
+            "rejectedConnections": [
+              {
+                "connection": 2,
+                "controllerId": "virtual-2e18bc886684",
+                "helloSeq": 1,
+                "sdkMessages": 10,
+                "response": {
+                  "type": "error",
+                  "message": "controller_busy",
+                  "seq": 1
+                }
+              }
+            ],
+            "unexpectedReplies": [],
+            "duplicateAcks": [],
+            "keysSent": [
+              "A",
+              "B",
+              "DOWN",
+              "LEFT",
+              "RIGHT",
+              "START",
+              "UP",
+              "X",
+              "Y"
+            ],
+            "errors": []
+          }
+        },
+        {
+          "name": "same native process and service port survive focus, disconnect and reconnect",
+          "status": "passed",
+          "details": 63485
+        }
+      ],
+      "menuTapObservations": [
+        {
+          "name": "Move down to the original Play button before selecting the campaign",
+          "key": "DOWN",
+          "status": "passed",
+          "requestedTapMs": 16,
+          "declaredHoldMs": 80,
+          "beforePollCount": 92,
+          "reloadBasis": null,
+          "samples": [
+            {
+              "pollCount": 97,
+              "released": true,
+              "expectationMatches": true,
+              "qualified": true,
+              "elapsedSeconds": 0.9546375779999607
+            },
+            {
+              "pollCount": 102,
+              "released": true,
+              "expectationMatches": true,
+              "qualified": true,
+              "elapsedSeconds": 1.7088015769999743
+            },
+            {
+              "pollCount": 108,
+              "released": true,
+              "expectationMatches": true,
+              "qualified": true,
+              "elapsedSeconds": 2.476743201999966
+            }
+          ],
+          "sampleCount": 3,
+          "samplesTruncated": false,
+          "sdkCallHeldMs": 17.304853000041476,
+          "downSequence": 46,
+          "releaseSequence": 47,
+          "wire": {
+            "controllerId": "virtual-bb9adddbe0d3",
+            "connection": 1,
+            "downSequence": 46,
+            "releaseSequence": 47,
+            "downCounts": {
+              "UP": 0,
+              "DOWN": 1,
+              "LEFT": 0,
+              "RIGHT": 0,
+              "START": 0,
+              "A": 0,
+              "B": 0,
+              "X": 0,
+              "Y": 0
+            },
+            "matchingAcks": 2,
+            "countScope": "Original SDK wire; native Android button counters are unavailable",
+            "observedWireHeldMs": 17.149777999975413
+          },
+          "stableFreshSamples": 2,
+          "afterPollCount": 108,
+          "elapsedSeconds": 2.4767806979999705
+        }
+      ],
+      "lastSnapshots": [
+        {
+          "label": "primary-controls-after-rejection",
+          "game": "penguintrack",
+          "stage": "paused",
+          "renderer": "webgl2",
+          "frames": 1231,
+          "pollCount": 1231,
+          "gameplay": {
+            "screen": "play",
+            "focus": "ResumeEsc",
+            "phase": "paused",
+            "tick": 5812,
+            "time": 58120,
+            "speed": 21.82953289309039,
+            "savedSettings": true
+          },
+          "connected": true,
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "native-exit-dialog-paused",
+          "game": "penguintrack",
+          "stage": "paused",
+          "renderer": "webgl2",
+          "frames": 1302,
+          "pollCount": 1302,
+          "gameplay": {
+            "screen": "play",
+            "focus": "ResumeEsc",
+            "phase": "paused",
+            "tick": 6170,
+            "time": 61700,
+            "speed": 74.58548893789848,
+            "savedSettings": true
+          },
+          "connected": false,
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "paused-model-stable",
+          "game": "penguintrack",
+          "stage": "paused",
+          "renderer": "webgl2",
+          "frames": 1324,
+          "pollCount": 1324,
+          "gameplay": {
+            "screen": "play",
+            "focus": "ResumeEsc",
+            "phase": "paused",
+            "tick": 6170,
+            "time": 61700,
+            "speed": 74.58548893789848,
+            "savedSettings": true
+          },
+          "connected": true,
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "disconnect-paused",
+          "game": "penguintrack",
+          "stage": "paused",
+          "renderer": "webgl2",
+          "frames": 1382,
+          "pollCount": 1382,
+          "gameplay": {
+            "screen": "play",
+            "focus": "ResumeEsc",
+            "phase": "paused",
+            "tick": 6400,
+            "time": 64000,
+            "speed": 64.54271274439306,
+            "savedSettings": true
+          },
+          "connected": false,
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "held-sync-acked",
+          "game": "penguintrack",
+          "stage": "paused",
+          "renderer": "webgl2",
+          "frames": 1447,
+          "pollCount": 1447,
+          "gameplay": {
+            "screen": "play",
+            "focus": "ResumeEsc",
+            "phase": "paused",
+            "tick": 6400,
+            "time": 64000,
+            "speed": 64.54271274439306,
+            "savedSettings": true
+          },
+          "connected": true,
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "held-start-sync",
+          "game": "penguintrack",
+          "stage": "paused",
+          "renderer": "webgl2",
+          "frames": 1455,
+          "pollCount": 1455,
+          "gameplay": {
+            "screen": "play",
+            "focus": "ResumeEsc",
+            "phase": "paused",
+            "tick": 6400,
+            "time": 64000,
+            "speed": 64.54271274439306,
+            "savedSettings": true
+          },
+          "connected": true,
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          }
+        }
+      ],
+      "wire": {
+        "acceptedSdkMessages": 602,
+        "matchingAcks": 602,
+        "missingAcks": [],
+        "duplicateAcks": [],
+        "errors": []
+      },
+      "storage": null
+    },
+    {
+      "path": "evidence/joystick-android-runtime-penguintrack/penguintrack-occupied/report.json",
+      "bytes": 1383404,
+      "sha256": "289f6dbe08a051da1dfe7196cd18f10642c15ce1720397aaeb6dd5d01aaff082",
+      "status": "passed",
+      "error": null,
+      "apk": {
+        "path": "/home/runner/work/_temp/input/packages/penguintrack/penguintrack-0.1.0.apk",
+        "bytes": 2342332,
+        "sha256": "e1f9aa255413819bda917543c2d2258dd685a8eff61f982f26a98dfcfc827827"
+      },
+      "tests": [
+        {
+          "name": "catalog scenario starts with fresh app data before launch",
+          "status": "passed",
+          "details": {
+            "mode": "fresh-install-app-data",
+            "targetPackage": "com.ecojust.joystick.penguintrack",
+            "method": "pm clear",
+            "phase": "before-target-launch",
+            "status": "passed",
+            "stdout": "Success"
+          }
+        },
+        {
+          "name": "installed target launches initialized game menu with no controller card",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "original SDK hello and nine sync messages create actual controller ID card",
+          "status": "passed",
+          "details": {
+            "identity": "virtual-c53b381c45a7"
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Move to the original Controller control from either native initial focus",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.screen",
+                "op": "eq",
+                "value": "menu"
+              },
+              {
+                "path": "gameplay.focus",
+                "op": "eq",
+                "value": "Controller"
+              }
+            ],
+            "holdMs": 80
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Move down to the original Play button before selecting the campaign",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.screen",
+                "op": "eq",
+                "value": "menu"
+              },
+              {
+                "path": "gameplay.focus",
+                "op": "eq",
+                "value": "Play"
+              }
+            ],
+            "holdMs": 80,
+            "menuTap": true
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Open original campaign",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.screen",
+                "op": "eq",
+                "value": "campaign"
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Start first original campaign track and wait natural countdown",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.phase",
+                "op": "eq",
+                "value": "racing"
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Accelerate using original car physics",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.speed",
+                "op": "gt",
+                "value": 1
+              },
+              {
+                "path": "gameplay.car.pos",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 3500
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Steer left under throttle",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.car.pos",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 900
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Steer right with separate A throttle",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.car.pos",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 900
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Brake with independent DOWN and B controls",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.speed",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 800
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Cycle original camera",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.camera",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Return to original checkpoint",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.speed",
+                "op": "lt",
+                "value": 1
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Pause original simulation",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": true
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Focus pause option Restart",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": true
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Focus pause option Settings",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": true
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Focus pause option Quit",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": true
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Focus pause option Pure",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": true
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Toggle original Pure ghost preference and save settings",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.showGhost",
+                "op": "changed"
+              },
+              {
+                "path": "gameplay.savedSettings",
+                "op": "eq",
+                "value": true
+              }
+            ],
+            "holdMs": 180
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Deliberately resume with held START without re-pausing",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "playing"
+              },
+              {
+                "path": "paused",
+                "op": "eq",
+                "value": false
+              }
+            ],
+            "holdMs": 1200
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Continue driving after saved preference",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "gameplay.speed",
+                "op": "gt",
+                "value": 1
+              },
+              {
+                "path": "gameplay.car.pos",
+                "op": "changed"
+              }
+            ],
+            "holdMs": 2000
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5684,
+              "after": 5684
+            },
+            "gameplay.time": {
+              "before": 56840,
+              "after": 56840
+            },
+            "gameplay.car.pos": {
+              "before": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ],
+              "after": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ],
+              "after": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ]
+            },
+            "gameplay.speed": {
+              "before": 8.245502200403443,
+              "after": 8.245502200403443
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5684,
+              "after": 5684
+            },
+            "gameplay.time": {
+              "before": 56840,
+              "after": 56840
+            },
+            "gameplay.car.pos": {
+              "before": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ],
+              "after": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ],
+              "after": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ]
+            },
+            "gameplay.speed": {
+              "before": 8.245502200403443,
+              "after": 8.245502200403443
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5684,
+              "after": 5684
+            },
+            "gameplay.time": {
+              "before": 56840,
+              "after": 56840
+            },
+            "gameplay.car.pos": {
+              "before": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ],
+              "after": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ],
+              "after": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ]
+            },
+            "gameplay.speed": {
+              "before": 8.245502200403443,
+              "after": 8.245502200403443
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release UP",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5684,
+              "after": 5684
+            },
+            "gameplay.time": {
+              "before": 56840,
+              "after": 56840
+            },
+            "gameplay.car.pos": {
+              "before": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ],
+              "after": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ],
+              "after": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ]
+            },
+            "gameplay.speed": {
+              "before": 8.245502200403443,
+              "after": 8.245502200403443
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5684,
+              "after": 5684
+            },
+            "gameplay.time": {
+              "before": 56840,
+              "after": 56840
+            },
+            "gameplay.car.pos": {
+              "before": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ],
+              "after": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ],
+              "after": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ]
+            },
+            "gameplay.speed": {
+              "before": 8.245502200403443,
+              "after": 8.245502200403443
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release DOWN",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5684,
+              "after": 5684
+            },
+            "gameplay.time": {
+              "before": 56840,
+              "after": 56840
+            },
+            "gameplay.car.pos": {
+              "before": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ],
+              "after": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ],
+              "after": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ]
+            },
+            "gameplay.speed": {
+              "before": 8.245502200403443,
+              "after": 8.245502200403443
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5684,
+              "after": 5684
+            },
+            "gameplay.time": {
+              "before": 56840,
+              "after": 56840
+            },
+            "gameplay.car.pos": {
+              "before": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ],
+              "after": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ],
+              "after": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ]
+            },
+            "gameplay.speed": {
+              "before": 8.245502200403443,
+              "after": 8.245502200403443
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release LEFT",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5684,
+              "after": 5684
+            },
+            "gameplay.time": {
+              "before": 56840,
+              "after": 56840
+            },
+            "gameplay.car.pos": {
+              "before": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ],
+              "after": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ],
+              "after": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ]
+            },
+            "gameplay.speed": {
+              "before": 8.245502200403443,
+              "after": 8.245502200403443
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5684,
+              "after": 5684
+            },
+            "gameplay.time": {
+              "before": 56840,
+              "after": 56840
+            },
+            "gameplay.car.pos": {
+              "before": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ],
+              "after": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ],
+              "after": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ]
+            },
+            "gameplay.speed": {
+              "before": 8.245502200403443,
+              "after": 8.245502200403443
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release RIGHT",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5684,
+              "after": 5684
+            },
+            "gameplay.time": {
+              "before": 56840,
+              "after": 56840
+            },
+            "gameplay.car.pos": {
+              "before": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ],
+              "after": [
+                788.3267132652331,
+                0.653053037901967,
+                445.3173006285676
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ],
+              "after": [
+                0.8759836347924679,
+                -0.007730952243470632,
+                2.116271298961812
+              ]
+            },
+            "gameplay.speed": {
+              "before": 8.245502200403443,
+              "after": 8.245502200403443
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5930,
+              "after": 5930
+            },
+            "gameplay.time": {
+              "before": 59300,
+              "after": 59300
+            },
+            "gameplay.car.pos": {
+              "before": [
+                788.9311440894922,
+                0.6522965971148577,
+                446.8300934659587
+              ],
+              "after": [
+                788.9311440894922,
+                0.6522965971148577,
+                446.8300934659587
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -6.877984016378526e-11,
+                9.233988192496168e-08,
+                -1.6960420741645092e-10
+              ],
+              "after": [
+                -6.877984016378526e-11,
+                9.233988192496168e-08,
+                -1.6960420741645092e-10
+              ]
+            },
+            "gameplay.speed": {
+              "before": 3.324242278784687e-07,
+              "after": 3.324242278784687e-07
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release START",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 5930,
+              "after": 5930
+            },
+            "gameplay.time": {
+              "before": 59300,
+              "after": 59300
+            },
+            "gameplay.car.pos": {
+              "before": [
+                788.9311440894922,
+                0.6522965971148577,
+                446.8300934659587
+              ],
+              "after": [
+                788.9311440894922,
+                0.6522965971148577,
+                446.8300934659587
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -6.877984016378526e-11,
+                9.233988192496168e-08,
+                -1.6960420741645092e-10
+              ],
+              "after": [
+                -6.877984016378526e-11,
+                9.233988192496168e-08,
+                -1.6960420741645092e-10
+              ]
+            },
+            "gameplay.speed": {
+              "before": 3.324242278784687e-07,
+              "after": 3.324242278784687e-07
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 6116,
+              "after": 6116
+            },
+            "gameplay.time": {
+              "before": 61160,
+              "after": 61160
+            },
+            "gameplay.car.pos": {
+              "before": [
+                793.7216476840027,
+                0.6547340911251734,
+                463.7499534969607
+              ],
+              "after": [
+                793.7216476840027,
+                0.6547340911251734,
+                463.7499534969607
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                1.9597571784711487,
+                -0.03825820502146948,
+                10.399288750507592
+              ],
+              "after": [
+                1.9597571784711487,
+                -0.03825820502146948,
+                10.399288750507592
+              ]
+            },
+            "gameplay.speed": {
+              "before": 38.09666188174624,
+              "after": 38.09666188174624
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release A",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 6116,
+              "after": 6116
+            },
+            "gameplay.time": {
+              "before": 61160,
+              "after": 61160
+            },
+            "gameplay.car.pos": {
+              "before": [
+                793.7216476840027,
+                0.6547340911251734,
+                463.7499534969607
+              ],
+              "after": [
+                793.7216476840027,
+                0.6547340911251734,
+                463.7499534969607
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                1.9597571784711487,
+                -0.03825820502146948,
+                10.399288750507592
+              ],
+              "after": [
+                1.9597571784711487,
+                -0.03825820502146948,
+                10.399288750507592
+              ]
+            },
+            "gameplay.speed": {
+              "before": 38.09666188174624,
+              "after": 38.09666188174624
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 6397,
+              "after": 6397
+            },
+            "gameplay.time": {
+              "before": 63970,
+              "after": 63970
+            },
+            "gameplay.car.pos": {
+              "before": [
+                793.4448211909303,
+                0.6524196837229657,
+                462.3590775586099
+              ],
+              "after": [
+                793.4448211909303,
+                0.6524196837229657,
+                462.3590775586099
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.03427982586105216,
+                -0.0015243470132200714,
+                -0.18065024383433886
+              ],
+              "after": [
+                -0.03427982586105216,
+                -0.0015243470132200714,
+                -0.18065024383433886
+              ]
+            },
+            "gameplay.speed": {
+              "before": 0.6619688447140377,
+              "after": 0.6619688447140377
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release B",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 6397,
+              "after": 6397
+            },
+            "gameplay.time": {
+              "before": 63970,
+              "after": 63970
+            },
+            "gameplay.car.pos": {
+              "before": [
+                793.4448211909303,
+                0.6524196837229657,
+                462.3590775586099
+              ],
+              "after": [
+                793.4448211909303,
+                0.6524196837229657,
+                462.3590775586099
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.03427982586105216,
+                -0.0015243470132200714,
+                -0.18065024383433886
+              ],
+              "after": [
+                -0.03427982586105216,
+                -0.0015243470132200714,
+                -0.18065024383433886
+              ]
+            },
+            "gameplay.speed": {
+              "before": 0.6619688447140377,
+              "after": 0.6619688447140377
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 6397,
+              "after": 6397
+            },
+            "gameplay.time": {
+              "before": 63970,
+              "after": 63970
+            },
+            "gameplay.car.pos": {
+              "before": [
+                793.4448211909303,
+                0.6524196837229657,
+                462.3590775586099
+              ],
+              "after": [
+                793.4448211909303,
+                0.6524196837229657,
+                462.3590775586099
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.03427982586105216,
+                -0.0015243470132200714,
+                -0.18065024383433886
+              ],
+              "after": [
+                -0.03427982586105216,
+                -0.0015243470132200714,
+                -0.18065024383433886
+              ]
+            },
+            "gameplay.speed": {
+              "before": 0.6619688447140377,
+              "after": 0.6619688447140377
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release X",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 6397,
+              "after": 6397
+            },
+            "gameplay.time": {
+              "before": 63970,
+              "after": 63970
+            },
+            "gameplay.car.pos": {
+              "before": [
+                793.4448211909303,
+                0.6524196837229657,
+                462.3590775586099
+              ],
+              "after": [
+                793.4448211909303,
+                0.6524196837229657,
+                462.3590775586099
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.03427982586105216,
+                -0.0015243470132200714,
+                -0.18065024383433886
+              ],
+              "after": [
+                -0.03427982586105216,
+                -0.0015243470132200714,
+                -0.18065024383433886
+              ]
+            },
+            "gameplay.speed": {
+              "before": 0.6619688447140377,
+              "after": 0.6619688447140377
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 6397,
+              "after": 6397
+            },
+            "gameplay.time": {
+              "before": 63970,
+              "after": 63970
+            },
+            "gameplay.car.pos": {
+              "before": [
+                793.4448211909303,
+                0.6524196837229657,
+                462.3590775586099
+              ],
+              "after": [
+                793.4448211909303,
+                0.6524196837229657,
+                462.3590775586099
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                -0.03427982586105216,
+                -0.0015243470132200714,
+                -0.18065024383433886
+              ],
+              "after": [
+                -0.03427982586105216,
+                -0.0015243470132200714,
+                -0.18065024383433886
+              ]
+            },
+            "gameplay.speed": {
+              "before": 0.6619688447140377,
+              "after": 0.6619688447140377
+            }
+          }
+        },
+        {
+          "name": "independent cached input down/release Y",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "single-seat host rejects second SDK with controller_busy and preserves active primary input",
+          "status": "passed",
+          "details": {
+            "connection": 2,
+            "controllerId": "virtual-9a791151d6e4",
+            "helloSeq": 1,
+            "sdkMessages": 10,
+            "response": {
+              "type": "error",
+              "message": "controller_busy",
+              "seq": 1
+            }
+          }
+        },
+        {
+          "name": "explicit actual model observations remain stable while paused",
+          "status": "passed",
+          "details": {
+            "gameplay.tick": {
+              "before": 6893,
+              "after": 6893
+            },
+            "gameplay.time": {
+              "before": 68930,
+              "after": 68930
+            },
+            "gameplay.car.pos": {
+              "before": [
+                794.3199698659902,
+                0.6569568167177402,
+                467.5157184917899
+              ],
+              "after": [
+                794.3199698659902,
+                0.6569568167177402,
+                467.5157184917899
+              ]
+            },
+            "gameplay.car.vel": {
+              "before": [
+                1.875400326466304,
+                -0.04479158220081247,
+                12.277516543359829
+              ],
+              "after": [
+                1.875400326466304,
+                -0.04479158220081247,
+                12.277516543359829
+              ]
+            },
+            "gameplay.speed": {
+              "before": 44.712021035186396,
+              "after": 44.712021035186396
+            }
+          }
+        },
+        {
+          "name": "native exit dialog and focus return cancel input and never automatically resume gameplay",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "disconnect clears keys; reconnect keeps original ID and remains paused",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "held START reconnect sync cannot resume gameplay",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "every accepted SDK message has exactly one original host ACK; busy rejection separately verified",
+          "status": "passed",
+          "details": {
+            "sdkMessages": 608,
+            "acceptedSdkMessages": 598,
+            "rejectedSdkMessages": 10,
+            "hostReplies": 599,
+            "matchingAcks": 598,
+            "missingAcks": [],
+            "expectedBusyIds": [
+              "virtual-9a791151d6e4"
+            ],
+            "rejectedConnections": [
+              {
+                "connection": 2,
+                "controllerId": "virtual-9a791151d6e4",
+                "helloSeq": 1,
+                "sdkMessages": 10,
+                "response": {
+                  "type": "error",
+                  "message": "controller_busy",
+                  "seq": 1
+                }
+              }
+            ],
+            "unexpectedReplies": [],
+            "duplicateAcks": [],
+            "keysSent": [
+              "A",
+              "B",
+              "DOWN",
+              "LEFT",
+              "RIGHT",
+              "START",
+              "UP",
+              "X",
+              "Y"
+            ],
+            "errors": []
+          }
+        },
+        {
+          "name": "same native process and service port survive focus, disconnect and reconnect",
+          "status": "passed",
+          "details": 41323
+        }
+      ],
+      "menuTapObservations": [
+        {
+          "name": "Move down to the original Play button before selecting the campaign",
+          "key": "DOWN",
+          "status": "passed",
+          "requestedTapMs": 16,
+          "declaredHoldMs": 80,
+          "beforePollCount": 84,
+          "reloadBasis": null,
+          "samples": [
+            {
+              "pollCount": 90,
+              "released": true,
+              "expectationMatches": true,
+              "qualified": true,
+              "elapsedSeconds": 0.7298612099999673
+            },
+            {
+              "pollCount": 94,
+              "released": true,
+              "expectationMatches": true,
+              "qualified": true,
+              "elapsedSeconds": 1.3260901730000114
+            },
+            {
+              "pollCount": 98,
+              "released": true,
+              "expectationMatches": true,
+              "qualified": true,
+              "elapsedSeconds": 1.8469878989999415
+            }
+          ],
+          "sampleCount": 3,
+          "samplesTruncated": false,
+          "sdkCallHeldMs": 16.3669309999932,
+          "downSequence": 44,
+          "releaseSequence": 45,
+          "wire": {
+            "controllerId": "virtual-c53b381c45a7",
+            "connection": 1,
+            "downSequence": 44,
+            "releaseSequence": 45,
+            "downCounts": {
+              "UP": 0,
+              "DOWN": 1,
+              "LEFT": 0,
+              "RIGHT": 0,
+              "START": 0,
+              "A": 0,
+              "B": 0,
+              "X": 0,
+              "Y": 0
+            },
+            "matchingAcks": 2,
+            "countScope": "Original SDK wire; native Android button counters are unavailable",
+            "observedWireHeldMs": 15.758333999997376
+          },
+          "stableFreshSamples": 2,
+          "afterPollCount": 98,
+          "elapsedSeconds": 1.8470228859999906
+        }
+      ],
+      "lastSnapshots": [
+        {
+          "label": "primary-controls-after-rejection",
+          "game": "penguintrack",
+          "stage": "paused",
+          "renderer": "webgl2",
+          "frames": 1277,
+          "pollCount": 1277,
+          "gameplay": {
+            "screen": "play",
+            "focus": "ResumeEsc",
+            "phase": "paused",
+            "tick": 6605,
+            "time": 66050,
+            "speed": 1.4040685966745652e-10,
+            "savedSettings": true
+          },
+          "connected": true,
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "native-exit-dialog-paused",
+          "game": "penguintrack",
+          "stage": "paused",
+          "renderer": "webgl2",
+          "frames": 1335,
+          "pollCount": 1335,
+          "gameplay": {
+            "screen": "play",
+            "focus": "ResumeEsc",
+            "phase": "paused",
+            "tick": 6893,
+            "time": 68930,
+            "speed": 44.712021035186396,
+            "savedSettings": true
+          },
+          "connected": false,
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "paused-model-stable",
+          "game": "penguintrack",
+          "stage": "paused",
+          "renderer": "webgl2",
+          "frames": 1357,
+          "pollCount": 1357,
+          "gameplay": {
+            "screen": "play",
+            "focus": "ResumeEsc",
+            "phase": "paused",
+            "tick": 6893,
+            "time": 68930,
+            "speed": 44.712021035186396,
+            "savedSettings": true
+          },
+          "connected": true,
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "disconnect-paused",
+          "game": "penguintrack",
+          "stage": "paused",
+          "renderer": "webgl2",
+          "frames": 1418,
+          "pollCount": 1418,
+          "gameplay": {
+            "screen": "play",
+            "focus": "ResumeEsc",
+            "phase": "paused",
+            "tick": 7179,
+            "time": 71790,
+            "speed": 76.93546353853974,
+            "savedSettings": true
+          },
+          "connected": false,
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "held-sync-acked",
+          "game": "penguintrack",
+          "stage": "paused",
+          "renderer": "webgl2",
+          "frames": 1489,
+          "pollCount": 1489,
+          "gameplay": {
+            "screen": "play",
+            "focus": "ResumeEsc",
+            "phase": "paused",
+            "tick": 7179,
+            "time": 71790,
+            "speed": 76.93546353853974,
+            "savedSettings": true
+          },
+          "connected": true,
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "held-start-sync",
+          "game": "penguintrack",
+          "stage": "paused",
+          "renderer": "webgl2",
+          "frames": 1497,
+          "pollCount": 1497,
+          "gameplay": {
+            "screen": "play",
+            "focus": "ResumeEsc",
+            "phase": "paused",
+            "tick": 7179,
+            "time": 71790,
+            "speed": 76.93546353853974,
+            "savedSettings": true
+          },
+          "connected": true,
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          }
+        }
+      ],
+      "wire": {
+        "acceptedSdkMessages": 598,
+        "matchingAcks": 598,
+        "missingAcks": [],
+        "duplicateAcks": [],
+        "errors": []
+      },
+      "storage": null
+    }
+  ],
+  "scope": "Read-only selected original reports; no APK download or acceptance rewrite"
+}
