@@ -1,0 +1,99 @@
+{
+  "status": "passed-plan-only",
+  "baseCommit": "8451c93577c70944c13919fe8ebb8f8633762345",
+  "markedIndices": [
+    0,
+    1,
+    8,
+    9,
+    10
+  ],
+  "originalKeysHoldMsExpectUnchanged": true,
+  "allUnmarkedStepsUnchanged": true,
+  "strictSchemaPassed": true,
+  "menuPreconditions": {
+    "0": {
+      "stage": "menu",
+      "gameplay": {
+        "focus": "Start"
+      }
+    },
+    "1": {
+      "stage": "menu",
+      "gameplay": {
+        "menu": "title"
+      }
+    },
+    "8": {
+      "stage": "menu",
+      "gameplay": {
+        "controlHand": "right",
+        "savedControls": false
+      }
+    },
+    "9": {
+      "stage": "menu",
+      "gameplay": {
+        "menu": "controls"
+      }
+    },
+    "10": {
+      "stage": "menu",
+      "gameplay": {
+        "menu": "title",
+        "focus": "Start"
+      }
+    }
+  },
+  "preconditionsSource": "Original UI route and immutable Mac reports: Start/title -> Controls -> right hand before clicking Left -> controls -> title. Snapshot assertions below only evaluate the shared predicate on these explicitly listed states; no native execution.",
+  "excluded": {
+    "2..7": "Y focus moves have menu=controls as their only expectation, already true before each action; shared menuTap must reject these. Y uses pressed edges rather than arrow repeat.",
+    "11": "Start race and wait natural countdown excluded as instructed.",
+    "12..19": "Gameplay and pause/resume steps unchanged."
+  },
+  "originalWindowsWire": [
+    {
+      "at": "2026-11-19T20:17:03.767047+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-ebc69e5b4ce7",
+        "key": "DOWN",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-19T20:17:06.518539+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 22,
+        "controller_id": "virtual-ebc69e5b4ce7",
+        "key": "DOWN",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 100
+      }
+    }
+  ],
+  "originalWindowsObservedFailure": "DOWN remained down for 2.751492 seconds (03.767047 to 06.518539), exceeding the original 380ms repeat delay. The sparse trace is insufficient to prove repeat as the sole cause; old focus was outside the title before input and final failure focus was Start. Current 5855 focus repair is separate.",
+  "originalReport": {
+    "path": "docs/racing-nine/windows-failures-44606210717/kart-royale/original-export/evidence/runtime-normal/report.json",
+    "sha256": "c2ade5b32607756bb7f11d53b8c8aef917ecf8acc4e5d3b3d8d3bd04ea5261fb"
+  },
+  "before": {
+    "bytes": 6439,
+    "sha256": "a11b548cb1bcdaa6f0b68d9c32eff97a2e323f7f9bfb4e6df09446b8aa6ad84e"
+  },
+  "after": {
+    "bytes": 6554,
+    "sha256": "a4b8bfcc0e3943ca5f7d9226362e1955736b036d1577b4561d719afa070c6615"
+  },
+  "nativeExecutionPerformed": false,
+  "gameSourceChanged": false
+}
