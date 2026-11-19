@@ -36,6 +36,184 @@ class Server(socketserver.ThreadingTCPServer):
     allow_reuse_address = True
     daemon_threads = True
 
+class MenuTapContracts(unittest.TestCase):
+
+    """Real original SDK/TCP ACK fixtures; synthetic Penguintrack DOM observations."""
+
+    def setUp(self):
+        self.directory = tempfile.TemporaryDirectory(prefix='android-menu-tap-')
+        self.server = Server(('127.0.0.1', 0), AckFixture); self.server.drop_key = None
+        threading.Thread(target=self.server.serve_forever, daemon=True).start()
+        self.proxy = runner.WireProxy(self.server.server_address, Path(self.directory.name) / 'wire.jsonl')
+        self.client = runner.JoystickClient('127.0.0.1', self.proxy.port); self.client.connect()
+        self.acceptance = runner.Acceptance.__new__(runner.Acceptance)
+        self.acceptance.args = SimpleNamespace(game='penguintrack')
+        self.acceptance.clients = [self.client]; self.acceptance.proxy = self.proxy
+        self.acceptance.report = {'apk': {'bytes': 2342332, 'sha256': 'e1f9aa255413819bda917543c2d2258dd685a8eff61f982f26a98dfcfc827827'}}
+        self.acceptance.plan = {'renderer': 'webgl2', 'pauseStablePaths': []}
+        self.acceptance.snapshots = []
+        self.acceptance.wait_sent_ack(self.client, self.client.seq)
+        self.step = {'name': 'fixture released menu step', 'keys': ['DOWN'], 'menuTap': True,
+                     'holdMs': 180, 'timeoutSeconds': 2,
+                     'expect': [{'path': 'gameplay.focus', 'op': 'eq', 'value': 'Play'}]}
+
+    def tearDown(self):
+        self.client.disconnect(); self.proxy.close(); self.server.shutdown(); self.server.server_close(); self.directory.cleanup()
+
+    def state(self, count, *, index=1):
+        buttons = {key: False for key in runner.KEYS}
+        return {'activityState': 'resumed', 'windowFocused': True,
+                'game': {'game': 'penguintrack', 'stage': 'menu', 'paused': False, 'renderer': 'webgl2',
+                         'webglVersion': 2, 'frames': count, 'errors': [],
+                         'controller': {'pollCount': count, 'buttons': buttons.copy(), 'cancelled': False,
+                                        'players': [{'id': 1, 'connected': True, 'controllerId': self.client.identity,
+                                                     'session': 'original-session', 'cancelSeq': 1, 'inputActive': True,
+                                                     'buttons': buttons.copy()}]},
+                         'gameplay': {'screen': 'menu', 'focus': 'Controller' if index == 1 else 'Play'}},
+                'page': {'hidden': False, 'focused': True, 'canvases': [{'width': 1280, 'height': 720, 'visible': True}]}}
+
+    def use_samples(self, values):
+        self.samples = list(values); self.reads = 0; self.budgets = []
+        def snapshot(**kwargs):
+            self.budgets.append(kwargs.get('timeout')); self.reads += 1
+            return self.samples.pop(0) if len(self.samples) > 1 else self.samples[0]
+        self.acceptance.snapshot = snapshot
+
+    def test_real_sdk_short_pair_ack_and_two_subsequent_fresh_polls(self):
+        self.use_samples([{'game': None}, self.state(101, index=2), self.state(101, index=2),
+                          self.state(102, index=2), self.state(103, index=2)])
+        result = self.acceptance.catalog_menu_tap(self.step, self.state(100))
+        self.assertEqual(result['game']['controller']['pollCount'], 103)
+        record = self.acceptance.report['menuTapObservations'][0]
+        self.assertEqual(record['stableFreshSamples'], 2)
+        self.assertEqual(record['wire']['matchingAcks'], 2)
+        self.assertEqual(record['wire']['downCounts'], {key: int(key == 'DOWN') for key in runner.KEYS})
+        self.assertGreaterEqual(record['sdkCallHeldMs'], 16)
+        self.assertIsNone(record['reloadBasis'])
+        self.assertEqual(self.reads, 5)
+        self.assertTrue(all(0 < value <= self.step['timeoutSeconds'] for value in self.budgets))
+
+    def test_counter_reset_without_exact_reload_proof_never_passes(self):
+        self.step['timeoutSeconds'] = .2
+        self.use_samples([self.state(2, index=2), self.state(3, index=2), self.state(4, index=2)])
+        with self.assertRaisesRegex(AssertionError, 'two subsequent fresh polls'):
+            self.acceptance.catalog_menu_tap(self.step, self.state(288))
+        self.assertEqual(self.acceptance.report['menuTapObservations'][0]['status'], 'failed')
+
+    def test_expectation_must_remain_true_for_both_fresh_polls(self):
+        self.use_samples([self.state(101, index=2), self.state(102, index=2), self.state(103, index=1),
+                          self.state(104, index=2), self.state(105, index=2), self.state(106, index=2)])
+        after = self.acceptance.catalog_menu_tap(self.step, self.state(100))
+        self.assertEqual(after['game']['controller']['pollCount'], 106)
+        self.assertEqual(self.reads, 6)
+
+    def test_identity_session_cancel_focus_and_every_raw_semantic_key_are_required(self):
+        before = self.state(100); after = self.state(101, index=2)
+        self.assertTrue(self.acceptance.menu_released(after, before))
+        for field, value in [('controllerId', 'other'), ('session', 'new'), ('cancelSeq', 2), ('inputActive', False), ('connected', False)]:
+            bad = copy.deepcopy(after); bad['game']['controller']['players'][0][field] = value
+            self.assertFalse(self.acceptance.menu_released(bad, before), field)
+        for key in runner.KEYS:
+            for raw in (True, False):
+                bad = copy.deepcopy(after)
+                target = bad['game']['controller']['players'][0] if raw else bad['game']['controller']
+                target['buttons'][key] = True
+                self.assertFalse(self.acceptance.menu_released(bad, before), (key, raw))
+        for field, value in [('windowFocused', False), ('activityState', 'paused')]:
+            bad = copy.deepcopy(after); bad[field] = value
+            self.assertFalse(self.acceptance.menu_released(bad, before))
+        bad = copy.deepcopy(after); bad['game']['controller']['players'].append(copy.deepcopy(bad['game']['controller']['players'][0]))
+        self.assertFalse(self.acceptance.menu_released(bad, before))
+
+    def test_wire_pair_rejects_duplicate_or_wrong_connection_ack_and_extra_key(self):
+        self.use_samples([self.state(101, index=2), self.state(102, index=2), self.state(103, index=2)])
+        self.acceptance.catalog_menu_tap(self.step, self.state(100))
+        record = self.acceptance.report['menuTapObservations'][0]; down, up = record['downSequence'], record['releaseSequence']
+        original = copy.deepcopy(self.proxy.records)
+        for mutation in ['duplicate-ack', 'wrong-connection', 'extra-key', 'wrong-id']:
+            changed = copy.deepcopy(original)
+            ack = next(r for r in changed if r['direction'] == 'game-to-sdk' and r['message'].get('seq') == down)
+            sent = next(r for r in changed if r['direction'] == 'sdk-to-game' and r['message'].get('seq') == down)
+            if mutation == 'duplicate-ack': changed.append(copy.deepcopy(ack))
+            elif mutation == 'wrong-connection': ack['connection'] += 1
+            elif mutation == 'extra-key': sent['message']['key'] = 'A'
+            else: sent['message']['controller_id'] = 'other'
+            with self.proxy.lock: self.proxy.records = changed
+            with self.assertRaises(AssertionError, msg=mutation): self.acceptance.menu_wire_pair('DOWN', down, up)
+        with self.proxy.lock: self.proxy.records = original
+
+    def test_menu_that_is_already_satisfied_sends_no_new_input(self):
+        before = self.state(100, index=2); sequence = self.client.seq
+        with self.assertRaisesRegex(AssertionError, 'already satisfied'):
+            self.acceptance.catalog_menu_tap(self.step, before)
+        self.assertEqual(self.client.seq, sequence)
+
+    def test_constant_matching_counter_cannot_supply_two_fresh_polls(self):
+        self.step['timeoutSeconds'] = .2
+        self.use_samples([self.state(101, index=2)])
+        with self.assertRaisesRegex(AssertionError, 'two subsequent fresh polls'):
+            self.acceptance.catalog_menu_tap(self.step, self.state(100))
+
+    def test_observer_disconnect_preserves_failure_after_releasing_input(self):
+        def broken(**kwargs): raise ConnectionResetError('original observer disconnect fixture')
+        self.acceptance.snapshot = broken
+        with self.assertRaisesRegex(ConnectionResetError, 'original observer disconnect fixture'):
+            self.acceptance.catalog_menu_tap(self.step, self.state(100))
+        record = self.acceptance.report['menuTapObservations'][0]
+        self.assertEqual(record['status'], 'failed')
+        self.assertEqual(record['wire']['matchingAcks'], 2)
+        self.assertEqual(self.acceptance.menu_wire_pair('DOWN', record['downSequence'], record['releaseSequence'])['downCounts']['DOWN'], 1)
+
+    def test_missing_ack_cannot_pass_and_original_down_is_released(self):
+        before_sequence = self.client.seq
+        self.server.drop_key = 'DOWN'; self.step['timeoutSeconds'] = .15
+        self.use_samples([self.state(101, index=2), self.state(102, index=2), self.state(103, index=2)])
+        with self.assertRaisesRegex(AssertionError, 'Actual host ACK'):
+            self.acceptance.catalog_menu_tap(self.step, self.state(100))
+        self.assertEqual(self.acceptance.report['menuTapObservations'][0]['status'], 'failed')
+        with self.proxy.lock:
+            sent = [r['message'] for r in self.proxy.records if r['direction'] == 'sdk-to-game' and r['message'].get('type') == 'button' and r['message'].get('seq', -1) > before_sequence]
+        self.assertEqual([(r['key'],r['action'],r['pressed']) for r in sent], [('DOWN','down',True),('DOWN','tap',False)])
+
+
+    def test_only_down_is_short_and_up_normalization_remains_original_held(self):
+        p = runner.plan.load_plan(runner.ROOT/'joystick-games/penguintrack/qa-plan.json')
+        self.assertEqual(len(p['steps']), 18)
+        self.assertEqual(p['steps'][0]['keys'], ['UP']); self.assertNotIn('menuTap', p['steps'][0])
+        self.assertEqual(p['steps'][1]['keys'], ['DOWN']); self.assertIs(p['steps'][1]['menuTap'], True)
+        self.assertEqual([i for i, step in enumerate(p['steps']) if step.get('menuTap') is True], [1])
+        before = self.state(53)
+        self.assertTrue(runner.plan.matches(p['steps'][0]['expect'], runner.Acceptance.game(before), runner.Acceptance.game(before)))
+        self.assertFalse(runner.plan.matches(p['steps'][1]['expect'], runner.Acceptance.game(before), runner.Acceptance.game(before)))
+
+    def test_original_long_hold_end_focus_never_satisfies_play(self):
+        # Selected fields from actual run44630032256, not synthetic successful gameplay.
+        originals = [('normal', 87, 417, 2.2225834900000336), ('occupied', 84, 372, 2.226433608999969)]
+        for mode, before_count, after_count, seconds in originals:
+            before = self.state(before_count); after = self.state(after_count, index=2)
+            after['game']['gameplay']['focus'] = 'SettingsSound, graphics, keys'
+            self.assertGreater(seconds, .380)
+            self.assertTrue(self.acceptance.frame_advanced(after, before), mode)
+            self.assertTrue(self.acceptance.menu_released(after, before), mode)
+            self.assertFalse(runner.plan.matches(self.step['expect'], runner.Acceptance.game(after), runner.Acceptance.game(before)), mode)
+
+    def test_observer_delay_after_release_does_not_extend_real_sdk_hold(self):
+        self.use_samples([self.state(101, index=2), self.state(102, index=2), self.state(103, index=2)])
+        original = self.acceptance.snapshot; calls = []
+        def slow(**kwargs):
+            if not calls: time.sleep(.45)
+            calls.append(True)
+            return original(**kwargs)
+        self.acceptance.snapshot = slow
+        result = self.acceptance.catalog_menu_tap(self.step, self.state(100))
+        record = self.acceptance.report['menuTapObservations'][0]
+        self.assertGreaterEqual(record['elapsedSeconds'], .45)
+        self.assertGreaterEqual(record['wire']['observedWireHeldMs'], 16)
+        self.assertLess(record['wire']['observedWireHeldMs'], 380)
+        self.assertEqual(record['wire']['matchingAcks'], 2)
+        self.assertEqual(result['game']['controller']['pollCount'], 103)
+
+
 class Contracts(unittest.TestCase):
     def proxy_case(self, drop=None):
         directory = tempfile.TemporaryDirectory(prefix='joystick-proxy-', dir='/dev/shm')
