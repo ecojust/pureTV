@@ -2,7 +2,7 @@
 
 已检查扩充前 README 中的 **31 个赛车候选**，以画面与玩法各 **50 分**选出以下 **9 款**。30款有分，F1因缺少足够清晰的赛中画面暂不评分；分数是本次有范围限制的评审估计，不是外部评分或 GitHub 星标。
 
-**当前已确定九款，正在适配；尚未新增完成验收的安装包。** 目标是 Android TV、macOS 通用包（Apple Silicon／Intel）与 Windows x64，支持 pureTV 九键手柄、默认 TCP 63485、真实连接 ID、断线／失焦取消和手动恢复。
+**九款三平台适配进行中，已提供 [Kart Rush Android TV 0.1.0](../../joystick-games/kart-rush/kart-rush-0.1.0.apk)。** 该包两种原生模式各52项实际手柄检查通过，其他平台仍分别验证。目标是 Android TV、macOS 通用包（Apple Silicon／Intel）与 Windows x64，支持 pureTV 九键手柄、默认 TCP 63485、真实连接 ID、断线／失焦取消和手动恢复。
 
 ## 入选九款
 

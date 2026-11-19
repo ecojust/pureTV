@@ -2,7 +2,7 @@
 
 固定源为 [stevkazt/kart-rush](https://github.com/stevkazt/kart-rush/tree/4b0cf276d84e76171feb765d87b5e8a6159cc421)。保留原始程序化 3D 美术、8 条正式赛道、7 场大奖赛、8 名车手、车辆与涂装选择、道具、自动漂移、三圈规则、原创合成音效及存档。每场仍为玩家和 5 名 AI。
 
-当前提供源码、离线 dist、回归和浏览器验证记录；安装包与原生 SDK 验收由整批交付另行记录。未在实体电视或手机上测试，不把桌面 SwiftShader 帧率当作电视性能。
+已提供 [Android TV 0.1.0 APK](kart-rush-0.1.0.apk)（948,563 字节，Android 8.0+），使用固定发布证书。原生模拟器正常端口与端口占用两种模式各通过52项实际手柄检查，详见[签名、源码及运行核验](docs/android-attempt-2/)。macOS 与 Windows 包仍在验证。未在实体电视或手机上测试。
 
 | 按键 | 比赛 | 菜单 |
 | --- | --- | --- |
@@ -24,6 +24,6 @@ npm run build:check
 npm test
 ```
 
-构建无 npm 依赖，直接复制固定本地模块。`upstream.json`、`dependency-lock.json` 与 `dist/asset-provenance.json` 记录逐文件来源和 SHA-256。`game.json` 显式 assetPolicy 保留安全的嵌套资产路径，必须与根注册表镜像一致；原始规则/美术的保留由内容哈希与输入回归检查；`qa-plan.json` 是只读观察、正常输入的原生验收方案，并不代表已经在原生包中执行。
+构建无 npm 依赖，直接复制固定本地模块。`upstream.json`、`dependency-lock.json` 与 `dist/asset-provenance.json` 记录逐文件来源和 SHA-256。`game.json` 的资产预算与根注册表保持一致。`qa-plan.json` 已在上述 Android 原包中通过正常输入执行；各平台证据分别记录。安装文件来源与哈希见 [packages.json](packages.json) 和 [SHA256SUMS.txt](SHA256SUMS.txt)。
 
-**许可状态未明确**：检查的上游固定源码树没有项目 LICENSE/COPYING。根 `LICENSE.txt` 仅记录此事实，不向原游戏授予新许可；Three.js 与 cannon-es 分别保留 MIT 许可。正式对外分发前需要落实上游授权。详情见 [NOTICE.md](NOTICE.md)。
+**许可状态未明确**：检查的上游固定源码树没有项目 LICENSE/COPYING。根 `LICENSE.txt` 仅记录此事实，不向原游戏授予新许可；Three.js 与 cannon-es 分别保留 MIT 许可。详情见 [NOTICE.md](NOTICE.md)。

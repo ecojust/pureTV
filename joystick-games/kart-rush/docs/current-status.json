@@ -1,5 +1,5 @@
 {
-  "stage": "source-and-browser-verified-not-packaged",
+  "stage": "source-browser-and-android-verified-other-platforms-pending",
   "productionFrozen": true,
   "baseSourceCheckpoint": "8612bc0",
   "runtimeDelta": "Original item HUD restoration; exact source hashes and patch retained in browser-attempt-3.",
@@ -9,16 +9,44 @@
   "reviewAcceptance": true,
   "offlineResponsesVerified": 16,
   "screenshotsVisuallyReviewed": 9,
-  "nativeSdkTested": false,
-  "installedAndroidTested": false,
+  "nativeSdkTested": true,
+  "installedAndroidTested": true,
   "installedMacOSTested": false,
   "installedWindowsTested": false,
   "physicalTvTested": false,
   "physicalPhoneTested": false,
   "qaPlanSchemaValid": true,
-  "qaPlanNativeExecuted": false,
+  "qaPlanNativeExecuted": true,
   "evidence": "browser-attempt-3/",
   "limitations": [
+    "Short manual drive, not a full lap/race/Grand Prix or all-track acceptance.",
+    "Native item pickup and inventory visibility observed; item use effect not separately asserted.",
+    "Android process-restart storage persistence not independently tested in this run.",
+    "Menu side card secondary service/address details require scrolling; full controller ID remains readable.",
+    "Physical TV/phone/ESP32 testing remains unperformed.",
+    "Upstream game license unresolved; dependency MIT licenses do not grant game redistribution rights."
+  ],
+  "sourceCheckpoint": "8f283c73f52f857777306eafc88f710262367834",
+  "androidBuildRuntimeRunId": 44600152694,
+  "androidBuildRuntimeStatus": "per-game-build-sign-runtime-passed-normal-and-occupied",
+  "androidFailureEvidence": "android-attempt-1/build-failure-review.json",
+  "androidEvidence": "android-attempt-2/",
+  "androidPackageSourceCheckpoint": "06f1ab2b77e45d5fabcbd7233f8d3e9279a9d5c7",
+  "androidSignedApk": {
+    "bytes": 948563,
+    "sha256": "36d8c72d18df760f2839dde95fdc98c7e4b6495e68e19d7b8ee0db3685f83618",
+    "scratchOnly": false,
+    "path": "kart-rush-0.1.0.apk",
+    "publicDownloadVerified": false
+  },
+  "androidNativeChecksPerMode": 52,
+  "androidNativeAckCounts": [
+    513,
+    512
+  ],
+  "androidNativeScreenshotsReviewed": 14,
+  "androidOriginalVideoSamplesReviewed": 6,
+  "browserLimitations": [
     "Synthetic PureGameHost input with ID Kart-Synthetic-18; not a real phone/SDK session or installed package.",
     "Short manual driving, reset and lifecycle observations; no complete lap, race or Grand Prix acceptance.",
     "The optional 30-second normal UP pickup observation reached no ready item. Inventory visibility is verified, but actual item pickup/use effect is not claimed.",
@@ -26,8 +54,5 @@
     "SwiftShader timing is not TV performance.",
     "Upstream game license unresolved; dependency MIT licenses do not grant game redistribution rights."
   ],
-  "sourceCheckpoint": "8f283c73f52f857777306eafc88f710262367834",
-  "androidBuildRuntimeRunId": 44597105538,
-  "androidBuildRuntimeStatus": "build-dependency-download-failed-before-apk-builder",
-  "androidFailureEvidence": "android-attempt-1/build-failure-review.json"
+  "androidPackageStatus": "verified-original-package-added-to-game-directory"
 }
