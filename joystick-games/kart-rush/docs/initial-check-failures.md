@@ -1,0 +1,1 @@
+Initial build and content-test run failed before producing a dist: the static import regex matched prose in cannon-es comments, and the test evaluated CFG without the real CANNON.Vec3 dependency. Fixed by matching module declaration lines and importing the exact pinned cannon-es into the test. Production model and assets were not changed to satisfy these checks.
