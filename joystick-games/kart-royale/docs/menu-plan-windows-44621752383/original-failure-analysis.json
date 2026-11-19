@@ -1,0 +1,78 @@
+{
+  "status": "original_failures_preserved",
+  "sourceCommit": "039d210cfa4cc65f59adf0859a777f3591853a70",
+  "runId": 44621752383,
+  "attempt": 1,
+  "originalExportCommit": "f559a71e99ff27c8f262ed2a82a70674ee90f9dc",
+  "originalFiles": {
+    "original-evidence-manifest.json": {
+      "bytes": 17884,
+      "sha256": "d7e3e52c295238db11a0b66a8143c179dc481e04ef53c0c281762bfbeb0fc54e"
+    },
+    "original-normal-report.json": {
+      "bytes": 582174,
+      "sha256": "0fea20f7e7fa5b93630607bbeebe2e468dfb521f6c31a9bec48dcb34ef3f9dfe"
+    },
+    "original-occupied-report.json": {
+      "bytes": 497075,
+      "sha256": "0c3215e29c1e176cd06bd7064867a0ba7ca54cf0cc7314235b091045a8696cf6"
+    },
+    "original-normal-final-state.json": {
+      "bytes": 4747,
+      "sha256": "9657750f9f3be9fb9f57e68558ba3b1c326c890db736f1d5d709268409f3c2c5"
+    }
+  },
+  "sixMenuSteps": {
+    "problem": "Original predicates only required the existing controls panel; they were already true before the Y input was consumed. Subsequent actions could run with stale focus.",
+    "replay": "All twelve retained original normal/occupied released-game snapshots pass the old Controls-only predicate and fail the new exact-focus predicate.",
+    "fix": "Use existing single-key menuTap, precise full original focus text, existing same-controller/counter checks and two subsequent released polls. No shared validator change."
+  },
+  "normalRosterUnresolved": {
+    "failedStep": "Open original roster from Start button",
+    "elapsedSeconds": 60.062999999999874,
+    "requestedTapMs": 16,
+    "sdkCallHeldMs": 62.99999999987449,
+    "sampleCount": 329,
+    "retainedSamples": 64,
+    "samplesTruncated": true,
+    "retentionRule": "Original shared verifier keeps first 16 plus last 48 samples. Missing middle timestamps are not evidence that reads stopped; earliest qualifying observation is not reconstructible from the retained sample list.",
+    "retainedPollTransitions": [
+      {
+        "at": "2026-11-19T21:53:56.811982+00:00",
+        "timestamp": 1854.078,
+        "pollCount": 55,
+        "releasedAndCounterExact": false,
+        "expectationMatches": false,
+        "qualified": false
+      },
+      {
+        "at": "2026-11-19T21:54:48.035258+00:00",
+        "timestamp": 1901.375,
+        "pollCount": 62,
+        "releasedAndCounterExact": true,
+        "expectationMatches": true,
+        "qualified": true
+      },
+      {
+        "at": "2026-11-19T21:54:51.020252+00:00",
+        "timestamp": 1908.031,
+        "pollCount": 63,
+        "releasedAndCounterExact": true,
+        "expectationMatches": true,
+        "qualified": true
+      }
+    ],
+    "beforePoll": 55,
+    "beforeNativeTimestamp": 1854.078,
+    "finalPoll": 63,
+    "finalNativeTimestamp": 1908.031,
+    "nativeTimestampDeltaSeconds": 53.953,
+    "observedPollDelta": 8,
+    "averageSnapshotReadRatePerSecond": 5.478,
+    "finalActive": true,
+    "finalMenu": "select",
+    "finalFocus": "Start race",
+    "unchangedTimeoutSeconds": 60,
+    "conclusion": "The original two-fresh-poll stability assertion failed despite eventual correct roster/focus. Real controller polling progressed slowly; retained samples and aggregate read count do not establish a sampling-efficiency root cause. No timeout, original renderer, physics or stable-frame criterion is changed; native retest still required."
+  }
+}
