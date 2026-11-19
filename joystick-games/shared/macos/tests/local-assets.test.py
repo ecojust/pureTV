@@ -5,6 +5,7 @@ import hashlib
 import os
 from pathlib import Path
 import platform
+import plistlib
 import select
 import socket
 import subprocess
@@ -18,7 +19,7 @@ import Foundation
 import Darwin
 let root = URL(fileURLWithPath: CommandLine.arguments[1], isDirectory: true)
 let policy: Any? = CommandLine.arguments.count > 2
-    ? try JSONSerialization.jsonObject(with: Data(contentsOf: URL(fileURLWithPath: CommandLine.arguments[2]))) : nil
+    ? try PropertyListSerialization.propertyList(from: Data(contentsOf: URL(fileURLWithPath: CommandLine.arguments[2])), options: [], format: nil) : nil
 let server = LocalAssetServer(root: root, policy: policy)
 server.start { result in
     switch result {
@@ -80,22 +81,26 @@ class NativeLocalAssets(unittest.TestCase):
 
     def tearDown(self):
         for index, process in enumerate(self.processes):
-            if process.poll() is None: process.terminate()
+            terminated_by_test = process.poll() is None
+            if terminated_by_test: process.terminate()
             stdout, stderr = process.communicate(timeout=10)
             if self.case_evidence:
                 (self.case_evidence / (str(index) + '-stdout.log')).write_bytes(self.first_lines.get(process.pid, b'') + stdout)
                 (self.case_evidence / (str(index) + '-stderr.log')).write_bytes(stderr)
                 (self.case_evidence / (str(index) + '-process.json')).write_text(json.dumps({
                     'command': process.args, 'exitCode': process.returncode,
-                    'terminationAfterTestIsExpected': True,
+                    'terminationAfterTestIsExpected': terminated_by_test,
                 }, indent=2) + '\n')
         self.temp.cleanup()
 
     def start(self, policy=None, success=True):
         args = [str(self.binary), str(self.root)]
         if policy is not None:
-            path = self.root.parent / ('policy-' + str(len(self.processes)) + '.json')
-            path.write_text(json.dumps(policy)); args.append(str(path))
+            # Match Bundle.main's real Info.plist deserialization, including
+            # malformed root types and the distinction between 1 and 1.0.
+            path = self.root.parent / ('policy-' + str(len(self.processes)) + '.plist')
+            path.write_bytes(plistlib.dumps(policy)); args.append(str(path))
+            if self.case_evidence: (self.case_evidence / path.name).write_bytes(path.read_bytes())
         process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         self.processes.append(process)
         self.assertTrue(select.select([process.stdout], [], [], 15)[0], 'Native asset server did not start')

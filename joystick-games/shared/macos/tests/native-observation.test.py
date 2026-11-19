@@ -14,7 +14,9 @@ class Observation(unittest.TestCase):
   blocker=module.port_blocker(port)
   try:
    self.assertEqual(blocker.getsockname()[1],port)
-   self.assertEqual(blocker.getsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR),1)
+   # Darwin exposes this boolean socket option as a nonzero bit (4); Linux
+   # returns 1. The real close/rebind check above verifies its behavior.
+   self.assertNotEqual(blocker.getsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR),0)
    if hasattr(socket,'SO_REUSEPORT'):self.assertEqual(blocker.getsockopt(socket.SOL_SOCKET,socket.SO_REUSEPORT),0)
   finally:blocker.close()
  def test_blocker_never_shares_an_active_listener(self):
