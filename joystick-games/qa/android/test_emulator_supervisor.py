@@ -65,7 +65,7 @@ class SupervisorTests(unittest.TestCase):
         self.entry.parent.mkdir(parents=True); shutil.copyfile(self.binary, self.entry); self.entry.chmod(0o755)
         self.original = self.entry.read_bytes(); self.output = self.root / 'observation'
         self.env = {'SUPERVISE_PON_EMULATOR': 'true', 'PURETV_DISPOSABLE_EMULATOR': '1', 'GITHUB_ACTIONS': 'true',
-                    'PON_DISABLE_VULKAN': 'false',
+                    'PON_DISABLE_VULKAN': 'false', 'PON_CAPTURE_QEMU_STACK': 'false',
                     'GAME': 'ponpoko-kart', 'ARTIFACT_SOURCE': '8f283c73f52f857777306eafc88f710262367834',
                     'ARTIFACT_RUN': '44597115244', 'ARTIFACT_EXPORT': '4249f5c0ec3053a1dec652a7880a040e1bb143f0',
                     'ARTIFACT_ID': '', 'ARTIFACT_ATTEMPT': '', 'GITHUB_SHA': 'a' * 40, 'GITHUB_RUN_ID': '123',
@@ -133,6 +133,43 @@ class SupervisorTests(unittest.TestCase):
             result = subprocess.run([sys.executable, str(MODULE), 'prepare', '--sdk', str(self.sdk), '--output', str(self.output)], capture_output=True)
         self.assertNotEqual(result.returncode, 0); self.assertFalse(self.output.exists())
         self.assertEqual(self.entry.read_bytes(), self.original)
+
+    def test_stack_flag_is_default_off_exact_scope_and_never_changes_argv(self):
+        environment = dict(self.env); environment.pop('PON_CAPTURE_QEMU_STACK')
+        self.assertFalse(m.capture_stack(environment))
+        environment.update(PON_CAPTURE_QEMU_STACK='true', PON_DISABLE_VULKAN='true')
+        self.assertTrue(m.capture_stack(environment))
+        self.assertEqual(m.expected_arguments(environment), m.EXPECTED_ARGS + ['-feature', '-Vulkan'])
+        for key, value in [('SUPERVISE_PON_EMULATOR', 'false'), ('PON_DISABLE_VULKAN', 'false'),
+                           ('GAME', 'night-racer'), ('ARTIFACT_SOURCE', 'b'*40), ('ARTIFACT_RUN', '1'),
+                           ('ARTIFACT_EXPORT', 'c'*40), ('ARTIFACT_ID', '1'), ('PON_CAPTURE_QEMU_STACK', '1')]:
+            with self.subTest(key=key), self.assertRaises(AssertionError):
+                m.capture_stack(dict(environment, **{key: value}))
+        with patch.dict(os.environ, environment), self.assertRaises((AssertionError, KeyError, FileNotFoundError)):
+            m.prepare(self.sdk, self.output)
+        self.assertEqual(self.entry.read_bytes(), self.original)
+        self.assertFalse(self.entry.with_name(m.BACKUP_NAME).exists())
+
+    def test_stack_workflow_selector_and_non_acceptance_are_explicit(self):
+        workflow = (ROOT/'.github/workflows/joystick-catalog-android-runtime.yml').read_text()
+        start = workflow.index("          assert os.environ['SUPERVISE_PON_EMULATOR']")
+        guard = compile(textwrap.dedent(workflow[start:workflow.index('          out=Path(', start)]), '<workflow-stack-guard>', 'exec')
+        with patch.dict(os.environ, {'PON_CAPTURE_QEMU_STACK':'true','PON_DISABLE_VULKAN':'true',
+                                    'GAMES':'ponpoko-kart','BATCH':'racing-01','CONFIRM_BACKROAD_INSTALL':'false'}):
+            exec(guard, {'os':os})
+            for key, value in [('PON_DISABLE_VULKAN','false'),('SUPERVISE_PON_EMULATOR','false'),
+                               ('GAMES','night-racer'),('ARTIFACT_SOURCE','a'*40),('PON_CAPTURE_QEMU_STACK','TRUE')]:
+                with patch.dict(os.environ,{key:value}), self.assertRaises(AssertionError):
+                    exec(guard, {'os':os})
+        begin=workflow.index('          original_checks_passed=')
+        end=workflow.index("          (out/'runtime-verification.json')",begin)
+        source=compile(textwrap.dedent(workflow[begin:end]),'<actual-export-acceptance>','exec')
+        for enabled in ['false','true']:
+            with patch.dict(os.environ,{'PON_CAPTURE_QEMU_STACK':enabled,'RUNTIME_RESULT':'success'}):
+                scope={'errors':[],'archive':{'status':'passed'},'os':os};exec(source,scope)
+                self.assertTrue(scope['original_checks_passed'])
+                self.assertEqual(scope['accepted'],enabled=='false')
+        self.assertLess(workflow.index('name: Require actual same-user'),workflow.index('uses: reactivecircus/'))
 
     def test_actual_workflow_vulkan_scope_and_only_two_added_argument_tokens(self):
         workflow = (ROOT/'.github/workflows/joystick-catalog-android-runtime.yml').read_text()

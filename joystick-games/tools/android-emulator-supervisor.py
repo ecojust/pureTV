@@ -2,6 +2,7 @@
 """Default-off, disposable-runner Pon launcher supervision. Never rebuild an APK."""
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -15,6 +16,7 @@ import time
 
 FLAG = 'SUPERVISE_PON_EMULATOR'
 GPU_FLAG = 'PON_DISABLE_VULKAN'
+STACK_FLAG = 'PON_CAPTURE_QEMU_STACK'
 EXPECTED_ARGS = ['-port', '5554', '-avd', 'JoystickGamesValidation', '-no-window',
                  '-memory', '2048', '-gpu', 'swiftshader_indirect', '-noaudio', '-no-boot-anim', '-no-snapshot']
 MAX_OUTPUT = 1024 * 1024
@@ -52,6 +54,21 @@ def disable_vulkan(environment=os.environ):
     if value == 'true':
         assert environment.get(FLAG, 'false') == 'true', 'Vulkan comparison requires exact Pon supervision'
     return value == 'true'
+
+
+def capture_stack(environment=os.environ):
+    value = environment.get(STACK_FLAG, 'false')
+    assert value in ('false', 'true'), 'Invalid stack diagnostic opt-in'
+    if value == 'true':
+        assert environment.get(FLAG) == 'true' and environment.get(GPU_FLAG) == 'true', 'Stack capture requires the exact supervised Vulkan-off Pon comparison'
+        assert enabled(environment), 'Stack capture requires the exact original Pon scope'
+    return value == 'true'
+
+
+def stack_module(path):
+    spec = importlib.util.spec_from_file_location('owned_qemu_stack', path)
+    module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+    return module
 
 
 def enabled(environment=os.environ):
@@ -121,7 +138,7 @@ def executable_identity(pid, sdk):
         return None
 
 
-def run_child(command, executable, output, *, sdk, seconds=MAX_SECONDS, budget=MAX_OUTPUT, forward_output=False):
+def run_child(command, executable, output, *, sdk, seconds=MAX_SECONDS, budget=MAX_OUTPUT, forward_output=False, diagnostic=None):
     """Own the real child and retain its actual wait status, never a guessed QEMU status."""
     assert 0 < seconds <= MAX_SECONDS and 0 < budget <= MAX_OUTPUT
     output = Path(output); output.mkdir(exist_ok=False)
@@ -139,22 +156,46 @@ def run_child(command, executable, output, *, sdk, seconds=MAX_SECONDS, budget=M
               'originalActionOutputForwarding': forward_output, 'closedForwardStreams': [],
               'executables': [], 'actualQemuExitProven': False, 'qemuExitCode': None, 'rootCauseProven': False}
     def save():
+        if diagnostic:
+            report['stackDiagnostic'] = diagnostic.report
+            report['diagnosticCleanupIncomplete'] = bool(diagnostic.report.get('cleanupIncomplete')) and not diagnostic.reap_allowed()
         atomic_json(output / 'report.json', report)
     def handle(number, _frame):
         if not received: received.append(number)
+    def poll():
+        return diagnostic.poll(child) if diagnostic else child.poll()
+    def quarantined_external_control():
+        nonlocal intervention, signalled_at
+        current = time.monotonic()
+        if child is None:
+            return
+        if (received or current - started >= seconds) and signalled_at is None:
+            intervention = 'supervisor-signal' if received else 'supervisor-deadline'
+            signalled_at = current
+            try: os.killpg(child.pid, received[0] if received else signal.SIGTERM)
+            except ProcessLookupError: pass
+            report.update(receivedSignal=received[0] if received else None, intervention=intervention)
+            save()
+        if signalled_at is not None and current - signalled_at >= 3:
+            try: os.killpg(child.pid, signal.SIGKILL)
+            except ProcessLookupError: pass
     try:
         for number in (signal.SIGINT, signal.SIGTERM):
             handlers[number] = signal.signal(number, handle)
         if received: raise InterruptedError('Supervisor stopped before child launch')
-        child = subprocess.Popen(command, executable=str(executable), stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE, start_new_session=True)
+        if diagnostic:
+            report.update(diagnosticIntervened=True, nativeAcceptanceAllowed=False)
+            child = diagnostic.spawn(command, executable)
+        else:
+            child = subprocess.Popen(command, executable=str(executable), stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE, start_new_session=True)
         report.update(status='running', child=process_identity(child.pid))
         selector.register(child.stdout, selectors.EVENT_READ, 'stdout')
         selector.register(child.stderr, selectors.EVENT_READ, 'stderr')
         save(); next_identity = 0; last_executable = None; last_save = started
-        while selector.get_map() or child.poll() is None:
+        while selector.get_map() or poll() is None:
             current = time.monotonic()
-            if current >= next_identity and child.poll() is None:
+            if current >= next_identity and poll() is None:
                 # Hash only when the observed executable changes, not every poll.
                 try: identity = os.readlink('/proc/' + str(child.pid) + '/exe')
                 except OSError: identity = None
@@ -163,8 +204,12 @@ def run_child(command, executable, output, *, sdk, seconds=MAX_SECONDS, budget=M
                     proc = process_identity(child.pid)
                     if value and len(report['executables']) < 8:
                         report['executables'].append({'elapsedSeconds': current - started, **proc, **value})
+                        if diagnostic:
+                            diagnostic.observe(report['executables'][-1])
                     last_executable = identity
                 next_identity = current + .05
+            if diagnostic:
+                diagnostic.tick()
             if (received or current - started >= seconds) and signalled_at is None:
                 intervention = 'supervisor-signal' if received else 'supervisor-deadline'
                 signalled_at = current
@@ -173,7 +218,7 @@ def run_child(command, executable, output, *, sdk, seconds=MAX_SECONDS, budget=M
             if signalled_at is not None and current - signalled_at >= 3:
                 try: os.killpg(child.pid, signal.SIGKILL)
                 except ProcessLookupError: pass
-            if signalled_at is not None and current - signalled_at >= 5:
+            if signalled_at is not None and current - signalled_at >= 5 and (not diagnostic or diagnostic.reap_allowed()):
                 report['inheritedOutputDrainIncomplete'] = bool(selector.get_map())
                 break
             for key, _ in selector.select(.02):
@@ -194,7 +239,9 @@ def run_child(command, executable, output, *, sdk, seconds=MAX_SECONDS, budget=M
                         report['closedForwardStreams'].append(name)
             if current - last_save >= 1:
                 report['lastObservedAtEpoch'] = time.time()
-                report['launcherReturnCodeObserved'] = child.poll(); save(); last_save = current
+                report['launcherReturnCodeObserved'] = poll(); save(); last_save = current
+        if diagnostic:
+            diagnostic.wait_for_reap_permission(save, quarantined_external_control)
         code = child.wait(timeout=2)
         owned = report['child']; observations = report['executables']
         bound_qemu = bool(type(owned.get('starttimeTicks')) is int and observations
@@ -209,16 +256,23 @@ def run_child(command, executable, output, *, sdk, seconds=MAX_SECONDS, budget=M
         report.update(status='supervisor-error', errorType=type(error).__name__)
         raise
     finally:
-        if child is not None and child.poll() is None:
+        if diagnostic:
+            diagnostic.wait_for_reap_permission(save, quarantined_external_control)
+            report['stackDiagnostic'] = diagnostic.report
+        if child is not None and poll() is None and (not diagnostic or received or signalled_at is not None):
             intervention = intervention or 'supervisor-error-cleanup'
             try:
                 try: os.killpg(child.pid, signal.SIGTERM); child.wait(timeout=3)
                 except (ProcessLookupError, subprocess.TimeoutExpired):
-                    if child.poll() is None:
+                    if poll() is None:
                         os.killpg(child.pid, signal.SIGKILL); child.wait(timeout=2)
             except (OSError, subprocess.TimeoutExpired) as cleanup_error:
                 report['cleanupErrorType'] = type(cleanup_error).__name__
-                report['childStillRunningAfterCleanupBudget'] = child.poll() is None
+                report['childStillRunningAfterCleanupBudget'] = poll() is None
+        elif child is not None and diagnostic and poll() is None:
+            # Internal diagnostic failure is not authority to kill the QEMU.
+            report['childStillRunningAfterCleanupBudget'] = True
+            report['internalDiagnosticFailureDidNotKillTarget'] = True
         selector.close()
         if child is not None:
             child.stdout.close(); child.stderr.close()
@@ -256,17 +310,22 @@ def restore(output, *, stop=True):
     if stop and (output / 'launch/report.json').is_file():
         launch = json.loads((output / 'launch/report.json').read_text())
         supervisor = launch.get('supervisor', {})
-        if launch.get('status') == 'running' and supervisor.get('pid') != os.getpid():
+        def active(value):
+            return value.get('status') == 'running' or (state.get('captureQemuStack') and value.get('diagnosticCleanupIncomplete') is True)
+        if active(launch) and supervisor.get('pid') != os.getpid():
             actual = process_identity(supervisor['pid'])
             if actual.get('starttimeTicks') == supervisor.get('starttimeTicks') and actual.get('starttimeTicks') is not None:
                 assert matches_supervisor(supervisor), 'Refuse to signal an unverified supervisor identity'
                 os.kill(supervisor['pid'], signal.SIGTERM)
                 until = time.monotonic() + 7
                 while time.monotonic() < until and process_identity(supervisor['pid']).get('starttimeTicks') == supervisor['starttimeTicks']:
-                    if json.loads((output / 'launch/report.json').read_text()).get('status') != 'running': break
+                    if not active(json.loads((output / 'launch/report.json').read_text())): break
                     time.sleep(.05)
                 state['cleanupSignalledOwnedSupervisor'] = True
-                cleanup_incomplete = matches_supervisor(supervisor) and json.loads((output / 'launch/report.json').read_text()).get('status') == 'running'
+                cleanup_incomplete = matches_supervisor(supervisor) and active(json.loads((output / 'launch/report.json').read_text()))
+        if state.get('captureQemuStack'):
+            latest = json.loads((output / 'launch/report.json').read_text())
+            cleanup_incomplete = bool(cleanup_incomplete or latest.get('diagnosticCleanupIncomplete') or latest.get('childStillRunningAfterCleanupBudget'))
     assert not entry.is_symlink() and entry.is_file(), 'Unexpected SDK entry during restore'
     if digest(entry) == state['original']['sha256']:
         if backup.exists():
@@ -289,6 +348,7 @@ def restore(output, *, stop=True):
 
 def prepare(sdk, output):
     arguments = expected_arguments()
+    use_stack = capture_stack()
     sdk = Path(sdk).resolve(); entry = sdk / 'emulator/emulator'; backup = entry.with_name(BACKUP_NAME)
     assert not entry.parent.is_symlink() and entry.parent.resolve() == sdk / 'emulator'
     assert not entry.is_symlink() and stat.S_ISREG(entry.lstat().st_mode) and entry.stat().st_mode & 0o111
@@ -296,6 +356,15 @@ def prepare(sdk, output):
     output = Path(output).resolve(); output.mkdir(parents=True, exist_ok=False)
     source = Path(__file__).read_bytes(); assert len(source) < SOURCE_LIMIT
     copied = output / 'executed-supervisor.py'; copied.write_bytes(source)
+    stack_gate = None
+    if use_stack:
+        helper = Path(__file__).with_name('android-qemu-stack.py')
+        test = Path(__file__).resolve().parents[1] / 'qa/android/test_qemu_permission.py'
+        gate_path = Path(os.environ['RUNNER_TEMP']) / 'qemu-permission-gate/report.json'
+        stack_gate = stack_module(helper).verify_permission_gate(gate_path, test)
+        (output / 'executed-stack.py').write_bytes(helper.read_bytes())
+        (output / 'executed-permission-test.py').write_bytes(test.read_bytes())
+        (output / 'permission-gate.json').write_bytes(gate_path.read_bytes())
     wrapper = ('#!' + sys.executable + '\nimport os,sys\nos.execv(' + repr(sys.executable)
                + ',[' + repr(sys.executable) + ',' + repr(str(copied)) + ',"launch","--output",'
                + repr(str(output)) + ',"--",*sys.argv[1:]])\n').encode()
@@ -306,6 +375,11 @@ def prepare(sdk, output):
              'disableVulkan': disable_vulkan(),
              'qaSourceSha': os.environ.get('GITHUB_SHA'), 'qaRunId': os.environ.get('GITHUB_RUN_ID'),
              'qaRunAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'), 'game': 'ponpoko-kart', 'restored': False}
+    if use_stack:
+        state.update(captureQemuStack=True, stackSourceSha256=digest(output / 'executed-stack.py'),
+                     permissionTestSha256=digest(output / 'executed-permission-test.py'),
+                     permissionGateSha256=digest(output / 'permission-gate.json'), gdbSha256=stack_gate['gdbSha256'],
+                     diagnosticIntervened=True, nativeAcceptanceAllowed=False)
     atomic_json(output / 'state.json', state)
     try:
         original = query(entry, output / 'original-query')
@@ -343,6 +417,12 @@ def assert_ready(output):
     assert state['qaSourceSha'] == os.environ['GITHUB_SHA'] and state['qaRunId'] == os.environ['GITHUB_RUN_ID']
     assert state['qaRunAttempt'] == os.environ['GITHUB_RUN_ATTEMPT']
     assert state['disableVulkan'] is disable_vulkan(), 'Vulkan diagnostic selection changed after preparation'
+    assert state.get('captureQemuStack', False) is capture_stack(), 'Stack diagnostic selection changed after preparation'
+    if state.get('captureQemuStack'):
+        assert state['stackSourceSha256'] == digest(output / 'executed-stack.py')
+        assert state['permissionTestSha256'] == digest(output / 'executed-permission-test.py')
+        assert state['permissionGateSha256'] == digest(output / 'permission-gate.json')
+        stack_module(output / 'executed-stack.py').verify_permission_gate(output / 'permission-gate.json', output / 'executed-permission-test.py')
     assert state['expectedArguments'] == expected_arguments(), 'Unexpected prepared emulator arguments'
     return state
 
@@ -357,7 +437,11 @@ def launch(output, arguments):
         os.execv(state['backup'], [state['entry'], *arguments])
     assert_ready(output)
     assert arguments == state['expectedArguments'], 'Unexpected supervised emulator arguments'
-    result = run_child([state['entry'], *arguments], Path(state['backup']), output / 'launch', sdk=state['sdk'], forward_output=True)
+    diagnostic = None
+    if state.get('captureQemuStack'):
+        helper = stack_module(output / 'executed-stack.py')
+        diagnostic = helper.OwnedDiagnostic(output / 'stack-diagnostic', module_roots=[Path(state['sdk']) / 'emulator', '/usr/lib', '/lib'])
+    result = run_child([state['entry'], *arguments], Path(state['backup']), output / 'launch', sdk=state['sdk'], forward_output=True, diagnostic=diagnostic)
     return 128 - result['returnCode'] if result['returnCode'] < 0 else result['returnCode']
 
 
@@ -368,6 +452,7 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     args, extra = parser.parse_known_args()
     assert args.operation == 'launch' or not extra
+    capture_stack()
     if not enabled():
         print(json.dumps({'status': 'disabled', 'sdkChanged': False})); return
     if args.operation == 'prepare':

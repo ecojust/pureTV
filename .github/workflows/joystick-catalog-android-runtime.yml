@@ -51,6 +51,11 @@ on:
         required: false
         default: false
         type: boolean
+      pon_capture_qemu_stack:
+        description: Diagnostic only; exact original supervised Vulkan-off Pon, bounded same-user GDB stacks, never native acceptance
+        required: false
+        default: false
+        type: boolean
 
 concurrency:
   group: joystick-catalog-android-runtime-${{ github.ref }}-${{ inputs.batch }}
@@ -71,6 +76,7 @@ env:
   CONFIRM_BACKROAD_INSTALL: ${{ inputs.confirm_backroad_install && 'true' || 'false' }}
   SUPERVISE_PON_EMULATOR: ${{ inputs.supervise_pon_emulator && 'true' || 'false' }}
   PON_DISABLE_VULKAN: ${{ inputs.pon_disable_vulkan && 'true' || 'false' }}
+  PON_CAPTURE_QEMU_STACK: ${{ inputs.pon_capture_qemu_stack && 'true' || 'false' }}
 
 jobs:
   select:
@@ -115,6 +121,9 @@ jobs:
               assert os.environ['ARTIFACT_ATTEMPT']=='1' and not os.environ['ARTIFACT_EXPORT']
           assert os.environ['SUPERVISE_PON_EMULATOR'] in ('true','false')
           assert os.environ['PON_DISABLE_VULKAN'] in ('true','false')
+          assert os.environ['PON_CAPTURE_QEMU_STACK'] in ('true','false')
+          if os.environ['PON_CAPTURE_QEMU_STACK']=='true':
+              assert os.environ['SUPERVISE_PON_EMULATOR']=='true' and os.environ['PON_DISABLE_VULKAN']=='true', 'Stack diagnostic requires the unchanged v8 Pon comparison'
           if os.environ['PON_DISABLE_VULKAN']=='true':
               assert os.environ['SUPERVISE_PON_EMULATOR']=='true', 'Vulkan comparison requires exact Pon supervision'
           if os.environ['SUPERVISE_PON_EMULATOR']=='true':
@@ -124,7 +133,7 @@ jobs:
               assert not os.environ['ARTIFACT_ID'] and not os.environ['ARTIFACT_ATTEMPT']
               assert os.environ['CONFIRM_BACKROAD_INSTALL']=='false'
           out=Path(os.environ['RUNNER_TEMP'])/'provenance';out.mkdir()
-          (out/'requested-inputs.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'batch':os.environ['BATCH'],'games':os.environ['GAMES'],'confirmBackroadInstall':os.environ['CONFIRM_BACKROAD_INSTALL']=='true','supervisePonEmulator':os.environ['SUPERVISE_PON_EMULATOR']=='true','ponDisableVulkan':os.environ['PON_DISABLE_VULKAN']=='true'},indent=2)+'\n')
+          (out/'requested-inputs.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'batch':os.environ['BATCH'],'games':os.environ['GAMES'],'confirmBackroadInstall':os.environ['CONFIRM_BACKROAD_INSTALL']=='true','supervisePonEmulator':os.environ['SUPERVISE_PON_EMULATOR']=='true','ponDisableVulkan':os.environ['PON_DISABLE_VULKAN']=='true','ponCaptureQemuStack':os.environ['PON_CAPTURE_QEMU_STACK']=='true','nativeAcceptanceAllowed':os.environ['PON_CAPTURE_QEMU_STACK']!='true'},indent=2)+'\n')
           PY
           python3 joystick-games/tools/android-catalog.py select --batch "$BATCH" --games "$GAMES" | tee "$RUNNER_TEMP/provenance/selection.json"
       - uses: actions/checkout@v4
@@ -242,6 +251,17 @@ jobs:
             --artifact-source "$ARTIFACT_SOURCE" --artifact-run-id "$ARTIFACT_RUN" "${origin_args[@]}" \
             --output "$RUNNER_TEMP/input" --build-tools "$ANDROID_HOME/build-tools/34.0.0" \
             2>&1 | tee "$RUNNER_TEMP/input-verification.log"
+      - name: Require actual same-user process-local GDB permission before any AVD
+        if: inputs.pon_capture_qemu_stack
+        run: |
+          set -euo pipefail
+          test -x /usr/bin/gdb
+          command -v cc >/dev/null
+          python3 -B joystick-games/qa/android/test_qemu_stack_integration.py \
+            2>&1 | tee "$RUNNER_TEMP/qemu-stack-integration-tests.log"
+          python3 -B joystick-games/qa/android/test_qemu_permission.py \
+            --output "$RUNNER_TEMP/qemu-permission-gate" \
+            2>&1 | tee "$RUNNER_TEMP/qemu-permission-gate.log"
       - name: Enable disposable emulator acceleration
         run: |
           test -e /dev/kvm
@@ -296,6 +316,9 @@ jobs:
               verifier.preserve_evidence(inputs,out/'verified-inputs')
           for name in ['qa-contracts.log','artifact-contracts.log','reuse-contracts.log','environment-diagnostics-tests.log','install-confirmation-tests.log','emulator-supervisor-tests.log','input-verification.log']:
               if (scratch/name).is_file():shutil.copyfile(scratch/name,out/name)
+          if (scratch/'qemu-permission-gate.log').is_file():shutil.copyfile(scratch/'qemu-permission-gate.log',out/'qemu-permission-gate.log')
+          if (scratch/'qemu-stack-integration-tests.log').is_file():shutil.copyfile(scratch/'qemu-stack-integration-tests.log',out/'qemu-stack-integration-tests.log')
+          if (scratch/'qemu-permission-gate').is_dir():shutil.copytree(scratch/'qemu-permission-gate',out/'qemu-permission-gate')
           paths=list(Path('joystick-games/qa/android').rglob('*.py'))+list(Path('joystick-games/qa/android').rglob('*.java'))+list(Path('joystick-games/qa/android/fixtures').glob('*.json'))
           paths+=list(Path('joystick-games/tools').glob('android-*.py'))
           paths+=[Path('joystick-games/tools/artifact-draft-transfer.py'),Path('joystick-games/tools/asset-policy.py')]
@@ -397,15 +420,17 @@ jobs:
                       checks.append({'game':game,'mode':mode,'apkSha256':report['apk']['sha256'],'status':'passed'})
               except Exception:errors.append({'game':game,'error':traceback.format_exc()})
           archive=json.loads((out/'archive-verification.json').read_text())
-          accepted=not errors and archive['status']=='passed' and os.environ['RUNTIME_RESULT']=='success'
-          (out/'runtime-verification.json').write_text(json.dumps({'status':'passed' if accepted else 'failed','checks':checks,'errors':errors},indent=2)+'\n')
+          original_checks_passed=not errors and archive['status']=='passed' and os.environ['RUNTIME_RESULT']=='success'
+          diagnostic=os.environ['PON_CAPTURE_QEMU_STACK']=='true'
+          accepted=original_checks_passed and not diagnostic
+          (out/'runtime-verification.json').write_text(json.dumps({'status':'passed' if original_checks_passed else 'failed','checks':checks,'errors':errors,'diagnosticIntervened':diagnostic,'nativeAcceptanceAllowed':not diagnostic},indent=2)+'\n')
           files={}
           for path in sorted(out.rglob('*')):
               assert not path.is_symlink()
               if path.is_file():
                   assert path.stat().st_size<100_000_000
                   files[path.relative_to(out).as_posix()]=record(path)
-          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'qaRunAttempt':os.environ['GITHUB_RUN_ATTEMPT'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'games':games,'runtimeResult':os.environ['RUNTIME_RESULT'],'runtimeAccepted':accepted,'files':files,'reusedSignedPackagesAndObservers':True,'physicalTvTested':False,'physicalEsp32Tested':False},indent=2)+'\n')
+          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'qaRunAttempt':os.environ['GITHUB_RUN_ATTEMPT'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'games':games,'runtimeResult':os.environ['RUNTIME_RESULT'],'runtimeAccepted':accepted,'diagnosticIntervened':diagnostic,'nativeAcceptanceAllowed':not diagnostic,'files':files,'reusedSignedPackagesAndObservers':True,'physicalTvTested':False,'physicalEsp32Tested':False},indent=2)+'\n')
           PY
           export_branch="build-assets/joystick-catalog-android-runtime-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
           test -z "$(git ls-remote --heads origin "refs/heads/$export_branch")"
