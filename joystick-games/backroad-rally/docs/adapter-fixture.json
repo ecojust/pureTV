@@ -1,0 +1,75 @@
+{
+  "scope": "Adapter-only fixture using actual Controls/puretv source with a mock stage; no game renderer/model loaded, not gameplay/native acceptance",
+  "checks": [
+    {
+      "name": "START enters pause",
+      "pass": true
+    },
+    {
+      "name": "held START does not resume",
+      "pass": true
+    },
+    {
+      "name": "resume then hold START >800ms stays running",
+      "pass": true
+    },
+    {
+      "name": "focus loss pauses",
+      "pass": true
+    },
+    {
+      "name": "already-paused focus loss does not re-pause explicit resume",
+      "pass": true
+    },
+    {
+      "name": "six independent simultaneous driving/action buttons",
+      "pass": true
+    },
+    {
+      "name": "disconnect pauses and clears held and pending inputs",
+      "pass": true
+    },
+    {
+      "name": "held reconnect does not resume or trigger actions",
+      "pass": true
+    },
+    {
+      "name": "fresh START after reconnect resumes once",
+      "pass": true
+    },
+    {
+      "name": "one native snapshot per adapter poll",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "time": "2026-11-19T18:53:10.819Z",
+  "scriptSha256": "072e9feb1614e3bda51088fe194c90a74a17b4917a655d889f29fa18c34ad6f4",
+  "inputs": [
+    {
+      "path": "../shared/web/controller-clients.js",
+      "sha256": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a"
+    },
+    {
+      "path": "../shared/web/input.js",
+      "sha256": "d33a301f082f0100db81c055b4773e2947cf4c166f76f68dfe06344d5a4660f6"
+    },
+    {
+      "path": "src/upstream/src/puretv-observation.ts",
+      "sha256": "9084a8984eb454cfa83215759b5e80f651ab5a0e442467e1e73620507764ef27"
+    },
+    {
+      "path": "src/upstream/src/puretv.ts",
+      "sha256": "50c14107b00988559e20ba80035627e49f0eaa1723e0c34c1c200c2b8f115cc6"
+    },
+    {
+      "path": "src/upstream/src/input/controls.ts",
+      "sha256": "0f158d1a0fef16f6671512381cee925bd0faafd6021505d00a9a58bb637437ac"
+    },
+    {
+      "path": "tests/adapter-fixture.ts",
+      "sha256": "40d817f6e18d55de63a2bcdc0405b0e9c7f2e83682220a495cc97367afcda6f4"
+    }
+  ]
+}
