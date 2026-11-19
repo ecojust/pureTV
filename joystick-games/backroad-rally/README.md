@@ -2,6 +2,14 @@
 
 基于 [jason-c-dev/backroad-rally](https://github.com/jason-c-dev/backroad-rally/tree/e5542f96b9a9a2912fdaa160396054e81f022f23) 的 pureTV 手柄适配。保留原作五辆车、六个地区、天气、正反赛段、幽灵车、生涯、存档和 Rapier 物理；不是重新实现或换皮。
 
+## macOS 下载
+
+0.1.0 Universal 预发布：[DMG](https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-v0.1.0/BackroadRally-0.1.0-macos-universal.dmg) · [ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-v0.1.0/BackroadRally-0.1.0-macos-universal.zip) · [SHA256](macos/SHA256SUMS.txt)。两个原包超过 GitHub 单文件 100 MiB 限制，存放在 Release；源码和记录仍在本目录。要求 **macOS 11+、WebGL2**，包含 arm64 与 x86_64，ad-hoc 签名，尚未 Apple 公证。
+
+原包首次复验中，Apple Silicon 原生、端口占用及 Rosetta 模式各9项检查通过。后续同包复验的占用与 Rosetta 模式仍各9项通过；原生模式前8项通过，最后存档重启检查在系统通知占据前台时超时。实际观察到新本地地址及四个存档值一致，但后续断言未完成，这份失败记录保留。**Intel Mac 图形运行未验证**，未做实体手柄或完整通关测试。具体源、原报告和画面范围见 [Mac 交付核验](docs/macos-delivery/verification.json)。
+
+Android TV 与 Windows 继续验证，未完成的平台没有列出下载包。
+
 | 按键 | 比赛中 | 菜单中 |
 | --- | --- | --- |
 | 上 / 下 | 油门 / 刹车 | 选择 |
@@ -24,4 +32,4 @@ npm run build:check
 
 上游代码声明 MIT；README 说明美术原创，音乐/部分音效由 ElevenLabs 生成，其他音效合成。Three.js 为 MIT、Rapier 为 Apache-2.0、Inter 字体为 OFL-1.1，许可证随包保留。上游音乐仅有 Ogg Opus：不支持此格式的旧 WKWebView 没有背景音乐，音效仍可使用原有 M4A 备选。
 
-源码与资源核验见 `docs/source-changes.json`、`docs/asset-closure.json`。浏览器合成手柄、真实 SDK TCP、安装包和实体设备验证分别记录；当前原生包及实体电视验收尚未完成。
+源码与资源核验见 `docs/source-changes.json`、`docs/asset-closure.json`。浏览器合成手柄、真实 SDK TCP、安装包和实体设备验证分别记录；macOS 原包及限定范围见上方；Android、Windows 与实体电视验收尚未完成。
