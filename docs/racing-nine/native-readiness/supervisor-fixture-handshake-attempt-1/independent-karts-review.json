@@ -1,0 +1,57 @@
+{
+  "reviewer": "racing_review_karts",
+  "timestamp": "2026-11-19T22:32:21.957369+00:00",
+  "conclusion": "no static blocker in isolated single-test-source repair",
+  "inventorySha256": "f24f78a8fe3e271e5a1e7bc693a8fc5b9c6d431cbec8bce430d183a5d11ea515",
+  "source": {
+    "path": "joystick-games/qa/android/test_emulator_supervisor.py",
+    "bytes": 25298,
+    "sha256": "cfd9ff85f21665564ebeb6bfa40512aae7b4c46fd191d3c2cfbcfca51191af64"
+  },
+  "originalParent": "a79611725f1f3c75816cff229b7883cf9e14c54b",
+  "verifiedInventoryFiles": 31,
+  "changedOriginalMethods": [
+    "test_restore_finishes_running_owned_supervisor"
+  ],
+  "addedMethods": [
+    "test_restore_fixture_waits_for_report_when_child_marker_wins_the_race",
+    "wait_owned_launch"
+  ],
+  "allOtherOriginalMethodsAstEqual": true,
+  "originalHelperAndWorkflow": {
+    "joystick-games/tools/android-emulator-supervisor.py": {
+      "bytes": 21468,
+      "gitBlob": "ea04ada21f62ae7147ce382c038d9daf9e1badfc",
+      "sha256": "03b50fff82e96f37903ebcc7df877fb216012f691cf87f60701f1390e3b65fd0"
+    },
+    ".github/workflows/joystick-catalog-android-runtime.yml": {
+      "bytes": 26240,
+      "gitBlob": "fab52938155b5845c6945d21949668e90f829588",
+      "sha256": "3fc28805e7f23958b1068b97e12c59810bc90d5e2719a2fa1c99407e40846009"
+    }
+  },
+  "observedTestEvidence": {
+    "supervisorTests": 20,
+    "isolatedSixSuites": [
+      53,
+      16,
+      15,
+      14,
+      18,
+      20
+    ],
+    "allSixOriginalLogsHashMatched": true,
+    "testsRerunByReviewer": false
+  },
+  "findings": [
+    "The previous restore fixture waited only for an ELF-written PID marker; the supervisor running/ownership record is emitted later. The fixture now waits within the original five-second setup budget for marker + running report + same supervisor PID + marker child PID + integer start identity before exercising restore.",
+    "The original restore call, eight-second communicate timeout, byte-identical restored SDK assertion and ownership signal assertion remain; helper cleanup and all emulator args/timeouts are unchanged.",
+    "The added real ELF regression intentionally delays only fixture report publication until after the marker, verifies the report is absent while the owned launcher remains alive, releases the barrier, then uses the normal restore implementation. It checks process return143 and recorded child SIGTERM(-15), original SDK bytes, and bounded cleanup.",
+    "The shared working tree may contain unrelated changes; root isolation must use a796 as its unique parent and overlay only the frozen test source. The older d3b/4b legacy test variant is separate and must not replace this Pon variant."
+  ],
+  "limitations": [
+    "Original CI 44627215167 failed during tests before APK binding and before emulator launch. Its temporary fixture state is missing; the exact original scheduling cause is unknown.",
+    "This proves a reproducible fixture race window and a locally passed repair, not that Vulkan causes or fixes the actual QEMU SIGSEGV.",
+    "No tests/native runs/ref creation/dispatch performed during independent review."
+  ]
+}

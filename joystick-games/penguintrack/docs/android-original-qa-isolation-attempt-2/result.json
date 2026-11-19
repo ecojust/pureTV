@@ -1,0 +1,60 @@
+{
+  "status": "frozen-three-QA-file-recipe-awaiting-independent-review-and-root-materialization",
+  "parentCommit": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+  "overlayFiles": [
+    {
+      "path": "joystick-games/penguintrack/qa-plan.json",
+      "bytes": 5866,
+      "sha256": "7c33fea5c547b8bf6a9e3ad43679c2ba43ad178e3269481488d23234cad2f720"
+    },
+    {
+      "path": "joystick-games/tools/android-runtime-inputs.py",
+      "bytes": 15011,
+      "sha256": "aa6c535038fc14a97d83bc8ded3b91a2e1a94dafe5e94214ab564f4f99842c08"
+    },
+    {
+      "path": "joystick-games/tools/android-tests.py",
+      "bytes": 15343,
+      "sha256": "3776ce754e10332433dc2c9de46476986f0ca17982fd425566cd7e90d2afcb40"
+    }
+  ],
+  "preserved": "Exact original c5 workflow/runner/full39runner tests/schema/catalog/Observer/SDK/all production. Only two plan steps + original-input-verifier nested payload reconstruction + four extra packaging tests.",
+  "testEvidence": {
+    "originalRunnerTests": 39,
+    "runnerLog": "test_runner-final.log",
+    "unchangedRunnerAndTestSha": true,
+    "packagingTests": 20,
+    "originalPackagingTestCount": 16,
+    "newBoundaryTests": 4,
+    "packagingLog": "minimal-android-tests.log",
+    "workflowActionlintPassed": true,
+    "actionlintShellcheckDisabled": true,
+    "allOriginalPackagingClassesAstUnchanged": true
+  },
+  "originalSignedPayload": {
+    "assets": 156,
+    "allAssetBytesAndNamesMatchOriginalReceipt": true,
+    "receiptSha256": "1e10a53df97af01a5d89b2d432e493dba5a221dacf92e7c3299addffbd4228d8",
+    "actualApkAudit": "../android-original-packages-44606071748-44606074787/report.json",
+    "newApkDownload": false,
+    "newApkBuild": false
+  },
+  "closure": {
+    "originalRuntimeWorkflowRunsOnlyTwoSuites": true,
+    "noLaterNightExactSourceOrBackInstallationDependency": true,
+    "fullSourceInventoryAndFixedCertificateAndExactAssetEqualityPreserved": true,
+    "originalVerifierFunctionsUnchangedExceptPayloadConstruction": true,
+    "originalSourceNestedDistFiles": 147,
+    "originalDistFiles": 151,
+    "originalPayloadAssets": 156,
+    "policy": "unchanged original GameKit bounded payload; nested assets accepted only with exact matching original game/registry policy; safe_name applied before writing each path",
+    "originalWorkflowKnownEnvironment": "API36/3072MiB/SwiftShader, emulator-build unpinned as original c5; no added supervisor/environment sampler",
+    "runtimeNoNativeSuccessClaim": true
+  },
+  "limitations": [
+    "No candidate commit/tree/ref/POST created; root must materialize exactly these three paths over the unique c5 parent and verify diff.",
+    "Local tests and actual original-source payload hashes do not prove the two extra menu steps pass native Android; old failures remain failed.",
+    "The old runtime workflow lacks new environment diagnostics and pins no emulator build. Penguin original failure had active frames/ACKs and a concrete incorrect menu route, so this recipe does not introduce unrelated environment changes.",
+    "Earlier 19-file candidate was blocked by an unrelated Back install suite requiring later runner attributes; retained evidence is explicitly superseded."
+  ]
+}

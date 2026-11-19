@@ -1,0 +1,85 @@
+{
+  "sourceBase": "a79611725f1f3c75816cff229b7883cf9e14c54b",
+  "originalFailedRun": 44627215167,
+  "originalFailure": "test_restore_finishes_running_owned_supervisor: child.communicate(timeout=8) timed out; emulator/runtime skipped",
+  "changedSource": {
+    "joystick-games/qa/android/test_emulator_supervisor.py": {
+      "bytes": 25298,
+      "sha256": "cfd9ff85f21665564ebeb6bfa40512aae7b4c46fd191d3c2cfbcfca51191af64"
+    }
+  },
+  "changedOriginalMethods": [
+    "test_restore_finishes_running_owned_supervisor"
+  ],
+  "addedMethods": [
+    "test_restore_fixture_waits_for_report_when_child_marker_wins_the_race",
+    "wait_owned_launch"
+  ],
+  "allOtherOriginalMethodASTUnchanged": true,
+  "helperWorkflowProductionUnchanged": true,
+  "localSupervisorTests": 20,
+  "isolatedCIContractGroups": [
+    53,
+    16,
+    15,
+    14,
+    18,
+    20
+  ],
+  "isolatedCIContractTotal": 136,
+  "localScratchMissingInputFailuresPreserved": [
+    "contract-replay/result.json",
+    "contract-replay/result-attempt-2.json",
+    "contract-replay/result-attempt-3.json"
+  ],
+  "failureInterpretation": "A marker-before-report window is reproduced deterministically in a real ELF child fixture. Original CI temporary files were not retained, so its exact schedule and causal ordering are not proven. New wait requires actual owned running report before restore; same setup5s/communicate8s/production restore retained.",
+  "legacyCandidate": {
+    "parents": [
+      "d3b9178bfc4748ef0d8b983f4c6775969f946625",
+      "4b6cf0b8cba288eae66bcae2ef2784acc279a695"
+    ],
+    "helperUnchanged": true,
+    "vulkanApiOrTestsAdded": false,
+    "oldTests": 15,
+    "newTests": 16,
+    "changedLegacyMethods": [
+      "test_restore_finishes_running_owned_supervisor"
+    ],
+    "addedMethods": [
+      "wait_owned_launch",
+      "test_restore_fixture_waits_for_report_when_child_marker_wins_the_race"
+    ],
+    "unchangedMethodAST": [
+      "setUpClass",
+      "tearDownClass",
+      "setUp",
+      "tearDown",
+      "prepared",
+      "test_default_off_and_wrong_identity_never_touch_sdk",
+      "test_actual_workflow_selector_rejects_other_games_sources_and_origins",
+      "test_atomic_install_queries_match_and_finally_restores_exact_original",
+      "test_install_replace_failure_recovers_original_and_removes_backup",
+      "test_state_write_failure_after_install_also_restores_original",
+      "test_wrapper_query_mismatch_aborts_and_restores_before_qa",
+      "test_wrapper_query_exit_stderr_and_budget_mismatches_also_restore",
+      "test_existing_shim_or_backup_is_rejected_without_overwrite",
+      "test_restore_refuses_changed_entry_instead_of_overwriting_it",
+      "test_exact_argv_queries_direct_and_unknown_avd_flags_rejected",
+      "child_case",
+      "test_real_nonzero_sigkill_sigterm_and_bounded_logs",
+      "test_deadline_escalation_is_explicit_and_leaves_no_owned_child",
+      "test_same_pid_qemu_exec_is_bound_but_forked_launcher_exit_is_unknown",
+      "test_signal_to_supervisor_cleans_owned_child_and_restore_succeeds"
+    ],
+    "candidate": "/dev/shm/racing-native-readiness/legacy-supervisor-fixture/source/joystick-games/qa/android/test_emulator_supervisor.py",
+    "sha256": "d5d003e6f94d262f2b5bedf481ad2c200211b2ca05f46fc71fca6b2e2e9b3573",
+    "bytes": 19205,
+    "helperSha256": "7822a7e077adbdcc187f437c651bf1a5c536093e28f10015423f414085cd17c1",
+    "regressionDriverCompatibility": "list(m.EXPECTED_ARGS), because the original helper has no expected_arguments function"
+  },
+  "legacyTests": 16,
+  "actualEmulatorRun": false,
+  "gpuRootCauseKnown": false,
+  "dispatched": false,
+  "refsCreated": false
+}

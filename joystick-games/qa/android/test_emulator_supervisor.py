@@ -78,6 +78,24 @@ class SupervisorTests(unittest.TestCase):
     def prepared(self):
         return m.prepare(self.sdk, self.output)
 
+    def wait_owned_launch(self, process, marker):
+        # An ELF marker can precede the supervisor's ownership record.
+        # Restore can stop the owned process only after both identities exist.
+        until = time.monotonic()+5; last = None
+        while time.monotonic()<until:
+            try:
+                last = json.loads((self.output/'launch/report.json').read_text())
+                if (marker.exists() and last.get('status') == 'running'
+                        and last.get('supervisor', {}).get('pid') == process.pid
+                        and last.get('child', {}).get('pid') == int(marker.read_text())
+                        and type(last['child'].get('starttimeTicks')) is int):
+                    return last
+            except (OSError, ValueError):
+                pass
+            self.assertIsNone(process.poll(), 'Fixture supervisor quit before ownership was published')
+            time.sleep(.02)
+        self.fail('Fixture did not publish its owned launch record within the original 5-second setup budget: '+str(last))
+
     def test_default_off_and_wrong_identity_never_touch_sdk(self):
         with patch.dict(os.environ, {'SUPERVISE_PON_EMULATOR': 'false'}):
             result = subprocess.run([sys.executable, str(MODULE), 'prepare', '--sdk', str(self.sdk), '--output', str(self.output)], capture_output=True)
@@ -328,13 +346,53 @@ class SupervisorTests(unittest.TestCase):
         child = subprocess.Popen([str(self.entry), *m.EXPECTED_ARGS], env=dict(os.environ,
             PURETV_SUPERVISOR_FIXTURE='hang', PURETV_SUPERVISOR_MARKER=str(marker)), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         try:
-            until=time.monotonic()+5
-            while not marker.exists() and time.monotonic()<until: time.sleep(.02)
-            self.assertTrue(marker.exists()); m.restore(self.output); child.communicate(timeout=8)
+            self.wait_owned_launch(child, marker)
+            m.restore(self.output); child.communicate(timeout=8)
             self.assertEqual(self.entry.read_bytes(), self.original)
             self.assertTrue(json.loads((self.output/'state.json').read_text())['cleanupSignalledOwnedSupervisor'])
         finally:
             if child.poll() is None: child.kill(); child.communicate(timeout=3)
+
+    def test_restore_fixture_waits_for_report_when_child_marker_wins_the_race(self):
+        self.prepared(); marker = self.root/'early-child.pid'; release = self.root/'publish-report'
+        # Delay only this fixture's first report after its real ELF starts.
+        # The production timeout and restore implementation remain unchanged.
+        driver = '''import importlib.util,sys,time
+from pathlib import Path
+spec=importlib.util.spec_from_file_location('fixture_supervisor',sys.argv[1])
+m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+out,release=map(Path,sys.argv[2:]);original=m.atomic_json
+def controlled(path,value):
+ if Path(path)==out/'launch/report.json' and value.get('status')=='running':
+  deadline=time.monotonic()+5
+  while not release.exists() and time.monotonic()<deadline:time.sleep(.01)
+  assert release.exists(),'Fixture publication barrier was not released'
+ return original(path,value)
+m.atomic_json=controlled
+sys.exit(m.launch(out,m.expected_arguments()))
+'''
+        child = subprocess.Popen([sys.executable, '-c', driver, str(MODULE), str(self.output), str(release)],
+            env=dict(os.environ, PURETV_SUPERVISOR_FIXTURE='hang', PURETV_SUPERVISOR_MARKER=str(marker)),
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        try:
+            until=time.monotonic()+5
+            while not marker.exists() and time.monotonic()<until: time.sleep(.02)
+            self.assertTrue(marker.exists())
+            self.assertFalse((self.output/'launch/report.json').exists(), 'Controlled marker-before-report window was not reproduced')
+            self.assertIsNone(child.poll())
+            release.write_text('publish')
+            self.wait_owned_launch(child, marker)
+            state=m.restore(self.output); stdout,stderr=child.communicate(timeout=8)
+            self.assertTrue(state['cleanupSignalledOwnedSupervisor'])
+            self.assertEqual(child.returncode,143,(stdout,stderr))
+            self.assertEqual(self.entry.read_bytes(),self.original)
+            self.assertEqual(json.loads((self.output/'launch/report.json').read_text())['returnCode'],-15)
+        finally:
+            release.touch()
+            if child.poll() is None:
+                child.terminate()
+                try: child.communicate(timeout=8)
+                except subprocess.TimeoutExpired: child.kill(); child.communicate(timeout=3)
 
 
 if __name__ == '__main__': unittest.main(verbosity=2)

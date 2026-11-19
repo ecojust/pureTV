@@ -1,0 +1,89 @@
+{
+  "status": "frozen-overlay-recipe-not-a-commit-or-native-result",
+  "timestamp": "2026-11-19T22:27:15.195065+00:00",
+  "parentCommit": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+  "overlayFiles": 19,
+  "overlayBytes": 339977,
+  "productionOverlap": [],
+  "originalStepsUnchanged": 16,
+  "addedSteps": [
+    {
+      "name": "Move to the original Controller control from either native initial focus",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 80,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "menu"
+        },
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "Controller"
+        }
+      ]
+    },
+    {
+      "name": "Move down to the original Play button before selecting the campaign",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 80,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "menu"
+        },
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "Play"
+        }
+      ]
+    }
+  ],
+  "localTests": {
+    "runnerOriginalC5": 39,
+    "artifactContracts": 16,
+    "artifactReuse": 15,
+    "environmentDiagnostics": 14,
+    "installConfirmation": 18,
+    "emulatorSupervisor": 15,
+    "total": 117,
+    "allApplicablePassed": true,
+    "initialNewRunnerErrorsPreserved": 3,
+    "runnerWasChangedBackToOriginalC5NotRelaxed": true,
+    "otherFiveSuitesInputsUnchangedAfterRefinement": true
+  },
+  "actionlint": {
+    "returncode": 0,
+    "shellcheckDisabled": true,
+    "log": "actionlint.log"
+  },
+  "originalPackage": {
+    "source": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+    "run": 44606071748,
+    "attempt": 1,
+    "export": "35fca55f5a05d38785fb531004eca9add6913f04",
+    "apkBytes": 2342332,
+    "apkSha256": "e1f9aa255413819bda917543c2d2258dd685a8eff61f982f26a98dfcfc827827",
+    "observerBytes": 16783,
+    "observerSha256": "3cec77b567652ac6b05f49587d222981e88b60c940e658e4d4958e39c33329e9",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "audit": "../android-original-packages-44606071748-44606074787/report.json"
+  },
+  "domEvidence": "../menu-entry-dom-1/summary.json",
+  "limitations": [
+    "No candidate commit, ref or dispatch created by this review. Root must materialize the exact 19 paths over the unique c5 parent and verify its Git diff.",
+    "The original failed Android reports remain failed. Local DOM navigation and Python tests do not establish Android gameplay.",
+    "The obsolete 22-file candidate failed three Night exact-source-proof tests; final recipe keeps original c5 runner, its full tests and schema, and does not import later Night production.",
+    "Optional virtual Git tree write failed after promisor fetch exhausted scratch space; disposable 124825600 bytes removed, not retried. No source tree or native run resulted.",
+    "Runtime diagnostics uses stable emulator 16970787 with 2048 MiB; Pon supervision and Backroad install confirmation are explicitly disabled. No causal claim about prior device failures."
+  ]
+}
