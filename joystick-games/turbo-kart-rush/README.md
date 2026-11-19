@@ -28,6 +28,6 @@ npm run build:check
 
 `dist/tv.html` 可用本地 HTTP 服务离线预览；浏览器预览没有原生 TCP 服务器。生产包排除上游可写调试全局和开发自动驾驶入口；`window.JoystickGameQA.snapshot()` 只读取状态与缓存控制器帧。
 
-`upstream.json` 固定原始 72 文件与提交；`docs/source-changes.json` 记录有限输入/取消改动。原 `package-lock.json` 运行依赖及工具版本保留，额外 esbuild 0.28.2 用于平铺打包。初期 npm HTTP 503 与尚未完成的检查独立记录在 `docs/dependency-attempts.json`，不把缓存构建视为原依赖安装或平台通过。
+`upstream.json` 固定原始 72 文件与提交；`docs/source-changes.json` 记录有限输入/取消改动。原 `package-lock.json` 运行依赖及工具版本保留，额外 esbuild 0.28.2 用于平铺打包。初期 npm HTTP 503 的尝试保留在 `docs/dependency-attempts.json`；网络恢复后精确依赖安装、原配置及完整源码的 TypeScript 检查均通过，见 `docs/npm-ci-attempt-3.json` 与 `docs/typecheck-exact.log`。这些结果不代表平台安装包已经通过。
 
 许可证见 [LICENSE](LICENSE) 与 [NOTICE.md](NOTICE.md)。源码 MIT，Three.js MIT；构建工具许可证单独保留。没有为适配新增商业模型或在线资源。

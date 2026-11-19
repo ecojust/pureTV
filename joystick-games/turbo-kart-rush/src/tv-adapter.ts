@@ -26,6 +26,8 @@ export function createTVAdapter() {
     poll(): TVFrame {
       controller.setPlaying(playing());
       const frame: TVFrame = controller.poll();
+      panel.dataset.mode = game?.currentState || 'boot';
+      panel.dataset.connected = String(controller.peek().connected);
       if (!frame.cancelled) {
         if (playing() && frame.pressed.Y) { helpOpen = !helpOpen; panel.dataset.help = String(helpOpen); }
         if (game?.currentState !== 'paused' && Object.values(frame.pressed).some(Boolean)) game?.wakeAudioForTV();

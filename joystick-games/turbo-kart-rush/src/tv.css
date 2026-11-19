@@ -4,5 +4,9 @@
 #puretv-controller-panel[data-playing=true] { top: 32% !important; bottom: auto; max-height: 43vh; }
 #puretv-controller-panel[data-playing=true] .tv-help { display:none; }
 #puretv-controller-panel[data-playing=true][data-help=true] .tv-help { display:block; border:1px solid #37a8ff99; border-radius:10px; padding:9px; background:#101126ed; }
+#puretv-controller-panel:is([data-mode=characterSelect],[data-mode=trackSelect],[data-mode=results]) { top:12px !important; bottom:auto; max-height:26vh; }
+#puretv-controller-panel:is([data-mode=characterSelect],[data-mode=trackSelect],[data-mode=results]) .ptv-host-title,
+#puretv-controller-panel:is([data-mode=characterSelect],[data-mode=trackSelect],[data-mode=results]) .tv-help,
+#puretv-controller-panel:is([data-mode=characterSelect],[data-mode=trackSelect],[data-mode=results])[data-connected=true] .ptv-host-info { display:none; }
 .tv-fatal { position:fixed; inset:15%; z-index:50; color:#fff; background:#101126; padding:30px; font:22px/1.6 system-ui,sans-serif; }
 @media(max-height:600px) { #puretv-controller-panel { width:174px !important; bottom:8px; } .tv-help { font-size:11px; } }

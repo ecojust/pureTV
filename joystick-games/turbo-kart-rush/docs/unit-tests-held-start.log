@@ -1,0 +1,32 @@
+
+> puretv-turbo-kart-rush@0.1.0 test
+> node tests/run.mjs
+
+▲ [WARNING] The CommonJS "module" variable is treated as a global variable in an ECMAScript module and may not work as expected [commonjs-variable-in-esm]
+
+    ../shared/web/controller-clients.js:125:55:
+      125 │ ...defined' && module.exports) module.exports = root.PureTVContro...
+          ╵                                ~~~~~~
+
+  This file is considered to be an ECMAScript module because the enclosing "package.json" file sets the type of this file to "module":
+
+    ../shared/web/package.json:1:23:
+      1 │ {"private":true,"type":"module"}
+        ╵                        ~~~~~~~~
+
+  Node's package format requires that CommonJS files in a "type": "module" package use the ".cjs" file extension.
+
+✔ physical movement, drift, item, look, help and START are separate (1.71803ms)
+✔ menus confirm with A/START, return with Y; held confirmation cannot drift (0.354613ms)
+✔ disconnect and reconnection quarantine cannot trigger stale item or charged drift release (0.799658ms)
+✔ keyboard cancel clears edges and quarantines held keys until physical release (0.266313ms)
+✔ holding START after resume cannot create a second pause edge (0.679491ms)
+✔ cancel through original endDrift(false) preserves earned boost and inventory (0.740751ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 252.161534

@@ -56,6 +56,24 @@ test('keyboard cancel clears edges and quarantines held keys until physical rele
   fire('keyup','Space');fire('keydown','Space');assert.equal(update(frame()).drift,true);
 });
 
+test('holding START after resume cannot create a second pause edge',()=>{
+  const {input,update}=setup();const reducer=createInputReducer();
+  const sample=keys=>({players:[{id:1,controllerId:'resume-test',session:'same',connected:true,transport:'wifi',buttons:frame(keys).buttons}]});
+  assert.equal(update(reducer.read(sample(['START']))).pause,true);
+  reducer.cancel();input.cancel();
+  assert.equal(update(reducer.read(sample(['START'])),false).pause,false);
+  update(reducer.read(sample([])),false);
+  assert.equal(update(reducer.read(sample(['START'])),false).pause,true);
+  input.cancel();
+  for(let i=0;i<12;i++) {
+    const held=update(reducer.read(sample(['START'])));
+    assert.equal(held.pause,false,`held resume frame ${i}`);
+    assert.equal(held.drift,false);assert.equal(held.useItem,false);
+  }
+  update(reducer.read(sample([])));
+  assert.equal(update(reducer.read(sample(['START']))).pause,true);
+});
+
 test('cancel through original endDrift(false) preserves earned boost and inventory',()=>{
   let awarded=0;
   const kart=Object.assign(Object.create(Kart.prototype),{state:{id:0,isDrifting:true,driftDirection:1,driftStage:3,driftCharge:1,boostTimer:0.6,item:'red_shell',itemCount:1,position:{x:12,y:2,z:30},speed:18},

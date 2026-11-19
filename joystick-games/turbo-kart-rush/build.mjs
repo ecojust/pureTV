@@ -7,7 +7,7 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 const result = await esbuild.build({
   absWorkingDir: root, entryPoints: ['src/main.ts'], outfile: 'game.js',
   bundle: true, splitting: false, format: 'iife', target: 'es2020',
-  minify: true, write: false, legalComments: 'inline',
+  minify: true, write: false, legalComments: 'inline', tsconfig: 'src/tsconfig.json',
   define: { 'import.meta.env.DEV': 'false', 'import.meta.env.PROD': 'true' },
 });
 const files = Object.fromEntries(result.outputFiles.map(f => [path.basename(f.path), Buffer.from(f.contents)]));
