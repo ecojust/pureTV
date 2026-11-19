@@ -23,7 +23,17 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 
 另有正在进行的[九款赛车三平台适配](../docs/racing-nine/README.md)：从 31 个赛车候选中比较画面与玩法，选出 Backroad Rally、Ponpoko Kart、Night Racer、Penguintrack、Last Track、Dirt Crown、Turbo Kart Rush、Kart Rush 和 Kart Royale。九款源码已提交，Android TV、macOS 通用包及 Windows x64 正在实际构建和运行验证，暂不计入下面已交付的安装包数量。
 
-赛车首个可下载包：[Kart Rush · Android TV 0.1.0 APK](kart-rush/kart-rush-0.1.0.apk)。该包的签名、完整源码与两模式实际手柄验收已核验；九款三平台完整交付仍在进行。
+赛车已有以下可下载包，均为 **0.1.0**；九款三平台完整交付仍在进行。
+
+| 游戏 | Android TV | macOS |
+| --- | --- | --- |
+| [Kart Rush](kart-rush/) | [APK](kart-rush/kart-rush-0.1.0.apk) | 验证中 |
+| [Ponpoko Kart](ponpoko-kart/) | 验证中 | [DMG](ponpoko-kart/macos/PonpokoKart-0.1.0-macos-universal.dmg) · [ZIP](ponpoko-kart/macos/PonpokoKart-0.1.0-macos-universal.zip) |
+| [Penguintrack](penguintrack/) | 验证中 | [DMG](penguintrack/macos/Penguintrack-0.1.0-macos-universal.dmg) · [ZIP](penguintrack/macos/Penguintrack-0.1.0-macos-universal.zip) |
+| [Last Track](last-track/) | 验证中 | [DMG](last-track/macos/LastTrack-0.1.0-macos-universal.dmg) · [ZIP](last-track/macos/LastTrack-0.1.0-macos-universal.zip) |
+| [Dirt Crown](dirt-crown/) | 验证中 | [DMG](dirt-crown/macos/DirtCrown-0.1.0-macos-universal.dmg) · [ZIP](dirt-crown/macos/DirtCrown-0.1.0-macos-universal.zip) |
+
+以上 Mac 赛车需要 macOS 11+ 与 WebGL2；Apple Silicon 原生、端口占用及 Rosetta 检查通过，**Intel 图形运行仍未验证**。包采用 ad-hoc 签名，未经过 Apple 公证；各目录列出原包哈希和具体验证范围。Windows 包继续验证。
 
 原清单的 **93 款**已完成逐项[电视适配评估](../docs/claude-games/tv-assessment.md)：51 款可继续使用现有 Web 宿主，42 款需补齐许可、素材或其他引擎运行方案。后续新增的 GitHub 参考清单与这 93 款适配范围分开记录。
 

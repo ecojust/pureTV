@@ -2,6 +2,14 @@
 
 日本乡村、樱花鸟居、夏祭花火三条原版赛道；八位动物车手、三档难度、道具、蓄力漂移、跳跃特技和和伞滑翔。保留 [たぬ的原作](https://github.com/tanuu5/ponpoko-kart/tree/88edb72d25c2f957431cc4d12547d3138d1bca48) 的完整程序生成场景、原 HUD 与日文菜单，不依赖在线模型、图片、音频或字体。
 
+## macOS 下载
+
+0.1.0 Universal：[DMG](macos/PonpokoKart-0.1.0-macos-universal.dmg) · [ZIP](macos/PonpokoKart-0.1.0-macos-universal.zip) · [SHA256 校验](macos/SHA256SUMS.txt) · [包来源与验证范围](packages.json)。DMG 内的应用可拖入 Applications；ZIP 解压后也可运行同一个应用。
+
+需要 **macOS 11 或更新版本及 WebGL 2**。包包含 arm64 / x86_64；Apple Silicon 原生、默认端口占用回退及 Rosetta 三种模式的原生游戏与 pureTV SDK 检查已通过。**Intel 原生运行仍未验证**，不能据 Universal 架构推断 Intel 可玩。应用采用 ad-hoc 签名，未经过 Apple 公证；未做实体手柄或用户设备测试。
+
+Intel 原报告保留精确的渲染初始化异常、零游戏帧及终止时 `active=false`（前台为系统 UserNotificationCenter）；前台与玩法均未验证，不把独立图形探针观察解释为已证明失败原因。同批其他游戏的失败也保留。详见[原包审计与逐款复评](docs/macos-ci-44602407034/README.md)。
+
 pureTV 控制采用共享原生宿主：默认 TCP **63485**；如果端口被其他实例占用，显示实际回退端口。侧边卡片显示实际连接席位与 controller ID；传输协议没有提供 RSSI 时不编造信号强度。浏览器预览不提供局域网 TCP 服务，需对应的安装版。
 
 | pureTV 按键 | 比赛 | 菜单 |

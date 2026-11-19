@@ -1,0 +1,589 @@
+{
+  "schemaVersion": 2,
+  "game": "ponpoko-kart",
+  "coveragePolicy": "arm-rosetta-with-intel-observation-v1",
+  "artifactSourceCommit": "ea7854ca06ed53967aed00fe160034185f2906b3",
+  "qaSourceCommit": "ea7854ca06ed53967aed00fe160034185f2906b3",
+  "runId": 44602407034,
+  "runAttempt": 1,
+  "installPackagesValidated": true,
+  "packageArchitectures": [
+    "arm64",
+    "x86_64"
+  ],
+  "binarySha256": "0bf710e5ecc0a1358bc51a5a091b2672161f7d8770cc151955931de041503015",
+  "verificationCoverage": {
+    "appleSiliconNative": {
+      "status": "passed",
+      "processArchitecture": "arm64",
+      "originalGameQaStatus": "passed"
+    },
+    "appleSiliconOccupiedPort": {
+      "status": "passed",
+      "processArchitecture": "arm64",
+      "originalGameQaStatus": "passed"
+    },
+    "appleSiliconRosetta": {
+      "status": "passed",
+      "processArchitecture": "x86_64",
+      "originalGameQaStatus": "passed"
+    },
+    "intelNative": {
+      "status": "unverified",
+      "processArchitecture": "x86_64",
+      "originalGameQaStatus": "failed",
+      "capabilityObservation": "webgl2_context_lost",
+      "gameFailureCauseProven": false,
+      "boundedInitializationEvidence": {
+        "kind": "frozen_ponpoko_three_precision_initialization",
+        "originalError": "null is not an object (evaluating 'i.getShaderPrecisionFormat(i.VERTEX_SHADER,i.HIGH_FLOAT).precision')",
+        "bundlePath": "game.js",
+        "bundleSourcePath": "joystick-games/ponpoko-kart/dist/game.js",
+        "bundle": {
+          "bytes": 1561049,
+          "sha256": "b26270b854a7672d67e36e987c2a5c938044556d5b91fc480c41211a5b959729"
+        },
+        "originalJavaScriptStackCaptured": false,
+        "gameplayStarted": false,
+        "diagnosticStage": "error",
+        "diagnosticMode": "boot",
+        "terminalWindowActive": false,
+        "frontmostApplication": {
+          "bundleIdentifier": "com.apple.UserNotificationCenter",
+          "name": "UserNotificationCenter"
+        },
+        "foregroundVerification": "unverified"
+      },
+      "terminalWindowActive": false,
+      "frontmostApplication": {
+        "bundleIdentifier": "com.apple.UserNotificationCenter",
+        "name": "UserNotificationCenter"
+      },
+      "foregroundVerification": "unverified"
+    }
+  },
+  "overallGameplayVerification": "partial",
+  "deliveryEligibility": "eligible_with_intel_unverified",
+  "originalGameReportsModified": false,
+  "physicalControllerTested": false,
+  "appleNotarized": false,
+  "evidenceFiles": {
+    "artifact/batch-report.json": {
+      "bytes": 7381,
+      "sha256": "5273acd112a5970fac499b1da9314e9de76d643101bcc1c1fe53ebe75df96df1"
+    },
+    "artifact/ponpoko-kart/package-verification.json": {
+      "bytes": 473,
+      "sha256": "63b8c53fb2ae320042a3daf84f6a073ea2ab2c4cdb7252a824a3d33d90de3cf3"
+    },
+    "artifact/ponpoko-kart/native/report.json": {
+      "bytes": 12375,
+      "sha256": "af920b34edbc4d2eaba15ce834ff71140b79bc94cb551e0749fdfa16b711085d"
+    },
+    "artifact/ponpoko-kart/native/executed-macos-verify.py": {
+      "bytes": 46183,
+      "sha256": "2db317fa9672df20992af6b4d6a31f9910e2876e4644c0cffca6b99df8709290"
+    },
+    "artifact/ponpoko-kart/native/executed-qa-plan.py": {
+      "bytes": 5101,
+      "sha256": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582"
+    },
+    "artifact/ponpoko-kart/native/executed-qa-plan.json": {
+      "bytes": 3657,
+      "sha256": "111e1ed85b2e1374c64cdb8e1ac397f6523c4b645ebbebc111587df5686e1490"
+    },
+    "artifact/ponpoko-kart/native/executed-allow-local-network.py": {
+      "bytes": 4623,
+      "sha256": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03"
+    },
+    "artifact/ponpoko-kart/native/diagnostics/menu.png": {
+      "bytes": 1018076,
+      "sha256": "1704ab9b76828e82e95f342388276ea7261964de9e82ad8112d27b7d57bd474d"
+    },
+    "artifact/ponpoko-kart/native/diagnostics/connected-menu.png": {
+      "bytes": 1005102,
+      "sha256": "f8ebd7604e84e884f4c7f9c052b8f7f688aadd3d8adf7f78064d89ec77f8b4e8"
+    },
+    "artifact/ponpoko-kart/native/diagnostics/playing.png": {
+      "bytes": 972375,
+      "sha256": "5eca7cabd381396cce527a64303ba2eb13ab7e04c9bb88d0a7a5988042459a63"
+    },
+    "artifact/ponpoko-kart/native/diagnostics/paused.png": {
+      "bytes": 862348,
+      "sha256": "183bc2749e01aef519fa7ea8d336c8580a6d01ad56443c412fce671786e091d1"
+    },
+    "artifact/ponpoko-kart/native/diagnostics/disconnected.png": {
+      "bytes": 889850,
+      "sha256": "bf60bc61c0c7da269f984da2a6d22629685ffc920957580ffb3cf55830d1ee01"
+    },
+    "artifact/ponpoko-kart/native/diagnostics/reconnected.png": {
+      "bytes": 879616,
+      "sha256": "5c37acf33fce271ca6fe9a0aa712a6f13b82931c97b9235565eef379d6093b37"
+    },
+    "artifact/ponpoko-kart/occupied-port/report.json": {
+      "bytes": 993183,
+      "sha256": "cb0a8336869d155b0959d7498defc8d5ddfd21fae0e67634003e677e6b3aedb8"
+    },
+    "artifact/ponpoko-kart/occupied-port/executed-macos-verify.py": {
+      "bytes": 46183,
+      "sha256": "2db317fa9672df20992af6b4d6a31f9910e2876e4644c0cffca6b99df8709290"
+    },
+    "artifact/ponpoko-kart/occupied-port/executed-qa-plan.py": {
+      "bytes": 5101,
+      "sha256": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582"
+    },
+    "artifact/ponpoko-kart/occupied-port/executed-qa-plan.json": {
+      "bytes": 3657,
+      "sha256": "111e1ed85b2e1374c64cdb8e1ac397f6523c4b645ebbebc111587df5686e1490"
+    },
+    "artifact/ponpoko-kart/occupied-port/executed-allow-local-network.py": {
+      "bytes": 4623,
+      "sha256": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03"
+    },
+    "artifact/ponpoko-kart/occupied-port/diagnostics/menu.png": {
+      "bytes": 1018612,
+      "sha256": "03d12395401027d13b49b3108bb74642c51224ecdc99fdd9ad096d522479ab3c"
+    },
+    "artifact/ponpoko-kart/occupied-port/diagnostics/connected-menu.png": {
+      "bytes": 1005647,
+      "sha256": "a18e28a4aff5ce7f1617f2478f5f08148471a18fda62e630f6b0bd4464f9761e"
+    },
+    "artifact/ponpoko-kart/occupied-port/diagnostics/playing.png": {
+      "bytes": 968652,
+      "sha256": "9fecf51f81141d929ce9d865989f19025fba1155bd543f138dc318a85707571c"
+    },
+    "artifact/ponpoko-kart/occupied-port/diagnostics/paused.png": {
+      "bytes": 858949,
+      "sha256": "25ce8c63fc798193e55374f6c99eab821a44bbe4208acd562feaec11401c2a38"
+    },
+    "artifact/ponpoko-kart/occupied-port/diagnostics/disconnected.png": {
+      "bytes": 892491,
+      "sha256": "593d678668cedb920f2eaccd2c8e8d4c6924e7d3915b36c7b73b5ce933121254"
+    },
+    "artifact/ponpoko-kart/occupied-port/diagnostics/reconnected.png": {
+      "bytes": 881730,
+      "sha256": "6e085458c6d09cd25dc1b1f5fb7ce9a70223b55b756fc2470b712c392019d661"
+    },
+    "artifact/ponpoko-kart/rosetta/report.json": {
+      "bytes": 989853,
+      "sha256": "8e2ccf764dbc0e117db54220c412a995c410c76b4a5e03a532e2ac45eadcd46b"
+    },
+    "artifact/ponpoko-kart/rosetta/executed-macos-verify.py": {
+      "bytes": 46183,
+      "sha256": "2db317fa9672df20992af6b4d6a31f9910e2876e4644c0cffca6b99df8709290"
+    },
+    "artifact/ponpoko-kart/rosetta/executed-qa-plan.py": {
+      "bytes": 5101,
+      "sha256": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582"
+    },
+    "artifact/ponpoko-kart/rosetta/executed-qa-plan.json": {
+      "bytes": 3657,
+      "sha256": "111e1ed85b2e1374c64cdb8e1ac397f6523c4b645ebbebc111587df5686e1490"
+    },
+    "artifact/ponpoko-kart/rosetta/executed-allow-local-network.py": {
+      "bytes": 4623,
+      "sha256": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03"
+    },
+    "artifact/ponpoko-kart/rosetta/diagnostics/menu.png": {
+      "bytes": 1012906,
+      "sha256": "4da8732287302e51a9ae1770743138f43fc209ae6612f5c7fa49500f445a1e43"
+    },
+    "artifact/ponpoko-kart/rosetta/diagnostics/connected-menu.png": {
+      "bytes": 999627,
+      "sha256": "5cda7874a69e0455afe56902842482f34b7539cef74c24cad4e175d4c8a0a32f"
+    },
+    "artifact/ponpoko-kart/rosetta/diagnostics/playing.png": {
+      "bytes": 952314,
+      "sha256": "ad55a80e4ef42aa7346a0ff602ed1d156e141248ab4d0c773c99e8004f2a02a7"
+    },
+    "artifact/ponpoko-kart/rosetta/diagnostics/paused.png": {
+      "bytes": 854960,
+      "sha256": "7cbdb2cb2ac24f14baad0408138cc6608408ed2ebb9119686125ec777e5c4e30"
+    },
+    "artifact/ponpoko-kart/rosetta/diagnostics/disconnected.png": {
+      "bytes": 884389,
+      "sha256": "9be630d44bdc5f40994be5e439a4d64ee5240c9a4cf9cd2b85c39e539b60e05f"
+    },
+    "artifact/ponpoko-kart/rosetta/diagnostics/reconnected.png": {
+      "bytes": 874775,
+      "sha256": "b504d35676cef66429510c1d2d3c990144137b418588f1cb8efffe13fa46874a"
+    },
+    "artifact/ponpoko-kart/capability/before/report.json": {
+      "bytes": 7183,
+      "sha256": "005f32f8405bdbf61d81aac04c8f99af658169aea4a3c81885fa1156793c0768"
+    },
+    "artifact/ponpoko-kart/capability/before/hw.machine-command.json": {
+      "bytes": 133,
+      "sha256": "7940aae4a4a382abde9dadab6b54426715de5297832dff6d5156c12cab908242"
+    },
+    "artifact/ponpoko-kart/capability/before/hw.machine-stdout.log": {
+      "bytes": 7,
+      "sha256": "aaf631698ae5160ceb04a97681a14887fdcab47cd6e0f163c87485b3b1340b62"
+    },
+    "artifact/ponpoko-kart/capability/before/hw.machine-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/before/machdep.cpu.brand_string-command.json": {
+      "bytes": 181,
+      "sha256": "6bfd118c7b3c03dd8dfef49d170e97317e1eb5fd7713764c632a62a3e873921b"
+    },
+    "artifact/ponpoko-kart/capability/before/machdep.cpu.brand_string-stdout.log": {
+      "bytes": 41,
+      "sha256": "8654db3d299186d3074bea1db036d2b0937f406974389fbd19e4ee2bad90ab20"
+    },
+    "artifact/ponpoko-kart/capability/before/machdep.cpu.brand_string-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/before/sysctl.proc_translated-command.json": {
+      "bytes": 183,
+      "sha256": "9d54c966ff00ac7f8b7c2ba8ebe15b287f37f93a7f816c7684ea36ee1ffda21d"
+    },
+    "artifact/ponpoko-kart/capability/before/sysctl.proc_translated-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/before/sysctl.proc_translated-stderr.log": {
+      "bytes": 45,
+      "sha256": "ef3afe19e57b67a85363d60d9b561e019beb8cb7ff0eaab14884a718c189a368"
+    },
+    "artifact/ponpoko-kart/capability/before/hw.optional.arm64-command.json": {
+      "bytes": 173,
+      "sha256": "0f6808315524e6f66b684c3ee52083695db8a6904c4aa23f113f68cb3d862c16"
+    },
+    "artifact/ponpoko-kart/capability/before/hw.optional.arm64-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/before/hw.optional.arm64-stderr.log": {
+      "bytes": 40,
+      "sha256": "d0c8f4afa46009ff4fd8cf9cc64698c8bf23cd7fe4373a69c344a629be7866f6"
+    },
+    "artifact/ponpoko-kart/capability/before/original-jobs-stdout.log": {
+      "bytes": 9102,
+      "sha256": "96a79598b0d83b4910bf7eeb7fa1f71d972d92957189a4414cd703deb4d336e0"
+    },
+    "artifact/ponpoko-kart/capability/before/original-jobs-command.json": {
+      "bytes": 10276,
+      "sha256": "d9dfe060f053b6c4f7947e5d6a37a3cda56a6f75c812ef0ef3ab8fa9252c6faa"
+    },
+    "artifact/ponpoko-kart/capability/before/original-jobs-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/before/probe.json": {
+      "bytes": 1013,
+      "sha256": "9fa3123bc67099b564783941e61e7131a19d35def53f7702e45facdc7cd833b3"
+    },
+    "artifact/ponpoko-kart/capability/before/executed-webgl-probe.swift": {
+      "bytes": 4548,
+      "sha256": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156"
+    },
+    "artifact/ponpoko-kart/capability/before/executed-macos-capability.py": {
+      "bytes": 9736,
+      "sha256": "57432b5209545faa5bb1b759a671d69c71358108b35caf0a73a8e789271d57db"
+    },
+    "artifact/ponpoko-kart/capability/before/system-version-command.json": {
+      "bytes": 172,
+      "sha256": "91eb9458ed2110d98645d7456c479a08092fdc9944d9a6bbbba6b068057dcd5d"
+    },
+    "artifact/ponpoko-kart/capability/before/system-version-stdout.log": {
+      "bytes": 66,
+      "sha256": "31fd674ddb951680692d7b68cafdeab5baa6b3e82aae843269dad73b53f25fc5"
+    },
+    "artifact/ponpoko-kart/capability/before/system-version-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/before/xcode-version-command.json": {
+      "bytes": 148,
+      "sha256": "887a106072f7fc09d2bd6d21fb0be300ad36891e657d9e183993eadbcad2dfee"
+    },
+    "artifact/ponpoko-kart/capability/before/xcode-version-stdout.log": {
+      "bytes": 30,
+      "sha256": "a8be4f9af0a29137fe7e59b9928056d4a0df297bb46ba40f80eaa6b0ae982f12"
+    },
+    "artifact/ponpoko-kart/capability/before/xcode-version-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/before/swift-version-command.json": {
+      "bytes": 247,
+      "sha256": "3586a8fbc52c45419c37b83e47b3a39e0b2aad30a247c56ad5fe087272f608d8"
+    },
+    "artifact/ponpoko-kart/capability/before/swift-version-stdout.log": {
+      "bytes": 98,
+      "sha256": "2f61d43a1c586a77ea87f861460148fb04bce0e3c3b974c6488cc9abdd93b303"
+    },
+    "artifact/ponpoko-kart/capability/before/swift-version-stderr.log": {
+      "bytes": 30,
+      "sha256": "c7ad56a9c04acf7eb234f7875b4638c0572f5cd5c6b96bc2a18297489dc922b6"
+    },
+    "artifact/ponpoko-kart/capability/before/sdk-version-command.json": {
+      "bytes": 145,
+      "sha256": "5f97fdcfb0c9c73944d7ce604e73219ab48d9975e9c5fe291d7c0caac641ebb1"
+    },
+    "artifact/ponpoko-kart/capability/before/sdk-version-stdout.log": {
+      "bytes": 5,
+      "sha256": "521fbd942d19d4f08ee3ac22fe5e1fee54d05fb48db0d8d179461b8195d210eb"
+    },
+    "artifact/ponpoko-kart/capability/before/sdk-version-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/before/sdk-path-command.json": {
+      "bytes": 241,
+      "sha256": "237599bc4232356f931a8bd3fec99aa71c03db6820a2bf7dc8470e2790d3cb3f"
+    },
+    "artifact/ponpoko-kart/capability/before/sdk-path-stdout.log": {
+      "bytes": 104,
+      "sha256": "b965d7d8db9e3bfddbe97a5d44090aab2003ae49d0abf441beee55cca9162e2f"
+    },
+    "artifact/ponpoko-kart/capability/before/sdk-path-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/before/WebKit-Info.plist": {
+      "bytes": 1407,
+      "sha256": "67e6498314c5aebd15c13f976c272786b9af0e30f045ad3a5a104348c627aef5"
+    },
+    "artifact/ponpoko-kart/capability/before/compile-probe-command.json": {
+      "bytes": 561,
+      "sha256": "f9d18dee8bceb736a042eac9e507f444d3ca572541c924afcc654f258df4b3da"
+    },
+    "artifact/ponpoko-kart/capability/before/compile-probe-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/before/compile-probe-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/before/sign-probe-command.json": {
+      "bytes": 256,
+      "sha256": "89d2d39c701f4e639eba75db6497d5e7272190085549224edddc23858286f495"
+    },
+    "artifact/ponpoko-kart/capability/before/sign-probe-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/before/sign-probe-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/before/probe-command.json": {
+      "bytes": 246,
+      "sha256": "d1dce6468e55c01b2e74302a60d701c96af0a87d641fd174e4a30bb683a93acb"
+    },
+    "artifact/ponpoko-kart/capability/before/probe-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/before/probe-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/report.json": {
+      "bytes": 7182,
+      "sha256": "e881cb5d34c660aac252c9ddbd9830cd490d94454a99c09e4a48d98c2446108f"
+    },
+    "artifact/ponpoko-kart/capability/after/hw.machine-command.json": {
+      "bytes": 133,
+      "sha256": "7940aae4a4a382abde9dadab6b54426715de5297832dff6d5156c12cab908242"
+    },
+    "artifact/ponpoko-kart/capability/after/hw.machine-stdout.log": {
+      "bytes": 7,
+      "sha256": "aaf631698ae5160ceb04a97681a14887fdcab47cd6e0f163c87485b3b1340b62"
+    },
+    "artifact/ponpoko-kart/capability/after/hw.machine-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/machdep.cpu.brand_string-command.json": {
+      "bytes": 181,
+      "sha256": "6bfd118c7b3c03dd8dfef49d170e97317e1eb5fd7713764c632a62a3e873921b"
+    },
+    "artifact/ponpoko-kart/capability/after/machdep.cpu.brand_string-stdout.log": {
+      "bytes": 41,
+      "sha256": "8654db3d299186d3074bea1db036d2b0937f406974389fbd19e4ee2bad90ab20"
+    },
+    "artifact/ponpoko-kart/capability/after/machdep.cpu.brand_string-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/sysctl.proc_translated-command.json": {
+      "bytes": 183,
+      "sha256": "9d54c966ff00ac7f8b7c2ba8ebe15b287f37f93a7f816c7684ea36ee1ffda21d"
+    },
+    "artifact/ponpoko-kart/capability/after/sysctl.proc_translated-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/sysctl.proc_translated-stderr.log": {
+      "bytes": 45,
+      "sha256": "ef3afe19e57b67a85363d60d9b561e019beb8cb7ff0eaab14884a718c189a368"
+    },
+    "artifact/ponpoko-kart/capability/after/hw.optional.arm64-command.json": {
+      "bytes": 173,
+      "sha256": "0f6808315524e6f66b684c3ee52083695db8a6904c4aa23f113f68cb3d862c16"
+    },
+    "artifact/ponpoko-kart/capability/after/hw.optional.arm64-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/hw.optional.arm64-stderr.log": {
+      "bytes": 40,
+      "sha256": "d0c8f4afa46009ff4fd8cf9cc64698c8bf23cd7fe4373a69c344a629be7866f6"
+    },
+    "artifact/ponpoko-kart/capability/after/original-jobs-stdout.log": {
+      "bytes": 9102,
+      "sha256": "96a79598b0d83b4910bf7eeb7fa1f71d972d92957189a4414cd703deb4d336e0"
+    },
+    "artifact/ponpoko-kart/capability/after/original-jobs-command.json": {
+      "bytes": 10276,
+      "sha256": "d9dfe060f053b6c4f7947e5d6a37a3cda56a6f75c812ef0ef3ab8fa9252c6faa"
+    },
+    "artifact/ponpoko-kart/capability/after/original-jobs-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/probe.json": {
+      "bytes": 1013,
+      "sha256": "9fa3123bc67099b564783941e61e7131a19d35def53f7702e45facdc7cd833b3"
+    },
+    "artifact/ponpoko-kart/capability/after/executed-webgl-probe.swift": {
+      "bytes": 4548,
+      "sha256": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156"
+    },
+    "artifact/ponpoko-kart/capability/after/executed-macos-capability.py": {
+      "bytes": 9736,
+      "sha256": "57432b5209545faa5bb1b759a671d69c71358108b35caf0a73a8e789271d57db"
+    },
+    "artifact/ponpoko-kart/capability/after/system-version-command.json": {
+      "bytes": 172,
+      "sha256": "91eb9458ed2110d98645d7456c479a08092fdc9944d9a6bbbba6b068057dcd5d"
+    },
+    "artifact/ponpoko-kart/capability/after/system-version-stdout.log": {
+      "bytes": 66,
+      "sha256": "31fd674ddb951680692d7b68cafdeab5baa6b3e82aae843269dad73b53f25fc5"
+    },
+    "artifact/ponpoko-kart/capability/after/system-version-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/xcode-version-command.json": {
+      "bytes": 148,
+      "sha256": "887a106072f7fc09d2bd6d21fb0be300ad36891e657d9e183993eadbcad2dfee"
+    },
+    "artifact/ponpoko-kart/capability/after/xcode-version-stdout.log": {
+      "bytes": 30,
+      "sha256": "a8be4f9af0a29137fe7e59b9928056d4a0df297bb46ba40f80eaa6b0ae982f12"
+    },
+    "artifact/ponpoko-kart/capability/after/xcode-version-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/swift-version-command.json": {
+      "bytes": 247,
+      "sha256": "3586a8fbc52c45419c37b83e47b3a39e0b2aad30a247c56ad5fe087272f608d8"
+    },
+    "artifact/ponpoko-kart/capability/after/swift-version-stdout.log": {
+      "bytes": 98,
+      "sha256": "2f61d43a1c586a77ea87f861460148fb04bce0e3c3b974c6488cc9abdd93b303"
+    },
+    "artifact/ponpoko-kart/capability/after/swift-version-stderr.log": {
+      "bytes": 30,
+      "sha256": "c7ad56a9c04acf7eb234f7875b4638c0572f5cd5c6b96bc2a18297489dc922b6"
+    },
+    "artifact/ponpoko-kart/capability/after/sdk-version-command.json": {
+      "bytes": 145,
+      "sha256": "5f97fdcfb0c9c73944d7ce604e73219ab48d9975e9c5fe291d7c0caac641ebb1"
+    },
+    "artifact/ponpoko-kart/capability/after/sdk-version-stdout.log": {
+      "bytes": 5,
+      "sha256": "521fbd942d19d4f08ee3ac22fe5e1fee54d05fb48db0d8d179461b8195d210eb"
+    },
+    "artifact/ponpoko-kart/capability/after/sdk-version-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/sdk-path-command.json": {
+      "bytes": 241,
+      "sha256": "237599bc4232356f931a8bd3fec99aa71c03db6820a2bf7dc8470e2790d3cb3f"
+    },
+    "artifact/ponpoko-kart/capability/after/sdk-path-stdout.log": {
+      "bytes": 104,
+      "sha256": "b965d7d8db9e3bfddbe97a5d44090aab2003ae49d0abf441beee55cca9162e2f"
+    },
+    "artifact/ponpoko-kart/capability/after/sdk-path-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/WebKit-Info.plist": {
+      "bytes": 1407,
+      "sha256": "67e6498314c5aebd15c13f976c272786b9af0e30f045ad3a5a104348c627aef5"
+    },
+    "artifact/ponpoko-kart/capability/after/compile-probe-command.json": {
+      "bytes": 561,
+      "sha256": "95b16296ed11334fb0c8033adc0b6d08eae1eed7ace1cf076f3d5e78ad527b5c"
+    },
+    "artifact/ponpoko-kart/capability/after/compile-probe-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/compile-probe-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/sign-probe-command.json": {
+      "bytes": 256,
+      "sha256": "908e4a15eaf8f15a44142fc90bb01c6c39818243be64394129c1b81ab9852b6d"
+    },
+    "artifact/ponpoko-kart/capability/after/sign-probe-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/sign-probe-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/probe-command.json": {
+      "bytes": 245,
+      "sha256": "96028d9e375cbed20387f6d4f09c785a4a5d6c345252c016d0516af36286a7a7"
+    },
+    "artifact/ponpoko-kart/capability/after/probe-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifact/ponpoko-kart/capability/after/probe-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "assessmentScope": "per-game",
+  "batchFailed": true,
+  "originalBatchStatuses": {
+    "macos-latest": "failed",
+    "macos-15-intel": "failed"
+  },
+  "targetVerified": true,
+  "targetVerificationMeaning": "Target meets its unchanged coverage policy; consult verificationCoverage for any explicitly unverified Intel mode",
+  "failedOtherGames": [
+    {
+      "runner": "macos-latest",
+      "game": "backroad-rally",
+      "status": "failed"
+    },
+    {
+      "runner": "macos-15-intel",
+      "game": "backroad-rally",
+      "status": "failed"
+    },
+    {
+      "runner": "macos-15-intel",
+      "game": "night-racer",
+      "status": "failed"
+    }
+  ]
+}

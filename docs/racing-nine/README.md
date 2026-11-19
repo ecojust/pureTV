@@ -2,7 +2,7 @@
 
 已检查扩充前 README 中的 **31 个赛车候选**，以画面与玩法各 **50 分**选出以下 **9 款**。30款有分，F1因缺少足够清晰的赛中画面暂不评分；分数是本次有范围限制的评审估计，不是外部评分或 GitHub 星标。
 
-**九款三平台适配进行中，已提供 [Kart Rush Android TV 0.1.0](../../joystick-games/kart-rush/kart-rush-0.1.0.apk)。** 该包两种原生模式各52项实际手柄检查通过，其他平台仍分别验证。目标是 Android TV、macOS 通用包（Apple Silicon／Intel）与 Windows x64，支持 pureTV 九键手柄、默认 TCP 63485、真实连接 ID、断线／失焦取消和手动恢复。
+**九款三平台适配进行中，已提供 [Kart Rush Android TV 0.1.0](../../joystick-games/kart-rush/kart-rush-0.1.0.apk)。** 该包两种原生模式各52项实际手柄检查通过；另已提供 [Ponpoko Kart](../../joystick-games/ponpoko-kart/)、[Penguintrack](../../joystick-games/penguintrack/)、[Last Track](../../joystick-games/last-track/) 和 [Dirt Crown](../../joystick-games/dirt-crown/) 的 macOS DMG／ZIP。四款 Mac 包均通过 Apple Silicon 原生、端口占用及 Rosetta 运行检查，Intel 图形运行仍未验证；未经过 Apple 公证。其他平台继续验证。目标是 Android TV、macOS 通用包（Apple Silicon／Intel）与 Windows x64，支持 pureTV 九键手柄、默认 TCP 63485、真实连接 ID、断线／失焦取消和手动恢复。
 
 ## 入选九款
 

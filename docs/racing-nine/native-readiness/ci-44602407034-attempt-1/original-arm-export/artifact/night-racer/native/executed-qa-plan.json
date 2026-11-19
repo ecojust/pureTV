@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "storageRestartRequired": true,
+  "pauseStablePaths": [
+    "gameplay.raceTime",
+    "gameplay.playerX",
+    "gameplay.playerZ",
+    "gameplay.heading",
+    "gameplay.speed",
+    "gameplay.nitro",
+    "gameplay.coins"
+  ],
+  "steps": [
+    {
+      "name": "Start and wait for the original countdown to finish",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 200,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.state",
+          "op": "eq",
+          "value": "race"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "Accelerate after the original countdown",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 7000,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.state",
+          "op": "eq",
+          "value": "race"
+        },
+        {
+          "path": "gameplay.speed",
+          "op": "gt",
+          "value": 1
+        },
+        {
+          "path": "gameplay.playerX",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Steer left while accelerating",
+      "keys": [
+        "UP",
+        "LEFT"
+      ],
+      "holdMs": 1400,
+      "expect": [
+        {
+          "path": "gameplay.heading",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Steer right while accelerating",
+      "keys": [
+        "UP",
+        "RIGHT"
+      ],
+      "holdMs": 1400,
+      "expect": [
+        {
+          "path": "gameplay.heading",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Use one original nitro bottle with B",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.bottles",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Change the original camera with Y",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.camera",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Reset to the original track with X",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "lt",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Pause the actual race",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Resume only on explicit input",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ]
+}
