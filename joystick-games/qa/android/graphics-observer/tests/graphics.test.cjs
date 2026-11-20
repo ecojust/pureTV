@@ -21,3 +21,17 @@ sandbox.location={origin:'null',pathname:'blank',href:'about:blank'};const qa=sa
 const initial=vm.runInNewContext(source,sandbox);assert.equal(initial.pendingInitialDocument,true);assert.equal(initial.url,'about:blank');assert.equal(initial.graphicsRead,false);assert.equal(snapshotCalls,1);
 sandbox.window.JoystickGameQA=qa;assert.equal(vm.runInNewContext(source,sandbox).error,'Unexpected target document');assert.equal(snapshotCalls,1);assert.equal(contextCalls,0);
 console.log('Graphics read-only boundary fixture: passed (no GL context calls, no native polls; bounded resources; original state unchanged)');
+
+sandbox.location={origin:'https://game-kit.invalid',pathname:'/tv.html',href:'https://game-kit.invalid/tv.html'};
+sandbox.backroadGlObservation=true;
+sandbox.document.getElementById=()=>null;
+canvas.getContext=(kind)=>{
+  assert.equal(kind,'webgl2');contextCalls++;
+  return {getSupportedExtensions:()=>['EXT_color_buffer_half_float'],getExtension:()=>null,
+    isContextLost:()=>false,getInternalformatParameter:()=>[],checkFramebufferStatus:()=>0x8cd5,getParameter:()=>'',getContextAttributes:()=>({alpha:true})};
+};
+const caps=vm.runInNewContext(source,sandbox);
+assert.equal(caps.contextRead,true);assert.equal(contextCalls,1);assert.equal(caps.extColorBufferFloat,false);
+assert.equal(caps.extColorBufferHalfFloat,true);assert.equal(caps.unmaskedRenderer,null);
+sandbox.document.querySelectorAll=()=>[canvas,canvas];
+assert.equal(vm.runInNewContext(source,sandbox).contextRead,false);assert.equal(contextCalls,1);

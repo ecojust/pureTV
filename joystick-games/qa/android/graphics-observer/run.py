@@ -39,7 +39,7 @@ TARGET = signer.TARGET
 ORIGINAL = signer.ORIGINAL
 PLAN_PATH = 'joystick-games/backroad-rally/qa-plan.json'
 PLAN_SHA = '8306e5b2ad54cf35eb2602db045711572e35a728478e668fc65a6fb962ad157f'
-OLD_OBSERVER = {'bytes': 16783, 'sha256': 'c8402dcc9b204e4aa405a9edae4efa72d8a2b7621f0df989b9e4bcf96ad0c4f2'}
+OLD_OBSERVER = {'bytes': 16783, 'sha256': 'd3fd4701e55a27ca9c5822d79b39635a71b802f7d44aacb722e45116d4f51a5f'}
 # Original one-based steps. Skip career/save, all driving, pause, lifecycle,
 # occupied-port and reconnection acceptance; retain every selected predicate.
 SUBSET = tuple(range(1, 21)) + tuple(range(24, 34))
@@ -122,7 +122,7 @@ def validate_binding(binding, source):
         require(all(type(item.get(k)) is type(v) and item[k] == v for k, v in expected.items()), 'Wrong original ' + key)
         require(item.get('certificateSha256') == signer.PIN, 'Wrong original certificate')
     require(game['package']['packageName'] == TARGET and game['observer']['packageName'] == 'com.ecojust.joystickqa.backroadrally', 'Original package identities')
-    require(game.get('frozenSourceInputsVerified') == 914 and game.get('currentProductionInputsUnchanged') == 887
+    require(game.get('frozenSourceInputsVerified') == 915 and game.get('currentProductionInputsUnchanged') == 887
             and game.get('assetsVerified') == 338, 'Original source/asset verification scope changed')
     return game
 
@@ -202,7 +202,7 @@ class Diagnosis:
         self.report = {'schemaVersion': 1, 'status': 'running', 'game': 'backroad-rally', 'mode': 'normal',
                        'scope': 'Graphics diagnosis only: original SDK menu subset and read-only graphics/console',
                        'formalAcceptance': False, 'visualPass': None, 'manualPixelReviewRequired': True,
-                       'modelWrites': False, 'clockOverrides': False, 'rendererChanges': False, 'glContextCalls': False,
+                       'modelWrites': False, 'clockOverrides': False, 'rendererChanges': False, 'existingGlCapabilitiesReadAtCheckpoints': True,
                        'targetApkBuilt': False, 'targetApkChanged': False, 'originalTarget': ORIGINAL,
                        'physicalTvTested': False, 'physicalPhoneTested': False, 'steps': [], 'captures': [],
                        'notTested': ['career/save', 'driving-input acceptance', 'pause/resume', 'reconnect', 'occupied port', 'storage restart']}
@@ -234,7 +234,7 @@ class Diagnosis:
         return result.stdout
 
     def get(self, endpoint, timeout=15, save=None, deadline=None):
-        require(endpoint in ('status', 'console', 'graphics'), 'Read-only Observer endpoint')
+        require(endpoint in ('status', 'console', 'graphics', 'capabilities'), 'Read-only Observer endpoint')
         entry = {'endpoint': endpoint, 'startedAt': time.time(), 'timeoutSeconds': timeout}
         try:
             def read():
@@ -428,6 +428,7 @@ class Diagnosis:
 
     def capture(self, label):
         before = self.get('graphics', save=label + '-graphics-before.json')
+        self.get('capabilities', save=label + '-capabilities.json')
         self.get('console', save=label + '-console.json')
         self.get('status', save=label + '-status.json')
         image = self.command('exec-out', 'screencap', '-p', limit=16 * 1024 * 1024, binary=label + '.png')
@@ -512,7 +513,7 @@ class Diagnosis:
                     self.report['finalSystemScreenshot'] = screen
                 except Exception as error: self.report['finalSystemScreenshot'] = {'status': 'unavailable', 'errorType': type(error).__name__}
             if hasattr(self, 'port'):
-                for endpoint in ('status', 'console', 'graphics'):
+                for endpoint in ('status', 'console', 'graphics', 'capabilities'):
                     try: self.get(endpoint, save='final-' + endpoint + '.json')
                     except Exception as error: self.report.setdefault('finalReadErrors', {})[endpoint] = type(error).__name__
             for client in self.clients: client.disconnect()

@@ -144,9 +144,20 @@ class DriverBoundaries(unittest.TestCase):
         after['url'] = driver.ENTRY; after['cachedGame']['pollCount'] = True
         self.assertFalse(driver.fresh(after, self.state))
 
-    def test_real_original_binding_exact_source_and_scope(self):
+    def test_candidate_binding_exact_source_and_scope(self):
         binding = json.loads((FROZEN / 'backroad-rally/verified-inputs/input-verification.json').read_text())
         with patch.dict(os.environ, {'GITHUB_RUN_ID': binding['qaRunId']}):
+            with self.assertRaises(AssertionError):
+                driver.validate_binding(binding, binding['qaSourceSha'])
+            # Adapt the preserved v7 layout to the independently pinned v0.1.1 identities.
+            expected = driver.ORIGINAL
+            binding.update(artifactSourceSha=expected['sourceSha'], artifactRunId=str(expected['runId']))
+            binding['artifactOrigin'].update(artifactRunId=str(expected['runId']), artifactSourceSha=expected['sourceSha'],
+                artifactId=expected['artifactId'], zip={'bytes':expected['artifactBytes'],'sha256':expected['artifactSha256']})
+            target = binding['games'][0]
+            target.update(frozenSourceInputsVerified=915)
+            target['package'].update(bytes=expected['bytes'],sha256=expected['sha256'])
+            target['observer'].update(driver.OLD_OBSERVER)
             driver.validate_binding(binding, binding['qaSourceSha'])
             mutations = [lambda b: b.update(localPreflightOnly=True), lambda b: b.update(status='failed'),
                          lambda b: b.update(qaRunId='other'), lambda b: b.update(qaSourceSha='0'*40),

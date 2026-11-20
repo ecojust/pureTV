@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  // Test-only observation. Do not call getContext: it can create a new context.
+  // Only the capabilities endpoint reads the one canvas that the initialized game owns.
   // No framebuffer reads, renderer setters, clock changes, native input polls,
   // event hooks, storage writes or resource fetches are performed here.
   // The frozen host posts loadUrl only after its asynchronous room startup.
@@ -49,6 +49,39 @@
       centerPoint:{x:x,y:y},centerStack:stack,
       contextRead:false,contextReason:'No existing context reference is exposed. getContext is deliberately not called.'};
   });
+  if (typeof backroadGlObservation !== 'undefined' && backroadGlObservation) {
+    var owned = document.querySelectorAll('#app > canvas');
+    var previous = location.href === 'https://game-kit.invalid/tv.html'
+      || location.href === 'https://game-kit.invalid/tv.html?mode=quick&stage=finland&car=swift&cond=stage&weather=stage';
+    if (!previous || !cached || cached.game !== 'backroad-rally' || cached.renderer !== 'webgl2'
+        || cached.webglVersion !== 2 || !(cached.frames > 0) || owned.length !== 1) {
+      return {contextRead:false, reason:'No initialized Backroad WebGL2 canvas at this checkpoint', url:location.href};
+    }
+    // createRenderer appends this canvas only after successful initialization.
+    // Calling getContext with the same type returns its existing context.
+    var gl = owned[0].getContext('webgl2');
+    if (!gl) return {contextRead:false, reason:'Existing WebGL2 context unavailable', url:location.href};
+    var supported = gl.getSupportedExtensions() || [];
+    var debug = gl.getExtension('WEBGL_debug_renderer_info');
+    var frameHud = document.getElementById('frame-hud');
+    var formats = {};
+    ['RGBA8','RGBA16F','DEPTH_COMPONENT24'].forEach(function(name) {
+      var samples = gl.getInternalformatParameter(gl.RENDERBUFFER, gl[name], gl.SAMPLES);
+      formats[name] = samples ? Array.from(samples) : null;
+    });
+    return {contextRead:true, url:location.href, stage:cached.stage, frames:cached.frames,
+      currentFramebufferStatus:gl.checkFramebufferStatus(gl.FRAMEBUFFER),
+      defaultFramebufferBound:gl.getParameter(gl.FRAMEBUFFER_BINDING) === null,
+      samplesPerRenderbufferFormat:formats,
+      contextLost:gl.isContextLost(), drawingBuffer:[gl.drawingBufferWidth,gl.drawingBufferHeight],
+      extColorBufferFloat:supported.indexOf('EXT_color_buffer_float') !== -1,
+      extColorBufferHalfFloat:supported.indexOf('EXT_color_buffer_half_float') !== -1,
+      vendor:gl.getParameter(gl.VENDOR), renderer:gl.getParameter(gl.RENDERER),
+      unmaskedVendor:debug ? gl.getParameter(debug.UNMASKED_VENDOR_WEBGL) : null,
+      unmaskedRenderer:debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : null,
+      version:gl.getParameter(gl.VERSION), contextAttributes:gl.getContextAttributes(),
+      frameHud:frameHud ? limit(frameHud.textContent,2048) : null};
+  }
   var resources = performance.getEntriesByType('resource');
   var selected = resources.slice(-96).map(function(r){
     return {name:limit(r.name,1024),initiatorType:r.initiatorType,duration:r.duration,
