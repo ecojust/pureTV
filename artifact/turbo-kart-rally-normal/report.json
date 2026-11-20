@@ -1,0 +1,545 @@
+{
+  "game": "turbo-kart-rally",
+  "targetPackage": "com.ecojust.joystick.turbokartrally",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": false,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "f5b9743be438b715085cc58e119da81eceb6c022",
+  "apk": {
+    "path": "/home/runner/work/_temp/signed/packages/turbo-kart-rally/turbo-kart-rally-0.1.0.apk",
+    "bytes": 562352,
+    "sha256": "a60e60f347bb8d04858fe6345aac1a6fb80d4c28af00463f385ebd06d4f9047f"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/signed/observers/turbo-kart-rally/observer-turbo-kart-rally.apk",
+    "bytes": 16783,
+    "sha256": "cae5cc70f7207a5570708d2ebfec985694c7f398add33b25ac39c1a55c91481e"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 77581,
+      "sha256": "fa5ac4b08a35d2a9ae28bceb5671feba1b4993f1c3adbcfd6ee50afc6274a236"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11491,
+      "sha256": "9c10a920e18a094c2650ab86924192cc9745daf8b0a792a732639295fa52ff0e"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 13196,
+      "sha256": "08fd35de2a0e64ea20a57e2ea7b2da41fa80df8ab167a072d86fa3f06eec8bd4"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 8288,
+      "sha256": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9"
+    },
+    "joystick-games/turbo-kart-rally/qa-plan.json": {
+      "bytes": 2598,
+      "sha256": "eb2aeaef96351b3d58e72c22b38af7d7f596a3869b6c9a474fe5703a9d3fe62d"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 10903,
+      "sha256": "fdf40f6d67eafd45ce9914ba1ae508ed2befc966b8bd4861f98a4cc9cd7c05f0"
+    }
+  },
+  "tests": [
+    {
+      "name": "catalog scenario starts with fresh app data before launch",
+      "status": "passed",
+      "details": {
+        "mode": "fresh-install-app-data",
+        "targetPackage": "com.ecojust.joystick.turbokartrally",
+        "method": "pm clear",
+        "phase": "before-target-launch",
+        "status": "passed",
+        "stdout": "Success"
+      }
+    },
+    {
+      "name": "installed target launches initialized game menu with no controller card",
+      "status": "passed",
+      "details": null
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "initial-menu",
+      "wallTime": 1795210491.4425564,
+      "snapshot": {
+        "game": {
+          "game": "turbo-kart-rally",
+          "frames": 5,
+          "stage": "menu",
+          "paused": false,
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "audioState": "locked",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "transport": null,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "buttonX": false,
+                "buttonY": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0,
+                "transport": "phone",
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:44007/?room=rXphYE2KpGAY2QwH5Mm-xK8XLI3d7KdU",
+              "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdfSURBVHic7d1BbgM5FgXB8WDuf2X1urWYgkCxPksZsbcly3aCiwfW3+v1ev0HIOi/028AYIoAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGT97+4X/Pv7u/slb/V6vZa+/urzmf7+q7+/1fd/Zfrnu7L79/d0u/8+3jkBAlkCCGQJIJAlgECWAAJZAghkCSCQdfsO8MrdO6BPTe/Edr/+9Pff/fNP7+h27zzr/z+fcgIEsgQQyBJAIEsAgSwBBLIEEMgSQCDruB3glekd3qrp9z+9w1s1fR/i9PdfNf33dxonQCBLAIEsAQSyBBDIEkAgSwCBLAEEsh63A3y66fvuTn/u7/TOcNXTdnB1ToBAlgACWQIIZAkgkCWAQJYAAlkCCGTZAR5m931+q69/uun7/E6/D5B/cwIEsgQQyBJAIEsAgSwBBLIEEMgSQCDrcTvAX99RTe/ITr+Pb3qHN31f46pf///5lBMgkCWAQJYAAlkCCGQJIJAlgECWAAJZx+0AT9+hrZq+b87Xn/31q379/+fbnACBLAEEsgQQyBJAIEsAgSwBBLIEEMi6fQfoPrL/b3rHdfrr737u8fTPf8X/z3c5AQJZAghkCSCQJYBAlgACWQIIZAkgkPX3unlYtHtn9es7r9X3v/u5uNPP3Z3++ab/vqafG/20naITIJAlgECWAAJZAghkCSCQJYBAlgACWcc9F3h1ZzW9U5rege32tJ3Xt53+XOHTd4zT/5/vnACBLAEEsgQQyBJAIEsAgSwBBLIEEMg6bgd45en3ve3eia2avu/PzrC1w5vmBAhkCSCQJYBAlgACWQIIZAkgkCWAQNbtzwW+Mv1c2FXTO6vTX3/a6TvMVaffV3ja5+cECGQJIJAlgECWAAJZAghkCSCQJYBA1uN2gKfv2E7fSf3660//fLvZyX6XEyCQJYBAlgACWQIIZAkgkCWAQJYAAlnHPRd4+rm8q18/fZ/a6udz2k7r207//Zz++T79/b9zAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOv2HeDTd0RPf/9Xdu/Ydn8+p3/+u3eoq6Z3qHdzAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOu4+wBXTe/Mdu+gdu+0pndcu19/+r6+03++3U7baToBAlkCCGQJIJAlgECWAAJZAghkCSCQddwO8Ok7uunnGj99x3bl9Pd/+uc/vcM77T5NJ0AgSwCBLAEEsgQQyBJAIEsAgSwBBLKO2wFe2b2ze/rO7+mmd3Kr3//Xd3bT/x/f5gQIZAkgkCWAQJYAAlkCCGQJIJAlgEDW7TvAp+/oTr+PbXrnNW33+5veGV6Z/v2ftvO74gQIZAkgkCWAQJYAAlkCCGQJIJAlgEDW7TvA03dCu3dUqzur3c8FfvqObPr7X5n++aZ3nNOv/84JEMgSQCBLAIEsAQSyBBDIEkAgSwCBrMc9F/jKr9/3t3tnN/3+n25653e66b+/d06AQJYAAlkCCGQJIJAlgECWAAJZAghkHfdc4CvTO6vp97/7+0/vtKY/39XXP+2+u7s9bcfoBAhkCSCQJYBAlgACWQIIZAkgkCWAQNZxzwX+9efWXjl9B/f0z+/0neT0jvHKaTu+VU6AQJYAAlkCCGQJIJAlgECWAAJZAghk/b0Ou8Ds9B3U0/3ajutTT78P8vTXn75P8lNOgECWAAJZAghkCSCQJYBAlgACWQIIZN2+A/z1++Smd06n79hWTX++q6Y/v1VP//zfOQECWQIIZAkgkCWAQJYAAlkCCGQJIJB1+3OBV3dE0zuk6ecS/7rp5xJP70Cf/lzf6fsOP+UECGQJIJAlgECWAAJZAghkCSCQJYBA1u07wKffh3Zlesd3+k5x+vf/6zu73TvE6d/ftzkBAlkCCGQJIJAlgECWAAJZAghkCSCQdfsO8Mr0ju7K6Tuv1a+f3hFO35d4+s5t+uc//f/zU06AQJYAAlkCCGQJIJAlgECWAAJZAghkHbcDvLJ7p3X6zunpO7sr0/cNTu/spneI0zvQuzkBAlkCCGQJIJAlgECWAAJZAghkCSCQ9bgd4NPt3lmt7simnws8vROb3lnu/vpV0z/ftzkBAlkCCGQJIJAlgECWAAJZAghkCSCQZQd4s9N2UJ++/u4d2O77/HZ//tM7vd2vP/33+W1OgECWAAJZAghkCSCQJYBAlgACWQIIZD1uB/hrO6R30/fxTd8naCe3Zvq+vtN3ru+cAIEsAQSyBBDIEkAgSwCBLAEEsgQQyDpuB7h7B3a603dq9d/PbtM7vd1O2wk6AQJZAghkCSCQJYBAlgACWQIIZAkgkPX3Ou2CLoCbOAECWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkPUPJvfrvf+l0QcAAAAASUVORK5CYII=",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Turbo Kart Rally",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 5,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": [],
+          "gameplay": {
+            "mode": "title",
+            "characterIndex": 0,
+            "menuZone": "grid",
+            "option": 0,
+            "playerX": 0,
+            "playerZ": 0,
+            "heading": 0,
+            "speed": 0,
+            "progress": 0,
+            "driftHeld": false,
+            "lookBack": false,
+            "driftLevel": 0,
+            "boost": 0,
+            "racers": 0,
+            "lap": 0,
+            "time": 0,
+            "course": "",
+            "reducedEffects": true
+          }
+        },
+        "info": {
+          "url": "http://10.0.2.15:44007/?room=rXphYE2KpGAY2QwH5Mm-xK8XLI3d7KdU",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Turbo Kart Rally",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 640,
+              "height": 360,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 440,
+              "height": 440,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            },
+            {
+              "width": 320,
+              "height": 320,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "backroadGhostLabels": [],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 775,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 338
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.turbokartrally"
+      }
+    }
+  ],
+  "captures": [],
+  "installationSetup": {
+    "mode": "fresh-install-app-data",
+    "targetPackage": "com.ecojust.joystick.turbokartrally",
+    "method": "pm clear",
+    "phase": "before-target-launch",
+    "status": "passed",
+    "stdout": "Success"
+  },
+  "observerTransportEvents": [
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210484.7668097,
+      "endedAt": 1795210484.7900825,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210484.9105284,
+      "endedAt": 1795210484.91198,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210485.032923,
+      "endedAt": 1795210485.0350487,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210485.1570368,
+      "endedAt": 1795210485.1583009,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210485.278878,
+      "endedAt": 1795210485.28016,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210485.4006667,
+      "endedAt": 1795210485.4059622,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210485.5264509,
+      "endedAt": 1795210485.528561,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210485.6491518,
+      "endedAt": 1795210485.6511114,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210485.771688,
+      "endedAt": 1795210485.7768238,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210485.897532,
+      "endedAt": 1795210485.91137,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210486.0319984,
+      "endedAt": 1795210486.033488,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210486.154123,
+      "endedAt": 1795210486.1566906,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210486.2774987,
+      "endedAt": 1795210486.2865062,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-recovered",
+      "attempt": 2,
+      "priorTransportFailures": 1,
+      "startedAt": 1795210486.4071794,
+      "endedAt": 1795210486.7136295,
+      "responseFromNewGet": true
+    },
+    {
+      "snapshotCall": 8,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210493.036006,
+      "endedAt": 1795210508.0510333,
+      "errorType": "TimeoutError",
+      "error": "timed out",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 8,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795210508.1761715,
+      "endedAt": 1795210523.1917388,
+      "errorType": "TimeoutError",
+      "error": "timed out",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 8,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 14.72344742599995,
+      "startedAt": 1795210523.3125532,
+      "endedAt": 1795210526.877742,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    }
+  ],
+  "adbForwards": {
+    "observer": 42551,
+    "controller": 33775
+  },
+  "controllerService": {
+    "state": "available",
+    "serviceName": "Turbo Kart Rally",
+    "port": 63485,
+    "serviceType": "_puretv._tcp",
+    "version": "1",
+    "error": 0
+  },
+  "targetPid": "2679",
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1230, in main\n    acceptance.setup()\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 632, in setup\n    self.capture('join-before-connection', [])\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 558, in capture\n    before = self.snapshot()\n             ^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 384, in snapshot\n    value = read_observer_snapshot('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout, event)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 151, in read_observer_snapshot\n    with urlopen(url, timeout=request_timeout) as response:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 515, in open\n    response = self._open(req, data)\n               ^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 532, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1373, in http_open\n    return self.do_open(http.client.HTTPConnection, req)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1348, in do_open\n    r = h.getresponse()\n        ^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 1457, in getresponse\n    response.begin()\n  File \"/usr/lib/python3.12/http/client.py\", line 336, in begin\n    version, status, reason = self._read_status()\n                              ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 305, in _read_status\n    raise RemoteDisconnected(\"Remote end closed connection without\"\nhttp.client.RemoteDisconnected: Remote end closed connection without response\n"
+}
