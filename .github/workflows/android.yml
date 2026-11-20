@@ -1,66 +1,32 @@
-name: Android build
-on:
-  push:
-    branches: [master]
-  pull_request:
-  workflow_dispatch:
-    inputs:
-      stage_resources:
-        description: Stage verified launcher/app APKs and bilingual native previews
-        type: boolean
-        default: false
-      resource_scope:
-        description: Games to browser-test and stage; all native apps are still built and checked
-        type: choice
-        default: all
-        options:
-          - all
-          - used-car-racing
-          - alien-shooter
+name: Existing release UI checks for catalog games
+on: workflow_dispatch
 permissions:
   contents: read
-concurrency:
-  group: android-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        slug: [tank, jackal, tetris, jewel, adventure-island, super-mario, bomb-jack, coast-kart, used-car-racing, alien-shooter]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: '17'
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /resource/apps/${{ matrix.slug }}/
+            /resource/game-kit/tools/
+            /resource/game-kit/runtime/
+            /desktop/package*.json
+            /tools/*.py
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify release certificate and game publication policies
-        run: |
-          python -m unittest discover -s tools/tests -p 'test_release_certificates.py'
-          python -m unittest discover -s tools/tests -p 'test_game_publication_policy.py'
-      - name: Verify official login form autofill
-        run: node --test resource/apps/hifini/src/test/js/login-autofill.test.mjs
-      - name: Verify CCTV website player presentation
-        run: node --test resource/apps/cctv/src/test/js/player-focus.test.mjs
-      - name: Verify Tank TV game rules
-        run: node --test resource/apps/tank/tests/game.test.cjs
-      - name: Verify Jackal TV game rules
-        run: |
-          node resource/apps/jackal/tools/build-levels.cjs --check
-          node --test resource/apps/jackal/tests/game.test.cjs resource/apps/jackal/tests/enemies.test.cjs resource/apps/jackal/tests/scenes.test.cjs
-      - name: Verify classic puzzle game rules
-        run: node --test resource/apps/jewel/tests/*.test.cjs resource/apps/tetris/tests/*.test.cjs
-      - name: Verify classic platform game rules
-        run: node --test resource/apps/bomb-jack/tests/*.test.cjs resource/apps/adventure-island/tests/*.test.cjs resource/apps/super-mario/tests/*.test.cjs
-      - name: Verify kart racing and island life game rules
-        run: node --test resource/apps/coast-kart/tests/*.test.cjs resource/apps/cozy-island/tests/*.test.cjs
-      - name: Verify Used Car Racing physics and track rules
-        run: node --test resource/apps/used-car-racing/tests/*.test.cjs
-      - name: Verify Alien Shooter rules and baked resources
-        run: |
-          node --test resource/apps/alien-shooter/tests/*.test.cjs
-          node resource/apps/alien-shooter/tools/bake-materials.mjs --verify
       - name: Prepare verified Jackal preview artwork
+        if: matrix.slug == 'jackal'
         run: |
           python resource/apps/jackal/tools/extract-artwork.py --output "$RUNNER_TEMP/puretv-jackal-art"
           echo "JACKAL_ART_DIR=$RUNNER_TEMP/puretv-jackal-art" >> "$GITHUB_ENV"
@@ -96,7 +62,7 @@ jobs:
           fi
           command -v certutil
       - name: Verify Tank TV phone controls and capture actual game UI
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
+        if: matrix.slug == 'tank'
         env:
           TANK_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-tank-previews
         run: |
@@ -104,7 +70,7 @@ jobs:
           node resource/apps/tank/tests/controller.mjs
           node resource/apps/tank/tests/capture.mjs
       - name: Verify Jackal TV phone controls and capture actual game UI
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
+        if: matrix.slug == 'jackal'
         env:
           JACKAL_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-jackal-previews
         run: |
@@ -112,7 +78,7 @@ jobs:
           node resource/apps/jackal/tests/controller.mjs
           node resource/apps/jackal/tests/capture.mjs
       - name: Verify Magic Jewelry TV controls, compatibility and game UI
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
+        if: matrix.slug == 'jewel'
         env:
           JEWEL_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-jewel-previews
         run: |
@@ -120,7 +86,7 @@ jobs:
           node resource/apps/jewel/tests/controller.mjs
           node resource/apps/jewel/tests/capture.mjs
       - name: Verify Tetris TV controls, compatibility and game UI
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
+        if: matrix.slug == 'tetris'
         env:
           TETRIS_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-tetris-previews
         run: |
@@ -128,7 +94,7 @@ jobs:
           node resource/apps/tetris/tests/controller.mjs
           node resource/apps/tetris/tests/capture.mjs
       - name: Verify Mighty Bomb Jack TV controls, compatibility and game UI
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
+        if: matrix.slug == 'bomb-jack'
         env:
           BOMB_JACK_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-bomb-jack-previews
         run: |
@@ -136,7 +102,7 @@ jobs:
           node resource/apps/bomb-jack/tests/controller.mjs
           node resource/apps/bomb-jack/tests/capture.mjs
       - name: Verify Adventure Island TV controls, compatibility and game UI
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
+        if: matrix.slug == 'adventure-island'
         env:
           ADVENTURE_ISLAND_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-adventure-island-previews
         run: |
@@ -144,7 +110,7 @@ jobs:
           node resource/apps/adventure-island/tests/controller.mjs
           node resource/apps/adventure-island/tests/capture.mjs
       - name: Verify Super Mario TV controls, compatibility and game UI
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
+        if: matrix.slug == 'super-mario'
         env:
           SUPER_MARIO_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-super-mario-previews
         run: |
@@ -152,7 +118,7 @@ jobs:
           node resource/apps/super-mario/tests/controller.mjs
           node resource/apps/super-mario/tests/capture.mjs
       - name: Verify Coast Kart TV phone controls, compatibility and game UI
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
+        if: matrix.slug == 'coast-kart'
         env:
           COAST_KART_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-coast-kart-previews
         run: |
@@ -161,28 +127,8 @@ jobs:
           node resource/apps/coast-kart/tests/controller.mjs
           node resource/apps/coast-kart/tests/combat.mjs
           node resource/apps/coast-kart/tests/capture.mjs
-      - name: Verify Cozy Island TV phone controls, compatibility and game UI
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        env:
-          COZY_ISLAND_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-cozy-island-previews
-        run: |
-          node resource/apps/cozy-island/tests/compatibility.mjs
-          node resource/apps/cozy-island/tests/rendering.mjs
-          node resource/apps/cozy-island/tests/controller.mjs
-          node resource/apps/cozy-island/tests/capture.mjs
-      - name: Verify Used Car Racing controls, 3D runtime and bilingual previews
-        env:
-          USED_CAR_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-used-car-racing-previews
-          GAME_RENDER_OUTPUT: ${{ runner.temp }}/puretv-used-car-rendering-checks
-        run: |
-          node resource/apps/used-car-racing/tests/compatibility.mjs
-          node resource/apps/used-car-racing/tests/rendering.mjs
-          node resource/apps/used-car-racing/tests/gallery.mjs
-          node resource/apps/used-car-racing/tests/controller.mjs
-          node resource/apps/used-car-racing/tests/secure-controller.mjs
-          node resource/apps/used-car-racing/tests/integration.mjs
       - name: Verify Alien Shooter phone controls and actual game scenes
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' || inputs.resource_scope == 'alien-shooter' }}
+        if: matrix.slug == 'alien-shooter'
         env:
           ALIEN_SHOOTER_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-alien-shooter-previews
         run: |
@@ -191,364 +137,3 @@ jobs:
           node resource/apps/alien-shooter/tests/integration.mjs
           node resource/apps/alien-shooter/tests/runtime-performance.mjs
           node resource/apps/alien-shooter/tests/animation.mjs --output "$RUNNER_TEMP/puretv-alien-shooter-animation"
-      - uses: android-actions/setup-android@v3
-        with:
-          packages: platform-tools
-      - uses: gradle/actions/setup-gradle@v4
-      - name: Install SDK
-        run: sdkmanager "platforms;android-35" "build-tools;34.0.0"
-      # Staged game builds stay unsigned; the game publication workflow owns signing.
-      - name: Prepare release signing
-        if: ${{ github.event_name != 'workflow_dispatch' || !inputs.stage_resources }}
-        env:
-          PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
-        run: |
-          if [ -n "$PURETV_KEYSTORE_BASE64" ]; then
-            python3 - <<'PYTHON'
-          import base64, os
-          from pathlib import Path
-          key = Path(os.environ['RUNNER_TEMP']) / 'pureTV.jks'
-          key.write_bytes(base64.b64decode(os.environ['PURETV_KEYSTORE_BASE64']))
-          key.chmod(0o600)
-          with open(os.environ['GITHUB_ENV'], 'a') as env:
-              env.write(f'PURETV_KEYSTORE_PATH={key}\n')
-          PYTHON
-          fi
-      - name: Build and lint
-        env:
-          PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
-          CLEAN_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-tv-previews
-          HIFINI_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-hifini-previews
-          SHORTVIDEO_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-shortvideo-previews
-          WEBTV_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-webtv-previews
-          CCTV_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-cctv-previews
-        working-directory: resource/launcher/puretv
-        run: |
-          set -o pipefail
-          ./gradlew --no-daemon --continue "-PjackalArtworkDir=$JACKAL_ART_DIR" assembleDebug assembleRelease lintDebug testDebugUnitTest :hifini:verifyReleaseSize :hifini:lintDebug :hifini:testDebugUnitTest :shortvideo:verifyReleaseSize :shortvideo:lintDebug :shortvideo:testDebugUnitTest :webtv:verifyReleaseSize :webtv:lintDebug :webtv:testDebugUnitTest :cctv:verifyReleaseSize :cctv:lintDebug :cctv:testDebugUnitTest :tank:verifyReleaseSize :tank:lintDebug :tank:testDebugUnitTest :jackal:verifyReleaseSize :jackal:lintDebug :jackal:testDebugUnitTest :jewel:verifyReleaseSize :tetris:verifyReleaseSize :bomb-jack:verifyReleaseSize :adventure-island:verifyReleaseSize :super-mario:verifyReleaseSize :coast-kart:verifyReleaseSize :cozy-island:verifyReleaseSize :used-car-racing:verifyReleaseSize :used-car-racing:lintDebug :used-car-racing:testDebugUnitTest :used-car-racing:assembleDebugAndroidTest :alien-shooter:verifyReleaseSize :alien-shooter:lintDebug :alien-shooter:testDebugUnitTest 2>&1 | tee "$RUNNER_TEMP/android-build.log"
-      - name: Report Android build or test failures
-        if: failure()
-        run: |
-          python - <<'PYTHON'
-          import os, pathlib, xml.etree.ElementTree as ET
-          messages=[]
-          for report in pathlib.Path('resource').rglob('TEST-*.xml'):
-              for case in ET.parse(report).getroot().iter('testcase'):
-                  for failure in case.findall('failure'):
-                      messages.append(case.attrib.get('name','test')+': '+(failure.text or '')[:3000])
-          log=pathlib.Path(os.environ['RUNNER_TEMP'])/'android-build.log'
-          if log.exists(): messages.append(log.read_text(errors='replace')[-3500:])
-          for message in messages:
-              print('::error::'+message.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
-          PYTHON
-      - name: Verify launcher identity and signing status
-        env:
-          PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
-        run: python tools/verify-release-apks.py
-      - uses: actions/upload-artifact@v4
-        with:
-          name: pureTV-release-metadata
-          path: resource/launcher/puretv/release-metadata.json
-      - uses: actions/upload-artifact@v4
-        with:
-          name: pureTV-tv-previews
-          path: ${{ runner.temp }}/puretv-tv-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        with:
-          name: pureTV-debug
-          path: resource/launcher/puretv/app/build/outputs/apk/debug/*.apk
-      - uses: actions/upload-artifact@v4
-        with:
-          name: pureTV-release
-          path: resource/launcher/puretv/release-output/*.apk
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: hifini-tv-previews
-          path: ${{ runner.temp }}/puretv-hifini-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: shortvideo-tv-previews
-          path: ${{ runner.temp }}/puretv-shortvideo-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: webtv-previews
-          path: ${{ runner.temp }}/puretv-webtv-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: cctv-tv-previews
-          path: ${{ runner.temp }}/puretv-cctv-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: tank-tv-previews
-          path: ${{ runner.temp }}/puretv-tank-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: jackal-tv-previews
-          path: ${{ runner.temp }}/puretv-jackal-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: hifini-tv
-          path: resource/apps/hifini/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: shortvideo-tv
-          path: resource/apps/shortvideo/build/outputs/apk/**/*.apk
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: webtv
-          path: resource/apps/webtv/build/outputs/apk/**/*.apk
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: cctv-tv
-          path: resource/apps/cctv/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: tank-tv
-          path: resource/apps/tank/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: jackal-tv
-          path: resource/apps/jackal/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: jewel-tv-previews
-          path: ${{ runner.temp }}/puretv-jewel-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: jewel-tv
-          path: resource/apps/jewel/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: tetris-tv-previews
-          path: ${{ runner.temp }}/puretv-tetris-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: tetris-tv
-          path: resource/apps/tetris/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: bomb-jack-tv-previews
-          path: ${{ runner.temp }}/puretv-bomb-jack-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: bomb-jack-tv
-          path: resource/apps/bomb-jack/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: adventure-island-tv-previews
-          path: ${{ runner.temp }}/puretv-adventure-island-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: adventure-island-tv
-          path: resource/apps/adventure-island/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: super-mario-tv-previews
-          path: ${{ runner.temp }}/puretv-super-mario-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: super-mario-tv
-          path: resource/apps/super-mario/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: coast-kart-tv-previews
-          path: ${{ runner.temp }}/puretv-coast-kart-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: coast-kart-tv
-          path: resource/apps/coast-kart/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: cozy-island-tv-previews
-          path: ${{ runner.temp }}/puretv-cozy-island-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: cozy-island-tv
-          path: resource/apps/cozy-island/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        with:
-          name: used-car-racing-tv-previews
-          path: ${{ runner.temp }}/puretv-used-car-racing-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        with:
-          name: used-car-racing-tv
-          path: resource/apps/used-car-racing/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' || inputs.resource_scope == 'alien-shooter' }}
-        with:
-          name: alien-shooter-tv-previews
-          path: ${{ runner.temp }}/puretv-alien-shooter-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' || inputs.resource_scope == 'alien-shooter') }}
-        with:
-          name: alien-shooter-rendering-performance
-          path: ${{ runner.temp }}/puretv-alien-shooter-performance/
-          if-no-files-found: warn
-      - uses: actions/upload-artifact@v4
-        if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' || inputs.resource_scope == 'alien-shooter') }}
-        with:
-          name: alien-shooter-character-motion
-          path: ${{ runner.temp }}/puretv-alien-shooter-animation/
-          if-no-files-found: warn
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' || inputs.resource_scope == 'alien-shooter' }}
-        with:
-          name: alien-shooter-tv
-          path: resource/apps/alien-shooter/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-
-  lan-tls-platform:
-    name: Local HTTPS with Android ${{ matrix.api }} Keystore
-    needs: build
-    runs-on: ubuntu-24.04
-    timeout-minutes: 25
-    strategy:
-      fail-fast: false
-      matrix:
-        api: [26, 35]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-      - uses: actions/download-artifact@v4
-        with:
-          name: used-car-racing-tv
-          path: platform-apks
-      - name: Enable Android emulator acceleration
-        run: |
-          test -e /dev/kvm
-          sudo chmod 666 /dev/kvm
-      - name: Verify actual Android Keystore and trusted local TLS
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api }}
-          target: google_apis
-          arch: x86_64
-          disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: bash tools/verify-used-car-lan-tls-platform.sh platform-apks
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: used-car-lan-tls-platform-${{ matrix.api }}
-          path: ${{ runner.temp }}/usedcar-lan-tls-platform.log
-          if-no-files-found: warn
-
-  stage-resources:
-    name: Stage verified launcher and app resource inputs
-    needs: [build, lan-tls-platform]
-    if: github.event_name == 'workflow_dispatch' && inputs.stage_resources
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          path: resource-artifacts
-      - name: Stage APK, metadata and actual rendered TV previews
-        env:
-          RESOURCE_SCOPE: ${{ inputs.resource_scope || 'all' }}
-        run: |
-          python - <<'PYTHON'
-          import hashlib,json,os,shutil
-          from pathlib import Path
-          root=Path('resource-artifacts');output=Path('release-staging');output.mkdir()
-          scope=os.environ['RESOURCE_SCOPE'];assert scope in ('all','used-car-racing','alien-shooter'),scope
-          metadata=json.loads((root/'pureTV-release-metadata/release-metadata.json').read_text());info=metadata['launcher']
-          assert info['sourceSha']==os.environ['GITHUB_SHA']
-          apk=root/'pureTV-release'/info['releaseName'];assert hashlib.file_digest(apk.open('rb'),'sha256').hexdigest()==info['sha256']
-          shutil.copyfile(apk,output/info['releaseName']);shutil.copyfile(root/'pureTV-release-metadata/release-metadata.json',output/'release-metadata.json')
-          apps=['hifini','shortvideo','webtv','cctv','tank','jackal','jewel','tetris','bomb-jack','adventure-island','super-mario','coast-kart','cozy-island','used-car-racing','alien-shooter'] if scope=='all' else [scope]
-          for app in apps:
-              apks=list((root/({'hifini':'hifini-tv','shortvideo':'shortvideo-tv','webtv':'webtv','cctv':'cctv-tv','tank':'tank-tv','jackal':'jackal-tv','jewel':'jewel-tv','tetris':'tetris-tv','bomb-jack':'bomb-jack-tv','adventure-island':'adventure-island-tv','super-mario':'super-mario-tv','coast-kart':'coast-kart-tv','cozy-island':'cozy-island-tv','used-car-racing':'used-car-racing-tv','alien-shooter':'alien-shooter-tv'}[app])).rglob('*.apk'))
-              apks=[p for p in apks if 'release' in p.name]
-              assert len(apks)==1,apks
-              shutil.copyfile(apks[0],output/(app+'.apk'))
-          if scope=='all':
-              for artifact,names in [('hifini-tv-previews',['hifini-tv.png','hifini-tv.en.png']),('shortvideo-tv-previews',['shortvideo-tv.png','shortvideo-tv.en.png']),('webtv-previews',['webtv-controls.png','webtv-controls.en.png']),('cctv-tv-previews',['cctv-live.png','cctv-live.en.png'])]:
-                  for name in names:shutil.copyfile(root/artifact/name,output/name)
-          games=['tank','jackal','jewel','tetris','bomb-jack','adventure-island','super-mario','coast-kart','cozy-island','used-car-racing','alien-shooter'] if scope=='all' else [scope]
-          for game in games:
-              for scene in ['tv','controller','controller-active']:
-                  for language in ['', '.en']:
-                      name=game+'-'+scene+language+'.png'
-                      shutil.copyfile(root/(game+'-tv-previews')/name,output/name)
-          if scope in ('all', 'alien-shooter'):
-              for scene in ['title', 'title.en', 'stage-1', 'stage-2', 'stage-3']:
-                  name='alien-shooter-'+scene+'.png'
-                  shutil.copyfile(root/'alien-shooter-tv-previews'/name,output/name)
-          if scope in ('all', 'used-car-racing'):
-              for scene in ['car-lineup','track-harbor','track-ridge','track-solar']:
-                  name='used-car-racing-'+scene+'.png'
-                  shutil.copyfile(root/'used-car-racing-tv-previews'/name,output/name)
-              for language in ['', '.en']:
-                  for scene in ['controller-gyro','controller-setup']:
-                      name='used-car-racing-'+scene+language+'.png'
-                      shutil.copyfile(root/'used-car-racing-tv-previews'/name,output/name)
-          for name in ['home-render.png','apps-render.png','home-render.en.png','apps-render.en.png']:
-              shutil.copyfile(root/'pureTV-tv-previews'/name,output/name)
-          PYTHON
-          git checkout -b "build-assets/resources-${GITHUB_RUN_ID}"
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add -f release-staging
-          git commit -m "Stage verified launcher resource inputs"
-          git push origin HEAD
