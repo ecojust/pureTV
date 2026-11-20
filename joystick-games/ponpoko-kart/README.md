@@ -12,6 +12,8 @@ Android TV 0.1.4 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/
 
 0.1.4（versionCode 5）面向 Android API 35 构建，最低仍为 API 26。0.1.2（target 29）在 API 34 / 720p 的这次复验中，Google Play Protect 的旧目标版本警告阻止了两个模式的首次安装。安装器已经收到原包，两种场景都停在确认界面，尚未启动游戏。[旧签名包两种安装会话及原始系统画面](docs/android-0.1.2/api34.json)
 
+0.1.4 的签名 APK 已在 Android TV 14 / 720p 模拟器的两个端口模式下安装并连接。默认端口通过全部 49 项，原 SDK 收到 1,078 个匹配回复；比赛中可加速、转向、暂停、手动继续和断线重连。原生驾驶截图显示首圈第 7 名、42 km/h。占用回退通过 6 项后，在选赛道的松键观察阶段超时。[原生驾驶原图](docs/android-0.1.4/default-driving.png) · [原包、双模式明细和八张截图记录](docs/android-0.1.4/api34.json)
+
 0.1.4 的分发资源在关闭可选浮点缓冲的 Chromium 软件渲染器上完成了选人、选赛道、倒数和实际驾驶。游戏读数确认低画质水面和 512 × 512 动态阴影已生效。原始截图显示首圈第 7 名、42 km/h、对手和已连接的手柄。[驾驶截图](docs/browser-0.1.4-software/driving.png) · [按键输入、速度、帧数和范围](docs/browser-0.1.4-software/report.json)
 
 0.1.3（versionCode 4）在 WebGL 明确识别出 SwiftShader、llvmpipe 等软件渲染器时，沿用原作的低画质水面，并把赛道动态阴影调为 512 × 512。硬件 GPU 和未能识别的设备沿用原画质。对 Inaka 同一机位做实际 GPU 像素回读，软件渲染的绘制调用由 929 次降为 634 次，赛道水面、太阳直射光、车辆阴影和八名车手都保留。[画质对照、原始计时及像素值](docs/software-course-effects.json)
