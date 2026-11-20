@@ -91,11 +91,11 @@ async function play(browser, slug) {
     };
   let room, context, padContext, secondPadContext, phone, game, touch;
   if (process.env.QA_COMPACT) {
-    record.sourceCommit =
-      process.env.QA_COMPACT_SOURCE ||
-      "940490d703ee8b55c1df8dc3e6bb8796aeb262a3";
-    delete record.signedApkSha256;
-    delete record.apkSha256;
+    const receipt = require("./compact/signed-assets.json")[slug];
+    record.sourceCommit = slug === "tank"
+      ? "940490d703ee8b55c1df8dc3e6bb8796aeb262a3"
+      : "89527853fc9c81b344b797e957c73dbe35fde67c";
+    record.signedApkSha256 = receipt.apkSha256;
   }
   const file = path.join(results, slug + ".json");
   const flush = () =>

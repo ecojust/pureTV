@@ -13,10 +13,11 @@ repo = Path(os.environ["QA_REPO"])
 apk_dir = Path(os.environ["QA_SIGNED_APKS"])
 work = Path(os.environ["QA_WORKDIR"])
 games = json.loads((here / "source.json").read_text())
-signed = json.loads((here / "signed-assets.json").read_text())
+receipt_dir = here / "compact" if os.environ.get("QA_COMPACT") else here
+signed = json.loads((receipt_dir / "signed-assets.json").read_text())
 
-for slug, source in games.items():
-    receipt = signed[slug]
+for slug, receipt in signed.items():
+    source = games[slug]
     apk = apk_dir / slug / receipt["apk"]
     with apk.open("rb") as stream:
         checksum = hashlib.file_digest(stream, "sha256").hexdigest()
