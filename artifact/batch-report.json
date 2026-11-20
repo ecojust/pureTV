@@ -1,0 +1,117 @@
+{
+  "sourceCommit": "a370be712a803cb65d6b9077399c9ae718bb0b6b",
+  "batch": "puzzle-03",
+  "runner": "macos-15-intel",
+  "expectedArchitecture": "x86_64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "neon-arcana",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/neon-arcana",
+            "--output",
+            "/Users/runner/work/_temp/qa/neon-arcana/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "neon-arcana/package-verification.log",
+          "startedAt": "2026-11-20T10:28:03.424091+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "neon-arcana",
+            "--app",
+            "/Users/runner/work/_temp/packages/neon-arcana/installed/Neon Arcana.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/neon-arcana/native"
+          ],
+          "status": "failed",
+          "log": "neon-arcana/native.log",
+          "startedAt": "2026-11-20T10:29:53.322545+00:00",
+          "returncode": 1
+        }
+      ]
+    },
+    {
+      "game": "atlas-of-ink",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/atlas-of-ink",
+            "--output",
+            "/Users/runner/work/_temp/qa/atlas-of-ink/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "atlas-of-ink/package-verification.log",
+          "startedAt": "2026-11-20T10:31:24.538146+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "atlas-of-ink",
+            "--app",
+            "/Users/runner/work/_temp/packages/atlas-of-ink/installed/Atlas of Ink.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/atlas-of-ink/native"
+          ],
+          "status": "passed",
+          "log": "atlas-of-ink/native.log",
+          "startedAt": "2026-11-20T10:32:35.867442+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "starbase-spooky",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/starbase-spooky",
+            "--output",
+            "/Users/runner/work/_temp/qa/starbase-spooky/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "starbase-spooky/package-verification.log",
+          "startedAt": "2026-11-20T10:33:18.696235+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "starbase-spooky",
+            "--app",
+            "/Users/runner/work/_temp/packages/starbase-spooky/installed/Starbase Spooky.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/starbase-spooky/native"
+          ],
+          "status": "passed",
+          "log": "starbase-spooky/native.log",
+          "startedAt": "2026-11-20T10:35:18.617381+00:00",
+          "returncode": 0
+        }
+      ]
+    }
+  ]
+}
