@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """One normal-mode graphics diagnosis of the fixed original Backroad APK.
 
-This is not acceptance. Only the unchanged SDK sends input; the separate test
+This is not acceptance. The unchanged SDK navigates to the race, and the original keyboard shortcut toggles postprocessing twice; the separate test
 Observer reads cached diagnostics/DOM and records console messages. No game
 clock, model, renderer or GL context is changed by this driver.
 """
@@ -42,7 +42,7 @@ PLAN_SHA = '8306e5b2ad54cf35eb2602db045711572e35a728478e668fc65a6fb962ad157f'
 OLD_OBSERVER = {'bytes': 16783, 'sha256': 'd3fd4701e55a27ca9c5822d79b39635a71b802f7d44aacb722e45116d4f51a5f'}
 # Original one-based steps. Skip career/save, all driving, pause, lifecycle,
 # occupied-port and reconnection acceptance; retain every selected predicate.
-SUBSET = tuple(range(1, 21)) + tuple(range(24, 34))
+SUBSET = tuple(range(24, 34))
 ENTRY = 'https://game-kit.invalid/tv.html'
 STAGE_URL = ENTRY + '?mode=quick&stage=finland&car=swift&cond=stage&weather=stage'
 
@@ -200,9 +200,9 @@ class Diagnosis:
         self.last = None
         self.device_confirmed = False
         self.report = {'schemaVersion': 1, 'status': 'running', 'game': 'backroad-rally', 'mode': 'normal',
-                       'scope': 'Graphics diagnosis only: original SDK menu subset and read-only graphics/console',
+                       'scope': 'Original SDK quick stage followed by the upstream physical P shortcut for a normal/post-toggle/restored comparison',
                        'formalAcceptance': False, 'visualPass': None, 'manualPixelReviewRequired': True,
-                       'modelWrites': False, 'clockOverrides': False, 'rendererChanges': False, 'existingGlCapabilitiesReadAtCheckpoints': True,
+                       'modelWrites': False, 'clockOverrides': False, 'rendererChanges': True, 'existingGlCapabilitiesReadAtCheckpoints': True,
                        'targetApkBuilt': False, 'targetApkChanged': False, 'originalTarget': ORIGINAL,
                        'physicalTvTested': False, 'physicalPhoneTested': False, 'steps': [], 'captures': [],
                        'notTested': ['career/save', 'driving-input acceptance', 'pause/resume', 'reconnect', 'occupied port', 'storage restart']}
@@ -427,21 +427,46 @@ class Diagnosis:
                         except OSError: pass
 
     def capture(self, label):
-        before = self.get('graphics', save=label + '-graphics-before.json')
-        self.get('capabilities', save=label + '-capabilities.json')
+        before = self.checkpoint('graphics', label + '-graphics-before.json')
+        self.checkpoint('capabilities', label + '-capabilities.json')
         self.get('console', save=label + '-console.json')
         self.get('status', save=label + '-status.json')
         image = self.command('exec-out', 'screencap', '-p', limit=16 * 1024 * 1024, binary=label + '.png')
         require(image.startswith(b'\x89PNG\r\n\x1a\n'), 'System screenshot is not PNG')
-        after = self.get('graphics', save=label + '-graphics-after.json')
+        after = self.checkpoint('graphics', label + '-graphics-after.json')
         self.report['captures'].append({'name': label, 'screenshot': record(self.out / (label + '.png')),
                                        'beforePoll': game(before).get('pollCount'), 'afterPoll': game(after).get('pollCount'),
                                        'manualPixelReviewRequired': True})
         self.save()
+        return after
+
+    def checkpoint(self, endpoint, filename):
+        # At a checkpoint there are no button writes to replay. Preserve failed GETs in the HTTP log.
+        deadline = time.monotonic() + 80
+        while time.monotonic() < deadline:
+            try:
+                return self.get(endpoint, timeout=min(15, max(.01, deadline-time.monotonic())), save=filename)
+            except (RemoteDisconnected, ConnectionError, TimeoutError, URLError) as error:
+                if isinstance(error, HTTPError) or self.instrument.poll() is not None: raise
+        raise TimeoutError('Checkpoint unavailable: ' + filename)
+
+    def compare_post(self, state, enabled, label):
+        previous = 'post off' if enabled else 'post on'
+        expected = 'post on' if enabled else 'post off'
+        require(previous in (state.get('frameHud') or ''), 'Upstream post state unavailable before keypress')
+        initial_frame = game(state)['frames']
+        self.command('shell', 'input', 'keyevent', 'KEYCODE_P')
+        changed = self.wait(lambda observation: observation.get('url') == STAGE_URL
+                            and game(observation).get('frames', 0) > initial_frame + 2
+                            and expected in (observation.get('frameHud') or ''), 90, label)
+        validated(changed)
+        self.report.setdefault('upstreamPostToggles', []).append({'key':'KEYCODE_P','previous':previous,'observed':expected,
+            'initialFrame':initial_frame,'observedFrame':game(changed)['frames']})
+        return self.capture(label)
 
     def menu(self, index, step):
         client = self.clients[0]
-        before = self.get('graphics'); validated(before)
+        before = self.menu_graphics(time.monotonic() + original.OBSERVER_SNAPSHOT_TIMEOUT); validated(before)
         require(game(before)['stage'] == 'menu' and released(before, before, client.identity), 'Menu input precondition')
         require(not original.plan.matches(step['expect'], game(before), game(before)), 'Menu expectation was already true')
         item = {'originalIndex': index, 'step': step, 'status': 'running', 'before': before, 'samples': []}
@@ -488,7 +513,10 @@ class Diagnosis:
         try:
             self.setup()
             for index, step in self.steps: self.menu(index, step)
-            self.capture('original-stage-running')
+            stage = self.capture('original-stage-running')
+            enabled = 'post on' in (stage.get('frameHud') or '')
+            changed = self.compare_post(stage, not enabled, 'original-stage-post-toggled')
+            self.compare_post(changed, enabled, 'original-stage-post-restored')
             client = self.clients[0]
             with client.lock: client.ping(); seq = client.seq
             original.Acceptance.wait_sent_ack(self, client, seq)

@@ -109,8 +109,8 @@ class DriverBoundaries(unittest.TestCase):
 
     def test_source_bound_subset_excludes_formal_acceptance_actions(self):
         raw, subset = driver.original_plan()
-        self.assertEqual([i for i, _ in subset], list(range(1, 21)) + list(range(24, 34)))
-        self.assertEqual(len(subset), 30)
+        self.assertEqual([i for i, _ in subset], list(range(24, 34)))
+        self.assertEqual(len(subset), 10)
         original = json.loads(raw)
         for i, step in subset:
             self.assertEqual(step, original['steps'][i-1])

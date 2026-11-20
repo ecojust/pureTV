@@ -90,7 +90,8 @@
       transferSize:r.transferSize,encodedBodySize:r.encodedBodySize,decodedBodySize:r.decodedBodySize,
       responseStatus:typeof r.responseStatus==='number'?r.responseStatus:null};
   });
-  return {graphicsRead:true,url:limit(location.href,2048),readyState:document.readyState,
+  var hud = document.getElementById ? document.getElementById('frame-hud') : null;
+  return {graphicsRead:true,frameHud:hud ? limit(hud.textContent,2048) : null,url:limit(location.href,2048),readyState:document.readyState,
     hidden:document.hidden,focused:document.hasFocus(),devicePixelRatio:devicePixelRatio,
     viewport:{width:innerWidth,height:innerHeight},
     cachedGame:cached?{game:cached.game,renderer:cached.renderer,webglVersion:cached.webglVersion,
