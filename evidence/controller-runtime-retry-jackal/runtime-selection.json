@@ -1,0 +1,95 @@
+{
+  "acceptanceMode": "complete",
+  "acceptanceScope": "complete controller acceptance",
+  "fullGameplayAcceptance": true,
+  "driverFlags": [],
+  "requestedBatches": [
+    "retry-jackal",
+    "arcade-2",
+    "arcade-3"
+  ],
+  "selectedBatches": [
+    "arcade-2",
+    "arcade-3",
+    "retry-jackal"
+  ],
+  "plannedSlugs": [
+    "jewel",
+    "tetris",
+    "bomb-jack",
+    "adventure-island",
+    "super-mario",
+    "jackal"
+  ],
+  "completeCatalogRequested": false,
+  "matrix": {
+    "include": [
+      {
+        "group": "arcade",
+        "batch": "arcade-2",
+        "apiLevel": 36,
+        "arch": "x86_64",
+        "renderer": "swiftshader_indirect",
+        "emulatorBuild": "",
+        "emulatorArchive": null,
+        "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+      },
+      {
+        "group": "arcade",
+        "batch": "arcade-3",
+        "apiLevel": 36,
+        "arch": "x86_64",
+        "renderer": "swiftshader_indirect",
+        "emulatorBuild": "",
+        "emulatorArchive": null,
+        "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+      },
+      {
+        "group": "arcade",
+        "batch": "retry-jackal",
+        "apiLevel": 36,
+        "arch": "x86_64",
+        "renderer": "swiftshader_indirect",
+        "emulatorBuild": "",
+        "emulatorArchive": null,
+        "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+      }
+    ]
+  },
+  "worlds2GraphicsExperiment": {
+    "selected": false,
+    "description": "Disable Vulkan while retaining SwiftShader and enable verbose emulator logs; the preceding AVD failure has no established root cause."
+  },
+  "usedCarStableImageComparison": {
+    "selected": false,
+    "systemImage": "system-images;android-29;android-tv;x86",
+    "channel": "stable",
+    "revisionListedByOfficialRepository": 3,
+    "rendererComparison": {
+      "previousObservedEmulatorVersion": "37.2.13",
+      "previousRenderer": "swiftshader_indirect",
+      "requestedRenderer": "swiftshader",
+      "previousRendererDeprecatedSince": "36.4.9",
+      "officialReference": "https://developer.android.com/studio/run/emulator-acceleration"
+    },
+    "hostVersionComparison": {
+      "previousObservedEmulatorVersion": "37.2.13",
+      "requested": {
+        "version": "35.6.11",
+        "build": "13610412",
+        "url": "https://dl.google.com/android/repository/emulator-linux_x64-13610412.zip",
+        "sha256": "2fe2b56fe93ce75e1d478a40162131381d911c355efeaedb54dd1e0d0897a5cf",
+        "bytes": 319086252,
+        "officialArchive": "https://developer.android.com/studio/emulator_archive"
+      },
+      "description": "Change only the host emulator version; retain API29/x86/swiftshader/disabled Vulkan and verbose options. The preceding host RenderThread segmentation fault has no established product cause."
+    },
+    "description": "Independent AVD on the official older stable TV image; installation, WebView, WebGL and controller acceptance remain mandatory."
+  },
+  "arcadeVisualStableImageComparison": {
+    "selected": false,
+    "systemImage": "system-images;android-29;android-tv;x86",
+    "description": "Recheck Tank and Jackal after transient black regions were observed in API36 recordings; preserve full controller acceptance and new visual evidence."
+  },
+  "qaSourceSha": "aed60f3e62d1cbe4841965fd7ba32e29c7d193d4"
+}

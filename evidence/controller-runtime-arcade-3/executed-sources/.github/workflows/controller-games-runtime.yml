@@ -1,0 +1,264 @@
+name: README games signed APK controller runtime
+
+on:
+  push:
+    branches: [feat/readme-games-controller]
+    paths: ['.github/workflows/controller-games-runtime.yml']
+  workflow_dispatch:
+    inputs:
+      bundle_manifest:
+        description: 'JSON: sourceSha, optional legacySourceSha, legacyRunId, legacyAttempt, kitRuns mapping Game Kit IDs to successful signing run IDs; optional scope (all, home-12, arcade-7 or arcade-recovery-6)'
+        type: string
+        required: true
+      batches:
+        description: 'Optional JSON array of predefined batch names; empty means all batches in the selected scope'
+        type: string
+        required: false
+        default: ''
+      acceptance_mode:
+        description: 'Complete gameplay acceptance or controller client-status UI acceptance only'
+        type: choice
+        options: [complete, client-status]
+        default: complete
+        required: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  plan:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.selection.outputs.matrix }}
+      selection: ${{ steps.selection.outputs.selection }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            tools/controller-emulator-batch.py
+            tools/controller-release.py
+            tools/resource_catalog.py
+      - name: Validate the requested batches before creating the matrix
+        id: selection
+        env:
+          REQUESTED_BATCHES: ${{ inputs.batches }}
+          BUNDLE_MANIFEST: ${{ inputs.bundle_manifest }}
+          ACCEPTANCE_MODE: ${{ inputs.acceptance_mode }}
+        run: |
+          python3 - <<'PY'
+          import importlib.util,json,os,sys
+          sys.path.insert(0,'tools')
+          spec=importlib.util.spec_from_file_location('runtime_batch','tools/controller-emulator-batch.py')
+          batch=importlib.util.module_from_spec(spec);spec.loader.exec_module(batch)
+          scope=json.loads(os.environ['BUNDLE_MANIFEST']).get('scope', 'all')
+          plan=batch.runtime_plan(os.environ['REQUESTED_BATCHES'],os.environ.get('ACCEPTANCE_MODE') or 'complete',scope)
+          plan['qaSourceSha']=os.environ['GITHUB_SHA']
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write('matrix='+json.dumps(plan['matrix'],separators=(',',':'))+'\n')
+              out.write('selection='+json.dumps(plan,separators=(',',':'))+'\n')
+          print(json.dumps(plan,indent=2))
+          PY
+
+  runtime:
+    name: runtime (${{ matrix.batch }})
+    needs: plan
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    env:
+      PYTHONUNBUFFERED: '1'
+      PURETV_DISPOSABLE_EMULATOR: '1'
+      RUNTIME_SELECTION: ${{ needs.plan.outputs.selection }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: ${{ (fromJSON(inputs.bundle_manifest).scope == 'home-12' || startsWith(fromJSON(inputs.bundle_manifest).scope, 'arcade-')) && '/tools/' || '' }}
+      - name: Check out selected runtime sources and original upgrade APKs
+        if: fromJSON(inputs.bundle_manifest).scope == 'home-12' || startsWith(fromJSON(inputs.bundle_manifest).scope, 'arcade-')
+        env:
+          CONTROLLER_RELEASE_SCOPE: ${{ fromJSON(inputs.bundle_manifest).scope }}
+        run: python3 tools/controller-release.py checkout-home-inputs
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools build-tools;34.0.0
+      - name: Parse immutable artifact references
+        env:
+          BUNDLE_MANIFEST: ${{ inputs.bundle_manifest }}
+        run: |
+          python3 - <<'PY'
+          import json,os,re
+          from pathlib import Path
+          manifest=json.loads(os.environ['BUNDLE_MANIFEST'])
+          assert re.fullmatch('[a-f0-9]{40}',manifest['sourceSha'])
+          (Path(os.environ['RUNNER_TEMP'])/'bundle-manifest.json').write_text(json.dumps(manifest)+'\n')
+          selection=json.loads(os.environ['RUNTIME_SELECTION'])
+          assert selection['qaSourceSha']==os.environ['GITHUB_SHA']
+          (Path(os.environ['RUNNER_TEMP'])/'runtime-selection.json').write_text(json.dumps(selection,indent=2)+'\n')
+          legacy_source=manifest.get('legacySourceSha',manifest['sourceSha'])
+          assert re.fullmatch('[a-f0-9]{40}',legacy_source)
+          with open(os.environ['GITHUB_ENV'],'a') as out:
+              assert selection['acceptanceMode'] in ['complete','client-status']
+              out.write('ARTIFACT_SOURCE='+manifest['sourceSha']+'\nLEGACY_ARTIFACT_SOURCE='+legacy_source+'\nACCEPTANCE_MODE='+selection['acceptanceMode']+'\n')
+          PY
+      - name: Fetch and verify the already signed game and observer APKs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          python3 tools/controller-runtime-inputs.py
+          --manifest "$RUNNER_TEMP/bundle-manifest.json"
+          --group '${{ matrix.group }}'
+          --output "$RUNNER_TEMP/controller-runtime-input"
+          --build-tools "$ANDROID_HOME/build-tools/34.0.0"
+      - name: Install the browser used for the original virtual controller
+        run: |
+          set -euo pipefail
+          mkdir "$RUNNER_TEMP/controller-browser"
+          cd "$RUNNER_TEMP/controller-browser"
+          npm install --no-audit --no-fund --package-lock=false playwright@1.64.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+          node - <<'JS' >> "$GITHUB_ENV"
+          console.log('PURETV_PACKAGE='+process.cwd()+'/package.json');
+          console.log('CHROMIUM_PATH='+require('playwright').chromium.executablePath());
+          JS
+      - name: Enable disposable emulator acceleration
+        run: |
+          test -e /dev/kvm
+          sudo chmod a+rw /dev/kvm
+          command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Independently verify the pinned official emulator archive
+        if: matrix.emulatorBuild != ''
+        env:
+          EMULATOR_ARCHIVE: ${{ toJSON(matrix.emulatorArchive) }}
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os,urllib.request
+          from pathlib import Path
+          expected=json.loads(os.environ['EMULATOR_ARCHIVE'])
+          receipt={'expected':expected,'method':'Independent streaming download of the same official URL subsequently installed by emulator-runner; its separate installer download is not intercepted.','status':'running'}
+          try:
+              digest=hashlib.sha256();size=0
+              with urllib.request.urlopen(expected['url'],timeout=120) as response:
+                  receipt['responseUrl']=response.url
+                  while chunk:=response.read(1024*1024):
+                      digest.update(chunk);size+=len(chunk)
+              receipt.update({'actualSha256':digest.hexdigest(),'actualBytes':size})
+              assert digest.hexdigest()==expected['sha256'] and size==expected['bytes'], 'Official emulator archive does not match its published identity'
+              receipt['status']='verified'
+          except Exception as error:
+              receipt.update({'status':'failed','error':repr(error)});raise
+          finally:
+              (Path(os.environ['RUNNER_TEMP'])/'emulator-archive-verification.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          PY
+      - name: Start read-only host diagnostics before emulator boot
+        run: python3 tools/controller-runtime-diagnostics.py start --output "$RUNNER_TEMP/controller-host-diagnostics"
+      - name: Upgrade and operate actual release APKs with the original pureTV SDK
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.apiLevel }}
+          target: android-tv
+          arch: ${{ matrix.arch }}
+          profile: tv_1080p
+          avd-name: ControllerGamesValidation
+          force-avd-creation: true
+          disable-animations: true
+          emulator-build: ${{ matrix.emulatorBuild }}
+          emulator-options: ${{ matrix.emulatorOptions }}
+          script: >-
+            python3 tools/controller-emulator-batch.py --group '${{ matrix.group }}'
+            --batch '${{ matrix.batch }}' --acceptance-mode "$ACCEPTANCE_MODE"
+            --input "$RUNNER_TEMP/controller-runtime-input"
+            --output "$RUNNER_TEMP/controller-runtime-output"
+            --artifact-source "$ARTIFACT_SOURCE" --legacy-source "$LEGACY_ARTIFACT_SOURCE" --adb "$ANDROID_HOME/platform-tools/adb"
+            --serial emulator-5554 --build-tools "$ANDROID_HOME/build-tools/34.0.0"
+      - name: Finish read-only host diagnostics
+        if: always()
+        run: python3 tools/controller-runtime-diagnostics.py stop --output "$RUNNER_TEMP/controller-host-diagnostics"
+      - name: Preserve input verification and exact executed QA sources
+        if: always()
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import os,shutil,json,hashlib
+          root=Path(os.environ['RUNNER_TEMP']);out=root/'controller-runtime-output';out.mkdir(exist_ok=True)
+          if (root/'controller-host-diagnostics').is_dir():
+              shutil.copytree(root/'controller-host-diagnostics',out/'host-diagnostics')
+          if (root/'controller-runtime-input/observer-source').is_dir():
+              shutil.copytree(root/'controller-runtime-input/observer-source',out/'observer-source')
+          for name in ['bundle-manifest.json','runtime-selection.json','controller-runtime-input/input-verification.json','emulator-archive-verification.json']:
+              path=root/name
+              if path.is_file():shutil.copy2(path,out/path.name)
+          source=out/'executed-sources';source.mkdir(exist_ok=True)
+          paths=[Path('tools/controller-emulator-batch.py'),Path('tools/controller-runtime-diagnostics.py'),Path('tools/controller-runtime-inputs.py'),Path('.github/workflows/controller-games-runtime.yml'),Path('tools/controller-release.py'),Path('tools/resource_catalog.py'),Path('resource/game-kit/fetch-signed.py'),Path('resource/game-kit/qa/common.mjs'),Path('tools/readme-controller-qa/baseline-inventory.json')]
+          paths += [p for p in Path('tools/readme-controller-qa').rglob('*') if p.is_file() and p.suffix in ['.py','.mjs']]
+          records={}
+          for p in paths:
+              dest=source/p;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,dest)
+              records[p.as_posix()]={'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+          (out/'executed-source-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'files':records},indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: controller-runtime-${{ matrix.batch }}
+          path: ${{ runner.temp }}/controller-runtime-output/
+          include-hidden-files: true
+          if-no-files-found: error
+
+  export:
+    if: always() && github.event_name == 'workflow_dispatch' && needs.plan.result == 'success'
+    needs: [plan, runtime]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: controller-runtime-*
+          path: ${{ runner.temp }}/controller-runtime-export/evidence
+      - name: Describe actual runtime results without changing raw reports
+        env:
+          RUNTIME_RESULT: ${{ needs.runtime.result }}
+          RUNTIME_SELECTION: ${{ needs.plan.outputs.selection }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import os,json,hashlib
+          out=Path(os.environ['RUNNER_TEMP'])/'controller-runtime-export';rows={}
+          for p in out.rglob('*'):
+              if p.is_file():rows[p.relative_to(out).as_posix()]={'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+          selection=json.loads(os.environ['RUNTIME_SELECTION'])
+          assert selection['qaSourceSha']==os.environ['GITHUB_SHA']
+          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'runId':os.environ['GITHUB_RUN_ID'],'runtimeResult':os.environ['RUNTIME_RESULT'],'runtimeResultScope':'selected batches only','selection':selection,'files':rows},indent=2)+'\n')
+          PY
+      - name: Export original evidence on a new isolated branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          export_branch="build-assets/controller-runtime-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
+          repository_url="https://github.com/$GITHUB_REPOSITORY.git"
+          gh auth setup-git
+          test -z "$(git ls-remote --heads "$repository_url" "refs/heads/$export_branch")"
+          git init --initial-branch "$export_branch" "$RUNNER_TEMP/controller-runtime-export"
+          git -C "$RUNNER_TEMP/controller-runtime-export" config user.name github-actions[bot]
+          git -C "$RUNNER_TEMP/controller-runtime-export" config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git -C "$RUNNER_TEMP/controller-runtime-export" add .
+          git -C "$RUNNER_TEMP/controller-runtime-export" commit -q -m "Actual controller runtime evidence ${GITHUB_RUN_ID}"
+          git -C "$RUNNER_TEMP/controller-runtime-export" remote add origin "$repository_url"
+          git -C "$RUNNER_TEMP/controller-runtime-export" push origin "HEAD:refs/heads/$export_branch"
