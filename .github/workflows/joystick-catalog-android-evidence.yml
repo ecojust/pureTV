@@ -1,135 +1,137 @@
-name: Read original joystick catalog Android runtime evidence
-
-on:
-  workflow_dispatch:
-    inputs:
-      source_run:
-        description: Original catalog Android build/sign/runtime run ID
-        required: true
-        type: string
-      source_sha:
-        description: Exact original frozen source SHA
-        required: true
-        type: string
-      source_attempt:
-        description: Exact original run attempt
-        required: true
-        default: '1'
-        type: string
-      game:
-        description: Registered game whose original runtime job has completed
-        required: true
-        type: string
-
+name: Verify published Android upgrades from signed controller builds
+on: workflow_dispatch
 permissions:
   contents: read
   actions: read
-
 jobs:
-  evidence:
+  upgrade:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    permissions:
-      contents: write
-      actions: read
+    timeout-minutes: 35
     env:
-      SOURCE_RUN: ${{ inputs.source_run }}
-      SOURCE_SHA: ${{ inputs.source_sha }}
-      SOURCE_ATTEMPT: ${{ inputs.source_attempt }}
-      GAME: ${{ inputs.game }}
+      GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Verify completed original job and exact evidence artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/joystick-upgrade/
+            /tools/puretv-release-certificate-v2.sha256
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools build-tools;34.0.0
+      - name: Retrieve original signed artifact 14640280629
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 14640280629
+          run-id: 44757260595
+          repository: ecojust/pureTV
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/signed-upgrades/44757260595
+          merge-multiple: true
+      - name: Retrieve original signed artifact 14639688129
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 14639688129
+          run-id: 44758693480
+          repository: ecojust/pureTV
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/signed-upgrades/44758693480
+          merge-multiple: true
+      - name: Retrieve original signed artifact 14639668138
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 14639668138
+          run-id: 44758693540
+          repository: ecojust/pureTV
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/signed-upgrades/44758693540
+          merge-multiple: true
+      - name: Retrieve original signed artifact 14640177463
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 14640177463
+          run-id: 44758693772
+          repository: ecojust/pureTV
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/signed-upgrades/44758693772
+          merge-multiple: true
+      - name: Retrieve original signed artifact 14640587725
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 14640587725
+          run-id: 44758694102
+          repository: ecojust/pureTV
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/signed-upgrades/44758694102
+          merge-multiple: true
+      - name: Retrieve original signed artifact 14640222574
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 14640222574
+          run-id: 44758694225
+          repository: ecojust/pureTV
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/signed-upgrades/44758694225
+          merge-multiple: true
+      - name: Independently verify both APKs and the original signing run
+        run: python3 .github/joystick-upgrade/probe.py prepare
+      - name: Enable existing disposable runner acceleration
         run: |
-          python3 - <<'PY'
-          import base64,json,os,re,subprocess
-          from pathlib import Path
-          run=os.environ['SOURCE_RUN'];source=os.environ['SOURCE_SHA'];attempt=os.environ['SOURCE_ATTEMPT'];game=os.environ['GAME']
-          assert re.fullmatch('[1-9][0-9]*',run) and re.fullmatch('[1-9][0-9]*',attempt) and re.fullmatch('[a-f0-9]{40}',source)
-          assert re.fullmatch('[a-z][a-z0-9]*(?:-[a-z0-9]+)*',game)
-          assert os.environ['GITHUB_REPOSITORY']=='ecojust/pureTV'
-          def api(path):return json.loads(subprocess.check_output(['gh','api','repos/ecojust/pureTV/'+path]))
-          original=api('actions/runs/'+run)
-          assert original['path']=='.github/workflows/joystick-catalog-android.yml' and original['event']=='workflow_dispatch'
-          assert original['head_sha']==source and original['run_attempt']==int(attempt)
-          assert original['repository']['full_name']==original['head_repository']['full_name']=='ecojust/pureTV'
-          registry_file=api('contents/joystick-games/catalog-registry.json?ref='+source)
-          assert registry_file['encoding']=='base64'
-          registry=json.loads(base64.b64decode(registry_file['content']))
-          assert registry['schemaVersion']==1 and game in registry['games']
-          assert registry['games'][game]['packageName']=='com.ecojust.joystick.'+game.replace('-','')
-          jobs=api(f'actions/runs/{run}/attempts/{attempt}/jobs?per_page=100')['jobs']
-          selected=[job for job in jobs if job['name']=='runtime ('+game+')']
-          assert len(selected)==1 and selected[0]['status']=='completed'
-          job=selected[0]
-          artifacts=api('actions/runs/'+run+'/artifacts?per_page=100')['artifacts']
-          selected=[a for a in artifacts if a['name']=='joystick-android-report-runtime-'+game and not a['expired']]
-          assert len(selected)==1
-          artifact=selected[0]
-          assert artifact['workflow_run']['id']==int(run) and artifact['workflow_run']['head_sha']==source
-          assert job['started_at']<=artifact['created_at']<=job['completed_at']
-          assert artifact['size_in_bytes']<250_000_000
-          out=Path(os.environ['RUNNER_TEMP'])/'catalog-android-evidence';out.mkdir()
-          record={'sourceRunId':int(run),'sourceCommit':source,'sourceRunAttempt':int(attempt),'game':game,'originalJobId':job['id'],'originalJobConclusion':job['conclusion'],'artifact':{key:artifact.get(key) for key in ['id','name','size_in_bytes','digest','created_at','updated_at']}}
-          (out/'original-artifact.json').write_text(json.dumps(record,indent=2)+'\n')
-          (out/'original-job.json').write_text(json.dumps(job,indent=2)+'\n')
-          with open(os.environ['GITHUB_ENV'],'a') as stream:stream.write('ARTIFACT_ID='+str(artifact['id'])+'\n')
-          print(json.dumps(record))
-          PY
+          test -c /dev/kvm
+          sudo chmod a+rw /dev/kvm
+      - name: Install old packages and replace them using the Android Package Manager
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: android-tv
+          arch: x86_64
+          profile: tv_720p
+          force-avd-creation: true
+          disable-animations: true
+          emulator-options: -no-window -noaudio -no-boot-anim -no-snapshot -gpu swiftshader_indirect -memory 2048
+          script: python3 .github/joystick-upgrade/probe.py exercise
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-controller-upgrade-receipts
+          path: ${{ runner.temp }}/upgrade-evidence
+          retention-days: 30
+          if-no-files-found: warn
+  export:
+    needs: upgrade
+    if: always()
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: read
+      contents: write
+    steps:
       - uses: actions/download-artifact@v4
         with:
-          github-token: ${{ github.token }}
-          repository: ecojust/pureTV
-          run-id: ${{ inputs.source_run }}
-          artifact-ids: ${{ env.ARTIFACT_ID }}
-          merge-multiple: true
-          path: ${{ runner.temp }}/catalog-android-evidence/artifact
-      - name: Preserve original runtime files without rerunning games
-        run: |
-          python3 - <<'PY'
-          import hashlib,json,os
-          from pathlib import Path
-          out=Path(os.environ['RUNNER_TEMP'])/'catalog-android-evidence';artifact=out/'artifact';game=os.environ['GAME']
-          source=json.loads((artifact/game/'executed-source.json').read_text())
-          assert source['sourceSha']==os.environ['SOURCE_SHA'] and str(source['runId'])==os.environ['SOURCE_RUN']
-          assert isinstance(source['files'],dict) and source['files']
-          assert 'joystick-games/'+game+'/qa-plan.json' in source['files']
-          for name,expected in source['files'].items():
-              assert isinstance(name,str) and name and not any(ord(c)<32 for c in name)
-              relative=Path(name)
-              assert not relative.is_absolute() and '..' not in relative.parts and '\\' not in name and relative.as_posix()==name
-              path=artifact/game/'executed-source'/relative
-              assert path.is_file() and not path.is_symlink()
-              assert {'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}==expected
-          allowed={'.json','.jsonl','.log','.txt','.png','.mp4','.py','.java','.yml'}
-          total=0;rows={}
-          for path in sorted(out.rglob('*')):
-              assert not path.is_symlink()
-              if path.is_file():
-                  assert path.suffix in allowed, 'Unexpected non-evidence file: '+str(path.relative_to(out))
-                  assert path.stat().st_size<100_000_000
-                  total+=path.stat().st_size
-                  rows[path.relative_to(out).as_posix()]={'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
-          assert total<250_000_000
-          manifest={'sourceRunId':int(os.environ['SOURCE_RUN']),'sourceCommit':os.environ['SOURCE_SHA'],'sourceRunAttempt':int(os.environ['SOURCE_ATTEMPT']),'game':game,'exporterSourceCommit':os.environ['GITHUB_SHA'],'exportRunId':int(os.environ['GITHUB_RUN_ID']),'exportRunAttempt':int(os.environ['GITHUB_RUN_ATTEMPT']),'gamesRerun':False,'installPackagesValidated':False,'files':rows}
-          (out/'export-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
-          print(json.dumps({'evidenceFiles':len(rows),'gamesRerun':False,'installPackagesValidated':False}))
-          PY
-      - name: Export original evidence to a new immutable diagnostic branch
+          name: android-controller-upgrade-receipts
+          path: ${{ runner.temp }}/receipts
+      - name: Preserve exact original diagnostics for both successful and unsuccessful replacements
         env:
           GH_TOKEN: ${{ github.token }}
+          UPGRADES_RESULT: ${{ needs.upgrade.result }}
         run: |
           set -euo pipefail
-          branch="build-assets/joystick-catalog-android-evidence-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
-          url="https://github.com/$GITHUB_REPOSITORY.git"
+          cd "$RUNNER_TEMP/receipts"
+          python - <<'PY_REPORT'
+          import hashlib, json, os
+          from pathlib import Path
+          records={p.name: {'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in Path('.').glob('*.json')}
+          Path('manifest.json').write_text(json.dumps(dict(source=os.environ['GITHUB_SHA'],run=os.environ['GITHUB_RUN_ID'],status=os.environ['UPGRADES_RESULT'],files=records),indent=2)+'\n')
+          PY_REPORT
+          branch="build-assets/joystick-controls-upgrade-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
+          git init -q --initial-branch "$branch" .
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -- *.json
+          git commit -qm "Android Package Manager upgrade observations ${GITHUB_RUN_ID}"
           gh auth setup-git
-          test -z "$(git ls-remote --heads "$url" "refs/heads/$branch")"
-          directory="$RUNNER_TEMP/catalog-android-evidence"
-          git init --initial-branch "$branch" "$directory"
-          git -C "$directory" config user.name github-actions[bot]
-          git -C "$directory" config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git -C "$directory" add .
-          git -C "$directory" commit -q -m "Original Android ${SOURCE_RUN} ${GAME} runtime evidence"
-          git -C "$directory" remote add origin "$url"
-          git -C "$directory" push "--force-with-lease=refs/heads/$branch:" origin "HEAD:refs/heads/$branch"
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          git push "--force-with-lease=refs/heads/$branch:" origin "HEAD:refs/heads/$branch"
