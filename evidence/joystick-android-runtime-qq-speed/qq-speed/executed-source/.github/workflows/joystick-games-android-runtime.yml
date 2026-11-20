@@ -1,0 +1,210 @@
+name: Joystick games Android QA with frozen packages
+
+on:
+  push:
+    branches: [build/joystick-games-android-runtime]
+  workflow_dispatch:
+    inputs:
+      artifact_source:
+        description: Frozen source commit of the signed game packages
+        type: string
+        required: true
+        default: d30e1ce26abbf27d07d149b708c6a491abb105b3
+      artifact_export:
+        description: Immutable export commit containing the signed games and Observers
+        type: string
+        required: true
+        default: 21618545e8262d69a743be0b10ef6ce9634a6dd3
+      artifact_run:
+        description: Build and signing run for the original export
+        type: string
+        required: true
+        default: '44110295680'
+
+permissions:
+  contents: read
+
+env:
+  PYTHONUNBUFFERED: '1'
+  ARTIFACT_SOURCE: ${{ inputs.artifact_source || 'd30e1ce26abbf27d07d149b708c6a491abb105b3' }}
+  ARTIFACT_EXPORT: ${{ inputs.artifact_export || '21618545e8262d69a743be0b10ef6ce9634a6dd3' }}
+  ARTIFACT_RUN: ${{ inputs.artifact_run || '44110295680' }}
+
+jobs:
+  runtime:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        game: [cf-transport-ship, qq-speed]
+    env:
+      PURETV_DISPOSABLE_EMULATOR: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            .github/workflows
+            joystick-games
+            resource/game-kit
+            tools
+            puretv-joystick
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.ARTIFACT_EXPORT }}
+          path: artifact
+          persist-credentials: false
+      - name: Check out the original failing boundary fixture
+        uses: actions/checkout@v4
+        with:
+          ref: 21618545e8262d69a743be0b10ef6ce9634a6dd3
+          path: original-contract-fixture
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools build-tools;34.0.0
+      - name: Check QA contracts using the preserved failing DOM and artifact boundaries
+        run: |
+          set -euo pipefail
+          python3 joystick-games/qa/android/test_runner.py 2>&1 | tee "$RUNNER_TEMP/qa-contracts.log"
+          JOYSTICK_RUNTIME_TEST_EXPORT="$GITHUB_WORKSPACE/original-contract-fixture" python3 joystick-games/tools/android-runtime-tests.py 2>&1 | tee "$RUNNER_TEMP/artifact-contracts.log"
+      - name: Bind original signed packages to their source and the new QA checkout
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin "$ARTIFACT_SOURCE"
+          python3 joystick-games/tools/android-runtime-inputs.py \
+            --artifact-source "$ARTIFACT_SOURCE" --export-commit "$ARTIFACT_EXPORT" --artifact-run-id "$ARTIFACT_RUN" \
+            --artifact "$GITHUB_WORKSPACE/artifact" --output "$RUNNER_TEMP/input" \
+            --build-tools "$ANDROID_HOME/build-tools/34.0.0" 2>&1 | tee "$RUNNER_TEMP/input-verification.log"
+      - name: Resolve the verified APK for this game version
+        env:
+          GAME: ${{ matrix.game }}
+        run: |
+          set -euo pipefail
+          folder="$RUNNER_TEMP/input/packages/$GAME"
+          version=$(jq -er '.versionName' "$folder/signing-receipt.json")
+          apk="$folder/$GAME-$version.apk"
+          test -f "$apk"
+          echo "VERIFIED_GAME_APK=$apk" >> "$GITHUB_ENV"
+      - name: Enable the same disposable emulator acceleration
+        run: |
+          test -e /dev/kvm
+          sudo chmod a+rw /dev/kvm
+          command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Run corrected QA against unchanged signed packages and Observers
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: android-tv
+          arch: x86_64
+          profile: tv_1080p
+          avd-name: JoystickGamesValidation
+          force-avd-creation: true
+          disable-animations: true
+          emulator-options: -no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          script: >-
+            python3 joystick-games/qa/android/run.py --game '${{ matrix.game }}'
+            --apk "$VERIFIED_GAME_APK"
+            --observer "$RUNNER_TEMP/input/observers/${{ matrix.game }}/observer-${{ matrix.game }}.apk"
+            --output "$RUNNER_TEMP/runtime/${{ matrix.game }}-normal" --adb "$ANDROID_HOME/platform-tools/adb" &&
+            python3 joystick-games/qa/android/run.py --game '${{ matrix.game }}'
+            --apk "$VERIFIED_GAME_APK"
+            --observer "$RUNNER_TEMP/input/observers/${{ matrix.game }}/observer-${{ matrix.game }}.apk"
+            --output "$RUNNER_TEMP/runtime/${{ matrix.game }}-occupied" --adb "$ANDROID_HOME/platform-tools/adb" --occupy-default-port
+      - name: Preserve independent artifact and QA source bindings with original reports
+        if: always()
+        env:
+          GAME: ${{ matrix.game }}
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os,shutil,subprocess
+          from pathlib import Path
+          scratch=Path(os.environ['RUNNER_TEMP']);out=scratch/'runtime'/os.environ['GAME'];out.mkdir(parents=True,exist_ok=True)
+          inputs=scratch/'input'
+          if inputs.is_dir():shutil.copytree(inputs,out/'verified-inputs')
+          for name in ['qa-contracts.log','artifact-contracts.log','input-verification.log']:
+              if (scratch/name).is_file():shutil.copyfile(scratch/name,out/name)
+          paths=list(Path('joystick-games/qa/android').rglob('*.py'))+list(Path('joystick-games/qa/android').rglob('*.java'))
+          paths+=list(Path('joystick-games/qa/android/fixtures').glob('*.json'))
+          paths+=list(Path('joystick-games/tools').glob('android-runtime-*.py'))
+          paths += [Path('puretv-joystick/joystick_sdk.py'),Path('tools/resource_catalog.py'),Path('.github/workflows/joystick-games-android-runtime.yml')]
+          files={}
+          for path in paths:
+              target=out/'executed-source'/path;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
+              files[path.as_posix()]={'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+          (out/'executed-source.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'files':files},indent=2)+'\n')
+          p=subprocess.run([os.environ['ANDROID_HOME']+'/emulator/emulator','-version'],text=True,capture_output=True)
+          (out/'emulator-version.txt').write_text(p.stdout+p.stderr)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joystick-android-runtime-${{ matrix.game }}
+          path: ${{ runner.temp }}/runtime/
+          include-hidden-files: true
+          if-no-files-found: error
+
+  export:
+    if: always()
+    needs: runtime
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            .github/workflows
+            joystick-games/tools
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: joystick-android-runtime-*
+          path: ${{ runner.temp }}/export/evidence
+      - name: Record whether all declared execution and artifact source copies survived upload
+        run: >-
+          python3 joystick-games/tools/android-runtime-copies.py
+          --evidence "$RUNNER_TEMP/export/evidence" --output "$RUNNER_TEMP/export/archive-verification.json"
+          --record-only
+      - name: Export the untouched runtime reports with both source identities
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUNTIME_RESULT: ${{ needs.runtime.result }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          out=Path(os.environ['RUNNER_TEMP'])/'export';out.mkdir(exist_ok=True)
+          files={}
+          for p in sorted(out.rglob('*')):
+              assert not p.is_symlink()
+              if p.is_file():
+                  assert p.stat().st_size<100_000_000
+                  files[p.relative_to(out).as_posix()]={'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'runtimeResult':os.environ['RUNTIME_RESULT'],'files':files,'reusedSignedPackagesAndObservers':True,'physicalTvTested':False,'physicalEsp32Tested':False},indent=2)+'\n')
+          PY
+          export_branch="build-assets/joystick-games-android-runtime-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
+          test -z "$(git ls-remote --heads origin "refs/heads/$export_branch")"
+          git init --initial-branch "$export_branch" "$RUNNER_TEMP/export"
+          git -C "$RUNNER_TEMP/export" config user.name github-actions[bot]
+          git -C "$RUNNER_TEMP/export" config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git -C "$RUNNER_TEMP/export" add .
+          git -C "$RUNNER_TEMP/export" commit -q -m "Joystick Android QA for immutable signed packages ${GITHUB_RUN_ID}"
+          gh auth setup-git
+          git -C "$RUNNER_TEMP/export" remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          git -C "$RUNNER_TEMP/export" push origin "HEAD:refs/heads/$export_branch"
+      - name: Reject incomplete source-copy evidence after preserving the original export
+        run: |
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          report=json.loads((Path(os.environ['RUNNER_TEMP'])/'export/archive-verification.json').read_text())
+          assert report['status']=='passed', report['errors']
+          PY
