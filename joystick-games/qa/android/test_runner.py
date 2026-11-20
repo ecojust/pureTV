@@ -132,6 +132,26 @@ class MenuTapContracts(unittest.TestCase):
                      'holdMs': 180, 'timeoutSeconds': 2,
                      'expect': [{'path': 'gameplay.menu.focusIndex', 'op': 'eq', 'value': 2}]}
 
+    def test_cold_course_sends_one_release_set_and_requires_original_fresh_seat(self):
+        held = self.state(10)
+        held['game']['controller']['players'][0]['buttons']['START'] = True
+        stale = self.state(10, index=2)
+        alien = self.state(11, index=2)
+        alien['game']['controller']['players'][0]['session'] = 'other'
+        pressed = self.state(12, index=2)
+        pressed['game']['controller']['buttons']['START'] = True
+        wrong = self.state(13)
+        correct = self.state(14, index=2)
+        read = [runner.RemoteDisconnected(), stale, alien, pressed, wrong, correct]
+        self.acceptance.snapshot = mock.Mock(side_effect=read)
+        self.acceptance.save = mock.Mock()
+        buttons = []
+        self.acceptance.button = lambda key, down: buttons.append((key, down))
+        self.assertIs(self.acceptance.wait_for_selected_course(self.step, self.state(9), held), correct)
+        self.assertEqual(buttons, [(key, False) for key in runner.KEYS])
+        self.assertEqual(self.acceptance.report['courseStartRelease']['transportErrors'], 1)
+        self.assertEqual(self.acceptance.report['courseStartRelease']['afterPollCount'], 14)
+
     def tearDown(self):
         self.client.disconnect(); self.proxy.close(); self.server.shutdown(); self.server.server_close(); self.directory.cleanup()
 
