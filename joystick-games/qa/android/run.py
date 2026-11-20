@@ -119,7 +119,7 @@ def install_timeout(apk_bytes):
     return min(240, max(45, 30 + 2 * math.ceil(apk_bytes / 1_000_000)))
 
 
-def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None):
+def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None, request_window=OBSERVER_REQUEST_TIMEOUT):
     """Retry only failed read-only transports; never reuse a previous snapshot.
 
     The original Observer closes its HTTP request after a 10-second WebView
@@ -127,6 +127,7 @@ def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None):
     therefore come from a new GET; HTTP/JSON/model errors are not retried here.
     """
     assert 0 < timeout <= OBSERVER_SNAPSHOT_TIMEOUT
+    assert 0 < request_window <= OBSERVER_SNAPSHOT_TIMEOUT
     deadline = time.monotonic() + timeout
     failures = 0
     transport_errors = (RemoteDisconnected, ConnectionResetError, ConnectionAbortedError,
@@ -137,7 +138,7 @@ def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None):
         if remaining <= 0:
             raise TimeoutError('Read-only observer snapshot wall deadline expired')
         started = time.time()
-        request_timeout = min(OBSERVER_REQUEST_TIMEOUT, remaining)
+        request_timeout = min(request_window, remaining)
         try:
             with urlopen(url, timeout=request_timeout) as response:
                 value = json.load(response)
@@ -388,7 +389,10 @@ class Acceptance:
                 {'snapshotCall': call, 'operation': 'GET /snapshot', **value})
             if hasattr(self, 'out'):
                 self.save()
-        value = read_observer_snapshot('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout, event)
+        # On the single-threaded Observer, 16–25s draw-to-swap stalls outlasted a 15s client
+        # socket. Within the same read deadline, allow this exact player route's GET to finish.
+        read_options = {'request_window': OBSERVER_SNAPSHOT_TIMEOUT} if getattr(self, 'player_route', False) else {}
+        value = read_observer_snapshot('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout, event, **read_options)
         port = (value.get('info') or {}).get('wifiController', {}).get('port')
         if hasattr(self, 'service_port') and port and port != self.service_port:
             raise AssertionError('Live game changed controller TCP port within the same process/session')
