@@ -21,7 +21,7 @@ on:
       scope:
         description: Games to build and corresponding signing observers
         type: choice
-        options: [all, home-12, arcade-7]
+        options: [all, home-12, arcade-7, arcade-recovery-6]
         default: all
 
 env:
@@ -38,9 +38,9 @@ jobs:
       - uses: actions/checkout@v4
         with: &controller_checkout
           sparse-checkout-cone-mode: false
-          sparse-checkout: ${{ (inputs.scope == 'home-12' || inputs.scope == 'arcade-7') && '/tools/' || '' }}
+          sparse-checkout: ${{ (inputs.scope == 'home-12' || startsWith(inputs.scope, 'arcade-')) && '/tools/' || '' }}
       - name: Check out the selected games and their published upgrade baselines
-        if: inputs.scope == 'home-12' || inputs.scope == 'arcade-7'
+        if: inputs.scope == 'home-12' || startsWith(inputs.scope, 'arcade-')
         run: python3 tools/controller-release.py checkout-home-inputs
       - uses: actions/setup-java@v4
         with:
@@ -93,14 +93,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: ${{ fromJSON(inputs.scope == 'arcade-7' && '["arcade"]' || '["arcade","worlds"]') }}
+        group: ${{ fromJSON(startsWith(inputs.scope, 'arcade-') && '["arcade"]' || '["arcade","worlds"]') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with: *controller_checkout
       - name: Check out the selected games and their published upgrade baselines
-        if: inputs.scope == 'home-12' || inputs.scope == 'arcade-7'
+        if: inputs.scope == 'home-12' || startsWith(inputs.scope, 'arcade-')
         run: python3 tools/controller-release.py checkout-home-inputs
       - uses: actions/setup-java@v4
         with:
@@ -180,7 +180,7 @@ jobs:
       - uses: actions/checkout@v4
         with: *controller_checkout
       - name: Check out the selected games and their published upgrade baselines
-        if: inputs.scope == 'home-12' || inputs.scope == 'arcade-7'
+        if: inputs.scope == 'home-12' || startsWith(inputs.scope, 'arcade-')
         run: python3 tools/controller-release.py checkout-home-inputs
       - uses: actions/setup-java@v4
         with:
@@ -231,7 +231,7 @@ jobs:
       - uses: actions/checkout@v4
         with: *controller_checkout
       - name: Check out the selected games and their published upgrade baselines
-        if: inputs.scope == 'home-12' || inputs.scope == 'arcade-7'
+        if: inputs.scope == 'home-12' || startsWith(inputs.scope, 'arcade-')
         run: python3 tools/controller-release.py checkout-home-inputs
       - uses: actions/setup-java@v4
         with:
