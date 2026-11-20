@@ -43,5 +43,26 @@
     }
   },
   "visualReview": "Sampled both original recordings at 5 seconds and three quarters of their duration. The splash menu shows the rendered car, neon showroom and controller card. The settings sheet and its quality controls are visible in both modes. These recordings do not verify racing.",
-  "garagePlanCorrection": "The three adjacent upgrade buttons share the same price label. Hold DOWN through the garage until the unique TO THE TRACK button is focused and require the following A press to open the original track selector. The route does not purchase any upgrade."
+  "garagePlanCorrection": "The three adjacent upgrade buttons share the same price label. Hold DOWN through the garage until the unique TO THE TRACK button is focused and require the following A press to open the original track selector. The route does not purchase any upgrade.",
+  "garageRetry": {
+    "qaRunId": 44681189162,
+    "qaSourceSha": "216312f2fca16519e79aece3893df6c31860a2a7",
+    "qaExportCommit": "c65d197cc06e14699d9e0e584f1cd50e7303b6b7",
+    "runtimeAccepted": false,
+    "modes": {
+      "normal": {
+        "passed": 12,
+        "lastPassed": "actual SDK gameplay: Navigate down through the garage upgrades to the track action",
+        "error": "AssertionError: No visible initialized rendering canvas",
+        "report": "https://github.com/ecojust/pureTV/blob/c65d197cc06e14699d9e0e584f1cd50e7303b6b7/evidence/joystick-android-runtime-last-track/last-track-normal/report.json"
+      },
+      "occupied": {
+        "passed": 12,
+        "lastPassed": "actual SDK gameplay: Navigate down through the garage upgrades to the track action",
+        "error": "AssertionError: No visible initialized rendering canvas",
+        "report": "https://github.com/ecojust/pureTV/blob/c65d197cc06e14699d9e0e584f1cd50e7303b6b7/evidence/joystick-android-runtime-last-track/last-track-occupied/report.json"
+      }
+    },
+    "menuImplementation": "The original game draws title, car select, garage, shop and paint over a live 3D showroom; it hides #game-canvas on the SVG track picker and HTML setup screens. The expected focused actions are SELECT, NEXT: SETUP and START RACE, also recorded in the existing browser and Windows reports."
+  }
 }

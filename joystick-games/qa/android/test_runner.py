@@ -446,6 +446,30 @@ class Contracts(unittest.TestCase):
 
 
 class CatalogContracts(unittest.TestCase):
+    def test_html_track_menu_requires_real_focus_and_an_allocated_webgl_canvas(self):
+        acceptance = self.acceptance()
+        acceptance.plan['renderer'] = 'webgl2'
+        snapshot = self.snapshot()
+        snapshot.update(activityState='resumed', windowFocused=True)
+        snapshot['game'].update(renderer='webgl2', webglVersion=2,
+                                gameplay={'screen': 'trackSelect', 'menuFocus': 'SELECT'})
+        snapshot['page'].update(hidden=False, focused=True, width=960, height=540)
+        snapshot['page']['canvases'][0].update(visible=False, clientWidth=960, clientHeight=540)
+        step = {'expect': [{'path': 'gameplay.screen', 'op': 'eq', 'value': 'trackSelect'},
+                           {'path': 'gameplay.menuFocus', 'op': 'eq', 'value': 'SELECT'}]}
+        acceptance.validate_catalog_snapshot(snapshot, step)
+        with self.assertRaisesRegex(AssertionError, 'visible initialized'):
+            acceptance.validate_catalog_snapshot(snapshot)
+        for container, field, bad in [('page', 'hidden', True), ('page', 'focused', False),
+                                      ('game', 'stage', 'playing'), ('game', 'webglVersion', 1),
+                                      ('game', 'gameplay', {'screen': 'trackSelect', 'menuFocus': 'BACK'}),
+                                      ('page', 'canvases', [])]:
+            with self.subTest(field=field):
+                changed = copy.deepcopy(snapshot)
+                changed[container][field] = bad
+                with self.assertRaises(AssertionError):
+                    acceptance.validate_catalog_snapshot(changed, step)
+
     def acceptance(self):
         acceptance = runner.Acceptance.__new__(runner.Acceptance)
         acceptance.args = SimpleNamespace(game='fixture-game')
