@@ -40,6 +40,7 @@ import { PostFX } from '../fx/PostFX';
 import { RaceManager } from './RaceManager';
 import { FollowCamera } from './FollowCamera';
 import { MenuBackdrop } from './MenuBackdrop';
+import { supportsHdrEffects, drawingPixelRatio } from './renderSettings';
 import type { MenuFraming } from './MenuBackdrop';
 import { HUD } from '../ui/HUD';
 import { MainMenu } from '../ui/MainMenu';
@@ -106,7 +107,8 @@ export class Game {
   private readonly audio: IAudioEngine;
   private readonly particles: IParticleSystem;
   private readonly postfx: IPostFX;
-  private postfxOk = true;
+  private readonly hdrEffects: boolean;
+  private postfxOk: boolean;
 
   private readonly backdrop: MenuBackdrop;
   private readonly mainMenu: MainMenu;
@@ -151,9 +153,10 @@ export class Game {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.05;
-    this.renderer.shadowMap.enabled = true;
+    this.hdrEffects = supportsHdrEffects(this.renderer.getContext());
+    this.postfxOk = this.hdrEffects;
+    this.renderer.shadowMap.enabled = this.hdrEffects;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     this.renderer.domElement.className = 'game-canvas';
     container.appendChild(this.renderer.domElement);
 
@@ -171,11 +174,13 @@ export class Game {
     this.particles = new ParticleSystem();
     this.scene.add(this.particles.object);
     this.postfx = new PostFX();
-    try {
-      this.postfx.init(this.renderer, this.scene, this.camera);
-    } catch (err) {
-      console.error('[Game] PostFX init failed, using plain rendering', err);
-      this.postfxOk = false;
+    if (this.hdrEffects) {
+      try {
+        this.postfx.init(this.renderer, this.scene, this.camera);
+      } catch (err) {
+        console.error('[Game] PostFX init failed, using plain rendering', err);
+        this.postfxOk = false;
+      }
     }
 
     // ---------------------------------------------------------- ui
@@ -588,7 +593,7 @@ export class Game {
     this.loading.hide();
     this.backdrop.setCharacter(this.mainMenu.highlightedCharacter);
     this.backdrop.setFraming(framingFor(panel), true);
-    this.backdrop.attach(this.scene, this.camera, this.renderer);
+    this.backdrop.attach(this.scene, this.camera, this.hdrEffects ? this.renderer : undefined);
     this.mainMenu.show(panel);
     this.setState(panel);
     this.playMusic('menu');
@@ -968,7 +973,7 @@ export class Game {
   private readonly onResize = (): void => {
     const w = Math.max(1, this.container.clientWidth || window.innerWidth);
     const h = Math.max(1, this.container.clientHeight || window.innerHeight);
-    const pr = Math.min(window.devicePixelRatio || 1, 2);
+    const pr = drawingPixelRatio(this.hdrEffects, window.devicePixelRatio || 1, w, h);
     this.renderer.setPixelRatio(pr);
     this.renderer.setSize(w, h, false);
     this.camera.aspect = w / h;

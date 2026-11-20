@@ -3,6 +3,8 @@
 [BridgeMind 原作](https://github.com/bridge-mind/turbo-kart-rush/tree/6c0456c7642447eae29e0832e7e542fec07ec07d)的独立 pureTV 适配：八位车手、四条赛道、三档难度，保留程序生成场景、道具的全部变体、漂移加速、跳跃、原版音乐与后处理。原资源无需网络即可运行；不是 pureTV 自创游戏。
 
 
+0.1.1 的渲染器会在不支持半浮点渲染目标的 WebGL 2 设备和已识别的软件 GPU 上直接绘制赛道与赛车，跳过辉光、环境反射和阴影，并将 3D 画面限制在 960×540 以内。菜单与 HUD 保持原显示尺寸。下方 0.1.0 的下载及其验证范围按各平台列出。
+
 ## Windows 下载
 
 0.1.0 x64：[安装版 EXE](windows/TurboKartRush-0.1.0-windows-x64-setup.exe)（646,837 字节）· [便携 ZIP](windows/TurboKartRush-0.1.0-windows-x64.zip)（563,888 字节）· [SHA256 校验](SHA256SUMS.txt)。需要 **Windows 10 1903 或更新版本、已安装 Microsoft Edge WebView2 Evergreen 和 WebGL 2**。安装包未作 Authenticode 签名。
