@@ -1,5 +1,7 @@
 # 铁垒行动 · Operation Ironhold
 
+[Android TV 0.1.0 签名 APK](operation-ironhold-0.1.0.apk?raw=true) · [扫码连接手机](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上游玩](../../docs/guide/README.md#在电脑上玩)
+
 单人第一人称游戏。玩家在第七区货柜场开局，须在三分钟内击败十名守卫。结算画面显示命中率、完成时间和战绩，可直接开始下一局。场景、对手、装备和音效沿用 StarKnightt 的原作，Three.js 已打入本地发行目录。
 
 ## 游玩

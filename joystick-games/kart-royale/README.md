@@ -1,10 +1,10 @@
 # Kart Royale · 海湾卡丁车
 
-[下载当前 Android TV 手柄版 0.1.5](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/kart-royale-0.1.5.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.6 签名 APK](kart-royale-0.1.6.apk?raw=true) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 基于 [ryancampbell/kart-royale](https://github.com/ryancampbell/kart-royale/tree/036c0efb025f5ecf8fc31c405e9d818c61e03e21) 的 pureTV 手柄版。固定原源为 `036c0efb025f5ecf8fc31c405e9d818c61e03e21`，保留 Sunset Bay Circuit、八辆卡丁车、AI 对手、道具、原轮胎/悬架物理和漂移奖励规则。网上后来替换的 homie 多人版本不属于本次移植。
 
-## 源码与 Web 版 0.1.6 的赛道
+## 0.1.6 的三条赛道
 
 | 赛道 | 平面里程 | 驾驶特点 |
 | --- | --- | --- |
@@ -16,7 +16,7 @@
 
 [内置日落湾的上游原图](src/docs/hero-coast.png) · [两条新赛道的实驾截图与验证记录](docs/circuits/README.md)
 
-## Android TV
+## Android TV 旧版记录
 
 [下载 Kart Royale 0.1.4 签名 APK](kart-royale-0.1.4.apk)。最低系统为 Android 8（API 26），游戏需要 WebGL 2。已安装 0.1.3 的玩家可使用相同包名与签名的 0.1.4 覆盖升级。安装后启动游戏，在同一局域网连接 pureTV 手柄，用十字键和 A 选择车手并开始比赛。
 
