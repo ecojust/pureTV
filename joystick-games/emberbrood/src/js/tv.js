@@ -13,7 +13,36 @@ export function installEmberTV(){
  pane.querySelector('[data-resume]').onclick=()=>setPause(false);pane.querySelector('[data-title]').onclick=()=>{saveTo('auto');location.reload();};
  const tv=createTV({game:'emberbrood',title:'Emberbrood · 余烬龙裔',controls:'方向键：焦点 / 调整\nA：选择 · B：返回\nX：滚动阅读 · Y：页签\n文本：A编辑，Y确认',suspend:()=>setPause(true,'连接变化或失焦 · 请按 START 继续'),observe:()=>{const b=activeBattle();return JSON.parse(JSON.stringify({renderer:'dom',stage:paused?'paused':currentScreenName()==='title'?'menu':state.ending?'ended':'playing',paused,gameplay:{screen:currentScreenName(),overlay:overlayOpen(),focus:focus?.textContent?.trim()||focus?.getAttribute('aria-label')||'',clockElapsed:clockSnapshot().elapsed,seed:state.seed,coin:state.coin,act:state.act,node:state.node,steps:state.stats.steps,stats:state.stats,roster:state.roster,rosterCount:state.roster.length,party:state.party,inventory:state.inventory,quests:state.quests,eggs:state.eggs,ending:state.ending,battle:b?{state:b.state,round:b.round,surge:b.surge,allies:b.allies,enemies:b.enemies}:null},ui:{overlay:overlayOpen(),focus:focus?.textContent?.trim()||focus?.getAttribute('aria-label')||'',focusId:focus?.id||'',editing:!!edit,scrollTop:document.getElementById('screen').scrollTop},timers:clockSnapshot()}));}});
  const keys={ArrowUp:'ArrowUp',ArrowDown:'ArrowDown',ArrowLeft:'ArrowLeft',ArrowRight:'ArrowRight',Enter:'Enter',Space:'Enter',KeyA:'Enter',KeyB:'b',Escape:'b',KeyP:'p',KeyX:'X',KeyY:'Select'};
- for(const type of ['keydown','keyup'])window.addEventListener(type,e=>{const k=keys[e.code];if(!k){if(paused){e.preventDefault();e.stopImmediatePropagation();}return;}e.preventDefault();e.stopImmediatePropagation();if(e.repeat)return;if(k==='X'){if(type==='keydown')xPulse=true;}else window.PureGame.key(k,type==='keydown');},true);
+ const keyboardDown = new Set();
+ function handleKeyboard(event) {
+   const up = event.type === 'keyup';
+   const releasing = up && keyboardDown.delete(event.code);
+   const field = event.target;
+   const textField = field?.isContentEditable || field?.tagName === 'TEXTAREA' ||
+     (field?.tagName === 'INPUT' && (field.type === 'text' || field.type === 'search'));
+   if (textField && !paused && !edit && !releasing) {
+     const singleLineNavigation = field.tagName === 'INPUT' &&
+       (event.code === 'ArrowUp' || event.code === 'ArrowDown');
+     if (event.isComposing || event.ctrlKey || event.metaKey || event.altKey ||
+         (!singleLineNavigation && event.code !== 'Escape')) return;
+   }
+   const action = keys[event.code];
+   if (!action) {
+     if (paused) { event.preventDefault(); event.stopImmediatePropagation(); }
+     return;
+   }
+   if (up && !releasing) return;
+   if (!up) keyboardDown.add(event.code);
+   event.preventDefault();
+   event.stopImmediatePropagation();
+   if (event.repeat) return;
+   if (action === 'X') {
+     if (event.type === 'keydown') xPulse = true;
+   } else {
+     window.PureGame.key(action, event.type === 'keydown');
+   }
+ }
+ for (const type of ['keydown', 'keyup']) window.addEventListener(type, handleKeyboard, true);
  function candidates(){const host=paused?pane:overlayOpen()?document.getElementById('overlay'):document.getElementById(currentScreenName()==='battle'?'screen':'app');return [...host.querySelectorAll('button,input,select,textarea,[data-tv-action],[role="button"]')].filter(e=>!e.disabled&&!e.closest('[hidden]')&&e.getClientRects().length&&getComputedStyle(e).visibility!=='hidden');}
  function choose(e){focus?.classList.remove('tv-focus');focus=e;if(e){e.classList.add('tv-focus');e.focus({preventScroll:true});e.scrollIntoView({block:'nearest',inline:'nearest'});}}
  function sync(){const next=paused?'pause':overlayOpen()?'overlay':'screen:'+currentScreenName();const list=candidates();if(next!==scope||!list.includes(focus)){scope=next;choose(list[0]);}return list;}
