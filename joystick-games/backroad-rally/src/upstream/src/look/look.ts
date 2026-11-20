@@ -208,7 +208,9 @@ export class Look {
     this.post.enabled = on && this.renderer.getOutputBufferType() === THREE.HalfFloatType;
     this.placeFog();
     // with post the pipeline tone-maps itself; without it the renderer does ACES at the same exposure
-    this.renderer.toneMapping = this.post.enabled ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
+    // The explicitly linear canvas bypasses Three's final colour-transform render target.
+    const sceneToneMap = this.renderer.outputColorSpace === THREE.LinearSRGBColorSpace ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
+    this.renderer.toneMapping = this.post.enabled ? THREE.NoToneMapping : sceneToneMap;
   }
 
   setCondition(name: string): void {

@@ -14,6 +14,11 @@ export function webglOutputPolicy(name: string, halfFloat: boolean, dpr: number)
   return { halfFloat: halfFloat && !software, pixelRatio: Math.min(dpr, software ? 1 : 2), antialias: !software };
 }
 
+// The legacy Android TV translator and the ANGLE/Vulkan variant report different names.
+export function useLegacyCanvasOutput(driver: string): boolean {
+  return /^Android Emulator OpenGL ES Translator \(Google SwiftShader\)$/i.test(driver.trim());
+}
+
 function webglName(gl: WebGL2RenderingContext): string {
   const info = gl.getExtension('WEBGL_debug_renderer_info');
   return info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : 'webgl2';
@@ -26,7 +31,8 @@ export function createRenderCanvas(forceWebGL: boolean, dpr: number, makeCanvas 
   let canvas = makeCanvas();
   let context = forceWebGL ? canvas.getContext('webgl2', attributes) ?? undefined : undefined;
   const halfFloat = !context || context.getExtension('EXT_color_buffer_float') || context.getExtension('EXT_color_buffer_half_float');
-  const output = webglOutputPolicy(context ? webglName(context) : '', !!halfFloat, dpr);
+  const driver = context ? webglName(context) : '';
+  const output = webglOutputPolicy(driver, !!halfFloat, dpr);
   if (context && !output.antialias && context.getContextAttributes()?.antialias) {
     const singleCanvas = makeCanvas();
     const singleContext = singleCanvas.getContext('webgl2', { ...attributes, antialias: false });
@@ -36,7 +42,7 @@ export function createRenderCanvas(forceWebGL: boolean, dpr: number, makeCanvas 
       context = singleContext;
     }
   }
-  return { canvas, context, output };
+  return { canvas, context, output, legacyCanvasOutput: useLegacyCanvasOutput(driver) };
 }
 
 /**
@@ -58,11 +64,13 @@ export async function createRenderer(params: URLSearchParams, trackTimestamp: bo
   const software = !!info && (!!info.isFallbackAdapter || !!info.info?.isFallbackAdapter
     || /swiftshader|llvmpipe|software/i.test(`${info.info?.vendor ?? ''} ${info.info?.architecture ?? ''} ${info.info?.description ?? ''}`));
   const forceWebGL = !gpuAdapter || software;
-  const { canvas, context, output } = createRenderCanvas(forceWebGL, devicePixelRatio);
+  const { canvas, context, output, legacyCanvasOutput } = createRenderCanvas(forceWebGL, devicePixelRatio);
   const renderer = new THREE.WebGPURenderer({
     canvas, context, antialias: output.antialias, forceWebGL, powerPreference: 'high-performance', trackTimestamp,
     outputBufferType: output.halfFloat ? THREE.HalfFloatType : THREE.UnsignedByteType,
   });
+  // On this translator compare rendering the original scene into the default framebuffer.
+  if (legacyCanvasOutput) renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
   renderer.setPixelRatio(output.pixelRatio);
   renderer.setSize(innerWidth, innerHeight);
   renderer.shadowMap.enabled = true;
