@@ -1,0 +1,365 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "ec5161417eaaf4b6be0585d04da60e59fb8d060f",
+  "artifactSourceCommit": "ec5161417eaaf4b6be0585d04da60e59fb8d060f",
+  "artifactRunId": "44715153569",
+  "startedAt": "2026-11-20T10:20:50.950392+00:00",
+  "game": "bumble-basket",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "6add0ec04a022ec4d716e516199aed45e9279514d2b33246d8b88113db47ae41",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "47d65e9e50b0630dab7e6c0957293be5b0a511b8db11b290a6a0ff3d08dc9d6f",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/bumble-basket/qa-plan.json": "24f9f3ff457cacbd3187dc84730fcc99ed2d82b1001ceab1797631768a6f1af0",
+    "joystick-games/tools/qa-plan.py": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9",
+    "joystick-games/tools/macos-build.py": "4fa65936293a5d6c5e728577780edc30429a500627e8799c1c83a5095470b853",
+    "joystick-games/catalog-registry.json": "d5999df4266e55efec83d9fcf6889cd801f3cfedee4c5eeff0d366754cb949e6",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaRunId": 44715153569,
+  "qaRunAttempt": 1,
+  "runnerKind": "macos-15-intel",
+  "runnerName": "GitHub Actions 1000011862",
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "webgl2",
+    "steps": [
+      {
+        "name": "Open the garden map",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "map"
+          }
+        ]
+      },
+      {
+        "name": "Choose the first orchard",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "intro"
+          }
+        ]
+      },
+      {
+        "name": "Start picking",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      },
+      {
+        "name": "Move the bee cursor",
+        "keys": [
+          "RIGHT"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.cursorCol",
+            "op": "increased"
+          }
+        ]
+      },
+      {
+        "name": "Show an available trail",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.hinted",
+            "op": "gte",
+            "value": 3
+          }
+        ]
+      },
+      {
+        "name": "Anchor the first fruit",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.trail",
+            "op": "eq",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "name": "Point to the next linked fruit",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.trail",
+            "op": "eq",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "name": "Confirm the second fruit",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.trail",
+            "op": "eq",
+            "value": 2
+          }
+        ]
+      },
+      {
+        "name": "Point to another matching fruit",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.trail",
+            "op": "eq",
+            "value": 2
+          }
+        ]
+      },
+      {
+        "name": "Confirm the third fruit",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.trail",
+            "op": "eq",
+            "value": 3
+          }
+        ]
+      },
+      {
+        "name": "Harvest the three-fruit chain",
+        "keys": [
+          "B"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.chains",
+            "op": "increased"
+          }
+        ]
+      },
+      {
+        "name": "Pause the board",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Resume explicitly",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      }
+    ],
+    "pauseStablePaths": [
+      "gameplay.movesUsed",
+      "gameplay.score",
+      "gameplay.chains"
+    ],
+    "storageRestartRequired": true
+  },
+  "acceptedRenderers": [
+    "webgl2"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "cdd825ed06da6fc0fd10ae2339cee54efd90154b446bbca0bce85f9ebce87ee6",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.bumble-basket.42c07913ca214027bb363c57276b1018",
+    "reusedAcrossRestartOnly": true
+  },
+  "nativeProcessArchitecture": "x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 478, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 202, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": true, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"Bumble Basket\", \"url\": \"http://127.0.0.1:53577/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.ecojust.joystick.bumblebasket\", \"name\": \"蜜蜂果篮\"}, \"game\": null, \"input\": {\"connections\": 0, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 4, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 4}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.1\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"bumble-basket.save.v1\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.6\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"蜜蜂果篮\", \"state\": \"available\"}}, \"storage\": {\"current\": {\"bumble-basket.save.v1\": null}, \"initial\": {\"bumble-basket.save.v1\": null}, \"origin\": \"http://127.0.0.1:53577\"}, \"timestamp\": 1795170140.8124409}\n",
+  "lastState": {
+    "active": true,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "en",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "Bumble Basket",
+      "url": "http://127.0.0.1:53577/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystick.bumblebasket",
+      "name": "蜜蜂果篮"
+    },
+    "game": null,
+    "input": {
+      "connections": 0,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 4,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 4
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.1",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "bumble-basket.save.v1"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.6"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "蜜蜂果篮",
+        "state": "available"
+      }
+    },
+    "storage": {
+      "current": {
+        "bumble-basket.save.v1": null
+      },
+      "initial": {
+        "bumble-basket.save.v1": null
+      },
+      "origin": "http://127.0.0.1:53577"
+    },
+    "timestamp": 1795170140.8124409
+  },
+  "failurePhase": "initialization",
+  "nativeProcessAlive": true,
+  "lastStateFresh": true,
+  "phase": "initialization",
+  "finishedAt": "2026-11-20T10:22:21.203007+00:00"
+}
