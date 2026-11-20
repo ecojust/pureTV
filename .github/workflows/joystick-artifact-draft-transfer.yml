@@ -12,62 +12,42 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           FIXED_SPEC: >-
-            {"run":44757260595,"source":"89faf2e4f5e17bd54d08859962dc9335c8b4cddb","workflow":".github/workflows/joystick-games-android.yml","job":"sign","artifact":14640280629,"artifact_name":"joystick-android-signed","release":452834419,"tag":"catalog-tv-controls-v1.0.0","target":"20e50e1e1e5ef4b2cdd8f1fa4f482916258b7284","files":[["packages/cf-transport-ship/cf-transport-ship-0.1.1.apk","cf-transport-ship-0.1.1.apk","d0fc0559891b4a12cb8bf717b1fc95c75209296bf460cc22a9a32c93ac49da54"],["packages/qq-speed/qq-speed-0.1.1.apk","qq-speed-0.1.1.apk","1231b9afc42bb524126653893cb47300399f88bb600b9c768910ad0c22cb4573"]]}
+            {"mode":"raw","label":"12 resource originals","release":452834419,"tag":"catalog-tv-controls-v1.0.0","target":"20e50e1e1e5ef4b2cdd8f1fa4f482916258b7284","files":[["adventure-island-0.5.5.apk","https://raw.githubusercontent.com/ecojust/pureTV/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/adventure-island/adventure-island-0.5.5.apk",103871,"82866569a92907325339339c28435810d14e926fd1238b560d86e2325fd4a588"],["alien-shooter-0.1.5.apk","https://raw.githubusercontent.com/ecojust/pureTV/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/alien-shooter/alien-shooter-0.1.5.apk",1775787,"f8afa219ca247107f79dc4e4da7e024eaec7f56b0b312a0fd4eb140340a913eb"],["bomb-jack-0.5.5.apk","https://raw.githubusercontent.com/ecojust/pureTV/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/bomb-jack/bomb-jack-0.5.5.apk",99837,"3d2f29293b9316be86ad45f60597d27fceebf8fd629321aa186fe37bd35154eb"],["coast-kart-0.5.5.apk","https://raw.githubusercontent.com/ecojust/pureTV/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/coast-kart/coast-kart-0.5.5.apk",276105,"4f480cf8b132bdc2f91bf1905349f5a535fc6538835252933b9eb225f28ac02d"],["jackal-0.5.5.apk","https://raw.githubusercontent.com/ecojust/pureTV/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/jackal/jackal-0.5.5.apk",12542767,"8fa859e9fe25eb2ceee50e407031dca9cecf67edcc850100c96373c86cafed63"],["jewel-0.5.5.apk","https://raw.githubusercontent.com/ecojust/pureTV/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/jewel/jewel-0.5.5.apk",95679,"0bf0247d19e81b512832fbedfd7291926ddaee7dd1bc60ad3e9d8f4b19258d90"],["neon-rush-0.1.4.apk","https://raw.githubusercontent.com/ecojust/pureTV/3870c47de37124a13f50196f6375830563493a08/neon-rush/neon-rush-0.1.4.apk",452149,"b59cc65f4dea1c3176d0ceb38885fa57143bddda26eb403c0e6a85c878d9ff47"],["super-mario-0.5.5.apk","https://raw.githubusercontent.com/ecojust/pureTV/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/super-mario/super-mario-0.5.5.apk",107967,"fe4bb3e638e0b08481de84b452ac0d755cf71762d5a641c6d0a8c0c4bd19d7df"],["tank-0.5.5.apk","https://raw.githubusercontent.com/ecojust/pureTV/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/tank/tank-0.5.5.apk",276852,"7ffe2bac456c36a25d12bb9ef033ea805ad7891f9149d67bb112cf179eb66b40"],["tetris-0.5.5.apk","https://raw.githubusercontent.com/ecojust/pureTV/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/tetris/tetris-0.5.5.apk",95679,"6370c9b2283e5f50a1325dfe9c323b6aeeeb25ddf8dfeea0b25c25c90a5863d3"],["tower-overlap-0.2.3.apk","https://raw.githubusercontent.com/ecojust/pureTV/d1e172803cc0637421899ec7c90138e2b7328229/tower-overlap/tower-overlap-0.2.3.apk",308655,"6490b703ce2cda05387b1031a91b945f7784fd774e8bce8dcd135cc52b0419a7"],["used-car-racing-0.1.6.apk","https://raw.githubusercontent.com/ecojust/pureTV/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/used-car-racing/used-car-racing-0.1.6.apk",1752553,"7fba87cc802570dbea303dc5286b88c2904122e909be40a19da8db0abcd0eeaa"]]}
         shell: bash
         run: |
           python - <<'PY'
-          """Run on a GitHub-hosted runner with a pinned original Actions artifact and existing draft."""
           import hashlib
           import json
           import os
+          import re
           import subprocess
-          import zipfile
           from pathlib import Path
-
-          def api(path):
-              return json.loads(subprocess.check_output(['gh', 'api', 'repos/ecojust/pureTV/' + path]))
-
-          def digest(path):
-              with path.open('rb') as f:
-                  d = hashlib.sha256()
-                  for block in iter(lambda: f.read(1024 * 1024), b''):
-                      d.update(block)
-                  return 'sha256:' + d.hexdigest()
+          from urllib.request import urlopen
 
           spec=json.loads(os.environ['FIXED_SPEC'])
           assert os.environ['GITHUB_REPOSITORY']=='ecojust/pureTV'
-          run=api('actions/runs/'+str(spec['run']))
-          assert run['head_sha']==spec['source'] and run['path']==spec['workflow']
-          assert run['head_repository']['full_name']==run['repository']['full_name']=='ecojust/pureTV'
-          jobs=api('actions/runs/'+str(spec['run'])+'/jobs?per_page=100')['jobs']
-          assert any(j['name']==spec['job'] and j['conclusion']=='success' for j in jobs)
-          artifact=api('actions/artifacts/'+str(spec['artifact']))
-          assert artifact['workflow_run']['id']==run['id'] and artifact['name']==spec['artifact_name'] and not artifact['expired']
           def release():
-              r=api('releases/'+str(spec['release']))
-              assert r['draft'] and r['tag_name']==spec['tag'] and r['target_commitish']==spec['target']
-              return r
-          release()
-          archive=Path('original.zip')
-          with archive.open('wb') as f:
-              subprocess.run(['gh','api','repos/ecojust/pureTV/actions/artifacts/'+str(artifact['id'])+'/zip'],check=True,stdout=f)
-          assert archive.stat().st_size==artifact['size_in_bytes'] and digest(archive)==artifact['digest']
-          with zipfile.ZipFile(archive) as z:
-              for row in spec['files']:
-                  inside,name,sha=row
-                  assert name==Path(name).name and name in {p[1] for p in spec['files']}
-                  info=z.getinfo(inside)
-                  assert z.namelist().count(inside)==1 and info.file_size<512*1024*1024
-                  out=Path(name)
-                  with out.open('wb') as f, z.open(info) as source:
+              data=json.loads(subprocess.check_output(['gh','api','repos/ecojust/pureTV/releases/'+str(spec['release'])]))
+              assert data['draft'] and data['tag_name']==spec['tag'] and data['target_commitish']==spec['target']
+              return {asset['name']:asset for asset in data['assets']}
+          assets=release()
+          for row in spec['files']:
+              name, url, size, digest=row
+              assert re.fullmatch(r'[a-z0-9-]+-[0-9]+\.[0-9]+\.[0-9]+\.apk',name)
+              assert re.fullmatch(r'https://raw\.githubusercontent\.com/ecojust/pureTV/[a-f0-9]{40}/[a-zA-Z0-9_./-]+',url)
+              assert 0<size<100*1024*1024 and len(digest)==64
+              if name not in assets:
+                  block_hash=hashlib.sha256()
+                  with urlopen(url,timeout=90) as source,Path(name).open('xb') as out:
+                      assert source.status==200
                       for block in iter(lambda:source.read(1024*1024),b''):
-                          f.write(block)
-                  fingerprint=digest(out)
-                  assert sha is None or fingerprint=='sha256:'+sha
-                  assets={a['name']:a for a in release()['assets']}
-                  if name not in assets:
-                      subprocess.run(['gh','release','upload',spec['tag'],str(out),'-R','ecojust/pureTV'],check=True)
-                  result=next(a for a in release()['assets'] if a['name']==name)
-                  assert result['digest']==fingerprint and result['size']==out.stat().st_size
-                  print(name, result['size'], fingerprint)
+                          out.write(block)
+                          assert out.tell()<=size
+                          block_hash.update(block)
+                  assert Path(name).stat().st_size==size and block_hash.hexdigest()==digest
+                  subprocess.run(['gh','release','upload',spec['tag'],name,'-R','ecojust/pureTV'],check=True)
+                  Path(name).unlink()
+                  assets=release()
+              assert assets[name]['size']==size and assets[name]['digest']=='sha256:'+digest
+              print(name,size,digest)
           PY
