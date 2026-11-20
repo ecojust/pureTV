@@ -147,7 +147,10 @@ def declared_package_outputs(scope,game):
                 assert item['storage']=='github-release-asset','Unsupported published package storage'
                 tag=descriptor.get('releaseTag');version=descriptor.get('version')
                 assert isinstance(version,str) and re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+',version),'Invalid remote release version'
-                assert tag=='joystick-'+game.name+'-v'+version,'Remote release tag differs from game/version'
+                tags = {f'joystick-{game.name}-v{version}'}
+                if platform == 'windows':
+                    tags.add(f'joystick-{game.name}-windows-v{version}')
+                assert tag in tags,'Remote release tag differs from game/version'
                 assert len(parts)==1,'Remote package name must be a basename'
                 assert item.get('url')=='https://github.com/ecojust/pureTV/releases/download/'+tag+'/'+name,'Remote package URL differs from exact release identity'
                 assert all(type(value) is int and 0<value<2**63 for value in (descriptor.get('releaseId'),item.get('assetId'))),'Invalid remote release/asset ID'

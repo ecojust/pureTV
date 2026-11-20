@@ -123,6 +123,18 @@ def check_receipt_origin(receipt, artifact_source, artifact_run):
     assert receipt['signatureVerified'] is True
 
 
+OBSERVER_SOURCE = 'joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java'
+# The only difference between these signed-observer sources is the optional read-only
+# backroadGhostLabels array. The current screenshot check accepts its original absent form.
+OBSERVER_WITHOUT_GHOST_BOUNDS = 'c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305'
+OBSERVER_WITH_GHOST_BOUNDS = '9c10a920e18a094c2650ab86924192cc9745daf8b0a792a732639295fa52ff0e'
+
+
+def compatible_observer_input(name, original_sha, qa_sha):
+    return original_sha == qa_sha or (name == OBSERVER_SOURCE and original_sha == OBSERVER_WITHOUT_GHOST_BOUNDS
+                                      and qa_sha == OBSERVER_WITH_GHOST_BOUNDS)
+
+
 def check_production_bytes(path, artifact_bytes, qa_committed_bytes):
     assert path.is_file() and not path.is_symlink()
     assert path.read_bytes() == artifact_bytes == qa_committed_bytes, 'QA changed production input: ' + str(path)
@@ -290,7 +302,9 @@ def verify(args):
         for name, expected in observer['sourceFiles'].items():
             data = frozen(ROOT, args.artifact_source, name)
             assert expected == {'bytes': len(data), 'sha256': sha(data)}
-            assert (ROOT / name).read_bytes() == data == frozen(ROOT, qa, name), 'Observer source changed'
+            qa_bytes = frozen(ROOT, qa, name)
+            assert (ROOT / name).read_bytes() == qa_bytes, 'Uncommitted QA Observer input'
+            assert compatible_observer_input(name, expected['sha256'], sha(qa_bytes)), 'Observer source changed'
             frozen_files[name] = data
         games.append({'game': slug, 'package': identity, 'observer': observer_identity,
                       'frozenSourceInputsVerified': len(inputs), 'currentProductionInputsUnchanged': len(artifact_production),

@@ -395,9 +395,22 @@ export function glCapabilities(): GLCapabilities {
   return caps;
 }
 
-function detectQuality(dev: DeviceProfile): Quality {
-  const gl = glCapabilities();
-  if (!gl.webgl2) return Quality.Low;
+/** Full-scene warming and post-processing both contend with the first visible frame on CPU rasterizers. */
+export function usesSoftwareLow(quality: Quality, software: boolean): boolean {
+  return software && quality === Quality.Low;
+}
+
+export function selectQuality(dev: DeviceProfile, gl: GLCapabilities, requested: string | null): Quality {
+  if (requested) {
+    switch (requested) {
+      case 'low': return Quality.Low;
+      case 'medium': return Quality.Medium;
+      case 'ultra': return Quality.Ultra;
+      default: return Quality.High;
+    }
+  }
+  // A CPU rasterizer pays for every shadow and post-processing pass in software.
+  if (!gl.webgl2 || gl.software) return Quality.Low;
 
   // A phone gets Low, and that is a deliberate change from the Medium this used
   // to hand out. Medium leaves shadows, motion blur and full-resolution render
@@ -413,10 +426,6 @@ function detectQuality(dev: DeviceProfile): Quality {
   }
 
   const name = gl.renderer;
-  // Software rasterisers (SwiftShader / llvmpipe / ANGLE-on-CPU) show up in CI
-  // and headless captures; they cannot take the full pipeline at speed but we
-  // still want the full *look*, so they get High rather than Low.
-  if (gl.software) return Quality.High;
   if (/Apple M[0-9]|RTX|Radeon RX|Arc A/i.test(name)) return Quality.Ultra;
   return Quality.High;
 }
@@ -663,11 +672,8 @@ export function device(): DeviceProfile {
 export function createSettings(): Settings {
   const dev = (deviceProfile = profileDevice());
   const params = new URLSearchParams(location.search);
-  const forced = params.get('quality');
-  const q: Quality = forced
-    ? ({ low: Quality.Low, medium: Quality.Medium, high: Quality.High, ultra: Quality.Ultra }[forced] ??
-       Quality.High)
-    : detectQuality(dev);
+  const gl = glCapabilities();
+  const q = selectQuality(dev, gl, params.get('quality'));
   const s: Settings = { quality: q, masterVolume: 0.8, ...PRESETS[q] };
   // ?scale=0.75 etc. lets the screenshot harness trade resolution for time
   const scale = parseFloat(params.get('scale') || '');
@@ -703,7 +709,6 @@ export function createSettings(): Settings {
   // Nothing below fires on hardware that passes the probe, so the desktop path
   // is untouched; every branch is a driver that has already told us it cannot
   // do the thing, and the alternative to acting on that is a black screen.
-  const gl = glCapabilities();
   if (gl.webgl2 && !gl.halfFloatRenderable) {
     // N8AO allocates half-float depth/normal/AO targets of its own, and the
     // pipeline cannot see inside them. On a device that cannot render to a

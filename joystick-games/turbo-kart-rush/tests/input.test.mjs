@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { InputManager } from '../src/upstream/src/kart/InputManager.ts';
+import { supportsHdrEffects, drawingPixelRatio } from '../src/upstream/src/game/renderSettings.ts';
 import { Kart } from '../src/upstream/src/kart/Kart.ts';
 import { createEmptyInput } from '../src/upstream/src/core/types.ts';
 import { createInputReducer, BUTTONS } from '../../shared/web/input.js';
@@ -82,4 +83,18 @@ test('cancel through original endDrift(false) preserves earned boost and invento
   assert.equal(awarded,0);assert.equal(kart.state.isDrifting,false);assert.equal(kart.state.driftStage,0);assert.equal(kart.input.useItem,false);
   assert.equal(kart.state.item,'red_shell');assert.equal(kart.state.itemCount,1);assert.equal(kart.state.boostTimer,0.6);
   assert.equal(kart.state.speed,18);assert.deepEqual(kart.state.position,{x:12,y:2,z:30});
+});
+
+
+test('selects a render path the WebGL driver can draw', () => {
+  function context(extensions, renderer) {
+    return { getExtension: name => extensions.includes(name) ? {} : null, getParameter: () => renderer };
+  }
+  assert.equal(supportsHdrEffects(context([], 'Adreno')), false);
+  assert.equal(supportsHdrEffects(context(['EXT_color_buffer_float'], 'ANGLE SwiftShader')), false);
+  assert.equal(supportsHdrEffects(context(['EXT_color_buffer_half_float'], 'Adreno')), true);
+  assert.equal(supportsHdrEffects(context(['EXT_color_buffer_float'], 'Apple GPU')), true);
+  assert.equal(drawingPixelRatio(false, 2, 1920, 1080), 0.5);
+  assert.equal(drawingPixelRatio(false, 2, 640, 360), 1);
+  assert.equal(drawingPixelRatio(true, 3, 1920, 1080), 2);
 });

@@ -41,7 +41,26 @@ class DownloadTests(unittest.TestCase):
     def test_production_pins_and_only_central_sources(self):
         self.assertEqual(m.EXPECTED_BYTES, 607650)
         self.assertEqual(m.EXPECTED_SHA256, '8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82')
-        self.assertEqual(m.URLS, ('https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar', 'https://repo1.maven.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar'))
+        self.assertEqual(m.URLS, ('https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar', 'https://repo1.maven.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar', 'https://maven-central.storage-download.googleapis.com/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar'))
+
+    def test_cached_archive_is_checked_without_network(self):
+        archive = self.root / 'cached.jar'
+        archive.write_bytes(b'abc')
+        digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+        with patch.object(m, 'EXPECTED_BYTES', 3), patch.object(m, 'EXPECTED_SHA256', digest):
+            result = m.download(self.output, self.receipt, self.fake([]), archive=archive)
+        self.assertEqual(result['selectedArchive'], str(archive))
+        self.assertEqual(result['sha256'], digest)
+        self.assertEqual(self.output.read_bytes(), archive.read_bytes())
+        self.assertEqual(self.calls, [])
+
+    def test_local_archive_with_wrong_content_cannot_be_used(self):
+        archive = self.root / 'wrong.jar'
+        archive.write_bytes(b'x' * m.EXPECTED_BYTES)
+        with self.assertRaises(RuntimeError):
+            m.download(self.output, self.receipt, self.fake([]), archive=archive)
+        self.assertFalse(self.output.exists())
+        self.assertEqual(json.loads(self.receipt.read_text())['attempts'][0]['error'], 'SHA-256 mismatch')
 
     def test_primary_exact_content_stops_without_requesting_mirror(self):
         result = self.invoke([(0, '200', b'abc')])
@@ -52,6 +71,11 @@ class DownloadTests(unittest.TestCase):
         result = self.invoke([(22, '404', b''), (0, '200', b'abc')])
         self.assertEqual(result['selectedUrl'], m.URLS[1]); self.assertEqual(result['attempts'][0]['httpStatus'], '404')
         self.assertEqual(len(self.calls), 2); self.assertEqual(json.loads(self.receipt.read_text()), result)
+
+    def test_two_404s_use_google_maven_central_mirror(self):
+        result = self.invoke([(22, '404', b''), (22, '404', b''), (0, '200', b'abc')])
+        self.assertEqual(result['selectedUrl'], m.URLS[2])
+        self.assertEqual(self.output.read_bytes(), b'abc')
 
     def test_wrong_size_short_or_long_and_wrong_hash_are_rejected(self):
         for data, reason in [(b'ab', 'Unexpected byte count'), (b'abcd', 'Unexpected byte count'), (b'xyz', 'SHA-256 mismatch')]:
@@ -69,9 +93,9 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(result['attempts'][0]['error'], '35 second process deadline exceeded')
 
     def test_all_sources_fail_no_jar_or_partial_file_survives(self):
-        with self.assertRaises(RuntimeError): self.invoke([(22, '404', b'bad'), (0, '200', b'xyz')])
+        with self.assertRaises(RuntimeError): self.invoke([(22, '404', b'bad'), (0, '200', b'xyz'), (22, '404', b'')])
         self.assertFalse(self.output.exists()); self.assertFalse(list(self.root.glob('.zxing-*')))
-        self.assertEqual(json.loads(self.receipt.read_text())['status'], 'failed'); self.assertEqual(len(self.calls), 2)
+        self.assertEqual(json.loads(self.receipt.read_text())['status'], 'failed'); self.assertEqual(len(self.calls), 3)
 
     def test_existing_output_or_receipt_is_never_replaced(self):
         for target in [self.output, self.receipt]:

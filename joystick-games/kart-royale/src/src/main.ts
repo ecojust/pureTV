@@ -77,7 +77,7 @@ const input = new Input();
 const sky = new Sky();
 const materials = new Materials();
 const track = new Track();
-const scenery = new Scenery();
+const scenery = new Scenery(() => pipeline.softwareLow);
 const effects = new Effects();
 const items = new Items();
 const race = new Race();
@@ -179,16 +179,18 @@ async function boot() {
   installContextRecovery();
   resize(true);
 
-  // Compile every shader before the first frame is presented. Doing it here
-  // costs a moment of boot; not doing it costs a dropped frame mid-race every
-  // time a new material first appears, which reads as the screen flashing black.
-  bootProgress(systems.length / (systems.length + 1), 'compiling shaders');
-  await new Promise((r) => requestAnimationFrame(r));
-  const warm = await prewarm(ctx);
-  console.info(
-    `[prewarm] ${warm.programsBefore} -> ${warm.programsAfter} programs ` +
-    `(${warm.objectsRevealed} hidden objects included) in ${warm.ms}ms`,
-  );
+  // On software Low, let three upload and compile what the current camera
+  // actually draws. Revealing hidden karts and pooled effects here delays the
+  // title and duplicates work on a CPU renderer with a small texture budget.
+  if (!pipeline.softwareLow) {
+    bootProgress(systems.length / (systems.length + 1), 'compiling shaders');
+    await new Promise((r) => requestAnimationFrame(r));
+    const warm = await prewarm(ctx);
+    console.info(
+      `[prewarm] ${warm.programsBefore} -> ${warm.programsAfter} programs ` +
+      `(${warm.objectsRevealed} hidden objects included) in ${warm.ms}ms`,
+    );
+  }
 
   // Deliberately NOT race.start(): the director already sits in RaceState.Menu,
   // which is what puts the title screen and character select on screen. Booting
@@ -1006,11 +1008,13 @@ function installContextRecovery() {
       console.error('[restore] environment re-bake failed', err);
     }
 
-    try {
-      const warm = await prewarm(ctx);
-      console.info(`[restore] re-warmed ${warm.programsBefore} -> ${warm.programsAfter} programs in ${warm.ms}ms`);
-    } catch (err) {
-      console.error('[restore] pre-warm failed; expect compile hitches', err);
+    if (!pipeline.softwareLow) {
+      try {
+        const warm = await prewarm(ctx);
+        console.info(`[restore] re-warmed ${warm.programsBefore} -> ${warm.programsAfter} programs in ${warm.ms}ms`);
+      } catch (err) {
+        console.error('[restore] pre-warm failed; expect compile hitches', err);
+      }
     }
 
     // Hand the simulation a fresh clock. Without this the first frame back sees

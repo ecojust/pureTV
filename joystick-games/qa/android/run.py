@@ -43,9 +43,69 @@ def file_info(path):
     return {'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
 
 
+def backroad_scene_sample(path, ghost_labels=()):
+    """Sample world pixels outside the racing HUD, controller card and projected names."""
+    width, height = 160, 90
+    image = subprocess.check_output(
+        ['ffmpeg', '-nostdin', '-v', 'error', '-i', str(path), '-frames:v', '1',
+         '-vf', f'scale={width}:{height}:flags=neighbor', '-pix_fmt', 'rgb24',
+         '-f', 'rawvideo', '-threads', '1', 'pipe:1'], timeout=20)
+    if len(image) != width * height * 3:
+        raise ValueError('Incomplete gameplay screenshot')
+    colors = set()
+    sampled = violet = 0
+    # The upstream draws projected rival names in the DOM, even above a uniformly blank canvas.
+    # Leave the horizon centre out and mask the observed bounds on either side of the screenshot.
+    rectangles = [(left * width - 2, top * height - 2, right * width + 2, bottom * height + 2)
+                  for left, top, right, bottom in ghost_labels if left < right and top < bottom]
+    for left, top, right, bottom in ((20, 22, 54, 32), (102, 22, 115, 32), (20, 59, 115, 72)):
+        for y in range(top, bottom):
+            for x in range(left, right):
+                if any(a <= x <= c and b <= y <= d for a, b, c, d in rectangles):
+                    continue
+                offset = (y * width + x) * 3
+                rgb = bytes(image[offset:offset + 3])
+                colors.add(rgb)
+                red, green, blue = rgb
+                sampled += 1
+                if blue >= 150 and blue - green >= 100 and blue - red >= 55:
+                    violet += 1
+    return {'colors': len(colors), 'sampledPixels': sampled, 'saturatedVioletPixels': violet}
+
+
+def backroad_scene_colors(path, ghost_labels=()):
+    return backroad_scene_sample(path, ghost_labels)['colors']
+
+
+def backroad_finland_violet_scene(capture, sample):
+    # Only this unchanged Finnish quick-stage, stage-default weather and Swift Mk1
+    # has a native reference. Its dirt/grass never fills the picture with saturated violet.
+    url = 'https://game-kit.invalid/tv.html?mode=quick&stage=finland&car=swift&cond=stage&weather=stage'
+    for moment in ('before', 'after'):
+        state = capture[moment]
+        game = state.get('game', {})
+        if state.get('page', {}).get('url') != url or game.get('stage') != 'playing':
+            return False
+        gameplay = game.get('gameplay', {})
+        if gameplay.get('stageId') != 'finland' or gameplay.get('carId') != 'swift':
+            return False
+    return sample['saturatedVioletPixels'] * 2 > sample['sampledPixels']
+
+
+
 OBSERVER_REQUEST_TIMEOUT = 15
 OBSERVER_SNAPSHOT_TIMEOUT = 45
 OBSERVER_SNAPSHOT_ATTEMPTS = 3
+OBSERVER_TRANSPORT_ERRORS = (RemoteDisconnected, ConnectionResetError, ConnectionAbortedError,
+                             ConnectionRefusedError, TimeoutError)
+OBSERVER_READ_ERRORS = OBSERVER_TRANSPORT_ERRORS + (URLError,)
+BACKROAD_ORIGINAL_APK = '67f61471e0e23e9ea963475425d5c43fa9d3265167f9028bd55dc319494fbe3c'
+BACKROAD_ENTRY = 'https://game-kit.invalid/tv.html'
+BACKROAD_FINLAND = BACKROAD_ENTRY + '?mode=quick&stage=finland&car=swift&cond=stage&weather=stage'
+BACKROAD_MENU_SOURCES = {
+    'joystick-games/backroad-rally/src/upstream/src/menu/menu.ts': 'd2c5b5f6d665957cd27ddf46477e8d5f8ed6f5fd7470050f91fb3f86e5372885',
+    'joystick-games/backroad-rally/src/upstream/src/menu/nav.ts': '4d7d57397b4dc816fb270b7bf84c59d2b6c1146f10aa879f856d89eb317391f8',
+}
 NIGHT_LOW_RELOAD_APK = '66e2589ece8a13bc03d9796259b2662aef34c56c166265db0a63d3baa2b72c91'
 NIGHT_LOW_RELOAD_SOURCES = {
     'joystick-games/night-racer/src/src/main.js': 'ad1edb9d785799db5cd357d614005d2e044b79bed7c7635e019e693e65b49004',
@@ -61,6 +121,12 @@ def install_timeout(apk_bytes):
     return min(240, max(45, 30 + 2 * math.ceil(apk_bytes / 1_000_000)))
 
 
+def dropped_observer_transport(error):
+    return isinstance(error, OBSERVER_TRANSPORT_ERRORS) or (
+        isinstance(error, URLError) and not isinstance(error, HTTPError)
+        and isinstance(error.reason, OBSERVER_TRANSPORT_ERRORS))
+
+
 def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None):
     """Retry only failed read-only transports; never reuse a previous snapshot.
 
@@ -71,9 +137,6 @@ def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None):
     assert 0 < timeout <= OBSERVER_SNAPSHOT_TIMEOUT
     deadline = time.monotonic() + timeout
     failures = 0
-    transport_errors = (RemoteDisconnected, ConnectionResetError, ConnectionAbortedError,
-                        ConnectionRefusedError, TimeoutError)
-    caught_errors = transport_errors + (URLError,)
     for attempt in range(1, OBSERVER_SNAPSHOT_ATTEMPTS + 1):
         remaining = deadline - time.monotonic()
         if remaining <= 0:
@@ -85,10 +148,10 @@ def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None):
                 value = json.load(response)
             if time.monotonic() > deadline:
                 raise TimeoutError('Read-only observer snapshot wall deadline expired')
-        except caught_errors as error:
+        except OBSERVER_READ_ERRORS as error:
             # HTTPError is also a URLError: a valid HTTP error is not a dropped
             # connection. Unknown URL errors and malformed JSON remain fatal.
-            if isinstance(error, HTTPError) or (isinstance(error, URLError) and not isinstance(error.reason, transport_errors)):
+            if not dropped_observer_transport(error):
                 raise
             failures += 1
             remaining = deadline - time.monotonic()
@@ -386,10 +449,14 @@ class Acceptance:
         self.release_observed(key)
         return observed
 
-    def release(self):
-        before = self.snapshot()
+    def send_releases(self):
         for key in KEYS:
             self.button(key, False)
+
+    def release(self, before=None):
+        if before is None:
+            before = self.snapshot()
+        self.send_releases()
         return self.wait_fresh(before, lambda s: not any(self.native_buttons(s).get(k) for k in KEYS), label='all-released')
 
     def wait_sent_ack(self, client, sequence, timeout=10):
@@ -632,7 +699,7 @@ class Acceptance:
         assert self.command('shell', 'pidof', self.package).decode().strip() == self.report['targetPid'], 'Game process restarted during the purported same-session check'
         self.passed('controller service keeps the same port throughout live session and reconnection', self.service_port)
 
-    def validate_catalog_snapshot(self, snapshot):
+    def validate_catalog_snapshot(self, snapshot, dom_menu_step=None):
         game = self.game(snapshot)
         assert game.get('game') == self.args.game, 'Snapshot game identity mismatch'
         assert game.get('renderer') in plan.accepted_renderers(self.plan), 'Actual renderer differs from QA plan'
@@ -650,7 +717,20 @@ class Acceptance:
         assert type(game.get('paused')) is bool and type(game.get('frames')) is int
         assert isinstance(game.get('gameplay'), dict) and game['gameplay'], 'Missing actual gameplay observations'
         assert not game.get('error') and not game.get('errors'), 'Game initialization or runtime error'
-        if self.plan['renderer'] != 'dom':
+        if dom_menu_step is not None:
+            assert game['stage'] == 'menu' and not game['paused']
+            assert snapshot.get('activityState') == 'resumed' and snapshot.get('windowFocused') is True
+            page = snapshot['page']
+            assert page.get('hidden') is False and page.get('focused') is True
+            assert page.get('width', 0) > 0 and page.get('height', 0) > 0
+            # These HTML/SVG menus hide the WebGL canvas using CSS visibility.
+            # Its laid-out backing surface remains underneath the focused menu.
+            assert any(c.get('width', 0) > 0 and c.get('height', 0) > 0 and
+                       abs(c.get('clientWidth', 0) - page['width']) <= 1 and
+                       abs(c.get('clientHeight', 0) - page['height']) <= 1
+                       for c in page.get('canvases', [])), 'Missing retained full-screen game canvas'
+            assert plan.matches(dom_menu_step['expect'], game, game), 'Unexpected focused game menu'
+        elif self.plan['renderer'] != 'dom':
             assert any(c.get('width', 0) > 0 and c.get('height', 0) > 0 and c.get('visible')
                        for c in snapshot.get('page', {}).get('canvases', [])), 'No visible initialized rendering canvas'
         if game['stage'] in ('playing', 'paused'):
@@ -708,6 +788,21 @@ class Acceptance:
         # the normal Low preference handler reloads the document. Do not infer
         # a reload from a decreasing poll counter or an arbitrary changed field.
         game = self.game(before)
+        current = game.get('gameplay', {})
+        stage_expect = [{'path': 'gameplay.phase', 'op': 'eq', 'value': 'running'},
+                        {'path': 'stage', 'op': 'eq', 'value': 'playing'}]
+        if (self.args.game == game.get('game') == 'backroad-rally'
+                and self.report['apk'].get('sha256') == BACKROAD_ORIGINAL_APK and self.report['apk'].get('bytes') == 105024551
+                and before.get('page', {}).get('url') == BACKROAD_ENTRY and game.get('stage') == 'menu'
+                and (current.get('screen'), current.get('flow'), current.get('menuFocus')) == ('stageselect', 'quick', 'start')
+                and current.get('carIndex') == current.get('stageIndex') == 0
+                and step.get('name') == 'Start and wait for untouched warm-up/countdown'
+                and step.get('keys') == ['A'] and step.get('menuTap') is True and step.get('expect') == stage_expect):
+            for name, digest in BACKROAD_MENU_SOURCES.items():
+                assert file_info(ROOT / name)['sha256'] == digest, 'Original Finland location.assign source changed'
+            return {'kind': 'original-finland-stage-location-assign', 'apkSha256': BACKROAD_ORIGINAL_APK,
+                    'sourceSha256': dict(BACKROAD_MENU_SOURCES), 'fromUrl': BACKROAD_ENTRY, 'toUrl': BACKROAD_FINLAND,
+                    'postReloadFreshPollsRequired': 2, 'maximumBootSeconds': 720}
         expected = [{'path': 'gameplay.renderPreset', 'op': 'eq', 'value': 'low'},
                     {'path': 'gameplay.menu.root', 'op': 'eq', 'value': 'title'},
                     {'path': 'gameplay.menu.focusId', 'op': 'eq', 'value': 'start'},
@@ -756,7 +851,9 @@ class Acceptance:
                   'declaredHoldMs': step['holdMs'], 'beforePollCount': self.game(before)['controller']['pollCount'],
                   'reloadBasis': basis, 'samples': [], 'sampleCount': 0, 'samplesTruncated': False}
         self.report.setdefault('menuTapObservations', []).append(record)
-        started = time.monotonic(); deadline = started + step.get('timeoutSeconds', 15)
+        finland_boot = basis is not None and basis['kind'] == 'original-finland-stage-location-assign'
+        transition_seconds = basis['maximumBootSeconds'] if finland_boot else step.get('timeoutSeconds', 15)
+        started = time.monotonic(); deadline = started + transition_seconds
         candidate = None; stable = 0; down_sent = False; released = False
         try:
             with client.lock:
@@ -773,7 +870,16 @@ class Acceptance:
                 self.wait_sent_ack(client, sequence, timeout=min(10, remaining))
             record['wire'] = self.menu_wire_pair(key, down_seq, release_seq)
             while time.monotonic() < deadline:
-                state = self.snapshot(timeout=min(OBSERVER_SNAPSHOT_TIMEOUT, max(.001, deadline - time.monotonic())))
+                try:
+                    state = self.snapshot(timeout=min(OBSERVER_SNAPSHOT_TIMEOUT, max(.001, deadline - time.monotonic())))
+                except (RemoteDisconnected, ConnectionResetError, ConnectionAbortedError, ConnectionRefusedError, TimeoutError, URLError) as error:
+                    if (not finland_boot or self.instrument.poll() is not None or isinstance(error, HTTPError)
+                            or isinstance(error, URLError) and not isinstance(error.reason, (ConnectionError, TimeoutError))):
+                        raise
+                    # Only a new GET may provide a state. A missing response breaks the stable sequence.
+                    record['unavailableStageReads'] = record.get('unavailableStageReads', 0) + 1
+                    candidate = None; stable = 0
+                    continue
                 game = self.game(state); count = game.get('controller', {}).get('pollCount')
                 assert not game.get('error') and not game.get('errors'), 'Game error during menu tap'
                 release_seen = self.menu_released(state, before)
@@ -781,10 +887,19 @@ class Acceptance:
                 # In the one source-proven reload, the first new Low document
                 # snapshot is only a baseline, never itself a successful frame.
                 fresh = self.frame_advanced(state, before) or (basis is not None and type(count) is int and count > 0)
+                if finland_boot:
+                    play = game.get('gameplay', {})
+                    fresh = (state.get('page', {}).get('url') == basis['toUrl'] and type(count) is int and count > 0
+                             and game.get('game') == 'backroad-rally' and game.get('renderer') == 'webgl2'
+                             and type(game.get('frames')) is int and game['frames'] > 0
+                             and play.get('stageId') == 'finland' and play.get('carId') == 'swift'
+                             and game.get('controller', {}).get('inputAvailable') is True)
                 qualified = fresh and release_seen and expected
                 record['sampleCount'] += 1
                 record['samples'].append({'pollCount': count, 'released': release_seen, 'expectationMatches': expected,
                                           'qualified': qualified, 'elapsedSeconds': time.monotonic() - started})
+                if finland_boot:
+                    record['samples'][-1].update(url=state.get('page', {}).get('url'), phase=game.get('gameplay', {}).get('phase'))
                 if len(record['samples']) > 64:
                     del record['samples'][16]; record['samplesTruncated'] = True
                 if qualified:
@@ -811,6 +926,57 @@ class Acceptance:
                 try: self.button(key, False)
                 except Exception: pass
 
+    def finish_catalog_hold(self, step, before, held):
+        budget = step.get('timeoutSeconds', 15)
+        deadline = time.monotonic() + budget
+        try:
+            observed = self.snapshot()
+        except Exception as error:
+            # An unresponsive WebView cannot supply another pre-release snapshot.
+            # The real down has already been seen in held, so send the SDK releases now.
+            self.send_releases()
+            if not dropped_observer_transport(error):
+                raise
+            observed = None
+        else:
+            self.release(before=observed)
+
+        def expected(state):
+            return plan.matches(step['expect'], self.game(state), self.game(before))
+
+        if observed is not None:
+            if expected(observed):
+                return observed
+            return self.wait_fresh(held, expected, timeout=budget, label='plan-gameplay-' + step['name'])
+
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError(step['name'] + ' exhausted its observer budget')
+        # A busy WebView may close three GETs while compiling a course. Recover only
+        # with new observations of a released, advancing game that meets all predicates.
+        def released_and_expected(state):
+            buttons = self.native_buttons(state)
+            return all(buttons.get(key) is False for key in KEYS) and expected(state)
+
+        return self.wait_fresh(held, released_and_expected, timeout=remaining,
+                               label='plan-gameplay-released-' + step['name'])
+
+    def capture_racing_checkpoint(self, state):
+        # The plan already verified moving speed and progress. Collect the current
+        # display without consuming another controller frame or changing later QA.
+        checkpoint = {'afterFrame': self.game(state)['frames'], 'startedAt': time.time()}
+        self.report.setdefault('racingCheckpoints', []).append(checkpoint)
+        try:
+            data = subprocess.check_output(self.adb + ['exec-out', 'screencap', '-p'], timeout=15)
+            assert data.startswith(b'\x89PNG\r\n\x1a\n'), 'Invalid Android screenshot'
+            path = self.out / 'driving-checkpoint.png'
+            path.write_bytes(data)
+            checkpoint.update(path=path.name, **file_info(path))
+        except (OSError, AssertionError, subprocess.SubprocessError) as error:
+            checkpoint['error'] = str(error)
+        checkpoint['endedAt'] = time.time()
+        self.save()
+
     def catalog_scenarios(self):
         # The per-game plan owns startup/menu navigation as well as gameplay inputs.
         assert self.game(self.snapshot()).get('stage') == 'menu'
@@ -824,17 +990,17 @@ class Acceptance:
                 continue
             for key in step['keys']: self.button(key)
             held = self.wait_fresh(before, lambda s: all(self.native_buttons(s).get(k) is True for k in step['keys']),
-                                   label='plan-held-' + step['name'])
+                                   timeout=max(60, step.get('timeoutSeconds', 60)), label='plan-held-' + step['name'])
             time.sleep(step['holdMs'] / 1000)
             # Capture gameplay while input is still held; release-only changes can also satisfy the plan below.
-            observed = self.snapshot()
-            self.release()
-            after = observed if plan.matches(step['expect'], self.game(observed), self.game(before)) else self.wait_fresh(
-                held, lambda s: plan.matches(step['expect'], self.game(s), self.game(before)),
-                timeout=step.get('timeoutSeconds', 15), label='plan-gameplay-' + step['name'])
-            self.validate_catalog_snapshot(after)
+            after = self.finish_catalog_hold(step, before, held)
             self.record('after-plan-' + step['name'], after)
+            self.validate_catalog_snapshot(after, step if step.get('androidDomMenu') else None)
+            if step.get('androidDomMenu'):
+                self.capture('dom-menu-' + str(self.plan['steps'].index(step)), [self.clients[0].identity])
             self.passed('actual SDK gameplay: ' + step['name'], {'expect': step['expect'], 'holdMs': step['holdMs']})
+            if self.args.game == 'ponpoko-kart' and step['name'] == 'Accelerate on original course':
+                self.capture_racing_checkpoint(after)
         self.capture('playing', [self.clients[0].identity])
         self.catalog_pause()
         self.capture('paused', [self.clients[0].identity])
@@ -1010,7 +1176,19 @@ def main():
     assert not a.confirm_backroad_install or a.game == 'backroad-rally', 'Per-app confirmation is Backroad-only'
     acceptance = Acceptance(a)
     try:
-        acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'
+        acceptance.setup()
+        acceptance.scenarios()
+        if a.game == 'backroad-rally':
+            playing = next(c for c in acceptance.captures if c['path'] == 'playing.png')
+            labels = [rect for moment in ('before', 'after') for rect in playing[moment]['page'].get('backroadGhostLabels', [])]
+            sample = backroad_scene_sample(acceptance.out / 'playing.png', labels)
+            acceptance.report['playingSceneColors'] = sample['colors']
+            acceptance.report['playingSceneSample'] = sample
+            if sample['colors'] <= 1:
+                raise AssertionError('Backroad gameplay screenshot has a uniform world behind the HUD')
+            if backroad_finland_violet_scene(playing, sample):
+                raise AssertionError('Finland quick-stage dirt and grass are missing beneath a predominantly violet world')
+        acceptance.report['status'] = 'passed'
     except Exception:
         acceptance.report['status'] = 'failed'; acceptance.report['error'] = traceback.format_exc()
         acceptance.save(); raise

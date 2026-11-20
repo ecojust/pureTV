@@ -203,10 +203,14 @@ export class Look {
   }
 
   setPost(on: boolean): void {
-    this.post.enabled = on;
+    // The optional DOF, bloom and FSR passes allocate half-float targets of their own.
+    // Use the original direct scene, per-material fog and ACES path on RGBA8-only devices.
+    this.post.enabled = on && this.renderer.getOutputBufferType() === THREE.HalfFloatType;
     this.placeFog();
     // with post the pipeline tone-maps itself; without it the renderer does ACES at the same exposure
-    this.renderer.toneMapping = on ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
+    // The explicitly linear canvas bypasses Three's final colour-transform render target.
+    const sceneToneMap = this.renderer.outputColorSpace === THREE.LinearSRGBColorSpace ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
+    this.renderer.toneMapping = this.post.enabled ? THREE.NoToneMapping : sceneToneMap;
   }
 
   setCondition(name: string): void {

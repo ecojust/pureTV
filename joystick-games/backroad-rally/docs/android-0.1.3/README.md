@@ -1,0 +1,9 @@
+# Backroad Rally 0.1.3 Android TV 渲染对照
+
+0.1.3 在识别到软件 GPU 时为原 WebGL2 画布和 Three.js 输出目标关闭 MSAA，保留 0.1.2 的 RGBA8、原 ACES 和原材质。测试安装原签名包，SHA-256 为 `5faf718f1307f8000ee74a9672c515130e0d7b335b369f804a3b4741873aed1c`，版本号为 4。[原包签名复核](https://github.com/ecojust/pureTV/actions/runs/44690984853)
+
+在 API 36 的 Android TV `swiftshader_indirect` 后端，WebGL2 实报 Android Emulator OpenGL ES Translator (Google SwiftShader)。实际画布抗锯齿为 false，绘制缓冲区为 528 × 297。渲染帧从 313 前进到 314，默认帧缓冲中央 96 × 54 的所有像素均不透明，共 32 种颜色；160 × 90 的完整画布采样均不透明，有 1,522 种颜色。[原上下文信息](https://github.com/ecojust/pureTV/blob/3f6bccecb2f435b1d29934c8ab02dba1d3f40753/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/original-stage-running-capabilities.json) · [原始 RGBA 样本](https://github.com/ecojust/pureTV/blob/3f6bccecb2f435b1d29934c8ab02dba1d3f40753/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/report.json)
+
+使用原手柄 SDK 按住上方向键，游戏记录车速从接近零升至 11.92 km/h，后续系统截图显示 15 km/h。全程 133 条 SDK 消息均获得确认。画面可见观众、电线杆和房车，但土路和草地呈大片紫色，车身呈黑色，未通过芬兰赛段画面验收。[起跑图](https://github.com/ecojust/pureTV/blob/3f6bccecb2f435b1d29934c8ab02dba1d3f40753/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/original-stage-running.png) · [驾驶图](https://github.com/ecojust/pureTV/blob/3f6bccecb2f435b1d29934c8ab02dba1d3f40753/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/original-stage-accelerated.png) · [同赛段可正常显示的 Android 原图](../android-0.1.2/README.md)
+
+同一签名包的完整生产验收使用原手柄流程。默认端口和端口占用回退两次各完成 77 项。两份 playing.png 均可见紫色路面、草地和黑色赛车。在相同芬兰首赛段的固定取样区内，默认端口画面有 1,379 / 1,705 个饱和紫色像素，端口占用回退画面有 1,569 / 1,705 个；两幅都未通过更新后的该赛段画面检查。Android TV 可玩版本仍需按具体图形后端判断。[完整生产运行](https://github.com/ecojust/pureTV/actions/runs/44690088277) · [默认端口原图和报告](https://github.com/ecojust/pureTV/tree/f45d4614c73a84509ee2af2a63d11a37de3b4886/artifact/backroad-rally-normal) · [端口回退原图和报告](https://github.com/ecojust/pureTV/tree/f45d4614c73a84509ee2af2a63d11a37de3b4886/artifact/backroad-rally-occupied)

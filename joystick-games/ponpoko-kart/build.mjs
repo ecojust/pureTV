@@ -8,10 +8,16 @@ const result = await esbuild.build({
   absWorkingDir: root, entryPoints: ['src/main.js'], outfile: 'game.js',
   bundle: true, splitting: false, format: 'iife', target: 'es2020',
   minify: true, write: false, legalComments: 'inline',
-  loader: { '.ttf': 'dataurl' },
+  loader: { '.ttf': 'dataurl', '.png': 'dataurl' },
 });
 const files = Object.fromEntries(result.outputFiles.map(f => [path.basename(f.path), Buffer.from(f.contents)]));
 files['tv.html'] = fs.readFileSync(path.join(root, 'src/tv.html'));
+for (const course of ['inaka', 'sakura', 'matsuri']) {
+  for (const surface of ['map', 'normal']) {
+    const name = `road-${course}-${surface}.png`;
+    files[name] = fs.readFileSync(path.join(root, 'src/track-art', name));
+  }
+}
 const notices = ['NOTICE.md', 'LICENSE', 'node_modules/three/LICENSE',
   'src/fonts/delagothicone-OFL.txt', 'src/fonts/mplusrounded1c-OFL.txt', 'src/fonts/yujisyuku-OFL.txt'];
 files['THIRD-PARTY-NOTICES.txt'] = Buffer.from(notices.map(p => p + '\n\n' + fs.readFileSync(path.join(root, p), 'utf8')).join('\n\n'));

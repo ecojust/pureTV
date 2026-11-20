@@ -97,6 +97,14 @@ def validate_plan(plan):
             assert isinstance(release, dict) and set(release) == {'timeoutSeconds'}
             assert type(release['timeoutSeconds']) is int and 0 < release['timeoutSeconds'] <= 60
             assert step.get('windowsHoldUntilExpect') is True, 'Release observation requires bounded held throttle'
+        if 'androidDomMenu' in step:
+            assert type(step['androidDomMenu']) is bool
+            if step['androidDomMenu']:
+                assert keys == ['A'] and plan['renderer'] == 'webgl2'
+                assert len(expectations) == 2
+                for item, path in zip(expectations, ('gameplay.screen', 'gameplay.menuFocus')):
+                    assert item.get('path') == path and item.get('op') == 'eq'
+                    assert isinstance(item.get('value'), str) and item['value'].strip()
         for item in expectations:
             assert isinstance(item, dict) and isinstance(item.get('path'), str) and PATH.fullmatch(item['path'])
             assert item.get('op') in OPERATORS

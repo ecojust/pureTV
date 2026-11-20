@@ -16,7 +16,8 @@ import * as THREE from 'three';
 import { EffectComposer } from 'postprocessing';
 import { Quality, type Ctx, type Settings, type System } from '../types';
 import { PostFX } from './PostFX';
-import { glCapabilities, forcedFailure, drainErrors, type GLCapabilities } from '../core/Settings';
+import { installSoftwareSurfaces } from './SoftwareSurfaces';
+import { glCapabilities, usesSoftwareLow, forcedFailure, drainErrors, type GLCapabilities } from '../core/Settings';
 import { logPipeline, recordShaderError, type FrameSample } from '../core/Diagnostics';
 
 interface DeviceProfile {
@@ -123,7 +124,7 @@ function describeProgram(
     }
     // The lit families three ships. Any of them being rejected takes visible
     // geometry with it; a postprocessing EffectMaterial being rejected does not.
-    if (/RE_Direct_Physical|RE_Direct_BlinnPhong|RE_Direct_Lambert|RE_Direct_Toon/.test(src)) {
+    if (/RE_Direct_Physical|RE_Direct_BlinnPhong|RE_Direct_Lambert|RE_Direct_Toon|PURETV_SOFTWARE_SURFACE/.test(src)) {
       world = true;
     }
   }
@@ -174,6 +175,7 @@ export class RenderPipeline implements System {
   private ctx!: Ctx;
   private device: DeviceProfile = { webgl2: false, halfFloat: false, software: false, name: '' };
   private usePost = false;
+  private releaseSoftwareSurfaces: (() => void) | null = null;
   /** Current position on the fallback ladder. Only ever moves downward. */
   private rung: Rung = Rung.Hdr;
   /** The material every object is drawn with at Rung.Safe / Rung.Flat. */
@@ -194,6 +196,10 @@ export class RenderPipeline implements System {
   private gl: WebGLRenderingContext | WebGL2RenderingContext | null = null;
 
   constructor(private readonly canvasParent: HTMLElement) {}
+
+  get softwareLow(): boolean {
+    return usesSoftwareLow(this.ctx.settings.quality, this.device.software);
+  }
 
   init(ctx: Ctx) {
     this.ctx = ctx;
@@ -219,7 +225,7 @@ export class RenderPipeline implements System {
       throw new Error('WebGL 2 is unavailable, so the renderer cannot be created.');
     }
     if (!caps.halfFloatRenderable) this.rung = Rung.Ldr;
-    if (!caps.byteRenderable) this.rung = Rung.Direct;
+    if (!caps.byteRenderable || this.softwareLow) this.rung = Rung.Direct;
     if (this.rung !== Rung.Hdr) {
       logPipeline('start', `pipeline starts on ${RUNG_NAMES[this.rung]} (boot probe)`);
     }
@@ -249,7 +255,7 @@ export class RenderPipeline implements System {
       // With the composer running, MSAA lives on the composer's render target
       // and the default framebuffer only ever receives one fullscreen triangle.
       // Without a composer, the driver's MSAA is the only edge treatment left.
-      antialias: !this.usePost,
+      antialias: !this.usePost && !this.softwareLow,
       powerPreference: 'high-performance',
       stencil: false,
       depth: true,
@@ -320,6 +326,9 @@ export class RenderPipeline implements System {
     this.renderer = renderer;
     try { this.gl = renderer.getContext(); } catch { this.gl = null; }
     ctx.renderer = renderer;
+    if (this.device.software) {
+      this.releaseSoftwareSurfaces = installSoftwareSurfaces(renderer, ctx, () => this.softwareLow && this.rung === Rung.Direct);
+    }
     // Same contract as `window.__drawBudget`: the capture and perf harnesses
     // need to read the device profile and reach into the effect chain (which
     // is deliberately not on Ctx) to A/B a single pass.
@@ -663,6 +672,8 @@ export class RenderPipeline implements System {
     this.samplePixels = null;
     this.notice?.remove();
     this.notice = null;
+    this.releaseSoftwareSurfaces?.();
+    this.releaseSoftwareSurfaces = null;
     this.renderer?.dispose();
     if (el !== undefined && el.parentNode !== null) el.parentNode.removeChild(el);
   }

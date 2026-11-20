@@ -1,0 +1,58 @@
+{
+  "runId": 44683658593,
+  "exportCommit": "46bcc07093d3b861423c5c039a2d0295c6256d34",
+  "apkSha256": "192ebd9366bce0447b0d35df22a326a93e230fc980bf2bdb3e5db7a30e0fa82c",
+  "environment": "Android TV API 34, x86, 720p; Lavapipe, Vulkan feature disabled",
+  "evidence": {
+    "logcatInAdbCommandOutput": {
+      "url": "https://raw.githubusercontent.com/ecojust/pureTV/46bcc07093d3b861423c5c039a2d0295c6256d34/evidence/joystick-android-runtime-ponpoko-kart/ponpoko-kart-occupied/adb-commands.jsonl",
+      "sha256": "868465b4041e674a32c5ae7e5d3f949fbec70e2ae7f4ab0f899bf8bb2a7677db",
+      "bytes": 6125339
+    },
+    "occupiedRawSdkWire": {
+      "url": "https://raw.githubusercontent.com/ecojust/pureTV/46bcc07093d3b861423c5c039a2d0295c6256d34/evidence/joystick-android-runtime-ponpoko-kart/ponpoko-kart-occupied/wire.jsonl",
+      "sha256": "cd0a1611d712c8676e5dd8115b327b690c29d07d28714a59645a9818da494b52",
+      "bytes": 281981
+    }
+  },
+  "androidAnrReason": "App requested: Buffer processing hung up due to stuck fence. Indicates GPU hang",
+  "cases": {
+    "normal": {
+      "pid": 2940,
+      "originalReport": {
+        "url": "https://raw.githubusercontent.com/ecojust/pureTV/46bcc07093d3b861423c5c039a2d0295c6256d34/evidence/joystick-android-runtime-ponpoko-kart/ponpoko-kart-normal/report.json",
+        "sha256": "e0582f15ba34b91775e926582f388f1dc18cfd9dcb4ff774006cfbae0c9124e2",
+        "bytes": 339194
+      },
+      "lastTest": "timeout-plan-held-Skip authored intro with jump and wait for real countdown",
+      "beforeFrame": 156,
+      "lastReadableFrame": 157,
+      "lastReadableMode": "intro",
+      "lastReadablePaused": false,
+      "activityManagerAnrGuestTime": "06:02:17.486",
+      "activityManagerKillGuestTime": "06:02:17.531",
+      "matchingSdkAcks": 273
+    },
+    "occupied": {
+      "pid": 5118,
+      "originalReport": {
+        "url": "https://raw.githubusercontent.com/ecojust/pureTV/46bcc07093d3b861423c5c039a2d0295c6256d34/evidence/joystick-android-runtime-ponpoko-kart/ponpoko-kart-occupied/report.json",
+        "sha256": "371cd04e13452bde45a888c01296f73b01bc3442c98f918aaaa9889db919915f",
+        "bytes": 518280
+      },
+      "lastTest": "timeout-plan-held-Pause from physical START",
+      "beforeFrame": 251,
+      "lastReadableFrame": 252,
+      "lastReadableMode": "racing",
+      "lastReadablePaused": false,
+      "activityManagerAnrGuestTime": "06:14:44.246",
+      "activityManagerKillGuestTime": "06:14:44.258",
+      "matchingSdkAcks": 540,
+      "sdkStartDownSequence": 534,
+      "sdkStartDownHostUtc": "2026-11-20T06:14:34.377Z",
+      "sdkStartAckHostUtc": "2026-11-20T06:14:34.396Z",
+      "rawStartInLastReadableSnapshot": false
+    }
+  },
+  "interpretation": "Android reported a stuck graphics buffer fence and terminated each target process. In the occupied case the SDK acknowledged START. The last readable snapshot still showed racing. The native report does not establish a pause transition or a key-release failure."
+}

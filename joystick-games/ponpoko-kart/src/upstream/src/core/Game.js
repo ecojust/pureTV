@@ -24,9 +24,10 @@ function safe(obj) {
 }
 
 export class Game {
-  constructor(app, { ui = null, audio = null, stages = [], characters = [], kartApi = null, itemApi = null } = {}) {
+  constructor(app, { ui = null, audio = null, stages = [], characters = [], kartApi = null, itemApi = null, prepareCourse = null } = {}) {
     this.app = app;
     this.renderer = new Renderer(app);
+    this.prepareCourse = prepareCourse;
     this.input = new Input();
     this.input.onCancel = () => {
       this.cancelControls();
@@ -67,7 +68,8 @@ export class Game {
     const def = this.stages.find((s) => s.id === courseId) || this.stages[0];
     this.def = def;
     await new Promise((r) => setTimeout(r, 30)); // let the loading screen paint
-    const world = new World(this.renderer, def, { quality: this.quality });
+    if (this.prepareCourse) await this.prepareCourse(def);
+    const world = new World(this.renderer, def, { quality: this.quality, shadowSize: this.courseShadowSize });
     await world.decorate({ fx: null, audio: this.audio });
     this.world = world;
     this.fx = new FX(world.scene);
@@ -212,8 +214,11 @@ export class Game {
       this.togglePause();
     }
     if (this.paused) {
-      this.renderer.render(0);
-      this.tv?.rendered();
+      // The DOM pause menu remains interactive over the last composited race frame.
+      if (!this.reusePausedFrame || !this.renderer.hasRenderedFrame) {
+        this.renderer.render(0);
+        this.tv?.rendered();
+      }
       this.input.endFrame();
       return;
     }

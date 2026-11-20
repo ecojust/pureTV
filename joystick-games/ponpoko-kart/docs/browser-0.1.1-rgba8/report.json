@@ -1,0 +1,129 @@
+{
+  "gameId": "ponpoko-kart",
+  "version": "0.1.1",
+  "dateUtc": "2026-11-20",
+  "sourceCommit": "2ff18c0adb710b08d4a8c61f112d39f8ace102cc",
+  "packageSourceCommit": "88be72b403edb6dc79f5ca7282d7a2d31fec9882",
+  "environment": {
+    "runtime": "Chromium 156.0.8078.79 (Debian 13, headless)",
+    "renderer": "ANGLE / SwiftShader",
+    "size": [
+      480,
+      270
+    ],
+    "deviceScaleFactor": 1,
+    "maskedWebGL2Extensions": [
+      "EXT_color_buffer_float",
+      "EXT_color_buffer_half_float"
+    ],
+    "webGLContextsAtTitle": 1
+  },
+  "controls": {
+    "transport": "Synthetic browser PureGameHost.snapshot() button frames",
+    "actions": [
+      "START at title",
+      "A at character selection",
+      "START at course selection",
+      "A on starting grid",
+      "hold UP through countdown and into race"
+    ],
+    "observation": "Read-only window.JoystickGameQA.snapshot(). Every menu input was held until the game observed it, then released. Game clock and model used the production implementation."
+  },
+  "observed": [
+    {
+      "frame": 3,
+      "screen": "title"
+    },
+    {
+      "frame": 9,
+      "screen": "chars"
+    },
+    {
+      "frame": 15,
+      "screen": "course"
+    },
+    {
+      "frame": 26,
+      "screen": "intro"
+    },
+    {
+      "frame": 32,
+      "screen": "countdown"
+    },
+    {
+      "frame": 58,
+      "screen": "racing"
+    },
+    {
+      "frame": 66,
+      "screen": "racing",
+      "speed": 8.830703297295422
+    },
+    {
+      "frame": 70,
+      "screen": "racing",
+      "speed": 12.923207343949418
+    }
+  ],
+  "rendererProbe": {
+    "method": "WebGL2 renderer and water target initialized for each capability profile. Read back one red mesh pixel after rendering and checked gl.getError().",
+    "profiles": [
+      {
+        "colorBuffer": "RGBA8",
+        "samples": 0,
+        "floatWater": false,
+        "bloom": false,
+        "pixel": [
+          255,
+          26,
+          13,
+          255
+        ],
+        "glError": 0
+      },
+      {
+        "colorBuffer": "RGBA16F",
+        "samples": 4,
+        "floatWater": true,
+        "bloom": true,
+        "pixel": [
+          255,
+          29,
+          14,
+          255
+        ],
+        "glError": 0
+      },
+      {
+        "colorBuffer": "RGBA16F",
+        "samples": 0,
+        "floatWater": true,
+        "bloom": true,
+        "pixel": [
+          255,
+          29,
+          14,
+          255
+        ],
+        "glError": 0
+      }
+    ]
+  },
+  "capture": {
+    "file": "driving.png",
+    "sha256": "4b61f322fdd2578707eca3cf9151101d5fb64bf18f6ef03df275df6878a083f8",
+    "review": "Kart and opponents on the torii-lined course, seventh place on lap one, connected-controller card, minimap and HUD visible."
+  },
+  "diagnostics": {
+    "gameErrors": [],
+    "browserConsole": [
+      "Expected Three.js warning for disabled EXT_color_buffer_float.",
+      "Two optional /favicon.ico requests returned HTTP 404."
+    ],
+    "earlierAttempts": [
+      "One navigation timed out after 120 s waiting for DOMContentLoaded.",
+      "A keyboard-only attempt reached the starting grid but timed out after 300 s waiting for speed."
+    ]
+  },
+  "scope": "Browser rendering and simulated bridge input. Android/Google TV APK and native TCP SDK acceptance are separately recorded."
+}

@@ -2,6 +2,12 @@
 
 基于 [Alexander Uspenskiy / LastTrack](https://github.com/alexander-uspenskiy/LastTrack/tree/7fdf7cfb6affb84748e11980f837255b12130bb7) v0.10.6 的 pureTV 手柄适配。保留原作 PBR 车模、赛道、AI 对手、武器、商店、装甲升级和存档。
 
+## Android TV 下载
+
+[Last Track 0.1.0 APK](last-track-0.1.0.apk)（8,900,372 字节） · [SHA256 校验](SHA256SUMS.txt)。需要 Android 8.0 或更新版本以及支持 WebGL 2 的 WebView。
+
+Android TV 16 模拟器中，默认 TCP 63485 与端口占用回退各通过 57 项原生检查。实际手柄输入完成选车、选赛道、低画质驾驶、射击、漂移、氮气和暂停恢复。实体电视及 ESP32 手柄尚未实测。[赛中截图及验证范围](docs/android-delivery/)
+
 ## Windows 下载
 
 0.1.0 x64：[安装 EXE](LastTrack-0.1.0-windows-x64-setup.exe)（8,934,793 字节）· [便携 ZIP](LastTrack-0.1.0-windows-x64.zip)（8,881,237 字节）· [SHA256 校验](SHA256SUMS.txt)。需要 **Windows 10 1903 或更新版本／Windows 11 x64、Microsoft Edge WebView2 Runtime 和可用的 WebGL 2**；便携版请完整解压后运行 `PureTVGame.exe`。安装包未做 Authenticode 签名。
@@ -39,4 +45,4 @@ npm test
 
 上游项目 MIT，Three.js MIT，许可证随包保留。原版开发调试器的写入/跳关/快进接口不对安装包页面暴露，`JoystickGameQA.snapshot()` 只返回副本。
 
-macOS、Windows 安装包与各自验证范围见上方。Android 仍待独立验收；浏览器、真实 TCP 与实体设备结果分别记录。
+macOS、Windows 安装包与各自验证范围见上方。Android TV 包与原生验证范围见上方。

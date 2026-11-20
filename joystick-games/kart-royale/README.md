@@ -2,6 +2,23 @@
 
 基于 [ryancampbell/kart-royale](https://github.com/ryancampbell/kart-royale/tree/036c0efb025f5ecf8fc31c405e9d818c61e03e21) 的 pureTV 手柄版。固定原源为 `036c0efb025f5ecf8fc31c405e9d818c61e03e21`，保留 Sunset Bay Circuit、八辆卡丁车、AI 对手、道具、原轮胎/悬架物理和漂移奖励规则。网上后来替换的 homie 多人版本不属于本次移植。
 
+## Android TV
+
+[下载 Kart Royale 0.1.4 签名 APK](kart-royale-0.1.4.apk)。最低系统为 Android 8（API 26），游戏需要 WebGL 2。已安装 0.1.3 的玩家可使用相同包名与签名的 0.1.4 覆盖升级。安装后启动游戏，在同一局域网连接 pureTV 手柄，用十字键和 A 选择车手并开始比赛。
+
+Android TV 14 软件渲染模拟器在首次启动游戏前完成 Google 系统服务更新，随后默认端口 63485 完成 58 项检查。端口占用时回退到 35045，也完成 58 项。两次都在首圈实际驾驶，随后暂停、断线并恢复。两次从建立观察端口到出现可操作菜单分别为 24.1 秒与 19.5 秒。[0.1.4 原生验收与驾驶原图](docs/android-0.1.4/README.md) · [各版本实测与首次开机记录](docs/android-tv-20261120.md)
+
+上一正式版本 [0.1.3 签名 APK](kart-royale-0.1.3.apk) 仍可下载，该版本在默认及回退端口也各通过 58 项。[0.1.3 原生验收与驾驶原图](docs/android-delivery/README.md)
+
+## Windows 下载
+
+Windows 0.1.0、0.1.1 与 0.1.2 均在默认端口和占用回退模式通过原生手柄实测。下方提供正式发布的 0.1.1。[三个版本的原始运行记录](docs/windows-delivery/version-runs.md)
+
+Windows x64 0.1.1 支持 Windows 10 1903 或更新版本，需要 Microsoft Edge WebView2 Runtime 和 WebGL 2。可运行安装程序，也可将便携版完整解压后运行 `PureTVGame.exe`。该版本未做 Authenticode 签名。
+
+[下载 EXE 安装程序](windows/KartRoyale-0.1.1-windows-x64-setup.exe) · [下载 ZIP 便携版](windows/KartRoyale-0.1.1-windows-x64.zip) · [SHA-256 校验](SHA256SUMS.txt)
+
+默认 TCP 63485 和端口占用回退两种模式各通过 10 项原生检查，覆盖手柄连接、选车、驾驶、暂停、断线重连和控制设置保存。安装与卸载已在 Windows x64 验证。显示比例覆盖 96 DPI，实体手柄与完整比赛未实测。[原生运行核验](docs/windows-delivery/verification.json) · [实机截图](docs/windows-delivery/visual-review.md) · [Windows 构建记录](https://github.com/ecojust/pureTV/actions/runs/44680258590)
 
 ## macOS 下载
 
@@ -9,7 +26,7 @@
 
 Apple Silicon 原生、默认端口占用回退及 Rosetta 三种模式各通过 9 项原 SDK 和实际游戏检查。**Intel Mac 图形运行仍未验证**；Intel 原失败和初始化分类结果保留，独立探针的 context-loss 不能证明游戏失败原因。原控制设置 `kr.controls.v1` 已完成真实保存、退出和换本地地址重启恢复验证。 未做实体手柄或完整通关测试。
 
-原三种模式的菜单、手柄 ID、比赛 HUD 和四个暂停按钮清楚可见；Rosetta 的赛中原图有近处赛道墙遮挡部分车身，属于原镜头中的场景遮挡。 本次 Mac 原截图为 1024×642／1024×645，浏览器的 960×540／1280×720 布局检查是另一组证据。详情见 [Mac 交付核验](docs/macos-delivery/) 与 [逐张目视记录](docs/macos-ci-44615880581-visual-review.json)。安装文件沿用源码 `6c7cb4fdb99dce236b634c842326bae6aed5f232`、原流程 [44615880581](https://github.com/ecojust/pureTV/actions/runs/44615880581) 的原始字节，未重新打包；Android、Windows 仍待各自验收。
+原三种模式的菜单、手柄 ID、比赛 HUD 和四个暂停按钮清楚可见；Rosetta 的赛中原图有近处赛道墙遮挡部分车身，属于原镜头中的场景遮挡。 本次 Mac 原截图为 1024×642／1024×645，浏览器的 960×540／1280×720 布局检查是另一组证据。详情见 [Mac 交付核验](docs/macos-delivery/) 与 [逐张目视记录](docs/macos-ci-44615880581-visual-review.json)。安装文件沿用源码 `6c7cb4fdb99dce236b634c842326bae6aed5f232`、原流程 [44615880581](https://github.com/ecojust/pureTV/actions/runs/44615880581) 的原始字节。
 
 | 按键 | 比赛 | 菜单 |
 | --- | --- | --- |
@@ -38,6 +55,6 @@ python3 -m http.server 8080 --directory dist
 
 `src/` 保留完整 103 个原源文件及其原 package-lock；新增桥接也在该目录维护。根适配包固定原四个运行依赖的精确版本，额外使用 esbuild 0.28.2 生成离线 IIFE/CSS。构建明确从根依赖锁解析，忽略原源目录里可能存在的旧 node_modules；干净 npm ci 与本地缓存安装的资产一致性见 docs/build-reproducibility/。所有网格、纹理、声音由原代码生成，没有运行时 CDN。根 LICENSE 是 MIT（Ryan Campbell），原 package.json 标记 ISC，两者事实均保留；依赖许可随 dist/THIRD-PARTY-NOTICES.txt 打包。
 
-需要 WebGL2 和现代 WebView。发布默认沿用原设备质量判断；原 `?quality=low` 渲染预设可用于软件 GPU 验证，不改变比赛时钟、物理、赛道或发布默认。Linux SwiftShader 不代表实体电视性能。
+需要 WebGL2 和现代 WebView。手柄版 0.1.1 在识别到 SwiftShader、llvmpipe 或 Microsoft Basic Render Driver 等软件渲染器时默认使用游戏自带的低画质。硬件 GPU 继续按设备选档，显式 `?quality=` 设置优先。0.1.2 的软件低画质直接绘制当前镜头内的原场景，按需编译着色器与上传几何数据，启动与图形上下文恢复均使用此路径。上方 0.1.0 Mac 下载沿用原默认设置。
 
-已提供上方 macOS 原包和限定验证范围；Android、Windows 仍待各自验收，实体电视尚未测试。原 SDK TCP、各平台原生与浏览器模拟桥接结果分别保存。
+上方提供 Android TV、Windows 和 macOS 安装包。实体电视尚未测试。原 SDK TCP、各平台原生与浏览器模拟桥接结果分别保存。

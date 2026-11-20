@@ -249,6 +249,19 @@ class SourceScope(unittest.TestCase):
             with self.assertRaisesRegex(AssertionError,'missing'):scope.verify_complete_git_selection(result,missing)
         self.put('joystick-games/sample/windows/build.mjs','real production derivation')
         with self.assertRaisesRegex(AssertionError,'Undeclared file'):self.selection()
+    def test_independently_versioned_windows_release_tag(self):
+        meta,rows=self.remote_windows_fixture()
+        for tag,valid in [('joystick-sample-windows-v0.1.0',True),
+                          ('joystick-sample-windows-v0.1.1',False),
+                          ('joystick-sample-macos-v0.1.0',False)]:
+            meta['windows']['releaseTag']=tag
+            for row in rows:
+                row['url']=f"https://github.com/ecojust/pureTV/releases/download/{tag}/{row['file']}"
+            self.put('joystick-games/sample/packages.json',json.dumps(meta))
+            with self.subTest(tag=tag):
+                if valid:self.selection()
+                else:
+                    with self.assertRaisesRegex(AssertionError,'release tag'):self.selection()
     def test_remote_windows_pair_keeps_exact_identities_and_local_conflict_guard(self):
         meta,rows=self.remote_windows_fixture();path=self.game/'packages.json'
         for update in [{'storage':'external'},{'url':rows[0]['url'].replace('ecojust/pureTV','other/pureTV')},{'file':'src/'+rows[0]['file']},{'assetId':True},{'bytes':0},{'sha256':'bad'}]:

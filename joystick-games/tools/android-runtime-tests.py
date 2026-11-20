@@ -22,6 +22,17 @@ RUN = '44110295680'
 
 
 class ExportBoundaries(unittest.TestCase):
+    def test_optional_ghost_bounds_are_compatible_only_for_the_two_exact_observers(self):
+        name = runtime.OBSERVER_SOURCE
+        old = runtime.OBSERVER_WITHOUT_GHOST_BOUNDS
+        new = runtime.OBSERVER_WITH_GHOST_BOUNDS
+        self.assertTrue(runtime.compatible_observer_input(name, old, old))
+        self.assertTrue(runtime.compatible_observer_input(name, old, new))
+        self.assertFalse(runtime.compatible_observer_input(name, new, old))
+        self.assertFalse(runtime.compatible_observer_input(name, old, '1' * 64))
+        self.assertFalse(runtime.compatible_observer_input(name, '2' * 64, new))
+        self.assertFalse(runtime.compatible_observer_input('build-observer.py', old, new))
+
     @classmethod
     def setUpClass(cls):
         cls.manifest = json.loads((ARTIFACT / 'export-manifest.json').read_text())

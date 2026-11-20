@@ -12,6 +12,8 @@
 
 ## macOS 下载
 
+Intel 原生的补充复验覆盖 macOS 26。已发布原包成功进入前台，同机 WebGL 1 和 2 的六次像素回读均丢失上下文。[Intel 实测记录](docs/macos-intel-26/)
+
 0.1.0 Universal：[DMG](macos/KartRush-0.1.0-macos-universal.dmg) · [ZIP](macos/KartRush-0.1.0-macos-universal.zip) · [SHA256 校验](SHA256SUMS.txt)。DMG 内应用可拖入 Applications；ZIP 提供相同应用。需要 **macOS 11 或更新版本和可用的 WebGL**，保留原版 WebGL 2 首选与 WebGL 1 回退。
 
 Apple Silicon 原生、默认端口占用回退及 Rosetta 三种模式的实际游戏与 pureTV SDK 检查通过，实际观察到 WebGL 2。**Intel 原生图形与玩法未验证，WebGL 1 回退未观察**；独立 WebGL 2 探针的 context-loss 记录不等于证明游戏失败原因。包包含 arm64 / x86_64，采用 ad-hoc 签名、未经过 Apple 公证；未做实体手柄或用户设备测试。原包、源码和同批失败保留情况见[逐款审计](../../docs/racing-nine/native-readiness/ci-44605303936-attempt-1/kart-rush-assessment/README.md)。

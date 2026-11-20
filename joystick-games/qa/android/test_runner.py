@@ -20,6 +20,52 @@ HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location('android_acceptance', HERE/'run.py')
 runner = importlib.util.module_from_spec(spec); spec.loader.exec_module(runner)
 
+class BackroadPlayingFrame(unittest.TestCase):
+    def test_hud_on_blank_background_and_dim_world_detail(self):
+        # Use decoded RGB samples at the capture reader's fixed dimensions.
+        width, height = 160, 90
+        frame = bytearray((27, 25, 22) * width * height)
+        def pixel(x, y, rgb):
+            start = (y * width + x) * 3
+            frame[start:start + 3] = bytes(rgb)
+        for x, y in ((152, 4), (4, 45), (80, 44), (153, 47), (80, 84)):
+            pixel(x, y, (255, 255, 255))
+        with mock.patch.object(runner.subprocess, 'check_output', return_value=frame):
+            self.assertEqual(runner.backroad_scene_colors('playing.png'), 1)
+            pixel(81, 24, (220, 180, 75))  # rival name at the horizon
+            self.assertEqual(runner.backroad_scene_colors('playing.png'), 1)
+            pixel(32, 65, (180, 180, 180))  # a projected rival name over the lower part of the screen
+            mask = [(30 / 160, 63 / 90, 34 / 160, 67 / 90)]
+            self.assertEqual(runner.backroad_scene_colors('playing.png', mask), 1)
+            pixel(32, 65, (27, 25, 22))
+            pixel(87, 65, (28, 25, 22))
+            self.assertEqual(runner.backroad_scene_colors('playing.png'), 2)
+
+    def test_exact_finland_run_rejects_the_original_violet_screen_and_accepts_the_visible_rally(self):
+        fixtures = Path(__file__).parent / 'fixtures/backroad-finland-color'
+        url = 'https://game-kit.invalid/tv.html?mode=quick&stage=finland&car=swift&cond=stage&weather=stage'
+        snapshot = {'page': {'url': url}, 'game': {'stage': 'playing', 'gameplay': {'stageId': 'finland', 'carId': 'swift'}}}
+        capture = {'before': snapshot, 'after': snapshot}
+        for name, expected, violet in [('vulkan-stage', False, 0), ('legacy-driving', True, 1427)]:
+            rgb = zlib.decompress((fixtures / (name + '.rgb.zlib')).read_bytes())
+            with mock.patch.object(runner.subprocess, 'check_output', return_value=rgb):
+                sample = runner.backroad_scene_sample('playing.png')
+            self.assertEqual(sample['sampledPixels'], 1705)
+            self.assertGreater(sample['colors'], 500)
+            self.assertEqual(sample['saturatedVioletPixels'], violet)
+            self.assertEqual(runner.backroad_finland_violet_scene(capture, sample), expected)
+        snapshot['page']['url'] = url.replace('cond=stage', 'cond=night')
+        self.assertFalse(runner.backroad_finland_violet_scene(capture, sample))
+        snapshot['page']['url'] = url
+        snapshot['game']['gameplay']['stageId'] = 'japan'
+        self.assertFalse(runner.backroad_finland_violet_scene(capture, sample))
+
+    def test_truncated_decode_cannot_pass(self):
+        with mock.patch.object(runner.subprocess, 'check_output', return_value=b''):
+            with self.assertRaisesRegex(ValueError, 'Incomplete'):
+                runner.backroad_scene_colors('playing.png')
+
+
 class AckFixture(socketserver.StreamRequestHandler):
     def handle(self):
         for line in self.rfile:
@@ -38,6 +84,80 @@ class AckFixture(socketserver.StreamRequestHandler):
 class Server(socketserver.ThreadingTCPServer):
     allow_reuse_address = True
     daemon_threads = True
+
+class HeldInputObservation(unittest.TestCase):
+    def setUp(self):
+        self.acceptance = runner.Acceptance.__new__(runner.Acceptance)
+        self.acceptance.clients = [SimpleNamespace(identity='player')]
+        self.acceptance.report = {}
+        self.acceptance.snapshots = []
+        self.acceptance.button = mock.Mock()
+        self.step = {'name': 'Start selected original three-lap course', 'keys': ['START'],
+                     'timeoutSeconds': 60, 'expect': [{'path': 'stage', 'op': 'eq', 'value': 'playing'}]}
+
+    @staticmethod
+    def state(count, stage, pressed):
+        return {'game': {'stage': stage, 'controller': {'pollCount': count, 'players': [
+            {'controllerId': 'player', 'connected': True, 'buttons': {key: (pressed if key == 'START' else False) for key in runner.KEYS}}]}}}
+
+    def finish(self):
+        return self.acceptance.finish_catalog_hold(self.step, self.state(40, 'menu', False),
+                                                    self.state(41, 'menu', True))
+
+    def test_dropped_gets_use_remaining_time_and_require_new_released_matching_frame(self):
+        self.acceptance.snapshot = mock.Mock(side_effect=runner.RemoteDisconnected())
+        states = [self.state(50, 'playing', True), self.state(51, 'menu', False), self.state(52, 'playing', False)]
+        def check(held, predicate, timeout, label):
+            self.assertEqual(timeout, 27)
+            self.assertEqual(held['game']['controller']['pollCount'], 41)
+            self.assertEqual([predicate(state) for state in states], [False, False, True])
+            self.assertIn('released', label)
+            return states[-1]
+        self.acceptance.wait_fresh = check
+        with mock.patch.object(runner.time, 'monotonic', side_effect=[90, 123]):
+            self.assertEqual(self.finish(), states[-1])
+        self.acceptance.snapshot.assert_called_once_with()
+        self.assertEqual(self.acceptance.button.call_args_list, [mock.call(key, False) for key in runner.KEYS])
+
+    def test_race_checkpoint_only_reads_display_and_retains_capture_errors(self):
+        with tempfile.TemporaryDirectory() as folder:
+            self.acceptance.adb = ['fixture-adb']
+            self.acceptance.out = Path(folder)
+            self.acceptance.snapshot = mock.Mock(side_effect=AssertionError('unexpected observer GET'))
+            with mock.patch.object(runner.subprocess, 'check_output', return_value=b'\x89PNG\r\n\x1a\nfixture') as read:
+                self.acceptance.capture_racing_checkpoint({'game': {'frames': 191}})
+                read.assert_called_once_with(['fixture-adb', 'exec-out', 'screencap', '-p'], timeout=15)
+            with mock.patch.object(runner.subprocess, 'check_output', return_value=b'invalid'):
+                self.acceptance.capture_racing_checkpoint({'game': {'frames': 192}})
+            first, second = self.acceptance.report['racingCheckpoints']
+            self.assertEqual(first['afterFrame'], 191)
+            self.assertEqual(first['sha256'], runner.file_info(self.acceptance.out / first['path'])['sha256'])
+            self.assertIn('Invalid Android screenshot', second['error'])
+            self.acceptance.snapshot.assert_not_called()
+            self.acceptance.button.assert_not_called()
+
+    def test_successful_first_read_keeps_ordinary_hold_semantics(self):
+        self.step['timeoutSeconds'] = 15
+        playing = self.state(52, 'playing', True)
+        self.acceptance.snapshot = mock.Mock(return_value=playing)
+        self.acceptance.wait_fresh = mock.Mock()
+        self.assertEqual(self.finish(), playing)
+        self.acceptance.snapshot.assert_called_once_with()
+        self.assertEqual(self.acceptance.wait_fresh.call_args.args[0], playing)
+        self.assertEqual(self.acceptance.wait_fresh.call_args.kwargs['label'], 'all-released')
+        self.assertEqual(self.acceptance.button.call_args_list, [mock.call(key, False) for key in runner.KEYS])
+
+    def test_http_error_and_exhausted_budget_do_not_pass(self):
+        self.acceptance.wait_fresh = mock.Mock()
+        self.acceptance.snapshot = mock.Mock(side_effect=runner.HTTPError('http://localhost/', 500, 'error', {}, None))
+        with self.assertRaises(runner.HTTPError):
+            self.finish()
+        self.acceptance.snapshot.side_effect = runner.RemoteDisconnected()
+        with mock.patch.object(runner.time, 'monotonic', side_effect=[10, 71]), self.assertRaises(TimeoutError):
+            self.finish()
+        self.acceptance.wait_fresh.assert_not_called()
+        self.assertEqual(self.acceptance.button.call_args_list, 2 * [mock.call(key, False) for key in runner.KEYS])
+
 
 class MenuTapContracts(unittest.TestCase):
     """Actual SDK/TCP frames against an ACK fixture; observations are synthetic."""
@@ -102,6 +222,52 @@ class MenuTapContracts(unittest.TestCase):
         self.assertEqual(self.reads, 5)
         self.assertTrue(all(0 < value <= self.step['timeoutSeconds'] for value in self.budgets))
 
+    def finland_stage(self, count, *, entered=False):
+        state = self.state(count)
+        state['game'].update(game='backroad-rally', stage='playing' if entered else 'menu')
+        state['game']['controller']['inputAvailable'] = True
+        state['game']['gameplay'] = ({'stageId': 'finland', 'carId': 'swift', 'phase': 'running'} if entered else
+            {'screen': 'stageselect', 'flow': 'quick', 'menuFocus': 'start', 'carIndex': 0, 'stageIndex': 0})
+        state['page']['url'] = runner.BACKROAD_FINLAND if entered else runner.BACKROAD_ENTRY
+        return state
+
+    def finland_setup(self):
+        self.acceptance.args.game = 'backroad-rally'
+        self.acceptance.report['apk'] = {'bytes': 105024551, 'sha256': runner.BACKROAD_ORIGINAL_APK}
+        self.step = {'name': 'Start and wait for untouched warm-up/countdown', 'menuTap': True,
+                     'keys': ['A'], 'holdMs': 100, 'timeoutSeconds': 240, 'expect':
+                     [{'path': 'gameplay.phase', 'op': 'eq', 'value': 'running'}, {'path': 'stage', 'op': 'eq', 'value': 'playing'}]}
+
+    def test_finland_real_navigation_needs_two_later_new_document_polls(self):
+        self.finland_setup()
+        before = self.finland_stage(579)
+        wrong_url = self.finland_stage(600, entered=True)
+        wrong_url['page']['url'] = runner.BACKROAD_ENTRY
+        wrong_owner = self.finland_stage(5, entered=True)
+        wrong_owner['game']['controller']['players'][0]['session'] = 'another'
+        self.use_samples([wrong_url, wrong_owner, *[self.finland_stage(n, entered=True) for n in (17, 17, 18, 19)]])
+        self.acceptance.catalog_menu_tap(self.step, before)
+        record = self.acceptance.report['menuTapObservations'][-1]
+        self.assertEqual(record['wire']['matchingAcks'], 2)
+        self.assertEqual(record['stableFreshSamples'], 2)
+        self.assertEqual(record['reloadBasis']['maximumBootSeconds'], 720)
+        self.assertEqual([s['qualified'] for s in record['samples']], [False, False, True, True, True, True])
+        self.assertEqual(record['afterPollCount'], 19)
+        self.assertEqual(self.reads, 6)
+
+    def test_finland_navigation_guard_rejects_another_action_or_start_document(self):
+        self.finland_setup()
+        before = self.finland_stage(579)
+        self.assertIsNotNone(self.acceptance.menu_reload_basis(self.step, before))
+        for lookup in ('carIndex', 'stageIndex'):
+            other = copy.deepcopy(before); other['game']['gameplay'][lookup] = 1
+            self.assertIsNone(self.acceptance.menu_reload_basis(self.step, other))
+        wrong = copy.deepcopy(before); wrong['page']['url'] += '?unrelated'
+        self.assertIsNone(self.acceptance.menu_reload_basis(self.step, wrong))
+        self.assertIsNone(self.acceptance.menu_reload_basis(dict(self.step, keys=['B']), before))
+        self.acceptance.report['apk']['sha256'] = '0' * 64
+        self.assertIsNone(self.acceptance.menu_reload_basis(self.step, before))
+
     def test_exact_night_low_reload_requires_new_baseline_then_two_new_polls(self):
         self.reload_step()
         self.use_samples([self.state(2, low=True), self.state(2, low=True), self.state(3, low=True), self.state(4, low=True)])
@@ -114,14 +280,14 @@ class MenuTapContracts(unittest.TestCase):
         self.assertEqual(self.reads, 4)
 
     def test_counter_reset_without_exact_reload_proof_never_passes(self):
-        self.step['timeoutSeconds'] = .2
+        self.step['timeoutSeconds'] = 1
         self.use_samples([self.state(2, index=2), self.state(3, index=2), self.state(4, index=2)])
         with self.assertRaisesRegex(AssertionError, 'two subsequent fresh polls'):
             self.acceptance.catalog_menu_tap(self.step, self.state(288))
         self.assertEqual(self.acceptance.report['menuTapObservations'][0]['status'], 'failed')
 
     def test_constant_post_reload_counter_does_not_count_as_fresh_frames(self):
-        self.reload_step(); self.step['timeoutSeconds'] = .2
+        self.reload_step(); self.step['timeoutSeconds'] = 1
         self.use_samples([self.state(3, low=True)])
         with self.assertRaisesRegex(AssertionError, 'two subsequent fresh polls'):
             self.acceptance.catalog_menu_tap(self.step, self.state(288))
@@ -413,6 +579,31 @@ class Contracts(unittest.TestCase):
 
 
 class CatalogContracts(unittest.TestCase):
+    def test_html_track_menu_requires_real_focus_and_an_allocated_webgl_canvas(self):
+        acceptance = self.acceptance()
+        acceptance.plan['renderer'] = 'webgl2'
+        snapshot = self.snapshot()
+        snapshot.update(activityState='resumed', windowFocused=True)
+        snapshot['game'].update(renderer='webgl2', webglVersion=2,
+                                gameplay={'screen': 'trackSelect', 'menuFocus': 'SELECT'})
+        snapshot['page'].update(hidden=False, focused=True, width=961, height=541)
+        snapshot['page']['canvases'][0].update(visible=False, clientWidth=961.5023193359375, clientHeight=540.8450317382812)
+        step = {'expect': [{'path': 'gameplay.screen', 'op': 'eq', 'value': 'trackSelect'},
+                           {'path': 'gameplay.menuFocus', 'op': 'eq', 'value': 'SELECT'}]}
+        acceptance.validate_catalog_snapshot(snapshot, step)
+        with self.assertRaisesRegex(AssertionError, 'visible initialized'):
+            acceptance.validate_catalog_snapshot(snapshot)
+        for container, field, bad in [('page', 'hidden', True), ('page', 'focused', False),
+                                      ('game', 'stage', 'playing'), ('game', 'webglVersion', 1),
+                                      ('game', 'gameplay', {'screen': 'trackSelect', 'menuFocus': 'BACK'}),
+                                      ('page', 'canvases', []),
+                                      ('page', 'width', 964)]:
+            with self.subTest(field=field):
+                changed = copy.deepcopy(snapshot)
+                changed[container][field] = bad
+                with self.assertRaises(AssertionError):
+                    acceptance.validate_catalog_snapshot(changed, step)
+
     def acceptance(self):
         acceptance = runner.Acceptance.__new__(runner.Acceptance)
         acceptance.args = SimpleNamespace(game='fixture-game')
@@ -732,9 +923,10 @@ class InstallationBudgetTests(unittest.TestCase):
         a, apk = self.fixture()
         script = a.out/'slow-adb.py'
         script.write_text("import sys,time\nprint('Performing Streamed Install',flush=True)\nprint('still pending',file=sys.stderr,flush=True)\ntime.sleep(10)\n")
-        a.adb = [runner.sys.executable, str(script)]
+        a.adb = [runner.sys.executable, '-S', str(script)]
         started = time.monotonic()
-        with mock.patch.object(runner, 'install_timeout', return_value=.2):
+        # Allow the child to start and flush both streams on a busy test host.
+        with mock.patch.object(runner, 'install_timeout', return_value=1):
             with self.assertRaises(runner.subprocess.TimeoutExpired):
                 a.command('install', '-r', str(apk))
         self.assertLess(time.monotonic()-started, 3)
@@ -827,10 +1019,12 @@ class ObserverTransportTests(unittest.TestCase):
         self.assertTrue(all(x['snapshotCall'] == 2 for x in events))
 
     def test_real_socket_timeout_is_recorded_and_recovers_with_fresh_get(self):
-        server = self.serve([('slow', .1), ('json', self.value(44))])
+        # The second, healthy HTTP handler needs a scheduling interval of its
+        # own when this fixture runs alongside software-rendered game tests.
+        server = self.serve([('slow', 2), ('json', self.value(44))])
         acceptance = self.acceptance(server)
-        with mock.patch.object(runner, 'OBSERVER_REQUEST_TIMEOUT', .03):
-            self.assertEqual(acceptance.snapshot(timeout=.8), self.value(44))
+        with mock.patch.object(runner, 'OBSERVER_REQUEST_TIMEOUT', .5):
+            self.assertEqual(acceptance.snapshot(timeout=3), self.value(44))
         events = acceptance.report['observerTransportEvents']
         self.assertIn(events[0]['errorType'], ('TimeoutError', 'URLError'))
         self.assertEqual(events[1]['status'], 'transport-recovered')

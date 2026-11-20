@@ -9,6 +9,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { CopyShader } from 'three/addons/shaders/CopyShader.js';
+import { supportsHalfFloatTargets, halfFloatSamples } from './renderTargets.js';
 import { installFog, FogState } from './fog.js';
 
 class MSAAScenePass extends Pass {
@@ -18,31 +19,34 @@ class MSAAScenePass extends Pass {
     this.camera = null;
     this.needsSwap = false;
     this.clear = true;
+    this.beforeRender = null; // hook(renderer) e.g. planar reflections
+    if (!samples) return;
     this.target = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples });
     this.copyMat = new THREE.ShaderMaterial(CopyShader);
     this.copyMat.depthTest = false;
     this.copyMat.depthWrite = false;
     this.fsQuad = new FullScreenQuad(this.copyMat);
-    this.beforeRender = null; // hook(renderer) e.g. planar reflections
   }
   setSize(w, h) {
-    this.target.setSize(w, h);
+    this.target?.setSize(w, h);
   }
   render(renderer, writeBuffer, readBuffer) {
     if (!this.scene || !this.camera) return;
     if (this.beforeRender) this.beforeRender(renderer);
     FogState.updateCamera(this.camera);
-    renderer.setRenderTarget(this.target);
+    // With no multisampling the scene can draw directly into the composer's input.
+    renderer.setRenderTarget(this.target ?? (this.renderToScreen ? null : readBuffer));
     renderer.clear();
     renderer.render(this.scene, this.camera);
+    if (!this.target) return;
     this.copyMat.uniforms.tDiffuse.value = this.target.texture;
     renderer.setRenderTarget(this.renderToScreen ? null : readBuffer);
     this.fsQuad.render(renderer);
   }
   dispose() {
-    this.target.dispose();
-    this.copyMat.dispose();
-    this.fsQuad.dispose();
+    this.target?.dispose();
+    this.copyMat?.dispose();
+    this.fsQuad?.dispose();
   }
 }
 
@@ -174,11 +178,15 @@ export class Renderer {
     this.minPixelRatio = 0.7;
     this.adaptive = true;
 
-    this.composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType }));
-    this.scenePass = new MSAAScenePass(4);
+    const hdr = supportsHalfFloatTargets(renderer);
+    const type = hdr ? THREE.HalfFloatType : THREE.UnsignedByteType;
+    this.composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { type }));
+    this.scenePass = new MSAAScenePass(hdr ? halfFloatSamples(renderer) : 0);
     this.composer.addPass(this.scenePass);
-    this.bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.45, 0.55, 0.95);
-    this.composer.addPass(this.bloom);
+    if (hdr) {
+      this.bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.45, 0.55, 0.95);
+      this.composer.addPass(this.bloom);
+    }
     this.outputPass = new OutputPass();
     this.composer.addPass(this.outputPass);
     this.fxPass = new ShaderPass(FinalFXShader);
@@ -190,6 +198,7 @@ export class Renderer {
     this._time = 0;
     this.resize();
     window.addEventListener('resize', () => this.resize());
+    renderer.domElement.addEventListener('webglcontextrestored', () => { this.hasRenderedFrame = false; });
   }
 
   get domElement() {
@@ -207,9 +216,11 @@ export class Renderer {
   /** Per-course look settings. */
   setLook({ exposure = 1.0, bloomStrength = 0.45, bloomRadius = 0.55, bloomThreshold = 0.95, saturation = 1.08, contrast = 1.04, tint = [1, 1, 1], lift = [0, 0, 0], vignette = 0.35, grain = 0.02 } = {}) {
     this.renderer.toneMappingExposure = exposure;
-    this.bloom.strength = bloomStrength;
-    this.bloom.radius = bloomRadius;
-    this.bloom.threshold = bloomThreshold;
+    if (this.bloom) {
+      this.bloom.strength = bloomStrength;
+      this.bloom.radius = bloomRadius;
+      this.bloom.threshold = bloomThreshold;
+    }
     this.fx.uSaturation.value = saturation;
     this.fx.uContrast.value = contrast;
     this.fx.uTint.value.setRGB(tint[0], tint[1], tint[2]);
@@ -219,6 +230,7 @@ export class Renderer {
   }
 
   resize() {
+    this.hasRenderedFrame = false;
     const w = window.innerWidth;
     const h = window.innerHeight;
     this.renderer.setPixelRatio(this.pixelRatio);
@@ -254,6 +266,7 @@ export class Renderer {
     this._time += dt;
     this.fx.uTime.value = this._time;
     this.composer.render(dt);
+    this.hasRenderedFrame = true;
     this._adapt(dt, this._time);
   }
 }
