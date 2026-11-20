@@ -37,3 +37,7 @@
 在 0.1.2 的两次原生对照中，观察器只在游戏标识、软件驱动、WebGL2 和控制器端口均可核实时续等，且必须看到原启动步骤或原倒计时帧增加。每一段总上限为 300 秒，验收仍需真实渲染和相同的 SDK 操作。两次均输入原签名产物 14606610194。[host Mesa](https://github.com/ecojust/pureTV/actions/runs/44685089257) · [guest lavapipe](https://github.com/ecojust/pureTV/actions/runs/44685153445)
 
 首次 host 对照在启动 AVD 前停于监督器的测试项，测试 ELF 在采样前退出。重试让同一真实测试进程等到监督器写出其 exec 身份才退出，保留原身份和退出码断言。测试项已本地通过 22/22。[首次运行的原始记录](https://github.com/ecojust/pureTV/tree/4254b8bba985beaa6acfb6cdad4c3d68396f3ef9/evidence/joystick-android-runtime-kart-royale) · [host 游戏运行重试](https://github.com/ecojust/pureTV/actions/runs/44685883221)
+
+0.1.2 的 guest lavapipe 普通端口 63485、回退端口 42335 均真实启动 WebGL2，游戏识别到 SwiftShader 5 和 Low。普通与占用模式分别在 48.74 秒和 37.78 秒最后观察到 “tuning the engines”，其后没有新游戏快照，等候上限分别到 198.74 秒、187.78 秒时仍为 0 帧。两个原始 ADB 日志均包含 Chromium 瓦片内存限额告警。[普通报告](https://github.com/ecojust/pureTV/blob/a29fb65bf0adb04c1801dd034a9dd502be6edde7/evidence/joystick-android-runtime-kart-royale/kart-royale-normal/report.json) · [回退报告](https://github.com/ecojust/pureTV/blob/a29fb65bf0adb04c1801dd034a9dd502be6edde7/evidence/joystick-android-runtime-kart-royale/kart-royale-occupied/report.json)
+
+host 重试的两个模式都完成游戏安装和初始化前清数据，150 秒内均未取得一份可解析的游戏快照。宿主 OpenGL 可由独立日志确认；游戏内的驱动及画面未能核实。[host 报告和原始诊断](https://github.com/ecojust/pureTV/tree/70bc862ef63d656e8ef6e446b46bbc1cef47cec3/evidence/joystick-android-runtime-kart-royale)
