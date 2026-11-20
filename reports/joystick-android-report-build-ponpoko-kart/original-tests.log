@@ -1,0 +1,87 @@
+{"originalNpmTestConfigured":true,"scope":"Configured original tests only; an absent script is recorded, not claimed as tested"}
+
+> puretv-ponpoko-kart@0.1.6 test
+> node --test tests/input.test.mjs tests/cancellation.test.mjs tests/render-targets.test.mjs tests/course-textures.test.mjs
+
+TAP version 13
+# Subtest: cancel charged drift and pending item without awarding boost or consuming inventory
+ok 1 - cancel charged drift and pending item without awarding boost or consuming inventory
+  ---
+  duration_ms: 1.575204
+  type: 'test'
+  ...
+# Subtest: a paused software renderer keeps polling and only redraws an invalidated backing buffer
+ok 2 - a paused software renderer keeps polling and only redraws an invalidated backing buffer
+  ---
+  duration_ms: 1.037131
+  type: 'test'
+  ...
+# Subtest: the selected course reuses decoded albedo and linear normals with the original sampling
+ok 3 - the selected course reuses decoded albedo and linear normals with the original sampling
+  ---
+  duration_ms: 3.735418
+  type: 'test'
+  ...
+# Subtest: all nine physical keys remain independent; action combinations retain movement
+ok 4 - all nine physical keys remain independent; action combinations retain movement
+  ---
+  duration_ms: 4.939775
+  type: 'test'
+  ...
+# Subtest: menu confirmation does not become race jump until a fresh press
+ok 5 - menu confirmation does not become race jump until a fresh press
+  ---
+  duration_ms: 0.343817
+  type: 'test'
+  ...
+# Subtest: disconnect/reconnect cancellation has no release edge or stale item/jump
+ok 6 - disconnect/reconnect cancellation has no release edge or stale item/jump
+  ---
+  duration_ms: 1.39798
+  type: 'test'
+  ...
+# Subtest: keyboard cancellation blocks repeated held keys until keyup
+ok 7 - keyboard cancellation blocks repeated held keys until keyup
+  ---
+  duration_ms: 0.492217
+  type: 'test'
+  ...
+# Subtest: resume input reset preserves the shared START edge until physical release
+ok 8 - resume input reset preserves the shared START edge until physical release
+  ---
+  duration_ms: 1.548393
+  type: 'test'
+  ...
+# Subtest: standard Gamepad disconnect cancels rather than synthesizing drift release
+ok 9 - standard Gamepad disconnect cancels rather than synthesizing drift release
+  ---
+  duration_ms: 1.899123
+  type: 'test'
+  ...
+# Subtest: WebGL 2 without renderable half-float textures skips sky prefiltering
+ok 10 - WebGL 2 without renderable half-float textures skips sky prefiltering
+  ---
+  duration_ms: 0.967409
+  type: 'test'
+  ...
+# Subtest: either color-buffer extension enables HDR with a supported sample count
+ok 11 - either color-buffer extension enables HDR with a supported sample count
+  ---
+  duration_ms: 0.926543
+  type: 'test'
+  ...
+# Subtest: only explicitly identified software renderers select the low course effects
+ok 12 - only explicitly identified software renderers select the low course effects
+  ---
+  duration_ms: 0.597615
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 262.266569
