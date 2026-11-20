@@ -6,7 +6,9 @@ Android TV 0.1.1 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/
 
 ## Android TV 适配
 
-0.1.1（versionCode 2）根据 WebGL 2 设备支持的颜色缓冲和多重采样格式选择渲染路径。支持 HDR 的设备保留泛光效果；其余设备以 RGBA8 绘制赛道、角色和水面倒影。八位车手的头像和九张道具图使用原版模型预先渲染，进入菜单时只需创建游戏画布。Android TV 安装包正在验证中。
+0.1.1（versionCode 2）根据 WebGL 2 设备支持的颜色缓冲和多重采样格式选择渲染路径。支持 HDR 的设备保留泛光效果；其余设备以 RGBA8 绘制赛道、角色和水面倒影。八位车手的头像和九张道具图使用原版模型预先渲染，进入菜单时只需创建游戏画布。
+
+Android TV 0.1.1 已签名。API 36 / 1080p 模拟器的默认端口与占用回退均通过安装启动、连接、手柄 ID 显示、选人和选赛道。进入所选赛道时，两种模式的画面观察请求均超时。两份录像止于赛道选择，Android 驾驶和后续项目仍待验证。[原始运行](https://github.com/ecojust/pureTV/actions/runs/44680918757) · [逐项结果、原图及录像](docs/android-0.1.1/api36.json)
 
 在 Chromium 中关闭可选浮点扩展后，浏览器合成手柄输入完成了选人、选赛道、倒数和起跑加速。RGBA8 路径的驾驶截图显示首圈第 7 名、赛道、对手和小地图。实测环境为 480 × 270 的软件渲染浏览器。另附 HDR 与 RGBA8 渲染回读值和原生验收范围。[驾驶截图](docs/browser-0.1.1-rgba8/driving.png) · [浏览器验证记录](docs/browser-0.1.1-rgba8/report.json)
 
