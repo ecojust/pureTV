@@ -281,7 +281,16 @@ jobs:
         run: |
           test -e /dev/kvm
           sudo chmod a+rw /dev/kvm
-          command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            archive="$RUNNER_TEMP/ffmpeg-linux64.tar.xz"
+            curl --fail --location --retry 3 --max-time 150 --output "$archive" https://github.com/FFmpeg-Builds/FFmpeg-Builds/releases/download/autobuild-2026-11-19-12-39/ffmpeg-n8.1.3-36-ge22a4510c9-linux64-gpl-8.1.tar.xz
+            echo "f35327acf7cc44f2ef606101c1321d949ae2bcc88fd02b160c09386d5ba53acf  $archive" | sha256sum -c -
+            mkdir -p "$RUNNER_TEMP/qa-media-tools"
+            tar -xJf "$archive" --wildcards --strip-components=2 -C "$RUNNER_TEMP/qa-media-tools" '*/bin/ffmpeg' '*/bin/ffprobe'
+            "$RUNNER_TEMP/qa-media-tools/ffmpeg" -version
+            "$RUNNER_TEMP/qa-media-tools/ffprobe" -version
+            echo "$RUNNER_TEMP/qa-media-tools" >> "$GITHUB_PATH"
+          fi
       - name: Run normal and occupied-port QA independently against unchanged signed bytes
         # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
@@ -296,9 +305,9 @@ jobs:
           avd-name: JoystickGamesValidation
           force-avd-creation: true
           disable-animations: true
-          # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
+          # Match the original puzzle game 1080p fixture and 3072 MiB guest.
           # Optional controlled Vulkan-off comparison; not an established crash cause or fix.
-          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}
+          emulator-options: -no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}
           pre-emulator-launch-script: >-
             python3 joystick-games/tools/android-emulator-supervisor.py prepare
             --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
