@@ -119,7 +119,7 @@ def install_timeout(apk_bytes):
     return min(240, max(45, 30 + 2 * math.ceil(apk_bytes / 1_000_000)))
 
 
-def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None):
+def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None, await_queued_callback=False):
     """Retry only failed read-only transports; never reuse a previous snapshot.
 
     The original Observer closes its HTTP request after a 10-second WebView
@@ -137,7 +137,7 @@ def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None):
         if remaining <= 0:
             raise TimeoutError('Read-only observer snapshot wall deadline expired')
         started = time.time()
-        request_timeout = min(OBSERVER_REQUEST_TIMEOUT, remaining)
+        request_timeout = remaining if await_queued_callback else min(OBSERVER_REQUEST_TIMEOUT, remaining)
         try:
             with urlopen(url, timeout=request_timeout) as response:
                 value = json.load(response)
@@ -372,7 +372,12 @@ class Acceptance:
                 {'snapshotCall': call, 'operation': 'GET /snapshot', **value})
             if hasattr(self, 'out'):
                 self.save()
-        value = read_observer_snapshot('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout, event)
+        slow_hwui = (self.report.get('apk', {}).get('sha256') == BACKROAD_ORIGINAL_APK
+                     and os.environ.get('BACKROAD_VULKAN_OBSERVATION') == 'true')
+        if slow_hwui:
+            self.report['observerRequestPolicy'] = 'Keep one GET open within the existing snapshot deadline while HWUI queues the callback'
+        value = read_observer_snapshot('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout, event,
+                                       await_queued_callback=slow_hwui)
         port = (value.get('info') or {}).get('wifiController', {}).get('port')
         if hasattr(self, 'service_port') and port and port != self.service_port:
             raise AssertionError('Live game changed controller TCP port within the same process/session')
