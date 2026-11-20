@@ -50,7 +50,7 @@ pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电�
 2. 将手柄和运行游戏的电视或电脑接入同一个可互通的局域网，启动游戏。按手柄搜索键 **GPIO 23** 发现游戏。当前固件只会自动连接发现的唯一有效服务。若同时打开了其他游戏，先关闭其他服务，或在手柄配网页手动填写游戏主机的 IPv4 地址和实际端口。
 3. 游戏默认使用 TCP **63485**。如果启动时端口已被占用，以游戏显示的实际端口为准。连接后侧栏显示手柄图标、玩家席位和完整客户端 ID，断开后移除相应标识。按 **START（GPIO 27）** 开始或暂停。方向键和 A 常用于选择和确认，其他操作、双人支持与断线后如何继续请按该游戏说明。[按键与双人支持](../readme-controller-support/README.md) · [客户端标识示例](../controller-client-status/README.md)
 
-原首页精选的 20 款电视游戏手柄版支持 Android 8.0 及以上。其他游戏也要看系统 WebView 和图形要求，部分 3D 游戏需要 WebGL2。桌面手柄版中的九款赛车要求 macOS 11+，Windows 版使用 Windows 10 1903+ x64 或 Windows 11 和 WebView2 Runtime。Universal 包提供 Apple Silicon 与 Intel 两种架构，Intel 原生游戏画面是否通过验证仍按款列出。九款解谜游戏中，Story Thief、Atlas of Ink 和 Starbase Spooky 通过 Intel 原生玩法检查，另六款在测试机上进入菜单前超时。[赛车版本表](../../joystick-games/README.md#九款赛车游戏下载) · [解谜版本与测试记录](https://github.com/ecojust/pureTV/blob/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/README.md#下载安装)
+原首页精选的 20 款电视游戏手柄版支持 Android 8.0 及以上。其他游戏也要看系统 WebView 和图形要求，部分 3D 游戏需要 WebGL2。桌面手柄版中的九款赛车要求 macOS 11+，Windows 版使用 Windows 10 1903+ x64 或 Windows 11 和 WebView2 Runtime。Universal 包提供 Apple Silicon 与 Intel 两种架构，Intel 原生游戏画面是否通过验证仍按款列出。九款解谜游戏中，Story Thief、Atlas of Ink 和 Starbase Spooky 通过 Intel 原生玩法检查，另六款在测试机上进入菜单前超时。[赛车版本表](../../joystick-games/README.md#九款赛车游戏下载) · [解谜版本与测试记录](../puzzle-nine/README.md#下载安装)
 
 ## 其他资源与许可
 
