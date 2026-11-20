@@ -81,7 +81,7 @@ class BatchIsolation(unittest.TestCase):
 
     def test_only_exact_requested_retry_aliases_exist(self):
         aliases = set(batch.BATCHES) - set(batch.DEFAULT_BATCHES) - set(batch.HOME_BATCHES)
-        self.assertEqual(aliases, {'retry-used-car', 'retry-alien', 'retry-prism', 'retry-arcade-visual', 'retry-cozy'})
+        self.assertEqual(aliases, {'retry-used-car', 'retry-alien', 'retry-prism', 'retry-arcade-visual', 'retry-cozy', 'retry-super-mario'})
         plan = batch.runtime_plan('["retry-used-car","retry-alien","retry-prism"]')
         self.assertEqual(plan['plannedSlugs'], ['used-car-racing', 'alien-shooter', 'prism-relay'])
         self.assertFalse(plan['completeCatalogRequested'])
@@ -157,6 +157,7 @@ class BatchIsolation(unittest.TestCase):
 
     def test_retry_selection_does_not_silently_include_completed_neighbors(self):
         self.assertEqual(batch.selected_slugs('worlds', 'retry-alien'), ['alien-shooter'])
+        self.assertEqual(batch.selected_slugs('arcade', 'retry-super-mario'), ['super-mario'])
         self.assertEqual(batch.selected_slugs('kit', 'retry-prism'), ['prism-relay'])
         with self.assertRaisesRegex(AssertionError, 'exact artifact source group'):
             batch.selected_slugs('kit', 'retry-used-car')

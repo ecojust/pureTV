@@ -31,6 +31,7 @@ HOME_BATCHES = ('arcade-1', 'arcade-2', 'arcade-3', 'home-coast', 'worlds-2', 'h
 BATCHES.update({
     'retry-used-car': ('worlds', ['used-car-racing']),
     'retry-alien': ('worlds', ['alien-shooter']),
+    'retry-super-mario': ('arcade', ['super-mario']),
     'retry-prism': ('kit', ['prism-relay']),
     'retry-arcade-visual': ('arcade', ['tank', 'jackal']),
     'retry-cozy': ('worlds', ['cozy-island']),
