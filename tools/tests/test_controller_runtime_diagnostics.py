@@ -87,9 +87,18 @@ class BatchIsolation(unittest.TestCase):
         with self.assertRaises(AssertionError):
             batch.runtime_plan('["retry-alien"]', scope='arcade-7')
 
+    def test_room_recovery_scope_excludes_tank_from_signing_and_runtime(self):
+        plan = batch.runtime_plan(scope='arcade-recovery-6')
+        expected = set(batch.release.GROUPS['arcade']) - {'tank'}
+        self.assertEqual(set(plan['plannedSlugs']), expected)
+        self.assertEqual(set(batch.release.scoped_games(batch.release.SLUGS, 'arcade-recovery-6')), expected)
+        self.assertEqual(batch.release.scoped_games(batch.release.KIT_SLUGS, 'arcade-recovery-6'), [])
+        with self.assertRaises(AssertionError):
+            batch.runtime_plan('["arcade-1"]', scope='arcade-recovery-6')
+
     def test_only_exact_requested_retry_aliases_exist(self):
         aliases = set(batch.BATCHES) - set(batch.DEFAULT_BATCHES) - set(batch.HOME_BATCHES)
-        self.assertEqual(aliases, {'retry-used-car', 'retry-alien', 'retry-prism', 'retry-arcade-visual', 'retry-cozy', 'retry-super-mario'})
+        self.assertEqual(aliases, {'retry-used-car', 'retry-alien', 'retry-prism', 'retry-arcade-visual', 'retry-cozy', 'retry-super-mario', 'retry-jackal'})
         plan = batch.runtime_plan('["retry-used-car","retry-alien","retry-prism"]')
         self.assertEqual(plan['plannedSlugs'], ['used-car-racing', 'alien-shooter', 'prism-relay'])
         self.assertFalse(plan['completeCatalogRequested'])

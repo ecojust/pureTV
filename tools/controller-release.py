@@ -25,7 +25,11 @@ HOME_GAMES = {
     'neon-rush', 'tower-overlap', 'coast-kart', 'used-car-racing', 'alien-shooter',
     'tank', 'jackal', 'jewel', 'tetris', 'bomb-jack', 'adventure-island', 'super-mario',
 }
-SCOPED_GAMES = {'home-12': HOME_GAMES, 'arcade-7': set(GROUPS['arcade'])}
+SCOPED_GAMES = {
+    'home-12': HOME_GAMES,
+    'arcade-7': set(GROUPS['arcade']),
+    'arcade-recovery-6': set(GROUPS['arcade']) - {'tank'},
+}
 RELEASE_SCOPES = ('all', *SCOPED_GAMES)
 
 
@@ -311,7 +315,7 @@ def main():
     parser.add_argument('--runtime-result', default='not_run')
     args = parser.parse_args()
     if args.command == 'checkout-home-inputs':
-        checkout_inputs(args.scope)
+        checkout_inputs(args.scope if args.scope != 'all' else 'home-12')
         return
     if args.command == 'list':
         games = ALL_SLUGS if args.all else GROUPS[args.group] if args.group else SLUGS

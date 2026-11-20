@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       bundle_manifest:
-        description: 'JSON: sourceSha, optional legacySourceSha, legacyRunId, legacyAttempt, kitRuns mapping Game Kit IDs to successful signing run IDs; optional scope (all, home-12 or arcade-7)'
+        description: 'JSON: sourceSha, optional legacySourceSha, legacyRunId, legacyAttempt, kitRuns mapping Game Kit IDs to successful signing run IDs; optional scope (all, home-12, arcade-7 or arcade-recovery-6)'
         type: string
         required: true
       batches:
@@ -80,9 +80,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout-cone-mode: false
-          sparse-checkout: ${{ (fromJSON(inputs.bundle_manifest).scope == 'home-12' || fromJSON(inputs.bundle_manifest).scope == 'arcade-7') && '/tools/' || '' }}
+          sparse-checkout: ${{ (fromJSON(inputs.bundle_manifest).scope == 'home-12' || startsWith(fromJSON(inputs.bundle_manifest).scope, 'arcade-')) && '/tools/' || '' }}
       - name: Check out selected runtime sources and original upgrade APKs
-        if: fromJSON(inputs.bundle_manifest).scope == 'home-12' || fromJSON(inputs.bundle_manifest).scope == 'arcade-7'
+        if: fromJSON(inputs.bundle_manifest).scope == 'home-12' || startsWith(fromJSON(inputs.bundle_manifest).scope, 'arcade-')
         env:
           CONTROLLER_RELEASE_SCOPE: ${{ fromJSON(inputs.bundle_manifest).scope }}
         run: python3 tools/controller-release.py checkout-home-inputs
