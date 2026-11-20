@@ -810,7 +810,7 @@ class Acceptance:
         started = time.monotonic(); transition_deadline = started + step.get('timeoutSeconds', 15)
         deadline = transition_deadline
         vulkan_observer = (self.args.game == 'backroad-rally'
-                           and self.report.get('apk', {}).get('sha256') == '67f61471e0e23e9ea963475425d5c43fa9d3265167f9028bd55dc319494fbe3c'
+                           and self.report.get('apk', {}).get('sha256') == '018a06cdb4dc3a2fa2c716a8cb07c5ee19bfd23172e748762579c1923161f328'
                            and os.environ.get('BACKROAD_VULKAN_OBSERVATION') == 'true')
         candidate = None; stable = 0; down_sent = False; released = False
         try:

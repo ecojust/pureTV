@@ -150,7 +150,7 @@ class MenuTapContracts(unittest.TestCase):
 
     def test_timely_backroad_transition_needs_two_real_polls_even_after_the_original_window(self):
         self.acceptance.args.game = 'backroad-rally'
-        self.acceptance.report['apk']['sha256'] = '67f61471e0e23e9ea963475425d5c43fa9d3265167f9028bd55dc319494fbe3c'
+        self.acceptance.report['apk']['sha256'] = '018a06cdb4dc3a2fa2c716a8cb07c5ee19bfd23172e748762579c1923161f328'
         self.step['timeoutSeconds'] = .35
         self.use_samples([self.state(101, index=2), self.state(102, index=2), self.state(103, index=2)])
         read = self.acceptance.snapshot
@@ -170,7 +170,7 @@ class MenuTapContracts(unittest.TestCase):
 
     def test_late_first_backroad_transition_is_rejected_despite_qualifying(self):
         self.acceptance.args.game = 'backroad-rally'
-        self.acceptance.report['apk']['sha256'] = '67f61471e0e23e9ea963475425d5c43fa9d3265167f9028bd55dc319494fbe3c'
+        self.acceptance.report['apk']['sha256'] = '018a06cdb4dc3a2fa2c716a8cb07c5ee19bfd23172e748762579c1923161f328'
         self.step['timeoutSeconds'] = .4
         def late(timeout):
             time.sleep(.5)
