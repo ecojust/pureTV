@@ -299,6 +299,19 @@ class MenuTapContracts(unittest.TestCase):
         self.assertEqual(after['game']['controller']['pollCount'], 106)
         self.assertEqual(self.reads, 6)
 
+    def test_historic_night_reload_requires_its_original_signing_receipt(self):
+        self.reload_step()
+        relative = runner.NIGHT_LOW_RELOAD_DELIVERY / 'original-package-proof/signing-receipt.json'
+        receipt = json.loads((runner.ROOT / relative).read_bytes())
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / relative).parent.mkdir(parents=True)
+            receipt['sha256'] = '0' * 64
+            (root / relative).write_text(json.dumps(receipt))
+            with mock.patch.object(runner, 'ROOT', root):
+                with self.assertRaisesRegex(AssertionError, 'Night reload receipt changed'):
+                    self.acceptance.menu_reload_basis(self.step, self.state(288))
+
     def test_reload_proof_rejects_changed_apk_source_wrong_state_and_expectation(self):
         self.reload_step(); before = self.state(288)
         self.assertIsNotNone(self.acceptance.menu_reload_basis(self.step, before))
