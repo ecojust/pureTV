@@ -93,17 +93,26 @@ class PayloadBoundaries(unittest.TestCase):
 
 
 class TargetSdkBoundaries(unittest.TestCase):
+    expansion_games = ('clawd-pop', 'lumenrift', 'operation-ironhold', 'saber-magic-tower', 'turbo-kart-rally')
+
+    def test_expansion_manifests_select_sdk_35(self):
+        for slug in self.expansion_games:
+            with self.subTest(slug=slug):
+                self.assertEqual(build.metadata(slug)['androidTargetSdk'], 35)
+                self.assertEqual(build.target_sdk(slug), 35)
+
     def test_scoped_target_overrides_preserve_existing_and_historical_defaults(self):
+        scoped = ('ponpoko-kart', 'kart-royale', 'starbase-spooky', *self.expansion_games)
         for field, configured in [({}, 29), ({'androidTargetSdk': 29}, 29), ({'androidTargetSdk': 35}, 35)]:
             with patch.object(build, 'metadata', return_value=field):
                 for slug in build.registered_packages():
                     expected = 35 if slug == 'backroad-rally' else 29
-                    if slug in ('ponpoko-kart', 'kart-royale', 'starbase-spooky'):
+                    if slug in scoped:
                         expected = configured
                     self.assertEqual(build.target_sdk(slug), expected, slug)
         for invalid in (None, True, '35', 35.0, 26, 34, 36):
             with patch.object(build, 'metadata', return_value={'androidTargetSdk': invalid}):
-                for slug in ('ponpoko-kart', 'kart-royale', 'starbase-spooky'):
+                for slug in scoped:
                     with self.assertRaises(AssertionError):
                         build.target_sdk(slug)
         with self.assertRaises(AssertionError): build.target_sdk('unregistered')
