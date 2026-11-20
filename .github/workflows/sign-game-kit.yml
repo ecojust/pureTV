@@ -46,6 +46,7 @@ jobs:
           persist-credentials: false
           sparse-checkout: |
             resource/game-kit
+            joystick-games/tools/android-zxing.py
             tools/puretv-release-certificate-v2.sha256
           sparse-checkout-cone-mode: false
       - uses: actions/checkout@v4
@@ -65,12 +66,8 @@ jobs:
           packages: platforms;android-35 build-tools;34.0.0
       - name: Fetch pinned QR encoder
         run: |
-          curl --fail --silent --show-error --location https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar --output "$RUNNER_TEMP/zxing.jar"
-          python3 - <<'PY'
-          import hashlib,os
-          from pathlib import Path
-          assert hashlib.sha256((Path(os.environ['RUNNER_TEMP'])/'zxing.jar').read_bytes()).hexdigest() == '8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82'
-          PY
+          python3 signer/joystick-games/tools/android-zxing.py \
+            --output "$RUNNER_TEMP/zxing.jar" --receipt "$RUNNER_TEMP/zxing-receipt.json"
       - name: Rebuild committed game without executing source scripts
         env:
           GAME_SLUG: ${{ inputs.slug }}
