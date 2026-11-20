@@ -92,10 +92,19 @@ class PayloadBoundaries(unittest.TestCase):
 
 
 class TargetSdkBoundaries(unittest.TestCase):
-    def test_only_registered_backroad_uses_35_and_all_other_targets_remain_29(self):
-        self.assertEqual(build.target_sdk('backroad-rally'), 35)
-        for slug in build.registered_packages():
-            if slug != 'backroad-rally': self.assertEqual(build.target_sdk(slug), 29)
+    def test_scoped_target_overrides_preserve_existing_and_historical_defaults(self):
+        for field, configured in [({}, 29), ({'androidTargetSdk': 29}, 29), ({'androidTargetSdk': 35}, 35)]:
+            with patch.object(build, 'metadata', return_value=field):
+                for slug in build.registered_packages():
+                    expected = 35 if slug == 'backroad-rally' else 29
+                    if slug in ('ponpoko-kart', 'kart-royale'):
+                        expected = configured
+                    self.assertEqual(build.target_sdk(slug), expected, slug)
+        for invalid in (None, True, '35', 35.0, 26, 34, 36):
+            with patch.object(build, 'metadata', return_value={'androidTargetSdk': invalid}):
+                for slug in ('ponpoko-kart', 'kart-royale'):
+                    with self.assertRaises(AssertionError):
+                        build.target_sdk(slug)
         with self.assertRaises(AssertionError): build.target_sdk('unregistered')
 
     def test_low_level_programmatic_override_rejects_unknown_values_before_building(self):
