@@ -222,6 +222,52 @@ class MenuTapContracts(unittest.TestCase):
         self.assertEqual(self.reads, 5)
         self.assertTrue(all(0 < value <= self.step['timeoutSeconds'] for value in self.budgets))
 
+    def finland_stage(self, count, *, entered=False):
+        state = self.state(count)
+        state['game'].update(game='backroad-rally', stage='playing' if entered else 'menu')
+        state['game']['controller']['inputAvailable'] = True
+        state['game']['gameplay'] = ({'stageId': 'finland', 'carId': 'swift', 'phase': 'running'} if entered else
+            {'screen': 'stageselect', 'flow': 'quick', 'menuFocus': 'start', 'carIndex': 0, 'stageIndex': 0})
+        state['page']['url'] = runner.BACKROAD_FINLAND if entered else runner.BACKROAD_ENTRY
+        return state
+
+    def finland_setup(self):
+        self.acceptance.args.game = 'backroad-rally'
+        self.acceptance.report['apk'] = {'bytes': 105024551, 'sha256': runner.BACKROAD_ORIGINAL_APK}
+        self.step = {'name': 'Start and wait for untouched warm-up/countdown', 'menuTap': True,
+                     'keys': ['A'], 'holdMs': 100, 'timeoutSeconds': 240, 'expect':
+                     [{'path': 'gameplay.phase', 'op': 'eq', 'value': 'running'}, {'path': 'stage', 'op': 'eq', 'value': 'playing'}]}
+
+    def test_finland_real_navigation_needs_two_later_new_document_polls(self):
+        self.finland_setup()
+        before = self.finland_stage(579)
+        wrong_url = self.finland_stage(600, entered=True)
+        wrong_url['page']['url'] = runner.BACKROAD_ENTRY
+        wrong_owner = self.finland_stage(5, entered=True)
+        wrong_owner['game']['controller']['players'][0]['session'] = 'another'
+        self.use_samples([wrong_url, wrong_owner, *[self.finland_stage(n, entered=True) for n in (17, 17, 18, 19)]])
+        self.acceptance.catalog_menu_tap(self.step, before)
+        record = self.acceptance.report['menuTapObservations'][-1]
+        self.assertEqual(record['wire']['matchingAcks'], 2)
+        self.assertEqual(record['stableFreshSamples'], 2)
+        self.assertEqual(record['reloadBasis']['maximumBootSeconds'], 720)
+        self.assertEqual([s['qualified'] for s in record['samples']], [False, False, True, True, True, True])
+        self.assertEqual(record['afterPollCount'], 19)
+        self.assertEqual(self.reads, 6)
+
+    def test_finland_navigation_guard_rejects_another_action_or_start_document(self):
+        self.finland_setup()
+        before = self.finland_stage(579)
+        self.assertIsNotNone(self.acceptance.menu_reload_basis(self.step, before))
+        for lookup in ('carIndex', 'stageIndex'):
+            other = copy.deepcopy(before); other['game']['gameplay'][lookup] = 1
+            self.assertIsNone(self.acceptance.menu_reload_basis(self.step, other))
+        wrong = copy.deepcopy(before); wrong['page']['url'] += '?unrelated'
+        self.assertIsNone(self.acceptance.menu_reload_basis(self.step, wrong))
+        self.assertIsNone(self.acceptance.menu_reload_basis(dict(self.step, keys=['B']), before))
+        self.acceptance.report['apk']['sha256'] = '0' * 64
+        self.assertIsNone(self.acceptance.menu_reload_basis(self.step, before))
+
     def test_exact_night_low_reload_requires_new_baseline_then_two_new_polls(self):
         self.reload_step()
         self.use_samples([self.state(2, low=True), self.state(2, low=True), self.state(3, low=True), self.state(4, low=True)])
