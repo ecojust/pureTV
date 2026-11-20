@@ -243,7 +243,8 @@ jobs:
           python - <<'PYTHON'
           import os, pathlib, xml.etree.ElementTree as ET
           messages=[]
-          for report in pathlib.Path('resource').rglob('TEST-*.xml'):
+          modules = [pathlib.Path('resource/launcher/puretv/app'), *pathlib.Path('resource/apps').iterdir()]
+          for report in (xml for module in modules for xml in module.glob('build/test-results/*/TEST-*.xml')):
               for case in ET.parse(report).getroot().iter('testcase'):
                   for failure in case.findall('failure'):
                       messages.append(case.attrib.get('name','test')+': '+(failure.text or '')[:3000])
