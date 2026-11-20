@@ -40,4 +40,12 @@
 
 0.1.2 的 guest lavapipe 普通端口 63485、回退端口 42335 均真实启动 WebGL2，游戏识别到 SwiftShader 5 和 Low。普通与占用模式分别在 48.74 秒和 37.78 秒最后观察到 “tuning the engines”，其后没有新游戏快照，等候上限分别到 198.74 秒、187.78 秒时仍为 0 帧。两个原始 ADB 日志均包含 Chromium 瓦片内存限额告警。[普通报告](https://github.com/ecojust/pureTV/blob/a29fb65bf0adb04c1801dd034a9dd502be6edde7/evidence/joystick-android-runtime-kart-royale/kart-royale-normal/report.json) · [回退报告](https://github.com/ecojust/pureTV/blob/a29fb65bf0adb04c1801dd034a9dd502be6edde7/evidence/joystick-android-runtime-kart-royale/kart-royale-occupied/report.json)
 
-host 重试的两个模式都完成游戏安装和初始化前清数据，150 秒内均未取得一份可解析的游戏快照。宿主 OpenGL 可由独立日志确认；游戏内的驱动及画面未能核实。[host 报告和原始诊断](https://github.com/ecojust/pureTV/tree/70bc862ef63d656e8ef6e446b46bbc1cef47cec3/evidence/joystick-android-runtime-kart-royale)
+host 重试的两个模式都完成游戏安装和初始化前清数据，150 秒内均未取得一份可解析的游戏快照。Android 输入分发器在两种端口模式下均记录 MainActivity 等待焦点事件 60 秒后触发 ANR。宿主 OpenGL 可由独立日志确认，游戏内的驱动及画面未能核实。[host 报告和原始诊断](https://github.com/ecojust/pureTV/tree/70bc862ef63d656e8ef6e446b46bbc1cef47cec3/evidence/joystick-android-runtime-kart-royale)
+
+## 0.1.3 的赛道画面与软件 GPU 测量
+
+0.1.3（versionCode 4）使用 minSdk 26 和 targetSdk 35。侦测到软件 GPU 且采用 Low 画质时，游戏以顶点光照绘制原赛车、路面和建筑的基础色、纹理与顶点颜色。原作的距离 LOD、风动、摇船、旗帜和观众动画沿用同一组顶点变换。窗板、阳台和观众的装饰网格减少了细分。静态镜头下对这三类改动做单项对照，原始第 2 帧提交了 1,467,423 个三角形，调整后为 1,301,525，两者都是 93 次绘制。硬件 GPU 使用原来的材质与网格。[冻结源码](https://github.com/ecojust/pureTV/commit/5636ee87703fc764d72ce8389dda965a538588fe)
+
+本地复核使用 Chromium 156、Mesa llvmpipe（LLVM 19.1.7）、960 × 540 和两核共享 CPU 配额。冻结版本 在该次并发测试中用 275.97 秒绘出第 1 帧，329.66 秒时可操作标题页。经游戏控制桥依次确认 Start 和 Start race，原倒计时运行到第 106 帧进入 racing，第 109 帧速度达到 1.4877，车辆的世界坐标同时改变。画面可见赛道路缘、观众、灯号和实际赛车。桌面软件渲染器的高启动延迟及低帧率仍然影响操作体验。
+
+![0.1.3 在桌面 llvmpipe 上的真实标题和起跑画面](software-renderer-0.1.3.jpg)
