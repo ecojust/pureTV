@@ -178,6 +178,7 @@ class Check:
     def __init__(self,args):
         self.args=args;self.out=args.output.resolve();self.out.mkdir(parents=True,exist_ok=True);assert not any(self.out.iterdir())
         self.diag=self.out/'diagnostics';self.diag.mkdir();self.processes=[];self.logs=[];self.client=None;self.proxy=None;self.app=None;self.blocker=None;self.held=set();self.stop=threading.Event();self.last=None
+        self.prompt_observer=None
         self.phase='package_setup'
         self.report={'status':'running','qaSourceCommit':os.environ.get('GITHUB_SHA'),'artifactSourceCommit':os.environ.get('ARTIFACT_SOURCE_COMMIT',os.environ.get('GITHUB_SHA')),'artifactRunId':os.environ.get('ARTIFACT_SOURCE_RUN',os.environ.get('GITHUB_RUN_ID')),'startedAt':now(),'game':args.game,'method':'Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.','physicalEsp32Tested':False,'tests':[],'wire':[],'observerErrors':[],'observerConnectionEnds':[],'snapshots':[],'screenshots':[],'sourceHashes':{str(p.relative_to(ROOT)):digest(p) for p in [Path(__file__),SDK,SHARED/'tools/webgl-probe.swift',SHARED/'tools/allow-local-network.py',SHARED/'Sources/main.swift',SHARED/'Sources/ControllerServer.swift',SHARED/'Web/bridge.js']}}
         self.report.update(qaRunId=int(os.environ['GITHUB_RUN_ID']) if os.environ.get('GITHUB_RUN_ID') else None,
@@ -439,12 +440,22 @@ class Check:
             time.sleep(.2)
         else:raise AssertionError('Bonjour service withdrawal was not observed')
         self.app=None;return {'normalExit':True,'tcpClosed':True,'mdnsWithdrawn':True}
+    def observe_network_prompts(self, log_name):
+        if os.environ.get('GITHUB_ACTIONS') != 'true':
+            return
+        # Launch and relaunch can each trigger a network prompt. Give each
+        # launch its own observation window and keep just one AX helper active.
+        if self.prompt_observer is not None and self.prompt_observer.poll() is None:
+            self.prompt_observer.terminate()
+            self.prompt_observer.wait(timeout=5)
+        helper = SHARED / 'tools/allow-local-network.py'
+        shutil.copy2(helper, self.out / 'executed-allow-local-network.py')
+        self.prompt_observer = self.process([sys.executable, helper, self.args.app], log_name)
+
     def run(self):
         try:
             info=plistlib.loads((self.args.app/'Contents/Info.plist').read_bytes());binary=self.args.app/'Contents/MacOS'/info['CFBundleExecutable'];self.report['binarySha256']=digest(binary)
-            if os.environ.get('GITHUB_ACTIONS')=='true':
-                helper=SHARED/'tools/allow-local-network.py';shutil.copy2(helper,self.out/'executed-allow-local-network.py')
-                self.process([sys.executable,helper,self.args.app],'network-prompts.txt')
+            self.observe_network_prompts('network-prompts.txt')
             if self.args.occupy_default_port:
                 self.report['occupiedPortSetup']={'port':63485,'addressReuseEnabled':True,'reusePortEnabled':False,'status':'preparing'}
                 try:
@@ -554,6 +565,7 @@ class CatalogCheck(Check):
                 self.report['storageRestart']['oldPortReservationError']=str(error)
             self.diag=self.out/'diagnostics-restart';self.diag.mkdir()
             command=list(self.launch_command);command[command.index('--diagnostics-dir')+1]=self.diag
+            self.observe_network_prompts('network-prompts-restart.txt')
             self.app=self.process(command,'native-restart.log')
             state=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),renderer=self.renderers)=='ready','Native restart initialized from real persisted data',90)
             assert state['storage']['origin']!=self.storage_before['origin'],'Restart did not use a different local origin'
