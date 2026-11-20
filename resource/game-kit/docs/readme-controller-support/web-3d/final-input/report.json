@@ -1,0 +1,5395 @@
+{
+  "startedAt": "2026-11-15T15:06:20.830Z",
+  "method": "Unmodified bundled game with normal synthetic native bridge inputs and actual requestAnimationFrame; no model, time or camera writes.",
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "gameStateWrites": false,
+  "cases": [
+    {
+      "game": "alien-shooter",
+      "status": "passed",
+      "layouts": [
+        {
+          "width": 960,
+          "height": 540,
+          "bodyWidth": 960,
+          "bodyHeight": 540,
+          "panel": {
+            "x": 702,
+            "y": 246.3125,
+            "w": 192,
+            "h": 69.984375,
+            "scrollHeight": 68,
+            "clientHeight": 68
+          },
+          "sidebar": {
+            "x": 684,
+            "y": 52.3125,
+            "w": 228,
+            "h": 413.765625,
+            "scrollHeight": 412,
+            "clientHeight": 412
+          }
+        },
+        {
+          "width": 1280,
+          "height": 720,
+          "bodyWidth": 1280,
+          "bodyHeight": 720,
+          "panel": {
+            "x": 962.640625,
+            "y": 355.5625,
+            "w": 216,
+            "h": 80.3125,
+            "scrollHeight": 78,
+            "clientHeight": 78
+          },
+          "sidebar": {
+            "x": 940.640625,
+            "y": 68.875,
+            "w": 260,
+            "h": 552,
+            "scrollHeight": 550,
+            "clientHeight": 550
+          }
+        }
+      ],
+      "checks": [
+        "ordinary start and both direction inputs reach running model",
+        "A, B and mapped Y/SELECT reach game input",
+        "disconnect pauses, stale held reconnect cannot resume, neutral then fresh START resumes"
+      ],
+      "movement": {
+        "before": {
+          "phase": "playing",
+          "paused": false,
+          "controllerPaused": false,
+          "controllers": [
+            {
+              "id": 1,
+              "transport": "wifi",
+              "session": "first",
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false,
+              "cancelSeq": 0
+            }
+          ],
+          "info": {
+            "language": "zh",
+            "url": "",
+            "qr": "",
+            "wifiController": {
+              "port": 63485,
+              "addresses": [
+                "192.0.2.10"
+              ],
+              "state": "available",
+              "connected": 1,
+              "inputActive": true
+            }
+          },
+          "model": {
+            "phase": "playing",
+            "players": [
+              {
+                "id": 1,
+                "x": 5,
+                "y": 28,
+                "angle": -1.5707963267948966,
+                "weapon": "pistol",
+                "ammo": {
+                  "pistol": -1,
+                  "smg": 0,
+                  "shotgun": 0,
+                  "minigun": 0,
+                  "plasma": 0
+                },
+                "grenades": 3,
+                "fireCooldown": 0,
+                "connected": true,
+                "active": true
+              }
+            ],
+            "elapsed": 0.3,
+            "stage": 0,
+            "selectedPlayers": 1,
+            "kills": 0,
+            "credits": 0,
+            "eventSerial": 0,
+            "events": [],
+            "bullets": []
+          },
+          "players": [
+            {
+              "id": 1,
+              "x": 5,
+              "y": 28,
+              "angle": -1.5707963267948966,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 3,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "camera": {
+            "projection": [
+              0.0625,
+              0,
+              0,
+              0,
+              0,
+              0.1111111111111111,
+              0,
+              0,
+              0,
+              0,
+              -0.011117287381878822,
+              0,
+              0,
+              0,
+              -1.0011117287381879,
+              1
+            ],
+            "view": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0.5999999999999999,
+              0.8,
+              0,
+              0,
+              -0.8,
+              0.5999999999999999,
+              0,
+              -15,
+              19.720000000000006,
+              -64.78999999999999,
+              1
+            ]
+          }
+        },
+        "right": {
+          "phase": "playing",
+          "paused": false,
+          "controllerPaused": false,
+          "controllers": [
+            {
+              "id": 1,
+              "transport": "wifi",
+              "session": "first",
+              "connected": true,
+              "x": 1,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false,
+              "cancelSeq": 0
+            }
+          ],
+          "info": {
+            "language": "zh",
+            "url": "",
+            "qr": "",
+            "wifiController": {
+              "port": 63485,
+              "addresses": [
+                "192.0.2.10"
+              ],
+              "state": "available",
+              "connected": 1,
+              "inputActive": true
+            }
+          },
+          "model": {
+            "phase": "playing",
+            "players": [
+              {
+                "id": 1,
+                "x": 5.383333333333331,
+                "y": 28,
+                "angle": 0,
+                "weapon": "pistol",
+                "ammo": {
+                  "pistol": -1,
+                  "smg": 0,
+                  "shotgun": 0,
+                  "minigun": 0,
+                  "plasma": 0
+                },
+                "grenades": 3,
+                "fireCooldown": 0,
+                "connected": true,
+                "active": true
+              }
+            ],
+            "elapsed": 0.3833333333333333,
+            "stage": 0,
+            "selectedPlayers": 1,
+            "kills": 0,
+            "credits": 0,
+            "eventSerial": 0,
+            "events": [],
+            "bullets": []
+          },
+          "players": [
+            {
+              "id": 1,
+              "x": 5.383333333333331,
+              "y": 28,
+              "angle": 0,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 3,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "camera": {
+            "projection": [
+              0.0625,
+              0,
+              0,
+              0,
+              0,
+              0.1111111111111111,
+              0,
+              0,
+              0,
+              0,
+              -0.011117287381878822,
+              0,
+              0,
+              0,
+              -1.0011117287381879,
+              1
+            ],
+            "view": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0.5999999999999999,
+              0.8,
+              0,
+              0,
+              -0.8,
+              0.5999999999999999,
+              0,
+              -15,
+              19.720000000000006,
+              -64.78999999999999,
+              1
+            ]
+          }
+        },
+        "left": {
+          "phase": "playing",
+          "paused": false,
+          "controllerPaused": false,
+          "controllers": [
+            {
+              "id": 1,
+              "transport": "wifi",
+              "session": "first",
+              "connected": true,
+              "x": -1,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false,
+              "cancelSeq": 0
+            }
+          ],
+          "info": {
+            "language": "zh",
+            "url": "",
+            "qr": "",
+            "wifiController": {
+              "port": 63485,
+              "addresses": [
+                "192.0.2.10"
+              ],
+              "state": "available",
+              "connected": 1,
+              "inputActive": true
+            }
+          },
+          "model": {
+            "phase": "playing",
+            "players": [
+              {
+                "id": 1,
+                "x": 5,
+                "y": 28,
+                "angle": 3.141592653589793,
+                "weapon": "pistol",
+                "ammo": {
+                  "pistol": -1,
+                  "smg": 0,
+                  "shotgun": 0,
+                  "minigun": 0,
+                  "plasma": 0
+                },
+                "grenades": 3,
+                "fireCooldown": 0,
+                "connected": true,
+                "active": true
+              }
+            ],
+            "elapsed": 0.4666666666666666,
+            "stage": 0,
+            "selectedPlayers": 1,
+            "kills": 0,
+            "credits": 0,
+            "eventSerial": 0,
+            "events": [],
+            "bullets": []
+          },
+          "players": [
+            {
+              "id": 1,
+              "x": 5,
+              "y": 28,
+              "angle": 3.141592653589793,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 3,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "camera": {
+            "projection": [
+              0.0625,
+              0,
+              0,
+              0,
+              0,
+              0.1111111111111111,
+              0,
+              0,
+              0,
+              0,
+              -0.011117287381878822,
+              0,
+              0,
+              0,
+              -1.0011117287381879,
+              1
+            ],
+            "view": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0.5999999999999999,
+              0.8,
+              0,
+              0,
+              -0.8,
+              0.5999999999999999,
+              0,
+              -15,
+              19.720000000000006,
+              -64.78999999999999,
+              1
+            ]
+          }
+        }
+      },
+      "actionA": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": true,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 5,
+              "y": 28,
+              "angle": 0.07436661246607931,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 3,
+              "fireCooldown": 0.040000000000000036,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 0.7666666666666674,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 0,
+          "credits": 0,
+          "eventSerial": 1,
+          "events": [
+            {
+              "id": 1,
+              "kind": "shot",
+              "x": 5,
+              "y": 28,
+              "playerId": 1,
+              "weapon": "pistol"
+            }
+          ],
+          "bullets": [
+            {
+              "id": 19,
+              "type": "pistol",
+              "x": 11.691945534304994,
+              "y": 28.57573959131408,
+              "prevX": 11.17718049320461,
+              "prevY": 28.531451930443765,
+              "vx": 30.88590246602306,
+              "vy": 2.6572596522189076,
+              "owner": 1,
+              "enemy": false,
+              "damage": 21,
+              "life": 0.5333333333333327,
+              "splash": 0,
+              "radius": 0.045
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 5,
+            "y": 28,
+            "angle": 0.07436661246607931,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 3,
+            "fireCooldown": 0.040000000000000036,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        }
+      },
+      "actionB": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": true,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 5,
+              "y": 28,
+              "angle": 0.07436661246607931,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 2,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 0.9833333333333347,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 0,
+          "credits": 0,
+          "eventSerial": 3,
+          "events": [
+            {
+              "id": 1,
+              "kind": "shot",
+              "x": 5,
+              "y": 28,
+              "playerId": 1,
+              "weapon": "pistol"
+            },
+            {
+              "id": 2,
+              "kind": "grenade",
+              "x": 5,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 3,
+              "kind": "hit",
+              "x": 12.550513396077502,
+              "y": 28.562543515108064,
+              "playerId": null
+            }
+          ],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 5,
+            "y": 28,
+            "angle": 0.07436661246607931,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 2,
+            "fireCooldown": 0,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        }
+      },
+      "select": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": true,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 5,
+              "y": 28,
+              "angle": 0.07436661246607931,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 2,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 1.0666666666666678,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 0,
+          "credits": 0,
+          "eventSerial": 4,
+          "events": [
+            {
+              "id": 1,
+              "kind": "shot",
+              "x": 5,
+              "y": 28,
+              "playerId": 1,
+              "weapon": "pistol"
+            },
+            {
+              "id": 2,
+              "kind": "grenade",
+              "x": 5,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 3,
+              "kind": "hit",
+              "x": 12.550513396077502,
+              "y": 28.562543515108064,
+              "playerId": null
+            },
+            {
+              "id": 4,
+              "kind": "weapon",
+              "x": 5,
+              "y": 28,
+              "playerId": 1,
+              "weapon": "pistol"
+            }
+          ],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 5,
+            "y": 28,
+            "angle": 0.07436661246607931,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 2,
+            "fireCooldown": 0,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        }
+      },
+      "disconnected": {
+        "phase": "paused",
+        "paused": true,
+        "controllerPaused": true,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 1,
+            "aimY": 0,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "paused",
+          "players": [
+            {
+              "id": 1,
+              "x": 5,
+              "y": 28,
+              "angle": 0.07436661246607931,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 2,
+              "fireCooldown": 0,
+              "connected": false,
+              "active": true
+            }
+          ],
+          "elapsed": 1.3000000000000003,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 0,
+          "credits": 0,
+          "eventSerial": 4,
+          "events": [
+            {
+              "id": 1,
+              "kind": "shot",
+              "x": 5,
+              "y": 28,
+              "playerId": 1,
+              "weapon": "pistol"
+            },
+            {
+              "id": 2,
+              "kind": "grenade",
+              "x": 5,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 3,
+              "kind": "hit",
+              "x": 12.550513396077502,
+              "y": 28.562543515108064,
+              "playerId": null
+            },
+            {
+              "id": 4,
+              "kind": "weapon",
+              "x": 5,
+              "y": 28,
+              "playerId": 1,
+              "weapon": "pistol"
+            }
+          ],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 5,
+            "y": 28,
+            "angle": 0.07436661246607931,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 2,
+            "fireCooldown": 0,
+            "connected": false,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        }
+      },
+      "reconnected": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "reconnected",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 2
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 5,
+              "y": 28,
+              "angle": 0.07436661246607931,
+              "weapon": "pistol",
+              "ammo": {
+                "pistol": -1,
+                "smg": 0,
+                "shotgun": 0,
+                "minigun": 0,
+                "plasma": 0
+              },
+              "grenades": 2,
+              "fireCooldown": 0,
+              "connected": true,
+              "active": true
+            }
+          ],
+          "elapsed": 1.4499999999999997,
+          "stage": 0,
+          "selectedPlayers": 1,
+          "kills": 0,
+          "credits": 0,
+          "eventSerial": 4,
+          "events": [
+            {
+              "id": 1,
+              "kind": "shot",
+              "x": 5,
+              "y": 28,
+              "playerId": 1,
+              "weapon": "pistol"
+            },
+            {
+              "id": 2,
+              "kind": "grenade",
+              "x": 5,
+              "y": 28,
+              "playerId": 1
+            },
+            {
+              "id": 3,
+              "kind": "hit",
+              "x": 12.550513396077502,
+              "y": 28.562543515108064,
+              "playerId": null
+            },
+            {
+              "id": 4,
+              "kind": "weapon",
+              "x": 5,
+              "y": 28,
+              "playerId": 1,
+              "weapon": "pistol"
+            }
+          ],
+          "bullets": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 5,
+            "y": 28,
+            "angle": 0.07436661246607931,
+            "weapon": "pistol",
+            "ammo": {
+              "pistol": -1,
+              "smg": 0,
+              "shotgun": 0,
+              "minigun": 0,
+              "plasma": 0
+            },
+            "grenades": 2,
+            "fireCooldown": 0,
+            "connected": true,
+            "active": true
+          }
+        ],
+        "camera": {
+          "projection": [
+            0.0625,
+            0,
+            0,
+            0,
+            0,
+            0.1111111111111111,
+            0,
+            0,
+            0,
+            0,
+            -0.011117287381878822,
+            0,
+            0,
+            0,
+            -1.0011117287381879,
+            1
+          ],
+          "view": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.5999999999999999,
+            0.8,
+            0,
+            0,
+            -0.8,
+            0.5999999999999999,
+            0,
+            -15,
+            19.720000000000006,
+            -64.78999999999999,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "game": "used-car-racing",
+      "status": "passed",
+      "layouts": [
+        {
+          "width": 960,
+          "height": 540,
+          "bodyWidth": 960,
+          "bodyHeight": 540,
+          "panel": {
+            "x": 634,
+            "y": 144,
+            "w": 304,
+            "h": 68.9375,
+            "scrollHeight": 67,
+            "clientHeight": 67
+          },
+          "sidebar": {
+            "x": 634,
+            "y": 14,
+            "w": 304,
+            "h": 124,
+            "scrollHeight": 198,
+            "clientHeight": 122
+          }
+        },
+        {
+          "width": 1280,
+          "height": 720,
+          "bodyWidth": 1280,
+          "bodyHeight": 720,
+          "panel": {
+            "x": 928,
+            "y": 154,
+            "w": 322,
+            "h": 74.375,
+            "scrollHeight": 72,
+            "clientHeight": 72
+          },
+          "sidebar": {
+            "x": 928,
+            "y": 20,
+            "w": 322,
+            "h": 128,
+            "scrollHeight": 207,
+            "clientHeight": 126
+          }
+        }
+      ],
+      "checks": [
+        "ordinary start and both direction inputs reach running model",
+        "A, B and mapped Y/SELECT reach game input",
+        "disconnect pauses, stale held reconnect cannot resume, neutral then fresh START resumes"
+      ],
+      "movement": {
+        "before": {
+          "phase": "race",
+          "paused": false,
+          "controllerPaused": false,
+          "controllers": [
+            {
+              "id": 1,
+              "transport": "wifi",
+              "session": "first",
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false,
+              "cancelSeq": 0
+            }
+          ],
+          "info": {
+            "language": "zh",
+            "url": "",
+            "qr": "",
+            "wifiController": {
+              "port": 63485,
+              "addresses": [
+                "192.0.2.10"
+              ],
+              "state": "available",
+              "connected": 1,
+              "inputActive": true
+            }
+          },
+          "model": {
+            "phase": "race",
+            "players": [
+              {
+                "id": 1,
+                "x": -183.51615322199467,
+                "y": 4.97761111217354,
+                "z": -241.5257390169149,
+                "yaw": 2.548125820692355,
+                "speed": 0,
+                "lateral": -2.149952145515637,
+                "s": 1743.4989797971305,
+                "u": 0,
+                "v": 0,
+                "steerAngle": 0,
+                "lap": 1,
+                "rank": 2,
+                "telemetry": {
+                  "speedKmh": 0,
+                  "rpm": 850,
+                  "gear": 1,
+                  "pedalForceN": 0,
+                  "brakeForce": 0,
+                  "brake": 0,
+                  "throttle": 0,
+                  "absActive": false,
+                  "brakeTemp": 27.996851417145677,
+                  "grip": 0.7061597868201585,
+                  "slipAngle": 0,
+                  "engineTemp": 73.86104563592112,
+                  "damage": 0,
+                  "offRoad": false,
+                  "locked": false,
+                  "steerAngle": 0,
+                  "brakeBroken": false,
+                  "lap": 1,
+                  "rank": 2,
+                  "misfire": false
+                }
+              }
+            ],
+            "raceTime": 0.05833333333333333,
+            "countdown": 0,
+            "trackId": "harbor",
+            "playerCount": 1,
+            "eventSerial": 2,
+            "events": [
+              {
+                "id": 1,
+                "kind": "countdown",
+                "type": "countdown",
+                "racerId": null,
+                "playerIndex": null,
+                "text": [
+                  "准备起步",
+                  "READY TO RACE"
+                ],
+                "time": 0
+              },
+              {
+                "id": 2,
+                "kind": "go",
+                "type": "go",
+                "racerId": null,
+                "playerIndex": null,
+                "text": [
+                  "绿灯！",
+                  "GREEN LIGHT!"
+                ],
+                "time": 2.999999999999992
+              }
+            ]
+          },
+          "players": [
+            {
+              "id": 1,
+              "x": -183.51615322199467,
+              "y": 4.97761111217354,
+              "z": -241.5257390169149,
+              "yaw": 2.548125820692355,
+              "speed": 0,
+              "lateral": -2.149952145515637,
+              "s": 1743.4989797971305,
+              "u": 0,
+              "v": 0,
+              "steerAngle": 0,
+              "lap": 1,
+              "rank": 2,
+              "telemetry": {
+                "speedKmh": 0,
+                "rpm": 850,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 0,
+                "absActive": false,
+                "brakeTemp": 27.996851417145677,
+                "grip": 0.7061597868201585,
+                "slipAngle": 0,
+                "engineTemp": 73.86104563592112,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 0,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 2,
+                "misfire": false
+              }
+            }
+          ],
+          "camera": {
+            "projection": [
+              1.0359961233938202,
+              0,
+              0,
+              0,
+              0,
+              1.8417708860334578,
+              0,
+              0,
+              0,
+              0,
+              -1.00010000500025,
+              -1,
+              0,
+              0,
+              -0.1800090004500225,
+              0
+            ],
+            "view": [
+              0.8290068787627144,
+              0.08461231564246785,
+              -0.5528004621974566,
+              0,
+              -1.3877787807814457e-17,
+              0.9884880152601505,
+              0.15129918600920672,
+              0,
+              0.559238406195517,
+              -0.12542806595283182,
+              0.8194633642251677,
+              0,
+              287.2066227281198,
+              -21.882555017993234,
+              87.59479518773736,
+              1
+            ]
+          }
+        },
+        "right": {
+          "phase": "race",
+          "paused": false,
+          "controllerPaused": false,
+          "controllers": [
+            {
+              "id": 1,
+              "transport": "wifi",
+              "session": "first",
+              "connected": true,
+              "x": 1,
+              "y": 0,
+              "a": true,
+              "b": false,
+              "start": false,
+              "select": false,
+              "cancelSeq": 0
+            }
+          ],
+          "info": {
+            "language": "zh",
+            "url": "",
+            "qr": "",
+            "wifiController": {
+              "port": 63485,
+              "addresses": [
+                "192.0.2.10"
+              ],
+              "state": "available",
+              "connected": 1,
+              "inputActive": true
+            }
+          },
+          "model": {
+            "phase": "race",
+            "players": [
+              {
+                "id": 1,
+                "x": -183.1042159385849,
+                "y": 4.979013281254019,
+                "z": -241.88464649463964,
+                "yaw": 2.4558248300349246,
+                "speed": 1.5886014954920864,
+                "lateral": -2.2931837448961763,
+                "s": 1744.026222591029,
+                "u": 1.5272244412270473,
+                "v": -0.437310207516846,
+                "steerAngle": -0.5115968693133854,
+                "lap": 1,
+                "rank": 2,
+                "telemetry": {
+                  "speedKmh": 5.718965383771511,
+                  "rpm": 2750,
+                  "gear": 1,
+                  "pedalForceN": 0,
+                  "brakeForce": 0,
+                  "brake": 0,
+                  "throttle": 1,
+                  "absActive": false,
+                  "brakeTemp": 27.94062487701888,
+                  "grip": 0.6900991018583421,
+                  "slipAngle": -0.2788809351045669,
+                  "engineTemp": 83.83459874302667,
+                  "damage": 0,
+                  "offRoad": false,
+                  "locked": false,
+                  "steerAngle": -0.5115968693133854,
+                  "brakeBroken": false,
+                  "lap": 1,
+                  "rank": 2,
+                  "misfire": false
+                }
+              }
+            ],
+            "raceTime": 1.058333333333332,
+            "countdown": 0,
+            "trackId": "harbor",
+            "playerCount": 1,
+            "eventSerial": 2,
+            "events": [
+              {
+                "id": 1,
+                "kind": "countdown",
+                "type": "countdown",
+                "racerId": null,
+                "playerIndex": null,
+                "text": [
+                  "准备起步",
+                  "READY TO RACE"
+                ],
+                "time": 0
+              },
+              {
+                "id": 2,
+                "kind": "go",
+                "type": "go",
+                "racerId": null,
+                "playerIndex": null,
+                "text": [
+                  "绿灯！",
+                  "GREEN LIGHT!"
+                ],
+                "time": 2.999999999999992
+              }
+            ]
+          },
+          "players": [
+            {
+              "id": 1,
+              "x": -183.1042159385849,
+              "y": 4.979013281254019,
+              "z": -241.88464649463964,
+              "yaw": 2.4558248300349246,
+              "speed": 1.5886014954920864,
+              "lateral": -2.2931837448961763,
+              "s": 1744.026222591029,
+              "u": 1.5272244412270473,
+              "v": -0.437310207516846,
+              "steerAngle": -0.5115968693133854,
+              "lap": 1,
+              "rank": 2,
+              "telemetry": {
+                "speedKmh": 5.718965383771511,
+                "rpm": 2750,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 1,
+                "absActive": false,
+                "brakeTemp": 27.94062487701888,
+                "grip": 0.6900991018583421,
+                "slipAngle": -0.2788809351045669,
+                "engineTemp": 83.83459874302667,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": -0.5115968693133854,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 2,
+                "misfire": false
+              }
+            }
+          ],
+          "camera": {
+            "projection": [
+              1.0325798558160915,
+              0,
+              0,
+              0,
+              0,
+              1.8356975214508293,
+              0,
+              0,
+              0,
+              0,
+              -1.00010000500025,
+              -1,
+              0,
+              0,
+              -0.1800090004500225,
+              0
+            ],
+            "view": [
+              0.7930894716289845,
+              0.09128891642607495,
+              -0.6022253927965938,
+              0,
+              1.387778780781446e-17,
+              0.988705132006277,
+              0.14987382007692537,
+              0,
+              0.6091051551179473,
+              -0.11886334877582622,
+              0.7841316307397235,
+              0,
+              292.58875247140077,
+              -19.137624151452524,
+              70.3450299632365,
+              1
+            ]
+          }
+        },
+        "left": {
+          "phase": "race",
+          "paused": false,
+          "controllerPaused": false,
+          "controllers": [
+            {
+              "id": 1,
+              "transport": "wifi",
+              "session": "first",
+              "connected": true,
+              "x": -1,
+              "y": 0,
+              "a": true,
+              "b": false,
+              "start": false,
+              "select": false,
+              "cancelSeq": 0
+            }
+          ],
+          "info": {
+            "language": "zh",
+            "url": "",
+            "qr": "",
+            "wifiController": {
+              "port": 63485,
+              "addresses": [
+                "192.0.2.10"
+              ],
+              "state": "available",
+              "connected": 1,
+              "inputActive": true
+            }
+          },
+          "model": {
+            "phase": "race",
+            "players": [
+              {
+                "id": 1,
+                "x": -180.4695328275156,
+                "y": 4.986377908295381,
+                "z": -243.46824575337263,
+                "yaw": 2.161095846379974,
+                "speed": 4.936834236070847,
+                "lateral": -3.550795400583139,
+                "s": 1746.88219551129,
+                "u": 4.934995059294142,
+                "v": 0.1347443475015906,
+                "steerAngle": 0.06351867422926993,
+                "lap": 1,
+                "rank": 2,
+                "telemetry": {
+                  "speedKmh": 17.77260324985505,
+                  "rpm": 2012.4906152963736,
+                  "gear": 1,
+                  "pedalForceN": 0,
+                  "brakeForce": 0,
+                  "brake": 0,
+                  "throttle": 1,
+                  "absActive": false,
+                  "brakeTemp": 27.872571340229744,
+                  "grip": 0.7031720540869852,
+                  "slipAngle": 0.027297064511841454,
+                  "engineTemp": 99.51513446114384,
+                  "damage": 0,
+                  "offRoad": false,
+                  "locked": false,
+                  "steerAngle": 0.06351867422926993,
+                  "brakeBroken": false,
+                  "lap": 1,
+                  "rank": 2,
+                  "misfire": false
+                }
+              }
+            ],
+            "raceTime": 2.0583333333333287,
+            "countdown": 0,
+            "trackId": "harbor",
+            "playerCount": 1,
+            "eventSerial": 2,
+            "events": [
+              {
+                "id": 1,
+                "kind": "countdown",
+                "type": "countdown",
+                "racerId": null,
+                "playerIndex": null,
+                "text": [
+                  "准备起步",
+                  "READY TO RACE"
+                ],
+                "time": 0
+              },
+              {
+                "id": 2,
+                "kind": "go",
+                "type": "go",
+                "racerId": null,
+                "playerIndex": null,
+                "text": [
+                  "绿灯！",
+                  "GREEN LIGHT!"
+                ],
+                "time": 2.999999999999992
+              }
+            ]
+          },
+          "players": [
+            {
+              "id": 1,
+              "x": -180.4695328275156,
+              "y": 4.986377908295381,
+              "z": -243.46824575337263,
+              "yaw": 2.161095846379974,
+              "speed": 4.936834236070847,
+              "lateral": -3.550795400583139,
+              "s": 1746.88219551129,
+              "u": 4.934995059294142,
+              "v": 0.1347443475015906,
+              "steerAngle": 0.06351867422926993,
+              "lap": 1,
+              "rank": 2,
+              "telemetry": {
+                "speedKmh": 17.77260324985505,
+                "rpm": 2012.4906152963736,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 1,
+                "absActive": false,
+                "brakeTemp": 27.872571340229744,
+                "grip": 0.7031720540869852,
+                "slipAngle": 0.027297064511841454,
+                "engineTemp": 99.51513446114384,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 0.06351867422926993,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 2,
+                "misfire": false
+              }
+            }
+          ],
+          "camera": {
+            "projection": [
+              1.0254361481080265,
+              0,
+              0,
+              0,
+              0,
+              1.8229975966364913,
+              0,
+              0,
+              0,
+              0,
+              -1.00010000500025,
+              -1,
+              0,
+              0,
+              -0.1800090004500225,
+              0
+            ],
+            "view": [
+              0.5793116338313309,
+              0.11933430456342155,
+              -0.8063233561432028,
+              0,
+              1.3877787807814454e-17,
+              0.9892249728362095,
+              0.14640339175442812,
+              0,
+              0.8151061470187019,
+              -0.08481318807570616,
+              0.5730695352404983,
+              0,
+              303.03732758675477,
+              -6.171453337557276,
+              -15.57252271586469,
+              1
+            ]
+          }
+        }
+      },
+      "actionA": {
+        "phase": "race",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": true,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "race",
+          "players": [
+            {
+              "id": 1,
+              "x": -172.042152663561,
+              "y": 5.012317368871757,
+              "z": -251.571266740433,
+              "yaw": 2.354935227489847,
+              "speed": 8.725907745709588,
+              "lateral": -5.064111240591709,
+              "s": 6.49959810032874,
+              "u": 8.72463606684119,
+              "v": -0.1489680764743725,
+              "steerAngle": 2.417710546093737e-7,
+              "lap": 1,
+              "rank": 2,
+              "telemetry": {
+                "speedKmh": 31.413267884554518,
+                "rpm": 3569.4766194861636,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 1,
+                "absActive": false,
+                "brakeTemp": 27.72568120334771,
+                "grip": 0.7008582714454927,
+                "slipAngle": -0.017072758262876027,
+                "engineTemp": 101.09487992999442,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 2.417710546093737e-7,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 2,
+                "misfire": false
+              }
+            }
+          ],
+          "raceTime": 3.8083333333333225,
+          "countdown": 0,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 2,
+          "events": [
+            {
+              "id": 1,
+              "kind": "countdown",
+              "type": "countdown",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "准备起步",
+                "READY TO RACE"
+              ],
+              "time": 0
+            },
+            {
+              "id": 2,
+              "kind": "go",
+              "type": "go",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "绿灯！",
+                "GREEN LIGHT!"
+              ],
+              "time": 2.999999999999992
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -172.042152663561,
+            "y": 5.012317368871757,
+            "z": -251.571266740433,
+            "yaw": 2.354935227489847,
+            "speed": 8.725907745709588,
+            "lateral": -5.064111240591709,
+            "s": 6.49959810032874,
+            "u": 8.72463606684119,
+            "v": -0.1489680764743725,
+            "steerAngle": 2.417710546093737e-7,
+            "lap": 1,
+            "rank": 2,
+            "telemetry": {
+              "speedKmh": 31.413267884554518,
+              "rpm": 3569.4766194861636,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 1,
+              "absActive": false,
+              "brakeTemp": 27.72568120334771,
+              "grip": 0.7008582714454927,
+              "slipAngle": -0.017072758262876027,
+              "engineTemp": 101.09487992999442,
+              "damage": 0,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 2.417710546093737e-7,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 2,
+              "misfire": false
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.0174431100496464,
+            0,
+            0,
+            0,
+            0,
+            1.8087877511993713,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.7044262570514696,
+            0.10057021957818946,
+            -0.7026160255149692,
+            0,
+            2.7755575615628914e-17,
+            0.9899106975148154,
+            0.14169266369763817,
+            0,
+            0.7097771822033003,
+            -0.09981203274017988,
+            0.6973190874655708,
+            0,
+            299.7693635609233,
+            -14.824484457807397,
+            44.21598969811309,
+            1
+          ]
+        }
+      },
+      "actionB": {
+        "phase": "race",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": true,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "race",
+          "players": [
+            {
+              "id": 1,
+              "x": -165.32022872791558,
+              "y": 5.021791990154627,
+              "z": -258.19009604140433,
+              "yaw": 2.3685328129183745,
+              "speed": 8.529340612563475,
+              "lateral": -5.238140726650018,
+              "s": 16.319991724885085,
+              "u": 8.528614321411249,
+              "v": -0.11130607235730801,
+              "steerAngle": 2.6898596377171508e-11,
+              "lap": 1,
+              "rank": 2,
+              "telemetry": {
+                "speedKmh": 30.705626205228512,
+                "rpm": 3514.800549376175,
+                "gear": 1,
+                "pedalForceN": 450,
+                "brakeForce": 4146.630201363936,
+                "brake": 0.25,
+                "throttle": 0,
+                "absActive": false,
+                "brakeTemp": 28.394861560874087,
+                "grip": 0.7003868673272613,
+                "slipAngle": -0.013050156727912113,
+                "engineTemp": 96.58073635023266,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 2.6898596377171508e-11,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 2,
+                "misfire": false
+              }
+            }
+          ],
+          "raceTime": 4.808333333333362,
+          "countdown": 0,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 2,
+          "events": [
+            {
+              "id": 1,
+              "kind": "countdown",
+              "type": "countdown",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "准备起步",
+                "READY TO RACE"
+              ],
+              "time": 0
+            },
+            {
+              "id": 2,
+              "kind": "go",
+              "type": "go",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "绿灯！",
+                "GREEN LIGHT!"
+              ],
+              "time": 2.999999999999992
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -165.32022872791558,
+            "y": 5.021791990154627,
+            "z": -258.19009604140433,
+            "yaw": 2.3685328129183745,
+            "speed": 8.529340612563475,
+            "lateral": -5.238140726650018,
+            "s": 16.319991724885085,
+            "u": 8.528614321411249,
+            "v": -0.11130607235730801,
+            "steerAngle": 2.6898596377171508e-11,
+            "lap": 1,
+            "rank": 2,
+            "telemetry": {
+              "speedKmh": 30.705626205228512,
+              "rpm": 3514.800549376175,
+              "gear": 1,
+              "pedalForceN": 450,
+              "brakeForce": 4146.630201363936,
+              "brake": 0.25,
+              "throttle": 0,
+              "absActive": false,
+              "brakeTemp": 28.394861560874087,
+              "grip": 0.7003868673272613,
+              "slipAngle": -0.013050156727912113,
+              "engineTemp": 96.58073635023266,
+              "damage": 0,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 2.6898596377171508e-11,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 2,
+              "misfire": false
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.0178554141534872,
+            0,
+            0,
+            0,
+            0,
+            1.809520736272866,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.7146083938181911,
+            0.09854410182090868,
+            -0.6925488455559619,
+            0,
+            0,
+            0.9900276844643647,
+            0.14087293563395492,
+            0,
+            0.6995247268571607,
+            -0.10066898226583394,
+            0.7074820934306225,
+            0,
+            298.77261062583233,
+            -16.699078733580034,
+            57.583388006557115,
+            1
+          ]
+        }
+      },
+      "select": {
+        "phase": "race",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": true,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "race",
+          "players": [
+            {
+              "id": 1,
+              "x": -162.36902755896574,
+              "y": 5.022450186608953,
+              "z": -261.15038247657526,
+              "yaw": 2.3703216149099546,
+              "speed": 8.242386469879495,
+              "lateral": -4.996513300040197,
+              "s": 20.747664863119553,
+              "u": 8.241843172876456,
+              "v": -0.09463526067128891,
+              "steerAngle": 2.566277697737047e-13,
+              "lap": 1,
+              "rank": 2,
+              "telemetry": {
+                "speedKmh": 29.67259129156618,
+                "rpm": 3385.406672005326,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 0,
+                "absActive": false,
+                "brakeTemp": 28.3662773956792,
+                "grip": 0.7009720567935295,
+                "slipAngle": -0.011481788723051417,
+                "engineTemp": 91.66225997460819,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 2.566277697737047e-13,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 2,
+                "misfire": false
+              }
+            }
+          ],
+          "raceTime": 5.308333333333387,
+          "countdown": 0,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 2,
+          "events": [
+            {
+              "id": 1,
+              "kind": "countdown",
+              "type": "countdown",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "准备起步",
+                "READY TO RACE"
+              ],
+              "time": 0
+            },
+            {
+              "id": 2,
+              "kind": "go",
+              "type": "go",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "绿灯！",
+                "GREEN LIGHT!"
+              ],
+              "time": 2.999999999999992
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -162.36902755896574,
+            "y": 5.022450186608953,
+            "z": -261.15038247657526,
+            "yaw": 2.3703216149099546,
+            "speed": 8.242386469879495,
+            "lateral": -4.996513300040197,
+            "s": 20.747664863119553,
+            "u": 8.241843172876456,
+            "v": -0.09463526067128891,
+            "steerAngle": 2.566277697737047e-13,
+            "lap": 1,
+            "rank": 2,
+            "telemetry": {
+              "speedKmh": 29.67259129156618,
+              "rpm": 3385.406672005326,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 0,
+              "absActive": false,
+              "brakeTemp": 28.3662773956792,
+              "grip": 0.7009720567935295,
+              "slipAngle": -0.011481788723051417,
+              "engineTemp": 91.66225997460819,
+              "damage": 0,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 2.566277697737047e-13,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 2,
+              "misfire": false
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.0184577668771926,
+            0,
+            0,
+            0,
+            0,
+            1.8105915855594534,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.7165557770359257,
+            0.0986610477942625,
+            -0.6905170642674802,
+            0,
+            0,
+            0.9899463316766524,
+            0.141443488361747,
+            0,
+            0.6975297974971685,
+            -0.10135214870972353,
+            0.7093517629184278,
+            0,
+            298.52496870489284,
+            -17.462000931050234,
+            62.67038002625202,
+            1.0000000000000002
+          ]
+        }
+      },
+      "disconnected": {
+        "phase": "paused",
+        "paused": true,
+        "controllerPaused": true,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 1,
+            "aimY": 0,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "paused",
+          "players": [
+            {
+              "id": 1,
+              "x": -148.772688548558,
+              "y": 5.003511847796862,
+              "z": -274.3314638975125,
+              "yaw": 2.3767031900425937,
+              "speed": 6.502637531314809,
+              "lateral": -2.2920487082526293,
+              "s": 40.12207059049592,
+              "u": 6.4910992923436535,
+              "v": -0.38720129209453186,
+              "steerAngle": 0,
+              "lap": 1,
+              "rank": 4,
+              "telemetry": {
+                "speedKmh": 23.409495112733314,
+                "rpm": 2666.6922926834673,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 0,
+                "absActive": false,
+                "brakeTemp": 28.110270791772756,
+                "grip": 0.6951178611354231,
+                "slipAngle": -0.05958051156022337,
+                "engineTemp": 76.80654137830861,
+                "damage": 0.01098139166878915,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 0,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 4,
+                "misfire": false
+              }
+            }
+          ],
+          "raceTime": 7.808333333333511,
+          "countdown": 0,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 2,
+          "events": [
+            {
+              "id": 1,
+              "kind": "countdown",
+              "type": "countdown",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "准备起步",
+                "READY TO RACE"
+              ],
+              "time": 0
+            },
+            {
+              "id": 2,
+              "kind": "go",
+              "type": "go",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "绿灯！",
+                "GREEN LIGHT!"
+              ],
+              "time": 2.999999999999992
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -148.772688548558,
+            "y": 5.003511847796862,
+            "z": -274.3314638975125,
+            "yaw": 2.3767031900425937,
+            "speed": 6.502637531314809,
+            "lateral": -2.2920487082526293,
+            "s": 40.12207059049592,
+            "u": 6.4910992923436535,
+            "v": -0.38720129209453186,
+            "steerAngle": 0,
+            "lap": 1,
+            "rank": 4,
+            "telemetry": {
+              "speedKmh": 23.409495112733314,
+              "rpm": 2666.6922926834673,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 0,
+              "absActive": false,
+              "brakeTemp": 28.110270791772756,
+              "grip": 0.6951178611354231,
+              "slipAngle": -0.05958051156022337,
+              "engineTemp": 76.80654137830861,
+              "damage": 0.01098139166878915,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 0,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 4,
+              "misfire": false
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.0221214475448488,
+            0,
+            0,
+            0,
+            0,
+            1.8171047956352866,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.721524960476382,
+            0.09937068211485933,
+            -0.6852205476673792,
+            0,
+            -1.3877787807814457e-17,
+            0.9896476062949155,
+            0.1435186933982616,
+            0,
+            0.6923884252423314,
+            -0.10355231958180268,
+            0.7140554500174848,
+            0,
+            297.2938788070954,
+            -20.800778598841116,
+            84.87952267256821,
+            1
+          ]
+        }
+      },
+      "reconnected": {
+        "phase": "race",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "reconnected",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 2
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "race",
+          "players": [
+            {
+              "id": 1,
+              "x": -144.43360581211843,
+              "y": 4.991465878876905,
+              "z": -278.77610667717715,
+              "yaw": 2.373716314447903,
+              "speed": 5.932740317074016,
+              "lateral": -0.607602944333124,
+              "s": 46.17263871638443,
+              "u": 5.932716002539078,
+              "v": -0.01698537760056402,
+              "steerAngle": 0,
+              "lap": 1,
+              "rank": 4,
+              "telemetry": {
+                "speedKmh": 21.35786514146646,
+                "rpm": 2437.664968978143,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 0,
+                "absActive": false,
+                "brakeTemp": 28.020787020562747,
+                "grip": 0.704069413320668,
+                "slipAngle": -0.002862994147209055,
+                "engineTemp": 73.70893897833491,
+                "damage": 0.01098139166878915,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 0,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 4,
+                "misfire": false
+              }
+            }
+          ],
+          "raceTime": 8.808333333333474,
+          "countdown": 0,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 2,
+          "events": [
+            {
+              "id": 1,
+              "kind": "countdown",
+              "type": "countdown",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "准备起步",
+                "READY TO RACE"
+              ],
+              "time": 0
+            },
+            {
+              "id": 2,
+              "kind": "go",
+              "type": "go",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "绿灯！",
+                "GREEN LIGHT!"
+              ],
+              "time": 2.999999999999992
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -144.43360581211843,
+            "y": 4.991465878876905,
+            "z": -278.77610667717715,
+            "yaw": 2.373716314447903,
+            "speed": 5.932740317074016,
+            "lateral": -0.607602944333124,
+            "s": 46.17263871638443,
+            "u": 5.932716002539078,
+            "v": -0.01698537760056402,
+            "steerAngle": 0,
+            "lap": 1,
+            "rank": 4,
+            "telemetry": {
+              "speedKmh": 21.35786514146646,
+              "rpm": 2437.664968978143,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 0,
+              "absActive": false,
+              "brakeTemp": 28.020787020562747,
+              "grip": 0.704069413320668,
+              "slipAngle": -0.002862994147209055,
+              "engineTemp": 73.70893897833491,
+              "damage": 0.01098139166878915,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 0,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 4,
+              "misfire": false
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.0233259741124034,
+            0,
+            0,
+            0,
+            0,
+            1.8192461761998282,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.7194356635833922,
+            0.10007227016865297,
+            -0.6873120591897224,
+            0,
+            0,
+            0.9895660018063995,
+            0.14408028341482726,
+            0,
+            0.6945590874535618,
+            -0.10365649430782943,
+            0.7119290731691512,
+            0,
+            297.54088872458397,
+            -21.47197103603736,
+            89.21714785309739,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "game": "cozy-island",
+      "status": "passed",
+      "layouts": [
+        {
+          "width": 960,
+          "height": 540,
+          "bodyWidth": 960,
+          "bodyHeight": 540,
+          "panel": {
+            "x": 746,
+            "y": 244,
+            "w": 186,
+            "h": 69.984375,
+            "scrollHeight": 68,
+            "clientHeight": 68
+          },
+          "sidebar": {
+            "x": 734,
+            "y": 12,
+            "w": 210,
+            "h": 498,
+            "scrollHeight": 498,
+            "clientHeight": 498
+          }
+        },
+        {
+          "width": 1280,
+          "height": 720,
+          "bodyWidth": 1280,
+          "bodyHeight": 720,
+          "panel": {
+            "x": 1023,
+            "y": 347.1875,
+            "w": 216,
+            "h": 80.3125,
+            "scrollHeight": 78,
+            "clientHeight": 78
+          },
+          "sidebar": {
+            "x": 1006,
+            "y": 20,
+            "w": 250,
+            "h": 663,
+            "scrollHeight": 679,
+            "clientHeight": 663
+          }
+        }
+      ],
+      "checks": [
+        "ordinary start and both direction inputs reach running model",
+        "A, B and mapped Y/SELECT reach game input",
+        "disconnect pauses, stale held reconnect cannot resume, neutral then fresh START resumes"
+      ],
+      "movement": {
+        "before": {
+          "phase": "playing",
+          "paused": false,
+          "controllerPaused": false,
+          "controllers": [
+            {
+              "id": 1,
+              "transport": "wifi",
+              "session": "first",
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false,
+              "cancelSeq": 0
+            }
+          ],
+          "info": {
+            "language": "zh",
+            "url": "",
+            "qr": "",
+            "wifiController": {
+              "port": 63485,
+              "addresses": [
+                "192.0.2.10"
+              ],
+              "state": "available",
+              "connected": 1,
+              "inputActive": true
+            }
+          },
+          "model": {
+            "phase": "playing",
+            "players": [
+              {
+                "id": 1,
+                "x": 11.899999999999999,
+                "y": 12.3,
+                "facing": {
+                  "x": 0,
+                  "y": 1
+                },
+                "movingSpeed": 0,
+                "inventory": {},
+                "tool": "hand",
+                "netRaised": false,
+                "previous": {
+                  "a": false,
+                  "b": false,
+                  "start": false,
+                  "select": false
+                },
+                "connected": true,
+                "joined": true,
+                "active": true,
+                "cancelSeq": 0
+              },
+              {
+                "id": 2,
+                "x": 12.6,
+                "y": 12.3,
+                "facing": {
+                  "x": 0,
+                  "y": 1
+                },
+                "movingSpeed": 0,
+                "inventory": {},
+                "tool": "hand",
+                "netRaised": false,
+                "previous": {
+                  "a": false,
+                  "b": false,
+                  "start": false,
+                  "select": false
+                },
+                "connected": false,
+                "joined": false,
+                "active": false,
+                "cancelSeq": 0
+              }
+            ],
+            "elapsed": 0.8999999999999999,
+            "clock": 540.9000000000002,
+            "selectedPlayers": 1
+          },
+          "players": [
+            {
+              "id": 1,
+              "x": 11.899999999999999,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "camera": null
+        },
+        "right": {
+          "phase": "playing",
+          "paused": false,
+          "controllerPaused": false,
+          "controllers": [
+            {
+              "id": 1,
+              "transport": "wifi",
+              "session": "first",
+              "connected": true,
+              "x": 1,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false,
+              "cancelSeq": 0
+            }
+          ],
+          "info": {
+            "language": "zh",
+            "url": "",
+            "qr": "",
+            "wifiController": {
+              "port": 63485,
+              "addresses": [
+                "192.0.2.10"
+              ],
+              "state": "available",
+              "connected": 1,
+              "inputActive": true
+            }
+          },
+          "model": {
+            "phase": "playing",
+            "players": [
+              {
+                "id": 1,
+                "x": 12.579999999999998,
+                "y": 11.620000000000001,
+                "facing": {
+                  "x": 0.7071067811865475,
+                  "y": -0.7071067811865475
+                },
+                "movingSpeed": 2.404163056034261,
+                "inventory": {},
+                "tool": "hand",
+                "netRaised": false,
+                "previous": {
+                  "a": false,
+                  "b": false,
+                  "start": false,
+                  "select": false
+                },
+                "connected": true,
+                "joined": true,
+                "active": true,
+                "cancelSeq": 0
+              },
+              {
+                "id": 2,
+                "x": 12.6,
+                "y": 12.3,
+                "facing": {
+                  "x": 0,
+                  "y": 1
+                },
+                "movingSpeed": 0,
+                "inventory": {},
+                "tool": "hand",
+                "netRaised": false,
+                "previous": {
+                  "a": false,
+                  "b": false,
+                  "start": false,
+                  "select": false
+                },
+                "connected": false,
+                "joined": false,
+                "active": false,
+                "cancelSeq": 0
+              }
+            ],
+            "elapsed": 1.4000000000000001,
+            "clock": 541.4000000000003,
+            "selectedPlayers": 1
+          },
+          "players": [
+            {
+              "id": 1,
+              "x": 12.579999999999998,
+              "y": 11.620000000000001,
+              "facing": {
+                "x": 0.7071067811865475,
+                "y": -0.7071067811865475
+              },
+              "movingSpeed": 2.404163056034261,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "camera": null
+        },
+        "left": {
+          "phase": "playing",
+          "paused": false,
+          "controllerPaused": false,
+          "controllers": [
+            {
+              "id": 1,
+              "transport": "wifi",
+              "session": "first",
+              "connected": true,
+              "x": -1,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false,
+              "cancelSeq": 0
+            }
+          ],
+          "info": {
+            "language": "zh",
+            "url": "",
+            "qr": "",
+            "wifiController": {
+              "port": 63485,
+              "addresses": [
+                "192.0.2.10"
+              ],
+              "state": "available",
+              "connected": 1,
+              "inputActive": true
+            }
+          },
+          "model": {
+            "phase": "playing",
+            "players": [
+              {
+                "id": 1,
+                "x": 12.239999999999998,
+                "y": 11.96,
+                "facing": {
+                  "x": -0.7071067811865475,
+                  "y": 0.7071067811865475
+                },
+                "movingSpeed": 2.404163056034261,
+                "inventory": {},
+                "tool": "hand",
+                "netRaised": false,
+                "previous": {
+                  "a": false,
+                  "b": false,
+                  "start": false,
+                  "select": false
+                },
+                "connected": true,
+                "joined": true,
+                "active": true,
+                "cancelSeq": 0
+              },
+              {
+                "id": 2,
+                "x": 12.6,
+                "y": 12.3,
+                "facing": {
+                  "x": 0,
+                  "y": 1
+                },
+                "movingSpeed": 0,
+                "inventory": {},
+                "tool": "hand",
+                "netRaised": false,
+                "previous": {
+                  "a": false,
+                  "b": false,
+                  "start": false,
+                  "select": false
+                },
+                "connected": false,
+                "joined": false,
+                "active": false,
+                "cancelSeq": 0
+              }
+            ],
+            "elapsed": 1.8000000000000005,
+            "clock": 541.8000000000004,
+            "selectedPlayers": 1
+          },
+          "players": [
+            {
+              "id": 1,
+              "x": 12.239999999999998,
+              "y": 11.96,
+              "facing": {
+                "x": -0.7071067811865475,
+                "y": 0.7071067811865475
+              },
+              "movingSpeed": 2.404163056034261,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "camera": null
+        }
+      },
+      "actionA": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": true,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.069999999999999,
+              "y": 12.13,
+              "facing": {
+                "x": -0.7071067811865475,
+                "y": 0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": true,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "elapsed": 2.600000000000001,
+          "clock": 542.6000000000006,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.069999999999999,
+            "y": 12.13,
+            "facing": {
+              "x": -0.7071067811865475,
+              "y": 0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": true,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 0
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 0
+          }
+        ],
+        "camera": null
+      },
+      "actionB": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": true,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.069999999999999,
+              "y": 12.13,
+              "facing": {
+                "x": -0.7071067811865475,
+                "y": 0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": true,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "elapsed": 3.0000000000000013,
+          "clock": 543.0000000000007,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.069999999999999,
+            "y": 12.13,
+            "facing": {
+              "x": -0.7071067811865475,
+              "y": 0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": true,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 0
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 0
+          }
+        ],
+        "camera": null
+      },
+      "select": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": true,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.069999999999999,
+              "y": 12.13,
+              "facing": {
+                "x": -0.7071067811865475,
+                "y": 0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": true
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "elapsed": 3.4000000000000017,
+          "clock": 543.4000000000008,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.069999999999999,
+            "y": 12.13,
+            "facing": {
+              "x": -0.7071067811865475,
+              "y": 0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": true
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 0
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 0
+          }
+        ],
+        "camera": null
+      },
+      "disconnected": {
+        "phase": "paused",
+        "paused": true,
+        "controllerPaused": true,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 1,
+            "aimY": 0,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "paused",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.069999999999999,
+              "y": 12.13,
+              "facing": {
+                "x": -0.7071067811865475,
+                "y": 0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 1
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "elapsed": 4.6,
+          "clock": 544.600000000001,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.069999999999999,
+            "y": 12.13,
+            "facing": {
+              "x": -0.7071067811865475,
+              "y": 0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 1
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 0
+          }
+        ],
+        "camera": null
+      },
+      "reconnected": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "reconnected",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 2
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": 12.069999999999999,
+              "y": 12.13,
+              "facing": {
+                "x": -0.7071067811865475,
+                "y": 0.7071067811865475
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": true,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 2
+            },
+            {
+              "id": 2,
+              "x": 12.6,
+              "y": 12.3,
+              "facing": {
+                "x": 0,
+                "y": 1
+              },
+              "movingSpeed": 0,
+              "inventory": {},
+              "tool": "hand",
+              "netRaised": false,
+              "previous": {
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              },
+              "connected": false,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "elapsed": 5.299999999999997,
+          "clock": 545.3000000000012,
+          "selectedPlayers": 1
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": 12.069999999999999,
+            "y": 12.13,
+            "facing": {
+              "x": -0.7071067811865475,
+              "y": 0.7071067811865475
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": true,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 2
+          },
+          {
+            "id": 2,
+            "x": 12.6,
+            "y": 12.3,
+            "facing": {
+              "x": 0,
+              "y": 1
+            },
+            "movingSpeed": 0,
+            "inventory": {},
+            "tool": "hand",
+            "netRaised": false,
+            "previous": {
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "connected": false,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 0
+          }
+        ],
+        "camera": null
+      }
+    },
+    {
+      "game": "coast-kart",
+      "status": "passed",
+      "layouts": [
+        {
+          "width": 960,
+          "height": 540,
+          "bodyWidth": 960,
+          "bodyHeight": 540,
+          "panel": {
+            "x": 780,
+            "y": 240.296875,
+            "w": 166,
+            "h": 83.03125,
+            "scrollHeight": 81,
+            "clientHeight": 81
+          },
+          "sidebar": {
+            "x": 780,
+            "y": 26.109375,
+            "w": 166,
+            "h": 470.59375,
+            "scrollHeight": 471,
+            "clientHeight": 471
+          }
+        },
+        {
+          "width": 1280,
+          "height": 720,
+          "bodyWidth": 1280,
+          "bodyHeight": 720,
+          "panel": {
+            "x": 1030,
+            "y": 329.9375,
+            "w": 218,
+            "h": 80.3125,
+            "scrollHeight": 78,
+            "clientHeight": 78
+          },
+          "sidebar": {
+            "x": 1030,
+            "y": 6.75,
+            "w": 218,
+            "h": 690.5,
+            "scrollHeight": 691,
+            "clientHeight": 691
+          }
+        }
+      ],
+      "checks": [
+        "ordinary start and both direction inputs reach running model",
+        "A, B and mapped Y/SELECT reach game input",
+        "disconnect pauses, stale held reconnect cannot resume, neutral then fresh START resumes"
+      ],
+      "movement": {
+        "before": {
+          "phase": "playing",
+          "paused": false,
+          "controllerPaused": false,
+          "controllers": [
+            {
+              "id": 1,
+              "transport": "wifi",
+              "session": "first",
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false,
+              "cancelSeq": 0
+            }
+          ],
+          "info": {
+            "language": "zh",
+            "url": "",
+            "qr": "",
+            "wifiController": {
+              "port": 63485,
+              "addresses": [
+                "192.0.2.10"
+              ],
+              "state": "available",
+              "connected": 1,
+              "inputActive": true
+            }
+          },
+          "model": {
+            "phase": "playing",
+            "players": [
+              {
+                "id": 1,
+                "x": -0.16,
+                "speed": 19.255600000000005,
+                "s": 2.1160000000000005,
+                "drifting": false,
+                "boost": 0,
+                "item": null,
+                "heldItem": false,
+                "lap": 1,
+                "rank": 1,
+                "joined": true,
+                "active": true,
+                "cancelSeq": 0
+              },
+              {
+                "id": 2,
+                "x": 0.26,
+                "speed": 0,
+                "s": 0,
+                "drifting": false,
+                "boost": 0,
+                "item": null,
+                "heldItem": false,
+                "lap": 1,
+                "rank": 2,
+                "joined": false,
+                "active": false,
+                "cancelSeq": 0
+              }
+            ],
+            "clock": 0.1,
+            "countdown": -0.03340000000000096,
+            "trackIndex": 0,
+            "selectedPlayers": 1,
+            "events": [
+              {
+                "type": "start",
+                "id": 0,
+                "tick": 30
+              },
+              {
+                "type": "go",
+                "id": 0,
+                "tick": 64
+              }
+            ]
+          },
+          "players": [
+            {
+              "id": 1,
+              "x": -0.16,
+              "speed": 19.255600000000005,
+              "s": 2.1160000000000005,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 1,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 0.26,
+              "speed": 0,
+              "s": 0,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 2,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "renderedPlayers": [
+            {
+              "id": 1,
+              "x": -1.056,
+              "y": 0,
+              "z": 0
+            },
+            {
+              "id": 2,
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          ],
+          "camera": {
+            "projection": [
+              1.1039684093466473,
+              0,
+              0,
+              0,
+              0,
+              1.9626105055051506,
+              0,
+              0,
+              0,
+              0,
+              -1.0006251953735543,
+              -1,
+              0,
+              0,
+              -0.20006251953735543,
+              0
+            ],
+            "view": [
+              0.9997163199719649,
+              0.005764944135242105,
+              -0.02310941368425002,
+              0,
+              8.673617379884037e-19,
+              0.9702649674121696,
+              0.24204522927060965,
+              0,
+              0.023817631740210125,
+              -0.24197656587318433,
+              0.9699897226190125,
+              0,
+              0.5266915213470251,
+              -2.7666507794023847,
+              -10.806309546212963,
+              1.0000000000000002
+            ]
+          }
+        },
+        "right": {
+          "phase": "playing",
+          "paused": false,
+          "controllerPaused": false,
+          "controllers": [
+            {
+              "id": 1,
+              "transport": "wifi",
+              "session": "first",
+              "connected": true,
+              "x": 1,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false,
+              "cancelSeq": 0
+            }
+          ],
+          "info": {
+            "language": "zh",
+            "url": "",
+            "qr": "",
+            "wifiController": {
+              "port": 63485,
+              "addresses": [
+                "192.0.2.10"
+              ],
+              "state": "available",
+              "connected": 1,
+              "inputActive": true
+            }
+          },
+          "model": {
+            "phase": "playing",
+            "players": [
+              {
+                "id": 1,
+                "x": 0.02967874791722605,
+                "speed": 80.48180434868812,
+                "s": 24.903995391722606,
+                "drifting": false,
+                "boost": 0,
+                "item": null,
+                "heldItem": false,
+                "lap": 1,
+                "rank": 1,
+                "joined": true,
+                "active": true,
+                "cancelSeq": 0
+              },
+              {
+                "id": 2,
+                "x": 0.26,
+                "speed": 0,
+                "s": 0,
+                "drifting": false,
+                "boost": 0,
+                "item": null,
+                "heldItem": false,
+                "lap": 1,
+                "rank": 2,
+                "joined": false,
+                "active": false,
+                "cancelSeq": 0
+              }
+            ],
+            "clock": 0.48320000000000074,
+            "countdown": -0.03340000000000096,
+            "trackIndex": 0,
+            "selectedPlayers": 1,
+            "events": [
+              {
+                "type": "start",
+                "id": 0,
+                "tick": 30
+              },
+              {
+                "type": "go",
+                "id": 0,
+                "tick": 64
+              }
+            ]
+          },
+          "players": [
+            {
+              "id": 1,
+              "x": 0.02967874791722605,
+              "speed": 80.48180434868812,
+              "s": 24.903995391722606,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 1,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 0.26,
+              "speed": 0,
+              "s": 0,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 2,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "renderedPlayers": [
+            {
+              "id": 1,
+              "x": 0.19587973625369193,
+              "y": 0,
+              "z": 0
+            },
+            {
+              "id": 2,
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          ],
+          "camera": {
+            "projection": [
+              1.1039684093466473,
+              0,
+              0,
+              0,
+              0,
+              1.9626105055051506,
+              0,
+              0,
+              0,
+              0,
+              -1.0006251953735543,
+              -1,
+              0,
+              0,
+              -0.20006251953735543,
+              0
+            ],
+            "view": [
+              0.9999902353109872,
+              -0.001070320726527164,
+              0.004287621277469325,
+              0,
+              0,
+              0.9702268109738266,
+              0.24219813225448028,
+              0,
+              -0.004419194799580724,
+              -0.2421957672650393,
+              0.9702173370107453,
+              0,
+              -0.09772392391937698,
+              -2.768532627981929,
+              -10.79238470150404,
+              1
+            ]
+          }
+        },
+        "left": {
+          "phase": "playing",
+          "paused": false,
+          "controllerPaused": false,
+          "controllers": [
+            {
+              "id": 1,
+              "transport": "wifi",
+              "session": "first",
+              "connected": true,
+              "x": -1,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false,
+              "cancelSeq": 0
+            }
+          ],
+          "info": {
+            "language": "zh",
+            "url": "",
+            "qr": "",
+            "wifiController": {
+              "port": 63485,
+              "addresses": [
+                "192.0.2.10"
+              ],
+              "state": "available",
+              "connected": 1,
+              "inputActive": true
+            }
+          },
+          "model": {
+            "phase": "playing",
+            "players": [
+              {
+                "id": 1,
+                "x": -0.48306276655284663,
+                "speed": 134.9542567219197,
+                "s": 104.65542620844766,
+                "drifting": false,
+                "boost": 0,
+                "item": null,
+                "heldItem": false,
+                "lap": 1,
+                "rank": 1,
+                "joined": true,
+                "active": true,
+                "cancelSeq": 0
+              },
+              {
+                "id": 2,
+                "x": 0.26,
+                "speed": 0,
+                "s": 0,
+                "drifting": false,
+                "boost": 0,
+                "item": null,
+                "heldItem": false,
+                "lap": 1,
+                "rank": 2,
+                "joined": false,
+                "active": false,
+                "cancelSeq": 0
+              }
+            ],
+            "clock": 1.1832000000000007,
+            "countdown": -0.03340000000000096,
+            "trackIndex": 0,
+            "selectedPlayers": 1,
+            "events": [
+              {
+                "type": "start",
+                "id": 0,
+                "tick": 30
+              },
+              {
+                "type": "go",
+                "id": 0,
+                "tick": 64
+              }
+            ]
+          },
+          "players": [
+            {
+              "id": 1,
+              "x": -0.48306276655284663,
+              "speed": 134.9542567219197,
+              "s": 104.65542620844766,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 1,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 0.26,
+              "speed": 0,
+              "s": 0,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 2,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "renderedPlayers": [
+            {
+              "id": 1,
+              "x": -3.1882142592487877,
+              "y": 0,
+              "z": 0
+            },
+            {
+              "id": 2,
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          ],
+          "camera": {
+            "projection": [
+              1.1039684093466473,
+              0,
+              0,
+              0,
+              0,
+              1.9626105055051506,
+              0,
+              0,
+              0,
+              0,
+              -1.0006251953735543,
+              -1,
+              0,
+              0,
+              -0.20006251953735543,
+              0
+            ],
+            "view": [
+              0.9974230884016804,
+              0.0173837896177763,
+              -0.06960593783420156,
+              0,
+              0,
+              0.9702005050950485,
+              0.24230348720832073,
+              0,
+              0.07174386888963989,
+              -0.2416790925418203,
+              0.9677003841607734,
+              0,
+              1.586509014202794,
+              -2.733702833017711,
+              -10.927453670322278,
+              1
+            ]
+          }
+        }
+      },
+      "actionA": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": true,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": -0.6277712454455552,
+              "speed": 167.66606748835463,
+              "s": 245.08155444471296,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 1,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 0.26,
+              "speed": 0,
+              "s": 0,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 2,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "clock": 2.0832000000000015,
+          "countdown": -0.03340000000000096,
+          "trackIndex": 0,
+          "selectedPlayers": 1,
+          "events": [
+            {
+              "type": "start",
+              "id": 0,
+              "tick": 30
+            },
+            {
+              "type": "go",
+              "id": 0,
+              "tick": 64
+            },
+            {
+              "type": "draft",
+              "id": 8,
+              "tick": 86
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -0.6277712454455552,
+            "speed": 167.66606748835463,
+            "s": 245.08155444471296,
+            "drifting": false,
+            "boost": 0,
+            "item": null,
+            "heldItem": false,
+            "lap": 1,
+            "rank": 1,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 0
+          },
+          {
+            "id": 2,
+            "x": 0.26,
+            "speed": 0,
+            "s": 0,
+            "drifting": false,
+            "boost": 0,
+            "item": null,
+            "heldItem": false,
+            "lap": 1,
+            "rank": 2,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderedPlayers": [
+          {
+            "id": 1,
+            "x": -4.143290219940664,
+            "y": 0,
+            "z": 0
+          },
+          {
+            "id": 2,
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.1039684093466473,
+            0,
+            0,
+            0,
+            0,
+            1.9626105055051506,
+            0,
+            0,
+            0,
+            0,
+            -1.0006251953735543,
+            -1,
+            0,
+            0,
+            -0.20006251953735543,
+            0
+          ],
+          "view": [
+            0.9954578766922813,
+            0.023248386759965066,
+            -0.09232078988155468,
+            0,
+            0,
+            0.9697253957312509,
+            0.24419798703893675,
+            0,
+            0.09520302375079842,
+            -0.2430888096703092,
+            0.9653207834092131,
+            0,
+            2.0366294043428357,
+            -2.6879203968923875,
+            -11.029801523302334,
+            1
+          ]
+        }
+      },
+      "actionB": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": true,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": -0.6409931341271279,
+              "speed": 172.67806730208142,
+              "s": 296.42449371849716,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 1,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 0.26,
+              "speed": 0,
+              "s": 0,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 2,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "clock": 2.3832000000000018,
+          "countdown": -0.03340000000000096,
+          "trackIndex": 0,
+          "selectedPlayers": 1,
+          "events": [
+            {
+              "type": "start",
+              "id": 0,
+              "tick": 30
+            },
+            {
+              "type": "go",
+              "id": 0,
+              "tick": 64
+            },
+            {
+              "type": "draft",
+              "id": 8,
+              "tick": 86
+            },
+            {
+              "type": "draft",
+              "id": 6,
+              "tick": 87
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -0.6409931341271279,
+            "speed": 172.67806730208142,
+            "s": 296.42449371849716,
+            "drifting": false,
+            "boost": 0,
+            "item": null,
+            "heldItem": false,
+            "lap": 1,
+            "rank": 1,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 0
+          },
+          {
+            "id": 2,
+            "x": 0.26,
+            "speed": 0,
+            "s": 0,
+            "drifting": false,
+            "boost": 0,
+            "item": null,
+            "heldItem": false,
+            "lap": 1,
+            "rank": 2,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderedPlayers": [
+          {
+            "id": 1,
+            "x": -4.230554685239044,
+            "y": 0,
+            "z": 0
+          },
+          {
+            "id": 2,
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.1039684093466473,
+            0,
+            0,
+            0,
+            0,
+            1.9626105055051506,
+            0,
+            0,
+            0,
+            0,
+            -1.0006251953735543,
+            -1,
+            0,
+            0,
+            -0.20006251953735543,
+            0
+          ],
+          "view": [
+            0.9950670567666658,
+            0.024326073883960263,
+            -0.09617585282760677,
+            0,
+            3.469446951953615e-18,
+            0.9694696962714908,
+            0.24521114985102904,
+            0,
+            0.09920459937787851,
+            -0.2440015371686333,
+            0.9646873572933456,
+            0,
+            2.0587685574712866,
+            -2.6728771201791477,
+            -11.04650678313166,
+            1.0000000000000002
+          ]
+        }
+      },
+      "select": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": true,
+            "cancelSeq": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": -0.6549345113630308,
+              "speed": 174.73764619006258,
+              "s": 325.46847267526715,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 1,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 0.26,
+              "speed": 0,
+              "s": 0,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 2,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "clock": 2.5499000000000027,
+          "countdown": -0.03340000000000096,
+          "trackIndex": 0,
+          "selectedPlayers": 1,
+          "events": [
+            {
+              "type": "start",
+              "id": 0,
+              "tick": 30
+            },
+            {
+              "type": "go",
+              "id": 0,
+              "tick": 64
+            },
+            {
+              "type": "draft",
+              "id": 8,
+              "tick": 86
+            },
+            {
+              "type": "draft",
+              "id": 6,
+              "tick": 87
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -0.6549345113630308,
+            "speed": 174.73764619006258,
+            "s": 325.46847267526715,
+            "drifting": false,
+            "boost": 0,
+            "item": null,
+            "heldItem": false,
+            "lap": 1,
+            "rank": 1,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 0
+          },
+          {
+            "id": 2,
+            "x": 0.26,
+            "speed": 0,
+            "s": 0,
+            "drifting": false,
+            "boost": 0,
+            "item": null,
+            "heldItem": false,
+            "lap": 1,
+            "rank": 2,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderedPlayers": [
+          {
+            "id": 1,
+            "x": -4.322567774996004,
+            "y": 0,
+            "z": 0
+          },
+          {
+            "id": 2,
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.1039684093466473,
+            0,
+            0,
+            0,
+            0,
+            1.9626105055051506,
+            0,
+            0,
+            0,
+            0,
+            -1.0006251953735543,
+            -1,
+            0,
+            0,
+            -0.20006251953735543,
+            0
+          ],
+          "view": [
+            0.9947209906587122,
+            0.025222846696522538,
+            -0.0994683806416586,
+            0,
+            0,
+            0.9693212941565088,
+            0.245797129142614,
+            0,
+            0.10261652275803425,
+            -0.24449956380180846,
+            0.9642042379899475,
+            0,
+            2.0901772844913484,
+            -2.662807359458456,
+            -11.061496664848061,
+            1
+          ]
+        }
+      },
+      "disconnected": {
+        "phase": "paused",
+        "paused": true,
+        "controllerPaused": true,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "first",
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 1,
+            "aimY": 0,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "paused",
+          "players": [
+            {
+              "id": 1,
+              "x": -0.7847166469605414,
+              "speed": 180.13719749353487,
+              "s": 453.17966517843354,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 1,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 0
+            },
+            {
+              "id": 2,
+              "x": 0.26,
+              "speed": 0,
+              "s": 0,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 2,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "clock": 3.2666000000000004,
+          "countdown": -0.03340000000000096,
+          "trackIndex": 0,
+          "selectedPlayers": 1,
+          "events": [
+            {
+              "type": "start",
+              "id": 0,
+              "tick": 30
+            },
+            {
+              "type": "go",
+              "id": 0,
+              "tick": 64
+            },
+            {
+              "type": "draft",
+              "id": 8,
+              "tick": 86
+            },
+            {
+              "type": "draft",
+              "id": 6,
+              "tick": 87
+            },
+            {
+              "type": "pause",
+              "id": 0,
+              "tick": 96
+            },
+            {
+              "type": "resume",
+              "id": 0,
+              "tick": 103
+            },
+            {
+              "type": "pause",
+              "id": 0,
+              "tick": 107
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -0.7847166469605414,
+            "speed": 180.13719749353487,
+            "s": 453.17966517843354,
+            "drifting": false,
+            "boost": 0,
+            "item": null,
+            "heldItem": false,
+            "lap": 1,
+            "rank": 1,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 0
+          },
+          {
+            "id": 2,
+            "x": 0.26,
+            "speed": 0,
+            "s": 0,
+            "drifting": false,
+            "boost": 0,
+            "item": null,
+            "heldItem": false,
+            "lap": 1,
+            "rank": 2,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderedPlayers": [
+          {
+            "id": 1,
+            "x": -5.179129869939573,
+            "y": 0,
+            "z": 0
+          },
+          {
+            "id": 2,
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.1039684093466473,
+            0,
+            0,
+            0,
+            0,
+            1.9626105055051506,
+            0,
+            0,
+            0,
+            0,
+            -1.0006251953735543,
+            -1,
+            0,
+            0,
+            -0.20006251953735543,
+            0
+          ],
+          "view": [
+            0.9917831871673086,
+            0.03175557616275454,
+            -0.12392615960654367,
+            0,
+            6.938893903907227e-18,
+            0.9687021487764822,
+            0.24822599975793366,
+            0,
+            0.12793009674136513,
+            -0.24618637317771505,
+            0.9607425045293599,
+            0,
+            2.4446182809313175,
+            -2.6030792291837503,
+            -11.192991709022085,
+            0.9999999999999998
+          ]
+        }
+      },
+      "reconnected": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "session": "reconnected",
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 2
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "",
+          "qr": "",
+          "wifiController": {
+            "port": 63485,
+            "addresses": [
+              "192.0.2.10"
+            ],
+            "state": "available",
+            "connected": 1,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "players": [
+            {
+              "id": 1,
+              "x": -1.0647499334444521,
+              "speed": 164.97970305939148,
+              "s": 596.7689679649775,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 1,
+              "joined": true,
+              "active": true,
+              "cancelSeq": 2
+            },
+            {
+              "id": 2,
+              "x": 0.26,
+              "speed": 0,
+              "s": 0,
+              "drifting": false,
+              "boost": 0,
+              "item": null,
+              "heldItem": false,
+              "lap": 1,
+              "rank": 2,
+              "joined": false,
+              "active": false,
+              "cancelSeq": 0
+            }
+          ],
+          "clock": 4.066600000000001,
+          "countdown": -0.03340000000000096,
+          "trackIndex": 0,
+          "selectedPlayers": 1,
+          "events": [
+            {
+              "type": "start",
+              "id": 0,
+              "tick": 30
+            },
+            {
+              "type": "go",
+              "id": 0,
+              "tick": 64
+            },
+            {
+              "type": "draft",
+              "id": 8,
+              "tick": 86
+            },
+            {
+              "type": "draft",
+              "id": 6,
+              "tick": 87
+            },
+            {
+              "type": "pause",
+              "id": 0,
+              "tick": 96
+            },
+            {
+              "type": "resume",
+              "id": 0,
+              "tick": 103
+            },
+            {
+              "type": "pause",
+              "id": 0,
+              "tick": 107
+            },
+            {
+              "type": "resume",
+              "id": 0,
+              "tick": 121
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -1.0647499334444521,
+            "speed": 164.97970305939148,
+            "s": 596.7689679649775,
+            "drifting": false,
+            "boost": 0,
+            "item": null,
+            "heldItem": false,
+            "lap": 1,
+            "rank": 1,
+            "joined": true,
+            "active": true,
+            "cancelSeq": 2
+          },
+          {
+            "id": 2,
+            "x": 0.26,
+            "speed": 0,
+            "s": 0,
+            "drifting": false,
+            "boost": 0,
+            "item": null,
+            "heldItem": false,
+            "lap": 1,
+            "rank": 2,
+            "joined": false,
+            "active": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderedPlayers": [
+          {
+            "id": 1,
+            "x": -7.027349560733383,
+            "y": 0,
+            "z": 0
+          },
+          {
+            "id": 2,
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.1039684093466473,
+            0,
+            0,
+            0,
+            0,
+            1.9626105055051506,
+            0,
+            0,
+            0,
+            0,
+            -1.0006251953735543,
+            -1,
+            0,
+            0,
+            -0.20006251953735543,
+            0
+          ],
+          "view": [
+            0.9850481281564365,
+            0.043083728131268026,
+            -0.16680520850924133,
+            0,
+            0,
+            0.9682250265023822,
+            0.25008058312164355,
+            0,
+            0.17227938128371748,
+            -0.24634141029224513,
+            0.9537482499903878,
+            0,
+            3.2957018855245592,
+            -2.499456438668847,
+            -11.51614286674724,
+            0.9999999999999999
+          ]
+        }
+      }
+    }
+  ],
+  "sourceHashes": {
+    "resource/apps/alien-shooter/src/main/assets/puretv-controller.js": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2",
+    "resource/apps/alien-shooter/src/main/assets/runtime.js": "b828085098f41e389c983abbf1b28e0bc090332e615a3d544d2a93865484781a",
+    "resource/apps/alien-shooter/src/main/assets/game-model.js": "1cb4cc6b8e47e55ac78da62c681dc2d29a41448b15f340c0736599dc99bec425",
+    "resource/apps/alien-shooter/src/main/assets/tv.html": "34fb556147fa724783052e9cfcaec25dd7f90372d3f0800d1d12869c87e6d684",
+    "resource/apps/alien-shooter/src/main/assets/tv.css": "fa610c917a96630406d27b2d107d8aa64b13e07df1932fb18c429ba423ebce16",
+    "resource/apps/used-car-racing/src/main/assets/puretv-controller.js": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2",
+    "resource/apps/used-car-racing/src/main/assets/game.js": "ae0daa9ea2895b1b5be1049e8ec8ed35ec6b6a49cce68f46a42ad5bda64ae1fa",
+    "resource/apps/used-car-racing/src/main/assets/game-model.js": "32666a4429fb0dc34c2003f34cb5783e075be5437251f87ffd12109b08ba5166",
+    "resource/apps/used-car-racing/src/main/assets/tv.html": "9accd85289d9a3589d37d3244dbadba6b2ab11b447a4a2b70a030f0f14909924",
+    "resource/apps/used-car-racing/src/main/assets/tv.css": "585049348d76a7abaab0ea9951aeb7f1c52055625e9ec225699f6f7b62c54d47",
+    "resource/apps/cozy-island/src/main/assets/puretv-controller.js": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2",
+    "resource/apps/cozy-island/src/main/assets/runtime.js": "eab112bd43b065025b9121801d6f1c547e8a5ffac531fb22ea6767b5091e90d8",
+    "resource/apps/cozy-island/src/main/assets/game-model.js": "05436c6e352273b0399bc7f1e72def24b19c96f11f02145305df59554ed5ed92",
+    "resource/apps/cozy-island/src/main/assets/tv.html": "5a9f33452ea208285ed4359efd5613cd9374cc007ca1df10aed943172e4d8347",
+    "resource/apps/cozy-island/src/main/assets/tv.css": "a2cf749982bb0170a54464e8cf0ee3ca19a9b00fdf220f8c2e0bcebfd3ef6644",
+    "resource/apps/coast-kart/src/main/assets/puretv-controller.js": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2",
+    "resource/apps/coast-kart/src/main/assets/runtime.js": "96e922a06a1ac498a88307bfcb1f5a7b22629740839e9e0bbd4868bb658ea925",
+    "resource/apps/coast-kart/src/main/assets/game-model.js": "034aa554416e0c10a0495b815c38929ac45907b3350bd7f662804a56d38f7982",
+    "resource/apps/coast-kart/src/main/assets/tv.html": "f49e55a590ff8d82dbce4b63629d2314c43626341f7ea063a17812476ca1e203",
+    "resource/apps/coast-kart/src/main/assets/tv.css": "87b438651566f268f7f200b627fd127cd6fb288b573302c7b9bec535d02de9ad"
+  },
+  "status": "passed",
+  "finishedAt": "2026-11-15T15:15:12.471Z"
+}

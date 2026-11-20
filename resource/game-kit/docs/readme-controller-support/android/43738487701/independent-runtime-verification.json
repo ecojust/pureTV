@@ -1,0 +1,203 @@
+{
+  "qaSourceSha": "a381b69f2cad78d9466872af656b3cb28d153211",
+  "manifest": {
+    "sourceSha": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
+    "legacySourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+    "legacyRunId": "43733343883",
+    "legacyAttempt": 1,
+    "kitRuns": {
+      "neon-rush": "43729028201",
+      "twenty-four": "43729038513",
+      "torch-bridge": "43729048674",
+      "tower-overlap": "43729058152",
+      "packing-sculptor": "43729068540",
+      "conveyor-window": "43729078678",
+      "glass-fold": "43729095616",
+      "tension-span": "43729105330",
+      "prism-relay": "43729115426"
+    }
+  },
+  "runId": "43738487701",
+  "conclusion": "failure",
+  "exportCommit": "8c836c3df809db53325f857d51b0da181dc56dec",
+  "filesVerified": 270,
+  "selection": {
+    "requestedBatches": [
+      "retry-used-car",
+      "retry-alien",
+      "retry-prism",
+      "retry-arcade-visual"
+    ],
+    "selectedBatches": [
+      "retry-used-car",
+      "retry-alien",
+      "retry-prism",
+      "retry-arcade-visual"
+    ],
+    "plannedSlugs": [
+      "used-car-racing",
+      "alien-shooter",
+      "prism-relay",
+      "tank",
+      "jackal"
+    ],
+    "completeCatalogRequested": false,
+    "matrix": {
+      "include": [
+        {
+          "group": "worlds",
+          "batch": "retry-used-car",
+          "apiLevel": 29,
+          "arch": "x86",
+          "renderer": "swiftshader_indirect",
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -feature -Vulkan -verbose"
+        },
+        {
+          "group": "worlds",
+          "batch": "retry-alien",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        },
+        {
+          "group": "kit",
+          "batch": "retry-prism",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        },
+        {
+          "group": "arcade",
+          "batch": "retry-arcade-visual",
+          "apiLevel": 29,
+          "arch": "x86",
+          "renderer": "swiftshader_indirect",
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -feature -Vulkan -verbose"
+        }
+      ]
+    },
+    "worlds2GraphicsExperiment": {
+      "selected": true,
+      "description": "Disable Vulkan while retaining SwiftShader and enable verbose emulator logs; the preceding AVD failure has no established root cause."
+    },
+    "usedCarStableImageComparison": {
+      "selected": true,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "channel": "stable",
+      "revisionListedByOfficialRepository": 3,
+      "description": "Independent AVD on the official older stable TV image; installation, WebView, WebGL and controller acceptance remain mandatory."
+    },
+    "arcadeVisualStableImageComparison": {
+      "selected": true,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "description": "Recheck Tank and Jackal after transient black regions were observed in API36 recordings; preserve full controller acceptance and new visual evidence."
+    },
+    "qaSourceSha": "a381b69f2cad78d9466872af656b3cb28d153211"
+  },
+  "completeCatalogRequested": false,
+  "games": [
+    {
+      "group": "retry-used-car",
+      "slug": "used-car-racing",
+      "status": "failed",
+      "artifactSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "inPlaceUpgradeInstalled": true,
+      "packageSha256": "7c7340342928905e6b8d8e0fe443376955b43d24437825536c249f54d18a2756",
+      "observerSha256": "2cd385b38d887e326bd08702a5f9c4fa08f6b0bd133d3550e7c608dcd50b6782",
+      "error": "CalledProcessError(1, ['node', '/home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs', '--mode', 'android', '--slug', 'used-car-racing', '--diagnostics', 'http://127.0.0.1:40701', '--tcp-port', '41579', '--output', '/home/runner/work/_temp/controller-runtime-output/used-car-racing/gameplay', '--adb', '/usr/local/lib/android/sdk/platform-tools/adb', '--serial', 'emulator-5554'])",
+      "recordingError": "RuntimeError('{\"command\": [\"/usr/local/lib/android/sdk/platform-tools/adb\", \"-s\", \"emulator-5554\", \"pull\", \"/sdcard/puretv-controller-used-car-racing.mp4\", \"/home/runner/work/_temp/controller-runtime-output/used-car-racing/gameplay.mp4\"], \"exitCode\": 1, \"stdout\": \"\", \"stderr\": \"adb: error: failed to get feature set: device offline\\\\n\"}')"
+    },
+    {
+      "group": "retry-alien",
+      "slug": "alien-shooter",
+      "status": "failed",
+      "artifactSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "inPlaceUpgradeInstalled": true,
+      "packageSha256": "dc18c95016769ac77f391c1721858c937914d1e6238f3281e79eb1db54db6e22",
+      "observerSha256": "79a51bc07df3fb4e96afd4bea66dd6c610b8f67649f954b2b6d758f717b2e98c",
+      "error": "CalledProcessError(1, ['node', '/home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs', '--mode', 'android', '--slug', 'alien-shooter', '--diagnostics', 'http://127.0.0.1:43853', '--tcp-port', '35737', '--output', '/home/runner/work/_temp/controller-runtime-output/alien-shooter/gameplay', '--adb', '/usr/local/lib/android/sdk/platform-tools/adb', '--serial', 'emulator-5554'])",
+      "recording": {
+        "file": "gameplay.mp4",
+        "bytes": 451766,
+        "sha256": "8fc8121c3978cc86154461c3ee5263b2dc7240c302847dfa9a8aba40d7d8cc04",
+        "method": "Android screenrecord during ordinary SDK/virtual-page inputs",
+        "maximumSeconds": 120,
+        "size": "960x540",
+        "bitRate": 600000,
+        "encodingRateIsNotDevicePerformance": true
+      }
+    },
+    {
+      "group": "retry-prism",
+      "slug": "prism-relay",
+      "status": "passed",
+      "artifactSourceSha": "a657ce24fc4c0c5adb07a671adabb3ce604f68f8",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "inPlaceUpgradeInstalled": true,
+      "packageSha256": "19c51069f00571dee4bb8f1d0d5f2009c60b00d56a66e53b661fcda3c1ddeec0",
+      "observerSha256": "670ace7aadf86f3606e698042cadbcdc5ae19dab9c829a243ff3797ced7524e9",
+      "recording": {
+        "file": "gameplay.mp4",
+        "bytes": 709511,
+        "sha256": "1d07a884f0a9a72beb914eb8141c740aa07aa9bb22ccc4c8fa53b7d304a447ae",
+        "method": "Android screenrecord during ordinary SDK/virtual-page inputs",
+        "maximumSeconds": 120,
+        "size": "960x540",
+        "bitRate": 600000,
+        "encodingRateIsNotDevicePerformance": true
+      }
+    },
+    {
+      "group": "retry-arcade-visual",
+      "slug": "tank",
+      "status": "passed",
+      "artifactSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "inPlaceUpgradeInstalled": true,
+      "packageSha256": "c43671a903a641620e55d06d75e4b9bcd66c1980ada3be4b7bc881bf8f59ea30",
+      "observerSha256": "5b9e7a280f9c872a4eba767ee1b864bca07994d08fe9f77bbd488012c19ed5ea",
+      "recording": {
+        "file": "gameplay.mp4",
+        "bytes": 463460,
+        "sha256": "fd1bc617f598c52b79e97ea02888b65ecbc475e924addc392d7a8c434b38aabb",
+        "method": "Android screenrecord during ordinary SDK/virtual-page inputs",
+        "maximumSeconds": 120,
+        "size": "960x540",
+        "bitRate": 600000,
+        "encodingRateIsNotDevicePerformance": true
+      }
+    },
+    {
+      "group": "retry-arcade-visual",
+      "slug": "jackal",
+      "status": "passed",
+      "artifactSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "inPlaceUpgradeInstalled": true,
+      "packageSha256": "f081fc7843bffe4d1d1b2b903d822960546a45e2d45be6e397afe9a55d081739",
+      "observerSha256": "9fdd917fad3916e4ee6d74f22e87065e409c2b6bfab51cd5eedab29d2102e3da",
+      "recording": {
+        "file": "gameplay.mp4",
+        "bytes": 1481617,
+        "sha256": "cceb0604d4fdf39d42a429a85e7a1274d72d5d4c32688e383b668e48d88e99d1",
+        "method": "Android screenrecord during ordinary SDK/virtual-page inputs",
+        "maximumSeconds": 120,
+        "size": "960x540",
+        "bitRate": 600000,
+        "encodingRateIsNotDevicePerformance": true
+      }
+    }
+  ],
+  "groups": {
+    "retry-used-car": "failed",
+    "retry-alien": "failed",
+    "retry-prism": "passed",
+    "retry-arcade-visual": "passed"
+  },
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false
+}

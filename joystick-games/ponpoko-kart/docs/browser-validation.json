@@ -1,0 +1,76 @@
+{
+  "recordedAt": "2026-11-19T18:51:32.257970+00:00",
+  "sourceCheckpoint": "411cdd5",
+  "latestBrowser": "browser-attempt-3/report.json",
+  "process": "browser-attempt-3/process.json",
+  "visualReview": "visual-review.json",
+  "status": "synthetic-browser-passed",
+  "frozenDist": {
+    "game.js": {
+      "bytes": 1561049,
+      "sha256": "b26270b854a7672d67e36e987c2a5c938044556d5b91fc480c41211a5b959729"
+    },
+    "game.css": {
+      "bytes": 1627414,
+      "sha256": "65995297b04be78a405a8590d844534acbcf674b33c18d79b60df62870a3efd8"
+    },
+    "tv.html": {
+      "bytes": 302,
+      "sha256": "96787f9509c939429448f88bd4c04022c567890f8d4b6137077b54a60bb94813"
+    },
+    "THIRD-PARTY-NOTICES.txt": {
+      "bytes": 17517,
+      "sha256": "a9d39ed1be8e757bfc81af841793cb634557e6dc79bd54dfb80d32709e7d8506"
+    }
+  },
+  "unitTestLog": "unit-tests-held-start.log",
+  "unitTestsPassed": 7,
+  "buildCheckLog": "build-after-layout.log",
+  "coverage": [
+    "Original menus navigated with nine-key native bridge",
+    "960x540 and 1280x720 real WebGL2 gameplay",
+    "Ordinary acceleration changes original speed and position",
+    "Pause freezes original simulation",
+    "Active drift cancellation does not award boost",
+    "Reconnect with held inputs remains quarantined and paused",
+    "Fresh manual START resumes",
+    "Focus return does not auto-resume",
+    "Read-only diagnostics use cached input, no extra native polls",
+    "ID/help layout observed for title, character/course selection, gameplay and pause"
+  ],
+  "limitations": [
+    "Synthetic host only; no TCP SDK, installed native package or physical hardware acceptance",
+    "Browser cancellation used an active drift; maximal charged drift cancellation is separately unit-tested",
+    "Browser run predates sustained START check; original Input/shared reducer regression unit test passes",
+    "Actual inventory item use and complete race/results were not exercised in this case",
+    "Software GPU throughput is not a measure of target-device performance"
+  ],
+  "historicalAttemptsPreserved": [
+    "browser-attempt-1/process.json",
+    "browser-attempt-2/process.json"
+  ],
+  "postBrowserCssChange": {
+    "description": "Only while data-help=true, allow the expanded instruction card to use the remaining height beneath its existing top position.",
+    "currentDist": {
+      "THIRD-PARTY-NOTICES.txt": {
+        "bytes": 17517,
+        "sha256": "a9d39ed1be8e757bfc81af841793cb634557e6dc79bd54dfb80d32709e7d8506"
+      },
+      "tv.html": {
+        "bytes": 302,
+        "sha256": "96787f9509c939429448f88bd4c04022c567890f8d4b6137077b54a60bb94813"
+      },
+      "game.css": {
+        "bytes": 1627503,
+        "sha256": "ddf78e0eb8457ed157b4ebfeda4cd7575a2a289840c3e58d831d513f984ad5a7"
+      },
+      "game.js": {
+        "bytes": 1561049,
+        "sha256": "b26270b854a7672d67e36e987c2a5c938044556d5b91fc480c41211a5b959729"
+      }
+    },
+    "gameplayJavascriptUnchanged": true,
+    "cssOnlyVerification": "help-layout-validation.json",
+    "note": "Full gameplay run used preserved frozen CSS. Later expanded-help-only CSS fix is checked independently with exact final built CSS; no claim that the full gameplay run used this later CSS."
+  }
+}

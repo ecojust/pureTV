@@ -1,0 +1,70 @@
+{
+  "runId": 44597102731,
+  "runAttempt": 1,
+  "sourceSha": "8f283c73f52f857777306eafc88f710262367834",
+  "workflowRef": "build-source/racing-android-02-v1",
+  "exportBranch": "build-assets/joystick-catalog-android-44597102731-attempt-1",
+  "exportCommit": "0edb618064fd200697e791cf64e45a5566f4a9da",
+  "originalRunConclusion": "failure",
+  "originalExportJobConclusion": "success",
+  "allExportFilesChecked": 23,
+  "allExportFilesMatchManifest": true,
+  "checkedExportFiles": [
+    "reports/joystick-android-report-build-dirt-crown/original-tests.log",
+    "reports/joystick-android-report-build-dirt-crown/web-build-check.log",
+    "reports/joystick-android-report-build-last-track/android-contract-tests.log",
+    "reports/joystick-android-report-build-last-track/build.log",
+    "reports/joystick-android-report-build-last-track/executed-string-resource-test.py",
+    "reports/joystick-android-report-build-last-track/original-tests.log",
+    "reports/joystick-android-report-build-last-track/qa-contract-tests.log",
+    "reports/joystick-android-report-build-last-track/string-resource-tests.json",
+    "reports/joystick-android-report-build-last-track/web-build-check.log",
+    "reports/joystick-android-report-build-penguintrack/android-contract-tests.log",
+    "reports/joystick-android-report-build-penguintrack/build.log",
+    "reports/joystick-android-report-build-penguintrack/executed-string-resource-test.py",
+    "reports/joystick-android-report-build-penguintrack/observer-build.log",
+    "reports/joystick-android-report-build-penguintrack/original-tests.log",
+    "reports/joystick-android-report-build-penguintrack/qa-contract-tests.log",
+    "reports/joystick-android-report-build-penguintrack/string-resource-tests.json",
+    "reports/joystick-android-report-build-penguintrack/unsigned/penguintrack/build-receipt.json",
+    "reports/joystick-android-report-build-penguintrack/unsigned/penguintrack/payload-sha256.json",
+    "reports/joystick-android-report-build-penguintrack/unsigned/penguintrack/source-context.json",
+    "reports/joystick-android-report-build-penguintrack/unsigned/penguintrack/source-inputs.json",
+    "reports/joystick-android-report-build-penguintrack/web-build-check.log",
+    "reports/joystick-android-report-selection/selection.json",
+    "runtime-verification.json"
+  ],
+  "packageBuilt": false,
+  "packageSigned": false,
+  "runtimeExecuted": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "gameFindings": {
+    "unit": "9/9 passed",
+    "originalSimulation": "1051/1051 passed",
+    "buildCheck": "failed: Unresolved module js/main.js -> three",
+    "rootCause": "Root .gitignore build/ excluded the official vendored three/build directory in both src and dist; local browser had these bytes, frozen Git checkout did not.",
+    "missingAssets": [
+      {
+        "path": "src/vendor/three/build/three.module.js",
+        "bytes": 1284652,
+        "sha256": "5916c8dfb5f4e3eede312de305345868d4a0a8105383b080c6985565d6e79b46",
+        "trackedAtFrozenSource": false,
+        "presentDuringFinalBrowser": true
+      },
+      {
+        "path": "dist/vendor/three/build/three.module.js",
+        "bytes": 1284652,
+        "sha256": "5916c8dfb5f4e3eede312de305345868d4a0a8105383b080c6985565d6e79b46",
+        "trackedAtFrozenSource": false,
+        "presentDuringFinalBrowser": true
+      }
+    ]
+  },
+  "batchFindings": {
+    "penguintrack": "build succeeded, sign/runtime skipped due matrix failures",
+    "last-track": "370 tests and 148-file build check passed; Android builder missing NOTICE.md",
+    "dirt-crown": "offline build check failed because fixed core dependency was ignored"
+  },
+  "reviewedAt": "2026-11-19T19:27:54.829840+00:00"
+}

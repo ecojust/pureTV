@@ -1,0 +1,218 @@
+{
+  "reviewer": "racing_review_karts",
+  "at": "2026-11-19T22:53:00.093535+00:00",
+  "conclusion": "no static blocker in frozen three-file QA isolation; actual Android success remains unverified",
+  "inventorySha256": "048bfebdd94fa85c1bc1d72d6eca1ec1e8cb902bfe1d54342283587eb04423e4",
+  "sourceBase": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+  "overlay": {
+    "joystick-games/kart-royale/qa-plan.json": {
+      "bytes": 7547,
+      "sha256": "049d3e70ef594885cc7d0a338f209266b05e2bec445712d7a97674ee88512738"
+    },
+    "joystick-games/qa/android/run.py": {
+      "bytes": 58902,
+      "sha256": "753a11511097e2562a78dfd6e2b43adff9c1f733be15633952b5d24a8a32f19f"
+    },
+    "joystick-games/qa/android/test_runner.py": {
+      "bytes": 59115,
+      "sha256": "d4992f90b38d0bcb8780ce1ef3036b2cc77f1b5fb02469f2a7540d27af76cb1e"
+    }
+  },
+  "originalInventoryFilesVerified": 24,
+  "signedSourceInputsVerified": 198,
+  "overlayIntersectionWithSignedInputs": [
+    "joystick-games/kart-royale/qa-plan.json"
+  ],
+  "preservedSignedInputs": 197,
+  "originalPlan": {
+    "steps": 20,
+    "changedIndices": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "allTimeoutSeconds": 60,
+    "allHoldMsUnchanged": true,
+    "otherFieldsUnchanged": true,
+    "previouslyIgnoredMenuTapFlagsNowActive": 5,
+    "addedFlags": 6
+  },
+  "runnerScope": {
+    "exactWholeOldModuleAstAfterRemovingFourHelpersAndOneDispatchBranch": true,
+    "unchangedSetupDriverPauseObserverAndTimeoutPaths": true,
+    "nightDocumentResetException": false,
+    "windowsStartup600": false,
+    "vulkanOrEmulatorChanges": false
+  },
+  "newSemanticsReviewed": [
+    "Single key sends one real original SDK down/release pair before waiting; both exact ACKs must be unique and use the same connection and controller identity. Wire counter scope is explicitly distinguished from unavailable native Android button counters.",
+    "The before state must be a menu with expectation false and original owner fully released/focused. Each qualifying observation keeps ID/session/cancelSeq, active input, uncancelled controller, nine raw/semantic keys released and resumed/visible/focused document.",
+    "One released matching sample establishes baseline; two subsequent increasing polls are required with continued expectation. Missing ACK, errors, no progress, regression, stale focus or lost identity cannot be accepted. No Night poll-reset proof is imported.",
+    "Existing five menuTap markers were previously ignored on Android; this candidate activates them as documented, as well as the six corrected Y steps. All driving steps stay on the exact old held-input path."
+  ],
+  "originalWindowsEvidence": [
+    {
+      "mode": "normal",
+      "name": "Focus controls option Floating stick",
+      "originalReport": {
+        "bytes": 582174,
+        "sha256": "0fea20f7e7fa5b93630607bbeebe2e468dfb521f6c31a9bec48dcb34ef3f9dfe"
+      },
+      "actualFocus": "Done",
+      "requiredFocus": "Floating stickAppears wherever your thumb lands. Never look for it."
+    },
+    {
+      "mode": "normal",
+      "name": "Focus controls option Fixed stick",
+      "originalReport": {
+        "bytes": 582174,
+        "sha256": "0fea20f7e7fa5b93630607bbeebe2e468dfb521f6c31a9bec48dcb34ef3f9dfe"
+      },
+      "actualFocus": "Floating stickAppears wherever your thumb lands. Never look for it.",
+      "requiredFocus": "Fixed stickAlways in the same place. Muscle memory, no drift."
+    },
+    {
+      "mode": "normal",
+      "name": "Focus controls option Tilt to steer",
+      "originalReport": {
+        "bytes": 582174,
+        "sha256": "0fea20f7e7fa5b93630607bbeebe2e468dfb521f6c31a9bec48dcb34ef3f9dfe"
+      },
+      "actualFocus": "Fixed stickAlways in the same place. Muscle memory, no drift.",
+      "requiredFocus": "Tilt to steerRoll the phone. Both thumbs free for the buttons."
+    },
+    {
+      "mode": "normal",
+      "name": "Focus controls option Steer buttons",
+      "originalReport": {
+        "bytes": 582174,
+        "sha256": "0fea20f7e7fa5b93630607bbeebe2e468dfb521f6c31a9bec48dcb34ef3f9dfe"
+      },
+      "actualFocus": "Tilt to steerRoll the phone. Both thumbs free for the buttons.",
+      "requiredFocus": "Steer buttonsTwo big pads. Nothing to hold steady."
+    },
+    {
+      "mode": "normal",
+      "name": "Focus controls option Right",
+      "originalReport": {
+        "bytes": 582174,
+        "sha256": "0fea20f7e7fa5b93630607bbeebe2e468dfb521f6c31a9bec48dcb34ef3f9dfe"
+      },
+      "actualFocus": "Steer buttonsTwo big pads. Nothing to hold steady.",
+      "requiredFocus": "Right"
+    },
+    {
+      "mode": "normal",
+      "name": "Focus controls option Left",
+      "originalReport": {
+        "bytes": 582174,
+        "sha256": "0fea20f7e7fa5b93630607bbeebe2e468dfb521f6c31a9bec48dcb34ef3f9dfe"
+      },
+      "actualFocus": "Right",
+      "requiredFocus": "Left"
+    },
+    {
+      "mode": "occupied",
+      "name": "Focus controls option Floating stick",
+      "originalReport": {
+        "bytes": 497075,
+        "sha256": "0c3215e29c1e176cd06bd7064867a0ba7ca54cf0cc7314235b091045a8696cf6"
+      },
+      "actualFocus": "Done",
+      "requiredFocus": "Floating stickAppears wherever your thumb lands. Never look for it."
+    },
+    {
+      "mode": "occupied",
+      "name": "Focus controls option Fixed stick",
+      "originalReport": {
+        "bytes": 497075,
+        "sha256": "0c3215e29c1e176cd06bd7064867a0ba7ca54cf0cc7314235b091045a8696cf6"
+      },
+      "actualFocus": "Floating stickAppears wherever your thumb lands. Never look for it.",
+      "requiredFocus": "Fixed stickAlways in the same place. Muscle memory, no drift."
+    },
+    {
+      "mode": "occupied",
+      "name": "Focus controls option Tilt to steer",
+      "originalReport": {
+        "bytes": 497075,
+        "sha256": "0c3215e29c1e176cd06bd7064867a0ba7ca54cf0cc7314235b091045a8696cf6"
+      },
+      "actualFocus": "Fixed stickAlways in the same place. Muscle memory, no drift.",
+      "requiredFocus": "Tilt to steerRoll the phone. Both thumbs free for the buttons."
+    },
+    {
+      "mode": "occupied",
+      "name": "Focus controls option Steer buttons",
+      "originalReport": {
+        "bytes": 497075,
+        "sha256": "0c3215e29c1e176cd06bd7064867a0ba7ca54cf0cc7314235b091045a8696cf6"
+      },
+      "actualFocus": "Fixed stickAlways in the same place. Muscle memory, no drift.",
+      "requiredFocus": "Steer buttonsTwo big pads. Nothing to hold steady."
+    },
+    {
+      "mode": "occupied",
+      "name": "Focus controls option Right",
+      "originalReport": {
+        "bytes": 497075,
+        "sha256": "0c3215e29c1e176cd06bd7064867a0ba7ca54cf0cc7314235b091045a8696cf6"
+      },
+      "actualFocus": "Tilt to steerRoll the phone. Both thumbs free for the buttons.",
+      "requiredFocus": "Right"
+    },
+    {
+      "mode": "occupied",
+      "name": "Focus controls option Left",
+      "originalReport": {
+        "bytes": 497075,
+        "sha256": "0c3215e29c1e176cd06bd7064867a0ba7ca54cf0cc7314235b091045a8696cf6"
+      },
+      "actualFocus": "Steer buttonsTwo big pads. Nothing to hold steady.",
+      "requiredFocus": "Left"
+    }
+  ],
+  "menuSourceIdenticalAcrossAndroidAndWindows": [
+    {
+      "path": "joystick-games/kart-royale/src/src/ui/ControlsMenu.ts",
+      "bytes": 19308,
+      "sha256": "3bc1c25afb75d3887bdd812c0a9b83a4f6c609f330daa055cc99a49abce491f0"
+    },
+    {
+      "path": "joystick-games/kart-royale/src/src/ui/Menus.ts",
+      "bytes": 30735,
+      "sha256": "94dd902c061c47b87f23af463765a8160f8948412948a38bda2f7acaefd33d74"
+    },
+    {
+      "path": "joystick-games/kart-royale/src/src/core/ControlPrefs.ts",
+      "bytes": 8482,
+      "sha256": "0a9a9b0da8a8c7bc63d580d5a026bf009b4a92b962fbd3a5b1b850033ddd3ca7"
+    },
+    {
+      "path": "joystick-games/kart-royale/src/src/core/TouchControls.ts",
+      "bytes": 82310,
+      "sha256": "d62850252bb08cc94470ae985830f70c876a96047b0cbefde721eef8f4ab2203"
+    }
+  ],
+  "testsEvidence": {
+    "original44PassedInFirstRun": true,
+    "newTenPassedAfterOnlyMissingAckFixtureWindowCorrection": true,
+    "otherSuites": [
+      16,
+      15,
+      11
+    ],
+    "allFrozenLogsHashMatched": true,
+    "testsRerunByReviewer": false,
+    "correctedTestOnly": "pre-tap SDK sequence filters connection-sync events from the intended action window; missing Y ACK remains a failure and exact Y down/release still asserted"
+  },
+  "scopeLimits": [
+    "Original Android6c7 runtime failed before playable menus due unavailable Observer/ADB; this QA patch does not prove its environment issue is solved.",
+    "Twelve source-bound stale-focus samples are real Windows observations, not Android gameplay evidence.",
+    "The imported generic menuTap uses requested16ms plus actual measured wire interval; it cannot promise exactly16ms wall time under host scheduling.",
+    "Root must create unique6c7-parent isolation and verify exactly3 paths; this reviewer created no ref/commit/POST and ran no native/GPU tests."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "racing_review_driving",
+  "status": "one-line-source-preservation-fix-reviewed",
+  "workflow": {
+    "bytes": 12087,
+    "sha256": "3b970df633b7380d5eea3712b0887f2bfcb0f078a1173811f2deec4a4d1d1a06"
+  },
+  "frozenEvidence": {
+    "bytes": 1357,
+    "sha256": "1d4bb68ad74c6bedb3a60cd9d3837118fb184fe73afb547f7aa655209a82de1c"
+  },
+  "findings": [
+    "Only the existing runtime diagnostic evidence upload gains include-hidden-files:true; no signing, emulator, driver, target or export permissions change.",
+    "The prior artifact had 21 of 22 declared execution-source files because .github was omitted. Its separate export-source workflow matches the exact old 6d91 bytes; missing runtime path and alternate source copy remain distinct in the original evidence.",
+    "Explicit upload paths remain unchanged. The independent exporter still whitelists the exact executed .github workflow and rejects unapproved paths, APKs, keys, symlinks and oversized entries.",
+    "Before/after files and all five frozen evidence files match. Original actionlint exit0 log was read, not rerun."
+  ],
+  "testsRepeated": false,
+  "nativeRunPerformed": false,
+  "newPost": false,
+  "originalFailureChanged": false
+}

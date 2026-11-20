@@ -1,0 +1,91 @@
+{
+  "status": "ready-for-fixed-source-Windows-validation",
+  "createdAt": "2026-11-20T00:21:35.312720+00:00",
+  "originalFailure": {
+    "runId": 44636807407,
+    "sourceCommit": "d750c0c68c430503be06d18fe5b76af825c72e58",
+    "exportCommit": "09167e91d63bfea2a069dbb62ba6127db238a9f7",
+    "evidence": "../attempts/44636807407/backroad-bootstrap-analysis.json",
+    "winsockError": 10013,
+    "documentEpoch": 0,
+    "specificPortDenialReasonProven": false
+  },
+  "sourceFiles": [
+    {
+      "path": "joystick-games/shared/windows/Sources/main.cpp",
+      "bytes": 35243,
+      "sha256": "7038855f074d633ba3c99631e606554174ac56ff372867be1c6a00c6b68ca98b"
+    },
+    {
+      "path": "joystick-games/shared/windows/Sources/ControllerBind.hpp",
+      "bytes": 1107,
+      "sha256": "3656034907322c28a7ba18174607190e2bf87f33b1f066beed8032142cfb8eca"
+    },
+    {
+      "path": "joystick-games/shared/windows/tests/controller-bind.test.cpp",
+      "bytes": 6248,
+      "sha256": "a203e997684b9d04270ee16b13a046b9b7734428ebc52561e6226c6166be7c98"
+    },
+    {
+      "path": "joystick-games/shared/windows/CMakeLists.txt",
+      "bytes": 2242,
+      "sha256": "a285a50f9e9373a21c2bf74885f5ec55b26c5351d0ac006da76f7c4f8ee8542e"
+    },
+    {
+      "path": "joystick-games/tools/windows-evidence.py",
+      "bytes": 3191,
+      "sha256": "fe06fad07277f3d942053d5d24865d1873327b39add24cb695d171a4491d8c4d"
+    }
+  ],
+  "unrelatedMainBytesUnchanged": true,
+  "localValidation": {
+    "linuxPolicyCasesPassed": 7,
+    "optimizedNdebugPolicyCasesPassed": 7,
+    "cmakeAttempt": "blocked-before-configure: cmake/ctest absent; validation-1 retained",
+    "productionWin32Compiled": false,
+    "actualWindowsSocketsTested": false
+  },
+  "nextCiPlan": {
+    "workflow": ".github/workflows/joystick-catalog-windows.yml",
+    "productionDispatchByRootOnly": true,
+    "buildInvocation": "Existing windows-build.py cmake configure + Release default target build + ctest --output-on-failure",
+    "newCTest": "controller-bind",
+    "testTimeoutSeconds": 20,
+    "expectedActualCases": [
+      "exclusive-bound-not-listening: real SO_EXCLUSIVEADDRUSE bind(0), SO_ACCEPTCONN=false, first second-socket error10013, exactly one port0 fallback, three local connections keep selected port",
+      "exclusive-listening: same real holder with listen, first error10013 and stable fallback listener",
+      "invalid-socket: actual WSAENOTSOCK10038, one attempt, fatal result with exact code"
+    ],
+    "actualFixturePreferredPort": "OS-assigned isolated occupied port; production still begins at63485. Fixture success does not establish63485 availability.",
+    "retainedOriginalLog": "ctest-last-test.log copied from packages/build/Testing/Temporary/LastTest.log and included in evidence-manifest.json",
+    "existingFourDocumentFixture": "Unchanged60s deadline/PAGE/strict assertions",
+    "normalAndOccupiedGameModes": "Unchanged normal port63485 assertion and occupied63485 fixture; no environment exemption or result promotion",
+    "noRebuildOrNativeRunPerformedForThisPatch": true
+  },
+  "exportCompatibility": {
+    "sourceFilesRead": [
+      {
+        "path": "joystick-games/tools/windows-export.py",
+        "bytes": 22039,
+        "sha256": "ae36160f6a3c5cc64c1b5279e6c564fc405568e75b229892f6079111d87e66c8"
+      },
+      {
+        "path": "joystick-games/tools/windows-read-evidence.py",
+        "bytes": 4949,
+        "sha256": "71f6d23675bb37de22087b58e088a5d40d36dea5107b99ce3e31d3c345a8f570"
+      },
+      {
+        "path": "joystick-games/tools/windows-reexport.py",
+        "bytes": 23579,
+        "sha256": "2e5db8a9baedd841db7206792b91af975b6f0f3797ce472f6a7a1374cfa93576"
+      }
+    ],
+    "finding": "ctest-last-test.log is a safe relative ASCII filename. Original exporter checks exact evidence receipt membership, size/hash, regular files and complete file set, without a fixed log basename allowlist. Evidence reader excludes executable/package suffixes; .log is allowed. Re-exporter likewise verifies manifest membership/hash and safe path. No reader/exporter change needed."
+  },
+  "limits": [
+    "Windows native socket branches and MSVC production compile remain pending the next fixed CI. Linux policy tests are not native evidence.",
+    "The observed default63485 WSAEACCES does not distinguish excluded ranges, bound-only ownership, or listener-table query failure.",
+    "No system reservation, firewall, privilege, connection protocol, active listener lifecycle, game source, game clock, QA predicate or job budget changed.",
+    "One port0 fallback only for10013/10048. Other initial errors stay fatal; failed fallback keeps both real errors."
+  ]
+}

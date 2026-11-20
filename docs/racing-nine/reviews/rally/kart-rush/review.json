@@ -1,0 +1,69 @@
+{
+  "reviewedAt": "2026-11-19",
+  "slug": "kart-rush",
+  "title": "Kart Rush",
+  "upstream": {
+    "slug": "kart-rush",
+    "title": "Kart Rush",
+    "repository": "stevkazt/kart-rush",
+    "commit": "4b0cf276d84e76171feb765d87b5e8a6159cc421",
+    "sourceUrl": "https://raw.githubusercontent.com/stevkazt/kart-rush/4b0cf276d84e76171feb765d87b5e8a6159cc421/index.html",
+    "sourceSha256": "20865b16330ff3dfa540c49bd92814cb598f97a6fc7c91773e1427f34cf0c724",
+    "bytes": 17284,
+    "demo": "https://stevkazt.github.io/kart-rush/"
+  },
+  "graphics": {
+    "sceneAndArtDirection": 13,
+    "vehicleDesign": 8,
+    "lightingAndEffects": 6,
+    "readability": 8,
+    "motionPresentation": 4,
+    "total": 39
+  },
+  "gameplay": {
+    "drivingAndControl": 12,
+    "competitionAndFeedback": 9,
+    "trackAndModeVariety": 9,
+    "progressionAndReplay": 7,
+    "completeRaceLoop": 4,
+    "total": 41
+  },
+  "totalScore": 80,
+  "evidenceKind": "本轮正常菜单、姓名键入与短时实际驾驶；完整玩法由源码补充",
+  "confidence": "medium-high for visible graphics; medium for short driving; source-confirmed breadth was not all played",
+  "actualPlayObserved": [
+    "首次使用正常物理键盘输入 PURETV 姓名，点击开始；看到6辆卡丁车、原倒计时、驶离起跑位与动态速度39→52 km/h（截图42 km/h）。",
+    "第一轮默认vertical视图在1280×720横屏不旋转，自动油门默认开启；不能把向上键期间的加速全部归因给手动油门。",
+    "场景色彩明亮统一：山地、看台、起终门、热气球、树木、路侧彩色护栏；多个动物/人物车手和不同车身有明显辨识度，后视镜和小地图完整。",
+    "正常左右输入已发出，但随后Space触发新的倒计时，steering截图回到0秒；Escape后DOM出现PAUSED，截图仍保留赛场。此轮未确认道具效果和完整暂停视觉。"
+  ],
+  "sourceConfirmedNotFullyPlayed": [
+    "菜单可选8条非debug赛道；大奖赛CUP_TRACKS为7站，不包含新Spiral Run，不能把Test Lab计作玩家内容。",
+    "源码有8车手、车身与喷漆、6车竞速、3圈、漂移/道具/跳台/捷径、大奖赛积分和本地纪录；本轮未完成整场、大奖赛或逐赛道实玩。",
+    "源码键盘Space同时设置input.item且不preventDefault；开始按钮点击后仍可能持焦。观察到重开与其相符，尚未做单变量根因复现。"
+  ],
+  "packagingAssessment": [
+    "Three.js 0.160.0 + cannon-es 0.20.0及程序化原素材可本地离线打包；本轮未做封装。",
+    "触摸优先界面、默认自动油门/Easy、姓名自绘键盘和菜单焦点需适配遥控/九键手柄。Space原生按钮激活与暂停渲染需要专门回归。",
+    "未确认根许可证；无强制账号、付费或API依赖，姓名为本地资料。"
+  ],
+  "demoIndexMatchesFixedSource": true,
+  "mainJsMatchesFixedSource": true,
+  "actualReport": "attempt-1/report.json",
+  "bestGameplayImage": "attempt-1/driving-straight.png",
+  "screenshotsVisuallyReviewed": [
+    "attempt-1/menu.png",
+    "attempt-1/started.png",
+    "attempt-1/driving-straight.png",
+    "attempt-1/steering.png",
+    "attempt-1/after-pause-key.png"
+  ],
+  "limitations": [
+    "Default auto-gas was on; not a manual-throttle validation.",
+    "Only short straight driving observed. Steering screenshot was captured after a new countdown; no item success, full race, podium or Grand Prix completion claim.",
+    "Software-rendered timing and recorded frame rate are not physical device performance.",
+    "Space/focus and pause visual behavior need follow-up before packaging."
+  ],
+  "physicalDeviceTested": false,
+  "recommendedTopNine": true
+}

@@ -1,0 +1,118 @@
+{
+  "sourceRunId": 44647675594,
+  "sourceRunAttempt": 1,
+  "sourceCommit": "772c99ae35583ad1594cd9fffcc6368aa4df7201",
+  "immutableExportCommit": "b498971a645158e9ae097b4b81a13234908399ed",
+  "nativeBuildOutcome": {
+    "msvcCompilePassedForBothGames": true,
+    "originalCTestPassed": [
+      "protocol",
+      "preferences",
+      "entry-url",
+      "diagnostic-log"
+    ],
+    "newControllerBindCTest": "failed_at_first_bound_not_listening_case",
+    "actualFirstErrorInOriginalLog": null,
+    "actualFallbackErrorInOriginalLog": null,
+    "bootstrapRun": false,
+    "gameplayRun": false,
+    "packagesProduced": false
+  },
+  "fixtureDefect": "Original fixture required WSAEACCES for exclusive wildcard holder and exclusive wildcard contender; the Microsoft same-account Windows Server 2003+ matrix documents WSAEADDRINUSE for that tuple. The old merged assertion did not print the actual result, so the original run is not claimed to have observed 10048.",
+  "candidate": {
+    "onlyChangedSource": "joystick-games/shared/windows/tests/controller-bind.test.cpp",
+    "productionBinderAndSocketOptionsUnchanged": true,
+    "defaultProductionAddress": "0.0.0.0:63485",
+    "real10013FixtureUsesSpecificLoopbackCandidate": true,
+    "wildcardCasesRequire10048": true,
+    "loopbackCasesRequire10013": true,
+    "boundOnlyAndListeningBothCovered": true,
+    "stableConnectionsRequiredPerCase": 3,
+    "nativeCasesPending": true
+  },
+  "localValidation": {
+    "baselineSourceCommit": "772c99ae35583ad1594cd9fffcc6368aa4df7201",
+    "sourceFiles": {
+      "joystick-games/shared/windows/tests/controller-bind.test.cpp": {
+        "bytes": 7689,
+        "sha256": "4de0677c8f91bf595d2270813c64040e811835fc116463f910a4f9cc011d79c9"
+      }
+    },
+    "unchangedProductionAndIntegration": {
+      "joystick-games/shared/windows/Sources/main.cpp": {
+        "bytes": 35243,
+        "sha256": "7038855f074d633ba3c99631e606554174ac56ff372867be1c6a00c6b68ca98b"
+      },
+      "joystick-games/shared/windows/Sources/ControllerBind.hpp": {
+        "bytes": 1107,
+        "sha256": "3656034907322c28a7ba18174607190e2bf87f33b1f066beed8032142cfb8eca"
+      },
+      "joystick-games/shared/windows/CMakeLists.txt": {
+        "bytes": 2242,
+        "sha256": "a285a50f9e9373a21c2bf74885f5ec55b26c5351d0ac006da76f7c4f8ee8542e"
+      },
+      "joystick-games/tools/windows-evidence.py": {
+        "bytes": 3191,
+        "sha256": "fe06fad07277f3d942053d5d24865d1873327b39add24cb695d171a4491d8c4d"
+      }
+    },
+    "nativeWindowsExecutedLocally": false,
+    "compile": {
+      "command": [
+        "g++",
+        "-std=c++17",
+        "-O2",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "/dev/shm/puretv-submit/joystick-games/shared/windows/Sources",
+        "/dev/shm/puretv-submit/joystick-games/shared/windows/tests/controller-bind.test.cpp",
+        "-o",
+        "/dev/shm/windows-host-tmp/bind-fixture-address-validation-2/controller-bind-test"
+      ],
+      "exitCode": 0
+    },
+    "portablePolicy": {
+      "exitCode": 0,
+      "caseCount": 7,
+      "nativeWindowsCaseCount": 0
+    },
+    "unchangedPolicyFunction": true,
+    "expectedWindowsCases": [
+      {
+        "holderListening": false,
+        "candidateAddress": "0.0.0.0",
+        "requiredError": 10048,
+        "requiredStableConnections": 3
+      },
+      {
+        "holderListening": false,
+        "candidateAddress": "127.0.0.1",
+        "requiredError": 10013,
+        "requiredStableConnections": 3
+      },
+      {
+        "holderListening": true,
+        "candidateAddress": "0.0.0.0",
+        "requiredError": 10048,
+        "requiredStableConnections": 3
+      },
+      {
+        "holderListening": true,
+        "candidateAddress": "127.0.0.1",
+        "requiredError": 10013,
+        "requiredStableConnections": 3
+      }
+    ],
+    "invalidSocketRequiredError": 10038,
+    "status": "portable_policy_passed_native_cases_pending"
+  },
+  "limitations": [
+    "The documented fixture correction is not a new Windows pass.",
+    "Even a future loopback-specific 10013 pass does not claim the production wildcard bind reproduced 10013.",
+    "The precise reason the earlier Backroad production port 63485 was denied remains unknown.",
+    "No original failed report has been changed; no workflow was dispatched by this correction."
+  ]
+}

@@ -1,0 +1,152 @@
+--- c5/joystick-games/penguintrack/qa-plan.json
++++ candidate/joystick-games/penguintrack/qa-plan.json
+@@ -11,6 +11,46 @@
+   ],
+   "steps": [
+     {
++      "name": "Move to the original Controller control from either native initial focus",
++      "keys": [
++        "UP"
++      ],
++      "holdMs": 80,
++      "timeoutSeconds": 60,
++      "expect": [
++        {
++          "path": "gameplay.screen",
++          "op": "eq",
++          "value": "menu"
++        },
++        {
++          "path": "gameplay.focus",
++          "op": "eq",
++          "value": "Controller"
++        }
++      ]
++    },
++    {
++      "name": "Move down to the original Play button before selecting the campaign",
++      "keys": [
++        "DOWN"
++      ],
++      "holdMs": 80,
++      "timeoutSeconds": 60,
++      "expect": [
++        {
++          "path": "gameplay.screen",
++          "op": "eq",
++          "value": "menu"
++        },
++        {
++          "path": "gameplay.focus",
++          "op": "eq",
++          "value": "Play"
++        }
++      ]
++    },
++    {
+       "name": "Open original campaign",
+       "keys": [
+         "A"
+--- c5/joystick-games/tools/android-runtime-inputs.py
++++ candidate/joystick-games/tools/android-runtime-inputs.py
+@@ -11,6 +11,8 @@
+ import shutil
+ import subprocess
+ import sys
++import tempfile
++import types
+ import zipfile
+ 
+ ROOT = Path(__file__).resolve().parents[2]
+@@ -130,6 +132,28 @@
+         for name in z.namelist():
+             safe_name(name.rstrip('/'))
+         return {n: sha(z.read(n)) for n in z.namelist() if not n.endswith('/') and not n.startswith('META-INF/')}
++
++
++def frozen_payload(meta, registered, files, slug):
++    """Use the exact original GameKit payload rules and explicit bounded policy."""
++    policy = build.asset_policy.android_limits(meta, registered)
++    with tempfile.TemporaryDirectory(prefix='frozen-android-assets-') as tmp:
++        stage = Path(tmp); game = stage / 'game'; kit = stage / 'kit'
++        original = types.ModuleType('original_frozen_gamekit')
++        original.__file__ = str(stage / 'resource/game-kit/build.py')
++        exec(compile(files['resource/game-kit/build.py'], original.__file__, 'exec'), original.__dict__)
++        original.KIT = kit
++        prefix = 'joystick-games/' + slug + '/dist/'
++        for name, data in files.items():
++            if name.startswith(prefix):
++                target = game / 'src/main/assets' / safe_name(name[len(prefix):])
++            elif name in PHONE:
++                target = kit / 'web' / Path(name).name
++            else:
++                continue
++            target.parent.mkdir(parents=True, exist_ok=True); target.write_bytes(data)
++        (game / 'game.json').write_text(json.dumps(meta, ensure_ascii=False))
++        return original.payload(game, policy)
+ 
+ 
+ def verify(args):
+@@ -185,12 +209,7 @@
+         assert identity['certificateSha256'] == pin and 0 < identity['bytes'] < budget['maxApkBytes']
+         assert all(receipt[k] == v for k, v in identity.items())
+         assert archive_content(apk) == receipt['contentSha256']
+-        prefix = 'joystick-games/' + slug + '/dist/'
+-        expected_assets = {name[len(prefix):]: value for name, value in frozen_files.items() if name.startswith(prefix)}
+-        assert all('/' not in name for name in expected_assets)
+-        expected_assets.update({Path(name).name: frozen_files[name] for name in PHONE})
+-        expected_assets['game-config.json'] = (json.dumps(meta, ensure_ascii=False, separators=(',', ':')) + '\n').encode()
+-        expected_assets['assets-index.json'] = (json.dumps(sorted(expected_assets), separators=(',', ':')) + '\n').encode()
++        expected_assets = frozen_payload(meta, registered, frozen_files, slug)
+         with zipfile.ZipFile(apk) as z:
+             actual_assets = {n[7:]: z.read(n) for n in z.namelist() if n.startswith('assets/')}
+         assert actual_assets == expected_assets, 'Signed assets differ from artifact source'
+--- c5/joystick-games/tools/android-tests.py
++++ candidate/joystick-games/tools/android-tests.py
+@@ -205,5 +205,46 @@
+                 with self.assertRaises(AssertionError): build.sources('fixture-game')
+ 
+ 
++class FrozenPayloadBoundaries(unittest.TestCase):
++    def setUp(self):
++        spec = importlib.util.spec_from_file_location('frozen_payload_under_test', HERE / 'android-runtime-inputs.py')
++        self.inputs = importlib.util.module_from_spec(spec); spec.loader.exec_module(self.inputs)
++        self.slug = 'penguintrack'
++        self.meta = json.loads((HERE.parent / self.slug / 'game.json').read_text())
++        self.registration = json.loads((HERE.parent / 'catalog-registry.json').read_text())['games'][self.slug]
++        self.files = {'resource/game-kit/build.py': (HERE.parents[1] / 'resource/game-kit/build.py').read_bytes(),
++                      **{name: b'phone fixture' for name in self.inputs.PHONE},
++                      'joystick-games/penguintrack/dist/tv.html': b'<html>fixture</html>',
++                      'joystick-games/penguintrack/dist/js/game.js': b'original nested source'}
++
++    def payload(self, files=None):
++        return self.inputs.frozen_payload(self.meta, self.registration, self.files if files is None else files, self.slug)
++
++    def test_matching_declared_policy_keeps_original_nested_bytes_and_index(self):
++        value = self.payload()
++        self.assertEqual(value['js/game.js'], b'original nested source')
++        self.assertEqual(json.loads(value['assets-index.json']), sorted(set(value) - {'assets-index.json'}))
++
++    def test_missing_or_mismatched_policy_cannot_admit_nested_assets(self):
++        self.registration['assetPolicy']['maxTotalBytes'] -= 1
++        with self.assertRaises(AssertionError): self.payload()
++        self.meta.pop('assetPolicy'); self.registration.pop('assetPolicy')
++        with self.assertRaises((AssertionError, ValueError, RuntimeError)): self.payload()
++
++    def test_unsafe_alias_reserved_and_traversal_names_are_rejected(self):
++        for name in ('js/GAME.js', 'game-config.json', 'assets-index.json', '../outside.js', 'js/../outside.js', '/outside.js', 'js\\bad.js'):
++            with self.subTest(name=name), self.assertRaises((AssertionError, ValueError, RuntimeError)):
++                self.payload({**self.files, 'joystick-games/penguintrack/dist/' + name: b'rejected'})
++
++    def test_default_flat_payload_is_byte_identical_to_original_rule(self):
++        self.meta.pop('assetPolicy'); self.registration.pop('assetPolicy')
++        self.files.pop('joystick-games/penguintrack/dist/js/game.js')
++        value = self.payload()
++        expected = {'tv.html': b'<html>fixture</html>', **{Path(n).name: self.files[n] for n in self.inputs.PHONE}}
++        expected['game-config.json'] = (json.dumps(self.meta, ensure_ascii=False, separators=(',', ':')) + '\n').encode()
++        expected['assets-index.json'] = (json.dumps(sorted(expected), separators=(',', ':')) + '\n').encode()
++        self.assertEqual(value, expected)
++
++
+ if __name__ == '__main__':
+     unittest.main(verbosity=2)

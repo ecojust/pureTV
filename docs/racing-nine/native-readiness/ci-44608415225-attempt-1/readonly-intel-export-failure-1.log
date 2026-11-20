@@ -1,0 +1,102 @@
+evidence	Preserve original job log and verify evidence-only export	﻿2026-11-19T20:44:04.7121007Z ##[group]Run python3 - <<'PY'
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7121504Z [36;1mpython3 - <<'PY'[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7121822Z [36;1mimport base64,hashlib,json,os,re,subprocess,urllib.parse[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7122189Z [36;1mfrom pathlib import Path[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7122639Z [36;1mout=Path(os.environ['RUNNER_TEMP'])/'catalog-macos-evidence';artifact=out/'artifact';job=os.environ['ORIGINAL_JOB_ID'][0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7123218Z [36;1massert re.fullmatch('[1-9][0-9]*',job) and artifact.is_dir() and any(artifact.iterdir())[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7123857Z [36;1moriginal=json.loads((out/'original-artifact.json').read_text());capability=original['independentCapabilityDiagnostic'][0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7124416Z [36;1mallowed={'.json','.log','.txt','.png','.py','.swift','.plist','.yml','.opus','.m4a'}[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7124820Z [36;1mif capability:allowed|={'.js','.patch','.yml'}[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7125108Z [36;1mtotal=0[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7125689Z [36;1mfor path in artifact.rglob('*'):[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7126256Z [36;1m    assert not path.is_symlink(), 'Symlink in evidence'[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7126636Z [36;1m    if path.is_file():[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7127037Z [36;1m        assert path.suffix in allowed, 'Unexpected non-evidence file: '+str(path.relative_to(artifact))[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7127491Z [36;1m        assert path.stat().st_size<50_000_000[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7127824Z [36;1m        total+=path.stat().st_size[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7128085Z [36;1massert total<250_000_000[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7128356Z [36;1mplan=os.environ['EVIDENCE_KIND']=='plan'[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7128641Z [36;1mif plan:[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7129281Z [36;1m    assert total<8_000_000 and {p.relative_to(artifact).as_posix() for p in artifact.rglob('*') if p.is_file()}=={'plan.json','catalog-registry.json','executed-workflow.yml'}, 'Expected only the complete original plan artifact'[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7130343Z [36;1mreport_name='plan.json' if plan else 'observation-report.json' if capability else 'build-report.json' if os.environ['EVIDENCE_KIND']=='build' else 'batch-report.json'[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7130942Z [36;1mreport_path=artifact/report_name[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7131304Z [36;1mreport=json.loads(report_path.read_text()) if report_path.is_file() else None[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7131672Z [36;1mif report is None:[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7132231Z [36;1m    assert os.environ['EVIDENCE_KIND']=='build' and original['originalJobConclusion']!='success', 'Successful jobs and runtime/capability evidence require their original report'[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7132991Z [36;1m    report_status='early_failure_missing_report'[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7133283Z [36;1melse:[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7133600Z [36;1m    assert report['sourceCommit']==original['sourceCommit'][0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7133924Z [36;1m    if plan:[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7134423Z [36;1m        assert report['runId']==original['sourceRunId'] and report['runAttempt']==original['sourceRunAttempt'], 'Original plan run or attempt mismatch'[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7135091Z [36;1m        assert report['batches'] and len({item['batch'] for item in report['batches']})==len(report['batches'])[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7135847Z [36;1m        assert sum(item['batch']==os.environ['BATCH'] for item in report['batches'])==1, 'Requested original batch is absent or ambiguous'[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7136344Z [36;1m        bindings={}[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7136933Z [36;1m        for filename,source_path in [('catalog-registry.json','joystick-games/catalog-registry.json'),('executed-workflow.yml','.github/workflows/joystick-catalog-macos.yml')]:[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7137715Z [36;1m            data=(artifact/filename).read_bytes();expected={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7138312Z [36;1m            assert report['inputFiles'][source_path]==expected, 'Original plan/file hash mismatch: '+source_path[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7138854Z [36;1m            endpoint='repos/ecojust/pureTV/contents/'+source_path+'?ref='+original['sourceCommit'][0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7139478Z [36;1m            fixed=json.loads(subprocess.check_output(['gh','api',endpoint],timeout=60))[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7140001Z [36;1m            assert fixed['type']=='file' and fixed['path']==source_path and fixed['encoding']=='base64'[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7140675Z [36;1m            frozen=base64.b64decode(fixed['content']);assert frozen==data and fixed['size']==len(data), 'Original plan artifact differs from fixed Git source: '+source_path[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7141448Z [36;1m            assert fixed['sha']==hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest(), 'Fixed Git blob identity mismatch'[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7141962Z [36;1m            bindings[source_path]={**expected,'gitBlob':fixed['sha']}[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7142663Z [36;1m        registry=json.loads((artifact/'catalog-registry.json').read_text());games=[][0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7143069Z [36;1m        for selected in report['batches']:[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7143574Z [36;1m            assert selected['games']==registry['batches'][selected['batch']] and selected['games'], 'Original batch differs from frozen registry'[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7144082Z [36;1m            games.extend(selected['games'])[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7144540Z [36;1m        assert len(games)==len(set(games)) and report['games']==sorted(games) and all(game in registry['games'] for game in games)[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7145422Z [36;1m        assert set(report['renderers'])==set(report['coveragePolicies'])==set(report['originalTestScripts'])==set(games)[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7146508Z [36;1m        verification={'sourceCommit':original['sourceCommit'],'sourceRunId':original['sourceRunId'],'sourceRunAttempt':original['sourceRunAttempt'],'originalPlanBytesPreserved':True,'fixedSourceFiles':bindings,'requestedBatch':os.environ['BATCH'],'allOriginalBatches':report['batches']}[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7147487Z [36;1m        (out/'plan-source-verification.json').write_text(json.dumps(verification,indent=2)+'\n')[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7147898Z [36;1m    elif capability:[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7148454Z [36;1m        assert report['workflowSourceCommit']==original['workflowSourceCommit'] and report['runId']==original['sourceRunId'] and report['runAttempt']==original['sourceRunAttempt'][0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7149270Z [36;1m        assert report['gamesOpened'] is False and report['gameAssetsChanged'] is False and report['installationPackagesIncluded'] is False[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7149974Z [36;1m        assert hashlib.sha256((artifact/'executed-webgl-probe.swift').read_bytes()).hexdigest()==report['probeSourceSha256'][0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7150534Z [36;1m    else:assert report['batch']==os.environ['BATCH'][0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7150988Z [36;1m    if original['separateRuntimeQa']:assert report['qaSourceCommit']==original['workflowSourceCommit'][0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7151410Z [36;1m    report_status=report.get('status')[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7151921Z [36;1m# This fixed workflow has no signing step, credentials or environment dumps.[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7152407Z [36;1m# Preserve raw logs without rendering their control sequences in the console.[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7153087Z [36;1mresult=subprocess.run(['gh','api','--allow-escape-sequences','repos/ecojust/pureTV/actions/jobs/'+job+'/logs?cachebust='+os.environ['GITHUB_RUN_ID']],capture_output=True)[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7153812Z [36;1mstatus={'originalJobId':int(job),'downloaded':result.returncode==0,'exitCode':result.returncode}[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7154289Z [36;1mif result.returncode==0:[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7154776Z [36;1m    raw=result.stdout;status['originalDownloadedLog']={'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7155473Z [36;1m    signed_keys={'sig','signature','token','access_token','x-amz-signature','x-goog-signature'}[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7155861Z [36;1m    redactions=[][0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7156123Z [36;1m    def redact(match):[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7156599Z [36;1m        url=match.group();keys={key.lower() for key,_ in urllib.parse.parse_qsl(urllib.parse.urlsplit(url).query)}[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7157030Z [36;1m        if keys & signed_keys:[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7157489Z [36;1m            redactions.append(hashlib.sha256(url.encode()).hexdigest());return '[signed download URL redacted]'[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7157912Z [36;1m        return url[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7158233Z [36;1m    log=re.sub(r'https?://[^\s<>\"\']+',redact,raw.decode(errors='replace'))[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7158689Z [36;1m    status['signedUrlRedactions']=len(redactions);status['redactedUrlSha256']=redactions[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7159096Z [36;1m    (out/'original-job.log').write_text(log)[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7159555Z [36;1melse:status['error']=re.sub(r'https?://\S+','[download URL redacted]',result.stderr.decode(errors='replace'))[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7160109Z [36;1m(out/'job-log-download-status.json').write_text(json.dumps(status,indent=2)+'\n')[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7160486Z [36;1mrows={}[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7160733Z [36;1mfor path in sorted(out.rglob('*')):[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7161022Z [36;1m    assert not path.is_symlink()[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7161524Z [36;1m    if path.is_file():rows[path.relative_to(out).as_posix()]={'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7163274Z [36;1mmanifest={'sourceRunId':int(os.environ['SOURCE_RUN']),'sourceCommit':original['sourceCommit'],'workflowSourceCommit':original['workflowSourceCommit'],'originalWorkflow':original['originalWorkflow'],'sourceRunAttempt':int(os.environ['SOURCE_ATTEMPT']),'batch':os.environ['BATCH'],'kind':os.environ['EVIDENCE_KIND'],'independentCapabilityDiagnostic':capability,'sourceMeaning':original['sourceMeaning'],'exporterSourceCommit':os.environ['GITHUB_SHA'],'exportRunId':int(os.environ['GITHUB_RUN_ID']),'exportRunAttempt':int(os.environ['GITHUB_RUN_ATTEMPT']),'gamesRerun':False,'installPackagesValidated':False,'files':rows}[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7165020Z [36;1mmanifest.update(originalReportPresent=report is not None,originalReportStatus=report_status)[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7165653Z [36;1mif os.environ['EVIDENCE_KIND']=='build':[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7166575Z [36;1m    manifest['compiledTestExecutableRetention']='Compiled test executables are outside the original build-evidence upload directory; this export retains every original artifact file, including binary hashes if compilation recorded them. No executable is reconstructed or claimed as included.'[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7167597Z [36;1m(out/'export-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7168216Z [36;1mprint(json.dumps({'evidenceFiles':len(rows),'originalJobLogDownloaded':status['downloaded'],'gamesRerun':False,'installPackagesValidated':False}))[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7168736Z [36;1mPY[0m
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7196273Z shell: /usr/bin/bash -e {0}
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7196593Z env:
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7196817Z   SOURCE_RUN: 44608415225
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7197165Z   SOURCE_SHA: 68d343d22c762c904eb83854d4ab9c4113a7c30f
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7197468Z   ARTIFACT_SOURCE_SHA: 
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7197704Z   SOURCE_ATTEMPT: 1
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7197934Z   BATCH: racing-01
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7198160Z   EVIDENCE_KIND: qa-intel
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7198421Z   ARTIFACT_ID: 14573245706
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7198654Z   ORIGINAL_JOB_ID: 135861987349
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7200646Z   GH_TOKEN: ***
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.7200877Z ##[endgroup]
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.8764996Z Traceback (most recent call last):
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.8765793Z   File "<stdin>", line 12, in <module>
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.8766376Z AssertionError: Unexpected non-evidence file: ponpoko-kart/native/diagnostics/.dat.nosync537F.s44g2n
+evidence	Preserve original job log and verify evidence-only export	2026-11-19T20:44:04.8897879Z ##[error]Process completed with exit code 1.

@@ -1,0 +1,26 @@
+// Model fixtures use the original simulator; browser/native QA never writes model state.
+const assert = require('node:assert/strict');
+const { load } = require('../src/tools/sim');
+const g = load();
+g.start(0, []);
+g.run({}, 4);
+const summary = () => JSON.parse(g.ev('JSON.stringify({t:Game.t,time:L.time,x:Player.x,y:Player.y,vx:Player.vx,vy:Player.vy,hp:Player.hp,pearls:L.pearls,projectiles:L.projs.length})'));
+g.ev("Player.held={kind:'rock',mass:1}; Player.fishDown=true; Player.sucking=true; Player.charge=0.8; Player.suckT=50; Input.nativeHeld={fish:true,right:true}; Input.sync(); Game.pause();");
+assert.equal(g.Game.paused, true);
+assert.equal(g.ev('Player.held.kind'), 'rock');
+assert.equal(g.ev('Player.fishDown'), false);
+assert.equal(g.ev('Player.sucking'), false);
+assert.equal(g.ev('Player.charge'), 0);
+assert.equal(g.ev('Object.values(Input.held).some(Boolean)'), false);
+const stopped = summary();
+for (let i=0;i<120;i++) g.frame({});
+assert.deepEqual(summary(), stopped);
+assert.equal(g.ev('Player.held.kind'), 'rock');
+g.frame({pause:1});
+assert.equal(g.Game.paused, false);
+const count = g.ev('L.projs.length');
+g.run({}, 4);
+assert.equal(g.ev('Player.held.kind'), 'rock');
+assert.equal(g.ev('L.projs.length'), count);
+assert.ok(summary().t > stopped.t);
+console.log('GLUP actual model pause/cancel: clocks and physics frozen, held object retained, no release projectile, explicit resume passed.');

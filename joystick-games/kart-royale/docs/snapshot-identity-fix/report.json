@@ -1,0 +1,33 @@
+{
+  "recordedAt": "2026-11-19T19:47:54.431890+00:00",
+  "cause": "Native read-only observer requires snapshot.game to equal registered game ID. Both adapters omitted the field; original failure was correctly rejected.",
+  "game": "kart-royale",
+  "fix": "Adds only the fixed game identity to the existing cached read-only snapshot. Does not change controls, physics, rendering or game clocks.",
+  "sourcePath": "src/src/tv-input.ts",
+  "sourceSha256": "7629c978ef984a7f7931585d12799f9e84434945e025e3595cd970232f1fed69",
+  "distributionBundle": "dist/kart-royale.js",
+  "distributionSha256": "d59b112cbb3207f5eff3ae86c4fea5b9dda76217282537ecac4db44ab687a08b",
+  "buildManifestSha256": "647f997168d0b1060d3e89e49c934959e8f5f9438ae1546919e19d7c8cb0cb38",
+  "buildCheckPassed": true,
+  "changedManifestEntries": [
+    {
+      "section": "inputs",
+      "path": "src/src/tv-input.ts",
+      "oldSha256": "2a70340988063a6866c37bfce193172eab2d68d6a37c524152ed43e37ee3f4e4",
+      "newSha256": "7629c978ef984a7f7931585d12799f9e84434945e025e3595cd970232f1fed69"
+    },
+    {
+      "section": "distribution",
+      "path": "kart-royale.js",
+      "oldSha256": "a04d837088681ca5955feebf8e3f0eabc001ef5b52281fc206fd4f4f1525dd55",
+      "newSha256": "d59b112cbb3207f5eff3ae86c4fea5b9dda76217282537ecac4db44ab687a08b"
+    }
+  ],
+  "nativePassed": false,
+  "priorBrowserEvidence": "Existing browser screenshots and gameplay are for the prior snapshot object without game identity; runtime unchanged apart from diagnostic field. Penguin attempt8 continues on its immutable prior 6-ui snapshot; Kart attempt3 will use a new immutable distribution.",
+  "bundledJavaScriptDiff": "New bundle equals previous frozen bundle byte-for-byte after removing exactly one added game identity property line.",
+  "testScope": "Adapter tests including executable production installTV snapshot contract; stub only controller boundary and DOM. Not original upstream full test suite or real native execution.",
+  "snapshotContractTestSha256": "ead3621e425f7fa24a7a5af53f31126a2c4152387d912f9c4ef3989ccdbd60b1",
+  "adapterTestsPassed": 11,
+  "adapterTestsLogSha256": "664b6e0fd16caf94b1c05db93dc6d0025a52422531e53a82277cee28de76074d"
+}

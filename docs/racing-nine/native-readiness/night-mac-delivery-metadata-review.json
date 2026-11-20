@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "racing_windows_host",
+  "reviewedAt": "2026-11-19T21:51:53.688467+00:00",
+  "status": "no_blocking_issue_in_scoped_metadata_review",
+  "game": "night-racer",
+  "reviewedFiles": {
+    "joystick-games/night-racer/packages.json": {
+      "bytes": 3819,
+      "sha256": "5a8b24006a221e77c5cca457a1249b40b741bd1ecc53ef8c441c03e05b72914c"
+    },
+    "joystick-games/night-racer/README.md": {
+      "bytes": 3933,
+      "sha256": "30e9d0eed6e18c84cb09e5bee4e1ad35615852c3d4a8a86b714fccfd4d7ff9b7"
+    },
+    "joystick-games/night-racer/SHA256SUMS.txt": {
+      "bytes": 422,
+      "sha256": "a58b5c1d13639703de46301e0e2228d4ef8aabc2b8c126573db50d5ec49cfbf3"
+    },
+    "joystick-games/night-racer/docs/macos-delivery/verification.json": {
+      "bytes": 3548,
+      "sha256": "dd2b9d7488c86d8225897f64ee4f44ab4270a0a597efeeff40092ded0de3170c"
+    },
+    "docs/racing-nine/native-readiness/backroad-night-mac-visual-review.json": {
+      "bytes": 9546,
+      "sha256": "4a6a9e627c00ef347caf80435e3ffbba2a3c2c037b8f2dd069c40a5b00a248e5"
+    }
+  },
+  "packageSourceCommit": "68d343d22c762c904eb83854d4ab9c4113a7c30f",
+  "packageBuildRunId": 44608415225,
+  "qaSourceCommit": "c19a4c43e5bed83bf3187869655944bc0fc4c32a",
+  "runtimeRunId": 44615672670,
+  "runtimeExportCommit": "c89af997432fc6f2c9d8cb6ccdcda20a7ef19403",
+  "scope": "Read-only cross-check of delivery metadata, existing original package audit, paths and declared limits. Original binaries checked by size and samefile link to audited package, not rehashed. No full source/runtime audit or native rerun, and no repeat image viewing.",
+  "checks": {
+    "allNonMacosManifestFieldsUnchangedAgainstHead": true,
+    "existingWindowsChecksumsPreserved": true,
+    "readmeRelativeLinksExist": true,
+    "twoMacRecordsEqualOriginalAuditedRecords": true,
+    "twoMacFilesSameInodesAsAuditedOriginalPackages": true,
+    "sourceInputCountAndBinaryAndCurrentDistCountMatchAudit": true,
+    "threeRuntimeReportPathsSizesAndCrossMetadataConsistent": true,
+    "runtimeModes": [
+      "native",
+      "occupied-port",
+      "rosetta"
+    ],
+    "reportedChecksPerMode": 9,
+    "reportedProcessArchitectures": [
+      "arm64",
+      "arm64",
+      "x86_64"
+    ],
+    "minimumMacOS": "11.0",
+    "renderer": "webgl2",
+    "signature": "ad-hoc",
+    "appleNotarized": false,
+    "intelExplicitlyUnverified": true,
+    "sameRunCapabilityProbeExplicitlyNotExecuted": true,
+    "gameFailureCauseProven": false,
+    "explicitDeliveryScopeDoesNotClaimOriginalClassifierPassed": true
+  },
+  "visualReviewScope": {
+    "actualViewer": "root",
+    "originalNightScreenshotsReviewedByRoot": 12,
+    "nightPlayingCaptureSpeedKmh": 0,
+    "motionEvidence": "Original runtime action observations, not still images",
+    "imageSizes": "1024x642; Night Rosetta 1024x645",
+    "notNew960Or1280MacCaptureSet": true,
+    "occupiedExpandedCardIconAndSeatLineNotDrawnDisclosed": true,
+    "completeActualIdsVisibleAccordingToRootReview": true
+  },
+  "limitations": [
+    "This review does not independently repeat the original 1283-input closure, ZIP/Mach-O, codesign, DMG mounting or original full runtime verification.",
+    "Rosetta x86_64 on Apple Silicon is not Intel hardware validation; original failed game/capability/classifier records retain their status.",
+    "Same-run capability probe did not execute due to job-identity truncation; no GPU root-cause inference.",
+    "No physical controller, full completion, additional native rendering dimensions or FPS claims."
+  ],
+  "minorWordingSuggestion": {
+    "text": "Use 赛中截图的紧凑卡 instead of 驾驶时紧凑卡 for the static 0km/h images.",
+    "blocking": false,
+    "alreadyAppliedAtReview": true
+  }
+}

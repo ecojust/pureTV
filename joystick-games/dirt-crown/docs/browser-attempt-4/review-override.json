@@ -1,0 +1,18 @@
+{
+  "automaticChecksPassed": true,
+  "overallAcceptance": false,
+  "finding": "The last image named playing-1280 is actually the original pause menu; snapshot.paused is true. Original script omitted a resume-state assertion.",
+  "cause": "resume cleared previous button edges; holding START into the next frame could re-pause. Same pattern corrected in Kart Rush.",
+  "productionFix": "Preserve current held edge state while clearing physical/game controls on explicit resume.",
+  "retainedEvidence": [
+    "960 explicit-throttle driving",
+    "controller identity",
+    "pause time/position freeze",
+    "disconnect cancellation",
+    "held reconnect quarantine"
+  ],
+  "requiresRetest": [
+    "resume remains unpaused while START is still held",
+    "actual 1280 gameplay image"
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "status": "source-frozen-for-independent-review-not-native-validated",
+  "at": "2026-11-19T23:18:05.106019+00:00",
+  "originalFailure": {
+    "run": 44628818020,
+    "source": "232d544079a472aa0ffb259c1bc73c692b94504d",
+    "export": "b7803b7f811e8eb45b511cc44dfa0f1d13de9c4c",
+    "analysis": "../windows-44628818020-analysis/analysis.json",
+    "analysisSha256": "a12e523a1f856f5292912fc60db9b842b175407aacdd2b48624f483a16d794e3"
+  },
+  "sourceFiles": {
+    "joystick-games/kart-royale/qa-plan.json": {
+      "bytes": 7654,
+      "sha256": "a28b7a1f6beb1affa77cb5f84b36dadd33521581e636e5ab178b46cc1b56ef4d"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 7146,
+      "sha256": "52fcb4b01f5dd67a12d7bfee5633f116fbc500bcc59c8e522d050b7a5af0e63e"
+    },
+    "joystick-games/shared/windows/tests/gameplay.test.py": {
+      "bytes": 16539,
+      "sha256": "ad15f60fd1314e57a6c4d6be324a655f84616ba214ec2599a6c561b4ce1d8b62"
+    }
+  },
+  "changes": [
+    "Only Kart Royale plan step12 adds windowsHoldUntilExpect:true; original speed>1 and whole position changed expectation,3500ms declaration,60s timeout and all other fields across the 20 original steps remain exact, including all 19 other steps.",
+    "Shared schema accepts exactly gameplay.progress changed or gameplay.position changed for the existing opt-in. SingleUP, positive finite speed threshold, no menuTap/startup, exactly two expectations and<=60s remain. No new operators or expressions.",
+    "Two added shared boundary tests prove unchanged original vector predicate through the real generic Windows held observer, including semantic input, first matching held observation, exact ACK, two released fresh frames and missing-motion failure cleanup. Existing test AST remains identical."
+  ],
+  "genericRunnerActuallySupportsVector": {
+    "runner": "joystick-games/tools/windows-verify.py",
+    "unchangedFromOriginal": true,
+    "sha256": "4d967b72972782acf9210415b757796c540039f37c00c33a99f16eb6a163091c",
+    "reason": "bounded_gameplay_step delegates every original expectation to unchanged plan_api.matches/read_path. changed compares complete vector structure; no scalar progress-only access exists in runner. Synthetic full-helper vector movement passes while same vector with speed alone fails.",
+    "matcherAndAllOtherSchemaAstUnchanged": true
+  },
+  "validation": [
+    {
+      "command": "python3 joystick-games/kart-royale/docs/windows-acceleration-wait-attempt-1/replay.py",
+      "log": "schema-rejected-replay.log",
+      "result": "failed-preserved",
+      "reason": "Initial plan-only candidate exposed existing progress-only schema; no production dispatch. Exact script and rejected plan retained."
+    },
+    {
+      "command": "python3 joystick-games/kart-royale/docs/windows-acceleration-wait-attempt-1/replay.py",
+      "log": "replay-after-schema.log",
+      "result": "passed",
+      "testCount": 2,
+      "seconds": 0.437,
+      "scope": "Exact original report snapshots through real helper with inert command adapter. Both original raw=true/semantic=false snapshots and final speed0.457 remain failed; no synthetic native success, no game/model/clock change, no SDK socket."
+    },
+    {
+      "command": "python3 joystick-games/shared/windows/tests/gameplay.test.py",
+      "log": "gameplay-tests.log",
+      "result": "passed",
+      "testCount": 16,
+      "seconds": 6.88,
+      "scope": "Existing14 boundaries plus2 added vector/schema tests; synthetic fixture clock is unit-test-only. No real process, package or original game clock changed."
+    }
+  ],
+  "originalSamplesReplay": "replay-observations.json",
+  "invariants": {
+    "originalTimeoutSeconds": 60,
+    "originalHoldMs": 3500,
+    "originalSpeedGt": 1,
+    "motionPath": "gameplay.position",
+    "motionOperation": "changed",
+    "mainTsOriginalClockByteIdentical": {
+      "bytes": 52111,
+      "sha256": "9dd91077642b48ab39b3516cff3218351bed85f87817057f4653761024ebd188"
+    },
+    "sharedRunnerByteIdentical": {
+      "bytes": 38128,
+      "sha256": "4d967b72972782acf9210415b757796c540039f37c00c33a99f16eb6a163091c"
+    },
+    "originalSharedTestsAstUnchanged": true,
+    "noRendererOrPhysicsOrHostOrApkChange": true,
+    "originalStepCount": 20,
+    "otherNineteenStepsUnchanged": true,
+    "allTwentyOriginalStepsExactAfterRemovingSingleOptIn": true
+  },
+  "pending": [
+    "Independent root/Host review",
+    "Actual Windows native run; later gameplay/pause/disconnect not yet accepted"
+  ],
+  "actions": {
+    "newNativeExecution": false,
+    "refOrWorkflowPost": false,
+    "signedPackageChanged": false,
+    "productionScope": "three listed QA files only"
+  }
+}

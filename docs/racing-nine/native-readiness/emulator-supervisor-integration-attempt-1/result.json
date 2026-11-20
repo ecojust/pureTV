@@ -1,0 +1,69 @@
+{
+  "scope": "Default-off QA integration and real local small ELF/process fixtures; no actual Android emulator executed",
+  "sourceFiles": [
+    {
+      "path": "joystick-games/tools/android-emulator-supervisor.py",
+      "bytes": 20509,
+      "sha256": "7822a7e077adbdcc187f437c651bf1a5c536093e28f10015423f414085cd17c1",
+      "copy": "executed-source/joystick-games/tools/android-emulator-supervisor.py"
+    },
+    {
+      "path": "joystick-games/qa/android/test_emulator_supervisor.py",
+      "bytes": 15863,
+      "sha256": "b87a0d47702e1abe763fcddc8cd64e6036564ca314181818f8ea0190eb790102",
+      "copy": "executed-source/joystick-games/qa/android/test_emulator_supervisor.py"
+    },
+    {
+      "path": ".github/workflows/joystick-catalog-android-runtime.yml",
+      "bytes": 25496,
+      "sha256": "582a5fe30c8d497ef1a4712fc99a89c5f2058526a209efd4a676b964cde75fa5",
+      "copy": "executed-source/.github/workflows/joystick-catalog-android-runtime.yml"
+    }
+  ],
+  "tests": {
+    "passed": true,
+    "count": 15,
+    "command": "TMPDIR=/dev/shm/racing-review-karts/countdown-schema-tests python3 -B joystick-games/qa/android/test_emulator_supervisor.py",
+    "log": "reviewed-source-tests.log"
+  },
+  "actionlint": {
+    "passed": true,
+    "command": "/dev/shm/racing-tooling/actionlint -shellcheck= .github/workflows/joystick-catalog-android-runtime.yml"
+  },
+  "embeddedPythonBlocksParsed": 6,
+  "diffCheckPassed": true,
+  "compilerVersion": "cc (Debian 14.2.0-19) 14.2.0",
+  "defaultEnabled": false,
+  "optInInput": "supervise_pon_emulator",
+  "exactOriginalArtifact": {
+    "game": "ponpoko-kart",
+    "batch": "racing-01",
+    "source": "8f283c73f52f857777306eafc88f710262367834",
+    "run": "44597115244",
+    "export": "4249f5c0ec3053a1dec652a7880a040e1bb143f0"
+  },
+  "existingBackroadOptInPreserved": true,
+  "emulatorArgsUnchanged": true,
+  "gameOrApkChanged": false,
+  "actualSdkTouchedLocally": false,
+  "nativeEmulatorRunPerformed": false,
+  "ciDispatched": false,
+  "rootCauseProven": false,
+  "guardDetails": [
+    "Exact default-off workflow selector and runtime environment guards reject other games/batches/original artifacts.",
+    "Original ELF retained at same-directory hard link, metadata/hash/mode recorded; atomic shim replacement and exact original restore.",
+    "Before AVD: original and wrapped -version require exit0, exact stdout/stderr equality, exact37.3.10.0/build16970787 and no timeout/truncation.",
+    "The upstream action catches pre-hook exceptions and may still try the restored original AVD; a mandatory assert-ready && gate prevents any QA on failed preparation.",
+    "Original argv0 and all AVD arguments are preserved and fixed. Whitelisted non-AVD queries exec the original directly.",
+    "Actual launcher child wait status is retained. QEMU exit remains null unless same PID/starttime and SDK-contained QEMU executable was observed. A forked launcher fixture remains unknown.",
+    "Original action stdout/stderr forwarding/listeners are retained; archived files each cap1MiB while remaining bytes are drained and hashed.",
+    "Existing host-kernel/environment diagnostics remain unchanged; no -show-kernel, GPU or RAM changes.",
+    "Supervisor cleanup signals require matching PID/starttime/executableSHA/command-lineSHA; signal escalation and cleanup intervention are explicit.",
+    "Installed SDK restore executes in always step before evidence preservation and refuses unexpected entry or backup bytes."
+  ],
+  "limitations": [
+    "Actual Android launcher relocation/exec/fork behavior, native compatibility and actual emulator exit remain for root-controlled CI proof.",
+    "Query and signal tests use compiled small ELF fixtures, not the Android emulator.",
+    "SIGKILL of the supervisor itself or a hard runner/job termination can prevent a final report; no exit cause is inferred from that absence."
+  ]
+}

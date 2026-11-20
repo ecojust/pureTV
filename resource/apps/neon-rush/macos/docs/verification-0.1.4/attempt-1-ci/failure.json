@@ -1,0 +1,19 @@
+{
+  "status": "failed-before-packaging",
+  "runId": 43844671574,
+  "sourceCommit": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "workflowUrl": "https://github.com/ecojust/pureTV/actions/runs/43844671574",
+  "failedStep": "build: Test game rules and verify the committed generated bundle",
+  "reason": "runtime-hooks.test.mjs fixture copies tv.html but does not copy its new puretv-controller.js dependency. All three subtests report HTTP 404 browser console errors. Original fixture reproduced on Linux Chromium.",
+  "npmTests": {
+    "total": 56,
+    "passed": 50,
+    "failed": 4,
+    "skipped": 2
+  },
+  "failureCountExplanation": "Three failed subtests plus their parent group; no fourth independent failing case.",
+  "nativeValidationStarted": false,
+  "installPackagesExported": false,
+  "limitations": "This is CI failure/reproduction evidence, not a native Mac gameplay pass.",
+  "fixtureCorrection": "Added only puretv-controller.js to the existing fixture copy list; all three original subtests and parent group pass locally. No production or native acceptance change."
+}

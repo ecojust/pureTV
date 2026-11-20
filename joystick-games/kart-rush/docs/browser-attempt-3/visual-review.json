@@ -1,0 +1,99 @@
+{
+  "overallAcceptance": true,
+  "scope": "Synthetic browser adapter, HUD and menu acceptance; no native/device or all-items/all-races claim.",
+  "method": "All nine original PNGs opened using view_image, matched to report states and frozen hashes.",
+  "captures": [
+    {
+      "file": "hello-960.png",
+      "sha256": "e6e0b630a106cd2a6a2be6800ccf47a7db45e25e03896a4bd18d330743aa7359",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "note": "Original keyboard and name field, focus ring, help and supplied ID are visible without overlap."
+    },
+    {
+      "file": "menu-960.png",
+      "sha256": "c3247bd39e543f14ee6a252972e81ccd21ad6b05a0619895900e5b2a4391ff06",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "note": "Original title, race mode/start action and track/driver/kart tiles fit the reserved menu width; supplied ID readable."
+    },
+    {
+      "file": "driving-960.png",
+      "sha256": "cf2ff3d88ab3b2251dd1786cd6d05ccda92402bdf05d12e8727b7ec02d7d5368",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "note": "Actual explicit UP acceleration after original countdown. Original item inventory is restored at bottom-right, with A/B help; speed, rear-view, map and supplied ID remain visible."
+    },
+    {
+      "file": "reset-960.png",
+      "sha256": "5d7226e65ea88c40aa3a34acb3b339782a9bf9b37ed0e93a30dffdc5c622ad7d",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "note": "Original X reset has returned the car to the track. Translucent car is original temporary ghost protection after reset, not a rendering defect. Empty item inventory remains visible."
+    },
+    {
+      "file": "help-960.png",
+      "sha256": "9a27c4014715c4f893a40cbbd663c5085ffb75137c3e1381cf189ae070798683",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "note": "Original help tabs and controls rendered; focus on original close button and supplied ID visible."
+    },
+    {
+      "file": "pause-960.png",
+      "sha256": "898f8c65883197e9eb4d4d9e0a8e1677a4186274aea6c273d0aaa1af40a41c7b",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "note": "Original pause menu and focused Resume visible; primary buttons do not overlap footer or ID card."
+    },
+    {
+      "file": "focus-pause-1280.png",
+      "sha256": "2f093f392ef2f6b05b38496a1f38d10bb2836a2c8432217e8198d3e6643828bb",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "note": "Lifecycle suspension overlay gives deliberate START/A resume instruction; supplied ID and connection details remain visible."
+    },
+    {
+      "file": "playing-1280.png",
+      "sha256": "5744eb08cce632ef4f6bb0ee0fd5d69728e538bc0ff9952a58a0709d4c812068",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "note": "Original race is playing and unpaused after deliberate focus resume, START held across at least three consumed frames; speed 4.4397 in snapshot. Original reset ghost transparency remains. Item inventory and supplied ID fit clearly."
+    },
+    {
+      "file": "menu-1280.png",
+      "sha256": "a00791456a9641f01557e96adad9eb449a4cbfc9f1a26497463ffebe9624f007",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "note": "Original title/setup cards fit reserved menu width; actual supplied ID and all connection detail lines visible."
+    }
+  ],
+  "limitations": [
+    "Synthetic PureGameHost input with ID Kart-Synthetic-18; not a real phone/SDK session or installed package.",
+    "Short manual driving, reset and lifecycle observations; no complete lap, race or Grand Prix acceptance.",
+    "The optional 30-second normal UP pickup observation reached no ready item. Inventory visibility is verified, but actual item pickup/use effect is not claimed.",
+    "At 960x540, secondary connection service/address/port details do not all fit the side panel scroll area; full ID stays readable.",
+    "SwiftShader timing is not TV performance.",
+    "Upstream game license unresolved; dependency MIT licenses do not grant game redistribution rights."
+  ],
+  "nativeSdkTested": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

@@ -1,0 +1,105 @@
+{
+  "createdAt": "2026-11-19T21:24:56.147942+00:00",
+  "baselineCommit": "f228b048b6a573a7c195ab5958d0a661fe437969",
+  "scope": "QA-only original signed APK reuse; no game, host, observer, plan or package changes; no native run/dispatch",
+  "tests": {
+    "allShared": 53,
+    "newMenuTapCases": 9,
+    "passed": true,
+    "command": "TMPDIR=/dev/shm/racing-review-karts/countdown-schema-tests python3 joystick-games/qa/android/test_runner.py",
+    "kind": "Real SDK/TCP ACK fixture and synthetic observations; existing HTTP/process/contract tests retained"
+  },
+  "unchangedAcceptanceMethodsByAST": [
+    "__init__",
+    "command",
+    "snapshot",
+    "wait",
+    "frame_advanced",
+    "wait_fresh",
+    "record",
+    "passed",
+    "save",
+    "heartbeat",
+    "button",
+    "press_observed",
+    "release_observed",
+    "tap",
+    "release",
+    "wait_sent_ack",
+    "game",
+    "button_state",
+    "paused",
+    "native_buttons",
+    "full_id_text",
+    "visible_ids",
+    "single_seat_session",
+    "reject_second_controller",
+    "capture",
+    "setup",
+    "scenarios",
+    "validate_catalog_snapshot",
+    "catalog_playing",
+    "catalog_pause",
+    "ack_barrier",
+    "cf_gameplay",
+    "qq_gameplay",
+    "cleanup"
+  ],
+  "catalogHeldPathEqualsOriginalAfterRemovingOnlyMenuTapBranch": true,
+  "noEpochOrNativeButtonCountersInOriginal": true,
+  "nativeButtonCounterClaims": false,
+  "exactOriginalSourcesUnchanged": [
+    {
+      "path": "joystick-games/night-racer/src/src/main.js",
+      "sourceCommit": "315f8889ea677ed6a9211bf7d66c8c78dff57f01",
+      "bytes": 98145,
+      "sha256": "ad1edb9d785799db5cd357d614005d2e044b79bed7c7635e019e693e65b49004",
+      "workingTreeEqualsOriginal": true
+    },
+    {
+      "path": "joystick-games/night-racer/src/src/tv-adapter.js",
+      "sourceCommit": "315f8889ea677ed6a9211bf7d66c8c78dff57f01",
+      "bytes": 7463,
+      "sha256": "e6feee4583e79cebcabf86a038699ca7062cd960d7a732386c5817ed28164d23",
+      "workingTreeEqualsOriginal": true
+    },
+    {
+      "path": "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java",
+      "sourceCommit": "315f8889ea677ed6a9211bf7d66c8c78dff57f01",
+      "bytes": 11264,
+      "sha256": "c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305",
+      "workingTreeEqualsOriginal": true
+    },
+    {
+      "path": "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java",
+      "sourceCommit": "315f8889ea677ed6a9211bf7d66c8c78dff57f01",
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+      "workingTreeEqualsOriginal": true
+    },
+    {
+      "path": "joystick-games/shared/web/input.js",
+      "sourceCommit": "315f8889ea677ed6a9211bf7d66c8c78dff57f01",
+      "bytes": 8423,
+      "sha256": "d33a301f082f0100db81c055b4773e2947cf4c166f76f68dfe06344d5a4660f6",
+      "workingTreeEqualsOriginal": true
+    }
+  ],
+  "originalReportsRemainFailed": true,
+  "nativeAcceptancePassed": false,
+  "files": [
+    {
+      "path": "joystick-games/qa/android/run.py",
+      "bytes": 61055,
+      "sha256": "b9ac22449b09c6251319f9ee831d8c96c76259e982a3368b0f13bea71dcf29ce",
+      "copy": "executed-source/joystick-games/qa/android/run.py"
+    },
+    {
+      "path": "joystick-games/qa/android/test_runner.py",
+      "bytes": 55943,
+      "sha256": "1d845d03f36a7fff8e2f6861ff404aaef1fdd1c0983732af80fd24ad9a23d0be",
+      "copy": "executed-source/joystick-games/qa/android/test_runner.py"
+    }
+  ],
+  "initialTestNote": "Initial 8 new cases passed but immediate fixture teardown emitted socket ResourceWarnings in tests not sending input; final setup waits for original SDK handshake ACK before use/teardown. Final 53 tests passed without that warning; initial log retained."
+}

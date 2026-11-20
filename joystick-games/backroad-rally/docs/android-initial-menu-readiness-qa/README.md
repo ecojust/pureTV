@@ -1,0 +1,1 @@
+Backroad 原 run 44625676430 的两个模式已正常安装新 target35 APK，随后旧 QA 将 renderer=loading / frames=0 / poll=1 当作初始菜单，立即严格校验失败。本修改仅在同一个 150 秒预算内等待实际期望 renderer、正整数 render frames 和 poll，再执行未改动的严格校验。原错误、设备丢失和最后 loading 状态仍记录。60 项测试通过；不修改游戏、APK、时钟、玩法或原失败报告。真实 query 导航、target35 全屏布局及游戏运行仍待原包复验。

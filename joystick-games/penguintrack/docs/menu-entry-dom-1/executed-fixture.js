@@ -1,0 +1,6 @@
+import Menu from './src/js/game/menu.js';import {installTV} from './src/js/tv-input.js';import {openModal} from './src/js/game/ui.js';
+document.getElementById('boot').hidden=true;document.getElementById('boot').remove();
+window.__calls=[];window.__device={connected:false,buttons:{},pulse:false,seq:0,consumed:0};
+window.PureGameHost={snapshot(){const d=window.__device,buttons={...d.buttons};if(d.pulse){d.buttons={};d.pulse=false;d.consumed=d.seq;}return JSON.stringify({players:d.connected?[{id:1,connected:true,transport:'wifi',controllerId:'Penguin-DOM-42',session:'fixture-one',buttons}]:[]})},getInfo(){return JSON.stringify({wifiController:{port:63485,serviceName:'Penguintrack UI fixture',addresses:['127.0.0.1']}})}};
+const app={ui:document.getElementById('ui'),screenId:'menu',screen:Menu,settings:{showGhost:true},backdrop:{start(){},track:null},controls:{tv:{},cancelAll(){},clearTV(){},setTV(){}},setMusic(){},goto(name){window.__calls.push(name)},modal:openModal,toast(){}};
+app.tv=installTV(app);Menu.enter(app);function frame(now){app.tv.poll(now);requestAnimationFrame(frame)}requestAnimationFrame(frame);

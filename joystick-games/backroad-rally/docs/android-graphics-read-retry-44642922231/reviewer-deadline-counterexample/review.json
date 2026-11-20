@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "reviewStatus": "blocking-absolute-read-deadline-not-enforced",
+  "sourceSha256": "fafbfa8a8e89a64cdfd93c494c34bb19a912634cc3f8e5916772860cde6eb443",
+  "existingTestSuiteRerun": false,
+  "newIsolatedRealHttpCounterexample": true,
+  "finding": "urlopen timeout and response.read budget are socket inactivity limits. Original step deadline is checked only after the body completes; real one-byte/10ms body returned after 142ms despite remaining25ms, then raised; self.last had already been assigned. This does not change or invalidate the original v2 failure evidence.",
+  "otherReviewedBoundaries": "menu AST only changes its read call; original SDK down/release/ACK/predicates/two subsequent fresh polls preserved; declared retry whitelist excludes HTTP/JSON/object errors.",
+  "files": {
+    "reproduce.py": {
+      "bytes": 2071,
+      "sha256": "9ba5ad0cfd43fbcd990df2defccea4c222097d8385a1b81877fff987a246f41e"
+    },
+    "result.json": {
+      "bytes": 1053,
+      "sha256": "4eaa7fd8bb0bd9ca38a35191e9788315be89b6fc877e14a4a28aea331738d440"
+    },
+    "observer-http.jsonl": {
+      "bytes": 243,
+      "sha256": "9080d74c772bba950576bd96fc681bf37b2c5ef4f7f7924726a82a1eee68ddb3"
+    },
+    "reviewed-driver.py": {
+      "bytes": 30880,
+      "sha256": "fafbfa8a8e89a64cdfd93c494c34bb19a912634cc3f8e5916772860cde6eb443"
+    }
+  },
+  "requestedResolution": "Enforce absolute deadline throughout HTTP transport before returning or updating last; preserve current failure and counterexample, then refreeze the same two-source scope.",
+  "noAndroidOrSdkRun": true,
+  "noPost": true
+}

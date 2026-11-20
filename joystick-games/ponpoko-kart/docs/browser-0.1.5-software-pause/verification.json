@@ -1,0 +1,375 @@
+{
+  "originalApkSha256": "192ebd9366bce0447b0d35df22a326a93e230fc980bf2bdb3e5db7a30e0fa82c",
+  "candidateSource": "53318c14d34a510faec8717dba09974b7f2a5ca7",
+  "candidateBase": "e491aad630fb9b02f2cfb7649c278c74ae285127",
+  "candidateGameJsSha256": "c4fdc50c9b7cf3a5dcaf65d0b26f9752d523aa0205aea1c5a02869134dbaa695",
+  "environment": {
+    "browser": "Chromium 156.0.8078.79 built on Debian GNU/Linux 13 (trixie)",
+    "gl": "ANGLE (Mesa, llvmpipe (LLVM 19.1.7 256 bits), OpenGL ES 3.2)",
+    "viewportSequence": [
+      [
+        480,
+        270
+      ],
+      [
+        640,
+        360
+      ]
+    ],
+    "deviceScaleFactor": 1,
+    "halfFloatRenderTargets": "extension-masked to use the shipped RGBA8 path",
+    "source": "Unmodified web assets from the signed 0.1.1 APK for the historical case. A separate development distribution based on the 0.1.3 Web sources for the proposed change. Timing comes from real browser wall time on a shared host."
+  },
+  "testMethod": "Browser-provided PureGameHost snapshots carry the actual adapter input. Native TCP delivery is covered by the separate Android report. The test drove menus, race and START with the adapter. Escape used a real browser keyboard event. Read-only game snapshots and WebGL draw counts were recorded. No game model writes or clock overrides.",
+  "originalWhileStartHeld": {
+    "from": "start-held-paused",
+    "to": "same-start-remains-paused",
+    "ms": 58915.4,
+    "controllerPolls": 6,
+    "completedSceneFrames": 6,
+    "webGLDrawCalls": 16626,
+    "fromSimulationTick": 5.400000000000058,
+    "toSimulationTick": 5.400000000000058,
+    "fromWorldTime": 5.899999999999995,
+    "toWorldTime": 5.899999999999995
+  },
+  "candidateWhileStartHeld": {
+    "from": "start-held-paused",
+    "to": "same-start-remains-paused",
+    "ms": 1829.5,
+    "controllerPolls": 7,
+    "completedSceneFrames": 0,
+    "webGLDrawCalls": 0,
+    "fromSimulationTick": 5.400000000000058,
+    "toSimulationTick": 5.400000000000058,
+    "fromWorldTime": 5.999999999999995,
+    "toWorldTime": 5.999999999999995
+  },
+  "candidateSettledPause": {
+    "from": "pause-settled",
+    "to": "pause-4-polls",
+    "ms": 490.4,
+    "controllerPolls": 9,
+    "completedSceneFrames": 0,
+    "webGLDrawCalls": 0,
+    "fromSimulationTick": 5.400000000000058,
+    "toSimulationTick": 5.400000000000058,
+    "fromWorldTime": 5.999999999999995,
+    "toWorldTime": 5.999999999999995
+  },
+  "candidateResize": {
+    "from": "pause-4-polls",
+    "to": "resized-pause",
+    "ms": 6516.6,
+    "controllerPolls": 12,
+    "completedSceneFrames": 1,
+    "webGLDrawCalls": 1933,
+    "fromSimulationTick": 5.400000000000058,
+    "toSimulationTick": 5.400000000000058,
+    "fromWorldTime": 5.999999999999995,
+    "toWorldTime": 5.999999999999995
+  },
+  "candidateAfterResize": {
+    "from": "resized-pause",
+    "to": "released-remains-paused",
+    "ms": 6231.6,
+    "controllerPolls": 11,
+    "completedSceneFrames": 0,
+    "webGLDrawCalls": 0,
+    "fromSimulationTick": 5.400000000000058,
+    "toSimulationTick": 5.400000000000058,
+    "fromWorldTime": 5.999999999999995,
+    "toWorldTime": 5.999999999999995
+  },
+  "states": [
+    {
+      "label": "driving",
+      "stage": "playing",
+      "paused": false,
+      "screen": "racing",
+      "tick": 3.9999999999999885,
+      "worldTime": 4.6,
+      "speed": 13.251791181861288,
+      "rawStart": false,
+      "frames": 73,
+      "polls": 73,
+      "errors": []
+    },
+    {
+      "label": "action-help",
+      "stage": "playing",
+      "paused": false,
+      "screen": "racing",
+      "tick": 5.200000000000048,
+      "worldTime": 5.799999999999995,
+      "speed": 18.621866111277875,
+      "rawStart": false,
+      "frames": 85,
+      "polls": 85,
+      "errors": []
+    },
+    {
+      "label": "start-held-paused",
+      "stage": "paused",
+      "paused": true,
+      "screen": "pause",
+      "tick": 5.400000000000058,
+      "worldTime": 5.999999999999995,
+      "speed": 19.292868686214735,
+      "rawStart": true,
+      "frames": 87,
+      "polls": 90,
+      "errors": []
+    },
+    {
+      "label": "same-start-remains-paused",
+      "stage": "paused",
+      "paused": true,
+      "screen": "pause",
+      "tick": 5.400000000000058,
+      "worldTime": 5.999999999999995,
+      "speed": 19.292868686214735,
+      "rawStart": true,
+      "frames": 87,
+      "polls": 97,
+      "errors": []
+    },
+    {
+      "label": "resized-pause",
+      "stage": "paused",
+      "paused": true,
+      "screen": "pause",
+      "tick": 5.400000000000058,
+      "worldTime": 5.999999999999995,
+      "speed": 19.292868686214735,
+      "rawStart": true,
+      "frames": 88,
+      "polls": 133,
+      "errors": []
+    },
+    {
+      "label": "released-remains-paused",
+      "stage": "paused",
+      "paused": true,
+      "screen": "pause",
+      "tick": 5.400000000000058,
+      "worldTime": 5.999999999999995,
+      "speed": 19.292868686214735,
+      "rawStart": false,
+      "frames": 88,
+      "polls": 144,
+      "errors": []
+    },
+    {
+      "label": "fresh-start-resumes",
+      "stage": "playing",
+      "paused": false,
+      "screen": "racing",
+      "tick": 6.200000000000098,
+      "worldTime": 6.799999999999992,
+      "speed": 21.254828441475315,
+      "rawStart": false,
+      "frames": 96,
+      "polls": 153,
+      "errors": []
+    },
+    {
+      "label": "escape-pauses",
+      "stage": "paused",
+      "paused": true,
+      "screen": "pause",
+      "tick": 6.300000000000103,
+      "worldTime": 6.8999999999999915,
+      "speed": 21.37396354410243,
+      "rawStart": false,
+      "frames": 97,
+      "polls": 157,
+      "errors": []
+    },
+    {
+      "label": "lost-facing-pause",
+      "stage": "paused",
+      "paused": true,
+      "screen": "pause",
+      "tick": 6.300000000000103,
+      "worldTime": 6.8999999999999915,
+      "speed": 21.37396354410243,
+      "rawStart": null,
+      "frames": 97,
+      "polls": 160,
+      "errors": []
+    },
+    {
+      "label": "reconnected-start-held",
+      "stage": "paused",
+      "paused": true,
+      "screen": "pause",
+      "tick": 6.300000000000103,
+      "worldTime": 6.8999999999999915,
+      "speed": 21.37396354410243,
+      "rawStart": true,
+      "frames": 97,
+      "polls": 166,
+      "errors": []
+    },
+    {
+      "label": "escape-resumes",
+      "stage": "playing",
+      "paused": false,
+      "screen": "racing",
+      "tick": 6.400000000000108,
+      "worldTime": 6.999999999999991,
+      "speed": 21.4224833809089,
+      "rawStart": false,
+      "frames": 98,
+      "polls": 180,
+      "errors": []
+    },
+    {
+      "label": "resumed-simulation",
+      "stage": "playing",
+      "paused": false,
+      "screen": "racing",
+      "tick": 6.800000000000128,
+      "worldTime": 7.39999999999999,
+      "speed": 21.499518312158596,
+      "rawStart": false,
+      "frames": 102,
+      "polls": 184,
+      "errors": []
+    }
+  ],
+  "visualCheck": {
+    "pausedDrawnFrame": 87,
+    "resizeDrawnFrame": 88,
+    "pixelDifferenceBoundsBetweenPausedScreens": [
+      165,
+      89,
+      311,
+      130
+    ],
+    "description": "The two 480x270 views differ only inside the animated pause-menu area. The 640x360 screenshot displays all three pause actions over the original track. The resumed screenshot shows the player kart, rivals, track and lap HUD.",
+    "backdropRegionObservations": {
+      "original-0.1.1-paused.png": {
+        "region": [
+          0,
+          45,
+          120,
+          225
+        ],
+        "numberOfColors": 2805,
+        "nonBlackPixels": 21600,
+        "pixels": 21600,
+        "rgbSha256": "6a9ab0e58e3ce28b38436f66002280ceb3dcfffaabdfbf5cb50a861236f3512b"
+      },
+      "paused.png": {
+        "region": [
+          0,
+          45,
+          120,
+          225
+        ],
+        "numberOfColors": 2907,
+        "nonBlackPixels": 21600,
+        "pixels": 21600,
+        "rgbSha256": "475d0c37349a6407b569e68f748724b884e8dd7dcd6379656dc063a570a4bf65"
+      },
+      "paused-still.png": {
+        "region": [
+          0,
+          45,
+          120,
+          225
+        ],
+        "numberOfColors": 2907,
+        "nonBlackPixels": 21600,
+        "pixels": 21600,
+        "rgbSha256": "475d0c37349a6407b569e68f748724b884e8dd7dcd6379656dc063a570a4bf65"
+      },
+      "paused-resized.png": {
+        "region": [
+          0,
+          60,
+          160,
+          300
+        ],
+        "numberOfColors": 3502,
+        "nonBlackPixels": 38400,
+        "pixels": 38400,
+        "rgbSha256": "3503200bf0cf6d6c69b41cef13314d970f848218bdfb8edc2447628acae213a6"
+      },
+      "resumed.png": {
+        "region": [
+          0,
+          60,
+          160,
+          300
+        ],
+        "numberOfColors": 7340,
+        "nonBlackPixels": 38397,
+        "pixels": 38400,
+        "rgbSha256": "c5fcc1c8667d89938fe8463c55325819b456c97b2703072f950fc0366af64472"
+      }
+    }
+  },
+  "images": [
+    {
+      "path": "original-0.1.1-paused.png",
+      "sha256": "a3c0c377d8f6b8ca22394f5f93fb4d9a3eaac7ab16881339243ece1632537a7b",
+      "bytes": 103253,
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "paused.png",
+      "sha256": "b1925a0891c3ddbdd23ee933fce95f97ab2f01e701c6d9178a7b3cc6b1a1d78a",
+      "bytes": 103605,
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "paused-still.png",
+      "sha256": "b0fafcbce0ca88bf2155b768de1e501f55833caf4886c2f476bcb43cc1525548",
+      "bytes": 103963,
+      "dimensions": [
+        480,
+        270
+      ]
+    },
+    {
+      "path": "paused-resized.png",
+      "sha256": "8752f906449af12d7e413a9280f64e607c047b87dad1e566544f006a8b34d8a4",
+      "bytes": 183604,
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "resumed.png",
+      "sha256": "6581f387ab4ad98a6ed27e7a059a262e424721275b0bb5deeccbbfc7bd57ecc8",
+      "bytes": 333476,
+      "dimensions": [
+        640,
+        360
+      ]
+    }
+  ],
+  "automatedTestsPassed": 12,
+  "exactDistCheck": true,
+  "frozen014ProductionBaseline": {
+    "runId": 44689241006,
+    "sourceCommit": "3ce7a4c832fb37cd96e8448044d065ec3d31384e",
+    "sourceTree": "f168d1aceb396982645e4d60725aa2770c203cc3",
+    "distTree": "d3103cac5025cec96b6d8c26017f7572908801fc",
+    "gameJsSha256": "cb67b7a18831b503adc85c0def19c45121f51345941789379ec24f3bdaa18c9a",
+    "sameSrcAndDistGitTreesAsCandidateBase": true
+  },
+  "releaseGameSource": "ab7f60aa630f88aa810e7705730ac1fbf630687b",
+  "androidBuildSource": "8cde079acd8a1294b48a4e37654d2e0307178224",
+  "androidNativeRun": "https://github.com/ecojust/pureTV/actions/runs/44691399510"
+}

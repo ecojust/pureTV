@@ -1,0 +1,240 @@
+name: README games controller Android packages
+
+on:
+  push:
+    branches: [feat/readme-games-controller]
+    paths:
+      - '.github/workflows/controller-games.yml'
+      - 'tools/controller-release.py'
+      - 'tools/tests/test_controller_*.py'
+      - 'tools/controller-runtime-inputs.py'
+      - 'tools/controller-emulator-batch.py'
+      - 'tools/readme-controller-qa/**'
+      - 'resource/game-kit/android/**'
+      - 'resource/game-kit/legacy-controller-native/**'
+      - 'resource/game-kit/legacy-controller-web/**'
+      - 'resource/apps/**/game.json'
+      - 'resource/apps/**/src/**'
+      - 'resource/apps/**/build.gradle'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  shared:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platforms;android-35 build-tools;34.0.0
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Verify release artifact rejection boundaries
+        run: python3 -m unittest discover -s tools/tests -p 'test_controller_*.py' -v
+      - name: Test and lint the shared Android controller host
+        run: |
+          set -euo pipefail
+          resource/launcher/puretv/gradlew --no-daemon --project-dir resource/game-kit/android testDebugUnitTest lintDebug 2>&1 | tee "$RUNNER_TEMP/shared-host.log"
+      - name: Build read-only instrumentation observers for all twenty games
+        run: |
+          set -euo pipefail
+          for slug in $(python3 tools/controller-release.py list --all); do
+            python3 tools/readme-controller-qa/android-observer/build.py --game "$slug" --output "$RUNNER_TEMP/controller-observers-unsigned/$slug" --sdk "$ANDROID_HOME" --jdk "$JAVA_HOME"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: controller-observers-unsigned
+          path: ${{ runner.temp }}/controller-observers-unsigned/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: controller-shared-reports
+          path: |
+            resource/game-kit/android/build/reports/
+            resource/game-kit/android/build/test-results/
+            ${{ runner.temp }}/shared-host.log
+          if-no-files-found: warn
+
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [arcade, worlds]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platforms;android-35 build-tools;34.0.0
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Prepare existing Jackal artwork and preview fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends fonts-wqy-zenhei
+          fc-cache -f
+          if [ '${{ matrix.group }}' = arcade ]; then
+            python3 resource/apps/jackal/tools/extract-artwork.py --output "$RUNNER_TEMP/jackal-art"
+          fi
+      - name: Check game models and generated resources
+        env:
+          CONTROLLER_GROUP: ${{ matrix.group }}
+        run: |
+          python3 - <<'PY'
+          import os, pathlib, subprocess, sys
+          slugs=subprocess.check_output(['python3','tools/controller-release.py','list','--group',os.environ['CONTROLLER_GROUP']],text=True).split()
+          for slug in slugs:
+              tests=sorted(pathlib.Path('resource/apps',slug,'tests').glob('*.test.cjs'))
+              assert tests, slug
+              subprocess.run(['node','--test',*map(str,tests)],check=True)
+          if 'jackal' in slugs:
+              subprocess.run(['node','resource/apps/jackal/tools/build-levels.cjs','--check'],check=True)
+          if 'alien-shooter' in slugs:
+              subprocess.run(['node','resource/apps/alien-shooter/tools/bake-materials.mjs','--verify'],check=True)
+          PY
+      - name: Build unsigned release APKs, native tests and lint
+        env:
+          CONTROLLER_GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          mapfile -t targets < <(python3 - <<'PY'
+          import os, subprocess
+          slugs=subprocess.check_output(['python3','tools/controller-release.py','list','--group',os.environ['CONTROLLER_GROUP']],text=True).split()
+          for slug in slugs:
+              for task in ('verifyReleaseSize','testDebugUnitTest','lintDebug'):
+                  print(':'+slug+':'+task)
+          PY
+          )
+          cd resource/launcher/puretv
+          ./gradlew --no-daemon --continue "-PjackalArtworkDir=$RUNNER_TEMP/jackal-art" "${targets[@]}" 2>&1 | tee "$RUNNER_TEMP/controller-${CONTROLLER_GROUP}-build.log"
+      - name: Bind unsigned APKs to source and previous release certificates
+        run: >-
+          python3 tools/controller-release.py stage --group '${{ matrix.group }}'
+          --build-tools "$ANDROID_HOME/build-tools/34.0.0"
+          --output "$RUNNER_TEMP/controller-unsigned"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: controller-unsigned-${{ matrix.group }}
+          path: ${{ runner.temp }}/controller-unsigned/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: controller-build-reports-${{ matrix.group }}
+          path: |
+            resource/apps/*/build/reports/
+            resource/apps/*/build/test-results/
+            ${{ runner.temp }}/controller-*-build.log
+          if-no-files-found: warn
+
+  sign:
+    needs: [shared, build]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: build-tools;34.0.0
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: controller-unsigned-*
+          path: ${{ runner.temp }}/controller-unsigned
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: controller-observers-unsigned
+          path: ${{ runner.temp }}/controller-observers-unsigned
+      - name: Sign with the existing certificate and verify all asset bytes
+        env:
+          PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
+          PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
+        run: >-
+          python3 tools/controller-release.py sign
+          --input "$RUNNER_TEMP/controller-unsigned"
+          --output "$RUNNER_TEMP/controller-release"
+          --observers "$RUNNER_TEMP/controller-observers-unsigned"
+          --observer-output "$RUNNER_TEMP/controller-observers-signed"
+          --build-tools "$ANDROID_HOME/build-tools/34.0.0"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: controller-signed-legacy-games
+          path: ${{ runner.temp }}/controller-release/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: controller-observers-signed
+          path: ${{ runner.temp }}/controller-observers-signed/
+          if-no-files-found: error
+
+  export:
+    if: always()
+    needs: [shared, build, sign]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: build-tools;34.0.0
+      - uses: actions/download-artifact@v4
+        if: needs.sign.result == 'success'
+        with:
+          name: controller-signed-legacy-games
+          path: ${{ runner.temp }}/controller-export-input/release
+      - uses: actions/download-artifact@v4
+        if: needs.sign.result == 'success'
+        with:
+          name: controller-observers-signed
+          path: ${{ runner.temp }}/controller-export-input/observers
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: controller-*-reports*
+          path: ${{ runner.temp }}/controller-export-input/reports
+      - name: Reverify packages and preserve all original reports
+        run: >-
+          python3 tools/controller-release.py export
+          --input "$RUNNER_TEMP/controller-export-input"
+          --output "$RUNNER_TEMP/controller-export"
+          --build-tools "$ANDROID_HOME/build-tools/34.0.0"
+          --build-result '${{ needs.build.result }}'
+          --sign-result '${{ needs.sign.result }}'
+      - name: Export to a new isolated branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          export_branch="build-assets/controller-games-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
+          test -z "$(git ls-remote --heads origin "refs/heads/$export_branch")"
+          git init --initial-branch "$export_branch" "$RUNNER_TEMP/controller-export"
+          git -C "$RUNNER_TEMP/controller-export" config user.name github-actions[bot]
+          git -C "$RUNNER_TEMP/controller-export" config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git -C "$RUNNER_TEMP/controller-export" add .
+          git -C "$RUNNER_TEMP/controller-export" commit -q -m "Controller game packages and evidence ${GITHUB_RUN_ID}"
+          gh auth setup-git
+          git -C "$RUNNER_TEMP/controller-export" remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          git -C "$RUNNER_TEMP/controller-export" push origin "HEAD:refs/heads/$export_branch"

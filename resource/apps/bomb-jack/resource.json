@@ -3,12 +3,12 @@
   "name": "Mighty Bomb Jack TV",
   "author": "ecojust / 桔子桑",
   "description": "16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流",
-  "version": "0.5.2",
+  "version": "0.5.4",
   "packageName": "com.ecojust.bombjacktv",
-  "versionCode": 4,
-  "apk": "bomb-jack-0.5.2.apk",
-  "apkBytes": 87476,
-  "sha256": "0bfe0f0c96f4d645cf12cca7e36eb8ec551cd17be9cae03cac4688f2dc855b98",
+  "versionCode": 6,
+  "apk": "bomb-jack-0.5.4.apk",
+  "apkBytes": 99837,
+  "sha256": "6c2cf1defa02263639e339d3067395df50c0b88cd823b6a439a38344b91b0583",
   "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
   "supportsLayoutJson": false,
   "languages": [
@@ -16,18 +16,138 @@
     "en"
   ],
   "cover": "thumb.png",
-  "coverSource": "Actual bundled game page rendered in Chromium with Chinese locale and a simulated native room bridge; not a physical TV capture",
+  "coverSource": "Unmodified connected-controller screenshot of this signed APK running in an Android TV emulator.",
   "license": "MIT (original application code, artwork and synthesized audio)",
-  "sourceCommit": "0752b658aecbb1322cb7294e3176500639db1b54",
-  "buildRun": "https://github.com/ecojust/pureTV/actions/runs/40843467072",
+  "sourceCommit": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "buildRun": "https://github.com/ecojust/pureTV/actions/runs/43844665851",
   "assetNotices": [
     "docs/reference.md"
   ],
   "romIncluded": false,
   "verification": {
-    "sourceAssetsMatchApk": true,
-    "checkedSourceAssetFiles": 12,
+    "status": "passed",
+    "scope": "controller client status acceptance",
     "signatureVerified": true,
-    "physicalTvTested": false
+    "sourceAssetsMatchApk": true,
+    "inPlaceUpgradeInstalled": true,
+    "controllerClientStatusAcceptancePassed": true,
+    "fullGameplayAcceptancePerformedInThisUpdate": false,
+    "actualAndroidEmulator": true,
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "physicalEsp32Tested": false,
+    "verificationReport": "docs/releases/0.5.4/verification.json"
+  },
+  "minSdk": 26,
+  "wifiController": {
+    "protocol": "puretv-tcp-jsonl-v1",
+    "defaultPort": 63485,
+    "discovery": "_puretv._tcp",
+    "maxPlayers": 2,
+    "buttonMapping": "A/X primary, B secondary, Y SELECT",
+    "guide": "../../../docs/readme-controller-support/README.md",
+    "clientIdentityDisplay": true,
+    "signalStrength": "Unavailable: current controller protocol does not report RSSI; signal strength is not displayed."
+  },
+  "previousReleases": [
+    {
+      "kind": "app",
+      "name": "Mighty Bomb Jack TV",
+      "author": "ecojust / 桔子桑",
+      "description": "16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流",
+      "version": "0.5.2",
+      "packageName": "com.ecojust.bombjacktv",
+      "versionCode": 4,
+      "apk": "bomb-jack-0.5.2.apk",
+      "apkBytes": 87476,
+      "sha256": "0bfe0f0c96f4d645cf12cca7e36eb8ec551cd17be9cae03cac4688f2dc855b98",
+      "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+      "supportsLayoutJson": false,
+      "languages": [
+        "zh",
+        "en"
+      ],
+      "cover": "docs/controller-update-baseline/0.5.2/thumb.png",
+      "coverSource": "Actual bundled game page rendered in Chromium with Chinese locale and a simulated native room bridge; not a physical TV capture",
+      "license": "MIT (original application code, artwork and synthesized audio)",
+      "sourceCommit": "0752b658aecbb1322cb7294e3176500639db1b54",
+      "buildRun": "https://github.com/ecojust/pureTV/actions/runs/40843467072",
+      "assetNotices": [
+        "docs/reference.md"
+      ],
+      "romIncluded": false,
+      "verification": {
+        "sourceAssetsMatchApk": true,
+        "checkedSourceAssetFiles": 12,
+        "signatureVerified": true,
+        "physicalTvTested": false
+      },
+      "metadata": "docs/controller-update-baseline/0.5.2/resource.json"
+    },
+    {
+      "kind": "app",
+      "name": "Mighty Bomb Jack TV",
+      "author": "ecojust / 桔子桑",
+      "description": "16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流",
+      "version": "0.5.3",
+      "packageName": "com.ecojust.bombjacktv",
+      "versionCode": 5,
+      "apk": "bomb-jack-0.5.3.apk",
+      "apkBytes": 99837,
+      "sha256": "8e576e2705890c509b5d9cbf986c02528f8fe807ec4789380fd589b0acdfca6e",
+      "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+      "supportsLayoutJson": false,
+      "languages": [
+        "zh",
+        "en"
+      ],
+      "cover": "docs/controller-status-baseline/0.5.3/thumb.png",
+      "coverSource": "Unmodified menu screenshot of this exact signed APK running in an Android TV emulator; not a physical TV capture.",
+      "license": "MIT (original application code, artwork and synthesized audio)",
+      "sourceCommit": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "buildRun": "https://github.com/ecojust/pureTV/actions/runs/43733343883",
+      "assetNotices": [
+        "docs/reference.md"
+      ],
+      "romIncluded": false,
+      "verification": {
+        "status": "passed",
+        "acceptanceMode": "complete_android_acceptance",
+        "sourceAssetsMatchApk": true,
+        "checkedSourceAssetFiles": 13,
+        "signatureVerified": true,
+        "inPlaceUpgradeInstalled": true,
+        "actualAndroidEmulator": true,
+        "androidControllerAcceptancePassed": true,
+        "androidControllerAcceptanceComplete": true,
+        "officialSdkAndroidTestsPassed": 9,
+        "officialSdkTestsPassed": 9,
+        "officialSdkTestEnvironment": "Android TV emulator",
+        "physicalTvTested": false,
+        "physicalPhoneTested": false,
+        "physicalEsp32Tested": false,
+        "verificationReport": "docs/releases/0.5.3/verification.json"
+      },
+      "gameplayVideo": "docs/releases/0.5.3/gameplay.mp4",
+      "gameplayMetadata": "docs/releases/0.5.3/gameplay.json",
+      "minSdk": 26,
+      "wifiController": {
+        "protocol": "puretv-tcp-jsonl-v1",
+        "defaultPort": 63485,
+        "discovery": "_puretv._tcp",
+        "maxPlayers": 2,
+        "buttonMapping": "A/X primary, B secondary, Y SELECT",
+        "guide": "../../../docs/readme-controller-support/README.md"
+      },
+      "metadata": "docs/controller-status-baseline/0.5.3/resource.json"
+    }
+  ],
+  "controllerStatusVideo": "docs/releases/0.5.4/controller-status.mp4",
+  "controllerStatusMetadata": "docs/releases/0.5.4/controller-status.json",
+  "historicalGameplayVideo": {
+    "version": "0.5.3",
+    "video": "docs/releases/0.5.3/gameplay.mp4",
+    "metadata": "docs/releases/0.5.3/gameplay.json",
+    "currentUiEvidence": false
   }
 }

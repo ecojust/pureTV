@@ -1,0 +1,2184 @@
+{
+  "reviewer": "racing_review_arcade",
+  "run": 44615299245,
+  "attempt": 1,
+  "sourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+  "scope": "Read-only original reports/final snapshots/wire and exact fixed-source semantics; no new native execution, game source changes, clock overrides or model writes.",
+  "originalReportsRemainFailed": true,
+  "sourceEvidence": {
+    "royale-clock": {
+      "path": "joystick-games/kart-royale/src/src/main.ts",
+      "fixedSource": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+      "bytes": 52111,
+      "sha256": "9dd91077642b48ab39b3516cff3218351bed85f87817057f4653761024ebd188",
+      "currentBytesMatch": true,
+      "sourceUrl": "https://github.com/ecojust/pureTV/blob/6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/kart-royale/src/src/main.ts",
+      "excerpts": [
+        {
+          "startLine": 720,
+          "endLine": 748,
+          "text": "function frame(now: number) {\n  requestAnimationFrame(frame);\n  tv.poll(now);\n\n  const raw = (now - last) / 1000;\n  last = now;\n\n  // Context gone, or the tab is not being composited. Do not simulate, do not\n  // draw, do not allocate — just keep the rAF alive so we notice when the world\n  // comes back. (A hidden tab on iOS is the single most likely moment for the\n  // GPU to reclaim our context, and continuing to queue frames into a surface\n  // nobody is presenting is the worst possible way to spend that window.)\n  if (suspended || document.hidden || pipeline.contextLost) {\n    // The next tick's rAF delta spans however long we were away, which is not a\n    // frame interval. Say so, or the ladder reads a backgrounded tab as a stall.\n    lastTickPresented = false;\n    return;\n  }\n\n  // Clamp so a stalled tab or a breakpoint never teleports anything.\n  // `__freeze` holds the simulation still while the screenshot harness retries a\n  // torn capture: rendering continues, so the compositor can produce a clean\n  // frame, but nothing advances — otherwise a retry lands seconds down the road\n  // and the shot no longer shows what it was aimed at.\n  const frozen = (window as any).__freeze === true;\n  const dt = frozen ? 0 : Math.min(raw, 1 / 20);\n  ctx.dt = dt;\n  ctx.time += dt;\n  ctx.frame++;"
+        },
+        {
+          "startLine": 799,
+          "endLine": 850,
+          "text": "    // race the averages are HELD rather than fed, so the menu's cost never\n    // reaches them and a second race starts from what the first one learned.\n    const racing = ctx.race.state === RaceState.Racing;\n    racingFrames = racing ? racingFrames + 1 : 0;\n\n    // The interval only describes a frame the player saw if the tick before it\n    // also presented, the clock was running, and it is not a tab-switch hole.\n    const intervalMs = raw * 1000;\n    const usable = racing && lastTickPresented && !frozen &&\n      intervalMs > 1 && intervalMs < 100;\n    if (usable) {\n      frameEma += (intervalMs - frameEma) * FRAME_EMA_ALPHA;\n      cleanFrames = intervalMs <= FRAME_CLEAN_MS && frameEma <= FRAME_CLEAN_MS\n        ? cleanFrames + 1\n        : Math.max(0, cleanFrames - CLEAN_LEAK);\n    }\n\n    if (cost > STALL_MS) {\n      stallCount++;\n      // Log the first few and then go quiet — a stall storm must not turn into\n      // a console-write storm, which is itself a stall.\n      if (stallCount <= 5) {\n        console.warn(`[frame] ${Math.round(cost)}ms frame; skipping the next present to drain`);\n      }\n      skipRender = 1;\n    } else if (ctx.frame <= WATCHDOG_FROM_FRAME) {\n      // Boot frames are enormous — shader pre-warm, first-use uploads, the\n      // PMREM bake — and they poison the average. Measured: the scaler dropped\n      // a rung at frame 9 off a 56ms EMA that was entirely startup cost, on a\n      // machine that then ran at 8ms. Hold both averages at the target until the\n      // scene has actually settled.\n      renderCostEma = 16.7;\n      frameEma = 16.7;\n      cleanFrames = 0;\n    } else if (SCALER_PINNED) {\n      // See `?scaler=`. The averages above are still maintained, so a pinned run\n      // reports the frame cost it is ACTUALLY paying via `__loopHealth`; it just\n      // never spends resolution to change it.\n    } else if (racingFrames < RACING_SETTLE_FRAMES) {\n      // Not racing, or not racing for long enough yet. See RACING_SETTLE_FRAMES.\n    } else if (scaleCooldown > 0) {\n      // The cooldown after a step down is also its ASSESSMENT window. When it\n      // expires, the rung has to justify itself or it is handed back.\n      if (--scaleCooldown === 0) settleDescent();\n    } else if ((frameEma > FRAME_SLOW_MS || renderCostEma > SLOW_MS) &&\n               // See CPU_BOUND_MS. `SLOW_MS` is exempt because at 45ms of\n               // submission the loop is running away and the rung is the least\n               // of it — dropping is still the right reflex there.\n               (renderCostEma < CPU_BOUND_MS || renderCostEma > SLOW_MS) &&\n               // See CSS_FLOOR_*. The next rung down may not exist on this\n               // device even though the array has one — and it may have been\n               // locked out by a descent that bought nothing."
+        }
+      ]
+    },
+    "royale-countdown": {
+      "path": "joystick-games/kart-royale/src/src/game/Race.ts",
+      "fixedSource": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+      "bytes": 35137,
+      "sha256": "52d89d4ae4295eaabde27da5c48236985ad541204c564fac97fc5a4df884cf2e",
+      "currentBytesMatch": true,
+      "sourceUrl": "https://github.com/ecojust/pureTV/blob/6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/kart-royale/src/src/game/Race.ts",
+      "excerpts": [
+        {
+          "startLine": 54,
+          "endLine": 61,
+          "text": " *\n * The beats fire when `ceil(countdownT)` changes, so the \".4\" is a lead-in: the\n * field is formed up and the camera has settled for 0.4 s before \"3\" lands, and\n * \"3\", \"2\", \"1\" then arrive on whole seconds with GO at 4.4. Without the\n * lead-in the first numeral is emitted on the very frame the grid pops into\n * existence and reads as a glitch rather than a start.\n */\nconst COUNTDOWN = 4.4;"
+        },
+        {
+          "startLine": 539,
+          "endLine": 570,
+          "text": "  // ---------------------------------------------------------------- countdown\n\n  private tickCountdown(ctx: Ctx, dt: number) {\n    const prev = Math.ceil(this.countdownT);\n    this.countdownT -= dt;\n    const now = Math.ceil(this.countdownT);\n    // The lead-in beat is not published: the HUD ignores anything above 3, but\n    // the audio mix would play a fourth blip of a three-blip metronome, with no\n    // numeral on screen to explain it.\n    if (now !== prev && now >= 0 && now <= 3) {\n      ctx.bus.emit({ type: 'countdown', n: now });\n      // The field blips its throttle on every light, not just the last one.\n      //\n      // `hop` is the ground-puff channel the effects layer already owns, and a\n      // puff at each kart's contact patch is the one bit of pre-start energy\n      // this system can raise without reaching into anyone else's. Firing it\n      // only on \"1\" meant the grid sat dead through \"3\" and \"2\" — three quarters\n      // of the countdown, and the exact window the establishing shot is taken\n      // in. Three staggered rev blips read as eight running engines waiting for\n      // the lights; one puff at the end reads as a car park.\n      if (now >= 1) this.revBlip(ctx);\n    }\n    // Published clamped: the lead-in beat is an implementation detail, and a\n    // readout of \"5\" on the lights would be nonsense.\n    this.countdown = clamp(now, 0, 3);\n    if (this.countdownT > 0) return;\n\n    this.countdownT = 0;\n    this.state = RaceState.Racing;\n    this.raceTime = 0;\n    // Every kart breaks traction leaving the line, whatever it did with the\n    // throttle, so the whole field launches inside a wall of its own dust"
+        }
+      ]
+    },
+    "royale-menus": {
+      "path": "joystick-games/kart-royale/src/src/ui/Menus.ts",
+      "fixedSource": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+      "bytes": 30735,
+      "sha256": "94dd902c061c47b87f23af463765a8160f8948412948a38bda2f7acaefd33d74",
+      "currentBytesMatch": true,
+      "sourceUrl": "https://github.com/ecojust/pureTV/blob/6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/kart-royale/src/src/ui/Menus.ts",
+      "excerpts": []
+    },
+    "royale-controls": {
+      "path": "joystick-games/kart-royale/src/src/ui/ControlsMenu.ts",
+      "fixedSource": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+      "bytes": 19308,
+      "sha256": "3bc1c25afb75d3887bdd812c0a9b83a4f6c609f330daa055cc99a49abce491f0",
+      "currentBytesMatch": true,
+      "sourceUrl": "https://github.com/ecojust/pureTV/blob/6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/kart-royale/src/src/ui/ControlsMenu.ts",
+      "excerpts": [
+        {
+          "startLine": 97,
+          "endLine": 157,
+          "text": "    el('div', 'kc-title', head, 'Controls');\n\n    // The live meter lives in the HEAD, not in a row of its own. On a 390 px\n    // landscape phone a row is 6% of the frame, and this screen has to fit\n    // without scrolling — `touch-action: none` on `html` means a child cannot\n    // re-enable panning however it is styled, so \"it scrolls\" is not available.\n    const meter = el('div', 'kc-meter', head);\n    el('div', 'kc-meter-lab', meter, 'Steer');\n    const track = el('div', 'kc-meter-track', meter);\n    el('i', 'kc-meter-mid', track);\n    this.meterFill = el('b', 'kc-meter-fill', track);\n    this.meterNum = el('div', 'kc-meter-num', meter, '+0.00');\n\n    const done = el('div', 'kc-done', head, 'Done');\n    done.onclick = () => this.close();\n\n    const body = el('div', 'kc-body', this.root);\n\n    // --- left column: the four schemes, as cards you can actually read.\n    const left = el('div', 'kc-schemes', body);\n    for (const s of SCHEMES) {\n      const c = el('div', 'kc-card', left);\n      c.innerHTML =\n        `<div class=\"kc-glyph kc-g-${s.glyph}\"><i></i><b></b></div>` +\n        `<div class=\"kc-card-t\"><em>${s.name}</em><span>${s.blurb}</span></div>`;\n      c.onclick = () => this.chooseScheme(s.id);\n      this.cards.set(s.id, c);\n    }\n\n    // --- right column: the meter, then the settings.\n    const right = el('div', 'kc-right', body);\n\n    this.tiltRow = el('div', 'kc-tilt', right);\n    this.tiltVal = el('span', undefined, this.tiltRow, 'waiting for the sensor…');\n    const re = el('div', 'kc-mini', this.tiltRow, 'Recentre');\n    re.onclick = () => this.pad?.recentreTilt();\n\n    const grid = el('div', 'kc-grid', right);\n    this.seg<'right' | 'left'>(grid, 'hand', 'Hand', [\n      { value: 'right', label: 'Right' }, { value: 'left', label: 'Left' },\n    ], () => this.pad?.prefs.hand, (v) => this.pad?.setHand(v));\n\n    this.seg<boolean>(grid, 'auto', 'Throttle', [\n      { value: true, label: 'Auto' }, { value: false, label: 'Manual' },\n    ], () => this.pad?.auto, (v) => this.pad?.setAuto(v));\n\n    this.seg<number>(grid, 'steerAssist', 'Steering help', [\n      { value: 0, label: 'Off' }, { value: 0.35, label: 'Light' }, { value: 0.6, label: 'Strong' },\n    ], () => this.pad?.prefs.steerAssist, (v) => this.pad?.setSteerAssist(v));\n\n    this.seg<number>(grid, 'driftAssist', 'Easy drift', [\n      { value: 0, label: 'Off' }, { value: 0.5, label: 'Half' }, { value: 1, label: 'Full' },\n    ], () => this.pad?.prefs.driftAssist, (v) => this.pad?.setDriftAssist(v));\n\n    this.seg<boolean>(grid, 'haptics', 'Vibration', [\n      { value: true, label: 'On' }, { value: false, label: 'Off' },\n    ], () => this.pad?.prefs.haptics, (v) => this.pad?.setHaptics(v));\n\n    this.seg<number>(grid, 'tiltRange', 'Tilt range', [\n      { value: 20, label: '20°' }, { value: 26, label: '26°' }, { value: 34, label: '34°' },\n    ], () => this.pad?.prefs.tiltRange, (v) => this.pad?.setTiltRange(v));"
+        }
+      ]
+    },
+    "turbo-clock": {
+      "path": "joystick-games/turbo-kart-rush/src/upstream/src/game/Game.ts",
+      "fixedSource": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+      "bytes": 34641,
+      "sha256": "089144c886294e876653b24922db13a8c24630d7c5f5b26fb9992cade3eb9bc3",
+      "currentBytesMatch": true,
+      "sourceUrl": "https://github.com/ecojust/pureTV/blob/6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/turbo-kart-rush/src/upstream/src/game/Game.ts",
+      "excerpts": [
+        {
+          "startLine": 313,
+          "endLine": 334,
+          "text": "  private readonly loop = (now: number): void => {\n    if (this.disposed) return;\n    this.rafId = requestAnimationFrame(this.loop);\n    if (this.lastTime < 0) this.lastTime = now;\n    let dt = (now - this.lastTime) / 1000;\n    this.lastTime = now;\n    if (dt > MAX_FRAME_DT) dt = MAX_FRAME_DT;\n    if (dt < 0) dt = 0;\n    this.elapsed += dt;\n\n    const frame = this.tv?.poll();\n    const racing = ['countdown','racing','finished'].includes(this.state);\n    const input = this.input.update(frame, racing);\n    if (['title','characterSelect','trackSelect'].includes(this.state) && input.confirm) this.tvSuspendPending = false;\n    try {\n      this.frame(dt, input);\n    } catch (err) {\n      console.error('[Game] frame error', err);\n      this.tv?.fail(err);\n      events.emit('ui:error', {});\n    }\n  };"
+        },
+        {
+          "startLine": 442,
+          "endLine": 477,
+          "text": "  private simulate(dt: number, input: InputState): void {\n    const r = this.race;\n    if (!r) return;\n    if (input.useItem) this.pendingUseItem = true;\n    this.accumulator += dt;\n    let steps = 0;\n    while (this.accumulator >= FIXED_DT && steps < MAX_STEPS_PER_FRAME) {\n      this.step(FIXED_DT, r, input, this.pendingUseItem);\n      this.pendingUseItem = false;\n      this.accumulator -= FIXED_DT;\n      steps++;\n    }\n    if (steps >= MAX_STEPS_PER_FRAME) this.accumulator = 0;\n  }\n\n  private step(dt: number, r: RaceContext, input: InputState, useItem: boolean): void {\n    const { track, karts, items } = r;\n    const player = karts[0];\n\n    // Player input (or auto-drive after finishing).\n    if (r.playerAutoDriver) {\n      r.playerAutoDriver.update(dt, track, karts, items, null);\n    } else {\n      const p = this.playerInput;\n      p.throttle = input.throttle;\n      p.brake = input.brake;\n      p.steer = input.steer;\n      p.drift = input.drift;\n      p.useItem = useItem;\n      p.useItemHeld = input.useItemHeld;\n      p.lookBack = input.lookBack;\n      p.pause = false;\n      p.confirm = false;\n      p.back = false;\n      p.menuUp = false;\n      p.menuDown = false;"
+        }
+      ]
+    },
+    "turbo-countdown": {
+      "path": "joystick-games/turbo-kart-rush/src/upstream/src/game/RaceManager.ts",
+      "fixedSource": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+      "bytes": 15999,
+      "sha256": "719986347c9c17f25329e7241adbbacf0e4eb4b3948b9d3776bc42accbdd3875",
+      "currentBytesMatch": true,
+      "sourceUrl": "https://github.com/ecojust/pureTV/blob/6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/turbo-kart-rush/src/upstream/src/game/RaceManager.ts",
+      "excerpts": [
+        {
+          "startLine": 136,
+          "endLine": 139,
+          "text": "    if (this.playerTracker) this.playerTracker.throttleStreak = 0;\n  }\n\n  get countdownElapsed(): number { return this.countdownTimer; }"
+        },
+        {
+          "startLine": 233,
+          "endLine": 251,
+          "text": "\n  private updateCountdown(dt: number): void {\n    // Track how long the player has been holding the throttle (for the start boost).\n    if (this.playerTracker) {\n      const thr = this.playerTracker.kart.input.throttle;\n      this.playerTracker.throttleStreak = thr > 0.5 ? this.playerTracker.throttleStreak + dt : 0;\n    }\n\n    this.countdownTimer += dt;\n    const total = COUNTDOWN_STEPS * COUNTDOWN_STEP_SECONDS;\n    while (this.countdownEmitted < COUNTDOWN_STEPS && this.countdownTimer >= this.countdownEmitted * COUNTDOWN_STEP_SECONDS) {\n      events.emit('race:countdown', { count: COUNTDOWN_STEPS - this.countdownEmitted });\n      this.countdownEmitted++;\n    }\n    if (this.countdownTimer >= total) {\n      this.go();\n    }\n  }\n"
+        }
+      ]
+    },
+    "turbo-constants": {
+      "path": "joystick-games/turbo-kart-rush/src/upstream/src/core/constants.ts",
+      "fixedSource": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+      "bytes": 2052,
+      "sha256": "94ff01ae5c0c5d0e76ed11d1e2ca655f8bf4804a4cfd0f17df87fba11d41509e",
+      "currentBytesMatch": true,
+      "sourceUrl": "https://github.com/ecojust/pureTV/blob/6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/turbo-kart-rush/src/upstream/src/core/constants.ts",
+      "excerpts": [
+        {
+          "startLine": 15,
+          "endLine": 19,
+          "text": "/** Fixed physics timestep (seconds). Game loop uses an accumulator. */\nexport const FIXED_DT = 1 / 120;\n\n/** Max frame delta we will simulate in one render frame (avoids spiral of death). */\nexport const MAX_FRAME_DT = 1 / 20;"
+        }
+      ]
+    },
+    "turbo-input": {
+      "path": "joystick-games/turbo-kart-rush/src/upstream/src/kart/InputManager.ts",
+      "fixedSource": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+      "bytes": 10994,
+      "sha256": "ff5f63711c27412e64b8a8c7161f4463f0de8ccc5737737e200ee60036ff04a5",
+      "currentBytesMatch": true,
+      "sourceUrl": "https://github.com/ecojust/pureTV/blob/6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/turbo-kart-rush/src/upstream/src/kart/InputManager.ts",
+      "excerpts": [
+        {
+          "startLine": 89,
+          "endLine": 106,
+          "text": "  update(tv?: TVFrame, racing = true): InputState {\n    const s = this.state;\n    const now = performance.now();\n    const dt = clamp((now - this.lastTime) / 1000, 0, 0.1);\n    this.lastTime = now;\n    const raw = tv?.buttons || {};\n    const held: Partial<Record<TVKey, boolean>> = {};\n    for (const key of TV_KEYS) {\n      if (!raw[key]) this.tvBlocked[key] = false;\n      if (!racing && raw[key]) this.tvBlocked[key] = true;\n      held[key] = racing && !!raw[key] && !this.tvBlocked[key] && !tv?.cancelled;\n    }\n\n    // --- keyboard --------------------------------------------------------------\n    const kbThrottle = this.anyHeld(KEY_THROTTLE) || held.UP ? 1 : 0;\n    const kbBrake = this.anyHeld(KEY_BRAKE) || held.DOWN ? 1 : 0;\n    const steerTarget = (this.anyHeld(KEY_RIGHT) || held.RIGHT ? 1 : 0) - (this.anyHeld(KEY_LEFT) || held.LEFT ? 1 : 0);\n    this.keyboardSteer = rampToward(this.keyboardSteer, steerTarget, dt);"
+        }
+      ]
+    },
+    "turbo-physics": {
+      "path": "joystick-games/turbo-kart-rush/src/upstream/src/kart/Kart.ts",
+      "fixedSource": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+      "bytes": 34185,
+      "sha256": "be0243dc4c80cabeee71a4fd68ad6da6b749a8e1a9a936ec2cd3fb8be231e3ac",
+      "currentBytesMatch": true,
+      "sourceUrl": "https://github.com/ecojust/pureTV/blob/6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/turbo-kart-rush/src/upstream/src/kart/Kart.ts",
+      "excerpts": [
+        {
+          "startLine": 29,
+          "endLine": 40,
+          "text": "/** m/s^2 at (0.5 + acceleration stat) = 1. Medium kart 0 -> 95% top in ~2.5 s. */\nconst ACCEL_BASE = 9.0;\n/** Proportional approach toward target speed (1/s). */\nconst ACCEL_APPROACH = 2.2;\n/** Acceleration cap / approach while boosting (reaches ~95% of boosted top speed in ~0.3 s). */\nconst BOOST_ACCEL = 45;\nconst BOOST_APPROACH = 7;\nconst OVER_SPEED_DECEL_MAX = 10;\nconst OVER_SPEED_APPROACH = 2.0;\nconst BRAKE_DECEL = 16;\nconst COAST_DECEL = 4.5;\nconst REVERSE_FRACTION = 0.35;"
+        },
+        {
+          "startLine": 660,
+          "endLine": 695,
+          "text": "\n    const maxAccel = ACCEL_BASE * (0.5 + s.character.stats.acceleration);\n    const throttle = s.isBoosting ? 1 : inp.throttle;\n    const brake = inp.brake;\n\n    if (brake > 0.05 && speed > 0.3 && brake >= throttle) {\n      speed = Math.max(0, speed - BRAKE_DECEL * brake * dt);\n    } else if (throttle > 0.05 && throttle >= brake) {\n      let target = top * throttle;\n      if (s.isDrifting) target *= DRIFT_SPEED_FACTOR;\n      if (speed < target) {\n        const cap = s.isBoosting ? BOOST_ACCEL : maxAccel;\n        const approach = s.isBoosting ? BOOST_APPROACH : ACCEL_APPROACH;\n        speed += Math.min(cap, (target - speed) * approach + 0.8) * dt;\n        if (speed > target) speed = target;\n      } else {\n        speed += Math.max(-OVER_SPEED_DECEL_MAX, (target - speed) * OVER_SPEED_APPROACH) * dt;\n        if (speed < target) speed = target;\n      }\n    } else if (brake > 0.05) {\n      const target = -REVERSE_FRACTION * top * brake;\n      if (speed > target) {\n        speed -= Math.min(REVERSE_ACCEL, (speed - target) * 2 + 0.5) * dt;\n        if (speed < target) speed = target;\n      } else {\n        speed += Math.min(6, (target - speed) * 2) * dt;\n      }\n    } else {\n      speed = approachZero(speed, (COAST_DECEL + 0.06 * Math.abs(speed)) * dt);\n      if (speed > top) {\n        speed += Math.max(-OVER_SPEED_DECEL_MAX, (top - speed) * OVER_SPEED_APPROACH) * dt;\n        if (speed < top) speed = top;\n      }\n    }\n    s.speed = speed;\n  }"
+        }
+      ]
+    },
+    "turbo-menus": {
+      "path": "joystick-games/turbo-kart-rush/src/upstream/src/ui/MainMenu.ts",
+      "fixedSource": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+      "bytes": 15693,
+      "sha256": "e044bac792254d7f84b12522b985e1ecff5f4d95501a748e39ee6083712cc0c4",
+      "currentBytesMatch": true,
+      "sourceUrl": "https://github.com/ecojust/pureTV/blob/6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/turbo-kart-rush/src/upstream/src/ui/MainMenu.ts",
+      "excerpts": []
+    },
+    "turbo-pause-menu": {
+      "path": "joystick-games/turbo-kart-rush/src/upstream/src/ui/PauseMenu.ts",
+      "fixedSource": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+      "bytes": 2279,
+      "sha256": "ff7dd22b2ba795881618b48a0a6eea48f5daaa2e90ccb7b7f89870f1376ae8a9",
+      "currentBytesMatch": true,
+      "sourceUrl": "https://github.com/ecojust/pureTV/blob/6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/turbo-kart-rush/src/upstream/src/ui/PauseMenu.ts",
+      "excerpts": []
+    },
+    "native-held-qa": {
+      "path": "joystick-games/tools/macos-verify.py",
+      "fixedSource": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+      "bytes": 56639,
+      "sha256": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17",
+      "currentBytesMatch": true,
+      "sourceUrl": "https://github.com/ecojust/pureTV/blob/6c7cb4fdb99dce236b634c842326bae6aed5f232/joystick-games/tools/macos-verify.py",
+      "excerpts": [
+        {
+          "startLine": 691,
+          "endLine": 707,
+          "text": "        self.display()\n        assert self.read()['game']['stage']=='menu','QA plan must begin at the actual menu'\n        cases=[]\n        for step in self.plan['steps']:\n            before=self.read();owner=self.player(before)\n            if step.get('menuTap') is True:\n                cases.append(self.menu_tap(step,before));self.settle_input('Plan controls released: '+step['name']);continue\n            for key in step['keys']:self.press(key)\n            try:\n                consumed=self.until(lambda s:self.fresh(s,before,True) and self.player(s).get('session')==owner['session'] and all(self.player(s).get('buttons',{}).get(k) is True and self.player(s).get('buttonCounters',{}).get(k)==owner['buttonCounters'][k]+1 for k in step['keys']),step['name']+' actual SDK input')\n                time.sleep(step['holdMs']/1000)\n                for key in step['keys']:self.release(key)\n                after=self.until(lambda s:self.fresh(s,before,True) and qa_plan.matches(step['expect'],s['game'],before['game']),step['name']+' actual gameplay observation',step.get('timeoutSeconds',15))\n                cases.append({'name':step['name'],'keys':step['keys'],'holdMs':step['holdMs'],'before':before['game'],'inputObserved':consumed['game'],'after':after['game']})\n            finally:self.clear()\n            self.settle_input('Plan controls released: '+step['name'])\n        self.ensure_playing();self.screenshot('playing.png')"
+        }
+      ]
+    }
+  },
+  "observations": {
+    "kart-royale": [
+      {
+        "mode": "normal",
+        "files": {
+          "joystick-windows-evidence-kart-royale/runtime-normal/report.json": {
+            "bytes": 612497,
+            "sha256": "bce09bf6a7cb325f5505c9ed72120c11a4cf57ecca45ebc7a35f1c0b17492c33"
+          },
+          "joystick-windows-evidence-kart-royale/runtime-normal/diagnostics/state.json": {
+            "bytes": 4944,
+            "sha256": "a80d94b5cc7985614705e7a67d3999c5ccae917f5ab944377e7e65cb148e6d8d"
+          }
+        },
+        "passedTopLevelChecks": [
+          "Native DPI-scaled minimum and initial viewport",
+          "DNS-SD resolves actual listener and TXT",
+          "Official SDK and single controller seat"
+        ],
+        "failedTopLevelChecks": [
+          "Actual gameplay and pause model freeze"
+        ],
+        "failureStep": "Start race and wait original countdown",
+        "previousObservation": {
+          "at": "2026-11-19T21:16:16.075912+00:00",
+          "label": "Plan controls released: Open original roster from Start button",
+          "state": {
+            "timestamp": 1744.125,
+            "frames": 67,
+            "pollCount": 67,
+            "renderer": "webgl2",
+            "stage": "menu",
+            "phase": "menu",
+            "mode": null,
+            "time": 0,
+            "countdown": null,
+            "speed": 2.9949149412278686e-19,
+            "position": [
+              -5.681087776438381,
+              4.071870506278387,
+              -9.973263241775635
+            ],
+            "playerXZ": [
+              null,
+              null
+            ],
+            "progress": null,
+            "rawButtons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "semanticButtons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "controls": {
+              "accel": 0,
+              "accelAuto": false,
+              "anyPressed": false,
+              "brake": 0,
+              "drift": false,
+              "driftPressed": false,
+              "itemPressed": false,
+              "lookBack": false,
+              "pausePressed": false,
+              "steer": 0
+            },
+            "lastJavaScriptError": "",
+            "documentEpoch": 1
+          }
+        },
+        "inputObserved": {
+          "at": "2026-11-19T21:16:21.912478+00:00",
+          "state": {
+            "timestamp": 1749.937,
+            "frames": 68,
+            "pollCount": 68,
+            "renderer": "webgl2",
+            "stage": "menu",
+            "phase": "menu",
+            "mode": null,
+            "time": 0,
+            "countdown": null,
+            "speed": -3.672665376123192e-19,
+            "position": [
+              -5.681087776389788,
+              4.071870508472283,
+              -9.973263241694621
+            ],
+            "playerXZ": [
+              null,
+              null
+            ],
+            "progress": null,
+            "rawButtons": {
+              "A": true,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "semanticButtons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "controls": {
+              "accel": 0,
+              "accelAuto": false,
+              "anyPressed": false,
+              "brake": 0,
+              "drift": false,
+              "driftPressed": false,
+              "itemPressed": false,
+              "lookBack": false,
+              "pausePressed": false,
+              "steer": 0
+            },
+            "lastJavaScriptError": "",
+            "documentEpoch": 1
+          }
+        },
+        "finalState": {
+          "timestamp": 1806.375,
+          "frames": 79,
+          "pollCount": 79,
+          "renderer": "webgl2",
+          "stage": "playing",
+          "phase": "countdown",
+          "mode": null,
+          "time": 0,
+          "countdown": null,
+          "speed": 1.734723475976807e-18,
+          "position": [
+            -5.691331193755681,
+            4.034141429455025,
+            -9.983559051756407
+          ],
+          "playerXZ": [
+            null,
+            null
+          ],
+          "progress": null,
+          "rawButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "controls": {
+            "accel": 0,
+            "accelAuto": false,
+            "anyPressed": false,
+            "brake": 0,
+            "drift": false,
+            "driftPressed": false,
+            "itemPressed": false,
+            "lookBack": false,
+            "pausePressed": false,
+            "steer": 0
+          },
+          "lastJavaScriptError": "",
+          "documentEpoch": 1
+        },
+        "wirePressRelease": [
+          {
+            "at": "2026-11-19T21:16:16.097747+00:00",
+            "connection": 1,
+            "direction": "sdk-to-game",
+            "message": {
+              "type": "button",
+              "seq": 112,
+              "controller_id": "virtual-ee45c7230332",
+              "key": "A",
+              "action": "down",
+              "pressed": true,
+              "duration_ms": 0
+            }
+          },
+          {
+            "at": "2026-11-19T21:16:22.095454+00:00",
+            "connection": 1,
+            "direction": "sdk-to-game",
+            "message": {
+              "type": "button",
+              "seq": 114,
+              "controller_id": "virtual-ee45c7230332",
+              "key": "A",
+              "action": "tap",
+              "pressed": false,
+              "duration_ms": 100
+            }
+          }
+        ],
+        "wireHeldSeconds": 5.997707,
+        "pairMatchingAcks": {
+          "112": 1,
+          "114": 1
+        },
+        "originalPlanUnchanged": {
+          "schemaVersion": 1,
+          "renderer": "webgl2",
+          "storageRestartRequired": true,
+          "pauseStablePaths": [
+            "gameplay.time",
+            "gameplay.position",
+            "gameplay.speed",
+            "gameplay.lap",
+            "gameplay.driftCharge",
+            "gameplay.boostTime"
+          ],
+          "steps": [
+            {
+              "name": "Focus original Controls menu",
+              "keys": [
+                "DOWN"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.focus",
+                  "op": "eq",
+                  "value": "Controls"
+                }
+              ],
+              "menuTap": true
+            },
+            {
+              "name": "Open original Controls",
+              "keys": [
+                "A"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "controls"
+                }
+              ],
+              "menuTap": true
+            },
+            {
+              "name": "Focus controls option Floating stick",
+              "keys": [
+                "Y"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "controls"
+                }
+              ]
+            },
+            {
+              "name": "Focus controls option Fixed stick",
+              "keys": [
+                "Y"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "controls"
+                }
+              ]
+            },
+            {
+              "name": "Focus controls option Tilt to steer",
+              "keys": [
+                "Y"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "controls"
+                }
+              ]
+            },
+            {
+              "name": "Focus controls option Steer buttons",
+              "keys": [
+                "Y"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "controls"
+                }
+              ]
+            },
+            {
+              "name": "Focus controls option Right",
+              "keys": [
+                "Y"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "controls"
+                }
+              ]
+            },
+            {
+              "name": "Focus controls option Left",
+              "keys": [
+                "Y"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "controls"
+                }
+              ]
+            },
+            {
+              "name": "Save original left-handed preference through Controls",
+              "keys": [
+                "A"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.controlHand",
+                  "op": "eq",
+                  "value": "left"
+                },
+                {
+                  "path": "gameplay.savedControls",
+                  "op": "eq",
+                  "value": true
+                }
+              ],
+              "menuTap": true
+            },
+            {
+              "name": "Close Controls explicitly",
+              "keys": [
+                "B"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "title"
+                }
+              ],
+              "menuTap": true
+            },
+            {
+              "name": "Open original roster from Start button",
+              "keys": [
+                "A"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "select"
+                },
+                {
+                  "path": "gameplay.focus",
+                  "op": "eq",
+                  "value": "Start race"
+                }
+              ],
+              "menuTap": true
+            },
+            {
+              "name": "Start race and wait original countdown",
+              "keys": [
+                "A"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.phase",
+                  "op": "eq",
+                  "value": "racing"
+                }
+              ]
+            },
+            {
+              "name": "Accelerate original kart from grid",
+              "keys": [
+                "UP"
+              ],
+              "holdMs": 3500,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.speed",
+                  "op": "gt",
+                  "value": 1
+                },
+                {
+                  "path": "gameplay.position",
+                  "op": "changed"
+                }
+              ]
+            },
+            {
+              "name": "Steer and request original drift",
+              "keys": [
+                "UP",
+                "RIGHT",
+                "B"
+              ],
+              "holdMs": 1200,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.position",
+                  "op": "changed"
+                }
+              ]
+            },
+            {
+              "name": "Steer opposite direction and look back",
+              "keys": [
+                "A",
+                "LEFT",
+                "Y"
+              ],
+              "holdMs": 800,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.position",
+                  "op": "changed"
+                }
+              ]
+            },
+            {
+              "name": "Brake using original input",
+              "keys": [
+                "DOWN"
+              ],
+              "holdMs": 800,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.speed",
+                  "op": "changed"
+                }
+              ]
+            },
+            {
+              "name": "Request item through X (empty inventory is not an item-use claim)",
+              "keys": [
+                "X"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.phase",
+                  "op": "eq",
+                  "value": "racing"
+                }
+              ]
+            },
+            {
+              "name": "Pause original race",
+              "keys": [
+                "START"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "paused",
+                  "op": "eq",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "name": "Deliberately resume with START held without re-pausing",
+              "keys": [
+                "START"
+              ],
+              "holdMs": 1200,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "stage",
+                  "op": "eq",
+                  "value": "playing"
+                },
+                {
+                  "path": "paused",
+                  "op": "eq",
+                  "value": false
+                }
+              ]
+            },
+            {
+              "name": "Continue actual driving after explicit resume",
+              "keys": [
+                "UP"
+              ],
+              "holdMs": 2000,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.speed",
+                  "op": "gt",
+                  "value": 1
+                },
+                {
+                  "path": "gameplay.position",
+                  "op": "changed"
+                }
+              ]
+            }
+          ]
+        },
+        "menuTapPassed": [
+          "Focus original Controls menu",
+          "Open original Controls",
+          "Save original left-handed preference through Controls",
+          "Close Controls explicitly",
+          "Open original roster from Start button"
+        ],
+        "countdownSimulationUpperBoundSinceInputObservedSeconds": 0.55,
+        "originalCountdownRequiredSeconds": 4.4
+      },
+      {
+        "mode": "occupied",
+        "files": {
+          "joystick-windows-evidence-kart-royale/runtime-occupied/report.json": {
+            "bytes": 620435,
+            "sha256": "9e4803af2fd723dd25b77bc3ad1f7f83e80e492e266f933e7b42907693e15a8d"
+          },
+          "joystick-windows-evidence-kart-royale/runtime-occupied/diagnostics/state.json": {
+            "bytes": 4944,
+            "sha256": "090f09cbb89e5e64d972d2c896e7271ad9fe9214b53725973907e3b76e245b00"
+          }
+        },
+        "passedTopLevelChecks": [
+          "Native DPI-scaled minimum and initial viewport",
+          "DNS-SD resolves actual listener and TXT",
+          "Official SDK and single controller seat"
+        ],
+        "failedTopLevelChecks": [
+          "Actual gameplay and pause model freeze"
+        ],
+        "failureStep": "Start race and wait original countdown",
+        "previousObservation": {
+          "at": "2026-11-19T21:24:16.911481+00:00",
+          "label": "Plan controls released: Open original roster from Start button",
+          "state": {
+            "timestamp": 2224.953,
+            "frames": 67,
+            "pollCount": 67,
+            "renderer": "webgl2",
+            "stage": "menu",
+            "phase": "menu",
+            "mode": null,
+            "time": 0,
+            "countdown": null,
+            "speed": -1.0410233445102364e-19,
+            "position": [
+              -5.6810877764184236,
+              4.071870507179767,
+              -9.973263241742346
+            ],
+            "playerXZ": [
+              null,
+              null
+            ],
+            "progress": null,
+            "rawButtons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "semanticButtons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "controls": {
+              "accel": 0,
+              "accelAuto": false,
+              "anyPressed": false,
+              "brake": 0,
+              "drift": false,
+              "driftPressed": false,
+              "itemPressed": false,
+              "lookBack": false,
+              "pausePressed": false,
+              "steer": 0
+            },
+            "lastJavaScriptError": "",
+            "documentEpoch": 1
+          }
+        },
+        "inputObserved": {
+          "at": "2026-11-19T21:24:22.714146+00:00",
+          "state": {
+            "timestamp": 2230.734,
+            "frames": 68,
+            "pollCount": 68,
+            "renderer": "webgl2",
+            "stage": "menu",
+            "phase": "menu",
+            "mode": null,
+            "time": 0,
+            "countdown": null,
+            "speed": 2.616521170015486e-19,
+            "position": [
+              -5.6810877763698775,
+              4.071870509371512,
+              -9.973263241661408
+            ],
+            "playerXZ": [
+              null,
+              null
+            ],
+            "progress": null,
+            "rawButtons": {
+              "A": true,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "semanticButtons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "controls": {
+              "accel": 0,
+              "accelAuto": false,
+              "anyPressed": false,
+              "brake": 0,
+              "drift": false,
+              "driftPressed": false,
+              "itemPressed": false,
+              "lookBack": false,
+              "pausePressed": false,
+              "steer": 0
+            },
+            "lastJavaScriptError": "",
+            "documentEpoch": 1
+          }
+        },
+        "finalState": {
+          "timestamp": 2287.015,
+          "frames": 79,
+          "pollCount": 79,
+          "renderer": "webgl2",
+          "stage": "playing",
+          "phase": "countdown",
+          "mode": null,
+          "time": 0,
+          "countdown": null,
+          "speed": 1.734723475976807e-18,
+          "position": [
+            -5.691331193755681,
+            4.034141429455025,
+            -9.983559051756407
+          ],
+          "playerXZ": [
+            null,
+            null
+          ],
+          "progress": null,
+          "rawButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "controls": {
+            "accel": 0,
+            "accelAuto": false,
+            "anyPressed": false,
+            "brake": 0,
+            "drift": false,
+            "driftPressed": false,
+            "itemPressed": false,
+            "lookBack": false,
+            "pausePressed": false,
+            "steer": 0
+          },
+          "lastJavaScriptError": "",
+          "documentEpoch": 1
+        },
+        "wirePressRelease": [
+          {
+            "at": "2026-11-19T21:24:16.911481+00:00",
+            "connection": 1,
+            "direction": "sdk-to-game",
+            "message": {
+              "type": "button",
+              "seq": 111,
+              "controller_id": "virtual-5ee5e99e0bec",
+              "key": "A",
+              "action": "down",
+              "pressed": true,
+              "duration_ms": 0
+            }
+          },
+          {
+            "at": "2026-11-19T21:24:22.897407+00:00",
+            "connection": 1,
+            "direction": "sdk-to-game",
+            "message": {
+              "type": "button",
+              "seq": 113,
+              "controller_id": "virtual-5ee5e99e0bec",
+              "key": "A",
+              "action": "tap",
+              "pressed": false,
+              "duration_ms": 100
+            }
+          }
+        ],
+        "wireHeldSeconds": 5.985926,
+        "pairMatchingAcks": {
+          "111": 1,
+          "113": 1
+        },
+        "originalPlanUnchanged": {
+          "schemaVersion": 1,
+          "renderer": "webgl2",
+          "storageRestartRequired": true,
+          "pauseStablePaths": [
+            "gameplay.time",
+            "gameplay.position",
+            "gameplay.speed",
+            "gameplay.lap",
+            "gameplay.driftCharge",
+            "gameplay.boostTime"
+          ],
+          "steps": [
+            {
+              "name": "Focus original Controls menu",
+              "keys": [
+                "DOWN"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.focus",
+                  "op": "eq",
+                  "value": "Controls"
+                }
+              ],
+              "menuTap": true
+            },
+            {
+              "name": "Open original Controls",
+              "keys": [
+                "A"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "controls"
+                }
+              ],
+              "menuTap": true
+            },
+            {
+              "name": "Focus controls option Floating stick",
+              "keys": [
+                "Y"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "controls"
+                }
+              ]
+            },
+            {
+              "name": "Focus controls option Fixed stick",
+              "keys": [
+                "Y"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "controls"
+                }
+              ]
+            },
+            {
+              "name": "Focus controls option Tilt to steer",
+              "keys": [
+                "Y"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "controls"
+                }
+              ]
+            },
+            {
+              "name": "Focus controls option Steer buttons",
+              "keys": [
+                "Y"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "controls"
+                }
+              ]
+            },
+            {
+              "name": "Focus controls option Right",
+              "keys": [
+                "Y"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "controls"
+                }
+              ]
+            },
+            {
+              "name": "Focus controls option Left",
+              "keys": [
+                "Y"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "controls"
+                }
+              ]
+            },
+            {
+              "name": "Save original left-handed preference through Controls",
+              "keys": [
+                "A"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.controlHand",
+                  "op": "eq",
+                  "value": "left"
+                },
+                {
+                  "path": "gameplay.savedControls",
+                  "op": "eq",
+                  "value": true
+                }
+              ],
+              "menuTap": true
+            },
+            {
+              "name": "Close Controls explicitly",
+              "keys": [
+                "B"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "title"
+                }
+              ],
+              "menuTap": true
+            },
+            {
+              "name": "Open original roster from Start button",
+              "keys": [
+                "A"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.menu",
+                  "op": "eq",
+                  "value": "select"
+                },
+                {
+                  "path": "gameplay.focus",
+                  "op": "eq",
+                  "value": "Start race"
+                }
+              ],
+              "menuTap": true
+            },
+            {
+              "name": "Start race and wait original countdown",
+              "keys": [
+                "A"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.phase",
+                  "op": "eq",
+                  "value": "racing"
+                }
+              ]
+            },
+            {
+              "name": "Accelerate original kart from grid",
+              "keys": [
+                "UP"
+              ],
+              "holdMs": 3500,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.speed",
+                  "op": "gt",
+                  "value": 1
+                },
+                {
+                  "path": "gameplay.position",
+                  "op": "changed"
+                }
+              ]
+            },
+            {
+              "name": "Steer and request original drift",
+              "keys": [
+                "UP",
+                "RIGHT",
+                "B"
+              ],
+              "holdMs": 1200,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.position",
+                  "op": "changed"
+                }
+              ]
+            },
+            {
+              "name": "Steer opposite direction and look back",
+              "keys": [
+                "A",
+                "LEFT",
+                "Y"
+              ],
+              "holdMs": 800,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.position",
+                  "op": "changed"
+                }
+              ]
+            },
+            {
+              "name": "Brake using original input",
+              "keys": [
+                "DOWN"
+              ],
+              "holdMs": 800,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.speed",
+                  "op": "changed"
+                }
+              ]
+            },
+            {
+              "name": "Request item through X (empty inventory is not an item-use claim)",
+              "keys": [
+                "X"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.phase",
+                  "op": "eq",
+                  "value": "racing"
+                }
+              ]
+            },
+            {
+              "name": "Pause original race",
+              "keys": [
+                "START"
+              ],
+              "holdMs": 180,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "paused",
+                  "op": "eq",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "name": "Deliberately resume with START held without re-pausing",
+              "keys": [
+                "START"
+              ],
+              "holdMs": 1200,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "stage",
+                  "op": "eq",
+                  "value": "playing"
+                },
+                {
+                  "path": "paused",
+                  "op": "eq",
+                  "value": false
+                }
+              ]
+            },
+            {
+              "name": "Continue actual driving after explicit resume",
+              "keys": [
+                "UP"
+              ],
+              "holdMs": 2000,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.speed",
+                  "op": "gt",
+                  "value": 1
+                },
+                {
+                  "path": "gameplay.position",
+                  "op": "changed"
+                }
+              ]
+            }
+          ]
+        },
+        "menuTapPassed": [
+          "Focus original Controls menu",
+          "Open original Controls",
+          "Save original left-handed preference through Controls",
+          "Close Controls explicitly",
+          "Open original roster from Start button"
+        ],
+        "countdownSimulationUpperBoundSinceInputObservedSeconds": 0.55,
+        "originalCountdownRequiredSeconds": 4.4
+      }
+    ],
+    "turbo-kart-rush": [
+      {
+        "mode": "normal",
+        "files": {
+          "joystick-windows-evidence-turbo-kart-rush/runtime-normal/report.json": {
+            "bytes": 297882,
+            "sha256": "c7c45b8e1f476b007119d4e556bdfa86b4a878b4b8583cecb384348dc04edefc"
+          },
+          "joystick-windows-evidence-turbo-kart-rush/runtime-normal/diagnostics/state.json": {
+            "bytes": 4039,
+            "sha256": "13330bc86086446f28fc62c360079701cc7d8fa6ef1f361ae6897cce98a1a57b"
+          }
+        },
+        "passedTopLevelChecks": [
+          "Native DPI-scaled minimum and initial viewport",
+          "DNS-SD resolves actual listener and TXT",
+          "Official SDK and single controller seat"
+        ],
+        "failedTopLevelChecks": [
+          "Actual gameplay and pause model freeze"
+        ],
+        "failureStep": "Accelerate on original race physics",
+        "previousObservation": {
+          "at": "2026-11-19T21:11:46.867587+00:00",
+          "label": "Plan controls released: Start selected original course and wait real countdown",
+          "state": {
+            "timestamp": 643.421,
+            "frames": 117,
+            "pollCount": 120,
+            "renderer": "webgl2",
+            "stage": "playing",
+            "phase": null,
+            "mode": "racing",
+            "time": 0.09166666666666666,
+            "countdown": 3.0083333333333253,
+            "speed": 0,
+            "position": null,
+            "playerXZ": [
+              0.9572047623597835,
+              21.732569559441515
+            ],
+            "progress": -0.022886410016722536,
+            "rawButtons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "semanticButtons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "controls": null,
+            "lastJavaScriptError": "",
+            "documentEpoch": 1
+          }
+        },
+        "inputObserved": {
+          "at": "2026-11-19T21:11:48.250316+00:00",
+          "state": {
+            "timestamp": 644.828,
+            "frames": 118,
+            "pollCount": 121,
+            "renderer": "webgl2",
+            "stage": "playing",
+            "phase": null,
+            "mode": "racing",
+            "time": 0.14166666666666666,
+            "countdown": 3.0083333333333253,
+            "speed": 0,
+            "position": null,
+            "playerXZ": [
+              0.9572047623597835,
+              21.732569559441515
+            ],
+            "progress": -0.022886410016722536,
+            "rawButtons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": true,
+              "X": false,
+              "Y": false
+            },
+            "semanticButtons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "controls": null,
+            "lastJavaScriptError": "",
+            "documentEpoch": 1
+          }
+        },
+        "finalState": {
+          "timestamp": 706.578,
+          "frames": 163,
+          "pollCount": 166,
+          "renderer": "webgl2",
+          "stage": "playing",
+          "phase": null,
+          "mode": "racing",
+          "time": 2.391666666666661,
+          "countdown": 3.0083333333333253,
+          "speed": 0,
+          "position": null,
+          "playerXZ": [
+            0.9600320531232457,
+            21.480284412245695
+          ],
+          "progress": -0.022620836810820943,
+          "rawButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "controls": null,
+          "lastJavaScriptError": "",
+          "documentEpoch": 1
+        },
+        "wirePressRelease": [
+          {
+            "at": "2026-11-19T21:11:46.869591+00:00",
+            "connection": 1,
+            "direction": "sdk-to-game",
+            "message": {
+              "type": "button",
+              "seq": 53,
+              "controller_id": "virtual-3d4402dbc38d",
+              "key": "UP",
+              "action": "down",
+              "pressed": true,
+              "duration_ms": 0
+            }
+          },
+          {
+            "at": "2026-11-19T21:11:50.759962+00:00",
+            "connection": 1,
+            "direction": "sdk-to-game",
+            "message": {
+              "type": "button",
+              "seq": 55,
+              "controller_id": "virtual-3d4402dbc38d",
+              "key": "UP",
+              "action": "tap",
+              "pressed": false,
+              "duration_ms": 100
+            }
+          }
+        ],
+        "wireHeldSeconds": 3.890371,
+        "pairMatchingAcks": {
+          "53": 1,
+          "55": 1
+        },
+        "originalPlanUnchanged": {
+          "schemaVersion": 1,
+          "renderer": "webgl2",
+          "storageRestartRequired": false,
+          "pauseStablePaths": [
+            "gameplay.time",
+            "gameplay.countdown",
+            "gameplay.playerX",
+            "gameplay.playerY",
+            "gameplay.playerZ",
+            "gameplay.speed",
+            "gameplay.heading",
+            "gameplay.progress",
+            "gameplay.lap",
+            "gameplay.boost"
+          ],
+          "steps": [
+            {
+              "name": "Open original racer selection",
+              "keys": [
+                "START"
+              ],
+              "holdMs": 500,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "gameplay.mode",
+                  "op": "eq",
+                  "value": "characterSelect"
+                }
+              ]
+            },
+            {
+              "name": "Choose another original racer",
+              "keys": [
+                "RIGHT"
+              ],
+              "holdMs": 250,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "gameplay.mode",
+                  "op": "eq",
+                  "value": "characterSelect"
+                }
+              ]
+            },
+            {
+              "name": "Confirm racer and open four-track selector",
+              "keys": [
+                "A"
+              ],
+              "holdMs": 500,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "gameplay.mode",
+                  "op": "eq",
+                  "value": "trackSelect"
+                }
+              ]
+            },
+            {
+              "name": "Start selected original course and wait real countdown",
+              "keys": [
+                "START"
+              ],
+              "holdMs": 700,
+              "timeoutSeconds": 240,
+              "expect": [
+                {
+                  "path": "gameplay.mode",
+                  "op": "eq",
+                  "value": "racing"
+                }
+              ]
+            },
+            {
+              "name": "Accelerate on original race physics",
+              "keys": [
+                "UP"
+              ],
+              "holdMs": 2500,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.speed",
+                  "op": "gt",
+                  "value": 2
+                },
+                {
+                  "path": "gameplay.progress",
+                  "op": "changed"
+                }
+              ]
+            },
+            {
+              "name": "Hop and steer left with original drift controls",
+              "keys": [
+                "UP",
+                "LEFT",
+                "A"
+              ],
+              "holdMs": 900,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "gameplay.heading",
+                  "op": "changed"
+                }
+              ]
+            },
+            {
+              "name": "Steer right with independent throttle",
+              "keys": [
+                "UP",
+                "RIGHT"
+              ],
+              "holdMs": 700,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "gameplay.playerX",
+                  "op": "changed"
+                }
+              ]
+            },
+            {
+              "name": "Open pureTV control help",
+              "keys": [
+                "Y"
+              ],
+              "holdMs": 250,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "gameplay.helpOpen",
+                  "op": "eq",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "name": "Pause manually",
+              "keys": [
+                "START"
+              ],
+              "holdMs": 350,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "paused",
+                  "op": "eq",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "name": "Continue with fresh START",
+              "keys": [
+                "START"
+              ],
+              "holdMs": 350,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "paused",
+                  "op": "eq",
+                  "value": false
+                },
+                {
+                  "path": "stage",
+                  "op": "eq",
+                  "value": "playing"
+                }
+              ]
+            }
+          ]
+        },
+        "menuTapPassed": [],
+        "finalMinusPreThrottlePlayerXZ": [
+          0.00282729076346222,
+          -0.2522851471958205
+        ],
+        "observedMeaning": "The final state is racing; countdown is elapsed countdown time, not remaining. The raw button became pressed before the cached game snapshot consumed it. No held-interval semantic or speed samples were retained by the original verifier."
+      },
+      {
+        "mode": "occupied",
+        "files": {
+          "joystick-windows-evidence-turbo-kart-rush/runtime-occupied/report.json": {
+            "bytes": 296177,
+            "sha256": "ee63e50489b78f4942b15ac0dc711e355e5c859ba025eda641b275822af87503"
+          },
+          "joystick-windows-evidence-turbo-kart-rush/runtime-occupied/diagnostics/state.json": {
+            "bytes": 4056,
+            "sha256": "5990f66bc08bb0a033c55e2eced8687be15aef325292413c8a8506b33b6f5943"
+          }
+        },
+        "passedTopLevelChecks": [
+          "Native DPI-scaled minimum and initial viewport",
+          "DNS-SD resolves actual listener and TXT",
+          "Official SDK and single controller seat"
+        ],
+        "failedTopLevelChecks": [
+          "Actual gameplay and pause model freeze"
+        ],
+        "failureStep": "Accelerate on original race physics",
+        "previousObservation": {
+          "at": "2026-11-19T21:15:26.603509+00:00",
+          "label": "Plan controls released: Start selected original course and wait real countdown",
+          "state": {
+            "timestamp": 863.156,
+            "frames": 116,
+            "pollCount": 120,
+            "renderer": "webgl2",
+            "stage": "playing",
+            "phase": null,
+            "mode": "racing",
+            "time": 0.09166666666666666,
+            "countdown": 3.0083333333333253,
+            "speed": 0,
+            "position": null,
+            "playerXZ": [
+              0.9572047623597835,
+              21.732569559441515
+            ],
+            "progress": -0.022886410016722536,
+            "rawButtons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "semanticButtons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "controls": null,
+            "lastJavaScriptError": "",
+            "documentEpoch": 1
+          }
+        },
+        "inputObserved": {
+          "at": "2026-11-19T21:15:27.950383+00:00",
+          "state": {
+            "timestamp": 864.515,
+            "frames": 117,
+            "pollCount": 121,
+            "renderer": "webgl2",
+            "stage": "playing",
+            "phase": null,
+            "mode": "racing",
+            "time": 0.14166666666666666,
+            "countdown": 3.0083333333333253,
+            "speed": 0,
+            "position": null,
+            "playerXZ": [
+              0.9572047623597835,
+              21.732569559441515
+            ],
+            "progress": -0.022886410016722536,
+            "rawButtons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": true,
+              "X": false,
+              "Y": false
+            },
+            "semanticButtons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "controls": null,
+            "lastJavaScriptError": "",
+            "documentEpoch": 1
+          }
+        },
+        "finalState": {
+          "timestamp": 927.0,
+          "frames": 163,
+          "pollCount": 167,
+          "renderer": "webgl2",
+          "stage": "playing",
+          "phase": null,
+          "mode": "racing",
+          "time": 2.4416666666666607,
+          "countdown": 3.0083333333333253,
+          "speed": 7.174648137343064e-43,
+          "position": null,
+          "playerXZ": [
+            0.9585873375623616,
+            21.609199443781897
+          ],
+          "progress": -0.02275654189926757,
+          "rawButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "controls": null,
+          "lastJavaScriptError": "",
+          "documentEpoch": 1
+        },
+        "wirePressRelease": [
+          {
+            "at": "2026-11-19T21:15:26.607511+00:00",
+            "connection": 1,
+            "direction": "sdk-to-game",
+            "message": {
+              "type": "button",
+              "seq": 54,
+              "controller_id": "virtual-f25ffa86b2dd",
+              "key": "UP",
+              "action": "down",
+              "pressed": true,
+              "duration_ms": 0
+            }
+          },
+          {
+            "at": "2026-11-19T21:15:30.453581+00:00",
+            "connection": 1,
+            "direction": "sdk-to-game",
+            "message": {
+              "type": "button",
+              "seq": 55,
+              "controller_id": "virtual-f25ffa86b2dd",
+              "key": "UP",
+              "action": "tap",
+              "pressed": false,
+              "duration_ms": 100
+            }
+          }
+        ],
+        "wireHeldSeconds": 3.84607,
+        "pairMatchingAcks": {
+          "54": 1,
+          "55": 1
+        },
+        "originalPlanUnchanged": {
+          "schemaVersion": 1,
+          "renderer": "webgl2",
+          "storageRestartRequired": false,
+          "pauseStablePaths": [
+            "gameplay.time",
+            "gameplay.countdown",
+            "gameplay.playerX",
+            "gameplay.playerY",
+            "gameplay.playerZ",
+            "gameplay.speed",
+            "gameplay.heading",
+            "gameplay.progress",
+            "gameplay.lap",
+            "gameplay.boost"
+          ],
+          "steps": [
+            {
+              "name": "Open original racer selection",
+              "keys": [
+                "START"
+              ],
+              "holdMs": 500,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "gameplay.mode",
+                  "op": "eq",
+                  "value": "characterSelect"
+                }
+              ]
+            },
+            {
+              "name": "Choose another original racer",
+              "keys": [
+                "RIGHT"
+              ],
+              "holdMs": 250,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "gameplay.mode",
+                  "op": "eq",
+                  "value": "characterSelect"
+                }
+              ]
+            },
+            {
+              "name": "Confirm racer and open four-track selector",
+              "keys": [
+                "A"
+              ],
+              "holdMs": 500,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "gameplay.mode",
+                  "op": "eq",
+                  "value": "trackSelect"
+                }
+              ]
+            },
+            {
+              "name": "Start selected original course and wait real countdown",
+              "keys": [
+                "START"
+              ],
+              "holdMs": 700,
+              "timeoutSeconds": 240,
+              "expect": [
+                {
+                  "path": "gameplay.mode",
+                  "op": "eq",
+                  "value": "racing"
+                }
+              ]
+            },
+            {
+              "name": "Accelerate on original race physics",
+              "keys": [
+                "UP"
+              ],
+              "holdMs": 2500,
+              "timeoutSeconds": 60,
+              "expect": [
+                {
+                  "path": "gameplay.speed",
+                  "op": "gt",
+                  "value": 2
+                },
+                {
+                  "path": "gameplay.progress",
+                  "op": "changed"
+                }
+              ]
+            },
+            {
+              "name": "Hop and steer left with original drift controls",
+              "keys": [
+                "UP",
+                "LEFT",
+                "A"
+              ],
+              "holdMs": 900,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "gameplay.heading",
+                  "op": "changed"
+                }
+              ]
+            },
+            {
+              "name": "Steer right with independent throttle",
+              "keys": [
+                "UP",
+                "RIGHT"
+              ],
+              "holdMs": 700,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "gameplay.playerX",
+                  "op": "changed"
+                }
+              ]
+            },
+            {
+              "name": "Open pureTV control help",
+              "keys": [
+                "Y"
+              ],
+              "holdMs": 250,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "gameplay.helpOpen",
+                  "op": "eq",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "name": "Pause manually",
+              "keys": [
+                "START"
+              ],
+              "holdMs": 350,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "paused",
+                  "op": "eq",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "name": "Continue with fresh START",
+              "keys": [
+                "START"
+              ],
+              "holdMs": 350,
+              "timeoutSeconds": 40,
+              "expect": [
+                {
+                  "path": "paused",
+                  "op": "eq",
+                  "value": false
+                },
+                {
+                  "path": "stage",
+                  "op": "eq",
+                  "value": "playing"
+                }
+              ]
+            }
+          ]
+        },
+        "menuTapPassed": [],
+        "finalMinusPreThrottlePlayerXZ": [
+          0.001382575202578118,
+          -0.1233701156596183
+        ],
+        "observedMeaning": "The final state is racing; countdown is elapsed countdown time, not remaining. The raw button became pressed before the cached game snapshot consumed it. No held-interval semantic or speed samples were retained by the original verifier."
+      }
+    ]
+  },
+  "findings": {
+    "kart-royale": "New menu taps and focus navigation passed. The original 4.4-second countdown needs at least 88 simulation frames at the unchanged dt<=0.05. Both final states have only 79 total frames; only 11 frames after native start-button observation. Therefore the original countdown cannot have finished in the recorded 60-second observation. No initialized racing/driving pass is claimed.",
+    "turbo-kart-rush": "Original countdown actually completed. UP wire holds lasted about 3.85-3.89 wall seconds at observed approximately 1.38 wall seconds per frame, while each frame simulates at most 0.05 seconds. Original physics applies acceleration then coasts at 4.5+0.06*speed after release. Final small position changes and zero speed are consistent with insufficient sampled throttle time; the sparse original snapshots do not establish exact peak speed or semantic hold consumption, so no mapping-bug root cause is asserted.",
+    "qualityMenus": "No original user-facing Low/graphics setting found in either game main/pause/control menus. Royale scaler query is an author diagnostic, and adaptive scaling is restricted to Racing; Turbo postfx toggles only on render failure. Neither is treated as a normal-menu QA shortcut."
+  },
+  "qaOnlyProposalsNotImplemented": {
+    "kart-royale": {
+      "onlyStepIndex": 11,
+      "preserveExpect": "gameplay.phase == racing",
+      "action": "Confirm original Start race through the normal A input, release, then observe fresh unchanged simulation.",
+      "proposedBoundSeconds": 600,
+      "basis": "Observed 5.8-5.9 wall seconds per frame times at least 88 countdown simulation frames is approximately 510-520 wall seconds. 600 seconds gives a small bounded margin; 240 seconds is not justified as enough.",
+      "sharedSchemaChangeRequired": true,
+      "limits": [
+        "Record frames/polls/phase throughout and fail cleanly on stalled progress or timeout.",
+        "Do not modify default visual quality, countdown duration, clock or simulation.",
+        "This only measures hosted Windows software rendering, not physical device performance."
+      ]
+    },
+    "turbo-kart-rush": {
+      "onlyStepIndex": 4,
+      "preserveKeys": [
+        "UP"
+      ],
+      "preserveExpect": [
+        "gameplay.speed > 2",
+        "gameplay.progress changed"
+      ],
+      "action": "An explicit opt-in held-until-original-expect mode: validate same owner and fresh raw plus semantic held input, keep normal SDK UP held until the original expectation first matches, release immediately, then require two fresh all-released polls.",
+      "maximumSeconds": 60,
+      "record": [
+        "original expected before/first-matching state",
+        "actual native and semantic consumed frame/poll",
+        "exact same-ID wire press/release pair and ACKs",
+        "final released snapshots"
+      ],
+      "limits": [
+        "No change to other steps or default held/tap logic.",
+        "No input after timeout; finally always releases.",
+        "Must be implemented and independently tested by shared QA owner before any native rerun."
+      ]
+    }
+  }
+}

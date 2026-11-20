@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="../dist/styles.css"><div id="ui-root"></div>
+<script type="module">
+import {createPureTv} from '../dist/src/puretv.js';
+import {createInput} from '../dist/src/ui/input.js';
+import {createSettingsSheet} from '../dist/src/ui/screens/settingsSheet.js';
+const raw={buttons:{}},root=document.getElementById('ui-root');
+window.PureGameHost={snapshot:()=>JSON.stringify({players:[{id:1,connected:true,transport:'wifi',controllerId:'Settings-Unit',session:'1',buttons:raw.buttons}]}),getInfo:()=>JSON.stringify({})};
+const game={flow:{state:'title'},save:{cash:0},bus:{on(){}},getSnapshot:()=>null,host:null,pbr:null,audio:null,settings:{quality:'med',camera:'chase',master:0.7,music:0.8,sfx:0.9,hints:true,nameplates:true,muted:false},updateSettings(change){Object.assign(this.settings,change)}};
+game.input=createInput({isRaceActive:()=>false});const adapter=createPureTv(game,root);const sheet=createSettingsSheet({game});root.append(sheet.el);sheet.open();await new Promise(r=>setTimeout(r,80));let t=0;const frame=()=>adapter.frame(t+=16);frame();
+const sequence=[];raw.buttons={LEFT:true};for(let i=0;i<65;i++){frame();sequence.push(document.activeElement.textContent)}raw.buttons={};frame();const focus=document.activeElement.textContent;raw.buttons={A:true};frame();raw.buttons={};frame();
+window.repeatResult={scope:'Original settings DOM/CSS with actual adapter and stub game; unit frame times only, no game renderer/model/clock instantiated',focusAfterHeldLeft:focus,qualityAfterA:game.settings.quality,sequence,passed:focus==='LOW'&&game.settings.quality==='low'};
+</script>

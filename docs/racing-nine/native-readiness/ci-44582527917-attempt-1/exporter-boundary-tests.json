@@ -1,0 +1,29 @@
+{
+  "method": "Execute exact workflow Python block using isolated fixture artifacts and mocked failed log download; never a real CI/game result",
+  "cases": [
+    {
+      "fixture": "failed-report-yml",
+      "expectedExportSuccess": true,
+      "observedExportSuccess": true,
+      "status": "passed"
+    },
+    {
+      "fixture": "early-failure-no-report",
+      "expectedExportSuccess": true,
+      "observedExportSuccess": true,
+      "status": "passed"
+    },
+    {
+      "fixture": "success-requires-report",
+      "expectedExportSuccess": false,
+      "observedExportSuccess": false,
+      "status": "passed"
+    },
+    {
+      "fixture": "unexpected-executable-rejected",
+      "expectedExportSuccess": false,
+      "observedExportSuccess": false,
+      "status": "passed"
+    }
+  ]
+}

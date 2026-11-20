@@ -1,0 +1,192 @@
+name: Joystick games macOS CF completion QA
+on:
+  push:
+    branches: [build/joystick-games-macos-qa]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  provenance:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            joystick-games
+            puretv-joystick
+            .github/workflows
+      - name: Verify original successful builds and QA regressions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/provenance"
+          python3 joystick-games/shared/macos/tests/native-observation.test.py 2>&1 | tee "$RUNNER_TEMP/provenance/native-observation-tests.txt"
+          python3 joystick-games/shared/macos/tests/reuse-source.test.py 2>&1 | tee "$RUNNER_TEMP/provenance/reuse-source-tests.txt"
+          python3 joystick-games/tools/macos-reuse.py --reuse-qq-evidence --output "$RUNNER_TEMP/provenance/source-provenance.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joystick-macos-reuse-provenance
+          path: ${{ runner.temp }}/provenance/
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 14
+  verify:
+    needs: provenance
+    strategy:
+      fail-fast: false
+      matrix:
+        game: [cf-transport-ship]
+        runner: [macos-latest, macos-15-intel]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    env:
+      GAME: ${{ matrix.game }}
+      PYTHONUNBUFFERED: '1'
+      ARTIFACT_SOURCE_COMMIT: 8d6475980ce2312df8839a38dd724794eb59b83b
+      ARTIFACT_SOURCE_RUN: '44115155028'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            joystick-games
+            puretv-joystick
+      - uses: actions/checkout@v4
+        with:
+          ref: 8d6475980ce2312df8839a38dd724794eb59b83b
+          path: artifact-source
+          sparse-checkout: |
+            joystick-games
+            puretv-joystick
+            .github/workflows
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: joystick-macos-package-${{ matrix.game }}
+          run-id: 44115155028
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/package
+      - name: Verify and install identical ZIP and DMG package
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/qa"
+          python3 joystick-games/tools/macos-packages.py --directory "$RUNNER_TEMP/package" --output "$RUNNER_TEMP/qa/package-verification.json" --artifact-source-checkout "$GITHUB_WORKSPACE/artifact-source" 2>&1 | tee "$RUNNER_TEMP/qa/package-verification.log"
+      - name: Compile independent graphics capability probe
+        run: |
+          set -euo pipefail
+          for TARGET_ARCH in arm64 x86_64; do
+            xcrun swiftc -swift-version 5 -target "$TARGET_ARCH-apple-macos11.0" -sdk "$(xcrun --sdk macosx --show-sdk-path)" -framework AppKit -framework WebKit joystick-games/shared/macos/tools/webgl-probe.swift -o "$RUNNER_TEMP/webgl-probe-$TARGET_ARCH"
+          done
+          lipo -create "$RUNNER_TEMP/webgl-probe-arm64" "$RUNNER_TEMP/webgl-probe-x86_64" -output "$RUNNER_TEMP/webgl-probe"
+          codesign --force --sign - --timestamp=none "$RUNNER_TEMP/webgl-probe"
+      - name: Verify actual native app through the official SDK
+        env:
+          RUNNER_KIND: ${{ matrix.runner }}
+        run: |
+          set -euo pipefail
+          if [ "$GAME" = cf-transport-ship ]; then APP='CF Transport Ship.app'; else APP='QQ Speed.app'; fi
+          if [ "$RUNNER_KIND" = macos-15-intel ]; then
+            python3 joystick-games/tools/macos-verify.py --webgl-probe "$RUNNER_TEMP/webgl-probe" --game "$GAME" --app "$RUNNER_TEMP/package/installed/$APP" --output "$RUNNER_TEMP/qa/native" --allow-unavailable-webgl 2>&1 | tee "$RUNNER_TEMP/qa/native.log"
+          else
+            python3 joystick-games/tools/macos-verify.py --webgl-probe "$RUNNER_TEMP/webgl-probe" --game "$GAME" --app "$RUNNER_TEMP/package/installed/$APP" --output "$RUNNER_TEMP/qa/native" 2>&1 | tee "$RUNNER_TEMP/qa/native.log"
+          fi
+      - name: Verify stable initial fallback while port 63485 is occupied
+        if: matrix.runner == 'macos-latest'
+        run: |
+          set -euo pipefail
+          if [ "$GAME" = cf-transport-ship ]; then APP='CF Transport Ship.app'; else APP='QQ Speed.app'; fi
+          python3 joystick-games/tools/macos-verify.py --webgl-probe "$RUNNER_TEMP/webgl-probe" --game "$GAME" --app "$RUNNER_TEMP/package/installed/$APP" --output "$RUNNER_TEMP/qa/occupied-port" --occupy-default-port 2>&1 | tee "$RUNNER_TEMP/qa/occupied-port.log"
+      - name: Run Intel executable under Rosetta with graphics
+        if: matrix.runner == 'macos-latest'
+        run: |
+          set -euo pipefail
+          if [ "$GAME" = cf-transport-ship ]; then APP='CF Transport Ship.app'; else APP='QQ Speed.app'; fi
+          if ! /usr/bin/arch -x86_64 /usr/bin/true; then sudo /usr/sbin/softwareupdate --install-rosetta --agree-to-license; fi
+          python3 joystick-games/tools/macos-verify.py --webgl-probe "$RUNNER_TEMP/webgl-probe" --game "$GAME" --app "$RUNNER_TEMP/package/installed/$APP" --output "$RUNNER_TEMP/qa/rosetta" --launch-architecture x86_64 2>&1 | tee "$RUNNER_TEMP/qa/rosetta.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joystick-macos-qa-${{ matrix.game }}-${{ matrix.runner }}
+          path: ${{ runner.temp }}/qa/
+          if-no-files-found: warn
+          include-hidden-files: true
+          retention-days: 14
+  export:
+    if: always()
+    needs: [provenance, verify]
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: joystick-macos-reuse-provenance
+          path: ${{ runner.temp }}/export/provenance
+      - uses: actions/download-artifact@v4
+        if: needs.provenance.result == 'success'
+        with:
+          pattern: joystick-macos-qa-qq-speed-*
+          run-id: 44120745068
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/export/evidence
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: joystick-macos-qa-*
+          path: ${{ runner.temp }}/export/evidence
+      - uses: actions/download-artifact@v4
+        if: needs.provenance.result == 'success' && needs.verify.result == 'success'
+        with:
+          pattern: joystick-macos-package-*
+          run-id: 44115155028
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/export/packages
+      - name: Preserve immutable packages and all original evidence in isolated branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_RESULT: ${{ needs.provenance.result }}
+          VERIFY_RESULT: ${{ needs.verify.result }}
+        run: |
+          python3 - <<'PY'
+          import datetime,hashlib,json,os,re,subprocess
+          from pathlib import Path
+          out=Path(os.environ['RUNNER_TEMP'])/'export';out.mkdir(exist_ok=True)
+          qa_source=os.environ['GITHUB_SHA'];source='8d6475980ce2312df8839a38dd724794eb59b83b';run=os.environ['GITHUB_RUN_ID'];attempt=os.environ['GITHUB_RUN_ATTEMPT'];repo=os.environ['GITHUB_REPOSITORY']
+          assert re.fullmatch('[a-f0-9]{40}',qa_source) and re.fullmatch('[a-f0-9]{40}',source) and run.isdigit() and attempt.isdigit()
+          qa_sources={'cf-transport-ship':qa_source,'qq-speed':'6da4d967d41fb0b365b563777d6ada9e8c079fe2'}
+          success=os.environ['BUILD_RESULT']==os.environ['VERIFY_RESULT']=='success'
+          if success:
+            provenance=json.loads((out/'provenance/source-provenance.json').read_text());assert provenance['artifactSourceCommit']==source and provenance['artifactRunId']==44115155028 and provenance['previousQQ']['qaSourceCommit']==qa_sources['qq-speed'] and provenance['previousQQ']['qaRunId']==44120745068
+            for game in ['cf-transport-ship','qq-speed']:
+              expected_qa=qa_sources[game]
+              packages=out/'packages'/('joystick-macos-package-'+game);m=json.loads((packages/'build-manifest.json').read_text());assert m['sourceCommit']==source and m['game']==game
+              for name,item in m['packages'].items():
+                p=packages/name;assert p.stat().st_size==item['bytes'] and hashlib.sha256(p.read_bytes()).hexdigest()==item['sha256']
+              for platform in ['macos-latest','macos-15-intel']:
+                evidence=out/'evidence'/('joystick-macos-qa-'+game+'-'+platform)
+                package_check=json.loads((evidence/'package-verification.json').read_text());assert package_check['status']=='passed' and package_check['artifactSourceCommit']==source and package_check['qaSourceCommit']==expected_qa and package_check['artifactRunId']==44115155028
+                executables=[v['sha256'] for name,v in m['appFiles'].items() if name.startswith('Contents/MacOS/')];assert len(executables)==1
+                native=json.loads((evidence/'native/report.json').read_text());assert native['qaSourceCommit']==expected_qa and native['artifactSourceCommit']==source and native['binarySha256']==executables[0]
+                assert native['status']=='passed' or (platform=='macos-15-intel' and native['status']=='limited_graphics' and not native['webglAvailable'] and native['initialization']['classification'] in ['webgl_unavailable','webgl_incomplete'])
+                if platform=='macos-latest':
+                  for mode in ['occupied-port','rosetta']:
+                    report=json.loads((evidence/mode/'report.json').read_text());assert report['status']=='passed' and report['qaSourceCommit']==expected_qa and report['artifactSourceCommit']==source and report['binarySha256']==executables[0]
+          else:assert not (out/'packages').exists(),'Never export packages as validated after failed runtime checks'
+          files={}
+          for p in sorted(out.rglob('*')):
+            if p.is_file():
+              assert not p.is_symlink() and p.stat().st_size<50000000
+              files[p.relative_to(out).as_posix()]={'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+          assert sum(v['bytes'] for v in files.values())<150000000
+          branch=f'build-assets/joystick-games-macos-qa-{run}-attempt-{attempt}'
+          (out/'export-manifest.json').write_text(json.dumps({'sourceCommit':source,'artifactSourceCommit':source,'artifactRunId':44115155028,'artifactRunAttempt':1,'workflowSourceCommit':qa_source,'qaSourceCommits':qa_sources,'qaRunIds':{'cf-transport-ship':int(run),'qq-speed':44120745068},'runId':int(run),'runAttempt':int(attempt),'exportBranch':branch,'originalBuildResult':'success' if success else 'see original provenance','provenanceResult':os.environ['BUILD_RESULT'],'verifyResult':os.environ['VERIFY_RESULT'],'installPackagesValidated':success,'files':files},indent=2)+'\n')
+          def git(*args):subprocess.run(['git','-C',str(out),*args],check=True)
+          git('init','-b','export');git('config','user.name','github-actions[bot]');git('config','user.email','41898282+github-actions[bot]@users.noreply.github.com');git('add','.');git('commit','-m',f'Export joystick games macOS {run} [skip ci]')
+          subprocess.run(['gh','auth','setup-git'],check=True);git('remote','add','origin','https://github.com/'+repo+'.git');git('push','origin','HEAD:refs/heads/'+branch)
+          PY

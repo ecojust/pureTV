@@ -47,8 +47,21 @@
     });
     for (var i = 1; i <= 2; i++)
       $("player-name-" + i).textContent = tr("玩家 ", "PLAYER ") + i;
+        var lastWifiRefresh = -1000;
+    function updateWifi(refresh) {
+      if (refresh && performance.now() - lastWifiRefresh >= 500) {
+        lastWifiRefresh = performance.now();
+        try { if (bridge) info = Object.assign({}, info, JSON.parse(bridge.getInfo())); } catch (_) {}
+      }
+      var wifi = info.wifiController || {}, address = (wifi.addresses || []).filter(function(v){return typeof v === 'string';}).join(' / ');
+      var node = document.getElementById('puretv-address');
+      if (!node) return;
+      node.textContent = wifi.port > 0 && address ? address + ':' + wifi.port : tr('等待局域网地址', 'Waiting for LAN address');
+      document.getElementById('puretv-status').textContent = (wifi.state === 'unavailable' ? (wifi.port > 0 ? tr('自动发现暂不可用，可按地址直连', 'Discovery unavailable; connect by address') : tr('手柄服务暂不可用，请重新打开游戏', 'Controller service unavailable; reopen game')) : wifi.connected ? tr('已连接 · START 开始 / 暂停', 'Connected · START begin / pause') : wifi.state === 'available' ? tr('同一网络，按手柄搜索键连接', 'Same network: press controller Search') : tr('正在准备手柄服务', 'Preparing controller service'));
+      document.getElementById('puretv-help').textContent = tr('方向走动 · A/X 互动 · B 背包 · Y 工具/人数', 'Walk · A/X use · B bag · Y tool/players');
+    }
     function updateRoom(value) {
-      info = Object.assign({}, info, value);
+      info = Object.assign({}, info, value); updateWifi();
       var ready = !!(info.qr && info.url);
       $("room-qr").hidden = !ready;
       $("qr-pending").hidden = ready;
@@ -129,18 +142,32 @@
         if (Array.from(held.values()).indexOf(action) < 0) keys.delete(action);
       }
     }
+    root.PureTVQA = {snapshot: function () {
+      var players = game && game.players ? game.players.map(function(player) {
+        var copy = {};
+        ['id','x','y','z','yaw','angle','facing','speed','movingSpeed','lateral','s','u','v','steerAngle','driftTime','drifting','driftCharge','boost','item','heldItem','inventory','tool','netRaised','weapon','ammo','grenades','fireCooldown','previous','lap','rank','connected','joined','active','cancelSeq','telemetry'].forEach(function(key){if (player[key] !== undefined) copy[key] = player[key];});
+        return copy;
+      }) : [];
+      var model = {phase: game ? game.phase : 'loading', players: players};
+      ['elapsed','raceTime','clock','countdown','stage','trackIndex','trackId','selectedPlayers','playerCount','kills','credits','eventSerial','events','projectiles','bullets'].forEach(function(key){if(game && game[key] !== undefined) model[key] = game[key];});
+      var camera = renderer && renderer.camera;
+      return JSON.parse(JSON.stringify({phase:model.phase,paused:!!(suspended || !visible || model.phase === 'paused'),controllerPaused:!!(game && model.phase === 'paused'),controllers:controllerAdapter.peek(),info:info,model:model,players:players,camera:camera && camera.matrixWorldInverse ? {projection:camera.projectionMatrix.elements,view:camera.matrixWorldInverse.elements} : null}));
+    }};
+    var controllerInputs = [], controllerAdapter = root.PureTVControllerAdapter.create({onCancel: function (event) { if (game && event.id > game.selectedPlayers) return false; if (!game || game.phase === "title") return false;
+        game.cancelHeldActions(); game.manualPause = true; game.phase = "paused"; game.pausedReason = "manual"; releaseKeys(); return true; }});
     function inputs() {
       var list = [];
       try {
         if (bridge) list = JSON.parse(bridge.snapshot()).players || [];
       } catch (_) {}
+      list = controllerAdapter.read(list); controllerInputs = list;
       list = list
         .filter(function (p) {
           return p && [1, 2].indexOf(Number(p.id)) >= 0;
         })
         .map(function (p) {
           return {
-            id: Number(p.id),
+            id: Number(p.id), transport: p.transport, session: p.session,
             connected: !!p.connected,
             x: Number(p.x) || 0,
             y: Number(p.y) || 0,
@@ -190,6 +217,8 @@
       } catch (_) {}
     }
     function updateUi(current) {
+      updateWifi(true);
+      root.PureTVControllerAdapter.renderClients($("controller-clients"), controllerAdapter.peek(), { language: english ? "en" : "zh" });
       if (game)
         $("music-button").textContent =
           tr("音乐：", "Music: ") +
@@ -211,9 +240,9 @@
       }
     }
     var roomTimer = root.setInterval(function () {
-      if (visible && !destroyed && !suspended) updateUi(inputs());
+      if (visible && !destroyed && !suspended) updateUi(controllerInputs);
     }, 200);
-    updateUi(inputs());
+    updateUi(controllerInputs);
     function animate(now) {
       if (!visible || destroyed || drawFailed) return;
       var dt = last ? Math.min((now - last) / 1000, 0.1) : 0;
@@ -253,7 +282,7 @@
       if (sound) sound.pause(suspended || !visible);
       publish();
     }
-    root.CozyIslandTV = {
+    root.CozyIslandTV = { controllerSnapshot: function () { return controllerAdapter.peek(); },
       key: key,
       updateRoom: updateRoom,
       suspend: suspend,
@@ -278,7 +307,7 @@
     root.addEventListener("blur", function () {
       var hadA = keys.has("a") || performance.now() < pulse.a;
       releaseKeys();
-      if (game && hadA && !inputs().some(function (p) { return p.id === 1 && p.a; })) game.cancelHeldActions(1);
+      if (game && hadA && !controllerAdapter.peek().some(function (p) { return p.id === 1 && p.a; })) game.cancelHeldActions(1);
     });
     document.addEventListener("visibilitychange", function () {
       visible = !document.hidden;
@@ -318,12 +347,12 @@
       $("music-button").onclick = function () {
         game.toggleMusic();
         sound.unlock().catch(function () {});
-        updateUi(inputs());
+        updateUi(controllerInputs);
       };
       renderer.draw(game);
       if (!$("game-loading").hasAttribute("data-failed"))
         $("game-loading").hidden = true;
-      updateUi(inputs());
+      updateUi(controllerInputs);
       publish();
       if (visible) frame = root.requestAnimationFrame(animate);
     } catch (error) {

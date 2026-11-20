@@ -1,0 +1,29 @@
+{
+  "sourceSha": "4b6cf0b8cba288eae66bcae2ef2784acc279a695",
+  "path": "resource/game-kit/android/src/main/java/com/ecojust/gamekit/MainActivity.java",
+  "bytes": 25896,
+  "sha256": "bff7e64d78a6e50120dddb12800fa5ed5ed09023f155e175ebfd3474943a13a6",
+  "matchesCurrentProduction": true,
+  "excerpts": [
+    {
+      "firstLine": 77,
+      "lastLine": 104,
+      "text": "    @Override public void onCreate(Bundle state) {\n        super.onCreate(state);\n        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN\n            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY\n            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION\n            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);\n        root = new FrameLayout(this);\n        root.setBackgroundColor(Color.rgb(12,18,22));\n        status = new TextView(this);\n        status.setText(R.string.starting);\n        status.setTextColor(Color.rgb(246,188,90));\n        status.setTextSize(22);\n        status.setGravity(android.view.Gravity.CENTER);\n        try {\n            loadAssetIndex();\n            web = createWebView();\n            root.addView(web, new FrameLayout.LayoutParams(-1,-1));\n        } catch (RuntimeException missingWebView) {\n            status.setText(R.string.web_error);\n        }\n        root.addView(status, new FrameLayout.LayoutParams(-1,-1));\n        setContentView(root);\n        connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);\n        wifiDiscovery = new WifiControllerDiscovery(this, (discoveryState, name, port, error) -> {\n            final int expected = generation;\n            main.post(() -> updateWifiInfo(expected, discoveryState, name, port, error));\n        });\n    }"
+    },
+    {
+      "firstLine": 229,
+      "lastLine": 240,
+      "text": "    @Override protected void onStart() {\n        super.onStart();\n        active = true;\n        suspended = false;\n        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);\n        if (web != null) {\n            web.onResume();\n            web.resumeTimers();\n            startRoom();\n        }\n        if (connectivity != null) {\n            networkCallback = new ConnectivityManager.NetworkCallback() {"
+    },
+    {
+      "firstLine": 260,
+      "lastLine": 268,
+      "text": "    private void startRoom() {\n        closeRoom(false);\n        if (!active || destroyed || web == null) return;\n        final int expected = generation;\n        final WifiControllerServer retainedWifi = wifiServer;\n        if (pageLoaded) web.evaluateJavascript(\"window.PureGame && window.PureGame.focus && window.PureGame.focus(false)\", null);\n        lastAddresses = lanAddresses();\n        final List<String> addresses = new ArrayList<>(lastAddresses);\n        status.setText(R.string.starting);"
+    },
+    {
+      "firstLine": 301,
+      "lastLine": 319,
+      "text": "                    server = created; pendingServer = null;\n                    wifiServer = readyWifiPort > 0 ? createdWifi : null; pendingWifiServer = null;\n                }\n                info = ready;\n                suspended = exitDialog != null;\n                createdWifi.setInputActive(windowFocused && !suspended);\n                if (readyWifiPort > 0 && !addresses.isEmpty()) {\n                    wifiDiscovery.start(getString(R.string.app_name), readyWifiPort);\n                } else updateWifiInfo(expected, \"unavailable\", getString(R.string.app_name), readyWifiPort, -1);\n                if (pageLoaded) {\n                    web.evaluateJavascript(\"window.PureGame && window.PureGame.networkChanged(\" + info + \")\", null);\n                    status.setVisibility(View.GONE);\n                } else {\n                    pageLoaded = true;\n                    web.loadUrl(GAME_URL);\n                }\n            });\n        });\n    }"
+    }
+  ]
+}

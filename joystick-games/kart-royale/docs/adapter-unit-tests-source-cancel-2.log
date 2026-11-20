@@ -1,0 +1,43 @@
+
+> puretv-kart-royale@0.1.0 test
+> node --test tests/*.test.mjs
+
+✔ independent nine-key controls feed original steering/drift/item pipeline (3.185206ms)
+✔ cancellation empties drift minimum hold and item re-arm buffer (0.975989ms)
+✔ cancelling original Kart drift forfeits charge without paying a boost (0.434851ms)
+✔ throttle cannot resume a paused original race; explicit resume can (0.971382ms)
+✔ Wi-Fi seat isolates touch AUTO gas; cancellation clears touch pointer latches (0.709897ms)
+✖ held standard gamepad confirm/pause cannot become fresh after cancellation (1.69553ms)
+✔ cancelled keyboard OS repeat cannot auto-confirm; fresh keydown still works (0.228276ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 614.651881
+
+✖ failing tests:
+
+test at tests/controller.test.mjs:48:1
+✖ held standard gamepad confirm/pause cannot become fresh after cancellation (1.69553ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///dev/shm/puretv-submit/joystick-games/kart-royale/tests/controller.test.mjs:55:67)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

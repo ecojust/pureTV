@@ -1,0 +1,312 @@
+{
+  "status": "passed",
+  "auditedAt": "2026-11-15T14:37:20.778574+00:00",
+  "sourceCommit": "cc04129f0369c1e9f9262ab798b353f276f1dc3b",
+  "runId": 43724380197,
+  "exportDirectory": "/dev/shm/neon-macos-ci/43724380197/export",
+  "auditScriptSha256": "03abbd6300c85cd3ef76cfe9bd2dbf42607530c8081ccc3a33f3ea7b482b0f2e",
+  "gameRerun": false,
+  "scope": "Read-only verification of exported CI files, package bytes and native diagnostic/wire observations. No game state writes or additional hardware test.",
+  "checks": [
+    {
+      "name": "export_manifest_and_all_file_hashes",
+      "status": "passed",
+      "details": {
+        "exportManifestSha256": "263249a8b591313cfde874a464684c969fef5418dd32716c81ae7753c90fda8c",
+        "allListedFilesVerified": 123,
+        "noMissingOrUnlistedFiles": true,
+        "workflowUrl": "https://github.com/ecojust/pureTV/actions/runs/43724380197",
+        "sourceCommit": "cc04129f0369c1e9f9262ab798b353f276f1dc3b",
+        "scope": "Computed manifest digest and verified every local exported file against its size/SHA-256 index."
+      }
+    },
+    {
+      "name": "package_and_committed_app_bytes",
+      "status": "passed",
+      "details": {
+        "version": "0.1.3",
+        "buildVersion": "3",
+        "packages": [
+          {
+            "name": "NeonRush-0.1.3-macos-universal.zip",
+            "bytes": 555160,
+            "sha256": "68a6b92afaafd121d61ba9b7e13b261050bc21c28dcb40b2ec5552db7176bb9c"
+          },
+          {
+            "name": "NeonRush-0.1.3-macos-universal.dmg",
+            "bytes": 888032,
+            "sha256": "8f8ef19a933fc0e15acef4bdc798b6250c8a35bd97d828395a9ae2dc7fe625a9"
+          }
+        ],
+        "zipAppFilesVerified": 25,
+        "committedBuildInputsVerified": 67,
+        "binarySha256": "5160a07115f72a404c5b2198d98dfda69340217f0ed2e7439bf9dac0b756d169",
+        "machOSlices": [
+          {
+            "architecture": "x86_64",
+            "offset": 16384,
+            "bytes": 439504,
+            "sliceSha256": "c15a0f70618cd8a9f66884c45a3fa072e647d86e08785ab30e526d63f49643e7"
+          },
+          {
+            "architecture": "arm64",
+            "offset": 458752,
+            "bytes": 450384,
+            "sliceSha256": "fcdee15cd9b06526d2dc931306f13f393bf9dd7aab2943b61595ffcc6897509b"
+          }
+        ],
+        "webAssets": [
+          {
+            "file": "game-model.js",
+            "sha256": "1cf7b1c91076deff8e8ccde601551a075a48e0cbe1682e7a6e7afc157eec5aa5",
+            "matchesCommitByteForByte": true
+          },
+          {
+            "file": "game.js",
+            "sha256": "28c9e67adbdde30a81bd67c27a4270205a78bcfa17b5c60a537b241b058bfed8",
+            "matchesCommitByteForByte": true
+          }
+        ],
+        "dmgBoundary": "DMG bytes independently hash-checked here; mounted/installed app checks are the archived Mac CI observations, not a new Linux mount.",
+        "signature": "ad-hoc",
+        "appleNotarized": false,
+        "physicalControllerTested": false
+      }
+    },
+    {
+      "name": "macos-arm64/native",
+      "status": "passed",
+      "details": {
+        "mode": "macos-arm64/native",
+        "status": "passed",
+        "testsPassed": 11,
+        "nativeProcessArchitecture": "arm64",
+        "sdkSha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+        "sdkMatchesOriginalAndCommit": true,
+        "binaryMatchesPackage": true,
+        "gameStateWritesDeclared": false,
+        "directionCases": [
+          {
+            "input": "LEFT",
+            "expectedSign": -1,
+            "recomputedScreenDeltaX": -0.038586738363613926
+          },
+          {
+            "input": "RIGHT",
+            "expectedSign": 1,
+            "recomputedScreenDeltaX": 0.03673757987911758
+          }
+        ],
+        "initialAndStablePort": 63485,
+        "defaultPortOccupied": false,
+        "preRegistrationSnapshots": [
+          {
+            "label": "Native game menu",
+            "state": "registering",
+            "port": 63485
+          }
+        ],
+        "focusCyclesIndependentlyChecked": [
+          {
+            "cycle": 1,
+            "sessionUnchanged": true,
+            "backgroundModelAndPulsesFrozen": true,
+            "heldKeysQuarantined": true,
+            "sameConnectionHeartbeatAckSequence": 207
+          },
+          {
+            "cycle": 2,
+            "sessionUnchanged": true,
+            "backgroundModelAndPulsesFrozen": true,
+            "heldKeysQuarantined": true,
+            "sameConnectionHeartbeatAckSequence": 233
+          },
+          {
+            "cycle": 3,
+            "sessionUnchanged": true,
+            "backgroundModelAndPulsesFrozen": true,
+            "heldKeysQuarantined": true,
+            "sameConnectionHeartbeatAckSequence": 260
+          }
+        ],
+        "wireMessagesWithMatchingAck": 359,
+        "limitations": [],
+        "physicalControllerTested": false
+      }
+    },
+    {
+      "name": "macos-arm64/native-occupied-port",
+      "status": "passed",
+      "details": {
+        "mode": "macos-arm64/native-occupied-port",
+        "status": "passed",
+        "testsPassed": 11,
+        "nativeProcessArchitecture": "arm64",
+        "sdkSha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+        "sdkMatchesOriginalAndCommit": true,
+        "binaryMatchesPackage": true,
+        "gameStateWritesDeclared": false,
+        "directionCases": [
+          {
+            "input": "LEFT",
+            "expectedSign": -1,
+            "recomputedScreenDeltaX": -0.03495040368656682
+          },
+          {
+            "input": "RIGHT",
+            "expectedSign": 1,
+            "recomputedScreenDeltaX": 0.03352079631537569
+          }
+        ],
+        "initialAndStablePort": 63430,
+        "defaultPortOccupied": true,
+        "preRegistrationSnapshots": [
+          {
+            "label": "Native game menu",
+            "state": "registering",
+            "port": 63430
+          }
+        ],
+        "focusCyclesIndependentlyChecked": [
+          {
+            "cycle": 1,
+            "sessionUnchanged": true,
+            "backgroundModelAndPulsesFrozen": true,
+            "heldKeysQuarantined": true,
+            "sameConnectionHeartbeatAckSequence": 227
+          },
+          {
+            "cycle": 2,
+            "sessionUnchanged": true,
+            "backgroundModelAndPulsesFrozen": true,
+            "heldKeysQuarantined": true,
+            "sameConnectionHeartbeatAckSequence": 253
+          },
+          {
+            "cycle": 3,
+            "sessionUnchanged": true,
+            "backgroundModelAndPulsesFrozen": true,
+            "heldKeysQuarantined": true,
+            "sameConnectionHeartbeatAckSequence": 280
+          }
+        ],
+        "wireMessagesWithMatchingAck": 379,
+        "limitations": [],
+        "physicalControllerTested": false
+      }
+    },
+    {
+      "name": "macos-arm64/rosetta",
+      "status": "passed",
+      "details": {
+        "mode": "macos-arm64/rosetta",
+        "status": "passed",
+        "testsPassed": 11,
+        "nativeProcessArchitecture": "x86_64",
+        "sdkSha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+        "sdkMatchesOriginalAndCommit": true,
+        "binaryMatchesPackage": true,
+        "gameStateWritesDeclared": false,
+        "directionCases": [
+          {
+            "input": "LEFT",
+            "expectedSign": -1,
+            "recomputedScreenDeltaX": -0.040202122380895496
+          },
+          {
+            "input": "RIGHT",
+            "expectedSign": 1,
+            "recomputedScreenDeltaX": 0.06545426192528468
+          }
+        ],
+        "initialAndStablePort": 63485,
+        "defaultPortOccupied": false,
+        "preRegistrationSnapshots": [
+          {
+            "label": "Native game menu",
+            "state": "registering",
+            "port": 0
+          }
+        ],
+        "focusCyclesIndependentlyChecked": [
+          {
+            "cycle": 1,
+            "sessionUnchanged": true,
+            "backgroundModelAndPulsesFrozen": true,
+            "heldKeysQuarantined": true,
+            "sameConnectionHeartbeatAckSequence": 227
+          },
+          {
+            "cycle": 2,
+            "sessionUnchanged": true,
+            "backgroundModelAndPulsesFrozen": true,
+            "heldKeysQuarantined": true,
+            "sameConnectionHeartbeatAckSequence": 253
+          },
+          {
+            "cycle": 3,
+            "sessionUnchanged": true,
+            "backgroundModelAndPulsesFrozen": true,
+            "heldKeysQuarantined": true,
+            "sameConnectionHeartbeatAckSequence": 280
+          }
+        ],
+        "wireMessagesWithMatchingAck": 379,
+        "limitations": [],
+        "physicalControllerTested": false
+      }
+    },
+    {
+      "name": "macos-x64/native",
+      "status": "passed",
+      "details": {
+        "mode": "macos-x64/native",
+        "status": "limited_graphics",
+        "testsPassed": 7,
+        "nativeProcessArchitecture": "x86_64",
+        "sdkSha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+        "sdkMatchesOriginalAndCommit": true,
+        "binaryMatchesPackage": true,
+        "gameStateWritesDeclared": "No 3D direction test run",
+        "directionCases": [],
+        "initialAndStablePort": 63485,
+        "defaultPortOccupied": false,
+        "preRegistrationSnapshots": [
+          {
+            "label": "Native game menu",
+            "state": "registering",
+            "port": 63485
+          }
+        ],
+        "focusCyclesIndependentlyChecked": [
+          {
+            "cycle": 1,
+            "sessionUnchanged": true,
+            "backgroundModelAndPulsesFrozen": true,
+            "heldKeysQuarantined": true,
+            "sameConnectionHeartbeatAckSequence": 44
+          },
+          {
+            "cycle": 2,
+            "sessionUnchanged": true,
+            "backgroundModelAndPulsesFrozen": true,
+            "heldKeysQuarantined": true,
+            "sameConnectionHeartbeatAckSequence": 69
+          },
+          {
+            "cycle": 3,
+            "sessionUnchanged": true,
+            "backgroundModelAndPulsesFrozen": true,
+            "heldKeysQuarantined": true,
+            "sameConnectionHeartbeatAckSequence": 93
+          }
+        ],
+        "wireMessagesWithMatchingAck": 107,
+        "limitations": [
+          "This hosted Intel Mac could not create a WebGL context; actual 3D driving and virtual-page gameplay checks were not run on this machine. Package, native protocol, TCP/SDK, Bonjour and error UI checks still ran."
+        ],
+        "physicalControllerTested": false
+      }
+    }
+  ]
+}

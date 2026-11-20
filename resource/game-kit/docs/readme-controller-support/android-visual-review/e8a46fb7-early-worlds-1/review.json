@@ -1,0 +1,258 @@
+{
+  "reviewedAt": "2026-11-15T16:41:44.967509+00:00",
+  "reviewer": "controller_legacy_web_3d",
+  "scope": "Read-only inspection of the third-run early-worlds-1 actual signed-APK screenshots; eight PNGs individually viewed.",
+  "method": "Original PNGs opened individually using view_image. No image editing, recapture, model writes, source changes, raw-report changes or gallery replacement. Android runtime captures use adb screencap; original report flags confirm actual Android app mode with no synthetic native bridge.",
+  "sourceRoot": "/dev/shm/controller-release-ci/e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb/runtime/early-worlds-1/export/artifact",
+  "runnerSourceSha": "e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb",
+  "environment": "Android TV emulator / AVD, not a physical television",
+  "androidAppUi": true,
+  "syntheticNativeBridge": false,
+  "physicalTvTested": false,
+  "qrDecodeOrScanTested": false,
+  "releaseApprovalByThisReview": false,
+  "imageCount": 8,
+  "games": [
+    {
+      "slug": "coast-kart",
+      "artifactSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "apkSha256": "52b2d0b5ca26c477c1648b30c0f882cda6f96afc615717cbf7051145d08fa255",
+      "observerSha256": "4b5c4db2c861ac4fc7978986405d65f5430254e115e159a718768cd4824a3aef",
+      "sourceCase": "/dev/shm/controller-release-ci/e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb/runtime/early-worlds-1/export/artifact/coast-kart/case.json",
+      "sourceCaseSha256": "8e3eda7ecc26ba034f468ea03871c547ed035d36c95ccb0880e4b0ae3dfaa617",
+      "rawReport": "/dev/shm/controller-release-ci/e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb/runtime/early-worlds-1/export/artifact/coast-kart/gameplay/report.json",
+      "rawReportSha256": "b856c33ad73e645f71b6c35576829e0513a738caabff8ff8c59274819a3334a1",
+      "rawCaseStatus": "passed",
+      "rawReportStatus": "passed",
+      "tests": [
+        {
+          "name": "menu layout and service address",
+          "status": "passed"
+        },
+        {
+          "name": "official hello and nine sync messages leave menu unchanged",
+          "status": "passed"
+        },
+        {
+          "name": "START begins actual game",
+          "status": "passed"
+        },
+        {
+          "name": "direction and game-specific action affect actual model",
+          "status": "passed"
+        },
+        {
+          "name": "START pause freezes game, fresh START resumes",
+          "status": "passed"
+        },
+        {
+          "name": "disconnect clears held input, reconnect sync requires fresh START",
+          "status": "passed"
+        },
+        {
+          "name": "all nine official keys and long hold have real protocol receipts",
+          "status": "passed"
+        },
+        {
+          "name": "two official SDK identities retain separate seats and held-sync safety",
+          "status": "passed"
+        },
+        {
+          "name": "same-sequence ACK for every original SDK message",
+          "status": "passed"
+        }
+      ],
+      "passedTestCount": 9,
+      "reportedTestCount": 9,
+      "visualReviewDoesNotOverrideRawStatus": true,
+      "visualDisposition": "Menu and gameplay are suitable final gallery candidates; all four reviewed captures show no blocking layout issue.",
+      "runtimeContext": "Raw signed-APK Android runtime report independently passed all 9 tests, including original SDK same-sequence ACK, disconnect/reconnect safety and two controller seats.",
+      "recommendedGalleryFiles": [
+        "menu-android.png",
+        "gameplay.png"
+      ],
+      "images": [
+        {
+          "sourcePath": "/dev/shm/controller-release-ci/e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb/runtime/early-worlds-1/export/artifact/coast-kart/gameplay/menu-android.png",
+          "exportRelativePath": "coast-kart/gameplay/menu-android.png",
+          "sha256": "a4111740e2d7e5aef37f1bfe0d1623b965bb1380d09074a8ada165216ec1fee0",
+          "dimensions": {
+            "width": 1920,
+            "height": 1080
+          },
+          "openedIndividually": true,
+          "visualDisposition": "no blocking layout issue observed",
+          "observations": [
+            "English title, four circuit choices, START action, both player cards, footer and music button are visible.",
+            "Actual QR pattern and white quiet border are complete; there is no TEST QR placeholder. This is a visual check, not QR decoding.",
+            "Phone URL http://10.0.2.15:34713/ and Wi-Fi address 10.0.2.15:63485 are readable; Search and A/X item, B drift, Y players mapping fit.",
+            "Sidebar title is wholly inside the screen; the previously reported top clipping is absent."
+          ]
+        },
+        {
+          "sourcePath": "/dev/shm/controller-release-ci/e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb/runtime/early-worlds-1/export/artifact/coast-kart/gameplay/gameplay.png",
+          "exportRelativePath": "coast-kart/gameplay/gameplay.png",
+          "sha256": "87407f9832276a74634c06e019e4704749c7bed8bb8e1d39bb6f2b60ea16977d",
+          "dimensions": {
+            "width": 1920,
+            "height": 1080
+          },
+          "openedIndividually": true,
+          "visualDisposition": "no blocking layout issue observed",
+          "observations": [
+            "Kart, opponent, road and rank/time/lap/speed/item HUD are visibly rendered.",
+            "Connected and START begin / pause text, full QR and 10.0.2.15:63485 remain readable.",
+            "No blocking layout clipping was observed."
+          ]
+        },
+        {
+          "sourcePath": "/dev/shm/controller-release-ci/e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb/runtime/early-worlds-1/export/artifact/coast-kart/gameplay/paused.png",
+          "exportRelativePath": "coast-kart/gameplay/paused.png",
+          "sha256": "efd7d93118e27aff2cad235f9b78293f772a476192b98d958c30e90a5b3391aa",
+          "dimensions": {
+            "width": 1920,
+            "height": 1080
+          },
+          "openedIndividually": true,
+          "visualDisposition": "no blocking layout issue observed",
+          "observations": [
+            "TAKE A BREATHER overlay and START RESUME RACE / SELECT TOGGLE MUSIC fit and remain readable.",
+            "QR, connected status and address remain visible outside the overlay."
+          ]
+        },
+        {
+          "sourcePath": "/dev/shm/controller-release-ci/e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb/runtime/early-worlds-1/export/artifact/coast-kart/gameplay/reconnected.png",
+          "exportRelativePath": "coast-kart/gameplay/reconnected.png",
+          "sha256": "849097d701e3ede72216ecb8b33b208b1035b60ae879f4958d5515110b4be982",
+          "dimensions": {
+            "width": 1920,
+            "height": 1080
+          },
+          "openedIndividually": true,
+          "visualDisposition": "no blocking layout issue observed",
+          "observations": [
+            "Race scene and speed/lap/rank/item/slipstream HUD are visible.",
+            "Connected status, actual QR and Wi-Fi instructions fit without clipping."
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "cozy-island",
+      "artifactSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "observerSourceSha": "ed925cc1839da4629991ecf46fc2f625821322ce",
+      "apkSha256": "fa083d76620260b2cdf56759b02c55ede40a4689cee8b165a281ae4875d223da",
+      "observerSha256": "61b8f79d0eeda8d6ac70b2c1138b3efac0dbac82e1fc3a3e82ac279271ab49fc",
+      "sourceCase": "/dev/shm/controller-release-ci/e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb/runtime/early-worlds-1/export/artifact/cozy-island/case.json",
+      "sourceCaseSha256": "97bf2227df9d634d36be181c46cdc06897abd4ecfca5aefa07a0c901c420fc0f",
+      "rawReport": "/dev/shm/controller-release-ci/e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb/runtime/early-worlds-1/export/artifact/cozy-island/gameplay/report.json",
+      "rawReportSha256": "267750a2e4569c864df59f454a2f8e7e17d4d970171140ecbcff6b1857327ff3",
+      "rawCaseStatus": "failed",
+      "rawReportStatus": "failed",
+      "tests": [
+        {
+          "name": "menu layout and service address",
+          "status": "passed"
+        },
+        {
+          "name": "official hello and nine sync messages leave menu unchanged",
+          "status": "passed"
+        },
+        {
+          "name": "START begins actual game",
+          "status": "passed"
+        },
+        {
+          "name": "direction and game-specific action affect actual model",
+          "status": "passed"
+        },
+        {
+          "name": "START pause freezes game, fresh START resumes",
+          "status": "passed"
+        },
+        {
+          "name": "disconnect clears held input, reconnect sync requires fresh START",
+          "status": "failed"
+        }
+      ],
+      "passedTestCount": 5,
+      "reportedTestCount": 6,
+      "visualReviewDoesNotOverrideRawStatus": true,
+      "visualDisposition": "Normal menu/gameplay/paused images have no blocking visual issue; failure image has partial music-button lower-border clipping. Runtime acceptance remains pending.",
+      "runtimeContext": "Raw report passed the first five tests then failed disconnect/reconnect sync freeze with AssertionError: sync does not award gameplay. Parent reports connected/cancelSeq connection accounting was incorrectly included in the fixture frozen projection and is investigating. That explanation is attributed to parent and does not change this raw failed result.",
+      "recommendedGalleryFiles": [],
+      "images": [
+        {
+          "sourcePath": "/dev/shm/controller-release-ci/e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb/runtime/early-worlds-1/export/artifact/cozy-island/gameplay/menu-android.png",
+          "exportRelativePath": "cozy-island/gameplay/menu-android.png",
+          "sha256": "e8fa9909ba5ff10530444dc5cf41a26f98eb1cbec92fb570af3a4ea9025b9cd6",
+          "dimensions": {
+            "width": 1920,
+            "height": 1080
+          },
+          "openedIndividually": true,
+          "visualDisposition": "no blocking layout issue observed",
+          "observations": [
+            "English title, island scene, central menu, solo choice and START/A controls are readable.",
+            "Actual QR and quiet border are fully visible; phone URL http://10.0.2.15:42951/ and Wi-Fi address 10.0.2.15:63485 are complete.",
+            "Search and Walk/A-X use/B bag/Y tool-players help, both player cards and music control are visible."
+          ]
+        },
+        {
+          "sourcePath": "/dev/shm/controller-release-ci/e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb/runtime/early-worlds-1/export/artifact/cozy-island/gameplay/gameplay.png",
+          "exportRelativePath": "cozy-island/gameplay/gameplay.png",
+          "sha256": "e3e359a6e2f23b5daee3a19994baa43dbcf319c59262e01697d57a92cc294655",
+          "dimensions": {
+            "width": 1920,
+            "height": 1080
+          },
+          "openedIndividually": true,
+          "visualDisposition": "no blocking layout issue observed",
+          "observations": [
+            "Island, player/NPC characters, clock/coins/home HUD and open My bag panel render clearly.",
+            "Wi-Fi panel shows Connected and START begin / pause with complete QR/address.",
+            "Bag controls and sidebar text are readable without a blocking overlap."
+          ]
+        },
+        {
+          "sourcePath": "/dev/shm/controller-release-ci/e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb/runtime/early-worlds-1/export/artifact/cozy-island/gameplay/paused.png",
+          "exportRelativePath": "cozy-island/gameplay/paused.png",
+          "sha256": "f189b10e24d09cb59cb653e62620d08adc91301710ddfd8ca148e16fac85ce5a",
+          "dimensions": {
+            "width": 1920,
+            "height": 1080
+          },
+          "openedIndividually": true,
+          "visualDisposition": "no blocking layout issue observed",
+          "observations": [
+            "Take a little break overlay and START resume / SELECT music are clear and fit.",
+            "Underlying bag panel, island scene, QR and connected Wi-Fi instructions remain visible."
+          ]
+        },
+        {
+          "sourcePath": "/dev/shm/controller-release-ci/e8a46fb7c3b5a56e77b6446a9550f18e7a7c8abb/runtime/early-worlds-1/export/artifact/cozy-island/gameplay/failure.png",
+          "exportRelativePath": "cozy-island/gameplay/failure.png",
+          "sha256": "6e1995e965d4389f159de8b9ac9d3c3066bff1cb4368925ef19c6bde50aa3a20",
+          "dimensions": {
+            "width": 1920,
+            "height": 1080
+          },
+          "openedIndividually": true,
+          "visualDisposition": "minor clipping noted; retain as failure evidence",
+          "observations": [
+            "Pause overlay remains visible; the bag content reads Inventory and Your bag is empty. Gather something!",
+            "Wi-Fi panel shows Search and both player cards say Waiting to connect; QR, address and operation text remain readable.",
+            "The music button lower border is partially clipped at the bottom of the sidebar region, while Music: on text remains visible. This screenshot is retained as failure evidence, not selected for the gallery.",
+            "The screenshot alone does not establish the cause of the sync assertion failure."
+          ]
+        }
+      ]
+    }
+  ],
+  "pending": [
+    "Await final new-run Alien, Used Car and Neon screenshots.",
+    "Cozy raw runtime result remains failed pending the separate fixture investigation and rerun.",
+    "Final release acceptance is owned by root and is separate from this visual inspection."
+  ]
+}

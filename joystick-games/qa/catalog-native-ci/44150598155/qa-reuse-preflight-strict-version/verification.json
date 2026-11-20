@@ -1,0 +1,46 @@
+{
+  "status": "passed",
+  "artifactSourceCommit": "a73a1976e7d38ff27b8e457b933519ea66eaa949",
+  "artifactRunId": 44150598155,
+  "artifactRunAttempt": 1,
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-tools.test.py"
+      ],
+      "exitCode": 0,
+      "log": "catalog-tools.test.py.log"
+    }
+  ],
+  "inputFiles": {
+    "joystick-games/tools/macos-catalog-reuse.py": {
+      "bytes": 8923,
+      "sha256": "9d368cb69e570906d1f199f09a15f14f8f41b12f7eb48788165dc661e81af12d"
+    },
+    "joystick-games/tools/macos-packages.py": {
+      "bytes": 5694,
+      "sha256": "ced8dc8ee52473fbad57ae6cbb84fefe267b27863d55ab4c248b8bca09095cd7"
+    },
+    "joystick-games/tools/macos-verify.py": {
+      "bytes": 43169,
+      "sha256": "45f19d34ebf2c2e8b8bf5349670ec91730357793e60982d249b13797a2cbe828"
+    },
+    "joystick-games/shared/macos/tests/catalog-reuse.test.py": {
+      "bytes": 7823,
+      "sha256": "b9d2b5ec8b9c8ac11b933056f53e48a1844bdaf4c8680ce5886f4bd65e79b1a9"
+    },
+    "joystick-games/shared/macos/tests/catalog-tools.test.py": {
+      "bytes": 15259,
+      "sha256": "739b584f5f5f855c7b4f8ca8edf36cb5bd5394529b133f14eb93d535478462ae"
+    },
+    "joystick-games/shared/macos/tests/fixtures/catalog-webgl-versions.json": {
+      "bytes": 11340,
+      "sha256": "0c091233447a411b8bfb3578bdb76bf2ec26ce3b64df6a641aa21230edee7101"
+    }
+  },
+  "reusedPriorChecks": "../qa-reuse-preflight/verification.json",
+  "change": "Tighten WebGL text boundary to match Android; reject WebGL 20/2.01/2.0spoof, bool/float/null/mismatch while retaining actual numeric context and GL_VERSION representations.",
+  "nativePackagesRebuilt": false,
+  "nativeQaPassed": false
+}

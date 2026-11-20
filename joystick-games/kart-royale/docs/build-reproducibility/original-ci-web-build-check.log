@@ -1,0 +1,27 @@
+
+> puretv-kart-royale@0.1.0 build:check
+> node build.mjs --check
+
+▲ [WARNING] The CommonJS "module" variable is treated as a global variable in an ECMAScript module and may not work as expected [commonjs-variable-in-esm]
+
+    ../shared/web/controller-clients.js:125:55:
+      125 │ ...defined' && module.exports) module.exports = root.PureTVContro...
+          ╵                                ~~~~~~
+
+  This file is considered to be an ECMAScript module because the enclosing "package.json" file sets the type of this file to "module":
+
+    ../shared/web/package.json:1:23:
+      1 │ {"private":true,"type":"module"}
+        ╵                        ~~~~~~~~
+
+  Node's package format requires that CommonJS files in a "type": "module" package use the ".cjs" file extension.
+
+file:///home/runner/work/pureTV/pureTV/joystick-games/kart-royale/build.mjs:21
+if(check){if(JSON.stringify(walk(out).map(p=>path.relative(out,p)).sort())!==JSON.stringify(names))throw Error('Inventory changed');for(const[name,bytes]of files)if(!Buffer.from(bytes).equals(fs.readFileSync(path.join(out,name))))throw Error('Stale '+name);console.log('Verified '+names.length+' files');}
+                                                                                                                                                                                                                                            ^
+
+Error: Stale kart-royale.js
+    at file:///home/runner/work/pureTV/pureTV/joystick-games/kart-royale/build.mjs:21:237
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+Node.js v22.23.4

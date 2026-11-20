@@ -1,0 +1,105 @@
+{
+  "reviewer": "racing_review_rally",
+  "reviewedAt": "2026-11-19T21:54:36.360348+00:00",
+  "status": "no_blocking_findings_static_review",
+  "sourceFiles": [
+    {
+      "path": "joystick-games/tools/backroad-macos-draft-upload.py",
+      "bytes": 14501,
+      "sha256": "7700e68b4575864e00dbc0e472981aec6a47deb7e2a56231d65d9147d757a074",
+      "role": "new_source"
+    },
+    {
+      "path": "joystick-games/tools/backroad-macos-draft-upload-test.py",
+      "bytes": 17319,
+      "sha256": "ece6d53da03e487c2861576e07179a658cc63910e475cdd5d54b3c10e0d58647",
+      "role": "new_source"
+    },
+    {
+      "path": ".github/workflows/joystick-backroad-macos-draft-upload.yml",
+      "bytes": 1602,
+      "sha256": "1de1b1b948979ac76966cecf0e11934c3b4315335a5b59967aab4f44fee23f38",
+      "role": "new_source"
+    },
+    {
+      "path": "joystick-games/tools/artifact-draft-transfer.py",
+      "bytes": 22122,
+      "sha256": "3a6e98adaa7b560650ccffe0c7c50c7bc3900f7342b73bafee535b464b8ed983",
+      "role": "unchanged_imported_dependency"
+    },
+    {
+      "path": "joystick-games/tools/android-runtime-artifact.py",
+      "bytes": 9210,
+      "sha256": "ee5d128e3510ed59778e7e871978fc8a8345e6d7e5a8436c5bf531a0879543d5",
+      "role": "unchanged_imported_dependency"
+    }
+  ],
+  "fixedRequest": {
+    "run": 44608415225,
+    "attempt": 1,
+    "source": "68d343d22c762c904eb83854d4ab9c4113a7c30f",
+    "artifact": 14570673468,
+    "release": 451969286
+  },
+  "fixedTargetTag": "joystick-backroad-rally-v0.1.0",
+  "fixedPackages": {
+    "BackroadRally-0.1.0-macos-universal.zip": {
+      "bytes": 105275042,
+      "sha256": "61ac58f2f75ff5ede9850d43e1bc77448731f870dd309efbb2af5d9236d57323"
+    },
+    "BackroadRally-0.1.0-macos-universal.dmg": {
+      "bytes": 108258927,
+      "sha256": "f1eb37f1ec24e75365f40f7c71a631a722f5657a849e984d0d7f7f515b60bd28"
+    }
+  },
+  "independentReferenceChecks": {
+    "docs/racing-nine/native-readiness/ci-44608415225-attempt-1/original-package-transfer/original-transfer-receipt.json": {
+      "bytes": 2721,
+      "sha256": "a5bb0b86087a37476c040a59f5a58a00fe9e3ef597e3c02e3785bbb439bcef81"
+    },
+    "docs/racing-nine/native-readiness/ci-44608415225-attempt-1/original-package-transfer/extracted-package-verification.json": {
+      "bytes": 1343,
+      "sha256": "1174c344d7c5dede459cb8347143097625c17c444c30ea8705bc42665b92c4b1"
+    },
+    "joystick-games/backroad-rally/docs/macos-draft-upload-validation-attempt-1/read-only-api-observations.json": {
+      "bytes": 1178,
+      "sha256": "5cdc7a3caa3a83bf92acf5f6f5333346bce12e7fc313648aeb79f15d2d62d2b6"
+    }
+  },
+  "originalLogsReviewed": {
+    "tests-final-v2.log": {
+      "bytes": 2287,
+      "sha256": "aebf3df367f0f1d987e5f90df9fccc9a1ca89cae92eb2982e69418ab2b5eadae",
+      "reportedPassedTests": 15,
+      "rerunByReviewer": false
+    },
+    "dependency-tests.log": {
+      "bytes": 121,
+      "sha256": "d44f298c072fcc18a12608cf0be258493253e9d138576f9bd27908fe03dbaa03",
+      "reportedPassedTests": 22,
+      "rerunByReviewer": false
+    }
+  },
+  "findings": [],
+  "reviewNotes": [
+    "All three new sources and both unchanged imported helpers match the frozen inventory and executed copies. Original archived transfer receipt binds the same run/attempt/source/artifact, successful Mac producer matrix and complete outer ZIP SHA/bytes. Both fixed package SHA/bytes match the previously audited extraction record; no original package audit was rerun.",
+    "Source identity uses the original fixed Git registry and its Git blob/SHA verification to derive the exact ordered Mac producer job. Unique original artifact membership, successful producer/upload, upload time window, repository IDs, expiry, digest and exact constants remain required.",
+    "The complete original outer ZIP is streamed and hashed before extraction. Exact 12-member whitelist, no aliases/traversal/encryption/symlinks, bounded metadata/member/total bytes, all-member CRC, fixed Backroad source/version/game manifest and original checksums are validated. Only the two fixed original ZIP/DMG byte streams are extracted and independently SHA checked.",
+    "The existing Release ID/tag/source/repository/upload origin must match and remain draft/unpublished. Every current target asset is prechecked before any upload; duplicate names/IDs, incomplete state, wrong size/hash or wrong membership/direct response hard-fail. Identical assets may be reused only after original archive validation. No delete, overwrite, Release creation/edit or publication path exists.",
+    "Each absent target uses a single fixed-origin POST with the job token, bounded streaming, exact MIME/length, and a second streaming hash. Failures are not auto-retried. Partial success is preserved in the small receipt and a separate future invocation can reuse only byte-identical existing assets. Before/after each upload the draft/source are rechecked and returned assets are bound through the exact release asset list plus direct API.",
+    "Real draft asset API uses an untagged-20-hex temporary URL. The final helper allows only the exact repository prefix, fixed filename and fixed tag or this narrowly observed temporary form; list/direct ID/SHA/size and the target draft tag/source remain authoritative. No query, fragment, other host or arbitrary tag matches the full regular expression. Temporary draft URLs do not establish public delivery.",
+    "The workflow has no user-selected target/source parameters and serializes this one release. GH_TOKEN comes only from github.token with actions:read/contents:write; checkout credentials are not persisted. Imports use the already inspected original no-redirect downloader, which strips authorization before signed-blob redirects. Errors persist safe codes/types without raw signed URLs or tokens.",
+    "Only the bounded transfer.json receipt is uploaded and copied to a new immutable Git branch by the unchanged receipt exporter. Packages stay in the draft release. The workflow always retains a failure receipt when transfer has started.",
+    "Original 15 new offline tests and 22 unchanged transfer boundary pass logs were read, including actual draft URL, partial failure/resume, same-count symlink and single POST cases. Actionlint passed with shellcheck disabled as explicitly recorded; no test/native/API/upload was repeated by this reviewer."
+  ],
+  "limitations": [
+    "This independent static review is not proof of a successful live upload or public release.",
+    "Existing source/package/signature/native gameplay audits remain separate and were not repeated.",
+    "Draft state is checked immediately around uploads; no operation in this helper publishes the release."
+  ],
+  "newNativeExecution": false,
+  "workflowDispatched": false,
+  "releaseMutationPerformedByReviewer": false,
+  "largeArtifactDownloadedByReviewer": false,
+  "productionFilesEditedByReviewer": false
+}

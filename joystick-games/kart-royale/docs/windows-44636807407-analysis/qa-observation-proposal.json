@@ -1,0 +1,100 @@
+{
+  "status": "proposal-only-no-source-edits",
+  "scope": "Kart Royale Windows opt-in observation only",
+  "originalActionTimeoutSeconds": 60,
+  "existingInterfaces": {
+    "timeoutSeconds": "Shared step budget; reused unchanged as the action deadline for the explicit new opt-in.",
+    "windowsHoldUntilExpect": "Existing true flag and original single UP/speed>1/position changed validation stay.",
+    "windowsStartupWait": "Existing startup-only600s remains unchanged; not repurposed.",
+    "deadline_snapshot": "Reuse read-only bounded-reader mechanism separately against the active action/release/pause deadline.",
+    "pause_stability": "Currently hardcoded30s; no current per-plan pause-budget option."
+  },
+  "proposedPlanDiff": {
+    "steps[12]": {
+      "add": {
+        "windowsReleaseWait": {
+          "timeoutSeconds": 45
+        }
+      },
+      "originalKeysHoldMsTimeoutExpect": "unchanged"
+    },
+    "root": {
+      "add": {
+        "windowsPauseWait": {
+          "timeoutSeconds": 45
+        }
+      }
+    },
+    "allOtherSteps": "unchanged"
+  },
+  "validation": {
+    "windowsReleaseWait": "Exact object with only timeoutSeconds; integer1..60, reject bool/NaN/extra keys. Requires windowsHoldUntilExpect is True, exact UP, no menuTap/startup, and existing<=60s original speed+position/progress predicate.",
+    "windowsPauseWait": "Exact object with only timeoutSeconds; integer>30 and<=60, reject bool/nonfinite/extra keys. Existing explicit nonempty pauseStablePaths stays required.",
+    "platforms": "Only Windows consumes either new field; default other-game action/release behavior and30s pause stay unchanged."
+  },
+  "releaseStateMachine": [
+    "Begin action deadline at current started+unchanged timeoutSeconds60. Do not extend held input or accept an initial expectation already satisfied.",
+    "Require same original game/renderer, documentepoch, owner/session/cancelSeq, active foreground, exact native counter, fresh frame+poll, raw UP and semantic UP. Only the first such sample matching original speed>1 and position changed permits release.",
+    "Send the original SDK UP tap/release immediately. Release must complete before the action deadline; a delayed read, missing match or failed release cannot enter a new observation window.",
+    "Once successfully released, set one deadline at actual release time+45. Do not reset it on stale snapshots or later samples; never press again. The total upper bound is action60+release45, and every read is bounded by its current phase deadline.",
+    "Keep existing baseline plus two subsequent fresh frames with all nine raw/semantic keys released, exact identity/counter/epoch and complete unique same-connection down/release/ACK chain. Natural coasting may reduce speed; the matched held sample remains required and cannot be replaced with coast-only movement.",
+    "Keep no-progress and unexpected-pause/error/foreground guards. All exceptions execute original release cleanup. Record actionElapsedSeconds, matchedHeldState, releaseSentAtSeconds, phase, release deadline, per-sample frames/polls and fresh-release count without changing original reports."
+  ],
+  "pauseObservation": [
+    "Use explicit45s only for this Windows plan; keep four distinct fresh native timestamps, original minimum0.5s, paused state, all six pauseStablePaths exactly equal and original foreground/background rules.",
+    "The independent45s hard budget covers reads and final required polling/foreground check. Do not let a late diagnostic read or the final until() add an unbounded extension.",
+    "Stale reads never increment the count. Require actual poll progress in foreground; keep the existing minimized/background distinction."
+  ],
+  "observedBasis": {
+    "normal": {
+      "matchAndReleaseSeconds": 29.297,
+      "firstReleasedBaselineSeconds": 51.25,
+      "firstReleasedFollowupSeconds": 58.656,
+      "nextFrameExtrapolationSeconds": 66.1,
+      "proposedReleaseDeadlineAtSeconds": 74.297,
+      "note": "66.1 is a cadence extrapolation only, not an observed successful frame."
+    },
+    "occupiedPause": {
+      "freshArrivalSeconds": [
+        7.672,
+        15.672,
+        22.86
+      ],
+      "observedMaxGapSeconds": 8.0,
+      "fourthFrameExtrapolationSeconds": 30.4,
+      "proposedBudgetSeconds": 45,
+      "note": "45s gives bounded margin while preserving all four fresh samples; no original failure is reclassified."
+    }
+  },
+  "preciseUnitBoundaries": [
+    "Opt-in sample schedule matching normal original facts: action match29.297, semantic release51.25, fresh58.656 and a synthetic66.1; default fails60 while explicit release45 completes only at66.1. Clearly synthetic final frame, not original evidence.",
+    "No held match or semantic consumption by60 fails and releases; cannot enter release phase. Snapshot arriving at/after60 cannot manufacture a successful match.",
+    "Match before60 but SDK release completion after60 fails. Release exception, repeated release or re-press cannot produce success.",
+    "After successful release, stale/no-progress samples fail at the independent45 deadline. A read returning after that deadline fails even if its data would otherwise pass.",
+    "Baseline plus one fresh all-released frame fails; baseline plus two required. Any raw/semantic held key, wrong counter, ID/session/cancelSeq/epoch, foreground loss, runtime error, missing/duplicate/wrong-connection ACK remains rejection.",
+    "Natural speed decay after a valid held match is allowed as before; movement seen only after release never replaces held proof. Already-satisfied original expectation remains rejected.",
+    "Pause synthetic cadence7.672/15.672/22.86/30.4: old30 fails, explicit45 completes only at fourth distinct fresh snapshot; all six model fields must remain exact.",
+    "Pause with only three fresh samples, stale repeated timestamps, late fourth/read or no foreground poll advance fails; each model field mutation/unpause/focus-loss guard remains tested.",
+    "Schema invalid boolean/float/nonfinite/out-of-range values, unknown keys, attached-to-menu/startup/multikey/missing-held flag rejected. Existing plan fields and non-opt-in defaults unchanged.",
+    "Existing lifecycle/gameplay suites remain on their normal CI entry point; no need for new game physics/model tests."
+  ],
+  "candidateFilesOnly": [
+    "joystick-games/kart-royale/qa-plan.json",
+    "joystick-games/tools/qa-plan.py",
+    "joystick-games/tools/windows-verify.py",
+    "joystick-games/shared/windows/tests/gameplay.test.py",
+    "joystick-games/shared/windows/tests/window-lifecycle.test.py"
+  ],
+  "outOfScope": [
+    "game source/assets",
+    "physics or clocks",
+    "startup600s",
+    "menuTap",
+    "all other game plans",
+    "host socket fallback",
+    "package rebuild or CI dispatch"
+  ],
+  "nativeAcceptanceAllowed": false,
+  "implemented": false,
+  "nativeReplayed": false
+}

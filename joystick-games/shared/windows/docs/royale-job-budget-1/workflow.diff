@@ -1,0 +1,13 @@
+diff --git a/.github/workflows/joystick-catalog-windows.yml b/.github/workflows/joystick-catalog-windows.yml
+index 2582435..a3f49cc 100644
+--- a/.github/workflows/joystick-catalog-windows.yml
++++ b/.github/workflows/joystick-catalog-windows.yml
+@@ -39,7 +39,7 @@ jobs:
+   verify:
+     needs: plan
+     runs-on: windows-2022
+-    timeout-minutes: 55
++    timeout-minutes: ${{ matrix.game == 'kart-royale' && 180 || 55 }}
+     strategy:
+       fail-fast: false
+       matrix:

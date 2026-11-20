@@ -1,0 +1,37 @@
+{
+  "reviewer": "racing_review_rally",
+  "method": "Independent static review of exact source, meaningful test boundaries and workflow diff; no repeated tests or Android run",
+  "status": "no_blocking_static_findings",
+  "blockingFindings": [],
+  "reviewedFiles": {
+    "joystick-games/tools/android-environment-diagnostics.py": {
+      "bytes": 40003,
+      "sha256": "92d8b974280353a8768cf505d1b51e739f97df77d27d9720d7e7d0f2b0f3160e"
+    },
+    "joystick-games/qa/android/test_environment_diagnostics.py": {
+      "bytes": 19172,
+      "sha256": "c7074cb10d491a0c3738948bbc44fe0f82eef43862b0e477534fe2d4bb356fec"
+    },
+    ".github/workflows/joystick-catalog-android-runtime.yml": {
+      "bytes": 22362,
+      "sha256": "a99f00b0a8465912298ca32f97043d050c60ece06a2d43d41254a7f6d3892597"
+    }
+  },
+  "checks": [
+    "Per-process data is restricted to recognized emulator/QEMU names and PID plus proc start time. Limits preserve only eight numeric/unlimited fields; raw proc environment and argv are not read.",
+    "Unified process cgroup membership rejects traversal, excessive depth and resolved escape from the cgroup root. At most eight actual ancestors including namespace root are inspected, using exact numeric counter filenames; group names are SHA256-only.",
+    "A disappearing PID retains an observation of its previously identified group counters without inventing a process exit code or OOM cause. All original observations remain bounded and errors expose types/errno, not arbitrary paths.",
+    "The systemd-oomd reader runs a fixed noninteractive read-only journal command for that service and bounded time range. It has a three-second read budget plus bounded reap, at most 256 KiB raw input, 32 parsed summaries and bounded lines; persistent output consists of numeric fields, category and hashes only. Permission failures remain unavailable.",
+    "Existing 2 MiB log, 64 KiB report/source bounds remain; each sample now permits 32 KiB for the added numeric counters. Diagnostic failure never becomes game acceptance or proven root cause.",
+    "Exact workflow comparison verifies the sole runtime option change is guest RAM 3072 to 2048 plus explanatory comment. Original APK selection, certificate, emulator version, GPU, ABI, timeouts and QA command are unchanged."
+  ],
+  "validationReviewed": {
+    "reportedTests": 14,
+    "actionlint": "reported passed; existing log reviewed",
+    "testsRerunByReviewer": false
+  },
+  "limitations": [
+    "This is a controlled original-package environment comparison, not proof that 2048 MiB fixes emulator disappearance.",
+    "Real kernel/systemd permissions and original QEMU failure must be established by the next fixed-source CI observation."
+  ]
+}

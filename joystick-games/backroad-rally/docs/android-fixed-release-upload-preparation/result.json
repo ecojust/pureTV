@@ -1,0 +1,102 @@
+{
+  "status": "prepared-not-dispatched",
+  "networkWrites": 0,
+  "workflowDispatches": 0,
+  "releaseUploads": 0,
+  "newOfflineTests": 23,
+  "existingTransferTests": 22,
+  "actualNativeAcceptanceByThisWork": false,
+  "originalQaObservation": {
+    "run": 44630023214,
+    "source": "382de3792628050773abec8821920348503f72ce",
+    "status": "in_progress",
+    "conclusion": null,
+    "rejectedWith": "qa_not_completed_successfully",
+    "notALiveStatusRefresh": true
+  },
+  "files": {
+    "joystick-games/tools/backroad-android-release-upload.py": {
+      "bytes": 30650,
+      "sha256": "3ad597e6fe9e0dc106f4a4ca1aba0cef6f9af87aa3fd337f39b684e0e09bf72f"
+    },
+    "joystick-games/tools/backroad-android-release-upload-test.py": {
+      "bytes": 27964,
+      "sha256": "7963205d3a92d216b1e21480c89d74b26d9ebc64100d103edb05655a18bf99e9"
+    },
+    ".github/workflows/joystick-backroad-android-release-upload.yml": {
+      "bytes": 1642,
+      "sha256": "7094d92538c24a3c36b28f38eaaf355e070c50d858b7fd4b31ca041c4509e78c"
+    },
+    "joystick-games/tools/fixtures/backroad-android-release-upload/release.json": {
+      "bytes": 6308,
+      "sha256": "e901bf3f8ba9ecd7d478f1526ab06d6b2c5a4f17f15835a4138f15bd1d153003"
+    },
+    "joystick-games/tools/fixtures/backroad-android-release-upload/pending-qa-run.json": {
+      "bytes": 11898,
+      "sha256": "20e2c10d28a38bfd4b617fc9787bb7699d8b051bb5f6d9efbb2d13d45128c9fd"
+    },
+    "joystick-games/tools/fixtures/backroad-android-release-upload/original-qa-plan.json": {
+      "bytes": 12109,
+      "sha256": "8306e5b2ad54cf35eb2602db045711572e35a728478e668fc65a6fb962ad157f"
+    }
+  },
+  "importedHelperClosure": {
+    "artifact-draft-transfer.py": {
+      "bytes": 22122,
+      "sha256": "3a6e98adaa7b560650ccffe0c7c50c7bc3900f7342b73bafee535b464b8ed983"
+    },
+    "android-runtime-artifact.py": {
+      "bytes": 9210,
+      "sha256": "ee5d128e3510ed59778e7e871978fc8a8345e6d7e5a8436c5bf531a0879543d5"
+    }
+  },
+  "testLogs": {
+    "offline-boundaries.log": {
+      "bytes": 3235,
+      "sha256": "c14e5cc5cf6197416f4e3a08edd2e26c7f4c0e2a3b44cc6eebe9be52e47b851f"
+    },
+    "existing-transfer-tests.log": {
+      "bytes": 121,
+      "sha256": "480b9a4c5788c8d70c8b9d2a7d87fbec46adef912a895996309f5d92310cd2a9"
+    },
+    "offline-boundaries-attempt-2.log": {
+      "bytes": 3430,
+      "sha256": "15f023a7359ef5e93b8c8617d34a8ef407142391e3f7e741168b08374c0cf791"
+    },
+    "offline-boundaries-attempt-3.log": {
+      "bytes": 3802,
+      "sha256": "bb4919af9b3fc5ab11a89309c5e552b0193be99b04553aacf65c8406a512c37b"
+    }
+  },
+  "limitations": [
+    "No real upload executed; local uploads domain failure is not claimed repaired by offline fixtures.",
+    "Pinned QA must actually complete successfully and its original export pass every gate; pending is refused.",
+    "No physical TV/handheld testing or new native run occurred.",
+    "Existing Release body and assets are intentionally strict; changes require a new reviewed source, not arbitrary inputs."
+  ],
+  "independentReviewCorrection": {
+    "matchingAcks": "Require exact integer equality with acceptedSdkMessages; missing, unequal and boolean values rejected in both modes",
+    "originalAttemptPreserved": true,
+    "originalStepSequence": {
+      "previousProblem": "By-name uniqueness falsely rejected original duplicate Focus quick stage labels",
+      "finalCheck": "Exact complete ordered 39 gameplay-report subsequence, matching original names/expect/holdMs with length equality",
+      "originalFixture": {
+        "bytes": 12109,
+        "sha256": "8306e5b2ad54cf35eb2602db045711572e35a728478e668fc65a6fb962ad157f"
+      },
+      "originalDuplicateNameIndexes": [
+        0,
+        23
+      ],
+      "negativeCases": [
+        "removed",
+        "extra",
+        "reordered",
+        "renamed",
+        "expect changed",
+        "holdMs changed"
+      ],
+      "previousSourceBytesArchived": true
+    }
+  }
+}

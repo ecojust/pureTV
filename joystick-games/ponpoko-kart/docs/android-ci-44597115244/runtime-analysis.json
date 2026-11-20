@@ -1,0 +1,141 @@
+{
+  "reviewedAt": "2026-11-19T19:49:21.658081+00:00",
+  "sourceRunId": 44597115244,
+  "sourceRunAttempt": 1,
+  "sourceCommit": "8f283c73f52f857777306eafc88f710262367834",
+  "exportCommit": "4249f5c0ec3053a1dec652a7880a040e1bb143f0",
+  "modes": [
+    {
+      "mode": "normal",
+      "originalReportSha256": "a6b767292cf877029a885a54d3d7599031ca223649720a99b56e36445004da59",
+      "status": "failed",
+      "sourceCommit": "8f283c73f52f857777306eafc88f710262367834",
+      "modelWrites": false,
+      "clockOverrides": false,
+      "tests": [
+        {
+          "name": "catalog scenario starts with fresh app data before launch",
+          "status": "passed",
+          "details": {
+            "mode": "fresh-install-app-data",
+            "targetPackage": "com.ecojust.joystick.ponpokokart",
+            "method": "pm clear",
+            "phase": "before-target-launch",
+            "status": "passed",
+            "stdout": "Success"
+          }
+        }
+      ],
+      "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 754, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 412, in setup\n    initial = self.wait(lambda s: self.game(s).get('stage') == 'menu' and self.game(s).get('loading') is not True\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 218, in wait\n    raise AssertionError(label + ' timed out; last snapshot retained')\nAssertionError: initial-menu timed out; last snapshot retained\n",
+      "snapshots": [
+        {
+          "label": "timeout-initial-menu",
+          "game": null,
+          "page": {
+            "url": "https://game-kit.invalid/tv.html",
+            "width": 960,
+            "height": 540,
+            "hidden": false,
+            "focused": true,
+            "canvases": [],
+            "controllerClients": {
+              "containers": []
+            }
+          },
+          "windowFocused": true,
+          "activityState": "resumed",
+          "wifiController": {
+            "state": "registering",
+            "serviceName": "Ponpoko Kart",
+            "port": 63485,
+            "error": 0
+          },
+          "readError": "URLError(ConnectionRefusedError(111, 'Connection refused'))"
+        }
+      ],
+      "captures": []
+    },
+    {
+      "mode": "occupied",
+      "originalReportSha256": "814f7c73b578f42fe25c589c8fec6e2a266530f29855c103c1a5487ce08cee9d",
+      "status": "failed",
+      "sourceCommit": "8f283c73f52f857777306eafc88f710262367834",
+      "modelWrites": false,
+      "clockOverrides": false,
+      "tests": [],
+      "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 754, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 385, in setup\n    self.command('wait-for-device')\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 193, in command\n    result = subprocess.run(self.adb + list(args), capture_output=True, check=False, timeout=45)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 550, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 1209, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 2116, in _communicate\n    self._check_timeout(endtime, orig_timeout, stdout, stderr)\n  File \"/usr/lib/python3.12/subprocess.py\", line 1253, in _check_timeout\n    raise TimeoutExpired(\nsubprocess.TimeoutExpired: Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'wait-for-device']' timed out after 45 seconds\n",
+      "snapshots": [],
+      "captures": []
+    }
+  ],
+  "observedFacts": [
+    "Build and signing jobs passed, but original normal and occupied runtime reports failed.",
+    "Normal passed only fresh app-data clearing. Initial-menu wait timed out; the last retained successful diagnostic has game=null and zero canvases/controller cards; its final diagnostic request reports ConnectionRefused.",
+    "Original normal instrumentation log records observer=ready and diagnosticPort=63486.",
+    "Occupied never reached initialization: adb wait-for-device timed out after 45 seconds, with zero snapshots and captures.",
+    "Neither original mode produced a screenshot or video capture. There is no observed SDK connection or menu/racing action to diagnose.",
+    "Full original runtime job log was recovered through gh run view after the earlier direct API log-download attempts failed.",
+    "Boot-time color buffer errors were followed by boot success and pm clear success. They are not sufficient to establish the later failure cause.",
+    "After initialization timed out, both adb logcat commands timed out; final emulator console TCP5554 returned Connection refused. No explicit emulator process exit code, OOM-kill, fatal signal, or WebView crash trace is present in the recovered job log."
+  ],
+  "unprovenCauses": [
+    "Emulator OOM or process crash",
+    "Game JavaScript parsing or initialization failure",
+    "Graphics-driver failure"
+  ],
+  "nextEvidenceNeeded": "A separately identified QA-only run against the unchanged signed APK in a fresh emulator can test reproducibility. The recovered original log does not prove why the emulator/ADB/diagnostic connection became unavailable; new evidence must not retroactively turn this original failed run into a pass.",
+  "gamesRerun": false,
+  "productionSourceChanged": false,
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "jobLog": {
+    "path": "original-runtime-job.log",
+    "bytes": 425227,
+    "sha256": "8cd2317364714b196430eb2a3ee3c271a9371a640dd72371cc25b89799760b4e",
+    "retrieval": "gh run view 44597115244 --repo ecojust/pureTV --job 135821097274 --log",
+    "format": "GitHub CLI full job-log rendering; not asserted byte-identical to raw redirected API download",
+    "runtimeJobId": 135821097274
+  },
+  "jobLogTimeline": [
+    {
+      "line": 2145,
+      "utc": "2026-11-19T19:29:35.8258658Z",
+      "fact": "Emulator reports Boot completed in 36604 ms."
+    },
+    {
+      "line": 2150,
+      "utc": "2026-11-19T19:29:37.3557244Z",
+      "fact": "Emulator logs Failed to find ColorBuffer: 25, followed by invalid color buffer. This is before the runner reports boot complete and before game launch."
+    },
+    {
+      "line": 2157,
+      "utc": "2026-11-19T19:29:39.5159945Z",
+      "fact": "Runner observes sys.boot_completed=1 and reports Emulator booted."
+    },
+    {
+      "line": 2165,
+      "utc": "2026-11-19T19:29:50.9166893Z",
+      "fact": "Normal scenario pm clear succeeds."
+    },
+    {
+      "line": 2166,
+      "utc": "2026-11-19T19:29:52.6981488Z",
+      "fact": "Emulator reports Created VkInstance, then Destroyed VkInstance 14ms later; no fatal status or exit code is attached."
+    },
+    {
+      "line": 2177,
+      "utc": "2026-11-19T19:33:06.0676870Z",
+      "fact": "Normal setup initial-menu timeout appears; failure cleanup adb logcat also times out after 45 seconds."
+    },
+    {
+      "line": 2222,
+      "utc": "2026-11-19T19:34:36.2684198Z",
+      "fact": "Occupied setup adb wait-for-device times out after 45 seconds; failure cleanup adb logcat also times out."
+    },
+    {
+      "line": 2262,
+      "utc": "2026-11-19T19:34:36.3429888Z",
+      "fact": "Final emulator stop command cannot connect to emulator console TCP5554: Connection refused."
+    }
+  ]
+}

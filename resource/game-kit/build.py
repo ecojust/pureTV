@@ -23,6 +23,28 @@ ZXING_SHA256 = '8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82
 ANDROID = '{http://schemas.android.com/apk/res/android}'
 SAFE_ASSET = re.compile(r'[A-Za-z0-9][A-Za-z0-9_.-]*')
 ASSET_EXTENSIONS = {'.html', '.css', '.js', '.json', '.png', '.webp', '.jpg', '.jpeg', '.svg', '.ogg', '.wav', '.mp3', '.txt'}
+DEFAULT_LIMITS = {'maxAssetBytes': 8_000_000, 'maxTotalBytes': 32_000_000, 'maxApkBytes': MAX_APK_BYTES, 'extraExtensions': (), 'allowNestedAssets': False}
+
+
+def checked_limits(limits=None):
+    """Programmatic opt-in for the registered joystick builder; CLI stays small.
+
+    This low-level bound is not registration authorization. The caller must
+    validate the catalog identity and matching committed per-game policy.
+    """
+    if limits is None:
+        return dict(DEFAULT_LIMITS)
+    require(isinstance(limits, dict) and set(limits) == set(DEFAULT_LIMITS), 'Invalid explicit build limits')
+    maxima = {'maxAssetBytes': 64 * 1024 * 1024, 'maxTotalBytes': 256 * 1024 * 1024, 'maxApkBytes': 128_000_000}
+    for key, maximum in maxima.items():
+        require(type(limits[key]) is int and 0 < limits[key] <= maximum, 'Invalid limit: ' + key)
+    require(limits['maxAssetBytes'] <= limits['maxTotalBytes'], 'Asset limit exceeds total budget')
+    extensions = limits['extraExtensions']
+    require(isinstance(extensions, (tuple, list)) and all(isinstance(ext, str) for ext in extensions)
+            and len(set(extensions)) == len(extensions), 'Invalid extra extensions')
+    require(set(extensions) <= {'.glb', '.gltf', '.bin', '.wasm', '.hdr', '.ktx2', '.woff', '.woff2', '.ttf', '.otf', '.ico', '.opus', '.m4a', '.md', '.webmanifest'}, 'Unsupported extra extension')
+    require(type(limits['allowNestedAssets']) is bool, 'Invalid nested asset policy')
+    return dict(limits)
 
 
 def digest(path):
@@ -32,6 +54,16 @@ def digest(path):
 def require(test, message):
     if not test:
         raise ValueError(message)
+
+
+def android_string_literal(value):
+    """Quote Android's resource syntax; XML escaping alone does not quote it.
+
+    The surrounding quotes preserve apostrophes, reference-like prefixes and
+    repeated spaces. Escape backslashes first so a literal ``\\n`` stays literal.
+    ElementTree still handles XML characters when writing the resource file.
+    """
+    return '"' + value.replace('\\', '\\\\').replace('"', '\\"') + '"'
 
 
 def checked_directory(path, label):
@@ -89,30 +121,67 @@ def metadata(game):
     return data
 
 
-def asset_inputs(game):
+def asset_tree(folder, extensions, allow_nested=False):
+    """Keep source-relative URLs intact without accepting filesystem aliases."""
+    folder = checked_directory(folder, 'asset directory')
+    files, names = {}, set()
+    paths = folder.rglob('*') if allow_nested else folder.iterdir()
+    reserved = {'CON', 'PRN', 'AUX', 'NUL'} | {p + str(i) for p in ('COM', 'LPT') for i in range(1, 10)}
+    for source in sorted(paths):
+        name = source.relative_to(folder).as_posix()
+        parts = name.split('/')
+        require(len(name) <= 1024 and len(parts) <= 16, 'Asset path is too long: ' + name)
+        require(all(SAFE_ASSET.fullmatch(part) and not part.endswith('.')
+                    and part.split('.')[0].upper() not in reserved for part in parts), 'Unsupported asset path: ' + name)
+        require(not source.is_symlink(), 'Asset symlink: ' + name)
+        require(name.casefold() not in names, 'Asset path collision: ' + name)
+        names.add(name.casefold())
+        require(len(names) <= 4096, 'Too many asset filesystem entries')
+        if source.is_dir():
+            require(allow_nested, 'Assets must be regular top-level files: ' + name)
+            continue
+        require(source.is_file(), 'Asset must be a regular file: ' + name)
+        special_notice = allow_nested and re.fullmatch(r'(?:[A-Za-z0-9][A-Za-z0-9_-]*_)?(?:LICENSE|NOTICE|COPYING)', source.name)
+        require(source.suffix.lower() in extensions or special_notice, 'Unsupported asset: ' + name)
+        files[name] = source
+        require(len(files) <= 2048, 'Too many bundled assets')
+    return files
+
+
+def asset_inputs(game, limits=None):
     """Return the exact payload, with explicit per-game overrides forbidden."""
-    files = {}
+    limits = checked_limits(limits)
+    extensions = ASSET_EXTENSIONS | set(limits['extraExtensions'])
+    files, names, aliases = {}, set(), {}
     for folder in (KIT / 'web', game / 'src/main/assets'):
         if not folder.exists() and not folder.is_symlink():
             continue
-        folder = checked_directory(folder, 'asset directory')
-        for source in sorted(folder.iterdir()):
-            require(source.is_file() and not source.is_symlink(), 'Assets must be regular top-level files: ' + str(source))
-            name = source.name
-            require(SAFE_ASSET.fullmatch(name) and source.suffix.lower() in ASSET_EXTENSIONS, 'Unsupported asset: ' + name)
-            require(name not in files and name not in ('assets-index.json', 'game-config.json'), 'Duplicate or reserved asset: ' + name)
-            require(source.stat().st_size <= 8_000_000, 'Oversized asset: ' + name)
+        for name, source in asset_tree(folder, extensions, limits['allowNestedAssets']).items():
+            folded = name.casefold()
+            require(folded not in names and folded.split('/')[0] not in ('assets-index.json', 'game-config.json'), 'Duplicate or reserved asset: ' + name)
+            parts = name.split('/')
+            for length in range(1, len(parts) + 1):
+                prefix = '/'.join(parts[:length])
+                require(aliases.get(prefix.casefold(), prefix) == prefix, 'Asset path collision: ' + name)
+                aliases[prefix.casefold()] = prefix
+            require(len(aliases) <= 4096, 'Too many asset filesystem entries')
+            require(not any(folded.startswith(old + '/') or old.startswith(folded + '/') for old in names), 'Asset file/directory collision: ' + name)
+            require(source.stat().st_size <= limits['maxAssetBytes'], 'Oversized asset: ' + name)
             files[name] = source
+            names.add(folded)
+            require(len(files) <= 2048, 'Too many bundled assets')
     require({'tv.html', 'controller.html', 'controller.js', 'controller.css'} <= files.keys(), 'Missing TV or phone controller assets')
     return files
 
 
-def payload(game):
-    files = asset_inputs(game)
+def payload(game, limits=None):
+    limits = checked_limits(limits)
+    files = asset_inputs(game, limits)
     data = {name: path.read_bytes() for name, path in files.items()}
     data['game-config.json'] = (json.dumps(metadata(game), ensure_ascii=False, separators=(',', ':')) + '\n').encode()
     data['assets-index.json'] = (json.dumps(sorted(data), separators=(',', ':')) + '\n').encode()
-    require(sum(map(len, data.values())) < 32_000_000, 'Assets exceed uncompressed budget')
+    require(len(data['assets-index.json']) <= 65_536, 'Asset index exceeds native limit')
+    require(sum(map(len, data.values())) < limits['maxTotalBytes'], 'Assets exceed uncompressed budget')
     return data
 
 
@@ -120,8 +189,10 @@ def run(args, env=None):
     subprocess.run([str(a) for a in args], check=True, env=env)
 
 
-def main():
+def main(argv=None, *, limits=None, target_sdk=29):
     global KIT
+    # Programmatic opt-in only; the normal Game Kit CLI retains target 29/min 26.
+    require(type(target_sdk) is int and target_sdk in (29, 35), 'Unsupported explicit target SDK')
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--kit', type=Path, default=KIT, help='Shared source directory; the builder itself stays pinned by CI')
     parser.add_argument('--game', required=True, type=Path)
@@ -130,13 +201,14 @@ def main():
     parser.add_argument('--jdk', type=Path, default=os.environ.get('JAVA_HOME', '/workspace/scratch/usedcar-local-https/jdk-17.0.21+9'))
     parser.add_argument('--zxing', type=Path)
     parser.add_argument('--cache', type=Path, default=Path('/workspace/scratch/hundred-games/dex-cache'))
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    limits = checked_limits(limits)
     KIT = checked_directory(args.kit, 'game kit directory')
     validate_native_source(KIT)
     game, output = checked_directory(args.game, 'game directory'), args.output.resolve()
     require(not output.is_relative_to(game) and not output.is_relative_to(KIT), 'Output must be outside source directories')
     meta = metadata(game)
-    data = payload(game)
+    data = payload(game, limits)
     icon = game_icon(game)
     tools = args.sdk / 'build-tools/34.0.0'
     android_jar = args.sdk / 'platforms/android-35/android.jar'
@@ -159,11 +231,12 @@ def main():
         for folder, title in (('values', meta['name']), ('values-en', meta['nameEn'])):
             path = res / folder / 'strings.xml'
             tree = ET.parse(path)
-            tree.find(".//string[@name='app_name']").text = title
+            tree.find(".//string[@name='app_name']").text = android_string_literal(title)
             tree.write(path, encoding='utf-8', xml_declaration=True)
         asset_dir = work / 'assets'
         asset_dir.mkdir()
         for name, content in data.items():
+            (asset_dir / name).parent.mkdir(parents=True, exist_ok=True)
             (asset_dir / name).write_bytes(content)
         manifest = ET.parse(KIT / 'android/src/main/AndroidManifest.xml')
         manifest.getroot().set('package', meta['packageName'])
@@ -173,7 +246,7 @@ def main():
         run([tools / 'aapt2', 'compile', '--dir', res, '-o', work / 'compiled.zip'], env)
         run([tools / 'aapt2', 'link', '--manifest', work / 'AndroidManifest.xml', '-I', android_jar,
              '--java', generated, '--custom-package', 'com.ecojust.gamekit', '--min-sdk-version', '26',
-             '--target-sdk-version', '29', '--version-code', str(meta['versionCode']), '--version-name', meta['version'],
+             '--target-sdk-version', str(target_sdk), '--version-code', str(meta['versionCode']), '--version-name', meta['version'],
              '-A', asset_dir, '-o', work / 'resources.apk', work / 'compiled.zip'], env)
         java = sorted((KIT / 'android/src/main/java').rglob('*.java')) + sorted(generated.rglob('*.java'))
         cache_key = hashlib.sha256(b'game-kit-d8-api26-jdk17-v1' + bytes.fromhex(digest(zxing)) + bytes.fromhex(digest(android_jar)) + b''.join(path.read_bytes() for path in java)).hexdigest()
@@ -199,7 +272,7 @@ def main():
         apk = output / 'unsigned.apk'
         run([tools / 'zipalign', '-f', '4', unaligned, apk], env)
         run([tools / 'zipalign', '-c', '4', apk], env)
-        require(0 < apk.stat().st_size < MAX_APK_BYTES, 'APK must be smaller than 10,000,000 bytes')
+        require(0 < apk.stat().st_size < limits['maxApkBytes'], 'APK exceeds explicit budget: ' + str(limits['maxApkBytes']))
         with zipfile.ZipFile(apk) as archive:
             require(archive.testzip() is None, 'APK ZIP integrity failure')
             require(len(archive.namelist()) == len(set(archive.namelist())), 'Duplicate APK entries')
@@ -207,9 +280,9 @@ def main():
                 require(archive.read('assets/' + name) == content, 'Packaged asset differs: ' + name)
         receipt = {'schema': 1, 'game': meta['id'], 'packageName': meta['packageName'], 'version': meta['version'],
                    'versionCode': meta['versionCode'], 'unsigned': True, 'bytes': apk.stat().st_size, 'sha256': digest(apk),
-                   'minSdk': 26, 'assets': {name: hashlib.sha256(value).hexdigest() for name, value in data.items()},
+                   'minSdk': 26, 'targetSdk': target_sdk, 'assets': {name: hashlib.sha256(value).hexdigest() for name, value in data.items()},
                    'hostDexCacheKey': cache_key, 'gameIconSha256': hashlib.sha256(icon).hexdigest() if icon is not None else None,
-                   'physicalTvTested': False}
+                   'physicalTvTested': False, 'assetLimits': limits}
         (output / 'build-receipt.json').write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n')
         print(json.dumps({'apk': str(apk), 'bytes': receipt['bytes'], 'sha256': receipt['sha256'], 'unsigned': True}))
 

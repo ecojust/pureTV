@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "scope": "Read-only design review; no signing, APK build, upload, workflow dispatch or production edits performed",
+  "observedAtUtc": "2026-11-19T23:24:30.607759+00:00",
+  "checkoutHeadAtReview": "41f8db4dff81a26dc9374476e54c1e5c45b5007e",
+  "reviewedSources": {
+    ".github/workflows/joystick-catalog-android.yml": {
+      "bytes": 20171,
+      "sha256": "ecf8812ec4744112891ccfdd2efaefb7c4a8181837bfe2717ee646a6e4792cb9"
+    },
+    ".github/workflows/joystick-catalog-android-runtime.yml": {
+      "bytes": 26240,
+      "sha256": "3fc28805e7f23958b1068b97e12c59810bc90d5e2719a2fa1c99407e40846009"
+    },
+    "joystick-games/tools/android-release.py": {
+      "bytes": 11274,
+      "sha256": "354cf65440987b4d3411d879056bbe94493ab3219acd91432beef4c421e97f0e"
+    },
+    "joystick-games/tools/android-runtime-artifact.py": {
+      "bytes": 9210,
+      "sha256": "ee5d128e3510ed59778e7e871978fc8a8345e6d7e5a8436c5bf531a0879543d5"
+    },
+    "joystick-games/tools/android-runtime-inputs.py": {
+      "bytes": 20076,
+      "sha256": "369e15a89d6cdbf7f6ccc79064e01111e0018de83232d4a4de80d91842d1768f"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 13049,
+      "sha256": "be47887c8fa964e0a17c8fc3d8ba3195e5ae503af4bbd728afab24bd9453277b"
+    },
+    "tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "tools/puretv-release-certificate-v2.sha256": {
+      "bytes": 65,
+      "sha256": "ec380e3fe6830d3f7c1988f6035296ab67fcb2ddd9e6183747d6d9f9322dc3f2"
+    }
+  },
+  "originalTarget": {
+    "repository": "ecojust/pureTV",
+    "sourceSha": "4b6cf0b8cba288eae66bcae2ef2784acc279a695",
+    "runId": 44625676430,
+    "runAttempt": 1,
+    "artifactId": 14579726223,
+    "artifactName": "joystick-android-signed",
+    "artifactBytes": 104996375,
+    "artifactSha256": "b6690049690175943c906ddd4277705c46c5e235770aa5c1ffbd6da1ab4c94fc",
+    "file": "backroad-rally-0.1.0.apk",
+    "bytes": 105024551,
+    "sha256": "2cd35f145f5362264a720708325c22e283a3828d21899058f17422ba87103c08",
+    "packageName": "com.ecojust.joystick.backroadrally",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "basis": "Previously preserved signing receipt and signed-package audit; large APK not downloaded or re-audited in this review"
+  },
+  "conclusion": "A separate tightly scoped Observer-only signing workflow is feasible. The existing generic sign command and sign_observer validator must not be invoked for the new Observer, and the ordinary original-artifact verifier must remain unchanged.",
+  "existingInterfaces": {
+    "credentials": "Existing workflow passes only PURETV_KEYSTORE_BASE64 and PURETV_KEYSTORE_PASSWORD to its signing step. This review inspected interface names only; no values or private key files were read.",
+    "signer": "android-release.py source() binds HEAD to GITHUB_SHA; pin() reads the checked-in fixed certificate digest. sign_file() zipaligns, signs with alias puretv and password env references, checks alignment and exact non-META-INF content equivalence. Existing flags enable v1/v2/v3 and disable v4.",
+    "genericSignerRejected": "sign() first validates and then signs every selected game APK plus its old Observer. sign_observer()/validate_observer() require com.ecojust.joystickqa.backroadrally, old /status+/snapshot endpoints and the old Observer source inventory.",
+    "originReader": "android-runtime-artifact.py binds exact original workflow, run/attempt/source, unique signed artifact and successful build/sign producer; validates full original ZIP digest and every extracted byte.",
+    "ordinaryInputVerifier": "android-runtime-inputs.py verifies original signed game and old Observer, complete original Git inputs/payload/signature, and unchanged current production/old Observer bytes. It intentionally cannot relabel a newly built diagnostic Observer as original."
+  },
+  "proposedWorkflow": [
+    {
+      "stage": "Freeze narrow diagnostic source",
+      "requirements": [
+        "Use a new fixed workflow source SHA, preferably an isolated child of original 4b6 with only explicitly reviewed diagnostic files and necessary helper/workflow additions.",
+        "No arbitrary game/package/artifact/source/release inputs. The original target identity above is constant. Exact checkout HEAD must equal GITHUB_SHA.",
+        "Retain original production, SDK and old Observer bytes. Run unchanged ordinary input verification; any legitimate closure mismatch must be explained and handled by an exact minimal QA checkout, never a bypass.",
+        "Record full exact source closure for new Java/JS/build, signing helper and imported verifier/build modules, workflow, certificate pin and diagnostic runner."
+      ]
+    },
+    {
+      "stage": "Build and sign the separate test Observer only",
+      "requirements": [
+        "Build com.ecojust.joystickgraphicsqa.backroadrally with instrumentation com.ecojust.graphicsqa.GraphicsObserver targeting exactly com.ecojust.joystick.backroadrally. Require committed source byte equality, testOnly=true, minSdk26/targetSdk35, INTERNET only and the expected manifest/component.",
+        "Prefer a build/sign job with unsigned build and tests before its only secret-bearing signing step, avoiding a separate unbound unsigned-artifact handoff. Runtime runs in another job without signing secrets.",
+        "Before loading any key: validate safe unique ZIP members, exact expected APK contents, bounded bytes, source/build receipt/class or DEX identities, manifest and absence of an existing signer. Do not merely trust receipt booleans.",
+        "Reuse the existing fixed certificate, alias and env-password interface; key only in a mode0600 temporary file, deleted on all exits. Do not log secrets or store keys. Validate exported certificate hash before signing.",
+        "Only the new test APK is passed to zipalign/apksigner. Never call generic android-release.py sign, build a target APK or sign any target package. Use bounded subprocess/job deadlines and exact non-META-INF content equality after signing.",
+        "Emit a new independent test-only signing receipt with source SHA/run/attempt, original target identity, unsigned and signed bytes/SHA, expected manifest/certificate, source/build hashes and testArtifactOnly=true; not an original-game signing receipt.",
+        "Upload the new signed test Observer plus receipts under an unmistakable diagnostic artifact name; no Release, app directory, market, publish or acceptance output."
+      ]
+    },
+    {
+      "stage": "Bind and run diagnostics without target changes",
+      "requirements": [
+        "Fetch the original artifact once with the existing reader and verify its exact full ZIP SHA/size/producer. Re-run unchanged ordinary input verification for original game and original Observer. Original identities remain distinct from the new Observer.",
+        "Separately verify the new Observer artifact/producer/source/build/sign receipt/certificate and signed APK exact SHA before installation. Recompute original target APK bytes/SHA immediately before and after use.",
+        "Install the verified original APK unchanged and install the distinct testOnly graphics Observer with -t. Start only its exact instrumentation component, and keep the original Observer validated but not concurrently started.",
+        "Use only the declared loopback diagnostic port63487 and bounded GET /status,/console,/graphics; explicitly report that this observer omits old /snapshot and is not a drop-in ordinary runner Observer. Do not rewrite the old run.py or ordinary binding result.",
+        "Drive any reproduction through unchanged SDK input and original menus, keeping independent actual ACK/session/sequence logs. Read cached state without a second consuming native poll; no model writes, clock overrides, GL context calls, synthetic gameplay, network asset substitutions or automatic resume.",
+        "Preserve chosen emulator/API/GPU/Vulkan settings as explicit separately controlled inputs; do not silently mix an environment change with instrumentation.",
+        "Record oldObserverValidatedButNotStarted and actualDiagnosticInstrumentationComponent separately. A test-only aggregate report must distinguish originalGameSource, diagnosticObserverSource and diagnosticRunnerSource, including all hashes/run identities.",
+        "Preserve all failures, raw console/resource/layout observations, actual screenshots and any visual blank-track outcome. Diagnostic completion never means gameplay accepted or APK publishable. Always collect bounded artifacts without keys, tokens or signed download URLs."
+      ]
+    }
+  ],
+  "pendingIndependentReview": [
+    "Driving has not yet frozen new graphics Observer/build/tests; no final behavior approval is claimed by this design.",
+    "Review bounded console fields/resource URLs and secret redaction, loopback-only GET parser/timeouts, UI thread timeouts, activity lifecycle and single existing-client-preserving console hook.",
+    "Review the proposed workflow/sign helper and test-only runner after freeze, including the exact original-artifact/Observer provenance boundary and unchanged target bytes."
+  ],
+  "requiredNegativeTests": [
+    "Wrong original source/run/attempt/artifact/digest/certificate rejected before signing or installation.",
+    "New Observer package/target/component/testOnly/SDK/permissions/endpoint/source/content mismatch and changed payload during signing rejected.",
+    "Original Observer receipt cannot be replaced or relabeled; generic signer cannot be selected; arbitrary target or Release writes are absent.",
+    "Wrong new diagnostic source/producer/cert or stale/tampered unsigned/signed receipt rejected; unknown signing result cannot be reported as successful.",
+    "All diagnostics errors/timeouts preserve original result and failure evidence; no cached snapshot substituted as a new observation."
+  ],
+  "limitations": [
+    "Design/source review only; no credentials inspected, APK operations, native execution or new signature produced.",
+    "Original signed APK and existing prior audit are referenced, not re-downloaded or reverified here.",
+    "Current Android publication remains paused for the unresolved actual blank-track image; diagnostic evidence does not override that decision."
+  ]
+}

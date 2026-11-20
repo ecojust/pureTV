@@ -25,6 +25,8 @@ python3 resource/game-kit/build.py \
 - `GameDef.holdConfirmAsA=true` 可把键盘/遥控器确认键作为持续按住的 A；默认仍为每次确认触发一次 A。开始、暂停恢复与结算菜单的确认操作不算游戏动作。
 - `input.cancelEpoch` 在输入清除或手机 `cancelSeq` 变化时递增，暂停或没有物理步时保留到下一次 `step`。`input.cancelled=true` 表示取消所属的整帧，或被取消的 A/B/确认键仍未真实松开；这种合成中立输入不能用于“松开后计分”或重新武装按键。需要按住时长的游戏应在新 epoch 清除未完成信号，并等下一次非取消输入中的真实松开后再接收信号。
 - `GameDef` 声明标题、说明、手柄标签、HUD、结算文字与 `render(renderer, state, time, input)`。
+- 三维游戏可选 `GameDef.createRenderer(canvas)`，返回实现 `begin/end/dispose` 和 `metrics` 的独立渲染器，由本游戏的 `render` 使用；未提供时仍使用默认图集渲染器。渲染器不能写入规则状态，指标须来自实际绘制。
+- 可选 `GameDef.afterUI(state, context)` 在共享界面更新后处理本游戏的附加仪表或翻译；`context` 包含 `phase/paused/level/best/phoneConnected/disconnected`，回调不得更改模型或跳过输入生命周期。
 - `GameDef.levelNames` 定义完整关卡列表，菜单按钮、遥控器／手机选关按实际关数循环；未提供时保留三个默认关卡。每款可用 `GameDef.stylesheet='game-theme.css'` 加载自身资产中的本地样式，独立组织舞台、仪表与操作面板，沿用共享输入和连接逻辑。
 - `PureTVQA.snapshot()` 只返回深拷贝，用于观察真实输入的结果；不提供改分数或强制胜利的入口。
 - `PureRenderer` 用单个烘焙图集合并图形与 ASCII 字符；中文界面在 DOM 层绘制。可通过 `GameDef.atlas` 使用[每款游戏自己的素材布局](RENDERER.md)。`metrics.drawCalls` 只统计 WebGL 提交，Canvas 降级单独标记。
@@ -46,3 +48,12 @@ node resource/game-kit/qa/input-lifecycle-test.mjs --output /tmp/puretv-input-li
 进度见 [progress.json](progress.json)。只有完成上述项目并逐款提交到 GitHub 后才计数，草稿与公共组件不计数。浏览器软件渲染的帧耗时不代表实体电视表现；报告必须说明是否做过真机验证。
 
 原生宿主与局域网协议基于本仓库既有游戏实现，继续遵循根目录 [MIT 许可证](../../LICENSE)。新增公共渲染素材为代码绘制的原创图集，不包含第三方游戏资源。
+
+
+## pureTV Wi-Fi 实体手柄
+
+共享宿主同时提供 TCP JSONL v1 手柄服务：首选端口63485，冲突时广播实际分配端口；通过NsdManager注册`_puretv._tcp`和TXT `version=1`，退出/按Home切换应用时撤销；临时窗口失焦或原生确认框保留监听、端口和会话，但隔离所有按键，恢复后须真实松开再按。ESP32协议按仓库AGENTS实现，扫码手机的HTTP/WebSocket入口继续保留。
+
+UP/DOWN/LEFT/RIGHT对应方向，START对应开始/暂停，A/X对应动作A，B/Y对应动作B。Wi-Fi连接优先于扫码手机；控制源或连接代际改变会暂停并取消旧输入。动作/START的sync不产生新操作，长按不依赖扫码协议的750ms刷新周期。`GameDef.afterUI`另收到`controllerKind`和`wifiController`发现状态；具体飞车说明见[Wi-Fi接入](../apps/neon-rush/docs/WIFI-CONTROLLER.md)。
+
+旧独立游戏通过同一TCP实现的 `WifiControllerServer(maxPlayers, true)` 适配一至两席位：A/X=动作A、B=动作B、Y=SELECT；Game Kit默认单席位且B/Y仍为动作B。双人按controller_id区分，断线席位保留15秒；同ID新TCP替换旧连接并生成新session，同步按住的动作不触发新操作。网页只读快照包含抑制后的九键buttons用于诊断。

@@ -1,0 +1,492 @@
+{
+  "at": "2026-11-19T20:54:01.962474+00:00",
+  "qaRunId": 44608419205,
+  "qaRunAttempt": 1,
+  "qaSourceSha": "68d343d22c762c904eb83854d4ab9c4113a7c30f",
+  "artifactSourceSha": "d548bccbe816bd4c03620388556ceef507b67d30",
+  "exportCommit": "7b9abaf97ff2a89c8347d985b974a3908d44de05",
+  "scope": "Six selected original report/command/diagnostic files and the export manifest (seven files total) were retrieved; no package or source-asset tree download.",
+  "sampleCount": 98,
+  "minimumMemAvailableKiB": 10878700,
+  "allObservedOomCountersZero": true,
+  "emulatorGoneEvents": [],
+  "lastObservedEmulator": {
+    "at": "2026-11-19T20:44:54.632596+00:00",
+    "pid": 5752,
+    "executableName": "qemu-system-x86_64-headless",
+    "exitCode": null,
+    "exitCodeReason": "EmulatorIsNotAnOwnedChild",
+    "state": "S",
+    "parentPid": 1,
+    "starttimeTicks": 80090,
+    "residentPages": 1023916,
+    "memory": {
+      "VmSize": {
+        "value": 5541624,
+        "unit": "kB"
+      },
+      "VmHWM": {
+        "value": 4095940,
+        "unit": "kB"
+      },
+      "VmRSS": {
+        "value": 4095940,
+        "unit": "kB"
+      },
+      "Threads": {
+        "value": 85,
+        "unit": "count"
+      }
+    }
+  },
+  "kernelBefore": {
+    "at": "2026-11-19T20:36:53.379434+00:00",
+    "method": "sudo -n dmesg (OOM/kill lines only)",
+    "lines": [],
+    "status": "read",
+    "exitCode": 0,
+    "stderr": "",
+    "captureLimited": false,
+    "unfilteredBytesRead": 121626,
+    "matchingLinesOmitted": 0,
+    "rootCauseProven": false
+  },
+  "kernelAfter": {
+    "at": "2026-11-19T20:44:54.636680+00:00",
+    "method": "sudo -n dmesg (OOM/kill lines only)",
+    "lines": [],
+    "status": "read",
+    "exitCode": 0,
+    "stderr": "",
+    "captureLimited": false,
+    "unfilteredBytesRead": 121626,
+    "matchingLinesOmitted": 0,
+    "rootCauseProven": false
+  },
+  "originalCommands": {
+    "normal": [
+      {
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "wait-for-device"
+        ],
+        "startedAt": 1795120613.7304776,
+        "timeoutSeconds": 45,
+        "endedAt": 1795120613.7339048,
+        "status": "completed",
+        "exitCode": 0
+      },
+      {
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "install",
+          "-r",
+          "/home/runner/work/_temp/input/packages/backroad-rally/backroad-rally-0.1.0.apk"
+        ],
+        "startedAt": 1795120613.7339704,
+        "apkBytes": 105020455,
+        "timeoutSeconds": 240,
+        "endedAt": 1795120853.8214052,
+        "status": "timed-out",
+        "exitCode": null,
+        "errorType": "TimeoutExpired",
+        "error": "Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'install', '-r', '/home/runner/work/_temp/input/packages/backroad-rally/backroad-rally-0.1.0.apk']' timed out after 240 seconds"
+      },
+      {
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "logcat",
+          "-d",
+          "-v",
+          "threadtime"
+        ],
+        "startedAt": 1795120853.824943,
+        "timeoutSeconds": 45,
+        "endedAt": 1795120853.918047,
+        "status": "completed",
+        "exitCode": 0
+      },
+      {
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "shell",
+          "dumpsys",
+          "package",
+          "com.ecojust.joystick.backroadrally"
+        ],
+        "startedAt": 1795120853.9304676,
+        "timeoutSeconds": 45,
+        "endedAt": 1795120853.945626,
+        "status": "completed",
+        "exitCode": 0,
+        "stdout": "Unable to find package: com.ecojust.joystick.backroadrally\n"
+      }
+    ],
+    "occupied": [
+      {
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "wait-for-device"
+        ],
+        "startedAt": 1795120854.2525527,
+        "timeoutSeconds": 45,
+        "endedAt": 1795120854.2545812,
+        "status": "completed",
+        "exitCode": 0
+      },
+      {
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "install",
+          "-r",
+          "/home/runner/work/_temp/input/packages/backroad-rally/backroad-rally-0.1.0.apk"
+        ],
+        "startedAt": 1795120854.2546349,
+        "apkBytes": 105020455,
+        "timeoutSeconds": 240,
+        "endedAt": 1795121094.3385973,
+        "status": "timed-out",
+        "exitCode": null,
+        "errorType": "TimeoutExpired",
+        "error": "Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'install', '-r', '/home/runner/work/_temp/input/packages/backroad-rally/backroad-rally-0.1.0.apk']' timed out after 240 seconds"
+      },
+      {
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "logcat",
+          "-d",
+          "-v",
+          "threadtime"
+        ],
+        "startedAt": 1795121094.3410714,
+        "timeoutSeconds": 45,
+        "endedAt": 1795121094.4235759,
+        "status": "completed",
+        "exitCode": 0
+      },
+      {
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "shell",
+          "dumpsys",
+          "package",
+          "com.ecojust.joystick.backroadrally"
+        ],
+        "startedAt": 1795121094.4370618,
+        "timeoutSeconds": 45,
+        "endedAt": 1795121094.4505208,
+        "status": "completed",
+        "exitCode": 0,
+        "stdout": "Unable to find package: com.ecojust.joystick.backroadrally\n"
+      }
+    ]
+  },
+  "logcatExcerpts": {
+    "normal": {
+      "source": "original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-normal/adb-commands.jsonl",
+      "sourceSha256": "8bd8d8b54ced98e7af41612fd96e71d3ab0671bd0b2c4931b0639d61400760bc",
+      "logcatStdoutUtf8Sha256": "e9be5f6bda814c0df7f610a6e38a92bfbfe58ca30099ee93d4ca469723707a1f",
+      "lines": [
+        {
+          "line": 12970,
+          "text": "11-19 20:36:56.785   629   718 E SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 12971,
+          "text": "11-19 20:36:56.785   629   718 E SystemServiceRegistry: android.os.ServiceManager$ServiceNotFoundException: No service published for: persistent_data_block"
+        },
+        {
+          "line": 13289,
+          "text": "11-19 20:36:57.560  1549  1813 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 15059,
+          "text": "11-19 20:36:59.883  2102  2226 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 15081,
+          "text": "11-19 20:37:00.082  2102  2244 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 15170,
+          "text": "11-19 20:37:00.720  2314  2314 I Finsky  : [2] VerifyApps: Install-time verification requested for package com.ecojust.joystick.backroadrally, PackageManager id = 0, Verifier id = d34d4f43-33a9-4018-b19d-ce680939fa7b"
+        },
+        {
+          "line": 15206,
+          "text": "11-19 20:37:00.982  2314  2342 I Finsky  : [44] VerifyApps: Anti-malware verification task started for package=com.ecojust.joystick.backroadrally"
+        },
+        {
+          "line": 15335,
+          "text": "11-19 20:37:01.909  2102  2345 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 16233,
+          "text": "11-19 20:37:04.804  2102  2111 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 16324,
+          "text": "11-19 20:37:05.082  2314  2383 I Finsky  : [63] VerifyApps: Starting APK Analysis scan for com.ecojust.joystick.backroadrally."
+        },
+        {
+          "line": 16325,
+          "text": "11-19 20:37:05.082  2314  2383 I Finsky  : [63] Scanning package com.ecojust.joystick.backroadrally contents with client side protections. File: [kwY6oVhx08Mj1B-_OqfJBsHbYm1CLDtk0rQJfoij-ss]"
+        },
+        {
+          "line": 16326,
+          "text": "11-19 20:37:05.082  2314  2383 I Finsky  : [63] VerifyApps: APK Analysis scan finished for com.ecojust.joystick.backroadrally. Verdict: SAFE"
+        },
+        {
+          "line": 16328,
+          "text": "11-19 20:37:05.087  2314  2342 I Finsky  : [44] VerifyApps: chooseScanResult for package=com.ecojust.joystick.backroadrally with timeout=15000ms"
+        },
+        {
+          "line": 16657,
+          "text": "11-19 20:37:05.391  2314  2363 I Finsky  : [55] VerifyApps: Verification package=com.ecojust.joystick.backroadrally, id=0, response=3, upload_requested=false, enable_ecm=false"
+        },
+        {
+          "line": 16658,
+          "text": "11-19 20:37:05.392  2314  2363 I Finsky  : [55] VerifyApps: PAM result saving to datastore delayed for package: com.ecojust.joystick.backroadrally"
+        },
+        {
+          "line": 16659,
+          "text": "11-19 20:37:05.395  2314  2342 I Finsky  : [44] VerifyApps: ScanResultPicker returned for package=com.ecojust.joystick.backroadrally: POTENTIALLY_UNWANTED"
+        },
+        {
+          "line": 16660,
+          "text": "11-19 20:37:05.395  2314  2342 I Finsky  : [44] VerifyApps: chooseScanResult returning verdict POTENTIALLY_UNWANTED for package=com.ecojust.joystick.backroadrally"
+        },
+        {
+          "line": 16665,
+          "text": "11-19 20:37:05.411   968  1037 V WindowManagerShell: Transition requested (#2): android.os.BinderProxy@1a7f38f TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=6 effectiveUid=10051 displayId=0 isRunning=true baseIntent=Intent { flg=0x10800000 cmp=com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity } baseActivity=ComponentInfo{com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} topActivity=ComponentInfo{com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} origActivity=null realActivity=ComponentInfo{com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} numActivities=1 lastActiveTime=48142 supportsMultiWindow=false resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@52761c} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=true launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 0 - 0, 0) topActivityInfo=ActivityInfo{8c10225 com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=true isActivityStackTransparent=true lastNonFullscreenBounds=Rect(687, 54 - 1233, 1026) capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=-9 topActivityRequestOpenInBrowserEducationTimestamp=0 appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false eligibleForLetterboxEducation= false isLetterboxEducationEnabled= false isLetterboxDoubleTapEnabled= false eligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 topActivityAppBounds=Rect(0, 0 - 1920, 1080) isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false hasMinAspectRatioOverride=false topActivityLetterboxBounds=null cameraCompatTaskInfo=CameraCompatTaskInfo { freeformCameraCompatMode=inactive}} topActivityMainWindowFrame=null}, pipChange = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 2 }"
+        },
+        {
+          "line": 16666,
+          "text": "11-19 20:37:05.411   629   716 I ActivityTaskManager: START u0 {flg=0x10000000 xflg=0x4 cmp=com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity (has extras)} with LAUNCH_MULTIPLE from uid 10051 (BAL_ALLOW_PERMISSION) result code=0"
+        },
+        {
+          "line": 16688,
+          "text": "11-19 20:37:05.519  2102  2111 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 16690,
+          "text": "11-19 20:37:05.543   629  1798 D CoreBackPreview: Window{9038b4 u0 com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@b07a052, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}"
+        },
+        {
+          "line": 16933,
+          "text": "11-19 20:37:05.797   629   716 D CoreBackPreview: Window{f369f9b u0 com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@dd925f1, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}"
+        },
+        {
+          "line": 16934,
+          "text": "11-19 20:37:05.800   629   716 D CoreBackPreview: Window{f369f9b u0 com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@15f744, mPriority=0, mIsAnimationCallback=true, mOverrideBehavior=0}"
+        },
+        {
+          "line": 17023,
+          "text": "11-19 20:37:06.443   629   650 I ActivityTaskManager: Displayed com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity for user 0: +1s8ms"
+        },
+        {
+          "line": 17024,
+          "text": "11-19 20:37:06.443   629   650 V WindowManager: Sent Transition (#2) createdAt=11-19 20:37:05.400 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=6 effectiveUid=10051 displayId=0 isRunning=true baseIntent=Intent { flg=0x10800000 cmp=com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity } baseActivity=ComponentInfo{com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} topActivity=ComponentInfo{com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} origActivity=null realActivity=ComponentInfo{com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} numActivities=1 lastActiveTime=48142 supportsMultiWindow=false resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{3b68804 Task{8f59db5 #6 type=standard I=com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=true launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 0 - 0, 0) topActivityInfo=ActivityInfo{94151ed com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=true isActivityStackTransparent=true lastNonFullscreenBounds=Rect(687, 54 - 1233, 1026) capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=-9 topActivityRequestOpenInBrowserEducationTimestamp=0 appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false eligibleForLetterboxEducation= false isLetterboxEducationEnabled= false isLetterboxDoubleTapEnabled= false eligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 topActivityAppBounds=Rect(0, 0 - 1920, 1080) isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false hasMinAspectRatioOverride=false topActivityLetterboxBounds=null cameraCompatTaskInfo=CameraCompatTaskInfo { freeformCameraCompatMode=inactive}} topActivityMainWindowFrame=null}, pipChange = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 2 }"
+        },
+        {
+          "line": 17030,
+          "text": "11-19 20:37:06.464   629   650 V WindowManager:         {WCT{RemoteToken{3b68804 Task{8f59db5 #6 type=standard I=com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity}}} m=OPEN f=TRANSLUCENT leash=Surface(name=Task=6)/@0x6c449ca sb=Rect(0, 0 - 1920, 1080) eb=Rect(0, 0 - 1920, 1080) epz=Point(1920, 1080) d=0 taskParent=-1}"
+        },
+        {
+          "line": 17109,
+          "text": "11-19 20:37:06.930  2102  2243 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 17432,
+          "text": "11-19 20:37:07.310  1549  1676 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 22593,
+          "text": "11-19 20:37:15.695  1549  2904 W SystemServiceRegistry: No service published for: persistent_data_block"
+        }
+      ]
+    },
+    "occupied": {
+      "source": "original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-occupied/adb-commands.jsonl",
+      "sourceSha256": "d9e3715a7f50de75374620baf61952bc5a650a9a7abdfb5b00808ac3605bfdfb",
+      "logcatStdoutUtf8Sha256": "93ed4f93ce0e4c9eb7b43d359eff33b7ce93cebc58e2663fccef1a9bd34d29c4",
+      "lines": [
+        {
+          "line": 12970,
+          "text": "11-19 20:36:56.785   629   718 E SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 12971,
+          "text": "11-19 20:36:56.785   629   718 E SystemServiceRegistry: android.os.ServiceManager$ServiceNotFoundException: No service published for: persistent_data_block"
+        },
+        {
+          "line": 13289,
+          "text": "11-19 20:36:57.560  1549  1813 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 15059,
+          "text": "11-19 20:36:59.883  2102  2226 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 15081,
+          "text": "11-19 20:37:00.082  2102  2244 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 15170,
+          "text": "11-19 20:37:00.720  2314  2314 I Finsky  : [2] VerifyApps: Install-time verification requested for package com.ecojust.joystick.backroadrally, PackageManager id = 0, Verifier id = d34d4f43-33a9-4018-b19d-ce680939fa7b"
+        },
+        {
+          "line": 15206,
+          "text": "11-19 20:37:00.982  2314  2342 I Finsky  : [44] VerifyApps: Anti-malware verification task started for package=com.ecojust.joystick.backroadrally"
+        },
+        {
+          "line": 15335,
+          "text": "11-19 20:37:01.909  2102  2345 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 16233,
+          "text": "11-19 20:37:04.804  2102  2111 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 16324,
+          "text": "11-19 20:37:05.082  2314  2383 I Finsky  : [63] VerifyApps: Starting APK Analysis scan for com.ecojust.joystick.backroadrally."
+        },
+        {
+          "line": 16325,
+          "text": "11-19 20:37:05.082  2314  2383 I Finsky  : [63] Scanning package com.ecojust.joystick.backroadrally contents with client side protections. File: [kwY6oVhx08Mj1B-_OqfJBsHbYm1CLDtk0rQJfoij-ss]"
+        },
+        {
+          "line": 16326,
+          "text": "11-19 20:37:05.082  2314  2383 I Finsky  : [63] VerifyApps: APK Analysis scan finished for com.ecojust.joystick.backroadrally. Verdict: SAFE"
+        },
+        {
+          "line": 16328,
+          "text": "11-19 20:37:05.087  2314  2342 I Finsky  : [44] VerifyApps: chooseScanResult for package=com.ecojust.joystick.backroadrally with timeout=15000ms"
+        },
+        {
+          "line": 16657,
+          "text": "11-19 20:37:05.391  2314  2363 I Finsky  : [55] VerifyApps: Verification package=com.ecojust.joystick.backroadrally, id=0, response=3, upload_requested=false, enable_ecm=false"
+        },
+        {
+          "line": 16658,
+          "text": "11-19 20:37:05.392  2314  2363 I Finsky  : [55] VerifyApps: PAM result saving to datastore delayed for package: com.ecojust.joystick.backroadrally"
+        },
+        {
+          "line": 16659,
+          "text": "11-19 20:37:05.395  2314  2342 I Finsky  : [44] VerifyApps: ScanResultPicker returned for package=com.ecojust.joystick.backroadrally: POTENTIALLY_UNWANTED"
+        },
+        {
+          "line": 16660,
+          "text": "11-19 20:37:05.395  2314  2342 I Finsky  : [44] VerifyApps: chooseScanResult returning verdict POTENTIALLY_UNWANTED for package=com.ecojust.joystick.backroadrally"
+        },
+        {
+          "line": 16665,
+          "text": "11-19 20:37:05.411   968  1037 V WindowManagerShell: Transition requested (#2): android.os.BinderProxy@1a7f38f TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=6 effectiveUid=10051 displayId=0 isRunning=true baseIntent=Intent { flg=0x10800000 cmp=com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity } baseActivity=ComponentInfo{com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} topActivity=ComponentInfo{com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} origActivity=null realActivity=ComponentInfo{com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} numActivities=1 lastActiveTime=48142 supportsMultiWindow=false resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@52761c} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=true launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 0 - 0, 0) topActivityInfo=ActivityInfo{8c10225 com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=true isActivityStackTransparent=true lastNonFullscreenBounds=Rect(687, 54 - 1233, 1026) capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=-9 topActivityRequestOpenInBrowserEducationTimestamp=0 appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false eligibleForLetterboxEducation= false isLetterboxEducationEnabled= false isLetterboxDoubleTapEnabled= false eligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 topActivityAppBounds=Rect(0, 0 - 1920, 1080) isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false hasMinAspectRatioOverride=false topActivityLetterboxBounds=null cameraCompatTaskInfo=CameraCompatTaskInfo { freeformCameraCompatMode=inactive}} topActivityMainWindowFrame=null}, pipChange = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 2 }"
+        },
+        {
+          "line": 16666,
+          "text": "11-19 20:37:05.411   629   716 I ActivityTaskManager: START u0 {flg=0x10000000 xflg=0x4 cmp=com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity (has extras)} with LAUNCH_MULTIPLE from uid 10051 (BAL_ALLOW_PERMISSION) result code=0"
+        },
+        {
+          "line": 16688,
+          "text": "11-19 20:37:05.519  2102  2111 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 16690,
+          "text": "11-19 20:37:05.543   629  1798 D CoreBackPreview: Window{9038b4 u0 com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@b07a052, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}"
+        },
+        {
+          "line": 16933,
+          "text": "11-19 20:37:05.797   629   716 D CoreBackPreview: Window{f369f9b u0 com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@dd925f1, mPriority=-1, mIsAnimationCallback=false, mOverrideBehavior=0}"
+        },
+        {
+          "line": 16934,
+          "text": "11-19 20:37:05.800   629   716 D CoreBackPreview: Window{f369f9b u0 com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@15f744, mPriority=0, mIsAnimationCallback=true, mOverrideBehavior=0}"
+        },
+        {
+          "line": 17023,
+          "text": "11-19 20:37:06.443   629   650 I ActivityTaskManager: Displayed com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity for user 0: +1s8ms"
+        },
+        {
+          "line": 17024,
+          "text": "11-19 20:37:06.443   629   650 V WindowManager: Sent Transition (#2) createdAt=11-19 20:37:05.400 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=6 effectiveUid=10051 displayId=0 isRunning=true baseIntent=Intent { flg=0x10800000 cmp=com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity } baseActivity=ComponentInfo{com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} topActivity=ComponentInfo{com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} origActivity=null realActivity=ComponentInfo{com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} numActivities=1 lastActiveTime=48142 supportsMultiWindow=false resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{3b68804 Task{8f59db5 #6 type=standard I=com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=true launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 0 - 0, 0) topActivityInfo=ActivityInfo{94151ed com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=true isActivityStackTransparent=true lastNonFullscreenBounds=Rect(687, 54 - 1233, 1026) capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=-9 topActivityRequestOpenInBrowserEducationTimestamp=0 appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false eligibleForLetterboxEducation= false isLetterboxEducationEnabled= false isLetterboxDoubleTapEnabled= false eligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 topActivityAppBounds=Rect(0, 0 - 1920, 1080) isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false hasMinAspectRatioOverride=false topActivityLetterboxBounds=null cameraCompatTaskInfo=CameraCompatTaskInfo { freeformCameraCompatMode=inactive}} topActivityMainWindowFrame=null}, pipChange = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 2 }"
+        },
+        {
+          "line": 17030,
+          "text": "11-19 20:37:06.464   629   650 V WindowManager:         {WCT{RemoteToken{3b68804 Task{8f59db5 #6 type=standard I=com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity}}} m=OPEN f=TRANSLUCENT leash=Surface(name=Task=6)/@0x6c449ca sb=Rect(0, 0 - 1920, 1080) eb=Rect(0, 0 - 1920, 1080) epz=Point(1920, 1080) d=0 taskParent=-1}"
+        },
+        {
+          "line": 17109,
+          "text": "11-19 20:37:06.930  2102  2243 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 17432,
+          "text": "11-19 20:37:07.310  1549  1676 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 22593,
+          "text": "11-19 20:37:15.695  1549  2904 W SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 26118,
+          "text": "11-19 20:40:54.086   629   716 E SystemServiceRegistry: No service published for: persistent_data_block"
+        },
+        {
+          "line": 26119,
+          "text": "11-19 20:40:54.086   629   716 E SystemServiceRegistry: android.os.ServiceManager$ServiceNotFoundException: No service published for: persistent_data_block"
+        },
+        {
+          "line": 26149,
+          "text": "11-19 20:40:54.332  2314  2314 I Finsky  : [2] VerifyApps: Install-time verification requested for package com.ecojust.joystick.backroadrally, PackageManager id = 1, Verifier id = 213ff3aa-f613-4453-8722-7415b9690905"
+        },
+        {
+          "line": 26154,
+          "text": "11-19 20:40:54.576  2314  3091 I Finsky  : [188] VerifyApps: Anti-malware verification task started for package=com.ecojust.joystick.backroadrally"
+        },
+        {
+          "line": 26163,
+          "text": "11-19 20:40:54.859  2314  3091 I Finsky  : [188] VerifyApps: chooseScanResult for package=com.ecojust.joystick.backroadrally with timeout=15000ms"
+        },
+        {
+          "line": 26164,
+          "text": "11-19 20:40:54.860  2314  2383 I Finsky  : [63] VerifyApps: Starting APK Analysis scan for com.ecojust.joystick.backroadrally."
+        },
+        {
+          "line": 26165,
+          "text": "11-19 20:40:54.860  2314  2383 I Finsky  : [63] Scanning package com.ecojust.joystick.backroadrally contents with client side protections. File: [IHzpaBuVSVx9BmdPDafJZL0QowP-75zGSBWEUQ4t1es]"
+        },
+        {
+          "line": 26166,
+          "text": "11-19 20:40:54.860  2314  2383 I Finsky  : [63] VerifyApps: APK Analysis scan finished for com.ecojust.joystick.backroadrally. Verdict: SAFE"
+        },
+        {
+          "line": 26179,
+          "text": "11-19 20:40:54.985  2314  3095 I Finsky  : [191] VerifyApps: Verification package=com.ecojust.joystick.backroadrally, id=1, response=3, upload_requested=false, enable_ecm=false"
+        },
+        {
+          "line": 26180,
+          "text": "11-19 20:40:54.986  2314  3095 I Finsky  : [191] VerifyApps: PAM result saving to datastore delayed for package: com.ecojust.joystick.backroadrally"
+        },
+        {
+          "line": 26181,
+          "text": "11-19 20:40:54.987  2314  3091 I Finsky  : [188] VerifyApps: ScanResultPicker returned for package=com.ecojust.joystick.backroadrally: POTENTIALLY_UNWANTED"
+        },
+        {
+          "line": 26182,
+          "text": "11-19 20:40:54.987  2314  3091 I Finsky  : [188] VerifyApps: chooseScanResult returning verdict POTENTIALLY_UNWANTED for package=com.ecojust.joystick.backroadrally"
+        },
+        {
+          "line": 26184,
+          "text": "11-19 20:40:54.992   629  2332 I ActivityTaskManager: START u0 {flg=0x10000000 xflg=0x4 cmp=com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity (has extras)} with LAUNCH_MULTIPLE from uid 10051 (BAL_ALLOW_VISIBLE_WINDOW) result code=3"
+        }
+      ]
+    }
+  },
+  "conclusions": [
+    "Both original modes timed out in adb install -r after 240 seconds, before any game acceptance check.",
+    "The same QEMU process remained present throughout the sampled interval; subsequent ADB logcat and dumpsys package succeeded.",
+    "PackageInstaller reached commit and Play VerifyApps ran APK analysis for the exact target package. The local analysis said SAFE, followed by final POTENTIALLY_UNWANTED and PlayProtectDialogsActivity launch. Preserve both original findings.",
+    "The original evidence contains no runtime UI screenshot/XML/foreground capture, so the exact dialog text and buttons are unobserved.",
+    "No change to timeout, transfer mode, security settings or installation UI interaction was made."
+  ],
+  "runtimeAccepted": false
+}

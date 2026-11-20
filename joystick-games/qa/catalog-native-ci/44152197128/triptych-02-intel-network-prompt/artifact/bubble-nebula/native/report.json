@@ -1,0 +1,231 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "44eec802f9ba270f38b8b19a1adc594c1bd8de6e",
+  "artifactSourceCommit": "a73a1976e7d38ff27b8e457b933519ea66eaa949",
+  "artifactRunId": "44150598155",
+  "startedAt": "2026-11-17T18:52:06.026734+00:00",
+  "game": "bubble-nebula",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "45f19d34ebf2c2e8b8bf5349670ec91730357793e60982d249b13797a2cbe828",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/Sources/main.swift": "fcf968cd99187d950205aaf35b9ed3071cc44c78ef5d1023ccca4bba3181c3f1",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/bubble-nebula/qa-plan.json": "536e30301d7350357bb182b6d47fe12e24d36c7c8050024771aed66cc948ce5a",
+    "joystick-games/tools/qa-plan.py": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+    "joystick-games/tools/macos-build.py": "1a0b81f2c712aff665be692f677573fa54b7466d6484a563588ea672b6ed2e0a",
+    "joystick-games/catalog-registry.json": "a34fc2e2892b3f5962e1ba2b45b48afb8358cc9d85728320a786805f4f55c30a",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "webgl2",
+    "pauseStablePaths": [
+      "gameplay.tick",
+      "gameplay.score",
+      "gameplay.playerX",
+      "gameplay.playerY",
+      "gameplay.blown"
+    ],
+    "steps": [
+      {
+        "name": "Start the first sector",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.phase",
+            "op": "eq",
+            "value": "play"
+          }
+        ]
+      },
+      {
+        "name": "Move jump and blow a real bubble",
+        "keys": [
+          "RIGHT",
+          "A",
+          "B"
+        ],
+        "holdMs": 1400,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.blown",
+            "op": "increased"
+          }
+        ]
+      },
+      {
+        "name": "Pause the real simulation",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "paused"
+          }
+        ]
+      },
+      {
+        "name": "Resume only by explicit START",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      }
+    ],
+    "storageRestartRequired": true
+  },
+  "acceptedRenderers": [
+    "webgl2"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "2dabe4bf696f877e42afb9e24f9665a2af944b177e9f2b81287211eed49fd3f6",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.bubble-nebula.abe5e306f6884299af1abc6bdfae124b",
+    "reusedAcrossRestartOnly": true
+  },
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 365, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 168, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": false, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"BUBBLE NEBULA\", \"url\": \"http://127.0.0.1:51812/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.apple.UserNotificationCenter\", \"name\": \"UserNotificationCenter\"}, \"game\": null, \"input\": {\"connections\": 0, \"inputEnabled\": false, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 3, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 3}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"bubble-nebula.v1\", \"bubble-nebula.v1.settings\", \"bubble-nebula.v1.scores\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.4\"], \"inputEnabled\": false, \"port\": 63485, \"serviceName\": \"泡泡星云\", \"state\": \"registering\"}}, \"storage\": {\"current\": {\"bubble-nebula.v1\": null, \"bubble-nebula.v1.scores\": null, \"bubble-nebula.v1.settings\": null}, \"initial\": {\"bubble-nebula.v1\": null, \"bubble-nebula.v1.scores\": null, \"bubble-nebula.v1.settings\": null}, \"origin\": \"http://127.0.0.1:51812\"}, \"timestamp\": 1794941615.943142}\n",
+  "lastState": {
+    "active": false,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "en",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "BUBBLE NEBULA",
+      "url": "http://127.0.0.1:51812/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.apple.UserNotificationCenter",
+      "name": "UserNotificationCenter"
+    },
+    "game": null,
+    "input": {
+      "connections": 0,
+      "inputEnabled": false,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 3,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 3
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "bubble-nebula.v1",
+        "bubble-nebula.v1.settings",
+        "bubble-nebula.v1.scores"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.4"
+        ],
+        "inputEnabled": false,
+        "port": 63485,
+        "serviceName": "泡泡星云",
+        "state": "registering"
+      }
+    },
+    "storage": {
+      "current": {
+        "bubble-nebula.v1": null,
+        "bubble-nebula.v1.scores": null,
+        "bubble-nebula.v1.settings": null
+      },
+      "initial": {
+        "bubble-nebula.v1": null,
+        "bubble-nebula.v1.scores": null,
+        "bubble-nebula.v1.settings": null
+      },
+      "origin": "http://127.0.0.1:51812"
+    },
+    "timestamp": 1794941615.943142
+  },
+  "finishedAt": "2026-11-17T18:53:36.461789+00:00"
+}

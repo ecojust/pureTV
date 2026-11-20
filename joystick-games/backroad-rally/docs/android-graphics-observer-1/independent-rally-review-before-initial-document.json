@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "kind": "Independent read-only pre-fix review",
+  "reviewedAtUtc": "2026-11-19T23:42:37.668500+00:00",
+  "status": "one-static-startup-race-requires-narrow-correction",
+  "sourceInventory": {
+    "bytes": 1852,
+    "sha256": "d0a12c29acaafcdda0233926b59fbf71157b1ef8835f37005fe077dfddd4f973"
+  },
+  "reviewScope": [
+    "Unsigned builder manifest/source inventory",
+    "Java console hook/HTTP/header/UI-thread budgets",
+    "Read-only JS and cached-controller boundary",
+    "Separate driver source/package binding, SDK subset, original error and final evidence handling"
+  ],
+  "findings": [
+    {
+      "severity": "blocking-for-a-reliable-first-diagnostic",
+      "status": "reported-to-owner-and-root",
+      "summary": "The original host loads the first document asynchronously; a legitimate initial about:blank can be returned before loadUrl. Current graphics.js labels every non-target document an error, and initial wait immediately fails that error rather than using the declared initialization budget.",
+      "sourceEvidence": {
+        "resource/game-kit/android/src/main/java/com/ecojust/gamekit/MainActivity.java": {
+          "bytes": 25896,
+          "sha256": "bff7e64d78a6e50120dddb12800fa5ed5ed09023f155e175ebfd3474943a13a6"
+        },
+        "joystick-games/qa/android/graphics-observer/graphics.js": {
+          "bytes": 4470,
+          "sha256": "decc9966cab6312d2684936ada870e29b0e4f2befae5536629ea67ce3a2680fb"
+        },
+        "joystick-games/qa/android/graphics-observer/run.py": {
+          "bytes": 28106,
+          "sha256": "1cc52a82d1c3a21a37304d3e11894e78933e8f715f4f61808c339ca12d7a7263"
+        }
+      },
+      "observedNativeFailure": false,
+      "requestedCorrection": "Represent only exact about:blank as an explicit initial-pending state and permit it only during the initial readiness wait; retain rejection of foreign/later documents and all genuine Observer/game errors. Add boundary tests and rebuild the separate unsigned Observer only."
+    }
+  ],
+  "otherChecks": [
+    "Nine source hashes match the owner inventory; local Java/Node/driver logs were read, not rerun.",
+    "Handler.post plus a request-local ten-second latch replaces the initially unbounded runOnMainSync; late callbacks affect only their abandoned private result.",
+    "Console hook does not replace an existing Chrome client, requires no existing URL, preserves WebViewClient and changes no game model/input/renderer.",
+    "Cached snapshot uses original controller.peek, no consuming native poll or GL getContext/getError/readPixels.",
+    "Driver fixed original APK and separate Observer identities remain distinct, only one normal SDK subset is executed, status is diagnostic-completed and formalAcceptance stays false.",
+    "Final independent system PNG and all GET outcomes are retained; rejected preflight never triggers final device observation.",
+    "New target35 original v7 installation completed in 10.57s; old target29 per-app confirmation is correctly excluded."
+  ],
+  "limitations": [
+    "No signing, credential read, game rebuild, install, WebView/native run, browser run or workflow dispatch was performed in this independent review.",
+    "The startup issue is source-proven possible ordering, not a claimed original native failure or a proven cause of the blank-track screenshot."
+  ]
+}

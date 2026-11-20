@@ -1,0 +1,1105 @@
+{
+  "status": "failed",
+  "startedAt": "2026-11-17T15:43:11.786297+00:00",
+  "game": "cf-transport-ship",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [
+    {
+      "name": "Bonjour actual port and version",
+      "status": "passed",
+      "details": {
+        "service": "运输船 CF",
+        "port": 63485,
+        "txtVersion": "1"
+      }
+    },
+    {
+      "name": "Original SDK and complete identity card",
+      "status": "failed",
+      "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 95, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 156, in connect\n    if self.graphics:self.display()\n                     ^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 141, in display\n    return self.until(match,'Identity card '+str(present))['document']['controllerClients']\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 92, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Identity card True timed out: {\"active\": true, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"zh-CN\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"运输船 · 穿越火线 3D\", \"url\": \"http://127.0.0.1:50507/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.ecojust.joystickcf\", \"name\": \"运输船 CF\"}, \"game\": {\"controller\": {\"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelled\": false, \"connected\": false, \"info\": {}, \"players\": [], \"pollCount\": 0, \"pressed\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"released\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"source\": \"\"}, \"controllerConnected\": false, \"controllerMode\": false, \"ended\": false, \"error\": \"null is not an object (evaluating 'r.getShaderPrecisionFormat(r.VERTEX_SHADER,r.HIGH_FLOAT).precision')\", \"focus\": \"潜伏者0\\n    10:00\\n    0保卫者\\n  \\n  运输船\\n  \\n  \\n  \\n    ✚100\\n    ⛨100\\n  \\n  \\n  30/ 90\\n  \\n  \\n  \\n  \\n  \\n  \\n  \\n  \\n \", \"game\": \"cf-transport-ship\", \"paused\": false, \"player\": null, \"playing\": false, \"pointerLocked\": false, \"primary\": \"ak47\", \"quality\": \"low\", \"ready\": false, \"score\": {\"BL\": 0, \"GR\": 0}, \"settings\": {\"crouch\": false, \"strafe\": false}, \"stage\": \"error\", \"team\": \"BL\", \"telemetry\": {\"aimFrames\": 0, \"cancellations\": 5, \"fireFrames\": 0, \"forwardFrames\": 0, \"jumpRequests\": 0, \"pauses\": 0, \"polls\": 0, \"reloadRequests\": 0, \"scopeRequests\": 0, \"turnFrames\": 0, \"weaponCycles\": 0}, \"time\": 0, \"webglError\": false, \"webglVersion\": null}, \"input\": {\"connections\": 1, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 5, \"connected\": true, \"controllerId\": \"virtual-5ddf5e351f92\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"wifi-9E7A663A-1C7E-4039-BE08-8D9E0631C1D2-1\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 20}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.10\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"运输船 CF\", \"state\": \"available\"}}, \"timestamp\": 1794930224.591326}\n"
+    }
+  ],
+  "wire": [
+    {
+      "at": "2026-11-17T15:43:19.459851+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-5ddf5e351f92"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.461689+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 1,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.464451+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-5ddf5e351f92",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.465507+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 2,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.467115+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-5ddf5e351f92",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.468136+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 3,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.468692+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-5ddf5e351f92",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.469720+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 4,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.470180+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-5ddf5e351f92",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.471000+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 5,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.471473+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-5ddf5e351f92",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.472350+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 6,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.474761+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-5ddf5e351f92",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.475964+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 7,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.476362+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-5ddf5e351f92",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.477409+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 8,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.477917+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-5ddf5e351f92",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.478918+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 9,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.479528+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-5ddf5e351f92",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:19.480642+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 10,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:23.554914+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 11,
+        "controller_id": "virtual-5ddf5e351f92"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:23.557197+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 11,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:27.561818+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 12,
+        "controller_id": "virtual-5ddf5e351f92"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:27.562827+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 12,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:31.574853+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 13,
+        "controller_id": "virtual-5ddf5e351f92"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:31.575747+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 13,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:35.589261+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 14,
+        "controller_id": "virtual-5ddf5e351f92"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:35.590270+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 14,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:39.593475+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 15,
+        "controller_id": "virtual-5ddf5e351f92"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:39.594357+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 15,
+        "type": "ack"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:43.650102+00:00",
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "message": {
+        "type": "ping",
+        "seq": 16,
+        "controller_id": "virtual-5ddf5e351f92"
+      }
+    },
+    {
+      "at": "2026-11-17T15:43:43.653255+00:00",
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "message": {
+        "seq": 16,
+        "type": "ack"
+      }
+    }
+  ],
+  "observerErrors": [],
+  "observerConnectionEnds": [
+    {
+      "connection": 1,
+      "error": "[Errno 9] Bad file descriptor"
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "Native ready",
+      "at": "2026-11-17T15:43:16.921269+00:00",
+      "state": {
+        "active": true,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "运输船 · 穿越火线 3D",
+          "url": "http://127.0.0.1:50507/tv.html",
+          "webglError": false,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.ecojust.joystickcf",
+          "name": "运输船 CF"
+        },
+        "game": {
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {},
+            "players": [],
+            "pollCount": 0,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "controllerConnected": false,
+          "controllerMode": false,
+          "ended": false,
+          "error": "",
+          "focus": "潜伏者0\n    10:00\n    0保卫者\n  \n  运输船\n  \n  \n  \n    ✚100\n    ⛨100\n  \n  \n  30/ 90\n  \n  \n  \n  \n  \n  \n  \n  \n ",
+          "game": "cf-transport-ship",
+          "paused": false,
+          "player": null,
+          "playing": false,
+          "pointerLocked": false,
+          "primary": "ak47",
+          "quality": "low",
+          "ready": false,
+          "score": {
+            "BL": 0,
+            "GR": 0
+          },
+          "settings": {
+            "crouch": false,
+            "strafe": false
+          },
+          "stage": "loading",
+          "team": "BL",
+          "telemetry": {
+            "aimFrames": 0,
+            "cancellations": 0,
+            "fireFrames": 0,
+            "forwardFrames": 0,
+            "jumpRequests": 0,
+            "pauses": 0,
+            "polls": 0,
+            "reloadRequests": 0,
+            "scopeRequests": 0,
+            "turnFrames": 0,
+            "weaponCycles": 0
+          },
+          "time": 0,
+          "webglError": false,
+          "webglVersion": null
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 2,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 2
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.10"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "运输船 CF",
+            "state": "registering"
+          }
+        },
+        "timestamp": 1794930196.631363
+      }
+    },
+    {
+      "label": "Bonjour ready",
+      "at": "2026-11-17T15:43:18.781535+00:00",
+      "state": {
+        "active": true,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "运输船 · 穿越火线 3D",
+          "url": "http://127.0.0.1:50507/tv.html",
+          "webglError": false,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.ecojust.joystickcf",
+          "name": "运输船 CF"
+        },
+        "game": {
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {},
+            "players": [],
+            "pollCount": 0,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "controllerConnected": false,
+          "controllerMode": false,
+          "ended": false,
+          "error": "null is not an object (evaluating 'r.getShaderPrecisionFormat(r.VERTEX_SHADER,r.HIGH_FLOAT).precision')",
+          "focus": "潜伏者0\n    10:00\n    0保卫者\n  \n  运输船\n  \n  \n  \n    ✚100\n    ⛨100\n  \n  \n  30/ 90\n  \n  \n  \n  \n  \n  \n  \n  \n ",
+          "game": "cf-transport-ship",
+          "paused": false,
+          "player": null,
+          "playing": false,
+          "pointerLocked": false,
+          "primary": "ak47",
+          "quality": "low",
+          "ready": false,
+          "score": {
+            "BL": 0,
+            "GR": 0
+          },
+          "settings": {
+            "crouch": false,
+            "strafe": false
+          },
+          "stage": "error",
+          "team": "BL",
+          "telemetry": {
+            "aimFrames": 0,
+            "cancellations": 5,
+            "fireFrames": 0,
+            "forwardFrames": 0,
+            "jumpRequests": 0,
+            "pauses": 0,
+            "polls": 0,
+            "reloadRequests": 0,
+            "scopeRequests": 0,
+            "turnFrames": 0,
+            "weaponCycles": 0
+          },
+          "time": 0,
+          "webglError": false,
+          "webglVersion": null
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 4,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 4
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.10"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "运输船 CF",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930198.735351
+      }
+    },
+    {
+      "label": "SDK hello",
+      "at": "2026-11-17T15:43:19.645614+00:00",
+      "state": {
+        "active": true,
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "zh-CN",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "运输船 · 穿越火线 3D",
+          "url": "http://127.0.0.1:50507/tv.html",
+          "webglError": false,
+          "width": 1280
+        },
+        "frontmostApplication": {
+          "bundleIdentifier": "com.ecojust.joystickcf",
+          "name": "运输船 CF"
+        },
+        "game": {
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {},
+            "players": [],
+            "pollCount": 0,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "controllerConnected": false,
+          "controllerMode": false,
+          "ended": false,
+          "error": "null is not an object (evaluating 'r.getShaderPrecisionFormat(r.VERTEX_SHADER,r.HIGH_FLOAT).precision')",
+          "focus": "潜伏者0\n    10:00\n    0保卫者\n  \n  运输船\n  \n  \n  \n    ✚100\n    ⛨100\n  \n  \n  30/ 90\n  \n  \n  \n  \n  \n  \n  \n  \n ",
+          "game": "cf-transport-ship",
+          "paused": false,
+          "player": null,
+          "playing": false,
+          "pointerLocked": false,
+          "primary": "ak47",
+          "quality": "low",
+          "ready": false,
+          "score": {
+            "BL": 0,
+            "GR": 0
+          },
+          "settings": {
+            "crouch": false,
+            "strafe": false
+          },
+          "stage": "error",
+          "team": "BL",
+          "telemetry": {
+            "aimFrames": 0,
+            "cancellations": 5,
+            "fireFrames": 0,
+            "forwardFrames": 0,
+            "jumpRequests": 0,
+            "pauses": 0,
+            "polls": 0,
+            "reloadRequests": 0,
+            "scopeRequests": 0,
+            "turnFrames": 0,
+            "weaponCycles": 0
+          },
+          "time": 0,
+          "webglError": false,
+          "webglVersion": null
+        },
+        "input": {
+          "connections": 1,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 5,
+              "connected": true,
+              "controllerId": "virtual-5ddf5e351f92",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "wifi-9E7A663A-1C7E-4039-BE08-8D9E0631C1D2-1",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 14
+        },
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.10"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "运输船 CF",
+            "state": "available"
+          }
+        },
+        "timestamp": 1794930199.54467
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "diagnostics/menu.png",
+      "bytes": 54708,
+      "sha256": "ae80a656a33c115a431a50a4e229d600120ca0e68ced1e53466ba8971627cb84"
+    }
+  ],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "80c2293e1e3c23092be471c97b502d8cd6d45e358d26b1db8103901480350c2b",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/Sources/main.swift": "4888c7ba767907e8d04723bbda333bf1efe07cc02d6563d0dcf5abab4367eaf7",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "0aa29efcf46fbb60c25d2833262b5ca8589e957de59063d7e90cd372db760edf"
+  },
+  "binarySha256": "fc53276d6ea438a818b0496b2eab6b95d4ffc50d7db87716c104bc9076c5ebf0",
+  "nativeProcessArchitecture": "x86_64",
+  "webglAvailable": true,
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 254, in run\n    self.screenshot('menu.png');self.check('Bonjour actual port and version',self.discovery);self.check('Original SDK and complete identity card' if self.graphics else 'Original SDK native receiver without renderer',self.connect)\n                                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 95, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 156, in connect\n    if self.graphics:self.display()\n                     ^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 141, in display\n    return self.until(match,'Identity card '+str(present))['document']['controllerClients']\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 92, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Identity card True timed out: {\"active\": true, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"zh-CN\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"运输船 · 穿越火线 3D\", \"url\": \"http://127.0.0.1:50507/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.ecojust.joystickcf\", \"name\": \"运输船 CF\"}, \"game\": {\"controller\": {\"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelled\": false, \"connected\": false, \"info\": {}, \"players\": [], \"pollCount\": 0, \"pressed\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"released\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"source\": \"\"}, \"controllerConnected\": false, \"controllerMode\": false, \"ended\": false, \"error\": \"null is not an object (evaluating 'r.getShaderPrecisionFormat(r.VERTEX_SHADER,r.HIGH_FLOAT).precision')\", \"focus\": \"潜伏者0\\n    10:00\\n    0保卫者\\n  \\n  运输船\\n  \\n  \\n  \\n    ✚100\\n    ⛨100\\n  \\n  \\n  30/ 90\\n  \\n  \\n  \\n  \\n  \\n  \\n  \\n  \\n \", \"game\": \"cf-transport-ship\", \"paused\": false, \"player\": null, \"playing\": false, \"pointerLocked\": false, \"primary\": \"ak47\", \"quality\": \"low\", \"ready\": false, \"score\": {\"BL\": 0, \"GR\": 0}, \"settings\": {\"crouch\": false, \"strafe\": false}, \"stage\": \"error\", \"team\": \"BL\", \"telemetry\": {\"aimFrames\": 0, \"cancellations\": 5, \"fireFrames\": 0, \"forwardFrames\": 0, \"jumpRequests\": 0, \"pauses\": 0, \"polls\": 0, \"reloadRequests\": 0, \"scopeRequests\": 0, \"turnFrames\": 0, \"weaponCycles\": 0}, \"time\": 0, \"webglError\": false, \"webglVersion\": null}, \"input\": {\"connections\": 1, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 5, \"connected\": true, \"controllerId\": \"virtual-5ddf5e351f92\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"wifi-9E7A663A-1C7E-4039-BE08-8D9E0631C1D2-1\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 20}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.10\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"运输船 CF\", \"state\": \"available\"}}, \"timestamp\": 1794930224.591326}\n",
+  "lastState": {
+    "active": true,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "zh-CN",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "运输船 · 穿越火线 3D",
+      "url": "http://127.0.0.1:50507/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystickcf",
+      "name": "运输船 CF"
+    },
+    "game": {
+      "controller": {
+        "buttons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "cancelled": false,
+        "connected": false,
+        "info": {},
+        "players": [],
+        "pollCount": 0,
+        "pressed": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "released": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "source": ""
+      },
+      "controllerConnected": false,
+      "controllerMode": false,
+      "ended": false,
+      "error": "null is not an object (evaluating 'r.getShaderPrecisionFormat(r.VERTEX_SHADER,r.HIGH_FLOAT).precision')",
+      "focus": "潜伏者0\n    10:00\n    0保卫者\n  \n  运输船\n  \n  \n  \n    ✚100\n    ⛨100\n  \n  \n  30/ 90\n  \n  \n  \n  \n  \n  \n  \n  \n ",
+      "game": "cf-transport-ship",
+      "paused": false,
+      "player": null,
+      "playing": false,
+      "pointerLocked": false,
+      "primary": "ak47",
+      "quality": "low",
+      "ready": false,
+      "score": {
+        "BL": 0,
+        "GR": 0
+      },
+      "settings": {
+        "crouch": false,
+        "strafe": false
+      },
+      "stage": "error",
+      "team": "BL",
+      "telemetry": {
+        "aimFrames": 0,
+        "cancellations": 5,
+        "fireFrames": 0,
+        "forwardFrames": 0,
+        "jumpRequests": 0,
+        "pauses": 0,
+        "polls": 0,
+        "reloadRequests": 0,
+        "scopeRequests": 0,
+        "turnFrames": 0,
+        "weaponCycles": 0
+      },
+      "time": 0,
+      "webglError": false,
+      "webglVersion": null
+    },
+    "input": {
+      "connections": 1,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 5,
+          "connected": true,
+          "controllerId": "virtual-5ddf5e351f92",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "wifi-9E7A663A-1C7E-4039-BE08-8D9E0631C1D2-1",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 20
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.10"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "运输船 CF",
+        "state": "available"
+      }
+    },
+    "timestamp": 1794930224.591326
+  },
+  "finishedAt": "2026-11-17T15:43:44.822041+00:00"
+}

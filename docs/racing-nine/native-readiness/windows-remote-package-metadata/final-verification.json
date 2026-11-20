@@ -1,0 +1,38 @@
+{
+  "status": "passed-after-actual-release-index-shape-reproduction",
+  "baseline": "41f8db4dff81a26dc9374476e54c1e5c45b5007e",
+  "sources": {
+    "joystick-games/tools/windows-inputs.py": {
+      "bytes": 18856,
+      "sha256": "3819b9eca9462c8cf56c2aeac9ccb67db96cf6c08b4a93d170361c65c9163cb6",
+      "changedOriginalFunctions": [
+        "declared_package_outputs",
+        "select"
+      ],
+      "addedFunctions": []
+    },
+    "joystick-games/shared/windows/tests/source-scope.test.py": {
+      "bytes": 31281,
+      "sha256": "19e62b531a9140420b3f2afaa67e1a54beb4c2df6c0d1c5f5153f4d1bc2b11c3",
+      "changedOriginalFunctions": [],
+      "addedFunctions": [
+        "remote_windows_fixture",
+        "test_remote_android_and_mac_release_indexes_cannot_reintroduce_exclusions",
+        "test_remote_windows_pair_keeps_exact_identities_and_local_conflict_guard",
+        "test_remote_windows_pair_keeps_index_bound_and_does_not_hide_tracked_input"
+      ]
+    }
+  },
+  "testsPassed": 38,
+  "testsLog": "final-tests.log",
+  "earlier37TestLimitation": "The initial Windows fixture omitted windows-release.json. Actual publication adds that index, which reintroduced remote basenames into release_outputs exclusions. The first 37 passing tests did not cover this interaction.",
+  "reproduction": "release-index-reproduction/inventory.json",
+  "fix": "After validating the complete remote descriptors, remove their basenames from outputs before source exclusions. Keep release index files bound as inputs.",
+  "coverage": [
+    "Windows remote ZIP and EXE with their standard release index remain absent from exclusions; missing tracked names are rejected.",
+    "Both Android and macOS remote release indexes get the same non-exclusion guard.",
+    "All existing local package hash/format/size/alias and complete source checks remain unchanged."
+  ],
+  "newNativeRunOrPackagePublished": false,
+  "actualPublishedWindowsMetadataChecked": false
+}

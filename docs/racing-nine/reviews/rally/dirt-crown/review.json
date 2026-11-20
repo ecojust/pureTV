@@ -1,0 +1,77 @@
+{
+  "reviewedAt": "2026-11-19",
+  "slug": "dirt-crown",
+  "title": "Dirt Crown",
+  "upstream": {
+    "slug": "dirt-crown",
+    "title": "Dirt Crown",
+    "repository": "triptych/web-games-andrew",
+    "commit": "a7051c34fe2e7550fd206e6272f758df171855b0",
+    "sourceUrl": "https://raw.githubusercontent.com/triptych/web-games-andrew/a7051c34fe2e7550fd206e6272f758df171855b0/game-069/index.html",
+    "sourceSha256": "c1743adf2a963ff38309887ef1f76c77b8b16aef6ab34dfafcadd67780aa278a",
+    "bytes": 8612,
+    "demo": "https://triptych.github.io/web-games-andrew/game-069/",
+    "localDemo": "http://127.0.0.1:8874/game-069/",
+    "localSource": "dirt-fixed/source-manifest.json"
+  },
+  "graphics": {
+    "sceneAndArtDirection": 12,
+    "vehicleDesign": 7,
+    "lightingAndEffects": 6,
+    "readability": 9,
+    "motionPresentation": 4,
+    "total": 38
+  },
+  "gameplay": {
+    "drivingAndControl": 12,
+    "competitionAndFeedback": 9,
+    "trackAndModeVariety": 10,
+    "progressionAndReplay": 9,
+    "completeRaceLoop": 4,
+    "total": 44
+  },
+  "totalScore": 82,
+  "evidenceKind": "本轮固定原源正常Free Race、起跑镜头与暂停画面；未到玩家驾驶，玩法主要由源码核实",
+  "confidence": "medium for actual default-quality graphics; low for driving feel; high for fixed-source content inventory, not full gameplay validation",
+  "actualPlayObserved": [
+    "固定原源的正常标题页→Free Race→Race，看到3条初始可用赛道、1～5圈和正反向选项，默认3圈进入6车起跑队列。",
+    "实际画面有纹理土路、倾斜弯道、圆草捆、风车/粮仓、观众席、不同车型与涂装，原始起跑绕车镜头在变化。标题、名次、仪表和小地图清楚。",
+    "按住油门20秒及左右/漂移正常输入后，受原dt封顶和软件渲染影响，仍在倒计时3→2、速度0；不能声称已验证实际驾驶或漂移效果。",
+    "Escape正常打开完整暂停菜单，继续/重赛/设置/退出可见；本轮没有继续、重赛或退出实际操作。"
+  ],
+  "sourceConfirmedNotFullyPlayed": [
+    "固定TRACKS为20条赛道；CIRCUITS为7地区、26生涯赛事（6×4+最终2），含竞速/淘汰/计时/单挑和每区冠军。",
+    "六条升级线engine/drive/tires/susp/body/nitro，各0～5级，外观随升级变化；喷漆、涂装、钱币、评级、故事和本地生涯保存。",
+    "驱动、地面抓地力、刹车/漂移蓄氮气/氮气/跳跃、AI竞速、碰撞和赛后奖励有独立模拟实现；这些是源码设计范围，未完整实玩。",
+    "原源码dev/README有作者自测说明，本轮没有运行或背书其通关/平衡测试结果。"
+  ],
+  "packagingAssessment": [
+    "根MIT许可证已读取固定原文；需保留作者与依赖许可证。没有恢复旧丢失的未提交pureTV改稿，这是全新固定原源审查。",
+    "36文件原运行闭包本地preview，31份浏览器文档/脚本响应哈希逐项与固定源匹配；Three.js0.165.0/CDN字体仍按原HTML在线引用，后续离线需要本地化。",
+    "原WASD/箭头、Space漂移、Shift氮气、R复位、C镜头和Escape暂停有清楚输入层，也有原Gamepad支持；九键/TV焦点/断线失焦需专门接入和验证。",
+    "完整玩法广度突出；若入选，需通过正常设置降低渲染档或实际平台跑完起步、转向、漂移、结算与生涯保存，不能把此次倒计时画面当完整验收。"
+  ],
+  "demoIndexMatchesFixedSource": false,
+  "demoVersionMismatchReason": "Live attempt index/input differed from the chosen fixed commit; original failure preserved, final visual evidence uses unchanged local fixed-source closure.",
+  "fixedPreviewRuntimeMatchesSource": true,
+  "fixedPreviewRuntimeVerification": "fixed-source-runtime-verification.json",
+  "actualReport": "attempt-2-fixed/report.json",
+  "bestGameplayImage": "attempt-2-fixed/started.png",
+  "screenshotsVisuallyReviewed": [
+    "attempt-2-fixed/menu.png",
+    "attempt-2-fixed/free-race-menu.png",
+    "attempt-2-fixed/started.png",
+    "attempt-2-fixed/driving-straight.png",
+    "attempt-2-fixed/steering.png",
+    "attempt-2-fixed/after-pause-key.png"
+  ],
+  "supplementaryAuthorImage": "author-preview.jpg (upstream garage scene, not our play; not the main comparison image)",
+  "limitations": [
+    "The final actual scene is the starting grid, not normal player driving.",
+    "Gameplay points represent inspected source design with low confidence on driving feel; no score was reduced because of SwiftShader timing.",
+    "No complete race, upgrade purchase, campaign, offline-network-block, physical controller or platform package validation.",
+    "Live attempt-1 timing failure remains; fixed attempt-2 changed source origin and observation timeout only, not game state, model, clock or score."
+  ],
+  "physicalDeviceTested": false,
+  "recommendedTopNine": true
+}

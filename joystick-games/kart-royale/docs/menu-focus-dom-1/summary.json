@@ -1,0 +1,67 @@
+{
+  "status": "passed-dom-and-unit-only",
+  "cases": 3,
+  "baselineCases": 3,
+  "oldCodeTransientCases": 3,
+  "oldCodeTransientOutcome": "After the select root rejects focus once, the old adapter leaves focus outside the active menu. The next A only focuses the first Vela card; selectKart/reset callbacks remain uncalled in all three dimensions.",
+  "newCodeOutcome": "After the same single hidden frame, default Start race focus recovers. Y-selected Back to title remains focused for 600 ms without reset; X returns to Start race and A calls original selectKart(0)/reset once.",
+  "syntheticFailure": "The real original select DOM is temporarily visibility:hidden for its first adapter poll, then its original CSS is restored. This proves recovery behavior but does not establish why Safari lost focus.",
+  "fixtureScope": "Original Menus, ControlsMenu and TV adapter. Stub race/input/roster data record original callbacks; no WebGL/native transport/physics/countdown.",
+  "sourceChange": "Retry original default focus only outside the active menu. Renderer version must explicitly identify WebGL 1 or 2; null/unknown reports null.",
+  "planChange": "Only add original Start race focus assertion to the roster-entry step; all gameplay expectations unchanged.",
+  "nativeCalibrationOfNewSource": false,
+  "unitTests": 12,
+  "buildCheckFiles": 5,
+  "visuallyReviewed": [
+    "menu-960.png",
+    "menu-1280.png"
+  ],
+  "testedSource": {
+    "src/src/tv-input.ts": {
+      "bytes": 6144,
+      "sha256": "01cbe3f146320be7552c1fbc8a960ba70a0f397738540be8553b781b2d4c6ecc"
+    },
+    "tests/snapshot-contract.test.mjs": {
+      "bytes": 5828,
+      "sha256": "66ebf9a555f5ffdaf2f705505b8bdc48dc16841b9a33bcc7924153ba313ec605"
+    },
+    "tests/menu-focus-dom.mjs": {
+      "bytes": 7722,
+      "sha256": "9bd0bd946739fbe14a1bde6dc392e9edc7c572c0c0dc3356a35af32c5c404b17"
+    },
+    "qa-plan.json": {
+      "bytes": 6439,
+      "sha256": "a11b548cb1bcdaa6f0b68d9c32eff97a2e323f7f9bfb4e6df09446b8aa6ad84e"
+    },
+    "build.mjs": {
+      "bytes": 3293,
+      "sha256": "93bcf68e601dc5606516ceeb0c70c99b200f83a67a4eaa625271246705a98fd1"
+    },
+    "docs/build-inputs.json": {
+      "bytes": 10797,
+      "sha256": "b1f284071164ad5543971e42a0d6b53820418faab5e6913a6ee9a05245f1fb36"
+    }
+  },
+  "distribution": {
+    "THIRD-PARTY-NOTICES.txt": {
+      "bytes": 11989,
+      "sha256": "49f495e721f70ec386df43cc09f5e471c1a364ecf70273dc02422bc301c69cbd"
+    },
+    "manifest.webmanifest": {
+      "bytes": 318,
+      "sha256": "02503bfe6460e8f1859cf8755dbb5e9e71e08a89dd8511b7300a5e737871e289"
+    },
+    "tv.html": {
+      "bytes": 5796,
+      "sha256": "7e1ac038f3986bf37fe439cc50105c2c538b6eae8a62054a0895667af9beaafb"
+    },
+    "kart-royale.css": {
+      "bytes": 50294,
+      "sha256": "ede1072cb1bce48382ab04f6ff88f8e50644e3c340cc49f4107556e9f54565c4"
+    },
+    "kart-royale.js": {
+      "bytes": 3894135,
+      "sha256": "a0afcbfaecda88c24dc014094d9bd9eb70079fe1198fd813b372f10e4639257f"
+    }
+  }
+}

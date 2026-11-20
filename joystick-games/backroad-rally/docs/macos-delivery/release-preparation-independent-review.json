@@ -1,0 +1,83 @@
+{
+  "reviewer": "racing_review_rally",
+  "reviewedAt": "2026-11-19T22:02:23.205267+00:00",
+  "status": "no_blocking_findings_after_one_relative_link_correction",
+  "preparedFiles": {
+    "joystick-games/backroad-rally/README.md": {
+      "bytes": 3154,
+      "sha256": "6b62f22bb3779d64448e430b2827f45b3cbd4a2484194d555d9622423e3249e2"
+    },
+    "joystick-games/backroad-rally/packages.json": {
+      "bytes": 2826,
+      "sha256": "9dddf732d3e71ddd3310faf3e37297f9d35e00b2118574f4d3a77c6d5fc04702"
+    },
+    "joystick-games/backroad-rally/macos/README.md": {
+      "bytes": 774,
+      "sha256": "f761e82694e20150e9d7c2f03fec199e30e9ad411275a4f8012efa72113730d9"
+    },
+    "joystick-games/backroad-rally/macos/SHA256SUMS.txt": {
+      "bytes": 212,
+      "sha256": "2b0ce30ca34bc3363a24b54e547d7cd9de0bcc51c29803ea34b0d43b248423b9"
+    },
+    "joystick-games/backroad-rally/docs/macos-delivery/verification.json": {
+      "bytes": 4556,
+      "sha256": "e6428fe7e933b114c1b0693d5f23bbfdd8ecc368c410806d8e6bcb74103f8d72"
+    }
+  },
+  "preparedPublishRequest": {
+    "path": "/dev/shm/backroad-release-work/publish-request-prepared.json",
+    "bytes": 1134,
+    "sha256": "9c9339d4142a39d12ad0dc90cacc3d71791d8c21a0918e49315df38295e8c62d",
+    "request": {
+      "draft": false,
+      "prerelease": true,
+      "make_latest": "false",
+      "body": "Backroad Rally · 乡野拉力 0.1.0 的 pureTV 手柄 macOS 通用版预发布，提供原始 DMG 与 ZIP。\n\n要求 macOS 11+、WebGL2，包含 arm64 与 x86_64，支持 pureTV 九键手柄、默认 TCP 63485、真实连接 ID、断线取消与手动恢复。两个文件超过 GitHub 单文件 100 MiB 限制，放在此 Release。\n\n原包复验44615672670中，Apple Silicon原生、端口占用和Rosetta各9项通过。后续同包44617061184中，端口占用和Rosetta仍各9项通过，原生前8项通过，最后存档重启检查在系统通知占据前台时超时；新本地地址及4个存档值一致，但后续断言未完成。原失败记录保留。Intel Mac图形运行未验证，未经过Apple公证，未做实体手柄或完整通关测试。\n\n原构建源68d343d22c762c904eb83854d4ab9c4113a7c30f / 流程44608415225；文件未重建或重签。Android和Windows继续验证，暂不包含在本次下载中。完整说明与校验记录：https://github.com/ecojust/pureTV/tree/master/joystick-games/backroad-rally\n"
+    }
+  },
+  "releaseId": 451969286,
+  "originalTransferReceipt": {
+    "immutableCommit": "e8da7c3987d5cafa22da6dc052e30aeffa66ab7f",
+    "sha256": "34ed81523acfdfa46f79eecc39e5fd5acb4e959bcb12db34964745084b648027",
+    "gitBlobSha": "45d0466be59d7578b1fdd8a6867c736750e7337a",
+    "executorRun": 44623552690
+  },
+  "files": [
+    {
+      "file": "BackroadRally-0.1.0-macos-universal.zip",
+      "url": "https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-v0.1.0/BackroadRally-0.1.0-macos-universal.zip",
+      "storage": "github-release-asset",
+      "assetId": 769411847,
+      "bytes": 105275042,
+      "sha256": "61ac58f2f75ff5ede9850d43e1bc77448731f870dd309efbb2af5d9236d57323"
+    },
+    {
+      "file": "BackroadRally-0.1.0-macos-universal.dmg",
+      "url": "https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-v0.1.0/BackroadRally-0.1.0-macos-universal.dmg",
+      "storage": "github-release-asset",
+      "assetId": 769412154,
+      "bytes": 108258927,
+      "sha256": "f1eb37f1ec24e75365f40f7c71a631a722f5657a849e984d0d7f7f515b60bd28"
+    }
+  ],
+  "resolvedFinding": {
+    "field": "packages.json macos.subsequentRuntime.evidence",
+    "before": "../../../../docs/racing-nine/native-readiness/ci-44617061184-attempt-1/runtime-findings.json",
+    "after": "../../docs/racing-nine/native-readiness/ci-44617061184-attempt-1/runtime-findings.json",
+    "fixedBy": "root",
+    "resolution": "Now resolves from game root to exactly the same original runtime-findings.json as the four-level verification.json link; both files exist."
+  },
+  "reviewNotes": [
+    "Five prepared files and exact publish request are mutually consistent. Stable public tag URLs are intended for after publication; original draft API URLs are temporary untagged URLs. This review did not claim public GET success before publication.",
+    "Both original release asset IDs/bytes/SHA match the successfully preserved immutable transfer receipt and direct asset API records. Each exceeds 100 MiB. Original source 68d/run44608415225 and unchanged bytes are distinct from later QA-only sources. No 205 MiB-scale re-download or package reconstruction occurred.",
+    "V1 c19/44615672670 has original native/occupied/Rosetta nine-check passes. V2 e7/44617061184 preserves native eight passes followed by a failed final restart foreground gate, with UserNotificationCenter frontmost; occupied/Rosetta retain nine passes. Four stored value hashes agree before/initial/current and origin changed, but remaining restart assertions were not executed and the failure is not reclassified.",
+    "Root README, metadata and release body state the later failure/incomplete check and Intel graphics unverified, ad-hoc/no Apple notarization, no physical controller/full completion, and Android/Windows pending. The original classifier and reports remain unchanged.",
+    "Publish request is limited to draft=false, prerelease=true, make_latest=false and the reviewed body for the already existing release. This reviewer did not execute it."
+  ],
+  "originalReportsModified": false,
+  "classifierModified": false,
+  "largePackagesDownloaded": false,
+  "nativeRerun": false,
+  "releaseMutationPerformedByReviewer": false,
+  "publicDownloadVerifiedByReviewer": false
+}

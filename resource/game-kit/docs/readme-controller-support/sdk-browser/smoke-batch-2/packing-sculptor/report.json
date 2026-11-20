@@ -1,0 +1,1509 @@
+{
+  "slug": "packing-sculptor",
+  "mode": "browser",
+  "startedAt": "2026-11-15T15:09:56.856Z",
+  "status": "failed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "ceb7652ca2b694f6e80c289be5c8167a65ae2b5fd91b79c16831cc5a556834ae",
+    "tools/readme-controller-qa/cases.mjs": "0378e7bb1ebcb93e6f64e0c1aa7b4320ccc6e4e30ae27cae6d2d202d8b7abe70",
+    "tools/readme-controller-qa/sdk-peer.py": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": false,
+  "syntheticNativeBridge": true,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "START begins actual game",
+      "status": "passed"
+    },
+    {
+      "name": "direction and game-specific action affect actual model",
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(after.model.rackIndex>before.model.rackIndex)\n\n    at gameplay (file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/cases.mjs:19:50)\n    at async file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:75:80\n    at async test (file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:75:2"
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "id": "packing-sculptor",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 746,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "rack",
+          "rackIndex": 0,
+          "preview": null,
+          "pieceIds": [
+            "rail",
+            "elbow",
+            "crate",
+            "bar"
+          ],
+          "container": {
+            "width": 5,
+            "height": 4,
+            "rows": [
+              "11110",
+              "11111",
+              "11111",
+              "01111"
+            ],
+            "doors": [
+              {
+                "id": "east",
+                "direction": "right",
+                "start": 1,
+                "end": 2
+              }
+            ],
+            "requirements": [
+              {
+                "pieceId": "rail",
+                "doorIds": [
+                  "east"
+                ]
+              }
+            ]
+          },
+          "placements": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "inventory": {
+            "rail": 1,
+            "elbow": 1,
+            "crate": 1,
+            "bar": 1
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 0,
+            "missingIds": [
+              "rail",
+              "elbow",
+              "crate",
+              "bar"
+            ],
+            "allPlaced": false,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": false,
+            "extractions": [
+              {
+                "pieceId": "rail",
+                "placed": false,
+                "options": [],
+                "canExit": false
+              }
+            ],
+            "canShip": false
+          },
+          "previewCheck": null,
+          "elapsed": 0,
+          "elapsedCapped": false,
+          "failures": 0,
+          "submissions": [],
+          "terminalReceipt": null,
+          "calls": 0,
+          "moves": 0,
+          "pickups": 0,
+          "placementsMade": 0,
+          "rotations": 0,
+          "removals": 0,
+          "clears": 0,
+          "blockedActions": 0,
+          "counterSaturated": false,
+          "inputArmed": false,
+          "cancelEpoch": null,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "选择零件后装入箱内；为标记零件留出指定直线出口。"
+        },
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 351,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2283.2999999999997,
+          4583.1,
+          350,
+          583.3000000000002,
+          916.6000000000004
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false,
+          "connected": false,
+          "controllerKind": null
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 0
+        }
+      }
+    },
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "id": "packing-sculptor",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 746,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "rack",
+          "rackIndex": 0,
+          "preview": null,
+          "pieceIds": [
+            "rail",
+            "elbow",
+            "crate",
+            "bar"
+          ],
+          "container": {
+            "width": 5,
+            "height": 4,
+            "rows": [
+              "11110",
+              "11111",
+              "11111",
+              "01111"
+            ],
+            "doors": [
+              {
+                "id": "east",
+                "direction": "right",
+                "start": 1,
+                "end": 2
+              }
+            ],
+            "requirements": [
+              {
+                "pieceId": "rail",
+                "doorIds": [
+                  "east"
+                ]
+              }
+            ]
+          },
+          "placements": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "inventory": {
+            "rail": 1,
+            "elbow": 1,
+            "crate": 1,
+            "bar": 1
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 0,
+            "missingIds": [
+              "rail",
+              "elbow",
+              "crate",
+              "bar"
+            ],
+            "allPlaced": false,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": false,
+            "extractions": [
+              {
+                "pieceId": "rail",
+                "placed": false,
+                "options": [],
+                "canExit": false
+              }
+            ],
+            "canShip": false
+          },
+          "previewCheck": null,
+          "elapsed": 0,
+          "elapsedCapped": false,
+          "failures": 0,
+          "submissions": [],
+          "terminalReceipt": null,
+          "calls": 0,
+          "moves": 0,
+          "pickups": 0,
+          "placementsMade": 0,
+          "rotations": 0,
+          "removals": 0,
+          "clears": 0,
+          "blockedActions": 0,
+          "counterSaturated": false,
+          "inputArmed": false,
+          "cancelEpoch": null,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "选择零件后装入箱内；为标记零件留出指定直线出口。"
+        },
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 351,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2283.2999999999997,
+          4583.1,
+          350,
+          583.3000000000002,
+          916.6000000000004,
+          2100,
+          883.2999999999993,
+          499.89999999999964,
+          800,
+          500
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false,
+          "connected": false,
+          "controllerKind": null
+        },
+        "document": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 0
+        }
+      }
+    },
+    {
+      "label": "started",
+      "before": null,
+      "after": {
+        "id": "packing-sculptor",
+        "phase": "playing",
+        "paused": false,
+        "tick": 6,
+        "elapsed": 0.09999999999999999,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 746,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "rack",
+          "rackIndex": 0,
+          "preview": null,
+          "pieceIds": [
+            "rail",
+            "elbow",
+            "crate",
+            "bar"
+          ],
+          "container": {
+            "width": 5,
+            "height": 4,
+            "rows": [
+              "11110",
+              "11111",
+              "11111",
+              "01111"
+            ],
+            "doors": [
+              {
+                "id": "east",
+                "direction": "right",
+                "start": 1,
+                "end": 2
+              }
+            ],
+            "requirements": [
+              {
+                "pieceId": "rail",
+                "doorIds": [
+                  "east"
+                ]
+              }
+            ]
+          },
+          "placements": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "inventory": {
+            "rail": 1,
+            "elbow": 1,
+            "crate": 1,
+            "bar": 1
+          },
+          "geometry": {
+            "pieces": [
+              {
+                "id": "rail",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "elbow",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "crate",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              },
+              {
+                "id": "bar",
+                "pose": null,
+                "cells": [],
+                "vertices": [],
+                "outsideCells": [],
+                "overlapIds": []
+              }
+            ],
+            "placedCount": 0,
+            "missingIds": [
+              "rail",
+              "elbow",
+              "crate",
+              "bar"
+            ],
+            "allPlaced": false,
+            "allInside": true,
+            "noOverlap": true,
+            "validPacking": false,
+            "extractions": [
+              {
+                "pieceId": "rail",
+                "placed": false,
+                "options": [],
+                "canExit": false
+              }
+            ],
+            "canShip": false
+          },
+          "previewCheck": null,
+          "elapsed": 0.09999999999999999,
+          "elapsedCapped": false,
+          "failures": 0,
+          "submissions": [],
+          "terminalReceipt": null,
+          "calls": 6,
+          "moves": 0,
+          "pickups": 0,
+          "placementsMade": 0,
+          "rotations": 0,
+          "removals": 0,
+          "clears": 0,
+          "blockedActions": 0,
+          "counterSaturated": false,
+          "inputArmed": false,
+          "cancelEpoch": 1,
+          "cancelledLast": true,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "message": "选择零件后装入箱内；为标记零件留出指定直线出口。"
+        },
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-ba3d4a2ea948",
+            "session": "wifi-d23bc9f4-8679-4029-9603-c6313a8d506c-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 351,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2283.2999999999997,
+          4583.1,
+          350,
+          583.3000000000002,
+          916.6000000000004,
+          2100,
+          883.2999999999993,
+          499.89999999999964,
+          800,
+          500,
+          1216.6000000000004,
+          50,
+          500,
+          399.89999999999964,
+          216.6999999999989,
+          233.3000000000029,
+          500.09999999999854,
+          583.2000000000007
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-ba3d4a2ea948",
+              "session": "wifi-d23bc9f4-8679-4029-9603-c6313a8d506c-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:20.855Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-ba3d4a2ea948"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:20.855Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-ba3d4a2ea948",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:20.855Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-ba3d4a2ea948",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:20.855Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-ba3d4a2ea948",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:20.855Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-ba3d4a2ea948",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:20.855Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-ba3d4a2ea948",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:20.855Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-ba3d4a2ea948",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:20.855Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-ba3d4a2ea948",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:20.855Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-ba3d4a2ea948",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:20.855Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-ba3d4a2ea948",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:20.947Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:20.957Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:20.957Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:20.973Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:21.025Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:21.025Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:21.027Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:21.027Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:21.027Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:21.032Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:21.339Z",
+      "message": {
+        "type": "button",
+        "seq": 11,
+        "controller_id": "virtual-ba3d4a2ea948",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:21.342Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:21.550Z",
+      "message": {
+        "type": "button",
+        "seq": 12,
+        "controller_id": "virtual-ba3d4a2ea948",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 209
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:21.556Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:22.151Z",
+      "message": {
+        "type": "button",
+        "seq": 13,
+        "controller_id": "virtual-ba3d4a2ea948",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:22.153Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:22.657Z",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-ba3d4a2ea948",
+        "key": "RIGHT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 503
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:22.662Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:22.878Z",
+      "message": {
+        "type": "button",
+        "seq": 15,
+        "controller_id": "virtual-ba3d4a2ea948",
+        "key": "RIGHT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 723
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:22.880Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:23.768Z",
+      "message": {
+        "type": "ping",
+        "seq": 16,
+        "controller_id": "virtual-ba3d4a2ea948"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:23.770Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    }
+  ],
+  "screenshots": [
+    "menu-960.png",
+    "menu-1280.png",
+    "failure.png"
+  ],
+  "limitations": [
+    "Desktop JVM and Chromium; Android lifecycle/NSD not exercised."
+  ],
+  "assetHashes": {
+    "assets-index.json": "38b84d5905bfb5976f1373cfe8e02add5ff750ee1b955fe0cdf61ad1cc84322a",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "e744455d45ea527f174865c0125abf1a1407774f1ed333010c25fe7f1d2f79f0",
+    "game-model.js": "35e309cf398974f7d834f4e517170c7a10d6ccbc1cde9a9fada3cc06155812a5",
+    "game-theme.css": "1a292a2add5ac30b4b9c46093e2bcee8ff5eccd67b0a1635b24f39d59844bbbc",
+    "game.js": "d6f6a948e83bbd21fb453174968d415a381359d3705f63eec56f7215a744c1a3",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "a1701697f6fcd3afd5e1269a8adfdc007e8be7954fd83f0b1fc32c4addfa01bf",
+    "tv.css": "23b41ae106dce0c783a19ee8bb6aa422aab35c9b384590a26dc2ca7f4372275c",
+    "tv.html": "97f44a121a8d6713f95be640dbd6604ef1271817eb1b0e1430a26ed8075e4bef"
+  },
+  "pageErrors": [],
+  "ports": {
+    "tcpPort": 63485,
+    "httpPort": 32853,
+    "observerPort": 36373
+  },
+  "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(after.model.rackIndex>before.model.rackIndex)\n\n    at gameplay (file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/cases.mjs:19:50)\n    at async file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:75:80\n    at async test (file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:75:2",
+  "lastSnapshot": {
+    "id": "packing-sculptor",
+    "phase": "playing",
+    "paused": false,
+    "tick": 18,
+    "elapsed": 0.3,
+    "level": 0,
+    "best": 0,
+    "model": {
+      "schema": 1,
+      "seed": 746,
+      "level": 0,
+      "phase": "playing",
+      "reason": "",
+      "score": 0,
+      "mode": "rack",
+      "rackIndex": 0,
+      "preview": null,
+      "pieceIds": [
+        "rail",
+        "elbow",
+        "crate",
+        "bar"
+      ],
+      "container": {
+        "width": 5,
+        "height": 4,
+        "rows": [
+          "11110",
+          "11111",
+          "11111",
+          "01111"
+        ],
+        "doors": [
+          {
+            "id": "east",
+            "direction": "right",
+            "start": 1,
+            "end": 2
+          }
+        ],
+        "requirements": [
+          {
+            "pieceId": "rail",
+            "doorIds": [
+              "east"
+            ]
+          }
+        ]
+      },
+      "placements": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "inventory": {
+        "rail": 1,
+        "elbow": 1,
+        "crate": 1,
+        "bar": 1
+      },
+      "geometry": {
+        "pieces": [
+          {
+            "id": "rail",
+            "pose": null,
+            "cells": [],
+            "vertices": [],
+            "outsideCells": [],
+            "overlapIds": []
+          },
+          {
+            "id": "elbow",
+            "pose": null,
+            "cells": [],
+            "vertices": [],
+            "outsideCells": [],
+            "overlapIds": []
+          },
+          {
+            "id": "crate",
+            "pose": null,
+            "cells": [],
+            "vertices": [],
+            "outsideCells": [],
+            "overlapIds": []
+          },
+          {
+            "id": "bar",
+            "pose": null,
+            "cells": [],
+            "vertices": [],
+            "outsideCells": [],
+            "overlapIds": []
+          }
+        ],
+        "placedCount": 0,
+        "missingIds": [
+          "rail",
+          "elbow",
+          "crate",
+          "bar"
+        ],
+        "allPlaced": false,
+        "allInside": true,
+        "noOverlap": true,
+        "validPacking": false,
+        "extractions": [
+          {
+            "pieceId": "rail",
+            "placed": false,
+            "options": [],
+            "canExit": false
+          }
+        ],
+        "canShip": false
+      },
+      "previewCheck": null,
+      "elapsed": 0.3,
+      "elapsedCapped": false,
+      "failures": 0,
+      "submissions": [],
+      "terminalReceipt": null,
+      "calls": 18,
+      "moves": 0,
+      "pickups": 0,
+      "placementsMade": 0,
+      "rotations": 0,
+      "removals": 0,
+      "clears": 0,
+      "blockedActions": 0,
+      "counterSaturated": false,
+      "inputArmed": true,
+      "cancelEpoch": 1,
+      "cancelledLast": false,
+      "lastHeld": {
+        "a": false,
+        "b": false,
+        "direction": "none"
+      },
+      "lastCommand": "none",
+      "events": [],
+      "message": "选择零件后装入箱内；为标记零件留出指定直线出口。"
+    },
+    "controllers": [
+      {
+        "a": false,
+        "cancelSeq": 1,
+        "b": false,
+        "select": false,
+        "buttons": {
+          "A": false,
+          "DOWN": false,
+          "B": false,
+          "LEFT": false,
+          "X": false,
+          "RIGHT": false,
+          "Y": false,
+          "START": false,
+          "UP": false
+        },
+        "controllerId": "virtual-ba3d4a2ea948",
+        "session": "wifi-d23bc9f4-8679-4029-9603-c6313a8d506c-1",
+        "start": false,
+        "transport": "wifi",
+        "inputActive": true,
+        "connected": true,
+        "x": 0,
+        "y": 0,
+        "aimY": 0,
+        "id": 1,
+        "aimX": 0
+      }
+    ],
+    "renderer": {
+      "kind": "webgl",
+      "drawCalls": 1,
+      "quads": 351,
+      "textureCount": 1,
+      "atlasSize": 1024,
+      "contextLost": false
+    },
+    "frameTimesMs": [
+      2283.2999999999997,
+      4583.1,
+      350,
+      583.3000000000002,
+      916.6000000000004,
+      2100,
+      883.2999999999993,
+      499.89999999999964,
+      800,
+      500,
+      1216.6000000000004,
+      50,
+      500,
+      399.89999999999964,
+      216.6999999999989,
+      233.3000000000029,
+      500.09999999999854,
+      583.2000000000007,
+      816.7000000000007,
+      400
+    ],
+    "connection": {
+      "phoneSeen": true,
+      "disconnected": false,
+      "connected": true,
+      "controllerKind": "wifi"
+    },
+    "document": {
+      "width": 1280,
+      "height": 720,
+      "scrollWidth": 1280,
+      "scrollHeight": 720
+    },
+    "nativeInfo": {
+      "language": "zh",
+      "url": "http://127.0.0.1:1/",
+      "qr": "",
+      "addresses": [
+        "127.0.0.1"
+      ],
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Desktop QA receiver; no Android NSD",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "addresses": [
+          "127.0.0.1"
+        ],
+        "inputActive": true
+      }
+    },
+    "receiver": {
+      "players": [
+        {
+          "a": false,
+          "cancelSeq": 1,
+          "b": false,
+          "select": false,
+          "buttons": {
+            "A": false,
+            "DOWN": false,
+            "B": false,
+            "LEFT": false,
+            "X": false,
+            "RIGHT": false,
+            "Y": false,
+            "START": false,
+            "UP": false
+          },
+          "controllerId": "virtual-ba3d4a2ea948",
+          "session": "wifi-d23bc9f4-8679-4029-9603-c6313a8d506c-1",
+          "start": false,
+          "transport": "wifi",
+          "inputActive": true,
+          "connected": true,
+          "x": 0,
+          "y": 0,
+          "aimY": 0,
+          "id": 1,
+          "aimX": 0
+        }
+      ],
+      "inputActive": true,
+      "connections": 1
+    }
+  },
+  "finishedAt": "2026-11-15T15:10:25.457Z"
+}

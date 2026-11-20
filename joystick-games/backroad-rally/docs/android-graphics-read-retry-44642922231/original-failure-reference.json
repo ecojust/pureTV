@@ -1,0 +1,88 @@
+{
+  "runId": 44642922231,
+  "sourceSha": "0415846f3b3e3fc11f79e08d25050affdf750435",
+  "exportCommit": "0eef0e125df7da4caa2d6eb5cb574f55a0db2099",
+  "originalFiles": {
+    "joystick-games/backroad-rally/docs/android-graphics-diagnostic-44642922231/original-small-export/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/report.json": {
+      "bytes": 1379123,
+      "sha256": "ecfd7f6456a85c09065e4af419d08e9eed4fd98e19a754d6c12f108241fc6847"
+    },
+    "joystick-games/backroad-rally/docs/android-graphics-diagnostic-44642922231/original-small-export/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/observer-http.jsonl": {
+      "bytes": 53984,
+      "sha256": "0e32dcd0bca5fc98982d03e65eb54c66b0bdf6907786cf6caf0b4c7e3d8876da"
+    },
+    "joystick-games/backroad-rally/docs/android-graphics-diagnostic-44642922231/original-small-export/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/final-graphics.json": {
+      "bytes": 11107,
+      "sha256": "4dd7a84d09afa51a926d9bc9f5f77594afa10373bdd6edf02b17817486c72143"
+    },
+    "joystick-games/backroad-rally/docs/android-graphics-diagnostic-44642922231/original-small-export/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/final-console.json": {
+      "bytes": 995,
+      "sha256": "abf729b435afefd64ced6adb01b3d9f0d74fe2da25779241cfde8ac5727b4a3e"
+    }
+  },
+  "originalStatus": "failed",
+  "originalError": "Remote end closed connection without response",
+  "observedSteps": 29,
+  "failedStep": {
+    "originalIndex": 33,
+    "step": {
+      "name": "Start and wait for untouched warm-up/countdown",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 100,
+      "timeoutSeconds": 240,
+      "expect": [
+        {
+          "path": "gameplay.phase",
+          "op": "eq",
+          "value": "running"
+        },
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ],
+      "menuTap": true
+    },
+    "wire": {
+      "controllerId": "virtual-1cd1835535c3",
+      "connection": 1,
+      "downSequence": 122,
+      "releaseSequence": 123,
+      "downCounts": {
+        "UP": 0,
+        "DOWN": 0,
+        "LEFT": 0,
+        "RIGHT": 0,
+        "START": 0,
+        "A": 1,
+        "B": 0,
+        "X": 0,
+        "Y": 0
+      },
+      "matchingAcks": 2,
+      "countScope": "Original SDK wire; native Android button counters are unavailable",
+      "observedWireHeldMs": 16.390350999984094
+    }
+  },
+  "originalDroppedGet": {
+    "endpoint": "graphics",
+    "startedAt": 1795133643.3618615,
+    "timeoutSeconds": 15,
+    "status": "failed",
+    "errorType": "RemoteDisconnected",
+    "error": "Remote end closed connection without response",
+    "endedAt": 1795133653.3649256
+  },
+  "droppedGetSeconds": 10.003064155578613,
+  "freshFinallyObservation": {
+    "url": "https://game-kit.invalid/tv.html?mode=quick&stage=finland&car=swift&cond=stage&weather=stage",
+    "frames": 1,
+    "pollCount": 20,
+    "phase": "intro"
+  },
+  "originalFailureUnchanged": true,
+  "originalTargetUnchanged": true
+}

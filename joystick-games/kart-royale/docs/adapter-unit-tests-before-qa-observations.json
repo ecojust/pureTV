@@ -1,0 +1,17 @@
+{
+  "command": "TMPDIR=/dev/shm/racing-review-arcade/tmp npm test",
+  "suite": "joystick-games/kart-royale/tests/controller.test.mjs",
+  "suiteSha256": "9c7e166812bd8debc4f027b4382b82e1589f447cc1f3759cd54c0b7431146e81",
+  "result": {
+    "tests": 7,
+    "passed": 7,
+    "failed": 0
+  },
+  "stdout": "adapter-unit-tests-source-cancel-3.log",
+  "scope": "Original Input/Kart/Race fixtures: nine keys, cancellation/forfeit, explicit resume, touch AUTO/latches, held standard gamepad edges and keyboard OS repeat. Not native/SDK/browser evidence.",
+  "priorFailure": {
+    "log": "adapter-unit-tests-source-cancel-2.log",
+    "executedScript": "executed-controller-tests-fixture-failure.mjs",
+    "reason": "Synthetic Gamepad lacked required index; the upstream gamepad reconnect scan therefore did not see the fresh post-release press until its next scan. Added index:0 to model a real standard Gamepad. The old failing log/script are retained."
+  }
+}

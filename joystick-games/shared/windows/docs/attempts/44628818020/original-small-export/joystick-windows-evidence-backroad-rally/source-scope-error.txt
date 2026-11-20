@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-evidence.py", line 20, in <module>
+    selection=source_scope.select(os.environ['GAME']);complete=True
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-inputs.py", line 199, in select
+    declared=declared_package_outputs(scope,game);outputs=release_outputs(scope,game)|set(declared)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-inputs.py", line 143, in declared_package_outputs
+    target=game/name;assert target.is_file() and not any(is_link(p) for p in [target,*target.parents]),'Missing or symlinked published package'
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Missing or symlinked published package

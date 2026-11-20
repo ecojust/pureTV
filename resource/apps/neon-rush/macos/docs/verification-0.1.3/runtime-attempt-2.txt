@@ -1,0 +1,24 @@
+✖ Wi-Fi controller snapshots integrate with the real racing rules (3.784582ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 902.353153
+
+✖ failing tests:
+
+test at resource/apps/neon-rush/tests/wifi-runtime.test.mjs:16:1
+✖ Wi-Fi controller snapshots integrate with the real racing rules (3.784582ms)
+  Error: ENOSPC: no space left on device, mkdtemp '/tmp/neon-rush-wifi-protocol-w4wTE5'
+      at async mkdtemp (node:internal/fs/promises:1909:10)
+      at async TestContext.<anonymous> (file:///dev/shm/puretv-neon-macos/resource/apps/neon-rush/tests/wifi-runtime.test.mjs:17:19)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -28,
+    code: 'ENOSPC',
+    syscall: 'mkdtemp',
+    path: '/tmp/neon-rush-wifi-protocol-w4wTE5'
+  }

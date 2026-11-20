@@ -1,0 +1,44 @@
+{
+  "valid": true,
+  "stepCount": 24,
+  "validator": "joystick-games/tools/qa-plan.py",
+  "nativeExecuted": false,
+  "resumeHeldMs": 1200,
+  "sha256": "855370c4bf7b823192d4f4bef6b546be70186bc8e313dda08345657c008d29be",
+  "countdownGate": {
+    "name": "Start original race and wait real countdown",
+    "keys": [
+      "A"
+    ],
+    "holdMs": 180,
+    "expect": [
+      {
+        "path": "gameplay.mode",
+        "op": "eq",
+        "value": "race"
+      },
+      {
+        "path": "gameplay.phase",
+        "op": "eq",
+        "value": "race"
+      },
+      {
+        "path": "gameplay.countdown",
+        "op": "lte",
+        "value": 0
+      },
+      {
+        "path": "paused",
+        "op": "eq",
+        "value": false
+      }
+    ],
+    "timeoutSeconds": 60
+  },
+  "naturalStorage": {
+    "key": "dirt-crown.v1.profile",
+    "valueObservedByPlan": "Kit",
+    "sourcePath": "src/js/main.js app.newCareer -> persist -> src/js/save.js saveProfile",
+    "restartExecuted": false
+  }
+}

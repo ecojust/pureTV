@@ -1,0 +1,54 @@
+{
+  "reviewedAt": "2026-11-19T19:46:21.024620+00:00",
+  "status": "failed",
+  "originalSessionFinalExitCode": null,
+  "sessionNote": "Original tool session was unavailable after interruption; completed report and original images retained. No successful result inferred.",
+  "observed": [
+    "Entered original editor through normal controller menu input",
+    "Placed blocks from 1 to 3 using grid controls",
+    "960 editor screenshot generated",
+    "Waiting for local tracks after START/DOWN/DOWN/A timed out; failure editorBlocks=2"
+  ],
+  "hypothesis": "Asynchronous down/release helper can leave DOWN held for several frames on software GPU, allowing original repeat navigation; Save focus was not recorded, so incorrect selection is not proved. Next script uses one-read synthetic pulses and explicit original action focus assertions.",
+  "productionChanged": false,
+  "executedScriptSha256": "a8a58a293a1761c1ba7b7f40026df7fec3903d408fb1c42cde929640121a5586",
+  "testedManifestSha256": "126485478969b743bbcc70914a9e0ca5c6cc517ae6264bff08e0285f56ad25c2",
+  "responsesMatchFrozen": true,
+  "screenshots": [
+    {
+      "name": "menu-960",
+      "sha256": "59c5a176dc163406ba339d9826327730cd3623aada1c91c3eb2dfe20a2ed245a",
+      "bytes": 383040,
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "actualSha256": "59c5a176dc163406ba339d9826327730cd3623aada1c91c3eb2dfe20a2ed245a"
+    },
+    {
+      "name": "editor-controls-960",
+      "sha256": "866ea6c093fbfc1724cfc3c773d5d9263606a59f38afc65e396a45e0b6da6d47",
+      "bytes": 403174,
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "actualSha256": "866ea6c093fbfc1724cfc3c773d5d9263606a59f38afc65e396a45e0b6da6d47"
+    },
+    {
+      "name": "editor-grid-960",
+      "sha256": "3cb27184902019fb2090553c88dce60ea555c86448352be9c080eaf930780c34",
+      "bytes": 370175,
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "actualSha256": "3cb27184902019fb2090553c88dce60ea555c86448352be9c080eaf930780c34"
+    }
+  ],
+  "visualReview": {
+    "editorControls960": "Actual screenshot viewed: identity card and editor palette do not overlap; toolbar and footer fit. Original empty-track validation warning is visible and expected.",
+    "editor1280Verified": false,
+    "saveVerified": false
+  }
+}

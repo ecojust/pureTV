@@ -1,0 +1,47 @@
+{
+  "title": "Night Racer",
+  "slug": "night",
+  "repository": "zhuqipaopao-maker/night-racer-public",
+  "commit": "3a432cd3bf059dbaaa00d700f0f83e0e5313d40b",
+  "graphicsScore": 41,
+  "gameplayScore": 43,
+  "totalScore": 84,
+  "graphicsBreakdown": {
+    "sceneAndArtDirection": 13,
+    "vehicleDesign": 8,
+    "lightingAndEffects": 9,
+    "readability": 7,
+    "motionPresentation": 4
+  },
+  "gameplayBreakdown": {
+    "drivingAndControl": 13,
+    "competitionAndFeedback": 9,
+    "trackAndModeVariety": 9,
+    "progressionAndReplay": 9,
+    "completeRaceLoop": 3
+  },
+  "reviewEvidencePaths": [
+    "docs/racing-nine/reviews/driving/night/attempt-1/report.json",
+    "docs/racing-nine/reviews/driving/night/source-inventory.json",
+    "docs/racing-nine/reviews/driving/night/source-read-checks.json",
+    "docs/racing-nine/reviews/driving/night/attempt-2/report.json",
+    "docs/racing-nine/reviews/driving/night/attempt-2/started.png",
+    "docs/racing-nine/reviews/driving/night/attempt-2/after-input.png",
+    "docs/racing-nine/reviews/driving/night/additional-source-checks.json"
+  ],
+  "bestGameplayImage": "docs/racing-nine/reviews/driving/night/attempt-2/started.png",
+  "evidenceKind": "本轮实际起跑赛场画面 + 固定源码玩法审查，尚未实际驾驶",
+  "confidence": "medium; graphics observed, control feel and finish not verified",
+  "rationale": "霓虹雨夜、金属车模和灯光较完整；场景建筑重复、部分高光过亮，1280x720 菜单赛道行右侧被截断。固定源码有漂移蓄氮气/小喷、5 AI、计时幽灵、多场景赛道和车库成长。60秒正常油门后仍在倒计时，不把慢模拟等同低画质或电视性能。",
+  "limitations": [
+    "未完整跑完比赛/生涯；源码确认的模式不等于都已实玩。",
+    "线上演示版本未证明与固定commit相同，固定源码与实际浏览器图分别记录。",
+    "软件GPU观测不代表实体电视帧率；未做实体手柄/电视测试。",
+    "只实际观察默认霓虹街区起跑画面。倒计时 3→2，速度与比赛计时仍为0；不声称本轮已实际驾驶。最后一次原生“流畅”画质菜单预览排队。",
+    "线上菜单含 Film Road，而固定 maps.js 没有该条目；冻结源码有11个常规+1个隐藏场景定义，不能把线上新增路线算进固定包。",
+    "1280x720 菜单赛道横排超出右边界，TV适配必须修复焦点与布局。",
+    "源 main.js 的 countdown 和 fpsT 都累加被 Math.min(...,0.05) 封顶的 dt；图中 22 FPS 不能当真实墙钟帧率。本轮没有改动时钟、时间倍率或模型。"
+  ],
+  "packagingNotes": "MIT代码及作者声明覆盖public模型；22MB模型需本地完整打包；联机/排行榜后台未公开，独立本地AI/计时可用。全菜单焦点与九键映射需改造。",
+  "status": "review_in_progress"
+}

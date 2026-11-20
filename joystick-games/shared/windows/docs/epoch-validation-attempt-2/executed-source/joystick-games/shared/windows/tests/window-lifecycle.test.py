@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+"""Synthetic timing boundaries; native lifecycle evidence still requires Windows."""
+import copy,importlib.util,unittest
+from pathlib import Path
+from unittest.mock import patch
+ROOT=Path(__file__).resolve().parents[4]
+spec=importlib.util.spec_from_file_location('windows_verify',ROOT/'joystick-games/tools/windows-verify.py');verify=importlib.util.module_from_spec(spec);spec.loader.exec_module(verify)
+class PauseTiming(unittest.TestCase):
+    def observe(self,background,*,polling=True,native_fresh=True,active=None,input_enabled=None,held=False,model_changes=False,paused=True,native_interval=None,model_change_at=None):
+        subject=object.__new__(verify.WindowsCheck);subject.plan={'pauseStablePaths':['gameplay.tick']};subject.report={};clock=[0.0];reads=[0]
+        def read():
+            reads[0]+=1
+            count=reads[0] if native_interval is None else int(clock[0]/native_interval)+1
+            tick=reads[0] if model_changes else 8 if model_change_at is not None and clock[0]>=model_change_at else 7
+            return {'timestamp':count if native_fresh else 1,'active':not background if active is None else active,'server':{'wifiController':{'inputEnabled':not background if input_enabled is None else input_enabled}},'input':{'players':[{'connected':True,'buttons':{'A':held}}]},'game':{'stage':'paused' if paused else 'playing','paused':paused,'controller':{'pollCount':count if polling else 10},'gameplay':{'tick':tick}}}
+        def until(predicate,label):
+            for _ in range(100):
+                value=read()
+                if predicate(value):return value
+            raise AssertionError(label+' timed out in synthetic boundary fixture')
+        subject.read=read;subject.until=until
+        def sleep(value):clock[0]+=value
+        with patch.object(verify.time,'monotonic',side_effect=lambda:clock[0]),patch.object(verify.time,'sleep',side_effect=sleep):
+            result=subject.pause_stability(background=background);result['_fixtureObservation']=subject.report['pauseObservations'][-1];return result
+    def test_minimized_raf_can_stop_but_new_native_snapshots_and_frozen_model_are_required(self):
+        result=self.observe(True,polling=False);self.assertFalse(result['controllerPollingRequired']);self.assertEqual(result['controllerFramesAdvanced'],0);self.assertGreaterEqual(result['samples'],4);self.assertGreaterEqual(result['realSeconds'],.5)
+    def test_foreground_pause_still_requires_actual_poll_growth(self):
+        with self.assertRaisesRegex(AssertionError,'Controller keeps polling'):self.observe(False,polling=False)
+        result=self.observe(False);self.assertTrue(result['controllerPollingRequired']);self.assertGreater(result['controllerFramesAdvanced'],0)
+    def test_stale_native_snapshot_is_never_accepted_as_background_stability(self):
+        with self.assertRaisesRegex(AssertionError,'Insufficient fresh'):self.observe(True,polling=False,native_fresh=False)
+    def test_background_active_input_or_held_button_is_rejected(self):
+        for update in ({'active':True},{'input_enabled':True},{'held':True}):
+            with self.subTest(update=update),self.assertRaises(AssertionError):self.observe(True,polling=False,**update)
+    def test_background_model_motion_or_automatic_resume_is_rejected(self):
+        with self.assertRaisesRegex(AssertionError,'Gameplay progressed'):self.observe(True,polling=False,model_changes=True)
+        with self.assertRaises(AssertionError):self.observe(True,polling=False,paused=False)
+    def test_slow_native_callbacks_still_require_four_distinct_frozen_snapshots(self):
+        result=self.observe(False,native_interval=2)
+        self.assertGreaterEqual(result['realSeconds'],8);self.assertLess(result['realSeconds'],15);self.assertEqual(result['samples'],4)
+        record=result['_fixtureObservation'];self.assertEqual(record['status'],'passed');self.assertEqual(record['timeoutSeconds'],15)
+        self.assertEqual(sum(row['freshNativeSnapshot'] for row in record['samples']),4)
+        self.assertTrue(all(row['paths']=={'gameplay.tick':7} for row in record['samples']))
+    def test_fewer_than_four_samples_within_fifteen_seconds_still_fails(self):
+        with self.assertRaisesRegex(AssertionError,'Insufficient fresh'):self.observe(False,native_interval=4)
+    def test_model_motion_late_in_extended_window_remains_a_failure(self):
+        with self.assertRaisesRegex(AssertionError,'Gameplay progressed'):self.observe(False,native_interval=3.5,model_change_at=12)
+class DocumentFreshness(unittest.TestCase):
+    def setUp(self):
+        self.subject=object.__new__(verify.WindowsCheck);self.subject.renderers=['webgl2']
+    def state(self,epoch=1,polls=100,timestamp=1):
+        return {'timestamp':timestamp,'documentEpoch':epoch,'document':{'epoch':epoch},'ready':True,'game':{'stage':'menu','paused':False,'renderer':'webgl2','webglVersion':'WebGL 2.0','frames':polls,'controller':{'pollCount':polls},'gameplay':{'menu':'title'}}}
+    def test_same_document_still_requires_native_timestamp_and_poll_growth(self):
+        before=self.state();self.assertTrue(self.subject.fresh(self.state(polls=101,timestamp=2),before,True))
+        self.assertFalse(self.subject.fresh(self.state(polls=101),before,True))
+        self.assertFalse(self.subject.fresh(self.state(timestamp=2),before,True))
+        self.assertTrue(self.subject.fresh(self.state(timestamp=2),before))
+    def test_reload_accepts_new_rendered_document_without_comparing_old_poll_counter(self):
+        before=self.state();after=self.state(epoch=2,polls=2,timestamp=2);original=copy.deepcopy((before,after))
+        self.assertTrue(self.subject.fresh(after,before,True));self.assertEqual((before,after),original)
+    def test_native_epoch_cannot_relabel_old_dom_snapshot(self):
+        before=self.state();after=self.state(polls=101,timestamp=2);after['documentEpoch']=2
+        self.assertFalse(self.subject.fresh(after,before,True));self.assertFalse(self.subject.fresh(after,before))
+        before['documentEpoch']=2;after=self.state(epoch=2,polls=102,timestamp=3)
+        self.assertFalse(self.subject.fresh(after,before,True))
+    def test_missing_or_malformed_identity_is_not_legacy_compatibility(self):
+        before=self.state()
+        for value in [None,0,-1,True,1.0,'1',9007199254740992]:
+            after=self.state(polls=101,timestamp=2);after['documentEpoch']=after['document']['epoch']=value
+            with self.subTest(value=value):self.assertFalse(self.subject.fresh(after,before,True))
+        for which in ['native','document','both']:
+            after=self.state(polls=101,timestamp=2)
+            if which in ['native','both']:after.pop('documentEpoch')
+            if which in ['document','both']:after['document'].pop('epoch')
+            with self.subTest(which=which):self.assertFalse(self.subject.fresh(after,before,True));self.assertFalse(self.subject.fresh(before,after,True))
+        for document in [None,[],1]:
+            after=self.state(polls=101,timestamp=2);after['document']=document
+            with self.subTest(document=document):self.assertFalse(self.subject.fresh(after,before,True))
+    def test_epoch_regression_is_never_fresh(self):
+        self.assertFalse(self.subject.fresh(self.state(1,200,3),self.state(2,100,2),True))
+    def test_reload_requires_real_initialized_renderer_and_polls(self):
+        before=self.state()
+        for update in [{'ready':False},{'lastJavaScriptError':'failure'},{'diagnosticError':'failure'}]:
+            after=self.state(2,2,2);after.update(update)
+            with self.subTest(update=update):self.assertFalse(self.subject.fresh(after,before,True))
+        for update in [{'stage':'boot'},{'renderer':'canvas2d'},{'webglVersion':None},{'frames':0},{'controller':{'pollCount':0}},{'errors':['unrelated failure']},{'stage':'error'},{'paused':True}]:
+            after=self.state(2,2,2);after['game'].update(update)
+            with self.subTest(update=update):self.assertFalse(self.subject.fresh(after,before,True))
+    def test_bad_or_stale_timestamp_is_rejected_after_reload(self):
+        for timestamp in [0,1,None,True,float('nan'),float('inf'),'2']:
+            with self.subTest(timestamp=timestamp):self.assertFalse(self.subject.fresh(self.state(2,2,timestamp),self.state(),True))
+    def test_query_page_can_render_race_directly_but_countdown_never_satisfies_running_expectation(self):
+        before=self.state();after=self.state(2,2,2);after['game'].update(stage='playing',gameplay={'phase':'warmup'})
+        expectation=[{'path':'stage','op':'eq','value':'playing'},{'path':'gameplay.phase','op':'eq','value':'running'}]
+        self.assertTrue(self.subject.fresh(after,before,True));self.assertFalse(verify.plan_api.matches(expectation,after['game'],before['game']))
+        after['game']['gameplay']['phase']='countdown'
+        self.assertTrue(self.subject.fresh(after,before,True));self.assertFalse(verify.plan_api.matches(expectation,after['game'],before['game']))
+        after['game']['gameplay']['phase']='running'
+        self.assertTrue(self.subject.fresh(after,before,True));self.assertTrue(verify.plan_api.matches(expectation,after['game'],before['game']))
+    def test_direct_race_still_requires_actual_renderer_identity_frames_and_clean_epoch(self):
+        before=self.state();original=self.state(2,2,2);original['game'].update(stage='playing',gameplay={'phase':'running'})
+        for update in [{'renderer':'canvas2d'},{'webglVersion':'WebGL 1.0'},{'frames':1},{'controller':None},{'controller':{'pollCount':1}},{'controller':{'pollCount':True}},{'controller':{'pollCount':float('inf')}},{'errors':['runtime failure']},{'error':'runtime failure'},{'paused':True},{'stage':'boot'},{'gameplay':None}]:
+            after=copy.deepcopy(original);after['game'].update(update)
+            with self.subTest(update=update):self.assertFalse(self.subject.fresh(after,before,True))
+        for update in [{'ready':False},{'lastJavaScriptError':'failure'},{'diagnosticError':'failure'},{'document':{'epoch':1}},{'documentEpoch':1},{'timestamp':1}]:
+            after=copy.deepcopy(original);after.update(update)
+            with self.subTest(update=update):self.assertFalse(self.subject.fresh(after,before,True))
+    def test_legacy_hosts_keep_old_counter_rule_only_when_both_omit_identity(self):
+        before=self.state();after=self.state(polls=101,timestamp=2)
+        for state in [before,after]:state.pop('documentEpoch');state['document'].pop('epoch')
+        self.assertTrue(self.subject.fresh(after,before,True));after['game']['controller']['pollCount']=2
+        self.assertFalse(self.subject.fresh(after,before,True));self.assertTrue(self.subject.fresh(after,before))
+if __name__=='__main__':unittest.main()

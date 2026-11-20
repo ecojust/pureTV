@@ -62,6 +62,32 @@
       }
     }
     updateRoom(info);
+    function updateWifi() {
+      const wifi = info.wifiController, panel = $("wifi-controller");
+      if (!panel) return;
+      panel.hidden = !wifi;
+      document.body.classList.toggle("has-wifi-controller", !!wifi);
+      if (!wifi) return;
+      const addresses = Array.isArray(wifi.addresses) ? wifi.addresses : [];
+      const address = addresses.length && Number(wifi.port) > 0
+        ? addresses.map(value => value + ":" + wifi.port).join(" · ") : "";
+      $("wifi-address").textContent = address;
+      $("wifi-state").textContent = wifi.connected
+        ? tr("pureTV 手柄已连接", "pureTV controller connected")
+        : wifi.state === "available" ? tr("pureTV 手柄待连接", "pureTV controller ready")
+        : wifi.state === "registering" ? tr("正在发布手柄服务", "Publishing controller service")
+        : wifi.state === "stopped" ? tr("手柄服务已停止", "Controller service stopped")
+        : address ? tr("手柄自动发现不可用", "Controller discovery unavailable")
+        : tr("手柄服务不可用", "Controller service unavailable");
+      $("wifi-help").textContent = wifi.connected
+        ? tr("A/X：动作 A · B：动作 B · Y：SELECT", "A/X: action A · B: action B · Y: SELECT")
+        : wifi.state === "available" ? tr("同一网络，按手柄搜索键连接；START 开始／暂停", "Same network: press Search; START begins / pauses")
+        : wifi.state === "registering" ? tr("正在准备自动发现，请稍候", "Preparing discovery; please wait")
+        : wifi.state === "stopped" ? tr("重新打开游戏以启动手柄服务", "Reopen the game to start controller service")
+        : address ? tr("自动发现不可用，可按上方地址手动连接", "Discovery unavailable; connect to the address above")
+        : tr("连接局域网后重新打开游戏", "Connect to a local network and reopen the game");
+    }
+    updateWifi();
     function resize() {
       const wrapper = canvas.parentElement,
         panel = wrapper.parentElement;
@@ -82,6 +108,45 @@
       visible = !document.hidden,
       keyboardActive = false,
       destroyed = false;
+    let currentInputs = [], controllerPaused = false, resumeArmed = false, renderFailed = false;
+    const suppressedStart = new Set(), pendingActions = new Map();
+    function pauseController() {
+      pendingActions.clear();
+      // A manually paused model already waits for a fresh START. Keep feeding
+      // neutral snapshots so its own edge detector can observe releases.
+      if (game && game.phase === "paused" && !controllerPaused) {
+        releaseKeys();
+        return true;
+      }
+      if (game && !["title", "attract", "gameover", "ending", "continue"].includes(game.phase)) {
+        controllerPaused = true;
+        resumeArmed = false;
+        releaseKeys();
+        return true;
+      }
+      return false;
+    }
+    const controllerInput = root.PureTVControllerAdapter.create({ onCancel: pauseController });
+    function wifiPresent() { return currentInputs.some(p => p.transport === "wifi"); }
+    function gateControllers(current) {
+      const start = current.some(p => p.connected && p.start);
+      for (const p of current) if (!p.start) suppressedStart.delete(p.id);
+      if (controllerPaused) {
+        if (!start) resumeArmed = true;
+        if (!suspended && resumeArmed && start) {
+          controllerPaused = false;
+          for (const p of current) if (p.start) suppressedStart.add(p.id);
+          for (const p of current) { p.x = p.y = 0; p.a = p.b = p.start = p.select = false; }
+        }
+      }
+      for (const p of current) if (suppressedStart.has(p.id)) p.start = false;
+      const banner = $("wifi-pause");
+      if (banner) {
+        banner.hidden = !controllerPaused;
+        banner.textContent = tr("输入已暂停 · 松开按键，再按 START 继续", "Input paused · Release buttons, then press START");
+      }
+      return current;
+    }
     const pulse = { a: 0, b: 0, start: 0, select: 0 };
     function releaseKeys() {
       keys.clear();
@@ -129,9 +194,9 @@
       try {
         if (bridge) list = JSON.parse(bridge.snapshot()).players || [];
       } catch (_) {}
-      list = list
+      list = controllerInput.read(list)
         .filter((p) => p && [1, 2].includes(Number(p.id)))
-        .map((p) => ({
+        .map((p) => (Object.assign({}, p, {
           id: Number(p.id),
           connected: !!p.connected,
           x: Number(p.x) || 0,
@@ -140,7 +205,7 @@
           b: !!p.b,
           start: !!p.start,
           select: !!p.select,
-        }));
+        })));
       if (keyboardActive) {
         let player = list.find((p) => p.id === 1);
         if (!player) {
@@ -168,13 +233,18 @@
             keys.has(action) ||
             performance.now() < pulse[action];
       }
-      return list;
+      currentInputs = gateControllers(list);
+      return currentInputs;
     }
     function state() {
       const value = game.status();
-      return suspended ? Object.assign({}, value, { phase: "paused" }) : value;
+      return suspended || controllerPaused ? Object.assign({}, value, { phase: "paused" }) : value;
     }
     function updateUi(current) {
+      // Display the last native identities without consuming short button pulses.
+      const clients = $("wifi-clients");
+      root.PureTVControllerAdapter.renderClients(clients, controllerInput.peek(), { language: english ? "en" : "zh" });
+      document.body.classList.toggle("has-wifi-clients", !clients.hidden);
       for (const id of [1, 2]) {
         const player = game && game.players.find((value) => value.id === id);
         const controller = current.find((value) => value.id === id);
@@ -197,9 +267,16 @@
     }
     // A valid room must keep showing its players even if game loading/drawing fails.
     const roomTimer = root.setInterval(() => {
-      if (visible && !destroyed && !suspended) updateUi(inputs());
+      if (visible && !destroyed) {
+        // Only the simulation frame consumes native button pulses. When startup
+        // fails there is no simulation, but the room remains observable.
+        if (!game || renderFailed) inputs();
+        updateUi(currentInputs);
+        try { if (bridge) updateRoom(JSON.parse(bridge.getInfo())); } catch (_) {}
+        updateWifi();
+      }
     }, 200);
-    updateUi(inputs());
+    updateUi(currentInputs);
     function publish() {
       try {
         if (bridge) bridge.publish(JSON.stringify(state()));
@@ -210,12 +287,29 @@
       const dt = last ? Math.min((now - last) / 1000, 0.1) : 0;
       last = now;
       const current = inputs();
+      // Native snapshots consume short presses once. Retain them until the
+      // model's real fixed step consumes inputs, not merely until the next RAF.
+      if (suspended || controllerPaused) pendingActions.clear();
+      else for (const p of current) {
+        if (!p.connected) { pendingActions.delete(p.id); continue; }
+        const held = pendingActions.get(p.id) || {};
+        for (const key of ["a", "b", "start", "select"]) {
+          held[key] = !!held[key] || !!p[key];
+          p[key] = held[key];
+        }
+        pendingActions.set(p.id, held);
+      }
       let ready = true;
       try {
         ready = !renderer.readyFor || renderer.readyFor(game);
-        if (!suspended && ready) game.step(dt, current);
+        if (!suspended && !controllerPaused && ready) {
+          const consumes = config.api === "BombJackTV" || Number(game.accumulator) + dt + 1e-9 >= 1 / 60;
+          game.step(dt, current);
+          if (consumes) pendingActions.clear();
+        }
         renderer.draw(game);
       } catch (error) {
+        renderFailed = true;
         if (sound) sound.pause(true);
         root.TetrisStartup.fail(error);
         return;
@@ -227,8 +321,8 @@
           )
         )
           sound.unlock().catch(() => {});
-        sound.pause(suspended || !ready || game.phase === "paused");
-        if (!suspended && ready) sound.update(game);
+        sound.pause(suspended || controllerPaused || !ready || game.phase === "paused");
+        if (!suspended && !controllerPaused && ready) sound.update(game);
       }
       if (now - lastPublish >= 200) {
         publish();
@@ -238,6 +332,7 @@
     }
     function suspend(value) {
       suspended = !!value;
+      if (suspended && wifiPresent()) pauseController();
       releaseKeys();
       last = 0;
       if (sound) sound.pause(suspended);
@@ -254,6 +349,14 @@
         return renderer;
       },
     };
+    root.PureTVQA = { snapshot: function () {
+      return JSON.parse(JSON.stringify({
+        phase: game ? state().phase : "loading", paused: suspended || controllerPaused || !!(game && game.phase === "paused"),
+        controllerPaused, controllers: currentInputs, info,
+        model: game ? game.status() : null, players: game ? game.players : [],
+        effects: game ? { bullets: game.bullets || [], weapons: game.weapons || [], events: game.events || [] } : {},
+      }));
+    } };
     document.addEventListener("keydown", (event) => {
       if (
         actionFor(event.key.length === 1 ? event.key.toLowerCase() : event.key)
@@ -263,9 +366,10 @@
       }
     });
     document.addEventListener("keyup", (event) => key(event.key, false));
-    root.addEventListener("blur", releaseKeys);
+    root.addEventListener("blur", () => { if (wifiPresent()) pauseController(); releaseKeys(); });
     document.addEventListener("visibilitychange", () => {
       visible = !document.hidden;
+      if (!visible && wifiPresent()) pauseController();
       releaseKeys();
       last = 0;
       cancelAnimationFrame(frame);
@@ -297,7 +401,7 @@
       sound = config.createAudio ? config.createAudio(loaded) : null;
       renderer.draw(game);
       if (!$("game-loading").hasAttribute("data-failed")) $("game-loading").hidden = true;
-      updateUi(inputs());
+      updateUi(currentInputs);
       publish();
       if (visible) frame = requestAnimationFrame(animate);
     } catch (error) {

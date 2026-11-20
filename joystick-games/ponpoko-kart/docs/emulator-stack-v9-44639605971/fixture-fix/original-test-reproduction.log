@@ -1,0 +1,21 @@
+test_stack_flag_is_default_off_exact_scope_and_never_changes_argv (__main__.SupervisorTests.test_stack_flag_is_default_off_exact_scope_and_never_changes_argv) ... ERROR
+
+======================================================================
+ERROR: test_stack_flag_is_default_off_exact_scope_and_never_changes_argv (__main__.SupervisorTests.test_stack_flag_is_default_off_exact_scope_and_never_changes_argv)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/dev/shm/racing-native-readiness/pon-v9-contract-replay/source/joystick-games/qa/android/test_emulator_supervisor.py", line 149, in test_stack_flag_is_default_off_exact_scope_and_never_changes_argv
+    m.prepare(self.sdk, self.output)
+  File "/dev/shm/racing-native-readiness/pon-v9-contract-replay/source/joystick-games/tools/android-emulator-supervisor.py", line 364, in prepare
+    stack_gate = stack_module(helper).verify_permission_gate(gate_path, test)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/racing-native-readiness/pon-v9-contract-replay/source/joystick-games/tools/android-qemu-stack.py", line 329, in verify_permission_gate
+    require(path.is_file() and not path.is_symlink() and path.stat().st_size <= MAX_REPORT, 'Missing bounded permission gate')
+  File "/dev/shm/racing-native-readiness/pon-v9-contract-replay/source/joystick-games/tools/android-qemu-stack.py", line 40, in require
+    raise Rejected(message)
+owned_qemu_stack.Rejected: Missing bounded permission gate
+
+----------------------------------------------------------------------
+Ran 1 test in 0.086s
+
+FAILED (errors=1)

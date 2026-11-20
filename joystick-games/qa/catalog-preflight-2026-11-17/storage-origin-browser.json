@@ -1,0 +1,719 @@
+{
+  "method": "Actual macOS JavaScript bridge in Chromium, synthetic native postMessage persistence and controller snapshots; normal gameplay inputs; two real HTTP origins",
+  "nativeMacTested": false,
+  "swiftStoreTested": false,
+  "gameStateWritten": false,
+  "bridgeSha256": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+  "games": [
+    {
+      "game": "sugarplum-drop",
+      "status": "passed",
+      "originalOrigin": "http://127.0.0.1:34181",
+      "restoredOrigin": "http://127.0.0.1:33523",
+      "realWrites": 2,
+      "storageKeys": [
+        "sugarplum-drop.v1",
+        "sugarplum-drop.v1.settings",
+        "sugarplum-drop.v1.best"
+      ],
+      "storedBeforeClose": {
+        "sugarplum-drop.v1": "{\"savedAt\":1794939380291,\"data\":{\"v\":1,\"seed\":939379497,\"t\":0.8083333333333329,\"score\":0,\"over\":false,\"drops\":1,\"merges\":0,\"miracles\":0,\"topTier\":0,\"nextId\":2,\"bodies\":[{\"id\":1,\"tier\":0,\"x\":5.075,\"y\":7.037066865794804,\"vx\":0,\"vy\":17.439526596971778,\"a\":-0.38534836135804656,\"w\":0,\"age\":0.5833333333333337,\"grow\":1,\"r\":0.34,\"im\":5.044076033603201,\"iI\":87.26775144642215,\"impact\":0}],\"dropper\":{\"x\":8.974999999999998,\"tier\":0,\"cool\":0,\"pending\":false},\"next\":0,\"danger\":0,\"chain\":0,\"lastMerge\":-99,\"rngState\":2139109640}}"
+      },
+      "storedAfterClose": {
+        "sugarplum-drop.v1": "{\"savedAt\":1794939380291,\"data\":{\"v\":1,\"seed\":939379497,\"t\":0.8083333333333329,\"score\":0,\"over\":false,\"drops\":1,\"merges\":0,\"miracles\":0,\"topTier\":0,\"nextId\":2,\"bodies\":[{\"id\":1,\"tier\":0,\"x\":5.075,\"y\":7.037066865794804,\"vx\":0,\"vy\":17.439526596971778,\"a\":-0.38534836135804656,\"w\":0,\"age\":0.5833333333333337,\"grow\":1,\"r\":0.34,\"im\":5.044076033603201,\"iI\":87.26775144642215,\"impact\":0}],\"dropper\":{\"x\":8.974999999999998,\"tier\":0,\"cool\":0,\"pending\":false},\"next\":0,\"danger\":0,\"chain\":0,\"lastMerge\":-99,\"rngState\":2139109640}}"
+      },
+      "restored": {
+        "origin": "http://127.0.0.1:33523",
+        "initial": {
+          "sugarplum-drop.v1": "{\"savedAt\":1794939380291,\"data\":{\"v\":1,\"seed\":939379497,\"t\":0.8083333333333329,\"score\":0,\"over\":false,\"drops\":1,\"merges\":0,\"miracles\":0,\"topTier\":0,\"nextId\":2,\"bodies\":[{\"id\":1,\"tier\":0,\"x\":5.075,\"y\":7.037066865794804,\"vx\":0,\"vy\":17.439526596971778,\"a\":-0.38534836135804656,\"w\":0,\"age\":0.5833333333333337,\"grow\":1,\"r\":0.34,\"im\":5.044076033603201,\"iI\":87.26775144642215,\"impact\":0}],\"dropper\":{\"x\":8.974999999999998,\"tier\":0,\"cool\":0,\"pending\":false},\"next\":0,\"danger\":0,\"chain\":0,\"lastMerge\":-99,\"rngState\":2139109640}}",
+          "sugarplum-drop.v1.settings": null,
+          "sugarplum-drop.v1.best": null
+        },
+        "current": {
+          "sugarplum-drop.v1": "{\"savedAt\":1794939380291,\"data\":{\"v\":1,\"seed\":939379497,\"t\":0.8083333333333329,\"score\":0,\"over\":false,\"drops\":1,\"merges\":0,\"miracles\":0,\"topTier\":0,\"nextId\":2,\"bodies\":[{\"id\":1,\"tier\":0,\"x\":5.075,\"y\":7.037066865794804,\"vx\":0,\"vy\":17.439526596971778,\"a\":-0.38534836135804656,\"w\":0,\"age\":0.5833333333333337,\"grow\":1,\"r\":0.34,\"im\":5.044076033603201,\"iI\":87.26775144642215,\"impact\":0}],\"dropper\":{\"x\":8.974999999999998,\"tier\":0,\"cool\":0,\"pending\":false},\"next\":0,\"danger\":0,\"chain\":0,\"lastMerge\":-99,\"rngState\":2139109640}}",
+          "sugarplum-drop.v1.settings": null,
+          "sugarplum-drop.v1.best": null
+        },
+        "game": {
+          "game": "sugarplum-drop",
+          "renderer": "canvas2d",
+          "webglVersion": null,
+          "frames": 6,
+          "stage": "menu",
+          "paused": false,
+          "gameplay": {
+            "tick": 0.16666666666666666,
+            "score": 0,
+            "drops": 0,
+            "merges": 0,
+            "aimX": 3.83333333333333,
+            "bodies": [],
+            "topTier": 0,
+            "screen": "title"
+          },
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": true,
+                "transport": "wifi",
+                "controllerId": "INDEPENDENT-REVIEW",
+                "session": "fresh",
+                "cancelSeq": 0,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                },
+                "x": 0,
+                "y": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              }
+            ],
+            "source": "[1,\"INDEPENDENT-REVIEW\",\"fresh\"]",
+            "info": {
+              "storageKeys": [
+                "sugarplum-drop.v1",
+                "sugarplum-drop.v1.settings",
+                "sugarplum-drop.v1.best"
+              ],
+              "storageMaxBytes": 1048576,
+              "preferences": {
+                "sugarplum-drop.v1": "{\"savedAt\":1794939380291,\"data\":{\"v\":1,\"seed\":939379497,\"t\":0.8083333333333329,\"score\":0,\"over\":false,\"drops\":1,\"merges\":0,\"miracles\":0,\"topTier\":0,\"nextId\":2,\"bodies\":[{\"id\":1,\"tier\":0,\"x\":5.075,\"y\":7.037066865794804,\"vx\":0,\"vy\":17.439526596971778,\"a\":-0.38534836135804656,\"w\":0,\"age\":0.5833333333333337,\"grow\":1,\"r\":0.34,\"im\":5.044076033603201,\"iI\":87.26775144642215,\"impact\":0}],\"dropper\":{\"x\":8.974999999999998,\"tier\":0,\"cool\":0,\"pending\":false},\"next\":0,\"danger\":0,\"chain\":0,\"lastMerge\":-99,\"rngState\":2139109640}}"
+              },
+              "wifiController": {
+                "state": "ready",
+                "port": 63485,
+                "inputEnabled": true
+              },
+              "platform": "macos"
+            },
+            "pollCount": 6,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        }
+      },
+      "paused": {
+        "game": "sugarplum-drop",
+        "renderer": "canvas2d",
+        "webglVersion": null,
+        "frames": 69,
+        "stage": "paused",
+        "paused": true,
+        "gameplay": {
+          "tick": 0.8083333333333329,
+          "score": 0,
+          "drops": 1,
+          "merges": 0,
+          "aimX": 8.974999999999998,
+          "bodies": [
+            {
+              "id": 1,
+              "x": 5.075,
+              "y": 7.037066865794804,
+              "tier": 0
+            }
+          ],
+          "topTier": 0,
+          "screen": "pause"
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "INDEPENDENT-REVIEW",
+              "session": "fresh",
+              "cancelSeq": 0,
+              "buttons": {
+                "UP": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "A": false,
+                "B": false,
+                "X": false,
+                "Y": false
+              },
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            }
+          ],
+          "source": "[1,\"INDEPENDENT-REVIEW\",\"fresh\"]",
+          "info": {
+            "storageKeys": [
+              "sugarplum-drop.v1",
+              "sugarplum-drop.v1.settings",
+              "sugarplum-drop.v1.best"
+            ],
+            "storageMaxBytes": 1048576,
+            "preferences": {},
+            "wifiController": {
+              "state": "ready",
+              "port": 63485,
+              "inputEnabled": true
+            },
+            "platform": "macos"
+          },
+          "pollCount": 69,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "errors": [],
+      "distSha256": "2b156382a5c72b55f917b3d75c79974666796df2396d1c9a36134ab327fe9a05"
+    },
+    {
+      "game": "starblazer-86",
+      "status": "passed",
+      "originalOrigin": "http://127.0.0.1:34625",
+      "restoredOrigin": "http://127.0.0.1:39599",
+      "realWrites": 2,
+      "storageKeys": [
+        "starblazer-86.v1",
+        "starblazer-86.v1.settings",
+        "starblazer-86.v1.scores"
+      ],
+      "storedBeforeClose": {
+        "starblazer-86.v1": "{\"savedAt\":1794939383658,\"data\":{\"v\":1,\"seed\":939382519,\"t\":0.8583333333333327,\"over\":false,\"endT\":0,\"score\":0,\"lives\":3,\"bombs\":2,\"wave\":1,\"diff\":0,\"phase\":\"intro\",\"phaseT\":0.8583333333333327,\"plan\":{\"n\":1,\"kind\":\"normal\",\"orders\":[{\"t\":0.2,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":0.5,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":0.8,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.0999999999999999,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":\"P\"}},{\"t\":1.4,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.7,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.9999999999999998,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":2.3000000000000003,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":4.3,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":4.58,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":4.859999999999999,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.14,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.42,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":\"S\"}},{\"t\":5.7,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.98,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":6.26,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}}],\"idx\":0,\"total\":16,\"killed\":0,\"escaped\":0,\"pieces\":[\"lineS\",\"lineArc\"]},\"player\":{\"x\":163.13333333333287,\"y\":250,\"vx\":0,\"vy\":0,\"alive\":true,\"respawn\":0,\"inv\":0.9416666666666698,\"fireT\":-0.008333333333333333,\"weapon\":1,\"speed\":0,\"shield\":0,\"bank\":0},\"enemies\":[],\"ebullets\":[],\"pbullets\":[{\"x\":112.98333333333333,\"y\":61.16666666666636,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0},{\"x\":130.6833333333333,\"y\":107.66666666666629,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0},{\"x\":148.38333333333307,\"y\":154.16666666666634,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0}],\"powerups\":[],\"adds\":[],\"form\":{\"diveT\":2.4},\"bombFx\":null,\"bombId\":0,\"chain\":0,\"chainT\":0,\"medal\":0,\"credits\":0,\"upg\":{\"engine\":0,\"cannon\":0,\"rapid\":0,\"bay\":0,\"magnet\":0,\"shield\":0},\"dock\":null,\"nextLife\":20000,\"dropIdx\":2,\"nid\":1,\"stats\":{\"kills\":0,\"shots\":3,\"deaths\":0,\"perfects\":0,\"maxChain\":0,\"bombs\":0,\"medals\":0},\"rngState\":307546849}}"
+      },
+      "storedAfterClose": {
+        "starblazer-86.v1": "{\"savedAt\":1794939383658,\"data\":{\"v\":1,\"seed\":939382519,\"t\":0.8583333333333327,\"over\":false,\"endT\":0,\"score\":0,\"lives\":3,\"bombs\":2,\"wave\":1,\"diff\":0,\"phase\":\"intro\",\"phaseT\":0.8583333333333327,\"plan\":{\"n\":1,\"kind\":\"normal\",\"orders\":[{\"t\":0.2,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":0.5,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":0.8,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.0999999999999999,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":\"P\"}},{\"t\":1.4,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.7,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.9999999999999998,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":2.3000000000000003,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":4.3,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":4.58,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":4.859999999999999,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.14,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.42,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":\"S\"}},{\"t\":5.7,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.98,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":6.26,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}}],\"idx\":0,\"total\":16,\"killed\":0,\"escaped\":0,\"pieces\":[\"lineS\",\"lineArc\"]},\"player\":{\"x\":163.13333333333287,\"y\":250,\"vx\":0,\"vy\":0,\"alive\":true,\"respawn\":0,\"inv\":0.9416666666666698,\"fireT\":-0.008333333333333333,\"weapon\":1,\"speed\":0,\"shield\":0,\"bank\":0},\"enemies\":[],\"ebullets\":[],\"pbullets\":[{\"x\":112.98333333333333,\"y\":61.16666666666636,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0},{\"x\":130.6833333333333,\"y\":107.66666666666629,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0},{\"x\":148.38333333333307,\"y\":154.16666666666634,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0}],\"powerups\":[],\"adds\":[],\"form\":{\"diveT\":2.4},\"bombFx\":null,\"bombId\":0,\"chain\":0,\"chainT\":0,\"medal\":0,\"credits\":0,\"upg\":{\"engine\":0,\"cannon\":0,\"rapid\":0,\"bay\":0,\"magnet\":0,\"shield\":0},\"dock\":null,\"nextLife\":20000,\"dropIdx\":2,\"nid\":1,\"stats\":{\"kills\":0,\"shots\":3,\"deaths\":0,\"perfects\":0,\"maxChain\":0,\"bombs\":0,\"medals\":0},\"rngState\":307546849}}"
+      },
+      "restored": {
+        "origin": "http://127.0.0.1:39599",
+        "initial": {
+          "starblazer-86.v1": "{\"savedAt\":1794939383658,\"data\":{\"v\":1,\"seed\":939382519,\"t\":0.8583333333333327,\"over\":false,\"endT\":0,\"score\":0,\"lives\":3,\"bombs\":2,\"wave\":1,\"diff\":0,\"phase\":\"intro\",\"phaseT\":0.8583333333333327,\"plan\":{\"n\":1,\"kind\":\"normal\",\"orders\":[{\"t\":0.2,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":0.5,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":0.8,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.0999999999999999,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":\"P\"}},{\"t\":1.4,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.7,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.9999999999999998,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":2.3000000000000003,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":4.3,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":4.58,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":4.859999999999999,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.14,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.42,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":\"S\"}},{\"t\":5.7,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.98,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":6.26,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}}],\"idx\":0,\"total\":16,\"killed\":0,\"escaped\":0,\"pieces\":[\"lineS\",\"lineArc\"]},\"player\":{\"x\":163.13333333333287,\"y\":250,\"vx\":0,\"vy\":0,\"alive\":true,\"respawn\":0,\"inv\":0.9416666666666698,\"fireT\":-0.008333333333333333,\"weapon\":1,\"speed\":0,\"shield\":0,\"bank\":0},\"enemies\":[],\"ebullets\":[],\"pbullets\":[{\"x\":112.98333333333333,\"y\":61.16666666666636,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0},{\"x\":130.6833333333333,\"y\":107.66666666666629,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0},{\"x\":148.38333333333307,\"y\":154.16666666666634,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0}],\"powerups\":[],\"adds\":[],\"form\":{\"diveT\":2.4},\"bombFx\":null,\"bombId\":0,\"chain\":0,\"chainT\":0,\"medal\":0,\"credits\":0,\"upg\":{\"engine\":0,\"cannon\":0,\"rapid\":0,\"bay\":0,\"magnet\":0,\"shield\":0},\"dock\":null,\"nextLife\":20000,\"dropIdx\":2,\"nid\":1,\"stats\":{\"kills\":0,\"shots\":3,\"deaths\":0,\"perfects\":0,\"maxChain\":0,\"bombs\":0,\"medals\":0},\"rngState\":307546849}}",
+          "starblazer-86.v1.settings": null,
+          "starblazer-86.v1.scores": null
+        },
+        "current": {
+          "starblazer-86.v1": "{\"savedAt\":1794939383658,\"data\":{\"v\":1,\"seed\":939382519,\"t\":0.8583333333333327,\"over\":false,\"endT\":0,\"score\":0,\"lives\":3,\"bombs\":2,\"wave\":1,\"diff\":0,\"phase\":\"intro\",\"phaseT\":0.8583333333333327,\"plan\":{\"n\":1,\"kind\":\"normal\",\"orders\":[{\"t\":0.2,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":0.5,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":0.8,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.0999999999999999,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":\"P\"}},{\"t\":1.4,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.7,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.9999999999999998,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":2.3000000000000003,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":4.3,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":4.58,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":4.859999999999999,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.14,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.42,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":\"S\"}},{\"t\":5.7,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.98,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":6.26,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}}],\"idx\":0,\"total\":16,\"killed\":0,\"escaped\":0,\"pieces\":[\"lineS\",\"lineArc\"]},\"player\":{\"x\":163.13333333333287,\"y\":250,\"vx\":0,\"vy\":0,\"alive\":true,\"respawn\":0,\"inv\":0.9416666666666698,\"fireT\":-0.008333333333333333,\"weapon\":1,\"speed\":0,\"shield\":0,\"bank\":0},\"enemies\":[],\"ebullets\":[],\"pbullets\":[{\"x\":112.98333333333333,\"y\":61.16666666666636,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0},{\"x\":130.6833333333333,\"y\":107.66666666666629,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0},{\"x\":148.38333333333307,\"y\":154.16666666666634,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0}],\"powerups\":[],\"adds\":[],\"form\":{\"diveT\":2.4},\"bombFx\":null,\"bombId\":0,\"chain\":0,\"chainT\":0,\"medal\":0,\"credits\":0,\"upg\":{\"engine\":0,\"cannon\":0,\"rapid\":0,\"bay\":0,\"magnet\":0,\"shield\":0},\"dock\":null,\"nextLife\":20000,\"dropIdx\":2,\"nid\":1,\"stats\":{\"kills\":0,\"shots\":3,\"deaths\":0,\"perfects\":0,\"maxChain\":0,\"bombs\":0,\"medals\":0},\"rngState\":307546849}}",
+          "starblazer-86.v1.settings": null,
+          "starblazer-86.v1.scores": null
+        },
+        "game": {
+          "game": "starblazer-86",
+          "renderer": "canvas2d",
+          "webglVersion": null,
+          "frames": 6,
+          "stage": "menu",
+          "paused": false,
+          "gameplay": {
+            "tick": 0.175,
+            "score": 0,
+            "wave": 1,
+            "playerX": 112,
+            "playerY": 232.30000000000024,
+            "shots": 2,
+            "kills": 0,
+            "bombsUsed": 0,
+            "bombs": 2,
+            "lives": 3,
+            "screen": "title",
+            "phase": "intro"
+          },
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": true,
+                "transport": "wifi",
+                "controllerId": "INDEPENDENT-REVIEW",
+                "session": "fresh",
+                "cancelSeq": 0,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                },
+                "x": 0,
+                "y": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false
+              }
+            ],
+            "source": "[1,\"INDEPENDENT-REVIEW\",\"fresh\"]",
+            "info": {
+              "storageKeys": [
+                "starblazer-86.v1",
+                "starblazer-86.v1.settings",
+                "starblazer-86.v1.scores"
+              ],
+              "storageMaxBytes": 1048576,
+              "preferences": {
+                "starblazer-86.v1": "{\"savedAt\":1794939383658,\"data\":{\"v\":1,\"seed\":939382519,\"t\":0.8583333333333327,\"over\":false,\"endT\":0,\"score\":0,\"lives\":3,\"bombs\":2,\"wave\":1,\"diff\":0,\"phase\":\"intro\",\"phaseT\":0.8583333333333327,\"plan\":{\"n\":1,\"kind\":\"normal\",\"orders\":[{\"t\":0.2,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":0.5,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":0.8,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.0999999999999999,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":\"P\"}},{\"t\":1.4,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.7,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":1.9999999999999998,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":2.3000000000000003,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.6,\"p\":[194,-16,194,130,32,100,32,320]},\"carry\":null}},{\"t\":4.3,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":4.58,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":4.859999999999999,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.14,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.42,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":\"S\"}},{\"t\":5.7,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":5.98,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}},{\"t\":6.26,\"type\":\"drone\",\"props\":{\"path\":{\"k\":\"bez\",\"d\":4.8,\"p\":[-16,34,110,26,200,80,150,320]},\"carry\":null}}],\"idx\":0,\"total\":16,\"killed\":0,\"escaped\":0,\"pieces\":[\"lineS\",\"lineArc\"]},\"player\":{\"x\":163.13333333333287,\"y\":250,\"vx\":0,\"vy\":0,\"alive\":true,\"respawn\":0,\"inv\":0.9416666666666698,\"fireT\":-0.008333333333333333,\"weapon\":1,\"speed\":0,\"shield\":0,\"bank\":0},\"enemies\":[],\"ebullets\":[],\"pbullets\":[{\"x\":112.98333333333333,\"y\":61.16666666666636,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0},{\"x\":130.6833333333333,\"y\":107.66666666666629,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0},{\"x\":148.38333333333307,\"y\":154.16666666666634,\"vx\":0,\"vy\":-310,\"dmg\":1,\"pierce\":0,\"k\":0}],\"powerups\":[],\"adds\":[],\"form\":{\"diveT\":2.4},\"bombFx\":null,\"bombId\":0,\"chain\":0,\"chainT\":0,\"medal\":0,\"credits\":0,\"upg\":{\"engine\":0,\"cannon\":0,\"rapid\":0,\"bay\":0,\"magnet\":0,\"shield\":0},\"dock\":null,\"nextLife\":20000,\"dropIdx\":2,\"nid\":1,\"stats\":{\"kills\":0,\"shots\":3,\"deaths\":0,\"perfects\":0,\"maxChain\":0,\"bombs\":0,\"medals\":0},\"rngState\":307546849}}"
+              },
+              "wifiController": {
+                "state": "ready",
+                "port": 63485,
+                "inputEnabled": true
+              },
+              "platform": "macos"
+            },
+            "pollCount": 6,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        }
+      },
+      "paused": {
+        "game": "starblazer-86",
+        "renderer": "canvas2d",
+        "webglVersion": null,
+        "frames": 87,
+        "stage": "paused",
+        "paused": true,
+        "gameplay": {
+          "tick": 0.8583333333333327,
+          "score": 0,
+          "wave": 1,
+          "playerX": 163.13333333333287,
+          "playerY": 250,
+          "shots": 3,
+          "kills": 0,
+          "bombsUsed": 0,
+          "bombs": 2,
+          "lives": 3,
+          "screen": "pause",
+          "phase": "intro"
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "INDEPENDENT-REVIEW",
+              "session": "fresh",
+              "cancelSeq": 0,
+              "buttons": {
+                "UP": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "A": false,
+                "B": false,
+                "X": false,
+                "Y": false
+              },
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            }
+          ],
+          "source": "[1,\"INDEPENDENT-REVIEW\",\"fresh\"]",
+          "info": {
+            "storageKeys": [
+              "starblazer-86.v1",
+              "starblazer-86.v1.settings",
+              "starblazer-86.v1.scores"
+            ],
+            "storageMaxBytes": 1048576,
+            "preferences": {},
+            "wifiController": {
+              "state": "ready",
+              "port": 63485,
+              "inputEnabled": true
+            },
+            "platform": "macos"
+          },
+          "pollCount": 87,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "errors": [],
+      "distSha256": "dad3d8f7c2926b071a6e8b59f979c8001d83c5167ca873a415a3dcd854cd00f5"
+    },
+    {
+      "game": "popgun-pip",
+      "status": "passed",
+      "originalOrigin": "http://127.0.0.1:45389",
+      "restoredOrigin": "http://127.0.0.1:35417",
+      "realWrites": 4,
+      "storageKeys": [
+        "popgunpip.save.v1",
+        "popgunpip.opts.v1"
+      ],
+      "storedBeforeClose": {
+        "popgunpip.save.v1": "{\"v\":1,\"seed\":2446588220,\"gadgets\":[],\"weapons\":[\"pea\"],\"maxHearts\":3,\"chips\":0,\"shards\":[],\"vaults\":[],\"cleared\":[],\"seen\":{\"1-1\":[\"high\"]},\"lives\":5,\"coins\":0,\"score\":0,\"hi\":0,\"at\":{\"world\":1,\"node\":0},\"stats\":{\"deaths\":0,\"time\":0,\"kills\":0,\"started\":1794939386197},\"done\":false}"
+      },
+      "storedAfterClose": {
+        "popgunpip.save.v1": "{\"v\":1,\"seed\":2446588220,\"gadgets\":[],\"weapons\":[\"pea\"],\"maxHearts\":3,\"chips\":0,\"shards\":[],\"vaults\":[],\"cleared\":[],\"seen\":{\"1-1\":[\"high\"]},\"lives\":5,\"coins\":0,\"score\":0,\"hi\":0,\"at\":{\"world\":1,\"node\":0},\"stats\":{\"deaths\":0,\"time\":0,\"kills\":0,\"started\":1794939386197},\"done\":false}"
+      },
+      "restored": {
+        "origin": "http://127.0.0.1:35417",
+        "initial": {
+          "popgunpip.save.v1": "{\"v\":1,\"seed\":2446588220,\"gadgets\":[],\"weapons\":[\"pea\"],\"maxHearts\":3,\"chips\":0,\"shards\":[],\"vaults\":[],\"cleared\":[],\"seen\":{\"1-1\":[\"high\"]},\"lives\":5,\"coins\":0,\"score\":0,\"hi\":0,\"at\":{\"world\":1,\"node\":0},\"stats\":{\"deaths\":0,\"time\":0,\"kills\":0,\"started\":1794939386197},\"done\":false}",
+          "popgunpip.opts.v1": null
+        },
+        "current": {
+          "popgunpip.save.v1": "{\"v\":1,\"seed\":2446588220,\"gadgets\":[],\"weapons\":[\"pea\"],\"maxHearts\":3,\"chips\":0,\"shards\":[],\"vaults\":[],\"cleared\":[],\"seen\":{\"1-1\":[\"high\"]},\"lives\":5,\"coins\":0,\"score\":0,\"hi\":0,\"at\":{\"world\":1,\"node\":0},\"stats\":{\"deaths\":0,\"time\":0,\"kills\":0,\"started\":1794939386197},\"done\":false}",
+          "popgunpip.opts.v1": null
+        },
+        "game": {
+          "game": "popgun-pip",
+          "renderer": "canvas2d",
+          "webglVersion": null,
+          "frames": 5,
+          "stage": "menu",
+          "paused": false,
+          "gameplay": {
+            "tick": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "score": 0,
+            "lives": 0,
+            "hp": 0,
+            "shots": 0,
+            "world": 1,
+            "level": 1,
+            "screen": "title",
+            "overlay": "",
+            "weapon": ""
+          },
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "cancelled": false,
+            "players": [],
+            "source": "",
+            "info": {
+              "storageKeys": [
+                "popgunpip.save.v1",
+                "popgunpip.opts.v1"
+              ],
+              "storageMaxBytes": 1048576,
+              "preferences": {
+                "popgunpip.save.v1": "{\"v\":1,\"seed\":2446588220,\"gadgets\":[],\"weapons\":[\"pea\"],\"maxHearts\":3,\"chips\":0,\"shards\":[],\"vaults\":[],\"cleared\":[],\"seen\":{\"1-1\":[\"high\"]},\"lives\":5,\"coins\":0,\"score\":0,\"hi\":0,\"at\":{\"world\":1,\"node\":0},\"stats\":{\"deaths\":0,\"time\":0,\"kills\":0,\"started\":1794939386197},\"done\":false}"
+              },
+              "wifiController": {
+                "state": "ready",
+                "port": 63485,
+                "inputEnabled": true
+              },
+              "platform": "macos"
+            },
+            "pollCount": 5,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        }
+      },
+      "paused": {
+        "game": "popgun-pip",
+        "renderer": "canvas2d",
+        "webglVersion": null,
+        "frames": 180,
+        "stage": "paused",
+        "paused": true,
+        "gameplay": {
+          "tick": 0.5666666666666668,
+          "playerX": 123.65346373027879,
+          "playerY": 269.59999999999997,
+          "score": 0,
+          "lives": 5,
+          "hp": 3,
+          "shots": 3,
+          "world": 1,
+          "level": 1,
+          "screen": "play",
+          "overlay": "pause",
+          "weapon": "pea"
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "INDEPENDENT-REVIEW",
+              "session": "fresh",
+              "cancelSeq": 0,
+              "buttons": {
+                "UP": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "A": false,
+                "B": false,
+                "X": false,
+                "Y": false
+              },
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            }
+          ],
+          "source": "[1,\"INDEPENDENT-REVIEW\",\"fresh\"]",
+          "info": {
+            "storageKeys": [
+              "popgunpip.save.v1",
+              "popgunpip.opts.v1"
+            ],
+            "storageMaxBytes": 1048576,
+            "preferences": {},
+            "wifiController": {
+              "state": "ready",
+              "port": 63485,
+              "inputEnabled": true
+            },
+            "platform": "macos"
+          },
+          "pollCount": 180,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "errors": [],
+      "distSha256": "15717c9bd1f936c6d839a4332d65832baa713c9e8a7b5dab1d0c16db755e91ef"
+    }
+  ],
+  "status": "passed"
+}

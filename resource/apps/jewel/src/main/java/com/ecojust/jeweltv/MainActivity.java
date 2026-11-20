@@ -1,6 +1,7 @@
 package com.ecojust.jeweltv;
 
 import android.annotation.SuppressLint;
+import com.ecojust.controller.LegacyWifiController;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -55,6 +56,8 @@ public class MainActivity extends Activity {
     private final ExecutorService worker = Executors.newSingleThreadExecutor();
     private final Object roomLock = new Object();
     private volatile LanGameServer server;
+    private LegacyWifiController wifiController;
+    private boolean windowFocused = true;
     private LanGameServer pendingServer;
     private volatile String info = "{}";
     private volatile boolean suspended = true;
@@ -90,6 +93,7 @@ public class MainActivity extends Activity {
         root.addView(status, new FrameLayout.LayoutParams(-1,-1));
         setContentView(root);
         connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        wifiController = new LegacyWifiController(this, 2);
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -131,6 +135,7 @@ public class MainActivity extends Activity {
             }
             @Override public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
                 closeRoom();
+                if (wifiController != null) wifiController.stop();
                 root.removeView(view);
                 view.destroy();
                 web = null;
@@ -148,6 +153,7 @@ public class MainActivity extends Activity {
         switch (path) {
             case "/tv.html": return "text/html";
             case "/tv.css": return "text/css";
+            case "/puretv-controller.js":
             case "/game.js":
             case "/bootstrap.js":
             case "/game-model.js":
@@ -179,7 +185,8 @@ public class MainActivity extends Activity {
     @Override protected void onStart() {
         super.onStart();
         active = true;
-        suspended = false;
+        suspended = !windowFocused;
+        wifiController.setInputActive(!suspended);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (web != null) {
             web.onResume();
@@ -223,6 +230,7 @@ public class MainActivity extends Activity {
                 synchronized (roomLock) {
                     if (generation != expected || !active || destroyed) return;
                     pendingServer = created;
+                    wifiController.start(getString(R.string.app_name), addresses);
                     port = created.start();
                 }
                 String url = addresses.isEmpty() ? "" : "http://" + addresses.get(0) + ":" + port + "/?room=" + created.roomToken();
@@ -236,7 +244,8 @@ public class MainActivity extends Activity {
                 if (!active || destroyed || generation != expected || web == null) { created.stop(); return; }
                 synchronized (roomLock) { server = created; pendingServer = null; }
                 info = ready;
-                suspended = false;
+                suspended = !windowFocused || exitDialog != null;
+                if (wifiController != null) wifiController.setInputActive(!suspended);
                 web.loadUrl(GAME_URL);
             });
         });
@@ -287,10 +296,11 @@ public class MainActivity extends Activity {
     }
 
     final class HostBridge {
-        @JavascriptInterface public String getInfo() { return info; }
+        @JavascriptInterface public String getInfo() { return wifiController == null ? info : wifiController.information(info); }
         @JavascriptInterface public String snapshot() {
             LanGameServer current = server;
-            return current == null || suspended ? "{\"players\":[],\"connections\":0}" : current.snapshot();
+            String phone = current == null || suspended ? "{\"players\":[],\"connections\":0}" : current.snapshot();
+            return wifiController == null ? phone : wifiController.snapshot(phone, suspended);
         }
         @JavascriptInterface public void publish(String state) {
             LanGameServer current = server;
@@ -303,6 +313,7 @@ public class MainActivity extends Activity {
         synchronized (roomLock) {
             generation++;
             suspended = true;
+            if (wifiController != null) wifiController.setInputActive(false);
             LanGameServer old = server;
             server = null;
             if (old != null) old.stop();
@@ -313,6 +324,7 @@ public class MainActivity extends Activity {
     @Override protected void onStop() {
         active = false;
         closeRoom();
+        if (wifiController != null) wifiController.stop();
         main.removeCallbacksAndMessages(null);
         if (networkCallback != null && connectivity != null) {
             try { connectivity.unregisterNetworkCallback(networkCallback); } catch (RuntimeException ignored) { }
@@ -328,6 +340,7 @@ public class MainActivity extends Activity {
         boolean terminate = isFinishing() && !isChangingConfigurations();
         destroyed = true;
         closeRoom();
+        if (wifiController != null) wifiController.stop();
         main.removeCallbacksAndMessages(null);
         worker.shutdownNow();
         if (web != null) {
@@ -345,6 +358,7 @@ public class MainActivity extends Activity {
     @Override public void onBackPressed() {
         if (exitDialog != null || destroyed) return;
         suspended = true;
+        if (wifiController != null) wifiController.setInputActive(false);
         if (server != null) server.releaseInputs();
         if (web != null) web.evaluateJavascript("window.JewelTV && window.JewelTV.suspend && window.JewelTV.suspend(true)",null);
         exitDialog = new AlertDialog.Builder(this).setTitle(R.string.exit_title).setMessage(R.string.exit_message)
@@ -354,11 +368,22 @@ public class MainActivity extends Activity {
         exitDialog.setOnDismissListener(dialog -> {
             exitDialog = null;
             if (active && !isFinishing()) {
-                suspended = false;
-                if (web != null) web.evaluateJavascript("window.JewelTV && window.JewelTV.suspend && window.JewelTV.suspend(false)",null);
+                suspended = !windowFocused || exitDialog != null;
+                if (wifiController != null) wifiController.setInputActive(!suspended);
+                if (web != null) web.evaluateJavascript("window.JewelTV && window.JewelTV.suspend && window.JewelTV.suspend(" + suspended + ")",null);
             }
         });
         exitDialog.show();
+    }
+
+    @Override public void onWindowFocusChanged(boolean focused) {
+        super.onWindowFocusChanged(focused);
+        windowFocused = focused;
+        if (destroyed) return;
+        suspended = !active || !focused || web == null || server == null || exitDialog != null;
+        if (wifiController != null) wifiController.setInputActive(!suspended);
+        if (suspended && server != null) server.releaseInputs();
+        if (web != null) web.evaluateJavascript("window.JewelTV && window.JewelTV.suspend && window.JewelTV.suspend(" + suspended + ")", null);
     }
 
     @Override public boolean dispatchKeyEvent(KeyEvent event) {

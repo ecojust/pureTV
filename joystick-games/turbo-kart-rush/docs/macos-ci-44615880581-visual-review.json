@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "status": "reviewed_with_visual_issue",
+  "originalRunId": 44615880581,
+  "qaSourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+  "packageSourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+  "immutableEvidenceExport": "9789c5a17e338df15728b3aec502bfbb42dce6a6",
+  "imagesInspected": 9,
+  "method": "Each unmodified original PNG opened individually with view_image; byte size and SHA256 independently matched to the original report. No rerun or image editing.",
+  "findings": [
+    {
+      "kind": "visible_ui_overlap",
+      "affectedScenes": "playing in native, occupied-port and Rosetta",
+      "description": "Separate instructions card overlaps the upper part of the lower-right minimap by approximately 50–60 image pixels (visual estimate, not DOM measurement). Compact ID card does not cover lap/time. Expanded pause card covers the background minimap but not the pause buttons."
+    }
+  ],
+  "observations": [
+    {
+      "mode": "native",
+      "scene": "connected-menu",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/turbo-kart-rush/native/diagnostics/connected-menu.png",
+      "bytes": 1036923,
+      "sha256": "f50cea2f9d645e0bd7e19ff2d5a1d21273ad2741166336ae5826e1001a9b07d7",
+      "pngPixels": [
+        1024,
+        645
+      ],
+      "viewImageInspected": true,
+      "controllerId": "virtual-4c0d5ba4f64b",
+      "displayedPort": 63485,
+      "notes": "Title/logo, kart and start prompt are clearly rendered. Expanded controller card shows full wrapped ID, game name and actual TCP port; it does not obstruct the start prompt."
+    },
+    {
+      "mode": "native",
+      "scene": "playing",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/turbo-kart-rush/native/diagnostics/playing.png",
+      "bytes": 1128319,
+      "sha256": "a2751da76b2cac595a1756c1539d13cdc9933aa0eb40d290835ef2c3d90fdbbe",
+      "pngPixels": [
+        1024,
+        645
+      ],
+      "viewImageInspected": true,
+      "controllerId": "virtual-4c0d5ba4f64b",
+      "displayedPort": 63485,
+      "notes": "Kart, track/grass/tyre barrier and spectator scene are rendered. Lap 1/3, timer and 8th place are readable; this still shows 0 km/h and is not itself evidence of sustained driving. Compact ID card is readable. The separate instructions card overlaps the upper part of the bottom-right minimap by approximately 50–60 image pixels (visual estimate only)."
+    },
+    {
+      "mode": "native",
+      "scene": "paused",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/turbo-kart-rush/native/diagnostics/paused.png",
+      "bytes": 934348,
+      "sha256": "cfc2f465a8d8e8f8ad86807be25284254553fa9ded41c47dff25125951c14ea1",
+      "pngPixels": [
+        1024,
+        645
+      ],
+      "viewImageInspected": true,
+      "controllerId": "virtual-4c0d5ba4f64b",
+      "displayedPort": 63485,
+      "notes": "Resume, Restart Race and Quit to Menu are readable and unobstructed; Resume is visibly selected. The expanded controller card covers the minimap behind it but not the central pause controls."
+    },
+    {
+      "mode": "occupied-port",
+      "scene": "connected-menu",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/turbo-kart-rush/occupied-port/diagnostics/connected-menu.png",
+      "bytes": 1055477,
+      "sha256": "9944127737831b53358adfdce3891e7c51c8c0ca38744b84f4335723fc9d524e",
+      "pngPixels": [
+        1024,
+        645
+      ],
+      "viewImageInspected": true,
+      "controllerId": "virtual-088496700bc7",
+      "displayedPort": 60469,
+      "notes": "Title/logo, kart and start prompt are clearly rendered. Expanded controller card shows full wrapped ID, game name and actual TCP port; it does not obstruct the start prompt."
+    },
+    {
+      "mode": "occupied-port",
+      "scene": "playing",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/turbo-kart-rush/occupied-port/diagnostics/playing.png",
+      "bytes": 1116924,
+      "sha256": "5bfa61df2aac85eb513ec0a90ee5cb60370999852fa64db406793e7c878c0d28",
+      "pngPixels": [
+        1024,
+        645
+      ],
+      "viewImageInspected": true,
+      "controllerId": "virtual-088496700bc7",
+      "displayedPort": 60469,
+      "notes": "Kart, track/grass/tyre barrier and spectator scene are rendered. Lap 1/3, timer and 8th place are readable; this still shows 0 km/h and is not itself evidence of sustained driving. Compact ID card is readable. The separate instructions card overlaps the upper part of the bottom-right minimap by approximately 50–60 image pixels (visual estimate only)."
+    },
+    {
+      "mode": "occupied-port",
+      "scene": "paused",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/turbo-kart-rush/occupied-port/diagnostics/paused.png",
+      "bytes": 917674,
+      "sha256": "1fb2e3dccbd43f7f0548853d822f93c7834ee4ec24a37f2470d87957960fbf5d",
+      "pngPixels": [
+        1024,
+        645
+      ],
+      "viewImageInspected": true,
+      "controllerId": "virtual-088496700bc7",
+      "displayedPort": 60469,
+      "notes": "Resume, Restart Race and Quit to Menu are readable and unobstructed; Resume is visibly selected. The expanded controller card covers the minimap behind it but not the central pause controls."
+    },
+    {
+      "mode": "rosetta",
+      "scene": "connected-menu",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/turbo-kart-rush/rosetta/diagnostics/connected-menu.png",
+      "bytes": 1026052,
+      "sha256": "a60a485613aa2fbc7b9840e134c5dfa12e43f7e5e2059ba72cdbda1015847b18",
+      "pngPixels": [
+        1024,
+        642
+      ],
+      "viewImageInspected": true,
+      "controllerId": "virtual-95eb438570be",
+      "displayedPort": 63485,
+      "notes": "Title/logo, kart and start prompt are clearly rendered. Expanded controller card shows full wrapped ID, game name and actual TCP port; it does not obstruct the start prompt."
+    },
+    {
+      "mode": "rosetta",
+      "scene": "playing",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/turbo-kart-rush/rosetta/diagnostics/playing.png",
+      "bytes": 1133018,
+      "sha256": "ee55f773a122f1b9b7d83f6e0fa2e6db58bda0bcc4b14e4e95f268cc4e7f7d17",
+      "pngPixels": [
+        1024,
+        642
+      ],
+      "viewImageInspected": true,
+      "controllerId": "virtual-95eb438570be",
+      "displayedPort": 63485,
+      "notes": "Kart, track/grass/tyre barrier and spectator scene are rendered. Lap 1/3, timer and 8th place are readable; this still shows 0 km/h and is not itself evidence of sustained driving. Compact ID card is readable. The separate instructions card overlaps the upper part of the bottom-right minimap by approximately 50–60 image pixels (visual estimate only)."
+    },
+    {
+      "mode": "rosetta",
+      "scene": "paused",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/turbo-kart-rush/rosetta/diagnostics/paused.png",
+      "bytes": 936079,
+      "sha256": "a461fcbcd8a7e5672f9f14fc7acdea28b0f9ae3cd95911c5a08a6dfc37b3d614",
+      "pngPixels": [
+        1024,
+        642
+      ],
+      "viewImageInspected": true,
+      "controllerId": "virtual-95eb438570be",
+      "displayedPort": 63485,
+      "notes": "Resume, Restart Race and Quit to Menu are readable and unobstructed; Resume is visibly selected. The expanded controller card covers the minimap behind it but not the central pause controls."
+    }
+  ],
+  "scope": "Actual visual inspection only. The original three ARM/Rosetta reports each passed nine checks; screenshots do not prove every gameplay transition. Intel graphics remain unverified and original Intel failures/classifier results are unchanged.",
+  "originalImagesModified": false,
+  "nativeRerun": false
+}

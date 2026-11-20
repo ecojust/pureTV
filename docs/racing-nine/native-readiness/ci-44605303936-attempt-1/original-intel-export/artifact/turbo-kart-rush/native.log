@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py", line 407, in run
+    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py", line 198, in until
+    s=self.read()
+      ^^^^^^^^^^^
+  File "/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py", line 512, in read
+    assert not state['game'].get('errors'),'Game runtime errors: '+json.dumps(state['game']['errors'],ensure_ascii=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Game runtime errors: ["null is not an object (evaluating 's.getShaderPrecisionFormat(s.VERTEX_SHADER,s.HIGH_FLOAT).precision')"]
+

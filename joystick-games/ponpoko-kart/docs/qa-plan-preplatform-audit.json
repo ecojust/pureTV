@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-19T19:13:36.160690+00:00",
+  "game": "ponpoko-kart",
+  "status": "passed-static-review",
+  "scope": "Data-plan schema and source control-flow review; no browser, native package, SDK session, CI, model mutation, clock mutation or storage fixture writes executed in this audit.",
+  "changedProductionFiles": [],
+  "qaPlanChanged": false,
+  "qaPlanSha256Before": "111e1ed85b2e1374c64cdb8e1ac397f6523c4b645ebbebc111587df5686e1490",
+  "qaPlanSha256After": "111e1ed85b2e1374c64cdb8e1ac397f6523c4b645ebbebc111587df5686e1490",
+  "schemaValidation": {
+    "validator": "joystick-games/tools/qa-plan.py",
+    "sha256": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+    "result": "passed",
+    "steps": 11
+  },
+  "raceReadiness": {
+    "gateStep": 5,
+    "gateName": "Skip authored intro with jump and wait for real countdown",
+    "expect": [
+      {
+        "path": "gameplay.mode",
+        "op": "eq",
+        "value": "racing"
+      }
+    ],
+    "timeoutSeconds": 60,
+    "nextThrottleStep": 6,
+    "nextThrottleHoldMs": 2500,
+    "introRejected": true,
+    "countdownRejected": true,
+    "racingAccepted": true,
+    "finding": "Step 4 stage=playing admits intro/countdown, but is not the throttle readiness gate: step 5 sends the original jump action to skip the intro and requires original mode=racing before step 6 sends UP."
+  },
+  "storage": {
+    "required": true,
+    "declaredKeys": [
+      "ponpoko.prefs"
+    ],
+    "naturalWriteSteps": [
+      3,
+      4
+    ],
+    "finding": "Original Menus.js character onConfirm assigns characterId and invokes save(); course onConfirm assigns courseId/difficulty and invokes save() before game.startRace. save() writes ponpoko.prefs. Normal plan A/START confirmation reaches these callbacks without storage injection. Native persistence verifier requires a nonempty actual save and matches the native values; no new restart verification was run here.",
+    "actualNativeRestartExecutedInThisAudit": false
+  },
+  "menuInput": {
+    "normalPlanKeys": [
+      "START",
+      "RIGHT",
+      "A",
+      "START"
+    ],
+    "finding": "The cached-frame pressed edges call original UI.nav. Title/character/course ok actions call the same confirm callbacks as visible buttons. Character/course selection confirmation delays are original 480/420 ms; the plan waits for the actual next screen/mode, with 700 ms confirmation holds. No focus on hidden buttons or pointer clicks is required.",
+    "historicalBrowserEvidence": "joystick-games/ponpoko-kart/docs/browser-attempt-3/report.json",
+    "historicalEvidenceScope": "Existing synthetic bridge run exercised normal menus and actual racing; it is not an original SDK/native persistence result."
+  },
+  "limitations": [
+    "This is static source/plan validation, not a rerun of gameplay or native packages.",
+    "Real native countdown may exceed the existing 60 second plan limit on slow hardware; such a timeout must be retained as a failure and must not be bypassed by changing model time.",
+    "The character-selection RIGHT step asserts the current menu, not the selected character identity; this audit does not claim a native selection-specific assertion."
+  ],
+  "sourceInventory": [
+    {
+      "path": "joystick-games/ponpoko-kart/qa-plan.json",
+      "sha256": "111e1ed85b2e1374c64cdb8e1ac397f6523c4b645ebbebc111587df5686e1490"
+    },
+    {
+      "path": "joystick-games/ponpoko-kart/game.json",
+      "sha256": "c1d7e247a371f133beb5849e4ec49440a33fe1c229a95a7b5895a878217f79ea"
+    },
+    {
+      "path": "joystick-games/ponpoko-kart/src/main.js",
+      "sha256": "8bec317ecfc09a5353e9b80c589177809f7a0ed4399593ab9eb2e5192a3a3b19"
+    },
+    {
+      "path": "joystick-games/ponpoko-kart/src/tv-adapter.js",
+      "sha256": "949ce0c297f6baa40056506648915523038632e5ab7774c571bf2a8c59c037c5"
+    },
+    {
+      "path": "joystick-games/ponpoko-kart/src/upstream/src/core/Menus.js",
+      "sha256": "aa4ed90ad307a2f43491403eeed702e6648af8a430515ddf315085adeba103ea"
+    },
+    {
+      "path": "joystick-games/ponpoko-kart/src/upstream/src/core/Game.js",
+      "sha256": "55d78587cdc6ee2336758a6ea12470951ad4e8f46f4ad7b390f76878150f9270"
+    },
+    {
+      "path": "joystick-games/ponpoko-kart/src/upstream/src/ui/UI.js",
+      "sha256": "90bd659a4eef9181a3efdc9b7d01e62e88c60e9f85fefdb432315df81ead852a"
+    },
+    {
+      "path": "joystick-games/tools/qa-plan.py",
+      "sha256": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582"
+    },
+    {
+      "path": "joystick-games/tools/macos-verify.py",
+      "sha256": "2db317fa9672df20992af6b4d6a31f9910e2876e4644c0cffca6b99df8709290"
+    },
+    {
+      "path": "joystick-games/qa/android/run.py",
+      "sha256": "8c59d19cf55ee793f3a09ff7671062e8eeecbc74144884a1a79461d14390eaaf"
+    }
+  ]
+}

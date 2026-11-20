@@ -1,0 +1,170 @@
+{
+  "status": "candidate-ready-for-independent-review-not-native-validated",
+  "preparedAt": "2026-11-19T22:50:19.796597+00:00",
+  "original": {
+    "sourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+    "runId": "44616011172",
+    "attempt": 1,
+    "exportCommit": "5fe9ceda41c134619c613ac352ac8f22ed5d96bb",
+    "apk": {
+      "packageName": "com.ecojust.joystick.kartroyale",
+      "versionName": "0.1.0",
+      "versionCode": 1,
+      "bytes": 1221895,
+      "sha256": "63b39ff300811e00401239ab5a4ec1206b6f96bfd8877e78399911e023038712",
+      "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23"
+    },
+    "observer": {
+      "packageName": "com.ecojust.joystickqa.kartroyale",
+      "versionName": "1.0",
+      "versionCode": 1,
+      "bytes": 16783,
+      "sha256": "229c7ce641b2fac35b98b0aeb4bf1056922e7a8bf6d3130104cf4830fa953c43"
+    },
+    "existingAudit": "../android-package-audit-44616011172/report.json",
+    "existingAuditScope": "198 source inputs / 10 assets and original package/Observer signature and identity already audited; this candidate does not repeat that audit",
+    "originalRuntimeStatus": "failed",
+    "originalFailureLimit": "Normal reached WebGL2 boot HUD/zero frames before Observer/ADB became unavailable; occupied had no available device. No proven graphics root cause."
+  },
+  "genericTapSource": "f3e1e9f6634e35d1c9ae0cfbf1f8a51d42de7965",
+  "overlay": {
+    "joystick-games/kart-royale/qa-plan.json": {
+      "bytes": 7547,
+      "sha256": "049d3e70ef594885cc7d0a338f209266b05e2bec445712d7a97674ee88512738"
+    },
+    "joystick-games/qa/android/run.py": {
+      "bytes": 58902,
+      "sha256": "753a11511097e2562a78dfd6e2b43adff9c1f733be15633952b5d24a8a32f19f"
+    },
+    "joystick-games/qa/android/test_runner.py": {
+      "bytes": 59115,
+      "sha256": "d4992f90b38d0bcb8780ce1ef3036b2cc77f1b5fb02469f2a7540d27af76cb1e"
+    }
+  },
+  "scope": "Three isolated QA files only; live runner/plan/tests are not modified. All new source is archived under executed-overlay.",
+  "testExecution": [
+    {
+      "command": "python3 joystick-games/qa/android/test_runner.py",
+      "log": "logs/test_runner-attempt-1.log",
+      "executedRunner": {
+        "bytes": 58902,
+        "sha256": "753a11511097e2562a78dfd6e2b43adff9c1f733be15633952b5d24a8a32f19f"
+      },
+      "executedTests": {
+        "bytes": 59035,
+        "sha256": "7ed69e007947bc93e7e9f017ebdd61a775854bd1ae5864ac402855bf6a1e6665"
+      },
+      "result": "failed",
+      "testCount": 54,
+      "passedOriginalTests": 44,
+      "newTestsPassed": 9,
+      "failure": "New missing-ACK fixture counted the 9 original connection sync messages as part of its two-message action window. Runner correctly rejected missing ACK and did send Y down/release. Original failure preserved."
+    },
+    {
+      "command": "python3 joystick-games/qa/android/test_runner.py MenuTapContracts",
+      "log": "logs/test_runner-tap-attempt-2.log",
+      "executedTests": {
+        "bytes": 59115,
+        "sha256": "d4992f90b38d0bcb8780ce1ef3036b2cc77f1b5fb02469f2a7540d27af76cb1e"
+      },
+      "result": "passed",
+      "testCount": 10,
+      "correction": "Only the new test now records the pre-tap SDK sequence and asserts the exact action window after it. Runner unchanged. Old 44 tests were not rerun because their complete AST and runtime source stayed identical."
+    },
+    {
+      "command": "python3 joystick-games/tools/android-tests.py",
+      "log": "logs/android-tests.log",
+      "result": "passed",
+      "testCount": 16
+    },
+    {
+      "command": "python3 joystick-games/tools/android-runtime-artifact-tests.py",
+      "log": "logs/android-runtime-artifact-tests.log",
+      "result": "passed",
+      "testCount": 15
+    },
+    {
+      "command": "python3 -B joystick-games/qa/android/test_environment_diagnostics.py",
+      "log": "logs/test_environment_diagnostics.log",
+      "result": "passed",
+      "testCount": 11
+    }
+  ],
+  "staticVerification": {
+    "result": "passed",
+    "evidence": "static-boundaries.json",
+    "log": "logs/static-boundaries-attempt-2.log",
+    "originalSupportFiles": 286,
+    "originalSignedInputs": 198,
+    "unchangedSignedInputs": 197,
+    "allowedChangedSignedInput": "joystick-games/kart-royale/qa-plan.json",
+    "oldRunnerAstRecoveredExactlyAfterRemovingFourHelpersAndDispatch": true,
+    "oldTestSuiteCompleteAstUnchanged": true,
+    "sixFocusTargetsAndFlagsOnlyPlanChanges": true,
+    "allTwentyOriginalTimeoutsRemain60Seconds": true,
+    "allOriginalHoldMsRetained": true,
+    "firstStaticAttempt": "Completed but probed an incorrect optional ControlPrefs path. Its log/script are preserved; the exact core path and TouchControls were then checked successfully. No source or test was changed."
+  },
+  "inputSemantics": {
+    "actualSdkTransport": "Real original JoystickClient with local TCP ACK fixture; no native game/emulator",
+    "tapMs": 16,
+    "keysPerTap": 1,
+    "sameConnectionUniqueAcks": 2,
+    "releasedRawAndSemanticKeysRequired": 9,
+    "sameControllerIdSessionCancelSequenceRequired": true,
+    "focusedResumedVisibleDocumentRequired": true,
+    "beforeExpectationMustBeFalse": true,
+    "releasedMatchingBaselineThenTwoSubsequentFreshPollsRequired": true,
+    "counterResetException": false,
+    "nativeButtonCounterClaim": false,
+    "existingFiveFlagsNowActuallyExecuted": true,
+    "existingFiveFlagIndices": [
+      0,
+      1,
+      8,
+      9,
+      10
+    ],
+    "newSixFlagsIndices": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "allOtherGameplayAndPauseChecksUnchanged": true
+  },
+  "failureSamples": {
+    "count": 12,
+    "platform": "original Windows observations of byte-identical ControlsMenu/Menus/ControlPrefs/TouchControls source",
+    "originalRun": "44621752383",
+    "originalSource": "039d210cfa4cc65f59adf0859a777f3591853a70",
+    "originalExport": "f559a71e99ff27c8f262ed2a82a70674ee90f9dc",
+    "oldControlsOnlyPredicatePassesAll": true,
+    "newExactFocusPredicatesRejectAll": true,
+    "nativeAndroidEvidence": false
+  },
+  "independentImportReview": "independent-import-closure-review.json",
+  "excluded": [
+    "Night-specific High-to-Low reload helper/constants/exact-APK exception",
+    "Any document/poll reset acceptance",
+    "Windows-only startup 600 second field",
+    "Backroad install confirmation",
+    "Pon emulator supervision or Vulkan flag",
+    "Later live runtime workflow, schema, host/Observer, asset or dependency changes"
+  ],
+  "pending": [
+    "Root independent review and isolated commit/ref if accepted",
+    "Separate emulator/Vulkan decision after Pon evidence",
+    "Actual original-APK normal and occupied runtime checks; old failures remain failed",
+    "No package delivery or counts change from local candidate tests"
+  ],
+  "actionsTaken": {
+    "productionFilesEdited": false,
+    "nativeRun": false,
+    "rebuiltOrResignedApkOrObserver": false,
+    "commitOrRefCreated": false,
+    "workflowPost": false
+  }
+}

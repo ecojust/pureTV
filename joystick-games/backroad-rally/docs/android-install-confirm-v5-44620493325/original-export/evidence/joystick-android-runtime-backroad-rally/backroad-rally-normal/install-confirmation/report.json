@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "status": "blocked",
+  "targetPackage": "com.ecojust.joystick.backroadrally",
+  "scope": "Explicit opt-in confirmation for one frozen APK; not gameplay acceptance",
+  "apk": {
+    "bytes": 105020455,
+    "sha256": "8596350c7868352a9494d0667037ef4a75709af25cf50066df137bab3bcd8808"
+  },
+  "originalFailurePreserved": true,
+  "originalEvidence": "/home/runner/work/_temp/runtime/backroad-rally-normal/install-failure",
+  "settingsChanged": false,
+  "installRetried": false,
+  "maximumSeconds": 120,
+  "actions": [],
+  "commands": [
+    {
+      "command": [
+        "/usr/local/lib/android/sdk/platform-tools/adb",
+        "shell",
+        "sha256sum",
+        "/data/app/vmdl431805986.tmp/base.apk"
+      ],
+      "startedAt": 1795124762.818608,
+      "outputPath": "before-stage-sha256.txt",
+      "maximumStdoutBytes": 65536,
+      "maximumStderrBytes": 8192,
+      "status": "command-failed",
+      "exitCode": 1,
+      "endedAt": 1795124762.8798773,
+      "stderr": "sha256sum: /data/app/vmdl431805986.tmp/base.apk: Permission denied\n",
+      "output": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "captures": [
+    {
+      "path": "before-details/report.json",
+      "bytes": 4570,
+      "sha256": "ff9dd249ccaef904dc3183e14c4dc5841f08e6afc3ef2cb351d16d1a18a97ac2",
+      "elapsedSeconds": 3.9793374369999697,
+      "originalFailurePreserved": true,
+      "uiActionsSent": false,
+      "settingsChanged": false
+    }
+  ],
+  "errorType": "ValueError",
+  "error": "ADB observation/action failed: before-stage-sha256.txt",
+  "executedSources": {
+    "executed-install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "executed-install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    }
+  },
+  "elapsedSeconds": 4.215114397999969,
+  "uiActionsSent": false
+}

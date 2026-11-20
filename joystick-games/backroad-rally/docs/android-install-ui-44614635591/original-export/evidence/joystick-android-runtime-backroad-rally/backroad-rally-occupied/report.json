@@ -1,0 +1,75 @@
+{
+  "game": "backroad-rally",
+  "targetPackage": "com.ecojust.joystick.backroadrally",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": true,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "cf26e19bf57524a9c4ce53ea77bd30824cbcd54d",
+  "apk": {
+    "path": "/home/runner/work/_temp/input/packages/backroad-rally/backroad-rally-0.1.0.apk",
+    "bytes": 105020455,
+    "sha256": "8596350c7868352a9494d0667037ef4a75709af25cf50066df137bab3bcd8808"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/input/observers/backroad-rally/observer-backroad-rally.apk",
+    "bytes": 16783,
+    "sha256": "ab4fad81fd8540ba0caedb3d8079b2ac7b8cca5caf367e7a94eaee09434f3c93"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 51354,
+      "sha256": "25964d58eea9d6a5c246a3dc71844a8f4eac0185311dbe1a0e977576f26f0eb6"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11264,
+      "sha256": "c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 12693,
+      "sha256": "3bf677cf2634fe364325e37a1439afab82a8a1f993efa77b64d56e14fe10bb8d"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 5102,
+      "sha256": "da42981df65741d793be59a96dba330226ddb885c9bf186b968eafef8f78a569"
+    },
+    "joystick-games/backroad-rally/qa-plan.json": {
+      "bytes": 11349,
+      "sha256": "5f4fb706e25787f4daacf8771e0e045d9175d542a914a38b06fa9a262a0858cb"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 7735,
+      "sha256": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d"
+    }
+  },
+  "tests": [],
+  "snapshots": [],
+  "captures": [],
+  "installFailureEvidence": {
+    "path": "install-failure/report.json",
+    "bytes": 4573,
+    "sha256": "f420200b4855e6b9a1790dbce047ecb6cd9534d2fc73da6ca2eb115fcf987c17",
+    "elapsedSeconds": 2.564572859000009,
+    "originalFailurePreserved": true,
+    "uiActionsSent": false,
+    "settingsChanged": false
+  },
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 851, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 483, in setup\n    self.command('install', '-r', str(self.args.apk))\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 270, in command\n    result = subprocess.run(record['command'], capture_output=True, check=False, timeout=timeout)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 550, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 1209, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 2116, in _communicate\n    self._check_timeout(endtime, orig_timeout, stdout, stderr)\n  File \"/usr/lib/python3.12/subprocess.py\", line 1253, in _check_timeout\n    raise TimeoutExpired(\nsubprocess.TimeoutExpired: Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'install', '-r', '/home/runner/work/_temp/input/packages/backroad-rally/backroad-rally-0.1.0.apk']' timed out after 240 seconds\n",
+  "finishedAt": 1795123172.0013623
+}

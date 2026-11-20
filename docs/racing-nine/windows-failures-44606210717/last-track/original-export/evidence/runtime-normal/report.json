@@ -1,0 +1,1982 @@
+{
+  "status": "failed",
+  "game": "last-track",
+  "platform": "windows",
+  "qaSourceCommit": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+  "startedAt": "2026-11-19T20:15:10.325236+00:00",
+  "method": "Actual Win32/WebView2 app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostics. No model/time/storage writes.",
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "tests": [
+    {
+      "name": "Native DPI-scaled minimum and initial viewport",
+      "status": "failed",
+      "error": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 204, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 105, in window_bounds\n    self.screenshot('minimum-window.png');before=self.read()\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 213, in screenshot\n    if p.is_file() and p.stat().st_size>1000:self.report['screenshots'].append({'path':'diagnostics/'+name,'bytes':p.stat().st_size,'sha256':digest(p)});return\n                                                                                                                                             ^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 13, in digest\n    def digest(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()\n                                        ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\pathlib.py\", line 1019, in read_bytes\n    with self.open(mode='rb') as f:\n         ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\pathlib.py\", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nPermissionError: [Errno 13] Permission denied: 'D:\\\\a\\\\_temp\\\\runtime-normal\\\\diagnostics\\\\minimum-window.png'\n"
+    }
+  ],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [
+    {
+      "label": "Actual renderer initialized",
+      "at": "2026-11-19T20:15:27.698253+00:00",
+      "state": {
+        "active": true,
+        "clientPixels": {
+          "height": 720,
+          "width": 1280
+        },
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "en",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "Last Track",
+          "url": "https://puretv.local/tv.html",
+          "webglError": false,
+          "width": 1280
+        },
+        "game": {
+          "audioState": "suspended",
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {
+              "appVersion": "0.1.0",
+              "language": "zh",
+              "platform": "windows",
+              "preferences": {},
+              "qr": "",
+              "storageKeys": [
+                "lasttrack.save.v1",
+                "lasttrack.settings",
+                "lasttrack.quality",
+                "lasttrack.started",
+                "lasttrack.save.v1.corrupt"
+              ],
+              "storageMaxBytes": 1048576,
+              "storageMaxTotalBytes": 67108864,
+              "url": "",
+              "wifiController": {
+                "addresses": [
+                  "10.1.0.104",
+                  "172.18.176.1"
+                ],
+                "inputEnabled": true,
+                "port": 63485,
+                "serviceName": "Last Track · 末路战车-7136",
+                "state": "available"
+              }
+            },
+            "inputAvailable": true,
+            "native": true,
+            "players": [],
+            "pollCount": 2,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "errors": [],
+          "frames": 2,
+          "game": "last-track",
+          "gameplay": {
+            "activeWeapon": 0,
+            "ammo": 0,
+            "armor": 0,
+            "cash": 5000,
+            "controls": {
+              "brake": false,
+              "cycle": false,
+              "drift": false,
+              "fire": false,
+              "left": false,
+              "nitro": false,
+              "right": false,
+              "throttle": false
+            },
+            "countdown": 0,
+            "drift": 0,
+            "heading": 0,
+            "lap": 0,
+            "menuFocus": "NEW GAMEPick a car, start with $5,000",
+            "modal": false,
+            "nitro": 0,
+            "nitroOn": false,
+            "phase": "menu",
+            "projectiles": 0,
+            "quality": "med",
+            "screen": "title",
+            "speed": 0,
+            "tick": 0,
+            "time": 0,
+            "x": 0,
+            "y": 0
+          },
+          "paused": false,
+          "renderer": "webgl2",
+          "stage": "menu",
+          "webglVersion": 2
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 2,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 2
+        },
+        "lastJavaScriptError": "",
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "windows",
+          "preferences": {},
+          "qr": "",
+          "storageKeys": [
+            "lasttrack.save.v1",
+            "lasttrack.settings",
+            "lasttrack.quality",
+            "lasttrack.started",
+            "lasttrack.save.v1.corrupt"
+          ],
+          "storageMaxBytes": 1048576,
+          "storageMaxTotalBytes": 67108864,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "10.1.0.104",
+              "172.18.176.1"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "Last Track · 末路战车-7136",
+            "state": "available"
+          }
+        },
+        "storage": {
+          "current": {
+            "lasttrack.quality": null,
+            "lasttrack.save.v1": null,
+            "lasttrack.save.v1.corrupt": null,
+            "lasttrack.settings": null,
+            "lasttrack.started": null
+          },
+          "initial": {
+            "lasttrack.quality": null,
+            "lasttrack.save.v1": null,
+            "lasttrack.save.v1.corrupt": null,
+            "lasttrack.settings": null,
+            "lasttrack.started": null
+          },
+          "origin": "https://puretv.local"
+        },
+        "timestamp": 673.156,
+        "windowDpi": 96
+      }
+    },
+    {
+      "label": "Foreground game ready",
+      "at": "2026-11-19T20:15:27.703252+00:00",
+      "state": {
+        "active": true,
+        "clientPixels": {
+          "height": 720,
+          "width": 1280
+        },
+        "document": {
+          "controllerClients": [],
+          "height": 720,
+          "language": "en",
+          "primaryText": "",
+          "scrollHeight": 720,
+          "scrollWidth": 1280,
+          "title": "Last Track",
+          "url": "https://puretv.local/tv.html",
+          "webglError": false,
+          "width": 1280
+        },
+        "game": {
+          "audioState": "suspended",
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {
+              "appVersion": "0.1.0",
+              "language": "zh",
+              "platform": "windows",
+              "preferences": {},
+              "qr": "",
+              "storageKeys": [
+                "lasttrack.save.v1",
+                "lasttrack.settings",
+                "lasttrack.quality",
+                "lasttrack.started",
+                "lasttrack.save.v1.corrupt"
+              ],
+              "storageMaxBytes": 1048576,
+              "storageMaxTotalBytes": 67108864,
+              "url": "",
+              "wifiController": {
+                "addresses": [
+                  "10.1.0.104",
+                  "172.18.176.1"
+                ],
+                "inputEnabled": true,
+                "port": 63485,
+                "serviceName": "Last Track · 末路战车-7136",
+                "state": "available"
+              }
+            },
+            "inputAvailable": true,
+            "native": true,
+            "players": [],
+            "pollCount": 2,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "errors": [],
+          "frames": 2,
+          "game": "last-track",
+          "gameplay": {
+            "activeWeapon": 0,
+            "ammo": 0,
+            "armor": 0,
+            "cash": 5000,
+            "controls": {
+              "brake": false,
+              "cycle": false,
+              "drift": false,
+              "fire": false,
+              "left": false,
+              "nitro": false,
+              "right": false,
+              "throttle": false
+            },
+            "countdown": 0,
+            "drift": 0,
+            "heading": 0,
+            "lap": 0,
+            "menuFocus": "NEW GAMEPick a car, start with $5,000",
+            "modal": false,
+            "nitro": 0,
+            "nitroOn": false,
+            "phase": "menu",
+            "projectiles": 0,
+            "quality": "med",
+            "screen": "title",
+            "speed": 0,
+            "tick": 0,
+            "time": 0,
+            "x": 0,
+            "y": 0
+          },
+          "paused": false,
+          "renderer": "webgl2",
+          "stage": "menu",
+          "webglVersion": 2
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 2,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 2
+        },
+        "lastJavaScriptError": "",
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "windows",
+          "preferences": {},
+          "qr": "",
+          "storageKeys": [
+            "lasttrack.save.v1",
+            "lasttrack.settings",
+            "lasttrack.quality",
+            "lasttrack.started",
+            "lasttrack.save.v1.corrupt"
+          ],
+          "storageMaxBytes": 1048576,
+          "storageMaxTotalBytes": 67108864,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "10.1.0.104",
+              "172.18.176.1"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "Last Track · 末路战车-7136",
+            "state": "available"
+          }
+        },
+        "storage": {
+          "current": {
+            "lasttrack.quality": null,
+            "lasttrack.save.v1": null,
+            "lasttrack.save.v1.corrupt": null,
+            "lasttrack.settings": null,
+            "lasttrack.started": null
+          },
+          "initial": {
+            "lasttrack.quality": null,
+            "lasttrack.save.v1": null,
+            "lasttrack.save.v1.corrupt": null,
+            "lasttrack.settings": null,
+            "lasttrack.started": null
+          },
+          "origin": "https://puretv.local"
+        },
+        "timestamp": 673.156,
+        "windowDpi": 96
+      }
+    },
+    {
+      "label": "Actual minimum logical viewport",
+      "at": "2026-11-19T20:15:29.549237+00:00",
+      "state": {
+        "active": true,
+        "clientPixels": {
+          "height": 540,
+          "width": 960
+        },
+        "document": {
+          "controllerClients": [],
+          "height": 540,
+          "language": "en",
+          "primaryText": "",
+          "scrollHeight": 540,
+          "scrollWidth": 960,
+          "title": "Last Track",
+          "url": "https://puretv.local/tv.html",
+          "webglError": false,
+          "width": 960
+        },
+        "game": {
+          "audioState": "suspended",
+          "controller": {
+            "buttons": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "cancelled": false,
+            "connected": false,
+            "info": {
+              "appVersion": "0.1.0",
+              "language": "zh",
+              "platform": "windows",
+              "preferences": {},
+              "qr": "",
+              "storageKeys": [
+                "lasttrack.save.v1",
+                "lasttrack.settings",
+                "lasttrack.quality",
+                "lasttrack.started",
+                "lasttrack.save.v1.corrupt"
+              ],
+              "storageMaxBytes": 1048576,
+              "storageMaxTotalBytes": 67108864,
+              "url": "",
+              "wifiController": {
+                "addresses": [
+                  "10.1.0.104",
+                  "172.18.176.1"
+                ],
+                "inputEnabled": true,
+                "port": 63485,
+                "serviceName": "Last Track · 末路战车-7136",
+                "state": "available"
+              }
+            },
+            "inputAvailable": true,
+            "native": true,
+            "players": [],
+            "pollCount": 4,
+            "pressed": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "A": false,
+              "B": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "UP": false,
+              "X": false,
+              "Y": false
+            },
+            "source": ""
+          },
+          "errors": [],
+          "frames": 4,
+          "game": "last-track",
+          "gameplay": {
+            "activeWeapon": 0,
+            "ammo": 0,
+            "armor": 0,
+            "cash": 5000,
+            "controls": {
+              "brake": false,
+              "cycle": false,
+              "drift": false,
+              "fire": false,
+              "left": false,
+              "nitro": false,
+              "right": false,
+              "throttle": false
+            },
+            "countdown": 0,
+            "drift": 0,
+            "heading": 0,
+            "lap": 0,
+            "menuFocus": "NEW GAMEPick a car, start with $5,000",
+            "modal": false,
+            "nitro": 0,
+            "nitroOn": false,
+            "phase": "menu",
+            "projectiles": 0,
+            "quality": "med",
+            "screen": "title",
+            "speed": 0,
+            "tick": 0,
+            "time": 0,
+            "x": 0,
+            "y": 0
+          },
+          "paused": false,
+          "renderer": "webgl2",
+          "stage": "menu",
+          "webglVersion": 2
+        },
+        "input": {
+          "connections": 0,
+          "inputEnabled": true,
+          "players": [
+            {
+              "a": false,
+              "aimX": 0,
+              "aimY": 0,
+              "b": false,
+              "buttonCounters": {
+                "A": 0,
+                "B": 0,
+                "DOWN": 0,
+                "LEFT": 0,
+                "RIGHT": 0,
+                "START": 0,
+                "UP": 0,
+                "X": 0,
+                "Y": 0
+              },
+              "buttons": {
+                "A": false,
+                "B": false,
+                "DOWN": false,
+                "LEFT": false,
+                "RIGHT": false,
+                "START": false,
+                "UP": false,
+                "X": false,
+                "Y": false
+              },
+              "cancelSeq": 2,
+              "connected": false,
+              "controllerId": "",
+              "id": 1,
+              "pulseCounters": {
+                "a": 0,
+                "b": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0,
+                "start": 0,
+                "up": 0
+              },
+              "select": false,
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "revision": 2
+        },
+        "lastJavaScriptError": "",
+        "processArchitecture": "x86_64",
+        "ready": true,
+        "server": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "windows",
+          "preferences": {},
+          "qr": "",
+          "storageKeys": [
+            "lasttrack.save.v1",
+            "lasttrack.settings",
+            "lasttrack.quality",
+            "lasttrack.started",
+            "lasttrack.save.v1.corrupt"
+          ],
+          "storageMaxBytes": 1048576,
+          "storageMaxTotalBytes": 67108864,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "10.1.0.104",
+              "172.18.176.1"
+            ],
+            "inputEnabled": true,
+            "port": 63485,
+            "serviceName": "Last Track · 末路战车-7136",
+            "state": "available"
+          }
+        },
+        "storage": {
+          "current": {
+            "lasttrack.quality": null,
+            "lasttrack.save.v1": null,
+            "lasttrack.save.v1.corrupt": null,
+            "lasttrack.settings": null,
+            "lasttrack.started": null
+          },
+          "initial": {
+            "lasttrack.quality": null,
+            "lasttrack.save.v1": null,
+            "lasttrack.save.v1.corrupt": null,
+            "lasttrack.settings": null,
+            "lasttrack.started": null
+          },
+          "origin": "https://puretv.local"
+        },
+        "timestamp": 674.89,
+        "windowDpi": 96
+      }
+    }
+  ],
+  "screenshots": [],
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "webgl2",
+    "storageRestartRequired": true,
+    "pauseStablePaths": [
+      "gameplay.x",
+      "gameplay.y",
+      "gameplay.time",
+      "gameplay.ammo",
+      "gameplay.armor",
+      "gameplay.cash"
+    ],
+    "steps": [
+      {
+        "name": "Focus settings from original New Game focus",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 16,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.menuFocus",
+            "op": "eq",
+            "value": "SETTINGSGraphics · audio · controls"
+          }
+        ]
+      },
+      {
+        "name": "Open original settings",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.modal",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Focus original Low preset",
+        "keys": [
+          "LEFT"
+        ],
+        "holdMs": 16,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.menuFocus",
+            "op": "eq",
+            "value": "LOW"
+          }
+        ]
+      },
+      {
+        "name": "Select original Low preset",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.quality",
+            "op": "eq",
+            "value": "low"
+          }
+        ]
+      },
+      {
+        "name": "Close settings",
+        "keys": [
+          "B"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.modal",
+            "op": "eq",
+            "value": false
+          }
+        ]
+      },
+      {
+        "name": "Focus New Game",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 16,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "title"
+          }
+        ]
+      },
+      {
+        "name": "Start new game normally",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "carSelect"
+          }
+        ]
+      },
+      {
+        "name": "Confirm original car choice",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "garage"
+          }
+        ]
+      },
+      {
+        "name": "Move from armor purchase to engine purchase",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 16,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.menuFocus",
+            "op": "eq",
+            "value": "$1,200"
+          }
+        ]
+      },
+      {
+        "name": "Move from engine purchase to tyre purchase",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 16,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.menuFocus",
+            "op": "eq",
+            "value": "$1,200"
+          }
+        ]
+      },
+      {
+        "name": "Move to original track-selection action",
+        "keys": [
+          "DOWN"
+        ],
+        "holdMs": 16,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.menuFocus",
+            "op": "eq",
+            "value": "TO THE TRACK"
+          }
+        ]
+      },
+      {
+        "name": "Open track selection",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "trackSelect"
+          }
+        ]
+      },
+      {
+        "name": "Select first unlocked track",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "raceSettings"
+          }
+        ]
+      },
+      {
+        "name": "Next original setup screen",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.menuFocus",
+            "op": "eq",
+            "value": "START RACE"
+          }
+        ]
+      },
+      {
+        "name": "Start race and wait for original countdown",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.phase",
+            "op": "eq",
+            "value": "racing"
+          },
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      },
+      {
+        "name": "Accelerate original simulation",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 3000,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "changed"
+          },
+          {
+            "path": "gameplay.speed",
+            "op": "gt",
+            "value": 2
+          }
+        ]
+      },
+      {
+        "name": "Fire the original machine gun",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 600,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.ammo",
+            "op": "lt",
+            "value": 200
+          }
+        ]
+      },
+      {
+        "name": "Turn and drift with independent B",
+        "keys": [
+          "UP",
+          "RIGHT",
+          "B"
+        ],
+        "holdMs": 800,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.heading",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Use independent nitro Y",
+        "keys": [
+          "UP",
+          "Y"
+        ],
+        "holdMs": 500,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "gameplay.nitro",
+            "op": "lt",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "name": "Pause explicitly",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "paused"
+          }
+        ]
+      },
+      {
+        "name": "Resume explicitly",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 30,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      }
+    ]
+  },
+  "binarySha256": "0dc50cc5852b8051a1223ea26abcb03c568e88808b59f41145c57327ee6a22d3",
+  "sourceHashes": {
+    "joystick-games\\tools\\windows-verify.py": "5b235e7bdf55b8cde2d64bbe2a765fb7b7b2c1522258eae27a28c5636397c755",
+    "joystick-games\\tools\\macos-verify.py": "2db317fa9672df20992af6b4d6a31f9910e2876e4644c0cffca6b99df8709290",
+    "joystick-games\\tools\\qa-plan.py": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+    "puretv-joystick\\joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games\\last-track\\qa-plan.json": "2dda477fb4acaaa0773a3c8682d57ff7973a37beca167ae8cf142b19414ad10e",
+    "joystick-games/tools/windows-display.py": "3a4bca5a17fd0cf33385812678d00dfd0cdde39d59f3342d906f5fb7b7b9ced1",
+    "joystick-games/tools/windows-observation.py": "4a0c015cfffbb4d5238d6d3b03a0bc69eeb939bbddf3209e9312eaedeaf2d9c8"
+  },
+  "nativeDisplay": {
+    "status": "prepared",
+    "method": "EnumDisplaySettingsExW, CDS_TEST, temporary ChangeDisplaySettingsExW; original mode restored in finally",
+    "persistentRegistryChange": false,
+    "before": {
+      "currentMode": {
+        "width": 1024,
+        "height": 768,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 544997536,
+        "rawDevModeHex": "4300440044000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc000000a0007c20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600020000000000400000003000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "screenPixels": [
+        1024,
+        768
+      ],
+      "virtualScreenPixels": [
+        1024,
+        768
+      ],
+      "workArea": {
+        "left": 0,
+        "top": 0,
+        "right": 1024,
+        "bottom": 728
+      }
+    },
+    "enumeratedModes": [
+      {
+        "width": 640,
+        "height": 480,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000080020000e001000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 800,
+        "height": 600,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000200300005802000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1024,
+        "height": 768,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000400000003000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1152,
+        "height": 864,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000800400006003000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1280,
+        "height": 720,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000050000d002000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1280,
+        "height": 800,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000500002003000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1280,
+        "height": 1024,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000500000004000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1366,
+        "height": 768,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000560500000003000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000a00500008403000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1600,
+        "height": 900,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000400600008403000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1600,
+        "height": 1200,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000040060000b004000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1680,
+        "height": 1050,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000900600001a04000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 8126592,
+        "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000800700003804000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "selectedMode": {
+      "width": 1600,
+      "height": 900,
+      "bitsPerPixel": 32,
+      "frequency": 64,
+      "orientation": 0,
+      "displayFlags": 0,
+      "dmFields": 8126592,
+      "rawDevModeHex": "6300640064000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc00000080007c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000400600008403000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "testReturnCode": 0,
+    "applyReturnCode": 0,
+    "after": {
+      "currentMode": {
+        "width": 1600,
+        "height": 900,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 544997536,
+        "rawDevModeHex": "4300440044000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc000000a0007c20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600020000000400600008403000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "screenPixels": [
+        1600,
+        900
+      ],
+      "virtualScreenPixels": [
+        1600,
+        900
+      ],
+      "workArea": {
+        "left": 0,
+        "top": 0,
+        "right": 1600,
+        "bottom": 860
+      }
+    },
+    "restoreReturnCode": 0,
+    "restored": {
+      "currentMode": {
+        "width": 1024,
+        "height": 768,
+        "bitsPerPixel": 32,
+        "frequency": 64,
+        "orientation": 0,
+        "displayFlags": 0,
+        "dmFields": 544997536,
+        "rawDevModeHex": "4300440044000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001040104dc000000a0007c20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600020000000000400000003000000000000400000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "screenPixels": [
+        1024,
+        768
+      ],
+      "virtualScreenPixels": [
+        1024,
+        768
+      ],
+      "workArea": {
+        "left": 0,
+        "top": 0,
+        "right": 1024,
+        "bottom": 728
+      }
+    },
+    "originalModeRestored": true
+  },
+  "diagnosticReadErrors": [
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    },
+    {
+      "attempt": 1,
+      "exception": "FileNotFoundError",
+      "message": "[WinError 2] The system cannot find the file specified.",
+      "winerror": 2
+    }
+  ],
+  "nativeWindowSetup": {
+    "originalOuterPixels": {
+      "left": 78,
+      "top": 78,
+      "right": 1374,
+      "bottom": 837
+    },
+    "originalClientPixels": {
+      "height": 720,
+      "width": 1280
+    },
+    "originalDocumentViewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "windowDpi": 96,
+    "resizeFlags": 22,
+    "resizeFlagsMeaning": "SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE"
+  },
+  "error": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 161, in run\n    self.check('Native DPI-scaled minimum and initial viewport',self.window_bounds)\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 204, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 105, in window_bounds\n    self.screenshot('minimum-window.png');before=self.read()\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 213, in screenshot\n    if p.is_file() and p.stat().st_size>1000:self.report['screenshots'].append({'path':'diagnostics/'+name,'bytes':p.stat().st_size,'sha256':digest(p)});return\n                                                                                                                                             ^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 13, in digest\n    def digest(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()\n                                        ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\pathlib.py\", line 1019, in read_bytes\n    with self.open(mode='rb') as f:\n         ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\pathlib.py\", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nPermissionError: [Errno 13] Permission denied: 'D:\\\\a\\\\_temp\\\\runtime-normal\\\\diagnostics\\\\minimum-window.png'\n",
+  "finishedAt": "2026-11-19T20:15:34.125634+00:00"
+}

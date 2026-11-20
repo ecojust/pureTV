@@ -1,0 +1,48 @@
+{
+  "status": "passed-independent-static-review",
+  "reviewedAt": "2026-11-19T23:13:32.580625+00:00",
+  "baseline": "b5c04521a0a5222c9efb2ac770acc8e62fcb5f43",
+  "sources": {
+    "joystick-games/tools/windows-inputs.py": {
+      "bytes": 18670,
+      "sha256": "ceeee894793c98445f491c64440a985633c6489b7110368be6d02e0e7b36132f"
+    },
+    "joystick-games/shared/windows/tests/source-scope.test.py": {
+      "bytes": 27478,
+      "sha256": "7dc4a11f9d49554a2944144963c6515998be35ba48985a5264d5b6eac1a389f0"
+    }
+  },
+  "ownerVerification": {
+    "bytes": 1374,
+    "sha256": "b099b720df83918632adc04f6aa7fa8e3f7f99c4b051e7bfebe5593098272176"
+  },
+  "astVerification": {
+    "wholeSelectorAstRecoveredAfterRevertingOnlyPlatformGuardAndTwoMessages": true,
+    "wholeOriginalTestsAstRecoveredAfterRemovingOneFixtureAndThreeTests": true
+  },
+  "findings": [],
+  "review": [
+    "The only semantic selector change permits explicit github-release-asset records for android in addition to macos. Windows remote storage remains unsupported. Android retains exact single file descriptor, .apk suffix, safe basename, lowercase SHA256/positive integer byte count, game/version tag, exact ecojust/pureTV URL with no query/fragment, positive integer release/asset IDs, and rejection of any local file/directory/dangling symlink at the declared path.",
+    "Remote records are metadata only and never enter declared local output/exclusion results. Complete Git selection still rejects a tracked-but-missing package/source path. This change does not silently exempt a remote-looking source file.",
+    "Optional android directory permits only a source-bound README plus exact SHA256SUMS entries for declared remote APK; unknown build.mjs/other content, altered checksum, extra node, symlink and path aliases remain rejected. Original local APK/ZIP/DMG/EXE hash, content format and file-completeness checks are unchanged.",
+    "Three new tests cover exact Android remote identity/invalid ID/version/path/url/storage/hash/size, conflicts with local file/directory/link, checksum mismatch, missing tracked input and undeclared source in android index. Old test bodies/helpers remain unchanged."
+  ],
+  "tests": {
+    "ownerRecordedCommand": "TMPDIR=/dev/shm PYTHONDONTWRITEBYTECODE=1 python3 -B joystick-games/shared/windows/tests/source-scope.test.py",
+    "ownerRecordedPassed": 35,
+    "ownerRecordedExitCode": 0,
+    "ownerRecordedSeconds": 0.393,
+    "reviewerReran": false,
+    "evidenceKind": "Root verification.json and corresponding source review; no independent native/platform test run"
+  },
+  "limits": [
+    "This is source selection support, not remote package validation or publication. It neither downloads nor verifies a Release asset.",
+    "No actual new Backroad published Android metadata exists in this check. Root reports Android publication paused after a visual issue; this review does not grant delivery or upload acceptance."
+  ],
+  "actions": {
+    "sourceEdited": false,
+    "packageEdited": false,
+    "networkOrPost": false,
+    "platformBuildRerun": false
+  }
+}

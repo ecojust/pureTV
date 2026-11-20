@@ -1,0 +1,40 @@
+{
+  "scope": "Pure Python read-only QA transport correction; no game/APK/Observer changes.",
+  "originalFailureSourceBindings": {
+    "run.py": {
+      "bytes": 45715,
+      "sha256": "8c59d19cf55ee793f3a09ff7671062e8eeecbc74144884a1a79461d14390eaaf"
+    },
+    "src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11264,
+      "sha256": "c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305"
+    },
+    "test_runner.py": {
+      "bytes": 27720,
+      "sha256": "11fcb66558427c88faf2bdfa73e444b34164cac8835b0e53322201cc8ed8bd54"
+    }
+  },
+  "observerBytesUnchanged": true,
+  "signedApkUnchanged": "e6a535e00f76f5b3f52f3a79a65a29ea0358896f1b8b56da0c57d7f3aa378b4c",
+  "newTests": 8,
+  "totalSharedTestsPassed": 35,
+  "firstLocalAttempt": "34/35 passed; existing historical WebGL fixture failed because sparse checkout omitted bubble-nebula/qa-plan.json. Original failure log retained.",
+  "completeTestMethod": "Same 35 tests executed unchanged from isolated copied current QA sources plus four historical plans fetched at their frozen Git blob identities. No global sparse changes and no skipped assertions.",
+  "bounds": {
+    "maximumSnapshotAttempts": 3,
+    "maximumSnapshotWallSeconds": 45,
+    "maximumRequestSeconds": 15,
+    "outerWaitBudgetPropagated": true
+  },
+  "behavior": [
+    "Every transport failure logged with exception and attempt; recovered response explicitly recorded.",
+    "Only new GET responses can be returned; no fallback to previous snapshots.",
+    "HTTP/JSON errors are not retried. Current service port, game identity, model assertions and screenshot requirements remain strict."
+  ],
+  "fixSources": {
+    "run.py": "ce59cc77af57206a40bc9119e5ff74df7b2522808111141618c8a65c3b667a0e",
+    "test_runner.py": "473d950bc9ec150a4beb4774ca6be84d4a4690b007cad6e5947bfeabb533c7e3"
+  },
+  "nativeRerunPerformed": false,
+  "nativeRerunPassed": false
+}

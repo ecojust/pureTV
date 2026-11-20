@@ -111,9 +111,9 @@ export async function installPlatformTools(onProgress: (progress: DownloadProgre
   const progress = new Channel<DownloadProgress>(onProgress);
   return invoke<Snapshot>('install_platform_tools', { acceptedLicense: true, onProgress: progress, ...(forceDownload?{forceDownload:true}:{}) });
 }
-export async function openResource(resource: 'catalog' | 'market' | 'forum' | 'forumCreate' | 'repository' | 'releases' | 'platformTools' | 'platformToolsLicense'): Promise<void> {
+export async function openResource(resource: 'catalog' | 'market' | 'client' | 'forum' | 'forumCreate' | 'repository' | 'releases' | 'platformTools' | 'platformToolsLicense'): Promise<void> {
   if (demo || !desktop) {
-    const url = resource === 'repository' ? 'https://github.com/ecojust/pureTV' : resource === 'forumCreate' ? 'https://gitee.com/juzisang331/pure-tv-store/issues/new' : resource === 'forum' ? 'https://gitee.com/juzisang331/pure-tv-store/issues' : resource === 'market' ? 'https://gitee.com/juzisang331/pure-tv-store' : resource === 'catalog' ? 'https://github.com/ecojust/pureTV/tree/master/resource' : resource === 'releases' ? 'https://github.com/ecojust/pureTV/releases' : resource === 'platformToolsLicense' ? 'https://developer.android.com/studio/terms' : 'https://developer.android.com/tools/releases/platform-tools';
+    const url = resource === 'repository' ? 'https://github.com/ecojust/pureTV' : resource === 'forumCreate' ? 'https://gitee.com/juzisang331/pure-tv-store/issues/new' : resource === 'forum' ? 'https://gitee.com/juzisang331/pure-tv-store/issues' : resource === 'client' ? 'https://apps.b14f.com/client/' : resource === 'market' ? 'https://apps.b14f.com/launcher/' : resource === 'catalog' ? 'https://github.com/ecojust/pureTV/tree/master/resource' : resource === 'releases' ? 'https://github.com/ecojust/pureTV/releases' : resource === 'platformToolsLicense' ? 'https://developer.android.com/studio/terms' : 'https://developer.android.com/tools/releases/platform-tools';
     window.open(url, '_blank', 'noopener,noreferrer'); return;
   }
   await invoke('open_resource', { resource });
@@ -191,7 +191,7 @@ export async function checkClientUpdate(): Promise<ClientUpdateInfo> {
   if (demo) {
     await new Promise(resolve => setTimeout(resolve, 180));
     const parts = appVersion.split('.').map(Number), latestVersion = `${parts[0]}.${parts[1]}.${parts[2] + 1}`;
-    return { currentVersion: appVersion, platform: 'windows-x64', supported: true, status: 'available', available: true, latestVersion, revision: 'demo-client-revision', fileName: `pureTV-Manager-${latestVersion}-windows-x64-setup.exe`, bytes: 2097152, sourceUrl: 'https://gitee.com/juzisang331/pure-tv-store', checkedAt: Date.now() };
+    return { currentVersion: appVersion, platform: 'windows-x64', supported: true, status: 'available', available: true, latestVersion, revision: 'demo-client-revision', fileName: `pureTV-Manager-${latestVersion}-windows-x64-setup.exe`, bytes: 2097152, sourceUrl: 'https://apps.b14f.com/client/', checkedAt: Date.now() };
   }
   if (!desktop) throw new Error(unavailable);
   return invoke<ClientUpdateInfo>('check_client_update');
@@ -234,10 +234,10 @@ export async function watchMcp(operation: (value: McpOperation) => void, progres
 }
 
 const demoMarket: MarketCatalog = {
-  sourceUrl: 'https://gitee.com/juzisang331/pure-tv-store', revision: 'demo', fetchedAt: Date.now(), stale: false,
+  sourceUrl: 'https://apps.b14f.com/', revision: 'demo', fetchedAt: Date.now(), stale: false,
   items: [
-    {id: 'apps/media/demo/Demo-Music-1.0.apk', kind: 'app', name: 'Demo Music', provider: 'Demo Studio', version: '1.0', fileName: 'Demo-Music-1.0.apk', bytes: 4194304, blobSha: 'demo-music', folderUrl: ''},
-    {id: 'apps/game/demo/Demo-Game-1.0.apk', kind: 'app', name: 'Demo Game', provider: 'Demo Games', version: '1.0', fileName: 'Demo-Game-1.0.apk', bytes: 786432, blobSha: 'demo-game', folderUrl: ''},
+    {id: 'media/demo/Demo-Music-1.0.apk', kind: 'app', name: 'Demo Music', provider: 'Demo Studio', version: '1.0', fileName: 'Demo-Music-1.0.apk', bytes: 4194304, blobSha: 'demo-music', folderUrl: ''},
+    {id: 'game/demo/Demo-Game-1.0.apk', kind: 'app', name: 'Demo Game', provider: 'Demo Games', version: '1.0', fileName: 'Demo-Game-1.0.apk', bytes: 786432, blobSha: 'demo-game', folderUrl: ''},
     {id: 'launcher/demo/Demo-Home-1.0.apk', kind: 'launcher', name: 'Demo Home', provider: 'Demo Home Team', version: '1.0', fileName: 'Demo-Home-1.0.apk', bytes: 786432, blobSha: 'demo-home', folderUrl: ''},
   ],
 };

@@ -1,0 +1,18 @@
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	﻿2026-11-19T21:09:55.6761689Z ##[group]Run $failed = 0
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6762010Z [36;1m$failed = 0[0m
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6762618Z [36;1mpython joystick-games/tools/windows-verify.py --game $env:GAME --app "$env:RUNNER_TEMP/install-verification/installed" --output "$env:RUNNER_TEMP/runtime-normal" *> "$env:RUNNER_TEMP/runtime-normal.log"[0m
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6763448Z [36;1mif ($LASTEXITCODE -ne 0) { $failed = 1 }[0m
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6764147Z [36;1mpython joystick-games/tools/windows-verify.py --game $env:GAME --app "$env:RUNNER_TEMP/install-verification/installed" --output "$env:RUNNER_TEMP/runtime-occupied" --occupy-default-port *> "$env:RUNNER_TEMP/runtime-occupied.log"[0m
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6764841Z [36;1mif ($LASTEXITCODE -ne 0) { $failed = 1 }[0m
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6765054Z [36;1mexit $failed[0m
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6796214Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6796501Z env:
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6796640Z   PYTHONUTF8: 1
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6796853Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6797427Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6797783Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6798090Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6798391Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6798628Z   GAME: backroad-rally
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:09:55.6798790Z ##[endgroup]
+verify (backroad-rally)	Actual original SDK gameplay normal and occupied port	2026-11-19T21:24:50.8961248Z ##[error]Process completed with exit code 1.

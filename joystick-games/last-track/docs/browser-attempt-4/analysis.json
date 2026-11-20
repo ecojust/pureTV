@@ -1,0 +1,37 @@
+{
+  "reviewedAt": "2026-11-19T19:44:47.549060+00:00",
+  "actualResult": "failed before driving; normal settings and new-car garage reached",
+  "reportSha256": "a32c24e40036d66b8d8e82e29b280fdd15829d72684925a7bcadbdc75d4c0926",
+  "error": [
+    "TimeoutError: page.waitForFunction: Timeout 60000ms exceeded."
+  ],
+  "cause": "QA incorrectly assumed first garage A goes to track. Original garage gives autofocus to first .btn-primary (armor buy), purchase succeeded; final cash3800/menuFocus$2,800. No actual source failure to open track was established.",
+  "originalSourceEvidence": [
+    "src/ui/screens/garage.js creates all three upgrade purchase buttons as btn-primary before TO THE TRACK",
+    "src/ui/dom.js focusFirst selects first enabled .btn-primary"
+  ],
+  "layoutIssue": "Full controller card covers upgrade buy buttons and cash in actual garage image",
+  "sourceFix": "Adapter compact identity card and reserved .screen-head space; original garage/purchases untouched",
+  "qaFix": "Three normal DOWN inputs confirmed by original DOM fixture at960 and1280",
+  "images": [
+    {
+      "path": "title-low-960.png",
+      "sha256": "20511673bb371bf2ee965fed6a84f8af97f09f0041e85e1480ed5ec4fd27b749",
+      "viewImageInspected": true,
+      "findings": [
+        "Title controls readable; controller panel hides some showroom background only"
+      ]
+    },
+    {
+      "path": "garage-960.png",
+      "sha256": "d8a549e1c0896ff41fc565b77d5b1172230f0d2381e08d86ba8844a338decb7b",
+      "viewImageInspected": true,
+      "findings": [
+        "Full pureTV panel visibly covers right-hand upgrade prices and cash; failed layout evidence preserved"
+      ]
+    }
+  ],
+  "gameplayTested": false,
+  "modelWrites": false,
+  "clockOverrides": false
+}

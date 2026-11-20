@@ -1,0 +1,41 @@
+{
+  "runId": 44615672670,
+  "qaSourceCommit": "c19a4c43e5bed83bf3187869655944bc0fc4c32a",
+  "originalJobsFile": "docs/racing-nine/native-readiness/ci-44615672670-attempt-1/monitor/20261119T211404Z-jobs.json",
+  "originalJobsSha256": "22cbed9e6e773c228788498d86cefa48ea4e1b640ab1b526c3cf3254f3d681d3",
+  "originalHelperSha256": "57432b5209545faa5bb1b759a671d69c71358108b35caf0a73a8e789271d57db",
+  "scope": "Read-only replay of exact frozen select_job against actual original in-progress GitHub jobs JSON. This is not an exported native capability error log; no native probes or game were executed by this replay.",
+  "results": [
+    {
+      "jobId": 135884522566,
+      "name": "verify (racing-01, backroad-rally, ponpoko-kart, night-racer, 14570673468, joystick-catalog-macos...",
+      "nameLength": 100,
+      "labels": [
+        "macos-latest"
+      ],
+      "runnerName": "GitHub Actions 1000011168",
+      "endsWithRequiredRunner": false,
+      "result": {
+        "replayException": "AssertionError",
+        "message": "Cannot identify exactly one current verification job"
+      }
+    },
+    {
+      "jobId": 135884522576,
+      "name": "verify (racing-01, backroad-rally, ponpoko-kart, night-racer, 14570673468, joystick-catalog-macos...",
+      "nameLength": 100,
+      "labels": [
+        "macos-15-intel"
+      ],
+      "runnerName": "GitHub Actions 1000011169",
+      "endsWithRequiredRunner": false,
+      "result": {
+        "replayException": "AssertionError",
+        "message": "Cannot identify exactly one current verification job"
+      }
+    }
+  ],
+  "proposedCorrection": "Add a short explicit verify job name to future runtime workflow: verify (${{ matrix.batch }}, ${{ matrix.runner }}). This satisfies the existing strict prefix/suffix checks without weakening identity.",
+  "originalRunCancelled": false,
+  "productionDispatchPerformed": false
+}

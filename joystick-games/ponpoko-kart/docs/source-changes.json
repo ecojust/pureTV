@@ -1,0 +1,92 @@
+{
+  "upstreamCommit": "88edb72d25c2f957431cc4d12547d3138d1bca48",
+  "baselineFileCount": 104,
+  "unchangedFileCount": 93,
+  "changes": [
+    {
+      "path": "src/upstream/src/core/Game.js",
+      "originalSha256": "036768a706bf319d6d74de195608a4149e19ad4a6fda29d3a3d94731971f5290",
+      "adaptedSha256": "3996929cbc1dd6cc0a174c7fde3c2e36b1683f7fdc6dce73842655b91c1a2a41",
+      "adaptedBytes": 21648,
+      "reason": "One native poll per original animation frame, read-only completion count, explicit pause/resume hooks and standard-gamepad disconnection cancellation; physics/rendering preserved. Before constructing the selected world, wait for its optional local road textures to decode. Pass the optional television shadow resolution to the selected world."
+    },
+    {
+      "path": "src/upstream/src/core/Input.js",
+      "originalSha256": "80984de0b5ddf6fe34199f9ddfcefa577cfb81891a370a0abe00efeab0ef029f",
+      "adaptedSha256": "f4246f0ac471dfa6f5b36bc575ca770789eb5476dcc52745006defdd86364612",
+      "adaptedBytes": 5990,
+      "reason": "Nine independent native keys, original keyboard and Gamepad retained, inactive menu/action quarantine, no rewarded release on cancellation."
+    },
+    {
+      "path": "src/upstream/src/core/Race.js",
+      "originalSha256": "5991ac840459e13c2927a72ef69945d0441db808c3f2914d8352c974a917eee9",
+      "adaptedSha256": "195d30a04f772d9a66a179ae73b155c7250834509db1c752446d0dafbe6445c5",
+      "adaptedBytes": 11132,
+      "reason": "Neutral pending player controls, pending item/jump latches and charged drift without calling reward-producing release; existing earned state preserved."
+    },
+    {
+      "path": "src/upstream/src/ui/UI.js",
+      "originalSha256": "bc8c0f1ef9463f4bea87318d326cc738315923ec2a74ae73e817434d5c98ed92",
+      "adaptedSha256": "90bd659a4eef9181a3efdc9b7d01e62e88c60e9f85fefdb432315df81ead852a",
+      "adaptedBytes": 64030,
+      "reason": "Remove runtime Google Fonts links; original families bundled locally. Original UI layout and visuals preserved."
+    },
+    {
+      "path": "src/upstream/src/core/Menus.js",
+      "originalSha256": "aa4ed90ad307a2f43491403eeed702e6648af8a430515ddf315085adeba103ea",
+      "adaptedSha256": "fbd0f0f8baddade39faa85b48014a5356e8f6d5665131b7a88e88c1e4c9af240",
+      "adaptedBytes": 14893,
+      "reason": "The TV entry supplies original item artwork and driver portraits baked from their 3D models. Other callers still generate them on demand."
+    },
+    {
+      "path": "src/upstream/src/core/Renderer.js",
+      "originalSha256": "7e1a035fb78e1a037a9ac9320941c96b532f4781b8725c613ff0a1024f3fc8b4",
+      "adaptedSha256": "850ae21b92f409834ff4f31a970ee5550885c077804e4c232527d2cf30289ba1",
+      "adaptedBytes": 10169,
+      "reason": "Choose a supported RGBA16F sample count or an RGBA8 scene target. Keep course color grading and effects; omit HDR bloom when half-float color attachments are unavailable."
+    },
+    {
+      "path": "src/upstream/src/world/Environment.js",
+      "originalSha256": "41579de0803488d30d5e2d64e2eb0243d966fe10b904bea85369c1f5406f9549",
+      "adaptedSha256": "2801f1ffe97386e76f260890756fbfcf8869dcd6983e76f4f6deda4dc7b95195",
+      "adaptedBytes": 1842,
+      "reason": "Dispose the optional sky reflection map only when created.Allow the TV entry to request 512px shadows on a named software renderer; the default remains 2048px."
+    },
+    {
+      "path": "src/upstream/src/world/Sky.js",
+      "originalSha256": "66ba5be49d4c7bee1e540fde12d128b6b9df40af8bbca01ec5a0de15fcafe210",
+      "adaptedSha256": "583817749ce18309c2ac932bbb0f82028053b6862dbf448b2632caf5490423ff",
+      "adaptedBytes": 11629,
+      "reason": "Use the original sky and direct lights on devices without half-float color render targets; skip the optional PMREM map."
+    },
+    {
+      "path": "src/upstream/src/world/Water.js",
+      "originalSha256": "8cb66a08d6f32826ac5fac497d66507c36e952bfe98b3139633e157989a62091",
+      "adaptedSha256": "7588cdefbaa2b5db196e33937a6dec9a29e83385c19f502c5538d5d9806e671d",
+      "adaptedBytes": 12070,
+      "reason": "Render planar water reflections using RGBA8 when half-float render targets are unavailable."
+    },
+    {
+      "path": "src/upstream/src/track/roadTextures.js",
+      "originalSha256": "17b231cf84ae653ad370313f2c71f8e8940ccaf724efafd07183d2acc172c549",
+      "reason": "Populate the original per-course texture cache from offline albedo and normal maps using the original sampling settings.",
+      "adaptedBytes": 12183,
+      "adaptedSha256": "723ecfed5fc827432946b476550b2e4e5c2cef096f74b84c56b7e0998fe8a02f"
+    },
+    {
+      "path": "src/upstream/src/core/World.js",
+      "originalSha256": "9380def4f13db0854bcbf73e81944e091aff11ba15802fd2bea7499166623edf",
+      "reason": "Pass the optional course shadow resolution to the environment.",
+      "adaptedBytes": 1697,
+      "adaptedSha256": "7952287c0b93eabcc44cab1f5322f83fb5aa81deac1077f3aca079103daf7782"
+    }
+  ],
+  "entry": "src/main.js supplies original Game/UI/menus/audio composition without upstream developer/autopilot hooks.",
+  "three": {
+    "version": "0.186.1",
+    "integrity": "sha512-blFeqb49wRCSGUGj7gtpfnSGHy2lwDk94RhUmS1c/hTby70kvChbWpkJ4Pm1390LqzzvTmzgXKHPEafJwCb8jA==",
+    "matchesOriginalLock": true
+  },
+  "tvArt": "src/menu-art/ contains nine 160px item icons and eight 256px driver portraits rendered with the pinned upstream src/items/icons.js renderItemIcons() and renderPortraits() defaults. Stored as lossless PNGs.",
+  "courseArt": "The six PNGs in src/track-art contain the original generated road materials. docs/course-textures.json records each authored seed, image and decoded RGBA SHA-256."
+}

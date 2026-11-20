@@ -1,0 +1,12 @@
+{
+  "automaticChecksPassed": true,
+  "coreInputAndMenuAcceptance": true,
+  "overallAcceptance": false,
+  "finding": "The original item inventory UI lives in #controls; hiding the whole touch-controls container also hid held-item icon/count/direction.",
+  "productionFix": "Hide only touch pedals/steering/reset/pause; preserve original btn-item and btn-item-b as noninteractive HUD with A/B labels. No item or physics rule changed.",
+  "requiresRetest": [
+    "item slot visible at 960 and 1280",
+    "original item pickup/use if attainable through normal driving",
+    "same controller and resume behavior with final display code"
+  ]
+}

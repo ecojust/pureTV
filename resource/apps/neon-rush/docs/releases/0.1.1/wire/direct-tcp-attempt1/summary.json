@@ -1,0 +1,90 @@
+{
+  "status": "passed",
+  "startedAt": "2026-11-12T16:47:03.332Z",
+  "finishedAt": "2026-11-12T16:47:47.098Z",
+  "method": "Real production WifiControllerServer on desktop JVM, actual newline JSON/ACK over loopback TCP; test-only synchronous HTTP native-bridge adapter feeds its snapshots to the actual browser game. No PureGame.key, model writes or clock overrides.",
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidNsdTested": false,
+  "syntheticNativeBridge": true,
+  "sourceAssetHashes": {
+    "assets-index.json": "6d11dc1dea59968278cbee0746d2f961762a0cb63653e964935315834c73770a",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "ddb9ed6beb2e983f7e10664fc825e22a3591ce8d8ad3dcff79aa4f2893e2b794",
+    "game-model.js": "f34fe5441f96b7bea33aa0e23fd12fa99ef9ee36b7e37a4448663d4468f8af13",
+    "game.js": "83d97ff6118897091b641f1abe496f7bee17f08f7bd34318d5e6043c58d1d45b",
+    "LICENSE.txt": "93a8777f8776e6aa280f486fb84a5a12b64fcb00d9b58086ee1cc203e7311a15",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "2a17981a7ddb4244ecea3845519508243c912ca02667d16504b6fd601beea518",
+    "rush-theme.css": "8b356b4647be895657682413422c83c58608faf467d36e1b58d57f02d187db81",
+    "THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+    "tv.css": "2572030056a405079866f27211f425c858c8c853cac2e699c58b85af69e03a6b",
+    "tv.html": "8927f9bbc609c4269e465bf9acd4a7e7e3d4c11505cf60218de7c7ea3e8f07cc"
+  },
+  "sourceHashes": {
+    "/workspace/pureTV/resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "266319a22f4d10f5ae3c788c04c67fbffe00eb1a97e06abb6ca2804430c1b833",
+    "/workspace/pureTV/resource/apps/neon-rush/tests/WifiWireHarness.java": "81cf100ab95e75c86fbe9aa94ba0367a22554bb0250bc1f2d786ce3b4a8e9c9f",
+    "/workspace/pureTV/resource/apps/neon-rush/tests/wifi-wire-smoke.mjs": "48c2585471d72aa2fa4c3ea500364937457313df52a5bda8132a34cabfe6077e",
+    "/workspace/pureTV/resource/apps/neon-rush/tests/automation.mjs": "d5b9c15b84dc1662605285c2d66bc400fdc4252738a7eb21ea77c58c5f3ba836",
+    "/workspace/pureTV/resource/apps/neon-rush/source/model.mjs": "b2055ccff50d952dfde11a7032c67a7efd6791b05d8578991993b9783968f6e8",
+    "/workspace/pureTV/resource/apps/neon-rush/source/tracks.mjs": "dbc7d87a93af4e2db9b9dd40b6f05b16171b3f79a1275efa1cc0289aeb95189c"
+  },
+  "tests": [
+    {
+      "name": "all nine keys acknowledge sync and first sync does not start",
+      "status": "passed",
+      "details": {
+        "acknowledgedKeys": 9,
+        "phase": "menu"
+      }
+    },
+    {
+      "name": "TCP START starts the actual game and all directions reach the bridge",
+      "status": "passed",
+      "details": {
+        "actualPhase": "playing"
+      }
+    },
+    {
+      "name": "real A/B TCP driving steers, drifts, releases mini turbo and consumes nitro",
+      "status": "passed",
+      "details": {
+        "stats": {
+          "drifts": 1,
+          "nitros": 1,
+          "miniBoosts": 1,
+          "collisions": 0,
+          "jumps": 0
+        },
+        "progress": 418.4546246445068
+      }
+    },
+    {
+      "name": "X/Y aliases control real drift and nitro after an ordinary keyboard restart",
+      "status": "passed",
+      "details": {
+        "stats": {
+          "drifts": 1,
+          "nitros": 1,
+          "miniBoosts": 1,
+          "collisions": 0,
+          "jumps": 0
+        }
+      }
+    },
+    {
+      "name": "disconnect cancels held input and pauses; reconnect sync cannot auto-resume or boost",
+      "status": "passed",
+      "details": {
+        "beforeTick": 912,
+        "pausedTick": 912,
+        "resumedTick": 918
+      }
+    }
+  ],
+  "rawReportSha256": "fee16d54b17a7dd0b5e7d2a557df83e02751c358d3e7e1960cf1e319d9f42e01",
+  "historicalOnly": "Before official SDK hello/ping/minimal ACK update; not evidence for current native protocol."
+}

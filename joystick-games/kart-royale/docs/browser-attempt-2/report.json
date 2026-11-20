@@ -1,0 +1,171 @@
+{
+  "startedAt": "2026-11-19T19:14:48.281Z",
+  "syntheticBridge": true,
+  "nativeSdk": false,
+  "physicalTvTested": false,
+  "normalInputOnly": true,
+  "quality": "Original documented ?quality=low rendering preset, no model/clock/scaler mutation; default shipping quality unchanged.",
+  "actions": [],
+  "captures": [],
+  "checks": [],
+  "errors": [
+    "page.waitForFunction: Timeout 65000ms exceeded.\n    at /dev/shm/racing-review-arcade/kart-browser.cjs:6:119"
+  ],
+  "requests": [
+    "http://127.0.0.1:18862/tv.html?quality=low",
+    "http://127.0.0.1:18862/kart-royale.css",
+    "http://127.0.0.1:18862/kart-royale.js"
+  ],
+  "console": [
+    "%c[gl:settings] pixel ceiling: maxPixelRatio 2 -> 1.20 to keep the drawing buffer near 0.8 Mpx (960x540 CSS at dpr 1) color:#8ab4ff",
+    "%c[frame-watch] available but idle. Run __frameWatch.start() to begin sampling (no reload needed), then __frameWatch.report() after you see a black flash. color:#8ab4ff",
+    "%c[kart] if the world is missing but the HUD is visible, run __gl() and send the output. color:#8ab4ff",
+    "%c[feel] speed-cue tuning is live. Try __feel.punchy() while driving, then __feel.show() to copy the numbers you liked. color:#8ab4ff",
+    "THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+    "[prewarm] surface=target depth=+0 geo=1+182 hosted=[kart-impostor-bake]",
+    "[prewarm] 1 -> 75 programs (25 hidden objects included) in 7289ms",
+    "[frame] 27651ms frame; skipping the next present to drain"
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:18862/tv.html?quality=low",
+      "status": 200,
+      "bytes": 5796,
+      "sha256": "7e1ac038f3986bf37fe439cc50105c2c538b6eae8a62054a0895667af9beaafb",
+      "expected": true,
+      "matchesExpected": true
+    },
+    {
+      "url": "http://127.0.0.1:18862/kart-royale.css",
+      "status": 200,
+      "bytes": 50294,
+      "sha256": "ede1072cb1bce48382ab04f6ff88f8e50644e3c340cc49f4107556e9f54565c4",
+      "expected": true,
+      "matchesExpected": true
+    },
+    {
+      "url": "http://127.0.0.1:18862/kart-royale.js",
+      "status": 200,
+      "bytes": 3893963,
+      "sha256": "701ec5af5a3a51312707ba97ea194a4a270a5a77db22512330ea4e957f089274",
+      "expected": true,
+      "matchesExpected": true
+    }
+  ],
+  "failureState": {
+    "qa": {
+      "stage": "menu",
+      "renderer": "webgl2",
+      "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "frames": 7,
+      "controller": {
+        "buttons": {
+          "UP": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "A": false,
+          "B": false,
+          "X": false,
+          "Y": false
+        },
+        "pressed": {
+          "UP": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "A": false,
+          "B": false,
+          "X": false,
+          "Y": false
+        },
+        "released": {
+          "UP": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "A": false,
+          "B": false,
+          "X": false,
+          "Y": false
+        },
+        "connected": true,
+        "cancelled": false,
+        "players": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "Kart-QA-42",
+            "session": 1,
+            "cancelSeq": 0,
+            "connected": true,
+            "buttons": {}
+          }
+        ],
+        "source": "[1,\"Kart-QA-42\",1]",
+        "info": {
+          "wifiController": {
+            "port": 63485,
+            "serviceName": "Kart Royale test",
+            "addresses": [
+              "127.0.0.1"
+            ]
+          }
+        },
+        "pollCount": 7,
+        "native": true,
+        "inputAvailable": true
+      },
+      "paused": false,
+      "gameplay": {
+        "menu": "title",
+        "focus": "Start",
+        "savedControls": false,
+        "controlHand": "right",
+        "state": 0,
+        "phase": "menu",
+        "time": 0,
+        "speed": 0.06610579730641943,
+        "position": [
+          -5.693696935086281,
+          3.95524541281277,
+          -9.987137973797662
+        ],
+        "lap": 0,
+        "place": 1,
+        "driftDir": 0,
+        "driftTier": 0,
+        "driftCharge": 0,
+        "boostTime": 0,
+        "controls": {
+          "steer": 0,
+          "accel": 0,
+          "brake": 0,
+          "accelAuto": false,
+          "drift": false,
+          "driftPressed": false,
+          "itemPressed": false,
+          "lookBack": false,
+          "pausePressed": false,
+          "anyPressed": false
+        }
+      },
+      "panel": {
+        "x": 12,
+        "y": 106,
+        "width": 166,
+        "height": 175.078125,
+        "scrollHeight": 173,
+        "clientHeight": 173,
+        "hidden": false
+      },
+      "focused": "Start",
+      "boot": "ready"
+    },
+    "boot": "ready"
+  },
+  "status": "failed"
+}

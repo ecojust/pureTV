@@ -1,0 +1,282 @@
+{
+  "scope": "Read-only review of original installed Android TV emulator results",
+  "runId": 44600152694,
+  "runAttempt": 1,
+  "sourceSha": "06f1ab2b77e45d5fabcbd7233f8d3e9279a9d5c7",
+  "exportCommit": "e01ab3ba25008cbbcbfa718321afa49fe6eb2331",
+  "automaticTestsPerMode": 52,
+  "acceptedAckCounts": [
+    513,
+    512
+  ],
+  "defaultAndOccupiedPorts": [
+    63485,
+    43313
+  ],
+  "visuallyReviewedOriginalScreenshots": 14,
+  "visuallyReviewedOriginalVideoSampleFrames": 6,
+  "pixelDimensions": [
+    1920,
+    1080
+  ],
+  "observations": [
+    "Original racing art, kart, track, minimap, lap/speed and item inventory are rendered.",
+    "Actual playing capture shows unpaused race, original speed above 12 model units/s and autoGas=false.",
+    "Full actual SDK ID is readable in side card; menu card wraps the ID over three lines, compact driving card over two.",
+    "Item inventory was naturally filled: normal star and occupied red; both actual HUDs and A/B hints visible. Item use success is not separately asserted.",
+    "Pause/resume, focus-return/manual-resume and disconnected/reconnected screenshots remain readable without blocking primary controls.",
+    "Menu side card clips secondary Kart Rush/address details below its scroll area; full ID remains visible, matching the previously documented 960 CSS layout limitation."
+  ],
+  "limitations": [
+    "Single meadow race start/short drive, not completed lap, race or Grand Prix.",
+    "Name Q is naturally saved during the plan; Android process-restart persistence is not independently tested by this run.",
+    "Video review sampled three times per original recording; not every video frame inspected.",
+    "Native screenshots are 1920x1080 physical pixels; previous browser 960x540/1280x720 evidence remains separate.",
+    "No physical TV, phone or ESP32 result; SDK client IDs prefixed virtual are actual TCP SDK clients, not physical pads.",
+    "Upstream game license remains unresolved."
+  ],
+  "modes": [
+    {
+      "mode": "normal",
+      "originalReportStatus": "passed",
+      "captures": [
+        {
+          "path": "connected.png",
+          "sha256": "de1c2ea01a21d2f1eb53ad1143307226112a395fea876c8136875c2bbe677ca1",
+          "visuallyReviewed": true,
+          "pixelDimensions": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "path": "playing.png",
+          "sha256": "ba767442b6ff8aaa0b1e9393b4d6d05ea3b5f5e659f65ea15f8b41533a2a00c2",
+          "visuallyReviewed": true,
+          "pixelDimensions": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "path": "paused.png",
+          "sha256": "70e60a367b09c1a813e328c2038f35b3f4f92e6706c0b1ee5b7e493a1b4655ee",
+          "visuallyReviewed": true,
+          "pixelDimensions": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "path": "second-rejected.png",
+          "sha256": "6843cd615c98e6a5ec90c381084e509fc0edaa5751c79de6080a5679f7bd0162",
+          "visuallyReviewed": true,
+          "pixelDimensions": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "path": "focus-restored-paused.png",
+          "sha256": "211589f7c89b977eaa3cbdf89f18698e67a1b345e296fa52f460ba760a864169",
+          "visuallyReviewed": true,
+          "pixelDimensions": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "path": "disconnected.png",
+          "sha256": "09f74d6d1a1bd582f8b32e2b55037c8653ff638a865241f97ce7d8de0d0316a8",
+          "visuallyReviewed": true,
+          "pixelDimensions": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "path": "reconnected.png",
+          "sha256": "3ae1f84d007fcbcc924d9e826c28b9a42a60441786645b6f9a3b199a47090141",
+          "visuallyReviewed": true,
+          "pixelDimensions": [
+            1920,
+            1080
+          ]
+        }
+      ],
+      "sampledOriginalVideoFrames": [
+        {
+          "path": "video-frames/normal-30s.png",
+          "originalVideoTimestampSeconds": 30,
+          "sha256": "9ad3300435fb2a086f5f6e4b9c4800466ebc210a45b3a09f662b8d42a3bb83a5",
+          "visuallyReviewed": true
+        },
+        {
+          "path": "video-frames/normal-70s.png",
+          "originalVideoTimestampSeconds": 70,
+          "sha256": "bccd6d8009d9fd9160ac3e5504f4c2675b49ef9022e9d6baae255cede43f7f2b",
+          "visuallyReviewed": true
+        },
+        {
+          "path": "video-frames/normal-140s.png",
+          "originalVideoTimestampSeconds": 140,
+          "sha256": "fb0b2fd3f4e4c04c5396fb0002c571732aa35ca5c06029c7a4f065eeb711841a",
+          "visuallyReviewed": true
+        }
+      ],
+      "playingObservations": {
+        "before": {
+          "phase": "race",
+          "speed": 12.959177665186992,
+          "lap": 1,
+          "item": "star",
+          "itemHud": {
+            "kind": "star",
+            "count": "",
+            "direction": "",
+            "ready": true,
+            "visible": true
+          },
+          "autoGas": false,
+          "profileName": "Q"
+        },
+        "after": {
+          "phase": "race",
+          "speed": 17.22916382269378,
+          "lap": 1,
+          "item": "star",
+          "itemHud": {
+            "kind": "star",
+            "count": "",
+            "direction": "",
+            "ready": true,
+            "visible": true
+          },
+          "autoGas": false,
+          "profileName": "Q"
+        }
+      }
+    },
+    {
+      "mode": "occupied",
+      "originalReportStatus": "passed",
+      "captures": [
+        {
+          "path": "connected.png",
+          "sha256": "f23fea39145e6972b5906942ae10ecfacf6c4b7bce31bd2fd994e300acba0271",
+          "visuallyReviewed": true,
+          "pixelDimensions": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "path": "playing.png",
+          "sha256": "9901139a418b65bd3aadad7c07f9d95117585686ac29a93eb792dd7c1eb0816e",
+          "visuallyReviewed": true,
+          "pixelDimensions": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "path": "paused.png",
+          "sha256": "faa380f5e91bf8dbba95ec2fbd1cf482051437a16232c904d7d53ab48da3c2cc",
+          "visuallyReviewed": true,
+          "pixelDimensions": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "path": "second-rejected.png",
+          "sha256": "5b428006175659650a1c4171bde6051f3fae7f00824338438a29e23f46eb7a68",
+          "visuallyReviewed": true,
+          "pixelDimensions": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "path": "focus-restored-paused.png",
+          "sha256": "bb01f37f656852bdd87060dfe7f99756df9715d02d6a4843b1e5361e886d2258",
+          "visuallyReviewed": true,
+          "pixelDimensions": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "path": "disconnected.png",
+          "sha256": "a2c615dd36f2492c15bf12b96477a77b60ed8871afcd40a8b110281fcb1c3b09",
+          "visuallyReviewed": true,
+          "pixelDimensions": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "path": "reconnected.png",
+          "sha256": "ce0fd971e0a2e40fda509f166c53edac67b634609bc057299953deb05146f227",
+          "visuallyReviewed": true,
+          "pixelDimensions": [
+            1920,
+            1080
+          ]
+        }
+      ],
+      "sampledOriginalVideoFrames": [
+        {
+          "path": "video-frames/occupied-30s.png",
+          "originalVideoTimestampSeconds": 30,
+          "sha256": "ee73e44a9101364fd6fde95b706b016e6dbb805dac6566a72afe43c8590e9078",
+          "visuallyReviewed": true
+        },
+        {
+          "path": "video-frames/occupied-70s.png",
+          "originalVideoTimestampSeconds": 70,
+          "sha256": "bb781b63bb611385cf84053bbb8c53c6bac7191bfe8bac03ab322226b9c1668f",
+          "visuallyReviewed": true
+        },
+        {
+          "path": "video-frames/occupied-140s.png",
+          "originalVideoTimestampSeconds": 140,
+          "sha256": "d08d17cf9bcdb7c0c1e7156638e1ed1a12bb5b77f5f4b1955590422069e1f821",
+          "visuallyReviewed": true
+        }
+      ],
+      "playingObservations": {
+        "before": {
+          "phase": "race",
+          "speed": 13.140332041242104,
+          "lap": 1,
+          "item": "red",
+          "itemHud": {
+            "kind": "red",
+            "count": "",
+            "direction": "",
+            "ready": true,
+            "visible": true
+          },
+          "autoGas": false,
+          "profileName": "Q"
+        },
+        "after": {
+          "phase": "race",
+          "speed": 17.22658993838432,
+          "lap": 1,
+          "item": "red",
+          "itemHud": {
+            "kind": "red",
+            "count": "",
+            "direction": "",
+            "ready": true,
+            "visible": true
+          },
+          "autoGas": false,
+          "profileName": "Q"
+        }
+      }
+    }
+  ]
+}

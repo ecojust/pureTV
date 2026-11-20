@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "game": "turbo-kart-rush",
+  "status": "original_package_and_apple_silicon_runtime_verified_intel_unverified",
+  "sourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+  "buildRunId": 44615880581,
+  "qaSourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+  "runtimeRunId": 44615880581,
+  "runAttempt": 1,
+  "runtimeExportCommit": "9789c5a17e338df15728b3aec502bfbb42dce6a6",
+  "intelEvidenceExportCommit": "5779100b7c50df0a666c4fe5433f890f6a013bfe",
+  "originalRunConclusion": "failure",
+  "originalPackageBytesUnchanged": true,
+  "binarySha256": "3047b20c6b48be8ebbc52ae7879c747062c790fe544310dd55e926e0e4593e3d",
+  "originalInputFilesVerified": 1365,
+  "currentDistFilesVerified": 4,
+  "currentDistMatches": true,
+  "files": [
+    {
+      "file": "macos/TurboKartRush-0.1.0-macos-universal.zip",
+      "bytes": 850314,
+      "sha256": "647c145ab2fa91e64d768707acbf8e46c3d8d10d2cf27697c78fbed6f6f8eb65"
+    },
+    {
+      "file": "macos/TurboKartRush-0.1.0-macos-universal.dmg",
+      "bytes": 1199951,
+      "sha256": "8319eed40c134fe6f0b0975a7f87cde0ca03cda261fd437200ededb15aba9152"
+    }
+  ],
+  "runtimeReports": [
+    {
+      "mode": "native",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/turbo-kart-rush/native/report.json",
+      "bytes": 905087,
+      "sha256": "d7fa47839d1c5509c765d2e00df8846ad2741e04cedfeff3637cee5c9837c599",
+      "testsPassed": 9,
+      "processArchitecture": "arm64",
+      "binarySha256": "3047b20c6b48be8ebbc52ae7879c747062c790fe544310dd55e926e0e4593e3d",
+      "storageRequired": false,
+      "storageStatus": "not_exercised",
+      "storedKeys": [],
+      "newOriginVerified": true,
+      "initialHydrationEqual": true,
+      "realStorageRestartVerified": false
+    },
+    {
+      "mode": "occupied-port",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/turbo-kart-rush/occupied-port/report.json",
+      "bytes": 904352,
+      "sha256": "9ad62a3aee35597a13f4e5680586a5861895a06898b8b6b01a3c03e3baa68fc6",
+      "testsPassed": 9,
+      "processArchitecture": "arm64",
+      "binarySha256": "3047b20c6b48be8ebbc52ae7879c747062c790fe544310dd55e926e0e4593e3d",
+      "storageRequired": false,
+      "storageStatus": "not_exercised",
+      "storedKeys": [],
+      "newOriginVerified": true,
+      "initialHydrationEqual": true,
+      "realStorageRestartVerified": false
+    },
+    {
+      "mode": "rosetta",
+      "path": "docs/racing-nine/native-readiness/ci-44615880581-attempt-1/original-arm-export/artifact/turbo-kart-rush/rosetta/report.json",
+      "bytes": 903170,
+      "sha256": "6d854eae3c7a95f162332055869f7f49bb23df1154358a1780edf849baceb50d",
+      "testsPassed": 9,
+      "processArchitecture": "x86_64",
+      "binarySha256": "3047b20c6b48be8ebbc52ae7879c747062c790fe544310dd55e926e0e4593e3d",
+      "storageRequired": false,
+      "storageStatus": "not_exercised",
+      "storedKeys": [],
+      "newOriginVerified": true,
+      "initialHydrationEqual": true,
+      "realStorageRestartVerified": false
+    }
+  ],
+  "runtimeReportPathBase": "repository root",
+  "packageAudit": "../../../../docs/racing-nine/native-readiness/ci-44615880581-attempt-1/package-source-audit/audit.json",
+  "packageAuditManifest": "../../../../docs/racing-nine/native-readiness/ci-44615880581-attempt-1/package-source-audit-manifest.json",
+  "originalBuildManifest": "original-build-manifest.json",
+  "originalBuildManifestSha256": "6981db04f157bdd0df863ebb0c7436eb14cfab15744684cf3959eea7bd915b52",
+  "visualReview": "../macos-ci-44615880581-visual-review.json",
+  "visualReviewSha256": "063343cfe820aa4351da9ea2b97d609d2e48315351ce2dad176fa58ff15e1c7f",
+  "imagesActuallyViewedByNativeAgent": 9,
+  "nativeScreenshotPixelSizes": [
+    [
+      1024,
+      642
+    ],
+    [
+      1024,
+      645
+    ]
+  ],
+  "notNew960x540Or1280x720MacCaptureSet": true,
+  "knownVisualFindings": [
+    {
+      "kind": "visible_ui_overlap",
+      "affectedScenes": "playing in native, occupied-port and Rosetta",
+      "description": "Separate instructions card overlaps the upper part of the lower-right minimap by approximately 50–60 image pixels (visual estimate, not DOM measurement). Compact ID card does not cover lap/time. Expanded pause card covers the background minimap but not the pause buttons."
+    }
+  ],
+  "deliveryPolicy": "Universal original bytes may be distributed with three Apple Silicon native/occupied/Rosetta modes verified and explicit Intel graphics unverified. This delivery scope is separate from the original classifier; original failed reports and blocked initialization boundary remain unchanged, and probe context loss does not prove the game failure cause.",
+  "intelNative": {
+    "status": "unverified",
+    "originalGameQaStatus": "failed",
+    "originalInitializationBoundary": "blocked_by_initialization_boundary",
+    "originalFullCoverageAssessmentReclassified": false,
+    "sameRunIndependentProbeStatus": "observed_context_loss",
+    "gameFailureCauseProven": false,
+    "evidence": "../../../../docs/racing-nine/native-readiness/ci-44615880581-attempt-1/intel-findings.json"
+  },
+  "realStorageRestartVerified": false,
+  "storageScope": "No declared save keys; storage was not exercised. Only empty-state rehydration and relaunch at a different origin were checked.",
+  "physicalEsp32Tested": false,
+  "physicalControllerTested": false,
+  "fullGameCompletionTested": false,
+  "appleNotarized": false,
+  "signature": "ad-hoc",
+  "gameOrClassifierModifiedForDelivery": false,
+  "nativeRerunForDelivery": false
+}

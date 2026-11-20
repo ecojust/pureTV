@@ -24,6 +24,7 @@
               height="240"
               aria-label="ADVENTURE ISLAND"
             ></canvas>
+            <div id="wifi-pause" class="wifi-pause" hidden></div>
             <div class="loading" id="game-loading">
               <strong id="loading-title">正在载入游戏…</strong>
               <p id="loading-detail"></p>
@@ -31,8 +32,14 @@
           </div>
         </section>
         <aside class="sidebar">
+          <div id="wifi-clients" class="wifi-clients" hidden></div>
           <section class="join-card">
             <div class="room-brand" id="room-brand">ADVENTURE ISLAND</div>
+            <div id="wifi-controller" class="wifi-controller" hidden>
+              <strong id="wifi-state"></strong>
+              <div id="wifi-address"></div>
+              <p id="wifi-help"></p>
+            </div>
             <div class="section-heading">
               <span id="join-label">手机手柄</span
               ><span id="lan-label">同一局域网</span>
@@ -81,6 +88,7 @@
     <script src="game-model.js"></script>
     <script src="renderer.js"></script>
     <script src="audio.js"></script>
+    <script src="puretv-controller.js"></script>
     <script src="runtime.js"></script>
     <script src="game.js"></script>
   </body>

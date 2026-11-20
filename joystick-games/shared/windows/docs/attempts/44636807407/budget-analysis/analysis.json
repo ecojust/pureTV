@@ -1,0 +1,250 @@
+{
+  "sourceCommit": "d750c0c68c430503be06d18fe5b76af825c72e58",
+  "sourceRunId": 44636807407,
+  "sourceRunAttempt": 1,
+  "status": "read-only-static-budget-analysis-not-a-runtime-result",
+  "createdAt": "2026-11-20T00:12:56.381996+00:00",
+  "sourceFiles": {
+    "joystick-games/kart-royale/qa-plan.json": {
+      "bytes": 7654,
+      "sha256": "a28b7a1f6beb1affa77cb5f84b36dadd33521581e636e5ab178b46cc1b56ef4d"
+    },
+    "joystick-games/tools/windows-verify.py": {
+      "bytes": 38128,
+      "sha256": "4d967b72972782acf9210415b757796c540039f37c00c33a99f16eb6a163091c"
+    },
+    "joystick-games/tools/macos-verify.py": {
+      "bytes": 56639,
+      "sha256": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17"
+    },
+    ".github/workflows/joystick-catalog-windows.yml": {
+      "bytes": 7283,
+      "sha256": "6227b95ac5aca470699fbb5366accbea303445e8d23e6dbbb230d9b8b5e0ed5a"
+    }
+  },
+  "workflowJobTimeoutSeconds": 3300,
+  "sequentialModes": [
+    "normal",
+    "occupied"
+  ],
+  "stepRows": [
+    {
+      "index": 0,
+      "name": "Focus original Controls menu",
+      "kind": "menuTap",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 25,
+      "additionalUntilMeaning": "post-menu settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.016
+    },
+    {
+      "index": 1,
+      "name": "Open original Controls",
+      "kind": "menuTap",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 25,
+      "additionalUntilMeaning": "post-menu settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.016
+    },
+    {
+      "index": 2,
+      "name": "Focus controls option Floating stick",
+      "kind": "menuTap",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 25,
+      "additionalUntilMeaning": "post-menu settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.016
+    },
+    {
+      "index": 3,
+      "name": "Focus controls option Fixed stick",
+      "kind": "menuTap",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 25,
+      "additionalUntilMeaning": "post-menu settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.016
+    },
+    {
+      "index": 4,
+      "name": "Focus controls option Tilt to steer",
+      "kind": "menuTap",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 25,
+      "additionalUntilMeaning": "post-menu settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.016
+    },
+    {
+      "index": 5,
+      "name": "Focus controls option Steer buttons",
+      "kind": "menuTap",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 25,
+      "additionalUntilMeaning": "post-menu settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.016
+    },
+    {
+      "index": 6,
+      "name": "Focus controls option Right",
+      "kind": "menuTap",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 25,
+      "additionalUntilMeaning": "post-menu settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.016
+    },
+    {
+      "index": 7,
+      "name": "Focus controls option Left",
+      "kind": "menuTap",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 25,
+      "additionalUntilMeaning": "post-menu settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.016
+    },
+    {
+      "index": 8,
+      "name": "Save original left-handed preference through Controls",
+      "kind": "menuTap",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 25,
+      "additionalUntilMeaning": "post-menu settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.016
+    },
+    {
+      "index": 9,
+      "name": "Close Controls explicitly",
+      "kind": "menuTap",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 25,
+      "additionalUntilMeaning": "post-menu settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.016
+    },
+    {
+      "index": 10,
+      "name": "Open original roster from Start button",
+      "kind": "menuTap",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 25,
+      "additionalUntilMeaning": "post-menu settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.016
+    },
+    {
+      "index": 11,
+      "name": "Start race and wait original countdown",
+      "kind": "startup-released",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 600,
+      "additionalSequentialUntilBudgetSeconds": 0,
+      "additionalUntilMeaning": "already within one hard step deadline",
+      "fixedHoldSecondsOutsideDeadline": 0
+    },
+    {
+      "index": 12,
+      "name": "Accelerate original kart from grid",
+      "kind": "held-until-expect",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 0,
+      "additionalUntilMeaning": "already within one hard step deadline",
+      "fixedHoldSecondsOutsideDeadline": 0
+    },
+    {
+      "index": 13,
+      "name": "Steer and request original drift",
+      "kind": "ordinary-hold",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 50,
+      "additionalUntilMeaning": "pre-input observation then post-release settle_input",
+      "fixedHoldSecondsOutsideDeadline": 1.2
+    },
+    {
+      "index": 14,
+      "name": "Steer opposite direction and look back",
+      "kind": "ordinary-hold",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 50,
+      "additionalUntilMeaning": "pre-input observation then post-release settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.8
+    },
+    {
+      "index": 15,
+      "name": "Brake using original input",
+      "kind": "ordinary-hold",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 50,
+      "additionalUntilMeaning": "pre-input observation then post-release settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.8
+    },
+    {
+      "index": 16,
+      "name": "Request item through X (empty inventory is not an item-use claim)",
+      "kind": "ordinary-hold",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 50,
+      "additionalUntilMeaning": "pre-input observation then post-release settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.18
+    },
+    {
+      "index": 17,
+      "name": "Pause original race",
+      "kind": "ordinary-hold",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 50,
+      "additionalUntilMeaning": "pre-input observation then post-release settle_input",
+      "fixedHoldSecondsOutsideDeadline": 0.18
+    },
+    {
+      "index": 18,
+      "name": "Deliberately resume with START held without re-pausing",
+      "kind": "ordinary-hold",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 50,
+      "additionalUntilMeaning": "pre-input observation then post-release settle_input",
+      "fixedHoldSecondsOutsideDeadline": 1.2
+    },
+    {
+      "index": 19,
+      "name": "Continue actual driving after explicit resume",
+      "kind": "ordinary-hold",
+      "expectationOrWholeBoundedStepDeadlineSeconds": 60,
+      "additionalSequentialUntilBudgetSeconds": 50,
+      "additionalUntilMeaning": "pre-input observation then post-release settle_input",
+      "fixedHoldSecondsOutsideDeadline": 2.0
+    }
+  ],
+  "perModePlanConditionBudgetSeconds": 1740,
+  "twoModePlanConditionBudgetSeconds": 3480,
+  "twoModePlanConditionBudgetMinutes": 58.0,
+  "perModeAdditionalSequentialUntilBudgetsSeconds": 625,
+  "perModeFixedHoldsOutsideDeadlineSeconds": 6.536,
+  "twoModePlanNominalAllowanceSeconds": 4743.072,
+  "twoModePlanNominalAllowanceMinutes": 79.05120000000001,
+  "interpretation": [
+    "The startup override replaces the original 60-second condition budget; it is not 600 plus 20 times 60. It is 600 plus 19 times 60 per mode.",
+    "Two modes allow 58 minutes of plan condition/whole-bounded-step budgets alone, exceeding the 55-minute job cap before build, fixture and lifecycle checks.",
+    "11 menuTap steps each add up to a 25-second post-release settle; 7 ordinary steps each add a 25-second input observation and 25-second release settle. Bounded startup/held-until-expect include their released stabilization within their one hard deadline.",
+    "These are nominal sequential allowances, not mandatory elapsed times or an exact global worst-case: base until can finish early and a final bounded state read can slightly overshoot; SDK, file/OS calls and setup/cleanup have separate costs.",
+    "Insufficient total job budget is a static compatibility concern. It does not establish this run failed a game expectation, timed out, or reached any particular current step."
+  ],
+  "outsidePlanExamples": [
+    "Build/install/source/package checks and four-document fixture (60-second observation plus exit/cleanup).",
+    "Initial launch 90-second renderer + 30-second foreground, minimum viewport and screenshots, DNS-SD and actual second-SDK rejection.",
+    "Actual post-plan playing/paused PNGs (each screenshot reads at most 60 seconds after 1.5 seconds delay), START transitions, pause stability (30 seconds plus surrounding waits).",
+    "Three minimize/restore cycles, disconnect/held-sync reconnect, ACK barrier, normal quit and native storage restart."
+  ],
+  "actualOriginalJobAtObservation": {
+    "metadataFile": "jobs-20261120T001253Z.json",
+    "metadataSha256": "5d35fe98e85a54954e73f54c412abfa7c159bfac8448b8c962d8041bec031401",
+    "jobId": 135957417320,
+    "status": "completed",
+    "conclusion": "failure",
+    "startedAt": "2026-11-19T23:20:45Z",
+    "completedAt": "2026-11-20T00:11:19Z",
+    "sdkStep": {
+      "name": "Actual original SDK gameplay normal and occupied port",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 9,
+      "started_at": "2026-11-19T23:24:06Z",
+      "completed_at": "2026-11-20T00:11:10Z"
+    }
+  },
+  "conclusion": "Current API reports completed/failure at SDK step, not timed_out. Await original reports for the actual failed predicate; no source or timeout changed and no workflow dispatched."
+}

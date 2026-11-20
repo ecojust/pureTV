@@ -1,0 +1,16 @@
+# Windows host sample: native verification passed, original export failed
+
+Original run `44605307930`, source `b7b7af12f1eb61f777d89edad7368a69a14bb9e3`, verify job `135847400176` completed successfully. The original export job `135849480347` failed because Linux interpreted the Windows backslashes in `report.sourceHashes` as literal filename characters. The original workflow remains failed; its successful native verification is retained separately.
+
+The authorized single read-only recovery run `44606487814` exported commit `3400b483e26904740039c0052962f5853a584988`. All 106 exported files (5,586,104 bytes), including 100 original evidence files, were checked against their recorded size and SHA256. No original file is missing. This reader did not download installation packages or run the game.
+
+- Both original runtime modes passed all 10 checks. Normal DNS-SD port was 63485; initial occupied-port fallback was 49753. Each retained three real independent SDK busy rejections, input cancellation, foreground polling after restoration, pause stability, reconnect and native storage restart.
+- Both modes recorded real 96-DPI client sizes 960×540 and 1280×720. The enumerated display changed from 1024×768 to 1600×900 and restored to 1024×768; test, apply and restore returned 0. The original display mode was verified after restoration.
+- Native save data survived quitting, deleting the WebView browser cache and restarting. Initial hydration equality passed in both modes.
+- Original portable/install/uninstall/reinstall verification passed with byte equality, full file-set verification and unrelated uninstall sentinels preserved. The original build manifest records an unsigned x64 portable ZIP of 310,608 bytes and setup EXE of 392,836 bytes. These package bytes are not included in this read-only evidence recovery.
+- The real Windows atomic replacement test completed 100 writes using 162 API attempts, with zero diagnostic read errors. The original per-attempt record is preserved.
+- The normal-mode original minimum-window menu and playing screenshots were visually inspected: menu controls and the sidebar remain visible at 960×540; the 1280×720 playing image contains the game and a controller card with the actual SDK identity. This is the existing Canvas2D Sugarplum host sample, not a verified racing game or physical-controller test.
+
+`native-results-summary.json` summarizes the unchanged original reports. `export-path-validation-attempt-2.json` binds the path repair to the original reports and original Git commit: each report's seven sources were checked against the original manifest and Git blobs, with only the five Windows path separators normalized in separate validation metadata. All original report bytes remain unchanged. Twelve local path/Git boundary tests passed; they are not native gameplay tests. The first isolated local clone preparation failed due to a missing partial-clone promisor object and is recorded separately; the subsequent isolated Git validation used existing original objects without fetching or executing game code.
+
+Original failures and recovery requests/responses are preserved here. No new production dispatch, package rebuild, Release creation or publication was performed during this recovery.

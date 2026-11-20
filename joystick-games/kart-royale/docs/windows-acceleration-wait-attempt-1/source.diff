@@ -1,0 +1,82 @@
+--- 232d544079a472aa0ffb259c1bc73c692b94504d/joystick-games/kart-royale/qa-plan.json
++++ candidate/joystick-games/kart-royale/qa-plan.json
+@@ -262,7 +262,8 @@
+           "path": "gameplay.position",
+           "op": "changed"
+         }
+-      ]
++      ],
++      "windowsHoldUntilExpect": true
+     },
+     {
+       "name": "Steer and request original drift",
+--- 232d544079a472aa0ffb259c1bc73c692b94504d/joystick-games/tools/qa-plan.py
++++ candidate/joystick-games/tools/qa-plan.py
+@@ -87,7 +87,7 @@
+                 speed, motion = expectations
+                 assert isinstance(speed, dict) and isinstance(motion, dict)
+                 assert speed.get('path') == 'gameplay.speed' and speed.get('op') == 'gt' and numeric(speed.get('value')) and speed['value'] > 0
+-                assert motion == {'path': 'gameplay.progress', 'op': 'changed'}, 'Held throttle must observe original speed and course progress'
++                assert motion in [{'path': path, 'op': 'changed'} for path in ('gameplay.progress', 'gameplay.position')], 'Held throttle must observe original speed and course motion'
+         for item in expectations:
+             assert isinstance(item, dict) and isinstance(item.get('path'), str) and PATH.fullmatch(item['path'])
+             assert item.get('op') in OPERATORS
+--- 232d544079a472aa0ffb259c1bc73c692b94504d/joystick-games/shared/windows/tests/gameplay.test.py
++++ candidate/joystick-games/shared/windows/tests/gameplay.test.py
+@@ -73,6 +73,24 @@
+             plan['steps'][4].update(update)
+             with self.subTest(update=update), self.assertRaises(AssertionError):
+                 plan_api.validate_plan(plan)
++
++
++    def test_position_motion_uses_original_predicate_and_keeps_throttle_boundaries(self):
++        original = self.plan('kart-royale')
++        step = original['steps'][12]
++        self.assertIs(step['windowsHoldUntilExpect'], True)
++        self.assertEqual(step['expect'], [{'path': 'gameplay.speed', 'op': 'gt', 'value': 1},
++                                         {'path': 'gameplay.position', 'op': 'changed'}])
++        self.assertEqual(step['timeoutSeconds'], 60)
++        plan_api.validate_plan(original)
++        for update in [{'keys':['UP','A']}, {'timeoutSeconds':61}, {'menuTap':True},
++                       {'expect':[step['expect'][0], {'path':'gameplay.position','op':'increased'}]},
++                       {'expect':[step['expect'][0], {'path':'gameplay.position.0','op':'changed'}]},
++                       {'expect':[step['expect'][0], {'path':'gameplay.position','op':'changed','value':[0,0,0]}]},
++                       {'expect':[step['expect'][0], {'path':'gameplay.time','op':'changed'}]},
++                       {'expect':[{'path':'gameplay.speed','op':'gt','value':0}, step['expect'][1]]}]:
++            plan = copy.deepcopy(original); plan['steps'][12].update(update)
++            with self.subTest(update=update), self.assertRaises(AssertionError): plan_api.validate_plan(plan)
+ 
+ 
+ class BoundedObservation(unittest.TestCase):
+@@ -183,6 +201,31 @@
+         self.assertEqual(result['releasedFreshFrames'], 2)
+         self.assertEqual(record['sdkMessagesThroughRelease'], record['matchingAcksThroughRelease'])
+ 
++    def test_position_vector_is_evaluated_by_real_held_observer_without_runner_change(self):
++        for moved in [True, False]:
++            def vector(state):
++                progress = state['game']['gameplay']['progress'] if moved else 0.0
++                state['game']['gameplay']['position'] = [progress, 0.0, 0.0]
++            fixture = self.fixture(interval=1.38, mutate=vector)
++            fixture.before['game']['gameplay']['position'] = [0.0, 0.0, 0.0]
++            fixture.step['expect'][1] = {'path':'gameplay.position','op':'changed'}
++            fixture.step['timeoutSeconds'] = 10
++            with self.subTest(moved=moved):
++                if moved:
++                    result = fixture.run()
++                    self.assertEqual(result['firstExpected']['gameplay']['position'], [.2, 0.0, 0.0])
++                    self.assertEqual(result['firstExpected']['gameplay']['speed'], 3.0)
++                    self.assertEqual(fixture.releases[0], fixture.matched_at[0])
++                    self.assertEqual(result['releasedFreshFrames'], 2)
++                    record = fixture.subject.report['boundedGameplayObservations'][0]
++                    self.assertTrue(record['semanticHeldObserved'])
++                    self.assertEqual(record['sdkMessagesThroughRelease'], record['matchingAcksThroughRelease'])
++                else:
++                    with self.assertRaises(AssertionError): fixture.run()
++                    self.assertNotIn('firstMatchingHeldState', fixture.subject.report['boundedGameplayObservations'][0])
++                self.assertEqual(len(fixture.releases), 1)
++                self.assertFalse(fixture.subject.held)
++
+     def test_raw_counter_without_semantic_input_cannot_prove_throttle(self):
+         f = self.fixture(semantic=False)
+         f.step['timeoutSeconds'] = 1

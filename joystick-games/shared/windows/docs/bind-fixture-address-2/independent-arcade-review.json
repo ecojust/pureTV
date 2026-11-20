@@ -1,0 +1,91 @@
+{
+  "status": "no-static-blocker-test-only-windows-fixture-correction",
+  "reviewer": "racing_review_arcade",
+  "reviewedAt": "2026-11-20T00:50:34.502243+00:00",
+  "scope": "One C++ fixture source; no production or workflow edits. No compilation or test rerun by reviewer.",
+  "baselineCommit": "772c99ae35583ad1594cd9fffcc6368aa4df7201",
+  "candidate": {
+    "path": "joystick-games/shared/windows/tests/controller-bind.test.cpp",
+    "bytes": 7689,
+    "sha256": "4de0677c8f91bf595d2270813c64040e811835fc116463f910a4f9cc011d79c9"
+  },
+  "freeze": {
+    "path": "joystick-games/shared/windows/docs/bind-fixture-address-2/freeze.json",
+    "bytes": 7847,
+    "sha256": "eb7dd91d4f8b5e73850a663b44781e06129ff782f364d26a3b0657346db1fbd0",
+    "filesVerified": 33,
+    "totalBytesVerified": 297474
+  },
+  "unchangedProductionAndIntegration": {
+    "joystick-games/shared/windows/Sources/main.cpp": {
+      "bytes": 35243,
+      "sha256": "7038855f074d633ba3c99631e606554174ac56ff372867be1c6a00c6b68ca98b"
+    },
+    "joystick-games/shared/windows/Sources/ControllerBind.hpp": {
+      "bytes": 1107,
+      "sha256": "3656034907322c28a7ba18174607190e2bf87f33b1f066beed8032142cfb8eca"
+    },
+    "joystick-games/shared/windows/CMakeLists.txt": {
+      "bytes": 2242,
+      "sha256": "a285a50f9e9373a21c2bf74885f5ec55b26c5351d0ac006da76f7c4f8ee8542e"
+    },
+    "joystick-games/tools/windows-evidence.py": {
+      "bytes": 3191,
+      "sha256": "fe06fad07277f3d942053d5d24865d1873327b39add24cb695d171a4491d8c4d"
+    }
+  },
+  "documentation": {
+    "url": "https://learn.microsoft.com/en-us/windows/win32/winsock/using-so-reuseaddr-and-so-exclusiveaddruse",
+    "retrievedAt": "2026-11-20T00:46:35.449480+00:00",
+    "html": {
+      "bytes": 73303,
+      "sha256": "47a3f7d865ebc348e6a611f7858995cc5f31078599d3fa2d1cc9af57ad6a5b4c"
+    },
+    "section": "Enhanced Socket Security: Windows Server 2003 and later, both bind calls under the same user account",
+    "row": [
+      "SO_EXCLUSIVEADDRUSE",
+      "Wildcard",
+      "INUSE",
+      "ACCESS",
+      "ACCESS",
+      "ACCESS",
+      "INUSE",
+      "ACCESS"
+    ],
+    "secondBindColumns": [
+      "Default wildcard",
+      "Default specific",
+      "SO_REUSEADDR wildcard",
+      "SO_REUSEADDR specific",
+      "SO_EXCLUSIVEADDRUSE wildcard",
+      "SO_EXCLUSIVEADDRUSE specific"
+    ],
+    "relevantCells": {
+      "exclusiveWildcardHolderToExclusiveWildcard": "INUSE / WSAEADDRINUSE / 10048",
+      "exclusiveWildcardHolderToExclusiveSpecific": "ACCESS / WSAEACCES / 10013"
+    }
+  },
+  "reviewedBoundaries": [
+    "Both sockets are created in one process, hence the same user context. AF_INET/TCP and SO_EXCLUSIVEADDRUSE are set before bind. No SO_REUSEADDR was added.",
+    "The holder remains wildcard with an independently assigned nonzero port. The contender explicitly chooses INADDR_ANY or INADDR_LOOPBACK, converts the address with htonl and the port with htons. The loopback case matches the specific-interface table column.",
+    "The two original wildcard cases remain, each requiring10048. Two loopback-specific cases require10013. Both bound-not-listening and listening modes verify SO_ACCEPTCONN before the contention call; no success code or alternative error is silently accepted.",
+    "The unchanged real bind policy must call exactly [occupied,0], preserve immediate WSAGetLastError and both errors, choose a distinct nonzero endpoint, and keep that listener port across three bounded loopback connects/accepts. Invalid SOCKET must yield10038 with one attempt and no retry.",
+    "Observed firstError/fallbackError/success/retry count are flushed before the merged assertion, so a future mismatch retains the actual numeric result. A failed fallback does not call getsockname on an unbound socket.",
+    "Socket handles have RAII destructors. Blocking holder, server and each client unwind on require exceptions; each successfully accepted peer is closed before later checks. WSA cleanup occurs after socket-local frames unwind. The connect is nonblocking with two-second select checks and SO_ERROR verification; original cleanup policy is preserved.",
+    "The seven portable policy cases and require-based checks are unchanged and stay active with NDEBUG. Native main invokes four address/listen combinations plus invalid-socket, for five Windows cases."
+  ],
+  "evidenceLimits": {
+    "originalRun": 44647675594,
+    "originalNativeCompile": "MSVC produced the old controller-bind executable for both games; original four other CTests passed.",
+    "originalNativeFailure": "Old first wildcard/bound-only case failed its merged10013 assertion. Its actual numeric error was not printed and remains unknown.",
+    "localCandidate": "Original archived g++ NDEBUG build and seven portable policy cases passed; _WIN32 native branch was not executed locally.",
+    "nativeCandidateCasesPending": 5,
+    "production10013RootCauseStillUnknown": true,
+    "doesNotReclassifyOriginalFailure": true
+  },
+  "reviewerTestRuns": 0,
+  "reviewerSourceEdits": 0,
+  "workflowDispatches": 0,
+  "releaseWrites": 0,
+  "nativeAcceptanceAllowed": false
+}

@@ -1,0 +1,10 @@
+allprojects {
+    tasks.withType(Test).configureEach {
+        systemProperty 'https.proxyHost', 'proxy'
+        systemProperty 'https.proxyPort', '8080'
+        systemProperty 'http.proxyHost', 'proxy'
+        systemProperty 'http.proxyPort', '8080'
+        systemProperty 'javax.net.ssl.trustStore', '/workspace/scratch/neon-rush-wifi-native/test-cacerts'
+        systemProperty 'robolectric.dependency.repo.url', 'https://repo.maven.apache.org/maven2'
+    }
+}

@@ -1,0 +1,23 @@
+// Adapter unit fixture. Native browser/TCP tests are recorded separately.
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const { load } = require('../src/tools/sim');
+const g = load();
+g.ev(`document.body.append = () => {}; window.__testFrame = {buttons:{START:true}, pressed:{START:true}, cancelled:false}; window.TVInput={createController(){return {setPlaying(){},poll(){return window.__testFrame},peek(){return window.__testFrame}}}};`);
+g.ev('window.__testAdapter = (() => {' + fs.readFileSync(path.join(__dirname,'../src/tv-adapter.js'),'utf8') + '; return PureTVGLUP; })()');
+g.ev("Game.state='gate'; window.__testAdapter.poll()");
+assert.equal(g.ev('Input.held.confirm'), true);
+g.ev("Game.state='play'; window.__testFrame={buttons:{},pressed:{},cancelled:false}; window.__testAdapter.poll()");
+assert.equal(g.ev('Input.held.confirm'), false, 'START confirm must be released when its context switches to play/pause');
+assert.equal(g.ev('Input.held.pause'), false);
+g.ev("window.__testFrame={buttons:{B:true,X:true},pressed:{B:true,X:true},cancelled:false}; window.__testAdapter.poll()");
+assert.equal(g.ev('Input.held.fish'),true);
+assert.equal(g.ev('Input.held.puff'),true);
+g.ev("window.__testFrame={buttons:{B:true},pressed:{},cancelled:false}; window.__testAdapter.poll()");
+assert.equal(g.ev('Input.held.fish'),true);
+assert.equal(g.ev('Input.held.puff'),false);
+g.start(0, []);
+g.ev("Input.mode='puretv'");
+assert.equal(g.ev("Game.signText(0, '{jump}/{fish}/{puff}')"), 'A/B/X');
+console.log('GLUP adapter: context changes release previous actions; B and X remain independent.');

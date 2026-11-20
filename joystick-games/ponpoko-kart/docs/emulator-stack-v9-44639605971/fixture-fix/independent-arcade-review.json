@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "status": "no-static-blocker-single-fixture-fix",
+  "reviewer": "racing_review_arcade",
+  "reviewedAt": "2026-11-19T23:49:05.201509+00:00",
+  "scope": "Only test_stack_flag_is_default_off_exact_scope_and_never_changes_argv; no production, workflow, arguments or other test-method changes.",
+  "originalRun": {
+    "id": 44639605971,
+    "attempt": 1,
+    "source": "c22b297146547e5503f8dc9b0bfa9163518f6673",
+    "conclusion": "failure",
+    "permissionGateExecuted": false,
+    "avdStarted": false
+  },
+  "inventory": {
+    "path": "joystick-games/ponpoko-kart/docs/emulator-stack-v9-44639605971/inventory.json",
+    "bytes": 48547,
+    "sha256": "cb393ac6e6eb47d45be8e7269db1dc3b9e419dcc2dcedeb417ac2a7f7af913d3",
+    "filesVerified": 184,
+    "bytesVerified": 3494651
+  },
+  "testFile": {
+    "path": "joystick-games/qa/android/test_emulator_supervisor.py",
+    "before": {
+      "bytes": 28270,
+      "sha256": "f3c941207eda7b6a13fa4ff01b1605896da7a452e427fb3c3c24def02f5ce4d7"
+    },
+    "after": {
+      "bytes": 28513,
+      "sha256": "917c8f28d278f140cea9c630568b0a794d9b48b7ac0a2ab8f30bec29c12e24e8"
+    },
+    "otherMethodsAstUnchanged": 28,
+    "moduleAstOutsideTargetUnchanged": true
+  },
+  "dependencyReview": {
+    "originalInputFilesBoundToFixedGitBlobs": 92,
+    "isolatedChangedPaths": [
+      "joystick-games/qa/android/test_emulator_supervisor.py"
+    ],
+    "unchangedInputFiles": 91,
+    "liveHelperSupervisorAndWorkflowUnchanged": true,
+    "gitLazyFetchDisabled": true
+  },
+  "findings": [
+    "Actual v9 log and original isolated replay both fail on owned_qemu_stack.Rejected: Missing bounded permission gate. The former broad exception tuple could falsely pass with a missing RUNNER_TEMP KeyError.",
+    "The fixture now assigns RUNNER_TEMP below its own unique TemporaryDirectory, so no ambient CI permission report can satisfy the missing-gate scenario.",
+    "It imports the real stack helper and patches only stack_module to return that exact module instance. This stabilizes the Rejected class identity without mocking verify_permission_gate or suppressing any helper behavior.",
+    "assertRaisesRegex accepts only helper.Rejected with the full exact Missing bounded permission gate message. Existing wrong-scope, unchanged argv, original SDK bytes and absent backup assertions remain."
+  ],
+  "originalResultsReviewed": {
+    "suiteCounts": [
+      53,
+      16,
+      15,
+      14,
+      18,
+      22
+    ],
+    "totalTests": 138,
+    "skipped": 0,
+    "logs": [
+      {
+        "returnCode": 0,
+        "log": "01-test_runner.log",
+        "bytes": 8739,
+        "sha256": "abeacfa15e45a78dee36e64bc44f591bb8c1d12cb38388881042ae0344612d00"
+      },
+      {
+        "returnCode": 0,
+        "log": "02-android-tests.log",
+        "bytes": 2409,
+        "sha256": "5141b6b9d216419995e02235c162278f4e3b8878fac26a0bebb9cb064cf065a1"
+      },
+      {
+        "returnCode": 0,
+        "log": "03-android-runtime-artifact-tests.log",
+        "bytes": 2423,
+        "sha256": "14acbc4730a352153489942c0686628cd81cac096169f27d3c24bb743c15512a"
+      },
+      {
+        "returnCode": 0,
+        "log": "04-test_environment_diagnostics.log",
+        "bytes": 2539,
+        "sha256": "44073b373fb14264fae2a10077594b5d0868c4563c5e823c3c8e3eb028f694cb"
+      },
+      {
+        "returnCode": 0,
+        "log": "05-test_install_confirmation.log",
+        "bytes": 117,
+        "sha256": "08b655535bc789786471a3f1de569673561c0f52d23cf3d217d80f34f19f978f"
+      },
+      {
+        "returnCode": 0,
+        "log": "06-test_emulator_supervisor.log",
+        "bytes": 3639,
+        "sha256": "b3fb13530dbb0e4623ca518dca7d3391d92d552c7d1460203a6bcdeeee0f8d62"
+      }
+    ],
+    "actualCiFailureLog": {
+      "path": "joystick-games/ponpoko-kart/docs/emulator-stack-v9-44639605971/original-export/evidence/joystick-android-runtime-ponpoko-kart/ponpoko-kart/emulator-supervisor-tests.log",
+      "bytes": 4924,
+      "sha256": "d8af20bcf001b3b29d2f98c64d59038bdf62a2b4f8576bae5f01b4fa0fd40634"
+    },
+    "isolatedOldFailureLog": {
+      "bytes": 1672,
+      "sha256": "58159294e2f6918fcb7d480c8f8eb29a9298c58254df15b29f45ace016b59de4"
+    }
+  },
+  "limitations": [
+    "These are local isolated replays of the original CI contracts; no claim of an actual hosted permission-gate pass.",
+    "No new QEMU stack, AVD execution or native-game acceptance is established. The real same-permission gate and all existing diagnostic restrictions remain mandatory."
+  ],
+  "reviewerSourceEdits": 0,
+  "reviewerTestSuiteExecutions": 0,
+  "reviewerDebuggerAttachments": 0,
+  "workflowDispatches": 0,
+  "releaseWrites": 0,
+  "nativeAcceptanceAllowed": false
+}

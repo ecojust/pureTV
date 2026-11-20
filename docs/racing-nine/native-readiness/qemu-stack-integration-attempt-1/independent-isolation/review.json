@@ -1,0 +1,283 @@
+{
+  "status": "passed-static-isolated-closure",
+  "parent": "467670b4e43189dc8fc4786a5c6b3a14b6f9b2bd",
+  "scope": "Static six-file candidate overlay only; no Git tree/ref/commit/native process/CI created. Existing tests were not rerun. Actual PR_SET_PTRACER local EINVAL remains blocked and CI mandatory real gate must pass before AVD.",
+  "overlay": [
+    {
+      "path": ".github/workflows/joystick-catalog-android-runtime.yml",
+      "bytes": 28325,
+      "sha256": "d6586c776085ca6855815db763c05ea6d024584cfc6f5d89398fd83b38f004b7",
+      "parentExists": true,
+      "parentSha256": "3fc28805e7f23958b1068b97e12c59810bc90d5e2719a2fa1c99407e40846009",
+      "preIntegrationCoreMatchesV8": true
+    },
+    {
+      "path": "joystick-games/tools/android-emulator-supervisor.py",
+      "bytes": 26589,
+      "sha256": "35e7ab50c5d44a0a32bf3985a752bb5889573b6e2bc3e98ddf8b34743ff9cc24",
+      "parentExists": true,
+      "parentSha256": "03b50fff82e96f37903ebcc7df877fb216012f691cf87f60701f1390e3b65fd0",
+      "preIntegrationCoreMatchesV8": true
+    },
+    {
+      "path": "joystick-games/tools/android-qemu-stack.py",
+      "bytes": 51405,
+      "sha256": "c2acd26eb58d8173b916e7896a1b6b990b076acffe14d07b1cf35a3c36ced509",
+      "parentExists": false,
+      "parentSha256": null,
+      "preIntegrationCoreMatchesV8": false
+    },
+    {
+      "path": "joystick-games/qa/android/test_emulator_supervisor.py",
+      "bytes": 28270,
+      "sha256": "f3c941207eda7b6a13fa4ff01b1605896da7a452e427fb3c3c24def02f5ce4d7",
+      "parentExists": true,
+      "parentSha256": "cfd9ff85f21665564ebeb6bfa40512aae7b4c46fd191d3c2cfbcfca51191af64",
+      "preIntegrationCoreMatchesV8": true
+    },
+    {
+      "path": "joystick-games/qa/android/test_qemu_permission.py",
+      "bytes": 13528,
+      "sha256": "f4d54b9a172596554867759ff8062de0af03e4889a449cc7980eafbf78874e98",
+      "parentExists": false,
+      "parentSha256": null,
+      "preIntegrationCoreMatchesV8": false
+    },
+    {
+      "path": "joystick-games/qa/android/test_qemu_stack_integration.py",
+      "bytes": 8696,
+      "sha256": "d8dce5e443c4caafb6b956415ef89b5f93549652e1da134118042675de68a497",
+      "parentExists": false,
+      "parentSha256": null,
+      "preIntegrationCoreMatchesV8": false
+    }
+  ],
+  "workflowPythonEntrypoints": [
+    "joystick-games/qa/android/test_emulator_supervisor.py",
+    "joystick-games/qa/android/test_environment_diagnostics.py",
+    "joystick-games/qa/android/test_install_confirmation.py",
+    "joystick-games/qa/android/test_qemu_permission.py",
+    "joystick-games/qa/android/test_qemu_stack_integration.py",
+    "joystick-games/qa/android/test_runner.py",
+    "joystick-games/tools/android-catalog.py",
+    "joystick-games/tools/android-emulator-supervisor.py",
+    "joystick-games/tools/android-environment-diagnostics.py",
+    "joystick-games/tools/android-runtime-artifact-tests.py",
+    "joystick-games/tools/android-runtime-artifact.py",
+    "joystick-games/tools/android-runtime-copies.py",
+    "joystick-games/tools/android-runtime-inputs.py",
+    "joystick-games/tools/android-tests.py"
+  ],
+  "newLocalDependencies": {
+    "joystick-games/tools/android-emulator-supervisor.py": [
+      "joystick-games/tools/android-qemu-stack.py",
+      "joystick-games/qa/android/test_qemu_permission.py"
+    ],
+    "joystick-games/tools/android-qemu-stack.py": [],
+    "joystick-games/qa/android/test_emulator_supervisor.py": [
+      "joystick-games/tools/android-emulator-supervisor.py",
+      ".github/workflows/joystick-catalog-android-runtime.yml"
+    ],
+    "joystick-games/qa/android/test_qemu_permission.py": [
+      "joystick-games/tools/android-qemu-stack.py",
+      "joystick-games/tools/android-emulator-supervisor.py"
+    ],
+    "joystick-games/qa/android/test_qemu_stack_integration.py": [
+      "joystick-games/tools/android-qemu-stack.py"
+    ]
+  },
+  "executedSourceExportPaths": [
+    ".github/workflows/joystick-catalog-android-runtime.yml",
+    "joystick-games/catalog-registry.json",
+    "joystick-games/ponpoko-kart/qa-plan.json",
+    "joystick-games/qa/android/build-observer.py",
+    "joystick-games/qa/android/fixtures/backroad-install-ui-44614635591.json",
+    "joystick-games/qa/android/fixtures/catalog-webgl-versions.json",
+    "joystick-games/qa/android/fixtures/id-dom-run-44110295680.json",
+    "joystick-games/qa/android/fixtures/install-timeout-run-44599353036.json",
+    "joystick-games/qa/android/fixtures/observer-timeout-run-44600442272.json",
+    "joystick-games/qa/android/fixtures/single-seat-run-44115154856.json",
+    "joystick-games/qa/android/install_confirmation.py",
+    "joystick-games/qa/android/install_failure.py",
+    "joystick-games/qa/android/run.py",
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java",
+    "joystick-games/qa/android/test_emulator_supervisor.py",
+    "joystick-games/qa/android/test_environment_diagnostics.py",
+    "joystick-games/qa/android/test_install_confirmation.py",
+    "joystick-games/qa/android/test_qemu_permission.py",
+    "joystick-games/qa/android/test_qemu_stack_integration.py",
+    "joystick-games/qa/android/test_runner.py",
+    "joystick-games/tools/android-asset-tests.py",
+    "joystick-games/tools/android-build.py",
+    "joystick-games/tools/android-catalog.py",
+    "joystick-games/tools/android-emulator-supervisor.py",
+    "joystick-games/tools/android-environment-diagnostics.py",
+    "joystick-games/tools/android-qemu-stack.py",
+    "joystick-games/tools/android-release.py",
+    "joystick-games/tools/android-runtime-artifact-tests.py",
+    "joystick-games/tools/android-runtime-artifact.py",
+    "joystick-games/tools/android-runtime-copies.py",
+    "joystick-games/tools/android-runtime-inputs.py",
+    "joystick-games/tools/android-runtime-tests.py",
+    "joystick-games/tools/android-tests.py",
+    "joystick-games/tools/android-zxing-tests.py",
+    "joystick-games/tools/android-zxing.py",
+    "joystick-games/tools/artifact-draft-transfer.py",
+    "joystick-games/tools/asset-policy.py",
+    "joystick-games/tools/fixtures/android-runtime-artifact/artifact.json",
+    "joystick-games/tools/fixtures/android-runtime-artifact/jobs.json",
+    "joystick-games/tools/fixtures/android-runtime-artifact/run.json",
+    "joystick-games/tools/qa-plan.py",
+    "puretv-joystick/joystick_sdk.py",
+    "tools/resource_catalog.py"
+  ],
+  "allSixOverlayFilesExported": true,
+  "oldCoreTestNotRequiredOrIncluded": true,
+  "preservedParentFiles": [
+    {
+      "path": "joystick-games/qa/android/run.py",
+      "gitBlob": "6cc8da171f186efebd9ce100fbb9afb7f2603d80",
+      "bytes": 62517,
+      "sha256": "5fb0fbb8b14995ea757f2b9bfd5e89fd08b51c24810657b8d5b3e368a1b8826a",
+      "candidateOrigin": "sole parent, no overlay"
+    },
+    {
+      "path": "joystick-games/qa/android/test_runner.py",
+      "gitBlob": "aa25f541afc7662b541cd92ddacb222261acb072",
+      "bytes": 55943,
+      "sha256": "1d845d03f36a7fff8e2f6861ff404aaef1fdd1c0983732af80fd24ad9a23d0be",
+      "candidateOrigin": "sole parent, no overlay"
+    },
+    {
+      "path": "joystick-games/ponpoko-kart/qa-plan.json",
+      "gitBlob": "0a8e4925f2712bb4f3b3a6a057764fb01a0f0bbd",
+      "bytes": 3658,
+      "sha256": "cea39515f37cd9da3f706aaf92108f48390d9b4fdb5745c3328466c465ccd512",
+      "candidateOrigin": "sole parent, no overlay"
+    },
+    {
+      "path": "puretv-joystick/joystick_sdk.py",
+      "gitBlob": "2261ba575664527f935b4eefa8c5ac33eb1ec28d",
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+      "candidateOrigin": "sole parent, no overlay"
+    },
+    {
+      "path": "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java",
+      "gitBlob": "1217b10b2a912122ee9e01691dc6e5127c3b2f57",
+      "bytes": 11264,
+      "sha256": "c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305",
+      "candidateOrigin": "sole parent, no overlay"
+    },
+    {
+      "path": "joystick-games/tools/android-catalog.py",
+      "gitBlob": "bc3314553280089fd7bd06c500fa6757e67bffcb",
+      "bytes": 3374,
+      "sha256": "5aad93b6435e631b20d047d4adcd268d42de4679d2c0b4933d4b33b7d14567be",
+      "candidateOrigin": "sole parent, no overlay"
+    },
+    {
+      "path": "joystick-games/tools/android-runtime-inputs.py",
+      "gitBlob": "109128d39d2ea64ee27b49f0eda821b416cf39cb",
+      "bytes": 20076,
+      "sha256": "369e15a89d6cdbf7f6ccc79064e01111e0018de83232d4a4de80d91842d1768f",
+      "candidateOrigin": "sole parent, no overlay"
+    },
+    {
+      "path": "joystick-games/tools/android-runtime-copies.py",
+      "gitBlob": "6ce1b056161772cf606ee2f6cdef281540c7eab5",
+      "bytes": 10371,
+      "sha256": "3bbffe0027b7a5ce66247eb37b315e199c03a3d26e8b44655ccae27d88e0cbd0",
+      "candidateOrigin": "sole parent, no overlay"
+    },
+    {
+      "path": "joystick-games/tools/android-environment-diagnostics.py",
+      "gitBlob": "3a0ca95baba0b17eb199570c72b4509da35c4301",
+      "bytes": 40003,
+      "sha256": "92d8b974280353a8768cf505d1b51e739f97df77d27d9720d7e7d0f2b0f3160e",
+      "candidateOrigin": "sole parent, no overlay"
+    },
+    {
+      "path": "joystick-games/qa/android/install_failure.py",
+      "gitBlob": "71eb80487202da061fa75b3a872caed1dc579854",
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712",
+      "candidateOrigin": "sole parent, no overlay"
+    },
+    {
+      "path": "joystick-games/qa/android/install_confirmation.py",
+      "gitBlob": "d5a4d3e5b46bd267c5ea89c7cf8ae997577ce2a8",
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4",
+      "candidateOrigin": "sole parent, no overlay"
+    }
+  ],
+  "preservedParentTrees": [
+    {
+      "path": "resource/game-kit",
+      "parentTreeEntry": "040000 tree 54c207642968b7060ce875d9560ad40a7cb65ae9\tresource/game-kit",
+      "candidateUnchanged": true
+    },
+    {
+      "path": "joystick-games/shared",
+      "parentTreeEntry": "040000 tree af266ceb2ea4fceeeb77a5ff88a56cf3a8931b14\tjoystick-games/shared",
+      "candidateUnchanged": true
+    },
+    {
+      "path": "joystick-games/ponpoko-kart/src",
+      "parentTreeEntry": "040000 tree cb7cf44f782d23d35b3cd67d712044625f98ccd4\tjoystick-games/ponpoko-kart/src",
+      "candidateUnchanged": true
+    },
+    {
+      "path": "joystick-games/ponpoko-kart/dist",
+      "parentTreeEntry": "040000 tree b52b30da315a49806484725a6499f3afb74b352b\tjoystick-games/ponpoko-kart/dist",
+      "candidateUnchanged": true
+    }
+  ],
+  "unchangedNativeEnvironmentLines": [
+    "emulator-build: '16970787'",
+    "api-level: 36",
+    "target: android-tv",
+    "arch: x86_64",
+    "profile: tv_1080p",
+    "avd-name: JoystickGamesValidation",
+    "force-avd-creation: true",
+    "disable-animations: true",
+    "emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}"
+  ],
+  "unchangedSupervisorFunctionsAst": {
+    "disable_vulkan": true,
+    "enabled": true,
+    "expected_arguments": true
+  },
+  "unchangedExactSupervisedVulkanArguments": [
+    "-port",
+    "5554",
+    "-avd",
+    "JoystickGamesValidation",
+    "-no-window",
+    "-memory",
+    "2048",
+    "-gpu",
+    "swiftshader_indirect",
+    "-noaudio",
+    "-no-boot-anim",
+    "-no-snapshot",
+    "-feature",
+    "-Vulkan"
+  ],
+  "liveMainRunnerExcluded": {
+    "liveSha256": "51f6aad21a8e9963a0ebd71d5de9f57fd67db924253464dd59565efc7d5f93a9",
+    "parentSha256": "5fb0fbb8b14995ea757f2b9bfd5e89fd08b51c24810657b8d5b3e368a1b8826a",
+    "reason": "Only exact parent run.py is used; no later Back readiness or unrelated QA imports."
+  },
+  "commandsNotRun": [
+    "git write-tree",
+    "git commit-tree",
+    "git update-ref",
+    "workflow dispatch",
+    "native emulator launch",
+    "original APK rebuild/sign"
+  ],
+  "sourceHashesStableAtEnd": true
+}

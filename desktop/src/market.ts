@@ -2,6 +2,18 @@ import type {MarketItem, MarketKind, MarketSeenEntry} from './types';
 
 export type MarketCategory = 'media' | 'game' | 'launcher';
 
+/** Cover images must stay on the public application server and in a market category. */
+export function marketCoverUrl(value: string | null | undefined): string | null {
+  if (!value || /[\\\u0000-\u0020]/u.test(value)) return null;
+  try {
+    const url = new URL(value);
+    if (url.origin !== 'https://apps.b14f.com' || url.username || url.password || url.search || url.hash) return null;
+    const segments = url.pathname.split('/').slice(1).map(decodeURIComponent);
+    if (segments.length < 2 || !['game', 'media', 'launcher'].includes(segments[0]) || segments.some(part => !part || part === '.' || part === '..' || /[/\\\u0000-\u001f\u007f]/u.test(part))) return null;
+    return url.href;
+  } catch { return null; }
+}
+
 export interface MarketGroup {
   id: string;
   kind: MarketKind;
@@ -12,7 +24,7 @@ export interface MarketGroup {
 function category(item: MarketItem): MarketCategory {
   if (item.kind === 'launcher') return 'launcher';
   // Store paths declare the category. Legacy flat app folders remain in Media.
-  return item.id.startsWith('apps/game/') ? 'game' : 'media';
+  return item.id.startsWith('game/') || item.id.startsWith('apps/game/') ? 'game' : 'media';
 }
 
 function groupId(item: MarketItem): string {
@@ -20,7 +32,7 @@ function groupId(item: MarketItem): string {
   const stem = item.fileName.replace(/\.apk$/i, '');
   const suffix = item.version ? `-${item.version}` : '';
   const name = suffix && stem.endsWith(suffix) ? stem.slice(0, -suffix.length) : stem;
-  // Paths and file stems identify the resource; display names and commit URLs do not.
+  // Paths and file stems identify the resource independently of display names and URLs.
   return JSON.stringify([item.kind, folder, name]);
 }
 

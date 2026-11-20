@@ -1,0 +1,39 @@
+{
+  "recordedAt": "2026-11-19T19:47:54.419142+00:00",
+  "cause": "Native read-only observer requires snapshot.game to equal registered game ID. Both adapters omitted the field; original failure was correctly rejected.",
+  "game": "penguintrack",
+  "fix": "Adds only the fixed game identity to the existing cached read-only snapshot. Does not change controls, physics, rendering or game clocks.",
+  "sourcePath": "src/js/tv-input.js",
+  "sourceSha256": "450a39e8a78bc41d4f7f8a9ed00edcf7a3c9ab2b8578466fdd61fb3dd308bba5",
+  "distributionBundle": "dist/penguintrack.js",
+  "distributionSha256": "f1890ac06cf5bead722bd6d9418014091a0e0e567b276a781bb2129d776c9b9c",
+  "buildManifestSha256": "133d0f40d89af4841846e7b1982af85a71b4f74b4efe89d6ed3cbc54420b7b04",
+  "buildCheckPassed": true,
+  "changedManifestEntries": [
+    {
+      "section": "inputs",
+      "path": "src/js/tv-input.js",
+      "oldSha256": "fe63c203a9a93b02f3bce24261cd0c3dec8e979f644087f3c55fd3f55b5f7cb8",
+      "newSha256": "450a39e8a78bc41d4f7f8a9ed00edcf7a3c9ab2b8578466fdd61fb3dd308bba5"
+    },
+    {
+      "section": "distribution",
+      "path": "js/tv-input.js",
+      "oldSha256": "fe63c203a9a93b02f3bce24261cd0c3dec8e979f644087f3c55fd3f55b5f7cb8",
+      "newSha256": "450a39e8a78bc41d4f7f8a9ed00edcf7a3c9ab2b8578466fdd61fb3dd308bba5"
+    },
+    {
+      "section": "distribution",
+      "path": "penguintrack.js",
+      "oldSha256": "a917f307f860d92c0ecabe7c936a2b3d9e2376f7e4b8192a83a4bb1f12aef277",
+      "newSha256": "f1890ac06cf5bead722bd6d9418014091a0e0e567b276a781bb2129d776c9b9c"
+    }
+  ],
+  "nativePassed": false,
+  "priorBrowserEvidence": "Existing browser screenshots and gameplay are for the prior snapshot object without game identity; runtime unchanged apart from diagnostic field. Penguin attempt8 continues on its immutable prior 6-ui snapshot; Kart attempt3 will use a new immutable distribution.",
+  "bundledJavaScriptDiff": "New bundle equals previous frozen bundle byte-for-byte after removing exactly one added game identity property.",
+  "testScope": "Adapter tests including executable production installTV snapshot contract; stub only controller boundary and DOM. Not original upstream full test suite or real native execution.",
+  "snapshotContractTestSha256": "71993f38ab50ea72aeb4d4949830e14789774e06f128e2fa9a7482ad9f8c997d",
+  "adapterTestsPassed": 7,
+  "adapterTestsLogSha256": "597291050c52f95bac32b10e20e539c269d88d98540b1b5cd3b044c1df2b3ae4"
+}

@@ -1,0 +1,64 @@
+{
+  "status": "passed",
+  "tests": 28,
+  "skipped": 0,
+  "seconds": 1.847,
+  "scope": "Real disposable compiled ELF + GDB13.1/MI processes; separate parser/ownership/synthetic cleanup boundary tests. No AVD, Android app or gameplay acceptance.",
+  "command": [
+    "python3",
+    "-B",
+    "joystick-games/qa/android/test_qemu_stack.py"
+  ],
+  "environmentOverrides": {
+    "TMPDIR": "/dev/shm/racing-review-karts/qemu-stack-tests-attempt-3",
+    "PURETV_QEMU_TEST_GDB": "/dev/shm/racing-native-readiness/gdb-local/minimal/usr/bin/gdb",
+    "PURETV_QEMU_TEST_GDB_LIBRARY_PATH": "/dev/shm/racing-native-readiness/gdb-local/minimal/usr/lib/x86_64-linux-gnu",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "helperUnchangedDuringExecution": true,
+  "files": [
+    {
+      "path": "android-qemu-stack.py",
+      "bytes": 32317,
+      "sha256": "91fb4cd86d5378e03f9a089663db213c45e1bb310bf73dbf23afa06e65481489"
+    },
+    {
+      "path": "exit-code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "source-after.sha256",
+      "bytes": 220,
+      "sha256": "d921633e297322540b3dd394c73204633516ff45f159935926afef482c39bd2f"
+    },
+    {
+      "path": "source-before.sha256",
+      "bytes": 220,
+      "sha256": "d921633e297322540b3dd394c73204633516ff45f159935926afef482c39bd2f"
+    },
+    {
+      "path": "test_qemu_stack.py",
+      "bytes": 23915,
+      "sha256": "3fffbed20e5d15cde5478d777b2150b541784b4bb8202e2dbb080a1c9f0742a0"
+    },
+    {
+      "path": "tests.log",
+      "bytes": 4234,
+      "sha256": "5b62ea0cb31a4da72cd2610287fca5263d6e121d985ea15e7a2bb9656dc4cc13"
+    }
+  ],
+  "limits": "MI command0.2sec synthetic cases; actual fixture starts only after ready+owned attach handshake via test SIGUSR1. Actual timeout.5sec. Parent return codes asserted fatal=-11, handled-then-fatal=-11, externalTERM=-15, INT=-2; healthy afterdetach=0. No target core allowed.",
+  "cleanupScope": "Only disposable fixture ELF/MI peer gets test cleanup terminate; production helper never inherits that cleanup. Unknown cleanup case uses mocks without attaching and must remain blocked/attachment unresolved, no kill/terminate.",
+  "exitCode": 0,
+  "newBoundaryScope": [
+    "Real MI late attach token and detach error",
+    "Expired capture zero sends, cleanup channel remains",
+    "Unknown original attach response cannot unlock reap based on separate detach error",
+    "Module-root symlink escape is not hashed",
+    "Per-thread frame query needs fresh target and debugger identity",
+    "Maximum 4event/4thread/12frame payload keeps bounded explicit blocked/cleanup report",
+    "Synthetic initial-SIGSEGV MI stop deferred after identity check; no args/raw data retained, no claim of real attach-time crash",
+    "use_sudo=True rejected before output creation or MI process launch; actual sudo capability absent"
+  ]
+}

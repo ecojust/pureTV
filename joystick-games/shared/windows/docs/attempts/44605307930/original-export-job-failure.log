@@ -1,0 +1,23 @@
+export	Validate and retain immutable original evidence	﻿2026-11-19T20:11:49.6599185Z ##[group]Run python3 joystick-games/tools/windows-export.py --directory "$RUNNER_TEMP/export"
+export	Validate and retain immutable original evidence	2026-11-19T20:11:49.6599847Z [36;1mpython3 joystick-games/tools/windows-export.py --directory "$RUNNER_TEMP/export"[0m
+export	Validate and retain immutable original evidence	2026-11-19T20:11:49.8718341Z shell: /usr/bin/bash -e {0}
+export	Validate and retain immutable original evidence	2026-11-19T20:11:49.8718829Z env:
+export	Validate and retain immutable original evidence	2026-11-19T20:11:49.8719086Z   PYTHONUTF8: 1
+export	Validate and retain immutable original evidence	2026-11-19T20:11:49.8721400Z   GH_TOKEN: ***
+export	Validate and retain immutable original evidence	2026-11-19T20:11:49.8721694Z   REQUESTED_GAMES: ["sugarplum-drop"]
+export	Validate and retain immutable original evidence	2026-11-19T20:11:49.8721949Z ##[endgroup]
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.1999760Z Traceback (most recent call last):
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.2000520Z   File "/home/runner/work/pureTV/pureTV/joystick-games/tools/windows-export.py", line 25, in <module>
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.2001236Z     for name,hash_value in report['sourceHashes'].items():assert sha(root/name)==hash_value,name
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.2001641Z                                                                  ^^^^^^^^^^^^^^
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.2002155Z   File "/home/runner/work/pureTV/pureTV/joystick-games/tools/windows-export.py", line 8, in sha
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.2002773Z     def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.2003155Z                                         ^^^^^^^^^^^^^^^^^
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.2003531Z   File "/usr/lib/python3.12/pathlib.py", line 1021, in read_bytes
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.2763035Z     with self.open(mode='rb') as f:
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.2763619Z          ^^^^^^^^^^^^^^^^^^^^
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.2764355Z   File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.2765174Z     return io.open(self, mode, buffering, encoding, errors, newline)
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.2766219Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.2767442Z FileNotFoundError: [Errno 2] No such file or directory: '/home/runner/work/pureTV/pureTV/joystick-games\\tools\\windows-verify.py'
+export	Validate and retain immutable original evidence	2026-11-19T20:11:50.2944628Z ##[error]Process completed with exit code 1.

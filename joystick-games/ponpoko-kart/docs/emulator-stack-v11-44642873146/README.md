@@ -1,0 +1,11 @@
+# Pon v11: GDB tool setup timeout, no permission test or QEMU launch
+
+Original run `44642873146`, attempt 1, QA source `73a3cdb8a41cc079fc06d62de382673b6d3e81c1`. Root's four original dispatch/payload/source-recipe files are preserved unchanged. This recovery made no workflow POST.
+
+All 138 generic checks and original signed-package binding passed. The GDB setup log shows nonroot UID 1001, no initial `command -v gdb` result, and `apt-get update` fetching 13.3 MB in 5 minutes. The installation command then started, but the runner stopped this step at its original five-minute deadline. The original log records index download retries; their underlying transport cause remains unknown.
+
+The 9 integration cases, 10 actual permission cases and AVD all remained unexecuted. This is not a new PR_SET_PTRACER denial, GDB attach result, or QEMU crash. `runtime-verification.json` correctly remains failed for the absent outcomes file. The export's diagnostic flag describes the requested experiment; no debugger actually attached in this attempt, and native acceptance remains false.
+
+Normal immutable export `e716953031dce3f348a3763afab95cba04ed1245` completed successfully. The original archive integrity report verifies all 43 QA source copies and 208 original artifact source copies. This recovery independently verified 61 small files (1,276,685 bytes) against original Git blobs and manifest hashes, including all 43 executed QA sources against the exact source commit. Duplicate assets, packages and media were not fetched. The complete original job log and first/final run/job API snapshots are included; failed early log requests are preserved separately with redirect queries redacted.
+
+The approved follow-up changes only the opted-in GDB setup step budget from 5 to 10 minutes. `setup-time-budget-fix/validation.json` verifies exact one-line replacement against the original source; actionlint passes without warnings. Installation commands, same-user execution, the real permission gate, emulator arguments and production sources are unchanged. The 138 generic, 9 integration and real permission suites were not rerun for this one-line timing change. Root creates the isolated ref and controls any next dispatch.

@@ -1,0 +1,138 @@
+{
+  "status": "source_and_local_qa_prepared_native_not_rerun",
+  "preparedAt": "2026-11-19T22:20:16.585018+00:00",
+  "game": "kart-royale",
+  "ownedFiles": {
+    "joystick-games/kart-royale/qa-plan.json": {
+      "bytes": 7616,
+      "sha256": "4a08d2b6d44bcda68d9311740d717ada4cbd7d1cb429c9055a47ea3a56afbde4"
+    },
+    "joystick-games/kart-royale/tests/menu-plan-dom.mjs": {
+      "bytes": 7641,
+      "sha256": "3cdc5c08569e603439b8a78eae88e5180dcd702ee89fbf8cfabf03697ec25070"
+    },
+    "joystick-games/kart-royale/tests/qa-menu-plan.test.mjs": {
+      "bytes": 1882,
+      "sha256": "683a88088b39b1bb15a036db19b2389272143626d0b3443cd02b66b24311d7d8"
+    },
+    "joystick-games/kart-royale/tests/fixtures/menu-focus-original-failures.json": {
+      "bytes": 51849,
+      "sha256": "4b85e0d0e63044fdb91f21ad82e976b400af1ae588dd0234d59e6a4f5c4c812f"
+    }
+  },
+  "minimalPlanChanges": [
+    {
+      "index": 2,
+      "name": "Focus controls option Floating stick",
+      "addedMenuTap": true,
+      "addedFocusExpectation": {
+        "path": "gameplay.focus",
+        "op": "eq",
+        "value": "Floating stickAppears wherever your thumb lands. Never look for it."
+      },
+      "timeoutSecondsUnchanged": 60,
+      "holdMsUnchanged": 180
+    },
+    {
+      "index": 3,
+      "name": "Focus controls option Fixed stick",
+      "addedMenuTap": true,
+      "addedFocusExpectation": {
+        "path": "gameplay.focus",
+        "op": "eq",
+        "value": "Fixed stickAlways in the same place. Muscle memory, no drift."
+      },
+      "timeoutSecondsUnchanged": 60,
+      "holdMsUnchanged": 180
+    },
+    {
+      "index": 4,
+      "name": "Focus controls option Tilt to steer",
+      "addedMenuTap": true,
+      "addedFocusExpectation": {
+        "path": "gameplay.focus",
+        "op": "eq",
+        "value": "Tilt to steerRoll the phone. Both thumbs free for the buttons."
+      },
+      "timeoutSecondsUnchanged": 60,
+      "holdMsUnchanged": 180
+    },
+    {
+      "index": 5,
+      "name": "Focus controls option Steer buttons",
+      "addedMenuTap": true,
+      "addedFocusExpectation": {
+        "path": "gameplay.focus",
+        "op": "eq",
+        "value": "Steer buttonsTwo big pads. Nothing to hold steady."
+      },
+      "timeoutSecondsUnchanged": 60,
+      "holdMsUnchanged": 180
+    },
+    {
+      "index": 6,
+      "name": "Focus controls option Right",
+      "addedMenuTap": true,
+      "addedFocusExpectation": {
+        "path": "gameplay.focus",
+        "op": "eq",
+        "value": "Right"
+      },
+      "timeoutSecondsUnchanged": 60,
+      "holdMsUnchanged": 180
+    },
+    {
+      "index": 7,
+      "name": "Focus controls option Left",
+      "addedMenuTap": true,
+      "addedFocusExpectation": {
+        "path": "gameplay.focus",
+        "op": "eq",
+        "value": "Left"
+      },
+      "timeoutSecondsUnchanged": 60,
+      "holdMsUnchanged": 180
+    }
+  ],
+  "otherPlanFieldsAndStepsUnchanged": true,
+  "originalGameSrcAndDistGitDiffEmpty": true,
+  "unitTests": {
+    "command": "npm test",
+    "passed": 13,
+    "failed": 0,
+    "log": "tests.log",
+    "originalStaleSnapshotsRejected": 12
+  },
+  "domCalibration": {
+    "report": "dom-attempt-1/report.json",
+    "reportSha256": "28ad707af70965c4ebf94604b9ad639fad1ea60264e617929245c2fca479b734",
+    "viewports": [
+      [
+        960,
+        540
+      ],
+      [
+        1280,
+        720
+      ]
+    ],
+    "menuStepsPerViewport": 11,
+    "originalMenuAndPreferenceModules": true,
+    "unmodifiedWindowsPulseBridge": true,
+    "strictReleasedSubsequentPollsPerStep": 2,
+    "savedHand": "left",
+    "rosterFocus": "Start race",
+    "rendererAndRacePhysicsAbsent": true,
+    "nativeTransportSimulated": true,
+    "gameClockModified": false,
+    "screenshotOrVisualAcceptanceClaimed": false
+  },
+  "originalFailureEvidence": "original-failure-analysis.json",
+  "unresolved": [
+    "Normal Windows roster stabilization failure remains unresolved; this patch does not extend timeout or weaken stable-frame checks.",
+    "Actual Windows native run, WebGL rendering and original SDK transport have not been rerun for this patch."
+  ],
+  "sharedSourcesChanged": false,
+  "workflowDispatched": false,
+  "committedOrPushed": false
+}

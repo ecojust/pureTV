@@ -1,0 +1,60 @@
+{
+  "reviewedAt": "2026-11-19T19:11:20.905477+00:00",
+  "qaPlanSha256": "361ffcdc5733fc5d5d38ecde03fe97de5f1dd83d11ceb16d03c1c0db155f65f9",
+  "schemaValidatorSha256": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+  "schemaValid": true,
+  "stepCount": 18,
+  "beforeFirstThrottleStep": {
+    "name": "Start race and wait for original countdown",
+    "keys": [
+      "A"
+    ],
+    "holdMs": 100,
+    "timeoutSeconds": 60,
+    "expect": [
+      {
+        "path": "gameplay.phase",
+        "op": "eq",
+        "value": "racing"
+      },
+      {
+        "path": "stage",
+        "op": "eq",
+        "value": "playing"
+      }
+    ]
+  },
+  "firstThrottleStep": {
+    "name": "Accelerate original simulation",
+    "keys": [
+      "UP"
+    ],
+    "holdMs": 3000,
+    "timeoutSeconds": 60,
+    "expect": [
+      {
+        "path": "gameplay.speed",
+        "op": "changed"
+      },
+      {
+        "path": "gameplay.speed",
+        "op": "gt",
+        "value": 2
+      }
+    ]
+  },
+  "guard": "The original simulation phase must equal racing before UP. stage=playing alone is insufficient and is not the only guard.",
+  "maximumStepWaitSeconds": 60,
+  "storageRestartRequired": true,
+  "normalPersistenceSteps": [
+    "Focus settings from original New Game focus",
+    "Focus original Low preset",
+    "Select original Low preset",
+    "Focus New Game",
+    "Start new game normally",
+    "Confirm original car choice"
+  ],
+  "modelOrClockModified": false,
+  "planChangedDuringAudit": false,
+  "limitation": "Native runtime not yet executed. The 60-second step limit fails closed if original warmup/countdown takes longer; browser software-GPU budget is separately documented."
+}

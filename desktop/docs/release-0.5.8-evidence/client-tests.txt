@@ -1,0 +1,50 @@
+   Compiling puretv-http-tests v0.5.8 (/dev/shm/puretv-http-tests)
+warning: fields `platform` and `file_name` are never read
+  --> /dev/shm/puretv-market-sync/desktop/src-tauri/src/client_updates.rs:56:9
+   |
+53 | pub struct Downloaded {
+   |            ---------- fields in this struct
+...
+56 |     pub platform: String,
+   |         ^^^^^^^^
+57 |     pub file_name: String,
+   |         ^^^^^^^^^
+   |
+   = note: `Downloaded` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `platform` is never used
+  --> /dev/shm/puretv-market-sync/desktop/src-tauri/src/client_updates.rs:88:8
+   |
+88 | pub fn platform() -> &'static str {
+   |        ^^^^^^^^
+
+warning: method `check` is never used
+   --> /dev/shm/puretv-market-sync/desktop/src-tauri/src/client_updates.rs:560:12
+    |
+553 | impl State {
+    | ---------- method in this implementation
+...
+560 |     pub fn check(
+    |            ^^^^^
+
+warning: `puretv-http-tests` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.87s
+     Running unittests src/lib.rs (/dev/shm/puretv-http-target/debug/deps/puretv_http_tests-fb75260699df43b8)
+
+running 12 tests
+test client_updates::tests::cached_packages_require_matching_receipt_and_are_rehashed_before_reuse ... ok
+test client_updates::tests::discovery_heads_only_latest_matching_package_and_uses_exact_metadata ... ok
+test client_updates::tests::download_addresses_cannot_escape_fixed_https_client_directory ... ok
+test client_updates::tests::failed_checks_clear_previous_candidates_and_downloads_require_displayed_revision ... ok
+test client_updates::tests::failed_or_cancelled_transfers_leave_no_partial_files_or_valid_receipt ... ok
+test client_updates::tests::live_http_discovery_and_verified_client_download ... ignored, downloads one public client package into an isolated temporary directory
+test client_updates::tests::missing_platform_does_not_head_files_and_invalid_sizes_are_rejected ... ok
+test client_updates::tests::no_matching_platform_is_distinct_from_up_to_date_and_never_downgrades ... ok
+test client_updates::tests::transfers_enforce_exact_length_calculate_sha256_and_honor_cancel_and_timeout ... ok
+test client_updates::tests::unsupported_platform_and_invalid_selection_never_touch_network_or_disk ... ok
+test client_updates::tests::versions_are_numeric_and_only_exact_stable_platform_files_are_selected ... ok
+test client_updates::tests::direct_download_requires_selected_http_metadata_and_never_falls_back_to_gitee ... ok
+
+test result: ok. 11 passed; 0 failed; 1 ignored; 0 measured; 31 filtered out; finished in 0.15s
+

@@ -1,0 +1,230 @@
+{
+  "sourceCommit": "a73a1976e7d38ff27b8e457b933519ea66eaa949",
+  "qaSourceCommit": "b15beb969bfc83595143aec4ddc4817220ba8119",
+  "artifactRunId": 44150598155,
+  "batch": "triptych-01",
+  "runner": "macos-latest",
+  "expectedArchitecture": "arm64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "sugarplum-drop",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/sugarplum-drop",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/sugarplum-drop/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "sugarplum-drop/package-verification.log",
+          "startedAt": "2026-11-17T19:21:19.891368+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "sugarplum-drop",
+            "--app",
+            "/Users/runner/work/_temp/packages/sugarplum-drop/installed/Sugarplum Drop.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/sugarplum-drop/native"
+          ],
+          "status": "passed",
+          "log": "sugarplum-drop/native.log",
+          "startedAt": "2026-11-17T19:21:44.842453+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "sugarplum-drop",
+            "--app",
+            "/Users/runner/work/_temp/packages/sugarplum-drop/installed/Sugarplum Drop.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/sugarplum-drop/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "sugarplum-drop/occupied-port.log",
+          "startedAt": "2026-11-17T19:22:24.277852+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "sugarplum-drop",
+            "--app",
+            "/Users/runner/work/_temp/packages/sugarplum-drop/installed/Sugarplum Drop.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/sugarplum-drop/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "sugarplum-drop/rosetta.log",
+          "startedAt": "2026-11-17T19:22:24.803395+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "starblazer-86",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/starblazer-86",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/starblazer-86/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "starblazer-86/package-verification.log",
+          "startedAt": "2026-11-17T19:23:08.274237+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "starblazer-86",
+            "--app",
+            "/Users/runner/work/_temp/packages/starblazer-86/installed/Starblazer 86.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/starblazer-86/native"
+          ],
+          "status": "passed",
+          "log": "starblazer-86/native.log",
+          "startedAt": "2026-11-17T19:23:21.731278+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "starblazer-86",
+            "--app",
+            "/Users/runner/work/_temp/packages/starblazer-86/installed/Starblazer 86.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/starblazer-86/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "starblazer-86/occupied-port.log",
+          "startedAt": "2026-11-17T19:23:57.628831+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "starblazer-86",
+            "--app",
+            "/Users/runner/work/_temp/packages/starblazer-86/installed/Starblazer 86.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/starblazer-86/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "starblazer-86/rosetta.log",
+          "startedAt": "2026-11-17T19:23:57.760722+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "popgun-pip",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/popgun-pip",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/popgun-pip/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "popgun-pip/package-verification.log",
+          "startedAt": "2026-11-17T19:24:37.143414+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "popgun-pip",
+            "--app",
+            "/Users/runner/work/_temp/packages/popgun-pip/installed/Popgun Pip.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/popgun-pip/native"
+          ],
+          "status": "passed",
+          "log": "popgun-pip/native.log",
+          "startedAt": "2026-11-17T19:24:54.639084+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "popgun-pip",
+            "--app",
+            "/Users/runner/work/_temp/packages/popgun-pip/installed/Popgun Pip.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/popgun-pip/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "popgun-pip/occupied-port.log",
+          "startedAt": "2026-11-17T19:25:36.489870+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "popgun-pip",
+            "--app",
+            "/Users/runner/work/_temp/packages/popgun-pip/installed/Popgun Pip.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/popgun-pip/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "popgun-pip/rosetta.log",
+          "startedAt": "2026-11-17T19:26:18.727969+00:00",
+          "returncode": 0
+        }
+      ]
+    }
+  ]
+}

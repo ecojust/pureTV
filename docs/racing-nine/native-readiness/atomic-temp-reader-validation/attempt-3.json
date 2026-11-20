@@ -1,0 +1,43 @@
+{
+  "status": "passed_local_validation_with_exact_preexisting_actionlint_metadata_ignore",
+  "checks": [
+    {
+      "argv": [
+        "/dev/shm/racing-tooling/actionlint",
+        "-ignore",
+        "input \"artifact-ids\" is not defined in action \"actions/download-artifact@v4\"",
+        ".github/workflows/joystick-catalog-macos-evidence.yml"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        ".github/workflows/joystick-catalog-macos-evidence.yml",
+        "joystick-games/shared/macos/tests/evidence-files.test.py"
+      ],
+      "returncode": 0
+    }
+  ],
+  "unitTests": {
+    "passed": 7,
+    "stderr": "attempt-2-0-stderr.log",
+    "sourceUnchangedSinceTest": true
+  },
+  "sources": {
+    ".github/workflows/joystick-catalog-macos-evidence.yml": {
+      "bytes": 19304,
+      "sha256": "5982a635b2615de7221e8ccd1b994a71c4a69a99b5cf23da2e92968a7ff92f13"
+    },
+    "joystick-games/shared/macos/tests/evidence-files.test.py": {
+      "bytes": 4520,
+      "sha256": "a24ff9afb6dd6bac7a3a4f3b69280651fc4e601fb5c4d82df4dbaa680f9619e4"
+    }
+  },
+  "realEvidenceRecoveredWithThisRevision": false,
+  "originalReaderFailureRetained": "../ci-44608415225-attempt-1/readonly-intel-export-failure-1.log",
+  "scope": "Only QA diagnostic Foundation .dat.nosync[hex1..16].[alnum6] opaque originals; <=8MB each/16MB total/16files, exact original game/mode path, no parse/execute; original general 50MBfile/250MBtotal constraints unchanged"
+}

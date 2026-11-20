@@ -1,0 +1,34 @@
+diff --git a/.github/workflows/joystick-catalog-android-runtime.yml b/.github/workflows/joystick-catalog-android-runtime.yml
+index 65f74d8..f7a767b 100644
+--- a/.github/workflows/joystick-catalog-android-runtime.yml
++++ b/.github/workflows/joystick-catalog-android-runtime.yml
+@@ -251,6 +251,21 @@ jobs:
+             --artifact-source "$ARTIFACT_SOURCE" --artifact-run-id "$ARTIFACT_RUN" "${origin_args[@]}" \
+             --output "$RUNNER_TEMP/input" --build-tools "$ANDROID_HOME/build-tools/34.0.0" \
+             2>&1 | tee "$RUNNER_TEMP/input-verification.log"
++      - name: Install GDB only for the owned QEMU diagnostic
++        if: inputs.pon_capture_qemu_stack
++        timeout-minutes: 5
++        run: |
++          set -euxo pipefail
++          {
++            test "$(id -u)" -ne 0
++            command -v gdb || true
++            sudo apt-get update
++            sudo apt-get install -y --no-install-recommends gdb
++            command -v gdb
++            test -x /usr/bin/gdb
++            /usr/bin/gdb --version
++            sha256sum /usr/bin/gdb
++          } 2>&1 | tee "$RUNNER_TEMP/qemu-debugger-setup.log"
+       - name: Require actual same-user process-local GDB permission before any AVD
+         if: inputs.pon_capture_qemu_stack
+         run: |
+@@ -317,6 +332,7 @@ jobs:
+           for name in ['qa-contracts.log','artifact-contracts.log','reuse-contracts.log','environment-diagnostics-tests.log','install-confirmation-tests.log','emulator-supervisor-tests.log','input-verification.log']:
+               if (scratch/name).is_file():shutil.copyfile(scratch/name,out/name)
+           if (scratch/'qemu-permission-gate.log').is_file():shutil.copyfile(scratch/'qemu-permission-gate.log',out/'qemu-permission-gate.log')
++          if (scratch/'qemu-debugger-setup.log').is_file():shutil.copyfile(scratch/'qemu-debugger-setup.log',out/'qemu-debugger-setup.log')
+           if (scratch/'qemu-stack-integration-tests.log').is_file():shutil.copyfile(scratch/'qemu-stack-integration-tests.log',out/'qemu-stack-integration-tests.log')
+           if (scratch/'qemu-permission-gate').is_dir():shutil.copytree(scratch/'qemu-permission-gate',out/'qemu-permission-gate')
+           paths=list(Path('joystick-games/qa/android').rglob('*.py'))+list(Path('joystick-games/qa/android').rglob('*.java'))+list(Path('joystick-games/qa/android/fixtures').glob('*.json'))

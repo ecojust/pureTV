@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "racing_windows_host",
+  "reviewedAt": "2026-11-19T21:39:29.337273+00:00",
+  "status": "no_static_blocking_issue",
+  "reviewedSources": {
+    ".github/workflows/joystick-catalog-windows.yml": {
+      "bytes": 7283,
+      "sha256": "6227b95ac5aca470699fbb5366accbea303445e8d23e6dbbb230d9b8b5e0ed5a"
+    },
+    "joystick-games/tools/windows-export.py": {
+      "bytes": 21712,
+      "sha256": "6e8ef677776e88f1dec3b05aad05497604f48bd8f0ca1b8bc6a583597755fe33"
+    },
+    "joystick-games/shared/windows/tests/export.test.py": {
+      "bytes": 20144,
+      "sha256": "da0212951f069b61969df6b97f0ed692d275281a1342cb2fd4c967df1627fde7"
+    }
+  },
+  "scope": "Independent read-only source/test/workflow review. No test rerun, native execution, upload, POST, publish or dispatch.",
+  "findings": [
+    "Workflow retains original packages only when the complete build step actually succeeded, even if installation/bootstrap/runtime subsequently fail. Both original upload steps retain exact names/order.",
+    "Export keeps exact original run/attempt/source/repo/job/build/upload/artifact identity and digest metadata, with existing bounded two-second upload-end timestamp tolerance and strict job window.",
+    "Source closure is selected from the exact checked-out source commit and each complete input is checked against its regular fixed Git blob plus recorded size/SHA256.",
+    "An ordinary failed/running/missing QA report produces built-unverified, not verifiedGames. Contradictory game/source/binary identity rejects the export. Successful reports retain both ten-test and persisted-storage checks and require successful original verify job.",
+    "Original bytes remain in download directory; a separate Git staging tree omits only validated package binaries at or above 100000000 bytes. References include exact package and original artifact identities/expiry and explicitly deny public delivery. Unrelated artifacts, symlinks, unexpected evidence or package file sets, and oversized non-package evidence reject.",
+    "No changes to success-only original-package windows-reexport verifier."
+  ],
+  "actualPriorJobShapeSource": "joystick-games/shared/windows/docs/attempts/44615299245/monitor-20261119T212733Z.json",
+  "actualPriorJobShapes": [
+    {
+      "name": "verify (penguintrack)",
+      "jobId": 135882337570,
+      "conclusion": "success",
+      "buildStepNumber": 6,
+      "uploadStepNumbers": [
+        11,
+        12
+      ],
+      "packageUploadConclusion": "success"
+    },
+    {
+      "name": "verify (last-track)",
+      "jobId": 135882337620,
+      "conclusion": "success",
+      "buildStepNumber": 6,
+      "uploadStepNumbers": [
+        11,
+        12
+      ],
+      "packageUploadConclusion": "success"
+    },
+    {
+      "name": "verify (night-racer)",
+      "jobId": 135882337624,
+      "conclusion": "success",
+      "buildStepNumber": 6,
+      "uploadStepNumbers": [
+        11,
+        12
+      ],
+      "packageUploadConclusion": "success"
+    },
+    {
+      "name": "verify (ponpoko-kart)",
+      "jobId": 135882337636,
+      "conclusion": "failure",
+      "buildStepNumber": 6,
+      "uploadStepNumbers": [
+        11,
+        12
+      ],
+      "packageUploadConclusion": "skipped"
+    },
+    {
+      "name": "verify (dirt-crown)",
+      "jobId": 135882337687,
+      "conclusion": "success",
+      "buildStepNumber": 6,
+      "uploadStepNumbers": [
+        11,
+        12
+      ],
+      "packageUploadConclusion": "success"
+    },
+    {
+      "name": "verify (backroad-rally)",
+      "jobId": 135882337710,
+      "conclusion": "failure",
+      "buildStepNumber": 6,
+      "uploadStepNumbers": [
+        11,
+        12
+      ],
+      "packageUploadConclusion": "skipped"
+    },
+    {
+      "name": "verify (turbo-kart-rush)",
+      "jobId": 135882337757,
+      "conclusion": "failure",
+      "buildStepNumber": 6,
+      "uploadStepNumbers": [
+        11,
+        12
+      ],
+      "packageUploadConclusion": "skipped"
+    },
+    {
+      "name": "verify (kart-royale)",
+      "jobId": 135882337760,
+      "conclusion": "failure",
+      "buildStepNumber": 6,
+      "uploadStepNumbers": [
+        11,
+        12
+      ],
+      "packageUploadConclusion": "skipped"
+    }
+  ],
+  "validationScope": "Owner recorded 30 exporter tests + 17 prior reexport tests + actionlint passed; reviewer did not rerun them. Exact source inventory was independently rehashed. Actual prior API-derived job names and ordered build/evidence/package upload steps were inspected; full end-to-end use of the new retention branch remains future CI.",
+  "limitations": [
+    "Old failed games from run 44615299245 had skipped package uploads; this change cannot recreate original missing package bytes.",
+    "Original outer artifact digest is authenticated GitHub metadata and download-artifact behavior; this exporter does not independently hash the original outer Actions ZIP. Actual package files are independently hashed against frozen manifest.",
+    "A large-file artifact reference is expiring retention, not permanent package publication or native QA success.",
+    "This review is static; no claim that future failed-build/upload paths have run on actual Windows."
+  ]
+}

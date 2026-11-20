@@ -1,0 +1,11 @@
+# Cozy 重连记账与玩法冻结比较
+
+第三轮实际APK运行43736021527中，Cozy在断线重连后的“sync does not award gameplay”比较失败。原Node diff只有P1 connected false→true、cancelSeq3→4及P2 cancelSeq2→3，并在model.players和顶层players各出现一次；phase仍paused，clock、elapsed、位置、工具、库存等未变。原始失败报告、精确执行源、截图和输出都原样保存在original/。
+
+原模型每帧先更新connected/cancelSeq，再检查paused并返回；时钟和玩法推进在这个返回之后。附带的game-model.js和runtime.js是该源的原样副本。修正仅在QA modelFrozen的Cozy分支，对这两个players数组剔除connected/cancelSeq。其余字段保持严格深比较，其他游戏的比较完全不变。原始快照没有删字段，reconnect trace前置到断言之前，今后失败也保留完整before/after。
+
+projection-regression/的18项回归复现旧比较对真实连接变化的拒绝，新比较允许这两项记账变化，并确认位置、库存、clock、elapsed、phase、工具、动作历史、netRaised、active、joined、人数等变化仍失败；相同名字出现在非玩家位置不会被忽略，其他游戏的连接字段仍严格。原失败未保存完整before对象，所以测试只从已保存的真实Node diff重建其连接字段，报告明确声明这个限制，不冒充原始完整before，也不运行或写入任何游戏模型。
+
+cozy-complete/以原SDK和生产Java接收器完成浏览器9/9组，128消息=128ACK，无传输或页面错误。所用16个网页资产逐字节匹配正式cozy-island-0.5.3.apk（fa083d76620260b2cdf56759b02c55ede40a4689cee8b165a281ae4875d223da）。本次浏览器采样时reconnect两侧记账恰相同，不宣称重现了Android的记账变化；该真实变化由上面的原始失败回归覆盖。
+
+本修正不改生产、SDK、观察器或每消息ACK要求。最终run SHA ae02ed6c4965a04fee760e2dc0f36ef86084a5bbc396ce82e5effeec34f8ab57；浏览器完整报告同时绑定Tank案例修正版cases SHA ea2d64a9e5cb3752131315338b77f417b9d6cd07930ea89f481696a20cfbf0d6。实际Android重跑结果由后续CI报告，不在这里冒称已通过。

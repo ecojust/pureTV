@@ -1,0 +1,124 @@
+name: Read completed controller runtime evidence
+
+on:
+  push:
+    branches: [feat/readme-games-controller]
+    paths: ['.github/workflows/controller-runtime-export.yml']
+  workflow_dispatch:
+    inputs:
+      source_run:
+        description: Original controller-games-runtime run ID
+        type: string
+        required: true
+      qa_source:
+        description: Exact original QA source SHA
+        type: string
+        required: true
+      group:
+        description: Completed runtime group to preserve without rerunning games
+        type: choice
+        options: [arcade, worlds, kit, arcade-1, arcade-2, arcade-3, worlds-1, worlds-2, kit-1, kit-2, kit-3, retry-used-car, retry-alien, retry-prism, retry-arcade-visual]
+        required: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  evidence:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      actions: read
+    env:
+      SOURCE_RUN: ${{ inputs.source_run }}
+      QA_SOURCE: ${{ inputs.qa_source }}
+      EVIDENCE_GROUP: ${{ inputs.group }}
+    steps:
+      - name: Verify original workflow, source and completed artifact group
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json,os,re,subprocess
+          from pathlib import Path
+          run=os.environ['SOURCE_RUN'];source=os.environ['QA_SOURCE'];group=os.environ['EVIDENCE_GROUP']
+          assert re.fullmatch('[1-9][0-9]*',run) and re.fullmatch('[a-f0-9]{40}',source)
+          assert group in ['arcade','worlds','kit','arcade-1','arcade-2','arcade-3','worlds-1','worlds-2','kit-1','kit-2','kit-3','retry-used-car','retry-alien','retry-prism','retry-arcade-visual']
+          assert os.environ['GITHUB_REPOSITORY']=='ecojust/pureTV'
+          def api(path):return json.loads(subprocess.check_output(['gh','api','repos/ecojust/pureTV/'+path]))
+          original=api('actions/runs/'+run)
+          assert original['path']=='.github/workflows/controller-games-runtime.yml'
+          assert original['head_sha']==source and original['event']=='workflow_dispatch'
+          assert original['repository']['full_name']==original['head_repository']['full_name']=='ecojust/pureTV'
+          jobs=api('actions/runs/'+run+'/jobs?per_page=100')['jobs']
+          completed=[j for j in jobs if j['name']=='runtime ('+group+')']
+          assert len(completed)==1 and completed[0]['status']=='completed'
+          artifacts=api('actions/runs/'+run+'/artifacts?per_page=100')['artifacts']
+          selected=[a for a in artifacts if a['name']=='controller-runtime-'+group and not a['expired']]
+          assert len(selected)==1
+          artifact={k:selected[0].get(k) for k in ['id','name','size_in_bytes','digest','created_at','updated_at']}
+          out=Path(os.environ['RUNNER_TEMP'])/'controller-diagnostic-export';out.mkdir()
+          (out/'original-artifact.json').write_text(json.dumps({'sourceRunId':run,'qaSourceSha':source,'group':group,'originalJobId':completed[0]['id'],'originalJobConclusion':completed[0]['conclusion'],'artifact':artifact},indent=2)+'\n')
+          with open(os.environ['GITHUB_ENV'],'a') as stream:stream.write('ARTIFACT_ID='+str(artifact['id'])+'\nORIGINAL_JOB_ID='+str(completed[0]['id'])+'\n')
+          print(json.dumps({'verifiedOriginalRun':run,'qaSourceSha':source,'group':group,'artifact':artifact}))
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ecojust/pureTV
+          run-id: ${{ inputs.source_run }}
+          artifact-ids: ${{ env.ARTIFACT_ID }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/controller-diagnostic-export/artifact
+      - name: Preserve the original completed job log
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,os,re,subprocess
+          out=Path(os.environ['RUNNER_TEMP'])/'controller-diagnostic-export'
+          job=os.environ['ORIGINAL_JOB_ID'];assert re.fullmatch('[1-9][0-9]*',job)
+          # Capture raw logs to a file, never render their terminal control sequences.
+          result=subprocess.run(['gh','api','--allow-escape-sequences','repos/ecojust/pureTV/actions/jobs/'+job+'/logs?cachebust='+os.environ['GITHUB_RUN_ID']],capture_output=True,text=True)
+          status={'originalJobId':job,'downloaded':result.returncode==0,'exitCode':result.returncode}
+          if result.returncode==0:
+              (out/'original-job.log').write_text(result.stdout)
+          else:
+              status['error']=re.sub(r'https?://\S+','[download URL redacted]',result.stderr)
+          (out/'job-log-download-status.json').write_text(json.dumps(status,indent=2)+'\n')
+          print(json.dumps({'originalJobId':job,'jobLogDownloaded':status['downloaded']}))
+          PY
+      - name: Hash original evidence without altering its files
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import os,json,hashlib
+          out=Path(os.environ['RUNNER_TEMP'])/'controller-diagnostic-export';rows={}
+          assert (out/'artifact').is_dir() and any((out/'artifact').iterdir())
+          for path in out.rglob('*'):
+              if path.is_file():
+                  assert not path.is_symlink()
+                  rows[path.relative_to(out).as_posix()]={'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+          (out/'export-manifest.json').write_text(json.dumps({'sourceRunId':os.environ['SOURCE_RUN'],'qaSourceSha':os.environ['QA_SOURCE'],'group':os.environ['EVIDENCE_GROUP'],'exporterSourceSha':os.environ['GITHUB_SHA'],'exportRunId':os.environ['GITHUB_RUN_ID'],'gamesRerun':False,'files':rows},indent=2)+'\n')
+          PY
+      - name: Export to a new isolated diagnostic branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          branch="build-assets/controller-runtime-diagnostic-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
+          url="https://github.com/$GITHUB_REPOSITORY.git"
+          gh auth setup-git
+          test -z "$(git ls-remote --heads "$url" "refs/heads/$branch")"
+          directory="$RUNNER_TEMP/controller-diagnostic-export"
+          git init --initial-branch "$branch" "$directory"
+          git -C "$directory" config user.name github-actions[bot]
+          git -C "$directory" config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git -C "$directory" add .
+          git -C "$directory" commit -q -m "Original runtime ${SOURCE_RUN} ${EVIDENCE_GROUP} evidence"
+          git -C "$directory" remote add origin "$url"
+          git -C "$directory" push origin "HEAD:refs/heads/$branch"

@@ -1,0 +1,233 @@
+{
+  "sourceCommit": "8f283c73f52f857777306eafc88f710262367834",
+  "batch": "racing-02",
+  "runner": "macos-latest",
+  "expectedArchitecture": "arm64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "penguintrack",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/penguintrack",
+            "--output",
+            "/Users/runner/work/_temp/qa/penguintrack/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "penguintrack/package-verification.log",
+          "startedAt": "2026-11-19T19:32:05.884278+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "penguintrack",
+            "--app",
+            "/Users/runner/work/_temp/packages/penguintrack/installed/Penguintrack.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/penguintrack/native"
+          ],
+          "status": "failed",
+          "log": "penguintrack/native.log",
+          "startedAt": "2026-11-19T19:33:10.708233+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "penguintrack",
+            "--app",
+            "/Users/runner/work/_temp/packages/penguintrack/installed/Penguintrack.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/penguintrack/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "penguintrack/occupied-port.log",
+          "startedAt": "2026-11-19T19:33:30.812787+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "penguintrack",
+            "--app",
+            "/Users/runner/work/_temp/packages/penguintrack/installed/Penguintrack.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/penguintrack/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "failed",
+          "log": "penguintrack/rosetta.log",
+          "startedAt": "2026-11-19T19:33:42.319405+00:00",
+          "returncode": 1
+        }
+      ],
+      "capability": {
+        "before": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "penguintrack",
+            "--phase",
+            "before",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/penguintrack/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/penguintrack/capability/before"
+          ],
+          "status": "passed",
+          "log": "penguintrack/capability-before.log",
+          "startedAt": "2026-11-19T19:32:40.843469+00:00",
+          "returncode": 0
+        },
+        "after": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "penguintrack",
+            "--phase",
+            "after",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/penguintrack/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/penguintrack/capability/after"
+          ],
+          "status": "passed",
+          "log": "penguintrack/capability-after.log",
+          "startedAt": "2026-11-19T19:34:04.500885+00:00",
+          "returncode": 0
+        }
+      }
+    },
+    {
+      "game": "last-track",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/last-track",
+            "--output",
+            "/Users/runner/work/_temp/qa/last-track/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "last-track/package-verification.log",
+          "startedAt": "2026-11-19T19:34:12.457351+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "last-track",
+            "--app",
+            "/Users/runner/work/_temp/packages/last-track/installed/Last Track.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/last-track/native"
+          ],
+          "status": "failed",
+          "log": "last-track/native.log",
+          "startedAt": "2026-11-19T19:34:44.870608+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "last-track",
+            "--app",
+            "/Users/runner/work/_temp/packages/last-track/installed/Last Track.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/last-track/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "last-track/occupied-port.log",
+          "startedAt": "2026-11-19T19:35:45.608804+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "last-track",
+            "--app",
+            "/Users/runner/work/_temp/packages/last-track/installed/Last Track.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/last-track/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "failed",
+          "log": "last-track/rosetta.log",
+          "startedAt": "2026-11-19T19:36:31.669434+00:00",
+          "returncode": 1
+        }
+      ],
+      "capability": {
+        "before": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "last-track",
+            "--phase",
+            "before",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/last-track/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/last-track/capability/before"
+          ],
+          "status": "passed",
+          "log": "last-track/capability-before.log",
+          "startedAt": "2026-11-19T19:34:39.115813+00:00",
+          "returncode": 0
+        },
+        "after": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "last-track",
+            "--phase",
+            "after",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/last-track/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/last-track/capability/after"
+          ],
+          "status": "passed",
+          "log": "last-track/capability-after.log",
+          "startedAt": "2026-11-19T19:37:22.750887+00:00",
+          "returncode": 0
+        }
+      }
+    },
+    {
+      "game": "dirt-crown",
+      "status": "failed",
+      "checks": [],
+      "error": "Traceback (most recent call last):\n  File \"<stdin>\", line 31, in <module>\n  File \"/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py\", line 1027, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py\", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/Users/runner/work/_temp/packages/dirt-crown/build-manifest.json'\n"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "valid": true,
+  "stepCount": 14,
+  "validator": "joystick-games/tools/qa-plan.py",
+  "nativeExecuted": false,
+  "resumeHeldMs": 1200,
+  "sha256": "283b3687535f0112e576b8584a62a7eccf37be2df2c3bc9420b6297fc64dd244",
+  "countdownGate": {
+    "name": "Start original single race and wait for its real countdown",
+    "keys": [
+      "START"
+    ],
+    "holdMs": 180,
+    "expect": [
+      {
+        "path": "gameplay.phase",
+        "op": "eq",
+        "value": "race"
+      },
+      {
+        "path": "gameplay.countdown",
+        "op": "lte",
+        "value": 0
+      },
+      {
+        "path": "paused",
+        "op": "eq",
+        "value": false
+      }
+    ],
+    "timeoutSeconds": 60
+  },
+  "naturalStorage": {
+    "key": "kartrush.profile",
+    "valueObservedByPlan": "Q",
+    "sourcePath": "src/main.js submitHello -> localStorage.setItem(PROFILE_KEY, JSON.stringify(profile))",
+    "restartExecuted": false
+  }
+}

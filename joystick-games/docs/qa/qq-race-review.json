@@ -1,0 +1,51 @@
+{
+  "status": "passed",
+  "scope": "Manual review of actual untouched 960\u00d7540 menu and normal results captures. This race uses ordinary browser menu clicks and keyboard events without a synthetic native bridge.",
+  "sourceAssetHashes": {
+    "THIRD-PARTY-NOTICES.txt": {
+      "bytes": 1972,
+      "sha256": "7c047898b473af4354c2582471eb068ac8453ce08a8b65a7d7624178231292cf"
+    },
+    "tv.html": {
+      "bytes": 736191,
+      "sha256": "82322636083050a14f6e35e8a4dbef0683ca721c38d4b7e12ddbe5ec95a54c8c"
+    }
+  },
+  "reviewedFiles": [
+    {
+      "path": "01-selected-menu.png",
+      "sha256": "24d99fe3e364be456d52c88627de85219c6da20191f6478b0f3fba1872dcc7a6"
+    },
+    {
+      "path": "02-finish.png",
+      "sha256": "cbf4aacb595f2651d92d474f42cc1bbc761bbb6f92c671548a52282c249880f1"
+    }
+  ],
+  "observations": [
+    "City, speed mode and one lap are visibly selected; ordinary Start control is visible.",
+    "The actual results screen shows Champion, all six racers, the player first with 00:42.20, full summary counters and both Replay/Lobby actions without clipping.",
+    "Actual rendered track, minimap and gameplay HUD remain visible behind results."
+  ],
+  "mechanics": {
+    "map": "city",
+    "mode": "speed",
+    "laps": 1,
+    "actualFinished": true,
+    "actualLap": 1,
+    "actualPlace": 1,
+    "actualResultShown": true,
+    "resets": 0,
+    "crashes": 0,
+    "displayedFinishTime": "00:42.20",
+    "wallClockSecondsIncludingNormalResultsWait": 967.608992051
+  },
+  "limits": [
+    "This is one complete city/speed race, not a complete race on every map or mode.",
+    "No native TCP, Android APK, macOS app or physical-controller claim follows from keyboard completion.",
+    "The 42.20-second finish time is game time. The software renderer required about 16.1 minutes of wall time including normal results waiting.",
+    "No full-race video was captured; exact ordinary inputs, read-only game snapshots and original start/results images are preserved."
+  ],
+  "visualReviewCompleted": true,
+  "modelWrites": false,
+  "clockOverrides": false
+}

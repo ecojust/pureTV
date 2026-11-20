@@ -1,0 +1,5 @@
+{
+  "issue": "PTY input did not reach interactive readline action loop; no gameplay action executed. Replaced QA command transport with a file queue, preserving ordinary DOM clicks and keyboard input. Original menu evidence retained.",
+  "gameFailure": false,
+  "rootCauseObserved": "Node process state T after attempting TTY stdin while timeout used a separate background process group (SIGTTIN). SIGTERM was pending until SIGCONT; this was a review harness issue, not game performance."
+}

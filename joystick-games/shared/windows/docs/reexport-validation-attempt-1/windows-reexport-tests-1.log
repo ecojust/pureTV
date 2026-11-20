@@ -1,0 +1,73 @@
+test_git_threshold_is_strict_and_large_files_only_reference_original_artifact (__main__.PackagePolicyTests.test_git_threshold_is_strict_and_large_files_only_reference_original_artifact) ... ok
+test_small_packages_are_not_reported_as_omitted (__main__.PackagePolicyTests.test_small_packages_are_not_reported_as_omitted) ... ok
+test_artifacts_are_unique_unexpired_and_bound_to_same_original_run (__main__.ProducerTests.test_artifacts_are_unique_unexpired_and_bound_to_same_original_run) ... 
+  test_artifacts_are_unique_unexpired_and_bound_to_same_original_run (__main__.ProducerTests.test_artifacts_are_unique_unexpired_and_bound_to_same_original_run) (index=0, key='digest') ... ERROR
+  test_artifacts_are_unique_unexpired_and_bound_to_same_original_run (__main__.ProducerTests.test_artifacts_are_unique_unexpired_and_bound_to_same_original_run) (index=1, key='digest') ... ERROR
+test_both_exact_upload_steps_are_required_and_ordered (__main__.ProducerTests.test_both_exact_upload_steps_are_required_and_ordered) ... ok
+test_creation_is_bound_to_corresponding_upload_with_only_two_second_end_tolerance (__main__.ProducerTests.test_creation_is_bound_to_corresponding_upload_with_only_two_second_end_tolerance) ... ok
+test_explicit_successful_game_can_be_recovered_from_failed_overall_run (__main__.ProducerTests.test_explicit_successful_game_can_be_recovered_from_failed_overall_run) ... FAIL
+test_other_failed_job_is_not_silently_selected (__main__.ProducerTests.test_other_failed_job_is_not_silently_selected) ... ok
+test_run_repository_source_attempt_and_workflow_must_match (__main__.ProducerTests.test_run_repository_source_attempt_and_workflow_must_match) ... ok
+test_selected_games_are_explicit_unique_valid_and_registered (__main__.ProducerTests.test_selected_games_are_explicit_unique_valid_and_registered) ... ok
+test_selected_job_is_unique_exact_successful_original_producer (__main__.ProducerTests.test_selected_job_is_unique_exact_successful_original_producer) ... ok
+test_archive_member_count_is_bounded (__main__.ZipTests.test_archive_member_count_is_bounded) ... ok
+test_duplicate_case_alias_parent_alias_and_file_directory_collision_rejected (__main__.ZipTests.test_duplicate_case_alias_parent_alias_and_file_directory_collision_rejected) ... ok
+test_existing_destination_is_never_overwritten (__main__.ZipTests.test_existing_destination_is_never_overwritten) ... ok
+test_safe_nested_stored_and_deflated_bytes_and_original_zip_preserved (__main__.ZipTests.test_safe_nested_stored_and_deflated_bytes_and_original_zip_preserved) ... ok
+test_symlink_unsupported_compression_and_encrypted_entries_rejected (__main__.ZipTests.test_symlink_unsupported_compression_and_encrypted_entries_rejected) ... ok
+test_uncompressed_budget_and_actual_crc_are_verified (__main__.ZipTests.test_uncompressed_budget_and_actual_crc_are_verified) ... ok
+test_unsafe_archive_paths_rejected_without_escape (__main__.ZipTests.test_unsafe_archive_paths_rejected_without_escape) ... ok
+
+======================================================================
+ERROR: test_artifacts_are_unique_unexpired_and_bound_to_same_original_run (__main__.ProducerTests.test_artifacts_are_unique_unexpired_and_bound_to_same_original_run) (index=0, key='digest')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/dev/shm/puretv-submit/joystick-games/shared/windows/tests/reexport.test.py", line 107, in test_artifacts_are_unique_unexpired_and_bound_to_same_original_run
+    self.reject(lambda v: v['artifacts'][index].__setitem__(key, wrong))
+  File "/dev/shm/puretv-submit/joystick-games/shared/windows/tests/reexport.test.py", line 60, in reject
+    self.verify(value)
+  File "/dev/shm/puretv-submit/joystick-games/shared/windows/tests/reexport.test.py", line 54, in verify
+    return m.validate_selection(**(value or fixture()))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/puretv-submit/joystick-games/tools/windows-reexport.py", line 46, in validate_selection
+    transfer.sha(artifact.get('digest'));link=artifact['workflow_run']
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/puretv-submit/joystick-games/tools/artifact-draft-transfer.py", line 56, in sha
+    require(isinstance(value, str) and re.fullmatch(r'sha256:[0-9a-f]{64}', value), 'missing_or_invalid_digest')
+  File "/dev/shm/puretv-submit/joystick-games/tools/artifact-draft-transfer.py", line 41, in require
+    raise Rejected(code)
+original_artifact_transfer.Rejected: missing_or_invalid_digest
+
+======================================================================
+ERROR: test_artifacts_are_unique_unexpired_and_bound_to_same_original_run (__main__.ProducerTests.test_artifacts_are_unique_unexpired_and_bound_to_same_original_run) (index=1, key='digest')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/dev/shm/puretv-submit/joystick-games/shared/windows/tests/reexport.test.py", line 107, in test_artifacts_are_unique_unexpired_and_bound_to_same_original_run
+    self.reject(lambda v: v['artifacts'][index].__setitem__(key, wrong))
+  File "/dev/shm/puretv-submit/joystick-games/shared/windows/tests/reexport.test.py", line 60, in reject
+    self.verify(value)
+  File "/dev/shm/puretv-submit/joystick-games/shared/windows/tests/reexport.test.py", line 54, in verify
+    return m.validate_selection(**(value or fixture()))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/puretv-submit/joystick-games/tools/windows-reexport.py", line 46, in validate_selection
+    transfer.sha(artifact.get('digest'));link=artifact['workflow_run']
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/puretv-submit/joystick-games/tools/artifact-draft-transfer.py", line 56, in sha
+    require(isinstance(value, str) and re.fullmatch(r'sha256:[0-9a-f]{64}', value), 'missing_or_invalid_digest')
+  File "/dev/shm/puretv-submit/joystick-games/tools/artifact-draft-transfer.py", line 41, in require
+    raise Rejected(code)
+original_artifact_transfer.Rejected: missing_or_invalid_digest
+
+======================================================================
+FAIL: test_explicit_successful_game_can_be_recovered_from_failed_overall_run (__main__.ProducerTests.test_explicit_successful_game_can_be_recovered_from_failed_overall_run)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/dev/shm/puretv-submit/joystick-games/shared/windows/tests/reexport.test.py", line 67, in test_explicit_successful_game_can_be_recovered_from_failed_overall_run
+    self.assertEqual(result['selected'][GAME], {'job': value['jobs'][0], 'evidence': value['artifacts'][0], 'packages': value['artifacts'][1]})
+AssertionError: {'job[639 chars]]}, 'uploadTimestampBindings': {'evidence': {'[1153 chars]56}}} != {'job[639 chars]]}, 'evidence': {'id': 1001, 'name': 'joystick[860 chars]56}}}
+Diff is 3244 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.351s
+
+FAILED (failures=1, errors=2)

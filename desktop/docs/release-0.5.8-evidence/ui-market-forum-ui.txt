@@ -1,0 +1,43 @@
+
+> puretv-desktop@0.5.7 test:ui
+> node tests/ui.mjs
+
+PASS 1: market server covers load only from the exact HTTPS host and application directories
+PASS 2: market media and game tabs isolate search and grouped counts while preserving versions and the app download queue
+PASS 3: market updates first visit builds a small persistent baseline and only real reentry checks the network
+PASS 4: market updates prioritize new apps and numeric upgrades throughout one visit without changing selected APKs
+PASS 5: market updates distinguish equal names in different folders filename stems and categories
+PASS 6: market updates ignore old-version backfills and same-version blob or cover changes
+PASS 7: market updates keep the baseline on stale catalogs failures and failed refreshes
+PASS 8: market updates do not consume results that arrive after leaving the market
+PASS 9: market updates check the current visit after leaving and reentering during an earlier request
+PASS 10: market updates cancellation leaves the stored baseline available for a later retry
+PASS 11: market updates do not consume background MCP catalog results before a visible visit
+PASS 12: market updates preserve unread changes when saving the local baseline fails
+PASS 13: market versions group each app separately and offer the latest five in numeric order
+PASS 14: market versions switch metadata and download the selected APK while preserving the choice
+PASS 15: market versions install the chosen older version after confirming its exact filename
+PASS 16: market versions refresh preserves an available selection and falls back when it leaves the latest five
+PASS 17: market discovers categorized APKs without ADB and escapes repository metadata
+PASS 18: market offline download uses displayed revision and joins the pending app list once
+PASS 19: market launcher download carries APK Home background into the launcher queue
+PASS 20: market installation reports completion and does not activate a downloaded launcher
+PASS 21: market installation failure explains signature migration and keeps the APK zh-CN
+PASS 22: market installation failure explains signature migration and keeps the APK zh-TW
+PASS 23: market installation failure explains signature migration and keeps the APK en
+PASS 24: market cancellation and failed verification never add a partial APK
+PASS 25: market refresh replaces a stale catalog and preserves localized controls
+PASS 26: market initial network failure shows an empty error state and can be retried
+PASS 27: market long catalogs scroll internally in compact windows and all themes
+PASS 28: market updates preserve scroll within a visit and show new cards at the top after reentry
+PASS 29: market MCP results synchronize catalog and download/install queues with the window
+PASS 30: market install confirmation rejects a changed television or Android user
+PASS 31: market pending queues follow verified generic MCP installs and ignore failed or older results
+PASS 32: forum: navigation follows APK Market and browsing never requires ADB or reserves device operations
+PASS 33: forum: network failure remains distinct from an empty repository and can be retried
+PASS 34: forum: stale posts remain readable and composer/reply opener failures are reported without claiming success
+PASS 35: forum: demo posts cannot be replied to, while the real Gitee composer remains accessible
+PASS 36: forum: late responses cannot replace a new visit or navigate away from the selected page
+PASS 37: forum: pending or failed pagination preserves the last successful page and allows a retry
+PASS 38: forum: untrusted post data stays text and English/Traditional Chinese work in compact themes
+38 UI scenarios passed

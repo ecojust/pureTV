@@ -1,0 +1,30 @@
+{
+  "sourceFiles": {
+    "joystick-games/tools/windows-inputs.py": {
+      "bytes": 16740,
+      "sha256": "8c76db4b03ad3aba3f0ad51a4e474cd33f416fc294d8b2afccde882e6d3d0798"
+    },
+    "joystick-games/shared/windows/tests/source-scope.test.py": {
+      "bytes": 17681,
+      "sha256": "6dc8b1a67cd383e024916ad411b5e2e0f40d087635a125f0742c5dc92eae8e30"
+    }
+  },
+  "sourceScopeTestsPassed": 25,
+  "frozenInputTestsPassed": 2,
+  "realDeliveredGamesVerified": [
+    "penguintrack",
+    "last-track",
+    "dirt-crown",
+    "ponpoko-kart",
+    "kart-rush"
+  ],
+  "actualMacPackagesVerified": 10,
+  "gitClosureCheck": "No missing tracked source. Correctly rejects three concurrently added untracked Windows host files until the root freezes them; original rejection retained.",
+  "scope": "Windows source inventory only; old platform-release descriptor behavior preserved",
+  "otherPlatformComparison": {
+    "android": "sources() selects explicit metadata and src/dist/shared source trees, so delivered macos directory is not included",
+    "macos": "inputs() includes game root files including packages.json/README but does not recurse delivered macos directory; unchanged in this patch"
+  },
+  "packagesOrExistingReleaseManifestsModified": false,
+  "nativeBuildOrGameRerun": false
+}

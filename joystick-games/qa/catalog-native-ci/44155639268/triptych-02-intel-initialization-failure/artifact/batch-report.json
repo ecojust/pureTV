@@ -1,0 +1,163 @@
+{
+  "sourceCommit": "a73a1976e7d38ff27b8e457b933519ea66eaa949",
+  "qaSourceCommit": "b15beb969bfc83595143aec4ddc4817220ba8119",
+  "artifactRunId": 44150598155,
+  "batch": "triptych-02",
+  "runner": "macos-15-intel",
+  "expectedArchitecture": "x86_64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "bubble-nebula",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/bubble-nebula",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/bubble-nebula/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "bubble-nebula/package-verification.log",
+          "startedAt": "2026-11-17T19:11:52.602336+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "bubble-nebula",
+            "--app",
+            "/Users/runner/work/_temp/packages/bubble-nebula/installed/BUBBLE NEBULA.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/bubble-nebula/native"
+          ],
+          "status": "failed",
+          "log": "bubble-nebula/native.log",
+          "startedAt": "2026-11-17T19:12:35.838816+00:00",
+          "returncode": 1
+        }
+      ]
+    },
+    {
+      "game": "phosphor-patrol",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/phosphor-patrol",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/phosphor-patrol/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "phosphor-patrol/package-verification.log",
+          "startedAt": "2026-11-17T19:14:07.183345+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "phosphor-patrol",
+            "--app",
+            "/Users/runner/work/_temp/packages/phosphor-patrol/installed/PHOSPHOR PATROL.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/phosphor-patrol/native"
+          ],
+          "status": "failed",
+          "log": "phosphor-patrol/native.log",
+          "startedAt": "2026-11-17T19:14:48.283810+00:00",
+          "returncode": 1
+        }
+      ]
+    },
+    {
+      "game": "wyrmzone",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/wyrmzone",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/wyrmzone/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "wyrmzone/package-verification.log",
+          "startedAt": "2026-11-17T19:16:18.844512+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "wyrmzone",
+            "--app",
+            "/Users/runner/work/_temp/packages/wyrmzone/installed/WYRMZONE.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/wyrmzone/native"
+          ],
+          "status": "failed",
+          "log": "wyrmzone/native.log",
+          "startedAt": "2026-11-17T19:16:51.411917+00:00",
+          "returncode": 1
+        }
+      ]
+    },
+    {
+      "game": "quiverspire",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/quiverspire",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/quiverspire/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "quiverspire/package-verification.log",
+          "startedAt": "2026-11-17T19:18:21.827808+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "quiverspire",
+            "--app",
+            "/Users/runner/work/_temp/packages/quiverspire/installed/Quiverspire.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/quiverspire/native"
+          ],
+          "status": "failed",
+          "log": "quiverspire/native.log",
+          "startedAt": "2026-11-17T19:18:54.905200+00:00",
+          "returncode": 1
+        }
+      ]
+    }
+  ]
+}

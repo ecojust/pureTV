@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "status": "isolated-transport-deadline-boundaries-passed",
+  "parent": "0415846f3b3e3fc11f79e08d25050affdf750435",
+  "sourceFiles": {
+    "joystick-games/qa/android/graphics-observer/run.py": {
+      "bytes": 32804,
+      "sha256": "cd6fa2249163d3a3e55b6658479a1744ca952d048ec195b46f0086ee164c2b6f"
+    },
+    "joystick-games/qa/android/graphics-observer/tests/test_driver.py": {
+      "bytes": 22823,
+      "sha256": "5241c1a6368d4fe4bf8e74b694347a5c73802dcf6017762be1e6ecb64f5b1e5b"
+    }
+  },
+  "isolatedInputs": {
+    "bytes": 3402,
+    "sha256": "863ac9a902ef79b4db0dbcaf311f4cf15ea71dcd702ddd9fb92ecf301a9411de"
+  },
+  "tests": 18,
+  "originalParentTests": 12,
+  "newTransportTests": 6,
+  "log": {
+    "bytes": 117,
+    "sha256": "2551c4b79c863a2671d5599fad288e417c35f4dce73b959322bf6a1e66f0005d"
+  },
+  "command": {
+    "command": [
+      "python3",
+      "-B",
+      "/dev/shm/racing-review-driving/graphics-transport-preflight-0415846-attempt2/tree/joystick-games/qa/android/graphics-observer/tests/test_driver.py"
+    ],
+    "cwd": "/dev/shm/racing-review-driving/graphics-transport-preflight-0415846-attempt2/tree",
+    "exitCode": 0,
+    "log": "tests-attempt-2.log",
+    "elapsedSeconds": 1.3049201965332031
+  },
+  "initialDraft": {
+    "log": "tests-attempt-1.log",
+    "testsPassed": 15,
+    "absoluteDeadlineClaimRejected": true,
+    "counterexample": "reviewer-deadline-counterexample",
+    "explanation": "A socket idle timeout allowed slow body to exceed 25ms budget and update last; original files preserved"
+  },
+  "isolation": "Exactly two overlays on fixed041; other imports and two v7 fixtures copied from parent",
+  "deadlineScope": [
+    "headers",
+    "response body",
+    "JSON parse",
+    "body SHA256"
+  ],
+  "deadlineImplementation": "Linux main thread SIGALRM/ITIMER_REAL with no-existing-timer guard and finally handler/timer restoration; no background GET",
+  "responseBodyLimitBytes": 524288,
+  "perRequestMaximumSeconds": 15,
+  "readMaximumSeconds": 45,
+  "maximumAttempts": 3,
+  "ordinaryStepDeadlineSecondsUnchanged": 240,
+  "deadlineCheckBeforePublishingLast": true,
+  "httpJsonGameErrorsAreNotRetried": true,
+  "commonRunnerChanged": false,
+  "observerJavaChanged": false,
+  "targetApkChanged": false,
+  "nativeTested": false,
+  "postPerformed": false
+}

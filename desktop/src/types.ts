@@ -43,6 +43,7 @@ export interface DownloadProgress {
   stage: 'downloading' | 'verifying' | 'extracting' | 'checking'; downloaded: number; total: number;
 }
 export type MarketKind = 'app' | 'launcher';
+/** blobSha is an opaque server file identity; logoBlobSha contains the logo's SHA256. */
 export interface MarketItem {
   id: string; kind: MarketKind; name: string; version?: string | null; fileName: string;
   provider?: string | null;

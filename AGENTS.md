@@ -45,6 +45,10 @@
 - 未做实体电视／手机测试时明确记录 `physicalTvTested:false` / `physicalPhoneTested:false`。软件浏览器结果和视频导出帧率不能当作设备帧率。
 - 运行与改动有关的检查；通过后除非有新修改、失败或未解决疑点，不反复运行相同测试。
 
+## 游戏 App 接入 pureTV Wi-Fi 手柄
+
+开发或验收支持手柄的游戏时，参考 [puretv-joystick/README.md](puretv-joystick/README.md) 中的服务发现、TCP 协议和虚拟手柄测试说明。
+
 ## 构建、签名与资源同步
 
 以 `resource/game-kit/BUILD.md` 为准。Game Kit 使用 JDK 17、Android Platform 35、Build Tools 34.0.0、固定哈希的 ZXing 3.5.3。工具链放仓库外，构建输出也不得写入游戏源码或公共组件目录。

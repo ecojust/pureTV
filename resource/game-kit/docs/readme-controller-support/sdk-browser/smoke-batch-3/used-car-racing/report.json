@@ -1,0 +1,3030 @@
+{
+  "slug": "used-car-racing",
+  "mode": "browser",
+  "startedAt": "2026-11-15T15:18:40.427Z",
+  "status": "failed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "72c5c520ae7b0949061bd08d10e68eb8d9b75d7ded5a60189ed92aead7c1db28",
+    "tools/readme-controller-qa/cases.mjs": "1eb56b4be84db7268c54641c81be989c3312e1b0716c34c670fc729e294a9df1",
+    "tools/readme-controller-qa/sdk-peer.py": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": false,
+  "syntheticNativeBridge": true,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "START begins actual game",
+      "status": "passed"
+    },
+    {
+      "name": "direction and game-specific action affect actual model",
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: RIGHT actual camera projection\n    at gameplay (file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/cases.mjs:82:327)\n    at runNextTicks (node:internal/process/task_queues:65:5)\n    at process.processImmediate (node:internal/timers:541:9)\n    at async file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:77:80\n    at async test (file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:77:2"
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "phase": "garage",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "garage",
+          "players": [
+            {
+              "id": 1,
+              "x": -183.51615322199467,
+              "y": 4.977638305141652,
+              "z": -241.5257390169149,
+              "yaw": 2.548125820692355,
+              "speed": 0,
+              "lateral": -2.15,
+              "s": 1743.5092048810245,
+              "u": 0,
+              "v": 0,
+              "steerAngle": 0,
+              "lap": 1,
+              "rank": 1,
+              "telemetry": {
+                "speedKmh": 0,
+                "rpm": 850,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 0,
+                "absActive": false,
+                "brakeTemp": 28,
+                "grip": 0.969479809602257,
+                "slipAngle": 0,
+                "engineTemp": 74,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 0,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 1
+              }
+            }
+          ],
+          "raceTime": 0,
+          "countdown": 3,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 0,
+          "events": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -183.51615322199467,
+            "y": 4.977638305141652,
+            "z": -241.5257390169149,
+            "yaw": 2.548125820692355,
+            "speed": 0,
+            "lateral": -2.15,
+            "s": 1743.5092048810245,
+            "u": 0,
+            "v": 0,
+            "steerAngle": 0,
+            "lap": 1,
+            "rank": 1,
+            "telemetry": {
+              "speedKmh": 0,
+              "rpm": 850,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 0,
+              "absActive": false,
+              "brakeTemp": 28,
+              "grip": 0.969479809602257,
+              "slipAngle": 0,
+              "engineTemp": 74,
+              "damage": 0,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 0,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 1
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.3922363550466668,
+            0,
+            0,
+            0,
+            0,
+            2.475086853416296,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.7846347458142114,
+            -0.1939372826281128,
+            0.5888434818081042,
+            0,
+            2.7755575615628914e-17,
+            0.9498114066947605,
+            0.31282309971055533,
+            0,
+            -0.6199583176803645,
+            -0.2454518733262053,
+            0.7452550316633821,
+            0,
+            -1.609823385706477e-15,
+            0.28494342200842704,
+            -10.774915649147985,
+            1
+          ]
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            },
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 2,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 0
+        }
+      }
+    },
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "phase": "garage",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "garage",
+          "players": [
+            {
+              "id": 1,
+              "x": -183.51615322199467,
+              "y": 4.977638305141652,
+              "z": -241.5257390169149,
+              "yaw": 2.548125820692355,
+              "speed": 0,
+              "lateral": -2.15,
+              "s": 1743.5092048810245,
+              "u": 0,
+              "v": 0,
+              "steerAngle": 0,
+              "lap": 1,
+              "rank": 1,
+              "telemetry": {
+                "speedKmh": 0,
+                "rpm": 850,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 0,
+                "absActive": false,
+                "brakeTemp": 28,
+                "grip": 0.969479809602257,
+                "slipAngle": 0,
+                "engineTemp": 74,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 0,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 1
+              }
+            }
+          ],
+          "raceTime": 0,
+          "countdown": 3,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 0,
+          "events": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -183.51615322199467,
+            "y": 4.977638305141652,
+            "z": -241.5257390169149,
+            "yaw": 2.548125820692355,
+            "speed": 0,
+            "lateral": -2.15,
+            "s": 1743.5092048810245,
+            "u": 0,
+            "v": 0,
+            "steerAngle": 0,
+            "lap": 1,
+            "rank": 1,
+            "telemetry": {
+              "speedKmh": 0,
+              "rpm": 850,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 0,
+              "absActive": false,
+              "brakeTemp": 28,
+              "grip": 0.969479809602257,
+              "slipAngle": 0,
+              "engineTemp": 74,
+              "damage": 0,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 0,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 1
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.3922363550466668,
+            0,
+            0,
+            0,
+            0,
+            2.475086853416296,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.7846347458142114,
+            -0.1939372826281128,
+            0.5888434818081042,
+            0,
+            2.7755575615628914e-17,
+            0.9498114066947605,
+            0.31282309971055533,
+            0,
+            -0.6199583176803645,
+            -0.2454518733262053,
+            0.7452550316633821,
+            0,
+            -1.609823385706477e-15,
+            0.28494342200842704,
+            -10.774915649147985,
+            1
+          ]
+        },
+        "document": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            },
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 2,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 0
+        }
+      }
+    },
+    {
+      "label": "started",
+      "before": null,
+      "after": {
+        "phase": "race",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-2f48b68dc613",
+            "session": "wifi-2b2db4b3-4dac-4f57-8be7-2956815c8d7b-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "race",
+          "players": [
+            {
+              "id": 1,
+              "x": -183.51615322199467,
+              "y": 4.97761111217354,
+              "z": -241.5257390169149,
+              "yaw": 2.548125820692355,
+              "speed": 0,
+              "lateral": -2.149952145515637,
+              "s": 1743.4989797971305,
+              "u": 0,
+              "v": 0,
+              "steerAngle": 0,
+              "lap": 1,
+              "rank": 2,
+              "telemetry": {
+                "speedKmh": 0,
+                "rpm": 850,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 0,
+                "absActive": false,
+                "brakeTemp": 27.9991000675,
+                "grip": 0.9113110210261215,
+                "slipAngle": 0,
+                "engineTemp": 73.96005000000001,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 0,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 2,
+                "misfire": false
+              }
+            }
+          ],
+          "raceTime": 0.016666666666666666,
+          "countdown": 0,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 2,
+          "events": [
+            {
+              "id": 1,
+              "kind": "countdown",
+              "type": "countdown",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "准备起步",
+                "READY TO RACE"
+              ],
+              "time": 0
+            },
+            {
+              "id": 2,
+              "kind": "go",
+              "type": "go",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "绿灯！",
+                "GREEN LIGHT!"
+              ],
+              "time": 2.999999999999992
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -183.51615322199467,
+            "y": 4.97761111217354,
+            "z": -241.5257390169149,
+            "yaw": 2.548125820692355,
+            "speed": 0,
+            "lateral": -2.149952145515637,
+            "s": 1743.4989797971305,
+            "u": 0,
+            "v": 0,
+            "steerAngle": 0,
+            "lap": 1,
+            "rank": 2,
+            "telemetry": {
+              "speedKmh": 0,
+              "rpm": 850,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 0,
+              "absActive": false,
+              "brakeTemp": 27.9991000675,
+              "grip": 0.9113110210261215,
+              "slipAngle": 0,
+              "engineTemp": 73.96005000000001,
+              "damage": 0,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 0,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 2,
+              "misfire": false
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.0359961233938202,
+            0,
+            0,
+            0,
+            0,
+            1.8417708860334578,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.8290068787627144,
+            0.08461231564246785,
+            -0.5528004621974566,
+            0,
+            -1.3877787807814457e-17,
+            0.9884880152601505,
+            0.15129918600920672,
+            0,
+            0.559238406195517,
+            -0.12542806595283182,
+            0.8194633642251677,
+            0,
+            287.2066227281198,
+            -21.882555017993234,
+            87.59479518773736,
+            1
+          ]
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-2f48b68dc613",
+              "session": "wifi-2b2db4b3-4dac-4f57-8be7-2956815c8d7b-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            },
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 2,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      }
+    },
+    {
+      "label": "LEFT-rendered-direction",
+      "before": {
+        "phase": "race",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-2f48b68dc613",
+            "session": "wifi-2b2db4b3-4dac-4f57-8be7-2956815c8d7b-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "race",
+          "players": [
+            {
+              "id": 1,
+              "x": -167.0796584189001,
+              "y": 5.022484659196979,
+              "z": -265.4166309980769,
+              "yaw": 2.5406704228773576,
+              "speed": 9.942932712664298,
+              "lateral": 1.3118217732009048,
+              "s": 19.975954897272914,
+              "u": 9.942559094175342,
+              "v": -0.08619505438836124,
+              "steerAngle": 0,
+              "lap": 1,
+              "rank": 3,
+              "telemetry": {
+                "speedKmh": 35.79455776559148,
+                "rpm": 4317.862889693331,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 0,
+                "absActive": false,
+                "brakeTemp": 27.567018344913446,
+                "grip": 0.9047745090911902,
+                "slipAngle": -0.008669085522908402,
+                "engineTemp": 82.4835367184224,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 0,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 3,
+                "misfire": false
+              }
+            }
+          ],
+          "raceTime": 5.766666666666743,
+          "countdown": 0,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 2,
+          "events": [
+            {
+              "id": 1,
+              "kind": "countdown",
+              "type": "countdown",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "准备起步",
+                "READY TO RACE"
+              ],
+              "time": 0
+            },
+            {
+              "id": 2,
+              "kind": "go",
+              "type": "go",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "绿灯！",
+                "GREEN LIGHT!"
+              ],
+              "time": 2.999999999999992
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -167.0796584189001,
+            "y": 5.022484659196979,
+            "z": -265.4166309980769,
+            "yaw": 2.5406704228773576,
+            "speed": 9.942932712664298,
+            "lateral": 1.3118217732009048,
+            "s": 19.975954897272914,
+            "u": 9.942559094175342,
+            "v": -0.08619505438836124,
+            "steerAngle": 0,
+            "lap": 1,
+            "rank": 3,
+            "telemetry": {
+              "speedKmh": 35.79455776559148,
+              "rpm": 4317.862889693331,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 0,
+              "absActive": false,
+              "brakeTemp": 27.567018344913446,
+              "grip": 0.9047745090911902,
+              "slipAngle": -0.008669085522908402,
+              "engineTemp": 82.4835367184224,
+              "damage": 0,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 0,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 3,
+              "misfire": false
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.0148960561468163,
+            0,
+            0,
+            0,
+            0,
+            1.804259655372118,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.8247339805870096,
+            0.0789871804051523,
+            -0.5599775768696009,
+            0,
+            -1.3877787807814457e-17,
+            0.9901978875938613,
+            0.1396715554601396,
+            0,
+            0.5655208760648062,
+            -0.11519187790942023,
+            0.8166498454041337,
+            0,
+            287.9099022868046,
+            -24.36488147837448,
+            112.43606004548828,
+            1
+          ]
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-2f48b68dc613",
+              "session": "wifi-2b2db4b3-4dac-4f57-8be7-2956815c8d7b-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            },
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 2,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      },
+      "after": {
+        "phase": "race",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-2f48b68dc613",
+            "session": "wifi-2b2db4b3-4dac-4f57-8be7-2956815c8d7b-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "race",
+          "players": [
+            {
+              "id": 1,
+              "x": -162.2535047888226,
+              "y": 5.017700850786757,
+              "z": -275.75057336018926,
+              "yaw": 3.0358563860365675,
+              "speed": 8.40068767353568,
+              "lateral": 6.371179665559586,
+              "s": 29.93741281981761,
+              "u": 8.395767432449192,
+              "v": -0.28747627470768833,
+              "steerAngle": 0.009375517732956294,
+              "lap": 1,
+              "rank": 3,
+              "telemetry": {
+                "speedKmh": 30.24247562472845,
+                "rpm": 3648.077976474643,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 0,
+                "absActive": false,
+                "brakeTemp": 27.458146200941364,
+                "grip": 0.885511023802378,
+                "slipAngle": -0.034227247043287244,
+                "engineTemp": 76.5620215122277,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 0.009375517732956294,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 3,
+                "misfire": false
+              }
+            }
+          ],
+          "raceTime": 7.016666666666805,
+          "countdown": 0,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 2,
+          "events": [
+            {
+              "id": 1,
+              "kind": "countdown",
+              "type": "countdown",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "准备起步",
+                "READY TO RACE"
+              ],
+              "time": 0
+            },
+            {
+              "id": 2,
+              "kind": "go",
+              "type": "go",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "绿灯！",
+                "GREEN LIGHT!"
+              ],
+              "time": 2.999999999999992
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -162.2535047888226,
+            "y": 5.017700850786757,
+            "z": -275.75057336018926,
+            "yaw": 3.0358563860365675,
+            "speed": 8.40068767353568,
+            "lateral": 6.371179665559586,
+            "s": 29.93741281981761,
+            "u": 8.395767432449192,
+            "v": -0.28747627470768833,
+            "steerAngle": 0.009375517732956294,
+            "lap": 1,
+            "rank": 3,
+            "telemetry": {
+              "speedKmh": 30.24247562472845,
+              "rpm": 3648.077976474643,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 0,
+              "absActive": false,
+              "brakeTemp": 27.458146200941364,
+              "grip": 0.885511023802378,
+              "slipAngle": -0.034227247043287244,
+              "engineTemp": 76.5620215122277,
+              "damage": 0,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 0.009375517732956294,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 3,
+              "misfire": false
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.0181254052770492,
+            0,
+            0,
+            0,
+            0,
+            1.8100007204925315,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.9818224043965225,
+            0.027045769780917172,
+            -0.18786509138738225,
+            0,
+            3.469446951953615e-18,
+            0.9897955626292748,
+            0.14249471639116196,
+            0,
+            0.18980191312268657,
+            -0.13990450506097113,
+            0.9718034591616831,
+            0,
+            211.76010011162182,
+            -41.19409559768681,
+            227.0623285774053,
+            1
+          ]
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-2f48b68dc613",
+              "session": "wifi-2b2db4b3-4dac-4f57-8be7-2956815c8d7b-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            },
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 2,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:09.578Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:09.578Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:09.578Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:09.578Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:09.578Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:09.578Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:09.578Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:09.578Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:09.578Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:09.578Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:09.646Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:09.649Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:09.650Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:09.654Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:09.659Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:09.659Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:09.664Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:09.665Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:09.665Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:09.666Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:10.788Z",
+      "message": {
+        "type": "button",
+        "seq": 11,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:10.824Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:11.328Z",
+      "message": {
+        "type": "button",
+        "seq": 12,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "START",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:11.333Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:11.577Z",
+      "message": {
+        "type": "ping",
+        "seq": 13,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:11.579Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:12.557Z",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "START",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 1761
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:12.567Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:16.578Z",
+      "message": {
+        "type": "ping",
+        "seq": 15,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:16.581Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:21.575Z",
+      "message": {
+        "type": "ping",
+        "seq": 16,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:21.576Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:26.623Z",
+      "message": {
+        "type": "ping",
+        "seq": 17,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:26.628Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:31.576Z",
+      "message": {
+        "type": "ping",
+        "seq": 18,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:31.583Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:36.577Z",
+      "message": {
+        "type": "ping",
+        "seq": 19,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:36.578Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:41.576Z",
+      "message": {
+        "type": "ping",
+        "seq": 20,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:41.579Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:41.668Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:41.675Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:42.164Z",
+      "message": {
+        "type": "button",
+        "seq": 22,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "A",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:42.165Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:46.622Z",
+      "message": {
+        "type": "ping",
+        "seq": 23,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:46.633Z",
+      "message": {
+        "type": "ack",
+        "seq": 23
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:47.241Z",
+      "message": {
+        "type": "button",
+        "seq": 24,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "A",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 5576
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:47.247Z",
+      "message": {
+        "type": "ack",
+        "seq": 24
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:51.575Z",
+      "message": {
+        "type": "ping",
+        "seq": 25,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:51.576Z",
+      "message": {
+        "type": "ack",
+        "seq": 25
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:53.557Z",
+      "message": {
+        "type": "button",
+        "seq": 26,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:53.557Z",
+      "message": {
+        "type": "ack",
+        "seq": 26
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:54.059Z",
+      "message": {
+        "type": "button",
+        "seq": 27,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "A",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:54.062Z",
+      "message": {
+        "type": "ack",
+        "seq": 27
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:56.576Z",
+      "message": {
+        "type": "ping",
+        "seq": 28,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:56.578Z",
+      "message": {
+        "type": "ack",
+        "seq": 28
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:19:57.663Z",
+      "message": {
+        "type": "button",
+        "seq": 29,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "A",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 4101
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:19:57.670Z",
+      "message": {
+        "type": "ack",
+        "seq": 29
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:01.576Z",
+      "message": {
+        "type": "ping",
+        "seq": 30,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:01.577Z",
+      "message": {
+        "type": "ack",
+        "seq": 30
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:05.974Z",
+      "message": {
+        "type": "button",
+        "seq": 31,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:05.975Z",
+      "message": {
+        "type": "ack",
+        "seq": 31
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:06.469Z",
+      "message": {
+        "type": "button",
+        "seq": 32,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "A",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:06.472Z",
+      "message": {
+        "type": "ack",
+        "seq": 32
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:06.575Z",
+      "message": {
+        "type": "ping",
+        "seq": 33,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:06.577Z",
+      "message": {
+        "type": "ack",
+        "seq": 33
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:09.556Z",
+      "message": {
+        "type": "button",
+        "seq": 34,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "A",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 3584
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:09.557Z",
+      "message": {
+        "type": "ack",
+        "seq": 34
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:11.575Z",
+      "message": {
+        "type": "ping",
+        "seq": 35,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:11.576Z",
+      "message": {
+        "type": "ack",
+        "seq": 35
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:12.848Z",
+      "message": {
+        "type": "button",
+        "seq": 36,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:12.849Z",
+      "message": {
+        "type": "ack",
+        "seq": 36
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:13.350Z",
+      "message": {
+        "type": "button",
+        "seq": 37,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "A",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:13.352Z",
+      "message": {
+        "type": "ack",
+        "seq": 37
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:14.724Z",
+      "message": {
+        "type": "button",
+        "seq": 38,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "A",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 1841
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:14.735Z",
+      "message": {
+        "type": "ack",
+        "seq": 38
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:16.681Z",
+      "message": {
+        "type": "ping",
+        "seq": 39,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:16.728Z",
+      "message": {
+        "type": "ack",
+        "seq": 39
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:19.745Z",
+      "message": {
+        "type": "button",
+        "seq": 40,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:19.747Z",
+      "message": {
+        "type": "ack",
+        "seq": 40
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:20.244Z",
+      "message": {
+        "type": "button",
+        "seq": 41,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "LEFT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 502
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:20.246Z",
+      "message": {
+        "type": "ack",
+        "seq": 41
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:21.583Z",
+      "message": {
+        "type": "ping",
+        "seq": 42,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:21.623Z",
+      "message": {
+        "type": "ack",
+        "seq": 42
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:22.169Z",
+      "message": {
+        "type": "button",
+        "seq": 43,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "LEFT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 2424
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:22.180Z",
+      "message": {
+        "type": "ack",
+        "seq": 43
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:25.135Z",
+      "message": {
+        "type": "button",
+        "seq": 44,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:25.136Z",
+      "message": {
+        "type": "ack",
+        "seq": 44
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:25.727Z",
+      "message": {
+        "type": "button",
+        "seq": 45,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "RIGHT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 524
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:25.737Z",
+      "message": {
+        "type": "ack",
+        "seq": 45
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:26.575Z",
+      "message": {
+        "type": "ping",
+        "seq": 46,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:26.579Z",
+      "message": {
+        "type": "ack",
+        "seq": 46
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:27.050Z",
+      "message": {
+        "type": "button",
+        "seq": 47,
+        "controller_id": "virtual-2f48b68dc613",
+        "key": "RIGHT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 1908
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:27.054Z",
+      "message": {
+        "type": "ack",
+        "seq": 47
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:20:31.576Z",
+      "message": {
+        "type": "ping",
+        "seq": 48,
+        "controller_id": "virtual-2f48b68dc613"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:20:31.578Z",
+      "message": {
+        "type": "ack",
+        "seq": 48
+      }
+    }
+  ],
+  "screenshots": [
+    "menu-960.png",
+    "menu-1280.png",
+    "failure.png"
+  ],
+  "limitations": [
+    "Desktop JVM and Chromium; Android lifecycle/NSD not exercised."
+  ],
+  "assetHashes": {
+    "audio.js": "3d1497474c0f7b1133d4a88d93323ddc7f831d9e641aa9aec39f790e8461bbef",
+    "controller.css": "08a93ace0e224952d2f2edce17ec09f868d17873dabbdd1c35dd160da987c5a9",
+    "controller.html": "be322923260aa688d75cc9c3c8422ded5d0cd34e2de31aee7fcb45a8734663cc",
+    "controller.js": "4f1ffed239a41e9f33f9da55277da2c70f5e9bc72cad7f98078bab1b3ace20a0",
+    "game-model.js": "32666a4429fb0dc34c2003f34cb5783e075be5437251f87ffd12109b08ba5166",
+    "game.js": "ae0daa9ea2895b1b5be1049e8ec8ed35ec6b6a49cce68f46a42ad5bda64ae1fa",
+    "materials.js": "f57f743c30d4563d64ec81be87092c32c5bc1203fbe1299ecd85b4573d9687fe",
+    "puretv-controller.js": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2",
+    "renderer-3d.js": "ae7177e7b957e108fbda4562d5906c90f0322acbe6b6e7e8016c9a2aa36e3fb4",
+    "secure-controller.js": "30204d3c8d732ae25e054a16f80a2fcf0ba10d42b9ba4c9c745d4105249e04ec",
+    "steering.js": "d16c7e8434505a427ce5856ab447a0732dbbbaf2b51a80444ed6542104d30d11",
+    "TEXTURE-LICENSE.txt": "ae77e01340f81a9e73e84069eb9d8eaf461ce9ed5a3ac949f4c042d948a5d10b",
+    "textures/asphalt-color.jpg": "6ef06ac2eb2e85990c8a0260d68309cef11591c6c5b60cef29eea3259c0cc654",
+    "textures/asphalt-normal.jpg": "fea3406de552b81dbb5b3b35d60d4a72af2e34952052efd4bccff529b3155fc9",
+    "textures/asphalt-specular.jpg": "6a55ca9ada50cd6053bcc45fef5f95d06adf17097e3895edd3ec4ce01117f33f",
+    "textures/concrete-color.jpg": "82db406252c7bc9706db0671de566997b1084358ccf81b3b1b6d421bc563b6fb",
+    "textures/concrete-normal.jpg": "f7d341a26ea272e4395bcef8dd1f803255ca2e708ac2f35ba7e086dc6abaa2c0",
+    "textures/container-color.jpg": "5eaa65639fe322ed0f64897177b3558465b6aa23ceb137169eb458c6fc7b1735",
+    "textures/container-normal.jpg": "dff0614c6e2bb7eef1a3837e5eb53ca6ad4f41294f95a981ca43001088c0959e",
+    "textures/facade-color.jpg": "2685d655a60a0dc730df2c34aba7dd5c3eac2a1598e6ee364b06d37e6c1263d7",
+    "textures/foliage-color.png": "577cacf6394a4eb91b248947cb57f9aee323c5182bc3bd781b5c2072fc24c27e",
+    "textures/grass-color.jpg": "3cfca2299ba7a8cf6c8e3ee75886d8190e6b2d58ae59b8ab6ad0f3c496fa8750",
+    "textures/grass-normal.jpg": "5075ea94770319013f31a2e177ce6901af40a50ad59776ea499cbdf02cbd173b",
+    "textures/manifest.json": "b02e01157a6faf492701665f64a89a0b8a3874911c499f4e4860cc868077074c",
+    "textures/rock-color.jpg": "690dcd6e1d5f73f4c7f4198c43c11bb6eba9148dfb1363a72fb0faff8d3338a2",
+    "textures/rock-normal.jpg": "0054fad039286bcf15584ad6a5bd7da5551cdbd4c3e0bcb5248ea1071cdabe1e",
+    "textures/sand-color.jpg": "a0dfc925d06547da6648e86bac96103916aaa07519bb414db3e27a8c1cd29ac8",
+    "textures/sand-normal.jpg": "6e6465a54381df1fb0434252dd94d1a5150f4287ecd16e354aacf2c6da782cf7",
+    "textures/solar-color.jpg": "7b0f65dfe56c680a2b0e2b6f8d7ee5be0f6d05022614087da67a70adf81b3959",
+    "textures/solar-specular.jpg": "5e9a6aa0677a4b3a2ed2eabbe0f416bc25602a0c4d0332a41fd8a5ed50e69458",
+    "textures/vehicle-atlas-color.jpg": "e24126b10194e3bf0b3b165dd233ee0420f95b912cc15f4f61236a2fc486dbf8",
+    "textures/vehicle-atlas-normal.jpg": "be139e62180492623dec5ed6fe08537792c1e8b3d69c04f52590e68a4021567b",
+    "textures/vehicle-atlas-specular.jpg": "fdfd498486c3825280e60377e42d047ef5793aa1913f121c7fb9f26a25c022aa",
+    "THREE-LICENSE.txt": "b53cfcb10e8642d82814dc14de5b4ea363300aa6a2de35f0669b33cd7d3f5c39",
+    "three.min.js": "a8a966c3de0bac23630957e8b6ceb1330725bc2889a0b2dad952d710797ba179",
+    "tracks.js": "8b6bb446bb3a494eea8757a2bab299547330dbd8fc3c5851efea8e74b8130a98",
+    "tv.css": "585049348d76a7abaab0ea9951aeb7f1c52055625e9ec225699f6f7b62c54d47",
+    "tv.html": "9accd85289d9a3589d37d3244dbadba6b2ab11b447a4a2b70a030f0f14909924",
+    "vehicle-models.js": "7c3a59cccdfff97b1deb12343be4b3d812d8e3853afc582e62580599cb6b1e86"
+  },
+  "pageErrors": [],
+  "ports": {
+    "tcpPort": 63485,
+    "httpPort": 45195,
+    "observerPort": 38651
+  },
+  "gameplayViewport": {
+    "width": 960,
+    "height": 540
+  },
+  "error": "AssertionError [ERR_ASSERTION]: RIGHT actual camera projection\n    at gameplay (file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/cases.mjs:82:327)\n    at runNextTicks (node:internal/process/task_queues:65:5)\n    at process.processImmediate (node:internal/timers:541:9)\n    at async file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:77:80\n    at async test (file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:77:2",
+  "lastSnapshot": {
+    "phase": "race",
+    "paused": false,
+    "controllerPaused": false,
+    "controllers": [
+      {
+        "a": false,
+        "cancelSeq": 1,
+        "b": false,
+        "select": false,
+        "buttons": {
+          "A": false,
+          "DOWN": false,
+          "B": false,
+          "LEFT": false,
+          "X": false,
+          "RIGHT": false,
+          "Y": false,
+          "START": false,
+          "UP": false
+        },
+        "controllerId": "virtual-2f48b68dc613",
+        "session": "wifi-2b2db4b3-4dac-4f57-8be7-2956815c8d7b-1",
+        "start": false,
+        "transport": "wifi",
+        "inputActive": true,
+        "connected": true,
+        "x": 0,
+        "y": 0,
+        "aimY": 0,
+        "id": 1,
+        "aimX": 0
+      },
+      {
+        "a": false,
+        "cancelSeq": 0,
+        "b": false,
+        "select": false,
+        "buttons": {
+          "A": false,
+          "DOWN": false,
+          "B": false,
+          "LEFT": false,
+          "X": false,
+          "RIGHT": false,
+          "Y": false,
+          "START": false,
+          "UP": false
+        },
+        "controllerId": "",
+        "session": "",
+        "start": false,
+        "transport": "wifi",
+        "inputActive": true,
+        "connected": false,
+        "x": 0,
+        "y": 0,
+        "aimY": 0,
+        "id": 2,
+        "aimX": 0
+      }
+    ],
+    "info": {
+      "language": "zh",
+      "url": "http://127.0.0.1:1/",
+      "qr": "",
+      "addresses": [
+        "127.0.0.1"
+      ],
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Desktop QA receiver; no Android NSD",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "addresses": [
+          "127.0.0.1"
+        ],
+        "inputActive": true
+      }
+    },
+    "model": {
+      "phase": "race",
+      "players": [
+        {
+          "id": 1,
+          "x": -162.00947113792205,
+          "y": 5.016308127333003,
+          "z": -277.92857456916994,
+          "yaw": 3.057803531637917,
+          "speed": 0,
+          "lateral": 7.999966116621328,
+          "s": 31.24862679594139,
+          "u": 0,
+          "v": 0,
+          "steerAngle": -0.0005083782211216971,
+          "lap": 1,
+          "rank": 5,
+          "telemetry": {
+            "speedKmh": 0,
+            "rpm": 850,
+            "gear": 1,
+            "pedalForceN": 0,
+            "brakeForce": 0,
+            "brake": 0,
+            "throttle": 0,
+            "absActive": false,
+            "brakeTemp": 27.372112995983787,
+            "grip": 0.4178873328003134,
+            "slipAngle": 0,
+            "engineTemp": 72.15845720669978,
+            "damage": 0.03029758086743568,
+            "offRoad": true,
+            "locked": false,
+            "steerAngle": -0.0005083782211216971,
+            "brakeBroken": false,
+            "lap": 1,
+            "rank": 5,
+            "misfire": false
+          }
+        }
+      ],
+      "raceTime": 8.76666666666681,
+      "countdown": 0,
+      "trackId": "harbor",
+      "playerCount": 1,
+      "eventSerial": 3,
+      "events": [
+        {
+          "id": 1,
+          "kind": "countdown",
+          "type": "countdown",
+          "racerId": null,
+          "playerIndex": null,
+          "text": [
+            "准备起步",
+            "READY TO RACE"
+          ],
+          "time": 0
+        },
+        {
+          "id": 2,
+          "kind": "go",
+          "type": "go",
+          "racerId": null,
+          "playerIndex": null,
+          "text": [
+            "绿灯！",
+            "GREEN LIGHT!"
+          ],
+          "time": 2.999999999999992
+        },
+        {
+          "id": 3,
+          "kind": "collision",
+          "type": "collision",
+          "racerId": 1,
+          "playerIndex": 0,
+          "text": [
+            "擦撞护栏",
+            "GUARDRAIL IMPACT"
+          ],
+          "time": 10.291666666666723
+        }
+      ]
+    },
+    "players": [
+      {
+        "id": 1,
+        "x": -162.00947113792205,
+        "y": 5.016308127333003,
+        "z": -277.92857456916994,
+        "yaw": 3.057803531637917,
+        "speed": 0,
+        "lateral": 7.999966116621328,
+        "s": 31.24862679594139,
+        "u": 0,
+        "v": 0,
+        "steerAngle": -0.0005083782211216971,
+        "lap": 1,
+        "rank": 5,
+        "telemetry": {
+          "speedKmh": 0,
+          "rpm": 850,
+          "gear": 1,
+          "pedalForceN": 0,
+          "brakeForce": 0,
+          "brake": 0,
+          "throttle": 0,
+          "absActive": false,
+          "brakeTemp": 27.372112995983787,
+          "grip": 0.4178873328003134,
+          "slipAngle": 0,
+          "engineTemp": 72.15845720669978,
+          "damage": 0.03029758086743568,
+          "offRoad": true,
+          "locked": false,
+          "steerAngle": -0.0005083782211216971,
+          "brakeBroken": false,
+          "lap": 1,
+          "rank": 5,
+          "misfire": false
+        }
+      }
+    ],
+    "camera": {
+      "projection": [
+        1.0359961233938202,
+        0,
+        0,
+        0,
+        0,
+        1.8417708860334578,
+        0,
+        0,
+        0,
+        0,
+        -1.00010000500025,
+        -1,
+        0,
+        0,
+        -0.1800090004500225,
+        0
+      ],
+      "view": [
+        0.9964739969426233,
+        0.012690755118539393,
+        -0.0829368322985274,
+        0,
+        3.469446951953614e-18,
+        0.9884945347858974,
+        0.15125658563650113,
+        0,
+        0.08390216574792807,
+        -0.15072325445309848,
+        0.9850091000340422,
+        0,
+        184.75756106481037,
+        -46.987901945929025,
+        251.43349384305534,
+        1
+      ]
+    },
+    "document": {
+      "width": 960,
+      "height": 540,
+      "scrollWidth": 960,
+      "scrollHeight": 540
+    },
+    "nativeInfo": {
+      "language": "zh",
+      "url": "http://127.0.0.1:1/",
+      "qr": "",
+      "addresses": [
+        "127.0.0.1"
+      ],
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Desktop QA receiver; no Android NSD",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "addresses": [
+          "127.0.0.1"
+        ],
+        "inputActive": true
+      }
+    },
+    "receiver": {
+      "players": [
+        {
+          "a": false,
+          "cancelSeq": 1,
+          "b": false,
+          "select": false,
+          "buttons": {
+            "A": false,
+            "DOWN": false,
+            "B": false,
+            "LEFT": false,
+            "X": false,
+            "RIGHT": false,
+            "Y": false,
+            "START": false,
+            "UP": false
+          },
+          "controllerId": "virtual-2f48b68dc613",
+          "session": "wifi-2b2db4b3-4dac-4f57-8be7-2956815c8d7b-1",
+          "start": false,
+          "transport": "wifi",
+          "inputActive": true,
+          "connected": true,
+          "x": 0,
+          "y": 0,
+          "aimY": 0,
+          "id": 1,
+          "aimX": 0
+        },
+        {
+          "a": false,
+          "cancelSeq": 0,
+          "b": false,
+          "select": false,
+          "buttons": {
+            "A": false,
+            "DOWN": false,
+            "B": false,
+            "LEFT": false,
+            "X": false,
+            "RIGHT": false,
+            "Y": false,
+            "START": false,
+            "UP": false
+          },
+          "controllerId": "",
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "inputActive": true,
+          "connected": false,
+          "x": 0,
+          "y": 0,
+          "aimY": 0,
+          "id": 2,
+          "aimX": 0
+        }
+      ],
+      "inputActive": true,
+      "connections": 1
+    }
+  },
+  "finishedAt": "2026-11-15T15:20:37.002Z"
+}

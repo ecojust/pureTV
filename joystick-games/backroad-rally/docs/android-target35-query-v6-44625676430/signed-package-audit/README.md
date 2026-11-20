@@ -1,0 +1,7 @@
+# Backroad 原 target35 签名包独立核验
+
+原 run44625676430 / source4b6cf0b8cba288eae66bcae2ef2784acc279a695 的包审通过。完整原ZIP104,996,375字节从固定draft asset769487716读取到内存，SHA b6690049690175943c906ddd4277705c46c5e235770aa5c1ffbd6da1ab4c94fc匹配。APK105,024,551字节、SHA2cd35f145f5362264a720708325c22e283a3828d21899058f17422ba87103c08；Game及Observer均通过实际apksigner固定证书校验和aapt min26/target35/包名版本核验。
+
+914游戏源+5Observer源去重916项全部对固定Git源流式校验；完整原Git树选择集、原selector、签名前后内容收据一致。338资源逐字节等于原source重新组成的payload，且与旧d548签名包的所有资源完全相同。相对旧包非META-INF仅AndroidManifest.xml/classes.dex改变。
+
+没有重建、重签、安装、改模型、运行游戏或发布。原runtime仍failed（初始loading快照），不能将包审当作导航/驾驶通过。APK超GitHub100MiB166,951字节，只能按未来明确验证范围通过Release资产分发。完整来源、原收据、逐文件哈希及命令输出均保留；审完重新确认远端draft/asset后已释放本地APK和可重建audit视图，详见scratch-cleanup.json。首次磁盘满的失败及不完整文件记录原样保留。

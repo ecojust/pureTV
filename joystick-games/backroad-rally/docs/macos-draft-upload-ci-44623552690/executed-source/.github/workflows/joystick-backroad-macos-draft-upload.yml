@@ -1,0 +1,43 @@
+name: Upload fixed original Backroad macOS packages to existing draft
+on:
+  workflow_dispatch:
+permissions:
+  actions: read
+  contents: write
+concurrency:
+  group: backroad-macos-draft-451969286
+  cancel-in-progress: false
+jobs:
+  transfer:
+    if: github.repository == 'ecojust/pureTV'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            joystick-games/tools
+            .github/workflows
+      - name: Test fixed original-package and existing-draft boundaries
+        run: |
+          python3 joystick-games/tools/artifact-draft-transfer-test.py
+          python3 joystick-games/tools/backroad-macos-draft-upload-test.py
+      - name: Verify original artifact and copy only the two fixed original packages
+        run: |
+          python3 joystick-games/tools/backroad-macos-draft-upload.py transfer \
+            --output "$RUNNER_TEMP/backroad-macos-draft-upload"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backroad-macos-draft-upload-receipt
+          path: ${{ runner.temp }}/backroad-macos-draft-upload/receipts/transfer.json
+          if-no-files-found: warn
+      - name: Preserve only the small receipt on a new immutable branch
+        if: always()
+        run: |
+          python3 joystick-games/tools/backroad-macos-draft-upload.py export-receipt \
+            --directory "$RUNNER_TEMP/backroad-macos-draft-upload/receipts"

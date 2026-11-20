@@ -1,0 +1,6910 @@
+{
+  "scope": "DOM fixture: original markup/styles, exact extracted original graphics selection+reload handlers and real TV adapter. No renderer, race physics, countdown or native SDK execution.",
+  "inputs": [
+    {
+      "path": "src/src/tv-storage.js",
+      "bytes": 1800,
+      "sha256": "03c31edb82f46126229ea7f8fb9513c267942b5e5fadb903b04439a1576530aa"
+    },
+    {
+      "path": "../shared/web/controller-clients.js",
+      "bytes": 7746,
+      "sha256": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a"
+    },
+    {
+      "path": "../shared/web/input.js",
+      "bytes": 8423,
+      "sha256": "d33a301f082f0100db81c055b4773e2947cf4c166f76f68dfe06344d5a4660f6"
+    },
+    {
+      "path": "src/src/tv-controls.js",
+      "bytes": 1455,
+      "sha256": "2511e1610900cd4bc7bfb2e5653fe38c239d5ae57ca9c30a216ce7f9312ecca9"
+    },
+    {
+      "path": "src/src/tv-adapter.js",
+      "bytes": 7463,
+      "sha256": "e6feee4583e79cebcabf86a038699ca7062cd960d7a732386c5817ed28164d23"
+    },
+    {
+      "path": "src/src/i18n.js",
+      "bytes": 21766,
+      "sha256": "6191d9dda3c98d402b4dcc75bb22bf68cfea07f39b1f725acecdca8157f7cf67"
+    },
+    {
+      "path": "src/src/main.js",
+      "bytes": 98145,
+      "sha256": "ad1edb9d785799db5cd357d614005d2e044b79bed7c7635e019e693e65b49004"
+    },
+    {
+      "path": "src/index.template.html",
+      "bytes": 29958,
+      "sha256": "d12a2363aa924c43ba549cb39a97023514d4c812ef328ba903ed43c6f6941756"
+    },
+    {
+      "path": "src/tv.css",
+      "bytes": 1900,
+      "sha256": "38e1bdea8c1001b1e81325e31b8c136827866759d465f2ed3a0abe5eb460ef1b"
+    },
+    {
+      "path": "dist/tv.html",
+      "bytes": 1246047,
+      "sha256": "5a3396489101d595c4e7d32a88a8604a281e8b5fa144826137a947e45a839ff6"
+    }
+  ],
+  "sourceFragments": {
+    "presetsSha256": "81ebe7acea1a49790bc5b6942c14a62a9f0c6d592f635540b1f817c3154b976d",
+    "settingsSha256": "24f3741af3a0a72af4529f8bb238c8902edfa25101b5806092f3b5edb1d430d3",
+    "resumeHandlerSha256": "c054e61126de90c492b428a164c0b76e6d44e4183c591894b99388bd71337155",
+    "titleLabelSha256": "a6631248e6931bc0ce7447161938aa296aa2436133a74a0a6a6647f5ff0a020c"
+  },
+  "fixtureBundleSha256": "456a441798ff815d714fc40dbeafdf79bf3605060aace13aa15b831d9cfd2299",
+  "fixtureHtmlSha256": "416877040f7d72f5196e690fe4b5efab6eab061d5db543768f3f07671af01e68",
+  "cases": [
+    {
+      "lang": "en",
+      "width": 960,
+      "actions": [
+        {
+          "key": "UP",
+          "before": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "Start race · 3 laps ▸",
+            "focusIndex": 18
+          },
+          "after": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "Standard · equal cars",
+            "focusIndex": 16
+          }
+        },
+        {
+          "key": "RIGHT",
+          "before": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "Standard · equal cars",
+            "focusIndex": 16
+          },
+          "after": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "Tuned · your upgraded car",
+            "focusIndex": 17
+          }
+        },
+        {
+          "key": "DOWN",
+          "before": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "Tuned · your upgraded car",
+            "focusIndex": 17
+          },
+          "after": {
+            "root": "title",
+            "focusId": "garagebtn",
+            "focusText": "🚗 Garage",
+            "focusIndex": 19
+          }
+        },
+        {
+          "key": "RIGHT",
+          "before": {
+            "root": "title",
+            "focusId": "garagebtn",
+            "focusText": "🚗 Garage",
+            "focusIndex": 19
+          },
+          "after": {
+            "root": "title",
+            "focusId": "volbtn",
+            "focusText": "Settings",
+            "focusIndex": 20
+          }
+        },
+        {
+          "key": "A",
+          "before": {
+            "root": "title",
+            "focusId": "volbtn",
+            "focusText": "Settings",
+            "focusIndex": 20
+          },
+          "after": {
+            "root": "volume",
+            "focusId": "volclose",
+            "focusText": "Close ✕",
+            "focusIndex": 0
+          }
+        },
+        {
+          "key": "DOWN",
+          "before": {
+            "root": "volume",
+            "focusId": "volclose",
+            "focusText": "Close ✕",
+            "focusIndex": 0
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Max",
+            "focusIndex": 5
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Max",
+            "focusIndex": 5
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Ultra",
+            "focusIndex": 4
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Ultra",
+            "focusIndex": 4
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "High",
+            "focusIndex": 3
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "High",
+            "focusIndex": 3
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Balanced",
+            "focusIndex": 2
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Balanced",
+            "focusIndex": 2
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Smooth",
+            "focusIndex": 1
+          }
+        },
+        {
+          "key": "START",
+          "before": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "Start race · 3 laps ▸",
+            "focusIndex": 18
+          },
+          "after": {
+            "root": null,
+            "focusId": null,
+            "focusText": null,
+            "focusIndex": -1
+          }
+        },
+        {
+          "key": "A",
+          "before": {
+            "root": "pause",
+            "focusId": "resume",
+            "focusText": "Resume ▸",
+            "focusIndex": 0
+          },
+          "after": {
+            "root": null,
+            "focusId": null,
+            "focusText": null,
+            "focusIndex": -1
+          }
+        }
+      ],
+      "titleGraph": [
+        {
+          "id": "",
+          "text": "Neon District",
+          "x": 294.6328125,
+          "y": 151
+        },
+        {
+          "id": "",
+          "text": "Mistridge Pass",
+          "x": 423.28125,
+          "y": 151
+        },
+        {
+          "id": "",
+          "text": "Azure Bay Bridge",
+          "x": 565.9609375,
+          "y": 151
+        },
+        {
+          "id": "",
+          "text": "Chang'an Lanterns",
+          "x": 722.1875,
+          "y": 151
+        },
+        {
+          "id": "",
+          "text": "Skyline Site",
+          "x": 859.5859375,
+          "y": 151
+        },
+        {
+          "id": "",
+          "text": "Red Rock Canyon",
+          "x": 310.0546875,
+          "y": 189
+        },
+        {
+          "id": "",
+          "text": "Metro Maze",
+          "x": 443.1484375,
+          "y": 189
+        },
+        {
+          "id": "",
+          "text": "Coral Deep",
+          "x": 552.9453125,
+          "y": 189
+        },
+        {
+          "id": "",
+          "text": "Aurora Icefield",
+          "x": 672.78125,
+          "y": 189
+        },
+        {
+          "id": "",
+          "text": "Colossus Ruins",
+          "x": 807.4140625,
+          "y": 189
+        },
+        {
+          "id": "",
+          "text": "Falling Dream",
+          "x": 295.9609375,
+          "y": 227
+        },
+        {
+          "id": "",
+          "text": "Race · vs 5 AI",
+          "x": 354.140625,
+          "y": 281
+        },
+        {
+          "id": "",
+          "text": "Time trial · ghost",
+          "x": 489.234375,
+          "y": 281
+        },
+        {
+          "id": "",
+          "text": "Easy",
+          "x": 720.1484375,
+          "y": 281
+        },
+        {
+          "id": "",
+          "text": "Normal",
+          "x": 793.7421875,
+          "y": 281
+        },
+        {
+          "id": "",
+          "text": "Hard",
+          "x": 866.9609375,
+          "y": 281
+        },
+        {
+          "id": "",
+          "text": "Standard · equal cars",
+          "x": 383.875,
+          "y": 335
+        },
+        {
+          "id": "",
+          "text": "Tuned · your upgraded car",
+          "x": 579.3671875,
+          "y": 335
+        },
+        {
+          "id": "start",
+          "text": "Start race · 3 laps ▸",
+          "x": 371.3046875,
+          "y": 393
+        },
+        {
+          "id": "garagebtn",
+          "text": "🚗 Garage",
+          "x": 584.0234375,
+          "y": 393
+        },
+        {
+          "id": "volbtn",
+          "text": "Settings",
+          "x": 789.453125,
+          "y": 393
+        }
+      ],
+      "titlePath": [
+        "UP",
+        "RIGHT",
+        "DOWN",
+        "RIGHT"
+      ],
+      "beforeLow": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 40,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "high",
+          "ready": true,
+          "menu": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Smooth",
+            "focusIndex": 1
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": true,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 40,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "afterReload": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 6,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "low",
+          "ready": true,
+          "menu": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "Start race · 3 laps ▸",
+            "focusIndex": 18
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 6,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "savedPreference": "low",
+      "qualityPathPassed": true,
+      "pointerResumePassed": true,
+      "pauseGeometry": {
+        "left": 258.25,
+        "right": 418.703125,
+        "top": 248,
+        "bottom": 296,
+        "panelRight": 202,
+        "clear": true,
+        "buttons": [
+          {
+            "id": "resume",
+            "left": 258.25,
+            "right": 418.703125,
+            "top": 248,
+            "bottom": 296,
+            "clear": true
+          },
+          {
+            "id": "restart",
+            "left": 430.703125,
+            "right": 532.625,
+            "top": 248,
+            "bottom": 296,
+            "clear": true
+          },
+          {
+            "id": "cambtn",
+            "left": 544.625,
+            "right": 647.234375,
+            "top": 248,
+            "bottom": 296,
+            "clear": true
+          },
+          {
+            "id": "volbtn2",
+            "left": 659.234375,
+            "right": 767.890625,
+            "top": 248,
+            "bottom": 296,
+            "clear": true
+          },
+          {
+            "id": "quit",
+            "left": 779.890625,
+            "right": 905.734375,
+            "top": 248,
+            "bottom": 296,
+            "clear": true
+          }
+        ]
+      },
+      "controllerResumePassed": true,
+      "snapshotReadsDoNotPoll": {
+        "before": 7,
+        "after": 7,
+        "callsBefore": 7,
+        "callsAfter": 7
+      }
+    },
+    {
+      "lang": "en",
+      "width": 1280,
+      "actions": [
+        {
+          "key": "UP",
+          "before": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "Start race · 3 laps ▸",
+            "focusIndex": 18
+          },
+          "after": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "Standard · equal cars",
+            "focusIndex": 16
+          }
+        },
+        {
+          "key": "RIGHT",
+          "before": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "Standard · equal cars",
+            "focusIndex": 16
+          },
+          "after": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "Tuned · your upgraded car",
+            "focusIndex": 17
+          }
+        },
+        {
+          "key": "DOWN",
+          "before": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "Tuned · your upgraded car",
+            "focusIndex": 17
+          },
+          "after": {
+            "root": "title",
+            "focusId": "garagebtn",
+            "focusText": "🚗 Garage",
+            "focusIndex": 19
+          }
+        },
+        {
+          "key": "RIGHT",
+          "before": {
+            "root": "title",
+            "focusId": "garagebtn",
+            "focusText": "🚗 Garage",
+            "focusIndex": 19
+          },
+          "after": {
+            "root": "title",
+            "focusId": "volbtn",
+            "focusText": "Settings",
+            "focusIndex": 20
+          }
+        },
+        {
+          "key": "A",
+          "before": {
+            "root": "title",
+            "focusId": "volbtn",
+            "focusText": "Settings",
+            "focusIndex": 20
+          },
+          "after": {
+            "root": "volume",
+            "focusId": "volclose",
+            "focusText": "Close ✕",
+            "focusIndex": 0
+          }
+        },
+        {
+          "key": "DOWN",
+          "before": {
+            "root": "volume",
+            "focusId": "volclose",
+            "focusText": "Close ✕",
+            "focusIndex": 0
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Max",
+            "focusIndex": 5
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Max",
+            "focusIndex": 5
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Ultra",
+            "focusIndex": 4
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Ultra",
+            "focusIndex": 4
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "High",
+            "focusIndex": 3
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "High",
+            "focusIndex": 3
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Balanced",
+            "focusIndex": 2
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Balanced",
+            "focusIndex": 2
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Smooth",
+            "focusIndex": 1
+          }
+        },
+        {
+          "key": "START",
+          "before": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "Start race · 3 laps ▸",
+            "focusIndex": 18
+          },
+          "after": {
+            "root": null,
+            "focusId": null,
+            "focusText": null,
+            "focusIndex": -1
+          }
+        },
+        {
+          "key": "A",
+          "before": {
+            "root": "pause",
+            "focusId": "resume",
+            "focusText": "Resume ▸",
+            "focusIndex": 0
+          },
+          "after": {
+            "root": null,
+            "focusId": null,
+            "focusText": null,
+            "focusIndex": -1
+          }
+        }
+      ],
+      "titleGraph": [
+        {
+          "id": "",
+          "text": "Neon District",
+          "x": 314.6328125,
+          "y": 203
+        },
+        {
+          "id": "",
+          "text": "Mistridge Pass",
+          "x": 443.28125,
+          "y": 203
+        },
+        {
+          "id": "",
+          "text": "Azure Bay Bridge",
+          "x": 585.9609375,
+          "y": 203
+        },
+        {
+          "id": "",
+          "text": "Chang'an Lanterns",
+          "x": 742.1875,
+          "y": 203
+        },
+        {
+          "id": "",
+          "text": "Skyline Site",
+          "x": 879.5859375,
+          "y": 203
+        },
+        {
+          "id": "",
+          "text": "Red Rock Canyon",
+          "x": 1013.4765625,
+          "y": 203
+        },
+        {
+          "id": "",
+          "text": "Metro Maze",
+          "x": 1146.5703125,
+          "y": 203
+        },
+        {
+          "id": "",
+          "text": "Coral Deep",
+          "x": 306.7578125,
+          "y": 241
+        },
+        {
+          "id": "",
+          "text": "Aurora Icefield",
+          "x": 426.59375,
+          "y": 241
+        },
+        {
+          "id": "",
+          "text": "Colossus Ruins",
+          "x": 561.2265625,
+          "y": 241
+        },
+        {
+          "id": "",
+          "text": "Falling Dream",
+          "x": 692.7421875,
+          "y": 241
+        },
+        {
+          "id": "",
+          "text": "Race · vs 5 AI",
+          "x": 374.140625,
+          "y": 295
+        },
+        {
+          "id": "",
+          "text": "Time trial · ghost",
+          "x": 509.234375,
+          "y": 295
+        },
+        {
+          "id": "",
+          "text": "Easy",
+          "x": 740.1484375,
+          "y": 295
+        },
+        {
+          "id": "",
+          "text": "Normal",
+          "x": 813.7421875,
+          "y": 295
+        },
+        {
+          "id": "",
+          "text": "Hard",
+          "x": 886.9609375,
+          "y": 295
+        },
+        {
+          "id": "",
+          "text": "Standard · equal cars",
+          "x": 403.875,
+          "y": 349
+        },
+        {
+          "id": "",
+          "text": "Tuned · your upgraded car",
+          "x": 599.3671875,
+          "y": 349
+        },
+        {
+          "id": "start",
+          "text": "Start race · 3 laps ▸",
+          "x": 391.3046875,
+          "y": 525
+        },
+        {
+          "id": "garagebtn",
+          "text": "🚗 Garage",
+          "x": 604.0234375,
+          "y": 525
+        },
+        {
+          "id": "volbtn",
+          "text": "Settings",
+          "x": 809.453125,
+          "y": 525
+        }
+      ],
+      "titlePath": [
+        "UP",
+        "RIGHT",
+        "DOWN",
+        "RIGHT"
+      ],
+      "beforeLow": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 34,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "high",
+          "ready": true,
+          "menu": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Smooth",
+            "focusIndex": 1
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": true,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 34,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "afterReload": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 6,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "low",
+          "ready": true,
+          "menu": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "Start race · 3 laps ▸",
+            "focusIndex": 18
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 6,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "savedPreference": "low",
+      "qualityPathPassed": true,
+      "pointerResumePassed": true,
+      "pauseGeometry": {
+        "left": 418.25,
+        "right": 578.703125,
+        "top": 338,
+        "bottom": 386,
+        "panelRight": 202,
+        "clear": true,
+        "buttons": [
+          {
+            "id": "resume",
+            "left": 418.25,
+            "right": 578.703125,
+            "top": 338,
+            "bottom": 386,
+            "clear": true
+          },
+          {
+            "id": "restart",
+            "left": 590.703125,
+            "right": 692.625,
+            "top": 338,
+            "bottom": 386,
+            "clear": true
+          },
+          {
+            "id": "cambtn",
+            "left": 704.625,
+            "right": 807.234375,
+            "top": 338,
+            "bottom": 386,
+            "clear": true
+          },
+          {
+            "id": "volbtn2",
+            "left": 819.234375,
+            "right": 927.890625,
+            "top": 338,
+            "bottom": 386,
+            "clear": true
+          },
+          {
+            "id": "quit",
+            "left": 939.890625,
+            "right": 1065.734375,
+            "top": 338,
+            "bottom": 386,
+            "clear": true
+          }
+        ]
+      },
+      "controllerResumePassed": true,
+      "snapshotReadsDoNotPoll": {
+        "before": 7,
+        "after": 7,
+        "callsBefore": 7,
+        "callsAfter": 7
+      }
+    },
+    {
+      "lang": "zh",
+      "width": 960,
+      "actions": [
+        {
+          "key": "UP",
+          "before": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "开始比赛 · 3 圈 ▸",
+            "focusIndex": 18
+          },
+          "after": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "标准组 · 车性能相同",
+            "focusIndex": 16
+          }
+        },
+        {
+          "key": "RIGHT",
+          "before": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "标准组 · 车性能相同",
+            "focusIndex": 16
+          },
+          "after": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "改装组 · 用你升级的车",
+            "focusIndex": 17
+          }
+        },
+        {
+          "key": "DOWN",
+          "before": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "改装组 · 用你升级的车",
+            "focusIndex": 17
+          },
+          "after": {
+            "root": "title",
+            "focusId": "garagebtn",
+            "focusText": "🚗 车库",
+            "focusIndex": 19
+          }
+        },
+        {
+          "key": "RIGHT",
+          "before": {
+            "root": "title",
+            "focusId": "garagebtn",
+            "focusText": "🚗 车库",
+            "focusIndex": 19
+          },
+          "after": {
+            "root": "title",
+            "focusId": "volbtn",
+            "focusText": "设置",
+            "focusIndex": 20
+          }
+        },
+        {
+          "key": "A",
+          "before": {
+            "root": "title",
+            "focusId": "volbtn",
+            "focusText": "设置",
+            "focusIndex": 20
+          },
+          "after": {
+            "root": "volume",
+            "focusId": "volclose",
+            "focusText": "关闭 ✕",
+            "focusIndex": 0
+          }
+        },
+        {
+          "key": "DOWN",
+          "before": {
+            "root": "volume",
+            "focusId": "volclose",
+            "focusText": "关闭 ✕",
+            "focusIndex": 0
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "极致",
+            "focusIndex": 5
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "极致",
+            "focusIndex": 5
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "极高",
+            "focusIndex": 4
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "极高",
+            "focusIndex": 4
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "高画质",
+            "focusIndex": 3
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "高画质",
+            "focusIndex": 3
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "均衡",
+            "focusIndex": 2
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "均衡",
+            "focusIndex": 2
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "流畅",
+            "focusIndex": 1
+          }
+        },
+        {
+          "key": "START",
+          "before": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "开始比赛 · 3 圈 ▸",
+            "focusIndex": 18
+          },
+          "after": {
+            "root": null,
+            "focusId": null,
+            "focusText": null,
+            "focusIndex": -1
+          }
+        },
+        {
+          "key": "A",
+          "before": {
+            "root": "pause",
+            "focusId": "resume",
+            "focusText": "继续 ▸",
+            "focusIndex": 0
+          },
+          "after": {
+            "root": null,
+            "focusId": null,
+            "focusText": null,
+            "focusIndex": -1
+          }
+        }
+      ],
+      "titleGraph": [
+        {
+          "id": "",
+          "text": "霓虹街区 · 雨夜",
+          "x": 299.4296875,
+          "y": 156
+        },
+        {
+          "id": "",
+          "text": "雾岭山道 · 黄昏",
+          "x": 432.2890625,
+          "y": 156
+        },
+        {
+          "id": "",
+          "text": "碧海长桥 · 晴天",
+          "x": 565.1484375,
+          "y": 156
+        },
+        {
+          "id": "",
+          "text": "长安灯火 · 元宵夜",
+          "x": 705.5078125,
+          "y": 156
+        },
+        {
+          "id": "",
+          "text": "天空工地 · 高空",
+          "x": 845.8671875,
+          "y": 156
+        },
+        {
+          "id": "",
+          "text": "赤岩峡谷 · 黄昏",
+          "x": 299.4296875,
+          "y": 196
+        },
+        {
+          "id": "",
+          "text": "云港城区 · 岔路",
+          "x": 432.2890625,
+          "y": 196
+        },
+        {
+          "id": "",
+          "text": "珊瑚深海 · 海底",
+          "x": 565.1484375,
+          "y": 196
+        },
+        {
+          "id": "",
+          "text": "冰原极光 · 雪夜",
+          "x": 698.0078125,
+          "y": 196
+        },
+        {
+          "id": "",
+          "text": "巨像遗迹 · 古林",
+          "x": 830.8671875,
+          "y": 196
+        },
+        {
+          "id": "",
+          "text": "坠梦 · 长梦",
+          "x": 284.4296875,
+          "y": 236
+        },
+        {
+          "id": "",
+          "text": "比赛 · 对 5 辆 AI",
+          "x": 349.9921875,
+          "y": 292
+        },
+        {
+          "id": "",
+          "text": "计时赛 · 幽灵车",
+          "x": 484.6015625,
+          "y": 292
+        },
+        {
+          "id": "",
+          "text": "新手",
+          "x": 652.8515625,
+          "y": 292
+        },
+        {
+          "id": "",
+          "text": "普通",
+          "x": 714.8671875,
+          "y": 292
+        },
+        {
+          "id": "",
+          "text": "高手",
+          "x": 776.8828125,
+          "y": 292
+        },
+        {
+          "id": "",
+          "text": "标准组 · 车性能相同",
+          "x": 363.2421875,
+          "y": 348
+        },
+        {
+          "id": "",
+          "text": "改装组 · 用你升级的车",
+          "x": 533.6015625,
+          "y": 348
+        },
+        {
+          "id": "start",
+          "text": "开始比赛 · 3 圈 ▸",
+          "x": 343.0859375,
+          "y": 408.5
+        },
+        {
+          "id": "garagebtn",
+          "text": "🚗 车库",
+          "x": 517.1796875,
+          "y": 408.5
+        },
+        {
+          "id": "volbtn",
+          "text": "设置",
+          "x": 696.8828125,
+          "y": 408.5
+        }
+      ],
+      "titlePath": [
+        "UP",
+        "RIGHT",
+        "DOWN",
+        "RIGHT"
+      ],
+      "beforeLow": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 32,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "high",
+          "ready": true,
+          "menu": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "流畅",
+            "focusIndex": 1
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": true,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 32,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "afterReload": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 7,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "low",
+          "ready": true,
+          "menu": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "开始比赛 · 3 圈 ▸",
+            "focusIndex": 18
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 7,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "savedPreference": "low",
+      "qualityPathPassed": true,
+      "pointerResumePassed": true,
+      "pauseGeometry": {
+        "left": 303.59375,
+        "right": 420.328125,
+        "top": 249,
+        "bottom": 300,
+        "panelRight": 202,
+        "clear": true,
+        "buttons": [
+          {
+            "id": "resume",
+            "left": 303.59375,
+            "right": 420.328125,
+            "top": 249,
+            "bottom": 300,
+            "clear": true
+          },
+          {
+            "id": "restart",
+            "left": 432.328125,
+            "right": 542.34375,
+            "top": 249,
+            "bottom": 300,
+            "clear": true
+          },
+          {
+            "id": "cambtn",
+            "left": 554.34375,
+            "right": 648.359375,
+            "top": 249,
+            "bottom": 300,
+            "clear": true
+          },
+          {
+            "id": "volbtn2",
+            "left": 660.359375,
+            "right": 738.375,
+            "top": 249,
+            "bottom": 300,
+            "clear": true
+          },
+          {
+            "id": "quit",
+            "left": 750.375,
+            "right": 860.390625,
+            "top": 249,
+            "bottom": 300,
+            "clear": true
+          }
+        ]
+      },
+      "controllerResumePassed": true,
+      "snapshotReadsDoNotPoll": {
+        "before": 5,
+        "after": 5,
+        "callsBefore": 5,
+        "callsAfter": 5
+      }
+    },
+    {
+      "lang": "zh",
+      "width": 1280,
+      "actions": [
+        {
+          "key": "UP",
+          "before": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "开始比赛 · 3 圈 ▸",
+            "focusIndex": 18
+          },
+          "after": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "标准组 · 车性能相同",
+            "focusIndex": 16
+          }
+        },
+        {
+          "key": "RIGHT",
+          "before": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "标准组 · 车性能相同",
+            "focusIndex": 16
+          },
+          "after": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "改装组 · 用你升级的车",
+            "focusIndex": 17
+          }
+        },
+        {
+          "key": "DOWN",
+          "before": {
+            "root": "title",
+            "focusId": null,
+            "focusText": "改装组 · 用你升级的车",
+            "focusIndex": 17
+          },
+          "after": {
+            "root": "title",
+            "focusId": "garagebtn",
+            "focusText": "🚗 车库",
+            "focusIndex": 19
+          }
+        },
+        {
+          "key": "RIGHT",
+          "before": {
+            "root": "title",
+            "focusId": "garagebtn",
+            "focusText": "🚗 车库",
+            "focusIndex": 19
+          },
+          "after": {
+            "root": "title",
+            "focusId": "volbtn",
+            "focusText": "设置",
+            "focusIndex": 20
+          }
+        },
+        {
+          "key": "A",
+          "before": {
+            "root": "title",
+            "focusId": "volbtn",
+            "focusText": "设置",
+            "focusIndex": 20
+          },
+          "after": {
+            "root": "volume",
+            "focusId": "volclose",
+            "focusText": "关闭 ✕",
+            "focusIndex": 0
+          }
+        },
+        {
+          "key": "DOWN",
+          "before": {
+            "root": "volume",
+            "focusId": "volclose",
+            "focusText": "关闭 ✕",
+            "focusIndex": 0
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "极致",
+            "focusIndex": 5
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "极致",
+            "focusIndex": 5
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "极高",
+            "focusIndex": 4
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "极高",
+            "focusIndex": 4
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "高画质",
+            "focusIndex": 3
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "高画质",
+            "focusIndex": 3
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "均衡",
+            "focusIndex": 2
+          }
+        },
+        {
+          "key": "LEFT",
+          "before": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "均衡",
+            "focusIndex": 2
+          },
+          "after": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "流畅",
+            "focusIndex": 1
+          }
+        },
+        {
+          "key": "START",
+          "before": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "开始比赛 · 3 圈 ▸",
+            "focusIndex": 18
+          },
+          "after": {
+            "root": null,
+            "focusId": null,
+            "focusText": null,
+            "focusIndex": -1
+          }
+        },
+        {
+          "key": "A",
+          "before": {
+            "root": "pause",
+            "focusId": "resume",
+            "focusText": "继续 ▸",
+            "focusIndex": 0
+          },
+          "after": {
+            "root": null,
+            "focusId": null,
+            "focusText": null,
+            "focusIndex": -1
+          }
+        }
+      ],
+      "titleGraph": [
+        {
+          "id": "",
+          "text": "霓虹街区 · 雨夜",
+          "x": 319.4296875,
+          "y": 208
+        },
+        {
+          "id": "",
+          "text": "雾岭山道 · 黄昏",
+          "x": 452.2890625,
+          "y": 208
+        },
+        {
+          "id": "",
+          "text": "碧海长桥 · 晴天",
+          "x": 585.1484375,
+          "y": 208
+        },
+        {
+          "id": "",
+          "text": "长安灯火 · 元宵夜",
+          "x": 725.5078125,
+          "y": 208
+        },
+        {
+          "id": "",
+          "text": "天空工地 · 高空",
+          "x": 865.8671875,
+          "y": 208
+        },
+        {
+          "id": "",
+          "text": "赤岩峡谷 · 黄昏",
+          "x": 998.7265625,
+          "y": 208
+        },
+        {
+          "id": "",
+          "text": "云港城区 · 岔路",
+          "x": 1131.5859375,
+          "y": 208
+        },
+        {
+          "id": "",
+          "text": "珊瑚深海 · 海底",
+          "x": 319.4296875,
+          "y": 248
+        },
+        {
+          "id": "",
+          "text": "冰原极光 · 雪夜",
+          "x": 452.2890625,
+          "y": 248
+        },
+        {
+          "id": "",
+          "text": "巨像遗迹 · 古林",
+          "x": 585.1484375,
+          "y": 248
+        },
+        {
+          "id": "",
+          "text": "坠梦 · 长梦",
+          "x": 703.0078125,
+          "y": 248
+        },
+        {
+          "id": "",
+          "text": "比赛 · 对 5 辆 AI",
+          "x": 369.9921875,
+          "y": 304
+        },
+        {
+          "id": "",
+          "text": "计时赛 · 幽灵车",
+          "x": 504.6015625,
+          "y": 304
+        },
+        {
+          "id": "",
+          "text": "新手",
+          "x": 672.8515625,
+          "y": 304
+        },
+        {
+          "id": "",
+          "text": "普通",
+          "x": 734.8671875,
+          "y": 304
+        },
+        {
+          "id": "",
+          "text": "高手",
+          "x": 796.8828125,
+          "y": 304
+        },
+        {
+          "id": "",
+          "text": "标准组 · 车性能相同",
+          "x": 383.2421875,
+          "y": 360
+        },
+        {
+          "id": "",
+          "text": "改装组 · 用你升级的车",
+          "x": 553.6015625,
+          "y": 360
+        },
+        {
+          "id": "start",
+          "text": "开始比赛 · 3 圈 ▸",
+          "x": 363.0859375,
+          "y": 546.5
+        },
+        {
+          "id": "garagebtn",
+          "text": "🚗 车库",
+          "x": 537.1796875,
+          "y": 546.5
+        },
+        {
+          "id": "volbtn",
+          "text": "设置",
+          "x": 716.8828125,
+          "y": 546.5
+        }
+      ],
+      "titlePath": [
+        "UP",
+        "RIGHT",
+        "DOWN",
+        "RIGHT"
+      ],
+      "beforeLow": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 38,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "high",
+          "ready": true,
+          "menu": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "流畅",
+            "focusIndex": 1
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": true,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 38,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "afterReload": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 7,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "low",
+          "ready": true,
+          "menu": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "开始比赛 · 3 圈 ▸",
+            "focusIndex": 18
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 7,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "savedPreference": "low",
+      "qualityPathPassed": true,
+      "pointerResumePassed": true,
+      "pauseGeometry": {
+        "left": 463.59375,
+        "right": 580.328125,
+        "top": 339,
+        "bottom": 390,
+        "panelRight": 202,
+        "clear": true,
+        "buttons": [
+          {
+            "id": "resume",
+            "left": 463.59375,
+            "right": 580.328125,
+            "top": 339,
+            "bottom": 390,
+            "clear": true
+          },
+          {
+            "id": "restart",
+            "left": 592.328125,
+            "right": 702.34375,
+            "top": 339,
+            "bottom": 390,
+            "clear": true
+          },
+          {
+            "id": "cambtn",
+            "left": 714.34375,
+            "right": 808.359375,
+            "top": 339,
+            "bottom": 390,
+            "clear": true
+          },
+          {
+            "id": "volbtn2",
+            "left": 820.359375,
+            "right": 898.375,
+            "top": 339,
+            "bottom": 390,
+            "clear": true
+          },
+          {
+            "id": "quit",
+            "left": 910.375,
+            "right": 1020.390625,
+            "top": 339,
+            "bottom": 390,
+            "clear": true
+          }
+        ]
+      },
+      "controllerResumePassed": true,
+      "snapshotReadsDoNotPoll": {
+        "before": 5,
+        "after": 5,
+        "callsBefore": 5,
+        "callsAfter": 5
+      }
+    }
+  ],
+  "captures": [
+    {
+      "name": "title-en-960",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "sha256": "7543ef2906876da1d6ead6c64ad5a17aeae5b8ddec6f30ef5475d82d2b04ef51",
+      "bytes": 191873,
+      "state": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 18,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "high",
+          "ready": true,
+          "menu": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "Start race · 3 laps ▸",
+            "focusIndex": 18
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 18,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "boxes": [
+        {
+          "id": "",
+          "text": "Neon District",
+          "x": 233,
+          "y": 132,
+          "w": 123.265625,
+          "h": 38,
+          "clientWidth": 123,
+          "scrollWidth": 123,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Mistridge Pass",
+          "x": 356.265625,
+          "y": 132,
+          "w": 134.03125,
+          "h": 38,
+          "clientWidth": 134,
+          "scrollWidth": 134,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Azure Bay Bridge",
+          "x": 490.296875,
+          "y": 132,
+          "w": 151.328125,
+          "h": 38,
+          "clientWidth": 151,
+          "scrollWidth": 151,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Chang'an Lanterns",
+          "x": 641.625,
+          "y": 132,
+          "w": 161.125,
+          "h": 38,
+          "clientWidth": 161,
+          "scrollWidth": 161,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Skyline Site",
+          "x": 802.75,
+          "y": 132,
+          "w": 113.671875,
+          "h": 38,
+          "clientWidth": 114,
+          "scrollWidth": 114,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Red Rock Canyon",
+          "x": 233,
+          "y": 170,
+          "w": 154.109375,
+          "h": 38,
+          "clientWidth": 154,
+          "scrollWidth": 154,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Metro Maze",
+          "x": 387.109375,
+          "y": 170,
+          "w": 112.078125,
+          "h": 38,
+          "clientWidth": 112,
+          "scrollWidth": 112,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Coral Deep",
+          "x": 499.1875,
+          "y": 170,
+          "w": 107.515625,
+          "h": 38,
+          "clientWidth": 108,
+          "scrollWidth": 108,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Aurora Icefield",
+          "x": 606.703125,
+          "y": 170,
+          "w": 132.15625,
+          "h": 38,
+          "clientWidth": 132,
+          "scrollWidth": 132,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Colossus Ruins",
+          "x": 738.859375,
+          "y": 170,
+          "w": 137.109375,
+          "h": 38,
+          "clientWidth": 137,
+          "scrollWidth": 137,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Falling Dream",
+          "x": 233,
+          "y": 208,
+          "w": 125.921875,
+          "h": 38,
+          "clientWidth": 126,
+          "scrollWidth": 126,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Race · vs 5 AI",
+          "x": 292.8125,
+          "y": 262,
+          "w": 122.65625,
+          "h": 38,
+          "clientWidth": 123,
+          "scrollWidth": 123,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Time trial · ghost",
+          "x": 415.46875,
+          "y": 262,
+          "w": 147.53125,
+          "h": 38,
+          "clientWidth": 148,
+          "scrollWidth": 148,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Easy",
+          "x": 687.296875,
+          "y": 262,
+          "w": 65.703125,
+          "h": 38,
+          "clientWidth": 66,
+          "scrollWidth": 66,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Normal",
+          "x": 753,
+          "y": 262,
+          "w": 81.484375,
+          "h": 38,
+          "clientWidth": 81,
+          "scrollWidth": 81,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Hard",
+          "x": 834.484375,
+          "y": 262,
+          "w": 64.953125,
+          "h": 38,
+          "clientWidth": 65,
+          "scrollWidth": 65,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Standard · equal cars",
+          "x": 294.78125,
+          "y": 316,
+          "w": 178.1875,
+          "h": 38,
+          "clientWidth": 178,
+          "scrollWidth": 178,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Tuned · your upgraded car",
+          "x": 472.96875,
+          "y": 316,
+          "w": 212.796875,
+          "h": 38,
+          "clientWidth": 213,
+          "scrollWidth": 213,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Auto",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Manual",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "start",
+          "text": "Start race · 3 laps ▸",
+          "x": 232,
+          "y": 369,
+          "w": 278.609375,
+          "h": 48,
+          "clientWidth": 279,
+          "scrollWidth": 279,
+          "clientHeight": 48,
+          "scrollHeight": 48,
+          "unobstructed": true
+        },
+        {
+          "id": "garagebtn",
+          "text": "🚗 Garage",
+          "x": 522.609375,
+          "y": 369,
+          "w": 122.828125,
+          "h": 48,
+          "clientWidth": 121,
+          "scrollWidth": 121,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": true
+        },
+        {
+          "id": "volbtn",
+          "text": "Settings",
+          "x": 735.125,
+          "y": 369,
+          "w": 108.65625,
+          "h": 48,
+          "clientWidth": 107,
+          "scrollWidth": 107,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": true
+        },
+        {
+          "id": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Night-DOM-long-ID-42单人游戏 · 1P 手柄操作\nNight Racer UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 220,
+          "w": 190,
+          "h": 190.46875,
+          "clientWidth": 188,
+          "scrollWidth": 188,
+          "clientHeight": 188,
+          "scrollHeight": 188,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "ID: Night-DOM-long-ID-42",
+          "x": 64,
+          "y": 282.6875,
+          "w": 118,
+          "h": 30.78125,
+          "clientWidth": 118,
+          "scrollWidth": 118,
+          "clientHeight": 31,
+          "scrollHeight": 31,
+          "unobstructed": true
+        }
+      ]
+    },
+    {
+      "name": "low-focused-en-960",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "sha256": "4ae066b3fafdb7079e7190f0729e23f9efe56fff99fe2a9c4168409a2660067e",
+      "bytes": 161448,
+      "state": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 47,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "high",
+          "ready": true,
+          "menu": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Smooth",
+            "focusIndex": 1
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 47,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "boxes": [
+        {
+          "id": "",
+          "text": "Neon District",
+          "x": 233,
+          "y": 132,
+          "w": 123.265625,
+          "h": 38,
+          "clientWidth": 123,
+          "scrollWidth": 123,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Mistridge Pass",
+          "x": 356.265625,
+          "y": 132,
+          "w": 134.03125,
+          "h": 38,
+          "clientWidth": 134,
+          "scrollWidth": 134,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Azure Bay Bridge",
+          "x": 490.296875,
+          "y": 132,
+          "w": 151.328125,
+          "h": 38,
+          "clientWidth": 151,
+          "scrollWidth": 151,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Chang'an Lanterns",
+          "x": 641.625,
+          "y": 132,
+          "w": 161.125,
+          "h": 38,
+          "clientWidth": 161,
+          "scrollWidth": 161,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Skyline Site",
+          "x": 802.75,
+          "y": 132,
+          "w": 113.671875,
+          "h": 38,
+          "clientWidth": 114,
+          "scrollWidth": 114,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Red Rock Canyon",
+          "x": 233,
+          "y": 170,
+          "w": 154.109375,
+          "h": 38,
+          "clientWidth": 154,
+          "scrollWidth": 154,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Metro Maze",
+          "x": 387.109375,
+          "y": 170,
+          "w": 112.078125,
+          "h": 38,
+          "clientWidth": 112,
+          "scrollWidth": 112,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Coral Deep",
+          "x": 499.1875,
+          "y": 170,
+          "w": 107.515625,
+          "h": 38,
+          "clientWidth": 108,
+          "scrollWidth": 108,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Aurora Icefield",
+          "x": 606.703125,
+          "y": 170,
+          "w": 132.15625,
+          "h": 38,
+          "clientWidth": 132,
+          "scrollWidth": 132,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Colossus Ruins",
+          "x": 738.859375,
+          "y": 170,
+          "w": 137.109375,
+          "h": 38,
+          "clientWidth": 137,
+          "scrollWidth": 137,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Falling Dream",
+          "x": 233,
+          "y": 208,
+          "w": 125.921875,
+          "h": 38,
+          "clientWidth": 126,
+          "scrollWidth": 126,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Race · vs 5 AI",
+          "x": 292.8125,
+          "y": 262,
+          "w": 122.65625,
+          "h": 38,
+          "clientWidth": 123,
+          "scrollWidth": 123,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Time trial · ghost",
+          "x": 415.46875,
+          "y": 262,
+          "w": 147.53125,
+          "h": 38,
+          "clientWidth": 148,
+          "scrollWidth": 148,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Easy",
+          "x": 687.296875,
+          "y": 262,
+          "w": 65.703125,
+          "h": 38,
+          "clientWidth": 66,
+          "scrollWidth": 66,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Normal",
+          "x": 753,
+          "y": 262,
+          "w": 81.484375,
+          "h": 38,
+          "clientWidth": 81,
+          "scrollWidth": 81,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Hard",
+          "x": 834.484375,
+          "y": 262,
+          "w": 64.953125,
+          "h": 38,
+          "clientWidth": 65,
+          "scrollWidth": 65,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Standard · equal cars",
+          "x": 294.78125,
+          "y": 316,
+          "w": 178.1875,
+          "h": 38,
+          "clientWidth": 178,
+          "scrollWidth": 178,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Tuned · your upgraded car",
+          "x": 472.96875,
+          "y": 316,
+          "w": 212.796875,
+          "h": 38,
+          "clientWidth": 213,
+          "scrollWidth": 213,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Auto",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Manual",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "start",
+          "text": "Start race · 3 laps ▸",
+          "x": 232,
+          "y": 369,
+          "w": 278.609375,
+          "h": 48,
+          "clientWidth": 279,
+          "scrollWidth": 279,
+          "clientHeight": 48,
+          "scrollHeight": 48,
+          "unobstructed": false
+        },
+        {
+          "id": "garagebtn",
+          "text": "🚗 Garage",
+          "x": 522.609375,
+          "y": 369,
+          "w": 122.828125,
+          "h": 48,
+          "clientWidth": 121,
+          "scrollWidth": 121,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": false
+        },
+        {
+          "id": "volbtn",
+          "text": "Settings",
+          "x": 735.125,
+          "y": 369,
+          "w": 108.65625,
+          "h": 48,
+          "clientWidth": 107,
+          "scrollWidth": 107,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": true
+        },
+        {
+          "id": "volume",
+          "text": "Settings Close ✕GraphicsQualitySmoothBalancedHighUltraMaxPick \"Smooth\" if it stutters or your phone gets hot. Changing it reloads the page.Lower quality when it stuttersOnOffWhen off, your chosen quality stays even if the frame rate drops.Language中文EnglishReflections100SoundMaster volume100Car (engine, tyres, wind)100Rain100Effects (crashes, countdown, alerts)100Music (Synthwave Dream)100",
+          "x": 260,
+          "y": 50,
+          "w": 440,
+          "h": 440,
+          "clientWidth": 438,
+          "scrollWidth": 438,
+          "clientHeight": 438,
+          "scrollHeight": 651,
+          "unobstructed": true
+        },
+        {
+          "id": "volclose",
+          "text": "Close ✕",
+          "x": 612.0625,
+          "y": 74,
+          "w": 62.9375,
+          "h": 20,
+          "clientWidth": 63,
+          "scrollWidth": 63,
+          "clientHeight": 20,
+          "scrollHeight": 20,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Smooth",
+          "x": 286,
+          "y": 172,
+          "w": 74.140625,
+          "h": 34,
+          "clientWidth": 74,
+          "scrollWidth": 74,
+          "clientHeight": 34,
+          "scrollHeight": 34,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Balanced",
+          "x": 360.140625,
+          "y": 172,
+          "w": 84.046875,
+          "h": 34,
+          "clientWidth": 84,
+          "scrollWidth": 84,
+          "clientHeight": 34,
+          "scrollHeight": 34,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "High",
+          "x": 444.1875,
+          "y": 172,
+          "w": 53.40625,
+          "h": 34,
+          "clientWidth": 53,
+          "scrollWidth": 53,
+          "clientHeight": 34,
+          "scrollHeight": 34,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Ultra",
+          "x": 497.59375,
+          "y": 172,
+          "w": 55.53125,
+          "h": 34,
+          "clientWidth": 56,
+          "scrollWidth": 56,
+          "clientHeight": 34,
+          "scrollHeight": 34,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Max",
+          "x": 553.125,
+          "y": 172,
+          "w": 49.703125,
+          "h": 34,
+          "clientWidth": 50,
+          "scrollWidth": 50,
+          "clientHeight": 34,
+          "scrollHeight": 34,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "On",
+          "x": 286,
+          "y": 290,
+          "w": 41.640625,
+          "h": 34,
+          "clientWidth": 42,
+          "scrollWidth": 42,
+          "clientHeight": 34,
+          "scrollHeight": 34,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Off",
+          "x": 327.640625,
+          "y": 290,
+          "w": 44.328125,
+          "h": 34,
+          "clientWidth": 44,
+          "scrollWidth": 44,
+          "clientHeight": 34,
+          "scrollHeight": 34,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "中文",
+          "x": 286,
+          "y": 391,
+          "w": 52,
+          "h": 36,
+          "clientWidth": 52,
+          "scrollWidth": 52,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "English",
+          "x": 338,
+          "y": 391,
+          "w": 70.859375,
+          "h": 36,
+          "clientWidth": 71,
+          "scrollWidth": 71,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Night-DOM-long-ID-42单人游戏 · 1P 手柄操作\nNight Racer UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 220,
+          "w": 190,
+          "h": 190.46875,
+          "clientWidth": 188,
+          "scrollWidth": 188,
+          "clientHeight": 188,
+          "scrollHeight": 188,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "ID: Night-DOM-long-ID-42",
+          "x": 64,
+          "y": 282.6875,
+          "w": 118,
+          "h": 30.78125,
+          "clientWidth": 118,
+          "scrollWidth": 118,
+          "clientHeight": 31,
+          "scrollHeight": 31,
+          "unobstructed": true
+        }
+      ]
+    },
+    {
+      "name": "paused-en-960",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "sha256": "405e2ac0b9caee175229709edd1f21c5b963e52ad5a9c1c379afd6e80ce50f5c",
+      "bytes": 34118,
+      "state": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 8,
+        "stage": "paused",
+        "paused": true,
+        "gameplay": {
+          "state": "paused",
+          "renderPreset": "low",
+          "ready": true,
+          "menu": {
+            "root": "pause",
+            "focusId": "resume",
+            "focusText": "Resume ▸",
+            "focusIndex": 0
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 8,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "boxes": [
+        {
+          "id": "",
+          "text": "PauseResume ▸RestartCameraSettingsMain menuKeys: Esc resume · R restart · Q main menuOnline races don't pause, the others keep driving",
+          "x": 232,
+          "y": 171,
+          "w": 700,
+          "h": 160,
+          "clientWidth": 700,
+          "scrollWidth": 700,
+          "clientHeight": 160,
+          "scrollHeight": 160,
+          "unobstructed": true
+        },
+        {
+          "id": "resume",
+          "text": "Resume ▸",
+          "x": 258.25,
+          "y": 248,
+          "w": 160.453125,
+          "h": 48,
+          "clientWidth": 160,
+          "scrollWidth": 160,
+          "clientHeight": 48,
+          "scrollHeight": 48,
+          "unobstructed": true
+        },
+        {
+          "id": "restart",
+          "text": "Restart",
+          "x": 430.703125,
+          "y": 248,
+          "w": 101.921875,
+          "h": 48,
+          "clientWidth": 100,
+          "scrollWidth": 100,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": true
+        },
+        {
+          "id": "cambtn",
+          "text": "Camera",
+          "x": 544.625,
+          "y": 248,
+          "w": 102.609375,
+          "h": 48,
+          "clientWidth": 101,
+          "scrollWidth": 101,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": true
+        },
+        {
+          "id": "volbtn2",
+          "text": "Settings",
+          "x": 659.234375,
+          "y": 248,
+          "w": 108.65625,
+          "h": 48,
+          "clientWidth": 107,
+          "scrollWidth": 107,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": true
+        },
+        {
+          "id": "quit",
+          "text": "Main menu",
+          "x": 779.890625,
+          "y": 248,
+          "w": 125.84375,
+          "h": 48,
+          "clientWidth": 124,
+          "scrollWidth": 124,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": true
+        },
+        {
+          "id": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Night-DOM-long-ID-42单人游戏 · 1P 手柄操作\nNight Racer UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 220,
+          "w": 190,
+          "h": 190.46875,
+          "clientWidth": 188,
+          "scrollWidth": 188,
+          "clientHeight": 188,
+          "scrollHeight": 188,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "ID: Night-DOM-long-ID-42",
+          "x": 64,
+          "y": 282.6875,
+          "w": 118,
+          "h": 30.78125,
+          "clientWidth": 118,
+          "scrollWidth": 118,
+          "clientHeight": 31,
+          "scrollHeight": 31,
+          "unobstructed": true
+        }
+      ]
+    },
+    {
+      "name": "title-en-1280",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "5c3cd9e44f3a8822ea2f75f79d31526a0fd9a88128cdc3f283db87c3f16b6ceb",
+      "bytes": 280814,
+      "state": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 13,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "high",
+          "ready": true,
+          "menu": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "Start race · 3 laps ▸",
+            "focusIndex": 18
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 13,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "boxes": [
+        {
+          "id": "",
+          "text": "Neon District",
+          "x": 253,
+          "y": 184,
+          "w": 123.265625,
+          "h": 38,
+          "clientWidth": 123,
+          "scrollWidth": 123,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Mistridge Pass",
+          "x": 376.265625,
+          "y": 184,
+          "w": 134.03125,
+          "h": 38,
+          "clientWidth": 134,
+          "scrollWidth": 134,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Azure Bay Bridge",
+          "x": 510.296875,
+          "y": 184,
+          "w": 151.328125,
+          "h": 38,
+          "clientWidth": 151,
+          "scrollWidth": 151,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Chang'an Lanterns",
+          "x": 661.625,
+          "y": 184,
+          "w": 161.125,
+          "h": 38,
+          "clientWidth": 161,
+          "scrollWidth": 161,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Skyline Site",
+          "x": 822.75,
+          "y": 184,
+          "w": 113.671875,
+          "h": 38,
+          "clientWidth": 114,
+          "scrollWidth": 114,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Red Rock Canyon",
+          "x": 936.421875,
+          "y": 184,
+          "w": 154.109375,
+          "h": 38,
+          "clientWidth": 154,
+          "scrollWidth": 154,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Metro Maze",
+          "x": 1090.53125,
+          "y": 184,
+          "w": 112.078125,
+          "h": 38,
+          "clientWidth": 112,
+          "scrollWidth": 112,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Coral Deep",
+          "x": 253,
+          "y": 222,
+          "w": 107.515625,
+          "h": 38,
+          "clientWidth": 108,
+          "scrollWidth": 108,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Aurora Icefield",
+          "x": 360.515625,
+          "y": 222,
+          "w": 132.15625,
+          "h": 38,
+          "clientWidth": 132,
+          "scrollWidth": 132,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Colossus Ruins",
+          "x": 492.671875,
+          "y": 222,
+          "w": 137.109375,
+          "h": 38,
+          "clientWidth": 137,
+          "scrollWidth": 137,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Falling Dream",
+          "x": 629.78125,
+          "y": 222,
+          "w": 125.921875,
+          "h": 38,
+          "clientWidth": 126,
+          "scrollWidth": 126,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Race · vs 5 AI",
+          "x": 312.8125,
+          "y": 276,
+          "w": 122.65625,
+          "h": 38,
+          "clientWidth": 123,
+          "scrollWidth": 123,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Time trial · ghost",
+          "x": 435.46875,
+          "y": 276,
+          "w": 147.53125,
+          "h": 38,
+          "clientWidth": 148,
+          "scrollWidth": 148,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Easy",
+          "x": 707.296875,
+          "y": 276,
+          "w": 65.703125,
+          "h": 38,
+          "clientWidth": 66,
+          "scrollWidth": 66,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Normal",
+          "x": 773,
+          "y": 276,
+          "w": 81.484375,
+          "h": 38,
+          "clientWidth": 81,
+          "scrollWidth": 81,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Hard",
+          "x": 854.484375,
+          "y": 276,
+          "w": 64.953125,
+          "h": 38,
+          "clientWidth": 65,
+          "scrollWidth": 65,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Standard · equal cars",
+          "x": 314.78125,
+          "y": 330,
+          "w": 178.1875,
+          "h": 38,
+          "clientWidth": 178,
+          "scrollWidth": 178,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Tuned · your upgraded car",
+          "x": 492.96875,
+          "y": 330,
+          "w": 212.796875,
+          "h": 38,
+          "clientWidth": 213,
+          "scrollWidth": 213,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Auto",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Manual",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "start",
+          "text": "Start race · 3 laps ▸",
+          "x": 252,
+          "y": 501,
+          "w": 278.609375,
+          "h": 48,
+          "clientWidth": 279,
+          "scrollWidth": 279,
+          "clientHeight": 48,
+          "scrollHeight": 48,
+          "unobstructed": true
+        },
+        {
+          "id": "garagebtn",
+          "text": "🚗 Garage",
+          "x": 542.609375,
+          "y": 501,
+          "w": 122.828125,
+          "h": 48,
+          "clientWidth": 121,
+          "scrollWidth": 121,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": true
+        },
+        {
+          "id": "volbtn",
+          "text": "Settings",
+          "x": 755.125,
+          "y": 501,
+          "w": 108.65625,
+          "h": 48,
+          "clientWidth": 107,
+          "scrollWidth": 107,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": true
+        },
+        {
+          "id": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Night-DOM-long-ID-42单人游戏 · 1P 手柄操作\nNight Racer UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 220,
+          "w": 190,
+          "h": 190.46875,
+          "clientWidth": 188,
+          "scrollWidth": 188,
+          "clientHeight": 188,
+          "scrollHeight": 188,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "ID: Night-DOM-long-ID-42",
+          "x": 64,
+          "y": 282.6875,
+          "w": 118,
+          "h": 30.78125,
+          "clientWidth": 118,
+          "scrollWidth": 118,
+          "clientHeight": 31,
+          "scrollHeight": 31,
+          "unobstructed": true
+        }
+      ]
+    },
+    {
+      "name": "low-focused-en-1280",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "efe72b13a16519f0338797c9d09076748d06e85d2762a2aca5987173ee9b1e48",
+      "bytes": 255277,
+      "state": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 41,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "high",
+          "ready": true,
+          "menu": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "Smooth",
+            "focusIndex": 1
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 41,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "boxes": [
+        {
+          "id": "",
+          "text": "Neon District",
+          "x": 253,
+          "y": 184,
+          "w": 123.265625,
+          "h": 38,
+          "clientWidth": 123,
+          "scrollWidth": 123,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Mistridge Pass",
+          "x": 376.265625,
+          "y": 184,
+          "w": 134.03125,
+          "h": 38,
+          "clientWidth": 134,
+          "scrollWidth": 134,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Azure Bay Bridge",
+          "x": 510.296875,
+          "y": 184,
+          "w": 151.328125,
+          "h": 38,
+          "clientWidth": 151,
+          "scrollWidth": 151,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Chang'an Lanterns",
+          "x": 661.625,
+          "y": 184,
+          "w": 161.125,
+          "h": 38,
+          "clientWidth": 161,
+          "scrollWidth": 161,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Skyline Site",
+          "x": 822.75,
+          "y": 184,
+          "w": 113.671875,
+          "h": 38,
+          "clientWidth": 114,
+          "scrollWidth": 114,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Red Rock Canyon",
+          "x": 936.421875,
+          "y": 184,
+          "w": 154.109375,
+          "h": 38,
+          "clientWidth": 154,
+          "scrollWidth": 154,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Metro Maze",
+          "x": 1090.53125,
+          "y": 184,
+          "w": 112.078125,
+          "h": 38,
+          "clientWidth": 112,
+          "scrollWidth": 112,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Coral Deep",
+          "x": 253,
+          "y": 222,
+          "w": 107.515625,
+          "h": 38,
+          "clientWidth": 108,
+          "scrollWidth": 108,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Aurora Icefield",
+          "x": 360.515625,
+          "y": 222,
+          "w": 132.15625,
+          "h": 38,
+          "clientWidth": 132,
+          "scrollWidth": 132,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Colossus Ruins",
+          "x": 492.671875,
+          "y": 222,
+          "w": 137.109375,
+          "h": 38,
+          "clientWidth": 137,
+          "scrollWidth": 137,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Falling Dream",
+          "x": 629.78125,
+          "y": 222,
+          "w": 125.921875,
+          "h": 38,
+          "clientWidth": 126,
+          "scrollWidth": 126,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Race · vs 5 AI",
+          "x": 312.8125,
+          "y": 276,
+          "w": 122.65625,
+          "h": 38,
+          "clientWidth": 123,
+          "scrollWidth": 123,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Time trial · ghost",
+          "x": 435.46875,
+          "y": 276,
+          "w": 147.53125,
+          "h": 38,
+          "clientWidth": 148,
+          "scrollWidth": 148,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Easy",
+          "x": 707.296875,
+          "y": 276,
+          "w": 65.703125,
+          "h": 38,
+          "clientWidth": 66,
+          "scrollWidth": 66,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Normal",
+          "x": 773,
+          "y": 276,
+          "w": 81.484375,
+          "h": 38,
+          "clientWidth": 81,
+          "scrollWidth": 81,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Hard",
+          "x": 854.484375,
+          "y": 276,
+          "w": 64.953125,
+          "h": 38,
+          "clientWidth": 65,
+          "scrollWidth": 65,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Standard · equal cars",
+          "x": 314.78125,
+          "y": 330,
+          "w": 178.1875,
+          "h": 38,
+          "clientWidth": 178,
+          "scrollWidth": 178,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Tuned · your upgraded car",
+          "x": 492.96875,
+          "y": 330,
+          "w": 212.796875,
+          "h": 38,
+          "clientWidth": 213,
+          "scrollWidth": 213,
+          "clientHeight": 38,
+          "scrollHeight": 38,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Auto",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "Manual",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "start",
+          "text": "Start race · 3 laps ▸",
+          "x": 252,
+          "y": 501,
+          "w": 278.609375,
+          "h": 48,
+          "clientWidth": 279,
+          "scrollWidth": 279,
+          "clientHeight": 48,
+          "scrollHeight": 48,
+          "unobstructed": true
+        },
+        {
+          "id": "garagebtn",
+          "text": "🚗 Garage",
+          "x": 542.609375,
+          "y": 501,
+          "w": 122.828125,
+          "h": 48,
+          "clientWidth": 121,
+          "scrollWidth": 121,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": false
+        },
+        {
+          "id": "volbtn",
+          "text": "Settings",
+          "x": 755.125,
+          "y": 501,
+          "w": 108.65625,
+          "h": 48,
+          "clientWidth": 107,
+          "scrollWidth": 107,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": false
+        },
+        {
+          "id": "volume",
+          "text": "Settings Close ✕GraphicsQualitySmoothBalancedHighUltraMaxPick \"Smooth\" if it stutters or your phone gets hot. Changing it reloads the page.Lower quality when it stuttersOnOffWhen off, your chosen quality stays even if the frame rate drops.Language中文EnglishReflections100SoundMaster volume100Car (engine, tyres, wind)100Rain100Effects (crashes, countdown, alerts)100Music (Synthwave Dream)100",
+          "x": 420,
+          "y": 50,
+          "w": 440,
+          "h": 620,
+          "clientWidth": 438,
+          "scrollWidth": 438,
+          "clientHeight": 618,
+          "scrollHeight": 651,
+          "unobstructed": true
+        },
+        {
+          "id": "volclose",
+          "text": "Close ✕",
+          "x": 772.0625,
+          "y": 74,
+          "w": 62.9375,
+          "h": 20,
+          "clientWidth": 63,
+          "scrollWidth": 63,
+          "clientHeight": 20,
+          "scrollHeight": 20,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Smooth",
+          "x": 446,
+          "y": 172,
+          "w": 74.140625,
+          "h": 34,
+          "clientWidth": 74,
+          "scrollWidth": 74,
+          "clientHeight": 34,
+          "scrollHeight": 34,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Balanced",
+          "x": 520.140625,
+          "y": 172,
+          "w": 84.046875,
+          "h": 34,
+          "clientWidth": 84,
+          "scrollWidth": 84,
+          "clientHeight": 34,
+          "scrollHeight": 34,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "High",
+          "x": 604.1875,
+          "y": 172,
+          "w": 53.40625,
+          "h": 34,
+          "clientWidth": 53,
+          "scrollWidth": 53,
+          "clientHeight": 34,
+          "scrollHeight": 34,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Ultra",
+          "x": 657.59375,
+          "y": 172,
+          "w": 55.53125,
+          "h": 34,
+          "clientWidth": 56,
+          "scrollWidth": 56,
+          "clientHeight": 34,
+          "scrollHeight": 34,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Max",
+          "x": 713.125,
+          "y": 172,
+          "w": 49.703125,
+          "h": 34,
+          "clientWidth": 50,
+          "scrollWidth": 50,
+          "clientHeight": 34,
+          "scrollHeight": 34,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "On",
+          "x": 446,
+          "y": 290,
+          "w": 41.640625,
+          "h": 34,
+          "clientWidth": 42,
+          "scrollWidth": 42,
+          "clientHeight": 34,
+          "scrollHeight": 34,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "Off",
+          "x": 487.640625,
+          "y": 290,
+          "w": 44.328125,
+          "h": 34,
+          "clientWidth": 44,
+          "scrollWidth": 44,
+          "clientHeight": 34,
+          "scrollHeight": 34,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "中文",
+          "x": 446,
+          "y": 391,
+          "w": 52,
+          "h": 36,
+          "clientWidth": 52,
+          "scrollWidth": 52,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "English",
+          "x": 498,
+          "y": 391,
+          "w": 70.859375,
+          "h": 36,
+          "clientWidth": 71,
+          "scrollWidth": 71,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Night-DOM-long-ID-42单人游戏 · 1P 手柄操作\nNight Racer UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 220,
+          "w": 190,
+          "h": 190.46875,
+          "clientWidth": 188,
+          "scrollWidth": 188,
+          "clientHeight": 188,
+          "scrollHeight": 188,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "ID: Night-DOM-long-ID-42",
+          "x": 64,
+          "y": 282.6875,
+          "w": 118,
+          "h": 30.78125,
+          "clientWidth": 118,
+          "scrollWidth": 118,
+          "clientHeight": 31,
+          "scrollHeight": 31,
+          "unobstructed": true
+        }
+      ]
+    },
+    {
+      "name": "paused-en-1280",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "6f537be00274b0f3bb2c92172c6a63a92d3a45bff2dd3ad0ec0b550444981a06",
+      "bytes": 37931,
+      "state": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 6,
+        "stage": "paused",
+        "paused": true,
+        "gameplay": {
+          "state": "paused",
+          "renderPreset": "low",
+          "ready": true,
+          "menu": {
+            "root": "pause",
+            "focusId": "resume",
+            "focusText": "Resume ▸",
+            "focusIndex": 0
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 6,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "boxes": [
+        {
+          "id": "",
+          "text": "PauseResume ▸RestartCameraSettingsMain menuKeys: Esc resume · R restart · Q main menuOnline races don't pause, the others keep driving",
+          "x": 232,
+          "y": 261,
+          "w": 1020,
+          "h": 160,
+          "clientWidth": 1020,
+          "scrollWidth": 1020,
+          "clientHeight": 160,
+          "scrollHeight": 160,
+          "unobstructed": true
+        },
+        {
+          "id": "resume",
+          "text": "Resume ▸",
+          "x": 418.25,
+          "y": 338,
+          "w": 160.453125,
+          "h": 48,
+          "clientWidth": 160,
+          "scrollWidth": 160,
+          "clientHeight": 48,
+          "scrollHeight": 48,
+          "unobstructed": true
+        },
+        {
+          "id": "restart",
+          "text": "Restart",
+          "x": 590.703125,
+          "y": 338,
+          "w": 101.921875,
+          "h": 48,
+          "clientWidth": 100,
+          "scrollWidth": 100,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": true
+        },
+        {
+          "id": "cambtn",
+          "text": "Camera",
+          "x": 704.625,
+          "y": 338,
+          "w": 102.609375,
+          "h": 48,
+          "clientWidth": 101,
+          "scrollWidth": 101,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": true
+        },
+        {
+          "id": "volbtn2",
+          "text": "Settings",
+          "x": 819.234375,
+          "y": 338,
+          "w": 108.65625,
+          "h": 48,
+          "clientWidth": 107,
+          "scrollWidth": 107,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": true
+        },
+        {
+          "id": "quit",
+          "text": "Main menu",
+          "x": 939.890625,
+          "y": 338,
+          "w": 125.84375,
+          "h": 48,
+          "clientWidth": 124,
+          "scrollWidth": 124,
+          "clientHeight": 46,
+          "scrollHeight": 46,
+          "unobstructed": true
+        },
+        {
+          "id": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Night-DOM-long-ID-42单人游戏 · 1P 手柄操作\nNight Racer UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 220,
+          "w": 190,
+          "h": 190.46875,
+          "clientWidth": 188,
+          "scrollWidth": 188,
+          "clientHeight": 188,
+          "scrollHeight": 188,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "ID: Night-DOM-long-ID-42",
+          "x": 64,
+          "y": 282.6875,
+          "w": 118,
+          "h": 30.78125,
+          "clientWidth": 118,
+          "scrollWidth": 118,
+          "clientHeight": 31,
+          "scrollHeight": 31,
+          "unobstructed": true
+        }
+      ]
+    },
+    {
+      "name": "title-zh-960",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "sha256": "7fdecadd99c2ed9eb21c036df1c68ea92e6d527bbe953f7cc8f2965276eaa3ce",
+      "bytes": 195451,
+      "state": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 11,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "high",
+          "ready": true,
+          "menu": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "开始比赛 · 3 圈 ▸",
+            "focusIndex": 18
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 11,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "boxes": [
+        {
+          "id": "",
+          "text": "霓虹街区 · 雨夜",
+          "x": 233,
+          "y": 136,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "雾岭山道 · 黄昏",
+          "x": 365.859375,
+          "y": 136,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "碧海长桥 · 晴天",
+          "x": 498.71875,
+          "y": 136,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "长安灯火 · 元宵夜",
+          "x": 631.578125,
+          "y": 136,
+          "w": 147.859375,
+          "h": 40,
+          "clientWidth": 148,
+          "scrollWidth": 148,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "天空工地 · 高空",
+          "x": 779.4375,
+          "y": 136,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "赤岩峡谷 · 黄昏",
+          "x": 233,
+          "y": 176,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "云港城区 · 岔路",
+          "x": 365.859375,
+          "y": 176,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "珊瑚深海 · 海底",
+          "x": 498.71875,
+          "y": 176,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "冰原极光 · 雪夜",
+          "x": 631.578125,
+          "y": 176,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "巨像遗迹 · 古林",
+          "x": 764.4375,
+          "y": 176,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "坠梦 · 长梦",
+          "x": 233,
+          "y": 216,
+          "w": 102.859375,
+          "h": 40,
+          "clientWidth": 103,
+          "scrollWidth": 103,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "比赛 · 对 5 辆 AI",
+          "x": 281.8125,
+          "y": 272,
+          "w": 136.359375,
+          "h": 40,
+          "clientWidth": 136,
+          "scrollWidth": 136,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "计时赛 · 幽灵车",
+          "x": 418.171875,
+          "y": 272,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "新手",
+          "x": 621.84375,
+          "y": 272,
+          "w": 62.015625,
+          "h": 40,
+          "clientWidth": 62,
+          "scrollWidth": 62,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "普通",
+          "x": 683.859375,
+          "y": 272,
+          "w": 62.015625,
+          "h": 40,
+          "clientWidth": 62,
+          "scrollWidth": 62,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "高手",
+          "x": 745.875,
+          "y": 272,
+          "w": 62.015625,
+          "h": 40,
+          "clientWidth": 62,
+          "scrollWidth": 62,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "标准组 · 车性能相同",
+          "x": 281.8125,
+          "y": 328,
+          "w": 162.859375,
+          "h": 40,
+          "clientWidth": 163,
+          "scrollWidth": 163,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "改装组 · 用你升级的车",
+          "x": 444.671875,
+          "y": 328,
+          "w": 177.859375,
+          "h": 40,
+          "clientWidth": 178,
+          "scrollWidth": 178,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "自动",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "手动按",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "start",
+          "text": "开始比赛 · 3 圈 ▸",
+          "x": 232,
+          "y": 383,
+          "w": 222.171875,
+          "h": 51,
+          "clientWidth": 222,
+          "scrollWidth": 222,
+          "clientHeight": 51,
+          "scrollHeight": 51,
+          "unobstructed": true
+        },
+        {
+          "id": "garagebtn",
+          "text": "🚗 车库",
+          "x": 466.171875,
+          "y": 383,
+          "w": 102.015625,
+          "h": 51,
+          "clientWidth": 100,
+          "scrollWidth": 100,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": true
+        },
+        {
+          "id": "volbtn",
+          "text": "设置",
+          "x": 657.875,
+          "y": 383,
+          "w": 78.015625,
+          "h": 51,
+          "clientWidth": 76,
+          "scrollWidth": 76,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": true
+        },
+        {
+          "id": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Night-DOM-long-ID-42单人游戏 · 1P 手柄操作\nNight Racer UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 220,
+          "w": 190,
+          "h": 190.46875,
+          "clientWidth": 188,
+          "scrollWidth": 188,
+          "clientHeight": 188,
+          "scrollHeight": 188,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "ID: Night-DOM-long-ID-42",
+          "x": 64,
+          "y": 282.6875,
+          "w": 118,
+          "h": 30.78125,
+          "clientWidth": 118,
+          "scrollWidth": 118,
+          "clientHeight": 31,
+          "scrollHeight": 31,
+          "unobstructed": true
+        }
+      ]
+    },
+    {
+      "name": "low-focused-zh-960",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "sha256": "2895d85d69534a91b1d170eecc40265d60f889d1eb6050b78bb0fc8cf9fd0b63",
+      "bytes": 165496,
+      "state": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 38,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "high",
+          "ready": true,
+          "menu": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "流畅",
+            "focusIndex": 1
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 38,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "boxes": [
+        {
+          "id": "",
+          "text": "霓虹街区 · 雨夜",
+          "x": 233,
+          "y": 136,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "雾岭山道 · 黄昏",
+          "x": 365.859375,
+          "y": 136,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "碧海长桥 · 晴天",
+          "x": 498.71875,
+          "y": 136,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "长安灯火 · 元宵夜",
+          "x": 631.578125,
+          "y": 136,
+          "w": 147.859375,
+          "h": 40,
+          "clientWidth": 148,
+          "scrollWidth": 148,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "天空工地 · 高空",
+          "x": 779.4375,
+          "y": 136,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "赤岩峡谷 · 黄昏",
+          "x": 233,
+          "y": 176,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "云港城区 · 岔路",
+          "x": 365.859375,
+          "y": 176,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "珊瑚深海 · 海底",
+          "x": 498.71875,
+          "y": 176,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "冰原极光 · 雪夜",
+          "x": 631.578125,
+          "y": 176,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "巨像遗迹 · 古林",
+          "x": 764.4375,
+          "y": 176,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "坠梦 · 长梦",
+          "x": 233,
+          "y": 216,
+          "w": 102.859375,
+          "h": 40,
+          "clientWidth": 103,
+          "scrollWidth": 103,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "比赛 · 对 5 辆 AI",
+          "x": 281.8125,
+          "y": 272,
+          "w": 136.359375,
+          "h": 40,
+          "clientWidth": 136,
+          "scrollWidth": 136,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "计时赛 · 幽灵车",
+          "x": 418.171875,
+          "y": 272,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "新手",
+          "x": 621.84375,
+          "y": 272,
+          "w": 62.015625,
+          "h": 40,
+          "clientWidth": 62,
+          "scrollWidth": 62,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "普通",
+          "x": 683.859375,
+          "y": 272,
+          "w": 62.015625,
+          "h": 40,
+          "clientWidth": 62,
+          "scrollWidth": 62,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "高手",
+          "x": 745.875,
+          "y": 272,
+          "w": 62.015625,
+          "h": 40,
+          "clientWidth": 62,
+          "scrollWidth": 62,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "标准组 · 车性能相同",
+          "x": 281.8125,
+          "y": 328,
+          "w": 162.859375,
+          "h": 40,
+          "clientWidth": 163,
+          "scrollWidth": 163,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "改装组 · 用你升级的车",
+          "x": 444.671875,
+          "y": 328,
+          "w": 177.859375,
+          "h": 40,
+          "clientWidth": 178,
+          "scrollWidth": 178,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "自动",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "手动按",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "start",
+          "text": "开始比赛 · 3 圈 ▸",
+          "x": 232,
+          "y": 383,
+          "w": 222.171875,
+          "h": 51,
+          "clientWidth": 222,
+          "scrollWidth": 222,
+          "clientHeight": 51,
+          "scrollHeight": 51,
+          "unobstructed": false
+        },
+        {
+          "id": "garagebtn",
+          "text": "🚗 车库",
+          "x": 466.171875,
+          "y": 383,
+          "w": 102.015625,
+          "h": 51,
+          "clientWidth": 100,
+          "scrollWidth": 100,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": false
+        },
+        {
+          "id": "volbtn",
+          "text": "设置",
+          "x": 657.875,
+          "y": 383,
+          "w": 78.015625,
+          "h": 51,
+          "clientWidth": 76,
+          "scrollWidth": 76,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": false
+        },
+        {
+          "id": "volume",
+          "text": "设置 关闭 ✕画面画质流畅均衡高画质极高极致卡顿或手机发烫时选「流畅」。切换后会重新载入。卡顿时自动降画质开关关掉后始终保持你选的画质，哪怕掉帧。语言中文English反光强度100声音总音量100车辆（引擎、轮胎、风噪）100雨声100音效（碰撞、倒计时、提示）100音乐（霓虹梦境）100",
+          "x": 260,
+          "y": 50,
+          "w": 440,
+          "h": 440,
+          "clientWidth": 438,
+          "scrollWidth": 438,
+          "clientHeight": 438,
+          "scrollHeight": 639,
+          "unobstructed": true
+        },
+        {
+          "id": "volclose",
+          "text": "关闭 ✕",
+          "x": 619.71875,
+          "y": 74.5,
+          "w": 55.28125,
+          "h": 22,
+          "clientWidth": 55,
+          "scrollWidth": 55,
+          "clientHeight": 22,
+          "scrollHeight": 22,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "流畅",
+          "x": 286,
+          "y": 179,
+          "w": 52,
+          "h": 36,
+          "clientWidth": 52,
+          "scrollWidth": 52,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "均衡",
+          "x": 338,
+          "y": 179,
+          "w": 52,
+          "h": 36,
+          "clientWidth": 52,
+          "scrollWidth": 52,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "高画质",
+          "x": 390,
+          "y": 179,
+          "w": 66,
+          "h": 36,
+          "clientWidth": 66,
+          "scrollWidth": 66,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "极高",
+          "x": 456,
+          "y": 179,
+          "w": 52,
+          "h": 36,
+          "clientWidth": 52,
+          "scrollWidth": 52,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "极致",
+          "x": 508,
+          "y": 179,
+          "w": 52,
+          "h": 36,
+          "clientWidth": 52,
+          "scrollWidth": 52,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "开",
+          "x": 286,
+          "y": 286,
+          "w": 38,
+          "h": 36,
+          "clientWidth": 38,
+          "scrollWidth": 38,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "关",
+          "x": 324,
+          "y": 286,
+          "w": 38,
+          "h": 36,
+          "clientWidth": 38,
+          "scrollWidth": 38,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "中文",
+          "x": 286,
+          "y": 393,
+          "w": 52,
+          "h": 36,
+          "clientWidth": 52,
+          "scrollWidth": 52,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "English",
+          "x": 338,
+          "y": 393,
+          "w": 70.859375,
+          "h": 36,
+          "clientWidth": 71,
+          "scrollWidth": 71,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Night-DOM-long-ID-42单人游戏 · 1P 手柄操作\nNight Racer UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 220,
+          "w": 190,
+          "h": 190.46875,
+          "clientWidth": 188,
+          "scrollWidth": 188,
+          "clientHeight": 188,
+          "scrollHeight": 188,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "ID: Night-DOM-long-ID-42",
+          "x": 64,
+          "y": 282.6875,
+          "w": 118,
+          "h": 30.78125,
+          "clientWidth": 118,
+          "scrollWidth": 118,
+          "clientHeight": 31,
+          "scrollHeight": 31,
+          "unobstructed": true
+        }
+      ]
+    },
+    {
+      "name": "paused-zh-960",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "sha256": "d979eb3fd578666c327dc18fac76e46ea833bcdded0d6efc5d5b1606d928632f",
+      "bytes": 37915,
+      "state": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 9,
+        "stage": "paused",
+        "paused": true,
+        "gameplay": {
+          "state": "paused",
+          "renderPreset": "low",
+          "ready": true,
+          "menu": {
+            "root": "pause",
+            "focusId": "resume",
+            "focusText": "继续 ▸",
+            "focusIndex": 0
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 9,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "boxes": [
+        {
+          "id": "",
+          "text": "暂停继续 ▸重新开始换视角设置回主菜单键盘：Esc 继续 · R 重新开始 · Q 回主菜单联机比赛不会暂停，其他人还在跑",
+          "x": 232,
+          "y": 164,
+          "w": 700,
+          "h": 174,
+          "clientWidth": 700,
+          "scrollWidth": 700,
+          "clientHeight": 174,
+          "scrollHeight": 174,
+          "unobstructed": true
+        },
+        {
+          "id": "resume",
+          "text": "继续 ▸",
+          "x": 303.59375,
+          "y": 249,
+          "w": 116.734375,
+          "h": 51,
+          "clientWidth": 117,
+          "scrollWidth": 117,
+          "clientHeight": 51,
+          "scrollHeight": 51,
+          "unobstructed": true
+        },
+        {
+          "id": "restart",
+          "text": "重新开始",
+          "x": 432.328125,
+          "y": 249,
+          "w": 110.015625,
+          "h": 51,
+          "clientWidth": 108,
+          "scrollWidth": 108,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": true
+        },
+        {
+          "id": "cambtn",
+          "text": "换视角",
+          "x": 554.34375,
+          "y": 249,
+          "w": 94.015625,
+          "h": 51,
+          "clientWidth": 92,
+          "scrollWidth": 92,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": true
+        },
+        {
+          "id": "volbtn2",
+          "text": "设置",
+          "x": 660.359375,
+          "y": 249,
+          "w": 78.015625,
+          "h": 51,
+          "clientWidth": 76,
+          "scrollWidth": 76,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": true
+        },
+        {
+          "id": "quit",
+          "text": "回主菜单",
+          "x": 750.375,
+          "y": 249,
+          "w": 110.015625,
+          "h": 51,
+          "clientWidth": 108,
+          "scrollWidth": 108,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": true
+        },
+        {
+          "id": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Night-DOM-long-ID-42单人游戏 · 1P 手柄操作\nNight Racer UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 220,
+          "w": 190,
+          "h": 190.46875,
+          "clientWidth": 188,
+          "scrollWidth": 188,
+          "clientHeight": 188,
+          "scrollHeight": 188,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "ID: Night-DOM-long-ID-42",
+          "x": 64,
+          "y": 282.6875,
+          "w": 118,
+          "h": 30.78125,
+          "clientWidth": 118,
+          "scrollWidth": 118,
+          "clientHeight": 31,
+          "scrollHeight": 31,
+          "unobstructed": true
+        }
+      ]
+    },
+    {
+      "name": "title-zh-1280",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "e625785245387f84c441b8b5a33155bbf7eb52f0aee159f9d6da52fe599ec877",
+      "bytes": 275258,
+      "state": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 17,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "high",
+          "ready": true,
+          "menu": {
+            "root": "title",
+            "focusId": "start",
+            "focusText": "开始比赛 · 3 圈 ▸",
+            "focusIndex": 18
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 17,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "boxes": [
+        {
+          "id": "",
+          "text": "霓虹街区 · 雨夜",
+          "x": 253,
+          "y": 188,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "雾岭山道 · 黄昏",
+          "x": 385.859375,
+          "y": 188,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "碧海长桥 · 晴天",
+          "x": 518.71875,
+          "y": 188,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "长安灯火 · 元宵夜",
+          "x": 651.578125,
+          "y": 188,
+          "w": 147.859375,
+          "h": 40,
+          "clientWidth": 148,
+          "scrollWidth": 148,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "天空工地 · 高空",
+          "x": 799.4375,
+          "y": 188,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "赤岩峡谷 · 黄昏",
+          "x": 932.296875,
+          "y": 188,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "云港城区 · 岔路",
+          "x": 1065.15625,
+          "y": 188,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "珊瑚深海 · 海底",
+          "x": 253,
+          "y": 228,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "冰原极光 · 雪夜",
+          "x": 385.859375,
+          "y": 228,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "巨像遗迹 · 古林",
+          "x": 518.71875,
+          "y": 228,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "坠梦 · 长梦",
+          "x": 651.578125,
+          "y": 228,
+          "w": 102.859375,
+          "h": 40,
+          "clientWidth": 103,
+          "scrollWidth": 103,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "比赛 · 对 5 辆 AI",
+          "x": 301.8125,
+          "y": 284,
+          "w": 136.359375,
+          "h": 40,
+          "clientWidth": 136,
+          "scrollWidth": 136,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "计时赛 · 幽灵车",
+          "x": 438.171875,
+          "y": 284,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "新手",
+          "x": 641.84375,
+          "y": 284,
+          "w": 62.015625,
+          "h": 40,
+          "clientWidth": 62,
+          "scrollWidth": 62,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "普通",
+          "x": 703.859375,
+          "y": 284,
+          "w": 62.015625,
+          "h": 40,
+          "clientWidth": 62,
+          "scrollWidth": 62,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "高手",
+          "x": 765.875,
+          "y": 284,
+          "w": 62.015625,
+          "h": 40,
+          "clientWidth": 62,
+          "scrollWidth": 62,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "标准组 · 车性能相同",
+          "x": 301.8125,
+          "y": 340,
+          "w": 162.859375,
+          "h": 40,
+          "clientWidth": 163,
+          "scrollWidth": 163,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "改装组 · 用你升级的车",
+          "x": 464.671875,
+          "y": 340,
+          "w": 177.859375,
+          "h": 40,
+          "clientWidth": 178,
+          "scrollWidth": 178,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "自动",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "手动按",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "start",
+          "text": "开始比赛 · 3 圈 ▸",
+          "x": 252,
+          "y": 521,
+          "w": 222.171875,
+          "h": 51,
+          "clientWidth": 222,
+          "scrollWidth": 222,
+          "clientHeight": 51,
+          "scrollHeight": 51,
+          "unobstructed": true
+        },
+        {
+          "id": "garagebtn",
+          "text": "🚗 车库",
+          "x": 486.171875,
+          "y": 521,
+          "w": 102.015625,
+          "h": 51,
+          "clientWidth": 100,
+          "scrollWidth": 100,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": true
+        },
+        {
+          "id": "volbtn",
+          "text": "设置",
+          "x": 677.875,
+          "y": 521,
+          "w": 78.015625,
+          "h": 51,
+          "clientWidth": 76,
+          "scrollWidth": 76,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": true
+        },
+        {
+          "id": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Night-DOM-long-ID-42单人游戏 · 1P 手柄操作\nNight Racer UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 220,
+          "w": 190,
+          "h": 190.46875,
+          "clientWidth": 188,
+          "scrollWidth": 188,
+          "clientHeight": 188,
+          "scrollHeight": 188,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "ID: Night-DOM-long-ID-42",
+          "x": 64,
+          "y": 282.6875,
+          "w": 118,
+          "h": 30.78125,
+          "clientWidth": 118,
+          "scrollWidth": 118,
+          "clientHeight": 31,
+          "scrollHeight": 31,
+          "unobstructed": true
+        }
+      ]
+    },
+    {
+      "name": "low-focused-zh-1280",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "e6918b8536be65601b994d14febc494ee1483c4f023865cd5de2b81129342702",
+      "bytes": 264080,
+      "state": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 47,
+        "stage": "menu",
+        "paused": false,
+        "gameplay": {
+          "state": "title",
+          "renderPreset": "high",
+          "ready": true,
+          "menu": {
+            "root": "volume",
+            "focusId": null,
+            "focusText": "流畅",
+            "focusIndex": 1
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 47,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "boxes": [
+        {
+          "id": "",
+          "text": "霓虹街区 · 雨夜",
+          "x": 253,
+          "y": 188,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "雾岭山道 · 黄昏",
+          "x": 385.859375,
+          "y": 188,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "碧海长桥 · 晴天",
+          "x": 518.71875,
+          "y": 188,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "长安灯火 · 元宵夜",
+          "x": 651.578125,
+          "y": 188,
+          "w": 147.859375,
+          "h": 40,
+          "clientWidth": 148,
+          "scrollWidth": 148,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "天空工地 · 高空",
+          "x": 799.4375,
+          "y": 188,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "赤岩峡谷 · 黄昏",
+          "x": 932.296875,
+          "y": 188,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "云港城区 · 岔路",
+          "x": 1065.15625,
+          "y": 188,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "珊瑚深海 · 海底",
+          "x": 253,
+          "y": 228,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "冰原极光 · 雪夜",
+          "x": 385.859375,
+          "y": 228,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "巨像遗迹 · 古林",
+          "x": 518.71875,
+          "y": 228,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "坠梦 · 长梦",
+          "x": 651.578125,
+          "y": 228,
+          "w": 102.859375,
+          "h": 40,
+          "clientWidth": 103,
+          "scrollWidth": 103,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "比赛 · 对 5 辆 AI",
+          "x": 301.8125,
+          "y": 284,
+          "w": 136.359375,
+          "h": 40,
+          "clientWidth": 136,
+          "scrollWidth": 136,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "计时赛 · 幽灵车",
+          "x": 438.171875,
+          "y": 284,
+          "w": 132.859375,
+          "h": 40,
+          "clientWidth": 133,
+          "scrollWidth": 133,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "新手",
+          "x": 641.84375,
+          "y": 284,
+          "w": 62.015625,
+          "h": 40,
+          "clientWidth": 62,
+          "scrollWidth": 62,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "普通",
+          "x": 703.859375,
+          "y": 284,
+          "w": 62.015625,
+          "h": 40,
+          "clientWidth": 62,
+          "scrollWidth": 62,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "高手",
+          "x": 765.875,
+          "y": 284,
+          "w": 62.015625,
+          "h": 40,
+          "clientWidth": 62,
+          "scrollWidth": 62,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "标准组 · 车性能相同",
+          "x": 301.8125,
+          "y": 340,
+          "w": 162.859375,
+          "h": 40,
+          "clientWidth": 163,
+          "scrollWidth": 163,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "改装组 · 用你升级的车",
+          "x": 464.671875,
+          "y": 340,
+          "w": 177.859375,
+          "h": 40,
+          "clientWidth": 178,
+          "scrollWidth": 178,
+          "clientHeight": 40,
+          "scrollHeight": 40,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "自动",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "",
+          "text": "手动按",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "clientWidth": 0,
+          "scrollWidth": 0,
+          "clientHeight": 0,
+          "scrollHeight": 0,
+          "unobstructed": false
+        },
+        {
+          "id": "start",
+          "text": "开始比赛 · 3 圈 ▸",
+          "x": 252,
+          "y": 521,
+          "w": 222.171875,
+          "h": 51,
+          "clientWidth": 222,
+          "scrollWidth": 222,
+          "clientHeight": 51,
+          "scrollHeight": 51,
+          "unobstructed": true
+        },
+        {
+          "id": "garagebtn",
+          "text": "🚗 车库",
+          "x": 486.171875,
+          "y": 521,
+          "w": 102.015625,
+          "h": 51,
+          "clientWidth": 100,
+          "scrollWidth": 100,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": false
+        },
+        {
+          "id": "volbtn",
+          "text": "设置",
+          "x": 677.875,
+          "y": 521,
+          "w": 78.015625,
+          "h": 51,
+          "clientWidth": 76,
+          "scrollWidth": 76,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": false
+        },
+        {
+          "id": "volume",
+          "text": "设置 关闭 ✕画面画质流畅均衡高画质极高极致卡顿或手机发烫时选「流畅」。切换后会重新载入。卡顿时自动降画质开关关掉后始终保持你选的画质，哪怕掉帧。语言中文English反光强度100声音总音量100车辆（引擎、轮胎、风噪）100雨声100音效（碰撞、倒计时、提示）100音乐（霓虹梦境）100",
+          "x": 420,
+          "y": 50,
+          "w": 440,
+          "h": 620,
+          "clientWidth": 438,
+          "scrollWidth": 438,
+          "clientHeight": 618,
+          "scrollHeight": 639,
+          "unobstructed": true
+        },
+        {
+          "id": "volclose",
+          "text": "关闭 ✕",
+          "x": 779.71875,
+          "y": 74.5,
+          "w": 55.28125,
+          "h": 22,
+          "clientWidth": 55,
+          "scrollWidth": 55,
+          "clientHeight": 22,
+          "scrollHeight": 22,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "流畅",
+          "x": 446,
+          "y": 179,
+          "w": 52,
+          "h": 36,
+          "clientWidth": 52,
+          "scrollWidth": 52,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "均衡",
+          "x": 498,
+          "y": 179,
+          "w": 52,
+          "h": 36,
+          "clientWidth": 52,
+          "scrollWidth": 52,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "高画质",
+          "x": 550,
+          "y": 179,
+          "w": 66,
+          "h": 36,
+          "clientWidth": 66,
+          "scrollWidth": 66,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "极高",
+          "x": 616,
+          "y": 179,
+          "w": 52,
+          "h": 36,
+          "clientWidth": 52,
+          "scrollWidth": 52,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "极致",
+          "x": 668,
+          "y": 179,
+          "w": 52,
+          "h": 36,
+          "clientWidth": 52,
+          "scrollWidth": 52,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "开",
+          "x": 446,
+          "y": 286,
+          "w": 38,
+          "h": 36,
+          "clientWidth": 38,
+          "scrollWidth": 38,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "关",
+          "x": 484,
+          "y": 286,
+          "w": 38,
+          "h": 36,
+          "clientWidth": 38,
+          "scrollWidth": 38,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "中文",
+          "x": 446,
+          "y": 393,
+          "w": 52,
+          "h": 36,
+          "clientWidth": 52,
+          "scrollWidth": 52,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "English",
+          "x": 498,
+          "y": 393,
+          "w": 70.859375,
+          "h": 36,
+          "clientWidth": 71,
+          "scrollWidth": 71,
+          "clientHeight": 36,
+          "scrollHeight": 36,
+          "unobstructed": true
+        },
+        {
+          "id": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Night-DOM-long-ID-42单人游戏 · 1P 手柄操作\nNight Racer UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 220,
+          "w": 190,
+          "h": 190.46875,
+          "clientWidth": 188,
+          "scrollWidth": 188,
+          "clientHeight": 188,
+          "scrollHeight": 188,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "ID: Night-DOM-long-ID-42",
+          "x": 64,
+          "y": 282.6875,
+          "w": 118,
+          "h": 30.78125,
+          "clientWidth": 118,
+          "scrollWidth": 118,
+          "clientHeight": 31,
+          "scrollHeight": 31,
+          "unobstructed": true
+        }
+      ]
+    },
+    {
+      "name": "paused-zh-1280",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "sha256": "f6bca405027e34f0f0bd98c8d13d7f565030c55eb7c185b906e812614cd18e12",
+      "bytes": 41548,
+      "state": {
+        "game": "night-racer",
+        "renderer": "webgl2",
+        "webglVersion": 2,
+        "frames": 8,
+        "stage": "paused",
+        "paused": true,
+        "gameplay": {
+          "state": "paused",
+          "renderPreset": "low",
+          "ready": true,
+          "menu": {
+            "root": "pause",
+            "focusId": "resume",
+            "focusText": "继续 ▸",
+            "focusIndex": 0
+          }
+        },
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Night-DOM-long-ID-42",
+              "session": 1,
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Night-DOM-long-ID-42\",1]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Night Racer UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 8,
+          "native": true,
+          "inputAvailable": true
+        },
+        "errors": []
+      },
+      "boxes": [
+        {
+          "id": "",
+          "text": "暂停继续 ▸重新开始换视角设置回主菜单键盘：Esc 继续 · R 重新开始 · Q 回主菜单联机比赛不会暂停，其他人还在跑",
+          "x": 232,
+          "y": 254,
+          "w": 1020,
+          "h": 174,
+          "clientWidth": 1020,
+          "scrollWidth": 1020,
+          "clientHeight": 174,
+          "scrollHeight": 174,
+          "unobstructed": true
+        },
+        {
+          "id": "resume",
+          "text": "继续 ▸",
+          "x": 463.59375,
+          "y": 339,
+          "w": 116.734375,
+          "h": 51,
+          "clientWidth": 117,
+          "scrollWidth": 117,
+          "clientHeight": 51,
+          "scrollHeight": 51,
+          "unobstructed": true
+        },
+        {
+          "id": "restart",
+          "text": "重新开始",
+          "x": 592.328125,
+          "y": 339,
+          "w": 110.015625,
+          "h": 51,
+          "clientWidth": 108,
+          "scrollWidth": 108,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": true
+        },
+        {
+          "id": "cambtn",
+          "text": "换视角",
+          "x": 714.34375,
+          "y": 339,
+          "w": 94.015625,
+          "h": 51,
+          "clientWidth": 92,
+          "scrollWidth": 92,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": true
+        },
+        {
+          "id": "volbtn2",
+          "text": "设置",
+          "x": 820.359375,
+          "y": 339,
+          "w": 78.015625,
+          "h": 51,
+          "clientWidth": 76,
+          "scrollWidth": 76,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": true
+        },
+        {
+          "id": "quit",
+          "text": "回主菜单",
+          "x": 910.375,
+          "y": 339,
+          "w": 110.015625,
+          "h": 51,
+          "clientWidth": 108,
+          "scrollWidth": 108,
+          "clientHeight": 49,
+          "scrollHeight": 49,
+          "unobstructed": true
+        },
+        {
+          "id": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Night-DOM-long-ID-42单人游戏 · 1P 手柄操作\nNight Racer UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 220,
+          "w": 190,
+          "h": 190.46875,
+          "clientWidth": 188,
+          "scrollWidth": 188,
+          "clientHeight": 188,
+          "scrollHeight": 188,
+          "unobstructed": true
+        },
+        {
+          "id": "",
+          "text": "ID: Night-DOM-long-ID-42",
+          "x": 64,
+          "y": 282.6875,
+          "w": 118,
+          "h": 30.78125,
+          "clientWidth": 118,
+          "scrollWidth": 118,
+          "clientHeight": 31,
+          "scrollHeight": 31,
+          "unobstructed": true
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "checks": [],
+  "status": "passed"
+}

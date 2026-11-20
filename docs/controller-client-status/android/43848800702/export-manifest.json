@@ -1,0 +1,424 @@
+{
+  "qaSourceSha": "f0195f355e48f6ef00dab6b795fd124c567cd5cd",
+  "runId": "43848800702",
+  "runtimeResult": "success",
+  "runtimeResultScope": "selected batches only",
+  "selection": {
+    "acceptanceMode": "client-status",
+    "acceptanceScope": "controller client status acceptance",
+    "fullGameplayAcceptance": false,
+    "driverFlags": [
+      "--status-only"
+    ],
+    "requestedBatches": [
+      "retry-cozy"
+    ],
+    "selectedBatches": [
+      "retry-cozy"
+    ],
+    "plannedSlugs": [
+      "cozy-island"
+    ],
+    "completeCatalogRequested": false,
+    "matrix": {
+      "include": [
+        {
+          "group": "worlds",
+          "batch": "retry-cozy",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorBuild": "",
+          "emulatorArchive": null,
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        }
+      ]
+    },
+    "worlds2GraphicsExperiment": {
+      "selected": false,
+      "description": "Disable Vulkan while retaining SwiftShader and enable verbose emulator logs; the preceding AVD failure has no established root cause."
+    },
+    "usedCarStableImageComparison": {
+      "selected": false,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "channel": "stable",
+      "revisionListedByOfficialRepository": 3,
+      "rendererComparison": {
+        "previousObservedEmulatorVersion": "37.2.13",
+        "previousRenderer": "swiftshader_indirect",
+        "requestedRenderer": "swiftshader",
+        "previousRendererDeprecatedSince": "36.4.9",
+        "officialReference": "https://developer.android.com/studio/run/emulator-acceleration"
+      },
+      "hostVersionComparison": {
+        "previousObservedEmulatorVersion": "37.2.13",
+        "requested": {
+          "version": "35.6.11",
+          "build": "13610412",
+          "url": "https://dl.google.com/android/repository/emulator-linux_x64-13610412.zip",
+          "sha256": "2fe2b56fe93ce75e1d478a40162131381d911c355efeaedb54dd1e0d0897a5cf",
+          "bytes": 319086252,
+          "officialArchive": "https://developer.android.com/studio/emulator_archive"
+        },
+        "description": "Change only the host emulator version; retain API29/x86/swiftshader/disabled Vulkan and verbose options. The preceding host RenderThread segmentation fault has no established product cause."
+      },
+      "description": "Independent AVD on the official older stable TV image; installation, WebView, WebGL and controller acceptance remain mandatory."
+    },
+    "arcadeVisualStableImageComparison": {
+      "selected": false,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "description": "Recheck Tank and Jackal after transient black regions were observed in API36 recordings; preserve full controller acceptance and new visual evidence."
+    },
+    "qaSourceSha": "f0195f355e48f6ef00dab6b795fd124c567cd5cd"
+  },
+  "files": {
+    "evidence/controller-runtime-retry-cozy/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "90d42bc752dea96b6215f1a1c0deef8c37b4873acb16bb57c02c9741701dd32d"
+    },
+    "evidence/controller-runtime-retry-cozy/bundle-manifest.json": {
+      "bytes": 464,
+      "sha256": "f2c7b8e958715dd96afb830a912eb9c9030a735aede4d9a75ca438d5b6df5d17"
+    },
+    "evidence/controller-runtime-retry-cozy/runtime-selection.json": {
+      "bytes": 2663,
+      "sha256": "e408af66f0df510e0fa86733089a83740af43fbf25e414e74b30cd078ae78fca"
+    },
+    "evidence/controller-runtime-retry-cozy/continuous-logcat.txt": {
+      "bytes": 3605960,
+      "sha256": "9cd7ab8946125f480bfd19f00f69676fa03fac4bca8e5b3662af584b1393b2ef"
+    },
+    "evidence/controller-runtime-retry-cozy/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-retry-cozy/input-verification.json": {
+      "bytes": 3091,
+      "sha256": "e6500d0dff90c33596694bed7ee90eeb5f25aa4de8769e83120d712adb50ad6c"
+    },
+    "evidence/controller-runtime-retry-cozy/emulator-version.json": {
+      "bytes": 727,
+      "sha256": "f01b2af581299048a2ba3da241b5b072d6c549c2944654f572e84a4c686dbc85"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "9a2f7a91590f9169d0e7ee77674543c9c01b15d23f720e0bbee6b00aff1ae476"
+    },
+    "evidence/controller-runtime-retry-cozy/report.json": {
+      "bytes": 25869,
+      "sha256": "1d8386f983439be1d817524ef4f6539356e9b5d62045f863686193c531057866"
+    },
+    "evidence/controller-runtime-retry-cozy/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-retry-cozy/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-cozy/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-cozy/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "f6578be099b1a1a81222f5d2025f0871e684dd27ef430159ec7f203ec80587a8"
+    },
+    "evidence/controller-runtime-retry-cozy/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "3b4a59c2e827817d05991678248194c472630a8be1f99530175f36104c57525a"
+    },
+    "evidence/controller-runtime-retry-cozy/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "e9fb135b26c080d04ef42c2b6281a3e2ad1c8478b6374919f5542419ff57a820"
+    },
+    "evidence/controller-runtime-retry-cozy/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "35a3468e9354edf61345b11aaab59d8bef6f03ea0d5bbbc795d545b094755f54"
+    },
+    "evidence/controller-runtime-retry-cozy/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-cozy/host-diagnostics/host-samples.jsonl": {
+      "bytes": 239464,
+      "sha256": "447691b0f9c030bbcb1e03f692a9feaccff0cdd634ba851f0101a4f59d38fb5d"
+    },
+    "evidence/controller-runtime-retry-cozy/host-diagnostics/kernel-before.txt": {
+      "bytes": 121625,
+      "sha256": "7235c20ffa1d07b671f1df3f9f9dee2a83fafb529dbafd15031ffc854010846e"
+    },
+    "evidence/controller-runtime-retry-cozy/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "43bbcadca3d5b77f9f5cf65258677f85d36241e12c7ba4bf3e67a6606ff2a262"
+    },
+    "evidence/controller-runtime-retry-cozy/host-diagnostics/kernel-after.txt": {
+      "bytes": 121625,
+      "sha256": "c0d6adf528462474de92ef4d224ead0a23d5b859c43b07720457b27e81a2e9ff"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/initial-snapshot.json": {
+      "bytes": 9848,
+      "sha256": "4df911dbccd618574e799124f40a427b1299d9dc606e3e41ca572d1c1b6046c5"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/driver.log": {
+      "bytes": 558,
+      "sha256": "af52f6ee8cb9f581fbb8d8ef2ee4663065b08d441d786253253cc2a7f38f6342"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/logcat.txt": {
+      "bytes": 1563336,
+      "sha256": "6193ff31b7c24020b03a1bf0b0db8b3d09a3dcf7cc02c4dfc6bc88e45fd3e6bd"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/baseline-release.json": {
+      "bytes": 425,
+      "sha256": "826cac9a47c60c018d351f6c1df5b46d3c5c48edc2e6fd2320bcab1c99c1f1a1"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/recording-probe.json": {
+      "bytes": 4353,
+      "sha256": "4a31606ebe105d6eeb45490dc31311e8bceaa2bef41328b093b8ecef6d054e8e"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/commands.json": {
+      "bytes": 1067,
+      "sha256": "bdc0bb3684db3c717f3f765f3274a80f3e52c3b2b2aa2460fb93c887fe580e93"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/case.json": {
+      "bytes": 988,
+      "sha256": "6a1212b3a9d39245198a1baf66505b3bbcbdb6576ff78ef63fcab27882c06f2b"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay.mp4": {
+      "bytes": 379898,
+      "sha256": "c51f4c404146343038185e3d124c6844c191d8e1ac3a0549aa75d444005a3a1e"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-retry-cozy/host-diagnostics/emulator-crash-data/emu-crash-37.2.13.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "87c8609e7c1b0d44c235203628f0a05932554a09db9ac0c565e581f5590be6da"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 23387,
+      "sha256": "40c250243728b268dd50b3edc2dd290d89629d89c5c7366533c609546a4e48b7"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8750,
+      "sha256": "58216647d5927ed375f531014e3ccb4722fe71da332b50ae782634172503fbfe"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/controller-release.py": {
+      "bytes": 16723,
+      "sha256": "caee3818477e965cbb44dc6c9cbd2acc5b59ba917bdc2680831829ef473c2f1c"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 13133,
+      "sha256": "56c29bd3f99e1c9ef7fc1600d08a79f7c221e4695e1b647d1445144121c3e5ca"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-retry-cozy/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/coast-kart/source-manifest.json": {
+      "bytes": 706,
+      "sha256": "9a1a56467b8b3f327c1baa88ba57fdf9ecbf7559f7aa5919be632b6e0e1ccccf"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/cozy-island/source-manifest.json": {
+      "bytes": 707,
+      "sha256": "6b953439ef91a3f2f60fb650c4cc90a8a9ed412b6c91783e3a2e088795e076fd"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/used-car-racing/source-manifest.json": {
+      "bytes": 711,
+      "sha256": "04a6164d21b5a6adc25418124ca059109ab18ccc7e930c578185ea29a8a55d16"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/alien-shooter/source-manifest.json": {
+      "bytes": 709,
+      "sha256": "7591abc08d0e9628c30bc0a63e7c7b6a90803a144aa6489240e8142fd4d930fb"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/coast-kart/resource/apps/coast-kart/build.gradle": {
+      "bytes": 1455,
+      "sha256": "f6ba0747c6dfc14d3003635b4640f63db5d68968ea159d8102dae63f8618ef58"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/coast-kart/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/coast-kart/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/cozy-island/resource/apps/cozy-island/build.gradle": {
+      "bytes": 1458,
+      "sha256": "cfff8fc0048b2fa5eb3b3fcffd03fcf64bc9541ad13bcca701a1b189642199dc"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/cozy-island/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/cozy-island/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/used-car-racing/resource/apps/used-car-racing/build.gradle": {
+      "bytes": 1653,
+      "sha256": "28b282c38f488060e84909bb744fd8f8b1829d3ec2c23415d35f0a6c71eb7ba6"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/alien-shooter/resource/apps/alien-shooter/build.gradle": {
+      "bytes": 1467,
+      "sha256": "34d4afd368fc600058b430b83fabdf696911cf574d5f97e8baec34cebc94bede"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/alien-shooter/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-cozy/observer-source/alien-shooter/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/controller-reconnected.png": {
+      "bytes": 533419,
+      "sha256": "fb776ff501798ccee310ddb42542eccbded8681171cd2213171e0f2471e6a218"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/controllers-two-android.png": {
+      "bytes": 544319,
+      "sha256": "7f4c975657404533de4586ff890c352b2c479adc8cb4064f25c456c33470d233"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/executed-run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/bridge-stderr.txt": {
+      "bytes": 724,
+      "sha256": "1162d14a4984c6d09606d5c2f3030d8e367e8ed6cbaddf3f702cc795526fbb04"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/report.json": {
+      "bytes": 126752,
+      "sha256": "5ec7e444bff8d8f68be2b4fcd7a2a3f06f291105091f14d84a77009a18d8e853"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/controller-disconnected.png": {
+      "bytes": 531411,
+      "sha256": "8bb834ccab9af9916c106b4fe421a691741644fa6d1e8ea8721c801aeafcfd80"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/controller-connected-android.png": {
+      "bytes": 533419,
+      "sha256": "fb776ff501798ccee310ddb42542eccbded8681171cd2213171e0f2471e6a218"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/menu-android.png": {
+      "bytes": 531411,
+      "sha256": "8bb834ccab9af9916c106b4fe421a691741644fa6d1e8ea8721c801aeafcfd80"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-retry-cozy/cozy-island/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    }
+  }
+}

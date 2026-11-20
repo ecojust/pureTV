@@ -1,0 +1,236 @@
+{
+  "sourceCommit": "490f84f9dbc07935b7f6c3797809fa5f82bdaa4f",
+  "batch": "adventure-01",
+  "status": "failed",
+  "shared": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "joystick-games/shared/macos/tests/web-bridge.test.mjs"
+      ],
+      "status": "passed",
+      "log": "shared/00.log",
+      "startedAt": "2026-11-19T18:46:49.136813+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/build-source.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/01.log",
+      "startedAt": "2026-11-19T18:46:49.431066+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-reuse.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/02.log",
+      "startedAt": "2026-11-19T18:46:49.867922+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-tools.test.py"
+      ],
+      "status": "failed",
+      "log": "shared/03.log",
+      "startedAt": "2026-11-19T18:46:54.580577+00:00",
+      "returncode": 1
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/local-assets.test.py"
+      ],
+      "status": "failed",
+      "log": "shared/04.log",
+      "startedAt": "2026-11-19T18:46:56.437915+00:00",
+      "returncode": 1
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/local-network-prompts.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/05.log",
+      "startedAt": "2026-11-19T18:47:13.327790+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/native-observation.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/06.log",
+      "startedAt": "2026-11-19T18:47:13.586398+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/reuse-source.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/07.log",
+      "startedAt": "2026-11-19T18:47:14.226123+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "5",
+        "joystick-games/shared/macos/Sources/ControllerServer.swift",
+        "joystick-games/shared/macos/tests/ControllerServerTests.swift",
+        "-o",
+        "/Users/runner/work/_temp/controller-tests"
+      ],
+      "status": "passed",
+      "log": "shared/08.log",
+      "startedAt": "2026-11-19T18:47:15.356766+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/runner/work/_temp/controller-tests"
+      ],
+      "status": "passed",
+      "log": "shared/09.log",
+      "startedAt": "2026-11-19T18:47:20.343174+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "5",
+        "joystick-games/shared/macos/Sources/GameStorage.swift",
+        "joystick-games/shared/macos/tests/GameStorageTests.swift",
+        "-o",
+        "/Users/runner/work/_temp/storage-tests"
+      ],
+      "status": "passed",
+      "log": "shared/10.log",
+      "startedAt": "2026-11-19T18:47:20.406773+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/runner/work/_temp/storage-tests"
+      ],
+      "status": "passed",
+      "log": "shared/11.log",
+      "startedAt": "2026-11-19T18:47:21.239526+00:00",
+      "returncode": 0
+    }
+  ],
+  "games": [
+    {
+      "game": "glup",
+      "status": "failed",
+      "originalTestScript": "node src/tools/check-levels.js && node src/tools/humo.js && node tests/pause.cjs && node tests/input.cjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "glup/dependencies.log",
+          "startedAt": "2026-11-19T18:47:21.369270+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "glup/original-tests.log",
+          "startedAt": "2026-11-19T18:47:23.135928+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "glup/frozen-dist.log",
+          "startedAt": "2026-11-19T18:47:29.741841+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "status": "skipped",
+        "reason": "Shared or game source regressions failed; original reports retained"
+      }
+    },
+    {
+      "game": "emberbrood",
+      "status": "failed",
+      "originalTestScript": "node src/test/run.mjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "emberbrood/dependencies.log",
+          "startedAt": "2026-11-19T18:47:30.269048+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "emberbrood/original-tests.log",
+          "startedAt": "2026-11-19T18:47:30.823324+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "emberbrood/frozen-dist.log",
+          "startedAt": "2026-11-19T18:47:31.195242+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "status": "skipped",
+        "reason": "Shared or game source regressions failed; original reports retained"
+      }
+    }
+  ]
+}

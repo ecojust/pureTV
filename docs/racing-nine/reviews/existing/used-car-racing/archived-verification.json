@@ -1,0 +1,113 @@
+{
+  "status": "passed",
+  "scope": "controller client status acceptance",
+  "game": "used-car-racing",
+  "version": "0.1.5",
+  "artifactSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "qaSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "runtimeRun": "43846050276",
+  "sourceWorkflowResult": "failure",
+  "sourceGroupResult": "passed",
+  "apk": {
+    "packageName": "com.ecojust.usedcartv",
+    "versionCode": 6,
+    "versionName": "0.1.5",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "bytes": 1752553,
+    "sha256": "3a616e53f8880f2c14fb564bc97204c171b4c5ab21cdacf46dfafeacf5b3f00e"
+  },
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "nativeSourceReceiptMatchesCommit": true,
+  "inPlaceUpgradeInstalled": true,
+  "controllerClientStatusAcceptancePassed": true,
+  "fullGameplayAcceptancePerformedInThisUpdate": false,
+  "modelReuse": {
+    "sourceRef": "9af9f197855eb7a0ce7174c0e6295c8974b3250d:resource/apps/used-car-racing/src/main/assets/game-model.js",
+    "sha256": "32666a4429fb0dc34c2003f34cb5783e075be5437251f87ffd12109b08ba5166",
+    "bytes": 29225,
+    "matchesNewApk": true
+  },
+  "previousReleaseVerification": {
+    "version": "0.1.4",
+    "metadata": "resource/apps/used-car-racing/docs/controller-status-baseline/0.1.4/resource.json",
+    "scope": "Historical evidence, not current UI captures"
+  },
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "connected status displays the real SDK identity and controller icon",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-3b4924aa271c",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "two SDK identities display separate seats and update independently",
+      "status": "passed",
+      "result": {
+        "primaryControllerId": "virtual-3b4924aa271c",
+        "secondaryControllerId": "virtual-0dda67af4584",
+        "seats": 2
+      }
+    },
+    {
+      "name": "disconnect removes the ID and same-ID reconnect restores its seat",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-3b4924aa271c",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK status message",
+      "status": "passed",
+      "result": {
+        "messages": 48,
+        "acks": 48,
+        "connections": 4
+      }
+    }
+  ],
+  "originalEvidence": "docs/controller-client-status/android/43846050276/evidence/controller-runtime-worlds-2/used-car-racing",
+  "originalDriverSha256": "88540a94150f30de80e35b2caddb49b0b1b98bed0687b3419991840c23baae53",
+  "captures": {
+    "menu-android.png": {
+      "sha256": "e8ad40e04731d1c2b60b1b44f5d421bbbb0ffe204a7cb1ded55fabb7e0a801f4",
+      "bytes": 1049459
+    },
+    "controller-connected-android.png": {
+      "sha256": "032ae14691b9f04af05736cd06cd579673c873fdbc17b654b1801e5f53d345ab",
+      "bytes": 1004640
+    },
+    "controllers-two-android.png": {
+      "sha256": "19c5822191fd2d5a4135fc1718ca779edbec60d83cfcef77ea4661e7e9dafe54",
+      "bytes": 985442
+    },
+    "controller-disconnected.png": {
+      "sha256": "4960fb374ae10daa7975258d363e3a6bada81e067a001209862dce415bcf57d1",
+      "bytes": 1016794
+    },
+    "controller-reconnected.png": {
+      "sha256": "595032279a2fb8711e6b60966bfa7fc960ee04554311d2acb05591cf0e5e2ffc",
+      "bytes": 1000332
+    }
+  },
+  "connectedCaptureSha256": "032ae14691b9f04af05736cd06cd579673c873fdbc17b654b1801e5f53d345ab",
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "knownLimitation": "Previous complete Android gameplay was blocked by a host emulator RenderThread crash; this update validates connection status in the menu only and does not close that limitation."
+}

@@ -1,0 +1,11 @@
+--- 18-case-ui/tv.css
++++ final/tv.css
+@@ -32,6 +32,8 @@
+ .wifi-help[hidden]{display:none}.wifi-help strong{font-size:11px;color:#90e6df}
+ .wifi-help p{font-size:10px;line-height:1.45;margin:3px 0 0;color:#c7dce9}
+ .wifi-help code{display:block;font-size:10px;overflow-wrap:anywhere;margin-top:3px;color:#f2f8fb}
++/* Vertical rails may scroll their extra tips without hiding connection help. */
++body .app .workspace>aside:not(.controller-strip){overflow-y:auto}
+ @media(min-width:851px) and (max-height:760px){aside>.wifi-help{margin:4px 0 0;padding:5px 7px}.wifi-help p{margin-top:2px}}
+ 
+ /* Horizontal instruction rails keep the controller card in its own column. */

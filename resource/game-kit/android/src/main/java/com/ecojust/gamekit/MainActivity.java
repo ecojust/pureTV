@@ -50,12 +50,17 @@ import java.util.concurrent.Executors;
 
 /** Hosts an offline game screen and a short-lived LAN controller room. */
 public class MainActivity extends Activity {
-    static final String GAME_URL = "https://game-kit.invalid/tv.html";
+    static final String GAME_URL = LocalGameUrl.ENTRY;
     private final Handler main = new Handler(Looper.getMainLooper());
     private final ExecutorService worker = Executors.newSingleThreadExecutor();
     private final Object roomLock = new Object();
     private volatile LanGameServer server;
     private LanGameServer pendingServer;
+    private volatile boolean windowFocused = true;
+    private boolean pageLoaded;
+    private volatile WifiControllerServer wifiServer;
+    private WifiControllerServer pendingWifiServer;
+    private WifiControllerDiscovery wifiDiscovery;
     private volatile String info = "{}";
     private volatile boolean suspended = true;
     private WebView web;
@@ -63,7 +68,7 @@ public class MainActivity extends Activity {
     private FrameLayout root;
     private TextView status;
     private boolean active, destroyed, processTerminated;
-    private int generation;
+    private volatile int generation;
     private AlertDialog exitDialog;
     private ConnectivityManager connectivity;
     private ConnectivityManager.NetworkCallback networkCallback;
@@ -92,6 +97,10 @@ public class MainActivity extends Activity {
         root.addView(status, new FrameLayout.LayoutParams(-1,-1));
         setContentView(root);
         connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        wifiDiscovery = new WifiControllerDiscovery(this, (discoveryState, name, port, error) -> {
+            final int expected = generation;
+            main.post(() -> updateWifiInfo(expected, discoveryState, name, port, error));
+        });
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -117,16 +126,16 @@ public class MainActivity extends Activity {
         value.addJavascriptInterface(new HostBridge(), "PureGameHost");
         value.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return !GAME_URL.equals(request.getUrl().toString());
+                return !LocalGameUrl.isEntry(request.getUrl().toString());
             }
             @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return !GAME_URL.equals(url);
+                return !LocalGameUrl.isEntry(url);
             }
             @Override public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 return localAsset(request.getUrl());
             }
             @Override public void onPageFinished(WebView view, String url) {
-                if (GAME_URL.equals(url) && active) {
+                if (LocalGameUrl.isEntry(url) && active) {
                     status.setVisibility(View.GONE);
                     view.requestFocus();
                 }
@@ -154,21 +163,29 @@ public class MainActivity extends Activity {
                 bytes.write(buffer, 0, count);
             }
             JSONArray list = new JSONArray(bytes.toString("UTF-8"));
+            if (list.length() > 2049) throw new IOException("Too many assets");
+            java.util.Set<String> names = new java.util.HashSet<>();
             for (int i = 0; i < list.length(); i++) {
                 String name = list.getString(i);
-                if (!name.matches("[A-Za-z0-9][A-Za-z0-9_.-]*")) throw new IOException("Invalid asset name");
+                if (!validBundledAssetPath(name) || !names.add(name.toLowerCase(java.util.Locale.ROOT))) throw new IOException("Invalid or duplicate asset name");
                 if (!name.startsWith("controller.") && !name.endsWith(".txt")) bundledAssets.add(name);
             }
             if (!bundledAssets.contains("tv.html")) throw new IOException("Missing TV page");
         } catch (Exception invalid) { throw new IllegalStateException("Invalid bundled assets", invalid); }
     }
 
+    static boolean validBundledAssetPath(String path) {
+        return LocalGameUrl.validAssetPath(path);
+    }
+
     static String bundledAssetMime(String path) {
         if (path == null) return null;
+        path = path.toLowerCase(java.util.Locale.ROOT);
         if (path.endsWith(".html")) return "text/html";
         if (path.endsWith(".css")) return "text/css";
         if (path.endsWith(".js")) return "application/javascript";
         if (path.endsWith(".json")) return "application/json";
+        if (path.endsWith(".webmanifest")) return "application/manifest+json";
         if (path.endsWith(".png")) return "image/png";
         if (path.endsWith(".webp")) return "image/webp";
         if (path.endsWith(".jpg") || path.endsWith(".jpeg")) return "image/jpeg";
@@ -176,20 +193,34 @@ public class MainActivity extends Activity {
         if (path.endsWith(".ogg")) return "audio/ogg";
         if (path.endsWith(".wav")) return "audio/wav";
         if (path.endsWith(".mp3")) return "audio/mpeg";
+        if (path.endsWith(".opus")) return "audio/ogg";
+        if (path.endsWith(".m4a")) return "audio/mp4";
+        if (path.endsWith(".glb")) return "model/gltf-binary";
+        if (path.endsWith(".gltf")) return "model/gltf+json";
+        if (path.endsWith(".bin") || path.endsWith(".hdr")) return "application/octet-stream";
+        if (path.endsWith(".wasm")) return "application/wasm";
+        if (path.endsWith(".ktx2")) return "image/ktx2";
+        if (path.endsWith(".woff")) return "font/woff";
+        if (path.endsWith(".woff2")) return "font/woff2";
+        if (path.endsWith(".ttf")) return "font/ttf";
+        if (path.endsWith(".otf")) return "font/otf";
+        if (path.endsWith(".ico")) return "image/x-icon";
+        if (path.endsWith(".md") || path.endsWith("/license") || path.endsWith("/notice") || path.endsWith("/copying")
+            || path.endsWith("_license") || path.endsWith("_notice") || path.endsWith("_copying")) return "text/plain";
         return null;
     }
 
     WebResourceResponse localAsset(Uri uri) {
-        String name = uri.getPath();
+        String assetPath = uri == null ? null : LocalGameUrl.assetPath(uri.toString());
+        String name = assetPath == null ? null : "/" + assetPath;
         String mime = bundledAssetMime(name);
-        if ("https".equals(uri.getScheme()) && "game-kit.invalid".equals(uri.getEncodedAuthority())
-            && uri.getQuery() == null && uri.getFragment() == null && name != null
-            && name.equals(uri.getEncodedPath()) && mime != null && bundledAssets.contains(name.substring(1))) {
-            String encoding = mime.startsWith("audio/") || mime.startsWith("image/") ? null : "UTF-8";
+        if (assetPath != null && mime != null && bundledAssets.contains(assetPath)) {
+            String encoding = mime.startsWith("text/") || mime.equals("application/javascript")
+                || mime.equals("application/json") || mime.equals("application/manifest+json") || mime.equals("model/gltf+json") ? "UTF-8" : null;
             Map<String,String> headers = new java.util.HashMap<>();
             headers.put("Cache-Control","no-store");
             headers.put("X-Content-Type-Options","nosniff");
-            try { return new WebResourceResponse(mime,encoding,200,"OK",headers,getAssets().open(name.substring(1))); }
+            try { return new WebResourceResponse(mime,encoding,200,"OK",headers,getAssets().open(assetPath)); }
             catch (IOException ignored) { }
         }
         return new WebResourceResponse("text/plain","UTF-8",403,"Forbidden",Collections.emptyMap(),new ByteArrayInputStream(new byte[0]));
@@ -227,15 +258,19 @@ public class MainActivity extends Activity {
     };
 
     private void startRoom() {
-        closeRoom();
+        closeRoom(false);
         if (!active || destroyed || web == null) return;
         final int expected = generation;
+        final WifiControllerServer retainedWifi = wifiServer;
+        if (pageLoaded) web.evaluateJavascript("window.PureGame && window.PureGame.focus && window.PureGame.focus(false)", null);
         lastAddresses = lanAddresses();
         final List<String> addresses = new ArrayList<>(lastAddresses);
         status.setText(R.string.starting);
         status.setVisibility(View.VISIBLE);
         worker.execute(() -> {
             LanGameServer created = new LanGameServer(name -> getAssets().open(name));
+            final boolean ownsWifi = retainedWifi == null;
+            WifiControllerServer createdWifi = ownsWifi ? new WifiControllerServer() : retainedWifi;
             String payload;
             try {
                 int port;
@@ -250,15 +285,51 @@ public class MainActivity extends Activity {
                 created.stop();
                 payload = roomInfo("", addresses, getString(R.string.server_error));
             }
+            int wifiPort = 0;
+            try {
+                synchronized (roomLock) {
+                    if (generation != expected || !active || destroyed) { created.stop(); return; }
+                    if (ownsWifi) pendingWifiServer = createdWifi;
+                    wifiPort = createdWifi.start();
+                }
+            } catch (Exception unavailableWifi) { if (ownsWifi) createdWifi.stop(); }
+            final int readyWifiPort = wifiPort;
             final String ready = payload;
             main.post(() -> {
-                if (!active || destroyed || generation != expected || web == null) { created.stop(); return; }
-                synchronized (roomLock) { server = created; pendingServer = null; }
+                if (!active || destroyed || generation != expected || web == null) { created.stop(); if (ownsWifi) createdWifi.stop(); return; }
+                synchronized (roomLock) {
+                    server = created; pendingServer = null;
+                    wifiServer = readyWifiPort > 0 ? createdWifi : null; pendingWifiServer = null;
+                }
                 info = ready;
-                suspended = false;
-                web.loadUrl(GAME_URL);
+                suspended = exitDialog != null;
+                createdWifi.setInputActive(windowFocused && !suspended);
+                if (readyWifiPort > 0 && !addresses.isEmpty()) {
+                    wifiDiscovery.start(getString(R.string.app_name), readyWifiPort);
+                } else updateWifiInfo(expected, "unavailable", getString(R.string.app_name), readyWifiPort, -1);
+                if (pageLoaded) {
+                    web.evaluateJavascript("window.PureGame && window.PureGame.networkChanged(" + info + ")", null);
+                    status.setVisibility(View.GONE);
+                } else {
+                    pageLoaded = true;
+                    web.loadUrl(GAME_URL);
+                }
             });
         });
+    }
+
+    private void updateWifiInfo(int expected, String state, String name, int port, int error) {
+        if (!active || destroyed || generation != expected || web == null) return;
+        WifiControllerServer current = wifiServer;
+        if (port > 0 && (current == null || current.getPort() != port)) return;
+        try {
+            JSONObject value = new JSONObject(info);
+            value.put("wifiController", new JSONObject().put("state", state).put("serviceName", name)
+                .put("port", port).put("serviceType", WifiControllerDiscovery.SERVICE_TYPE)
+                .put("version", "1").put("error", error));
+            info = value.toString();
+            web.evaluateJavascript("window.PureGame && window.PureGame.roomInfo(" + info + ")", null);
+        } catch (Exception ignored) { }
     }
 
     private String roomInfo(String url, List<String> addresses, String error) {
@@ -308,8 +379,15 @@ public class MainActivity extends Activity {
     final class HostBridge {
         @JavascriptInterface public String getInfo() { return info; }
         @JavascriptInterface public String snapshot() {
+            if (suspended || !windowFocused) return "{\"players\":[],\"connections\":0}";
+            WifiControllerServer wifi = wifiServer;
+            if (wifi != null) {
+                String sample = wifi.snapshot();
+                try { if (new JSONObject(sample).optInt("connections") > 0) return sample; }
+                catch (Exception ignored) { }
+            }
             LanGameServer current = server;
-            return current == null || suspended ? "{\"players\":[],\"connections\":0}" : current.snapshot();
+            return current == null ? "{\"players\":[],\"connections\":0}" : current.snapshot();
         }
         @JavascriptInterface public void publish(String state) {
             LanGameServer current = server;
@@ -318,10 +396,19 @@ public class MainActivity extends Activity {
         @JavascriptInterface public void exit() { main.post(MainActivity.this::onBackPressed); }
     }
 
-    private void closeRoom() {
+    private void closeRoom() { closeRoom(true); }
+
+    private void closeRoom(boolean closeWifi) {
         synchronized (roomLock) {
             generation++;
             suspended = true;
+            if (wifiDiscovery != null) wifiDiscovery.stop();
+            WifiControllerServer oldWifi = wifiServer;
+            if (closeWifi) {
+                wifiServer = null;
+                if (oldWifi != null) oldWifi.stop();
+            } else if (oldWifi != null) oldWifi.setInputActive(false);
+            if (pendingWifiServer != null) { pendingWifiServer.stop(); pendingWifiServer = null; }
             LanGameServer old = server;
             server = null;
             if (old != null) old.stop();
@@ -382,6 +469,7 @@ public class MainActivity extends Activity {
         if (exitDialog != null || destroyed) return;
         suspended = true;
         if (server != null) server.releaseInputs();
+        if (wifiServer != null) wifiServer.setInputActive(false);
         if (web != null) web.evaluateJavascript("window.PureGame && window.PureGame.suspend && window.PureGame.suspend(true)",null);
         exitDialog = new AlertDialog.Builder(this).setTitle(R.string.exit_title).setMessage(R.string.exit_message)
             .setPositiveButton(R.string.exit,(dialog,which) -> { closeRoom(); finishAndRemoveTask(); })
@@ -390,11 +478,25 @@ public class MainActivity extends Activity {
         exitDialog.setOnDismissListener(dialog -> {
             exitDialog = null;
             if (active && !isFinishing()) {
+                // Events received while the native confirmation dialog was open
+                // must not replay when the WebView resumes.
+                if (server != null) server.releaseInputs();
+                if (wifiServer != null) wifiServer.setInputActive(windowFocused);
                 suspended = false;
                 if (web != null) web.evaluateJavascript("window.PureGame && window.PureGame.suspend && window.PureGame.suspend(false)",null);
             }
         });
         exitDialog.show();
+    }
+
+    @Override public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        windowFocused = hasFocus;
+        if (!active || destroyed || web == null) return;
+        if (server != null) server.releaseInputs();
+        if (wifiServer != null) wifiServer.setInputActive(hasFocus && !suspended);
+        // Losing focus pauses; regaining it never automatically resumes a game.
+        web.evaluateJavascript("window.PureGame && window.PureGame.focus && window.PureGame.focus(" + hasFocus + ")", null);
     }
 
     @Override public boolean dispatchKeyEvent(KeyEvent event) {

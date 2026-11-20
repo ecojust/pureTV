@@ -1,0 +1,55 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.ecojust.operatv'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'com.ecojust.operatv'
+        minSdk 19
+        targetSdk 29
+        versionCode 1
+        versionName '0.1.0'
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+            // Release signing is isolated in CI after build, lint and tests pass.
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    testOptions {
+        unitTests.includeAndroidResources = true
+        unitTests.all {
+            maxHeapSize = '1g'
+            forkEvery = 1 // Isolate API 19 and native graphics test classes.
+            if (System.getenv('OPERA_UI_CAPTURE_DIR')) {
+                outputs.upToDateWhen { false }
+                outputs.cacheIf { false }
+            }
+        }
+    }
+    lint { disable 'ExpiredTargetSdkVersion' }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    // Later Robolectric releases no longer support the minimum Android API 19.
+    testImplementation 'org.robolectric:robolectric:4.11.1'
+}
+
+tasks.register('verifyReleaseSize') {
+    dependsOn 'assembleRelease'
+    doLast {
+        def apks = fileTree("$buildDir/outputs/apk/release") { include '*.apk' }
+        if (apks.empty) throw new GradleException('No Opera TV release APK found')
+        apks.each { apk ->
+            if (apk.length() >= 10000000) throw new GradleException("Opera TV APK must remain below 10 MB: ${apk.length()} bytes")
+            println "Opera TV APK: ${apk.length()} bytes"
+        }
+    }
+}

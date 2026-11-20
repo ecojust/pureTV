@@ -1,0 +1,1601 @@
+{
+  "scope": "DOM-only original Menu, original spatial navigation and real TV adapter; connected Play/Controller starting focus fixtures correspond to observed Mac/Android reports. Initial focus is a test fixture, not proof of native focus-migration cause. No WebGL, game model, countdown or native transport.",
+  "inputs": [
+    {
+      "path": "src/js/game/dom.js",
+      "bytes": 5140,
+      "sha256": "6864448efcb0e6c2c4376bbcb88f16e5bb1045634864de6941bd404eb9fd9da5"
+    },
+    {
+      "path": "src/js/game/icons.js",
+      "bytes": 8855,
+      "sha256": "4901bc9617ba486a7ed2c070d64430f179478c63a96655aebf51a0f5e9950e85"
+    },
+    {
+      "path": "src/js/services/config.js",
+      "bytes": 2437,
+      "sha256": "a81fc4bbe2d0b3945a0132616781eb44a13b4172c525e9e77b7cfd6b006999a9"
+    },
+    {
+      "path": "src/js/services/firebase.js",
+      "bytes": 4743,
+      "sha256": "c5d27349c1a0177b2fa33cae807363619085ea1f3668a704f8efe90b72640f01"
+    },
+    {
+      "path": "src/js/game/account.js",
+      "bytes": 4578,
+      "sha256": "6512a19ba05716e59931f7a08fd292cdfa3ef0c2100d0bf878c6c6e549f6a2e4"
+    },
+    {
+      "path": "src/js/game/menu.js",
+      "bytes": 6438,
+      "sha256": "1cefd9fffae33b64694ec385da0f6981d9fdc01b7769d989d47d5c83f3a4cfd9"
+    },
+    {
+      "path": "../shared/web/controller-clients.js",
+      "bytes": 7746,
+      "sha256": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a"
+    },
+    {
+      "path": "../shared/web/input.js",
+      "bytes": 8423,
+      "sha256": "d33a301f082f0100db81c055b4773e2947cf4c166f76f68dfe06344d5a4660f6"
+    },
+    {
+      "path": "src/js/game/ui.js",
+      "bytes": 10041,
+      "sha256": "8da1b075e5e006ca7160378058f3642ae6a7301e54a6f547e9ee35a5b98e85b6"
+    },
+    {
+      "path": "src/js/tv-mapping.js",
+      "bytes": 968,
+      "sha256": "e2cf40c66a54c3c0058095073776eb3a029ba59706d3344b5a7a3a5c3aba35af"
+    },
+    {
+      "path": "src/js/tv-input.js",
+      "bytes": 11059,
+      "sha256": "450a39e8a78bc41d4f7f8a9ed00edcf7a3c9ab2b8578466fdd61fb3dd308bba5"
+    },
+    {
+      "path": "dist/tv.html",
+      "bytes": 1454,
+      "sha256": "90123f5119e62af00f41d131b396c6cd6cac20649095402d37cb366a0c875ef2"
+    },
+    {
+      "path": "dist/css/game.css",
+      "bytes": 42312,
+      "sha256": "a87c181f39bec6a922a03c72ee007a5cb1f06d28a6aac7b53b2ea411614c7786"
+    },
+    {
+      "path": "dist/css/puretv.css",
+      "bytes": 2140,
+      "sha256": "82dd79a73b8fda7b234ee61417758b3d31caf2524d4e6c7ae6c48724f1f62267"
+    }
+  ],
+  "bundleSha256": "ef581492bee35c6a4b6d4022f5af4d7896ffa0a4bd1cf0a4f9bb465672faf655",
+  "htmlSha256": "ffe2945b14c148cfe556dc5d33c305c5d1d9048fa268061b2170ee4859b979bb",
+  "cases": [
+    {
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "startingFocusFixture": "Play",
+      "actions": [
+        {
+          "key": "UP",
+          "beforeFocus": "Play",
+          "afterFocus": "Controller"
+        },
+        {
+          "key": "DOWN",
+          "beforeFocus": "Controller",
+          "afterFocus": "Play"
+        },
+        {
+          "key": "A",
+          "beforeFocus": "Play",
+          "afterFocus": "Play"
+        }
+      ],
+      "beforeConnection": {
+        "game": "penguintrack",
+        "stage": "menu",
+        "renderer": null,
+        "webglVersion": null,
+        "frames": 3,
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": false,
+          "cancelled": false,
+          "players": [],
+          "source": "",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Penguintrack UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 3,
+          "native": true,
+          "inputAvailable": true
+        },
+        "paused": false,
+        "gameplay": {
+          "screen": "menu",
+          "focus": "Play",
+          "savedSettings": false,
+          "showGhost": true,
+          "phase": null,
+          "track": null,
+          "tick": null,
+          "time": null,
+          "speed": null,
+          "car": null,
+          "controls": {},
+          "camera": null,
+          "ghostCount": null,
+          "editorGrid": false,
+          "editorBlocks": null
+        },
+        "panel": {
+          "x": 12,
+          "y": 96,
+          "width": 164,
+          "height": 113.5,
+          "scrollHeight": 112,
+          "clientHeight": 112,
+          "hidden": false
+        },
+        "focused": "Play"
+      },
+      "afterConnection": {
+        "game": "penguintrack",
+        "stage": "menu",
+        "renderer": null,
+        "webglVersion": null,
+        "frames": 5,
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Penguin-DOM-42",
+              "session": "fixture-one",
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Penguin-DOM-42\",\"fixture-one\"]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Penguintrack UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 5,
+          "native": true,
+          "inputAvailable": true
+        },
+        "paused": false,
+        "gameplay": {
+          "screen": "menu",
+          "focus": "Play",
+          "savedSettings": false,
+          "showGhost": true,
+          "phase": null,
+          "track": null,
+          "tick": null,
+          "time": null,
+          "speed": null,
+          "car": null,
+          "controls": {},
+          "camera": null,
+          "ghostCount": null,
+          "editorGrid": false,
+          "editorBlocks": null
+        },
+        "panel": {
+          "x": 12,
+          "y": 96,
+          "width": 164,
+          "height": 184.46875,
+          "scrollHeight": 182,
+          "clientHeight": 182,
+          "hidden": false
+        },
+        "focused": "Play"
+      },
+      "geometry": [
+        {
+          "selector": "pt-btn small ghost menu-site",
+          "text": "Controller",
+          "x": 184,
+          "y": 25.296875,
+          "w": 115.921875,
+          "h": 36,
+          "scrollWidth": 112,
+          "clientWidth": 112,
+          "clear": true
+        },
+        {
+          "selector": "pt-btn primary big menu-play",
+          "text": "Play",
+          "x": 184,
+          "y": 197.546875,
+          "w": 306.796875,
+          "h": 59,
+          "scrollWidth": 303,
+          "clientWidth": 303,
+          "clear": true
+        },
+        {
+          "selector": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Penguin-DOM-42单人游戏 · 1P 手柄操作\nPenguintrack UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 96,
+          "w": 164,
+          "h": 184.46875,
+          "scrollWidth": 162,
+          "clientWidth": 162,
+          "clear": true
+        }
+      ],
+      "originalHandlerCalls": [
+        "campaign"
+      ],
+      "status": "passed"
+    },
+    {
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "startingFocusFixture": "Controller",
+      "actions": [
+        {
+          "key": "UP",
+          "beforeFocus": "Controller",
+          "afterFocus": "Controller"
+        },
+        {
+          "key": "DOWN",
+          "beforeFocus": "Controller",
+          "afterFocus": "Play"
+        },
+        {
+          "key": "A",
+          "beforeFocus": "Play",
+          "afterFocus": "Play"
+        }
+      ],
+      "beforeConnection": {
+        "game": "penguintrack",
+        "stage": "menu",
+        "renderer": null,
+        "webglVersion": null,
+        "frames": 5,
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": false,
+          "cancelled": false,
+          "players": [],
+          "source": "",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Penguintrack UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 5,
+          "native": true,
+          "inputAvailable": true
+        },
+        "paused": false,
+        "gameplay": {
+          "screen": "menu",
+          "focus": "Play",
+          "savedSettings": false,
+          "showGhost": true,
+          "phase": null,
+          "track": null,
+          "tick": null,
+          "time": null,
+          "speed": null,
+          "car": null,
+          "controls": {},
+          "camera": null,
+          "ghostCount": null,
+          "editorGrid": false,
+          "editorBlocks": null
+        },
+        "panel": {
+          "x": 12,
+          "y": 96,
+          "width": 164,
+          "height": 113.5,
+          "scrollHeight": 112,
+          "clientHeight": 112,
+          "hidden": false
+        },
+        "focused": "Play"
+      },
+      "afterConnection": {
+        "game": "penguintrack",
+        "stage": "menu",
+        "renderer": null,
+        "webglVersion": null,
+        "frames": 6,
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Penguin-DOM-42",
+              "session": "fixture-one",
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Penguin-DOM-42\",\"fixture-one\"]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Penguintrack UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 6,
+          "native": true,
+          "inputAvailable": true
+        },
+        "paused": false,
+        "gameplay": {
+          "screen": "menu",
+          "focus": "Play",
+          "savedSettings": false,
+          "showGhost": true,
+          "phase": null,
+          "track": null,
+          "tick": null,
+          "time": null,
+          "speed": null,
+          "car": null,
+          "controls": {},
+          "camera": null,
+          "ghostCount": null,
+          "editorGrid": false,
+          "editorBlocks": null
+        },
+        "panel": {
+          "x": 12,
+          "y": 96,
+          "width": 164,
+          "height": 184.46875,
+          "scrollHeight": 182,
+          "clientHeight": 182,
+          "hidden": false
+        },
+        "focused": "Play"
+      },
+      "geometry": [
+        {
+          "selector": "pt-btn small ghost menu-site",
+          "text": "Controller",
+          "x": 184,
+          "y": 25.296875,
+          "w": 115.921875,
+          "h": 36,
+          "scrollWidth": 112,
+          "clientWidth": 112,
+          "clear": true
+        },
+        {
+          "selector": "pt-btn primary big menu-play",
+          "text": "Play",
+          "x": 184,
+          "y": 197.546875,
+          "w": 306.796875,
+          "h": 59,
+          "scrollWidth": 303,
+          "clientWidth": 303,
+          "clear": true
+        },
+        {
+          "selector": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Penguin-DOM-42单人游戏 · 1P 手柄操作\nPenguintrack UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 96,
+          "w": 164,
+          "h": 184.46875,
+          "scrollWidth": 162,
+          "clientWidth": 162,
+          "clear": true
+        }
+      ],
+      "originalHandlerCalls": [
+        "campaign"
+      ],
+      "status": "passed"
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 645
+      },
+      "startingFocusFixture": "Play",
+      "actions": [
+        {
+          "key": "UP",
+          "beforeFocus": "Play",
+          "afterFocus": "Controller"
+        },
+        {
+          "key": "DOWN",
+          "beforeFocus": "Controller",
+          "afterFocus": "Play"
+        },
+        {
+          "key": "A",
+          "beforeFocus": "Play",
+          "afterFocus": "Play"
+        }
+      ],
+      "beforeConnection": {
+        "game": "penguintrack",
+        "stage": "menu",
+        "renderer": null,
+        "webglVersion": null,
+        "frames": 3,
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": false,
+          "cancelled": false,
+          "players": [],
+          "source": "",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Penguintrack UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 3,
+          "native": true,
+          "inputAvailable": true
+        },
+        "paused": false,
+        "gameplay": {
+          "screen": "menu",
+          "focus": "Play",
+          "savedSettings": false,
+          "showGhost": true,
+          "phase": null,
+          "track": null,
+          "tick": null,
+          "time": null,
+          "speed": null,
+          "car": null,
+          "controls": {},
+          "camera": null,
+          "ghostCount": null,
+          "editorGrid": false,
+          "editorBlocks": null
+        },
+        "panel": {
+          "x": 12,
+          "y": 124,
+          "width": 178,
+          "height": 113.5,
+          "scrollHeight": 112,
+          "clientHeight": 112,
+          "hidden": false
+        },
+        "focused": "Play"
+      },
+      "afterConnection": {
+        "game": "penguintrack",
+        "stage": "menu",
+        "renderer": null,
+        "webglVersion": null,
+        "frames": 4,
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Penguin-DOM-42",
+              "session": "fixture-one",
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Penguin-DOM-42\",\"fixture-one\"]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Penguintrack UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 4,
+          "native": true,
+          "inputAvailable": true
+        },
+        "paused": false,
+        "gameplay": {
+          "screen": "menu",
+          "focus": "Play",
+          "savedSettings": false,
+          "showGhost": true,
+          "phase": null,
+          "track": null,
+          "tick": null,
+          "time": null,
+          "speed": null,
+          "car": null,
+          "controls": {},
+          "camera": null,
+          "ghostCount": null,
+          "editorGrid": false,
+          "editorBlocks": null
+        },
+        "panel": {
+          "x": 12,
+          "y": 124,
+          "width": 178,
+          "height": 184.46875,
+          "scrollHeight": 182,
+          "clientHeight": 182,
+          "hidden": false
+        },
+        "focused": "Play"
+      },
+      "geometry": [
+        {
+          "selector": "pt-btn small ghost menu-site",
+          "text": "Controller",
+          "x": 202,
+          "y": 35.296875,
+          "w": 115.921875,
+          "h": 36,
+          "scrollWidth": 112,
+          "clientWidth": 112,
+          "clear": true
+        },
+        {
+          "selector": "pt-btn primary big menu-play",
+          "text": "Play",
+          "x": 202,
+          "y": 257.734375,
+          "w": 306.796875,
+          "h": 59,
+          "scrollWidth": 303,
+          "clientWidth": 303,
+          "clear": true
+        },
+        {
+          "selector": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Penguin-DOM-42单人游戏 · 1P 手柄操作\nPenguintrack UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 124,
+          "w": 178,
+          "h": 184.46875,
+          "scrollWidth": 176,
+          "clientWidth": 176,
+          "clear": true
+        }
+      ],
+      "originalHandlerCalls": [
+        "campaign"
+      ],
+      "status": "passed"
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 645
+      },
+      "startingFocusFixture": "Controller",
+      "actions": [
+        {
+          "key": "UP",
+          "beforeFocus": "Controller",
+          "afterFocus": "Controller"
+        },
+        {
+          "key": "DOWN",
+          "beforeFocus": "Controller",
+          "afterFocus": "Play"
+        },
+        {
+          "key": "A",
+          "beforeFocus": "Play",
+          "afterFocus": "Play"
+        }
+      ],
+      "beforeConnection": {
+        "game": "penguintrack",
+        "stage": "menu",
+        "renderer": null,
+        "webglVersion": null,
+        "frames": 3,
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": false,
+          "cancelled": false,
+          "players": [],
+          "source": "",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Penguintrack UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 3,
+          "native": true,
+          "inputAvailable": true
+        },
+        "paused": false,
+        "gameplay": {
+          "screen": "menu",
+          "focus": "Play",
+          "savedSettings": false,
+          "showGhost": true,
+          "phase": null,
+          "track": null,
+          "tick": null,
+          "time": null,
+          "speed": null,
+          "car": null,
+          "controls": {},
+          "camera": null,
+          "ghostCount": null,
+          "editorGrid": false,
+          "editorBlocks": null
+        },
+        "panel": {
+          "x": 12,
+          "y": 124,
+          "width": 178,
+          "height": 113.5,
+          "scrollHeight": 112,
+          "clientHeight": 112,
+          "hidden": false
+        },
+        "focused": "Play"
+      },
+      "afterConnection": {
+        "game": "penguintrack",
+        "stage": "menu",
+        "renderer": null,
+        "webglVersion": null,
+        "frames": 5,
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Penguin-DOM-42",
+              "session": "fixture-one",
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Penguin-DOM-42\",\"fixture-one\"]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Penguintrack UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 5,
+          "native": true,
+          "inputAvailable": true
+        },
+        "paused": false,
+        "gameplay": {
+          "screen": "menu",
+          "focus": "Play",
+          "savedSettings": false,
+          "showGhost": true,
+          "phase": null,
+          "track": null,
+          "tick": null,
+          "time": null,
+          "speed": null,
+          "car": null,
+          "controls": {},
+          "camera": null,
+          "ghostCount": null,
+          "editorGrid": false,
+          "editorBlocks": null
+        },
+        "panel": {
+          "x": 12,
+          "y": 124,
+          "width": 178,
+          "height": 184.46875,
+          "scrollHeight": 182,
+          "clientHeight": 182,
+          "hidden": false
+        },
+        "focused": "Play"
+      },
+      "geometry": [
+        {
+          "selector": "pt-btn small ghost menu-site",
+          "text": "Controller",
+          "x": 202,
+          "y": 35.296875,
+          "w": 115.921875,
+          "h": 36,
+          "scrollWidth": 112,
+          "clientWidth": 112,
+          "clear": true
+        },
+        {
+          "selector": "pt-btn primary big menu-play",
+          "text": "Play",
+          "x": 202,
+          "y": 257.734375,
+          "w": 306.796875,
+          "h": 59,
+          "scrollWidth": 303,
+          "clientWidth": 303,
+          "clear": true
+        },
+        {
+          "selector": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Penguin-DOM-42单人游戏 · 1P 手柄操作\nPenguintrack UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 124,
+          "w": 178,
+          "h": 184.46875,
+          "scrollWidth": 176,
+          "clientWidth": 176,
+          "clear": true
+        }
+      ],
+      "originalHandlerCalls": [
+        "campaign"
+      ],
+      "status": "passed"
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "startingFocusFixture": "Play",
+      "actions": [
+        {
+          "key": "UP",
+          "beforeFocus": "Play",
+          "afterFocus": "Controller"
+        },
+        {
+          "key": "DOWN",
+          "beforeFocus": "Controller",
+          "afterFocus": "Play"
+        },
+        {
+          "key": "A",
+          "beforeFocus": "Play",
+          "afterFocus": "Play"
+        }
+      ],
+      "beforeConnection": {
+        "game": "penguintrack",
+        "stage": "menu",
+        "renderer": null,
+        "webglVersion": null,
+        "frames": 4,
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": false,
+          "cancelled": false,
+          "players": [],
+          "source": "",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Penguintrack UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 4,
+          "native": true,
+          "inputAvailable": true
+        },
+        "paused": false,
+        "gameplay": {
+          "screen": "menu",
+          "focus": "Play",
+          "savedSettings": false,
+          "showGhost": true,
+          "phase": null,
+          "track": null,
+          "tick": null,
+          "time": null,
+          "speed": null,
+          "car": null,
+          "controls": {},
+          "camera": null,
+          "ghostCount": null,
+          "editorGrid": false,
+          "editorBlocks": null
+        },
+        "panel": {
+          "x": 12,
+          "y": 124,
+          "width": 178,
+          "height": 113.5,
+          "scrollHeight": 112,
+          "clientHeight": 112,
+          "hidden": false
+        },
+        "focused": "Play"
+      },
+      "afterConnection": {
+        "game": "penguintrack",
+        "stage": "menu",
+        "renderer": null,
+        "webglVersion": null,
+        "frames": 5,
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Penguin-DOM-42",
+              "session": "fixture-one",
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Penguin-DOM-42\",\"fixture-one\"]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Penguintrack UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 5,
+          "native": true,
+          "inputAvailable": true
+        },
+        "paused": false,
+        "gameplay": {
+          "screen": "menu",
+          "focus": "Play",
+          "savedSettings": false,
+          "showGhost": true,
+          "phase": null,
+          "track": null,
+          "tick": null,
+          "time": null,
+          "speed": null,
+          "car": null,
+          "controls": {},
+          "camera": null,
+          "ghostCount": null,
+          "editorGrid": false,
+          "editorBlocks": null
+        },
+        "panel": {
+          "x": 12,
+          "y": 124,
+          "width": 178,
+          "height": 184.46875,
+          "scrollHeight": 182,
+          "clientHeight": 182,
+          "hidden": false
+        },
+        "focused": "Play"
+      },
+      "geometry": [
+        {
+          "selector": "pt-btn small ghost menu-site",
+          "text": "Controller",
+          "x": 202,
+          "y": 35.296875,
+          "w": 115.921875,
+          "h": 36,
+          "scrollWidth": 112,
+          "clientWidth": 112,
+          "clear": true
+        },
+        {
+          "selector": "pt-btn primary big menu-play",
+          "text": "Play",
+          "x": 202,
+          "y": 309.546875,
+          "w": 306.796875,
+          "h": 59,
+          "scrollWidth": 303,
+          "clientWidth": 303,
+          "clear": true
+        },
+        {
+          "selector": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Penguin-DOM-42单人游戏 · 1P 手柄操作\nPenguintrack UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 124,
+          "w": 178,
+          "h": 184.46875,
+          "scrollWidth": 176,
+          "clientWidth": 176,
+          "clear": true
+        }
+      ],
+      "originalHandlerCalls": [
+        "campaign"
+      ],
+      "status": "passed"
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "startingFocusFixture": "Controller",
+      "actions": [
+        {
+          "key": "UP",
+          "beforeFocus": "Controller",
+          "afterFocus": "Controller"
+        },
+        {
+          "key": "DOWN",
+          "beforeFocus": "Controller",
+          "afterFocus": "Play"
+        },
+        {
+          "key": "A",
+          "beforeFocus": "Play",
+          "afterFocus": "Play"
+        }
+      ],
+      "beforeConnection": {
+        "game": "penguintrack",
+        "stage": "menu",
+        "renderer": null,
+        "webglVersion": null,
+        "frames": 3,
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": false,
+          "cancelled": false,
+          "players": [],
+          "source": "",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Penguintrack UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 3,
+          "native": true,
+          "inputAvailable": true
+        },
+        "paused": false,
+        "gameplay": {
+          "screen": "menu",
+          "focus": "Play",
+          "savedSettings": false,
+          "showGhost": true,
+          "phase": null,
+          "track": null,
+          "tick": null,
+          "time": null,
+          "speed": null,
+          "car": null,
+          "controls": {},
+          "camera": null,
+          "ghostCount": null,
+          "editorGrid": false,
+          "editorBlocks": null
+        },
+        "panel": {
+          "x": 12,
+          "y": 124,
+          "width": 178,
+          "height": 113.5,
+          "scrollHeight": 112,
+          "clientHeight": 112,
+          "hidden": false
+        },
+        "focused": "Play"
+      },
+      "afterConnection": {
+        "game": "penguintrack",
+        "stage": "menu",
+        "renderer": null,
+        "webglVersion": null,
+        "frames": 5,
+        "controller": {
+          "buttons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pressed": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "released": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "connected": true,
+          "cancelled": false,
+          "players": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "wifi",
+              "controllerId": "Penguin-DOM-42",
+              "session": "fixture-one",
+              "buttons": {}
+            }
+          ],
+          "source": "[1,\"Penguin-DOM-42\",\"fixture-one\"]",
+          "info": {
+            "wifiController": {
+              "port": 63485,
+              "serviceName": "Penguintrack UI fixture",
+              "addresses": [
+                "127.0.0.1"
+              ]
+            }
+          },
+          "pollCount": 5,
+          "native": true,
+          "inputAvailable": true
+        },
+        "paused": false,
+        "gameplay": {
+          "screen": "menu",
+          "focus": "Play",
+          "savedSettings": false,
+          "showGhost": true,
+          "phase": null,
+          "track": null,
+          "tick": null,
+          "time": null,
+          "speed": null,
+          "car": null,
+          "controls": {},
+          "camera": null,
+          "ghostCount": null,
+          "editorGrid": false,
+          "editorBlocks": null
+        },
+        "panel": {
+          "x": 12,
+          "y": 124,
+          "width": 178,
+          "height": 184.46875,
+          "scrollHeight": 182,
+          "clientHeight": 182,
+          "hidden": false
+        },
+        "focused": "Play"
+      },
+      "geometry": [
+        {
+          "selector": "pt-btn small ghost menu-site",
+          "text": "Controller",
+          "x": 202,
+          "y": 35.296875,
+          "w": 115.921875,
+          "h": 36,
+          "scrollWidth": 112,
+          "clientWidth": 112,
+          "clear": true
+        },
+        {
+          "selector": "pt-btn primary big menu-play",
+          "text": "Play",
+          "x": 202,
+          "y": 309.546875,
+          "w": 306.796875,
+          "h": 59,
+          "scrollWidth": 303,
+          "clientWidth": 303,
+          "clear": true
+        },
+        {
+          "selector": "puretv-controller-panel",
+          "text": "pureTV 手柄1P已连接ID: Penguin-DOM-42单人游戏 · 1P 手柄操作\nPenguintrack UI fixture\n127.0.0.1\nTCP 63485",
+          "x": 12,
+          "y": 124,
+          "w": 178,
+          "h": 184.46875,
+          "scrollWidth": 176,
+          "clientWidth": 176,
+          "clear": true
+        }
+      ],
+      "originalHandlerCalls": [
+        "campaign"
+      ],
+      "status": "passed"
+    }
+  ],
+  "captures": [
+    {
+      "name": "play-960-from-play.png",
+      "bytes": 207086,
+      "sha256": "e8bd68e32dab90d6e249f1719e752d6df7bddbeff7522cae8736ea39ee211bfe",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "name": "play-960-from-controller.png",
+      "bytes": 206271,
+      "sha256": "2726566b14ec583891c51f8617b3ec655945345c40a140b7ba9456f6d805e0d0",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "name": "play-1024-from-play.png",
+      "bytes": 267592,
+      "sha256": "1df794ac2906965e8a782f7628e2aaf4878af4d2e84723beb7bc15ed92961921",
+      "viewport": {
+        "width": 1024,
+        "height": 645
+      }
+    },
+    {
+      "name": "play-1024-from-controller.png",
+      "bytes": 266652,
+      "sha256": "2f587fe91b950e9ddd984cfa4fb7e2355c0328fd3cc95a256df355376886562b",
+      "viewport": {
+        "width": 1024,
+        "height": 645
+      }
+    },
+    {
+      "name": "play-1280-from-play.png",
+      "bytes": 357537,
+      "sha256": "349917b7586008a43d8f0beb2b6799ff78f32071de36d5a22c4ea38eded5193f",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "name": "play-1280-from-controller.png",
+      "bytes": 357933,
+      "sha256": "770aa119299e3ab8bb2ab388290d66bab08a2c5b127e78d00e4e6cbda344a6ce",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    }
+  ],
+  "errors": [],
+  "status": "passed"
+}

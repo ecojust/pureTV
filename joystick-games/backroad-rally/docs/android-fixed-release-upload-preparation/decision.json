@@ -1,0 +1,77 @@
+{
+  "decision": "BLOCKED_DO_NOT_DISPATCH_OR_UPLOAD",
+  "at": "2026-11-19T23:13:47.082386+00:00",
+  "reviewer": "racing_review_arcade",
+  "rootInstruction": "Pause Back Android upload after root and Driving observed dark original playing captures; append decision only, keep frozen helper and original reports unchanged.",
+  "qaRun": 44630023214,
+  "qaAttempt": 1,
+  "qaSource": "382de3792628050773abec8821920348503f72ce",
+  "originalQaExportCommit": "1c0e351dae33304090294b042627192bb8c06622",
+  "package": {
+    "bytes": 105024551,
+    "sha256": "2cd35f145f5362264a720708325c22e283a3828d21899058f17422ba87103c08",
+    "source": "4b6cf0b8cba288eae66bcae2ef2784acc279a695",
+    "run": 44625676430,
+    "artifact": 14579726223
+  },
+  "modes": [
+    {
+      "mode": "normal",
+      "originalReport": {
+        "path": "joystick-games/backroad-rally/docs/android-initial-ready-v7-44630023214/original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-normal/report.json",
+        "bytes": 1935876,
+        "sha256": "6e57d24349da8bc6eb86a0ff23dd4beffd60c0958a812d807a4d495a5483db00"
+      },
+      "originalReportStatus": "passed",
+      "originalPassedTests": 77,
+      "originalPlanSteps": 39,
+      "acceptedSdkMessages": 999,
+      "matchingAcks": 999,
+      "playingImage": {
+        "path": "joystick-games/backroad-rally/docs/android-initial-ready-v7-44630023214/original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-normal/playing.png",
+        "bytes": 48952,
+        "sha256": "1af29b127b1fdf528e8a1f426606fed9afd6e3e5a1879699a5c4fe995a299707"
+      },
+      "independentActualViewImagePerformed": true,
+      "visualObservation": "The game area is uniformly dark with no visible road, terrain or vehicle. Timer, speed, gear/damage HUD and connected controller ID card are visible.",
+      "visualAcceptance": "blocked"
+    },
+    {
+      "mode": "occupied",
+      "originalReport": {
+        "path": "joystick-games/backroad-rally/docs/android-initial-ready-v7-44630023214/original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-occupied/report.json",
+        "bytes": 1940395,
+        "sha256": "d96afc4cc48a60f6fb627322176580c08aff1f2ba2dce53052131868bd43c250"
+      },
+      "originalReportStatus": "passed",
+      "originalPassedTests": 77,
+      "originalPlanSteps": 39,
+      "acceptedSdkMessages": 1062,
+      "matchingAcks": 1062,
+      "playingImage": {
+        "path": "joystick-games/backroad-rally/docs/android-initial-ready-v7-44630023214/original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-occupied/playing.png",
+        "bytes": 48645,
+        "sha256": "56ef0afd99641dc409c5e3cded2058e65b5afc02161c65cc57aeee6bec86d8e9"
+      },
+      "independentActualViewImagePerformed": true,
+      "visualObservation": "The game area is uniformly dark with no visible road, terrain or vehicle. Timer, speed, gear/damage HUD and connected controller ID card are visible.",
+      "visualAcceptance": "blocked"
+    }
+  ],
+  "originalRuntimeReportsPreserved": true,
+  "visualCauseKnown": false,
+  "doesNotProve": "These screenshots do not establish whether rendering, Android capture/compositing or another cause produced the dark game area. No cause is inferred from the passing model/SDK reports alone.",
+  "releaseDeliveryApproved": false,
+  "helperExecutionPermitted": false,
+  "frozenHelperChanged": false,
+  "frozenPreparationInventoryUnchanged": {
+    "bytes": 4991,
+    "sha256": "d89a73da5702caf08e48eeae83a02fc944fd1bd2f4507a471511544ef3b83cfa"
+  },
+  "importantGateLimit": "The frozen helper checks original automated QA reports, not this later visual decision. This file records an operational hold and is not a machine-enforced new helper gate. The workflow must not be dispatched.",
+  "nextDecisionOwner": "root",
+  "nextStep": "Determine the visual failure cause and review actual visible gameplay before deciding whether to replace or abandon this fixed upload helper. Do not silently reuse automated passes as visual acceptance.",
+  "workflowDispatches": 0,
+  "releaseUploads": 0,
+  "originalPassReportsRewritten": false
+}

@@ -1,0 +1,4 @@
+import {ControlsMenu} from './src/src/ui/ControlsMenu';import {Input} from './src/src/core/Input';import {installTV} from './src/src/tv-input';
+ window.__device={buttons:{},seq:0,consumed:0,calls:0};window.PureGameHost={snapshot(){const d=window.__device;d.calls++;const buttons={...d.buttons};if(d.pulse){d.buttons={};d.pulse=false;d.consumed=d.seq;}return JSON.stringify({players:[{id:1,connected:true,transport:'wifi',controllerId:'Controls-DOM-42',session:1,buttons}]})},getInfo(){return JSON.stringify({wifiController:{port:63485,serviceName:'DOM fixture',addresses:['127.0.0.1']}})}};
+ const input=new Input(),ctx={input,race:{state:0,player:null,raceTime:0,setPaused(){throw Error('Fixture must stay in menu')}},bus:{emit(){}}};
+ const menu=new ControlsMenu(document.body);menu.attach(ctx);menu.show();const tv=installTV(ctx,input);function tick(now){tv.poll(now);menu.update(ctx);requestAnimationFrame(tick);}requestAnimationFrame(tick);window.__fixtureReady=true;

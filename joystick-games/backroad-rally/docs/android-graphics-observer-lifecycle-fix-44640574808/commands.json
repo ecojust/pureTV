@@ -1,0 +1,36 @@
+[
+  {
+    "command": [
+      "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/javac",
+      "-cp",
+      "/dev/shm/racing-review-driving/graphics-observer-build-6/classes:/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar",
+      "-d",
+      "/dev/shm/racing-review-driving/graphics-observer-tests-6",
+      "/dev/shm/puretv-submit/joystick-games/qa/android/graphics-observer/tests/HeaderBudgetTest.java"
+    ],
+    "exitCode": 0,
+    "log": "header-compile.log"
+  },
+  {
+    "command": [
+      "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/java",
+      "-cp",
+      "/dev/shm/racing-review-driving/graphics-observer-tests-6:/dev/shm/racing-review-driving/graphics-observer-build-6/classes:/workspace/scratch/game-polish-toolchain/android-sdk/platforms/android-35/android.jar",
+      "com.ecojust.graphicsqa.HeaderBudgetTest"
+    ],
+    "exitCode": 0,
+    "log": "header-test.log"
+  },
+  {
+    "command": [
+      "/workspace/scratch/game-polish-toolchain/jdk-17.0.21+9/bin/javap",
+      "-p",
+      "-c",
+      "-classpath",
+      "/dev/shm/racing-review-driving/graphics-observer-build-6/classes",
+      "com.ecojust.graphicsqa.GraphicsObserver"
+    ],
+    "exitCode": 0,
+    "log": "javap-instrumentation-override.log"
+  }
+]

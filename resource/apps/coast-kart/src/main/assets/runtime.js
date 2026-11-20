@@ -60,8 +60,21 @@
     });
     for (var id = 1; id <= 2; id++)
       $("player-name-" + id).textContent = tr("车手 " + id, "RACER " + id);
+        var lastWifiRefresh = -1000;
+    function updateWifi(refresh) {
+      if (refresh && performance.now() - lastWifiRefresh >= 500) {
+        lastWifiRefresh = performance.now();
+        try { if (bridge) info = Object.assign({}, info, JSON.parse(bridge.getInfo())); } catch (_) {}
+      }
+      var wifi = info.wifiController || {}, address = (wifi.addresses || []).filter(function(v){return typeof v === 'string';}).join(' / ');
+      var node = document.getElementById('puretv-address');
+      if (!node) return;
+      node.textContent = wifi.port > 0 && address ? address + ':' + wifi.port : tr('等待局域网地址', 'Waiting for LAN address');
+      document.getElementById('puretv-status').textContent = (wifi.state === 'unavailable' ? (wifi.port > 0 ? tr('自动发现暂不可用，可按地址直连', 'Discovery unavailable; connect by address') : tr('手柄服务暂不可用，请重新打开游戏', 'Controller service unavailable; reopen game')) : wifi.connected ? tr('已连接 · START 开始 / 暂停', 'Connected · START begin / pause') : wifi.state === 'available' ? tr('同一网络，按手柄搜索键连接', 'Same network: press controller Search') : tr('正在准备手柄服务', 'Preparing controller service'));
+      document.getElementById('puretv-help').textContent = tr('方向转向/刹车 · A/X 道具 · B 漂移 · Y 人数', 'Steer/brake · A/X item · B drift · Y players');
+    }
     function updateRoom(value) {
-      info = Object.assign({}, info, value || {});
+      info = Object.assign({}, info, value || {}); updateWifi();
       var ready = !!(info.qr && info.url);
       $("room-qr").hidden = !ready;
       $("qr-pending").hidden = ready;
@@ -138,7 +151,7 @@
       var activeA = !!keys.a || pulse.a > performance.now();
       // Refresh the native source in this event, not the preceding animation
       // frame: a phone press/release can race a local window blur.
-      if (activeA) inputs();
+      if (activeA) phoneHoldingA = controllerAdapter.peek().some(function(p){return p.id === 1 && p.connected && p.a;});
       // Cancel only a local A release; direction/B cleanup and a continuing
       // phone A must not retract another input source's held item.
       if (activeA && !phoneHoldingA && game && game.players[0]) game.cancelItem(game.players[0]);
@@ -148,18 +161,33 @@
         pulse[k] = 0;
       });
     }
+    root.PureTVQA = {snapshot: function () {
+      var players = game && game.players ? game.players.map(function(player) {
+        var copy = {};
+        ['id','x','y','z','yaw','angle','facing','speed','movingSpeed','lateral','s','u','v','steerAngle','driftTime','drifting','driftCharge','boost','item','heldItem','inventory','tool','netRaised','weapon','ammo','grenades','fireCooldown','previous','lap','rank','connected','joined','active','cancelSeq','telemetry'].forEach(function(key){if (player[key] !== undefined) copy[key] = player[key];});
+        return copy;
+      }) : [];
+      var model = {phase: game ? game.phase : 'loading', players: players};
+      ['elapsed','raceTime','clock','countdown','stage','trackIndex','trackId','selectedPlayers','playerCount','kills','credits','eventSerial','events','projectiles','bullets'].forEach(function(key){if(game && game[key] !== undefined) model[key] = game[key];});
+      var scene = renderer && renderer.scene3d, camera = scene && scene.camera;
+      var renderedPlayers = game && scene ? game.players.map(function(player) { var kart = scene.karts[(player.id - 1) % 8]; return kart ? {id:player.id,x:kart.group.position.x,y:kart.group.position.y,z:kart.group.position.z} : null; }).filter(Boolean) : [];
+      return JSON.parse(JSON.stringify({phase:model.phase,paused:!!(suspended || !visible || model.phase === 'paused'),controllerPaused:!!(game && model.phase === 'paused'),controllers:controllerAdapter.peek(),info:info,model:model,players:players,renderedPlayers:renderedPlayers,camera:camera && camera.matrixWorldInverse ? {projection:camera.projectionMatrix.elements,view:camera.matrixWorldInverse.elements} : null}));
+    }};
+    var controllerInputs = [], controllerAdapter = root.PureTVControllerAdapter.create({onCancel: function (event) { if (game && event.id > game.selectedPlayers) return false; if (!game || ["playing", "paused"].indexOf(game.phase) < 0) return false;
+        game.pause("manual"); game.pauseReason = "manual"; return true; }});
     function inputs() {
       var list = [];
       try {
         if (bridge) list = JSON.parse(bridge.snapshot()).players || [];
       } catch (_) {}
+      list = controllerAdapter.read(list); controllerInputs = list;
       list = list
         .filter(function (p) {
           return p && (Number(p.id) === 1 || Number(p.id) === 2);
         })
         .map(function (p) {
           return {
-            id: Number(p.id),
+            id: Number(p.id), transport: p.transport, session: p.session,
             connected: !!p.connected,
             x: Number(p.x) || 0,
             y: Number(p.y) || 0,
@@ -206,6 +234,8 @@
       return list;
     }
     function updateUi(current) {
+      updateWifi(true);
+      root.PureTVControllerAdapter.renderClients($("controller-clients"), controllerAdapter.peek(), { language: english ? "en" : "zh" });
       if (game)
         $("music-button").textContent =
           tr("音乐：", "MUSIC: ") +
@@ -261,18 +291,18 @@
     // Keep QR/controller state and publication functioning even after draw/setup failure.
     var roomTimer = root.setInterval(function () {
       if (destroyed) return;
-      var current = inputs();
+      var current = controllerInputs;
       updateUi(current);
       publish();
     }, 200);
-    updateUi(inputs());
+    updateUi(controllerInputs);
     function suspend(value) {
       suspended = !!value;
       release();
       last = 0;
       if (game) {
         if (suspended) game.pause("background");
-        else if (visible && game.pauseReason === "background") game.resume();
+        else if (visible && game.pauseReason === "background" && !controllerInputs.some(function(p){return p.transport === "wifi";})) game.resume();
         publish();
       }
       if (sound)
@@ -306,7 +336,7 @@
       }
       frame = root.requestAnimationFrame(animate);
     }
-    root.CoastKartTV = {
+    root.CoastKartTV = { controllerSnapshot: function () { return controllerAdapter.peek(); },
       key: key,
       updateRoom: updateRoom,
       suspend: suspend,
@@ -338,7 +368,7 @@
         if (sound) sound.pause(true);
         publish();
       } else {
-        if (game && !suspended && game.pauseReason === "background")
+        if (game && !suspended && game.pauseReason === "background" && !controllerInputs.some(function(p){return p.transport === "wifi";}))
           game.resume();
         if (game && !renderFailed && !destroyed)
           frame = root.requestAnimationFrame(animate);
@@ -385,14 +415,14 @@
       $("music-button").onclick = function () {
         game.toggleMusic();
         if (sound) sound.unlock().catch(function () {});
-        updateUi(inputs());
+        updateUi(controllerInputs);
       };
       renderer = new root.CoastKartRenderer(canvas);
       sound = new root.CoastKartAudio();
       renderer.draw(game);
       if (!$("game-loading").hasAttribute("data-failed"))
         $("game-loading").hidden = true;
-      updateUi(inputs());
+      updateUi(controllerInputs);
       publish();
       if (visible) frame = root.requestAnimationFrame(animate);
     } catch (error) {

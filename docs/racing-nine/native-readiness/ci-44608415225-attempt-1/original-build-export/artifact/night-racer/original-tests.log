@@ -1,0 +1,80 @@
+
+> puretv-night-racer@0.1.0 test
+> node --test tests/*.test.mjs
+
+TAP version 13
+# Subtest: nine physical keys keep steering, throttle, brake, drift and nitro independent
+ok 1 - nine physical keys keep steering, throttle, brake, drift and nitro independent
+  ---
+  duration_ms: 1.890917
+  type: 'test'
+  ...
+# Subtest: held nitro does not repeat without a new press; camera and reset do not spend it
+ok 2 - held nitro does not repeat without a new press; camera and reset do not spend it
+  ---
+  duration_ms: 0.168583
+  type: 'test'
+  ...
+# Subtest: B closing a pause menu cannot spend nitro; menu throttle/drift wait for release
+ok 3 - B closing a pause menu cannot spend nitro; menu throttle/drift wait for release
+  ---
+  duration_ms: 0.1875
+  type: 'test'
+  ...
+# Subtest: nitro edge survives render-only frames and is cleared by a physics step or cancel
+ok 4 - nitro edge survives render-only frames and is cleared by a physics step or cancel
+  ---
+  duration_ms: 0.146083
+  type: 'test'
+  ...
+# Subtest: ordinary keyboard driving and original steering sign remain available
+ok 5 - ordinary keyboard driving and original steering sign remain available
+  ---
+  duration_ms: 0.086542
+  type: 'test'
+  ...
+# Subtest: disconnect discards a charged drift without changing motion or granting boost
+ok 6 - disconnect discards a charged drift without changing motion or granting boost
+  ---
+  duration_ms: 0.077583
+  type: 'test'
+  ...
+# Subtest: original settings/profile keys persist inside one native record
+ok 7 - original settings/profile keys persist inside one native record
+  ---
+  duration_ms: 6.246792
+  type: 'test'
+  ...
+# Subtest: invalid save payload starts clean without losing subsequently stored progress
+ok 8 - invalid save payload starts clean without losing subsequently stored progress
+  ---
+  duration_ms: 0.107375
+  type: 'test'
+  ...
+# Subtest: large replays on different maps do not exceed a single combined native value
+ok 9 - large replays on different maps do not exceed a single combined native value
+  ---
+  duration_ms: 45.246958
+  type: 'test'
+  ...
+# Subtest: renderer loop samples input once and exposes no upstream simulation mutation hook
+ok 10 - renderer loop samples input once and exposes no upstream simulation mutation hook
+  ---
+  duration_ms: 3.885375
+  type: 'test'
+  ...
+# Subtest: original driving physics and every track definition remain byte-identical
+ok 11 - original driving physics and every track definition remain byte-identical
+  ---
+  duration_ms: 4.856417
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 136.952333

@@ -1,0 +1,55 @@
+{
+  "sourceRunId": 44155639268,
+  "originalQaSource": "b15beb969bfc83595143aec4ddc4817220ba8119",
+  "originalFailures": [
+    "sugarplum-drop occupied-port",
+    "starblazer-86 occupied-port"
+  ],
+  "change": "QA blocker enables SO_REUSEADDR, never SO_REUSEPORT; existing listener conflicts still fail, recording bounded lsof/netstat observations after failure without terminating owners.",
+  "tests": {
+    "nativeObservation": {
+      "passed": 10,
+      "command": "python3 joystick-games/shared/macos/tests/native-observation.test.py",
+      "outputNote": "Saved exact output from the completed tool invocation; no native Mac execution."
+    },
+    "linuxSocketReproduction": {
+      "linuxSocketDemonstrationOnly": true,
+      "port": 45833,
+      "plainBindAfterClosedConnection": {
+        "errno": 98,
+        "message": "Address already in use"
+      },
+      "reuseAddrBind": "passed",
+      "activeListenerStillRejected": {
+        "errno": 98,
+        "message": "Address already in use"
+      },
+      "macFailureRootCauseConfirmed": false
+    }
+  },
+  "macCauseStillUnconfirmed": true,
+  "macQaRerun": false,
+  "productionGameChanged": false,
+  "files": {
+    "linux-socket-reproduction.log": {
+      "bytes": 289,
+      "sha256": "00dfbdc9760ed92cef96755d3f0f9e4091633e1f82816ff7b14585e9810b13b1"
+    },
+    "linux-socket-reproduction.py": {
+      "bytes": 1290,
+      "sha256": "35008e5002ece1072a3feeb85f353867ec6e969f25a74978c27288714aa986f8"
+    },
+    "native-observation-tests.log": {
+      "bytes": 109,
+      "sha256": "a88be5a95bb0fd3aaf2f9bacd99352b3b929acb30276582752ecc1fb15c76430"
+    },
+    "native-observation.test.py": {
+      "bytes": 8081,
+      "sha256": "f19869f915b1f2e99519cc5a28e1ae1a664e3a5a77f5ac58d4a013a516aefb53"
+    },
+    "macos-verify.py": {
+      "bytes": 45033,
+      "sha256": "03157d96dea6098ac336020d1627d9e4f9ae872590fee59bc6d5ba9f0e1af048"
+    }
+  }
+}

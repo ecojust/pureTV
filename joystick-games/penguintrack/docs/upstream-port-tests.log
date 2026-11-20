@@ -1,0 +1,381 @@
+
+ai-lab
+  ok   presets are valid, distinct and recognised (2 ms)
+  ok   settings sanitising: clamps, even ES populations, hidden layers (0 ms)
+  ok   pickShown spreads the field over the ranking, best first (0 ms)
+  ok   chart helpers: history rows from trainers and model files (0 ms)
+  ok   field playback re-drives every evaluated episode and the network decisions (402 ms)
+  ok   model files: built like tools/train.mjs, stored, listed, deleted (107 ms)
+  ok   trackForFile prefers the catalog track, falls back to the share code (1 ms)
+  ok   the demo driver loads and its ghost finishes in the field playback (78 ms)
+
+ai
+  ok   env: spaces match the layout; observations are finite and inside their bounds on every sample (342 ms)
+  ok   env: the autopilot driven through the env finishes and the episode replay verifies (149 ms)
+  ok   env: same actions give identical episodes; JSON savestates resume bit-identically (21 ms)
+  ok   env: actions — discrete table, continuous [steer, throttle], input objects (0 ms)
+  ok   env: episodes end on finish, stuck, wrong way, off route and the time limit (15 ms)
+  ok   env: random-checkpoint starts use autopilot snapshots and still record whole runs (87 ms)
+  ok   nn: seeded init, flat params, deterministic tanh, JSON round trips (1 ms)
+  ok   policy: argmax / tanh heads, episodes, self-contained model files (19 ms)
+  ok   neuro: race fitness ranks any finish above any crash, then by time; return fitness is the reward sum (7 ms)
+      GA: best -8.727 -> -0.041
+      ES: best -9.179 -> -0.017
+  ok   neuro: centered ranks; GA and ES climb a synthetic hill (12 ms)
+      ga: best per generation 14.802 14.821 14.854
+      es: best per generation 0.015 0.666 2.210
+  ok   neuro: the same seed gives the same training curve; resume continues it exactly (604 ms)
+  ok   worker: a worker_threads pool scores exactly like the in-thread evaluator (318 ms)
+  ok   headless: JSON-lines protocol (make, reset, step, batch, savestates, replay, errors) (347 ms)
+      35 official tracks found (A01 First Flakes ...)
+  ok   tracks: sample ids, share codes, JSON text, levels when present (16 ms)
+      demo driver: 19.70 s on S01 (autopilot 22.14 s), 150 generations
+  ok   demo model: models/demo-S01.json loads, finishes S01 and carries a verified ghost (61 ms)
+
+audio
+      S01 squeal 0, ice 0, crunch 0, deep 0, turbo 0, wind 0.66, air 0
+      S02 squeal 0.01, ice 0, crunch 0, deep 0, turbo 0, wind 0.58, air 43
+      S03 squeal 0, ice 0, crunch 0, deep 0, turbo 0.65, wind 0.81, air 461
+      S04 squeal 0, ice 0, crunch 0, deep 0, turbo 1, wind 1.08, air 0
+      S05 squeal 0.15, ice 0.92, crunch 0.8, deep 0, turbo 0, wind 0.38, air 31
+      S06 squeal 0, ice 0, crunch 0, deep 0, turbo 0, wind 0.56, air 0
+  ok   car sound params stay finite and in range on every sample drive (1026 ms)
+      top speed 269 km/h, f0 56 -> 120.4 Hz, upshift dips 3.1 3.1 3.1 3.1 3.1 st
+  ok   engine pitch follows speed with small dips on upshifts (41 ms)
+  ok   throttle load: gas is louder than coasting, gas estimate works without input (4 ms)
+      snow: drift true, squeal 1.00, ice 0.00, deep 0.00, crunch 0.00
+      ice: drift false, squeal 0.00, ice 1.00, deep 0.00, crunch 0.00
+      ground: drift true, squeal 0.50, ice 0.00, deep 1.00, crunch 0.00
+      powder: drift true, squeal 0.75, ice 0.00, deep 0.00, crunch 0.86
+  ok   drifting on packed snow squeals, ice hisses instead, deep snow rumbles (97 ms)
+  ok   frozen engine silences the engine; boosts whine and fade (0 ms)
+      36 voice variants, 1483 nodes, 1392 automation events
+  ok   every SFX voice schedules cleanly on a strict WebAudio mock (161 ms)
+      60 s of music: 144 steps, 187 sources (3.1/s)
+  ok   music box schedules sparse notes ahead of the clock (82 ms)
+  ok   AudioEngine is a silent no-op without WebAudio (1 ms)
+      events seen: boost, effect, checkpoint, land, finish; 7 ticks played sounds; 430 nodes, 51595 automations
+  ok   AudioEngine drives a full race on the mock: car, events, music, lifecycle (437 ms)
+  ok   a locked context (no gesture yet) plays and queues nothing until it runs (159 ms)
+  ok   checkpoint split chimes, gated countdown, unknown names (6 ms)
+  ok   a Quick TAS rewind keeps one engine voice: resetCar never stacks audio nodes (17 ms)
+
+editor
+  ok   new track: one Start, open road ahead (1 ms)
+  ok   palette covers every catalog block exactly once (0 ms)
+  ok   placementAt puts the entry connector on the cursor at every rotation (1 ms)
+  ok   fit: overlaps and the map edge are refused (0 ms)
+  ok   snapping: turns offer left and right, slopes up and down, Start replaces Start (0 ms)
+  ok   undo / redo walk the full history, a new edit clears redo (1 ms)
+  ok   decor: one per cell, never inside a block (1 ms)
+  ok   medal formulas match the official bake (8 ms)
+  ok   validation follows the layout hash: edit invalidates, undo restores (21 ms)
+  ok   draft JSON round-trips the document (1 ms)
+  ok   an official track opens as an editable copy (1 ms)
+  ok   thumbnails: every block and decor kind draws an SVG (3 ms)
+
+geometry
+      max err sin 1.11e-16 cos 1.11e-16 tan(rel) 4.40e-16
+  ok   dsin/dcos/dtan match Math.* within 1e-12 (38 ms)
+      max err 8.88e-16
+  ok   datan2/datan/dasin/dacos match Math.* within 1e-12 (11 ms)
+      max rel err 2.22e-16
+  ok   dexp/dlog/dpow relative error below 1e-14 (18 ms)
+  ok   quaternion helpers: headings, rotation, integration, basis round trip (1 ms)
+  ok   rng is seeded, deterministic and in range (2 ms)
+      32 blocks
+  ok   every block id builds at all rotations, several heights and every surface (767 ms)
+  ok   deck triangles face the driving side (normal agrees with the path up vector) (47 ms)
+      3736 rays
+  ok   raycast down onto every deck finds the block surface at the path height (117 ms)
+      4225 pairs, worst step 9.99e-8 m
+  ok   connector continuity: every connectable pair meets without a step (< 1 cm) (981 ms)
+  ok   placement transforms agree with rotateCell, footprints and DIRS (1 ms)
+  ok   querySphere: one merged contact on a flat deck and across a seam; two in a border corner (1 ms)
+  ok   raycast: decks, undersides, ground, misses and the reused result object (1 ms)
+  ok   sweepSphere stops at a wall; segmentAABB catches thin gates (1 ms)
+  ok   samples validate, build and their routes cross every checkpoint and the finish (79 ms)
+  ok   route projection inverts pointAt; lateral is positive to the right (33 ms)
+  ok   pillars stand under elevated decks with outward walls, never through lower blocks (42 ms)
+  ok   multilap route is a closed lap starting on the StartFinish line (2 ms)
+  ok   jumps are bridged by gap edges from the ramp lip to the landing (4 ms)
+  ok   validateTrack reports structural problems (6 ms)
+  ok   trackFromPath: turtle rules, piece names and clear errors (2 ms)
+      S01: 25 blocks -> 378 chars
+      S02: 21 blocks -> 383 chars
+      S03: 24 blocks -> 386 chars
+      S04: 38 blocks -> 508 chars
+      S05: 28 blocks -> 426 chars
+      S06: 16 blocks -> 306 chars
+  ok   codec round-trips every sample and rejects corrupt codes (7 ms)
+  ok   trackHash depends on the layout only (0 ms)
+      150 blocks, 48310 tris: cold 101.8 ms, warm 28.4 ms
+  ok   buildWorld is fast for a 150-block track (503 ms)
+      S03 collision hash ec198dd7 route 380b3452
+  ok   buildWorld is deterministic (bit-identical triangles, route and render data) (177 ms)
+      0.52 M rays/s (200000 hits), 0.20 M sphere queries/s (208207 contacts), grid 138x7x98 @ 4 m
+  ok   collision micro-benchmark (wheel rays and sphere queries) (1396 ms)
+
+handling
+  ok   physics: Sims default to physics 1, replays and states only carry newer versions (13 ms)
+  ok   physics: without the brake, physics 2 drives bit-identically to physics 1 (146 ms)
+  ok   drift (physics 2): a brake tap while steering drifts from 40 km/h (295 ms)
+      180 km/h, 1.5 s: drift 66° vs grip 57°; counter-steer settled in 6 ticks
+  ok   drift (physics 2): the slide breaks loose, then grips; counter-steer catches it (84 ms)
+      1.4 s at half lock from 180 km/h: speed drift +28.7, full lock -28.3, physics 1 -18.6 km/h
+  ok   speed drift (physics 2): 16°-24° at speed keeps its speed, wider angles scrub (87 ms)
+      tilt at touchdown: 17.1° without, 0.00° with the air-brake (slope 0.00°)
+  ok   air-brake (physics 2): brake in the air levels pitch and roll to the ground, no bounce (33 ms)
+  ok   checkpoints (physics 2): flying over the gate on a shortcut counts, the gate stays put (106 ms)
+      A03 physics 2 run: 26990 ms, 13 drift / 0 speed-drift / 108 air-brake ticks
+  ok   determinism (physics 2): live run = replay = savestate restore, and old replays keep physics 1 (371 ms)
+  ok   old replays: every baked author run still verifies with physics 1 (2809 ms)
+  ok   multiplayer: room runs use the latest physics; finishes verify after the protocol strips the version (116 ms)
+
+integration
+  ok   every renderer method the shell calls is a GameRenderer method and has a stand-in (37 ms)
+  ok   every audio method the shell calls exists on AudioEngine and NullAudio (7 ms)
+  ok   catalog and levels agree: 35 official tracks, ids unique, medals earnable (6 ms)
+  ok   platform medals validate cleanly; out-of-order race medals still warn (5 ms)
+  ok   the Emperor ghost of a multilap and a platform track re-simulates to its medal time (92 ms)
+
+levels
+  ok   campaign shape: 5 tiers of 5 race tracks, 5 platform, 5 training (0 ms)
+  ok   navigation helpers (3 ms)
+      1391 blocks, 2546 decor over 35 tracks
+  ok   every track validates, builds a route and matches its bake (136 ms)
+  ok   decor stays off the road and uses known models (4 ms)
+  ok   author ghosts re-simulate to the baked author time (one per tier) (471 ms)
+  ok   race medals (0 ms)
+  ok   platform medals: respawn caps, Emperor needs a clean run under the author time (0 ms)
+
+mp
+  ok   points table and ties share the better place (0 ms)
+  ok   platform runs rank by respawns, then time (0 ms)
+  ok   hot-seat: attempts limit, turn order rotates per track, scoring and podium (1 ms)
+  ok   hot-seat: time budget counts driving time (0 ms)
+  ok   hot-seat: tied points split by wins, then share a place (0 ms)
+  ok   split input: WASD+R and arrows+Enter drive separate players (1 ms)
+  ok   split input: gamepads go to P1 then P2, analog steering with a dead zone (0 ms)
+  ok   racer: countdown, autopilot run to the finish, replay verifies (182 ms)
+  ok   protocol: room codes, names and text are cleaned (1 ms)
+  ok   protocol: decode refuses oversize and non-object frames (0 ms)
+  ok   protocol: client messages are rebuilt field by field (1 ms)
+  ok   protocol: host messages are checked too (a hostile host cannot inject) (1 ms)
+  ok   room: join, welcome, unique names, chat relay, leave (18 ms)
+  ok   room: next-track vote: tallies, late joiners, bad votes ignored, winner, closes on a new round (8 ms)
+  ok   room: full rooms and other protocol versions are refused (3 ms)
+  ok   room: poses relay to the others only, throttled, ignored outside a round (7 ms)
+  ok   room: flooding and garbage get a client dropped (256 ms)
+  ok   room: finishes are verified by re-simulating the replay; forgeries are refused (227 ms)
+  ok   room: the clock ends the round, awards points, late finishes are refused (74 ms)
+  ok   room: silent peers time out, closing the room tells everyone (8 ms)
+  ok   pose buffer: interpolates on the sender clock and snaps on restarts (0 ms)
+
+physics
+  ok   input helpers normalise, compare and map the discrete action table (0 ms)
+      5002 random inputs -> 1160 chars
+  ok   input encoding round-trips and stays compact (14 ms)
+      3000 random ticks on S03: final hash 80dfe85f475a8f86, respawns 9
+  ok   determinism: same inputs give identical states; savestates resume exactly (91 ms)
+  ok   reset() returns to tick 0 exactly (4 ms)
+      
+      0-100 km/h (packed snow)                     1.95 s                 1.6-2.0 s
+      0-200 km/h                                   5.69 s                 5-6.5 s
+      plateau (90 s full gas)                      290.2 km/h             280-310 km/h
+      top speed on powder                          250.6 km/h             
+      top speed on ice                             249.2 km/h             
+      top speed on ground                          109.4 km/h             ~110 km/h
+      brake 200 -> 0                               2.52 s, 68 m           ~2.5 s
+      reverse top speed                            47.5 km/h              <= 50 km/h
+      full-lock radius at walking pace             5.9 m                  ~6 m
+      lateral grip at 100 km/h on snow             30.2 m/s², slide 1°    ~30
+      lateral grip at 100 km/h on powder           20.8 m/s², slide 14°   ~20
+      lateral grip at 100 km/h on ice              7.5 m/s², slide 77°    6-8 (+ big slides)
+      lateral grip at 100 km/h on ground           12.6 m/s², slide 6°    ~12
+      lateral grip at 250 km/h on snow (downforce) 42.2 m/s²              
+      gravity                                      20 m/s²                18-22
+  ok   feel metrics: acceleration, top speeds, braking, steering, grip (486 ms)
+      
+      Turn1 (radius 16 m) cornering speed                      108 km/h
+      Turn2 (radius 48 m) cornering speed                      170 km/h
+      Turn3 (radius 80 m) cornering speed                      216 km/h
+      Loop: speed needed at the bottom, gas held, hands off    74 km/h
+      Loop: speed needed at the bottom, coasting, hands off    152 km/h
+      Bank3 flat out: entry / slowest in the bank              282 / 281 km/h
+  ok   cornering speeds via the autopilot, loop entry speed, Bank3 flat out (1514 ms)
+       5°: impact 3.6 m/s, 0.6 s later 141 km/h | 15°: impact 10.7 m/s, 0.6 s later 130 km/h | 30°: impact 20.7 m/s, 0.6 s later 104 km/h | 45°: impact 29.2 m/s, 0.6 s later 72 km/h | 90°: impact 41.4 m/s, 0.6 s later 2 km/h
+  ok   walls: glancing hits keep speed, head-on stops, resting is jitter-free (33 ms)
+  ok   snowbanks: a hit bounces off or slides along, never climbs; pushing into one is calm (62 ms)
+      full-lock drift: 27° slip, 12 km/h lost in 1 s with gas
+  ok   drift: brake tap while steering drifts, steering holds it, letting go realigns (195 ms)
+      after a 4 m drop at 144 km/h: flat 136 km/h, nose-first (40°) 108 km/h, impact 10.8 m/s
+  ok   landings: wheels down, nose-first loses speed, events carry the impact (9 ms)
+      2 s of full gas from a standstill: 102 km/h, Frost Boost 134, Avalanche Boost 165
+  ok   effects: turbo, engine/steer/brake freezes, slow motion, cruise, fragile, reset (240 ms)
+  ok   a pad fires once per entry; triggers are swept so 1000 km/h never skips them (83 ms)
+  ok   race rules: checkpoints in any order, finish timing, respawns, falls (78 ms)
+      laps 14500 / 12590 / 12590 ms
+  ok   laps: StartFinish counts laps after every checkpoint (S06, 3 laps) (203 ms)
+      S03 replay: 10948 chars for 2439 ticks
+  ok   replay: recorded autopilot run verifies, resimulates and samples ghosts (131 ms)
+      S01 22.14 s (0 respawns, 64 ms) | S02 23.58 s (0 respawns, 68 ms) | S03 24.39 s (0 respawns, 22 ms) | S04 21.49 s (0 respawns, 31 ms) | S05 24.71 s (0 respawns, 27 ms) | S06 39.68 s (0 respawns, 37 ms)
+  ok   autopilot finishes every sample track (306 ms)
+  ok   autopilot savestates resume the same drive (85 ms)
+      Sim.step on S03: 92,667 ticks/s; with the autopilot: 50,282 ticks/s
+  ok   performance: Sim.step ticks per second (762 ms)
+  ok   state hash helper is stable (3 ms)
+
+pro
+  ok   pro: the placeholder Firebase config counts as not set up (0 ms)
+  FAIL pro: nothing is locked until Firebase is set up (PRO_GATING auto)
+       AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+       
+       true !== false
+       
+           at Object.fn (file:///dev/shm/puretv-submit/joystick-games/penguintrack/src/tools/tests/pro.test.mjs:47:12)
+           at file:///dev/shm/puretv-submit/joystick-games/penguintrack/src/tools/test.mjs:31:17
+  FAIL pro: the dev flag works on dev hosts only
+       AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+       
+       false !== true
+       
+           at file:///dev/shm/puretv-submit/joystick-games/penguintrack/src/tools/tests/pro.test.mjs:61:16
+           at atPage (file:///dev/shm/puretv-submit/joystick-games/penguintrack/src/tools/tests/pro.test.mjs:27:16)
+  ok   pro: entitlements unlock per item; a bundle unlocks both (0 ms)
+  ok   pro: normalizeEntitlements ignores unknown items and anything but true (0 ms)
+  ok   pro: the offline cache belongs to one uid (0 ms)
+  FAIL pro: the AI Lab free tier caps generations and workers
+       AssertionError [ERR_ASSERTION]: ungated: unlimited stays unlimited
+       
+       5 !== 0
+       
+           at Object.fn (file:///dev/shm/puretv-submit/joystick-games/penguintrack/src/tools/tests/pro.test.mjs:129:12)
+           at file:///dev/shm/puretv-submit/joystick-games/penguintrack/src/tools/test.mjs:31:17
+  ok   pro: the payment return is read and cleared from the address (1 ms)
+  ok   pro: no Stripe secrets in the game (6 ms)
+
+quick-tas
+  ok   restoring a savestate and driving on ends on the same tick and position as an uninterrupted run (103 ms)
+  ok   cycling markers keeps later ones (inputs included) until a new marker overwrites them (29 ms)
+  ok   markers: none on the same tick or after the finish, and the cap merges the oldest away (47 ms)
+  ok   controls: Quick TAS keys act only in Quick TAS, win over the keys they share, never over driving (1 ms)
+  ok   savestate flags: pooled meshes on shared geometry, kept by a rewind, nothing leaked (37 ms)
+
+regressions
+  ok   steer is normalised once: fractional or garbage steer replays exactly (368 ms)
+      decode of a 1-hour replay: 360000 ticks in 16 ms
+  ok   replay text is canonical, and hostile run lengths are refused before allocating (26 ms)
+  ok   autopilot savestates taken on a fall or a fragile break tick resume identically (72 ms)
+  ok   state hash is canonical: key order and stray keys do not change it (14 ms)
+  ok   savestates carry their track, lap count and mode; impossible configurations are refused (51 ms)
+  ok   sim.respawn() is recorded like the respawn flag; nothing is recorded after the finish (159 ms)
+  ok   verifyReplay checks every claim a replay makes (149 ms)
+  ok   the rpm view is the same after a savestate restore (46 ms)
+  ok   realignment: parked cars stay put across slopes and against snowbanks; sideways slides stay calm (18 ms)
+      0°/-0.06: 0 flips, 0.000 rad/s | 0°/-0.02: 0 flips, 0.000 rad/s | 0°/0: 0 flips, 0.000 rad/s | 0°/0.02: 0 flips, 0.000 rad/s | 0°/0.06: 0 flips, 0.000 rad/s | 0°/0.12: 0 flips, 0.000 rad/s | -18°/-0.06: 0 flips, 0.000 rad/s | -18°/-0.02: 0 flips, 0.000 rad/s | -18°/0: 0 flips, 0.000 rad/s | -18°/0.02: 0 flips, 0.000 rad/s | -18°/0.06: 0 flips, 0.000 rad/s | -18°/0.12: 0 flips, 0.000 rad/s
+  ok   a car parked with a wheel at the snowbank foot rests without rocking or launching (99 ms)
+      steer 0.3: 7.0 m/s² | steer 0.5: 6.0 m/s² | steer 1: 7.5 m/s²
+  ok   ice: a power slide cannot corner harder than the grip allows (68 ms)
+  ok   a car on its roof does not steer or spin in place (14 ms)
+  ok   effects: Glide keeps a reverse speed, boosts never downgrade, Thin Ice survives a kicker landing (86 ms)
+  ok   Bank3: every line is loaded at plateau speed, the centerline holds at 220 km/h (23 ms)
+  ok   loops: the speed needed at the bottom of the circle is pinned (gas held vs coasting) (90 ms)
+  ok   gates stay below the next layer: a road stacked over a Finish or Checkpoint never takes it (9 ms)
+  ok   lap tracks route one closed lap; a Finish arch cannot end one (79 ms)
+  ok   jumps: zero-gap kickers and drops validate, landings far above the take-off do not (17 ms)
+  ok   checkpoint order: a dead end after the nearest checkpoint backtracks to another order (20 ms)
+  ok   slope tops are closed below an attached road; loop pillars meet the deck (3 ms)
+      largest crease between adjacent deck triangles: Bank2 7.1°, Bank3 4.0°, Loop 9.9°, LoopL 13.5°
+  ok   twisted decks: banks and loops have small creases and no step at their seams (60 ms)
+  ok   the ground is flush with level 0: rejoining the track from the snow has no step (2 ms)
+  ok   route.project with a stale hint finds the nearest segment; Cross corners report their real width (187 ms)
+  ok   share codes and hashes normalise their input exactly like normalizeTrack (1 ms)
+  ok   editor data: triangle -> block, render ranges per block, cell lookup, structured issues (7 ms)
+  ok   editor previews: placed connectors and block previews match buildWorld (121 ms)
+  ok   trackFromPath: turtle jumps, marks, sidesteps, side decor, case-insensitive names, clear errors (0 ms)
+  ok   RouteTracker: lap-aware progress that survives respawns and savestates (81 ms)
+      edgeRays: 25838 fans of 15 x 120 m per second
+  ok   edgeRays: cheap 2D road-edge sensors for AI observations (82 ms)
+      S01 0:22.14 | S02 0:23.58 | S03 0:24.39 | S04 0:21.49 | S05 0:24.71 | S06 0:39.68
+  ok   runAutopilot finishes every sample, returns a verified replay, and gives up on hopeless runs (498 ms)
+  ok   renderer helpers: snapshots, interpolation, ghosts snap across respawns, wheels never spin backwards (25 ms)
+  ok   formatTime: one race-time format for every screen (0 ms)
+
+render
+  ok   scenery plan is deterministic and differs per track (15 ms)
+  ok   auto scenery keeps clear of roads, jump gaps and decor (21 ms)
+  ok   penguin crowds stand beside ground-level gates, off the road (1 ms)
+  ok   night lamps line flat road at the snowbank edge (1 ms)
+  ok   terrain is flat on the map and rolls into hills beyond it (0 ms)
+  ok   scenery plan on an empty and on a decor-heavy track (3 ms)
+      pine 66, rock 80, crystal 40, igloo 206, snowman 676, penguin 200, lamp 104
+  ok   scenery models stay within their triangle budgets and stand on the ground (22 ms)
+  ok   chase camera sits behind and above the car and snaps on a teleport (3 ms)
+  ok   renderer module links and exposes the GameRenderer contract (6 ms)
+
+shell
+  ok   settings: defaults, validation and the Trackmania key defaults (1 ms)
+  ok   controls: keyboard to Input, edges fire once, typing is ignored (0 ms)
+  ok   controls: a tap shorter than a frame still drives one tick, never a stale one (0 ms)
+  ok   controls: gamepad stick with dead zone and sensitivity, triggers, edges (1 ms)
+  ok   loop: 100 Hz accumulator, frame cap, alpha and stop from a tick (0 ms)
+  ok   records: personal bests, medals and stale layouts (6 ms)
+  ok   records: first-time medal gold goes to the signed-in site account once (7 ms)
+  ok   leaderboards: Pure / TAS / AI boards, top five, only the leader keeps its replay (5 ms)
+  ok   leaderboard ghosts: any mix of the three, each in its own colour (0 ms)
+  ok   storage: a save that hits the quota is read back for the rest of the session (0 ms)
+  ok   records: saved replay list (0 ms)
+  ok   replay codes: round trip, custom tracks travel inside, junk is refused (178 ms)
+  ok   replay codes: compressed PTR2 codes are shorter and decode the same (188 ms)
+  ok   replay import box: codes, bare replay JSON and AI model files (39 ms)
+  ok   ghosts: a re-simulated replay is exactly the recorded run (96 ms)
+  ok   catalog: official tracks, next track, custom tracks and medal helpers (1 ms)
+
+tas-studio
+  ok   view: tick <-> x, zoom keeps the anchor, follow, fit (0 ms)
+  ok   steer lane mapping: top = full right, snaps near centre and lock, quantise (0 ms)
+  ok   paintSteer interpolates both ways, one notification (1 ms)
+  ok   flags: paint and toggle spans (0 ms)
+  ok   clipboard: copy / paste over / paste insert / clear / remove (1 ms)
+  ok   shiftRange moves a block and fills the gap with the neighbour (0 ms)
+  ok   undo / redo restore exact timelines (0 ms)
+  ok   markers from a real run and next / previous checkpoint (149 ms)
+  ok   readouts: euler angles, effects, numbers, slots, speeds, time boxes (1 ms)
+  ok   bruteforce form -> options that resolve to targets (5 ms)
+  ok   projects: save, list newest first, load, unique names, delete (1 ms)
+
+tas
+  ok   times: seconds, m:ss.cc and whole ticks only (0 ms)
+  ok   script commands build the per-tick inputs (ranges, analog steer, digital override, respawn) (0 ms)
+  ok   script errors carry line numbers; the valid lines still build (0 ms)
+  ok   same-tick rules: range ends apply first, then file order; conflicts warn (0 ms)
+  ok   serialize is canonical: parse(serialize(t)) equals t and serialize is idempotent (both styles) (202 ms)
+  ok   fromReplay / toReplay round trip through the core replay format and verify (219 ms)
+  ok   timeline: held tail, edits, insert/delete, diff and change listeners (2 ms)
+  ok   runner: seek anywhere matches a plain re-simulation, and edits invalidate from the lowest tick (1002 ms)
+  ok   runner: savestate slots, stale slots, record mode and playTo (111 ms)
+      incremental trace after an edit at 12 s: 92.5 ms
+  ok   runner: trace rebuilds only after the edit and equals a fresh trace; ghost compare (579 ms)
+      cold seek to 2:00 204 ms, then 0.35 ms per random seek
+  ok   runner: seeking anywhere in a 2-minute run is instant once cached (426 ms)
+      60 iterations: finish 0:21.88 (precise 21.87565 s) (15 improvements)
+  ok   bruteforce improves the autopilot run, deterministically, and the result verifies (2548 ms)
+  ok   bruteforce: window, rules and targets (checkpoint, speed, position, custom) (1176 ms)
+  ok   bruteforce session protocol (what the worker runs) (278 ms)
+  ok   bruteforce worker file speaks the protocol (worker_threads shim) (604 ms)
+  ok   CLI: autopilot, run, bruteforce, from-replay, compare (4249 ms)
+
+worker
+  ok   worker: checkout makes a one-time $3 Stripe session for the signed-in player (194 ms)
+  ok   worker: the bundle costs $5; unknown items and owned items are refused (16 ms)
+  ok   worker: checkout needs a valid Firebase ID token for this project (25 ms)
+  ok   worker: return addresses and CORS stick to APP_URLS (1 ms)
+  ok   worker: a paid checkout.session.completed merges the entitlements into Firestore (7 ms)
+  ok   worker: the webhook refuses bad signatures and ignores unpaid or other events (6 ms)
+  ok   worker: Stripe signature check (several v1 values, string or bytes) (1 ms)
+
+236 passed, 3 failed (239 tests, 34.0 s)
+  - pro > pro: nothing is locked until Firebase is set up (PRO_GATING auto)
+  - pro > pro: the dev flag works on dev hosts only
+  - pro > pro: the AI Lab free tier caps generations and workers

@@ -1,0 +1,37 @@
+{
+  "recordedAt": "2026-11-19T18:55:04.256117+00:00",
+  "scope": "DOM/CSS fixture only; not gameplay evidence. Original renderer/model/clock and JavaScript unchanged.",
+  "change": "Only while data-help=true, allow the expanded instruction card to use the remaining height beneath its existing top position.",
+  "before": "dom-help-layout-2/report.json",
+  "after": "dom-help-layout-3/report.json",
+  "invalidInitialHarness": "dom-help-layout-1/invalid-fixture.json",
+  "buildCheckLog": "build-after-help-layout.log",
+  "currentDist": {
+    "THIRD-PARTY-NOTICES.txt": {
+      "bytes": 3834,
+      "sha256": "1f13d13aa18f3540114210523b4f1c1fbf871a6fd2bdfcbdb0b3de34161404cf"
+    },
+    "tv.html": {
+      "bytes": 294,
+      "sha256": "9a0314ae701bb9cc2d5046131168ea909b8b507906b40ffba698834f3ca20ce2"
+    },
+    "game.css": {
+      "bytes": 32515,
+      "sha256": "3ad65bdc9565b93a5f706867fd2fde36494efc19b96458862f3e60e2cc7ac900"
+    },
+    "game.js": {
+      "bytes": 936960,
+      "sha256": "06b2c27fe41341bb7407839ce6152852ad5b78d5fbe68a78886391dbc0b89e2b"
+    }
+  },
+  "visualObservation": "960px screenshots before and after personally reviewed. Before fix, current long ID sample left START text readable but clipped bottom border/padding; after fix the card bottom is visible without vertical scroll.",
+  "assertions": [
+    "960x540 and 1280x720 recorded panel scrollHeight equals clientHeight",
+    "Panel stays within viewport",
+    "Horizontal content does not overflow"
+  ],
+  "limitations": [
+    "No WebGL canvas/game simulation loaded by this DOM fixture",
+    "This does not replace native installation or device verification"
+  ]
+}

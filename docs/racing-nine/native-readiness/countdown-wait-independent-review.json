@@ -1,0 +1,30 @@
+{
+  "reviewer": "racing_review_rally",
+  "method": "Independent read-only diff and validation-record review; existing 17 tests were not rerun",
+  "files": {
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 5102,
+      "sha256": "da42981df65741d793be59a96dba330226ddb885c9bf186b968eafef8f78a569"
+    },
+    "joystick-games/shared/macos/tests/catalog-tools.test.py": {
+      "bytes": 23802,
+      "sha256": "6b25291bc480369c677e212b75a430d7927bdfd4bad7215d482619cacce64de3"
+    },
+    "joystick-games/ponpoko-kart/qa-plan.json": {
+      "bytes": 3658,
+      "sha256": "cea39515f37cd9da3f706aaf92108f48390d9b4fdb5745c3328466c465ccd512"
+    },
+    "joystick-games/turbo-kart-rush/qa-plan.json": {
+      "bytes": 3387,
+      "sha256": "38072507f3424574c89317a491f485683a4232012f8bee10d2890dbcdbcb1ac9"
+    }
+  },
+  "blockingFindings": [],
+  "findings": [
+    "Only the finite positive timeoutSeconds upper limit changes from 60 to 240; numeric/finite/type constraints remain",
+    "Pon step4 and Turbo step3 each change only timeoutSeconds 60 to 240; key holds and required real state assertions unchanged",
+    "The added test accepts 60/240 without mutation and rejects zero/negative/241/bool/string/NaN/infinity",
+    "No game clock, physics, renderer or package bytes are altered by these four source diffs"
+  ],
+  "newNativeRunClaimed": false
+}

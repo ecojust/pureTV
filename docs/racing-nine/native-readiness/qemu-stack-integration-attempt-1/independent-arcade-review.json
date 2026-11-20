@@ -1,0 +1,148 @@
+{
+  "status": "no-remaining-static-blockers-for-root-reviewed-gated-ci-diagnostic",
+  "reviewer": "racing_review_arcade",
+  "reviewedAt": "2026-11-19T23:38:23.706730+00:00",
+  "scope": "Final six-path QA implementation review plus unchanged local core-test source and original evidence; not actual CI permission or QEMU validation.",
+  "inventory": {
+    "bytes": 16706,
+    "sha256": "75641abb827a27fcc1c63d3104ed138e88466a1b20912b3c5a4e54de2da71fc5"
+  },
+  "inventoryFilesVerified": 67,
+  "sourceFilesVerified": {
+    "joystick-games/tools/android-qemu-stack.py": {
+      "bytes": 51405,
+      "sha256": "c2acd26eb58d8173b916e7896a1b6b990b076acffe14d07b1cf35a3c36ced509"
+    },
+    "joystick-games/tools/android-emulator-supervisor.py": {
+      "bytes": 26589,
+      "sha256": "35e7ab50c5d44a0a32bf3985a752bb5889573b6e2bc3e98ddf8b34743ff9cc24"
+    },
+    "joystick-games/qa/android/test_qemu_stack.py": {
+      "bytes": 23915,
+      "sha256": "3fffbed20e5d15cde5478d777b2150b541784b4bb8202e2dbb080a1c9f0742a0"
+    },
+    "joystick-games/qa/android/test_emulator_supervisor.py": {
+      "bytes": 28270,
+      "sha256": "f3c941207eda7b6a13fa4ff01b1605896da7a452e427fb3c3c24def02f5ce4d7"
+    },
+    "joystick-games/qa/android/test_qemu_permission.py": {
+      "bytes": 13528,
+      "sha256": "f4d54b9a172596554867759ff8062de0af03e4889a449cc7980eafbf78874e98"
+    },
+    "joystick-games/qa/android/test_qemu_stack_integration.py": {
+      "bytes": 8696,
+      "sha256": "d8dce5e443c4caafb6b956415ef89b5f93549652e1da134118042675de68a497"
+    },
+    ".github/workflows/joystick-catalog-android-runtime.yml": {
+      "bytes": 28325,
+      "sha256": "d6586c776085ca6855815db763c05ea6d024584cfc6f5d89398fd83b38f004b7"
+    }
+  },
+  "isolatedParentRequired": "467670b4e43189dc8fc4786a5c6b3a14b6f9b2bd",
+  "overlayFiles": 6,
+  "evidenceLogs": {
+    "core-tests.log": {
+      "bytes": 4234,
+      "sha256": "b26a007477a6fb1ef8e6625b2a7c7ffd3ddf08f4857f36da3e62e55859497cc5"
+    },
+    "supervisor-tests.log": {
+      "bytes": 3639,
+      "sha256": "2fe7fa925d08617bc0a427da41586242329c3abb6882c98be69fd5d2e3536321"
+    },
+    "integration-tests.log": {
+      "bytes": 1538,
+      "sha256": "15bf5ce31652de9997aa3953a5d93b5ea8c418abb61d5175cb8143081286c231"
+    },
+    "synthetic-grant.log": {
+      "bytes": 1087,
+      "sha256": "1cf7f454a02a9f787e052b00f30042a0dec0a590124788597b2c82dcda94fff7"
+    },
+    "permission-gate.log": {
+      "bytes": 1715,
+      "sha256": "8c47025074432f51a7273f4c029a01497746bfa656d1bfc72643ac979317a4fb"
+    },
+    "actionlint.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "originalLocalResults": {
+    "core": 28,
+    "supervisor": 22,
+    "syntheticIntegration": 9,
+    "skipped": 0,
+    "syntheticGrantRealGdbWiring": {
+      "cases": 10,
+      "realPR_SET_PTRACERExecuted": false,
+      "canAuthorizeAvd": false,
+      "fixtureOriginalParentWait": -11,
+      "report": {
+        "bytes": 412,
+        "sha256": "35acfe30f735a381872c22c88030d4cf79fbcdb682dd9d753cad52580af8e3ca"
+      }
+    },
+    "actualProcessLocalPermission": {
+      "status": "blocked",
+      "errno": 22,
+      "casesRun": 1,
+      "casesNotRun": 9,
+      "skipped": 0,
+      "report": {
+        "bytes": 1066,
+        "sha256": "e68a0cf1d1115771b6f64544fd8a371ce159d23d494e031f6b215aeec33850c6"
+      }
+    }
+  },
+  "reviewedBoundaries": [
+    {
+      "area": "Scope/default",
+      "finding": "The new flag defaults false and requires exact original Pon source/run/export, existing supervision and v8 Vulkan-off flags. No emulator argument, APK, game model or clock is changed by this overlay."
+    },
+    {
+      "area": "Permission",
+      "finding": "Same-user GDB only. PR_SET_PTRACER receives the exact positive prepared GDB PID in the owned child before exec. Python and kernel task counts must both be one. No ANY, sudo, global ptrace setting or root bridge. Kernel allowance includes debugger descendants; actual TracerPid is still verified as the exact original GDB."
+    },
+    {
+      "area": "PID ownership",
+      "finding": "GDB stays unreaped through grant/exec. Receipt binds original child PID/start. Exact target and debugger PID/start/parent/UID/executable identities are checked before attach and before every frame read. Parent polls/waits are guarded while initial attach is unresolved."
+    },
+    {
+      "area": "Owner transfer",
+      "finding": "Session construction must succeed before adoption. The session owns the prepared MI process immediately after successful construction, so an exit before start cannot orphan the cleanup owner. Wrong-start, constructor rejection and exit-before/during-start cases are preserved."
+    },
+    {
+      "area": "Data bounds",
+      "finding": "At most 4 SIGSEGV events, 4 threads and 12 frames per event. Only sanitized frame address/function/module metadata; module paths resolve under controlled roots before hashing. No retained raw MI, arguments, locals, environment, arbitrary memory or requested core dump. Capture uses remaining deadline and reserves final-report space."
+    },
+    {
+      "area": "Signals/cleanup",
+      "finding": "Normal detach preserves signal delivery and original parent wait. No internal diagnostic error calls kill/terminate. Unknown attach remains blocked; target is not reaped until the original response is already conclusive or exact GDB actually exits. Quarantine explicitly does not continue reading late MI. External cancellation/original supervisor deadline control remains separate and restore reports incomplete cleanup."
+    },
+    {
+      "area": "CI gate",
+      "finding": "Before any AVD, CI must pass integration boundaries then all 10 actual same-permission ELF cases with zero skips. Gate checks helper/test/GDB bytes, GDB path, QA source/run/attempt and runner, and is verified again at prepare/launch. Local EINVAL cannot pass this gate; synthetic-grant output is not a usable gate report."
+    },
+    {
+      "area": "Acceptance separation",
+      "finding": "Diagnostic requests set runtimeAccepted=false and nativeAcceptanceAllowed=false in original export metadata even if ordinary game tests pass. Original game reports are retained unchanged; attachment is marked intervention, never proof of root cause or release acceptance."
+    }
+  ],
+  "remainingLimits": [
+    "Actual PR_SET_PTRACER capability on the hosted CI runner is unverified. All ten unmocked same-permission cases must pass in that run before any QEMU/AVD starts.",
+    "If GDB never responds or exits after an unresolved attachment, cleanup cannot be promised within the 300-second capture budget. The explicit outer workflow timeout remains a boundary; the source records this as incomplete, not successful detach.",
+    "Root must create the exact six-file overlay on v8 parent 467670b and verify every other path remains unchanged. Separate closure review is owned by racing_review_karts.",
+    "No real QEMU stack, Android gameplay or physical-device result has been produced by this work."
+  ],
+  "reviewerSourceEdits": [],
+  "reviewerTestReruns": 0,
+  "reviewerDebuggerAttachments": 0,
+  "workflowDispatches": 0,
+  "releaseWrites": 0,
+  "actualCiPermissionProven": false,
+  "actualQemuProven": false,
+  "nativeAcceptanceAllowed": false,
+  "checker": {
+    "bytes": 8137,
+    "sha256": "485ef06de47c687ae0ad3f499d004c1b5d9e5d15fcaa00bfb5095a9a1b1962f8"
+  }
+}

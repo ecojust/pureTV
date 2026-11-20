@@ -1,0 +1,212 @@
+{
+  "at": "2026-11-19T20:13:13.275332+00:00",
+  "sourceSha": "06f1ab2b77e45d5fabcbd7233f8d3e9279a9d5c7",
+  "runId": 44600152694,
+  "runAttempt": 1,
+  "exportCommit": "e01ab3ba25008cbbcbfa718321afa49fe6eb2331",
+  "modes": [
+    {
+      "mode": "normal",
+      "status": "failed",
+      "testsPassed": [
+        "catalog scenario starts with fresh app data before launch",
+        "installed target launches initialized game menu with no controller card",
+        "original SDK hello and nine sync messages create actual controller ID card",
+        "actual SDK gameplay: Open original racer selection",
+        "actual SDK gameplay: Choose another original racer",
+        "actual SDK gameplay: Confirm racer and open four-track selector"
+      ],
+      "lastRecordedStep": "before-plan-Start selected original course and wait real countdown",
+      "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 754, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n                        ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 444, in scenarios\n    return self.catalog_scenarios()\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 574, in catalog_scenarios\n    observed = self.snapshot()\n               ^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 201, in snapshot\n    with urlopen('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout=15) as response:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 515, in open\n    response = self._open(req, data)\n               ^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 532, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1373, in http_open\n    return self.do_open(http.client.HTTPConnection, req)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1348, in do_open\n    r = h.getresponse()\n        ^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 1457, in getresponse\n    response.begin()\n  File \"/usr/lib/python3.12/http/client.py\", line 336, in begin\n    version, status, reason = self._read_status()\n                              ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 305, in _read_status\n    raise RemoteDisconnected(\"Remote end closed connection without\"\nhttp.client.RemoteDisconnected: Remote end closed connection without response\n",
+      "adbCommands": {
+        "bytes": 4140452,
+        "sha256": "a8219475193d0698434f78985d7450602b8f568b2fb819c7475da20ec3037f59"
+      },
+      "logcat": [
+        {
+          "adbCommandsLine": 12,
+          "command": [
+            "/usr/local/lib/android/sdk/platform-tools/adb",
+            "logcat",
+            "-d",
+            "-v",
+            "threadtime"
+          ],
+          "exitCode": 0,
+          "stdoutBytesUtf8": 4095746,
+          "stdoutSha256": "30fed5bdf42e3fa003ff64cc19423b5c8be0e337446ddbe2798f841760335fd0",
+          "observerTimeouts": [
+            {
+              "stdoutLine": 20057,
+              "excerpt": [
+                "11-19 19:53:22.707  2704  2729 W PureTVQA: Readonly diagnostic request ended",
+                "11-19 19:53:22.707  2704  2729 W PureTVQA: java.lang.IllegalStateException: WebView snapshot timed out",
+                "11-19 19:53:22.707  2704  2729 W PureTVQA: \tat com.ecojust.controllerqa.Observer.snapshot(Observer.java:102)",
+                "11-19 19:53:22.707  2704  2729 W PureTVQA: \tat com.ecojust.controllerqa.Observer.handle(Observer.java:112)",
+                "11-19 19:53:22.707  2704  2729 W PureTVQA: \tat com.ecojust.controllerqa.Observer.onStart(Observer.java:64)",
+                "11-19 19:53:22.707  2704  2729 W PureTVQA: \tat android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2597)"
+              ]
+            },
+            {
+              "stdoutLine": 29551,
+              "excerpt": [
+                "11-19 19:55:27.674  2704  2729 W PureTVQA: Readonly diagnostic request ended",
+                "11-19 19:55:27.674  2704  2729 W PureTVQA: java.lang.IllegalStateException: WebView snapshot timed out",
+                "11-19 19:55:27.674  2704  2729 W PureTVQA: \tat com.ecojust.controllerqa.Observer.snapshot(Observer.java:102)",
+                "11-19 19:55:27.674  2704  2729 W PureTVQA: \tat com.ecojust.controllerqa.Observer.handle(Observer.java:112)",
+                "11-19 19:55:27.674  2704  2729 W PureTVQA: \tat com.ecojust.controllerqa.Observer.onStart(Observer.java:64)",
+                "11-19 19:55:27.674  2704  2729 W PureTVQA: \tat android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2597)"
+              ]
+            }
+          ]
+        }
+      ],
+      "successfulCleanupCommands": [
+        [
+          "shell",
+          "am",
+          "force-stop",
+          "com.ecojust.joystick.turbokartrush"
+        ],
+        [
+          "logcat",
+          "-d",
+          "-v",
+          "threadtime"
+        ],
+        [
+          "shell",
+          "dumpsys",
+          "package",
+          "com.ecojust.joystick.turbokartrush"
+        ],
+        [
+          "shell",
+          "am",
+          "force-stop",
+          "com.ecojust.joystick.turbokartrush"
+        ]
+      ],
+      "instrumentationOriginal": "INSTRUMENTATION_STATUS: diagnosticPort=63486\nINSTRUMENTATION_STATUS: observer=ready\nINSTRUMENTATION_STATUS_CODE: 0\nINSTRUMENTATION_RESULT: shortMsg=Process crashed.\nINSTRUMENTATION_CODE: 0\n",
+      "instrumentationLimitation": "The short Process crashed line has no timestamp; QA cleanup includes successful force-stop. This line alone does not establish a spontaneous application crash."
+    },
+    {
+      "mode": "occupied",
+      "status": "failed",
+      "testsPassed": [
+        "catalog scenario starts with fresh app data before launch",
+        "installed target launches initialized game menu with no controller card",
+        "original SDK hello and nine sync messages create actual controller ID card",
+        "actual SDK gameplay: Open original racer selection",
+        "actual SDK gameplay: Choose another original racer",
+        "actual SDK gameplay: Confirm racer and open four-track selector"
+      ],
+      "lastRecordedStep": "before-plan-Start selected original course and wait real countdown",
+      "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 754, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n                        ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 444, in scenarios\n    return self.catalog_scenarios()\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 574, in catalog_scenarios\n    observed = self.snapshot()\n               ^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 201, in snapshot\n    with urlopen('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout=15) as response:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 515, in open\n    response = self._open(req, data)\n               ^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 532, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1373, in http_open\n    return self.do_open(http.client.HTTPConnection, req)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1348, in do_open\n    r = h.getresponse()\n        ^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 1457, in getresponse\n    response.begin()\n  File \"/usr/lib/python3.12/http/client.py\", line 336, in begin\n    version, status, reason = self._read_status()\n                              ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 305, in _read_status\n    raise RemoteDisconnected(\"Remote end closed connection without\"\nhttp.client.RemoteDisconnected: Remote end closed connection without response\n",
+      "adbCommands": {
+        "bytes": 4535465,
+        "sha256": "dc11db937e48558656498b7bd6b1690c2629e0a225407fb678e1b3e062ddc837"
+      },
+      "logcat": [
+        {
+          "adbCommandsLine": 12,
+          "command": [
+            "/usr/local/lib/android/sdk/platform-tools/adb",
+            "logcat",
+            "-d",
+            "-v",
+            "threadtime"
+          ],
+          "exitCode": 0,
+          "stdoutBytesUtf8": 4487949,
+          "stdoutSha256": "e0d7a1e612fa86b0225d6b1c5ce873c84518c7638c8d5c8bcf569fd8b9ea0da5",
+          "observerTimeouts": [
+            {
+              "stdoutLine": 20057,
+              "excerpt": [
+                "11-19 19:53:22.707  2704  2729 W PureTVQA: Readonly diagnostic request ended",
+                "11-19 19:53:22.707  2704  2729 W PureTVQA: java.lang.IllegalStateException: WebView snapshot timed out",
+                "11-19 19:53:22.707  2704  2729 W PureTVQA: \tat com.ecojust.controllerqa.Observer.snapshot(Observer.java:102)",
+                "11-19 19:53:22.707  2704  2729 W PureTVQA: \tat com.ecojust.controllerqa.Observer.handle(Observer.java:112)",
+                "11-19 19:53:22.707  2704  2729 W PureTVQA: \tat com.ecojust.controllerqa.Observer.onStart(Observer.java:64)",
+                "11-19 19:53:22.707  2704  2729 W PureTVQA: \tat android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2597)"
+              ]
+            },
+            {
+              "stdoutLine": 29551,
+              "excerpt": [
+                "11-19 19:55:27.674  2704  2729 W PureTVQA: Readonly diagnostic request ended",
+                "11-19 19:55:27.674  2704  2729 W PureTVQA: java.lang.IllegalStateException: WebView snapshot timed out",
+                "11-19 19:55:27.674  2704  2729 W PureTVQA: \tat com.ecojust.controllerqa.Observer.snapshot(Observer.java:102)",
+                "11-19 19:55:27.674  2704  2729 W PureTVQA: \tat com.ecojust.controllerqa.Observer.handle(Observer.java:112)",
+                "11-19 19:55:27.674  2704  2729 W PureTVQA: \tat com.ecojust.controllerqa.Observer.onStart(Observer.java:64)",
+                "11-19 19:55:27.674  2704  2729 W PureTVQA: \tat android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2597)"
+              ]
+            },
+            {
+              "stdoutLine": 31082,
+              "excerpt": [
+                "11-19 19:55:45.882  3915  3928 W PureTVQA: Readonly diagnostic request ended",
+                "11-19 19:55:45.882  3915  3928 W PureTVQA: java.lang.IllegalStateException: WebView snapshot timed out",
+                "11-19 19:55:45.882  3915  3928 W PureTVQA: \tat com.ecojust.controllerqa.Observer.snapshot(Observer.java:102)",
+                "11-19 19:55:45.882  3915  3928 W PureTVQA: \tat com.ecojust.controllerqa.Observer.handle(Observer.java:112)",
+                "11-19 19:55:45.882  3915  3928 W PureTVQA: \tat com.ecojust.controllerqa.Observer.onStart(Observer.java:64)",
+                "11-19 19:55:45.882  3915  3928 W PureTVQA: \tat android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2597)"
+              ]
+            },
+            {
+              "stdoutLine": 31933,
+              "excerpt": [
+                "11-19 19:57:42.655  3915  3928 W PureTVQA: Readonly diagnostic request ended",
+                "11-19 19:57:42.655  3915  3928 W PureTVQA: java.lang.IllegalStateException: WebView snapshot timed out",
+                "11-19 19:57:42.655  3915  3928 W PureTVQA: \tat com.ecojust.controllerqa.Observer.snapshot(Observer.java:102)",
+                "11-19 19:57:42.655  3915  3928 W PureTVQA: \tat com.ecojust.controllerqa.Observer.handle(Observer.java:112)",
+                "11-19 19:57:42.655  3915  3928 W PureTVQA: \tat com.ecojust.controllerqa.Observer.onStart(Observer.java:64)",
+                "11-19 19:57:42.655  3915  3928 W PureTVQA: \tat android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2597)"
+              ]
+            }
+          ]
+        }
+      ],
+      "successfulCleanupCommands": [
+        [
+          "shell",
+          "am",
+          "force-stop",
+          "com.ecojust.joystick.turbokartrush"
+        ],
+        [
+          "logcat",
+          "-d",
+          "-v",
+          "threadtime"
+        ],
+        [
+          "shell",
+          "dumpsys",
+          "package",
+          "com.ecojust.joystick.turbokartrush"
+        ],
+        [
+          "shell",
+          "am",
+          "force-stop",
+          "com.ecojust.joystick.turbokartrush"
+        ]
+      ],
+      "instrumentationOriginal": "INSTRUMENTATION_STATUS: diagnosticPort=63486\nINSTRUMENTATION_STATUS: observer=ready\nINSTRUMENTATION_STATUS_CODE: 0\nINSTRUMENTATION_RESULT: shortMsg=Process crashed.\nINSTRUMENTATION_CODE: 0\n",
+      "instrumentationLimitation": "The short Process crashed line has no timestamp; QA cleanup includes successful force-stop. This line alone does not establish a spontaneous application crash."
+    }
+  ],
+  "finding": "Both modes completed initial menu, SDK identity and three original menu steps. At Start selected original course, the single direct snapshot in frozen run.py line574 failed with RemoteDisconnected after the Observer ten-second WebView callback timeout, before the per-step sixty-second expectation wait at lines576-578. ADB remained available for logcat/package diagnostics and cleanup.",
+  "gameClockChanged": false,
+  "productionSourceChanged": false,
+  "unproven": [
+    "Exact reason the WebView callback took longer than ten seconds",
+    "Spontaneous game-process crash or emulator-host OOM"
+  ],
+  "qaFollowup": "Parent reports shared QA fix c5ad63e8c6a0ccfada5f763d1d26afa27f45002e adds bounded fresh snapshot retry without changing game bytes. This report does not claim that new runtime has passed.",
+  "runtimeAccepted": false,
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false
+}

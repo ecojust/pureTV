@@ -1,0 +1,360 @@
+{
+  "checkedAt": "2026-11-19",
+  "reviewer": "racing_review_arcade",
+  "sample": {
+    "root": 4,
+    "strategy": 4
+  },
+  "materialContradictions": 0,
+  "items": [
+    {
+      "title": "Fall Line",
+      "groupFile": "root-research.json",
+      "repository": "Nipale-ai/opus-5-5-overnight-builds",
+      "commit": "8d35d834bc3d62cb772ae9f75b95b89c9600ab82",
+      "result": "通过",
+      "semanticFindings": [
+        "固定 HTML 实际赛事对象共 8 个：Aurel Park Jam、Vireaux Downhill、Crow’s Couloir Line、Sunbowl Freeride、Pillow Pop、Glade Rush、Superpipe Session、Summit to Valley。",
+        "落点数组含 9 项；物理配置分别有 snowboard/ski，另有抓板、磨杆、动作判分、回放和 personal-best 存取；README 说明静态离线，HTML 无外部 script src。"
+      ],
+      "suggestedRefinements": [],
+      "readFiles": [
+        {
+          "path": "README.md",
+          "url": "https://raw.githubusercontent.com/Nipale-ai/opus-5-5-overnight-builds/8d35d834bc3d62cb772ae9f75b95b89c9600ab82/README.md",
+          "bytes": 2161,
+          "sha256": "f3dc923259560533c142bc0226ed6a271760c1563ca79943698a3db93c66ff45"
+        },
+        {
+          "path": "fall-line/index.html",
+          "url": "https://raw.githubusercontent.com/Nipale-ai/opus-5-5-overnight-builds/8d35d834bc3d62cb772ae9f75b95b89c9600ab82/fall-line/index.html",
+          "bytes": 1135743,
+          "sha256": "5167d40dd1953c8909d12abb17e4f300160238dc36051ef29e9a80a3ba0b2664"
+        }
+      ],
+      "scope": "独立重新取固定 README、实际代码片段、许可/构建声明；未运行或安装，不重复把 HTTP/hash 合格当语义验证。"
+    },
+    {
+      "title": "TaterTots Flight Sim",
+      "groupFile": "root-research.json",
+      "repository": "JaredTate/tatertotsflightsim",
+      "commit": "61ad8f7a611c5ea870e5604e4e37a97956fbbb57",
+      "result": "通过",
+      "semanticFindings": [
+        "README 列 172RG、F-16C、A-10C、747-400 四种可选机型，运行要求 Node 22.12+、WebGL2；package.json engines.node 为 >=22.12。",
+        "engine.ts 明确螺旋桨功率/推力和喷气引擎分支；controlSystem.ts 实现油门、襟翼、配平与手柄轴。README 对武器与地面目标描述和所列摘要一致。",
+        "MIT 已读；源中品牌/真实性描述不应外推为飞行训练级验证，当前文案未如此宣称。"
+      ],
+      "suggestedRefinements": [],
+      "readFiles": [
+        {
+          "path": "README.md",
+          "url": "https://raw.githubusercontent.com/JaredTate/tatertotsflightsim/61ad8f7a611c5ea870e5604e4e37a97956fbbb57/README.md",
+          "bytes": 22887,
+          "sha256": "52697bc17eb1959a0f32b4386a43e367a8e779847aadf1cd0f4d865927dc33fd"
+        },
+        {
+          "path": "src/physics/engine.ts",
+          "url": "https://raw.githubusercontent.com/JaredTate/tatertotsflightsim/61ad8f7a611c5ea870e5604e4e37a97956fbbb57/src/physics/engine.ts",
+          "bytes": 6307,
+          "sha256": "8abad95ef6d9eaa9ccee3cce4e0bb6b6d5c1c7bf672abc8fee416df0b32ba0d0"
+        },
+        {
+          "path": "src/input/controlSystem.ts",
+          "url": "https://raw.githubusercontent.com/JaredTate/tatertotsflightsim/61ad8f7a611c5ea870e5604e4e37a97956fbbb57/src/input/controlSystem.ts",
+          "bytes": 12121,
+          "sha256": "3f648d06b34e621821cd67552183c0535c05de36c7613d44dcbc222c3bfab5f3"
+        },
+        {
+          "path": "src/aircraft/f16/nozzle.ts",
+          "url": "https://raw.githubusercontent.com/JaredTate/tatertotsflightsim/61ad8f7a611c5ea870e5604e4e37a97956fbbb57/src/aircraft/f16/nozzle.ts",
+          "bytes": 15497,
+          "sha256": "6a22b245a86ed4c5ec51ba4ff4d9ce6a1729fb1816cf72f3240c6f41a6bcef7a"
+        },
+        {
+          "path": "LICENSE",
+          "url": "https://raw.githubusercontent.com/JaredTate/tatertotsflightsim/61ad8f7a611c5ea870e5604e4e37a97956fbbb57/LICENSE",
+          "bytes": 1067,
+          "sha256": "d9af52ecdb238a9690a3e31330191f1a49cfbd9da695279ff283fddac9c5e7c9"
+        },
+        {
+          "path": "package.json",
+          "url": "https://raw.githubusercontent.com/JaredTate/tatertotsflightsim/61ad8f7a611c5ea870e5604e4e37a97956fbbb57/package.json",
+          "bytes": 1646,
+          "sha256": "106722d79b49ff7ebb1ea9c3b5142466ecfd113cbf03f821a174b474095b7d41"
+        }
+      ],
+      "scope": "独立重新取固定 README、实际代码片段、许可/构建声明；未运行或安装，不重复把 HTTP/hash 合格当语义验证。"
+    },
+    {
+      "title": "Spinlings",
+      "groupFile": "root-research.json",
+      "repository": "416rehman/spinlings",
+      "commit": "1074f311ffce663b05fd0efa4ae4f63ced1fdf28",
+      "result": "通过",
+      "semanticFindings": [
+        "README 明确宿主为 Claude Code 2.1.287+，三人队、默认在线世界和独立离线世界、交易/融合/进化均有公开说明。",
+        "battle.ts 实际采用 seed RNG/确定性战斗日志，特殊攻击自动触发，同一回合按键 Perfect=1.3 倍；摘要描述吻合。",
+        "项目网站不是普通网页游戏入口，当前 runtimeLabel 和 controllerNotes 已明确插件宿主，不误标电视可直接运行。"
+      ],
+      "suggestedRefinements": [],
+      "readFiles": [
+        {
+          "path": "README.md",
+          "url": "https://raw.githubusercontent.com/416rehman/spinlings/1074f311ffce663b05fd0efa4ae4f63ced1fdf28/README.md",
+          "bytes": 37404,
+          "sha256": "2e989654d89609a31fd088d1485a16d1df7ad8646210110acab6a3d141d1d0de"
+        },
+        {
+          "path": "plugin/hooks/core/battle.ts",
+          "url": "https://raw.githubusercontent.com/416rehman/spinlings/1074f311ffce663b05fd0efa4ae4f63ced1fdf28/plugin/hooks/core/battle.ts",
+          "bytes": 10774,
+          "sha256": "58a9c7ad13872c9102b3d646eb6c7d2dbddb6dabddd983705fa265805dedd527"
+        },
+        {
+          "path": "LICENSE",
+          "url": "https://raw.githubusercontent.com/416rehman/spinlings/1074f311ffce663b05fd0efa4ae4f63ced1fdf28/LICENSE",
+          "bytes": 1066,
+          "sha256": "5ae8742ee2d7043631e8f608db30d58c7addedb4f23d3138cf6f4d7eb4edd4df"
+        }
+      ],
+      "scope": "独立重新取固定 README、实际代码片段、许可/构建声明；未运行或安装，不重复把 HTTP/hash 合格当语义验证。"
+    },
+    {
+      "title": "Inkline Town",
+      "groupFile": "root-research.json",
+      "repository": "SandroMaglione/inkline-town",
+      "commit": "aa7dbe06d274235b63481e62e165ca5442c43f1f",
+      "result": "通过；有精确化建议",
+      "semanticFindings": [
+        "README 明确 45/60/90 分钟任期及道路运输、食物衣物、税收贸易、寒冬/火灾/疾病。",
+        "town.ts/homes.ts 为城镇等级、入住和资源规则；gpu.ts backend() 检查 adapter 特性并试绘制，失败选择 webgl，确认 WebGPU→WebGL 回退不是推测。",
+        "根 Apache-2.0 与 NOTICE 已读，NOTICE 强调分发时携带原署名且 Typeonce 名称和 logo 不在许可内。"
+      ],
+      "suggestedRefinements": [
+        "建议在 license.note 加上需要保留 NOTICE（原说明只泛称不覆盖品牌，事实无误但可更精确）。"
+      ],
+      "readFiles": [
+        {
+          "path": "README.md",
+          "url": "https://raw.githubusercontent.com/SandroMaglione/inkline-town/aa7dbe06d274235b63481e62e165ca5442c43f1f/README.md",
+          "bytes": 9229,
+          "sha256": "0d1365ff1729eb222fe961f3002d35283e84c0f3348e3e4ab928765f158b0df9"
+        },
+        {
+          "path": "src/game/content/town.ts",
+          "url": "https://raw.githubusercontent.com/SandroMaglione/inkline-town/aa7dbe06d274235b63481e62e165ca5442c43f1f/src/game/content/town.ts",
+          "bytes": 6271,
+          "sha256": "22ad41ec7310f82a54dbd1fffc2780572c89b81f7c3fae1f195a79161988d3a7"
+        },
+        {
+          "path": "src/game/content/homes.ts",
+          "url": "https://raw.githubusercontent.com/SandroMaglione/inkline-town/aa7dbe06d274235b63481e62e165ca5442c43f1f/src/game/content/homes.ts",
+          "bytes": 4856,
+          "sha256": "ecf50cfba8288c19b0614e7bdc4caafcc1065b7786c5c4250b2b989519f4ada9"
+        },
+        {
+          "path": "LICENSE",
+          "url": "https://raw.githubusercontent.com/SandroMaglione/inkline-town/aa7dbe06d274235b63481e62e165ca5442c43f1f/LICENSE",
+          "bytes": 10140,
+          "sha256": "bb28c48e3e078166e91cfc2b6db7ffebb8a0973b9e23b3df060561292d8d69ec"
+        },
+        {
+          "path": "src/render/pixi3d/gpu.ts",
+          "url": "https://raw.githubusercontent.com/SandroMaglione/inkline-town/aa7dbe06d274235b63481e62e165ca5442c43f1f/src/render/pixi3d/gpu.ts",
+          "bytes": 6466,
+          "sha256": "0ea5216846b91c23308ac5a05fe4d99c01c1736bf5d29c7bf5f0dc834ba9f58d"
+        },
+        {
+          "path": "src/render/pixi3d/assets/renderer.ts",
+          "url": "https://raw.githubusercontent.com/SandroMaglione/inkline-town/aa7dbe06d274235b63481e62e165ca5442c43f1f/src/render/pixi3d/assets/renderer.ts",
+          "bytes": 4619,
+          "sha256": "6bbfda9fb0c7bb967badd62101f723c8fbe215bef5dcf4308522bc40e7de37ba"
+        },
+        {
+          "path": "NOTICE",
+          "url": "https://raw.githubusercontent.com/SandroMaglione/inkline-town/aa7dbe06d274235b63481e62e165ca5442c43f1f/NOTICE",
+          "bytes": 618,
+          "sha256": "ddef31ef47aead78c796249c0e5baf926e7b17c6f8a5cef2b956cabd5b01df62"
+        },
+        {
+          "path": "package.json",
+          "url": "https://raw.githubusercontent.com/SandroMaglione/inkline-town/aa7dbe06d274235b63481e62e165ca5442c43f1f/package.json",
+          "bytes": 2071,
+          "sha256": "9a274c8045f71b2ed3250d50b9abf6f880b42b7d7c1c721c7623ccc419ceb846"
+        }
+      ],
+      "scope": "独立重新取固定 README、实际代码片段、许可/构建声明；未运行或安装，不重复把 HTTP/hash 合格当语义验证。"
+    },
+    {
+      "title": "断眠実験 DANMIN JIKKEN",
+      "groupFile": "strategy-research.json",
+      "repository": "alejandruxxug/danmin-jikken",
+      "commit": "e101d9cffe7a3ffc2ff17b34b7c28eefa7d1d419",
+      "result": "通过；有精确化建议",
+      "semanticFindings": [
+        "README 与 game/game.go 都区分医院白班接待/电脑场景及夜间视觉小说；场景由 Ebitengine 驱动。",
+        "game/go.mod 确为 go 1.27；根医院命令程序只需 1.21，不应混为游戏要求；当前 runtime 写 1.27 正确。",
+        "MIT 代码和 LICENSE-ART 的 CC BY-NC 4.0 图像/剧情分开；README 118 行另列音乐 Ironbound CC BY 3.0、Hot Swing CC BY 4.0 等音频来源。"
+      ],
+      "suggestedRefinements": [
+        "素材许可建议说明原作图像/故事/人物 CC BY-NC 4.0；第三方音频按 game/assets/sound/README.txt 单独署名，不能概括所有音频均 CC BY-NC。"
+      ],
+      "readFiles": [
+        {
+          "path": "README.md",
+          "url": "https://raw.githubusercontent.com/alejandruxxug/danmin-jikken/e101d9cffe7a3ffc2ff17b34b7c28eefa7d1d419/README.md",
+          "bytes": 12187,
+          "sha256": "df90fbdd50c62fd41e3b93b8e03511ff54a928e621be0f4e87e31b4d7aa1d882"
+        },
+        {
+          "path": "game/game.go",
+          "url": "https://raw.githubusercontent.com/alejandruxxug/danmin-jikken/e101d9cffe7a3ffc2ff17b34b7c28eefa7d1d419/game/game.go",
+          "bytes": 16851,
+          "sha256": "dc1c4fcc92c51e1655bd1afcbbec02bb4ad9bc33c71fe176037698d10abd5044"
+        },
+        {
+          "path": "LICENSE",
+          "url": "https://raw.githubusercontent.com/alejandruxxug/danmin-jikken/e101d9cffe7a3ffc2ff17b34b7c28eefa7d1d419/LICENSE",
+          "bytes": 1227,
+          "sha256": "a99fc49b85a426c6894388c29414ee74127320c2dd60add4136c83d042d8566c"
+        },
+        {
+          "path": "LICENSE-ART.md",
+          "url": "https://raw.githubusercontent.com/alejandruxxug/danmin-jikken/e101d9cffe7a3ffc2ff17b34b7c28eefa7d1d419/LICENSE-ART.md",
+          "bytes": 625,
+          "sha256": "d70621f4df9d578f8b08f1d8a6dc31ad74f451d30107b4895c9e5ca825a91102"
+        },
+        {
+          "path": "game/go.mod",
+          "url": "https://raw.githubusercontent.com/alejandruxxug/danmin-jikken/e101d9cffe7a3ffc2ff17b34b7c28eefa7d1d419/game/go.mod",
+          "bytes": 843,
+          "sha256": "deb33a98b6d889885c27bd50b78d67df8a436be3ed72f8953abe9f1dce9147fa"
+        }
+      ],
+      "scope": "独立重新取固定 README、实际代码片段、许可/构建声明；未运行或安装，不重复把 HTTP/hash 合格当语义验证。"
+    },
+    {
+      "title": "Couch Colony",
+      "groupFile": "strategy-research.json",
+      "repository": "phal-nx/couch-colony",
+      "commit": "1a11b1eabb46118c4ca258d28ad9b065b075150e",
+      "result": "通过",
+      "semanticFindings": [
+        "README 明确 rooted LG webOS，作者仅称已测 LG CX/webOS5.6.2/Chromium68；ES5、透明叠加、手机 Node8 桥和隐藏暂停皆有说明。",
+        "mechanics.js 与 colony.js 确有事件/奖励/访客、升级/暂停状态；README 写明 Swarm Simulator 经济内核移植，当前推荐已标上游移植。",
+        "根 GNU GPL v3 已读取；不是 Android TV 通用叠加应用，当前 runtime/手柄说明准确。"
+      ],
+      "suggestedRefinements": [],
+      "readFiles": [
+        {
+          "path": "README.md",
+          "url": "https://raw.githubusercontent.com/phal-nx/couch-colony/1a11b1eabb46118c4ca258d28ad9b065b075150e/README.md",
+          "bytes": 12699,
+          "sha256": "13d876847a0703fc7081dd8b3252a6577d7783048ce0d4f7916dccff6a67fba4"
+        },
+        {
+          "path": "app/mechanics.js",
+          "url": "https://raw.githubusercontent.com/phal-nx/couch-colony/1a11b1eabb46118c4ca258d28ad9b065b075150e/app/mechanics.js",
+          "bytes": 31941,
+          "sha256": "f8229adf3f60c3687013c560022364ece2c72d6d198ea458c19c77300f99b679"
+        },
+        {
+          "path": "app/colony.js",
+          "url": "https://raw.githubusercontent.com/phal-nx/couch-colony/1a11b1eabb46118c4ca258d28ad9b065b075150e/app/colony.js",
+          "bytes": 146048,
+          "sha256": "245376001ac7a122896871620a3a0508dd1865b5c7a1f6813465235eeb36caec"
+        },
+        {
+          "path": "LICENSE",
+          "url": "https://raw.githubusercontent.com/phal-nx/couch-colony/1a11b1eabb46118c4ca258d28ad9b065b075150e/LICENSE",
+          "bytes": 35149,
+          "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+        }
+      ],
+      "scope": "独立重新取固定 README、实际代码片段、许可/构建声明；未运行或安装，不重复把 HTTP/hash 合格当语义验证。"
+    },
+    {
+      "title": "Noordheim",
+      "groupFile": "strategy-research.json",
+      "repository": "thijssmudde/noordheim-oss",
+      "commit": "06886ce1955934f1ae066852c0e2557ac2e3fc42",
+      "result": "通过",
+      "semanticFindings": [
+        "README 明确 1–8 指挥官、四阵营、三级科技；tactical-command.tsx 有部署/选军/建造及科技/阵营过滤，tactical-scene.tsx 是战场渲染。",
+        "依赖 Convex 权威服务器，当前 runtime 已写服务端；四次每秒为 README 声明，当前推荐明确未实玩验证。",
+        "MIT 代码、CC BY-NC 4.0 美术/音频/模型/截图/录像已读；LICENSE-ASSETS 特别说明盈利游戏/网站使用资产需要另获许可。"
+      ],
+      "suggestedRefinements": [],
+      "readFiles": [
+        {
+          "path": "README.md",
+          "url": "https://raw.githubusercontent.com/thijssmudde/noordheim-oss/06886ce1955934f1ae066852c0e2557ac2e3fc42/README.md",
+          "bytes": 13511,
+          "sha256": "4acf69e89a842da66033a032ce09acff19dac509b8002a083b6882187c14d4f2"
+        },
+        {
+          "path": "components/game/tactical-command.tsx",
+          "url": "https://raw.githubusercontent.com/thijssmudde/noordheim-oss/06886ce1955934f1ae066852c0e2557ac2e3fc42/components/game/tactical-command.tsx",
+          "bytes": 105044,
+          "sha256": "3e9f3fc36c6152b1398278970fe398e452d915d7b8ed9ad2fbe063f104766d3f"
+        },
+        {
+          "path": "components/game/tactical-scene.tsx",
+          "url": "https://raw.githubusercontent.com/thijssmudde/noordheim-oss/06886ce1955934f1ae066852c0e2557ac2e3fc42/components/game/tactical-scene.tsx",
+          "bytes": 60529,
+          "sha256": "180336e1697cab392ee54abbc9f808e14ac3769ef1024e22bf8908143fdd6deb"
+        },
+        {
+          "path": "LICENSE",
+          "url": "https://raw.githubusercontent.com/thijssmudde/noordheim-oss/06886ce1955934f1ae066852c0e2557ac2e3fc42/LICENSE",
+          "bytes": 1069,
+          "sha256": "d775a4749cbd767b839a7b5fc81d798ae2ecdcab7b11193e3d744d1b18d16622"
+        },
+        {
+          "path": "LICENSE-ASSETS.md",
+          "url": "https://raw.githubusercontent.com/thijssmudde/noordheim-oss/06886ce1955934f1ae066852c0e2557ac2e3fc42/LICENSE-ASSETS.md",
+          "bytes": 878,
+          "sha256": "7920f7b9e5d209da04cff14d313074a2299a249f2eb3910c502cfe6105191466"
+        }
+      ],
+      "scope": "独立重新取固定 README、实际代码片段、许可/构建声明；未运行或安装，不重复把 HTTP/hash 合格当语义验证。"
+    },
+    {
+      "title": "Cocktail Shack",
+      "groupFile": "strategy-research.json",
+      "repository": "josephsammorris-dotcom/cocktail-shack",
+      "commit": "87d9fa6821c8e285ddd60a2f3ba0301cd3a8ea12",
+      "result": "通过；有精确化建议",
+      "semanticFindings": [
+        "README 与 engine.js 确认为电视展示+手机私人经营面板，房间权威状态是 Worker/Durable Object。",
+        "engine.js C.weeks 与默认 settings.weeks 均 12，游戏按天气、定价、员工容量、需求/共享客流结算；但 settings 注释允许 8/12/16 周，12 是默认。",
+        "README 明确 /tv 主屏、/play 手机及 wrangler dev；无需把手机经营面板假称纯按钮手柄。"
+      ],
+      "suggestedRefinements": [
+        "summary 中“十二个周六”建议改“默认十二个周六（可配置局长）”，避免把默认误写为唯一长度。"
+      ],
+      "readFiles": [
+        {
+          "path": "README.md",
+          "url": "https://raw.githubusercontent.com/josephsammorris-dotcom/cocktail-shack/87d9fa6821c8e285ddd60a2f3ba0301cd3a8ea12/README.md",
+          "bytes": 8844,
+          "sha256": "ea8f8158539d64f01a9569e427060a129b68d985fd7c169a91644f2f5bd66126"
+        },
+        {
+          "path": "src/engine.js",
+          "url": "https://raw.githubusercontent.com/josephsammorris-dotcom/cocktail-shack/87d9fa6821c8e285ddd60a2f3ba0301cd3a8ea12/src/engine.js",
+          "bytes": 31787,
+          "sha256": "a372f6a2acc6c847b3a4559cdaa9047f0729fd6437f4ab9a71fbe2ac77ee2e51"
+        },
+        {
+          "path": "public/scene.js",
+          "url": "https://raw.githubusercontent.com/josephsammorris-dotcom/cocktail-shack/87d9fa6821c8e285ddd60a2f3ba0301cd3a8ea12/public/scene.js",
+          "bytes": 98102,
+          "sha256": "3df3315f98fdff84198bb6eb8af9ecf083361b103d8c3a960f5fb8285f15afa6"
+        }
+      ],
+      "scope": "独立重新取固定 README、实际代码片段、许可/构建声明；未运行或安装，不重复把 HTTP/hash 合格当语义验证。"
+    }
+  ]
+}

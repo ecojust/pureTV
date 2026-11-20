@@ -1,0 +1,320 @@
+name: Neon Rush macOS client
+
+on:
+  push:
+    branches: [feat/neon-rush-macos]
+    paths:
+      - '.github/workflows/neon-rush-macos.yml'
+      - 'resource/apps/neon-rush/macos/**'
+      - 'resource/apps/neon-rush/src/main/assets/**'
+      - 'resource/apps/neon-rush/source/**'
+      - 'resource/apps/neon-rush/tests/**'
+      - 'resource/apps/neon-rush/tools/**'
+      - 'resource/apps/neon-rush/package*.json'
+      - 'resource/apps/neon-rush/logo.svg'
+      - 'resource/apps/neon-rush/game.json'
+      - 'resource/game-kit/web/**'
+      - 'resource/game-kit/qa/**'
+      - 'resource/game-kit/build.py'
+      - 'puretv-joystick/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            resource/apps/neon-rush
+            resource/game-kit
+            puretv-joystick
+            .github/workflows
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install the pinned game build dependencies
+        working-directory: resource/apps/neon-rush
+        run: npm ci --no-audit --no-fund
+      - name: Prepare the browser for shared game runtime regressions
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/neon-rush-game-tests"
+          cd "$RUNNER_TEMP/neon-rush-game-tests"
+          npm install --no-audit --no-fund --package-lock=false playwright@1.64.1 pngjs@7.0.0
+          npx playwright install chromium
+          node - <<'JS' >> "$GITHUB_ENV"
+          const path = require('node:path');
+          console.log('PURETV_PACKAGE=' + path.join(process.cwd(), 'package.json'));
+          console.log('CHROMIUM_PATH=' + require('playwright').chromium.executablePath());
+          JS
+      - name: Test game rules and verify the committed generated bundle
+        working-directory: resource/apps/neon-rush
+        run: |
+          set -euo pipefail
+          npm test
+          npm run build:check
+      - name: Test the WebView controller bridge
+        run: node --test resource/apps/neon-rush/macos/tests/web-bridge.test.mjs
+      - name: Build the universal app and install packages
+        run: python3 resource/apps/neon-rush/macos/build.py --output "$RUNNER_TEMP/neon-rush-package"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: neon-rush-macos-package
+          path: |
+            ${{ runner.temp }}/neon-rush-package/NeonRush-*-macos-universal.zip
+            ${{ runner.temp }}/neon-rush-package/NeonRush-*-macos-universal.dmg
+            ${{ runner.temp }}/neon-rush-package/SHA256SUMS.txt
+            ${{ runner.temp }}/neon-rush-package/build-manifest.json
+          if-no-files-found: error
+          retention-days: 14
+
+  verify:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-arm64
+            runner: macos-latest
+            architecture: arm64
+            qa_options: ''
+          - platform: macos-x64
+            runner: macos-15-intel
+            architecture: x86_64
+            qa_options: '--allow-unavailable-webgl'
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    env:
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            resource/apps/neon-rush
+            resource/game-kit
+            puretv-joystick
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: neon-rush-macos-package
+          path: ${{ runner.temp }}/neon-rush-package
+      - name: Verify the identical package on the native architecture
+        env:
+          EXPECTED_ARCHITECTURE: ${{ matrix.architecture }}
+        run: |
+          set -euo pipefail
+          test "$(uname -m)" = "$EXPECTED_ARCHITECTURE"
+          mkdir -p "$RUNNER_TEMP/neon-rush-qa"
+          python3 - <<'PY'
+          import hashlib, json, os, plistlib, re, subprocess
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP']) / 'neon-rush-package'
+          manifest = json.loads((root / 'build-manifest.json').read_text())
+          assert manifest['sourceCommit'] == os.environ['GITHUB_SHA']
+          assert set(manifest['architectures']) == {'arm64', 'x86_64'}
+          version = manifest['version']
+          assert re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+', version)
+          stem = f'NeonRush-{version}-macos-universal'
+          assert set(manifest['packages']) == {stem + '.zip', stem + '.dmg'}
+          for name, item in manifest['packages'].items():
+              path = root / name
+              assert path.stat().st_size == item['bytes']
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == item['sha256']
+          archive = root / (stem + '.zip')
+          unpacked = root / 'zip-copy'
+          subprocess.run(['ditto', '-x', '-k', str(archive), str(unpacked)], check=True)
+          def verify(app):
+              plist = plistlib.loads((app / 'Contents/Info.plist').read_bytes())
+              assert plist['CFBundleShortVersionString'] == version
+              assert plist['CFBundleVersion'] == manifest['buildVersion']
+              for name, item in manifest['appFiles'].items():
+                  path = app / name
+                  assert path.stat().st_size == item['bytes'], name
+                  assert hashlib.sha256(path.read_bytes()).hexdigest() == item['sha256'], name
+              subprocess.run(['codesign', '--verify', '--deep', '--strict', str(app)], check=True)
+          verify(unpacked / 'Neon Rush.app')
+          mount = root / 'mount'
+          mount.mkdir()
+          subprocess.run(['hdiutil', 'attach', '-readonly', '-nobrowse', '-mountpoint', str(mount), str(root / (stem + '.dmg'))], check=True)
+          try:
+              verify(mount / 'Neon Rush.app')
+              assert (mount / 'Applications').is_symlink()
+              app = root / 'installed' / 'Neon Rush.app'
+              subprocess.run(['ditto', str(mount / 'Neon Rush.app'), str(app)], check=True)
+          finally:
+              subprocess.run(['hdiutil', 'detach', str(mount)], check=True)
+          verify(app)
+          (Path(os.environ['RUNNER_TEMP']) / 'neon-rush-qa/package-verification.json').write_text(json.dumps({
+              'sourceCommit': manifest['sourceCommit'], 'version': version, 'buildVersion': manifest['buildVersion'],
+              'architecture': os.environ['EXPECTED_ARCHITECTURE'],
+              'sameUniversalPackage': True, 'zipBytesVerified': True, 'dmgBytesVerified': True,
+              'dmgInstalledCopyVerified': True, 'signature': 'ad-hoc', 'appleNotarized': False,
+          }, indent=2) + '\n')
+          PY
+      - name: Run native controller protocol regressions
+        run: |
+          set -euo pipefail
+          xcrun swiftc -swift-version 5 \
+            resource/apps/neon-rush/macos/Sources/ControllerServer.swift \
+            resource/apps/neon-rush/macos/tests/ControllerServerTests.swift \
+            -o "$RUNNER_TEMP/controller-tests"
+          "$RUNNER_TEMP/controller-tests" | tee "$RUNNER_TEMP/neon-rush-qa/controller-tests.txt"
+      - name: Install the browser used for the unmodified virtual controller
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/neon-rush-browser"
+          cd "$RUNNER_TEMP/neon-rush-browser"
+          npm install --no-audit --no-fund --package-lock=false playwright@1.64.1
+          npx playwright install chromium
+      - name: Verify stable fallback ports while the default controller port is occupied
+        if: matrix.architecture == 'arm64'
+        env:
+          PLAYWRIGHT_MODULE: ${{ runner.temp }}/neon-rush-browser/node_modules/playwright/index.mjs
+        run: >-
+          python3 resource/apps/neon-rush/macos/tests/verify-native.py
+          --app "$RUNNER_TEMP/neon-rush-package/installed/Neon Rush.app"
+          --output "$RUNNER_TEMP/neon-rush-qa/native-occupied-port"
+          --occupy-default-port
+      - name: Drive the actual native app through the pureTV SDK and virtual controller
+        env:
+          PLAYWRIGHT_MODULE: ${{ runner.temp }}/neon-rush-browser/node_modules/playwright/index.mjs
+        run: >-
+          python3 resource/apps/neon-rush/macos/tests/verify-native.py
+          --app "$RUNNER_TEMP/neon-rush-package/installed/Neon Rush.app"
+          --output "$RUNNER_TEMP/neon-rush-qa/native"
+          ${{ matrix.qa_options }}
+      - name: Exercise the Intel executable through Rosetta with graphics
+        if: matrix.architecture == 'arm64'
+        env:
+          PLAYWRIGHT_MODULE: ${{ runner.temp }}/neon-rush-browser/node_modules/playwright/index.mjs
+        run: |
+          set -euo pipefail
+          if ! /usr/bin/arch -x86_64 /usr/bin/true; then
+            sudo /usr/sbin/softwareupdate --install-rosetta --agree-to-license
+          fi
+          python3 resource/apps/neon-rush/macos/tests/verify-native.py \
+            --app "$RUNNER_TEMP/neon-rush-package/installed/Neon Rush.app" \
+            --output "$RUNNER_TEMP/neon-rush-qa/rosetta" --launch-architecture x86_64 --language en
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: neon-rush-macos-qa-${{ matrix.platform }}
+          path: ${{ runner.temp }}/neon-rush-qa/
+          if-no-files-found: warn
+          retention-days: 14
+
+  export:
+    if: always()
+    needs: [build, verify]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: neon-rush-macos-qa-*
+          path: ${{ runner.temp }}/neon-rush-export/evidence
+      - uses: actions/download-artifact@v4
+        if: ${{ needs.build.result == 'success' && needs.verify.result == 'success' }}
+        with:
+          name: neon-rush-macos-package
+          path: ${{ runner.temp }}/neon-rush-export/packages
+      - name: Export this run to a new isolated Git branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          VERIFY_RESULT: ${{ needs.verify.result }}
+        run: |
+          python3 - <<'PY'
+          import datetime, hashlib, json, os, re, subprocess
+          from pathlib import Path
+          output = Path(os.environ['RUNNER_TEMP']) / 'neon-rush-export'
+          output.mkdir(exist_ok=True)
+          success = os.environ['BUILD_RESULT'] == os.environ['VERIFY_RESULT'] == 'success'
+          run = os.environ['GITHUB_RUN_ID']; attempt = os.environ['GITHUB_RUN_ATTEMPT']
+          source = os.environ['GITHUB_SHA']; repository = os.environ['GITHUB_REPOSITORY']
+          assert run.isdigit() and attempt.isdigit() and re.fullmatch('[a-f0-9]{40}', source)
+          if not success:
+              assert not (output / 'packages').exists(), 'Do not export install packages from failed validation'
+          else:
+              packages = output / 'packages'
+              manifest = json.loads((packages / 'build-manifest.json').read_text())
+              assert manifest['sourceCommit'] == source
+              for name, item in manifest['packages'].items():
+                  path = packages / name
+                  assert path.stat().st_size == item['bytes']
+                  assert hashlib.sha256(path.read_bytes()).hexdigest() == item['sha256']
+              def require_steering_direction(report):
+                  direction = report['steeringDirection']
+                  assert direction['passed'] is True and direction['sdkUnmodified'] is True
+                  assert direction['gameStateWrites'] is False
+                  cases = direction['cases']
+                  assert len(cases) == 2 and {case['input'] for case in cases} == {'LEFT', 'RIGHT'}
+                  for case in cases:
+                      expected = -1 if case['input'] == 'LEFT' else 1
+                      assert case['expectedSign'] == expected and case['screenDeltaX'] * expected > 0
+              for platform in ('macos-arm64', 'macos-x64'):
+                  evidence = output / 'evidence' / ('neon-rush-macos-qa-' + platform)
+                  assert (evidence / 'package-verification.json').is_file()
+                  report = json.loads((evidence / 'native/report.json').read_text())
+                  assert report['status'] == 'passed' or (platform == 'macos-x64' and report['status'] == 'limited_graphics' and report['webglAvailable'] is False)
+                  if report['status'] == 'passed':
+                      require_steering_direction(report)
+                  if platform == 'macos-arm64':
+                      translated = json.loads((evidence / 'rosetta/report.json').read_text())
+                      assert translated['status'] == 'passed' and translated['nativeProcessArchitecture'] == 'x86_64'
+                      require_steering_direction(translated)
+                      occupied = json.loads((evidence / 'native-occupied-port/report.json').read_text())
+                      assert occupied['status'] == 'passed'
+                      require_steering_direction(occupied)
+                      assert occupied['defaultPortOccupied'] is True and occupied['initialControllerPort'] != 63485
+                      stability = occupied['portStability']
+                      assert stability['cycles'] == 3 and stability['port'] == occupied['initialControllerPort']
+                      assert all(stability[key] is True for key in (
+                          'sameConnection', 'samePort', 'backgroundInputSuppressed',
+                          'foregroundHeldKeysQuarantined', 'freshPressWorks', 'defaultPortOccupied'))
+          files = {}
+          for path in sorted(output.rglob('*')):
+              if not path.is_file():
+                  continue
+              assert not path.is_symlink()
+              size = path.stat().st_size
+              assert size < 50_000_000, path
+              files[path.relative_to(output).as_posix()] = {'bytes': size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
+          assert sum(item['bytes'] for item in files.values()) < 150_000_000
+          branch = f'build-assets/neon-rush-macos-{run}-attempt-{attempt}'
+          metadata = {'sourceCommit': source, 'runId': int(run), 'runAttempt': int(attempt),
+              'workflowUrl': f'https://github.com/{repository}/actions/runs/{run}',
+              'exportBranch': branch, 'buildResult': os.environ['BUILD_RESULT'],
+              'verifyResult': os.environ['VERIFY_RESULT'], 'installPackagesValidated': success,
+              'githubReleaseCreated': False, 'masterUpdated': False,
+              'createdAt': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'files': files}
+          (output / 'export-manifest.json').write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n')
+          def git(*args):
+              subprocess.run(['git', '-C', str(output), *args], check=True)
+          git('init', '-b', 'export')
+          git('config', 'user.name', 'github-actions[bot]')
+          git('config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com')
+          git('add', '.')
+          git('commit', '-m', f'Export Neon Rush macOS run {run} attempt {attempt} [skip ci]')
+          subprocess.run(['gh', 'auth', 'setup-git'], check=True)
+          git('remote', 'add', 'origin', 'https://github.com/' + repository + '.git')
+          git('push', 'origin', 'HEAD:refs/heads/' + branch)
+          print(json.dumps({'exportBranch': branch, 'sourceCommit': source, 'installPackagesValidated': success}))
+          PY

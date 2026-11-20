@@ -1,0 +1,434 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "e7ba7d87faee02316200b3dc5dd36ab04cee493b",
+  "artifactSourceCommit": "68d343d22c762c904eb83854d4ab9c4113a7c30f",
+  "artifactRunId": "44608415225",
+  "startedAt": "2026-11-19T21:32:56.316488+00:00",
+  "game": "ponpoko-kart",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "47d65e9e50b0630dab7e6c0957293be5b0a511b8db11b290a6a0ff3d08dc9d6f",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/ponpoko-kart/qa-plan.json": "111e1ed85b2e1374c64cdb8e1ac397f6523c4b645ebbebc111587df5686e1490",
+    "joystick-games/tools/qa-plan.py": "26888d21e6cb2dd4b0da8a835af79d6fa0b02506b2e7f8264607c300f3390fb3",
+    "joystick-games/tools/macos-build.py": "4fa65936293a5d6c5e728577780edc30429a500627e8799c1c83a5095470b853",
+    "joystick-games/catalog-registry.json": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaRunId": 44617061184,
+  "qaRunAttempt": 1,
+  "runnerKind": "macos-15-intel",
+  "runnerName": "GitHub Actions 1000011191",
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "webgl2",
+    "storageRestartRequired": true,
+    "pauseStablePaths": [
+      "gameplay.tick",
+      "gameplay.time",
+      "gameplay.worldTime",
+      "gameplay.playerX",
+      "gameplay.playerY",
+      "gameplay.playerZ",
+      "gameplay.speed",
+      "gameplay.progress",
+      "gameplay.lap",
+      "gameplay.boost"
+    ],
+    "steps": [
+      {
+        "name": "Open original character selection",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 700,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "chars"
+          }
+        ]
+      },
+      {
+        "name": "Choose next original character",
+        "keys": [
+          "RIGHT"
+        ],
+        "holdMs": 200,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "chars"
+          }
+        ]
+      },
+      {
+        "name": "Confirm character and open course selection",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 700,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "course"
+          }
+        ]
+      },
+      {
+        "name": "Start selected original three-lap course",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 700,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      },
+      {
+        "name": "Skip authored intro with jump and wait for real countdown",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 700,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "racing"
+          }
+        ]
+      },
+      {
+        "name": "Accelerate on original course",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 2500,
+        "timeoutSeconds": 60,
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "gt",
+            "value": 2
+          },
+          {
+            "path": "gameplay.progress",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Jump and steer left while accelerating",
+        "keys": [
+          "UP",
+          "LEFT",
+          "A"
+        ],
+        "holdMs": 800,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "gameplay.playerX",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Steer right on original physics",
+        "keys": [
+          "UP",
+          "RIGHT"
+        ],
+        "holdMs": 700,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "gameplay.playerZ",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Display pureTV action help",
+        "keys": [
+          "Y"
+        ],
+        "holdMs": 250,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "gameplay.helpOpen",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Pause from physical START",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 350,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Resume only with fresh physical START",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 350,
+        "timeoutSeconds": 40,
+        "expect": [
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          },
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      }
+    ]
+  },
+  "acceptedRenderers": [
+    "webgl2"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "5be1d4bb67d96e02cac8090d52699fb784c45d109df961a0839454034bbd8964",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.ponpoko-kart.f0eda2fd93a94fb9ac409725d8080346",
+    "reusedAcrossRestartOnly": true
+  },
+  "nativeProcessArchitecture": "x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 467, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 198, in until\n    s=self.read()\n      ^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 572, in read\n    assert not state['game'].get('errors'),'Game runtime errors: '+json.dumps(state['game']['errors'],ensure_ascii=False)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Game runtime errors: [\"null is not an object (evaluating 'i.getShaderPrecisionFormat(i.VERTEX_SHADER,i.HIGH_FLOAT).precision')\"]\n",
+  "lastState": {
+    "active": false,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "ja",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "ぽんぽこカート · Ponpoko Kart",
+      "url": "http://127.0.0.1:60926/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.apple.UserNotificationCenter",
+      "name": "UserNotificationCenter"
+    },
+    "game": {
+      "audioState": "not_created",
+      "controller": {
+        "buttons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "cancelled": false,
+        "connected": false,
+        "info": {},
+        "players": [],
+        "pollCount": 0,
+        "pressed": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "released": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "source": ""
+      },
+      "errors": [
+        "null is not an object (evaluating 'i.getShaderPrecisionFormat(i.VERTEX_SHADER,i.HIGH_FLOAT).precision')"
+      ],
+      "frames": 0,
+      "game": "ponpoko-kart",
+      "gameplay": {
+        "boost": 0,
+        "character": "",
+        "countdown": 0,
+        "course": "",
+        "driftActive": false,
+        "driftCharge": 0,
+        "driftLevel": 0,
+        "framePolls": 0,
+        "helpOpen": false,
+        "item": "",
+        "itemPending": false,
+        "jumpHeld": false,
+        "lap": 0,
+        "lookBack": false,
+        "mode": "boot",
+        "playerX": 0,
+        "playerY": 0,
+        "playerZ": 0,
+        "position": 0,
+        "progress": 0,
+        "renderCalls": 0,
+        "screen": "boot",
+        "speed": 0,
+        "tick": 0,
+        "time": 0,
+        "worldTime": 0
+      },
+      "paused": false,
+      "renderer": "webgl2",
+      "stage": "error",
+      "webglVersion": null
+    },
+    "input": {
+      "connections": 0,
+      "inputEnabled": false,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 3,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 3
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "ponpoko.prefs"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.5"
+        ],
+        "inputEnabled": false,
+        "port": 63485,
+        "serviceName": "ぽんぽこカート · Ponpoko Kart",
+        "state": "registering"
+      }
+    },
+    "storage": {
+      "current": {
+        "ponpoko.prefs": null
+      },
+      "initial": {
+        "ponpoko.prefs": null
+      },
+      "origin": "http://127.0.0.1:60926"
+    },
+    "timestamp": 1795123977.769959
+  },
+  "failurePhase": "initialization",
+  "nativeProcessAlive": true,
+  "lastStateFresh": true,
+  "phase": "initialization",
+  "finishedAt": "2026-11-19T21:32:57.896989+00:00"
+}

@@ -1,0 +1,69 @@
+{
+  "recordedAt": "2026-11-19T19:07:55.245081+00:00",
+  "sourceCheckpoint": "894b7dc",
+  "latestBrowser": "browser-attempt-1/report.json",
+  "process": "browser-attempt-1/process.json",
+  "visualReview": "visual-review.json",
+  "status": "synthetic-browser-gameplay-passed",
+  "frozenDist": {
+    "game.js": {
+      "bytes": 936960,
+      "sha256": "06b2c27fe41341bb7407839ce6152852ad5b78d5fbe68a78886391dbc0b89e2b"
+    },
+    "game.css": {
+      "bytes": 32515,
+      "sha256": "3ad65bdc9565b93a5f706867fd2fde36494efc19b96458862f3e60e2cc7ac900"
+    },
+    "tv.html": {
+      "bytes": 294,
+      "sha256": "9a0314ae701bb9cc2d5046131168ea909b8b507906b40ffba698834f3ca20ce2"
+    },
+    "THIRD-PARTY-NOTICES.txt": {
+      "bytes": 3834,
+      "sha256": "1f13d13aa18f3540114210523b4f1c1fbf871a6fd2bdfcbdb0b3de34161404cf"
+    }
+  },
+  "unitTestLog": "unit-tests-held-start.log",
+  "unitTestsPassed": 6,
+  "typecheckLog": "typecheck-exact.log",
+  "buildCheckLog": "build-after-character-layout.log",
+  "coverage": [
+    "normal throttle changes original position and speed",
+    "X looks back and Y toggles help independently from movement/drift/item",
+    "pause freezes original simulation while rendered/controller frames advance",
+    "holding resume START for >=800ms and >=4 actual frames does not re-pause",
+    "disconnect cancels active original drift without release boost",
+    "Held-input reconnect remains quarantined and paused",
+    "Manual START resumes; focus return alone does not",
+    "20 read-only QA snapshots do not add native polls"
+  ],
+  "postBrowserCssChange": {
+    "description": "Low-height original character menu overflow fixed only in CSS",
+    "currentDist": {
+      "THIRD-PARTY-NOTICES.txt": {
+        "bytes": 3834,
+        "sha256": "1f13d13aa18f3540114210523b4f1c1fbf871a6fd2bdfcbdb0b3de34161404cf"
+      },
+      "tv.html": {
+        "bytes": 294,
+        "sha256": "9a0314ae701bb9cc2d5046131168ea909b8b507906b40ffba698834f3ca20ce2"
+      },
+      "game.css": {
+        "bytes": 33229,
+        "sha256": "3c9d980944e9cd2a7c31a9fc295dd23924fab024050de72b224ec0636d4ed01f"
+      },
+      "game.js": {
+        "bytes": 936960,
+        "sha256": "06b2c27fe41341bb7407839ce6152852ad5b78d5fbe68a78886391dbc0b89e2b"
+      }
+    },
+    "gameplayJavascriptUnchanged": true,
+    "exactCssVerification": "character-layout-validation.json"
+  },
+  "limitations": [
+    "Synthetic host only; no installed native app/TCP SDK/physical TV/phone acceptance",
+    "Initial browser character page at 960 was clipped; exact final CSS is separately verified with original DOM menu fixture",
+    "Active drift browser cancellation plus charged drift unit test; complete race/results and actual inventory item use not exercised",
+    "Software GPU throughput is not target-device performance"
+  ]
+}

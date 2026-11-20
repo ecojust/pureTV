@@ -1,0 +1,70 @@
+{
+  "overallAcceptance": true,
+  "scope": "Synthetic bridge browser adapter and visual review only; not installed-native or physical-controller acceptance.",
+  "reviewMethod": "All six original PNGs opened using view_image individually or in pairs, matched to frozen report states and hashes.",
+  "captures": [
+    {
+      "file": "menu-960.png",
+      "sha256": "c420b1c8efd21d9a1b16c2035739e5e49fa2402f0fa69b7fe18873cb90121edb",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "note": "Original title and all primary actions visible; focus outline and full supplied ID readable. The 28vh side panel scroll area clips secondary service/address/port details at 960x540; it does not clip the ID."
+    },
+    {
+      "file": "driving-1280.png",
+      "sha256": "8a63d1e959b2a149156c1ae2bd0559587cb92bf92a35cb9583f4a62d18d30f2d",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "note": "Actual manual UP acceleration after unchanged countdown; original cars, track, race HUD and minimap rendered; actual supplied ID visible, no modal."
+    },
+    {
+      "file": "pause-1280.png",
+      "sha256": "b619523b5e99728ee6ac10b9aa4948c1353de57cd604adcc7c2a5d8c5920f0b0",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "note": "Original pause menu and focus clear; side card stays visible; snapshot paused and zero controls."
+    },
+    {
+      "file": "focus-pause-1280.png",
+      "sha256": "1cf085714a9b32000e344c367ea74d86d5ae6515c3182c0dda1ecc071f514745",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "note": "Lifecycle freeze overlay visible above original race; deliberate START/A resume instruction and supplied ID readable."
+    },
+    {
+      "file": "focus-resumed-1280.png",
+      "sha256": "646f7a4659f8c5b8043a2859ad783871ae54c1d9efbb6502fc2c8fd1e99b01a0",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "note": "Original race visible without pause modal; state playing after START was held across at least three consumed frames."
+    },
+    {
+      "file": "reconnected-1280.png",
+      "sha256": "0000d16b06c17bc1a9e57587fdb88686be6fca4f84024d9b6a9c2835f5b32fcc",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "note": "Original race visible and active after deliberate reconnect resume; no pause modal, actual test ID visible."
+    }
+  ],
+  "limitations": [
+    "Short start-of-race manual-driving observation only; no full lap, complete race, career completion or performance claim.",
+    "960 title panel secondary connection details require its scroll area; complete controller ID remains visible.",
+    "Browser uses supplied synthetic ID Dirt-Synthetic-42, not an actual phone/SDK connection.",
+    "Software rendering is not TV performance."
+  ],
+  "nativeSdkTested": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

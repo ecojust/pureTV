@@ -1,0 +1,13 @@
+{
+  "command": "node joystick-games/penguintrack/src/tools/test.mjs",
+  "passed": 236,
+  "failed": 3,
+  "total": 239,
+  "runnerSha256": "5a2f31ae6ab6a8c06bb62c9e1b5580ad7bdeb3e4f2f389d54ea0481233b62b30",
+  "failures": [
+    "pro > nothing is locked until Firebase is set up (PRO_GATING auto)",
+    "pro > the dev flag works on dev hosts only",
+    "pro > the AI Lab free tier caps generations and workers"
+  ],
+  "interpretation": "All three expectations rely on the upstream automatic development unlock. The packaged localhost origin deliberately disables that bypass and leaves optional unconfigured Pro unavailable; separate adapter tests assert this policy. This is not an all-tests-passed report."
+}

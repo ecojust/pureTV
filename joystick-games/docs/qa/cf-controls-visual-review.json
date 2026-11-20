@@ -1,0 +1,63 @@
+{
+  "status": "passed",
+  "scope": "Manual review of 9 unmodified actual browser screenshots from the frozen CF controls acceptance. Synthetic bridge; no native hardware claim.",
+  "sourceAssetHashes": {
+    "THIRD-PARTY-NOTICES.txt": {
+      "bytes": 2257,
+      "sha256": "190efd7cdb014660722b4d6e0a1688d317373598e9ba8adb610dd129feb717b6"
+    },
+    "tv.html": {
+      "bytes": 881238,
+      "sha256": "9128ffc33f14d73da2205baf992c9f5f016ad3ff29b9744f1a2bb1fe375cd472"
+    }
+  },
+  "reviewedFiles": [
+    {
+      "path": "01-menu.png",
+      "sha256": "dec790255380c6605017f55246523dbf24ac9dfd51b1e0726ef2471762547df7"
+    },
+    {
+      "path": "02-connected.png",
+      "sha256": "14862463c72586c15f597b5988c4ba4d18dbe227e99faf9abeb38304cef31d52"
+    },
+    {
+      "path": "03-playing.png",
+      "sha256": "ae6c8a738df304579b7302c5949b6ab6e2e0cafaf49ecea35bc3fcb1b1dbcd9c"
+    },
+    {
+      "path": "04-paused.png",
+      "sha256": "98649f322518a305da37ec630f034ed5da7dc2834a8e031a751ab9f545227a5d"
+    },
+    {
+      "path": "05-reconnected.png",
+      "sha256": "4599c877e2097b4c71a9a8ee78981893b135a0e232367c801d4dc10c8b3be9a9"
+    },
+    {
+      "path": "06-layout-1280.png",
+      "sha256": "c8181bb37b27bdeb8e68c74d065120588c527e64b9e8adb8cb43daf09d693c1e"
+    },
+    {
+      "path": "06-layout-960.png",
+      "sha256": "9f621f1016c17ba60e008d237f92c3bc21a4dd660f138d6a1a8064835d120412"
+    },
+    {
+      "path": "07-menu-1280.png",
+      "sha256": "4a8aa5ae1250ff55b45646534b39d03a652d7757591f467134d4000d83bb3d80"
+    },
+    {
+      "path": "07-menu-960.png",
+      "sha256": "e8406d55f8534853edb849e3a36e1d0be5e4373f854d1fbb335adc9343ebbcf9"
+    }
+  ],
+  "controllerIdentity": "Icon and full fixture controller ID are visible at 960×540 and 1280×720; long ID wraps within its panel.",
+  "gameWorld": "Actual ship, weapon, teammates, health, armor, ammunition, scoreboard and minimap rendered.",
+  "menuBehavior": "At 960×540 the options panel scrolls internally. Initial Start focus scrolls title above the viewport while retaining the controller legend and visible Start action. Returning to the menu can leave Start below the viewport until directional focus/scroll reaches it. At 1280×720 the full menu is visible.",
+  "pauseBehavior": "At 960×540 Continue is visible and Quit is below the scroll viewport. At 1280×720 both are visible. Controller identity does not cover the main menu actions.",
+  "limitations": [
+    "This is not a claim that every configuration option fits the initial 960 viewport without scrolling.",
+    "The controls suite verifies actual movement, aiming, firing, reload completion and jump, but does not complete a whole 50-kill match.",
+    "Software rendering timing and frame rate are not physical-device performance measurements."
+  ],
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false
+}

@@ -1,0 +1,99 @@
+{
+  "status": "passed",
+  "scope": "controller client status acceptance",
+  "game": "tension-span",
+  "version": "0.2.3",
+  "artifactSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "qaSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "runtimeRun": "43846050276",
+  "sourceWorkflowResult": "failure",
+  "sourceGroupResult": "passed",
+  "apk": {
+    "packageName": "com.ecojust.tensionspantv",
+    "versionCode": 5,
+    "versionName": "0.2.3",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "bytes": 312751,
+    "sha256": "db42bcfa6714274cd393aa949a7860061034cc6cb94cd4e5048f2b3e5b82a6b6"
+  },
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "nativeSourceReceiptMatchesCommit": true,
+  "inPlaceUpgradeInstalled": true,
+  "controllerClientStatusAcceptancePassed": true,
+  "fullGameplayAcceptancePerformedInThisUpdate": false,
+  "modelReuse": {
+    "sourceRef": "9af9f197855eb7a0ce7174c0e6295c8974b3250d:resource/apps/tension-span/src/main/assets/game-model.js",
+    "sha256": "5f10810a7c657ef65b480a3aff2a4240644dc07cbb7467fec6efaebe59fb7ef8",
+    "bytes": 15449,
+    "matchesNewApk": true
+  },
+  "previousReleaseVerification": {
+    "version": "0.2.2",
+    "metadata": "resource/apps/tension-span/docs/controller-status-baseline/0.2.2/resource.json",
+    "scope": "Historical evidence, not current UI captures"
+  },
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "connected status displays the real SDK identity and controller icon",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-c78322db75f2",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "disconnect removes the ID and same-ID reconnect restores its seat",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-c78322db75f2",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK status message",
+      "status": "passed",
+      "result": {
+        "messages": 22,
+        "acks": 22,
+        "connections": 2
+      }
+    }
+  ],
+  "originalEvidence": "docs/controller-client-status/android/43846050276/evidence/controller-runtime-kit-3/tension-span",
+  "originalDriverSha256": "6f1ceef5851085d9a0586664305fe7d5eb70f669c105014a1075d14739fb8cda",
+  "captures": {
+    "menu-android.png": {
+      "sha256": "08d1e78cf4f4b51d942eab4fbb403d228f2f60d70e4a41c1444c3f595ec0edcf",
+      "bytes": 399088
+    },
+    "controller-connected-android.png": {
+      "sha256": "7648eed757fe8110dba41036755ef7343d589425a450671c3e76c7702ea152ca",
+      "bytes": 394505
+    },
+    "controller-disconnected.png": {
+      "sha256": "5d51c12d3512652d58846ef43e7e2249c7378af4366329f2c0d2e189db9fe706",
+      "bytes": 396827
+    },
+    "controller-reconnected.png": {
+      "sha256": "7648eed757fe8110dba41036755ef7343d589425a450671c3e76c7702ea152ca",
+      "bytes": 394505
+    }
+  },
+  "connectedCaptureSha256": "7648eed757fe8110dba41036755ef7343d589425a450671c3e76c7702ea152ca",
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false
+}

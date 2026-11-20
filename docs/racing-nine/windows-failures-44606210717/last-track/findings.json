@@ -1,0 +1,329 @@
+{
+  "game": "last-track",
+  "sourceSha": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+  "originalRunId": 44606210717,
+  "attempt": 1,
+  "exportCommit": "8edfdd8b29cea381da4bad6393a07eeb0181885d",
+  "evidenceIntegrity": "all original exported files verified against immutable Git blobs and both manifests",
+  "modes": [
+    {
+      "mode": "runtime-normal",
+      "originalStatus": "failed",
+      "failedTest": "Native DPI-scaled minimum and initial viewport",
+      "failedError": "PermissionError: [Errno 13] Permission denied: 'D:\\\\a\\\\_temp\\\\runtime-normal\\\\diagnostics\\\\minimum-window.png'",
+      "report": "last-track/original-export/evidence/runtime-normal/report.json",
+      "reportSha256": "6aa3a462e355774c67fe9a893f3221559e61742f2a107a5f4dc2b0e7faa81783",
+      "finalNativeState": "last-track/original-export/evidence/runtime-normal/diagnostics/state.json",
+      "finalNativeStateSha256": "8673e81c1a1d4095a3d2b538aa3ea3fcc7377b9c9b24a0359994f7b0913faf0a",
+      "lastRecordedSnapshot": {
+        "label": "Actual minimum logical viewport",
+        "at": "2026-11-19T20:15:29.549237+00:00",
+        "nativeTimestamp": 674.89,
+        "frame": 4,
+        "gameplay": {
+          "activeWeapon": 0,
+          "ammo": 0,
+          "armor": 0,
+          "cash": 5000,
+          "controls": {
+            "brake": false,
+            "cycle": false,
+            "drift": false,
+            "fire": false,
+            "left": false,
+            "nitro": false,
+            "right": false,
+            "throttle": false
+          },
+          "countdown": 0,
+          "drift": 0,
+          "heading": 0,
+          "lap": 0,
+          "menuFocus": "NEW GAMEPick a car, start with $5,000",
+          "modal": false,
+          "nitro": 0,
+          "nitroOn": false,
+          "phase": "menu",
+          "projectiles": 0,
+          "quality": "med",
+          "screen": "title",
+          "speed": 0,
+          "tick": 0,
+          "time": 0,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "finalState": {
+        "nativeTimestamp": 679.093,
+        "frames": 10,
+        "renderer": "webgl2",
+        "stage": "menu",
+        "gameplay": {
+          "activeWeapon": 0,
+          "ammo": 0,
+          "armor": 0,
+          "cash": 5000,
+          "controls": {
+            "brake": false,
+            "cycle": false,
+            "drift": false,
+            "fire": false,
+            "left": false,
+            "nitro": false,
+            "right": false,
+            "throttle": false
+          },
+          "countdown": 0,
+          "drift": 0,
+          "heading": 0,
+          "lap": 0,
+          "menuFocus": "NEW GAMEPick a car, start with $5,000",
+          "modal": false,
+          "nitro": 0,
+          "nitroOn": false,
+          "phase": "menu",
+          "projectiles": 0,
+          "quality": "med",
+          "screen": "title",
+          "speed": 0,
+          "tick": 0,
+          "time": 0,
+          "x": 0,
+          "y": 0
+        },
+        "controllerPollCount": 10,
+        "heldButtons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "errorsField": []
+      },
+      "modelWrites": false,
+      "clockOverrides": false,
+      "category": "native-screenshot-file-read-race",
+      "confidence": "high",
+      "finding": "Original native host creates the final PNG with STGM_SHARE_EXCLUSIVE, then CapturePreview writes asynchronously. The inherited screenshot verifier reads as soon as size>1000, and the actual traceback fails inside Path.read_bytes. This is an observation/output-file failure, not evidence that the game failed to initialize."
+    },
+    {
+      "mode": "runtime-occupied",
+      "originalStatus": "failed",
+      "failedTest": "Actual gameplay and pause model freeze",
+      "failedError": "AssertionError: Insufficient fresh real snapshots during pause",
+      "report": "last-track/original-export/evidence/runtime-occupied/report.json",
+      "reportSha256": "91c12333579659cf59af9cf047cbab9bd7a13cdd7550d173ec7588d287a013b7",
+      "finalNativeState": "last-track/original-export/evidence/runtime-occupied/diagnostics/state.json",
+      "finalNativeStateSha256": "890b7576a8c391be076c1c7f10a3c73ec89bb1d0b4ad8e0a5ba493db1de1bad3",
+      "lastRecordedSnapshot": {
+        "label": "Paused before model stability observation",
+        "at": "2026-11-19T20:19:24.392863+00:00",
+        "nativeTimestamp": 910.031,
+        "frame": 197,
+        "gameplay": {
+          "activeWeapon": 0,
+          "ammo": 199,
+          "armor": 130,
+          "cash": 5000,
+          "controls": {
+            "brake": false,
+            "cycle": false,
+            "drift": false,
+            "fire": false,
+            "left": false,
+            "nitro": false,
+            "right": false,
+            "throttle": false
+          },
+          "countdown": 0,
+          "drift": 0.0013853524186875704,
+          "heading": 0.1794654617410707,
+          "lap": 1,
+          "menuFocus": "RESUME",
+          "modal": false,
+          "nitro": 0.9628333333333333,
+          "nitroOn": false,
+          "phase": "racing",
+          "projectiles": 0,
+          "quality": "low",
+          "screen": "paused",
+          "speed": 15.337005205371371,
+          "tick": 732,
+          "time": 3.0916666666666583,
+          "x": 149.9871402876714,
+          "y": 0.9982603075338152
+        }
+      },
+      "finalState": {
+        "nativeTimestamp": 911.64,
+        "frames": 198,
+        "renderer": "webgl2",
+        "stage": "paused",
+        "gameplay": {
+          "activeWeapon": 0,
+          "ammo": 199,
+          "armor": 130,
+          "cash": 5000,
+          "controls": {
+            "brake": false,
+            "cycle": false,
+            "drift": false,
+            "fire": false,
+            "left": false,
+            "nitro": false,
+            "right": false,
+            "throttle": false
+          },
+          "countdown": 0,
+          "drift": 0.0013853524186875704,
+          "heading": 0.1794654617410707,
+          "lap": 1,
+          "menuFocus": "RESUME",
+          "modal": false,
+          "nitro": 0.9628333333333333,
+          "nitroOn": false,
+          "phase": "racing",
+          "projectiles": 0,
+          "quality": "low",
+          "screen": "paused",
+          "speed": 15.337005205371371,
+          "tick": 732,
+          "time": 3.0916666666666583,
+          "x": 149.9871402876714,
+          "y": 0.9982603075338152
+        },
+        "controllerPollCount": 198,
+        "heldButtons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "errorsField": []
+      },
+      "modelWrites": false,
+      "clockOverrides": false,
+      "category": "pause-observation-budget",
+      "confidence": "high for failing guard and unchanged available model samples",
+      "finding": "Original Windows guard requires four distinct native timestamps within three seconds. No paused-model-change assertion failed. Available before/final samples remain paused with exactly unchanged declared model fields; loop-internal reads were not individually archived, so their exact sample count is not reconstructed.",
+      "pauseEvidence": {
+        "beforeAt": "2026-11-19T20:19:24.392863+00:00",
+        "finishedAt": "2026-11-19T20:19:27.597726+00:00",
+        "beforeNativeTimestamp": 910.031,
+        "finalNativeTimestamp": 911.64,
+        "nativeTimestampDelta": 1.6090000000000373,
+        "beforeControllerPoll": 197,
+        "finalControllerPoll": 198,
+        "observedPollDelta": 1,
+        "unchangedModel": {
+          "gameplay.x": 149.9871402876714,
+          "gameplay.y": 0.9982603075338152,
+          "gameplay.time": 3.0916666666666583,
+          "gameplay.ammo": 199,
+          "gameplay.armor": 130,
+          "gameplay.cash": 5000
+        },
+        "nearbyOriginalObservations": [
+          {
+            "label": "Plan controls released: Use independent nitro Y",
+            "at": "2026-11-19T20:18:44.040883+00:00",
+            "timestamp": 869.468,
+            "poll": 177,
+            "stage": "playing"
+          },
+          {
+            "label": "Pause explicitly actual SDK input",
+            "at": "2026-11-19T20:18:46.652692+00:00",
+            "timestamp": 872.046,
+            "poll": 178,
+            "stage": "playing"
+          },
+          {
+            "label": "Pause explicitly actual gameplay observation",
+            "at": "2026-11-19T20:18:51.536075+00:00",
+            "timestamp": 876.921,
+            "poll": 180,
+            "stage": "paused"
+          },
+          {
+            "label": "Plan controls released: Pause explicitly",
+            "at": "2026-11-19T20:18:53.704023+00:00",
+            "timestamp": 879.343,
+            "poll": 181,
+            "stage": "paused"
+          },
+          {
+            "label": "Resume explicitly actual SDK input",
+            "at": "2026-11-19T20:18:56.433786+00:00",
+            "timestamp": 881.765,
+            "poll": 182,
+            "stage": "paused"
+          },
+          {
+            "label": "Resume explicitly actual gameplay observation",
+            "at": "2026-11-19T20:19:01.243615+00:00",
+            "timestamp": 886.64,
+            "poll": 184,
+            "stage": "playing"
+          },
+          {
+            "label": "Plan controls released: Resume explicitly",
+            "at": "2026-11-19T20:19:03.304808+00:00",
+            "timestamp": 888.953,
+            "poll": 185,
+            "stage": "playing"
+          },
+          {
+            "label": "Catalog controls released",
+            "at": "2026-11-19T20:19:05.513469+00:00",
+            "timestamp": 891.156,
+            "poll": 186,
+            "stage": "playing"
+          },
+          {
+            "label": "Catalog controls released",
+            "at": "2026-11-19T20:19:14.645817+00:00",
+            "timestamp": 900.296,
+            "poll": 191,
+            "stage": "playing"
+          },
+          {
+            "label": "START pauses with native START counter",
+            "at": "2026-11-19T20:19:19.538123+00:00",
+            "timestamp": 905.187,
+            "poll": 194,
+            "stage": "paused"
+          },
+          {
+            "label": "START pauses raw and semantic START released",
+            "at": "2026-11-19T20:19:24.391846+00:00",
+            "timestamp": 910.031,
+            "poll": 197,
+            "stage": "paused"
+          },
+          {
+            "label": "Paused before model stability observation",
+            "at": "2026-11-19T20:19:24.392863+00:00",
+            "timestamp": 910.031,
+            "poll": 197,
+            "stage": "paused"
+          }
+        ]
+      }
+    }
+  ],
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "productionChanged": false
+}

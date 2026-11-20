@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-11-19T18:39:37.159622+00:00",
+  "status": "passed",
+  "exactNpmCi": "npm-ci-attempt-3.json",
+  "originalTsconfigCheck": {
+    "command": "node_modules/.bin/tsc --noEmit --project src/upstream/tsconfig.json",
+    "exitCode": 0,
+    "log": "typecheck-exact.log"
+  },
+  "fullAdaptationTypecheck": {
+    "command": "npm run typecheck",
+    "exitCode": 0,
+    "log": "typecheck-exact.log"
+  },
+  "unitTests": {
+    "command": "npm test",
+    "passed": 5,
+    "failed": 0,
+    "log": "unit-tests-exact.log"
+  },
+  "offlineDistribution": {
+    "commands": [
+      "npm run build",
+      "npm run build:check"
+    ],
+    "exitCode": 0,
+    "log": "build-exact.log"
+  },
+  "initialFailureHistory": "dependency-attempts.json",
+  "scope": "Source/dependency validation only; no synthetic browser or native/physical device acceptance implied."
+}

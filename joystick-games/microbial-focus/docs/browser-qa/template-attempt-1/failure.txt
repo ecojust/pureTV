@@ -1,0 +1,5 @@
+初始 shape 模板实际 Chromium 运行失败：
+ERROR Unexpected end of input
+page.evaluate: ReferenceError: JoystickGameQA is not defined
+
+原因：HTML build 使用 String.replace 的字符串替换值，Pixi 原库内的 $ 替换标记被解释为替换表达式，破坏拼接 JS。改用函数替换值后同源 Microbial Focus 在真实 WebGL2 中成功运行并响应 A 调焦。此为开发阶段失败，未冻结当时完整 dist；不将随后生成的源码哈希冒充失败版本。最终验收见后续 attempt 目录。

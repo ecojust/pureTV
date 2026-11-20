@@ -1,0 +1,106 @@
+{
+  "status": "passed",
+  "method": "Decode every original frame to the rawvideo sink, timestamp passthrough; no modified video is created. Initial default timebase sinks reported rounded duplicate DTS while exiting zero; retained separately. Preserve the demuxer time base for this final full decode; no codec errors or device-FPS claims.",
+  "videos": [
+    {
+      "game": "glup",
+      "mode": "glup-normal",
+      "sha256": "32f29688aaf6a27a9510de972978fbb9f3ce22f6448b3df30255425dadab6743",
+      "bytes": 18571384,
+      "fullDecodeExitCode": 0,
+      "diagnosticBytes": 0,
+      "metadata": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "nb_frames": "1557"
+          },
+          {
+            "nb_frames": "1"
+          },
+          {
+            "nb_frames": "1"
+          }
+        ],
+        "format": {
+          "duration": "158.761278"
+        }
+      },
+      "decodeCommand": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-xerror",
+        "-err_detect",
+        "explode",
+        "-i",
+        "<original-video>",
+        "-map",
+        "0:v:0",
+        "-vsync",
+        "0",
+        "-enc_time_base",
+        "-1",
+        "-f",
+        "rawvideo",
+        "-y",
+        "/dev/null"
+      ],
+      "url": "https://raw.githubusercontent.com/ecojust/pureTV/a06ad8414c3b8b46fd56cdcd9d7420c2ef344b93/evidence/joystick-android-runtime-glup/glup-normal/controller-gameplay.mp4"
+    },
+    {
+      "game": "glup",
+      "mode": "glup-occupied",
+      "sha256": "5b6517ffc4448bd5f83318ae25e927ecf627e539c736a189252a4c3223ab295f",
+      "bytes": 18840305,
+      "fullDecodeExitCode": 0,
+      "diagnosticBytes": 0,
+      "metadata": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "nb_frames": "1639"
+          },
+          {
+            "nb_frames": "1"
+          },
+          {
+            "nb_frames": "1"
+          }
+        ],
+        "format": {
+          "duration": "156.284056"
+        }
+      },
+      "decodeCommand": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-xerror",
+        "-err_detect",
+        "explode",
+        "-i",
+        "<original-video>",
+        "-map",
+        "0:v:0",
+        "-vsync",
+        "0",
+        "-enc_time_base",
+        "-1",
+        "-f",
+        "rawvideo",
+        "-y",
+        "/dev/null"
+      ],
+      "url": "https://raw.githubusercontent.com/ecojust/pureTV/a06ad8414c3b8b46fd56cdcd9d7420c2ef344b93/evidence/joystick-android-runtime-glup/glup-occupied/controller-gameplay.mp4"
+    }
+  ]
+}

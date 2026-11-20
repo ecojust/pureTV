@@ -1,0 +1,32 @@
+{
+  "scope": "Catalog-only fresh app-data preparation before read-only instrumentation launches target game",
+  "tests": {
+    "suite": "joystick-games/qa/android/test_runner.py",
+    "passed": 24,
+    "log": "/dev/shm/joystick-android-fresh-install-tests.log"
+  },
+  "checkedSyntax": true,
+  "diffWhitespaceCheck": true,
+  "actualAndroidRuntimeExecuted": false,
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "sha256": "71c04edb176791e4f4180af0738797820420e66fa7f6ac2bd7972d4890f5a142",
+      "bytes": 45172
+    },
+    "joystick-games/qa/android/test_runner.py": {
+      "sha256": "174e9cfd83b0455051fbf12aba2212a9c53b4a29f27f286fa4fcf4f5d3c3d213",
+      "bytes": 24591
+    },
+    "joystick-games/qa/android/README.md": {
+      "sha256": "6ecb57605b93c93cf96d1eee6e7f90111074736a0bfa7c0eecd7c7c010be75fa",
+      "bytes": 8174
+    }
+  },
+  "behavior": [
+    "Only registered catalog target package is reset; observer and unrelated packages are untouched.",
+    "Both normal and occupied scenarios require exact Success from pm clear before any instrumentation launch.",
+    "Failed or unconfirmed reset saves failure setup report and blocks launch.",
+    "CF/QQ retain prior install-and-preserve-data behavior."
+  ],
+  "signedOrPublished": false
+}

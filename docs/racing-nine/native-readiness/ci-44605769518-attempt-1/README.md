@@ -1,0 +1,9 @@
+# Mac racing-02 attempt 2
+
+Original production run 44605769518, attempt 1, source `ed27d8e4cd5fadc037dac718afb958f1727f63fe`, ref `build-source/racing-macos-02-v2`. Root dispatched production once. The original build and ARM job passed; Intel initialization failed; the original immutable export succeeded. The workflow conclusion remains failure.
+
+The complete immutable export `df1b33d5a8c2c107396f654818600b93d68bb112` contains 976 files / 81,305,997 bytes. Every original Git blob and manifest SHA256 was verified. Original non-package evidence is preserved in `original-production-export/`. Six actual ZIP/DMG files remain only in `/dev/shm/racing-native-readiness/macos-44605769518-export/packages/` for root to review and stage; temporary packages are not stored under docs.
+
+`production-export-audit.json` binds 1,991 unique input files to the frozen Git source and verifies every ZIP application/resource file and actual universal Mach-O architecture. It independently reruns the original exported classifier, without rerunning games, and obtains exactly the original three coverage reports. Penguintrack, Last Track and Dirt Crown each passed all nine original gameplay/controller/storage checks in native ARM, occupied-port ARM and Rosetta x86_64. Intel results remain initialization failures; independent before/after WebGL2 observations do not prove the game failure cause or Intel hardware gameplay. Package signatures are ad hoc, not Apple notarized. Physical ESP32 was not tested.
+
+The earlier Intel-only read-only export `5aaf9bf65b0cd854831a51d345b6b1d7e1283101` (reader run 44608765900) is retained separately with its original request, HTTP204 response and all 309 original files. No original report has been modified. The audit does not claim a new Linux codesign/DMG mount or screenshot visual review; original macOS package checks and separate human-readable visual reviews remain distinct.

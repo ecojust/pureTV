@@ -1,0 +1,105 @@
+{
+  "status": "passed_no_blocking_findings",
+  "reviewer": "racing_review_rally",
+  "reviewedAt": "2026-11-19T22:36:56.732581+00:00",
+  "method": "Independent static review plus frozen source/evidence SHA and exact Git-original cross-check; read recorded local tests and real Backroad selection verification without rerunning them.",
+  "freezeInventory": {
+    "path": "/dev/shm/windows-host-tmp/remote-mac-source-scope-freeze.json",
+    "bytes": 3360,
+    "sha256": "2306f01b16825922145bb761148e1c75bf42057cc9201719cf5354cb0155bc81"
+  },
+  "sourceInventory": {
+    "joystick-games/tools/windows-inputs.py": {
+      "bytes": 18668,
+      "sha256": "6b7198315bc15e0f9a4c275c794f326bd7a6631a1b3f94d7172269aa370dced5"
+    },
+    "joystick-games/shared/windows/tests/source-scope.test.py": {
+      "bytes": 24497,
+      "sha256": "8d4a992b6f849e404cca82dde68b51a61daffb46c0f7449074a0934b7d32952c"
+    }
+  },
+  "evidenceFilesRehashed": 13,
+  "exactFixedSourceFilesCompared": 4,
+  "originalSourceCommit": "232d544079a472aa0ffb259c1bc73c692b94504d",
+  "originalFailure": {
+    "windowsRunId": 44628818020,
+    "localExactSourceReproduction": "Missing or symlinked published package",
+    "originalLocalFailurePreserved": true,
+    "originalCiBuildLogReadByThisReview": false,
+    "initialRemoteOnlyDraftAlsoRejectedMacosIndex": true
+  },
+  "remoteMetadataBoundary": {
+    "platform": "macos only",
+    "storage": "github-release-asset",
+    "priorPathSuffixSizeShaAndAliasChecksRunFirst": true,
+    "version": "Strict numeric major.minor.patch",
+    "tag": "Exact joystick-{game}-v{version}",
+    "url": "Exact HTTPS github.com/ecojust/pureTV/releases/download/{tag}/{basename}, no query/fragment/foreign origin",
+    "releaseAndAssetIds": "Positive true integers below 2**63; bool/string rejected",
+    "localSameNameFileDirectoryOrLinkRejected": true,
+    "remoteNamesAddedToExcludedOutputs": false,
+    "remoteDeclarationsDoNotConcealMissingTrackedBlobs": true,
+    "remoteBytesOrSignatureVerifiedByThisSelector": false
+  },
+  "publishedIndexBoundary": {
+    "allowedMetadata": [
+      "macos/README.md",
+      "macos/SHA256SUMS.txt"
+    ],
+    "metadataIncludedAndHashedAsSourceConfiguration": true,
+    "checksumRequiredWhenRemoteIndexDirectoryExists": true,
+    "checksumEntriesExactlyMatchDeclaredRemoteAndLocalPackages": true,
+    "unexpectedFilesAndDirectoriesAndSymlinksRejected": true,
+    "localRemoteBasenameAmbiguityRejected": true,
+    "existingLocalPayloadChecksUnchanged": true
+  },
+  "unchangedFunctionsAst": [
+    "regular",
+    "package_json",
+    "pe_header",
+    "published_format",
+    "release_outputs",
+    "file_records",
+    "executed_sources",
+    "verify_complete_git_selection"
+  ],
+  "localPackageHashSizeFormatValidationTailByteIdentical": true,
+  "allOriginalSourceScopeTestMethodsAstUnchanged": true,
+  "newBoundaryTests": [
+    "test_remote_mac_cannot_mask_an_existing_file_directory_or_link",
+    "test_remote_mac_does_not_relax_local_package_or_production_inputs",
+    "test_remote_mac_index_keeps_readme_and_checksums_as_exact_inputs",
+    "test_remote_mac_index_rejects_local_binary_and_ambiguous_name",
+    "test_remote_mac_metadata_never_excludes_a_source_path",
+    "test_remote_mac_requires_exact_repo_tag_version_and_asset_identity",
+    "test_remote_mac_retains_original_path_size_hash_and_alias_guards"
+  ],
+  "recordedValidation": {
+    "sourceScopeTestsPassed": 32,
+    "gitInputTestsPassed": 2,
+    "actualBackroadSelectedFiles": 928,
+    "actualBackroadDistFiles": 333,
+    "complete232dGitPathSetChecked": true,
+    "note": "Path-set completeness was checked by the executed freeze script against git ls-tree of 232d. Changed selector/test bytes belong to the new fix; this does not claim all selected bytes are the old commit.",
+    "rerunByReviewer": false
+  },
+  "actualRemoteReleaseMetadata": {
+    "releaseId": 451969286,
+    "tag": "joystick-backroad-rally-v0.1.0",
+    "assetIds": [
+      769411847,
+      769412154
+    ],
+    "sameBytesAsFixed232d": true,
+    "priorDeliveryAndNativeLimitsUnmodified": true
+  },
+  "findings": [],
+  "limitations": [
+    "No remote package download, signature/content re-audit, new Windows build or native execution occurred in this review.",
+    "The current original Windows run and its successful Pon/Royale work are not restarted by this source-selection change.",
+    "This resolves the demonstrated local source-selection guard; it does not establish a new Backroad native acceptance result."
+  ],
+  "sharedSourcesModifiedByReviewer": false,
+  "workflowDispatched": false,
+  "committedOrPublished": false
+}

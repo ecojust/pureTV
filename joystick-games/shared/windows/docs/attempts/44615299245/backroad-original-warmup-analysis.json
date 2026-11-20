@@ -1,0 +1,136 @@
+{
+  "scope": "Read-only diagnosis of original Backroad Windows failure, not a passing rerun",
+  "sourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+  "sourceRunId": 44615299245,
+  "originalExportCommit": "6dc14b79a364dc8679f370f17099e0636acef356",
+  "sourceFilesVerifiedAgainstGitAndBuildManifest": {
+    "joystick-games/backroad-rally/src/upstream/src/main.ts": {
+      "bytes": 53102,
+      "sha256": "1eafed5155049a2fe353c863dfa5e5fcbb07356d4f1ba62b87ff8e31728b8d92"
+    },
+    "joystick-games/backroad-rally/src/upstream/src/menu/stageMenus.ts": {
+      "bytes": 14219,
+      "sha256": "72c30b4153c97bf7ece996f69a7fcffcc5ad6f28f6cc299856d4da462488321b"
+    },
+    "joystick-games/backroad-rally/src/upstream/src/game/stageRun.ts": {
+      "bytes": 5076,
+      "sha256": "c1e269cfa40be54e436f213a3c793162c4a835cc90ff4ea091877342acce3400"
+    },
+    "joystick-games/backroad-rally/src/upstream/src/puretv.ts": {
+      "bytes": 5315,
+      "sha256": "50c14107b00988559e20ba80035627e49f0eaa1723e0c34c1c200c2b8f115cc6"
+    },
+    "joystick-games/backroad-rally/dist/data/stage_runtime.json": {
+      "bytes": 2671,
+      "sha256": "4aff9a2321fb7c2ee0306a20e918255263c46391339dc0aa7efe75ea1d409c6a"
+    }
+  },
+  "originalStateFiles": {
+    "joystick-windows-evidence-backroad-rally/runtime-normal/diagnostics/state.json": {
+      "file": {
+        "bytes": 84837,
+        "sha256": "e3b53ccef469c7142c7b10c876a696082f243aa7454ccaa1482c41edd4d519d5"
+      },
+      "timestamp": 1011.687,
+      "ready": true,
+      "nativeEpoch": 2,
+      "documentEpoch": 2,
+      "url": "https://puretv.local/tv.html?mode=quick&stage=finland&car=swift&cond=stage&weather=stage",
+      "renderer": "webgl2",
+      "frames": 53,
+      "pollCount": 69,
+      "stage": "menu",
+      "paused": false,
+      "gameplay": {
+        "camera": "default",
+        "carId": "swift",
+        "clock": 0,
+        "controls": {
+          "brake": 0,
+          "digitalSteer": false,
+          "handbrake": false,
+          "steer": 0,
+          "throttle": 0
+        },
+        "menuFocus": "",
+        "menuValue": "",
+        "penalties": 0,
+        "phase": "intro",
+        "ready": false,
+        "recovers": 0,
+        "speed": 0,
+        "stageId": "finland",
+        "tractionAssist": true,
+        "x": 54,
+        "y": 24.350000381469727,
+        "yaw": 0,
+        "z": 0
+      },
+      "diagnosticError": null,
+      "lastJavaScriptError": ""
+    },
+    "joystick-windows-evidence-backroad-rally/runtime-occupied/diagnostics/state.json": {
+      "file": {
+        "bytes": 84837,
+        "sha256": "6413fc653fb89084dec6d373194f3dfbbd2823d4529bbdf8f7281febe487d85d"
+      },
+      "timestamp": 1456.109,
+      "ready": true,
+      "nativeEpoch": 2,
+      "documentEpoch": 2,
+      "url": "https://puretv.local/tv.html?mode=quick&stage=finland&car=swift&cond=stage&weather=stage",
+      "renderer": "webgl2",
+      "frames": 53,
+      "pollCount": 67,
+      "stage": "menu",
+      "paused": false,
+      "gameplay": {
+        "camera": "default",
+        "carId": "swift",
+        "clock": 0,
+        "controls": {
+          "brake": 0,
+          "digitalSteer": false,
+          "handbrake": false,
+          "steer": 0,
+          "throttle": 0
+        },
+        "menuFocus": "",
+        "menuValue": "",
+        "penalties": 0,
+        "phase": "intro",
+        "ready": false,
+        "recovers": 0,
+        "speed": 0,
+        "stageId": "finland",
+        "tractionAssist": true,
+        "x": 54,
+        "y": 24.350000381469727,
+        "yaw": 0,
+        "z": 0
+      },
+      "diagnosticError": null,
+      "lastJavaScriptError": ""
+    }
+  },
+  "observedRenderedFramesBothModes": 53,
+  "perFrameRealDtMaximumSeconds": 0.1,
+  "maximumWarmupAccumulatedAt53FramesSeconds": 5.3,
+  "originalWarmupMaximumSeconds": 6,
+  "originalCurtainFadeSeconds": 0.6,
+  "originalStageIntroSeconds": 2.5,
+  "originalCountdownSeconds": 3,
+  "actualNativeAndLocalStorageQuality": "low",
+  "observations": [
+    "All 32 preceding menu taps passed.",
+    "Both final documents have matching native/JS epoch 2 and the intended query URL.",
+    "The final stage renderer is active; the original loading curtain has not set menus.ready.",
+    "The original flow remains intro with clock zero; only ready and unpaused frames advance physics.",
+    "The 60-second wall-clock wait did not satisfy the unchanged running/playing expectation."
+  ],
+  "limitations": [
+    "The original reports do not expose every frameDt or warmup accumulator value.",
+    "This source/state explanation is not a successful native gameplay result."
+  ],
+  "noGameOrClockMutation": true
+}

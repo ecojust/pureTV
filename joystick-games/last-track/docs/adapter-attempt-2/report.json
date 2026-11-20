@@ -1,0 +1,62 @@
+{
+  "scope": "Adapter-only unit fixture, no game simulation/renderer loaded; not gameplay or native-platform acceptance",
+  "checks": [
+    {
+      "name": "START enters pause",
+      "pass": true
+    },
+    {
+      "name": "held START does not resume itself",
+      "pass": true
+    },
+    {
+      "name": "resume then hold START >800ms stays running",
+      "pass": true
+    },
+    {
+      "name": "focus loss pauses",
+      "pass": true
+    },
+    {
+      "name": "second focus loss while already paused does not re-pause explicit resume",
+      "pass": true
+    },
+    {
+      "name": "six simultaneous independent driving/actions",
+      "pass": true
+    },
+    {
+      "name": "disconnect pauses and clears held/pending actions",
+      "pass": true
+    },
+    {
+      "name": "held reconnect cannot resume or fire",
+      "pass": true
+    },
+    {
+      "name": "fresh START after reconnect resumes once",
+      "pass": true
+    },
+    {
+      "name": "wizard advances focus from hidden NEXT to visible START",
+      "pass": true
+    },
+    {
+      "name": "next controller A activates visible START exactly once",
+      "pass": true
+    },
+    {
+      "name": "B on second wizard page uses visible BACK instead of hidden LEAVE",
+      "pass": true
+    },
+    {
+      "name": "native snapshot consumed once per adapter frame",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "testScriptSha256": "3095efb77b1682fa3ef0700b8f44f5503fa58fff36ca797b76529f223f002531",
+  "fixtureSha256": "79e8172d3933248d809a69a62347443846beb6ed7f3e4adf9f5138c16f3f58ce",
+  "distManifestSha256": "09e3a27e760868db1fb36d8ee82077ac665a82adb4c370110809645343c1cb1a"
+}

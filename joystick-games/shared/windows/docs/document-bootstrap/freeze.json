@@ -1,0 +1,78 @@
+{
+  "frozenAt": "2026-11-19T20:56:51.568800+00:00",
+  "baseCommit": "98141299f9eb187ccb7d732cc6c5eef433c87142",
+  "files": [
+    {
+      "path": "joystick-games/shared/windows/Sources/main.cpp",
+      "bytes": 30168,
+      "sha256": "eb8b7f2ae8bf2ca817f51efa4f7c6ddcdaedeb760cdd78e57834a482de08f73e"
+    },
+    {
+      "path": "joystick-games/shared/windows/Sources/EntryURL.hpp",
+      "bytes": 1351,
+      "sha256": "94b5efc011bac9d1153157d5da9d5df454e8cba6d73e409828389d03fee9cec8"
+    },
+    {
+      "path": "joystick-games/shared/windows/Web/bootstrap.js",
+      "bytes": 803,
+      "sha256": "a7f6dfc2a1055bcd29c92922d8ef55117c56fdf368775bcb54400f9ebcd53e75"
+    },
+    {
+      "path": "joystick-games/shared/windows/Web/diagnostics.js",
+      "bytes": 3123,
+      "sha256": "574c29d5223ecbb2e2ae0e76756ce6f68824541b66bb3a6dd99edc371a2c9486"
+    },
+    {
+      "path": "joystick-games/shared/windows/CMakeLists.txt",
+      "bytes": 1675,
+      "sha256": "7af7e5a45982292245c1da7dc1bb2b1b66a243eee9036a6b0c358b8b34d8b1aa"
+    },
+    {
+      "path": "joystick-games/shared/windows/tests/entry-url.test.cpp",
+      "bytes": 1215,
+      "sha256": "dac1920734823e13ecb26ae948d073556fd3a84b51d6ad256d1c6ed320a248e8"
+    },
+    {
+      "path": "joystick-games/shared/windows/tests/bootstrap.test.mjs",
+      "bytes": 3107,
+      "sha256": "9ae4986f6e363b9f97a7813e7a3b5b410cff6d1e082b4f241ec81279de2b8aa5"
+    },
+    {
+      "path": "joystick-games/shared/windows/tests/navigation-storage.test.py",
+      "bytes": 6419,
+      "sha256": "0ab0f4d4006d1d04f7344286d7698b7c94c6b1ddb311fe79014a671087a9b60a"
+    },
+    {
+      "path": "joystick-games/shared/windows/Web/bridge.js",
+      "bytes": 5693,
+      "sha256": "14b63ff99f549312e6ae5cc2a157d81234647067b74379d5edff431fec12fc1c",
+      "unchanged": true
+    },
+    {
+      "path": "joystick-games/tools/windows-build.py",
+      "bytes": 15878,
+      "sha256": "eee38e0d3510bb25bdc54475e5ffc077c57d46186a4acfbb523e4910b6f5fd71"
+    },
+    {
+      "path": "joystick-games/shared/windows/tests/assets.test.py",
+      "bytes": 9107,
+      "sha256": "0559b804d3fcaaef11278b97234c8f8bcf18d1c2e8e5a050cc74f8fe9cd9cfc2"
+    }
+  ],
+  "localValidation": {
+    "entryUrlCases": 27,
+    "bootstrapTests": 4,
+    "existingBridgeTests": 10,
+    "actualWindowsFixtureSyntax": "Python AST and extracted first-script JavaScript node --check passed",
+    "nativeWindowsRun": false,
+    "msvcBuild": false,
+    "reservedHostAssetBoundary": "1 existing boundary test passed with bridge/bootstrap/casefold-bootstrap/diagnostics rejection and with_host allowance; no unrelated suite repeated."
+  },
+  "productionChange": "A read-only COM property synchronously provides current native info/input for every allowed main document at DocumentCreated, before game scripts. No synchronous writer or change to preference message protocol. A strictly validated local entry may include a bounded query; both navigation and message origin validation use the same policy.",
+  "epoch": "Native accepted navigation increments a safe positive integer; document-start bootstrap stores an immutable page epoch. Diagnostics capture the request epoch, discard results from a previous document, and expose native documentEpoch plus actual document.epoch.",
+  "limitations": [
+    "Portable bootstrap tests use a mocked synchronous host-property/IPC boundary; they do not establish real COM behavior or WebMessage ordering.",
+    "Actual Windows/WebView2 fixture covers immediate setItem/removeItem/clear then reload, the original Backroad-style ?mode navigation, query-page persistence, and query-page normal exit. It is prepared, not run locally.",
+    "No game, game clock, physics, original storage allowlists or storage budget changes. Existing signed/built packages are not changed or reclassified."
+  ]
+}

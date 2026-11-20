@@ -1,0 +1,354 @@
+{
+  "sourceCommit": "b7b7af12f1eb61f777d89edad7368a69a14bb9e3",
+  "qaSourceCommit": "dc49ea1db63aa373f9408b9142725293a9885573",
+  "artifactRunId": 44605303936,
+  "batch": "racing-03",
+  "runner": "macos-latest",
+  "expectedArchitecture": "arm64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "turbo-kart-rush",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/turbo-kart-rush",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/turbo-kart-rush/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "turbo-kart-rush/package-verification.log",
+          "startedAt": "2026-11-19T21:20:47.888678+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "turbo-kart-rush",
+            "--app",
+            "/Users/runner/work/_temp/packages/turbo-kart-rush/installed/Turbo Kart Rush.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/turbo-kart-rush/native"
+          ],
+          "status": "passed",
+          "log": "turbo-kart-rush/native.log",
+          "startedAt": "2026-11-19T21:22:06.715174+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "turbo-kart-rush",
+            "--app",
+            "/Users/runner/work/_temp/packages/turbo-kart-rush/installed/Turbo Kart Rush.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/turbo-kart-rush/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "turbo-kart-rush/occupied-port.log",
+          "startedAt": "2026-11-19T21:23:23.289304+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "turbo-kart-rush",
+            "--app",
+            "/Users/runner/work/_temp/packages/turbo-kart-rush/installed/Turbo Kart Rush.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/turbo-kart-rush/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "turbo-kart-rush/rosetta.log",
+          "startedAt": "2026-11-19T21:24:23.192244+00:00",
+          "returncode": 0
+        }
+      ],
+      "capability": {
+        "before": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "turbo-kart-rush",
+            "--phase",
+            "before",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/turbo-kart-rush/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/turbo-kart-rush/capability/before"
+          ],
+          "status": "passed",
+          "log": "turbo-kart-rush/capability-before.log",
+          "startedAt": "2026-11-19T21:21:43.376436+00:00",
+          "returncode": 0
+        },
+        "after": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "turbo-kart-rush",
+            "--phase",
+            "after",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/turbo-kart-rush/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/turbo-kart-rush/capability/after"
+          ],
+          "status": "passed",
+          "log": "turbo-kart-rush/capability-after.log",
+          "startedAt": "2026-11-19T21:25:29.275663+00:00",
+          "returncode": 0
+        }
+      }
+    },
+    {
+      "game": "kart-rush",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/kart-rush",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-rush/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "kart-rush/package-verification.log",
+          "startedAt": "2026-11-19T21:25:38.014276+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kart-rush",
+            "--app",
+            "/Users/runner/work/_temp/packages/kart-rush/installed/Kart Rush.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-rush/native"
+          ],
+          "status": "passed",
+          "log": "kart-rush/native.log",
+          "startedAt": "2026-11-19T21:26:34.561853+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kart-rush",
+            "--app",
+            "/Users/runner/work/_temp/packages/kart-rush/installed/Kart Rush.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-rush/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "kart-rush/occupied-port.log",
+          "startedAt": "2026-11-19T21:27:51.017449+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kart-rush",
+            "--app",
+            "/Users/runner/work/_temp/packages/kart-rush/installed/Kart Rush.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-rush/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "kart-rush/rosetta.log",
+          "startedAt": "2026-11-19T21:28:55.501836+00:00",
+          "returncode": 0
+        }
+      ],
+      "capability": {
+        "before": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "kart-rush",
+            "--phase",
+            "before",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/kart-rush/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-rush/capability/before"
+          ],
+          "status": "passed",
+          "log": "kart-rush/capability-before.log",
+          "startedAt": "2026-11-19T21:26:27.016206+00:00",
+          "returncode": 0
+        },
+        "after": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "kart-rush",
+            "--phase",
+            "after",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/kart-rush/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-rush/capability/after"
+          ],
+          "status": "passed",
+          "log": "kart-rush/capability-after.log",
+          "startedAt": "2026-11-19T21:30:01.928711+00:00",
+          "returncode": 0
+        }
+      }
+    },
+    {
+      "game": "kart-royale",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/kart-royale",
+            "--artifact-source-checkout",
+            "/Users/runner/work/pureTV/pureTV/artifact-source",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-royale/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "kart-royale/package-verification.log",
+          "startedAt": "2026-11-19T21:30:11.313367+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kart-royale",
+            "--app",
+            "/Users/runner/work/_temp/packages/kart-royale/installed/Kart Royale.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-royale/native"
+          ],
+          "status": "failed",
+          "log": "kart-royale/native.log",
+          "startedAt": "2026-11-19T21:30:55.017543+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kart-royale",
+            "--app",
+            "/Users/runner/work/_temp/packages/kart-royale/installed/Kart Royale.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-royale/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "failed",
+          "log": "kart-royale/occupied-port.log",
+          "startedAt": "2026-11-19T21:33:09.778979+00:00",
+          "returncode": 1
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kart-royale",
+            "--app",
+            "/Users/runner/work/_temp/packages/kart-royale/installed/Kart Royale.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-royale/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "failed",
+          "log": "kart-royale/rosetta.log",
+          "startedAt": "2026-11-19T21:34:59.508866+00:00",
+          "returncode": 1
+        }
+      ],
+      "capability": {
+        "before": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "kart-royale",
+            "--phase",
+            "before",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/kart-royale/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-royale/capability/before"
+          ],
+          "status": "passed",
+          "log": "kart-royale/capability-before.log",
+          "startedAt": "2026-11-19T21:30:47.874978+00:00",
+          "returncode": 0
+        },
+        "after": {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-capability.py",
+            "--game",
+            "kart-royale",
+            "--phase",
+            "after",
+            "--manifest",
+            "/Users/runner/work/_temp/packages/kart-royale/build-manifest.json",
+            "--output",
+            "/Users/runner/work/_temp/qa/kart-royale/capability/after"
+          ],
+          "status": "passed",
+          "log": "kart-royale/capability-after.log",
+          "startedAt": "2026-11-19T21:36:52.040554+00:00",
+          "returncode": 0
+        }
+      }
+    }
+  ],
+  "localAssetHttp": {
+    "command": [
+      "python3",
+      "joystick-games/shared/macos/tests/local-assets.test.py"
+    ],
+    "status": "passed",
+    "log": "local-assets.log",
+    "startedAt": "2026-11-19T21:20:26.348349+00:00",
+    "returncode": 0
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "reviewer": "racing_review_arcade",
+  "at": "2026-11-19T21:47:23.519988+00:00",
+  "status": "no_blocker",
+  "scope": "Read-only exact three-source hashes, original eight-report selected fixture fields including all four consumed storage fields, four complete installation reports, immutable original evidence manifests, production diff and original 32-test log. No tests or native execution rerun.",
+  "files": {
+    "joystick-games/tools/windows-export.py": {
+      "bytes": 22039,
+      "sha256": "ae36160f6a3c5cc64c1b5279e6c564fc405568e75b229892f6079111d87e66c8"
+    },
+    "joystick-games/shared/windows/tests/export.test.py": {
+      "bytes": 21686,
+      "sha256": "c79f5e1d53412b3a5d5b96e4b1c2475870639ce8a387f7d52e1bad96a260162b"
+    },
+    "joystick-games/shared/windows/tests/fixtures/windows-runtime-storage-44615299245.json": {
+      "bytes": 36584,
+      "sha256": "1eb0f2476e1a1f41fc36b81233cc853ef3f94c2d3c7944eb92265f0bade2d3d9"
+    }
+  },
+  "originalFixtureReports": [
+    {
+      "game": "night-racer",
+      "mode": "runtime-normal",
+      "originalPath": "joystick-games/night-racer/docs/windows-delivery/original-evidence/runtime-normal/report.json",
+      "sha256": "f97760468ada04d9d5bb54e42b6582bc20df3fae0d5fe4c9be34ba086694ad5d",
+      "actualSavedMapKeys": [
+        "night-racer.v1"
+      ],
+      "allSelectedFixtureFieldsExact": true,
+      "originalEvidenceManifestMatched": true
+    },
+    {
+      "game": "night-racer",
+      "mode": "runtime-occupied",
+      "originalPath": "joystick-games/night-racer/docs/windows-delivery/original-evidence/runtime-occupied/report.json",
+      "sha256": "103b1551690a4a4105bf74d280225fa7860a3b61d8fa6833ed835eea6cb9b237",
+      "actualSavedMapKeys": [
+        "night-racer.v1"
+      ],
+      "allSelectedFixtureFieldsExact": true,
+      "originalEvidenceManifestMatched": true
+    },
+    {
+      "game": "penguintrack",
+      "mode": "runtime-normal",
+      "originalPath": "joystick-games/penguintrack/docs/windows-delivery/original-evidence/runtime-normal/report.json",
+      "sha256": "b62c03b7f8f7d18edfab1429fb6bbc73d69d2bad1eee489a9f39161cb19c022e",
+      "actualSavedMapKeys": [
+        "penguintrack:settings"
+      ],
+      "allSelectedFixtureFieldsExact": true,
+      "originalEvidenceManifestMatched": true
+    },
+    {
+      "game": "penguintrack",
+      "mode": "runtime-occupied",
+      "originalPath": "joystick-games/penguintrack/docs/windows-delivery/original-evidence/runtime-occupied/report.json",
+      "sha256": "053c4e40851f1d1c37d79f9b7fe390e4a44802d78faca44b7d8e6934ea9f2470",
+      "actualSavedMapKeys": [
+        "penguintrack:settings"
+      ],
+      "allSelectedFixtureFieldsExact": true,
+      "originalEvidenceManifestMatched": true
+    },
+    {
+      "game": "last-track",
+      "mode": "runtime-normal",
+      "originalPath": "joystick-games/last-track/docs/windows-delivery/original-evidence/runtime-normal/report.json",
+      "sha256": "0a8c73178e3adc1381c24d204a350e3bf4bc9085fe39fdaabfba0fbf2a92fe05",
+      "actualSavedMapKeys": [
+        "lasttrack.quality",
+        "lasttrack.save.v1",
+        "lasttrack.settings",
+        "lasttrack.started"
+      ],
+      "allSelectedFixtureFieldsExact": true,
+      "originalEvidenceManifestMatched": true
+    },
+    {
+      "game": "last-track",
+      "mode": "runtime-occupied",
+      "originalPath": "joystick-games/last-track/docs/windows-delivery/original-evidence/runtime-occupied/report.json",
+      "sha256": "87c2a36dccbca86062d7a1502070e75889e4043d4637e0ce3f72729a25a440a9",
+      "actualSavedMapKeys": [
+        "lasttrack.quality",
+        "lasttrack.save.v1",
+        "lasttrack.settings",
+        "lasttrack.started"
+      ],
+      "allSelectedFixtureFieldsExact": true,
+      "originalEvidenceManifestMatched": true
+    },
+    {
+      "game": "dirt-crown",
+      "mode": "runtime-normal",
+      "originalPath": "joystick-games/dirt-crown/docs/windows-delivery/original-evidence/runtime-normal/report.json",
+      "sha256": "535af596fd82fbc15d56d75b23ee5df9e42810884c7a6ee54955cf97ece57b24",
+      "actualSavedMapKeys": [
+        "dirt-crown.v1.profile",
+        "dirt-crown.v1.settings"
+      ],
+      "allSelectedFixtureFieldsExact": true,
+      "originalEvidenceManifestMatched": true
+    },
+    {
+      "game": "dirt-crown",
+      "mode": "runtime-occupied",
+      "originalPath": "joystick-games/dirt-crown/docs/windows-delivery/original-evidence/runtime-occupied/report.json",
+      "sha256": "8b0df48cc820dd7af8d386013758c23f3578b9c3b6e1529e2702befb2c82099e",
+      "actualSavedMapKeys": [
+        "dirt-crown.v1.profile",
+        "dirt-crown.v1.settings"
+      ],
+      "allSelectedFixtureFieldsExact": true,
+      "originalEvidenceManifestMatched": true
+    }
+  ],
+  "originalInstallationReportsExact": 4,
+  "onlyChangedProductionFunction": [
+    "assess_reports"
+  ],
+  "finding": "The actual producer records a nonempty string-to-string persisted map. The old literal True check rejected these originals. The new map check rejects boolean placeholders, empty or malformed maps while preserving required passed status, hydration/cache checks, exact source/binary identity and failed-run retention.",
+  "priorWrongReviewPreserved": true,
+  "existingRun44621752383NotCancelledOrRepeated": true,
+  "blockers": []
+}

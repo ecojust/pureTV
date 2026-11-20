@@ -1,0 +1,32 @@
+diff --git a/joystick-games/qa/android/graphics-observer/src/com/ecojust/graphicsqa/GraphicsObserver.java b/joystick-games/qa/android/graphics-observer/src/com/ecojust/graphicsqa/GraphicsObserver.java
+index fa57949..9119e0e 100644
+--- a/joystick-games/qa/android/graphics-observer/src/com/ecojust/graphicsqa/GraphicsObserver.java
++++ b/joystick-games/qa/android/graphics-observer/src/com/ecojust/graphicsqa/GraphicsObserver.java
+@@ -52,11 +52,17 @@ public final class GraphicsObserver extends Instrumentation {
+     private void created(Activity a){
+         if(!TARGET.equals(a.getPackageName()))return;
+         activity=a;activityState="created";consoleAttached=false;
++    }
++    @Override public void callActivityOnCreate(Activity a,Bundle state){
++        // Activity.onCreate dispatches lifecycle callbacks from super.onCreate,
++        // before this target creates its WebView. Wait for the whole override.
++        super.callActivityOnCreate(a,state);
++        if(!TARGET.equals(a.getPackageName()))return;
+         try{attachConsole(a);}catch(RuntimeException error){events.add("console-unavailable",error.toString(),"",0);}
+     }
+     private void attachConsole(Activity a){
+         WebView web=find(a.getWindow().getDecorView());
+-        if(web==null){events.add("console-unavailable","No WebView in onActivityCreated","",0);return;}
++        if(web==null){events.add("console-unavailable","No WebView after Activity.onCreate returned","",0);return;}
+         // This frozen target starts loadUrl in startRoom/onStart after onCreate.
+         // Do not replace an application's existing chrome client or WebViewClient.
+         if(web.getWebChromeClient()!=null){events.add("console-unavailable","Existing WebChromeClient preserved","",0);return;}
+@@ -67,7 +73,7 @@ public final class GraphicsObserver extends Instrumentation {
+                 return false; // Retain default handling; no JS/DOM/input mutation.
+             }
+         });
+-        consoleAttached=true;events.add("console-attached","onActivityCreated before target loadUrl","",0);
++        consoleAttached=true;events.add("console-attached","after Activity.onCreate returned; before target onStart/loadUrl","",0);
+     }
+     private String script() throws Exception {
+         try(InputStream input=getContext().getAssets().open("graphics.js")){

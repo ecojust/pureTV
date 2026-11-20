@@ -1,0 +1,805 @@
+[
+  {
+    "title": "Neon Racer",
+    "slug": "neon-racer",
+    "repository": "machuiwen/neon-racer",
+    "commit": "ea16989410c883baedd7062c359a0d54c826d3d6",
+    "graphicsScore": 33,
+    "gameplayScore": 30,
+    "totalScore": 63,
+    "graphicsBreakdown": {
+      "sceneArt": 11,
+      "vehicle": 6,
+      "lightingEffects": 5,
+      "readability": 8,
+      "motionPresentation": 3
+    },
+    "gameplayBreakdown": {
+      "drivingControl": 11,
+      "competitionFeedback": 7,
+      "trackModeVariety": 4,
+      "progressionReplay": 4,
+      "raceLoop": 4
+    },
+    "observedGameplay": [
+      "attempt-2 正常点击开始进入四车发车网格；只读状态为 countdown，time 从 1.25→2.97 秒，车辆坐标不变，尚未观察油门/转向/boost 生效。",
+      "霓虹城市、线框山地和发光路肩有统一风格；当前 bloom 亮部明显过曝，起点太阳/灯光覆盖部分车辆与道路。"
+    ],
+    "sourceVerifiedFeatures": [
+      "固定 main.js/car.js 有单条环形赛道、3 名 AI、3 难度、1/3/5 圈，漂移攒 boost、收集物、比赛计时/排名与本地最好记录。"
+    ],
+    "reviewEvidencePaths": [
+      "docs/racing-nine/reviews/arcade/neon-racer/attempt-1/report.json",
+      "docs/racing-nine/reviews/arcade/neon-racer/attempt-2/report.json",
+      "docs/racing-nine/reviews/arcade/source-audit.json"
+    ],
+    "bestGameplayImage": "docs/racing-nine/reviews/arcade/neon-racer/attempt-2/driving.png",
+    "evidenceKind": "本轮实际比赛界面（驾驶待验证）",
+    "confidence": "低：等待重试或只有起点画面",
+    "limitations": [
+      "attempt-1 的 stdin 被 SIGTTIN 阻塞仅是 harness 问题，原报告保留；attempt-2 已修正输入执行。",
+      "首个有效比赛样本仍在倒计时，发车后的驾驶手感和独特操作未验证；补充重试排队中取消，未启动浏览器，不计为游戏失败。"
+    ],
+    "packagingNotes": [
+      "Three.js 0.160 CDN 和 addons 须固定本地化；依赖 importmap 的现代浏览器能力需打包解决。",
+      "根许可未明确，单独列分发可行性，不作为画面/玩法扣分。"
+    ],
+    "screenshots": [
+      {
+        "attempt": "attempt-1",
+        "label": "initial",
+        "bytes": 620270,
+        "sha256": "0a881aed5faa82692380b97f1bcb5e29d28a62e4b579f87faca53fe4d4532ce5",
+        "path": "docs/racing-nine/reviews/arcade/neon-racer/attempt-1/initial.png"
+      },
+      {
+        "attempt": "attempt-2",
+        "label": "initial",
+        "bytes": 628908,
+        "sha256": "76bd8dc5020f2604654ff20450a7e19f7ee69d4025453c8081c8f6356bb603e4",
+        "path": "docs/racing-nine/reviews/arcade/neon-racer/attempt-2/initial.png"
+      },
+      {
+        "attempt": "attempt-2",
+        "label": "race-start",
+        "bytes": 765831,
+        "sha256": "e1dbc416477f439432e0d5c9397f85cef87ef5516a10498f2d6e172c6e9e7a05",
+        "path": "docs/racing-nine/reviews/arcade/neon-racer/attempt-2/race-start.png"
+      },
+      {
+        "attempt": "attempt-2",
+        "label": "driving",
+        "bytes": 696860,
+        "sha256": "266e2e1fe80f5c0d9f7121652469f10e17de14926d1cf5e699080f81f3bc9137",
+        "path": "docs/racing-nine/reviews/arcade/neon-racer/attempt-2/driving.png"
+      },
+      {
+        "attempt": "attempt-2",
+        "label": "steering",
+        "bytes": 665104,
+        "sha256": "688b7fb3d35d50292625816083b7e6d9a5167165ae1b6e4381a9b8148dd256e0",
+        "path": "docs/racing-nine/reviews/arcade/neon-racer/attempt-2/steering.png"
+      },
+      {
+        "attempt": "attempt-2",
+        "label": "boost",
+        "bytes": 514517,
+        "sha256": "32757596b4d7edaf7dcd982dd3d673974bbb12fa42346dd77836a801ef0a5438",
+        "path": "docs/racing-nine/reviews/arcade/neon-racer/attempt-2/boost.png"
+      }
+    ],
+    "fixedLiveHashMatches": [
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "index.html",
+        "sha256": "a5bf6056b84e3901e8f84af9f2ff6a9ae1f17247dde6eea0ba460c5ae2432db9",
+        "responseUrl": "https://machuiwen.github.io/neon-racer/"
+      },
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "js/car.js",
+        "sha256": "c906ff175ffcbdd501a747bc2ec3c915ccae3d4e69093aa47d2133cfda29558c",
+        "responseUrl": "https://machuiwen.github.io/neon-racer/js/car.js"
+      },
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "js/main.js",
+        "sha256": "1f5b2e3bcebb11697bc61f478aa81d2c6754410e4e9d11b66bf3bfe7e7fbe870",
+        "responseUrl": "https://machuiwen.github.io/neon-racer/js/main.js"
+      },
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "js/scenery.js",
+        "sha256": "43381015643b507c4d213dc0ec7cb697da81f106355ff43f64122b180e7c9f42",
+        "responseUrl": "https://machuiwen.github.io/neon-racer/js/scenery.js"
+      },
+      {
+        "attempt": "attempt-2",
+        "fixedPath": "index.html",
+        "sha256": "a5bf6056b84e3901e8f84af9f2ff6a9ae1f17247dde6eea0ba460c5ae2432db9",
+        "responseUrl": "https://machuiwen.github.io/neon-racer/"
+      },
+      {
+        "attempt": "attempt-2",
+        "fixedPath": "js/car.js",
+        "sha256": "c906ff175ffcbdd501a747bc2ec3c915ccae3d4e69093aa47d2133cfda29558c",
+        "responseUrl": "https://machuiwen.github.io/neon-racer/js/car.js"
+      },
+      {
+        "attempt": "attempt-2",
+        "fixedPath": "js/main.js",
+        "sha256": "1f5b2e3bcebb11697bc61f478aa81d2c6754410e4e9d11b66bf3bfe7e7fbe870",
+        "responseUrl": "https://machuiwen.github.io/neon-racer/js/main.js"
+      },
+      {
+        "attempt": "attempt-2",
+        "fixedPath": "js/scenery.js",
+        "sha256": "43381015643b507c4d213dc0ec7cb697da81f106355ff43f64122b180e7c9f42",
+        "responseUrl": "https://machuiwen.github.io/neon-racer/js/scenery.js"
+      }
+    ],
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "nativeMacTested": false,
+    "nativeWindowsTested": false,
+    "scoringNote": "画面50/玩法50；源码功能与本轮观测分别列出。软件GPU帧率、GitHub星数和许可证不是质量评分因子。分发可行性单列。"
+  },
+  {
+    "title": "KART RACER",
+    "slug": "kart-racer",
+    "repository": "hungungworld/kart-racer",
+    "commit": "45f9c4979bb7c7d38c25df7cae3f328f10dcd42f",
+    "graphicsScore": 41,
+    "gameplayScore": 37,
+    "totalScore": 78,
+    "graphicsBreakdown": {
+      "sceneArt": 13,
+      "vehicle": 8,
+      "lightingEffects": 8,
+      "readability": 8,
+      "motionPresentation": 4
+    },
+    "gameplayBreakdown": {
+      "drivingControl": 11,
+      "competitionFeedback": 8,
+      "trackModeVariety": 8,
+      "progressionReplay": 6,
+      "raceLoop": 4
+    },
+    "observedGameplay": [
+      "attempt-2 普通开始后倒计时自然结束，持续油门至88 km/h；只读state race/time0.675，车x -245→-168。左转+Shift后车头h -0.0668→-0.0914、速度82km/h，boost仍0，未证实蓄满漂移。"
+    ],
+    "sourceVerifiedFeatures": [
+      "固定单 HTML 有 3 主题赛道、5 角色、4 车、6 色、道具/竞速、AI、圈数/排名/结算；漂移蓄能和道具行为有实现。"
+    ],
+    "reviewEvidencePaths": [
+      "docs/racing-nine/reviews/arcade/kart-racer/attempt-1/report.json",
+      "docs/racing-nine/reviews/arcade/kart-racer/attempt-2/report.json",
+      "docs/racing-nine/reviews/arcade/source-audit.json"
+    ],
+    "bestGameplayImage": "docs/racing-nine/reviews/arcade/kart-racer/attempt-2/driving.png",
+    "evidenceKind": "本轮实玩",
+    "confidence": "中：短时正常输入实玩＋固定源码",
+    "limitations": [
+      "首轮菜单在720高度需要滚动；第二次已实起步，仅观察约0.925秒游戏时间。",
+      "未验证完整圈次、漂移蓄满与道具效果；玩法深度仍主要由固定源码支持。"
+    ],
+    "packagingNotes": [
+      "Three.js r128 与可选 PeerJS 需要依赖本地化，保留角色选择/漂移/道具独立输入。",
+      "韩文菜单需要中文化和焦点导航；根许可未明确，角色或 KartRider 联想不等于素材授权。"
+    ],
+    "screenshots": [
+      {
+        "attempt": "attempt-1",
+        "label": "initial",
+        "bytes": 659539,
+        "sha256": "56d7929cdc717bf8eb278594a4ca5cfc377f994b999ede5f046c45cb054cbb94",
+        "path": "docs/racing-nine/reviews/arcade/kart-racer/attempt-1/initial.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "race-start",
+        "bytes": 720723,
+        "sha256": "1ac1f9d7a35ac929d70f9dab4ef05bac3f9bf4fc4451fe10051bd49eeda395f1",
+        "path": "docs/racing-nine/reviews/arcade/kart-racer/attempt-1/race-start.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "driving",
+        "bytes": 720775,
+        "sha256": "3f087ba17b47ed5ca76f1bdf0fc3fee0c73a9b700d2a29a9fb12441dc9967f5b",
+        "path": "docs/racing-nine/reviews/arcade/kart-racer/attempt-1/driving.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "drifting",
+        "bytes": 720374,
+        "sha256": "e7f1faf7a7d43ec3fc6918bdb90b3dd07a62b8e2b27546fbf9f84ed31bbdacee",
+        "path": "docs/racing-nine/reviews/arcade/kart-racer/attempt-1/drifting.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "boost",
+        "bytes": 719247,
+        "sha256": "f11bea1e23006ca64e7abc3cf71839bb169f27bd661cf05f3d58f7d6c328776d",
+        "path": "docs/racing-nine/reviews/arcade/kart-racer/attempt-1/boost.png"
+      },
+      {
+        "attempt": "attempt-2",
+        "label": "initial",
+        "bytes": 655179,
+        "sha256": "59a5a5ac066314b6107bea44421e17af7500a63e6a322c1545c1ad900a59fccb",
+        "path": "docs/racing-nine/reviews/arcade/kart-racer/attempt-2/initial.png"
+      },
+      {
+        "attempt": "attempt-2",
+        "label": "race-start",
+        "bytes": 722918,
+        "sha256": "b4f4ccd39ba9863fc0ebc0984c77038eea189b43a95d865d429f708e32630567",
+        "path": "docs/racing-nine/reviews/arcade/kart-racer/attempt-2/race-start.png"
+      },
+      {
+        "attempt": "attempt-2",
+        "label": "after-wait",
+        "bytes": 720535,
+        "sha256": "b6a9f1015737d0038dcc9f02f9d4204064b6262eda64044076fa223627500386",
+        "path": "docs/racing-nine/reviews/arcade/kart-racer/attempt-2/after-wait.png"
+      },
+      {
+        "attempt": "attempt-2",
+        "label": "driving",
+        "bytes": 737804,
+        "sha256": "a82d59c280cec455d5be26148174d67cbdfca3135ac9d47be705c0d0069ea2ba",
+        "path": "docs/racing-nine/reviews/arcade/kart-racer/attempt-2/driving.png"
+      },
+      {
+        "attempt": "attempt-2",
+        "label": "drifting",
+        "bytes": 734743,
+        "sha256": "47b70a5094bebf44f6c5e9845688b22bf11f09bd623d48d8fb9f575b074776f3",
+        "path": "docs/racing-nine/reviews/arcade/kart-racer/attempt-2/drifting.png"
+      }
+    ],
+    "fixedLiveHashMatches": [
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "index.html",
+        "sha256": "0a5000d085214567394ee62e3994f127c2e70c826d71a4f6a0346f4a4edf8d37",
+        "responseUrl": "https://kart-racer-one.vercel.app/"
+      },
+      {
+        "attempt": "attempt-2",
+        "fixedPath": "index.html",
+        "sha256": "0a5000d085214567394ee62e3994f127c2e70c826d71a4f6a0346f4a4edf8d37",
+        "responseUrl": "https://kart-racer-one.vercel.app/"
+      }
+    ],
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "nativeMacTested": false,
+    "nativeWindowsTested": false,
+    "scoringNote": "画面50/玩法50；源码功能与本轮观测分别列出。软件GPU帧率、GitHub星数和许可证不是质量评分因子。分发可行性单列。"
+  },
+  {
+    "title": "Poly GT",
+    "slug": "poly-gt",
+    "repository": "hakanalverson-cyber/polytourismo",
+    "commit": "1ad6148bd97ecf303c180401fbd00d63b0fbe715",
+    "graphicsScore": 39,
+    "gameplayScore": 40,
+    "totalScore": 79,
+    "graphicsBreakdown": {
+      "sceneArt": 13,
+      "vehicle": 9,
+      "lightingEffects": 7,
+      "readability": 7,
+      "motionPresentation": 3
+    },
+    "gameplayBreakdown": {
+      "drivingControl": 12,
+      "competitionFeedback": 8,
+      "trackModeVariety": 9,
+      "progressionReplay": 7,
+      "raceLoop": 4
+    },
+    "observedGameplay": [
+      "三次正常菜单尝试：最后通过 Quick Play 展开、填写 Guest 名称、确认进入 Time Attack 赛道选择；受测部署保持 LOADING TRACKS，未进入比赛。",
+      "实际目视菜单展示的3D跑车、车轮/车身低多边形轮廓、城市/海岸背景与复古扫描线。这里只能评这些可见表现，不代表赛中HUD或驾驶效果。"
+    ],
+    "sourceVerifiedFeatures": [
+      "固定 README 说明以 Python build.py 组装 base 与 layers（本地未取 build.py）；已读 ui.js 有 Career、Quick Play、Time Trial、Versus/Elimination，以及车型/调校。",
+      "固定 ui.js 明确 free roam 与部分旧赛道已 vaulted；README 所列功能不能都当当前入口可用。"
+    ],
+    "reviewEvidencePaths": [
+      "docs/racing-nine/reviews/arcade/poly-gt/attempt-1/report.json",
+      "docs/racing-nine/reviews/arcade/poly-gt/attempt-2/report.json",
+      "docs/racing-nine/reviews/arcade/poly-gt/attempt-3/report.json",
+      "docs/racing-nine/reviews/arcade/source-audit.json"
+    ],
+    "bestGameplayImage": null,
+    "evidenceKind": "本轮菜单背景3D展示＋固定源码（未实驾）",
+    "confidence": "低：有限可见画面与源码估分",
+    "limitations": [
+      "没有实际驾驶；39/40=79为菜单背景画面＋固定源码玩法的低信心估分，不等价于有实驾证据的79分，不据此宣称可正常完成比赛。",
+      "未观察到的赛中HUD、车辆驾驶动态、碰撞手感和完整比赛循环均未验证；bestGameplayImage保留null。",
+      "公开部署显示131辆车，固定README为136；部署版本与固定源码一致性未确认。",
+      "三次尝试的菜单选择器/首次名称提示及赛道加载限制均留原报告，不再追加第四次。"
+    ],
+    "packagingNotes": [
+      "Python 组装、多层脚本与外部模型/赛道资源，离线依赖闭包和体积核查工作较多。",
+      "根许可未明确，README 明说部分车型模型许可未经确认；代码质量评分与这些分发约束分开。"
+    ],
+    "screenshots": [
+      {
+        "attempt": "attempt-1",
+        "label": "initial",
+        "bytes": 631856,
+        "sha256": "d3deb98d32ea563a9ec5bf554fc9781449eb69b9486bba5148125beef23abcdd",
+        "path": "docs/racing-nine/reviews/arcade/poly-gt/attempt-1/initial.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "driving",
+        "bytes": 403383,
+        "sha256": "c026c67b59ba683fd9f39ec20256bce96152b4665e8f494f876fd44a9679d7aa",
+        "path": "docs/racing-nine/reviews/arcade/poly-gt/attempt-1/driving.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "steering",
+        "bytes": 399945,
+        "sha256": "a0ccf92ff634303421324fe8da99282f9d989258c3e4f34b1516b6f59f99f491",
+        "path": "docs/racing-nine/reviews/arcade/poly-gt/attempt-1/steering.png"
+      },
+      {
+        "attempt": "attempt-2",
+        "label": "initial",
+        "bytes": 674348,
+        "sha256": "dbc1f05523905d4480c3c7e3ab898bc1b5e54e7dd0aff1b7f940271370e5098b",
+        "path": "docs/racing-nine/reviews/arcade/poly-gt/attempt-2/initial.png"
+      },
+      {
+        "attempt": "attempt-2",
+        "label": "driving",
+        "bytes": 793951,
+        "sha256": "06b213b0bf0550291c002c8f0077bb027f9a3610fb5d761c807cdc54a0447938",
+        "path": "docs/racing-nine/reviews/arcade/poly-gt/attempt-2/driving.png"
+      },
+      {
+        "attempt": "attempt-2",
+        "label": "steering",
+        "bytes": 758511,
+        "sha256": "58b81f0591c239aa8e0619f5d594ab62602d176c31ee7a105b1c30dacf11f281",
+        "path": "docs/racing-nine/reviews/arcade/poly-gt/attempt-2/steering.png"
+      },
+      {
+        "attempt": "attempt-3",
+        "label": "initial",
+        "bytes": 634522,
+        "sha256": "647313d6396ed6af868e0500d6fd75046b3e113215d74b8b2ce9c806d3b89aa9",
+        "path": "docs/racing-nine/reviews/arcade/poly-gt/attempt-3/initial.png"
+      },
+      {
+        "attempt": "attempt-3",
+        "label": "quick-play-expanded",
+        "bytes": 380847,
+        "sha256": "2c7ea3fa107b15000d022cf3bcd94526ace585dad021ebb36d4607aedf692b07",
+        "path": "docs/racing-nine/reviews/arcade/poly-gt/attempt-3/quick-play-expanded.png"
+      },
+      {
+        "attempt": "attempt-3",
+        "label": "name-confirmed",
+        "bytes": 817309,
+        "sha256": "b58a2f123834946e4a86cf87ab98c1fe387f9ff6af5be53786737e43a00824cd",
+        "path": "docs/racing-nine/reviews/arcade/poly-gt/attempt-3/name-confirmed.png"
+      },
+      {
+        "attempt": "attempt-3",
+        "label": "tracks",
+        "bytes": 632376,
+        "sha256": "9131e2499d597c238431141cd7b113f7898b8df3de97133a5093798cddef4470",
+        "path": "docs/racing-nine/reviews/arcade/poly-gt/attempt-3/tracks.png"
+      },
+      {
+        "attempt": "attempt-3",
+        "label": "setup",
+        "bytes": 607389,
+        "sha256": "8846b43212ed66ede3c748b76f0d61512af5b9442b578cd1dfcb98a32bc4c79d",
+        "path": "docs/racing-nine/reviews/arcade/poly-gt/attempt-3/setup.png"
+      },
+      {
+        "attempt": "attempt-3",
+        "label": "driving-after-name",
+        "bytes": 634992,
+        "sha256": "c4272623803f48d4ee7997b23f2ba2b694ed7a5f7f0c88bffab10b8885fe5a38",
+        "path": "docs/racing-nine/reviews/arcade/poly-gt/attempt-3/driving-after-name.png"
+      }
+    ],
+    "fixedLiveHashMatches": [],
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "nativeMacTested": false,
+    "nativeWindowsTested": false,
+    "scoringNote": "画面50/玩法50；源码功能与本轮观测分别列出。软件GPU帧率、GitHub星数和许可证不是质量评分因子。分发可行性单列。 本项不是赛中画面实评分；动态分仅按菜单镜头变化与源码功能暂估。",
+    "bestObservedImage": "docs/racing-nine/reviews/arcade/poly-gt/attempt-2/driving.png",
+    "scoreStatus": "provisional-no-driving"
+  },
+  {
+    "title": "Suburban Turismo",
+    "slug": "suburban-turismo",
+    "repository": "mtd-public/suburban-turismo",
+    "commit": "7469b708ed332c727f4c86e29b20eba2b420cc62",
+    "graphicsScore": 37,
+    "gameplayScore": 39,
+    "totalScore": 76,
+    "graphicsBreakdown": {
+      "sceneArt": 12,
+      "vehicle": 6,
+      "lightingEffects": 7,
+      "readability": 8,
+      "motionPresentation": 4
+    },
+    "gameplayBreakdown": {
+      "drivingControl": 12,
+      "competitionFeedback": 8,
+      "trackModeVariety": 9,
+      "progressionReplay": 6,
+      "raceLoop": 4
+    },
+    "observedGameplay": [
+      "正常菜单选 Race→Whispering Pines GP→Minivan，倒计时后油门/左转产生实际位移，计时 0→5.28 秒，名次 4/6→6/6。",
+      "树前受阻后观察低速转向；C 正常切换到 BUMPER CAM。"
+    ],
+    "sourceVerifiedFeatures": [
+      "game.js/race.js 有刹车＋转向漂移、车体碰撞、竞速/TT ghost/战斗/警车终段、圈次/结果和最好成绩；6 路线、5 车由本轮正常菜单与固定 README 核对，定义文件未另取。",
+      "town.js 程序生成郊区道路、房屋、商场和公园；季节/时间设置；行人布娃娃等 README 计划项不计。"
+    ],
+    "reviewEvidencePaths": [
+      "docs/racing-nine/reviews/arcade/suburban-turismo/attempt-1/report.json",
+      "docs/racing-nine/reviews/arcade/source-audit.json"
+    ],
+    "bestGameplayImage": "docs/racing-nine/reviews/arcade/suburban-turismo/attempt-1/driving.png",
+    "evidenceKind": "本轮实玩",
+    "confidence": "中：短时正常输入实玩＋固定源码",
+    "limitations": [
+      "仅驾驶第一场约 5 秒游戏时间，没有跑完整圈、实测漂移或战斗模式。",
+      "软件 GPU 上渲染慢，不据此推断电视/原生性能；PS1 抖动/低分辨率是风格设计。"
+    ],
+    "packagingNotes": [
+      "vendored Three 与主要程序化场景有利离线打包；已有键盘/手柄菜单可复用。",
+      "需保留模拟/碰撞和相机，电视实体性能与文字/导航另验；根许可未明确。"
+    ],
+    "screenshots": [
+      {
+        "attempt": "attempt-1",
+        "label": "initial",
+        "bytes": 874545,
+        "sha256": "921ee6b6dcf422b8483392e81b1270f2dd6feded26f82f8e6d115ff3ad60e545",
+        "path": "docs/racing-nine/reviews/arcade/suburban-turismo/attempt-1/initial.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "circuits",
+        "bytes": 849703,
+        "sha256": "173bb9ef702621844dd2c12670ed77e479dbe0919f1a72782b79607df9f8322b",
+        "path": "docs/racing-nine/reviews/arcade/suburban-turismo/attempt-1/circuits.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "cars",
+        "bytes": 864271,
+        "sha256": "26f6d65d7dcb3774dd42ff3180be63625c111c68ddfb34ade515b938184bf5e6",
+        "path": "docs/racing-nine/reviews/arcade/suburban-turismo/attempt-1/cars.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "race-start",
+        "bytes": 161340,
+        "sha256": "2fe680d8d5a3d7b9a2e5500f9b9020ea7be3ec863b09e15417d294ddca06120c",
+        "path": "docs/racing-nine/reviews/arcade/suburban-turismo/attempt-1/race-start.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "driving",
+        "bytes": 188386,
+        "sha256": "6788ce45c552e7271f5610188f9aa1b9cbe91239d54f1c306d6257ec3a1bb7c4",
+        "path": "docs/racing-nine/reviews/arcade/suburban-turismo/attempt-1/driving.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "steering",
+        "bytes": 194682,
+        "sha256": "c36aed3d3a95ee175d5297accad74ddc37955f2d6f8f423516ab3f05418b03d6",
+        "path": "docs/racing-nine/reviews/arcade/suburban-turismo/attempt-1/steering.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "bumper-camera",
+        "bytes": 200593,
+        "sha256": "a4f5e011bdaa0df35cac31aa7fd61ffa7dec6aaf9d3039fa6dc0b5ba397cad5e",
+        "path": "docs/racing-nine/reviews/arcade/suburban-turismo/attempt-1/bumper-camera.png"
+      }
+    ],
+    "fixedLiveHashMatches": [
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "index.html",
+        "sha256": "faabcc29a1915c52bedd92032f104ba51ade198dd95f827ea718af921eda8b5a",
+        "responseUrl": "https://mtd-public.github.io/suburban-turismo/"
+      },
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "js/game.js",
+        "sha256": "da1eaf60300f43e288581a45e6258c4ac168c8bee9b65653acf291e9001c937b",
+        "responseUrl": "https://mtd-public.github.io/suburban-turismo/js/game.js"
+      },
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "js/race.js",
+        "sha256": "26774b14c2481a295df8a6ddeda10b391303cd2418fb0628a8123a6bbe812e24",
+        "responseUrl": "https://mtd-public.github.io/suburban-turismo/js/race.js"
+      },
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "js/town.js",
+        "sha256": "d5bd744def5a255aa082b07fe159619ccdfe684c83792f2fd8a444b2581a7b85",
+        "responseUrl": "https://mtd-public.github.io/suburban-turismo/js/town.js"
+      }
+    ],
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "nativeMacTested": false,
+    "nativeWindowsTested": false,
+    "scoringNote": "画面50/玩法50；源码功能与本轮观测分别列出。软件GPU帧率、GitHub星数和许可证不是质量评分因子。分发可行性单列。"
+  },
+  {
+    "title": "Penguintrack",
+    "slug": "penguintrack",
+    "repository": "silverninja71/penguin-track",
+    "commit": "0369367ff5aa76902bdf0736e4644efbbd3f1d82",
+    "graphicsScore": 41,
+    "gameplayScore": 42,
+    "totalScore": 83,
+    "graphicsBreakdown": {
+      "sceneArt": 13,
+      "vehicle": 8,
+      "lightingEffects": 8,
+      "readability": 8,
+      "motionPresentation": 4
+    },
+    "gameplayBreakdown": {
+      "drivingControl": 13,
+      "competitionFeedback": 8,
+      "trackModeVariety": 9,
+      "progressionReplay": 8,
+      "raceLoop": 4
+    },
+    "observedGameplay": [
+      "正常 Play→Race→A01 First Flakes，油门后实际 101 km/h，左转后 107 km/h，车辆位置和镜头变化，计时 0→5.06 秒。",
+      "C 切换镜头，车辆贴近左边界后减速到 83 km/h；雪地、悬架车轮、落雪、计时/目标奖牌和小地图均为实时比赛画面。"
+    ],
+    "sourceVerifiedFeatures": [
+      "固定 baked.js/campaign.js 有 35 关（25 Race、5 Platform、5 Training），奖牌阈值、checkpoint、重生、ghost、PB 和 replay。",
+      "race.js/replayer.js 实现计时、完成/重试与回放；编辑器/分享及可选在线比赛由源码/README另核，未在本轮操作。"
+    ],
+    "reviewEvidencePaths": [
+      "docs/racing-nine/reviews/arcade/penguintrack/attempt-1/report.json",
+      "docs/racing-nine/reviews/arcade/source-audit.json"
+    ],
+    "bestGameplayImage": "docs/racing-nine/reviews/arcade/penguintrack/attempt-1/driving.png",
+    "evidenceKind": "本轮实玩",
+    "confidence": "中：短时正常输入实玩＋固定源码",
+    "limitations": [
+      "只跑第一关开头，未经过 checkpoint 或完成赛道；Escape 发出但截图没有明确暂停菜单，不计暂停验证。",
+      "Pro TAS/Pro AI 与账号/付费基础设施未试用，不算首版离线玩法必需。"
+    ],
+    "packagingNotes": [
+      "MIT 已读取，但版权行原为 Spear-Mace PVP Contributors，应原样保留。",
+      "ES modules、importmap、vendored Three 与独立本地赛道适合现代 WebView/桌面宿主；Google Fonts Baloo 2 需本地化。不要把 Linux 软件浏览器当老 Android 实机兼容证据。",
+      "基础计时赛可离线规划；账号、金币、在线房间、Pro 权限与第三方依赖需明确范围，不绕过付费。"
+    ],
+    "screenshots": [
+      {
+        "attempt": "attempt-1",
+        "label": "initial",
+        "bytes": 705694,
+        "sha256": "0d8d558f6232192553b2fa47eaee8322e3121f507052984ba7806ab93df090b9",
+        "path": "docs/racing-nine/reviews/arcade/penguintrack/attempt-1/initial.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "campaign",
+        "bytes": 245143,
+        "sha256": "f399dac85ed392bea9d221f98a82ef9217dd3983d831338b909571a0580aad8f",
+        "path": "docs/racing-nine/reviews/arcade/penguintrack/attempt-1/campaign.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "race-start",
+        "bytes": 614670,
+        "sha256": "ef918eb1f773dae49491e0636a254700c3d34383123bb9c45031e01c57f663a0",
+        "path": "docs/racing-nine/reviews/arcade/penguintrack/attempt-1/race-start.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "driving",
+        "bytes": 597875,
+        "sha256": "3e50842eccd0830ac57d7130751fb7de570b4b771069b8f793e8e55dd44538cf",
+        "path": "docs/racing-nine/reviews/arcade/penguintrack/attempt-1/driving.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "steering",
+        "bytes": 571865,
+        "sha256": "31b497de294631d7140cc97d6fb771e908e39ce3a024bb62ace0b4b6b56dd9c0",
+        "path": "docs/racing-nine/reviews/arcade/penguintrack/attempt-1/steering.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "camera",
+        "bytes": 591932,
+        "sha256": "80091596961d6142a3386f3607b10a04f72579f3cfee3f09d8148d288d97245d",
+        "path": "docs/racing-nine/reviews/arcade/penguintrack/attempt-1/camera.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "paused",
+        "bytes": 295346,
+        "sha256": "0cfffbd72127b97d283f36b127c3a473791215e3f73fe11ea4d94a9a7db5238b",
+        "path": "docs/racing-nine/reviews/arcade/penguintrack/attempt-1/paused.png"
+      }
+    ],
+    "fixedLiveHashMatches": [
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "index.html",
+        "sha256": "c465ae4a454e2b62d9bfd966daa3a0576fad66f8c5d8851a297cd313a9cef4da",
+        "responseUrl": "https://silverninja71.github.io/Penguin-Track/"
+      },
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "js/game/campaign.js",
+        "sha256": "51ab9f615a34c501210be0b06a5009b32eb5e1751273ff12815a30a6802215ee",
+        "responseUrl": "https://silverninja71.github.io/Penguin-Track/js/game/campaign.js"
+      },
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "js/game/menu.js",
+        "sha256": "9a1b184ad90c956b235cd5997c4f18a81235d20f167e27c9651feea699be6c2a",
+        "responseUrl": "https://silverninja71.github.io/Penguin-Track/js/game/menu.js"
+      },
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "js/game/race.js",
+        "sha256": "165fbd876a4a2c650d61888f19d6cc0e35e49aae93f8114b6539789964f249d7",
+        "responseUrl": "https://silverninja71.github.io/Penguin-Track/js/game/race.js"
+      },
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "js/game/replayer.js",
+        "sha256": "aeb05c4cb281c984ca6f44b320ad785d02879345816242c688f3d3b90035dff4",
+        "responseUrl": "https://silverninja71.github.io/Penguin-Track/js/game/replayer.js"
+      },
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "js/levels/baked.js",
+        "sha256": "f03235622a195a7dcac9227df82ee905f587f6d74b61a0ccf3d63d7c2fd0f81e",
+        "responseUrl": "https://silverninja71.github.io/Penguin-Track/js/levels/baked.js"
+      },
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "js/main.js",
+        "sha256": "f0244c291ecca51afe644ce3a272a88a64ca307150a564e64417992946502f63",
+        "responseUrl": "https://silverninja71.github.io/Penguin-Track/js/main.js"
+      }
+    ],
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "nativeMacTested": false,
+    "nativeWindowsTested": false,
+    "scoringNote": "画面50/玩法50；源码功能与本轮观测分别列出。软件GPU帧率、GitHub星数和许可证不是质量评分因子。分发可行性单列。"
+  },
+  {
+    "title": "Turbo Rush (ATEAMROCKX)",
+    "slug": "turbo-rush",
+    "repository": "ateamrockx/turbo-rush",
+    "commit": "c622197a3bedaba27ca94b9362672dbbc98b31fa",
+    "graphicsScore": 28,
+    "gameplayScore": 37,
+    "totalScore": 65,
+    "graphicsBreakdown": {
+      "sceneArt": 9,
+      "vehicle": 6,
+      "lightingEffects": 5,
+      "readability": 5,
+      "motionPresentation": 3
+    },
+    "gameplayBreakdown": {
+      "drivingControl": 10,
+      "competitionFeedback": 7,
+      "trackModeVariety": 8,
+      "progressionReplay": 8,
+      "raceLoop": 4
+    },
+    "observedGameplay": [
+      "正常打开 Races 并选择首关，实际比赛画面显示六车、赛道、道具槽、氮气条、距离与起点；首轮按键后仍 0 km/h。"
+    ],
+    "sourceVerifiedFeatures": [
+      "固定 HTML 有油门/制动/侧移/氮气，6 人比赛、道具、名次/终点、前 3 解锁下一关、70 个挑战、金币购车与外观定制及双人分屏。",
+      "Canvas 2D 伪 3D 道路与程序精灵；单人界面在 1280×720 居中约 560 像素窄幅，未充分使用电视横屏。"
+    ],
+    "reviewEvidencePaths": [
+      "docs/racing-nine/reviews/arcade/turbo-rush/attempt-1/report.json",
+      "docs/racing-nine/reviews/arcade/source-audit.json"
+    ],
+    "bestGameplayImage": "docs/racing-nine/reviews/arcade/turbo-rush/attempt-1/nitro.png",
+    "evidenceKind": "本轮实际比赛界面（驾驶待验证）",
+    "confidence": "低：等待重试或只有起点画面",
+    "limitations": [
+      "首轮起步未确认；补充等待重试在拿锁前取消，未启动浏览器，不计为游戏失败。",
+      "玩法分以源码完整循环为主，实际手感、购车与挑战尚未验证。"
+    ],
+    "packagingNotes": [
+      "单 HTML、Canvas 2D 与程序精灵便于离线打包；字体需本地化。",
+      "电视版需调整窄幅布局但保留原规则；单人键盘模式需要油门，单人触控模式自动油门；双人模式在未制动时自动加速。",
+      "根许可未明确。"
+    ],
+    "screenshots": [
+      {
+        "attempt": "attempt-1",
+        "label": "initial",
+        "bytes": 232569,
+        "sha256": "fb9bd410586c5056b212abf208af45002ba5ab9e10019296cf3fe75cb13f3717",
+        "path": "docs/racing-nine/reviews/arcade/turbo-rush/attempt-1/initial.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "race-menu",
+        "bytes": 97066,
+        "sha256": "cc360a6d9d82436d247aa46427f6efed3310223d1d5a97e143a0bd36c5024ec7",
+        "path": "docs/racing-nine/reviews/arcade/turbo-rush/attempt-1/race-menu.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "race-start",
+        "bytes": 134288,
+        "sha256": "cb615f89a70b452fe469a33ae2cd4a371e59181af187751dc359fbf6d6927966",
+        "path": "docs/racing-nine/reviews/arcade/turbo-rush/attempt-1/race-start.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "driving",
+        "bytes": 133925,
+        "sha256": "978eb739d9c23327981ff8698a34d9aedc9cbefeb3a17e147a0dded4ecda771b",
+        "path": "docs/racing-nine/reviews/arcade/turbo-rush/attempt-1/driving.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "steering",
+        "bytes": 133896,
+        "sha256": "54fb7ea5a833f1497725b8d41c2593ed7f2fb7cc65bcabad848517f1c9a72543",
+        "path": "docs/racing-nine/reviews/arcade/turbo-rush/attempt-1/steering.png"
+      },
+      {
+        "attempt": "attempt-1",
+        "label": "nitro",
+        "bytes": 134001,
+        "sha256": "2cd82c7289c38850ca70166a0412cc0a62973f597bc0529f7134c688c7ecd835",
+        "path": "docs/racing-nine/reviews/arcade/turbo-rush/attempt-1/nitro.png"
+      }
+    ],
+    "fixedLiveHashMatches": [
+      {
+        "attempt": "attempt-1",
+        "fixedPath": "index.html",
+        "sha256": "fb3b07e0e588df8a1622f8be9b64eb2d2aebdee61396aa0285a4ffe353f2e15a",
+        "responseUrl": "https://ateamrockx.github.io/turbo-rush/"
+      }
+    ],
+    "physicalTvTested": false,
+    "physicalPhoneTested": false,
+    "nativeMacTested": false,
+    "nativeWindowsTested": false,
+    "scoringNote": "画面50/玩法50；源码功能与本轮观测分别列出。软件GPU帧率、GitHub星数和许可证不是质量评分因子。分发可行性单列。"
+  }
+]

@@ -1,0 +1,96 @@
+{
+  "sourceCommit": "06f1ab2b77e45d5fabcbd7233f8d3e9279a9d5c7",
+  "game": "kart-rush",
+  "files": {
+    "joystick-games/kart-rush/src/main.js": {
+      "bytes": 566483,
+      "sha256": "0f06b66f3401f56b66f9c7761af27a460c4d9fea76c5f82e79c5082501a976f2",
+      "needle": "new THREE.WebGLRenderer",
+      "matchingLines": [
+        567
+      ],
+      "excerpts": [
+        {
+          "firstLine": 565,
+          "lines": [
+            "const VERSION_N = '80'; // the build shown on the title screen + in the race log: main number = sw.js VERSION, then +.1 for every change Claude makes (so the user can confirm the latest is running)",
+            "const canvas = $('game');",
+            "const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });",
+            "renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));",
+            "renderer.setSize(window.innerWidth, window.innerHeight);",
+            "renderer.shadowMap.enabled = true;",
+            "renderer.shadowMap.type = THREE.PCFShadowMap;"
+          ]
+        }
+      ],
+      "immutableSource": "https://github.com/ecojust/pureTV/blob/06f1ab2b77e45d5fabcbd7233f8d3e9279a9d5c7/joystick-games/kart-rush/src/main.js"
+    },
+    "joystick-games/kart-rush/src/vendor/three.module.js": {
+      "bytes": 1272972,
+      "sha256": "76dea8151bc9352aef3528b4262e249b2604f62543828328db978d060d61a495",
+      "needle": "const contextNames = [ 'webgl2', 'webgl', 'experimental-webgl' ];",
+      "matchingLines": [
+        28654
+      ],
+      "excerpts": [
+        {
+          "firstLine": 28652,
+          "lines": [
+            "\t\t\tif ( _gl === null ) {",
+            "",
+            "\t\t\t\tconst contextNames = [ 'webgl2', 'webgl', 'experimental-webgl' ];",
+            "",
+            "\t\t\t\tif ( _this.isWebGL1Renderer === true ) {",
+            "",
+            "\t\t\t\t\tcontextNames.shift();"
+          ]
+        }
+      ],
+      "immutableSource": "https://github.com/ecojust/pureTV/blob/06f1ab2b77e45d5fabcbd7233f8d3e9279a9d5c7/joystick-games/kart-rush/src/vendor/three.module.js"
+    },
+    "joystick-games/kart-rush/src/tv.js": {
+      "bytes": 6919,
+      "sha256": "3be0ec5450d4c40c4b2b352c03af9076ba189e91fe3bbc9672f8af35b63095ad",
+      "needle": "isWebGL2",
+      "matchingLines": [
+        34
+      ],
+      "excerpts": [
+        {
+          "firstLine": 32,
+          "lines": [
+            "  if(pressed.Y){clearDrive(input,getKart());pauseGame();openHelp();}",
+            " }",
+            " const snapshot=()=>{const k=getKart(),t=getTrack(),cup=getCup(),p=k.body.position,v=k.body.velocity;return JSON.parse(JSON.stringify({game:'kart-rush',renderer:renderer.capabilities.isWebGL2?'webgl2':'webgl1',webglVersion:renderer.capabilities.isWebGL2?2:1,frames,stage:frozen||state.paused?'paused':state.phase==='menu'?'menu':state.phase==='finished'?'ended':'playing',paused:frozen||state.paused,gameplay:{phase:state.phase,time:state.raceTime,countdown:state.countdown,track:t.id,speed:k.speed,x:p.x,y:p.y,z:p.z,vx:v.x,vz:v.z,lap:k.lap,progress:k.progress,place:k.place,boost:k.boost,driftCharge:k.driftCharge,item:k.item||null,itemHud:{kind:hud.item.dataset.item||'',count:hud.item.dataset.count||'',direction:hud.item.dataset.dir||'',ready:hud.item.classList.contains('ready'),visible:getComputedStyle(hud.item).display!=='none'&&getComputedStyle(hud.item).opacity!=='0'&&getComputedStyle(document.getElementById('controls')).display!=='none'},cup:cup?{at:cup.at,pts:cup.pts,over:cup.over}:null,controls:{...input},autoGas:false,screen:activeScreen()?.id||null,focusId:focus?.id||'',focus:focus?.textContent?.trim()||focus?.getAttribute('aria-label')||'',...observe()},controller:controller.peek(),errors:[...errors]}));};Object.defineProperty(window,'JoystickGameQA',{value:Object.freeze({snapshot}),configurable:false,writable:false});return{tick,suspended:()=>frozen};",
+            "}"
+          ]
+        }
+      ],
+      "immutableSource": "https://github.com/ecojust/pureTV/blob/06f1ab2b77e45d5fabcbd7233f8d3e9279a9d5c7/joystick-games/kart-rush/src/tv.js"
+    },
+    "joystick-games/kart-rush/qa-plan.json": {
+      "bytes": 4469,
+      "sha256": "283b3687535f0112e576b8584a62a7eccf37be2df2c3bc9420b6297fc64dd244",
+      "needle": "compatibleRenderers",
+      "matchingLines": [
+        5
+      ],
+      "excerpts": [
+        {
+          "firstLine": 3,
+          "lines": [
+            "  \"storageRestartRequired\": true,",
+            "  \"renderer\": \"webgl2\",",
+            "  \"compatibleRenderers\": [",
+            "    \"webgl2\",",
+            "    \"webgl1\"",
+            "  ],",
+            "  \"pauseStablePaths\": ["
+          ]
+        }
+      ],
+      "immutableSource": "https://github.com/ecojust/pureTV/blob/06f1ab2b77e45d5fabcbd7233f8d3e9279a9d5c7/joystick-games/kart-rush/qa-plan.json"
+    }
+  },
+  "scope": "Read-only source evidence for the existing original fallback; not actual WebGL1 runtime validation."
+}

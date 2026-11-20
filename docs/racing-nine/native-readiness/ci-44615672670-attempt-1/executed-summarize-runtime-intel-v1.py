@@ -1,0 +1,26 @@
+from pathlib import Path
+import json,hashlib,subprocess
+r=Path('/dev/shm/puretv-submit')
+def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+for run in [44615672670,44615678373]:
+ d=r/f'docs/racing-nine/native-readiness/ci-{run}-attempt-1';ident=json.loads((d/'identity.json').read_text());v=json.loads((d/'readonly-intel-export-verification.json').read_text());b=d/'original-intel-export/artifact';qa=ident['workflowSourceCommit'];package=ident['sourceCommit'];batch=json.loads((b/'batch-report.json').read_text());assert batch['sourceCommit']==package and batch['qaSourceCommit']==qa and batch['artifactRunId']==ident['originalPackageRunId'];assert batch['status']=='failed' and batch['runner']=='macos-15-intel';sources={};games=[]
+ def source_hashes(values):
+  for name,expected in values.items():
+   data=subprocess.check_output(['git','show',qa+':'+name],cwd=r);actual=hashlib.sha256(data).hexdigest();assert actual==expected
+   if name in sources:assert sources[name]==expected
+   sources[name]=expected
+ for entry in batch['games']:
+  game=entry['game'];base=b/game;report=json.loads((base/'native/report.json').read_text());assert report['game']==game and report['qaSourceCommit']==qa and report['artifactSourceCommit']==package and report['qaRunId']==run and report['qaRunAttempt']==1;assert report['status']=='failed' and report['failurePhase']=='initialization';source_hashes(report['sourceHashes']);caps=[]
+  for phase in ['before','after']:
+   path=base/'capability'/phase;q=json.loads((path/'report.json').read_text());assert q['sourceCommit']==package and q['qaSourceCommit']==qa and q['runId']==run and q['runAttempt']==1 and q['game']==game and q['phase']==phase;assert q['status']=='failed' and q['error'].strip().splitlines()[-1]=='AssertionError: Cannot identify exactly one current verification job';source_hashes(q['sourceHashes'])
+   for name,expected in q['executedSources'].items():assert {'bytes':(path/name).stat().st_size,'sha256':digest(path/name)}==expected
+   assert not (path/'probe.json').exists() and 'probe' not in q
+   caps.append({'phase':phase,'status':q['status'],'errorLastLine':q['error'].strip().splitlines()[-1],'probeExecuted':False,'reportSha256':digest(path/'report.json')})
+  state=report['lastState'];g=state.get('game');summary={k:g.get(k) for k in ['game','renderer','webglVersion','frames','stage','errors','audioState','focused']} if isinstance(g,dict) else None
+  if isinstance(g,dict) and isinstance(g.get('gameplay'),dict):summary['gameplayFocus']=g['gameplay'].get('focus')
+  games.append({'game':game,'originalStatus':'failed','failurePhase':'initialization','lastGame':summary,'ready':state.get('ready'),'active':state.get('active'),'nativeProcessAlive':report.get('nativeProcessAlive'),'lastStateFresh':report.get('lastStateFresh'),'originalErrorLastLine':report['error'].strip().splitlines()[-1][:800],'reportSha256':digest(base/'native/report.json'),'packageVerificationOriginalStatus':entry['checks'][0]['status'],'capability':caps})
+ http=json.loads((b/'local-assets-source-inputs.json').read_text());assert http['qaSourceCommit']==qa and http['artifactSourceCommit']==package and http['runnerArchitecture']=='x86_64'
+ for name,expected in http['files'].items():
+  p=b/'executed-source'/name;assert {'bytes':p.stat().st_size,'sha256':digest(p)}==expected;source_hashes({name:expected['sha256']})
+ result={'sourceRunId':run,'sourceRunAttempt':1,'qaSourceCommit':qa,'packageSourceCommit':package,'originalPackageRunId':ident['originalPackageRunId'],'immutableExportCommit':v['exportCommit'],'originalFiles':v['fileCount'],'originalBytes':v['totalBytes'],'originalBatchStatus':batch['status'],'originalHttpCheck':batch['localAssetHttp'],'exactQaGitSourceHashesVerified':sources,'games':games,'coverageEligibility':'blocked_missing_actual_capability_observations','causeProven':False,'originalReportsModified':False,'gamesRerunByThisRecovery':False,'packageBytesDownloadedByThisRecovery':False,'scope':'Original runtime reports and exact Git sources only; before/after probe failed before executing due to truncated job identity, so no Intel coverage or game root cause is inferred.'}
+ (d/'intel-findings.json').write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\n');(d/'executed-summarize-runtime-intel-v1.py').write_bytes(Path(__file__).read_bytes());paths=list((d/'original-intel-export').rglob('*'))+[d/x for x in ['identity.json','readonly-intel-export-request-1.json','readonly-intel-export-response-1.json','readonly-intel-export-verification.json','intel-findings.json','executed-summarize-runtime-intel-v1.py','capability-job-identity-replay.json','executed-original-macos-capability.py']];files={p.relative_to(r).as_posix():{'bytes':p.stat().st_size,'sha256':digest(p)} for p in paths if p.is_file()};(d/'intel-checkpoint-inventory.json').write_text(json.dumps({'files':files,'fileCount':len(files),'totalBytes':sum(x['bytes'] for x in files.values()),'originalFileBytesPreserved':True},indent=2)+'\n');print(json.dumps({'run':run,'files':len(files),'bytes':sum(x['bytes'] for x in files.values()),'qaHashes':len(sources),'originalHttp':batch['localAssetHttp']['status'],'games':[(x['game'],x['lastGame']) for x in games]},ensure_ascii=False))

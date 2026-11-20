@@ -1,0 +1,54 @@
+{
+  "status": "superseded-layout-review-found-scroll-crop",
+  "upstreamModelChecks": 31,
+  "buildCheck": true,
+  "offline": true,
+  "browserReports": [
+    "browser-attempt-2-960/report.json",
+    "browser-attempt-3-1280/report.json"
+  ],
+  "renderer": "dom",
+  "browserGraphics": "Chromium --disable-gpu; original DOM and Canvas2D sprite renderer",
+  "resolutions": [
+    [
+      960,
+      540
+    ],
+    [
+      1280,
+      720
+    ]
+  ],
+  "visualReview": "960 playing thumbnail retained a middle scroll position after commands rebuilt and focus reset to the global header; enemy name was clipped. Previous full-visibility claim was too broad. New battle-scoped focus, short-screen cards and normal directional reading checks are being verified.",
+  "validated": [
+    "original seeded world and roster initialization",
+    "actual travel increases steps and changes node",
+    "original random encounter and completed guard round",
+    "pause freezes actual gameplay and original UI/audio scheduler",
+    "focus cancellation",
+    "disconnect and reconnect remain paused",
+    "single native snapshot per RAF",
+    "no external runtime requests"
+  ],
+  "failureHistory": [
+    {
+      "report": "browser-attempt-1-960/report.json",
+      "cause": "Test expected round > 1 after executing the first original round. Readonly failure snapshot shows round=1,state=input; corrected test to >=1. No model changed."
+    }
+  ],
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "nativeAndroidTested": false,
+  "nativeMacTested": false,
+  "signedApk": false,
+  "files": {
+    "THIRD-PARTY-NOTICES.txt": {
+      "bytes": 1469,
+      "sha256": "bc6c8584c13cecb6812568b739382d7e0e25aaeecaf14ad6b55f39286a281533"
+    },
+    "tv.html": {
+      "bytes": 262618,
+      "sha256": "f75fabbe94fc36f7841eaaf6de44e804a488d4cabd019c1561e62a2718cc3c6d"
+    }
+  }
+}

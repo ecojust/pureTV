@@ -1,0 +1,69 @@
+{
+  "status": "local_contracts_passed_native_reverification_pending",
+  "at": "2026-11-19T21:41:29.151724+00:00",
+  "priorWindowsPauseCheckpoint": "0a2e0bd93067b4945892ebccd7a3329dcde7675f",
+  "files": {
+    "joystick-games/tools/windows-verify.py": {
+      "bytes": 38128,
+      "sha256": "4d967b72972782acf9210415b757796c540039f37c00c33a99f16eb6a163091c"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 7106,
+      "sha256": "8fa99646235d8d3369e6606b94b1facaafda934dcc1df3ad693233f9bcfe6e54"
+    },
+    "joystick-games/shared/windows/tests/window-lifecycle.test.py": {
+      "bytes": 12453,
+      "sha256": "92c6ca63a4ddfda51adbe83d769e712905cda83e1f902a6503922697a8424f3d"
+    },
+    "joystick-games/shared/windows/tests/gameplay.test.py": {
+      "bytes": 13590,
+      "sha256": "e129f3711d84886f431907abff240282337c9d53dc3885a42e7dba91b30a0060"
+    },
+    "joystick-games/backroad-rally/qa-plan.json": {
+      "bytes": 12109,
+      "sha256": "8306e5b2ad54cf35eb2602db045711572e35a728478e668fc65a6fb962ad157f"
+    },
+    "joystick-games/kart-royale/qa-plan.json": {
+      "bytes": 6623,
+      "sha256": "e2c0c2fc404294b4cbf9ae737e0e6c2fe544b7b2f53f8c5324723f6eb63d81e8"
+    },
+    "joystick-games/turbo-kart-rush/qa-plan.json": {
+      "bytes": 3425,
+      "sha256": "526e03230f54a2e9147b0e697d07c5031e746b3924031b1d43c6c16f65866b7b"
+    }
+  },
+  "checks": {
+    "newSyntheticBoundaryGroups": 14,
+    "existingLifecycleAndEpochGroups": 21,
+    "combinedExistingCiEntrypoint": 35,
+    "androidCatalogContracts": 6,
+    "sourceScope": {
+      "backroad-rally": {
+        "inputs": 919,
+        "newTestIncluded": true
+      },
+      "kart-royale": {
+        "inputs": 207,
+        "newTestIncluded": true
+      },
+      "turbo-kart-rush": {
+        "inputs": 180,
+        "newTestIncluded": true
+      }
+    },
+    "ordinaryGameplayAstIdentical": true,
+    "exactThreePlanDiffAudit": true
+  },
+  "newProductionDispatched": false,
+  "newNativeExecution": false,
+  "originalReportsUnmodified": true,
+  "gameProductionSourceChanged": false,
+  "clockOrPhysicsChanged": false,
+  "notes": [
+    "Original Windows8 reports remain failed. These synthetic fixtures check verifier timing/identity/protocol boundaries, not native game performance.",
+    "Royale extended startup is Windows-only, confirms A then releases, preserves original phase expectation, hard-bounds all observation to 600 seconds, and fails after 60 seconds without frame+poll progress.",
+    "Turbo opt-in applies only the original accelerate step; same-owner raw and semantic UP plus actual fresh frame are required before the first original speed+progress expectation can pass. SDK UP is immediately released; two subsequent fresh fully released frames and complete ACKs through release remain mandatory.",
+    "Backroad only step index32 timeout 60 to240. No original action keys, predicate or holdMs changed.",
+    "The shared CI lifecycle test entrypoint imports both new test classes. All three actual source closures include the new test file."
+  ]
+}

@@ -1,0 +1,1264 @@
+{
+  "status": "original-failures-explained-no-native-acceptance",
+  "sourceCommit": "d750c0c68c430503be06d18fe5b76af825c72e58",
+  "originalRunId": 44636807407,
+  "attempt": 1,
+  "exportCommit": "09167e91d63bfea2a069dbb62ba6127db238a9f7",
+  "originalFilesVerified": 22,
+  "originalBytesVerified": 2718198,
+  "fixedSourceFiles": {
+    "joystick-games/kart-royale/qa-plan.json": {
+      "bytes": 7654,
+      "sha256": "a28b7a1f6beb1affa77cb5f84b36dadd33521581e636e5ab178b46cc1b56ef4d"
+    },
+    "joystick-games/tools/windows-verify.py": {
+      "bytes": 38128,
+      "sha256": "4d967b72972782acf9210415b757796c540039f37c00c33a99f16eb6a163091c"
+    },
+    "joystick-games/tools/macos-verify.py": {
+      "bytes": 56639,
+      "sha256": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 7146,
+      "sha256": "52fcb4b01f5dd67a12d7bfee5633f116fbc500bcc59c8e522d050b7a5af0e63e"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/windows-display.py": {
+      "bytes": 7004,
+      "sha256": "3a4bca5a17fd0cf33385812678d00dfd0cdde39d59f3342d906f5fb7b7b9ced1"
+    },
+    "joystick-games/tools/windows-observation.py": {
+      "bytes": 5526,
+      "sha256": "99ac7dae5eb1d37c5e8191d0a18bf00335f744e66269b340dbe94a74a6dc88a4"
+    },
+    "joystick-games/shared/windows/Sources/main.cpp": {
+      "bytes": 34903,
+      "sha256": "53ab3af86bdd9d203fc2fe604fcc60ebe44bbc619825cfb7f8725d51e5ce20bf"
+    },
+    "joystick-games/shared/windows/Web/bridge.js": {
+      "bytes": 8739,
+      "sha256": "e4de0862673f30c254e02597f45b8fbac0382b2e2e6a5ae8aee819ad4d1f0a89"
+    },
+    "joystick-games/shared/web/input.js": {
+      "bytes": 8423,
+      "sha256": "d33a301f082f0100db81c055b4773e2947cf4c166f76f68dfe06344d5a4660f6"
+    },
+    "joystick-games/kart-royale/src/src/tv-input.ts": {
+      "bytes": 6144,
+      "sha256": "01cbe3f146320be7552c1fbc8a960ba70a0f397738540be8553b781b2d4c6ecc"
+    },
+    "joystick-games/kart-royale/src/src/core/Input.ts": {
+      "bytes": 40121,
+      "sha256": "844f4a49ae9ecd9d6d093a005d7e2d74dd123e055bfec4a4ad24c62fbb320d01"
+    },
+    "joystick-games/kart-royale/src/src/main.ts": {
+      "bytes": 52111,
+      "sha256": "9dd91077642b48ab39b3516cff3218351bed85f87817057f4653761024ebd188"
+    }
+  },
+  "modes": {
+    "normal": {
+      "report": {
+        "bytes": 908747,
+        "sha256": "61b2f3a84d7546795aaf22bf4be4fbae8f31ea45d03a9a591bb18d93a6f58b6c"
+      },
+      "status": "failed",
+      "passedTopLevelChecks": 3,
+      "failedTopLevelCheck": "Actual gameplay and pause model freeze",
+      "error": "AssertionError: Snapshot arrived after gameplay observation deadline",
+      "passedMenuTapSteps": 11,
+      "startup": {
+        "status": "passed",
+        "elapsedSeconds": 567.4370000000001,
+        "firstMatchedAtSeconds": 553.078,
+        "releasedFreshFrames": 2,
+        "wireHeldSeconds": 0.037007
+      },
+      "acceleration": {
+        "status": "failed",
+        "timeoutSeconds": 60,
+        "elapsedSeconds": 60.0630000000001,
+        "firstMatchedAtSeconds": 29.297000000000025,
+        "releasedAtSeconds": 29.297000000000025,
+        "sdkDownSequence": 297,
+        "sdkReleaseSequence": 305,
+        "before": {
+          "frames": 183,
+          "pollCount": 183,
+          "phase": "racing",
+          "time": 0.1,
+          "speed": -4.53354532683163e-19,
+          "position": [
+            -5.690552343072305,
+            4.072478971904076,
+            -9.98221542925321
+          ],
+          "controls": {
+            "accel": 0,
+            "accelAuto": false,
+            "anyPressed": false,
+            "brake": 0,
+            "drift": false,
+            "driftPressed": false,
+            "itemPressed": false,
+            "lookBack": false,
+            "pausePressed": false,
+            "steer": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelled": false
+        },
+        "firstConsumed": {
+          "frames": 186,
+          "pollCount": 186,
+          "phase": "racing",
+          "time": 0.25,
+          "speed": 0.744047748790047,
+          "position": [
+            -5.673793792768857,
+            4.0715662940033,
+            -9.968380756813628
+          ],
+          "controls": {
+            "accel": 1,
+            "accelAuto": false,
+            "anyPressed": true,
+            "brake": 0,
+            "drift": false,
+            "driftPressed": false,
+            "itemPressed": false,
+            "lookBack": false,
+            "pausePressed": false,
+            "steer": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": true,
+            "X": false,
+            "Y": false
+          },
+          "cancelled": false
+        },
+        "firstMatchWhileHeld": {
+          "frames": 187,
+          "pollCount": 187,
+          "phase": "racing",
+          "time": 0.3,
+          "speed": 1.4877464160064342,
+          "position": [
+            -5.629993206300452,
+            4.068574382438925,
+            -9.929090931671766
+          ],
+          "controls": {
+            "accel": 1,
+            "accelAuto": false,
+            "anyPressed": false,
+            "brake": 0,
+            "drift": false,
+            "driftPressed": false,
+            "itemPressed": false,
+            "lookBack": false,
+            "pausePressed": false,
+            "steer": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": true,
+            "X": false,
+            "Y": false
+          },
+          "cancelled": false
+        },
+        "samples": [
+          {
+            "elapsedSeconds": 7.391000000000076,
+            "timestamp": 1735.812,
+            "frames": 184,
+            "pollCount": 184,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": true,
+            "semantic": false,
+            "nativeCounterExact": true,
+            "expectationMatches": false,
+            "observedValues": {
+              "gameplay.speed": 3.398860321562014e-19,
+              "gameplay.position": [
+                -5.690552343024075,
+                4.072478974081532,
+                -9.982215429172802
+              ]
+            }
+          },
+          {
+            "elapsedSeconds": 14.484000000000151,
+            "timestamp": 1743.046,
+            "frames": 185,
+            "pollCount": 185,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": true,
+            "semantic": false,
+            "nativeCounterExact": true,
+            "expectationMatches": false,
+            "observedValues": {
+              "gameplay.speed": 4.093559687208549e-19,
+              "gameplay.position": [
+                -5.69055234297585,
+                4.072478976258783,
+                -9.982215429092399
+              ]
+            }
+          },
+          {
+            "elapsedSeconds": 21.688000000000102,
+            "timestamp": 1750.234,
+            "frames": 186,
+            "pollCount": 186,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": true,
+            "semantic": true,
+            "nativeCounterExact": true,
+            "expectationMatches": false,
+            "observedValues": {
+              "gameplay.speed": 0.744047748790047,
+              "gameplay.position": [
+                -5.673793792768857,
+                4.0715662940033,
+                -9.968380756813628
+              ]
+            }
+          },
+          {
+            "elapsedSeconds": 29.297000000000025,
+            "timestamp": 1757.781,
+            "frames": 187,
+            "pollCount": 187,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": true,
+            "semantic": true,
+            "nativeCounterExact": true,
+            "expectationMatches": true,
+            "observedValues": {
+              "gameplay.speed": 1.4877464160064342,
+              "gameplay.position": [
+                -5.629993206300452,
+                4.068574382438925,
+                -9.929090931671766
+              ]
+            }
+          },
+          {
+            "elapsedSeconds": 36.406000000000176,
+            "timestamp": 1764.968,
+            "frames": 188,
+            "pollCount": 188,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": false,
+            "semantic": true,
+            "nativeCounterExact": true,
+            "expectationMatches": true,
+            "observedValues": {
+              "gameplay.speed": 2.231082766164957,
+              "gameplay.position": [
+                -5.559327647470452,
+                4.063190106440354,
+                -9.86419765767751
+              ]
+            }
+          },
+          {
+            "elapsedSeconds": 43.547000000000025,
+            "timestamp": 1772.187,
+            "frames": 189,
+            "pollCount": 189,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": false,
+            "semantic": true,
+            "nativeCounterExact": true,
+            "expectationMatches": true,
+            "observedValues": {
+              "gameplay.speed": 2.973750818252906,
+              "gameplay.position": [
+                -5.4619095547470184,
+                4.055942063695432,
+                -9.773590287151272
+              ]
+            }
+          },
+          {
+            "elapsedSeconds": 51.25,
+            "timestamp": 1779.812,
+            "frames": 190,
+            "pollCount": 190,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": false,
+            "semantic": false,
+            "nativeCounterExact": true,
+            "expectationMatches": true,
+            "observedValues": {
+              "gameplay.speed": 2.866648441421165,
+              "gameplay.position": [
+                -5.356647454452426,
+                4.048538841609788,
+                -9.673312272277377
+              ]
+            }
+          },
+          {
+            "elapsedSeconds": 58.656000000000176,
+            "timestamp": 1787.343,
+            "frames": 191,
+            "pollCount": 191,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": false,
+            "semantic": false,
+            "nativeCounterExact": true,
+            "expectationMatches": true,
+            "observedValues": {
+              "gameplay.speed": 2.759770075842897,
+              "gameplay.position": [
+                -5.255259458881751,
+                4.0422421338399195,
+                -9.576664053448555
+              ]
+            }
+          }
+        ],
+        "firstReleasedBaseline": {
+          "elapsedSeconds": 51.25,
+          "timestamp": 1779.812,
+          "frames": 190,
+          "pollCount": 190,
+          "stage": "playing",
+          "phase": "racing",
+          "raw": false,
+          "semantic": false,
+          "nativeCounterExact": true,
+          "expectationMatches": true,
+          "observedValues": {
+            "gameplay.speed": 2.866648441421165,
+            "gameplay.position": [
+              -5.356647454452426,
+              4.048538841609788,
+              -9.673312272277377
+            ]
+          }
+        },
+        "releasedFollowupsRecomputed": 1,
+        "reportedReleasedFreshFrames": 0,
+        "reportedCounterNote": "The observer updates releasedFreshFrames only on successful completion. Failure retains its initialized zero; samples preserve actual progress."
+      },
+      "wire": {
+        "connection": 1,
+        "messages": 312,
+        "uniqueSequences": 312,
+        "matchingAcks": 312,
+        "pressRelease": [
+          {
+            "at": "2026-11-19T23:44:08.530287+00:00",
+            "connection": 1,
+            "direction": "sdk-to-game",
+            "message": {
+              "type": "button",
+              "seq": 297,
+              "controller_id": "virtual-b7fa178ef144",
+              "key": "UP",
+              "action": "down",
+              "pressed": true,
+              "duration_ms": 0
+            }
+          },
+          {
+            "at": "2026-11-19T23:44:37.835815+00:00",
+            "connection": 1,
+            "direction": "sdk-to-game",
+            "message": {
+              "type": "button",
+              "seq": 305,
+              "controller_id": "virtual-b7fa178ef144",
+              "key": "UP",
+              "action": "tap",
+              "pressed": false,
+              "duration_ms": 100
+            }
+          }
+        ],
+        "actualHeldSeconds": 29.305528,
+        "errors": [],
+        "connectionEnds": []
+      },
+      "inputEventRing": {
+        "discarded": 0,
+        "enabled": true,
+        "events": [
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": -1,
+            "disabled": false,
+            "documentEpoch": 1,
+            "event": "diagnostics_enabled",
+            "focused": false,
+            "hasPureGame": false,
+            "hidden": false,
+            "performanceMilliseconds": 2031,
+            "sequence": 1
+          },
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": -1,
+            "cancelSeq": null,
+            "connected": false,
+            "disabled": false,
+            "documentEpoch": 1,
+            "event": "input_transition",
+            "focused": false,
+            "hasPureGame": false,
+            "hidden": false,
+            "incomingRevision": 1,
+            "inputEnabled": false,
+            "performanceMilliseconds": 2032.2000000000698,
+            "previousCancelSeq": null,
+            "sequence": 2,
+            "sourceChanged": false
+          },
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": -1,
+            "disabled": false,
+            "documentEpoch": 1,
+            "event": "suspend_called",
+            "focused": false,
+            "hasPureGame": false,
+            "hidden": false,
+            "performanceMilliseconds": 2032.2000000000698,
+            "sequence": 3
+          },
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": 1,
+            "disabled": true,
+            "documentEpoch": 1,
+            "event": "window_focus",
+            "focused": true,
+            "hasPureGame": true,
+            "hidden": false,
+            "performanceMilliseconds": 3318.8000000000466,
+            "sequence": 4
+          },
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": 1,
+            "disabled": true,
+            "documentEpoch": 1,
+            "event": "window_focus",
+            "focused": true,
+            "hasPureGame": true,
+            "hidden": false,
+            "performanceMilliseconds": 3318.9000000000233,
+            "sequence": 5
+          },
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": 1,
+            "cancelSeq": null,
+            "connected": false,
+            "disabled": true,
+            "documentEpoch": 1,
+            "event": "input_transition",
+            "focused": true,
+            "hasPureGame": true,
+            "hidden": false,
+            "incomingRevision": 2,
+            "inputEnabled": true,
+            "performanceMilliseconds": 3321.5,
+            "previousCancelSeq": null,
+            "sequence": 6,
+            "sourceChanged": false
+          },
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": 2,
+            "disabled": false,
+            "documentEpoch": 1,
+            "event": "first_poll",
+            "focused": true,
+            "hasPureGame": true,
+            "hidden": false,
+            "performanceMilliseconds": 34321.30000000005,
+            "sequence": 7
+          },
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": 2,
+            "cancelSeq": 3,
+            "connected": true,
+            "disabled": false,
+            "documentEpoch": 1,
+            "event": "input_transition",
+            "focused": true,
+            "hasPureGame": true,
+            "hidden": false,
+            "incomingRevision": 12,
+            "inputEnabled": true,
+            "performanceMilliseconds": 102122.6000000001,
+            "previousCancelSeq": null,
+            "sequence": 8,
+            "sourceChanged": true
+          },
+          {
+            "cachedCancelSeq": 3,
+            "cachedConnected": true,
+            "cachedRevision": 12,
+            "disabled": false,
+            "documentEpoch": 1,
+            "event": "first_active_poll",
+            "focused": true,
+            "hasPureGame": true,
+            "hidden": false,
+            "performanceMilliseconds": 102166.40000000002,
+            "sequence": 9
+          }
+        ],
+        "total": 9
+      },
+      "observedOwnerIdentities": [
+        [
+          "virtual-b7fa178ef144",
+          "wifi-9d57adbebec5dbc2fe0e24e0afaaefdf-1",
+          3
+        ]
+      ],
+      "final": {
+        "frames": 191,
+        "pollCount": 191,
+        "phase": "racing",
+        "time": 0.49999999999999994,
+        "speed": 2.759770075842897,
+        "position": [
+          -5.255259458881751,
+          4.0422421338399195,
+          -9.576664053448555
+        ],
+        "controls": {
+          "accel": 0,
+          "accelAuto": false,
+          "anyPressed": false,
+          "brake": 0,
+          "drift": false,
+          "driftPressed": false,
+          "itemPressed": false,
+          "lookBack": false,
+          "pausePressed": false,
+          "steer": 0
+        },
+        "buttons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "cancelled": false
+      },
+      "completedPlanSteps": 12,
+      "failingPlanIndexZeroBased": 12
+    },
+    "occupied": {
+      "report": {
+        "bytes": 1571824,
+        "sha256": "7c90f51da12c755f8c42014d37c3a16d80b935cb0e21252a45c334d4abfe35d4"
+      },
+      "status": "failed",
+      "passedTopLevelChecks": 3,
+      "failedTopLevelCheck": "Actual gameplay and pause model freeze",
+      "error": "AssertionError: Insufficient fresh real snapshots during pause",
+      "passedMenuTapSteps": 11,
+      "startup": {
+        "status": "passed",
+        "elapsedSeconds": 567.375,
+        "firstMatchedAtSeconds": 552.625,
+        "releasedFreshFrames": 2,
+        "wireHeldSeconds": 0.028138
+      },
+      "acceleration": {
+        "status": "passed",
+        "timeoutSeconds": 60,
+        "elapsedSeconds": 58.96900000000005,
+        "firstMatchedAtSeconds": 28.797000000000025,
+        "releasedAtSeconds": 28.860000000000127,
+        "sdkDownSequence": 298,
+        "sdkReleaseSequence": 306,
+        "before": {
+          "frames": 182,
+          "pollCount": 182,
+          "phase": "racing",
+          "time": 0.1,
+          "speed": 4.2864499342497894e-20,
+          "position": [
+            -5.690552343072125,
+            4.072478971912179,
+            -9.982215429252912
+          ],
+          "controls": {
+            "accel": 0,
+            "accelAuto": false,
+            "anyPressed": false,
+            "brake": 0,
+            "drift": false,
+            "driftPressed": false,
+            "itemPressed": false,
+            "lookBack": false,
+            "pausePressed": false,
+            "steer": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelled": false
+        },
+        "firstConsumed": {
+          "frames": 185,
+          "pollCount": 185,
+          "phase": "racing",
+          "time": 0.25,
+          "speed": 0.7440477493418387,
+          "position": [
+            -5.673793793407288,
+            4.071566293994799,
+            -9.968380756015238
+          ],
+          "controls": {
+            "accel": 1,
+            "accelAuto": false,
+            "anyPressed": true,
+            "brake": 0,
+            "drift": false,
+            "driftPressed": false,
+            "itemPressed": false,
+            "lookBack": false,
+            "pausePressed": false,
+            "steer": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": true,
+            "X": false,
+            "Y": false
+          },
+          "cancelled": false
+        },
+        "firstMatchWhileHeld": {
+          "frames": 186,
+          "pollCount": 186,
+          "phase": "racing",
+          "time": 0.3,
+          "speed": 1.4877464171028585,
+          "position": [
+            -5.629993208758442,
+            4.068574382402255,
+            -9.929090928781825
+          ],
+          "controls": {
+            "accel": 1,
+            "accelAuto": false,
+            "anyPressed": false,
+            "brake": 0,
+            "drift": false,
+            "driftPressed": false,
+            "itemPressed": false,
+            "lookBack": false,
+            "pausePressed": false,
+            "steer": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": true,
+            "X": false,
+            "Y": false
+          },
+          "cancelled": false
+        },
+        "samples": [
+          {
+            "elapsedSeconds": 7.094000000000051,
+            "timestamp": 2993.562,
+            "frames": 183,
+            "pollCount": 183,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": true,
+            "semantic": false,
+            "nativeCounterExact": true,
+            "expectationMatches": false,
+            "observedValues": {
+              "gameplay.speed": -1.5401606697369843e-19,
+              "gameplay.position": [
+                -5.690552343023898,
+                4.072478974089533,
+                -9.982215429172507
+              ]
+            }
+          },
+          {
+            "elapsedSeconds": 14.594000000000051,
+            "timestamp": 3001.109,
+            "frames": 184,
+            "pollCount": 184,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": true,
+            "semantic": false,
+            "nativeCounterExact": true,
+            "expectationMatches": false,
+            "observedValues": {
+              "gameplay.speed": -9.171365041681694e-20,
+              "gameplay.position": [
+                -5.690552342975675,
+                4.072478976266744,
+                -9.982215429092108
+              ]
+            }
+          },
+          {
+            "elapsedSeconds": 21.59400000000005,
+            "timestamp": 3008.312,
+            "frames": 185,
+            "pollCount": 185,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": true,
+            "semantic": true,
+            "nativeCounterExact": true,
+            "expectationMatches": false,
+            "observedValues": {
+              "gameplay.speed": 0.7440477493418387,
+              "gameplay.position": [
+                -5.673793793407288,
+                4.071566293994799,
+                -9.968380756015238
+              ]
+            }
+          },
+          {
+            "elapsedSeconds": 28.860000000000127,
+            "timestamp": 3015.515,
+            "frames": 186,
+            "pollCount": 186,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": true,
+            "semantic": true,
+            "nativeCounterExact": true,
+            "expectationMatches": true,
+            "observedValues": {
+              "gameplay.speed": 1.4877464171028585,
+              "gameplay.position": [
+                -5.629993208758442,
+                4.068574382402255,
+                -9.929090928781825
+              ]
+            }
+          },
+          {
+            "elapsedSeconds": 36.65700000000015,
+            "timestamp": 3023.125,
+            "frames": 187,
+            "pollCount": 187,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": false,
+            "semantic": true,
+            "nativeCounterExact": true,
+            "expectationMatches": true,
+            "observedValues": {
+              "gameplay.speed": 2.2310827677992604,
+              "gameplay.position": [
+                -5.559327652936614,
+                4.063190106369666,
+                -9.864197651410674
+              ]
+            }
+          },
+          {
+            "elapsedSeconds": 43.90700000000015,
+            "timestamp": 3030.39,
+            "frames": 188,
+            "pollCount": 188,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": false,
+            "semantic": false,
+            "nativeCounterExact": true,
+            "expectationMatches": true,
+            "observedValues": {
+              "gameplay.speed": 2.1244432532786233,
+              "gameplay.position": [
+                -5.480756818433561,
+                4.057002921286738,
+                -9.789690946850847
+              ]
+            }
+          },
+          {
+            "elapsedSeconds": 51.0,
+            "timestamp": 3037.64,
+            "frames": 189,
+            "pollCount": 189,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": false,
+            "semantic": false,
+            "nativeCounterExact": true,
+            "expectationMatches": true,
+            "observedValues": {
+              "gameplay.speed": 2.0178585373100115,
+              "gameplay.position": [
+                -5.406051292149053,
+                4.051893149555933,
+                -9.71879672446111
+              ]
+            }
+          },
+          {
+            "elapsedSeconds": 58.547000000000025,
+            "timestamp": 3045.25,
+            "frames": 190,
+            "pollCount": 190,
+            "stage": "playing",
+            "phase": "racing",
+            "raw": false,
+            "semantic": false,
+            "nativeCounterExact": true,
+            "expectationMatches": true,
+            "observedValues": {
+              "gameplay.speed": 1.91139638627184,
+              "gameplay.position": [
+                -5.335182786803638,
+                4.047200521609951,
+                -9.651577873712897
+              ]
+            }
+          }
+        ],
+        "firstReleasedBaseline": {
+          "elapsedSeconds": 43.90700000000015,
+          "timestamp": 3030.39,
+          "frames": 188,
+          "pollCount": 188,
+          "stage": "playing",
+          "phase": "racing",
+          "raw": false,
+          "semantic": false,
+          "nativeCounterExact": true,
+          "expectationMatches": true,
+          "observedValues": {
+            "gameplay.speed": 2.1244432532786233,
+            "gameplay.position": [
+              -5.480756818433561,
+              4.057002921286738,
+              -9.789690946850847
+            ]
+          }
+        },
+        "releasedFollowupsRecomputed": 2,
+        "reportedReleasedFreshFrames": 2,
+        "reportedCounterNote": "The observer updates releasedFreshFrames only on successful completion. Failure retains its initialized zero; samples preserve actual progress."
+      },
+      "wire": {
+        "connection": 1,
+        "messages": 409,
+        "uniqueSequences": 409,
+        "matchingAcks": 409,
+        "pressRelease": [
+          {
+            "at": "2026-11-20T00:05:06.557899+00:00",
+            "connection": 1,
+            "direction": "sdk-to-game",
+            "message": {
+              "type": "button",
+              "seq": 298,
+              "controller_id": "virtual-6b3980ae901c",
+              "key": "UP",
+              "action": "down",
+              "pressed": true,
+              "duration_ms": 0
+            }
+          },
+          {
+            "at": "2026-11-20T00:05:35.399828+00:00",
+            "connection": 1,
+            "direction": "sdk-to-game",
+            "message": {
+              "type": "button",
+              "seq": 306,
+              "controller_id": "virtual-6b3980ae901c",
+              "key": "UP",
+              "action": "tap",
+              "pressed": false,
+              "duration_ms": 100
+            }
+          }
+        ],
+        "actualHeldSeconds": 28.841929,
+        "errors": [],
+        "connectionEnds": []
+      },
+      "inputEventRing": {
+        "discarded": 0,
+        "enabled": true,
+        "events": [
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": -1,
+            "disabled": false,
+            "documentEpoch": 1,
+            "event": "diagnostics_enabled",
+            "focused": false,
+            "hasPureGame": false,
+            "hidden": false,
+            "performanceMilliseconds": 2033.8000000000466,
+            "sequence": 1
+          },
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": -1,
+            "cancelSeq": null,
+            "connected": false,
+            "disabled": false,
+            "documentEpoch": 1,
+            "event": "input_transition",
+            "focused": false,
+            "hasPureGame": false,
+            "hidden": false,
+            "incomingRevision": 1,
+            "inputEnabled": false,
+            "performanceMilliseconds": 2034.9000000001397,
+            "previousCancelSeq": null,
+            "sequence": 2,
+            "sourceChanged": false
+          },
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": -1,
+            "disabled": false,
+            "documentEpoch": 1,
+            "event": "suspend_called",
+            "focused": false,
+            "hasPureGame": false,
+            "hidden": false,
+            "performanceMilliseconds": 2035,
+            "sequence": 3
+          },
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": 1,
+            "disabled": true,
+            "documentEpoch": 1,
+            "event": "window_focus",
+            "focused": true,
+            "hasPureGame": true,
+            "hidden": false,
+            "performanceMilliseconds": 2643,
+            "sequence": 4
+          },
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": 1,
+            "disabled": true,
+            "documentEpoch": 1,
+            "event": "window_focus",
+            "focused": true,
+            "hasPureGame": true,
+            "hidden": false,
+            "performanceMilliseconds": 2643.100000000093,
+            "sequence": 5
+          },
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": 1,
+            "cancelSeq": null,
+            "connected": false,
+            "disabled": true,
+            "documentEpoch": 1,
+            "event": "input_transition",
+            "focused": true,
+            "hasPureGame": true,
+            "hidden": false,
+            "incomingRevision": 2,
+            "inputEnabled": true,
+            "performanceMilliseconds": 2839.100000000093,
+            "previousCancelSeq": null,
+            "sequence": 6,
+            "sourceChanged": false
+          },
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": 2,
+            "disabled": false,
+            "documentEpoch": 1,
+            "event": "first_poll",
+            "focused": true,
+            "hasPureGame": true,
+            "hidden": false,
+            "performanceMilliseconds": 33181.10000000009,
+            "sequence": 7
+          },
+          {
+            "cachedCancelSeq": null,
+            "cachedConnected": false,
+            "cachedRevision": 2,
+            "cancelSeq": 3,
+            "connected": true,
+            "disabled": false,
+            "documentEpoch": 1,
+            "event": "input_transition",
+            "focused": true,
+            "hasPureGame": true,
+            "hidden": false,
+            "incomingRevision": 13,
+            "inputEnabled": true,
+            "performanceMilliseconds": 100998,
+            "previousCancelSeq": null,
+            "sequence": 8,
+            "sourceChanged": true
+          },
+          {
+            "cachedCancelSeq": 3,
+            "cachedConnected": true,
+            "cachedRevision": 13,
+            "disabled": false,
+            "documentEpoch": 1,
+            "event": "first_active_poll",
+            "focused": true,
+            "hasPureGame": true,
+            "hidden": false,
+            "performanceMilliseconds": 101026.20000000019,
+            "sequence": 9
+          }
+        ],
+        "total": 9
+      },
+      "observedOwnerIdentities": [
+        [
+          "virtual-6b3980ae901c",
+          "wifi-cfe77d80b1a49232969dfdb886e4fdd8-1",
+          3
+        ]
+      ],
+      "final": {
+        "frames": 228,
+        "pollCount": 228,
+        "phase": "paused",
+        "time": 1.800000000000001,
+        "speed": 1.4960540284646924,
+        "position": [
+          -3.4122686214838196,
+          3.925276150352829,
+          -7.9197944517173875
+        ],
+        "controls": {
+          "accel": 0,
+          "accelAuto": false,
+          "anyPressed": false,
+          "brake": 0,
+          "drift": false,
+          "driftPressed": false,
+          "itemPressed": false,
+          "lookBack": false,
+          "pausePressed": false,
+          "steer": 0
+        },
+        "buttons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "cancelled": false
+      },
+      "completedPlanSteps": 20,
+      "failingPlanIndexZeroBased": null,
+      "failureAfterPlan": true,
+      "pauseObservation": {
+        "background": false,
+        "timeoutSeconds": 30,
+        "baselineTimestamp": 3316.64,
+        "baselinePollCount": 224,
+        "expectedPaths": {
+          "gameplay.time": 1.800000000000001,
+          "gameplay.position": [
+            -3.4122686214838196,
+            3.925276150352829,
+            -7.9197944517173875
+          ],
+          "gameplay.speed": 1.4960540284646924,
+          "gameplay.lap": 0,
+          "gameplay.driftCharge": 0,
+          "gameplay.boostTime": 0
+        },
+        "status": "failed",
+        "elapsedSeconds": 30.0,
+        "totalReadSamples": 226,
+        "freshSamples": [
+          {
+            "elapsedSeconds": 7.6720000000000255,
+            "nativeTimestamp": 3324.078,
+            "pollCount": 225,
+            "freshNativeSnapshot": true,
+            "paused": true,
+            "active": true,
+            "inputEnabled": true,
+            "paths": {
+              "gameplay.time": 1.800000000000001,
+              "gameplay.position": [
+                -3.4122686214838196,
+                3.925276150352829,
+                -7.9197944517173875
+              ],
+              "gameplay.speed": 1.4960540284646924,
+              "gameplay.lap": 0,
+              "gameplay.driftCharge": 0,
+              "gameplay.boostTime": 0
+            }
+          },
+          {
+            "elapsedSeconds": 15.672000000000025,
+            "nativeTimestamp": 3331.937,
+            "pollCount": 227,
+            "freshNativeSnapshot": true,
+            "paused": true,
+            "active": true,
+            "inputEnabled": true,
+            "paths": {
+              "gameplay.time": 1.800000000000001,
+              "gameplay.position": [
+                -3.4122686214838196,
+                3.925276150352829,
+                -7.9197944517173875
+              ],
+              "gameplay.speed": 1.4960540284646924,
+              "gameplay.lap": 0,
+              "gameplay.driftCharge": 0,
+              "gameplay.boostTime": 0
+            }
+          },
+          {
+            "elapsedSeconds": 22.860000000000127,
+            "nativeTimestamp": 3339.359,
+            "pollCount": 228,
+            "freshNativeSnapshot": true,
+            "paused": true,
+            "active": true,
+            "inputEnabled": true,
+            "paths": {
+              "gameplay.time": 1.800000000000001,
+              "gameplay.position": [
+                -3.4122686214838196,
+                3.925276150352829,
+                -7.9197944517173875
+              ],
+              "gameplay.speed": 1.4960540284646924,
+              "gameplay.lap": 0,
+              "gameplay.driftCharge": 0,
+              "gameplay.boostTime": 0
+            }
+          }
+        ],
+        "requiredFreshSamples": 4,
+        "allObservedModelValuesUnchanged": true
+      }
+    }
+  },
+  "conclusions": [
+    "Both original modes consumed held UP in the semantic frame, set original controls.accel=1, and exceeded speed 1 with changed position before releasing. Permanent input-mapping failure is contradicted by these observations.",
+    "Normal fails after the original held expectation already matched. Semantic release reaches frame190 at 51.25s; frame191 at 58.656s is only the first subsequent fresh frame. The unchanged 60-second total budget expires before the second subsequent frame required by the observer.",
+    "Occupied completes all20 original plan steps, then fails the additional pause-stability observation. In30seconds it records only3 new native timestamps of the4 required. Every observed pause model field is identical and polling advances224to228.",
+    "The complete9-event rings discard nothing and show only initial bootstrap suspension. No post-connection blur/suspend/input-disable/cancel event is present; observed owner/session/cancelSeq and documentepoch remain fixed.",
+    "The original native callback samples live protocol state after asynchronous JavaScript diagnostics. Raw and semantic fields can therefore represent different moments. This run directly shows delayed-but-eventual consumption and release; raw/semantic disagreement alone is not evidence of wrong mapping.",
+    "The fixed original frame clamps dt to0.05seconds and polls once per animationframe. Both startup sequences progress naturally in about567seconds; no clock or physics modification is justified. The evidence measures this runner only, not physical Windows/TV performance."
+  ],
+  "remainingUncertainty": [
+    "The precise rendering/scheduling cause of approximately7-to8second fresh observations was not instrumented; no confirmed GPU-driver or game-physics cause is asserted.",
+    "No screenshots were requested or visually reviewed in this narrow analysis; no package delivery claim is made.",
+    "Later top-level disconnect/reconnect, background and storage acceptance was not reached. Both modes remain failed."
+  ],
+  "recommendedNextStep": "Review a narrowly bounded QA observation-budget separation only if root authorizes it: preserve held input<=60s, original speed/position predicate, exact ACKs and full post-release/pause fresh-frame counts. Do not loosen physics, assert stale frames, extrapolate a pass or blindly rerun.",
+  "nativeRunsPerformed": 0,
+  "workflowDispatches": 0,
+  "productionOrQaSourceEdits": 0,
+  "nativeAcceptanceAllowed": false
+}

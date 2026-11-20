@@ -1,0 +1,106 @@
+{
+  "status": "passed",
+  "method": "Decode every original frame to the rawvideo sink, timestamp passthrough; no modified video is created. Initial default timebase sinks reported rounded duplicate DTS while exiting zero; retained separately. Preserve the demuxer time base for this final full decode; no codec errors or device-FPS claims.",
+  "videos": [
+    {
+      "game": "emberbrood",
+      "mode": "emberbrood-occupied",
+      "sha256": "e82fe1eee1811d5fe564563beb201242de2f7a4e3c6fdb309596f5063384604e",
+      "bytes": 2735306,
+      "fullDecodeExitCode": 0,
+      "diagnosticBytes": 0,
+      "metadata": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "nb_frames": "117"
+          },
+          {
+            "nb_frames": "1"
+          },
+          {
+            "nb_frames": "1"
+          }
+        ],
+        "format": {
+          "duration": "44.602211"
+        }
+      },
+      "decodeCommand": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-xerror",
+        "-err_detect",
+        "explode",
+        "-i",
+        "<original-video>",
+        "-map",
+        "0:v:0",
+        "-vsync",
+        "0",
+        "-enc_time_base",
+        "-1",
+        "-f",
+        "rawvideo",
+        "-y",
+        "/dev/null"
+      ],
+      "url": "https://raw.githubusercontent.com/ecojust/pureTV/d3d9238e2028e750dfbfa55bcb32685a0cb243c6/reports/joystick-android-report-runtime-emberbrood/emberbrood-occupied/controller-gameplay.mp4"
+    },
+    {
+      "game": "emberbrood",
+      "mode": "emberbrood-normal",
+      "sha256": "178fa47b989b2711ce0103fc84fb50de5925425365809e89d25a9d730e174f6a",
+      "bytes": 2549477,
+      "fullDecodeExitCode": 0,
+      "diagnosticBytes": 0,
+      "metadata": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "nb_frames": "112"
+          },
+          {
+            "nb_frames": "1"
+          },
+          {
+            "nb_frames": "1"
+          }
+        ],
+        "format": {
+          "duration": "49.782867"
+        }
+      },
+      "decodeCommand": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-xerror",
+        "-err_detect",
+        "explode",
+        "-i",
+        "<original-video>",
+        "-map",
+        "0:v:0",
+        "-vsync",
+        "0",
+        "-enc_time_base",
+        "-1",
+        "-f",
+        "rawvideo",
+        "-y",
+        "/dev/null"
+      ],
+      "url": "https://raw.githubusercontent.com/ecojust/pureTV/d3d9238e2028e750dfbfa55bcb32685a0cb243c6/reports/joystick-android-report-runtime-emberbrood/emberbrood-normal/controller-gameplay.mp4"
+    }
+  ]
+}

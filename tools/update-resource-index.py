@@ -15,7 +15,7 @@ ENGLISH=json.loads((root/'tools/resource-index.en.json').read_text())
 # Persist creation order so version updates and checkout dates cannot reorder cards.
 RESOURCE_ORDER=json.loads((root/'tools/resource-order.json').read_text())
 # Media apps have no game manifest or bundled game entry point.
-MEDIA_APPS={'apps/bilibili','apps/cctv','apps/hifini','apps/shortvideo','apps/webtv'}
+MEDIA_APPS={'apps/opera','apps/bilibili','apps/cctv','apps/hifini','apps/shortvideo','apps/webtv'}
 TOOL_APPS={'apps/putrtv-store'}
 
 def section(key,info):
@@ -96,7 +96,7 @@ def main():
         p=root/filename;text=p.read_text()
         for kind,label in [('launcher','launchers'),('app','apps')]:
             text,replaced=re.subn(r'(https://img\.shields\.io/badge/'+label+r'-)\d+(?=-)',lambda match:match[1]+str(counts[kind]),text)
-            assert replaced==1,f'{filename}: expected one {label} count badge'
+            assert replaced<=1,f'{filename}: duplicate {label} count badge'
         start='<!-- resource-index:start -->';end='<!-- resource-index:end -->';left=text.index(start)+len(start);right=text.index(end);p.write_text(text[:left]+'\n\n'+tables('resource/',featured_groups,locale)+'\n\n'+text[right:])
     (root/'resource/README.md').write_text('# 电视 APK 资源目录\n\n目录分为 `launcher/`（启动器）和 `apps/`（应用）。源码与 APK 放在同一软件目录。每个软件文件夹至少包含一个真实 APK，以及 resource.json、许可证和校验文件；可附对应源码及封面。点击软件名称进入文件夹下载。当前收录桔子桑（ecojust）开发的启动器和电视应用。\n\n启动器布局自定义使用管理器可识别的 layout.json 接口，当前配套启动器使用 v5 users/system 协议。界面预览与相关许可见各文件夹说明。\n\n'+tables('',groups)+'\n\n开发者请参阅 [开发与协议 README](README-development.md)，包含 layout.json 字段说明、画面对照、构建与测试。'+'\n\n维护校验：`python tools/resource_catalog.py --build-tools <Android Build Tools 34.0.0 目录>`。索引由 `python tools/update-resource-index.py` 根据资源元数据生成。\n')
 

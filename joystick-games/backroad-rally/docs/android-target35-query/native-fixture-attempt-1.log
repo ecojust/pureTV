@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/dev/shm/puretv-submit/joystick-games/backroad-rally/docs/android-target35-query/fixture-build.py", line 61, in <module>
+    if __name__ == '__main__': main()
+                               ^^^^^^
+  File "/dev/shm/puretv-submit/joystick-games/backroad-rally/docs/android-target35-query/fixture-build.py", line 32, in main
+    if target == 29: build.main(argv)  # Exercise the actual untouched default.
+                     ^^^^^^^^^^^^^^^^
+  File "/dev/shm/puretv-submit/resource/game-kit/build.py", line 211, in main
+    data = payload(game, limits)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/puretv-submit/resource/game-kit/build.py", line 179, in payload
+    files = asset_inputs(game, limits)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/puretv-submit/resource/game-kit/build.py", line 161, in asset_inputs
+    require(folded not in names and folded.split('/')[0] not in ('assets-index.json', 'game-config.json'), 'Duplicate or reserved asset: ' + name)
+  File "/dev/shm/puretv-submit/resource/game-kit/build.py", line 56, in require
+    raise ValueError(message)
+ValueError: Duplicate or reserved asset: tv.html

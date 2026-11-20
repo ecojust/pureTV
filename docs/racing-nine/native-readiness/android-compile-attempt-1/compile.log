@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/dev/shm/puretv-submit/docs/racing-nine/native-readiness/build-android-asset-fixture.py", line 82, in <module>
+    main()
+  File "/dev/shm/puretv-submit/docs/racing-nine/native-readiness/build-android-asset-fixture.py", line 63, in main
+    builder.main(['--game', str(game), '--output', str(args.scratch / 'output'),
+  File "/dev/shm/puretv-submit/resource/game-kit/build.py", line 176, in main
+    data = payload(game, limits)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/puretv-submit/resource/game-kit/build.py", line 146, in payload
+    files = asset_inputs(game, limits)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/puretv-submit/resource/game-kit/build.py", line 136, in asset_inputs
+    require(name not in files and name not in ('assets-index.json', 'game-config.json'), 'Duplicate or reserved asset: ' + name)
+  File "/dev/shm/puretv-submit/resource/game-kit/build.py", line 55, in require
+    raise ValueError(message)
+ValueError: Duplicate or reserved asset: tv.html

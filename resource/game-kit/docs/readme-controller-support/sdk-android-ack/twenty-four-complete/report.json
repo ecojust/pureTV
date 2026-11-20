@@ -1,0 +1,4403 @@
+{
+  "slug": "twenty-four",
+  "mode": "browser",
+  "startedAt": "2026-11-15T16:31:04.467Z",
+  "status": "passed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "c754c4c79f888419051c05a728ec356d802016f38de0c3680a3aaaa8874740e2",
+    "tools/readme-controller-qa/cases.mjs": "99e7a01d4e7554ee684561a5006c75564741ff310e8730544f68b535a1133342",
+    "tools/readme-controller-qa/sdk-peer.py": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": false,
+  "syntheticNativeBridge": true,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "START begins actual game",
+      "status": "passed"
+    },
+    {
+      "name": "direction and game-specific action affect actual model",
+      "status": "passed"
+    },
+    {
+      "name": "START pause freezes game, fresh START resumes",
+      "status": "passed"
+    },
+    {
+      "name": "disconnect clears held input, reconnect sync requires fresh START",
+      "status": "passed"
+    },
+    {
+      "name": "all nine official keys and long hold have real protocol receipts",
+      "status": "passed",
+      "result": {
+        "keys": 9,
+        "unchangedOfficialPage": true,
+        "longPressAndRelease": true
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK message",
+      "status": "passed",
+      "result": {
+        "messages": 64,
+        "acks": 64,
+        "connections": 2
+      }
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "id": "twenty-four",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "first",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 0,
+          "firstMask": null,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 0,
+          "elapsedCapped": false,
+          "calls": 0,
+          "blockedActions": 0,
+          "inputArmed": false,
+          "cancelEpoch": null,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "左右选现存数，A 先选L再选R，再选带方向的运算。四张原牌各用一次，最后精确等于24；B 取消选数或用票撤销。"
+        },
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 209,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          366.79999999999995,
+          16.600000000000136,
+          2249.8999999999996
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false,
+          "connected": false,
+          "controllerKind": null
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 0
+        }
+      }
+    },
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "id": "twenty-four",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "first",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 0,
+          "firstMask": null,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 0,
+          "elapsedCapped": false,
+          "calls": 0,
+          "blockedActions": 0,
+          "inputArmed": false,
+          "cancelEpoch": null,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "左右选现存数，A 先选L再选R，再选带方向的运算。四张原牌各用一次，最后精确等于24；B 取消选数或用票撤销。"
+        },
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 209,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          366.79999999999995,
+          16.600000000000136,
+          2249.8999999999996,
+          366.5999999999999,
+          16.700000000000273,
+          200.0999999999999,
+          399.89999999999964,
+          133.30000000000018,
+          100,
+          33.400000000000546
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false,
+          "connected": false,
+          "controllerKind": null
+        },
+        "document": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 0
+        }
+      }
+    },
+    {
+      "label": "started",
+      "before": null,
+      "after": {
+        "id": "twenty-four",
+        "phase": "playing",
+        "paused": false,
+        "tick": 18,
+        "elapsed": 0.3,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "first",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 0,
+          "firstMask": null,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 0.3,
+          "elapsedCapped": false,
+          "calls": 18,
+          "blockedActions": 0,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "左右选现存数，A 先选L再选R，再选带方向的运算。四张原牌各用一次，最后精确等于24；B 取消选数或用票撤销。"
+        },
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-b978bcec2fb6",
+            "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 209,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          366.79999999999995,
+          16.600000000000136,
+          2249.8999999999996,
+          366.5999999999999,
+          16.700000000000273,
+          200.0999999999999,
+          399.89999999999964,
+          133.30000000000018,
+          100,
+          33.400000000000546,
+          149.89999999999964,
+          350,
+          133.30000000000018,
+          366.6999999999998,
+          216.69999999999982,
+          233.30000000000018,
+          249.89999999999964,
+          200,
+          216.70000000000073,
+          166.69999999999982,
+          16.600000000000364,
+          133.39999999999964
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-b978bcec2fb6",
+              "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      }
+    },
+    {
+      "label": "right-selection",
+      "before": {
+        "id": "twenty-four",
+        "phase": "playing",
+        "paused": false,
+        "tick": 18,
+        "elapsed": 0.3,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "first",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 0,
+          "firstMask": null,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 0.3,
+          "elapsedCapped": false,
+          "calls": 18,
+          "blockedActions": 0,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "左右选现存数，A 先选L再选R，再选带方向的运算。四张原牌各用一次，最后精确等于24；B 取消选数或用票撤销。"
+        },
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-b978bcec2fb6",
+            "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 209,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          366.79999999999995,
+          16.600000000000136,
+          2249.8999999999996,
+          366.5999999999999,
+          16.700000000000273,
+          200.0999999999999,
+          399.89999999999964,
+          133.30000000000018,
+          100,
+          33.400000000000546,
+          149.89999999999964,
+          350,
+          133.30000000000018,
+          366.6999999999998,
+          216.69999999999982,
+          233.30000000000018,
+          249.89999999999964,
+          200,
+          216.70000000000073,
+          166.69999999999982,
+          16.600000000000364,
+          133.39999999999964
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-b978bcec2fb6",
+              "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      },
+      "after": {
+        "id": "twenty-four",
+        "phase": "playing",
+        "paused": false,
+        "tick": 41,
+        "elapsed": 0.6833333333333338,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "first",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 1,
+          "firstMask": null,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 0.6833333333333338,
+          "elapsedCapped": false,
+          "calls": 41,
+          "blockedActions": 0,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "左右选现存数，A 先选L再选R，再选带方向的运算。四张原牌各用一次，最后精确等于24；B 取消选数或用票撤销。"
+        },
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-b978bcec2fb6",
+            "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 209,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          366.79999999999995,
+          16.600000000000136,
+          2249.8999999999996,
+          366.5999999999999,
+          16.700000000000273,
+          200.0999999999999,
+          399.89999999999964,
+          133.30000000000018,
+          100,
+          33.400000000000546,
+          149.89999999999964,
+          350,
+          133.30000000000018,
+          366.6999999999998,
+          216.69999999999982,
+          233.30000000000018,
+          249.89999999999964,
+          200,
+          216.70000000000073,
+          166.69999999999982,
+          16.600000000000364,
+          133.39999999999964,
+          183.30000000000018,
+          66.59999999999945,
+          116.70000000000073,
+          100,
+          16.699999999999818
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-b978bcec2fb6",
+              "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      }
+    },
+    {
+      "label": "game-action",
+      "before": {
+        "id": "twenty-four",
+        "phase": "playing",
+        "paused": false,
+        "tick": 70,
+        "elapsed": 1.1666666666666674,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "first",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 0,
+          "firstMask": null,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 1.1666666666666674,
+          "elapsedCapped": false,
+          "calls": 70,
+          "blockedActions": 0,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "左右选现存数，A 先选L再选R，再选带方向的运算。四张原牌各用一次，最后精确等于24；B 取消选数或用票撤销。"
+        },
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-b978bcec2fb6",
+            "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 209,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          366.79999999999995,
+          16.600000000000136,
+          2249.8999999999996,
+          366.5999999999999,
+          16.700000000000273,
+          200.0999999999999,
+          399.89999999999964,
+          133.30000000000018,
+          100,
+          33.400000000000546,
+          149.89999999999964,
+          350,
+          133.30000000000018,
+          366.6999999999998,
+          216.69999999999982,
+          233.30000000000018,
+          249.89999999999964,
+          200,
+          216.70000000000073,
+          166.69999999999982,
+          16.600000000000364,
+          133.39999999999964,
+          183.30000000000018,
+          66.59999999999945,
+          116.70000000000073,
+          100,
+          16.699999999999818,
+          166.59999999999945,
+          33.30000000000018,
+          66.69999999999982,
+          116.70000000000073,
+          33.29999999999927,
+          66.60000000000036,
+          83.39999999999964
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-b978bcec2fb6",
+              "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      },
+      "after": {
+        "id": "twenty-four",
+        "phase": "playing",
+        "paused": false,
+        "tick": 91,
+        "elapsed": 1.5166666666666662,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "second",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 1,
+          "firstMask": 1,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 1.5166666666666662,
+          "elapsedCapped": false,
+          "calls": 91,
+          "blockedActions": 0,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "已选L；左右选另一数作为R，A 确认，B 免费取消。"
+        },
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-b978bcec2fb6",
+            "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 218,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          366.79999999999995,
+          16.600000000000136,
+          2249.8999999999996,
+          366.5999999999999,
+          16.700000000000273,
+          200.0999999999999,
+          399.89999999999964,
+          133.30000000000018,
+          100,
+          33.400000000000546,
+          149.89999999999964,
+          350,
+          133.30000000000018,
+          366.6999999999998,
+          216.69999999999982,
+          233.30000000000018,
+          249.89999999999964,
+          200,
+          216.70000000000073,
+          166.69999999999982,
+          16.600000000000364,
+          133.39999999999964,
+          183.30000000000018,
+          66.59999999999945,
+          116.70000000000073,
+          100,
+          16.699999999999818,
+          166.59999999999945,
+          33.30000000000018,
+          66.69999999999982,
+          116.70000000000073,
+          33.29999999999927,
+          66.60000000000036,
+          83.39999999999964,
+          66.60000000000036,
+          66.70000000000073,
+          100,
+          83.39999999999964,
+          33.29999999999927
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-b978bcec2fb6",
+              "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      }
+    },
+    {
+      "label": "pause-freeze",
+      "before": {
+        "id": "twenty-four",
+        "phase": "playing",
+        "paused": true,
+        "tick": 135,
+        "elapsed": 2.249999999999997,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "first",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 0,
+          "firstMask": null,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 2.249999999999997,
+          "elapsedCapped": false,
+          "calls": 135,
+          "blockedActions": 0,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "已免费取消当前选数；没有撤销已完成的合并或消耗票。"
+        },
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-b978bcec2fb6",
+            "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 209,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          366.79999999999995,
+          16.600000000000136,
+          2249.8999999999996,
+          366.5999999999999,
+          16.700000000000273,
+          200.0999999999999,
+          399.89999999999964,
+          133.30000000000018,
+          100,
+          33.400000000000546,
+          149.89999999999964,
+          350,
+          133.30000000000018,
+          366.6999999999998,
+          216.69999999999982,
+          233.30000000000018,
+          249.89999999999964,
+          200,
+          216.70000000000073,
+          166.69999999999982,
+          16.600000000000364,
+          133.39999999999964,
+          183.30000000000018,
+          66.59999999999945,
+          116.70000000000073,
+          100,
+          16.699999999999818,
+          166.59999999999945,
+          33.30000000000018,
+          66.69999999999982,
+          116.70000000000073,
+          33.29999999999927,
+          66.60000000000036,
+          83.39999999999964,
+          66.60000000000036,
+          66.70000000000073,
+          100,
+          83.39999999999964,
+          33.29999999999927,
+          83.39999999999964,
+          99.90000000000146,
+          66.69999999999891,
+          100,
+          33.30000000000109,
+          16.599999999998545,
+          50,
+          133.40000000000146,
+          33.399999999999636,
+          50,
+          100,
+          49.899999999999636,
+          50,
+          83.39999999999964,
+          149.89999999999964,
+          83.40000000000146
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-b978bcec2fb6",
+              "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      },
+      "after": {
+        "id": "twenty-four",
+        "phase": "playing",
+        "paused": true,
+        "tick": 135,
+        "elapsed": 2.249999999999997,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "first",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 0,
+          "firstMask": null,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 2.249999999999997,
+          "elapsedCapped": false,
+          "calls": 135,
+          "blockedActions": 0,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "direction": "none"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "已免费取消当前选数；没有撤销已完成的合并或消耗票。"
+        },
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-b978bcec2fb6",
+            "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 209,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          366.79999999999995,
+          16.600000000000136,
+          2249.8999999999996,
+          366.5999999999999,
+          16.700000000000273,
+          200.0999999999999,
+          399.89999999999964,
+          133.30000000000018,
+          100,
+          33.400000000000546,
+          149.89999999999964,
+          350,
+          133.30000000000018,
+          366.6999999999998,
+          216.69999999999982,
+          233.30000000000018,
+          249.89999999999964,
+          200,
+          216.70000000000073,
+          166.69999999999982,
+          16.600000000000364,
+          133.39999999999964,
+          183.30000000000018,
+          66.59999999999945,
+          116.70000000000073,
+          100,
+          16.699999999999818,
+          166.59999999999945,
+          33.30000000000018,
+          66.69999999999982,
+          116.70000000000073,
+          33.29999999999927,
+          66.60000000000036,
+          83.39999999999964,
+          66.60000000000036,
+          66.70000000000073,
+          100,
+          83.39999999999964,
+          33.29999999999927,
+          83.39999999999964,
+          99.90000000000146,
+          66.69999999999891,
+          100,
+          33.30000000000109,
+          16.599999999998545,
+          50,
+          133.40000000000146,
+          33.399999999999636,
+          50,
+          100,
+          49.899999999999636,
+          50,
+          83.39999999999964,
+          149.89999999999964,
+          83.40000000000146,
+          116.59999999999854,
+          150,
+          100
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-b978bcec2fb6",
+              "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      }
+    },
+    {
+      "label": "held-before-disconnect",
+      "before": null,
+      "after": {
+        "id": "twenty-four",
+        "phase": "playing",
+        "paused": false,
+        "tick": 153,
+        "elapsed": 2.549999999999996,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "second",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 1,
+          "firstMask": 1,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 2.549999999999996,
+          "elapsedCapped": false,
+          "calls": 153,
+          "blockedActions": 0,
+          "inputArmed": true,
+          "cancelEpoch": 3,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": true,
+            "b": false,
+            "direction": "right"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "已选L；左右选另一数作为R，A 确认，B 免费取消。"
+        },
+        "controllers": [
+          {
+            "a": true,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": true,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": true,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-b978bcec2fb6",
+            "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 1,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 218,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          366.79999999999995,
+          16.600000000000136,
+          2249.8999999999996,
+          366.5999999999999,
+          16.700000000000273,
+          200.0999999999999,
+          399.89999999999964,
+          133.30000000000018,
+          100,
+          33.400000000000546,
+          149.89999999999964,
+          350,
+          133.30000000000018,
+          366.6999999999998,
+          216.69999999999982,
+          233.30000000000018,
+          249.89999999999964,
+          200,
+          216.70000000000073,
+          166.69999999999982,
+          16.600000000000364,
+          133.39999999999964,
+          183.30000000000018,
+          66.59999999999945,
+          116.70000000000073,
+          100,
+          16.699999999999818,
+          166.59999999999945,
+          33.30000000000018,
+          66.69999999999982,
+          116.70000000000073,
+          33.29999999999927,
+          66.60000000000036,
+          83.39999999999964,
+          66.60000000000036,
+          66.70000000000073,
+          100,
+          83.39999999999964,
+          33.29999999999927,
+          83.39999999999964,
+          99.90000000000146,
+          66.69999999999891,
+          100,
+          33.30000000000109,
+          16.599999999998545,
+          50,
+          133.40000000000146,
+          33.399999999999636,
+          50,
+          100,
+          49.899999999999636,
+          50,
+          83.39999999999964,
+          149.89999999999964,
+          83.40000000000146,
+          116.59999999999854,
+          150,
+          100,
+          16.700000000000728,
+          100,
+          133.29999999999927,
+          150,
+          133.3000000000011,
+          166.6999999999989,
+          166.70000000000073
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": true,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": true,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": true,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-b978bcec2fb6",
+              "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 1,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      }
+    },
+    {
+      "label": "reconnect",
+      "before": {
+        "id": "twenty-four",
+        "phase": "playing",
+        "paused": true,
+        "tick": 156,
+        "elapsed": 2.5999999999999956,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "second",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 1,
+          "firstMask": 1,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 2.5999999999999956,
+          "elapsedCapped": false,
+          "calls": 156,
+          "blockedActions": 0,
+          "inputArmed": true,
+          "cancelEpoch": 3,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": true,
+            "b": false,
+            "direction": "right"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "已选L；左右选另一数作为R，A 确认，B 免费取消。"
+        },
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 2,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-b978bcec2fb6",
+            "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 218,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          366.79999999999995,
+          16.600000000000136,
+          2249.8999999999996,
+          366.5999999999999,
+          16.700000000000273,
+          200.0999999999999,
+          399.89999999999964,
+          133.30000000000018,
+          100,
+          33.400000000000546,
+          149.89999999999964,
+          350,
+          133.30000000000018,
+          366.6999999999998,
+          216.69999999999982,
+          233.30000000000018,
+          249.89999999999964,
+          200,
+          216.70000000000073,
+          166.69999999999982,
+          16.600000000000364,
+          133.39999999999964,
+          183.30000000000018,
+          66.59999999999945,
+          116.70000000000073,
+          100,
+          16.699999999999818,
+          166.59999999999945,
+          33.30000000000018,
+          66.69999999999982,
+          116.70000000000073,
+          33.29999999999927,
+          66.60000000000036,
+          83.39999999999964,
+          66.60000000000036,
+          66.70000000000073,
+          100,
+          83.39999999999964,
+          33.29999999999927,
+          83.39999999999964,
+          99.90000000000146,
+          66.69999999999891,
+          100,
+          33.30000000000109,
+          16.599999999998545,
+          50,
+          133.40000000000146,
+          33.399999999999636,
+          50,
+          100,
+          49.899999999999636,
+          50,
+          83.39999999999964,
+          149.89999999999964,
+          83.40000000000146,
+          116.59999999999854,
+          150,
+          100,
+          16.700000000000728,
+          100,
+          133.29999999999927,
+          150,
+          133.3000000000011,
+          166.6999999999989,
+          166.70000000000073,
+          66.60000000000036,
+          116.69999999999891,
+          99.90000000000146,
+          50.099999999998545
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": true,
+          "connected": false,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 2,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-b978bcec2fb6",
+              "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 0
+        }
+      },
+      "after": {
+        "id": "twenty-four",
+        "phase": "playing",
+        "paused": true,
+        "tick": 156,
+        "elapsed": 2.5999999999999956,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 799,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "stage": "second",
+          "cards": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "terms": [
+            {
+              "id": 1,
+              "mask": 1,
+              "n": 1,
+              "d": 1,
+              "expr": "A"
+            },
+            {
+              "id": 2,
+              "mask": 2,
+              "n": 2,
+              "d": 1,
+              "expr": "B"
+            },
+            {
+              "id": 4,
+              "mask": 4,
+              "n": 3,
+              "d": 1,
+              "expr": "C"
+            },
+            {
+              "id": 8,
+              "mask": 8,
+              "n": 4,
+              "d": 1,
+              "expr": "D"
+            }
+          ],
+          "cursor": 1,
+          "firstMask": 1,
+          "secondMask": null,
+          "opIndex": 0,
+          "target": 24,
+          "fullMask": 15,
+          "currentAttempt": 1,
+          "failures": 0,
+          "attemptLimit": 3,
+          "attemptsRemaining": 3,
+          "attemptMerges": 0,
+          "mergesUsed": 0,
+          "undoTickets": 2,
+          "undoUsed": 0,
+          "history": [],
+          "lastOperation": null,
+          "lastAttempt": null,
+          "attemptHistory": [],
+          "elapsed": 2.5999999999999956,
+          "elapsedCapped": false,
+          "calls": 156,
+          "blockedActions": 0,
+          "inputArmed": true,
+          "cancelEpoch": 3,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": true,
+            "b": false,
+            "direction": "right"
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "已选L；左右选另一数作为R，A 确认，B 免费取消。"
+        },
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 3,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-b978bcec2fb6",
+            "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-2",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 218,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          366.79999999999995,
+          16.600000000000136,
+          2249.8999999999996,
+          366.5999999999999,
+          16.700000000000273,
+          200.0999999999999,
+          399.89999999999964,
+          133.30000000000018,
+          100,
+          33.400000000000546,
+          149.89999999999964,
+          350,
+          133.30000000000018,
+          366.6999999999998,
+          216.69999999999982,
+          233.30000000000018,
+          249.89999999999964,
+          200,
+          216.70000000000073,
+          166.69999999999982,
+          16.600000000000364,
+          133.39999999999964,
+          183.30000000000018,
+          66.59999999999945,
+          116.70000000000073,
+          100,
+          16.699999999999818,
+          166.59999999999945,
+          33.30000000000018,
+          66.69999999999982,
+          116.70000000000073,
+          33.29999999999927,
+          66.60000000000036,
+          83.39999999999964,
+          66.60000000000036,
+          66.70000000000073,
+          100,
+          83.39999999999964,
+          33.29999999999927,
+          83.39999999999964,
+          99.90000000000146,
+          66.69999999999891,
+          100,
+          33.30000000000109,
+          16.599999999998545,
+          50,
+          133.40000000000146,
+          33.399999999999636,
+          50,
+          100,
+          49.899999999999636,
+          50,
+          83.39999999999964,
+          149.89999999999964,
+          83.40000000000146,
+          116.59999999999854,
+          150,
+          100,
+          16.700000000000728,
+          100,
+          133.29999999999927,
+          150,
+          133.3000000000011,
+          166.6999999999989,
+          166.70000000000073,
+          66.60000000000036,
+          116.69999999999891,
+          99.90000000000146,
+          50.099999999998545,
+          133.3000000000011,
+          83.29999999999927,
+          100,
+          150,
+          83.39999999999964,
+          149.90000000000146
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 3,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-b978bcec2fb6",
+              "session": "wifi-0b42b427-b702-433d-9fc3-83a010ea98d7-2",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:12.588Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-b978bcec2fb6"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:12.588Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:12.588Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:12.588Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:12.588Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:12.588Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:12.588Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:12.589Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:12.589Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:12.589Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:12.648Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:12.659Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:12.659Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:12.668Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:12.668Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:12.668Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:12.672Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:12.672Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:12.672Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:12.675Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:13.060Z",
+      "message": {
+        "type": "button",
+        "seq": 11,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:13.062Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:13.343Z",
+      "message": {
+        "type": "button",
+        "seq": 12,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 279
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:13.351Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:13.758Z",
+      "message": {
+        "type": "button",
+        "seq": 13,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:13.763Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:13.854Z",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 99
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:13.868Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:14.081Z",
+      "message": {
+        "type": "ping",
+        "seq": 15,
+        "controller_id": "virtual-b978bcec2fb6"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:14.082Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:14.148Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:14.151Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:14.352Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "LEFT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 201
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:14.358Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:14.662Z",
+      "message": {
+        "type": "button",
+        "seq": 18,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:14.670Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:14.756Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 90
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:14.760Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:15.040Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "B",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:15.046Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:15.134Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "B",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 96
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:15.139Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:15.757Z",
+      "message": {
+        "type": "button",
+        "seq": 22,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:15.758Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:15.847Z",
+      "message": {
+        "type": "button",
+        "seq": 23,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 91
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:15.850Z",
+      "message": {
+        "type": "ack",
+        "seq": 23
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:17.044Z",
+      "message": {
+        "type": "button",
+        "seq": 24,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:17.045Z",
+      "message": {
+        "type": "ack",
+        "seq": 24
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:17.137Z",
+      "message": {
+        "type": "button",
+        "seq": 25,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 91
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:17.139Z",
+      "message": {
+        "type": "ack",
+        "seq": 25
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:17.350Z",
+      "message": {
+        "type": "button",
+        "seq": 26,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:17.352Z",
+      "message": {
+        "type": "ack",
+        "seq": 26
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:17.366Z",
+      "message": {
+        "type": "button",
+        "seq": 27,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:17.377Z",
+      "message": {
+        "type": "ack",
+        "seq": 27
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:17.481Z",
+      "message": {
+        "type": "button",
+        "seq": 28,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 130
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:17.482Z",
+      "message": {
+        "type": "ack",
+        "seq": 28
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:17.530Z",
+      "message": {
+        "type": "button",
+        "seq": 29,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 124
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:17.531Z",
+      "message": {
+        "type": "ack",
+        "seq": 29
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:18.170Z",
+      "message": {
+        "type": "hello",
+        "seq": 30,
+        "controller_id": "virtual-b978bcec2fb6"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:18.170Z",
+      "message": {
+        "type": "button",
+        "seq": 31,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:18.170Z",
+      "message": {
+        "type": "button",
+        "seq": 32,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:18.170Z",
+      "message": {
+        "type": "button",
+        "seq": 33,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:18.170Z",
+      "message": {
+        "type": "button",
+        "seq": 34,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:18.170Z",
+      "message": {
+        "type": "button",
+        "seq": 35,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:18.170Z",
+      "message": {
+        "type": "button",
+        "seq": 36,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:18.170Z",
+      "message": {
+        "type": "button",
+        "seq": 37,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:18.170Z",
+      "message": {
+        "type": "button",
+        "seq": 38,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:18.170Z",
+      "message": {
+        "type": "button",
+        "seq": 39,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:18.174Z",
+      "message": {
+        "type": "ack",
+        "seq": 30
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:18.174Z",
+      "message": {
+        "type": "ack",
+        "seq": 31
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:18.174Z",
+      "message": {
+        "type": "ack",
+        "seq": 32
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:18.175Z",
+      "message": {
+        "type": "ack",
+        "seq": 33
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:18.175Z",
+      "message": {
+        "type": "ack",
+        "seq": 34
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:18.178Z",
+      "message": {
+        "type": "ack",
+        "seq": 35
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:18.179Z",
+      "message": {
+        "type": "ack",
+        "seq": 36
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:18.179Z",
+      "message": {
+        "type": "ack",
+        "seq": 37
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:18.179Z",
+      "message": {
+        "type": "ack",
+        "seq": 38
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:18.179Z",
+      "message": {
+        "type": "ack",
+        "seq": 39
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:18.526Z",
+      "message": {
+        "type": "button",
+        "seq": 40,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:18.532Z",
+      "message": {
+        "type": "ack",
+        "seq": 40
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:18.638Z",
+      "message": {
+        "type": "button",
+        "seq": 41,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 144
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:18.640Z",
+      "message": {
+        "type": "ack",
+        "seq": 41
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:19.085Z",
+      "message": {
+        "type": "ping",
+        "seq": 42,
+        "controller_id": "virtual-b978bcec2fb6"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:19.086Z",
+      "message": {
+        "type": "ack",
+        "seq": 42
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:19.328Z",
+      "message": {
+        "type": "button",
+        "seq": 43,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:19.331Z",
+      "message": {
+        "type": "ack",
+        "seq": 43
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:19.451Z",
+      "message": {
+        "type": "button",
+        "seq": 44,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 122
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:19.454Z",
+      "message": {
+        "type": "ack",
+        "seq": 44
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:19.653Z",
+      "message": {
+        "type": "button",
+        "seq": 45,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "UP",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:19.655Z",
+      "message": {
+        "type": "ack",
+        "seq": 45
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:19.944Z",
+      "message": {
+        "type": "button",
+        "seq": 46,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "UP",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 293
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:19.947Z",
+      "message": {
+        "type": "ack",
+        "seq": 46
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:20.228Z",
+      "message": {
+        "type": "button",
+        "seq": 47,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "DOWN",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:20.236Z",
+      "message": {
+        "type": "ack",
+        "seq": 47
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:20.550Z",
+      "message": {
+        "type": "button",
+        "seq": 48,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "DOWN",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 323
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:20.552Z",
+      "message": {
+        "type": "ack",
+        "seq": 48
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:20.831Z",
+      "message": {
+        "type": "button",
+        "seq": 49,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:20.832Z",
+      "message": {
+        "type": "ack",
+        "seq": 49
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:21.330Z",
+      "message": {
+        "type": "button",
+        "seq": 50,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "LEFT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:21.331Z",
+      "message": {
+        "type": "ack",
+        "seq": 50
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:21.622Z",
+      "message": {
+        "type": "button",
+        "seq": 51,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "LEFT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 760
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:21.623Z",
+      "message": {
+        "type": "ack",
+        "seq": 51
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:21.786Z",
+      "message": {
+        "type": "button",
+        "seq": 52,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:21.786Z",
+      "message": {
+        "type": "ack",
+        "seq": 52
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:22.045Z",
+      "message": {
+        "type": "button",
+        "seq": 53,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 259
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:22.047Z",
+      "message": {
+        "type": "ack",
+        "seq": 53
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:22.225Z",
+      "message": {
+        "type": "button",
+        "seq": 54,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:22.227Z",
+      "message": {
+        "type": "ack",
+        "seq": 54
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:22.449Z",
+      "message": {
+        "type": "button",
+        "seq": 55,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 219
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:22.451Z",
+      "message": {
+        "type": "ack",
+        "seq": 55
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:22.634Z",
+      "message": {
+        "type": "button",
+        "seq": 56,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "B",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:22.636Z",
+      "message": {
+        "type": "ack",
+        "seq": 56
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:22.854Z",
+      "message": {
+        "type": "button",
+        "seq": 57,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "B",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 221
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:22.857Z",
+      "message": {
+        "type": "ack",
+        "seq": 57
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:23.130Z",
+      "message": {
+        "type": "button",
+        "seq": 58,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "X",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:23.132Z",
+      "message": {
+        "type": "ack",
+        "seq": 58
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:23.343Z",
+      "message": {
+        "type": "button",
+        "seq": 59,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "X",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 213
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:23.346Z",
+      "message": {
+        "type": "ack",
+        "seq": 59
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:23.530Z",
+      "message": {
+        "type": "button",
+        "seq": 60,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "Y",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:23.534Z",
+      "message": {
+        "type": "ack",
+        "seq": 60
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:23.743Z",
+      "message": {
+        "type": "button",
+        "seq": 61,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "Y",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 217
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:23.745Z",
+      "message": {
+        "type": "ack",
+        "seq": 61
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:23.928Z",
+      "message": {
+        "type": "button",
+        "seq": 62,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:23.929Z",
+      "message": {
+        "type": "ack",
+        "seq": 62
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:24.031Z",
+      "message": {
+        "type": "button",
+        "seq": 63,
+        "controller_id": "virtual-b978bcec2fb6",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 102
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:24.034Z",
+      "message": {
+        "type": "ack",
+        "seq": 63
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T16:31:24.082Z",
+      "message": {
+        "type": "ping",
+        "seq": 64,
+        "controller_id": "virtual-b978bcec2fb6"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T16:31:24.084Z",
+      "message": {
+        "type": "ack",
+        "seq": 64
+      }
+    }
+  ],
+  "transportErrors": [],
+  "connectionEvents": [
+    {
+      "connection": 1,
+      "event": "client-eof",
+      "at": "2026-11-15T16:31:17.540Z",
+      "pendingSeq": []
+    },
+    {
+      "connection": 1,
+      "event": "forward-fin",
+      "reason": "all-acked",
+      "at": "2026-11-15T16:31:17.540Z",
+      "waitMs": 0.15721099999973376,
+      "pendingSeq": []
+    }
+  ],
+  "screenshots": [
+    "menu-960.png",
+    "menu-1280.png",
+    "gameplay.png",
+    "paused.png",
+    "reconnected.png"
+  ],
+  "limitations": [
+    "Desktop JVM and Chromium; Android lifecycle/NSD not exercised."
+  ],
+  "assetHashes": {
+    "assets-index.json": "38b84d5905bfb5976f1373cfe8e02add5ff750ee1b955fe0cdf61ad1cc84322a",
+    "controller.css": "3a7a83c904fb33bc4d280634f25e8db39faee33aef51cd413c6dc47590dde15d",
+    "controller.html": "296503ae08232514c684f92085e694f0ab98831b8301c762b8a89c09abc86bff",
+    "controller.js": "74a175fd098fe8d9530904da90dda8b26d68aa9e263d316d17d4e2f62e5d3a08",
+    "game-config.json": "67e7ddb19604b43b48c0b2b04666bffeb13039a88509e5fb1a107c2bfd5f690f",
+    "game-model.js": "bb25f5f43583829d3864f2e9ca76bca4a8e89fba76502060fdf65c77afd0a3a0",
+    "game-theme.css": "245d4b4ee721609ffc6fb0c9a261d9231b2659efc76381aba80bd2a404c0cbc6",
+    "game.js": "91d39e51d16a088d8219fdfe749fe051280da0489f70a2959b4f7986504453ad",
+    "renderer.js": "7fb3a27a6d205edb1785c9e64298c0d34b432f6e70df9b2781eb16e45dd02411",
+    "runtime.js": "27b2a7a498cf952a132d5d2ce1795ae39f6696b57bb1ab9aa827663d1762b233",
+    "tv.css": "4ef7ccb34aaffb7c64677403d0c6eff51a8593fa9197ec8424e86f800175fcc1",
+    "tv.html": "97f44a121a8d6713f95be640dbd6604ef1271817eb1b0e1430a26ed8075e4bef"
+  },
+  "pageErrors": [],
+  "ports": {
+    "tcpPort": 63485,
+    "httpPort": 44105,
+    "observerPort": 36975
+  },
+  "gameplayViewport": {
+    "width": 960,
+    "height": 540
+  },
+  "scope": "complete controller acceptance",
+  "finishedAt": "2026-11-15T16:31:24.646Z"
+}

@@ -31,6 +31,8 @@
           </div>
         </section>
         <aside class="sidebar">
+          <section id="controller-clients" class="controller-clients" hidden></section>
+          <div class="sidebar-content">
           <section class="join-card">
             <div class="room-brand" id="room-brand">悠岛生活 TV</div>
             <div class="section-heading">
@@ -46,6 +48,7 @@
             <h2 id="scan-title">扫码连接手柄</h2>
             <p id="scan-description"></p>
             <div class="room-address" id="room-address"></div>
+<div class="puretv-panel" id="puretv-panel"><strong>pureTV Wi-Fi</strong><code id="puretv-address"></code><span id="puretv-status"></span><small id="puretv-help"></small></div>
           </section>
           <section class="players" aria-label="Players">
             <div class="player-card p1" id="player-1">
@@ -64,9 +67,6 @@
             </div>
           </section>
           <p class="menu-help" id="menu-help"></p>
-          <button id="music-button" class="music-button" type="button">
-            音乐
-          </button>
           <section class="control-legend">
             <div>
               <span class="key-pill">✚</span><span id="move-label"></span>
@@ -74,12 +74,17 @@
             <div><span class="key-pill">A</span><span id="a-label"></span></div>
             <div><span class="key-pill">B</span><span id="b-label"></span></div>
           </section>
+          </div>
+          <button id="music-button" class="music-button" type="button">
+            音乐
+          </button>
         </aside>
       </main>
       <footer class="footer">
         <span id="footer-left"></span><span id="footer-right"></span>
       </footer>
     </div>
+    <script src="puretv-controller.js"></script>
     <script src="bootstrap.js"></script>
     <script src="world.js"></script>
     <script src="game-model.js"></script>

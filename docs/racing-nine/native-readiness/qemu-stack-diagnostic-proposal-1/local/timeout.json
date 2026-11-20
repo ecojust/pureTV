@@ -1,0 +1,30 @@
+{
+  "mode": "timeout",
+  "detachAtFault": false,
+  "pid": 153662,
+  "stops": [],
+  "attachStop": "*stopped,frame={addr=\"0x00007f4a3c4c93a7\",func=\"??\",args=[],from=\"/lib/x86_64-linux-gnu/libc.so.6\",arch=\"i386:x86-64\"},thread-id=\"1\",stopped-threads=\"all\",core=\"2\"",
+  "interruptStop": "*stopped,reason=\"signal-received\",signal-name=\"SIGINT\",signal-meaning=\"Interrupt\",frame={addr=\"0x00007f4a3c4c93a7\",func=\"??\",args=[],from=\"/lib/x86_64-linux-gnu/libc.so.6\",arch=\"i386:x86-64\"},thread-id=\"1\",stopped-threads=\"all\",core=\"2\"",
+  "targetAliveAfterDetach": true,
+  "originalParentWait": 0,
+  "targetStdout": "continued-after-detach\n",
+  "targetStderr": "",
+  "commands": [
+    "-gdb-set pagination off",
+    "-gdb-set confirm off",
+    "-gdb-set auto-load off",
+    "-gdb-set debuginfod enabled off",
+    "-gdb-set print frame-arguments none",
+    "-gdb-set print entry-values no",
+    "-gdb-set mi-async on",
+    "-interpreter-exec console \"handle all nostop noprint pass\"",
+    "-interpreter-exec console \"handle SIGSEGV stop print pass\"",
+    "-target-attach 153662",
+    "-exec-continue",
+    "-exec-interrupt",
+    "-target-detach",
+    "-gdb-exit"
+  ],
+  "argumentAndLocalSecretAbsent": true,
+  "status": "passed"
+}

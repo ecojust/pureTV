@@ -1,0 +1,114 @@
+{
+  "time": "2026-11-19T19:59:17.932371+00:00",
+  "cause": "Original heave spring integration diverges at its allowed0.1-second render dt, moving sprung body far from origin while root-level wheels and visible flags remain correct",
+  "beforeSourceIdenticalToOriginal": true,
+  "beforeSourceSha256": "ac41c62621a5076c830228784763fecb9bd390fc995e6467bcc7db995cde286f",
+  "afterSourceSha256": "4a64519c14c608c7c44ec825e3851bf012619ee2f8a2700fa7f007cefb51c0a9",
+  "fixedSourcePath": "src/upstream/src/render/pbr/heroCarPBR.js",
+  "sourceChanges": "Subdivide only pitch/roll/heave visual spring integration into ceil(dt/(1/30)) equal substeps. Original constants, targets and total dt retained.",
+  "unchanged": [
+    "Actual game simulation/physics",
+    "Game frame clock",
+    "Visual clock S.t",
+    "Wheel spin integration",
+    "Heat/lights/effects/damage/materials/meshes"
+  ],
+  "diagnosisScope": "Original heroCarPBR visual function with explicit bounded input/dt sequence, no WebGL or real game simulation instantiated; not gameplay evidence",
+  "all25CasesBoundedAfter": true,
+  "exactOriginalTraceMatchesAt30FpsOrAbove": [
+    [
+      "wasp",
+      0.008333333333333333
+    ],
+    [
+      "wasp",
+      0.016666666666666666
+    ],
+    [
+      "wasp",
+      0.03333333333333333
+    ],
+    [
+      "hammer",
+      0.008333333333333333
+    ],
+    [
+      "hammer",
+      0.016666666666666666
+    ],
+    [
+      "hammer",
+      0.03333333333333333
+    ],
+    [
+      "bulwark",
+      0.008333333333333333
+    ],
+    [
+      "bulwark",
+      0.016666666666666666
+    ],
+    [
+      "bulwark",
+      0.03333333333333333
+    ],
+    [
+      "gullwing",
+      0.008333333333333333
+    ],
+    [
+      "gullwing",
+      0.016666666666666666
+    ],
+    [
+      "gullwing",
+      0.03333333333333333
+    ],
+    [
+      "rhino",
+      0.008333333333333333
+    ],
+    [
+      "rhino",
+      0.016666666666666666
+    ],
+    [
+      "rhino",
+      0.03333333333333333
+    ]
+  ],
+  "originalMaximumHeaveAt10Fps": 4.3820517782573485e+21,
+  "afterMaximumHeaveAt10Fps": 0.013283771643829956,
+  "unitTests": {
+    "newRegression": {
+      "file": "tests/visual-spring.test.mjs",
+      "passed": 1,
+      "cases": 25
+    },
+    "originalPbrRegression": {
+      "file": "src/upstream/tests/slice/pbr.test.js",
+      "passed": 10,
+      "log": "docs/visual-spring-original-pbr-tests.log"
+    }
+  },
+  "buildCheck": {
+    "passed": true,
+    "identicalFiles": 148
+  },
+  "actualBefore": "docs/browser-attempt-6/report.json",
+  "actualAfter": "docs/browser-attempt-8/report.json",
+  "actualAfterAtRecordTime": "completed:9 checks passed, both 1280 gameplay screenshots timed out, original overall passed=false",
+  "physicalDevicePerformanceClaim": false,
+  "actualAfterScriptSha256": "f8bd5d28d663146b79c2c2d3b311f590d8746421f4de9051a17f1de4d21b212e",
+  "beforeScriptSha256": "7364b5f85595313776100313d466a8f9bfc72bb7734b5bdc529948d101634bfa",
+  "normalInputSequenceUnchanged": true,
+  "browserRetryBudgetOnlyChange": "attempt8 compared with7 permits 120s instead of60s waiting for natural racing phase; total bound720s instead of600s. No game clock/model/physics writes.",
+  "actualBeforeAfterVisualEvidence": {
+    "before": "docs/browser-attempt-6/combat-960.png",
+    "after": "docs/browser-attempt-8/combat-960.png",
+    "afterSha256": "08123c9c1352b6b198c33997898b63eff059d970249a2a6bfc2c20b201f8cb87",
+    "actualAfterViewed": true,
+    "finding": "The current capture restores complete nearby car body, turret and wheels; prior capture showed predominantly wheels. Actual runs use the same normal input sequence, but unchanged original random AI lineups mean they are not identical random seeds or model trajectories. Isolated source-function fixture uses exact identical dt/input trajectories."
+  },
+  "currentSource1280VisualCoverageComplete": false
+}

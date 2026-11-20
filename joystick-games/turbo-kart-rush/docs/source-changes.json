@@ -1,0 +1,51 @@
+{
+  "upstreamCommit": "6c0456c7642447eae29e0832e7e542fec07ec07d",
+  "baselineFileCount": 72,
+  "unchangedFileCount": 67,
+  "changes": [
+    {
+      "path": "src/upstream/src/audio/AudioEngine.ts",
+      "originalSha256": "07cb8f301725b3e4450c207c9eb18c22a2f796b9a9fdbef62d4a0d52f3b07384",
+      "adaptedSha256": "42b8f395753fe88bec29fc83d21294be45eb772064024d5a449d035318e9c023",
+      "adaptedBytes": 14886,
+      "reason": "Suspend existing original AudioContext on cancellation and expose its read-only state."
+    },
+    {
+      "path": "src/upstream/src/game/Game.ts",
+      "originalSha256": "3ecce3b525f3674b8b2d4d9e3341574c84883b3ecf0ca0d360161ce334a33bff",
+      "adaptedSha256": "7162e8bae4dddb9abf0040260e9d014d926fe9bc7720b485b78230bd0372fd5c",
+      "adaptedBytes": 34903,
+      "reason": "One controller poll per animation frame, read-only gameplay observations, input and audio cancellation, manual resume, and direct scene rendering on software or limited WebGL 2 devices."
+    },
+    {
+      "path": "src/upstream/src/game/RaceManager.ts",
+      "originalSha256": "2e2eedd11e27f0d59176b96e5c2e681924fc571aef647c848764e66be89b0cac",
+      "adaptedSha256": "719986347c9c17f25329e7241adbbacf0e4eb4b3948b9d3776bc42accbdd3875",
+      "adaptedBytes": 15999,
+      "reason": "Clear player throttle streak on cancellation; read-only countdown getter."
+    },
+    {
+      "path": "src/upstream/src/kart/InputManager.ts",
+      "originalSha256": "5472d2b2a9093e264cba35e85b75a4eb42ee09c652708137bd77a3f4d71053d8",
+      "adaptedSha256": "ff5f63711c27412e64b8a8c7161f4463f0de8ccc5737737e200ee60036ff04a5",
+      "adaptedBytes": 10994,
+      "reason": "Add independent nine-key native frame composition, menu hold quarantine and source-loss cancellation while retaining original keyboard/standard Gamepad steering ramp."
+    },
+    {
+      "path": "src/upstream/src/kart/Kart.ts",
+      "originalSha256": "4bd98f0e10a13ea2eb6274ff8e884bdfe0228630ef4ba7caeae0d18b309ce414",
+      "adaptedSha256": "be0243dc4c80cabeee71a4fd68ad6da6b749a8e1a9a936ec2cd3fb8be231e3ac",
+      "adaptedBytes": 34185,
+      "reason": "Cancel through original endDrift(false), reset pending input/hop/rocket charge without boosting or changing earned inventory/position/speed."
+    }
+  ],
+  "entry": "src/main.ts retains original Game flow without original writable debug global. Build defines import.meta.env.DEV=false, preserving original production exclusion of autoplay.",
+  "runtimeDependency": {
+    "version": "0.185.1",
+    "resolved": "https://registry.npmjs.org/three/-/three-0.185.1.tgz",
+    "integrity": "sha512-5aojFCXKwnjBRZvUnt3WFfEcvUJgkN5LlijRFN95hMy8WVkG4I0QNcJE+OuWvuJ0bOdStrbfXn0pkd6/QyiAlg==",
+    "license": "MIT"
+  },
+  "upstreamDependencyEntriesPreserved": true,
+  "adapterGraphicsPolicy": "src/upstream/src/game/renderSettings.ts"
+}

@@ -1,0 +1,338 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "44eec802f9ba270f38b8b19a1adc594c1bd8de6e",
+  "artifactSourceCommit": "a73a1976e7d38ff27b8e457b933519ea66eaa949",
+  "artifactRunId": "44150598155",
+  "startedAt": "2026-11-17T18:56:23.686350+00:00",
+  "game": "popgun-pip",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "45f19d34ebf2c2e8b8bf5349670ec91730357793e60982d249b13797a2cbe828",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/Sources/main.swift": "fcf968cd99187d950205aaf35b9ed3071cc44c78ef5d1023ccca4bba3181c3f1",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/popgun-pip/qa-plan.json": "bc77c540151a1d0270ef87b580f9fc6f28bc44ef734eb933568d6c3864f05550",
+    "joystick-games/tools/qa-plan.py": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582",
+    "joystick-games/tools/macos-build.py": "1a0b81f2c712aff665be692f677573fa54b7466d6484a563588ea672b6ed2e0a",
+    "joystick-games/catalog-registry.json": "a34fc2e2892b3f5962e1ba2b45b48afb8358cc9d85728320a786805f4f55c30a",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "canvas2d",
+    "pauseStablePaths": [
+      "gameplay.tick",
+      "gameplay.score",
+      "gameplay.playerX",
+      "gameplay.playerY",
+      "gameplay.shots"
+    ],
+    "steps": [
+      {
+        "name": "Start a campaign and open the island map",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "map"
+          }
+        ]
+      },
+      {
+        "name": "Enter the first real generated level",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      },
+      {
+        "name": "Jump right and fire the popgun",
+        "keys": [
+          "RIGHT",
+          "A",
+          "B"
+        ],
+        "holdMs": 650,
+        "expect": [
+          {
+            "path": "gameplay.playerX",
+            "op": "changed"
+          },
+          {
+            "path": "gameplay.shots",
+            "op": "increased"
+          }
+        ]
+      },
+      {
+        "name": "Pause the platformer",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "paused"
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Resume explicitly",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          }
+        ]
+      }
+    ],
+    "storageRestartRequired": true
+  },
+  "acceptedRenderers": [
+    "canvas2d"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "a45ccf69177094568c130e311a54602ec8568fa7105fcd7269a7d3ef30ab1cf3",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.popgun-pip.7847941023e843e1847693448ef02280",
+    "reusedAcrossRestartOnly": true
+  },
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 365, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 168, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": false, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"POPGUN PIP\", \"url\": \"http://127.0.0.1:58914/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.apple.UserNotificationCenter\", \"name\": \"UserNotificationCenter\"}, \"game\": {\"controller\": {\"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelled\": false, \"connected\": false, \"info\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"popgunpip.save.v1\", \"popgunpip.opts.v1\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.11\"], \"inputEnabled\": false, \"port\": 63485, \"serviceName\": \"泡泡枪皮普\", \"state\": \"registering\"}}, \"inputAvailable\": true, \"native\": true, \"players\": [], \"pollCount\": 2630, \"pressed\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"released\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"source\": \"\"}, \"errors\": [], \"frames\": 2630, \"game\": \"popgun-pip\", \"gameplay\": {\"hp\": 0, \"level\": 1, \"lives\": 0, \"overlay\": \"\", \"playerX\": 0, \"playerY\": 0, \"score\": 0, \"screen\": \"title\", \"shots\": 0, \"tick\": 0, \"weapon\": \"\", \"world\": 1}, \"paused\": false, \"renderer\": \"canvas2d\", \"stage\": \"menu\", \"webglVersion\": null}, \"input\": {\"connections\": 0, \"inputEnabled\": false, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 3, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 3}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"popgunpip.save.v1\", \"popgunpip.opts.v1\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.11\"], \"inputEnabled\": false, \"port\": 63485, \"serviceName\": \"泡泡枪皮普\", \"state\": \"registering\"}}, \"storage\": {\"current\": {\"popgunpip.opts.v1\": null, \"popgunpip.save.v1\": null}, \"initial\": {\"popgunpip.opts.v1\": null, \"popgunpip.save.v1\": null}, \"origin\": \"http://127.0.0.1:58914\"}, \"timestamp\": 1794941873.688538}\n",
+  "lastState": {
+    "active": false,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "en",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "POPGUN PIP",
+      "url": "http://127.0.0.1:58914/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.apple.UserNotificationCenter",
+      "name": "UserNotificationCenter"
+    },
+    "game": {
+      "controller": {
+        "buttons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "cancelled": false,
+        "connected": false,
+        "info": {
+          "appVersion": "0.1.0",
+          "language": "zh",
+          "platform": "macos",
+          "preferences": {},
+          "qr": "",
+          "storageKeys": [
+            "popgunpip.save.v1",
+            "popgunpip.opts.v1"
+          ],
+          "storageMaxBytes": 1048576,
+          "url": "",
+          "wifiController": {
+            "addresses": [
+              "192.168.64.11"
+            ],
+            "inputEnabled": false,
+            "port": 63485,
+            "serviceName": "泡泡枪皮普",
+            "state": "registering"
+          }
+        },
+        "inputAvailable": true,
+        "native": true,
+        "players": [],
+        "pollCount": 2630,
+        "pressed": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "released": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "source": ""
+      },
+      "errors": [],
+      "frames": 2630,
+      "game": "popgun-pip",
+      "gameplay": {
+        "hp": 0,
+        "level": 1,
+        "lives": 0,
+        "overlay": "",
+        "playerX": 0,
+        "playerY": 0,
+        "score": 0,
+        "screen": "title",
+        "shots": 0,
+        "tick": 0,
+        "weapon": "",
+        "world": 1
+      },
+      "paused": false,
+      "renderer": "canvas2d",
+      "stage": "menu",
+      "webglVersion": null
+    },
+    "input": {
+      "connections": 0,
+      "inputEnabled": false,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 3,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 3
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "popgunpip.save.v1",
+        "popgunpip.opts.v1"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.11"
+        ],
+        "inputEnabled": false,
+        "port": 63485,
+        "serviceName": "泡泡枪皮普",
+        "state": "registering"
+      }
+    },
+    "storage": {
+      "current": {
+        "popgunpip.opts.v1": null,
+        "popgunpip.save.v1": null
+      },
+      "initial": {
+        "popgunpip.opts.v1": null,
+        "popgunpip.save.v1": null
+      },
+      "origin": "http://127.0.0.1:58914"
+    },
+    "timestamp": 1794941873.688538
+  },
+  "finishedAt": "2026-11-17T18:57:53.987995+00:00"
+}

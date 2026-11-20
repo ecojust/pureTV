@@ -1,0 +1,3301 @@
+{
+  "slug": "tetris",
+  "mode": "browser",
+  "startedAt": "2026-11-15T14:59:14.554Z",
+  "status": "failed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "2775091edd12edeb03b606a9a597906f5e4c3a9a3477b82edf3ec2eb5604c223",
+    "tools/readme-controller-qa/cases.mjs": "d61c02f08cb818d0ca27b40edded6055684e1f5b8b874bfcd7b72311365a0c47",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": false,
+  "syntheticNativeBridge": true,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "START begins actual game",
+      "status": "passed"
+    },
+    {
+      "name": "direction and game-specific action affect actual model",
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n4 !== 5\n\n    at gameplay (file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/cases.mjs:60:50)\n    at async file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:75:80\n    at async test (file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:75:2"
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "stage": 1,
+          "selectedPlayers": 1,
+          "music": true,
+          "highScore": 0,
+          "mode": "A",
+          "startHeight": 0,
+          "players": [
+            {
+              "id": 1,
+              "joined": false,
+              "alive": false,
+              "connected": false,
+              "score": 0,
+              "level": 0,
+              "cleared": 0,
+              "completed": false,
+              "remaining": null
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": false,
+              "connected": false,
+              "score": 0,
+              "level": 0,
+              "cleared": 0,
+              "completed": false,
+              "remaining": null
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": false,
+            "alive": false,
+            "connected": false,
+            "board": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "piece": null,
+            "sequence": {
+              "seed": 4154183266,
+              "previous": 2
+            },
+            "nextType": "Z",
+            "score": 0,
+            "level": 0,
+            "startLevel": 0,
+            "cleared": 0,
+            "statistics": {
+              "T": 0,
+              "J": 0,
+              "Z": 0,
+              "O": 0,
+              "S": 0,
+              "L": 0,
+              "I": 0
+            },
+            "clearRows": [],
+            "clearTimer": 0,
+            "clearDuration": 0,
+            "entryTimer": 0,
+            "entryDuration": 10,
+            "gravityTimer": 0,
+            "softTimer": 0,
+            "softCells": 0,
+            "dasCharge": 0,
+            "previous": {
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "lockedPieces": 0,
+            "completed": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": false,
+            "connected": false,
+            "board": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "piece": null,
+            "sequence": {
+              "seed": 4154183266,
+              "previous": 2
+            },
+            "nextType": "Z",
+            "score": 0,
+            "level": 0,
+            "startLevel": 0,
+            "cleared": 0,
+            "statistics": {
+              "T": 0,
+              "J": 0,
+              "Z": 0,
+              "O": 0,
+              "S": 0,
+              "L": 0,
+              "I": 0
+            },
+            "clearRows": [],
+            "clearTimer": 0,
+            "clearDuration": 0,
+            "entryTimer": 0,
+            "entryDuration": 10,
+            "gravityTimer": 0,
+            "softTimer": 0,
+            "softCells": 0,
+            "dasCharge": 0,
+            "previous": {
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "lockedPieces": 0,
+            "completed": false
+          }
+        ],
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        }
+      }
+    },
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "stage": 1,
+          "selectedPlayers": 1,
+          "music": true,
+          "highScore": 0,
+          "mode": "A",
+          "startHeight": 0,
+          "players": [
+            {
+              "id": 1,
+              "joined": false,
+              "alive": false,
+              "connected": false,
+              "score": 0,
+              "level": 0,
+              "cleared": 0,
+              "completed": false,
+              "remaining": null
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": false,
+              "connected": false,
+              "score": 0,
+              "level": 0,
+              "cleared": 0,
+              "completed": false,
+              "remaining": null
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": false,
+            "alive": false,
+            "connected": false,
+            "board": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "piece": null,
+            "sequence": {
+              "seed": 4154183266,
+              "previous": 2
+            },
+            "nextType": "Z",
+            "score": 0,
+            "level": 0,
+            "startLevel": 0,
+            "cleared": 0,
+            "statistics": {
+              "T": 0,
+              "J": 0,
+              "Z": 0,
+              "O": 0,
+              "S": 0,
+              "L": 0,
+              "I": 0
+            },
+            "clearRows": [],
+            "clearTimer": 0,
+            "clearDuration": 0,
+            "entryTimer": 0,
+            "entryDuration": 10,
+            "gravityTimer": 0,
+            "softTimer": 0,
+            "softCells": 0,
+            "dasCharge": 0,
+            "previous": {
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "lockedPieces": 0,
+            "completed": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": false,
+            "connected": false,
+            "board": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "piece": null,
+            "sequence": {
+              "seed": 4154183266,
+              "previous": 2
+            },
+            "nextType": "Z",
+            "score": 0,
+            "level": 0,
+            "startLevel": 0,
+            "cleared": 0,
+            "statistics": {
+              "T": 0,
+              "J": 0,
+              "Z": 0,
+              "O": 0,
+              "S": 0,
+              "L": 0,
+              "I": 0
+            },
+            "clearRows": [],
+            "clearTimer": 0,
+            "clearDuration": 0,
+            "entryTimer": 0,
+            "entryDuration": 10,
+            "gravityTimer": 0,
+            "softTimer": 0,
+            "softCells": 0,
+            "dasCharge": 0,
+            "previous": {
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "lockedPieces": 0,
+            "completed": false
+          }
+        ],
+        "document": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        }
+      }
+    },
+    {
+      "label": "started",
+      "before": null,
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": true,
+              "UP": false
+            },
+            "controllerId": "virtual-cd43765a5059",
+            "session": "wifi-3da9694b-2b95-43ed-97dd-0b2fca2a28bc-1",
+            "start": true,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "stage": 1,
+          "selectedPlayers": 1,
+          "music": true,
+          "highScore": 0,
+          "mode": "A",
+          "startHeight": 0,
+          "players": [
+            {
+              "id": 1,
+              "joined": true,
+              "alive": true,
+              "connected": true,
+              "score": 0,
+              "level": 0,
+              "cleared": 0,
+              "completed": false,
+              "remaining": null
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": false,
+              "connected": false,
+              "score": 0,
+              "level": 0,
+              "cleared": 0,
+              "completed": false,
+              "remaining": null
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": true,
+            "alive": true,
+            "connected": true,
+            "board": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "piece": {
+              "type": "Z",
+              "rotation": 0,
+              "x": 4,
+              "y": -1
+            },
+            "sequence": {
+              "seed": 1152311401,
+              "previous": 1
+            },
+            "nextType": "J",
+            "score": 0,
+            "level": 0,
+            "startLevel": 0,
+            "cleared": 0,
+            "statistics": {
+              "T": 0,
+              "J": 0,
+              "Z": 1,
+              "O": 0,
+              "S": 0,
+              "L": 0,
+              "I": 0
+            },
+            "clearRows": [],
+            "clearTimer": 0,
+            "clearDuration": 0,
+            "entryTimer": 0,
+            "entryDuration": 10,
+            "gravityTimer": 5,
+            "softTimer": 0,
+            "softCells": 0,
+            "dasCharge": 0,
+            "previous": {
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": true,
+              "select": false
+            },
+            "lockedPieces": 0,
+            "completed": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": false,
+            "connected": false,
+            "board": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "piece": null,
+            "sequence": {
+              "seed": 4154183266,
+              "previous": 2
+            },
+            "nextType": "Z",
+            "score": 0,
+            "level": 0,
+            "startLevel": 0,
+            "cleared": 0,
+            "statistics": {
+              "T": 0,
+              "J": 0,
+              "Z": 0,
+              "O": 0,
+              "S": 0,
+              "L": 0,
+              "I": 0
+            },
+            "clearRows": [],
+            "clearTimer": 0,
+            "clearDuration": 0,
+            "entryTimer": 0,
+            "entryDuration": 10,
+            "gravityTimer": 0,
+            "softTimer": 0,
+            "softCells": 0,
+            "dasCharge": 0,
+            "previous": {
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "a": false,
+              "b": false,
+              "start": false,
+              "select": false
+            },
+            "lockedPieces": 0,
+            "completed": false
+          }
+        ],
+        "document": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        }
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:27.685Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-cd43765a5059"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:27.685Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-cd43765a5059",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:27.685Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-cd43765a5059",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:27.685Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-cd43765a5059",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:27.685Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-cd43765a5059",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:27.685Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-cd43765a5059",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:27.685Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-cd43765a5059",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:27.685Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-cd43765a5059",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:27.685Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-cd43765a5059",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:27.685Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-cd43765a5059",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:27.767Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:27.770Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:27.776Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:27.777Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:27.784Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:27.784Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:27.785Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:27.786Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:27.786Z",
+      "message": {
+        "type": "ping",
+        "seq": 11,
+        "controller_id": "virtual-cd43765a5059"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:27.823Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:27.824Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:27.824Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:28.061Z",
+      "message": {
+        "type": "button",
+        "seq": 12,
+        "controller_id": "virtual-cd43765a5059",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:28.066Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:28.164Z",
+      "message": {
+        "type": "button",
+        "seq": 13,
+        "controller_id": "virtual-cd43765a5059",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 108
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:28.168Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:28.576Z",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-cd43765a5059",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:28.581Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T14:59:28.670Z",
+      "message": {
+        "type": "button",
+        "seq": 15,
+        "controller_id": "virtual-cd43765a5059",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 103
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T14:59:28.672Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    }
+  ],
+  "screenshots": [
+    "menu-960.png",
+    "menu-1280.png",
+    "failure.png"
+  ],
+  "limitations": [
+    "Desktop JVM and Chromium; Android lifecycle/NSD not exercised."
+  ],
+  "assetHashes": {
+    "audio.js": "192aa3b80cca0231c0ec3f820ba2a03edd2d925cc026f157a3161bf3d8ff6186",
+    "bootstrap.js": "74d285c2476498933c83d76d4b7bc94fc0afbe686ba04f9c93711dcf6498ea21",
+    "controller.css": "a8bac051eb660edf9ea5b9417491ee4febb83b042fbe04bfc83164ba35e80020",
+    "controller.html": "c0b3a58094d9437f069da296849597b5df57e316713de09d5c2f30aa11bf41bb",
+    "controller.js": "721f6313717a4517643708185644acc2537acc66c65b03b955dd2fd98ace6832",
+    "game-model.js": "918eb5067bc63df07e40736264fa0a6966ccf32946aa3b714b3d078f60076849",
+    "game.js": "3da240939af94311e93be990718a337ca1c4c7188b9fcae14ea4beb71b9f3e21",
+    "puretv-controller.js": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2",
+    "renderer.js": "1c01b2eb6ee658f5d8472ecdc918f5d5f10ad95c57bf564940255d6805fdbf1e",
+    "runtime.js": "86789f02ddb2b4220bfe2ec9d3696b8d972d6e3a4fe1ad12b91cd4f96034e30b",
+    "tv.css": "7e2a7124ab3671e304bedbe55ed5c5c5e85d559bc4e3127f03f07cf419f4d7c6",
+    "tv.html": "52c166b72f3ea3399b3a5cdc37304f5984ff96bbc2152a2b54d959cca401cc3f"
+  },
+  "pageErrors": [],
+  "ports": {
+    "tcpPort": 63485,
+    "httpPort": 40911,
+    "observerPort": 40871
+  },
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n4 !== 5\n\n    at gameplay (file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/cases.mjs:60:50)\n    at async file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:75:80\n    at async test (file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:31:96)\n    at async file:///dev/shm/puretv-controller-games/tools/readme-controller-qa/run.mjs:75:2",
+  "lastSnapshot": {
+    "phase": "playing",
+    "paused": false,
+    "controllerPaused": false,
+    "controllers": [
+      {
+        "a": false,
+        "cancelSeq": 1,
+        "b": false,
+        "select": false,
+        "buttons": {
+          "A": false,
+          "DOWN": false,
+          "B": false,
+          "LEFT": false,
+          "X": false,
+          "RIGHT": false,
+          "Y": false,
+          "START": true,
+          "UP": false
+        },
+        "controllerId": "virtual-cd43765a5059",
+        "session": "wifi-3da9694b-2b95-43ed-97dd-0b2fca2a28bc-1",
+        "start": true,
+        "transport": "wifi",
+        "inputActive": true,
+        "connected": true,
+        "x": 0,
+        "y": 0,
+        "aimY": 0,
+        "id": 1,
+        "aimX": 0
+      },
+      {
+        "a": false,
+        "cancelSeq": 0,
+        "b": false,
+        "select": false,
+        "buttons": {
+          "A": false,
+          "DOWN": false,
+          "B": false,
+          "LEFT": false,
+          "X": false,
+          "RIGHT": false,
+          "Y": false,
+          "START": false,
+          "UP": false
+        },
+        "controllerId": "",
+        "session": "",
+        "start": false,
+        "transport": "wifi",
+        "inputActive": true,
+        "connected": false,
+        "x": 0,
+        "y": 0,
+        "aimY": 0,
+        "id": 2,
+        "aimX": 0
+      }
+    ],
+    "info": {
+      "language": "zh",
+      "url": "http://127.0.0.1:1/",
+      "qr": "",
+      "addresses": [
+        "127.0.0.1"
+      ],
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Desktop QA receiver; no Android NSD",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "addresses": [
+          "127.0.0.1"
+        ],
+        "inputActive": true
+      }
+    },
+    "model": {
+      "phase": "playing",
+      "stage": 1,
+      "selectedPlayers": 1,
+      "music": true,
+      "highScore": 0,
+      "mode": "A",
+      "startHeight": 0,
+      "players": [
+        {
+          "id": 1,
+          "joined": true,
+          "alive": true,
+          "connected": true,
+          "score": 0,
+          "level": 0,
+          "cleared": 0,
+          "completed": false,
+          "remaining": null
+        },
+        {
+          "id": 2,
+          "joined": false,
+          "alive": false,
+          "connected": false,
+          "score": 0,
+          "level": 0,
+          "cleared": 0,
+          "completed": false,
+          "remaining": null
+        }
+      ]
+    },
+    "players": [
+      {
+        "id": 1,
+        "joined": true,
+        "alive": true,
+        "connected": true,
+        "board": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "piece": {
+          "type": "Z",
+          "rotation": 0,
+          "x": 4,
+          "y": -1
+        },
+        "sequence": {
+          "seed": 1152311401,
+          "previous": 1
+        },
+        "nextType": "J",
+        "score": 0,
+        "level": 0,
+        "startLevel": 0,
+        "cleared": 0,
+        "statistics": {
+          "T": 0,
+          "J": 0,
+          "Z": 1,
+          "O": 0,
+          "S": 0,
+          "L": 0,
+          "I": 0
+        },
+        "clearRows": [],
+        "clearTimer": 0,
+        "clearDuration": 0,
+        "entryTimer": 0,
+        "entryDuration": 10,
+        "gravityTimer": 5,
+        "softTimer": 0,
+        "softCells": 0,
+        "dasCharge": 0,
+        "previous": {
+          "connected": true,
+          "x": 0,
+          "y": 0,
+          "a": false,
+          "b": false,
+          "start": true,
+          "select": false
+        },
+        "lockedPieces": 0,
+        "completed": false
+      },
+      {
+        "id": 2,
+        "joined": false,
+        "alive": false,
+        "connected": false,
+        "board": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "piece": null,
+        "sequence": {
+          "seed": 4154183266,
+          "previous": 2
+        },
+        "nextType": "Z",
+        "score": 0,
+        "level": 0,
+        "startLevel": 0,
+        "cleared": 0,
+        "statistics": {
+          "T": 0,
+          "J": 0,
+          "Z": 0,
+          "O": 0,
+          "S": 0,
+          "L": 0,
+          "I": 0
+        },
+        "clearRows": [],
+        "clearTimer": 0,
+        "clearDuration": 0,
+        "entryTimer": 0,
+        "entryDuration": 10,
+        "gravityTimer": 0,
+        "softTimer": 0,
+        "softCells": 0,
+        "dasCharge": 0,
+        "previous": {
+          "connected": false,
+          "x": 0,
+          "y": 0,
+          "a": false,
+          "b": false,
+          "start": false,
+          "select": false
+        },
+        "lockedPieces": 0,
+        "completed": false
+      }
+    ],
+    "document": {
+      "width": 1280,
+      "height": 720,
+      "scrollWidth": 1280,
+      "scrollHeight": 720
+    },
+    "nativeInfo": {
+      "language": "zh",
+      "url": "http://127.0.0.1:1/",
+      "qr": "",
+      "addresses": [
+        "127.0.0.1"
+      ],
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Desktop QA receiver; no Android NSD",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "addresses": [
+          "127.0.0.1"
+        ],
+        "inputActive": true
+      }
+    }
+  },
+  "finishedAt": "2026-11-15T14:59:32.637Z"
+}

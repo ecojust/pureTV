@@ -1,0 +1,34 @@
+✖ 20 authored tracks and all 26 career events retained, each route constructs (53.475088ms)
+✔ simulation and procedural models remain byte-identical to fixed upstream (3.652333ms)
+✔ default and persisted settings cannot add implicit throttle (1.090384ms)
+✔ six held actions are independent, X/Y/START never create throttle (2.500519ms)
+✔ TV input drives original controls and autoGas remains disabled even with touch settings (1.572663ms)
+✔ disconnect cancels, never creates action release; held reconnect is quarantined (2.676728ms)
+✔ background cancellation requires release before repeat action (0.477974ms)
+✔ edge computation does not merge simultaneous independent buttons (0.235216ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 394.281829
+
+✖ failing tests:
+
+test at tests/content.test.mjs:4:1
+✖ 20 authored tracks and all 26 career events retained, each route constructs (53.475088ms)
+  AssertionError [ERR_ASSERTION]: barnyard
+      at TestContext.<anonymous> (file:///dev/shm/puretv-submit/joystick-games/dirt-crown/tests/content.test.mjs:4:285)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

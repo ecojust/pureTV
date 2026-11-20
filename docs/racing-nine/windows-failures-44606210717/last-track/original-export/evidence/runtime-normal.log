@@ -1,0 +1,24 @@
+Native DPI-scaled minimum and initial viewport: failed
+Traceback (most recent call last):
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-verify.py", line 161, in run
+    self.check('Native DPI-scaled minimum and initial viewport',self.window_bounds)
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 204, in check
+    try:r['details']=fn();r['status']='passed'
+                     ^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-verify.py", line 105, in window_bounds
+    self.screenshot('minimum-window.png');before=self.read()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 213, in screenshot
+    if p.is_file() and p.stat().st_size>1000:self.report['screenshots'].append({'path':'diagnostics/'+name,'bytes':p.stat().st_size,'sha256':digest(p)});return
+                                                                                                                                             ^^^^^^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\macos-verify.py", line 13, in digest
+    def digest(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+                                        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'D:\\a\\_temp\\runtime-normal\\diagnostics\\minimum-window.png'
+

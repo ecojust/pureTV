@@ -1,0 +1,100 @@
+{
+  "runId": 44602407034,
+  "runAttempt": 1,
+  "sourceSha": "ea7854ca06ed53967aed00fe160034185f2906b3",
+  "scope": "Independent source-bound explanation and original-loader HTTP fixture replay; no actual Swift/WK/game execution or production edits",
+  "terminalStates": [
+    {
+      "mode": "native",
+      "originalStatus": "failed",
+      "reportPath": "docs/racing-nine/native-readiness/ci-44602407034-attempt-1/original-arm-export/artifact/backroad-rally/native/report.json",
+      "reportSha256": "3e1d7fa404698a50094cb94ec1e6bc8b370539c58661bbc361258c64fda683f3",
+      "statePath": "docs/racing-nine/native-readiness/ci-44602407034-attempt-1/original-arm-export/artifact/backroad-rally/native/diagnostics/state.json",
+      "stateSha256": "df62db85f737d346e9ed5cdf9ebda20c6844c40c6f32b326ca0625286844b2a6",
+      "ready": true,
+      "active": true,
+      "renderer": "loading",
+      "frames": 0,
+      "gameplay": {
+        "menuFocus": "",
+        "menuValue": ""
+      },
+      "errors": [],
+      "adapterPollCount": 5179,
+      "nativeInputAvailable": true,
+      "initialStorageKeys": 367,
+      "currentStorageKeys": 367,
+      "nativeLogBytes": 0
+    },
+    {
+      "mode": "occupied-port",
+      "originalStatus": "failed",
+      "reportPath": "docs/racing-nine/native-readiness/ci-44602407034-attempt-1/original-arm-export/artifact/backroad-rally/occupied-port/report.json",
+      "reportSha256": "aa3a9485ff15ceca4d0bc6170876400660200ca5984e674fc5866c76c9d30cbe",
+      "statePath": "docs/racing-nine/native-readiness/ci-44602407034-attempt-1/original-arm-export/artifact/backroad-rally/occupied-port/diagnostics/state.json",
+      "stateSha256": "a6251b365e0db476e561b2bbe2b0d11111e54ecac9c3aeab75b309ec798afa13",
+      "ready": true,
+      "active": true,
+      "renderer": "loading",
+      "frames": 0,
+      "gameplay": {
+        "menuFocus": "",
+        "menuValue": ""
+      },
+      "errors": [],
+      "adapterPollCount": 5194,
+      "nativeInputAvailable": true,
+      "initialStorageKeys": 367,
+      "currentStorageKeys": 367,
+      "nativeLogBytes": 0
+    },
+    {
+      "mode": "rosetta",
+      "originalStatus": "failed",
+      "reportPath": "docs/racing-nine/native-readiness/ci-44602407034-attempt-1/original-arm-export/artifact/backroad-rally/rosetta/report.json",
+      "reportSha256": "d207a4e9f3f9066f3b26ac0b15c8eb822df6ee09129d7a1fca3e700767b55a62",
+      "statePath": "docs/racing-nine/native-readiness/ci-44602407034-attempt-1/original-arm-export/artifact/backroad-rally/rosetta/diagnostics/state.json",
+      "stateSha256": "ae1d40d454c1279b74583f283542f6e570f28e3dcc99f08f1d7c0999aa49f6ce",
+      "ready": true,
+      "active": true,
+      "renderer": "loading",
+      "frames": 0,
+      "gameplay": {
+        "menuFocus": "",
+        "menuValue": ""
+      },
+      "errors": [],
+      "adapterPollCount": 4895,
+      "nativeInputAvailable": true,
+      "initialStorageKeys": 367,
+      "currentStorageKeys": 367,
+      "nativeLogBytes": 0
+    }
+  ],
+  "blockers": [
+    {
+      "kind": "initial-data-load",
+      "server": "LocalAssetServer.swift:325-328 rejects all literal ? in target",
+      "producer": "Original data.ts publicUrl adds ?v=<content hash>; actual menu hash is198988baa6",
+      "awaitChain": [
+        "main() imports menuPage",
+        "runMenu() first awaits loadMenuData()",
+        "loadMenuData() calls load(menu.json), garage/career/conditions/weather/fivecars concurrently",
+        "load() rejects non-OK HTTP responses",
+        "main().catch consumes rejection and inserts #fatal; window unhandledrejection listener therefore sees no event"
+      ],
+      "consequence": "configurePureTv and createRenderer are not reached, leaving hooks null, gameplay empty, renderer loading and frames0; errors[] does not establish successful boot."
+    },
+    {
+      "kind": "next-navigation",
+      "host": "main.swift navigation delegate requires url.query == nil",
+      "producer": "Original nav.playQuery emits same-path tv.html?mode=quick&stage=finland&car=swift&cond=stage&weather=clear",
+      "consequence": "Even once asset GET queries are accepted, the original start-race URL is cancelled until same-origin same-entry query navigation is supported."
+    }
+  ],
+  "storageAssessment": "367 initial/current keys and thousands of native adapter polls are present; original code only loads save/settings after the first menu-data await. No evidence of a blocked storage bootstrap.",
+  "evidenceLimit": "Original native.log is empty and original reports do not record asset HTTP requests or #fatal text. HTTP400 is demonstrated by the fixed original loader and source-equivalent rejection fixture, not recovered from an original native HTTP log. Native Swift HTTP tests and rebuilt Mac runtime are still required.",
+  "otherCandidates": "Frozen dist query-pattern scan finds local hash/stage-query construction in Backroad. Penguin matches optional external checkout navigation only; no matching local query construction found in other seven candidates. This static pattern scan is not exhaustive computed-URL coverage.",
+  "gameAndHostProductionChangedByThisInvestigation": false,
+  "nativeRerunPerformed": false
+}

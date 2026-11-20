@@ -1,0 +1,29 @@
+{
+  "recordedAt": "2026-11-19T18:01:52.124702+00:00",
+  "runId": 44581917576,
+  "runAttempt": 1,
+  "sourceCommit": "3b705cc9269aece0bf7312aa39617f28dbd7913f",
+  "immutableExportCommit": "9c0087207e3c1fd6a2a1b68dbf0833c79358d50d",
+  "originalExportFiles": 79,
+  "allManifestHashesVerified": true,
+  "verifyJob": 135765149856,
+  "exportJob": 135766443583,
+  "nativeBuildStatus": "failed",
+  "nativeRuntimeTested": false,
+  "installerBuilt": false,
+  "portablePackageBuilt": false,
+  "actualCompilerVersion": "MSVC 19.44.35230.0",
+  "actualWindowsSdkVersion": "10.0.26100.0",
+  "observedErrors": [
+    "CommandLineToArgvW undeclared",
+    "ShellExecuteW undeclared"
+  ],
+  "cause": "WIN32_LEAN_AND_MEAN excludes shell declarations; main.cpp requires explicit shellapi.h.",
+  "correction": "Add shellapi.h. Separately correct static DPI sizing with DPI-scaled client/window bounds and add a real native viewport gate. DPI defect is source review, not a failure measured in this run.",
+  "priorLongPathCorrectionReachedCompilation": true,
+  "limitations": [
+    "Windows host did not link or run. No packages were verified.",
+    "Actual native DPI test and other DPI scales remain untested.",
+    "Physical controller and physical Windows user machine not tested."
+  ]
+}

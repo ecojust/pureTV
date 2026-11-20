@@ -1,0 +1,7 @@
+# Fixed Backroad macOS draft transfer validation
+
+This helper copies exactly the two original Backroad Rally macOS packages from run `44608415225`, attempt `1`, source `68d343d22c762c904eb83854d4ab9c4113a7c30f`, artifact `14570673468` to the already-created draft Release `451969286`, tag `joystick-backroad-rally-v0.1.0`. It never builds, signs, creates a Release, publishes a draft, deletes assets or overwrites an existing asset. The complete original Actions archive, original producer/upload step, safe member set/CRC, manifest, checksums and two package SHA256 values are verified. Identical existing assets can be reused; conflicts fail closed.
+
+The test logs contain small offline fixtures only. The original archive and packages were not downloaded or executed for this validation. `result.json` and `source-inventory.json` bind the exact tested sources and preserve the initial HTTP mock failure. The real GitHub draft API observation explains why a temporary `untagged-…` download URL is accepted only with the same repository, exact file name, matching direct/list asset metadata, and the fixed release identity.
+
+The workflow accepts no arbitrary input and uploads only these original files. Its small `transfer.json` receipt is also exported via the existing create-only `build-assets/artifact-draft-transfer-<run>-attempt-<attempt>` mechanism. Native runtime acceptance and original package/source audits remain separate; this upload helper does not claim them. Actual CI upload is pending root dispatch.

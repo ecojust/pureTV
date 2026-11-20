@@ -1,0 +1,54 @@
+{
+  "title": "Neuro Rivals",
+  "repository": "Chloudde/neuro-rivals",
+  "fixedCommit": "f5129dd9534c4dfe7af1f4a7e4418e290658a245",
+  "reviewedAtUtc": "2026-11-19T17:30:39.656801+00:00",
+  "graphics": {
+    "sceneAndArtDirection": 10,
+    "vehicleDesign": 5,
+    "lightingAndEffects": 5,
+    "readability": 9,
+    "motionPresentation": 4,
+    "total": 33
+  },
+  "gameplay": {
+    "drivingAndControl": 12,
+    "competitionAndFeedback": 9,
+    "trackAndModeVariety": 8,
+    "progressionAndReplay": 9,
+    "completeRaceLoop": 3,
+    "total": 41
+  },
+  "total": 74,
+  "scoreType": "Independent graphics/gameplay rubric; not stars or an external user rating",
+  "visualEvidence": [
+    "attempt-2/initial.png",
+    "attempt-2/started.png",
+    "attempt-2/after-input.png"
+  ],
+  "observed": [
+    "Used actual Race menu then Start race, with normal ArrowUp/Left/Right and Space input.",
+    "Active 6-car race HUD advanced from 3.683 to 14.683 seconds; speed and positions changed; no score/time/model injection.",
+    "Clean high-contrast 2D top-down presentation, distinguishable car colours, tyre marks, minimap and timing/standings. The circuit environment and car silhouettes are simpler than the strongest 3D candidates.",
+    "Menu exposed five named tracks, championship, time trial, training lab, track editor and garage/settings."
+  ],
+  "sourceSupportedNotFullyPlayed": [
+    "Race.ts has standings, collision resolution, lap timing, ghost-recording and finished-state logic; a complete race/season was not played.",
+    "README/source describe neural-network rival training, trained difficulty tiers, player chassis, achievements and custom tracks; only normal race driving was exercised."
+  ],
+  "assessment": "Strong gameplay variety and approachable controls; visual clarity is good, but scenery/vehicle detail is modest. Good fallback if visual leaders cannot be packaged, not automatically a top-nine pick on graphics.",
+  "packaging": {
+    "codeLicense": "MIT",
+    "renderer": "Canvas 2D",
+    "sourceTreeBytes": 903760,
+    "externalAssets": "Original procedural graphics and synthesised sound; Vite/TypeScript build dependencies need pinning.",
+    "controllerWork": "Map driving/nitro/pause and all menu focus, adapt track editor cursor/actions or clearly separate optional editor; keep offline records/ghosts/rival storage.",
+    "status": "Feasible, not yet adapted or packaged"
+  },
+  "limits": [
+    "Live demo version is not proven equal to the fixed source commit; source snapshots and live screenshots are separate evidence.",
+    "No complete race finish, full championship or device performance benchmark.",
+    "No physical controller or device test.",
+    "Attempt 1 reached Race setup only and is retained; attempt 2 reached actual gameplay."
+  ]
+}

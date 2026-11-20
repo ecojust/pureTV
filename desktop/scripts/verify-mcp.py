@@ -91,28 +91,36 @@ else:raise AssertionError(args)
 '''
 
 def seed_market(root):
-    """Seed the production catalog/APK cache, so native routing stays offline."""
-    source='https://gitee.com/juzisang331/pure-tv-store'
-    revision='0123456789abcdef0123456789abcdef01234567'
+    """Seed the current HTTP catalog/APK cache, so native routing stays offline."""
+    source='https://apps.b14f.com'
     directory=root/'data/com.ecojust.puretv.manager/market'
     logo=SMOKE_LOGO.encode('utf-8')
-    logo_digest=hashlib.sha1(f'blob {len(logo)}\0'.encode()+logo).hexdigest()
+    logo_digest=hashlib.sha256(logo).hexdigest()
     items=[];paths={}
-    for kind,folder,name in [('app','apps/smoke','market-smoke'),('launcher','launcher/smoke','market-launcher')]:
+    for kind,folder,name in [('app','media/smoke','market-smoke'),('launcher','launcher/smoke','market-launcher')]:
         filename=f'{name}-1.0.apk';item_id=f'{folder}/{filename}'
         output=io.BytesIO()
         with zipfile.ZipFile(output,'w') as archive:
             archive.writestr('AndroidManifest.xml','<manifest package="com.example.marketsmoke"/>')
             if kind=='launcher':archive.writestr('assets/layout.json',(root/'default-layout.json').read_bytes())
         apk=output.getvalue()
-        digest=hashlib.sha1(f'blob {len(apk)}\0'.encode()+apk).hexdigest()
-        path=directory/'apks'/digest/filename
+        # Match app_store::fingerprint: compact JSON tuple + declared struct field order.
+        # This identifies HTTP metadata, not a publisher-supplied content hash.
+        metadata={'bytes':len(apk),'etag':f'"mcp-{kind}"','lastModified':'Sun, 15 Nov 2026 09:21:53 GMT'}
+        identity=json.dumps([source,item_id,metadata],ensure_ascii=False,separators=(',',':')).encode('utf-8')
+        digest=hashlib.sha256(identity).hexdigest()
+        path=directory/'apks-http-v1'/digest/filename
         path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(apk)
+        receipt={'id':item_id,'identity':digest,'bytes':len(apk),'sha256':hashlib.sha256(apk).hexdigest()}
+        path.with_suffix('.receipt.json').write_text(json.dumps(receipt))
         (path.parent/'logo.svg').write_bytes(logo)
-        items.append({'id':item_id,'kind':kind,'name':name,'version':'1.0','fileName':filename,'bytes':len(apk),'blobSha':digest,'folderUrl':f'{source}/tree/{revision}/{folder}','coverUrl':None,'logoUrl':f'{source}/raw/{revision}/{folder}/logo.svg','logoBlobSha':logo_digest,'logoBytes':len(logo)})
+        items.append({'id':item_id,'kind':kind,'name':name,'version':'1.0','fileName':filename,'bytes':len(apk),'blobSha':digest,'downloadMetadata':metadata,'folderUrl':f'{source}/{folder}/','coverUrl':None,'logoUrl':f'{source}/{folder}/logo.svg','logoBlobSha':logo_digest,'logoBytes':len(logo)})
         paths[kind]=path
+    # Match market::catalog_revision: sorted (id, blobSha) pairs, compact JSON.
+    identity=json.dumps(sorted((item['id'],item['blobSha']) for item in items),ensure_ascii=False,separators=(',',':')).encode('utf-8')
+    revision=hashlib.sha256(identity).hexdigest()
     catalog={'sourceUrl':source,'revision':revision,'fetchedAt':int(time.time()*1000),'stale':False,'warning':None,'items':items}
-    (directory/'catalog-v3.json').write_text(json.dumps(catalog))
+    (directory/'catalog-http-v1.json').write_text(json.dumps(catalog))
     # This fixture's APKs deliberately use a text manifest. Real binary-manifest
     # identity/save coverage lives in app_logos.rs against all nine shipped APKs;
     # seed the persisted identity here to exercise the running GUI/MCP read path.
@@ -189,22 +197,26 @@ def main():
                 for name in ['get_market_catalog','download_market_item','install_market_item']:
                     assert name in names and catalog[name]['annotations']['openWorldHint'],name
                 assert not catalog['download_market_item']['annotations']['destructiveHint']
+                for name in ['download_market_item','install_market_item']:
+                    revision_schema=catalog[name]['inputSchema']['properties']['revision']
+                    assert revision_schema['minLength']==64 and revision_schema['maxLength']==64
                 assert 'market' in catalog['open_resource']['inputSchema']['properties']['resource']['enum']
+                assert 'client' in catalog['open_resource']['inputSchema']['properties']['resource']['enum']
                 assert 'marketProgress' in client.call('get_status')
-                # Reject unsupported market arguments before any repository request.
+                # Reject unsupported market arguments before any server request.
                 for name,args in [
                     ('get_market_catalog',{'refresh':'true'}),
                     ('download_market_item',{'id':''}),
-                    ('download_market_item',{'id':'apps/music/music.apk','url':'https://example.com/apk'}),
-                    ('install_market_item',{'id':'apps/music/music.apk','revision':'master'}),
+                    ('download_market_item',{'id':'media/music/music.apk','url':'https://example.com/apk'}),
+                    ('install_market_item',{'id':'media/music/music.apk','revision':'master'}),
                 ]:
                     rejected=client.rpc('tools/call',{'name':name,'arguments':args})
                     assert rejected['error']['code']==-32602,(name,rejected)
                 # Valid JSON shapes still cannot bypass the backend's path/revision
-                # checks. These fail before reading the cache or contacting Gitee.
+                # checks. These fail before reading the cache or contacting the application server.
                 client.call('download_market_item',{'id':'../bad.apk'},failure=True)
                 client.call('install_market_item',{'id':'https://example.com/bad.apk'},failure=True)
-                client.call('download_market_item',{'id':'apps/music/music.apk','revision':'g'*40},failure=True)
+                client.call('download_market_item',{'id':'media/music/music.apk','revision':'g'*64},failure=True)
                 market=client.call('get_market_catalog')
                 assert market['revision']==market_fixture['revision'] and market['items']==market_fixture['items'],market
                 assert market['stale'] is False
@@ -215,7 +227,7 @@ def main():
                 assert (market_paths['app'].parent/'logo.svg').read_text()==SMOKE_LOGO
                 progress=client.call('get_status')['marketProgress']
                 assert progress['itemId']==app_item['id'] and progress['downloaded']==app_item['bytes'],progress
-                client.call('download_market_item',{'id':app_item['id'],'revision':'a'*40},failure=True)
+                client.call('download_market_item',{'id':app_item['id'],'revision':'a'*64},failure=True)
                 network=client.call('get_local_network')['localNetwork']
                 assert isinstance(network['addresses'],list)
                 for row in network['addresses']:assert row['interfaceName'] and not row['ip'].startswith('127.') and 0<=row['prefixLength']<=32

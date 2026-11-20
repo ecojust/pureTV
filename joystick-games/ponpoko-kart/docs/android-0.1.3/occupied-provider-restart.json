@@ -1,0 +1,48 @@
+{
+  "version": "0.1.3",
+  "originalApk": {
+    "bytes": 8783465,
+    "sha256": "6c5254c2e63b9006b0561bbef6f4ea04bc57acb3ba33b20d773c8ab42e1ab9f8"
+  },
+  "androidEmulator": "Android TV API 34, x86, 720p",
+  "mode": "occupied",
+  "qaSource": "2ac1d0a5dba55a72e317ec01103aa0b002b640be",
+  "run": "https://github.com/ecojust/pureTV/actions/runs/44694323139",
+  "exportCommit": "d6db98ddb251973970fca62225969ba757b9c814",
+  "status": "failed",
+  "hostPort": 42725,
+  "targetPid": "3032",
+  "testsPassedBeforeTermination": [
+    "catalog scenario starts with fresh app data before launch",
+    "installed target launches initialized game menu with no controller card"
+  ],
+  "matchingSdkAcks": 13,
+  "duplicateAcks": [],
+  "missingAcks": [],
+  "lastAction": "Read the pre-capture state for the connected-controller screenshot before any course selection.",
+  "systemEvents": [
+    "11-20 07:27:47.204   460   505 I ActivityManager: Posting BOOT_COMPLETED user #0",
+    "11-20 07:28:19.192   460   539 I PackageManager: Update system package com.android.vending code path from /product/priv-app/Tubesky to /data/app/~~XqLmpiRA-pQpp_NxwOYHnA==/com.android.vending-KD5MEOwmLEF8oNxPlElkVQ==; Retain data and using new",
+    "11-20 07:28:19.895   460   501 I ActivityManager: Process com.google.android.gms.persistent (pid 1036) has died: fg  BTOP",
+    "11-20 07:28:19.942   460   501 I ActivityManager: Killing 3032:com.ecojust.joystick.ponpokokart/u0a122 (adj 0): depends on provider com.google.android.gms/.fonts.provider.FontsProvider in dying proc com.google.android.gms.persistent (adj -10000)"
+  ],
+  "originalRecords": {
+    "report.json": {
+      "bytes": 26756,
+      "sha256": "759f08e68674af8bd16c6acbcc2c742fa885ed560f9425049211dd3a4b7af14d",
+      "url": "https://github.com/ecojust/pureTV/blob/d6db98ddb251973970fca62225969ba757b9c814/evidence/joystick-android-runtime-ponpoko-kart/ponpoko-kart-occupied/report.json"
+    },
+    "adb-commands.jsonl": {
+      "bytes": 3701911,
+      "sha256": "85905662fd42ae25d0dfeb82bd374902b538a94fa4670123d489710b6a9f827e",
+      "url": "https://github.com/ecojust/pureTV/blob/d6db98ddb251973970fca62225969ba757b9c814/evidence/joystick-android-runtime-ponpoko-kart/ponpoko-kart-occupied/adb-commands.jsonl"
+    },
+    "wire.jsonl": {
+      "bytes": 7335,
+      "sha256": "26731eaaece8f00b60957499e8b8f56094ce4b50ddaa8832d66f6f9361be02a8",
+      "url": "https://github.com/ecojust/pureTV/blob/d6db98ddb251973970fca62225969ba757b9c814/evidence/joystick-android-runtime-ponpoko-kart/ponpoko-kart-occupied/wire.jsonl"
+    }
+  },
+  "interpretation": "The Play Store system package was replaced 32 seconds after BOOT_COMPLETED. In the same second the GMS persistent process died. ActivityManager named its FontsProvider dependency as the reason for killing the running game PID. The follow-up observes system package paths and the provider process before launching an unchanged fresh game.",
+  "nextRun": "https://github.com/ecojust/pureTV/actions/runs/44695684531"
+}

@@ -1,0 +1,3310 @@
+{
+  "checkedAt": "2026-11-17",
+  "scope": "扩展静态源码候选；逐项核对原仓、固定commit、Claude作者声明或共同作者提交及实际规则源码；未试玩。",
+  "count": 41,
+  "games": [
+    {
+      "repository": "mglass222/claude-chess-web",
+      "title": "Claude Chess",
+      "category": "解谜与益智",
+      "genre": "国际象棋 / 棋局分析",
+      "summary": "对战Stockfish八档电脑，配置棋钟，检查合法着法，并在赛后回放和分析整盘棋。",
+      "runtime": "原生JavaScript ES模块 / Vite / chess.js；Stockfish 17.1 WebAssembly Worker。",
+      "recommendation": "完整对局、升变、将死/和棋/超时及回放状态，适合研究本地棋类界面。",
+      "controllerNotes": "需棋盘网格焦点与升变菜单；Stockfish WASM和多Worker资源需实机评估。",
+      "notes": "整仓未明确许可；Stockfish与棋子素材各自许可需另核。",
+      "id": "mglass222/claude-chess-web#1d211f6d",
+      "commit": "1d211f6d0cc1f3ef051e7014e6d1acf910555965",
+      "sourceUrl": "https://github.com/mglass222/claude-chess-web/blob/1d211f6d0cc1f3ef051e7014e6d1acf910555965/src/game/GameController.js",
+      "stars": 0,
+      "pushedAt": "2026-06-13T17:29:31Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+        "url": "https://github.com/mglass222/claude-chess-web/commit/f60a0014cc73efd173260447840d7d106c7a8986",
+        "commitSubject": "Add post-game analysis system, resign button, and UI polish",
+        "changedFiles": [
+          "index.html",
+          "src/engine/EngineManager.js",
+          "src/game/GameController.js",
+          "src/game/GameState.js",
+          "src/game/MoveHistory.js",
+          "src/styles/board.css",
+          "src/styles/dialogs.css",
+          "src/styles/main.css",
+          "src/styles/panels.css",
+          "src/styles/setup.css",
+          "src/ui/AnalysisGraph.js",
+          "src/ui/GameOverOverlay.js",
+          "src/ui/SetupScreen.js"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "src/game/GameController.js",
+          "src/game/GameState.js"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "src/game/GameController.js",
+          "url": "https://github.com/mglass222/claude-chess-web/blob/1d211f6d0cc1f3ef051e7014e6d1acf910555965/src/game/GameController.js",
+          "bytes": 35615,
+          "sha256": "fe5f64b180d5087aff916de4567d1d3d2f82074cd71504e23302e6f4e036795f",
+          "finding": "读取GameState的终局判定和GameController的落子、电脑应手、棋钟及回放流程。"
+        },
+        {
+          "path": "src/game/GameState.js",
+          "url": "https://github.com/mglass222/claude-chess-web/blob/1d211f6d0cc1f3ef051e7014e6d1acf910555965/src/game/GameState.js",
+          "bytes": 4583,
+          "sha256": "3412ba54fb910485bf32c6457dc90c23613b6b15ba53e3d182b5df86151eab5c",
+          "finding": "读取GameState的终局判定和GameController的落子、电脑应手、棋钟及回放流程。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/game/GameController.js",
+        "src/game/GameState.js"
+      ],
+      "demo": {
+        "url": "https://mglass222.github.io/claude-chess-web/",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:04:59.298919+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://mglass222.github.io/claude-chess-web/",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 1156,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "TamirNator/heroes-clone",
+      "title": "Heroes Clone",
+      "category": "策略、塔防与卡牌",
+      "genre": "回合制地图探索 / 部队战斗",
+      "summary": "探索随机地图、收集资源、管理单位堆栈和城镇，进入独立战斗场景交战并获得经验。",
+      "runtime": "TypeScript / Phaser 3 / Vite。",
+      "recommendation": "有世界生成、地图与战斗分场景、经验成长及存档，源码提供大量端到端测试。",
+      "controllerNotes": "地图选择、兵种与城镇面板需手柄焦点；可采用格子光标。",
+      "notes": "README旧段落仍称六角地图，但后续源码/提交已改规则方格，清单不沿用旧网格说法。LICENSE为MIT，package.json仍写ISC，两者不一致。",
+      "id": "TamirNator/heroes-clone#9ccd10f9",
+      "commit": "9ccd10f90c7049b17bc391febaaece16d1838d3a",
+      "sourceUrl": "https://github.com/TamirNator/heroes-clone/blob/9ccd10f90c7049b17bc391febaaece16d1838d3a/src/data/world.ts",
+      "stars": 0,
+      "pushedAt": "2026-05-26T14:17:45Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>",
+        "url": "https://github.com/TamirNator/heroes-clone/commit/80c61856f4532ea70eeb44651abca2fc923f35d7",
+        "commitSubject": "10A: clustered biome generator (continents not scatter)",
+        "changedFiles": [
+          "MAP-DESIGN.md",
+          "ROADMAP.md",
+          "src/data/biomeCluster.ts",
+          "src/data/mapGen.ts",
+          "src/data/world.ts",
+          "src/render/mapBaker.ts"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "src/data/world.ts"
+        ]
+      },
+      "license": {
+        "label": "MIT",
+        "name": "MIT",
+        "url": "https://github.com/TamirNator/heroes-clone/blob/9ccd10f90c7049b17bc391febaaece16d1838d3a/LICENSE",
+        "path": "LICENSE",
+        "sourceFileRead": true,
+        "sha256": "447d460346e2617c67d6ef73c186ead5712b2c4eb3ccad640b00dd53cb76d96c",
+        "note": "已读取原许可全文；第三方素材和依赖授权范围另核。"
+      },
+      "licenseLabel": "MIT",
+      "sourceReview": [
+        {
+          "path": "src/data/world.ts",
+          "url": "https://github.com/TamirNator/heroes-clone/blob/9ccd10f90c7049b17bc391febaaece16d1838d3a/src/data/world.ts",
+          "bytes": 3128,
+          "sha256": "7ddfff3bfa5581fd3de846ab828ecb938d4a406b2cf7b5b078f9607c9a1f55ed",
+          "finding": "读取generateWorld的地图、敌人、资源和城镇生成，以及CombatScene的伤害、单位堆栈、胜负返回流程。"
+        },
+        {
+          "path": "src/scenes/CombatScene.ts",
+          "url": "https://github.com/TamirNator/heroes-clone/blob/9ccd10f90c7049b17bc391febaaece16d1838d3a/src/scenes/CombatScene.ts",
+          "bytes": 29058,
+          "sha256": "c69650e60862a942518e2bca8d5567d284799682eda140ecb45c423b8a5f9277",
+          "finding": "读取generateWorld的地图、敌人、资源和城镇生成，以及CombatScene的伤害、单位堆栈、胜负返回流程。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/data/world.ts",
+        "src/scenes/CombatScene.ts"
+      ],
+      "demo": {
+        "url": "https://github.com/TamirNator/heroes-clone",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:04:59.303133+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/TamirNator/heroes-clone",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "macjoocan/hex-danmaku",
+      "title": "Hex Danmaku／六角弹幕",
+      "category": "策略、塔防与卡牌",
+      "genre": "回合制六角弹幕 / 战术闪避",
+      "summary": "在六角棋盘上每步推进弹幕，躲避预告攻击，使用炸弹、冻结与撤销，挑战关卡或无尽成长模式。",
+      "runtime": "React 18 UMD / Babel浏览器编译 / SVG；静态服务器加载JSX，入口使用CDN。",
+      "recommendation": "实时弹幕被转化为逐步决策，含关卡、首领、资源消耗与永久升级。",
+      "controllerNotes": "适合离散格子移动；六方向与技能需选择映射，React/Babel CDN需离线封装。",
+      "notes": "未发现公开部署，提供项目源码入口；未明确整仓许可。",
+      "id": "macjoocan/hex-danmaku#38baca4d",
+      "commit": "38baca4ddb5a2de6db7cc80903ad523c05ae4e4e",
+      "sourceUrl": "https://github.com/macjoocan/hex-danmaku/blob/38baca4ddb5a2de6db7cc80903ad523c05ae4e4e/engine.jsx",
+      "stars": 0,
+      "pushedAt": "2026-09-08T10:20:10Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>",
+        "url": "https://github.com/macjoocan/hex-danmaku/commit/38baca4ddb5a2de6db7cc80903ad523c05ae4e4e",
+        "commitSubject": "feat(art): 판타지 아트 패스 + 헌트/RPG 모드 + 걷기 애니메이션 6종",
+        "changedFiles": [
+          ".claude/assets/README.md",
+          "AGENTS.md",
+          "HUNT_DESIGN.md",
+          "Hex Danmaku.html",
+          "README.md",
+          "VISUAL_DESIGN.md",
+          "app.jsx",
+          "art-data.js",
+          "art-gate.json",
+          "art-review/README.md",
+          "art-review/RPG_UPDATE.md",
+          "art-review/animated-sanctuary-desktop.png",
+          "art-review/before-game.png",
+          "art-review/combat-preview.css",
+          "art-review/combat-preview.jsx",
+          "art-review/combat.html",
+          "art-review/cvd-2026-09-08.md",
+          "art-review/cvd-check.html",
+          "art-review/cvd/cvd-report.md",
+          "art-review/cvd/cvd.json",
+          "art-review/enemy-cast-2026-09-08.md",
+          "art-review/enemy-cast-2026-09-08.png",
+          "art-review/fantasy-boss-mobile.png",
+          "art-review/fantasy-combat-preview.png",
+          "art-review/fantasy-game-320.png",
+          "art-review/fantasy-game-ice-mobile.png",
+          "art-review/fantasy-game-slash-mobile.png",
+          "art-review/fantasy-menu-320.png",
+          "art-review/fantasy-menu-desktop.png",
+          "art-review/fantasy-preview-320.png",
+          "art-review/fantasy-slash.png",
+          "art-review/feet-2026-09-08.png",
+          "art-review/game-mobile.png",
+          "art-review/gate/art-gate-report.md",
+          "art-review/gate/art-gate.json",
+          "art-review/hard-pattern-lightning.png",
+          "art-review/hud-1280.png",
+          "art-review/hud-375.png",
+          "art-review/hud-390.png",
+          "art-review/hud-small-viewport.png",
+          "art-review/hud-stage.png",
+          "art-review/hunt-dragon.png",
+          "art-review/hunt-first-room.png",
+          "art-review/hunt-victory.png",
+          "art-review/index.html",
+          "art-review/lunger-legs-2026-09-08.png",
+          "art-review/menu-desktop.png",
+          "art-review/menu-mobile.png",
+          "art-review/patterns-1280.png",
+          "art-review/patterns-390.png",
+          "art-review/regions-mobile.png",
+          "art-review/rpg-mobile.png",
+          "art-review/rpg-play-mobile.png",
+          "art-review/rpg-relic-mobile.png",
+          "art-review/stages-mobile.png",
+          "art-review/walk-2026-09-08.html",
+          "art-review/walktest.html",
+          "art/cvd-pairs.json",
+          "art/palette.json",
+          "assets/casual/beam.svg",
+          "assets/casual/bomb.svg",
+          "assets/casual/bombZone.svg",
+          "assets/casual/bossDefault.svg",
+          "assets/casual/bossGunner.svg",
+          "assets/casual/bossOverlord.svg",
+          "assets/casual/bossPredator.svg",
+          "assets/casual/bouncer.svg",
+          "assets/casual/chaser.svg",
+          "assets/casual/coin.svg",
+          "assets/casual/drone.svg",
+          "assets/casual/droneFz.svg",
+          "assets/casual/explode.svg",
+          "assets/casual/gem.svg",
+          "assets/casual/hint.svg",
+          "assets/casual/lunger.svg",
+          "assets/casual/mine.svg",
+          "assets/casual/pad.svg",
+          "assets/casual/player.svg",
+          "assets/casual/portal.svg",
+          "assets/casual/sky-islands.png",
+          "assets/casual/spike.svg",
+          "assets/casual/star.svg",
+          "assets/casual/tp.svg",
+          "assets/casual/turret.svg",
+          "assets/casual/wall.svg",
+          "assets/fantasy/actors-walk.png",
+          "assets/fantasy/bossDefault-walk.png",
+          "assets/fantasy/bossDefault.png",
+          "assets/fantasy/bossGunner-walk.png",
+          "assets/fantasy/bossGunner.png",
+          "assets/fantasy/bossOverlord-walk.png",
+          "assets/fantasy/bossOverlord.png",
+          "assets/fantasy/bossPredator-walk.png",
+          "assets/fantasy/bossPredator.png",
+          "assets/fantasy/chaser-walk-wan.png",
+          "assets/fantasy/chaser-walk.png",
+          "assets/fantasy/chaser.png",
+          "assets/fantasy/dragon.png",
+          "assets/fantasy/forest-sanctuary.png",
+          "assets/fantasy/goblin.png",
+          "assets/fantasy/hero.png",
+          "assets/fantasy/ice.svg",
+          "assets/fantasy/lunger-orig.png",
+          "assets/fantasy/lunger-walk.png",
+          "assets/fantasy/lunger.png",
+          "assets/fantasy/rewind.svg",
+          "assets/fantasy/slash.svg",
+          "casual.css",
+          "combat-fx.jsx",
+          "engine.jsx",
+          "fantasy.css",
+          "game-hud.css",
+          "hunt-engine.js",
+          "package.json",
+          "resources.jsx",
+          "screens.jsx",
+          "sprites.jsx",
+          "styles.css",
+          "tests/harness.mjs",
+          "tests/hunt-hard-patterns.test.mjs",
+          "tests/hunt-patterns.test.mjs",
+          "tests/hunt.test.mjs",
+          "tests/resources-art.test.mjs",
+          "tests/rpg.test.mjs",
+          "tools/build-casual-art.mjs",
+          "tools/serve-preview.mjs"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "engine.jsx"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "engine.jsx",
+          "url": "https://github.com/macjoocan/hex-danmaku/blob/38baca4ddb5a2de6db7cc80903ad523c05ae4e4e/engine.jsx",
+          "bytes": 40828,
+          "sha256": "aac7acc6b775d90a5f6feba0aaa0581d61a867d29297875ec8a8e792649a2799",
+          "finding": "读取engine.jsx的六角距离、种子状态、技能费用与次数限制、胜负/撤销条件、关卡和无尽初始化。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "engine.jsx"
+      ],
+      "demo": {
+        "url": "https://github.com/macjoocan/hex-danmaku",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:04:59.370114+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/macjoocan/hex-danmaku",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "ben-gy/lastlight",
+      "title": "Lastlight／最后暖光",
+      "category": "经营、沙盒与休闲",
+      "genre": "定居点生存 / 空间资源管理",
+      "summary": "在不断缩小的供暖圈内安置房屋、采集站和工坊，分配工人、派出侦察队并熬过寒夜。",
+      "runtime": "TypeScript / Vite；本地六角格模拟与浏览器渲染，依赖固定tag的game-engine包。",
+      "recommendation": "建筑邻接、保暖范围、煤炭消耗、食物与劳动力彼此制约，有明确胜负。",
+      "controllerNotes": "格子光标与建筑菜单适合适配；复杂资源HUD需电视字号。",
+      "notes": "LICENSE为AGPLv3，package声明AGPL-3.0-or-later。",
+      "id": "ben-gy/lastlight#bf7b724e",
+      "commit": "bf7b724ed4250c93ec31b87c549e0c615d0fd1c3",
+      "sourceUrl": "https://github.com/ben-gy/lastlight/blob/bf7b724ed4250c93ec31b87c549e0c615d0fd1c3/src/game.ts",
+      "stars": 0,
+      "pushedAt": "2026-07-24T13:09:05Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>",
+        "url": "https://github.com/ben-gy/lastlight/commit/b41bb5533b2cdd3900788a8a80481f78a94fb44f",
+        "commitSubject": "Initial commit: Lastlight — hold a shrinking ring of warmth against the cold",
+        "changedFiles": [
+          ".github/workflows/deploy.yml",
+          ".gitignore",
+          "README.md",
+          "index.html",
+          "package-lock.json",
+          "package.json",
+          "plan.md",
+          "public/133936b7b2ab337d2e2288fd7dd7c30f.txt",
+          "public/CNAME",
+          "public/favicon.svg",
+          "public/icons/apple-touch-icon.png",
+          "public/icons/icon-192.png",
+          "public/icons/icon-512-maskable.png",
+          "public/icons/icon-512.png",
+          "public/manifest.webmanifest",
+          "public/og.png",
+          "public/robots.txt",
+          "public/sitemap.xml",
+          "scripts/gen-icons.mjs",
+          "src/bot.ts",
+          "src/countdown.ts",
+          "src/feedback.ts",
+          "src/game.ts",
+          "src/hex.ts",
+          "src/main.ts",
+          "src/modes.ts",
+          "src/palette.ts",
+          "src/race.ts",
+          "src/render.ts",
+          "src/styles/main.css",
+          "src/ui.ts",
+          "src/vite-env.d.ts",
+          "tests/balance.test.ts",
+          "tests/contrast.test.ts",
+          "tests/game.test.ts",
+          "tests/helpers/bus.ts",
+          "tests/helpers/sim.ts",
+          "tests/host-election.test.ts",
+          "tests/manifest.test.ts",
+          "tests/net-lifecycle.test.ts",
+          "tests/no-deadlock.test.ts",
+          "tests/rematch.test.ts",
+          "tests/room-code.test.ts",
+          "tests/source-hygiene.test.ts",
+          "tests/takeover.test.ts",
+          "tests/trystero-rejoin.test.ts",
+          "tests/ui-chrome.test.ts",
+          "tsconfig.json",
+          "vite.config.ts"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "src/game.ts"
+        ]
+      },
+      "license": {
+        "label": "AGPL-3.0",
+        "name": "AGPL-3.0",
+        "url": "https://github.com/ben-gy/lastlight/blob/bf7b724ed4250c93ec31b87c549e0c615d0fd1c3/LICENSE",
+        "path": "LICENSE",
+        "sourceFileRead": true,
+        "sha256": "8d56b405468aad11f87ab5763f901e276e08d9646ff5c8481b1762b6b789e9ed",
+        "note": "已读取原许可全文；第三方素材和依赖授权范围另核。"
+      },
+      "licenseLabel": "AGPL-3.0",
+      "sourceReview": [
+        {
+          "path": "src/game.ts",
+          "url": "https://github.com/ben-gy/lastlight/blob/bf7b724ed4250c93ec31b87c549e0c615d0fd1c3/src/game.ts",
+          "bytes": 20041,
+          "sha256": "07a5f588c5c3cb9790cb9da1036f3674f3ccffe6ed440c1a15cae29daec01b31",
+          "finding": "读取game.ts每夜生产、食物、住房、供暖结算及人口归零/熬过指定天数的终局。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/game.ts"
+      ],
+      "demo": {
+        "url": "https://lastlight.benrichardson.dev",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:04:59.373083+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://lastlight.benrichardson.dev",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 3140,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "Rapsody09/buildyourtown",
+      "title": "BuildYourTown",
+      "category": "经营、沙盒与休闲",
+      "genre": "等距城市建设 / 经营模拟",
+      "summary": "规划道路铁路和住宅商业工业分区，供应水电，管理交通、公共服务、预算与灾害。",
+      "runtime": "TypeScript / Vite；浏览器本地模拟与存档，无需账号。",
+      "recommendation": "水电网络、交通寻路、土地价值、建筑密度和月度财政有独立模拟。",
+      "controllerNotes": "大量建造工具与地图编辑需要网格光标、缩放和焦点菜单。",
+      "notes": "上游README明确作者与Claude Fable 5.1共同制作；未明确整仓许可。",
+      "id": "Rapsody09/buildyourtown#d12a1997",
+      "commit": "d12a19973a331e392ac8db80cedb9ec0e18c1444",
+      "sourceUrl": "https://github.com/Rapsody09/buildyourtown/blob/d12a19973a331e392ac8db80cedb9ec0e18c1444/src/game/sim.ts",
+      "stars": 8,
+      "pushedAt": "2026-09-06T12:05:10Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "上游README作者声明",
+        "quote": "Erwann avec Claude Fable 5.1",
+        "url": "https://github.com/Rapsody09/buildyourtown/blob/d12a19973a331e392ac8db80cedb9ec0e18c1444/README.md"
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "src/game/sim.ts",
+          "url": "https://github.com/Rapsody09/buildyourtown/blob/d12a19973a331e392ac8db80cedb9ec0e18c1444/src/game/sim.ts",
+          "bytes": 31673,
+          "sha256": "7c1f950e231c592e8977c32688ef4326d19e2922ba20bb6d9114147a768312f8",
+          "finding": "读取sim.ts的tick/endMonth、城市增长、水电覆盖、道路距离、交通和债券操作。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/game/sim.ts"
+      ],
+      "demo": {
+        "url": "https://buildyourtown.com",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:04:59.370845+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://buildyourtown.com",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 18991,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "IntelligentRebel/constellations",
+      "title": "Constellations",
+      "category": "策略、塔防与卡牌",
+      "genre": "太空4X / 回合制战略",
+      "summary": "探索星系、设计舰船、殖民生产、研究科技及外交交战，并按回合结算经济、移动和战斗。",
+      "runtime": "TypeScript / Preact / esbuild；构建为可离线打开的单HTML。",
+      "recommendation": "有丰富的舰队、科技、殖民和战斗模块及条件胜利，适合研究复杂策略系统。",
+      "controllerNotes": "密集表格、地图与设计器需要分层焦点导航；电视操作改造量较大。",
+      "notes": "早期版本仍在开发；无LICENSE文件且package明确UNLICENSED，不能当成开源授权。",
+      "id": "IntelligentRebel/constellations#905599ef",
+      "commit": "905599ef81ea096d8d2a91787facc3e7458da0e2",
+      "sourceUrl": "https://github.com/IntelligentRebel/constellations/blob/905599ef81ea096d8d2a91787facc3e7458da0e2/src/engine/battle.ts",
+      "stars": 0,
+      "pushedAt": "2026-11-09T05:11:30Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "上游README作者声明",
+        "quote": "It was created with the help of **Claude Opus 5.5** (Anthropic).",
+        "url": "https://github.com/IntelligentRebel/constellations/blob/905599ef81ea096d8d2a91787facc3e7458da0e2/README.md"
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "src/engine/battle.ts",
+          "url": "https://github.com/IntelligentRebel/constellations/blob/905599ef81ea096d8d2a91787facc3e7458da0e2/src/engine/battle.ts",
+          "bytes": 46700,
+          "sha256": "302324b34554676500085290b32ea44486178d63f5c8001aa021e5fa7285113b",
+          "finding": "读取generateTurn的移动/生产/研究/战斗/胜利顺序与battle.ts的护甲伤害、舰队战斗和模拟器。"
+        },
+        {
+          "path": "src/engine/turn.ts",
+          "url": "https://github.com/IntelligentRebel/constellations/blob/905599ef81ea096d8d2a91787facc3e7458da0e2/src/engine/turn.ts",
+          "bytes": 41684,
+          "sha256": "2d6e8da3755f31681593cd0a12c4950e7c71cb56a64e176fa76bacf7479ef0d0",
+          "finding": "读取generateTurn的移动/生产/研究/战斗/胜利顺序与battle.ts的护甲伤害、舰队战斗和模拟器。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/engine/battle.ts",
+        "src/engine/turn.ts"
+      ],
+      "demo": {
+        "url": "https://intelligentrebel.github.io/constellations/",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:04:59.403489+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://intelligentrebel.github.io/constellations/",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "jcooksh/loop-clear",
+      "title": "Loop Clear",
+      "category": "解谜与益智",
+      "genre": "管线拼块 / 闭环消除",
+      "summary": "选择和旋转管线拼块放入棋盘，把相连管口拼成闭环后消除，直到再无可放位置。",
+      "runtime": "原生HTML / JavaScript，无构建；独立logic.js与Node规则测试。",
+      "recommendation": "规则紧凑且连通分量、消除与终局逻辑独立，适合电视休闲。",
+      "controllerNotes": "棋盘光标+A放置、B旋转即可覆盖核心操作，菜单仍需适配。",
+      "notes": "未明确整仓许可。",
+      "id": "jcooksh/loop-clear#eb77f4d5",
+      "commit": "eb77f4d51cc7d1881518fdf4e9a3f2c037ce4a88",
+      "sourceUrl": "https://github.com/jcooksh/loop-clear/blob/eb77f4d51cc7d1881518fdf4e9a3f2c037ce4a88/logic.js",
+      "stars": 0,
+      "pushedAt": "2026-10-16T07:49:30Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/jcooksh/loop-clear/commit/eb77f4d51cc7d1881518fdf4e9a3f2c037ce4a88",
+        "commitSubject": "Loop Clear game",
+        "changedFiles": [
+          "README.md",
+          "index.html",
+          "logic.js",
+          "test.js"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "logic.js"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "logic.js",
+          "url": "https://github.com/jcooksh/loop-clear/blob/eb77f4d51cc7d1881518fdf4e9a3f2c037ce4a88/logic.js",
+          "bytes": 8354,
+          "sha256": "82a2f81f18a1ccc312e162c9d9cdcc9b05683fe3ccbc156038a734453da926fe",
+          "finding": "读取placePiece、findConnectedComponents、checkClears和isGameOver的放置、连通闭环及无可用着法判定。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "logic.js"
+      ],
+      "demo": {
+        "url": "https://jcooksh.github.io/loop-clear/",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:04:59.649569+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://jcooksh.github.io/loop-clear/",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 25042,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "blake8086/escapement",
+      "title": "Escapement",
+      "category": "解谜与益智",
+      "genre": "机械编程 / 逻辑布线解谜",
+      "summary": "在单张网格内布置传感器、线路、转向器与闸门，让移动方块按时组成目标产物。",
+      "runtime": "原生JavaScript纯模拟 / HTML；Python构建为单页，无运行时后端。",
+      "recommendation": "含碰撞、上一tick信号、配方、成本/时间/面积指标和多组挑战。",
+      "controllerNotes": "建造、布线、撤销及逐tick回放需要网格光标与模式菜单。",
+      "notes": "上游明确为prototype；未明确整仓许可。",
+      "id": "blake8086/escapement#5738ea1f",
+      "commit": "5738ea1f53c8dcb567fb8ea5dc01c86f5e1b2d59",
+      "sourceUrl": "https://github.com/blake8086/escapement/blob/5738ea1f53c8dcb567fb8ea5dc01c86f5e1b2d59/src/sim.js",
+      "stars": 0,
+      "pushedAt": "2026-10-19T20:18:43Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/blake8086/escapement/commit/4951397a846f7c46ceae1a0a4abef317794a5da6",
+        "commitSubject": "Escapement prototype: grid-only puzzle game",
+        "changedFiles": [
+          "README.md",
+          "build.py",
+          "docs/index.html",
+          "src/shell.html",
+          "src/sim.js",
+          "src/style.css",
+          "src/ui.js",
+          "test.js"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "src/sim.js"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "src/sim.js",
+          "url": "https://github.com/blake8086/escapement/blob/5738ea1f53c8dcb567fb8ea5dc01c86f5e1b2d59/src/sim.js",
+          "bytes": 32526,
+          "sha256": "8a72d684b927c6710fe2c5d79c9c2761b23f5fd352149164894c3a628e311971",
+          "finding": "读取simulate中的关卡编译、传感器与执行器状态、源/产物计数及方块逐步解析。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/sim.js"
+      ],
+      "demo": {
+        "url": "https://blake8086.github.io/escapement/",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:04:59.745387+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://blake8086.github.io/escapement/",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "eisiishai/diagonpuzzle",
+      "title": "Diagon Puzzle",
+      "category": "解谜与益智",
+      "genre": "镜面激光 / 多步状态解谜",
+      "summary": "向网格射入光弹，镜面反射后会翻转，利用多次射击重排状态并命中目标；包含45关及隐藏目标。",
+      "runtime": "TypeScript / PixiJS 8 / Vite，WebGL渲染。",
+      "recommendation": "镜面翻转使失败射击也改变后续路线；含传送门、单向门、可破坏障碍及星级目标。",
+      "controllerNotes": "已有键盘输入；需检查电视字号、镜面选择焦点和WebGL性能。",
+      "notes": "完整MIT许可文件；上游提供单元、求解与浏览器测试，但本次未执行。",
+      "id": "eisiishai/diagonpuzzle#346acf22",
+      "commit": "346acf224910fb9123a65d2763128a17d141c6cc",
+      "sourceUrl": "https://github.com/eisiishai/diagonpuzzle/blob/346acf224910fb9123a65d2763128a17d141c6cc/src/game/LevelSession.ts",
+      "stars": 0,
+      "pushedAt": "2026-10-21T18:05:33Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/eisiishai/diagonpuzzle/commit/4e8979b177da291257e39a2df24819857fa45bbc",
+        "commitSubject": "Show the bonus target on a restart after reaching par",
+        "changedFiles": [
+          "docs/DESIGN.md",
+          "e2e/progress.e2e.ts",
+          "src/game/LevelSession.test.ts",
+          "src/game/LevelSession.ts",
+          "src/main.ts",
+          "src/save/GameProgress.test.ts",
+          "src/save/GameProgress.ts",
+          "src/scenes/GameScene.ts"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "src/game/LevelSession.ts"
+        ]
+      },
+      "license": {
+        "label": "MIT",
+        "name": "MIT",
+        "url": "https://github.com/eisiishai/diagonpuzzle/blob/346acf224910fb9123a65d2763128a17d141c6cc/LICENSE",
+        "path": "LICENSE",
+        "sourceFileRead": true,
+        "sha256": "dab4987bfd0724b451130a9eff4ce9eaabc2992854bac15ec21e3e6b642556da",
+        "note": "已读取原许可全文；第三方素材和依赖授权范围另核。"
+      },
+      "licenseLabel": "MIT",
+      "sourceReview": [
+        {
+          "path": "src/game/LevelSession.ts",
+          "url": "https://github.com/eisiishai/diagonpuzzle/blob/346acf224910fb9123a65d2763128a17d141c6cc/src/game/LevelSession.ts",
+          "bytes": 5770,
+          "sha256": "3b41950830158db107a8179d12ef780a74748579117df7f835d1a35c302feabe",
+          "finding": "读取fire的路径推进/状态循环保护及LevelSession的瞄准、射击次数、目标命中与玩家镜面状态。"
+        },
+        {
+          "path": "src/game/simulate.ts",
+          "url": "https://github.com/eisiishai/diagonpuzzle/blob/346acf224910fb9123a65d2763128a17d141c6cc/src/game/simulate.ts",
+          "bytes": 4369,
+          "sha256": "d2c1d4ad8d6f78c8e5b5e5391f75b0aac5627738e937ef4254b6ff460d187d6e",
+          "finding": "读取fire的路径推进/状态循环保护及LevelSession的瞄准、射击次数、目标命中与玩家镜面状态。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/game/LevelSession.ts",
+        "src/game/simulate.ts"
+      ],
+      "demo": {
+        "url": "https://eisiishai.github.io/diagonpuzzle/",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:04:59.783352+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://eisiishai.github.io/diagonpuzzle/",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 1081,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "Palm-Health-Tech/tamers-gambit-play",
+      "title": "Blight Siege",
+      "category": "策略、塔防与卡牌",
+      "genre": "卡牌构筑 / 塔防Roguelike",
+      "summary": "构筑生物牌组，把卡牌部署为道路边的防御塔，选择路线、补充牌组并挑战三个章节。",
+      "runtime": "单HTML内联JavaScript/画布与内嵌素材，浏览器本地存档。",
+      "recommendation": "卡牌费用、塔位、波次、路线、商店和跨战斗牌组构成完整循环。",
+      "controllerNotes": "需塔位网格选择、手牌与路线菜单焦点；单HTML约9.3MB，离线封装要核实际体积。",
+      "notes": "上游Tamer’s Gambit衍生宣传小游戏，代码与素材未明确整体授权。",
+      "id": "Palm-Health-Tech/tamers-gambit-play#306f9464",
+      "commit": "306f94643869db81ffdc9bc0cf36cfc0deb06957",
+      "sourceUrl": "https://github.com/Palm-Health-Tech/tamers-gambit-play/blob/306f94643869db81ffdc9bc0cf36cfc0deb06957/index.html",
+      "stars": 0,
+      "pushedAt": "2026-10-27T22:49:12Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>",
+        "url": "https://github.com/Palm-Health-Tech/tamers-gambit-play/commit/8c066927f3cf4d495fb0029f57789893b2f586b7",
+        "commitSubject": "Blight Siege: free Tamer's Gambit browser roguelike",
+        "changedFiles": [
+          ".nojekyll",
+          "README.md",
+          "index.html"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "index.html"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "index.html",
+          "url": "https://github.com/Palm-Health-Tech/tamers-gambit-play/blob/306f94643869db81ffdc9bc0cf36cfc0deb06957/index.html",
+          "bytes": 9316066,
+          "sha256": "8a150b1f653c3cc22431866b5ef1e9a6fd3de382f2848e7da559c9c6fefd1bd3",
+          "finding": "读取newRun的牌组/血量/地图创建及newBattle、playCard、startWave、step的战斗流程。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "index.html"
+      ],
+      "demo": {
+        "url": "https://palm-health-tech.github.io/tamers-gambit-play/",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:04:59.957844+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://palm-health-tech.github.io/tamers-gambit-play/",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "Bencepapa/chipgrove",
+      "title": "Chipgrove",
+      "category": "经营、沙盒与休闲",
+      "genre": "工厂拼装 / 生产管线解谜",
+      "summary": "开采比特、音符与像素，把四格形状工厂拼接成生产线，为复古电脑机器完成订单。",
+      "runtime": "原生JavaScript / Canvas / WebAudio；自包含HTML与localStorage。",
+      "recommendation": "固定零件解谜和大地图经营两种模式，端口连接、有限管道及订单经济形成实际约束。",
+      "controllerNotes": "需格子光标、旋转零件与端口连接菜单；原输入依赖拖拽。",
+      "notes": "上游标为可玩prototype；未明确整仓许可。",
+      "id": "Bencepapa/chipgrove#c9e381cd",
+      "commit": "c9e381cd11e2ea7d66870d9727bc88d4ba7c3cb6",
+      "sourceUrl": "https://github.com/Bencepapa/chipgrove/blob/c9e381cd11e2ea7d66870d9727bc88d4ba7c3cb6/prototype/index.html",
+      "stars": 0,
+      "pushedAt": "2026-10-15T10:42:07Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/Bencepapa/chipgrove/commit/c9e381cd11e2ea7d66870d9727bc88d4ba7c3cb6",
+        "commitSubject": "Add Chipgrove prototype, game data workbook and design notes",
+        "changedFiles": [
+          "README.md",
+          "data/chipgrove-data.xlsx",
+          "docs/design.md",
+          "prototype/index.html"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "prototype/index.html"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "prototype/index.html",
+          "url": "https://github.com/Bencepapa/chipgrove/blob/c9e381cd11e2ea7d66870d9727bc88d4ba7c3cb6/prototype/index.html",
+          "bytes": 129099,
+          "sha256": "b1725983dbc5033b490172ac682561f1a047eebb8463460c3964393ee81aafda",
+          "finding": "读取newMap、spawnUser、payItem、tycoonTick、placeErr和step的地图、订单、收入与生产逻辑。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "prototype/index.html"
+      ],
+      "demo": {
+        "url": "https://github.com/Bencepapa/chipgrove",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:04:59.967446+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/Bencepapa/chipgrove",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "LK1248/Pawnbroker",
+      "title": "Pawnbroker",
+      "category": "解谜与益智",
+      "genre": "国际象棋变体 / 资源升变",
+      "summary": "除国王外所有棋子从兵起步，通过回合和吃子赚取点数，再付费升级棋子并将死对方。",
+      "runtime": "原生HTML / JavaScript，独立engine.js棋规。",
+      "recommendation": "升变经济与将军限制叠加在合法着法、王车易位、吃过路兵等棋规上。",
+      "controllerNotes": "适合棋盘光标；需升变购买菜单与规则说明焦点。",
+      "notes": "未发现公开部署，提供项目源码入口；未明确整仓许可。",
+      "id": "LK1248/Pawnbroker#b0714a4f",
+      "commit": "b0714a4f0ed79772d298877832d75d0533cce848",
+      "sourceUrl": "https://github.com/LK1248/Pawnbroker/blob/b0714a4f0ed79772d298877832d75d0533cce848/engine.js",
+      "stars": 0,
+      "pushedAt": "2026-10-17T18:13:19Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/LK1248/Pawnbroker/commit/b0714a4f0ed79772d298877832d75d0533cce848",
+        "commitSubject": "Move the rules engine into engine.js and store games as action lists",
+        "changedFiles": [
+          "README.md",
+          "engine.js",
+          "pawnbroker.html",
+          "sim/REPORT.md",
+          "sim/harness.js",
+          "sim/run.html"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "engine.js"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "engine.js",
+          "url": "https://github.com/LK1248/Pawnbroker/blob/b0714a4f0ed79772d298877832d75d0533cce848/engine.js",
+          "bytes": 9566,
+          "sha256": "13ca12926b1f6c2a29c8a89bf50d40f55a47cc8d1aa33b6659fbe0bc4937d3d7",
+          "finding": "读取newGame、attacked、playOnBoard等棋盘状态和攻击判定，以及积分/升级状态字段。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "engine.js"
+      ],
+      "demo": {
+        "url": "https://github.com/LK1248/Pawnbroker",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:04:59.983974+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/LK1248/Pawnbroker",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "danielbank/push-poker",
+      "title": "Push Poker",
+      "category": "策略、塔防与卡牌",
+      "genre": "多人卡牌 / 行列推牌",
+      "summary": "2—4人轮流推动牌行牌列、取出或放入底牌，重排自己的扑克牌组合并选择敲桌进入最后一轮。",
+      "runtime": "JavaScript网页+Node.js实时服务器；同桌多设备通过共享URL加入。",
+      "recommendation": "推牌空间操作与扑克牌型评分结合，有主机迁移、掉线处理和保存桌局。",
+      "controllerNotes": "需同桌多客户端或本地联机；并非纯离线单人包。",
+      "notes": "MIT；多人需要Node服务器。",
+      "id": "danielbank/push-poker#ec9a2c70",
+      "commit": "ec9a2c70c57332b787abd54b2b42d89cb2dd2796",
+      "sourceUrl": "https://github.com/danielbank/push-poker/blob/ec9a2c70c57332b787abd54b2b42d89cb2dd2796/lib/game.js",
+      "stars": 0,
+      "pushedAt": "2026-10-26T14:38:43Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>",
+        "url": "https://github.com/danielbank/push-poker/commit/f749dceb8c80828d6c3fa74c579174602c922965",
+        "commitSubject": "Add Push Poker: a real-time card game for 2-4 players",
+        "changedFiles": [
+          ".gitignore",
+          "LICENSE",
+          "README.md",
+          "lib/game.js",
+          "lib/hands.js",
+          "package-lock.json",
+          "package.json",
+          "public/app.js",
+          "public/index.html",
+          "public/style.css",
+          "server.js",
+          "test/game.test.js"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "lib/game.js"
+        ]
+      },
+      "license": {
+        "label": "MIT",
+        "name": "MIT",
+        "url": "https://github.com/danielbank/push-poker/blob/ec9a2c70c57332b787abd54b2b42d89cb2dd2796/LICENSE",
+        "path": "LICENSE",
+        "sourceFileRead": true,
+        "sha256": "cf1fd548138121858e6fd438c61ba42bb636d337e65346d96bd0b834ba7ce7d0",
+        "note": "已读取原许可全文；第三方素材和依赖授权范围另核。"
+      },
+      "licenseLabel": "MIT",
+      "sourceReview": [
+        {
+          "path": "lib/game.js",
+          "url": "https://github.com/danielbank/push-poker/blob/ec9a2c70c57332b787abd54b2b42d89cb2dd2796/lib/game.js",
+          "bytes": 14887,
+          "sha256": "8800e9334d02b942f51dda7896dd2c695f2fd75d1ea09ef17959c7669c515814",
+          "finding": "读取applyMove对shiftRow/shiftCol/pickUp/putDown/knock的合法性、回合推进和最终showdown触发。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "lib/game.js"
+      ],
+      "demo": {
+        "url": "https://github.com/danielbank/push-poker",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:36.986407+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/danielbank/push-poker",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "skelzer/gunbros-public",
+      "title": "GunBros",
+      "category": "策略、塔防与卡牌",
+      "genre": "回合制炮战 / 物理弹道",
+      "summary": "2—8人轮流调整角度和蓄力，利用风向、地形、道具与不同载具弹种击败对手。",
+      "runtime": "TypeScript / Vite / Canvas 2D；Node+WebSocket权威服务器，纯共享模拟。",
+      "recommendation": "18载具、8地图及天气/突然死亡机制，回合调度和模拟与渲染分离。",
+      "controllerNotes": "方向调角和蓄力适合手柄，但线上房间与服务器部署需保留。",
+      "notes": "未明确整仓许可；README作者明确多人源码、测试与像素管线由Claude协作生成。",
+      "id": "skelzer/gunbros-public#49cb4a87",
+      "commit": "49cb4a876688361c37dcc9e1613efc1b12f15dd2",
+      "sourceUrl": "https://github.com/skelzer/gunbros-public/blob/49cb4a876688361c37dcc9e1613efc1b12f15dd2/packages/shared/src/rules/turn.ts",
+      "stars": 0,
+      "pushedAt": "2026-09-25T13:05:18Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "上游README作者声明",
+        "quote": "The code, tests, pixel art pipeline (Blender scripts) and docs were written by Claude\nagents in Claude Code: **Claude Opus 5.5** for most of it, with **Claude Fable 5.1** on\nparts, working phase by phase from `docs/DESIGN.md`.",
+        "url": "https://github.com/skelzer/gunbros-public/blob/49cb4a876688361c37dcc9e1613efc1b12f15dd2/README.md"
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "packages/shared/src/rules/turn.ts",
+          "url": "https://github.com/skelzer/gunbros-public/blob/49cb4a876688361c37dcc9e1613efc1b12f15dd2/packages/shared/src/rules/turn.ts",
+          "bytes": 16918,
+          "sha256": "8a8c02ba0446dff5e61a7a938ffea873887d7266bbcadb9311de46b494dcbc99",
+          "finding": "读取turn.ts的回合初始化、当前座位权限、射击/跳过、计时与阶段推进。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "packages/shared/src/rules/turn.ts"
+      ],
+      "demo": {
+        "url": "https://play.gunbros.luquematte.com/",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:36.985023+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://play.gunbros.luquematte.com/",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "accipiter117/Spice-Raiders",
+      "title": "Arrakis Wars",
+      "category": "策略、塔防与卡牌",
+      "genre": "沙漠领土 / 回合制战略",
+      "summary": "在20个区域上与两支电脑势力争夺香料、村庄和政治优势，建造采集车、调兵交战并经营资源。",
+      "runtime": "原生HTML/CSS/JavaScript ES模块，无构建步骤。",
+      "recommendation": "seed可复现、纯规则applyAction及独立AI，支持保存和自对弈测试。",
+      "controllerNotes": "区域地图+操作菜单适合焦点化，但状态信息较密。",
+      "notes": "Dune同人题材；代码和相关名称/美术授权未明确。",
+      "id": "accipiter117/Spice-Raiders#4a26d3dc",
+      "commit": "4a26d3dc25414c7a515d330364718411bcfffdee",
+      "sourceUrl": "https://github.com/accipiter117/Spice-Raiders/blob/4a26d3dc25414c7a515d330364718411bcfffdee/js/engine/actions.js",
+      "stars": 0,
+      "pushedAt": "2026-10-17T00:39:26Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/accipiter117/Spice-Raiders/commit/6a5a10cf408a22e827498f89a096a1c73f64cb0e",
+        "commitSubject": "M3 rules: Spice Wars style land, desert and faction balance",
+        "changedFiles": [
+          "js/ai/ai.js",
+          "js/data/factions.js",
+          "js/data/map.js",
+          "js/data/rules.js",
+          "js/engine/actions.js",
+          "js/engine/combat.js",
+          "js/engine/queries.js",
+          "js/engine/state.js",
+          "js/engine/turn.js",
+          "js/ui/panel.js",
+          "test/engine.test.js"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "js/engine/actions.js"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "js/engine/actions.js",
+          "url": "https://github.com/accipiter117/Spice-Raiders/blob/4a26d3dc25414c7a515d330364718411bcfffdee/js/engine/actions.js",
+          "bytes": 6275,
+          "sha256": "c503e0ec7b1e4d42d6b846d10a0815560536593b67a155472251059e81692961",
+          "finding": "读取applyAction的回合权限、资源扣减、采集车、交易/袭击、endTurn与checkVictory。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "js/engine/actions.js"
+      ],
+      "demo": {
+        "url": "https://github.com/accipiter117/Spice-Raiders",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:36.965527+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/accipiter117/Spice-Raiders",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "sirsigmund79/snail-chess",
+      "title": "Immortal Snail Chess",
+      "category": "解谜与益智",
+      "genre": "国际象棋变体 / 动态威胁",
+      "summary": "标准象棋棋盘另有两只不死蜗牛，每三个完整回合向敌王移动一格并碾碎所到棋子。",
+      "runtime": "TypeScript / Vite / Web Worker；Stockfish 18 WASM，本地电脑或Cloudflare在线房间。",
+      "recommendation": "蜗牛路径、堵塞与同步夺王带来区别于标准象棋的新决策。",
+      "controllerNotes": "可网格焦点化；WASM约7MB需关注体积，在线模式另需Worker服务。",
+      "notes": "仅技能目录有单独LICENSE，不适用于游戏；整仓授权未明确，Stockfish另遵原许可。",
+      "id": "sirsigmund79/snail-chess#451410c7",
+      "commit": "451410c7f6704ab6ccbc7ae282cb3f464c4e03bf",
+      "sourceUrl": "https://github.com/sirsigmund79/snail-chess/blob/451410c7f6704ab6ccbc7ae282cb3f464c4e03bf/src/engine/snailEngine.ts",
+      "stars": 0,
+      "pushedAt": "2026-10-22T17:32:37Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/sirsigmund79/snail-chess/commit/a417790a228f6069a3291991e29c7c0021f87070",
+        "commitSubject": "Blocked variant snails wait again, and bump against what blocks them",
+        "changedFiles": [
+          "README.md",
+          "src/engine/game.ts",
+          "src/engine/snailEngine.ts",
+          "src/engine/types.ts",
+          "src/ui/SnailBoard.tsx",
+          "src/ui/usePlayback.ts",
+          "tests/engine/rules.test.ts",
+          "tests/ui/playback.test.ts"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "src/engine/snailEngine.ts"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "src/engine/snailEngine.ts",
+          "url": "https://github.com/sirsigmund79/snail-chess/blob/451410c7f6704ab6ccbc7ae282cb3f464c4e03bf/src/engine/snailEngine.ts",
+          "bytes": 7866,
+          "sha256": "86d1a68501c07071ef9a163fee92b55e7a9a96d357bfccb46682334be3498337",
+          "finding": "读取tickInterval/isTickPly及applySnailTick的路径、碾压棋子、敌王判定和双方同tick夺王处理。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/engine/snailEngine.ts"
+      ],
+      "demo": {
+        "url": "https://chess.stbinf.com",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:37.053412+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://chess.stbinf.com",
+        "contentType": "text/html",
+        "bytesRead": 1395,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "xzlstc415/ashen-crown",
+      "title": "Ruinaccord（原 Ashen Crown）",
+      "category": "策略、塔防与卡牌",
+      "genre": "卡牌对决 / 职业构筑",
+      "summary": "选择六种职业，挑战八场冒险，构筑25张牌组与电脑对战，或通过房间码与朋友对局。",
+      "runtime": "单HTML/JavaScript网页；PeerJS联机，另有SwiftUI iOS客户端。",
+      "recommendation": "手牌、法力、场上单位、职业资源、天赋与卡组编辑形成完整对战流程。",
+      "controllerNotes": "手牌、目标、牌组与冒险菜单需要明确焦点；联机信令/原生账号功能不能当纯离线。",
+      "notes": "源码已更名Ruinaccord；旧仓名与旧演示域仍保留。未明确整体许可。",
+      "id": "xzlstc415/ashen-crown#51bf878a",
+      "commit": "51bf878a440650c1ca54262bd0f320bc2444884b",
+      "sourceUrl": "https://github.com/xzlstc415/ashen-crown/blob/51bf878a440650c1ca54262bd0f320bc2444884b/src/game.html",
+      "stars": 0,
+      "pushedAt": "2026-10-26T02:57:51Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>",
+        "url": "https://github.com/xzlstc415/ashen-crown/commit/08b999ac3bab41a94a8dd3394e9bb72d839624d7",
+        "commitSubject": "Class resources: Rage (Warrior), Souls (Warlock), Light (Priest)",
+        "changedFiles": [
+          "beta/index.html",
+          "ios/Ruinaccord/Game/AI.swift",
+          "ios/Ruinaccord/Game/Engine.swift",
+          "ios/Ruinaccord/Game/GameVM.swift",
+          "ios/Ruinaccord/Model/Cards.swift",
+          "ios/Ruinaccord/Model/Strings.swift",
+          "ios/Ruinaccord/Resources/GameData.json",
+          "ios/Ruinaccord/Views/DuelView.swift",
+          "ios/RuinaccordTests/EngineTests.swift",
+          "src/game.html"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "src/game.html"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "src/game.html",
+          "url": "https://github.com/xzlstc415/ashen-crown/blob/51bf878a440650c1ca54262bd0f320bc2444884b/src/game.html",
+          "bytes": 348161,
+          "sha256": "131d4c35fc305a84873b8b0f0630fb2d7c130a99248bebfd593cd815895ae294",
+          "finding": "读取startQuick/startDuel/startTurn、职业资源、手牌施放、效果解析和攻击目标选择。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/game.html"
+      ],
+      "demo": {
+        "url": "https://ruinaccord.hermes-eris.com",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:37.052576+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://ruinaccord.hermes-eris.com",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "FlorianDaunay/bee-factory",
+      "title": "Bee Factory",
+      "category": "经营、沙盒与休闲",
+      "genre": "蜂场经营 / 收集与回合战斗",
+      "summary": "经营蜂巢生产蜂蜜，收集世界各地蜜蜂并组成最多六人的队伍挑战剧情关卡。",
+      "runtime": "React18 / TypeScript / Vite / Zustand；SVG程序美术、WebAudio，另有Capacitor Android封装。",
+      "recommendation": "蜂巢效率与蜂种协同连接经营和战斗，核心规则独立于React。",
+      "controllerNotes": "蜂巢、招募、队伍和战斗多屏菜单需焦点导航；本地收集玩法并不等于付费抽卡。",
+      "notes": "未明确整体许可。",
+      "id": "FlorianDaunay/bee-factory#52e3552b",
+      "commit": "52e3552b1c643e3a2f60fbfc7cb3cb13e52a58fd",
+      "sourceUrl": "https://github.com/FlorianDaunay/bee-factory/blob/52e3552b1c643e3a2f60fbfc7cb3cb13e52a58fd/src/core/battle/engine.ts",
+      "stars": 0,
+      "pushedAt": "2026-10-21T19:30:15Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/FlorianDaunay/bee-factory/commit/9e9707bea246a0d61c17a4710d3932f7160dcf8e",
+        "commitSubject": "feat: tier 3 packs, space chapters, timed events, burst elements",
+        "changedFiles": [
+          "src/art/icons.tsx",
+          "src/core/battle/engine.ts",
+          "src/core/data/bees.ts",
+          "src/core/data/enemies.ts",
+          "src/core/data/meta.ts",
+          "src/core/data/story.ts",
+          "src/core/events.ts",
+          "src/core/gacha.ts",
+          "src/core/types.ts",
+          "src/core/unlocks.ts",
+          "src/features/story/StoryScreen.tsx",
+          "src/features/summon/SummonScreen.tsx"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "src/core/battle/engine.ts"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "src/core/battle/engine.ts",
+          "url": "https://github.com/FlorianDaunay/bee-factory/blob/52e3552b1c643e3a2f60fbfc7cb3cb13e52a58fd/src/core/battle/engine.ts",
+          "bytes": 17599,
+          "sha256": "ed136dc45d4f0abeab8beccf4d2391d633091ab7e009ade7aa68d96f0e422e28",
+          "finding": "读取hiveRates/income/upgradeCost及createBattle、applyEffects、act、endPlayerTurn、checkOutcome。"
+        },
+        {
+          "path": "src/core/hive.ts",
+          "url": "https://github.com/FlorianDaunay/bee-factory/blob/52e3552b1c643e3a2f60fbfc7cb3cb13e52a58fd/src/core/hive.ts",
+          "bytes": 8539,
+          "sha256": "4aae5d2f70f1578ee7ae8735b2987ef99c564d26c9aba7834873e7f1306aac63",
+          "finding": "读取hiveRates/income/upgradeCost及createBattle、applyEffects、act、endPlayerTurn、checkOutcome。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/core/battle/engine.ts",
+        "src/core/hive.ts"
+      ],
+      "demo": {
+        "url": "https://github.com/FlorianDaunay/bee-factory",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:37.043406+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/FlorianDaunay/bee-factory",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "KyleLookingAround/door-duty-game",
+      "title": "Door Duty Contractors",
+      "category": "经营、沙盒与休闲",
+      "genre": "人流工程 / 合同经营解谜",
+      "summary": "为店铺设计旋转门、推拉门或闸机，模拟40秒高峰人流满足合同，再用维护收入研究扩张。",
+      "runtime": "原生JavaScript / Canvas；无安装依赖，构建为离线单页。",
+      "recommendation": "门型、流量、成本、拥堵及轮椅等人群参数转化为独立设计谜题。",
+      "controllerNotes": "需要布置工具、参数菜单与模拟播放控制；不能仅映射一个点击键。",
+      "notes": "未明确整体许可；项目说明将GitHub Pages作为试玩入口。",
+      "id": "KyleLookingAround/door-duty-game#2c03fb2b",
+      "commit": "2c03fb2b51d68e289777ba7fd4c7fc640f0d96f9",
+      "sourceUrl": "https://github.com/KyleLookingAround/door-duty-game/blob/2c03fb2b51d68e289777ba7fd4c7fc640f0d96f9/src/engine/world.js",
+      "stars": 0,
+      "pushedAt": "2026-10-19T11:37:18Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/KyleLookingAround/door-duty-game/commit/91c224934923d1bab1bf50c3d5a70ff662ba0423",
+        "commitSubject": "Tourists: a tour group rides the revolving door round for the photo",
+        "changedFiles": [
+          "CLAUDE.md",
+          "docs/PLAN.md",
+          "src/content/twists.js",
+          "src/engine/world.js",
+          "src/game/contracts.js",
+          "src/game/jobs.js",
+          "src/ui/canvas.js",
+          "test/fixtures/surveyor-golden.json",
+          "test/guests.test.js"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "src/engine/world.js",
+          "src/game/contracts.js"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "src/engine/world.js",
+          "url": "https://github.com/KyleLookingAround/door-duty-game/blob/2c03fb2b51d68e289777ba7fd4c7fc640f0d96f9/src/engine/world.js",
+          "bytes": 40509,
+          "sha256": "b30f1870eb5de17884776836138530f5ce9f0946a0ecde95c8c900972ecb8266",
+          "finding": "读取World几何/人流模拟入口及makeContract、designCost、violatesRules、runHeadless和合同目标。"
+        },
+        {
+          "path": "src/game/contracts.js",
+          "url": "https://github.com/KyleLookingAround/door-duty-game/blob/2c03fb2b51d68e289777ba7fd4c7fc640f0d96f9/src/game/contracts.js",
+          "bytes": 45212,
+          "sha256": "c84ef53870e123f9ebeb8ead505a9371d37e07a37d7d3fefda47b6b3d5b251a6",
+          "finding": "读取World几何/人流模拟入口及makeContract、designCost、violatesRules、runHeadless和合同目标。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/engine/world.js",
+        "src/game/contracts.js"
+      ],
+      "demo": {
+        "url": "https://kylelookingaround.github.io/door-duty-game/",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:37.314647+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://kylelookingaround.github.io/door-duty-game/",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "maevlyn/gate-fixer",
+      "title": "Gate Fixer",
+      "category": "解谜与益智",
+      "genre": "逻辑电路 / 真值表教学解谜",
+      "summary": "补齐电路中缺失的逻辑门，运行全部输入组合，使输出符合目标真值表；八关逐步引入半加器等电路。",
+      "runtime": "HTML/JavaScript / Three.js r128 CDN，WebGL，无构建步骤。",
+      "recommendation": "真正枚举输入并执行电路，不是选择题或静态教学图。",
+      "controllerNotes": "已有数字键选门；槽位、测试按钮与真值表需要手柄焦点。",
+      "notes": "Three.js依赖CDN需离线化；整仓许可未明确。",
+      "id": "maevlyn/gate-fixer#8c1b5ed8",
+      "commit": "8c1b5ed87f00a4c4f270841d8bf34c5134de6ccd",
+      "sourceUrl": "https://github.com/maevlyn/gate-fixer/blob/8c1b5ed87f00a4c4f270841d8bf34c5134de6ccd/gates3d.js",
+      "stars": 0,
+      "pushedAt": "2026-10-16T17:02:32Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/maevlyn/gate-fixer/commit/8c1b5ed87f00a4c4f270841d8bf34c5134de6ccd",
+        "commitSubject": "Add Gate Fixer: 3D logic-gate puzzle game for Grade 12",
+        "changedFiles": [
+          ".gitignore",
+          "README.md",
+          "gates3d.js",
+          "index.html",
+          "shared.css"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "gates3d.js",
+          "index.html"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "gates3d.js",
+          "url": "https://github.com/maevlyn/gate-fixer/blob/8c1b5ed87f00a4c4f270841d8bf34c5134de6ccd/gates3d.js",
+          "bytes": 21424,
+          "sha256": "8f45918fd38afbfcec1ca63fb06520ab9ad1ec26247e803f5c5fe36b094e17c4",
+          "finding": "读取关卡节点/目标函数、buildCircuit、电路输入枚举、槽位选择和逐行输出对照。"
+        },
+        {
+          "path": "index.html",
+          "url": "https://github.com/maevlyn/gate-fixer/blob/8c1b5ed87f00a4c4f270841d8bf34c5134de6ccd/index.html",
+          "bytes": 13909,
+          "sha256": "24888385a535d8279835a434b25cf2324dda64d8d33e1879662a5a7e5f740550",
+          "finding": "读取关卡节点/目标函数、buildCircuit、电路输入枚举、槽位选择和逐行输出对照。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "gates3d.js",
+        "index.html"
+      ],
+      "demo": {
+        "url": "https://github.com/maevlyn/gate-fixer",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:37.399481+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/maevlyn/gate-fixer",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "MagicMiikka/TowerDefense",
+      "title": "Adaptive Mazing Tower Defense（原型）",
+      "category": "策略、塔防与卡牌",
+      "genre": "迷宫塔防 / 敌群适应",
+      "summary": "在紧凑网格上筑墙和布塔改变敌人路线，抵抗会针对玩家布局调整特性的敌群。",
+      "runtime": "Unity / C#；独立无Unity依赖的TD.Core规则库，.NET8模拟测试。",
+      "recommendation": "包含路由校验、重叠波次、提前开波奖励及适应反馈，规则系统独立。",
+      "controllerNotes": "目前为Unity灰盒原型；需要原生导出及电视输入/界面改造。",
+      "notes": "上游明确greybox/prototype，未提供成熟发布版；未明确许可。",
+      "id": "MagicMiikka/TowerDefense#934dfc73",
+      "commit": "934dfc7356422e71f96b37217c97f73cf011b5df",
+      "sourceUrl": "https://github.com/MagicMiikka/TowerDefense/blob/934dfc7356422e71f96b37217c97f73cf011b5df/Packages/com.tdgame.core/Runtime/Sim/SiteSim.cs",
+      "stars": 0,
+      "pushedAt": "2026-10-16T19:40:40Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "原生客户端",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/MagicMiikka/TowerDefense/commit/934dfc7356422e71f96b37217c97f73cf011b5df",
+        "commitSubject": "Initial commit: Unity tower defense prototype",
+        "changedFiles": [
+          ".gitattributes",
+          ".gitignore",
+          ".vscode/extensions.json",
+          ".vscode/launch.json",
+          ".vscode/settings.json",
+          ".vscode/tasks.json",
+          "Assets/InputSystem_Actions.inputactions",
+          "Assets/InputSystem_Actions.inputactions.meta",
+          "Assets/Readme.asset",
+          "Assets/Readme.asset.meta",
+          "Assets/Scenes.meta",
+          "Assets/Scenes/SampleScene.unity",
+          "Assets/Scenes/SampleScene.unity.meta",
+          "Assets/Settings.meta",
+          "Assets/Settings/DefaultVolumeProfile.asset",
+          "Assets/Settings/DefaultVolumeProfile.asset.meta",
+          "Assets/Settings/Mobile_RPAsset.asset",
+          "Assets/Settings/Mobile_RPAsset.asset.meta",
+          "Assets/Settings/Mobile_Renderer.asset",
+          "Assets/Settings/Mobile_Renderer.asset.meta",
+          "Assets/Settings/PC_RPAsset.asset",
+          "Assets/Settings/PC_RPAsset.asset.meta",
+          "Assets/Settings/PC_Renderer.asset",
+          "Assets/Settings/PC_Renderer.asset.meta",
+          "Assets/Settings/SampleSceneProfile.asset",
+          "Assets/Settings/SampleSceneProfile.asset.meta",
+          "Assets/Settings/UniversalRenderPipelineGlobalSettings.asset",
+          "Assets/Settings/UniversalRenderPipelineGlobalSettings.asset.meta",
+          "Assets/TutorialInfo.meta",
+          "Assets/TutorialInfo/Editor.meta",
+          "Assets/TutorialInfo/Editor/ReadmeEditor.cs",
+          "Assets/TutorialInfo/Editor/ReadmeEditor.cs.meta",
+          "Assets/TutorialInfo/Icons.meta",
+          "Assets/TutorialInfo/Icons/URP.png",
+          "Assets/TutorialInfo/Icons/URP.png.meta",
+          "Assets/TutorialInfo/Readme.cs",
+          "Assets/TutorialInfo/Readme.cs.meta",
+          "Assets/TutorialInfo/StyleSheets.meta",
+          "Assets/TutorialInfo/StyleSheets/ReadmeEditor.uss",
+          "Assets/TutorialInfo/StyleSheets/ReadmeEditor.uss.meta",
+          "Assets/TutorialInfo/StyleSheets/ReadmeEditorDark.uss",
+          "Assets/TutorialInfo/StyleSheets/ReadmeEditorDark.uss.meta",
+          "Assets/TutorialInfo/StyleSheets/ReadmeEditorLight.uss",
+          "Assets/TutorialInfo/StyleSheets/ReadmeEditorLight.uss.meta",
+          "Assets/_Project.meta",
+          "Assets/_Project/Scripts.meta",
+          "Assets/_Project/Scripts/Palette.cs",
+          "Assets/_Project/Scripts/Palette.cs.meta",
+          "Assets/_Project/Scripts/PrototypeGame.Hud.cs",
+          "Assets/_Project/Scripts/PrototypeGame.Hud.cs.meta",
+          "Assets/_Project/Scripts/PrototypeGame.View.cs",
+          "Assets/_Project/Scripts/PrototypeGame.View.cs.meta",
+          "Assets/_Project/Scripts/PrototypeGame.cs",
+          "Assets/_Project/Scripts/PrototypeGame.cs.meta",
+          "Assets/_Project/Scripts/TD.Game.asmdef",
+          "Assets/_Project/Scripts/TD.Game.asmdef.meta",
+          "Packages/com.tdgame.core/Runtime.meta",
+          "Packages/com.tdgame.core/Runtime/Adapt.meta",
+          "Packages/com.tdgame.core/Runtime/Adapt/Adaptation.cs",
+          "Packages/com.tdgame.core/Runtime/Adapt/Adaptation.cs.meta",
+          "Packages/com.tdgame.core/Runtime/Adapt/AdaptationEngine.cs",
+          "Packages/com.tdgame.core/Runtime/Adapt/AdaptationEngine.cs.meta",
+          "Packages/com.tdgame.core/Runtime/Bots.meta",
+          "Packages/com.tdgame.core/Runtime/Bots/Bots.cs",
+          "Packages/com.tdgame.core/Runtime/Bots/Bots.cs.meta",
+          "Packages/com.tdgame.core/Runtime/Core.meta",
+          "Packages/com.tdgame.core/Runtime/Core/Basics.cs",
+          "Packages/com.tdgame.core/Runtime/Core/Basics.cs.meta",
+          "Packages/com.tdgame.core/Runtime/Map.meta",
+          "Packages/com.tdgame.core/Runtime/Map/FlowField.cs",
+          "Packages/com.tdgame.core/Runtime/Map/FlowField.cs.meta",
+          "Packages/com.tdgame.core/Runtime/Map/Layout.cs",
+          "Packages/com.tdgame.core/Runtime/Map/Layout.cs.meta",
+          "Packages/com.tdgame.core/Runtime/Model.meta",
+          "Packages/com.tdgame.core/Runtime/Model/Defs.cs",
+          "Packages/com.tdgame.core/Runtime/Model/Defs.cs.meta",
+          "Packages/com.tdgame.core/Runtime/Run.meta",
+          "Packages/com.tdgame.core/Runtime/Run/RunState.cs",
+          "Packages/com.tdgame.core/Runtime/Run/RunState.cs.meta",
+          "Packages/com.tdgame.core/Runtime/Sim.meta",
+          "Packages/com.tdgame.core/Runtime/Sim/Entities.cs",
+          "Packages/com.tdgame.core/Runtime/Sim/Entities.cs.meta",
+          "Packages/com.tdgame.core/Runtime/Sim/SiteSim.cs",
+          "Packages/com.tdgame.core/Runtime/Sim/SiteSim.cs.meta",
+          "Packages/com.tdgame.core/Runtime/Sim/WaveGenerator.cs",
+          "Packages/com.tdgame.core/Runtime/Sim/WaveGenerator.cs.meta",
+          "Packages/com.tdgame.core/Runtime/TD.Core.asmdef",
+          "Packages/com.tdgame.core/Runtime/TD.Core.asmdef.meta",
+          "Packages/com.tdgame.core/package.json",
+          "Packages/com.tdgame.core/package.json.meta",
+          "Packages/manifest.json",
+          "Packages/packages-lock.json",
+          "ProjectSettings/AudioManager.asset",
+          "ProjectSettings/ClusterInputManager.asset",
+          "ProjectSettings/DynamicsManager.asset",
+          "ProjectSettings/EditorBuildSettings.asset",
+          "ProjectSettings/EditorSettings.asset",
+          "ProjectSettings/GraphicsSettings.asset",
+          "ProjectSettings/InputManager.asset",
+          "ProjectSettings/MemorySettings.asset",
+          "ProjectSettings/MultiplayerManager.asset",
+          "ProjectSettings/NavMeshAreas.asset",
+          "ProjectSettings/PackageManagerSettings.asset",
+          "ProjectSettings/Physics2DSettings.asset",
+          "ProjectSettings/PhysicsCoreProjectSettings2D.asset",
+          "ProjectSettings/PresetManager.asset",
+          "ProjectSettings/ProjectAuditorSettings.asset",
+          "ProjectSettings/ProjectSettings.asset",
+          "ProjectSettings/ProjectVersion.txt",
+          "ProjectSettings/QualitySettings.asset",
+          "ProjectSettings/SceneTemplateSettings.json",
+          "ProjectSettings/ShaderGraphSettings.asset",
+          "ProjectSettings/Switch2PlayerSettings.asset",
+          "ProjectSettings/TagManager.asset",
+          "ProjectSettings/TimeManager.asset",
+          "ProjectSettings/URPProjectSettings.asset",
+          "ProjectSettings/UnityConnectSettings.asset",
+          "ProjectSettings/VFXManager.asset",
+          "ProjectSettings/VersionControlSettings.asset",
+          "ProjectSettings/XRSettings.asset",
+          "README.md",
+          "Tools/TD.Core.Tests/TD.Core.Tests.csproj",
+          "Tools/TD.Core.Tests/Tests.cs",
+          "Tools/TD.Sim/Program.cs",
+          "Tools/TD.Sim/TD.Sim.csproj",
+          "Tools/nuget.config"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "Packages/com.tdgame.core/Runtime/Sim/SiteSim.cs"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "Packages/com.tdgame.core/Runtime/Sim/SiteSim.cs",
+          "url": "https://github.com/MagicMiikka/TowerDefense/blob/934dfc7356422e71f96b37217c97f73cf011b5df/Packages/com.tdgame.core/Runtime/Sim/SiteSim.cs",
+          "bytes": 35148,
+          "sha256": "3803f2f6fcd4043ed764048e739093165b1e350c0296f3e027d6d75a07be2a33",
+          "finding": "读取SiteSim的阶段门、TickWave波次计时、敌人移动、塔攻击与事件处理。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "Packages/com.tdgame.core/Runtime/Sim/SiteSim.cs"
+      ],
+      "demo": {
+        "url": "https://github.com/MagicMiikka/TowerDefense",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:37.674465+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/MagicMiikka/TowerDefense",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "wai-lau/spire",
+      "title": "THE SPIRE",
+      "category": "策略、塔防与卡牌",
+      "genre": "螺旋线路塔防 / 三塔构筑",
+      "summary": "用最多三座、七种防御塔守住中央核心，沿不同升级路线成长并挑战120波敌人和周期首领。",
+      "runtime": "JavaScript网页 / WebGL，多模块规则与渲染。",
+      "recommendation": "三塔上限与分支升级限制形成明显取舍，敌群固定波次便于策略研究。",
+      "controllerNotes": "移动塔位、升级树和技能需手柄光标；正式站点有Cloudflare Turnstile。",
+      "notes": "试玩站实测HTTP 401，需访问验证，未确认可进入游戏；保留原仓源码入口。未明确整体许可。",
+      "id": "wai-lau/spire#4c8edceb",
+      "commit": "4c8edceb87c29f2a27fa360d1362c905c91b5552",
+      "sourceUrl": "https://github.com/wai-lau/spire/blob/4c8edceb87c29f2a27fa360d1362c905c91b5552/web/aspira-game.js",
+      "stars": 0,
+      "pushedAt": "2026-11-17T17:54:28Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/wai-lau/spire/commit/f2fb82f8dd2cf149040fbc7d6147a8f26329f774",
+        "commitSubject": "Spire: every tower's hit throws sparks only, their count and size by the damage; damage-over-time ticks a tenth as many; a shield pop always mid-sized blue sparks (owner, 2026-11-17: \"every tower gets sparks only\", \"DoTs should create much fewer sparks ...\", \"spark size and quantity should be correlated to damage dealt, always use mid-sized blue sparks when popping shield\") [skip-docs]",
+        "changedFiles": [
+          "web/aspira-floats.js",
+          "web/aspira-game.js"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "web/aspira-game.js"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "web/aspira-game.js",
+          "url": "https://github.com/wai-lau/spire/blob/4c8edceb87c29f2a27fa360d1362c905c91b5552/web/aspira-game.js",
+          "bytes": 31086,
+          "sha256": "22bbb8c91a79b63740bb156fa6311ae1b62d10eab186d52d3d80feb20de5f5f5",
+          "finding": "读取newGame状态及伤害、减速、标记叠加、射击效果和敌人规则。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "web/aspira-game.js"
+      ],
+      "demo": {
+        "url": "https://wai-lau.net/spire",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:37.880145+00:00",
+        "status": 401,
+        "error": "HTTP Error 401: Unauthorized",
+        "note": "未确认演示可达；源码仍单独核验"
+      },
+      "sourceAccess": {
+        "url": "https://github.com/wai-lau/spire/tree/4c8edceb87c29f2a27fa360d1362c905c91b5552",
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/wai-lau/spire/tree/4c8edceb87c29f2a27fa360d1362c905c91b5552",
+        "bytesRead": 65536,
+        "label": "固定提交源码",
+        "checkedAt": "2026-11-17T18:13:58.732057+00:00",
+        "playtested": false
+      }
+    },
+    {
+      "repository": "Alex-Caian/abstracts",
+      "title": "ABSTRACTS",
+      "category": "策略、塔防与卡牌",
+      "genre": "几何阵位 / 召唤卡牌对战",
+      "summary": "扮演恐惧、正义或知识等概念，把随从放在不同几何节点，利用位置增益和连边仪式击破敌方核心。",
+      "runtime": "原生JavaScript网页规则引擎与DOM界面。",
+      "recommendation": "不同概念使用不同多边形阵列，阵位影响随从和仪式，具备独立卡牌机制。",
+      "controllerNotes": "需要手牌/节点/目标三层焦点，回合制本身适合离散按键。",
+      "notes": "未明确整体许可。",
+      "id": "Alex-Caian/abstracts#e0ddb8ba",
+      "commit": "e0ddb8ba242763140dce577d7413c599366b7fa4",
+      "sourceUrl": "https://github.com/Alex-Caian/abstracts/blob/e0ddb8ba242763140dce577d7413c599366b7fa4/public/js/engine.js",
+      "stars": 1,
+      "pushedAt": "2026-10-04T09:10:42Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "上游README作者声明",
+        "quote": "Designed by Alex, built with Claude Fable 5.",
+        "url": "https://github.com/Alex-Caian/abstracts/blob/e0ddb8ba242763140dce577d7413c599366b7fa4/README.md"
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "public/js/engine.js",
+          "url": "https://github.com/Alex-Caian/abstracts/blob/e0ddb8ba242763140dce577d7413c599366b7fa4/public/js/engine.js",
+          "bytes": 53920,
+          "sha256": "3d211b476a11932a3daecf28616c02b4456c5bd40ed99452a9c562dea01e443f",
+          "finding": "读取startTurn、playFollower、resolveFx、attackWith与几何/赐福效果处理。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "public/js/engine.js"
+      ],
+      "demo": {
+        "url": "https://alex-caian.github.io/abstracts/",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:37.888583+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://alex-caian.github.io/abstracts/",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 11607,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "jbrwilkinson/Trading-Card-Game-Fable5",
+      "title": "Trading Card Game Fable5（原型）",
+      "category": "策略、塔防与卡牌",
+      "genre": "奇幻交换卡牌 / 回合对战",
+      "summary": "通过牌库、资源、出牌与战斗阶段进行奇幻卡牌对局，支持电脑对手、存档与JSON卡片定义。",
+      "runtime": "TypeScript多包项目，纯规则engine及网页UI；npm开发启动。",
+      "recommendation": "合法动作验证、事件堆栈、击倒清理和胜负判定有独立模块。",
+      "controllerNotes": "需手牌、阶段与目标焦点；目前原型不能当完整商业卡牌游戏。",
+      "notes": "作者明确尚不完整；奇幻原作名称/图像权利与整体代码许可未明确。",
+      "id": "jbrwilkinson/Trading-Card-Game-Fable5#3c74acc7",
+      "commit": "3c74acc775865de5a0f65970b0027a455391911e",
+      "sourceUrl": "https://github.com/jbrwilkinson/Trading-Card-Game-Fable5/blob/3c74acc775865de5a0f65970b0027a455391911e/packages/engine/src/reducer/dispatch.ts",
+      "stars": 0,
+      "pushedAt": "2026-07-13T17:07:33Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "上游README作者声明",
+        "quote": "This is a wholly-AI generated 'Trading Card' game created by Claude Fable 5 with two steps:",
+        "url": "https://github.com/jbrwilkinson/Trading-Card-Game-Fable5/blob/3c74acc775865de5a0f65970b0027a455391911e/README.md"
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "packages/engine/src/reducer/dispatch.ts",
+          "url": "https://github.com/jbrwilkinson/Trading-Card-Game-Fable5/blob/3c74acc775865de5a0f65970b0027a455391911e/packages/engine/src/reducer/dispatch.ts",
+          "bytes": 12366,
+          "sha256": "2545ccbe0661195d9a1cb256aac39247644d8e5b88f8bd9d5dd3d4df0e57c84b",
+          "finding": "读取dispatch的合法动作集合校验、applyAction、阶段推进、cleanupKnockouts及checkWinCondition。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "packages/engine/src/reducer/dispatch.ts"
+      ],
+      "demo": {
+        "url": "https://github.com/jbrwilkinson/Trading-Card-Game-Fable5",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:37.903582+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/jbrwilkinson/Trading-Card-Game-Fable5",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "mnorrsken/fringeworlds",
+      "title": "Regolith",
+      "category": "经营、沙盒与休闲",
+      "genre": "外星殖民 / 勘探与生产经营",
+      "summary": "建立殖民中心，通过勘探逐步确认地下矿藏，协调电力、生产、人口生命维持和天气影响。",
+      "runtime": "Godot4 / GDScript，原生客户端，等距地图。",
+      "recommendation": "有限矿藏、勘探覆盖、建筑依赖和固定tick经济，而非单纯建造展示。",
+      "controllerNotes": "需要Godot导出和建造焦点；窗口和资源表需电视布局。",
+      "notes": "未发现公开可下载发行；源码项目入口已核，未明确整体许可。",
+      "id": "mnorrsken/fringeworlds#d3086716",
+      "commit": "d308671614d6a688d20dcaa7ef62153c79f3405c",
+      "sourceUrl": "https://github.com/mnorrsken/fringeworlds/blob/d308671614d6a688d20dcaa7ef62153c79f3405c/sim/sim.gd",
+      "stars": 0,
+      "pushedAt": "2026-08-17T20:24:13Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "原生客户端",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>",
+        "url": "https://github.com/mnorrsken/fringeworlds/commit/429d51ccef4faf41245886ac90dcb1faf1242ee7",
+        "commitSubject": "feat: dust storms — periodic weather that dims solar and halts prospecting",
+        "changedFiles": [
+          "data/balance.json",
+          "data/buildings.json",
+          "main.gd",
+          "main.tscn",
+          "render/dust_storm.gd",
+          "render/dust_storm.gd.uid",
+          "sim/alerts.gd",
+          "sim/balance.gd",
+          "sim/colony.gd",
+          "sim/events.gd",
+          "sim/sim.gd",
+          "sim/weather.gd",
+          "sim/weather.gd.uid",
+          "tests/test_weather.gd",
+          "tests/test_weather.gd.uid",
+          "ui/hover_panel.gd",
+          "ui/sidebar.gd",
+          "ui/sidebar.tscn"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "sim/sim.gd"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "sim/sim.gd",
+          "url": "https://github.com/mnorrsken/fringeworlds/blob/d308671614d6a688d20dcaa7ef62153c79f3405c/sim/sim.gd",
+          "bytes": 8732,
+          "sha256": "3d619f074cb130ebab09a9e9ddd0366ccbecedeff10fc2c0585ee7c78dff4f63",
+          "finding": "读取sim.gd的固定步进、暂停速度、自动存档、殖民状态与tick调度。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "sim/sim.gd"
+      ],
+      "demo": {
+        "url": "https://github.com/mnorrsken/fringeworlds",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:38.080928+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/mnorrsken/fringeworlds",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "maciej-trebacz/tower-of-time-game",
+      "title": "Tower of Time",
+      "category": "策略、塔防与卡牌",
+      "genre": "塔防 / 时间回溯",
+      "summary": "建造基础、狙击、减速和范围塔迎击敌群，消耗时间能力回溯局势并重新制定防线。",
+      "runtime": "TypeScript / Phaser.js；网页游戏与itch.io入口。",
+      "recommendation": "时间回溯与能量管理直接接入波次、建筑和基地生命系统，具有鲜明机制。",
+      "controllerNotes": "塔位光标、回溯按键与教程菜单需适配；原素材许可应与代码MIT分开核。",
+      "notes": "Beginner’s Jam Summer2025参赛项目；作者明确混用Claude Sonnet4、Opus4与OpenAI o3，不称仅Claude。",
+      "id": "maciej-trebacz/tower-of-time-game#a2497fb8",
+      "commit": "a2497fb8aaf497c25a9caa306ed7ac7129d2400b",
+      "sourceUrl": "https://github.com/maciej-trebacz/tower-of-time-game/blob/a2497fb8aaf497c25a9caa306ed7ac7129d2400b/src/scenes/Level.ts",
+      "stars": 381,
+      "pushedAt": "2025-07-04T16:07:09Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "上游README作者声明",
+        "quote": "- **Claude Sonnet 4** - My LLM of choice for this project (also used OpenAI o3 and Claude Opus 4 occasionally)",
+        "url": "https://github.com/maciej-trebacz/tower-of-time-game/blob/a2497fb8aaf497c25a9caa306ed7ac7129d2400b/README.md"
+      },
+      "license": {
+        "label": "MIT",
+        "name": "MIT",
+        "url": "https://github.com/maciej-trebacz/tower-of-time-game/blob/a2497fb8aaf497c25a9caa306ed7ac7129d2400b/LICENSE",
+        "path": "LICENSE",
+        "sourceFileRead": true,
+        "sha256": "4595fe7c54c297c5efee8505b724d8e8420473568411818363190a1eb874ed44",
+        "note": "已读取原许可全文；第三方素材和依赖授权范围另核。"
+      },
+      "licenseLabel": "MIT",
+      "sourceReview": [
+        {
+          "path": "src/scenes/Level.ts",
+          "url": "https://github.com/maciej-trebacz/tower-of-time-game/blob/a2497fb8aaf497c25a9caa306ed7ac7129d2400b/src/scenes/Level.ts",
+          "bytes": 75032,
+          "sha256": "5b7ef120088cb3969a7a8662912f02d90d1562532fed973e37091ac17b439fd0",
+          "finding": "读取Level中回溯模式、能量系统、基地生命、敌人生成、教程和gameOver处理连接。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/scenes/Level.ts"
+      ],
+      "demo": {
+        "url": "https://m4v3k.itch.io/tower-of-time",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:38.106794+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://m4v3k.itch.io/tower-of-time",
+        "contentType": "text/html",
+        "bytesRead": 36564,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "Malkefjes/newgame",
+      "title": "LATTICE",
+      "category": "策略、塔防与卡牌",
+      "genre": "迷宫塔防 / 节点光束布线",
+      "summary": "把塔当作阻路节点再用光束连接，规划敌群通路并令敌人穿过交叉火力。",
+      "runtime": "TypeScript / Canvas / Vite，种子化确定性模拟。",
+      "recommendation": "路径合法性、光束切断提示、放置前路线长度预览与20波关卡构成可研究规则。",
+      "controllerNotes": "节点布置和连线需格子光标与选择模式。",
+      "notes": "上游称20波Proving Ground可玩，但仍使用占位美术；未明确整体许可。",
+      "id": "Malkefjes/newgame#b2d3d17d",
+      "commit": "b2d3d17d909e59a02fef93be63a8658db356eb2a",
+      "sourceUrl": "https://github.com/Malkefjes/newgame/blob/b2d3d17d909e59a02fef93be63a8658db356eb2a/src/sim/game.ts",
+      "stars": 0,
+      "pushedAt": "2026-10-17T17:28:08Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/Malkefjes/newgame/commit/5fbe8ec20f3907083a747effa3348d23e4de5ae9",
+        "commitSubject": "Build LATTICE core loop: deterministic sim, canvas UI, Proving Ground",
+        "changedFiles": [
+          ".gitignore",
+          "README.md",
+          "docs/HANDOFF.md",
+          "docs/LATTICE-spec.md",
+          "docs/LATTICE-spec.pdf",
+          "index.html",
+          "package-lock.json",
+          "package.json",
+          "src/sim/content.ts",
+          "src/sim/game.ts",
+          "src/sim/geom.ts",
+          "src/sim/map.ts",
+          "src/sim/rng.ts",
+          "src/ui/main.ts",
+          "src/ui/render.ts",
+          "src/ui/state.ts",
+          "src/ui/style.css",
+          "tests/sim.test.ts",
+          "tools/balance/bot3.js",
+          "tools/balance/cal.js",
+          "tools/balance/fair2.js",
+          "tools/balance/mapgen.js",
+          "tools/balance/micro.js",
+          "tools/balance/package.json",
+          "tools/balance/planner.js",
+          "tools/balance/sim.js",
+          "tsconfig.json",
+          "vite.config.ts"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "src/sim/game.ts"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "src/sim/game.ts",
+          "url": "https://github.com/Malkefjes/newgame/blob/b2d3d17d909e59a02fef93be63a8658db356eb2a/src/sim/game.ts",
+          "bytes": 38572,
+          "sha256": "6211b6c566960b8dd64d4bda7718f41f1d3b190bf558a694a9a3372c4aa5ad84",
+          "finding": "读取Game网格占位/流场、塔节点、光束和固定步进状态；有独立种子与内容定义。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/sim/game.ts"
+      ],
+      "demo": {
+        "url": "https://github.com/Malkefjes/newgame",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:38.154938+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/Malkefjes/newgame",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "hazlema/lantern-hollow",
+      "title": "Lantern Hollow",
+      "category": "策略、塔防与卡牌",
+      "genre": "秋日僵尸塔防 / 研究升级",
+      "summary": "在小屋前布置橡果炮塔、南瓜投石机等防御，守住20夜并用余烬研究新能力。",
+      "runtime": "Three.js / TypeScript / WebGL，程序音频。",
+      "recommendation": "白天建设、手动开夜、研究与难度模式，通关后可继续无尽防守。",
+      "controllerNotes": "已有1—5选塔和Space开波；建造与研究菜单需手柄焦点。",
+      "notes": "未明确整体许可。",
+      "id": "hazlema/lantern-hollow#0fc96c77",
+      "commit": "0fc96c77407d1754cfbbc29d0fa5813d27f59988",
+      "sourceUrl": "https://github.com/hazlema/lantern-hollow/blob/0fc96c77407d1754cfbbc29d0fa5813d27f59988/src/game.ts",
+      "stars": 0,
+      "pushedAt": "2026-10-21T02:52:27Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/hazlema/lantern-hollow/commit/296a2c57481504643e6ee741375c37083593661d",
+        "commitSubject": "Add game modes: Easy, Medium, Hard and Lantern Rush",
+        "changedFiles": [
+          "src/audio-lab.ts",
+          "src/audio/sfx.ts",
+          "src/core/world.ts",
+          "src/data/modes.ts",
+          "src/data/zombies.ts",
+          "src/game.ts",
+          "src/ui/hud.ts",
+          "src/ui/screens.ts",
+          "src/ui/style.css",
+          "tests/data.test.ts"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "src/game.ts"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "src/game.ts",
+          "url": "https://github.com/hazlema/lantern-hollow/blob/0fc96c77407d1754cfbbc29d0fa5813d27f59988/src/game.ts",
+          "bytes": 44680,
+          "sha256": "51c3af80c54873954f6ffcf7c1e140b8f1702e756a1add1c22ff509115ebfa0e",
+          "finding": "读取Game中开夜、塔升级、余烬研究、20夜胜利和继续无尽阶段。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/game.ts"
+      ],
+      "demo": {
+        "url": "https://github.com/hazlema/lantern-hollow",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:38.157857+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/hazlema/lantern-hollow",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "etothesmith/tilekeeper",
+      "title": "Tilekeeper",
+      "category": "解谜与益智",
+      "genre": "滚动方块 / 标记捕获解谜",
+      "summary": "在浮空平台标记地砖捕获滚来的方块，连锁清除绿色方块，同时避开不能捕获的黑色方块。",
+      "runtime": "自包含HTML/JavaScript，PWA离线缓存；核心规则另存dev/core.js。",
+      "recommendation": "五个世界25关、首领与每日模式，方块波形有独立求解和生成逻辑。",
+      "controllerNotes": "格子移动适合手柄；标记、捕获、爆破三种动作需独立按键。",
+      "notes": "代码设计归Claude，美术归Gemini；整体许可未明确。",
+      "id": "etothesmith/tilekeeper#5b4544ed",
+      "commit": "5b4544ed20ec8013de17228b69d3ca680a449f47",
+      "sourceUrl": "https://github.com/etothesmith/tilekeeper/blob/5b4544ed20ec8013de17228b69d3ca680a449f47/dev/core.js",
+      "stars": 0,
+      "pushedAt": "2026-10-19T20:35:01Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "上游README作者声明",
+        "quote": "Game design and code by Claude, art by Gemini, directed by Coach Smith.",
+        "url": "https://github.com/etothesmith/tilekeeper/blob/5b4544ed20ec8013de17228b69d3ca680a449f47/README.md"
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "dev/core.js",
+          "url": "https://github.com/etothesmith/tilekeeper/blob/5b4544ed20ec8013de17228b69d3ca680a449f47/dev/core.js",
+          "bytes": 21449,
+          "sha256": "25fb33085b14f4e50ae968e58ee5b2c42fb66dfcc77f8a1721622a4aa26cee0b",
+          "finding": "读取core.js的hazard放置、buildWave关卡生成和solveWave可解性/par计算。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "dev/core.js"
+      ],
+      "demo": {
+        "url": "https://etothesmith.github.io/tilekeeper/",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:38.554925+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://etothesmith.github.io/tilekeeper/",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "Kugez/between-words",
+      "title": "Between Words",
+      "category": "解谜与益智",
+      "genre": "语言推理 / 叙事解谜",
+      "summary": "观察村民行为推测陌生文字含义，填写笔记并逐页确认，再为河流两岸的人群翻译信息。",
+      "runtime": "原生JavaScript ES模块 / 浏览器本地存档，无游戏服务端。",
+      "recommendation": "文字含义确认、整页验证与章节解锁相互衔接，重推理而非操作速度。",
+      "controllerNotes": "需要人物选择、笔记和句子编写焦点；电视文字排版是主要工作。",
+      "notes": "未明确整体许可。",
+      "id": "Kugez/between-words#9ded03c1",
+      "commit": "9ded03c10c2754775c71210062773e4a12feee66",
+      "sourceUrl": "https://github.com/Kugez/between-words/blob/9ded03c10c2754775c71210062773e4a12feee66/src/main.js",
+      "stars": 0,
+      "pushedAt": "2026-10-23T21:22:30Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>",
+        "url": "https://github.com/Kugez/between-words/commit/d6aa28d2693dff203a3b347cb28178518af20fc2",
+        "commitSubject": "Add the mountain camp and the bridge finale",
+        "changedFiles": [
+          "README.md",
+          "css/style.css",
+          "src/art/bridge.js",
+          "src/art/camp.js",
+          "src/art/common.js",
+          "src/art/figures.js",
+          "src/art/valley.js",
+          "src/art/village.js",
+          "src/data/language.js",
+          "src/data/mountain.js",
+          "src/data/river.js",
+          "src/data/words.js",
+          "src/glyph.js",
+          "src/i18n.js",
+          "src/main.js",
+          "src/progress.js",
+          "src/scenes/bridge.js",
+          "src/scenes/camp.js",
+          "src/scenes/ending.js",
+          "src/scenes/village.js",
+          "src/stage.js",
+          "src/state.js",
+          "src/ui/letter.js",
+          "src/ui/notebook.js",
+          "src/ui/writer.js",
+          "tests/playthrough.spec.js"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "src/main.js",
+          "src/progress.js",
+          "src/state.js",
+          "src/ui/notebook.js"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "src/main.js",
+          "url": "https://github.com/Kugez/between-words/blob/9ded03c10c2754775c71210062773e4a12feee66/src/main.js",
+          "bytes": 1994,
+          "sha256": "95b5d97a252ca8f7ab0b9f96e4e0d977402c6790a44e07b5779e079a70555981",
+          "finding": "读取recordSentence、checkPage、openPages和笔记UI，整页所有词义正确才确认为已知。"
+        },
+        {
+          "path": "src/progress.js",
+          "url": "https://github.com/Kugez/between-words/blob/9ded03c10c2754775c71210062773e4a12feee66/src/progress.js",
+          "bytes": 1425,
+          "sha256": "da57ac4f564222041411002ff084eb8daf1a01e1e0762aa6aeead05d476b7095",
+          "finding": "读取recordSentence、checkPage、openPages和笔记UI，整页所有词义正确才确认为已知。"
+        },
+        {
+          "path": "src/state.js",
+          "url": "https://github.com/Kugez/between-words/blob/9ded03c10c2754775c71210062773e4a12feee66/src/state.js",
+          "bytes": 1027,
+          "sha256": "ca5026cb1f4b4ee58fc9213269a465cc7763c4456ffdf519b1822c708cf4ae0b",
+          "finding": "读取recordSentence、checkPage、openPages和笔记UI，整页所有词义正确才确认为已知。"
+        },
+        {
+          "path": "src/ui/notebook.js",
+          "url": "https://github.com/Kugez/between-words/blob/9ded03c10c2754775c71210062773e4a12feee66/src/ui/notebook.js",
+          "bytes": 3773,
+          "sha256": "15644f8bbf024b6d36188b1015b1f1e678a311fff9c1db95231ac9036ebfa890",
+          "finding": "读取recordSentence、checkPage、openPages和笔记UI，整页所有词义正确才确认为已知。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/main.js",
+        "src/progress.js",
+        "src/state.js",
+        "src/ui/notebook.js"
+      ],
+      "demo": {
+        "url": "https://kugez.github.io/between-words/",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:38.660445+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://kugez.github.io/between-words/",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 603,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "radelong/packet-loss",
+      "title": "Packet Loss",
+      "category": "解谜与益智",
+      "genre": "网络工程 / 排障解谜",
+      "summary": "扮演公司的唯一网络工程师，处理布线、地址冲突、子网划分、VLAN、DHCP、DNS和路由等16张工单。",
+      "runtime": "单HTML内联JavaScript，浏览器本地存档，无构建或后台。",
+      "recommendation": "谜题依据网络配置和模拟结果判定，覆盖真实网络概念且有连续剧情。",
+      "controllerNotes": "文字、端口连线和地址配置需要焦点化与输入方案，电视改造量较大。",
+      "notes": "上游标称约60—90分钟内容是作者说明，本次未通关；未明确许可。",
+      "id": "radelong/packet-loss#db85605b",
+      "commit": "db85605be59a53f06f3a879f2b4c67923754eed2",
+      "sourceUrl": "https://github.com/radelong/packet-loss/blob/db85605be59a53f06f3a879f2b4c67923754eed2/index.html",
+      "stars": 0,
+      "pushedAt": "2026-10-22T10:11:47Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/radelong/packet-loss/commit/db85605be59a53f06f3a879f2b4c67923754eed2",
+        "commitSubject": "Packet Loss: networking puzzle game",
+        "changedFiles": [
+          "README.md",
+          "index.html"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "index.html"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "index.html",
+          "url": "https://github.com/radelong/packet-loss/blob/db85605be59a53f06f3a879f2b4c67923754eed2/index.html",
+          "bytes": 205810,
+          "sha256": "faacbb54440ef7547dafef817a02a600f67e6f28b5a1f625b6d7cf30ca249104",
+          "finding": "读取DNS resolve、VLSM分配check及工单/周次入口、自动存档和结果反馈。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "index.html"
+      ],
+      "demo": {
+        "url": "https://github.com/radelong/packet-loss",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:38.805245+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/radelong/packet-loss",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "ben-griffiths/scrapyard-holdout",
+      "title": "Scrapyard Holdout",
+      "category": "经营、沙盒与休闲",
+      "genre": "僵尸生存 / 殖民与工厂自动化",
+      "summary": "指挥队员砍伐、拾荒、建造和烹饪，用传送带、机器及电网自动化基地，抵抗越来越强的夜间尸群。",
+      "runtime": "单HTML / JavaScript / Canvas，localStorage存档。",
+      "recommendation": "队员任务、资源加工、自动化设施与基地防守组成相互关联的循环。",
+      "controllerNotes": "已有键盘速度/暂停/工具快捷键，建造与框选需手柄光标。",
+      "notes": "未明确整体许可。",
+      "id": "ben-griffiths/scrapyard-holdout#df141b06",
+      "commit": "df141b06a1fd37ba1a31dcd7953b32cfb9b68624",
+      "sourceUrl": "https://github.com/ben-griffiths/scrapyard-holdout/blob/df141b06a1fd37ba1a31dcd7953b32cfb9b68624/index.html",
+      "stars": 0,
+      "pushedAt": "2026-10-22T18:33:26Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/ben-griffiths/scrapyard-holdout/commit/5d0e832a49783220877d951ebad22fd2ee3ed9e9",
+        "commitSubject": "Add Scrapyard Holdout game",
+        "changedFiles": [
+          ".nojekyll",
+          "README.md",
+          "index.html"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "index.html"
+        ]
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "index.html",
+          "url": "https://github.com/ben-griffiths/scrapyard-holdout/blob/df141b06a1fd37ba1a31dcd7953b32cfb9b68624/index.html",
+          "bytes": 188296,
+          "sha256": "b5ebdfb4f0071e415afaad040d444817b37c089275e2190dbe14ce635ae3ff02",
+          "finding": "读取newGame、place、tryInsert、step与基地/人员归零gameOver规则。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "index.html"
+      ],
+      "demo": {
+        "url": "https://github.com/ben-griffiths/scrapyard-holdout",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:38.956123+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/ben-griffiths/scrapyard-holdout",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "Ryan-J-Smith/throughput",
+      "title": "Throughput",
+      "category": "策略、塔防与卡牌",
+      "genre": "工厂主题 / Roguelike牌组构筑",
+      "summary": "把设计、制造和出货牌装入生产线，追逐市场趋势达成季度销售目标，再在商店升级生产线。",
+      "runtime": "React / TypeScript / Vite；seed确定性引擎，另有文本CLI。",
+      "recommendation": "牌库、计分修饰器、利息、Boss规则和商店统一在可复现run状态机。",
+      "controllerNotes": "回合牌组适合焦点操作，但生产线与市场面板需TV布局。",
+      "notes": "MIT。",
+      "id": "Ryan-J-Smith/throughput#e4cd2bf3",
+      "commit": "e4cd2bf34d81f7775281ef55102c82a03525d0fb",
+      "sourceUrl": "https://github.com/Ryan-J-Smith/throughput/blob/e4cd2bf34d81f7775281ef55102c82a03525d0fb/src/engine/run/run.ts",
+      "stars": 0,
+      "pushedAt": "2026-10-23T01:54:29Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/Ryan-J-Smith/throughput/commit/73b5d196cb7ca19973e85e1eaea48e328b781988",
+        "commitSubject": "Add Run.peekNextRound and fix round getter docs",
+        "changedFiles": [
+          "src/engine/__tests__/bosses.test.ts",
+          "src/engine/run/index.ts",
+          "src/engine/run/run.ts"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "src/engine/run/run.ts"
+        ]
+      },
+      "license": {
+        "label": "MIT",
+        "name": "MIT",
+        "url": "https://github.com/Ryan-J-Smith/throughput/blob/e4cd2bf34d81f7775281ef55102c82a03525d0fb/LICENSE",
+        "path": "LICENSE",
+        "sourceFileRead": true,
+        "sha256": "47a1325fa0cac7c8b7db582208c6e3ed5c6a58f224438de2079b92dcf6c41124",
+        "note": "已读取原许可全文；第三方素材和依赖授权范围另核。"
+      },
+      "licenseLabel": "MIT",
+      "sourceReview": [
+        {
+          "path": "src/engine/run/run.ts",
+          "url": "https://github.com/Ryan-J-Smith/throughput/blob/e4cd2bf34d81f7775281ef55102c82a03525d0fb/src/engine/run/run.ts",
+          "bytes": 12433,
+          "sha256": "630d24b0920ed9b53c90ac41298fa44574eb8b4a1936842788922a14c4e1f0ec",
+          "finding": "读取Run的roundStart/playing/roundEnd/shop/won/lost状态、play分数目标和有限出牌/弃牌次数。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/engine/run/run.ts"
+      ],
+      "demo": {
+        "url": "https://ryan-j-smith.github.io/throughput/",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:38.962706+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://ryan-j-smith.github.io/throughput/",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 791,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "pablitofernandez/coinkeep",
+      "title": "Coinkeep",
+      "category": "策略、塔防与卡牌",
+      "genre": "动作塔防 / 金币建设",
+      "summary": "操控盗贼保卫城堡，自动攻击僵尸并搬运金币，在建造地块停留付费升级塔、武器和支援单位。",
+      "runtime": "TypeScript / Three.js / Vite，WebGL，程序音乐音效。",
+      "recommendation": "移动收集与自动战斗、站位建造结合，支持方向键且规则循环明确。",
+      "controllerNotes": "已有WASD/方向键，优先映射候选；升级卡片和西语界面需导航/本地化。",
+      "notes": "MIT代码，随仓模型另有独立许可；用户界面为西班牙语。",
+      "id": "pablitofernandez/coinkeep#a8a89cde",
+      "commit": "a8a89cde01486fd8e7f06e319684c2d468ab88b4",
+      "sourceUrl": "https://github.com/pablitofernandez/coinkeep/blob/a8a89cde01486fd8e7f06e319684c2d468ab88b4/src/game/sim.ts",
+      "stars": 3,
+      "pushedAt": "2026-11-11T20:58:32Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "上游README作者声明",
+        "quote": "This game was made by **Pablo Fernández** in conversation with **Claude Opus 5.5** (Anthropic), using Claude Code.",
+        "url": "https://github.com/pablitofernandez/coinkeep/blob/a8a89cde01486fd8e7f06e319684c2d468ab88b4/README.md"
+      },
+      "license": {
+        "label": "MIT",
+        "name": "MIT",
+        "url": "https://github.com/pablitofernandez/coinkeep/blob/a8a89cde01486fd8e7f06e319684c2d468ab88b4/LICENSE",
+        "path": "LICENSE",
+        "sourceFileRead": true,
+        "sha256": "061f6fcfc216d08c346396907cbd9a509e3342a63fad206e672cc6f8adc08944",
+        "note": "已读取原许可全文；第三方素材和依赖授权范围另核。"
+      },
+      "licenseLabel": "MIT",
+      "sourceReview": [
+        {
+          "path": "src/game/sim.ts",
+          "url": "https://github.com/pablitofernandez/coinkeep/blob/a8a89cde01486fd8e7f06e319684c2d468ab88b4/src/game/sim.ts",
+          "bytes": 44495,
+          "sha256": "c6ba7fc48576eb7bceab7a5147271e5e7270a498dc7ad8f25fac8a943d49255a",
+          "finding": "读取createGame、spawnEnemy、pickCard、completePad与step内波次/玩家/敌人/建筑更新；升级选择时暂停。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/game/sim.ts"
+      ],
+      "demo": {
+        "url": "https://pablitofernandez.github.io/coinkeep/",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:38.996249+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://pablitofernandez.github.io/coinkeep/",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 3936,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "chunkydotdev/vakttornet",
+      "title": "Vakttornet",
+      "category": "策略、塔防与卡牌",
+      "genre": "格子塔防 / Roguelike成长",
+      "summary": "守住路线迎击波次，每次尝试累积trollsilver购买永久升级并解锁新地图。",
+      "runtime": "TypeScript / React / Canvas2D / Vite，确定性共享模拟与数据化关卡。",
+      "recommendation": "独立模拟、塔/敌/波次配置与永久成长，适合研究可扩展塔防。",
+      "controllerNotes": "格子建塔及升级菜单需焦点；排行榜可选服务不应成为离线运行阻碍。",
+      "notes": "MIT；OpenSverige游戏hackathon项目。",
+      "id": "chunkydotdev/vakttornet#bfaa3376",
+      "commit": "bfaa337644c16db7d24ae60d30466a7931216a7b",
+      "sourceUrl": "https://github.com/chunkydotdev/vakttornet/blob/bfaa337644c16db7d24ae60d30466a7931216a7b/packages/sim/src/sim.ts",
+      "stars": 1,
+      "pushedAt": "2026-06-17T19:02:45Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "上游README作者声明",
+        "quote": "— vibecoded with Claude Code as co-builder.",
+        "url": "https://github.com/chunkydotdev/vakttornet/blob/bfaa337644c16db7d24ae60d30466a7931216a7b/README.md"
+      },
+      "license": {
+        "label": "MIT",
+        "name": "MIT",
+        "url": "https://github.com/chunkydotdev/vakttornet/blob/bfaa337644c16db7d24ae60d30466a7931216a7b/LICENSE",
+        "path": "LICENSE",
+        "sourceFileRead": true,
+        "sha256": "64383a476319c4c841a1a79fb1e2e28f2a4ce9a97e17909b274ef78c5350c68d",
+        "note": "已读取原许可全文；第三方素材和依赖授权范围另核。"
+      },
+      "licenseLabel": "MIT",
+      "sourceReview": [
+        {
+          "path": "packages/sim/src/sim.ts",
+          "url": "https://github.com/chunkydotdev/vakttornet/blob/bfaa337644c16db7d24ae60d30466a7931216a7b/packages/sim/src/sim.ts",
+          "bytes": 32908,
+          "sha256": "d021c1a8e9e0111c27a54f4de0cd0fb58f914c332d4f1e115d3dcb4ac0097e23",
+          "finding": "读取createSim、buildSpawnSchedule、路径移动漏怪扣血、waveCleared奖励和runWon终局。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "packages/sim/src/sim.ts"
+      ],
+      "demo": {
+        "url": "https://chunkydotdev.github.io/vakttornet/",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:39.044647+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://chunkydotdev.github.io/vakttornet/",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 956,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "kodkod88/tower-defense",
+      "title": "Tower Defense（Claude Code Agent Team）",
+      "category": "策略、塔防与卡牌",
+      "genre": "浏览器塔防 / 固定步进规则",
+      "summary": "在网格上布置防御塔，抵挡预设敌群波次，避免敌人漏过防线耗尽生命。",
+      "runtime": "TypeScript / Vite / Canvas2D。",
+      "recommendation": "输入意图、纯状态步进、目标选择、弹丸与胜负系统模块化，适合作为小型塔防参考。",
+      "controllerNotes": "建造光标、工具栏和暂停菜单需适配。",
+      "notes": "未明确整体许可。",
+      "id": "kodkod88/tower-defense#e91893a6",
+      "commit": "e91893a618ec5a63afddef2c0561214cddf4d721",
+      "sourceUrl": "https://github.com/kodkod88/tower-defense/blob/e91893a618ec5a63afddef2c0561214cddf4d721/src/core/runner.ts",
+      "stars": 0,
+      "pushedAt": "2026-10-07T14:48:22Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "上游README作者声明",
+        "quote": "A browser tower defense game (TypeScript + Vite + Canvas), built by a Claude Code agent team.",
+        "url": "https://github.com/kodkod88/tower-defense/blob/e91893a618ec5a63afddef2c0561214cddf4d721/README.md"
+      },
+      "license": {
+        "label": "未明确",
+        "url": null,
+        "path": null,
+        "basis": "固定提交未发现根目录整体项目LICENSE/COPYING类许可文件；嵌套依赖、工具许可或package默认字段不代表整仓授权。"
+      },
+      "licenseLabel": "未明确",
+      "sourceReview": [
+        {
+          "path": "src/core/runner.ts",
+          "url": "https://github.com/kodkod88/tower-defense/blob/e91893a618ec5a63afddef2c0561214cddf4d721/src/core/runner.ts",
+          "bytes": 1910,
+          "sha256": "293b364f0081b9a09288126b4e26815cf87c3b6c165b2be52ddc73776a772d59",
+          "finding": "读取固定步进runner与winLoseSystem：漏怪扣血，零生命优先失败，最后一波清场后成功。"
+        },
+        {
+          "path": "src/systems/winLose.ts",
+          "url": "https://github.com/kodkod88/tower-defense/blob/e91893a618ec5a63afddef2c0561214cddf4d721/src/systems/winLose.ts",
+          "bytes": 1159,
+          "sha256": "95910f241e1f63b70253264c743bbfa70a67ffedd58f169be74c85ad90510a3f",
+          "finding": "读取固定步进runner与winLoseSystem：漏怪扣血，零生命优先失败，最后一波清场后成功。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "src/core/runner.ts",
+        "src/systems/winLose.ts"
+      ],
+      "demo": {
+        "url": "https://github.com/kodkod88/tower-defense",
+        "label": "项目源码",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:09:39.208083+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://github.com/kodkod88/tower-defense",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 65536,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "btahir/stillplay",
+      "title": "Stillplay：Minesweeper",
+      "category": "解谜与益智",
+      "genre": "扫雷 / 逻辑推断",
+      "summary": "根据周围地雷数推断安全方格，插旗标记危险位置；提供三档棋盘、每日棋盘和回放。",
+      "runtime": "C 规则核编译 WebAssembly；原生 ES modules / HTML / CSS 前端，无框架与打包器，离线 PWA。",
+      "recommendation": "独立规则核、种子牌局和回放便于核查；已有方向键与确认键操作，适合进一步评估电视端适配。",
+      "controllerNotes": "已有键盘导航；仍需逐游戏验证焦点、长串选牌、返回和暂停操作。",
+      "notes": "同一仓库包含五个独立规则游戏，分别列出；未执行上游测试、未试玩。MIT涵盖项目代码，字体与音效另见上游credits。",
+      "id": "btahir/stillplay#minesweeper",
+      "commit": "5b2051477345b165f611253dc61f3a6d9ca75002",
+      "sourceUrl": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/cores/minesweeper.c",
+      "stars": 2,
+      "pushedAt": "2026-10-27T06:20:01Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/btahir/stillplay/commit/43be54b22708f57c7154361556021fce0547d5c5",
+        "commitSubject": "Add deterministic C and WebAssembly game cores with replay tooling",
+        "changedFiles": [
+          ".gitignore",
+          ".npmrc",
+          "cores/freecell.c",
+          "cores/minesweeper.c",
+          "docs/freecell-core.md",
+          "docs/replay-format.md",
+          "package.json",
+          "pnpm-lock.yaml",
+          "src/freecell-core.js",
+          "src/minesweeper-core.js",
+          "src/pe-resources.js",
+          "src/shared.js",
+          "tests/cli.test.mjs",
+          "tests/freecell.test.mjs",
+          "tests/minesweeper.test.mjs",
+          "tests/pe-resources.test.mjs"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "cores/minesweeper.c"
+        ]
+      },
+      "license": {
+        "label": "MIT",
+        "name": "MIT",
+        "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/LICENSE",
+        "path": "LICENSE",
+        "sourceFileRead": true,
+        "sha256": "cb0622ed5c77762b214589132f84c33a22487489375f1b583bc32ce47bbfd60d",
+        "note": "已读取原许可全文；第三方素材和依赖授权范围另核。"
+      },
+      "licenseLabel": "MIT",
+      "sourceReview": [
+        {
+          "path": "cores/minesweeper.c",
+          "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/cores/minesweeper.c",
+          "bytes": 5870,
+          "sha256": "e86dee6855e77eb8e69b0e425b46f5575c5d297184fed8e36dd96e85b0a92d8f",
+          "finding": "读取ms_new_game、ms_reveal及uncover：首击安全后布雷，邻域数字展开，所有安全格揭开胜利，踩雷结束。"
+        },
+        {
+          "path": "src/site/catalog.js",
+          "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/src/site/catalog.js",
+          "bytes": 3536,
+          "sha256": "8c29e6d98391ad56f3f4bd5f5b327c420ad652a2c91c1d305da447245b402e23",
+          "finding": "读取ms_new_game、ms_reveal及uncover：首击安全后布雷，邻域数字展开，所有安全格揭开胜利，踩雷结束。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "cores/minesweeper.c",
+        "src/site/catalog.js"
+      ],
+      "demo": {
+        "url": "https://stillplay.shiptiffin.app/minesweeper",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:13:11.685449+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://stillplay.shiptiffin.app/minesweeper",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 52651,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "btahir/stillplay",
+      "title": "Stillplay：FreeCell",
+      "category": "策略、塔防与卡牌",
+      "genre": "空当接龙 / 扑克牌排序",
+      "summary": "利用四个临时空当和八列牌，把所有牌按花色从A移入基础牌堆；支持编号牌局、提示、撤销和回放。",
+      "runtime": "C 规则核编译 WebAssembly；原生 ES modules / HTML / CSS 前端，无框架与打包器，离线 PWA。",
+      "recommendation": "独立规则核、种子牌局和回放便于核查；已有方向键与确认键操作，适合进一步评估电视端适配。",
+      "controllerNotes": "已有键盘导航；仍需逐游戏验证焦点、长串选牌、返回和暂停操作。",
+      "notes": "同一仓库包含五个独立规则游戏，分别列出；未执行上游测试、未试玩。MIT涵盖项目代码，字体与音效另见上游credits。",
+      "id": "btahir/stillplay#freecell",
+      "commit": "5b2051477345b165f611253dc61f3a6d9ca75002",
+      "sourceUrl": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/cores/freecell.c",
+      "stars": 2,
+      "pushedAt": "2026-10-27T06:20:01Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/btahir/stillplay/commit/43be54b22708f57c7154361556021fce0547d5c5",
+        "commitSubject": "Add deterministic C and WebAssembly game cores with replay tooling",
+        "changedFiles": [
+          ".gitignore",
+          ".npmrc",
+          "cores/freecell.c",
+          "cores/minesweeper.c",
+          "docs/freecell-core.md",
+          "docs/replay-format.md",
+          "package.json",
+          "pnpm-lock.yaml",
+          "src/freecell-core.js",
+          "src/minesweeper-core.js",
+          "src/pe-resources.js",
+          "src/shared.js",
+          "tests/cli.test.mjs",
+          "tests/freecell.test.mjs",
+          "tests/minesweeper.test.mjs",
+          "tests/pe-resources.test.mjs"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "cores/freecell.c"
+        ]
+      },
+      "license": {
+        "label": "MIT",
+        "name": "MIT",
+        "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/LICENSE",
+        "path": "LICENSE",
+        "sourceFileRead": true,
+        "sha256": "cb0622ed5c77762b214589132f84c33a22487489375f1b583bc32ce47bbfd60d",
+        "note": "已读取原许可全文；第三方素材和依赖授权范围另核。"
+      },
+      "licenseLabel": "MIT",
+      "sourceReview": [
+        {
+          "path": "cores/freecell.c",
+          "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/cores/freecell.c",
+          "bytes": 8398,
+          "sha256": "714df5383f046078e3eda85d3e723231499be097452009f0940ef306b8b73cf9",
+          "finding": "读取fc_new、fc_move与fc_hint：交替颜色降序叠牌，空当和空列决定连串移动容量，四组基础牌堆完成获胜。"
+        },
+        {
+          "path": "src/site/catalog.js",
+          "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/src/site/catalog.js",
+          "bytes": 3536,
+          "sha256": "8c29e6d98391ad56f3f4bd5f5b327c420ad652a2c91c1d305da447245b402e23",
+          "finding": "读取fc_new、fc_move与fc_hint：交替颜色降序叠牌，空当和空列决定连串移动容量，四组基础牌堆完成获胜。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "cores/freecell.c",
+        "src/site/catalog.js"
+      ],
+      "demo": {
+        "url": "https://stillplay.shiptiffin.app/freecell",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:13:11.672983+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://stillplay.shiptiffin.app/freecell",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 52554,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "btahir/stillplay",
+      "title": "Stillplay：Solitaire",
+      "category": "策略、塔防与卡牌",
+      "genre": "Klondike 接龙 / 扑克牌排序",
+      "summary": "在七列牌之间整理交替颜色的降序序列，逐步翻开暗牌并完成四组基础牌堆；支持翻一张或三张。",
+      "runtime": "C 规则核编译 WebAssembly；原生 ES modules / HTML / CSS 前端，无框架与打包器，离线 PWA。",
+      "recommendation": "独立规则核、种子牌局和回放便于核查；已有方向键与确认键操作，适合进一步评估电视端适配。",
+      "controllerNotes": "已有键盘导航；仍需逐游戏验证焦点、长串选牌、返回和暂停操作。",
+      "notes": "同一仓库包含五个独立规则游戏，分别列出；未执行上游测试、未试玩。MIT涵盖项目代码，字体与音效另见上游credits。",
+      "id": "btahir/stillplay#solitaire",
+      "commit": "5b2051477345b165f611253dc61f3a6d9ca75002",
+      "sourceUrl": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/cores/solitaire.c",
+      "stars": 2,
+      "pushedAt": "2026-10-27T06:20:01Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/btahir/stillplay/commit/2196eb6339e35c005ebdc802a725bf81bf333741",
+        "commitSubject": "Add a Klondike Solitaire core with replays, CLI and invariant tests",
+        "changedFiles": [
+          "cores/solitaire.c",
+          "cores/solitaire.wasm",
+          "docs/replay-format.md",
+          "docs/solitaire-core.md",
+          "scripts/xpc.mjs",
+          "src/shared.js",
+          "src/solitaire-core.js",
+          "tests/solitaire.test.mjs"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "cores/solitaire.c"
+        ]
+      },
+      "license": {
+        "label": "MIT",
+        "name": "MIT",
+        "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/LICENSE",
+        "path": "LICENSE",
+        "sourceFileRead": true,
+        "sha256": "cb0622ed5c77762b214589132f84c33a22487489375f1b583bc32ce47bbfd60d",
+        "note": "已读取原许可全文；第三方素材和依赖授权范围另核。"
+      },
+      "licenseLabel": "MIT",
+      "sourceReview": [
+        {
+          "path": "cores/solitaire.c",
+          "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/cores/solitaire.c",
+          "bytes": 19407,
+          "sha256": "5831e57f3c3ee8137f2604890997aeccc38ebd6ee12125b8fa5e7ce9ed2d123a",
+          "finding": "读取sol_new、sol_can_move与sol_finish_step：七列发牌、库存翻牌、空列仅允许K、同花色升序基础堆及自动收尾。"
+        },
+        {
+          "path": "src/site/catalog.js",
+          "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/src/site/catalog.js",
+          "bytes": 3536,
+          "sha256": "8c29e6d98391ad56f3f4bd5f5b327c420ad652a2c91c1d305da447245b402e23",
+          "finding": "读取sol_new、sol_can_move与sol_finish_step：七列发牌、库存翻牌、空列仅允许K、同花色升序基础堆及自动收尾。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "cores/solitaire.c",
+        "src/site/catalog.js"
+      ],
+      "demo": {
+        "url": "https://stillplay.shiptiffin.app/solitaire",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:13:11.675647+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://stillplay.shiptiffin.app/solitaire",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 52465,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "btahir/stillplay",
+      "title": "Stillplay：Spider Solitaire",
+      "category": "策略、塔防与卡牌",
+      "genre": "蜘蛛接龙 / 序列整理",
+      "summary": "用两副牌在十列之间整理同花色K到A的完整序列；提供单花、双花与四花模式以及每日牌局。",
+      "runtime": "C 规则核编译 WebAssembly；原生 ES modules / HTML / CSS 前端，无框架与打包器，离线 PWA。",
+      "recommendation": "独立规则核、种子牌局和回放便于核查；已有方向键与确认键操作，适合进一步评估电视端适配。",
+      "controllerNotes": "已有键盘导航；仍需逐游戏验证焦点、长串选牌、返回和暂停操作。",
+      "notes": "同一仓库包含五个独立规则游戏，分别列出；未执行上游测试、未试玩。MIT涵盖项目代码，字体与音效另见上游credits。",
+      "id": "btahir/stillplay#spider",
+      "commit": "5b2051477345b165f611253dc61f3a6d9ca75002",
+      "sourceUrl": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/cores/spider.c",
+      "stars": 2,
+      "pushedAt": "2026-10-27T06:20:01Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/btahir/stillplay/commit/f94e4627f8997cfe71acf5d8fd4ba48a75ba37de",
+        "commitSubject": "Spider Solitaire core: rules, scoring, undo, ranked hints and a simple solver",
+        "changedFiles": [
+          "cores/spider.c",
+          "cores/spider.wasm",
+          "src/shared.js",
+          "src/spider-core.js",
+          "src/spider-solver.js",
+          "tests/spider.test.mjs"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "cores/spider.c"
+        ]
+      },
+      "license": {
+        "label": "MIT",
+        "name": "MIT",
+        "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/LICENSE",
+        "path": "LICENSE",
+        "sourceFileRead": true,
+        "sha256": "cb0622ed5c77762b214589132f84c33a22487489375f1b583bc32ce47bbfd60d",
+        "note": "已读取原许可全文；第三方素材和依赖授权范围另核。"
+      },
+      "licenseLabel": "MIT",
+      "sourceReview": [
+        {
+          "path": "cores/spider.c",
+          "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/cores/spider.c",
+          "bytes": 16333,
+          "sha256": "995c922e2fe690141eb64566d7b9720d1a0c69bc6f984da105ea1e8fec3d1253",
+          "finding": "读取sp_new、sp_run_length、sp_hints及快照恢复：同花色连续牌可一起移动，完整K到A自动收走，存在空列时禁止库存发牌。"
+        },
+        {
+          "path": "src/site/catalog.js",
+          "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/src/site/catalog.js",
+          "bytes": 3536,
+          "sha256": "8c29e6d98391ad56f3f4bd5f5b327c420ad652a2c91c1d305da447245b402e23",
+          "finding": "读取sp_new、sp_run_length、sp_hints及快照恢复：同花色连续牌可一起移动，完整K到A自动收走，存在空列时禁止库存发牌。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "cores/spider.c",
+        "src/site/catalog.js"
+      ],
+      "demo": {
+        "url": "https://stillplay.shiptiffin.app/spider",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:13:11.709673+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://stillplay.shiptiffin.app/spider",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 52481,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    },
+    {
+      "repository": "btahir/stillplay",
+      "title": "Stillplay：Hearts",
+      "category": "策略、塔防与卡牌",
+      "genre": "红心大战 / 四人吃墩",
+      "summary": "与三名电脑对手打红心大战，尽量避免红心与黑桃Q，也可争取一次收齐罚分牌反转计分。",
+      "runtime": "C 规则核编译 WebAssembly；原生 ES modules / HTML / CSS 前端，无框架与打包器，离线 PWA。",
+      "recommendation": "独立规则核、种子牌局和回放便于核查；已有方向键与确认键操作，适合进一步评估电视端适配。",
+      "controllerNotes": "已有键盘导航；仍需逐游戏验证焦点、长串选牌、返回和暂停操作。",
+      "notes": "同一仓库包含五个独立规则游戏，分别列出；未执行上游测试、未试玩。MIT涵盖项目代码，字体与音效另见上游credits。",
+      "id": "btahir/stillplay#hearts",
+      "commit": "5b2051477345b165f611253dc61f3a6d9ca75002",
+      "sourceUrl": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/cores/hearts.c",
+      "stars": 2,
+      "pushedAt": "2026-10-27T06:20:01Z",
+      "checkedAt": "2026-11-17",
+      "researchGroup": "expansion-strategy-puzzle",
+      "runtimeLabel": "网页",
+      "playtested": false,
+      "claudeEvidence": {
+        "kind": "实际源码提交中的Claude共同作者署名",
+        "quote": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+        "url": "https://github.com/btahir/stillplay/commit/5858f0af448b91756e69c34df6822f5e746911bc",
+        "commitSubject": "Hearts core: rules, passing, fair computer players and strength tests",
+        "changedFiles": [
+          "cores/hearts.c",
+          "cores/hearts.wasm",
+          "src/hearts-core.js",
+          "tests/hearts.test.mjs"
+        ],
+        "scope": "证明该提交有Claude参与署名，不推断全仓独立由Claude生成。",
+        "sourcePathAffected": [
+          "cores/hearts.c"
+        ]
+      },
+      "license": {
+        "label": "MIT",
+        "name": "MIT",
+        "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/LICENSE",
+        "path": "LICENSE",
+        "sourceFileRead": true,
+        "sha256": "cb0622ed5c77762b214589132f84c33a22487489375f1b583bc32ce47bbfd60d",
+        "note": "已读取原许可全文；第三方素材和依赖授权范围另核。"
+      },
+      "licenseLabel": "MIT",
+      "sourceReview": [
+        {
+          "path": "cores/hearts.c",
+          "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/cores/hearts.c",
+          "bytes": 23454,
+          "sha256": "ca56065da5fa43b860f3e8fc30cb80449cb4c3f3818a6ad903bd96cb8a64cbe5",
+          "finding": "读取合法出牌、吃墩判定、cardpoints与手牌结算：必须跟花色、梅花2首出、红心1分/黑桃Q13分、收齐26分转给对手，达到100分结局。"
+        },
+        {
+          "path": "src/site/catalog.js",
+          "url": "https://github.com/btahir/stillplay/blob/5b2051477345b165f611253dc61f3a6d9ca75002/src/site/catalog.js",
+          "bytes": 3536,
+          "sha256": "8c29e6d98391ad56f3f4bd5f5b327c420ad652a2c91c1d305da447245b402e23",
+          "finding": "读取合法出牌、吃墩判定、cardpoints与手牌结算：必须跟花色、梅花2首出、红心1分/黑桃Q13分、收齐26分转给对手，达到100分结局。"
+        }
+      ],
+      "sourceFilesReviewed": [
+        "cores/hearts.c",
+        "src/site/catalog.js"
+      ],
+      "demo": {
+        "url": "https://stillplay.shiptiffin.app/hearts",
+        "label": "演示",
+        "playtested": false,
+        "method": "GET",
+        "checkedAt": "2026-11-17T18:13:11.691429+00:00",
+        "status": 200,
+        "httpStatus": 200,
+        "finalUrl": "https://stillplay.shiptiffin.app/hearts",
+        "contentType": "text/html; charset=utf-8",
+        "bytesRead": 52428,
+        "note": "仅HTTP可达检查，未运行/试玩"
+      }
+    }
+  ],
+  "countUnit": "独立规则游戏；同仓库Stillplay五款分别计数",
+  "repositoryCount": 37,
+  "categoryCounts": {
+    "解谜与益智": 11,
+    "策略、塔防与卡牌": 23,
+    "经营、沙盒与休闲": 7
+  },
+  "frozenAt": "2026-11-17T18:13:58.783628+00:00"
+}

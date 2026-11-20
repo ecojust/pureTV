@@ -1,57 +1,19 @@
-**简体中文** | [English](README.en.md)
+# pureTV 应用目录
 
-<div align="center">
-  <img src="docs/branding/puretv-logo.png" width="112" alt="pureTV 生肖龙 Logo">
-</div>
+**简体中文** · [English](README.en.md) · [使用说明](docs/guide/README.md) · [开发与 MCP 文档](docs/guide/development.md)
 
-pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连接电视，查看系统信息，安装、卸载、启停应用，选择启动器，并用可视化画布自定义支持的桌面。也可通过 MCP 让 Agent 控制已打开的管理器。
+[管理工具](#管理工具) · [启动器与电视应用](#启动器与电视应用资源) · [手柄游戏](#手柄游戏专用目录) · [第三方电视应用](fork/README.md) · [游戏参考清单](docs/claude-games/catalog.md)
 
-[![GitHub release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
-[![GitHub Release 总下载量](https://img.shields.io/github/downloads/ecojust/pureTV/total?style=flat-square&label=downloads&color=16a34a)](https://github.com/ecojust/pureTV/releases)
-[![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
-[![启动器数量](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![应用数量](https://img.shields.io/badge/apps-117-f97316?style=flat-square)](resource/apps/)
-[![MCP tools](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
-[![Layout protocol](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
-[![Android TV via ADB](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#连接与应用管理)
-[![MIT license](https://img.shields.io/badge/license-MIT-f4c430?style=flat-square)](LICENSE)
+## 管理工具
 
-[下载 pureTV Manager 0.5.6](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.6) · Windows / macOS / Linux · APK市场名称布局优化
-
-[下载电视端 putrtv商城 0.1.1](resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1) · 在电视上浏览、安装和检查应用更新；配合[新版启动器](resource/README.md)可选择位置添加到桌面。
-
-![当前源码的晴空主题，使用模拟设备数据](docs/previews/manager-zh.png)
-
-## 连接与应用管理
-
-1. 电脑和电视接入可互通的网络，在电视开发者选项中开启 ADB／网络调试。
-2. 首页输入电视 IP／主机名与调试端口，在电视上允许电脑连接。常见端口为 5555，以电视实际设置为准。
-3. 缺少 ADB 时，阅读并同意 Android SDK 许可后点击「下载并配置 ADB」；优先 Google，失败时使用腾讯镜像。也可选择已有 ADB。
-
-连接后首页显示型号、Android／SDK／安全补丁、CPU、内存、`/data` 磁盘容量、分辨率及运行时间。其他页面顶部保留当前连接状态。
-
-- **应用管理**：搜索和分类，批量启用／停用、为当前用户卸载、恢复仍保有安装包的系统应用。
-- **包名说明**：点击应用行中的圆圈 **i**，查询包的用途、卸载风险、资料来源与获取时间；未知包明确提示，当前默认桌面与核心组件的保护优先。
-- **客户端更新**：启动后或手动检查 Gitee 商店 `client` 目录，按系统匹配新版本；点击「下载并安装」后校验安装包并自动安装、重启。首次从旧版升级及各平台说明见[客户端更新](desktop/docs/client-updates.md)。
-- **待安装应用**：导入本地 APK，可在行尾安装单个，也可勾选批量安装；成功项移出队列，失败与未执行项保留。
-- **启动器**：导入启动器 APK 后在该页面直接安装，选择／恢复默认桌面；支持接口的当前启动器显示「调整布局」。
-- **市场**：动态浏览 [pure-tv-store](https://gitee.com/juzisang331/pure-tv-store) 的应用与启动器，搜索、预览并下载到待安装列表，或连接电视后直接安装；同一应用或启动器的多个版本合并展示，可从下拉框选择最近 5 个版本，默认最新版；仓库新增 APK 后刷新即可发现。下载时一并保存同目录的 `logo.svg`，布局编辑器新增应用块或切换应用时自动使用该图标。
-- 应用与启动器均显示主 APK 与分包的合计大小，不含私有数据、缓存与优化文件，无法读取时明确显示未知。
-- 列表内部滚动，表头和顶部批量操作固定；核心系统组件与当前默认启动器受保护。
-
-系统应用卸载只针对当前 Android 用户，保留数据，不删除系统分区 APK。新安装且具备启动入口的用户应用可加入启动器排布。
-
-主动执行连接、刷新、应用管理、启动器切换或布局应用等操作时，管理器显示等待状态，完成后弹窗反馈结果。批量任务区分成功、失败和未执行项；后台自动读取不会反复弹窗。
+| 应用 | 用途 | 平台 | 下载 |
+| --- | --- | --- | --- |
+| pureTV Manager | 在电脑上管理电视应用和启动器 | Windows、macOS、Linux | [0.5.9](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.9) |
+| putrtv商城 | 在电视上浏览、安装和更新应用 | Android TV | [0.1.1 APK](resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1) |
 
 ## 启动器与电视应用资源
 
-公共目录为 [resource/](resource/)，分为 [launcher/](resource/launcher/) 与 [apps/](resource/apps/)，原根目录的启动器和应用源码已整体移入。启动器和电视应用 APK 放在各自软件目录，也可通过独立的 `android-v*` Release 下载；电脑管理器保留单独的 `desktop-v*` 版本与最新发布入口。每个软件文件夹至少包含一个实际 APK，可同时提供对应版本源码、封面、作者、许可证及 SHA256。点击软件名称进入对应文件夹。每个电视应用目录还提供 64×64 的 `logo.svg`，供启动器布局使用；后续应用遵循[资源约定](resource/README-development.md#应用资源与-logosvg-约定)。
-
-九款游戏的 0.5.1 规则与交互改进见[还原度复核](docs/game-fidelity-0.5.1.md)。沿用 0.5.0 统一证书，可覆盖更新 0.5.0；文档同时列出仍未精确还原的地图与内容。
-
-启动器布局自定义使用本管理器的 **layout.json 版本 5 users/system 接口**。支持布局协议的启动器卡片自动显示 Home 背景颜色和图片，包括未激活的启动器；修改并应用布局后同步更新。列表不提供选择或移除封面的操作，桌面背景统一在「调整布局」中修改。待安装 APK 优先预览内置布局的 Home 背景，仅在无法读取布局背景时使用同目录的 `thumb.png`／`APK名.thumb.png`。
-
-新增百款游戏暂选八款在本页展示，原有游戏仍保留；全部资源见 [完整资源目录](resource/README.md)。
+[查看全部启动器和电视应用](resource/README.md)
 
 <!-- resource-index:start -->
 
@@ -78,55 +40,55 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
   </tr>
 </table>
 
-### 应用-影音（5）
+### 应用-影音（6）
 
 <table>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/opera/"><img src="resource/apps/opera/thumb.png" width="180" alt="梨园 TV 界面"><br>梨园 TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/bilibili/"><img src="resource/apps/bilibili/thumb.png" width="180" alt="BiliTV 界面"><br>BiliTV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/cctv/"><img src="resource/apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"><br>CCTV Live</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/hifini/"><img src="resource/apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"><br>HIFINi TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/webtv/"><img src="resource/apps/webtv/thumb.png" width="180" alt="WebTV 界面"><br>WebTV</a></td>
   </tr>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/webtv/"><img src="resource/apps/webtv/thumb.png" width="180" alt="WebTV 界面"><br>WebTV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/shortvideo/"><img src="resource/apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"><br>ShortVideo TV</a></td>
-    <td width="25%"></td>
     <td width="25%"></td>
     <td width="25%"></td>
   </tr>
 </table>
 
-### 应用-游戏（19）
+### 应用-游戏（20）
 
 <table>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/neon-rush/"><img src="resource/apps/neon-rush/thumb.png" width="180" alt="霓虹飞车 界面"><br>霓虹飞车</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/twenty-four/"><img src="resource/apps/twenty-four/thumb.png" width="180" alt="四则二十四 界面"><br>四则二十四</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/torch-bridge/"><img src="resource/apps/torch-bridge/thumb.png" width="180" alt="夜桥接力 界面"><br>夜桥接力</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/tower-overlap/"><img src="resource/apps/tower-overlap/thumb.png" width="180" alt="叠塔工匠 界面"><br>叠塔工匠</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/packing-sculptor/"><img src="resource/apps/packing-sculptor/thumb.png" width="180" alt="异形装箱 界面"><br>异形装箱</a></td>
   </tr>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/packing-sculptor/"><img src="resource/apps/packing-sculptor/thumb.png" width="180" alt="异形装箱 界面"><br>异形装箱</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/conveyor-window/"><img src="resource/apps/conveyor-window/thumb.png" width="180" alt="窗口装配 界面"><br>窗口装配</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/glass-fold/"><img src="resource/apps/glass-fold/thumb.png" width="180" alt="折光工坊 界面"><br>折光工坊</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/tension-span/"><img src="resource/apps/tension-span/thumb.png" width="180" alt="拉索桥梁 界面"><br>拉索桥梁</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/prism-relay/"><img src="resource/apps/prism-relay/thumb.png" width="180" alt="镜光接力 界面"><br>镜光接力</a></td>
   </tr>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/prism-relay/"><img src="resource/apps/prism-relay/thumb.png" width="180" alt="镜光接力 界面"><br>镜光接力</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/alien-shooter/"><img src="resource/apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV 界面"><br>孤胆枪手 TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/used-car-racing/"><img src="resource/apps/used-car-racing/thumb.png" width="180" alt="极品二手车 界面"><br>极品二手车</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/cozy-island/"><img src="resource/apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV 界面"><br>Cozy Island TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/coast-kart/"><img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"><br>Coast Kart TV</a></td>
   </tr>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/coast-kart/"><img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"><br>Coast Kart TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/super-mario/"><img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"><br>Super Mario TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/bomb-jack/"><img src="resource/apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"><br>Mighty Bomb Jack TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/adventure-island/"><img src="resource/apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV 界面"><br>Adventure Island TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tetris/"><img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"><br>Tetris TV</a></td>
   </tr>
   <tr>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/tetris/"><img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"><br>Tetris TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/jewel/"><img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"><br>Magic Jewelry TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/jackal/"><img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"><br>Jackal TV</a></td>
     <td align="center" valign="top" width="25%"><a href="resource/apps/tank/"><img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV 界面"><br>Tank TV</a></td>
-    <td width="25%"></td>
   </tr>
 </table>
 
@@ -143,30 +105,130 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 <!-- resource-index:end -->
 
-第三方应用见 [fork/ 分类目录](fork/README.md)：收录 TVAPP 中小于 10 MB 的 14 款应用、23 个 APK，另按指定加入儿歌多多TV、宝宝趣学、茉莉音乐、淘知学堂TV和七星戏曲，共 19 款应用、28 个 APK，提供图标、介绍封面与 manifest。[超限文件与复刻参考](fork/OVERSIZED.md)保留全部 205 个超限文件，其中 5 份已收录，其余 200 份未收录。
+## 手柄游戏专用目录
 
-## MCP / Agent
+**43 款手柄游戏** · Android TV 43 款 · macOS 24 款 · Windows x64 19 款
 
-在「设备连接 → MCP · Agent 调试」复制配置到客户端，保持管理器窗口打开。34 个工具覆盖系统信息、连接、应用管理、APK 安装、启动器切换与布局、市场目录／下载／安装、背景图、ADB 配置、语言与主题、取消及记录；Agent 与界面共享状态。
+[竞速与体育（13）](#controller-racing) · [动作、角色扮演与探索（2）](#controller-action) · [平台、弹幕与街机（7）](#controller-arcade) · [策略、塔防与卡牌（1）](#controller-strategy) · [解谜与益智（18）](#controller-puzzle) · [经营、沙盒与休闲（1）](#controller-casual) · [单键街机（1）](#controller-one-button)
 
-[完整 MCP 接入与参数](desktop/docs/mcp.md)。
+<a id="controller-racing"></a>
 
-## 开发文档
+### 竞速与体育（13）
 
-构建与测试说明见 [resource 开发 README](resource/README-development.md)。
+<table>
+<tr>
+<td align="center" valign="top"><a href="joystick-games/backroad-rally/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/1e2d4ba2812a5d719e04493bcf5a39ee00e5baf1/evidence/joystick-android-runtime-backroad-rally/backroad-rally-normal/accelerating.png" width="180" alt="Backroad Rally游戏画面"><br>Backroad Rally</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-android-v0.1.2/backroad-rally-0.1.2.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-v0.1.0/BackroadRally-0.1.0-macos-universal.dmg">macOS 预览</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-windows-v0.1.0/BackroadRally-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/ponpoko-kart/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/47bfd89f8a322209807a1054cc5058e1e008bc97/reports/joystick-android-report-runtime-ponpoko-kart/ponpoko-kart-normal/driving-checkpoint.png" width="180" alt="Ponpoko Kart游戏画面"><br>Ponpoko Kart</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/3bf22a01c62439afdc7352e2f7529cc23ea575ad/joystick-games/ponpoko-kart/ponpoko-kart-0.1.5.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/ponpoko-kart/macos/PonpokoKart-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/ponpoko-kart/PonpokoKart-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/night-racer/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/night-racer/docs/android-delivery/original-export/evidence/joystick-android-runtime-night-racer/night-racer-normal/playing.png" width="180" alt="Night Racer游戏画面"><br>Night Racer</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/night-racer/night-racer-0.1.0.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/night-racer/macos/NightRacer-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/night-racer/NightRacer-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/penguintrack/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/penguintrack/docs/android-delivery/original-export/evidence/joystick-android-runtime-penguintrack/penguintrack-normal/playing.png" width="180" alt="Penguintrack游戏画面"><br>Penguintrack</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/penguintrack/penguintrack-0.1.0.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/penguintrack/macos/Penguintrack-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/penguintrack/Penguintrack-0.1.0-windows-x64-setup.exe">Windows</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="joystick-games/last-track/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/last-track/docs/android-delivery/race-normal.png" width="180" alt="Last Track游戏画面"><br>Last Track</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/last-track/last-track-0.1.0.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/last-track/macos/LastTrack-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/last-track/LastTrack-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/dirt-crown/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/dirt-crown/docs/android-runtime-44608423645/original-export/evidence/joystick-android-runtime-dirt-crown/dirt-crown-normal/playing.png" width="180" alt="Dirt Crown游戏画面"><br>Dirt Crown</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/dirt-crown/dirt-crown-0.1.0.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/dirt-crown/macos/DirtCrown-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/dirt-crown/DirtCrown-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/turbo-kart-rush/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/dee5a42698422aaf0de64c3f1c312e6a102a67c3/reports/joystick-android-report-runtime-turbo-kart-rush/turbo-kart-rush-occupied/playing.png" width="180" alt="Turbo Kart Rush游戏画面"><br>Turbo Kart Rush</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/turbo-kart-rush/turbo-kart-rush-0.1.1.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/turbo-kart-rush/macos/TurboKartRush-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/turbo-kart-rush/windows/TurboKartRush-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/kart-rush/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/kart-rush/docs/android-attempt-2/original/reports/joystick-android-report-runtime-kart-rush/kart-rush-normal/playing.png" width="180" alt="Kart Rush游戏画面"><br>Kart Rush</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/kart-rush/kart-rush-0.1.0.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/kart-rush/macos/KartRush-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/kart-rush/KartRush-0.1.0-windows-x64-setup.exe">Windows</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="joystick-games/kart-royale/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/f42bad392bf2444cfe4573653805d83f2f8a6a90/evidence/joystick-android-runtime-kart-royale/kart-royale-occupied/driving-checkpoint.png" width="180" alt="Kart Royale游戏画面"><br>Kart Royale</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/36b91f81533f10ff5d37ec091c3701913d4a42e4/joystick-games/kart-royale/kart-royale-0.1.4.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/kart-royale/macos/KartRoyale-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/kart-royale/windows/KartRoyale-0.1.1-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/qq-speed/"><img src="joystick-games/qq-speed/thumb.png" width="180" alt="QQ 飞车游戏画面"><br>QQ 飞车</a><br><a href="joystick-games/qq-speed/qq-speed-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/qq-speed/macos/QQSpeed-0.1.0-macos-universal.dmg?raw=1">macOS</a></td>
+<td align="center" valign="top"><a href="resource/apps/neon-rush/"><img src="resource/apps/neon-rush/thumb.png" width="180" alt="霓虹飞车游戏画面"><br>霓虹飞车</a><br><a href="resource/apps/neon-rush/neon-rush-0.1.3.apk?raw=1">APK</a> · <a href="resource/apps/neon-rush/macos/NeonRush-0.1.4-macos-universal.dmg?raw=1">macOS</a></td>
+<td align="center" valign="top"><a href="resource/apps/coast-kart/"><img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV游戏画面"><br>Coast Kart TV</a><br><a href="resource/apps/coast-kart/coast-kart-0.5.4.apk?raw=1">APK</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="resource/apps/used-car-racing/"><img src="resource/apps/used-car-racing/thumb.png" width="180" alt="极品二手车游戏画面"><br>极品二手车</a><br><a href="resource/apps/used-car-racing/used-car-racing-0.1.5.apk?raw=1">APK</a></td>
+</tr>
+</table>
 
-<a id="layoutjson-规范与画面对照"></a>
+<a id="controller-action"></a>
 
-<a id="layoutjson-协议规范与画面对照"></a>
+### 动作、角色扮演与探索（2）
 
-### 自定义启动器布局
+<table>
+<tr>
+<td align="center" valign="top"><a href="joystick-games/cf-transport-ship/"><img src="joystick-games/cf-transport-ship/thumb.png" width="180" alt="运输船 CF游戏画面"><br>运输船 CF</a><br><a href="joystick-games/cf-transport-ship/cf-transport-ship-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/cf-transport-ship/macos/CFTransportShip-0.1.0-macos-universal.dmg?raw=1">macOS</a></td>
+<td align="center" valign="top"><a href="resource/apps/alien-shooter/"><img src="resource/apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV游戏画面"><br>孤胆枪手 TV</a><br><a href="resource/apps/alien-shooter/alien-shooter-0.1.4.apk?raw=1">APK</a></td>
+</tr>
+</table>
 
-`layout.json` 是连接启动器与管理器显示的协议文件：电视和电脑使用同一份布局，管理器可以重现桌面并调整应用块。Home 和 Apps 支持独立背景、布局与切页设置；用户应用可编辑，系统组件仅供查看。
+<a id="controller-arcade"></a>
 
-在启动器页面选择「调整布局」，可添加已安装用户应用、拖动、框选、对齐或平铺排布，确认后应用到电视。使用新版布局需同时更新管理器与配套启动器。
+### 平台、弹幕与街机（7）
 
-完整字段说明、JSON 示例与画面对照见 [layout.json 协议规范](resource/README-development.md#layoutjson-协议规范与画面对照)。
+<table>
+<tr>
+<td align="center" valign="top"><a href="joystick-games/glup/"><img src="joystick-games/glup/thumb.png" width="180" alt="GLUP · 沼泽猫鱼游戏画面"><br>GLUP · 沼泽猫鱼</a><br><a href="joystick-games/glup/glup-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/glup/Glup-0.1.0-macos-universal.dmg?raw=1">macOS</a></td>
+<td align="center" valign="top"><a href="resource/apps/super-mario/"><img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV游戏画面"><br>Super Mario TV</a><br><a href="resource/apps/super-mario/super-mario-0.5.4.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/bomb-jack/"><img src="resource/apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV游戏画面"><br>Mighty Bomb Jack TV</a><br><a href="resource/apps/bomb-jack/bomb-jack-0.5.4.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/adventure-island/"><img src="resource/apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV游戏画面"><br>Adventure Island TV</a><br><a href="resource/apps/adventure-island/adventure-island-0.5.4.apk?raw=1">APK</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="resource/apps/jackal/"><img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV游戏画面"><br>Jackal TV</a><br><a href="resource/apps/jackal/jackal-0.5.4.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/tank/"><img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV游戏画面"><br>Tank TV</a><br><a href="resource/apps/tank/tank-0.5.4.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/conveyor-window/"><img src="resource/apps/conveyor-window/thumb.png" width="180" alt="窗口装配游戏画面"><br>窗口装配</a><br><a href="resource/apps/conveyor-window/conveyor-window-0.2.2.apk?raw=1">APK</a></td>
+</tr>
+</table>
 
-## 许可与致谢
+<a id="controller-strategy"></a>
 
-pureTV 使用 [MIT](LICENSE) 许可。部分电视端启动器代码参考 [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv)，原作者版权与许可保留于 [NOTICE.md](NOTICE.md)。字体见 [OFL 许可](resource/launcher/puretv/FONT-LICENSE-OFL.txt)。应用使用的第三方代码、字体和其他素材保留各自的版权及许可声明。
+### 策略、塔防与卡牌（1）
+
+<table>
+<tr>
+<td align="center" valign="top"><a href="joystick-games/emberbrood/"><img src="joystick-games/emberbrood/thumb.png" width="180" alt="Emberbrood · 余烬龙裔游戏画面"><br>Emberbrood · 余烬龙裔</a><br><a href="joystick-games/emberbrood/emberbrood-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/emberbrood/Emberbrood-0.1.0-macos-universal.dmg?raw=1">macOS</a></td>
+</tr>
+</table>
+
+<a id="controller-puzzle"></a>
+
+### 解谜与益智（18）
+
+<table>
+<tr>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/alchemists-lattice"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/alchemists-lattice/playing-1280.jpg" width="180" alt="炼金方阵游戏画面"><br>炼金方阵</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-alchemists-lattice-v0.1.1/alchemists-lattice-0.1.1.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-alchemists-lattice-v0.1.1/AlchemistsLattice-0.1.1-macos-universal.dmg">macOS 预览</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-alchemists-lattice-v0.1.1/AlchemistsLattice-0.1.1-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/story-thief"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/story-thief/playing-1280.jpg" width="180" alt="灰斗篷山的故事大盗游戏画面"><br>灰斗篷山的故事大盗</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/story-thief-0.1.1.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/StoryThief-0.1.1-macos-universal.dmg">macOS</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/StoryThief-0.1.1-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/bumble-basket"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/bumble-basket/playing-1280.jpg" width="180" alt="蜜蜂果篮游戏画面"><br>蜜蜂果篮</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-bumble-basket-v0.1.2/bumble-basket-0.1.2.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-bumble-basket-v0.1.2/BumbleBasket-0.1.2-macos-universal.dmg">macOS 预览</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-bumble-basket-v0.1.2/BumbleBasket-0.1.2-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/starsling"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/starsling/playing-1280.jpg" width="180" alt="星际弹弓游戏画面"><br>星际弹弓</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-starsling-v0.1.1/starsling-0.1.1.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-starsling-v0.1.1/Starsling-0.1.1-macos-universal.dmg">macOS 预览</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-starsling-v0.1.1/Starsling-0.1.1-windows-x64-setup.exe">Windows</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/solder-and-rain"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/solder-and-rain/playing-1280.jpg" width="180" alt="雨夜维修铺游戏画面"><br>雨夜维修铺</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-solder-and-rain-v0.1.0/solder-and-rain-0.1.0.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-solder-and-rain-v0.1.0/SolderAndRain-0.1.0-macos-universal.dmg">macOS 预览</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-solder-and-rain-v0.1.0/SolderAndRain-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/oathstones"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/oathstones/playing-1280.jpg" width="180" alt="誓约宝石游戏画面"><br>誓约宝石</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-oathstones-v0.1.0/oathstones-0.1.0.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-oathstones-v0.1.0/Oathstones-0.1.0-macos-universal.dmg">macOS 预览</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-oathstones-v0.1.0/Oathstones-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/neon-arcana"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/neon-arcana/playing-1280.jpg" width="180" alt="霓虹秘仪游戏画面"><br>霓虹秘仪</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/neon-arcana-0.1.1.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/NeonArcana-0.1.1-macos-universal.dmg">macOS 预览</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/NeonArcana-0.1.1-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/atlas-of-ink"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/atlas-of-ink/playing-1280.jpg" width="180" alt="墨绘地图集游戏画面"><br>墨绘地图集</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-atlas-of-ink-v0.1.1/atlas-of-ink-0.1.1.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-atlas-of-ink-v0.1.1/AtlasOfInk-0.1.1-macos-universal.dmg">macOS</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-atlas-of-ink-v0.1.1/AtlasOfInk-0.1.1-windows-x64-setup.exe">Windows</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/starbase-spooky"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/starbase-spooky/playing-1280.jpg" width="180" alt="幽灵空间站游戏画面"><br>幽灵空间站</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/starbase-spooky-0.1.2.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/StarbaseSpooky-0.1.2-macos-universal.dmg">macOS</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/StarbaseSpooky-0.1.2-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/sugarplum-drop/"><img src="joystick-games/sugarplum-drop/docs/browser-attempt-3/playing-1280.png" width="180" alt="Sugarplum Drop游戏画面"><br>Sugarplum Drop</a><br><a href="joystick-games/sugarplum-drop/sugarplum-drop-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/sugarplum-drop/SugarplumDrop-0.1.0-macos-universal.dmg?raw=1">macOS</a> · <a href="joystick-games/sugarplum-drop/SugarplumDrop-0.1.0-windows-x64-setup.exe?raw=1">Windows</a></td>
+<td align="center" valign="top"><a href="resource/apps/twenty-four/"><img src="resource/apps/twenty-four/thumb.png" width="180" alt="四则二十四游戏画面"><br>四则二十四</a><br><a href="resource/apps/twenty-four/twenty-four-0.2.2.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/torch-bridge/"><img src="resource/apps/torch-bridge/thumb.png" width="180" alt="夜桥接力游戏画面"><br>夜桥接力</a><br><a href="resource/apps/torch-bridge/torch-bridge-0.2.2.apk?raw=1">APK</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="resource/apps/packing-sculptor/"><img src="resource/apps/packing-sculptor/thumb.png" width="180" alt="异形装箱游戏画面"><br>异形装箱</a><br><a href="resource/apps/packing-sculptor/packing-sculptor-0.2.2.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/glass-fold/"><img src="resource/apps/glass-fold/thumb.png" width="180" alt="折光工坊游戏画面"><br>折光工坊</a><br><a href="resource/apps/glass-fold/glass-fold-0.2.2.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/tension-span/"><img src="resource/apps/tension-span/thumb.png" width="180" alt="拉索桥梁游戏画面"><br>拉索桥梁</a><br><a href="resource/apps/tension-span/tension-span-0.2.3.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/prism-relay/"><img src="resource/apps/prism-relay/thumb.png" width="180" alt="镜光接力游戏画面"><br>镜光接力</a><br><a href="resource/apps/prism-relay/prism-relay-0.2.3.apk?raw=1">APK</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="resource/apps/tetris/"><img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV游戏画面"><br>Tetris TV</a><br><a href="resource/apps/tetris/tetris-0.5.4.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/jewel/"><img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV游戏画面"><br>Magic Jewelry TV</a><br><a href="resource/apps/jewel/jewel-0.5.4.apk?raw=1">APK</a></td>
+</tr>
+</table>
+
+<a id="controller-casual"></a>
+
+### 经营、沙盒与休闲（1）
+
+<table>
+<tr>
+<td align="center" valign="top"><a href="resource/apps/cozy-island/"><img src="resource/apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV游戏画面"><br>Cozy Island TV</a><br><a href="resource/apps/cozy-island/cozy-island-0.5.4.apk?raw=1">APK</a></td>
+</tr>
+</table>
+
+<a id="controller-one-button"></a>
+
+### 单键街机（1）
+
+<table>
+<tr>
+<td align="center" valign="top"><a href="resource/apps/tower-overlap/"><img src="resource/apps/tower-overlap/thumb.png" width="180" alt="叠塔工匠游戏画面"><br>叠塔工匠</a><br><a href="resource/apps/tower-overlap/tower-overlap-0.2.2.apk?raw=1">APK</a></td>
+</tr>
+</table>

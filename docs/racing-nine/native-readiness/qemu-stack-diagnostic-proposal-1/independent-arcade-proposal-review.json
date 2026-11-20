@@ -1,0 +1,103 @@
+{
+  "status": "proposal-no-blocker-implementation-review-pending",
+  "reviewedAt": "2026-11-19T23:06:07.523699+00:00",
+  "reviewer": "racing_review_arcade",
+  "proposalInventory": {
+    "bytes": 7529,
+    "sha256": "2eaf43ff4063f491257ca05a14ac6d6d9672d05e15b21a1b57db7026bce9697c"
+  },
+  "proposalFilesVerified": 33,
+  "replayedTests": false,
+  "newProcessesAttached": 0,
+  "workflowPosts": 0,
+  "sourceFilesModified": [],
+  "originalEvidence": [
+    {
+      "path": "local/fatal.json",
+      "file": {
+        "bytes": 1882,
+        "sha256": "4d13989aa21f84885f1d1779ba2bc15764d3262b74b4c66701545bab1f36642a"
+      },
+      "status": "passed",
+      "originalParentWait": -11,
+      "signalsObserved": 1,
+      "aliveAfterDetach": null,
+      "artificialInterruptSent": null,
+      "scope": "Controlled local ELF, not Android or original QEMU"
+    },
+    {
+      "path": "local/handled.json",
+      "file": {
+        "bytes": 2882,
+        "sha256": "e86cd5f29109c758eb761fd37b382434dfc53d07e5c29e689a6e064e642d2be7"
+      },
+      "status": "passed",
+      "originalParentWait": -11,
+      "signalsObserved": 2,
+      "aliveAfterDetach": null,
+      "artificialInterruptSent": null,
+      "scope": "Controlled local ELF, not Android or original QEMU"
+    },
+    {
+      "path": "local/timeout.json",
+      "file": {
+        "bytes": 1255,
+        "sha256": "acc76e440e12d820ec9ed06ad7d40fceb6cc53a3124abeaa31eb6e3d1da6df37"
+      },
+      "status": "passed",
+      "originalParentWait": 0,
+      "signalsObserved": 0,
+      "aliveAfterDetach": true,
+      "artificialInterruptSent": null,
+      "scope": "Controlled local ELF, not Android or original QEMU"
+    },
+    {
+      "path": "local/fatal-detach-fault.json",
+      "file": {
+        "bytes": 1881,
+        "sha256": "297f78f353949ec888592656ef81678fc853ab825760921b80b120d8a41211d7"
+      },
+      "status": "passed",
+      "originalParentWait": -11,
+      "signalsObserved": 1,
+      "aliveAfterDetach": null,
+      "artificialInterruptSent": null,
+      "scope": "Controlled local ELF, not Android or original QEMU"
+    },
+    {
+      "path": "local/detach-running.json",
+      "file": {
+        "bytes": 762,
+        "sha256": "2ee39417031f9ca94bd835b279267ce6c1f09a4ef0726a0e95ae5284cd56d81d"
+      },
+      "status": "passed",
+      "originalParentWait": 0,
+      "signalsObserved": 0,
+      "aliveAfterDetach": true,
+      "artificialInterruptSent": false,
+      "scope": "Controlled local ELF, not Android or original QEMU"
+    }
+  ],
+  "ownershipBoundaries": {
+    "originalLog": {
+      "bytes": 920,
+      "sha256": "5423d2621f403967c14fb8e534227c5cbaafe3b30ac1da1072b531832c377a4e"
+    },
+    "originalTestsPassed": 8,
+    "scope": "Read original executed prototype source and log, no rerun"
+  },
+  "proposalFindings": [
+    "Exact owned PID/start/parent/executable hash before attach and after attach-stop, with expected TracerPid, is appropriate; parent must not reap during first attach handshake.",
+    "4 SIGSEGV events x 4 threads x 12 frames is below the permitted 8-thread/16-frame ceiling. Original handled/fatal and direct-detach experiments support the proposed signal semantics on the tested local GDB only.",
+    "The proposal explicitly limits stored output to address/function and controlled executable module offsets, excludes args/locals/environment/core/arbitrary memory, and disables GDB auto-load and debuginfod before attach.",
+    "Debugger attachment is an intervention. Original owned wait status remains the terminal-status evidence; a stack or attach success cannot independently imply QEMU root cause or native gameplay pass."
+  ],
+  "implementationAcceptanceStillRequired": [
+    "All poll/wait/finally/signal paths preserve the no-reap handshake, including target exits before or during attach.",
+    "Same executable GDB bytes and actual GDB version must pass controlled signal/detach fixtures in CI before the real QEMU hook; sudo path must bind actual tracer PID/start/exe rather than wrapper PID.",
+    "Timeout/output/parse failures must retain a bounded normal detach attempt and explicit uncertainty; no blind debugger/target kill or signal swallowing.",
+    "Only whitelisted sanitized frame fields may be archived; asynchronous, console, source path, args and arbitrary raw MI lines must not enter exported diagnostics.",
+    "Original v8 APK, Observer, API, SDK version, argv, memory/GPU/Vulkan settings and QA assertions remain unchanged; opt-in default stays off."
+  ],
+  "implementationReady": false
+}

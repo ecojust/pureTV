@@ -1,0 +1,453 @@
+name: Joystick catalog Android QA with frozen packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      qa_source_sha:
+        description: Frozen QA commit (40 characters, matching the selected workflow ref)
+        required: true
+        type: string
+      artifact_source:
+        description: Original package source commit (40 characters)
+        required: true
+        type: string
+      artifact_export:
+        description: Immutable Git package export commit, or empty when using an Actions artifact
+        required: false
+        type: string
+      artifact_run:
+        description: Original package workflow run ID
+        required: true
+        type: string
+      artifact_id:
+        description: Original signed Actions artifact ID, mutually exclusive with artifact_export
+        required: false
+        type: string
+      artifact_attempt:
+        description: Exact original Actions attempt, required with artifact_id
+        required: false
+        type: string
+      batch:
+        description: Registered catalog batch
+        required: true
+        default: one-button-01
+        type: string
+      games:
+        description: Optional comma-separated registered subset of the batch
+        required: false
+        type: string
+      confirm_backroad_install:
+        description: Opt in to exact original Backroad per-app Play Protect confirmation, without changing verifier settings
+        required: false
+        default: false
+        type: boolean
+      supervise_pon_emulator:
+        description: Opt in to default-off launcher exit diagnostics for the exact original Pon APK only
+        required: false
+        default: false
+        type: boolean
+      pon_disable_vulkan:
+        description: Optional single-variable Vulkan-off comparison for the exact supervised original Pon APK only
+        required: false
+        default: false
+        type: boolean
+      pon_capture_qemu_stack:
+        description: Diagnostic only; exact original supervised Vulkan-off Pon, bounded same-user GDB stacks, never native acceptance
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: joystick-catalog-android-runtime-${{ github.ref }}-${{ inputs.batch }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  PYTHONUNBUFFERED: '1'
+  PYTHONDONTWRITEBYTECODE: '1'
+  ARTIFACT_SOURCE: ${{ inputs.artifact_source }}
+  ARTIFACT_EXPORT: ${{ inputs.artifact_export }}
+  ARTIFACT_RUN: ${{ inputs.artifact_run }}
+  ARTIFACT_ID: ${{ inputs.artifact_id }}
+  ARTIFACT_ATTEMPT: ${{ inputs.artifact_attempt }}
+  CONFIRM_BACKROAD_INSTALL: ${{ inputs.confirm_backroad_install && 'true' || 'false' }}
+  SUPERVISE_PON_EMULATOR: ${{ inputs.supervise_pon_emulator && 'true' || 'false' }}
+  PON_DISABLE_VULKAN: ${{ inputs.pon_disable_vulkan && 'true' || 'false' }}
+  PON_CAPTURE_QEMU_STACK: ${{ inputs.pon_capture_qemu_stack && 'true' || 'false' }}
+
+jobs:
+  select:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.select.outputs.matrix }}
+      games: ${{ steps.select.outputs.games }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          filter: blob:none
+          sparse-checkout: |
+            .github/workflows
+            joystick-games
+            resource/game-kit
+            tools
+            puretv-joystick
+      - id: select
+        env:
+          REQUESTED_QA: ${{ inputs.qa_source_sha }}
+          BATCH: ${{ inputs.batch }}
+          GAMES: ${{ inputs.games }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,os,re,subprocess
+          from pathlib import Path
+          for key in ['REQUESTED_QA','ARTIFACT_SOURCE']:assert re.fullmatch('[a-f0-9]{40}',os.environ[key]), key
+          assert re.fullmatch('[1-9][0-9]*',os.environ['ARTIFACT_RUN'])
+          assert bool(os.environ['ARTIFACT_EXPORT']) != bool(os.environ['ARTIFACT_ID']), 'Choose exactly one original artifact origin'
+          if os.environ['ARTIFACT_EXPORT']:
+              assert re.fullmatch('[a-f0-9]{40}',os.environ['ARTIFACT_EXPORT']) and not os.environ['ARTIFACT_ATTEMPT']
+          else:
+              for key in ['ARTIFACT_ID','ARTIFACT_ATTEMPT']:assert re.fullmatch('[1-9][0-9]*',os.environ[key])
+          assert os.environ['REQUESTED_QA']==os.environ['GITHUB_SHA']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          assert os.environ['CONFIRM_BACKROAD_INSTALL'] in ('true','false')
+          if os.environ['CONFIRM_BACKROAD_INSTALL']=='true':
+              assert os.environ['GAMES']=='backroad-rally', 'Only this single original APK is authorized'
+              assert os.environ['ARTIFACT_SOURCE']=='d548bccbe816bd4c03620388556ceef507b67d30'
+              assert os.environ['ARTIFACT_RUN']=='44599353036' and os.environ['ARTIFACT_ID']=='14567692465'
+              assert os.environ['ARTIFACT_ATTEMPT']=='1' and not os.environ['ARTIFACT_EXPORT']
+          assert os.environ['SUPERVISE_PON_EMULATOR'] in ('true','false')
+          assert os.environ['PON_DISABLE_VULKAN'] in ('true','false')
+          assert os.environ['PON_CAPTURE_QEMU_STACK'] in ('true','false')
+          if os.environ['PON_CAPTURE_QEMU_STACK']=='true':
+              assert os.environ['SUPERVISE_PON_EMULATOR']=='true' and os.environ['PON_DISABLE_VULKAN']=='true', 'Stack diagnostic requires the unchanged v8 Pon comparison'
+          if os.environ['PON_DISABLE_VULKAN']=='true':
+              assert os.environ['SUPERVISE_PON_EMULATOR']=='true', 'Vulkan comparison requires exact Pon supervision'
+          if os.environ['SUPERVISE_PON_EMULATOR']=='true':
+              assert os.environ['GAMES']=='ponpoko-kart' and os.environ['BATCH']=='racing-01'
+              assert os.environ['ARTIFACT_SOURCE']=='8f283c73f52f857777306eafc88f710262367834'
+              assert os.environ['ARTIFACT_RUN']=='44597115244' and os.environ['ARTIFACT_EXPORT']=='4249f5c0ec3053a1dec652a7880a040e1bb143f0'
+              assert not os.environ['ARTIFACT_ID'] and not os.environ['ARTIFACT_ATTEMPT']
+              assert os.environ['CONFIRM_BACKROAD_INSTALL']=='false'
+          out=Path(os.environ['RUNNER_TEMP'])/'provenance';out.mkdir()
+          (out/'requested-inputs.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'batch':os.environ['BATCH'],'games':os.environ['GAMES'],'confirmBackroadInstall':os.environ['CONFIRM_BACKROAD_INSTALL']=='true','supervisePonEmulator':os.environ['SUPERVISE_PON_EMULATOR']=='true','ponDisableVulkan':os.environ['PON_DISABLE_VULKAN']=='true','ponCaptureQemuStack':os.environ['PON_CAPTURE_QEMU_STACK']=='true','nativeAcceptanceAllowed':os.environ['PON_CAPTURE_QEMU_STACK']!='true'},indent=2)+'\n')
+          PY
+          python3 joystick-games/tools/android-catalog.py select --batch "$BATCH" --games "$GAMES" | tee "$RUNNER_TEMP/provenance/selection.json"
+      - uses: actions/checkout@v4
+        if: inputs.artifact_export != ''
+        with:
+          ref: ${{ inputs.artifact_export }}
+          path: artifact
+          persist-credentials: false
+      - name: Confirm the immutable export and original successful build/sign jobs
+        if: inputs.artifact_export != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os,subprocess
+          from pathlib import Path
+          out=Path(os.environ['RUNNER_TEMP'])/'provenance';artifact=Path('artifact');commit=os.environ['ARTIFACT_EXPORT']
+          assert subprocess.check_output(['git','-C',str(artifact),'rev-parse','HEAD'],text=True).strip()==commit
+          manifest=json.loads(subprocess.check_output(['git','-C',str(artifact),'show',commit+':export-manifest.json']))
+          assert manifest['sourceSha']==os.environ['ARTIFACT_SOURCE'] and str(manifest['runId'])==os.environ['ARTIFACT_RUN']
+          assert manifest['buildResult']==manifest['signResult']=='success'
+          attempt=str(manifest['runAttempt']);assert attempt.isdecimal() and int(attempt)>0
+          endpoint='repos/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+os.environ['ARTIFACT_RUN']+'/attempts/'+attempt
+          run=json.loads(subprocess.check_output(['gh','api',endpoint]))
+          assert run['head_sha']==os.environ['ARTIFACT_SOURCE'] and run['id']==int(os.environ['ARTIFACT_RUN']) and run['run_attempt']==int(attempt)
+          assert run['status']=='completed' and run['repository']['full_name']==os.environ['GITHUB_REPOSITORY'] and run['path']=='.github/workflows/joystick-catalog-android.yml'
+          pages=json.loads(subprocess.check_output(['gh','api','--paginate','--slurp',endpoint+'/jobs?per_page=100']));jobs=[job for page in pages for job in page['jobs']]
+          selection=json.loads((out/'selection.json').read_text());games=selection['games'].split(',')
+          for name in ['sign',*['build ('+game+')' for game in games]]:
+              matches=[job for job in jobs if job['name']==name];assert len(matches)==1 and matches[0]['status']=='completed' and matches[0]['conclusion']=='success',name
+          (out/'original-run.json').write_text(json.dumps(run,indent=2)+'\n');(out/'original-jobs.json').write_text(json.dumps(jobs,indent=2)+'\n')
+          (out/'original-export-manifest.json').write_bytes((artifact/'export-manifest.json').read_bytes())
+          PY
+      - name: Confirm the exact original Actions signed artifact producer
+        if: inputs.artifact_id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GAMES: ${{ steps.select.outputs.games }}
+        run: >-
+          python3 joystick-games/tools/android-runtime-artifact.py
+          --run "$ARTIFACT_RUN" --attempt "$ARTIFACT_ATTEMPT" --source "$ARTIFACT_SOURCE"
+          --artifact "$ARTIFACT_ID" --games "$GAMES" --metadata-only
+          --output "$RUNNER_TEMP/provenance/actions-artifact"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joystick-android-runtime-provenance
+          path: ${{ runner.temp }}/provenance/
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 30
+
+  runtime:
+    needs: select
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.select.outputs.matrix) }}
+    env:
+      PURETV_DISPOSABLE_EMULATOR: '1'
+      GAME: ${{ matrix.game }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          filter: blob:none
+          sparse-checkout: |
+            .github/workflows
+            joystick-games
+            resource/game-kit
+            tools
+            puretv-joystick
+      - uses: actions/checkout@v4
+        if: inputs.artifact_export != ''
+        with:
+          ref: ${{ inputs.artifact_export }}
+          path: artifact
+          persist-credentials: false
+      - name: Download the unchanged original signed Actions ZIP
+        if: inputs.artifact_id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          python3 joystick-games/tools/android-runtime-artifact.py
+          --run "$ARTIFACT_RUN" --attempt "$ARTIFACT_ATTEMPT" --source "$ARTIFACT_SOURCE"
+          --artifact "$ARTIFACT_ID" --games "$GAME" --output "$RUNNER_TEMP/original-signed"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools build-tools;34.0.0
+      - name: Check generic input and read-only observation contracts
+        run: |
+          set -euo pipefail
+          python3 joystick-games/qa/android/test_runner.py 2>&1 | tee "$RUNNER_TEMP/qa-contracts.log"
+          python3 joystick-games/tools/android-tests.py 2>&1 | tee "$RUNNER_TEMP/artifact-contracts.log"
+          python3 joystick-games/tools/android-runtime-artifact-tests.py 2>&1 | tee "$RUNNER_TEMP/reuse-contracts.log"
+          python3 -B joystick-games/qa/android/test_environment_diagnostics.py 2>&1 | tee "$RUNNER_TEMP/environment-diagnostics-tests.log"
+          python3 -B joystick-games/qa/android/test_install_confirmation.py 2>&1 | tee "$RUNNER_TEMP/install-confirmation-tests.log"
+          python3 -B joystick-games/qa/android/test_emulator_supervisor.py 2>&1 | tee "$RUNNER_TEMP/emulator-supervisor-tests.log"
+      - name: Bind original signed packages to their frozen source and current QA checkout
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin "$ARTIFACT_SOURCE"
+          if [ -n "$ARTIFACT_ID" ]; then
+            origin_args=(--actions-artifact-id "$ARTIFACT_ID" --artifact-attempt "$ARTIFACT_ATTEMPT" --artifact "$RUNNER_TEMP/original-signed/artifact")
+          else
+            origin_args=(--export-commit "$ARTIFACT_EXPORT" --artifact "$GITHUB_WORKSPACE/artifact")
+          fi
+          python3 joystick-games/tools/android-runtime-inputs.py --games "$GAME" \
+            --artifact-source "$ARTIFACT_SOURCE" --artifact-run-id "$ARTIFACT_RUN" "${origin_args[@]}" \
+            --output "$RUNNER_TEMP/input" --build-tools "$ANDROID_HOME/build-tools/34.0.0" \
+            2>&1 | tee "$RUNNER_TEMP/input-verification.log"
+      - name: Require actual same-user process-local GDB permission before any AVD
+        if: inputs.pon_capture_qemu_stack
+        run: |
+          set -euo pipefail
+          test -x /usr/bin/gdb
+          command -v cc >/dev/null
+          python3 -B joystick-games/qa/android/test_qemu_permission.py \
+            --output "$RUNNER_TEMP/qemu-permission-gate" \
+            2>&1 | tee "$RUNNER_TEMP/qemu-permission-gate.log"
+      - name: Enable disposable emulator acceleration
+        run: |
+          test -e /dev/kvm
+          sudo chmod a+rw /dev/kvm
+          command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Run normal and occupied-port QA independently against unchanged signed bytes
+        # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          # Controlled original-APK comparison: official stable 37.3.10 (2026-11-19), not a claimed crash fix.
+          # https://dl.google.com/android/repository/repository2-3.xml — emulator-linux_x64-16970787.zip
+          emulator-build: '16970787'
+          api-level: 36
+          target: android-tv
+          arch: x86_64
+          profile: tv_1080p
+          avd-name: JoystickGamesValidation
+          force-avd-creation: true
+          disable-animations: true
+          # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
+          # Optional controlled Vulkan-off comparison; not an established crash cause or fix.
+          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}
+          pre-emulator-launch-script: >-
+            python3 joystick-games/tools/android-emulator-supervisor.py prepare
+            --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
+          script: >-
+            python3 joystick-games/tools/android-emulator-supervisor.py assert-ready
+            --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor" &&
+            python3 joystick-games/tools/android-environment-diagnostics.py
+            --output "$RUNNER_TEMP/runtime/$GAME/environment-diagnostics" --
+            python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
+            --input "$RUNNER_TEMP/input" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
+            --confirm-backroad-install "$CONFIRM_BACKROAD_INSTALL"
+      - name: Restore the exact disposable SDK launcher after optional supervision
+        if: always() && inputs.supervise_pon_emulator
+        run: >-
+          python3 joystick-games/tools/android-emulator-supervisor.py restore
+          --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
+      - name: Preserve both immutable source identities, every result and exact executed scripts
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import hashlib,importlib.util,json,os,shutil,subprocess
+          from pathlib import Path
+          scratch=Path(os.environ['RUNNER_TEMP']);out=scratch/'runtime'/os.environ['GAME'];out.mkdir(parents=True,exist_ok=True)
+          inputs=scratch/'input'
+          original_origin=scratch/'original-signed/artifact/actions-artifact-origin.json'
+          if original_origin.is_file():shutil.copyfile(original_origin,out/'original-actions-artifact-origin.json')
+          if inputs.is_dir():
+              spec=importlib.util.spec_from_file_location('runtime_inputs',Path('joystick-games/tools/android-runtime-inputs.py'))
+              verifier=importlib.util.module_from_spec(spec);spec.loader.exec_module(verifier)
+              verifier.preserve_evidence(inputs,out/'verified-inputs')
+          for name in ['qa-contracts.log','artifact-contracts.log','reuse-contracts.log','environment-diagnostics-tests.log','install-confirmation-tests.log','emulator-supervisor-tests.log','input-verification.log']:
+              if (scratch/name).is_file():shutil.copyfile(scratch/name,out/name)
+          if (scratch/'qemu-permission-gate.log').is_file():shutil.copyfile(scratch/'qemu-permission-gate.log',out/'qemu-permission-gate.log')
+          if (scratch/'qemu-permission-gate').is_dir():shutil.copytree(scratch/'qemu-permission-gate',out/'qemu-permission-gate')
+          paths=list(Path('joystick-games/qa/android').rglob('*.py'))+list(Path('joystick-games/qa/android').rglob('*.java'))+list(Path('joystick-games/qa/android/fixtures').glob('*.json'))
+          paths+=list(Path('joystick-games/tools').glob('android-*.py'))
+          paths+=[Path('joystick-games/tools/artifact-draft-transfer.py'),Path('joystick-games/tools/asset-policy.py')]
+          paths+=list(Path('joystick-games/tools/fixtures/android-runtime-artifact').glob('*.json'))
+          paths += [Path('puretv-joystick/joystick_sdk.py'),Path('tools/resource_catalog.py'),Path('.github/workflows/joystick-catalog-android-runtime.yml'),Path('joystick-games/catalog-registry.json'),Path('joystick-games/tools/qa-plan.py'),Path('joystick-games')/os.environ['GAME']/'qa-plan.json']
+          files={}
+          for path in paths:
+              target=out/'executed-source'/path;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
+              files[path.as_posix()]={'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+          (out/'executed-source.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'files':files},indent=2)+'\n')
+          command=Path(os.environ['ANDROID_HOME'])/'emulator/emulator'
+          if command.is_file():
+              process=subprocess.run([str(command),'-version'],text=True,capture_output=True);(out/'emulator-version.txt').write_text(process.stdout+process.stderr)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joystick-android-runtime-${{ matrix.game }}
+          path: ${{ runner.temp }}/runtime/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+
+  export:
+    if: always() && needs.select.result == 'success'
+    needs: [select, runtime]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      GAMES: ${{ needs.select.outputs.games }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          filter: blob:none
+          sparse-checkout: |
+            .github/workflows
+            joystick-games
+            puretv-joystick
+            tools
+      - uses: actions/download-artifact@v4
+        with:
+          name: joystick-android-runtime-provenance
+          path: ${{ runner.temp }}/export/provenance
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: joystick-android-runtime-*
+          path: ${{ runner.temp }}/downloaded
+      - name: Separate runtime evidence from original run provenance
+        run: |
+          python3 - <<'PY'
+          import os,shutil
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP']);evidence=root/'export/evidence';evidence.mkdir(parents=True,exist_ok=True)
+          for game in os.environ['GAMES'].split(','):
+              source=root/'downloaded'/('joystick-android-runtime-'+game)
+              if source.is_dir():shutil.move(str(source),evidence/source.name)
+          PY
+      - name: Record whether declared execution and frozen source copies survived upload
+        run: >-
+          python3 joystick-games/tools/android-runtime-copies.py --games "$GAMES"
+          --evidence "$RUNNER_TEMP/export/evidence" --output "$RUNNER_TEMP/export/archive-verification.json"
+          --record-only
+      - name: Export untouched failures and successes with both source identities
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUNTIME_RESULT: ${{ needs.runtime.result }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,json,os,traceback
+          from pathlib import Path
+          out=Path(os.environ['RUNNER_TEMP'])/'export';errors=[];checks=[]
+          games=os.environ['GAMES'].split(',')
+          def record(path):return {'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+          for game in games:
+              try:
+                  evidence=out/'evidence'/('joystick-android-runtime-'+game);inputs=evidence/game/'verified-inputs'
+                  binding=json.loads((inputs/'input-verification.json').read_text());assert binding['status']=='passed' and binding['qaSourceSha']==os.environ['GITHUB_SHA']
+                  assert binding['artifactSourceSha']==os.environ['ARTIFACT_SOURCE'] and str(binding['artifactRunId'])==os.environ['ARTIFACT_RUN']
+                  if os.environ['ARTIFACT_ID']:
+                      origin=binding['artifactOrigin'];assert origin['kind']=='github-actions-signed-artifact' and origin['artifactId']==int(os.environ['ARTIFACT_ID']) and origin['artifactRunAttempt']==int(os.environ['ARTIFACT_ATTEMPT']) and binding['artifactExportCommit'] is None
+                  else:assert binding['artifactExportCommit']==os.environ['ARTIFACT_EXPORT']
+                  outcomes=json.loads((evidence/(game+'-outcomes.json')).read_text());assert [item['mode'] for item in outcomes]==['normal','occupied'] and all(item['exitCode']==0 for item in outcomes)
+                  receipt=json.loads((inputs/'packages'/game/'signing-receipt.json').read_text());observer=json.loads((inputs/'observers'/game/'observer-signing-receipt.json').read_text())
+                  for mode in ['normal','occupied']:
+                      folder=evidence/(game+'-'+mode);report=json.loads((folder/'report.json').read_text())
+                      assert report['status']=='passed' and report['game']==game and report['sourceCommit']==os.environ['GITHUB_SHA']
+                      assert report['defaultPortOccupiedFixture'] is (mode=='occupied') and report['modelWrites'] is False and report['clockOverrides'] is False
+                      assert all(report['apk'][key]==receipt[key] for key in ['bytes','sha256']) and all(report['observer'][key]==observer['apkIdentity'][key] for key in ['bytes','sha256'])
+                      assert report['tests'] and all(item['status']=='passed' for item in report['tests'])
+                      video=report['video'];assert Path(video['path']).name==video['path'] and record(folder/video['path'])=={key:video[key] for key in ['bytes','sha256']}
+                      for name,item in report['sourceFiles'].items():
+                          assert not Path(name).is_absolute() and '..' not in Path(name).parts
+                          assert record(folder/'source'/name)==item==record(Path(name)), name
+                      checks.append({'game':game,'mode':mode,'apkSha256':report['apk']['sha256'],'status':'passed'})
+              except Exception:errors.append({'game':game,'error':traceback.format_exc()})
+          archive=json.loads((out/'archive-verification.json').read_text())
+          original_checks_passed=not errors and archive['status']=='passed' and os.environ['RUNTIME_RESULT']=='success'
+          diagnostic=os.environ['PON_CAPTURE_QEMU_STACK']=='true'
+          accepted=original_checks_passed and not diagnostic
+          (out/'runtime-verification.json').write_text(json.dumps({'status':'passed' if original_checks_passed else 'failed','checks':checks,'errors':errors,'diagnosticIntervened':diagnostic,'nativeAcceptanceAllowed':not diagnostic},indent=2)+'\n')
+          files={}
+          for path in sorted(out.rglob('*')):
+              assert not path.is_symlink()
+              if path.is_file():
+                  assert path.stat().st_size<100_000_000
+                  files[path.relative_to(out).as_posix()]=record(path)
+          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'qaRunAttempt':os.environ['GITHUB_RUN_ATTEMPT'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'games':games,'runtimeResult':os.environ['RUNTIME_RESULT'],'runtimeAccepted':accepted,'diagnosticIntervened':diagnostic,'nativeAcceptanceAllowed':not diagnostic,'files':files,'reusedSignedPackagesAndObservers':True,'physicalTvTested':False,'physicalEsp32Tested':False},indent=2)+'\n')
+          PY
+          export_branch="build-assets/joystick-catalog-android-runtime-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
+          test -z "$(git ls-remote --heads origin "refs/heads/$export_branch")"
+          git init --initial-branch "$export_branch" "$RUNNER_TEMP/export"
+          git -C "$RUNNER_TEMP/export" config user.name github-actions[bot]
+          git -C "$RUNNER_TEMP/export" config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git -C "$RUNNER_TEMP/export" add .
+          git -C "$RUNNER_TEMP/export" commit -q -m "Catalog Android QA for immutable signed packages ${GITHUB_RUN_ID} attempt ${GITHUB_RUN_ATTEMPT}"
+          gh auth setup-git
+          git -C "$RUNNER_TEMP/export" remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          git -C "$RUNNER_TEMP/export" push "--force-with-lease=refs/heads/$export_branch:" origin "HEAD:refs/heads/$export_branch"
+      - name: Reject incomplete source copies or inconsistent success claims after preservation
+        env:
+          RUNTIME_RESULT: ${{ needs.runtime.result }}
+        run: |
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          out=Path(os.environ['RUNNER_TEMP'])/'export';archive=json.loads((out/'archive-verification.json').read_text())
+          assert archive['status']=='passed', archive['errors']
+          if os.environ['RUNTIME_RESULT']=='success':
+              report=json.loads((out/'runtime-verification.json').read_text());assert report['status']=='passed', report['errors']
+          PY

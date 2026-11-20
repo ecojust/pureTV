@@ -1,0 +1,172 @@
+{
+  "status": "local_boundary_checks_passed_native_cause_still_unknown",
+  "checkedAt": "2026-11-19T22:25:45.058856+00:00",
+  "originalRunId": 44621752383,
+  "originalSourceCommit": "039d210cfa4cc65f59adf0859a777f3591853a70",
+  "originalExportCommit": "f559a71e99ff27c8f262ed2a82a70674ee90f9dc",
+  "originalFiles": {
+    "joystick-windows-evidence-ponpoko-kart/evidence-manifest.json": {
+      "bytes": 13193,
+      "sha256": "bffea6cb86096c70dc54a9fc2b2618620d481a12ec2721ea45b77d117d335d0e"
+    },
+    "joystick-windows-evidence-ponpoko-kart/runtime-bootstrap/report.json": {
+      "bytes": 1312,
+      "sha256": "269fa9f18704d94e67d8c019dd060627d5d6558b1fe66961b0d31867d523c30f"
+    },
+    "joystick-windows-evidence-ponpoko-kart/runtime-bootstrap.log": {
+      "bytes": 542,
+      "sha256": "8342eaed61e50d611563c34b25634c1dea4ce3611b5c5bac6e8b9f2376ea3d32"
+    },
+    "joystick-windows-evidence-ponpoko-kart/runtime-bootstrap/native-preferences-after-run.json": {
+      "bytes": 60,
+      "sha256": "878e23ef4a086424784f85615f89f07ea41d27348a999102f179ed44d541fee8"
+    },
+    "joystick-windows-evidence-ponpoko-kart/runtime-bootstrap/native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "joystick-windows-evidence-ponpoko-kart/package-verification.json": {
+      "bytes": 944,
+      "sha256": "78a555f1897553ddd1f2c789144fc7cc4c89d36ec6ffa12b321714799b0862cd"
+    }
+  },
+  "originalPonFacts": {
+    "fixtureStatus": "failed",
+    "timeoutSeconds": 60,
+    "lastState": null,
+    "hostHadNotExitedAtDeadline": true,
+    "nativeLogBytes": 0,
+    "diagnosticStateAbsentFromOriginalManifest": true,
+    "nativePreferencesRemainInitial": true,
+    "installationPackageVerification": "passed",
+    "rootCauseProven": false
+  },
+  "changes": "Optional bounded native phase/HRESULT/foreground/suspend-document observation, and bounded own-process fixture window observation. Existing HRESULT control flow, original error dialogs, document checks and gameplay cancellation remain unchanged.",
+  "limits": {
+    "nativeTraceEntries": 256,
+    "nativeTraceLineBytes": 8192,
+    "nativeTraceFileBytes": 1048576,
+    "fixtureWindowSeconds": 3,
+    "fixtureOwnedTopWindows": 16,
+    "fixtureStaticChildren": 64,
+    "fixtureVisitedWindows": 4096,
+    "windowTextCharacters": 1024,
+    "textRequestMilliseconds": 100
+  },
+  "frozenFixturePageUnchanged": true,
+  "allSevenOriginalAssertAstsUnchanged": true,
+  "original60SecondDeadlineAstUnchanged": true,
+  "nativeWindowsExecuted": false,
+  "msvcCompiled": false,
+  "gameClockOrRulesChanged": false,
+  "automaticResumeAdded": false,
+  "newWorkflowDispatched": false,
+  "testGroups": {
+    "portableCpp": 8,
+    "injectedWindowApi": 6,
+    "actualDiagnosticJavaScriptExpression": 4
+  },
+  "commands": [
+    {
+      "command": [
+        "g++",
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-pedantic",
+        "joystick-games/shared/windows/tests/diagnostic-log.test.cpp",
+        "-o",
+        "/dev/shm/windows-host-tmp/diagnostic-log-test"
+      ],
+      "returncode": 0,
+      "log": "validation-1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/dev/shm/windows-host-tmp/diagnostic-log-test"
+      ],
+      "returncode": 0,
+      "log": "validation-2.log",
+      "bytes": 73,
+      "sha256": "ee1b6d6f20936d34da05a13d78d4be59a4b9e4283f42aa6bc254a96d951dc4f5"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "joystick-games/shared/windows/tests/navigation-observation.test.py"
+      ],
+      "returncode": 0,
+      "log": "validation-3.log",
+      "bytes": 104,
+      "sha256": "65378dcad145da2497120819bebfc3c46534dce9714ce064b3d809a56654aca2"
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "joystick-games/shared/windows/tests/diagnostic-suspend.test.mjs"
+      ],
+      "returncode": 0,
+      "log": "validation-4.log",
+      "bytes": 469,
+      "sha256": "2947a47220cd58c03bae733b79f222769c0cdd2ec90a02524f0cf0dbeb64a560"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "joystick-games/shared/windows/Sources/main.cpp",
+        "joystick-games/shared/windows/Sources/DiagnosticLog.hpp",
+        "joystick-games/shared/windows/CMakeLists.txt",
+        "joystick-games/shared/windows/tests/diagnostic-log.test.cpp",
+        "joystick-games/shared/windows/tests/navigation-storage.test.py",
+        "joystick-games/shared/windows/tests/navigation-observation.py",
+        "joystick-games/shared/windows/tests/navigation-observation.test.py",
+        "joystick-games/shared/windows/tests/diagnostic-suspend.test.mjs"
+      ],
+      "returncode": 0,
+      "log": "validation-5.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "sourceInventory": {
+    "joystick-games/shared/windows/Sources/main.cpp": {
+      "bytes": 34859,
+      "sha256": "ec7511d3da5ad0aa5134b2e60215841c33d19c6b503e581743d1511d6b922dba"
+    },
+    "joystick-games/shared/windows/Sources/DiagnosticLog.hpp": {
+      "bytes": 1010,
+      "sha256": "e81581fdf9ac3412f84a9b1b8beed188d8f54afcf167936ccf0b39662388c86d"
+    },
+    "joystick-games/shared/windows/CMakeLists.txt": {
+      "bytes": 1819,
+      "sha256": "6a75ece5a523651ddb485996e5d8aab5da9bdcbbf1c0d867c63ef48d23d9bd32"
+    },
+    "joystick-games/shared/windows/tests/diagnostic-log.test.cpp": {
+      "bytes": 2165,
+      "sha256": "55e0fe7248069a01f68f718683e7063ce3ccf5c6583dae58bf7e2f6ef40ce1b7"
+    },
+    "joystick-games/shared/windows/tests/navigation-storage.test.py": {
+      "bytes": 8079,
+      "sha256": "c57f0090974cb697360d1ddad6b5baae9e810537e25ee945f34a250483f0089c"
+    },
+    "joystick-games/shared/windows/tests/navigation-observation.py": {
+      "bytes": 5557,
+      "sha256": "e366ff0260e5b517250fd5cd69ecd5f999cb1739fe7e0b910447a9c085dd8217"
+    },
+    "joystick-games/shared/windows/tests/navigation-observation.test.py": {
+      "bytes": 3122,
+      "sha256": "406733543680ffd369de0b90aa71776ae8b3f8e83e59639f335966a69e16c89c"
+    },
+    "joystick-games/shared/windows/tests/diagnostic-suspend.test.mjs": {
+      "bytes": 2412,
+      "sha256": "3daa9020c0368797e09a2f22da13b9a86873dbb1c4d41292bac6b83e75ce71af"
+    }
+  }
+}

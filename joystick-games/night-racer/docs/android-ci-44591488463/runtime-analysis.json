@@ -1,0 +1,683 @@
+{
+  "reviewedAt": "2026-11-19T19:04:43.598995+00:00",
+  "sourceSha": "032924026f00dba24133ae6cfbf1e99b704c1011",
+  "sourceRunId": 44591488463,
+  "sourceRunAttempt": 1,
+  "originalExportCommit": "23d9b4e11b8409cb3c63cf1dc051bac54ffb6de5",
+  "modes": [
+    {
+      "mode": "normal",
+      "status": "failed",
+      "reportSha256": "f5323e6e8a5ac6c8261a811195cf936ca6381b822fd0eaf6dc76790107efbd57",
+      "tests": [
+        {
+          "name": "catalog scenario starts with fresh app data before launch",
+          "status": "passed",
+          "details": {
+            "mode": "fresh-install-app-data",
+            "targetPackage": "com.ecojust.joystick.nightracer",
+            "method": "pm clear",
+            "phase": "before-target-launch",
+            "status": "passed",
+            "stdout": "Success"
+          }
+        },
+        {
+          "name": "installed target launches initialized game menu with no controller card",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "original SDK hello and nine sync messages create actual controller ID card",
+          "status": "passed",
+          "details": {
+            "identity": "virtual-3f80539ec777"
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Start the original three-light countdown",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "playing"
+              }
+            ],
+            "holdMs": 200
+          }
+        }
+      ],
+      "failure": "AssertionError: plan-gameplay-Accelerate through the original countdown timed out; last snapshot retained",
+      "controllerService": {
+        "state": "available",
+        "serviceName": "Night Racer",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "error": 0
+      },
+      "wire": {
+        "sdkMessages": 111,
+        "acceptedSdkMessages": 111,
+        "rejectedSdkMessages": 0,
+        "hostReplies": 111,
+        "matchingAcks": 111,
+        "missingAcks": [],
+        "expectedBusyIds": [],
+        "rejectedConnections": [],
+        "unexpectedReplies": [],
+        "duplicateAcks": [],
+        "keysSent": [
+          "A",
+          "B",
+          "DOWN",
+          "LEFT",
+          "RIGHT",
+          "START",
+          "UP",
+          "X",
+          "Y"
+        ],
+        "errors": []
+      },
+      "observations": [
+        {
+          "label": "initial-menu",
+          "stage": "menu",
+          "frames": 2,
+          "renderer": "webgl2",
+          "gameplay": {
+            "state": "title",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 0,
+            "countT": 0,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "controllerButtons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pollCount": 2,
+          "runtimeErrors": []
+        },
+        {
+          "label": "before-plan-Start the original three-light countdown",
+          "stage": "menu",
+          "frames": 30,
+          "renderer": "webgl2",
+          "gameplay": {
+            "state": "title",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 0,
+            "countT": 0,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "controllerButtons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pollCount": 30,
+          "runtimeErrors": []
+        },
+        {
+          "label": "after-plan-Start the original three-light countdown",
+          "stage": "playing",
+          "frames": 37,
+          "renderer": "webgl2",
+          "gameplay": {
+            "state": "countdown",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 0,
+            "countT": 0.194,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "controllerButtons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": true,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pollCount": 37,
+          "runtimeErrors": []
+        },
+        {
+          "label": "before-plan-Accelerate through the original countdown",
+          "stage": "playing",
+          "frames": 54,
+          "renderer": "webgl2",
+          "gameplay": {
+            "state": "countdown",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 0,
+            "countT": 1.0440000000000003,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "controllerButtons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pollCount": 54,
+          "runtimeErrors": []
+        },
+        {
+          "label": "timeout-plan-gameplay-Accelerate through the original countdown",
+          "stage": "playing",
+          "frames": 171,
+          "renderer": "webgl2",
+          "gameplay": {
+            "state": "race",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 3.824999999999989,
+            "countT": 3.0341999999999802,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "controllerButtons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pollCount": 171,
+          "runtimeErrors": []
+        }
+      ],
+      "modelWrites": false,
+      "clockOverrides": false
+    },
+    {
+      "mode": "occupied",
+      "status": "failed",
+      "reportSha256": "6ae1a489b40541e495eef3e1d229c744106bc5a5469224eb104d12ece7ba746e",
+      "tests": [
+        {
+          "name": "catalog scenario starts with fresh app data before launch",
+          "status": "passed",
+          "details": {
+            "mode": "fresh-install-app-data",
+            "targetPackage": "com.ecojust.joystick.nightracer",
+            "method": "pm clear",
+            "phase": "before-target-launch",
+            "status": "passed",
+            "stdout": "Success"
+          }
+        },
+        {
+          "name": "installed target launches initialized game menu with no controller card",
+          "status": "passed",
+          "details": null
+        },
+        {
+          "name": "original SDK hello and nine sync messages create actual controller ID card",
+          "status": "passed",
+          "details": {
+            "identity": "virtual-4d31d3c28f38"
+          }
+        },
+        {
+          "name": "actual SDK gameplay: Start the original three-light countdown",
+          "status": "passed",
+          "details": {
+            "expect": [
+              {
+                "path": "stage",
+                "op": "eq",
+                "value": "playing"
+              }
+            ],
+            "holdMs": 200
+          }
+        }
+      ],
+      "failure": "AssertionError: plan-gameplay-Accelerate through the original countdown timed out; last snapshot retained",
+      "controllerService": {
+        "state": "available",
+        "serviceName": "Night Racer",
+        "port": 34173,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "error": 0
+      },
+      "wire": {
+        "sdkMessages": 107,
+        "acceptedSdkMessages": 107,
+        "rejectedSdkMessages": 0,
+        "hostReplies": 107,
+        "matchingAcks": 107,
+        "missingAcks": [],
+        "expectedBusyIds": [],
+        "rejectedConnections": [],
+        "unexpectedReplies": [],
+        "duplicateAcks": [],
+        "keysSent": [
+          "A",
+          "B",
+          "DOWN",
+          "LEFT",
+          "RIGHT",
+          "START",
+          "UP",
+          "X",
+          "Y"
+        ],
+        "errors": []
+      },
+      "observations": [
+        {
+          "label": "initial-menu",
+          "stage": "menu",
+          "frames": 2,
+          "renderer": "webgl2",
+          "gameplay": {
+            "state": "title",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 0,
+            "countT": 0,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "controllerButtons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pollCount": 2,
+          "runtimeErrors": []
+        },
+        {
+          "label": "before-plan-Start the original three-light countdown",
+          "stage": "menu",
+          "frames": 23,
+          "renderer": "webgl2",
+          "gameplay": {
+            "state": "title",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 0,
+            "countT": 0,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "controllerButtons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pollCount": 23,
+          "runtimeErrors": []
+        },
+        {
+          "label": "after-plan-Start the original three-light countdown",
+          "stage": "playing",
+          "frames": 30,
+          "renderer": "webgl2",
+          "gameplay": {
+            "state": "countdown",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 0,
+            "countT": 0.22200000000000003,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "controllerButtons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": true,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pollCount": 30,
+          "runtimeErrors": []
+        },
+        {
+          "label": "before-plan-Accelerate through the original countdown",
+          "stage": "playing",
+          "frames": 48,
+          "renderer": "webgl2",
+          "gameplay": {
+            "state": "countdown",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 0,
+            "countT": 1.1220000000000006,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "controllerButtons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pollCount": 48,
+          "runtimeErrors": []
+        },
+        {
+          "label": "timeout-plan-gameplay-Accelerate through the original countdown",
+          "stage": "playing",
+          "frames": 177,
+          "renderer": "webgl2",
+          "gameplay": {
+            "state": "race",
+            "map": "city",
+            "mode": "race",
+            "raceTime": 4.458333333333345,
+            "countT": 3.0219999999999976,
+            "playerX": -36.357958843559025,
+            "playerZ": 3.225297576189041,
+            "heading": 1.4554841714141133,
+            "speed": 0,
+            "steer": 0,
+            "drift": false,
+            "driftTime": 0,
+            "miniT": 0,
+            "nitro": 0,
+            "bottles": 1,
+            "camera": 0,
+            "coins": 400,
+            "laps": -1,
+            "renderPreset": "high",
+            "ready": true
+          },
+          "controllerButtons": {
+            "UP": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "A": false,
+            "B": false,
+            "X": false,
+            "Y": false
+          },
+          "pollCount": 177,
+          "runtimeErrors": []
+        }
+      ],
+      "modelWrites": false,
+      "clockOverrides": false
+    }
+  ],
+  "visualReview": [
+    {
+      "path": "original-evidence/reports/joystick-android-report-runtime-night-racer/night-racer-normal/connected.png",
+      "sha256": "0c7697f3731c6415f75dcae1f372518ad9faf92455a86136ede53f7e1ea958fd",
+      "kind": "original installed Android screenshot",
+      "viewImageInspected": true,
+      "cssViewport": [
+        960,
+        540
+      ],
+      "screenshotPixels": [
+        1920,
+        1080
+      ],
+      "findings": [
+        "Actual supplied SDK controller ID wraps within the visible sidebar",
+        "Native menu and original animated 3D scene render",
+        "Bottom fixed Chinese input-help strip overlaps the lower primary menu buttons; needs layout review",
+        "No actual driving established by this menu capture"
+      ]
+    },
+    {
+      "path": "original-evidence/reports/joystick-android-report-runtime-night-racer/night-racer-occupied/connected.png",
+      "sha256": "67b924a0c2d062536d021e4ec87672e2fc57c7049f9159d3151606cbcf1b4fce",
+      "kind": "original installed Android screenshot",
+      "viewImageInspected": true,
+      "cssViewport": [
+        960,
+        540
+      ],
+      "screenshotPixels": [
+        1920,
+        1080
+      ],
+      "findings": [
+        "Actual supplied SDK controller ID wraps within the visible sidebar",
+        "Native menu and original animated 3D scene render",
+        "Bottom fixed Chinese input-help strip overlaps the lower primary menu buttons; needs layout review",
+        "No actual driving established by this menu capture"
+      ]
+    },
+    {
+      "path": "video-review/normal-030s.png",
+      "sha256": "a8c70608fa432f45cd2917260d003b50a0a42b547aadd04f25a66a43bf2b3e90",
+      "kind": "frame extracted from original installed Android screen recording",
+      "viewImageInspected": true,
+      "sourceVideo": "original-evidence/reports/joystick-android-report-runtime-night-racer/night-racer-normal/controller-gameplay.mp4",
+      "sourceVideoSha256": "fdd3e97f8df977d053e98d59e0b4725ae11392bb849e9ddb44421f6758869889",
+      "seekSeconds": 30,
+      "extraction": "ffmpeg -v error -ss <seconds> -i <original> -frames:v 1 <output>; no frame manipulation",
+      "findings": [
+        "Original title menu with readable ID; bottom help overlaps lower menu action labels"
+      ]
+    },
+    {
+      "path": "video-review/normal-075s.png",
+      "sha256": "8c3216044393a7d09b032732535bda5c6521cfe9d987a7815a28111305ede8c5",
+      "kind": "frame extracted from original installed Android screen recording",
+      "viewImageInspected": true,
+      "sourceVideo": "original-evidence/reports/joystick-android-report-runtime-night-racer/night-racer-normal/controller-gameplay.mp4",
+      "sourceVideoSha256": "fdd3e97f8df977d053e98d59e0b4725ae11392bb849e9ddb44421f6758869889",
+      "seekSeconds": 75,
+      "extraction": "ffmpeg -v error -ss <seconds> -i <original> -frames:v 1 <output>; no frame manipulation",
+      "findings": [
+        "Original starting grid, countdown numeral 1, player speed 0 km/h"
+      ]
+    },
+    {
+      "path": "video-review/normal-110s.png",
+      "sha256": "94bc7700271e7920d8f798f92ca9095d18460893a9a33db18bed55197e9b9474",
+      "kind": "frame extracted from original installed Android screen recording",
+      "viewImageInspected": true,
+      "sourceVideo": "original-evidence/reports/joystick-android-report-runtime-night-racer/night-racer-normal/controller-gameplay.mp4",
+      "sourceVideoSha256": "fdd3e97f8df977d053e98d59e0b4725ae11392bb849e9ddb44421f6758869889",
+      "seekSeconds": 110,
+      "extraction": "ffmpeg -v error -ss <seconds> -i <original> -frames:v 1 <output>; no frame manipulation",
+      "findings": [
+        "Original race underway with AI ahead and total time 2.525 seconds, player still stationary at 0 km/h"
+      ]
+    }
+  ],
+  "conclusion": "Installed app initializes and accepts original SDK START. Both modes fail before proving acceleration. Current plan presses UP for a fixed 7 wall seconds while still in the original countdown, releases all keys, then waits for speed; final retained snapshots show race phase with no held inputs and speed zero. This supports a QA sequencing issue; it does not establish actual driving acceptance.",
+  "sourceBasis": [
+    "Original qa-plan.json first step accepts stage=playing, which includes countdown",
+    "Executed run.py catalog_scenarios releases keys before evaluating delayed step expectations",
+    "Snapshots retain countT~1.04/1.12 before acceleration and raceTime~3.82/4.46 at timeout",
+    "Original video 75s shows countdown 1;110s shows player0km/h after green"
+  ],
+  "unreached": [
+    "Acceleration acceptance",
+    "Steering/drift/nitro actual operation",
+    "Pause/resume/disconnect/background and reconnect scenarios",
+    "1280x720 layout checks",
+    "Persistent storage restart checks"
+  ],
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "packageDeliveryAccepted": false,
+  "productionModifiedByAudit": false,
+  "extraWorkflowsDispatched": 0
+}

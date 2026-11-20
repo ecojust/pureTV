@@ -1,0 +1,325 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-19T21:25:51.571111+00:00",
+  "sourceRun": 44614635591,
+  "sourceAttempt": 1,
+  "sourceCommit": "cf26e19bf57524a9c4ce53ea77bd30824cbcd54d",
+  "runtimeJob": 135880748114,
+  "exportCommit": "2e0db026e138bbc8b3c5fbbb4f06ef9d109449f0",
+  "originalStatus": "failure",
+  "classification": "installation remains pending at the Play Protect per-app old-Android privacy block; no game runtime was reached",
+  "package": "com.ecojust.joystick.backroadrally",
+  "apk": {
+    "bytes": 105020455,
+    "sha256": "8596350c7868352a9494d0667037ef4a75709af25cf50066df137bab3bcd8808"
+  },
+  "sdk": {
+    "minimum": 26,
+    "target": 29,
+    "compile": 35,
+    "sourcePath": "joystick-games/backroad-rally/docs/signed-artifact-audit-44599353036/game-badging.txt",
+    "sourceSha256": "f354a64cc7c7a5fc9083b05d3526f3cf15efc5c8d8d82b96e62fced8e278604c",
+    "note": "26 is minimum SDK, not target SDK. Source is prior exact signed-package aapt badging; APK identity unchanged."
+  },
+  "modes": [
+    {
+      "mode": "normal",
+      "runtimeReport": {
+        "path": "original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-normal/report.json",
+        "bytes": 4347,
+        "sha256": "c2259f7b3982db3096684cfeb0d38baea5f0f8177919a75294020d2f10b21535"
+      },
+      "status": "failed",
+      "failurePhase": "adb install -r timeout after 240 seconds",
+      "gameTests": 0,
+      "gameSnapshots": 0,
+      "installedPackageDumpsys": {
+        "exitCode": 0,
+        "stdout": "Unable to find package: com.ecojust.joystick.backroadrally\n"
+      },
+      "installFailureReport": {
+        "path": "original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-normal/install-failure/report.json",
+        "bytes": 4569,
+        "sha256": "b1c8423cc7c270c56765167538c18821da79c6b915d65806abcbb9b1ab2149ed"
+      },
+      "installCommand": {
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "install",
+          "-r",
+          "/home/runner/work/_temp/input/packages/backroad-rally/backroad-rally-0.1.0.apk"
+        ],
+        "startedAt": 1795122684.7767053,
+        "apkBytes": 105020455,
+        "timeoutSeconds": 240,
+        "status": "timed-out",
+        "endedAt": 1795122924.877638
+      },
+      "image": {
+        "path": "original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-normal/install-failure/screen.png",
+        "bytes": 114653,
+        "sha256": "9f6c7f98be3d1c582b00b116bbf55d38da1c357d62b865cd37656d0118ee31a9"
+      },
+      "imageActuallyViewed": true,
+      "imageDimensions": [
+        1920,
+        1080
+      ],
+      "visibleTitle": "Google Play Protect / Unsafe app blocked",
+      "visibleApp": "Backroad Rally",
+      "visibleReason": "This app was built for an older version of Android and doesn't include the latest privacy protections.",
+      "visibleControls": [
+        "More details (collapsed and focused)",
+        "Got it"
+      ],
+      "installAnywayVisible": false,
+      "xml": {
+        "path": "original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-normal/install-failure/ui.xml",
+        "bytes": 9047,
+        "sha256": "44a6403a78ba426a60a5c6f06509b9e955a407a307711f8f178d94048db28c53"
+      },
+      "xmlTexts": [
+        "Google Play Protect",
+        "Unsafe app blocked",
+        "Backroad Rally",
+        "This app was built for an older version of Android and doesn't include the latest privacy protections.",
+        "More details",
+        "Got it"
+      ],
+      "clickableNodes": [
+        {
+          "index": "0",
+          "text": "",
+          "resource-id": "",
+          "class": "android.view.View",
+          "package": "com.android.vending",
+          "content-desc": "",
+          "checkable": "false",
+          "checked": "false",
+          "clickable": "true",
+          "enabled": "true",
+          "focusable": "true",
+          "focused": "true",
+          "scrollable": "false",
+          "long-clickable": "false",
+          "password": "false",
+          "selected": "false",
+          "bounds": "[693,662][885,758]",
+          "drawing-order": "0",
+          "hint": ""
+        },
+        {
+          "index": "3",
+          "text": "",
+          "resource-id": "",
+          "class": "android.view.View",
+          "package": "com.android.vending",
+          "content-desc": "",
+          "checkable": "false",
+          "checked": "false",
+          "clickable": "true",
+          "enabled": "true",
+          "focusable": "true",
+          "focused": "false",
+          "scrollable": "false",
+          "long-clickable": "false",
+          "password": "false",
+          "selected": "false",
+          "bounds": "[1129,762][1251,858]",
+          "drawing-order": "3",
+          "hint": ""
+        }
+      ],
+      "foreground": {
+        "path": "original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-normal/install-failure/foreground.txt",
+        "bytes": 26531,
+        "sha256": "f413030f1fb8be15000056f1bdff50d69e89bee529c79dfdecc408ef49dffad8"
+      },
+      "foregroundMatchingLines": [
+        "topResumedActivity=ActivityRecord{59426710 u0 com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity t6}",
+        "mCurrentFocus=Window{694d1db u0 com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity}",
+        "mFocusedApp=ActivityRecord{59426710 u0 com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity t6}"
+      ],
+      "installerSessions": {
+        "path": "original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-normal/install-failure/installer-sessions.txt",
+        "bytes": 1855,
+        "sha256": "b443555378be3999fd5cb6d17a8cf7e24b36143f0ab13d2d539c776b82e42cfa"
+      },
+      "activeSessionIds": [
+        1094821096
+      ],
+      "sessionObservation": "committed=true, sealed=true, progress=0.90000004; not applied/failed/ready; original 105020455-byte shell-initiated install remains active",
+      "verificationLogExtracts": [
+        "11-19 21:11:39.347  2322  2422 I Finsky  : [62] VerifyApps: APK Analysis scan finished for com.ecojust.joystick.backroadrally. Verdict: SAFE",
+        "11-19 21:11:39.580  2322  2671 I Finsky  : [136] VerifyApps: Verification package=com.ecojust.joystick.backroadrally, id=0, response=3, upload_requested=false, enable_ecm=false",
+        "11-19 21:11:39.604  2322  2413 I Finsky  : [57] VerifyApps: ScanResultPicker returned for package=com.ecojust.joystick.backroadrally: POTENTIALLY_UNWANTED",
+        "11-19 21:11:39.622   623  1706 I ActivityTaskManager: START u0 {flg=0x10000000 xflg=0x4 cmp=com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity (has extras)} with LAUNCH_MULTIPLE from uid 10051 (BAL_ALLOW_PERMISSION) result code=0"
+      ],
+      "uiActionsSent": false,
+      "settingsChanged": false
+    },
+    {
+      "mode": "occupied",
+      "runtimeReport": {
+        "path": "original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-occupied/report.json",
+        "bytes": 4346,
+        "sha256": "fede789cfdf28d26dc6c417cca4e83bfe40a4950870de552a840c830489aa951"
+      },
+      "status": "failed",
+      "failurePhase": "adb install -r timeout after 240 seconds",
+      "gameTests": 0,
+      "gameSnapshots": 0,
+      "installedPackageDumpsys": {
+        "exitCode": 0,
+        "stdout": "Unable to find package: com.ecojust.joystick.backroadrally\n"
+      },
+      "installFailureReport": {
+        "path": "original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-occupied/install-failure/report.json",
+        "bytes": 4573,
+        "sha256": "f420200b4855e6b9a1790dbce047ecb6cd9534d2fc73da6ca2eb115fcf987c17"
+      },
+      "installCommand": {
+        "command": [
+          "/usr/local/lib/android/sdk/platform-tools/adb",
+          "install",
+          "-r",
+          "/home/runner/work/_temp/input/packages/backroad-rally/backroad-rally-0.1.0.apk"
+        ],
+        "startedAt": 1795122928.7435977,
+        "apkBytes": 105020455,
+        "timeoutSeconds": 240,
+        "status": "timed-out",
+        "endedAt": 1795123168.8451042
+      },
+      "image": {
+        "path": "original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-occupied/install-failure/screen.png",
+        "bytes": 114523,
+        "sha256": "c8ca4a1572296c40b62e30e3e0c0e1e897c4fee430c43b52c5fa0a341de5b956"
+      },
+      "imageActuallyViewed": true,
+      "imageDimensions": [
+        1920,
+        1080
+      ],
+      "visibleTitle": "Google Play Protect / Unsafe app blocked",
+      "visibleApp": "Backroad Rally",
+      "visibleReason": "This app was built for an older version of Android and doesn't include the latest privacy protections.",
+      "visibleControls": [
+        "More details (collapsed and focused)",
+        "Got it"
+      ],
+      "installAnywayVisible": false,
+      "xml": {
+        "path": "original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-occupied/install-failure/ui.xml",
+        "bytes": 9047,
+        "sha256": "44a6403a78ba426a60a5c6f06509b9e955a407a307711f8f178d94048db28c53"
+      },
+      "xmlTexts": [
+        "Google Play Protect",
+        "Unsafe app blocked",
+        "Backroad Rally",
+        "This app was built for an older version of Android and doesn't include the latest privacy protections.",
+        "More details",
+        "Got it"
+      ],
+      "clickableNodes": [
+        {
+          "index": "0",
+          "text": "",
+          "resource-id": "",
+          "class": "android.view.View",
+          "package": "com.android.vending",
+          "content-desc": "",
+          "checkable": "false",
+          "checked": "false",
+          "clickable": "true",
+          "enabled": "true",
+          "focusable": "true",
+          "focused": "true",
+          "scrollable": "false",
+          "long-clickable": "false",
+          "password": "false",
+          "selected": "false",
+          "bounds": "[693,662][885,758]",
+          "drawing-order": "0",
+          "hint": ""
+        },
+        {
+          "index": "3",
+          "text": "",
+          "resource-id": "",
+          "class": "android.view.View",
+          "package": "com.android.vending",
+          "content-desc": "",
+          "checkable": "false",
+          "checked": "false",
+          "clickable": "true",
+          "enabled": "true",
+          "focusable": "true",
+          "focused": "false",
+          "scrollable": "false",
+          "long-clickable": "false",
+          "password": "false",
+          "selected": "false",
+          "bounds": "[1129,762][1251,858]",
+          "drawing-order": "3",
+          "hint": ""
+        }
+      ],
+      "foreground": {
+        "path": "original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-occupied/install-failure/foreground.txt",
+        "bytes": 26685,
+        "sha256": "3b138c4d9273fd0b56d720af6ad81c4f9e3be25b61abf35fb4a673c3b1e1ee81"
+      },
+      "foregroundMatchingLines": [
+        "topResumedActivity=ActivityRecord{59426710 u0 com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity t6}",
+        "mCurrentFocus=Window{694d1db u0 com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity}",
+        "mFocusedApp=ActivityRecord{59426710 u0 com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity t6}"
+      ],
+      "installerSessions": {
+        "path": "original-export/evidence/joystick-android-runtime-backroad-rally/backroad-rally-occupied/install-failure/installer-sessions.txt",
+        "bytes": 3463,
+        "sha256": "3bccbaf37751055bcc76df59678fb9ccb7caf0f99f19c1935dabd5503029e593"
+      },
+      "activeSessionIds": [
+        1094821096,
+        668507573
+      ],
+      "sessionObservation": "committed=true, sealed=true, progress=0.90000004; not applied/failed/ready; original 105020455-byte shell-initiated install remains active",
+      "verificationLogExtracts": [
+        "11-19 21:11:39.347  2322  2422 I Finsky  : [62] VerifyApps: APK Analysis scan finished for com.ecojust.joystick.backroadrally. Verdict: SAFE",
+        "11-19 21:11:39.580  2322  2671 I Finsky  : [136] VerifyApps: Verification package=com.ecojust.joystick.backroadrally, id=0, response=3, upload_requested=false, enable_ecm=false",
+        "11-19 21:11:39.604  2322  2413 I Finsky  : [57] VerifyApps: ScanResultPicker returned for package=com.ecojust.joystick.backroadrally: POTENTIALLY_UNWANTED",
+        "11-19 21:11:39.622   623  1706 I ActivityTaskManager: START u0 {flg=0x10000000 xflg=0x4 cmp=com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity (has extras)} with LAUNCH_MULTIPLE from uid 10051 (BAL_ALLOW_PERMISSION) result code=0",
+        "11-19 21:15:29.636  2322  2422 I Finsky  : [62] VerifyApps: APK Analysis scan finished for com.ecojust.joystick.backroadrally. Verdict: SAFE",
+        "11-19 21:15:29.743  2322  3121 I Finsky  : [191] VerifyApps: Verification package=com.ecojust.joystick.backroadrally, id=1, response=3, upload_requested=false, enable_ecm=false",
+        "11-19 21:15:29.745  2322  3118 I Finsky  : [188] VerifyApps: ScanResultPicker returned for package=com.ecojust.joystick.backroadrally: POTENTIALLY_UNWANTED",
+        "11-19 21:15:29.750   623  1707 I ActivityTaskManager: START u0 {flg=0x10000000 xflg=0x4 cmp=com.android.vending/com.google.android.finsky.protectdialogs.activity.PlayProtectDialogsActivity (has extras)} with LAUNCH_MULTIPLE from uid 10051 (BAL_ALLOW_VISIBLE_WINDOW) result code=3"
+      ],
+      "uiActionsSent": false,
+      "settingsChanged": false
+    }
+  ],
+  "evidenceRecovery": {
+    "files": 92,
+    "bytes": 9545825,
+    "gitBlobsAndManifestValidated": true,
+    "errors": []
+  },
+  "cliLog": {
+    "path": "original-runtime-job.log",
+    "bytes": 501721,
+    "sha256": "449bb660ee124c37023ea48527ab317b4fd7530b1535bfa4a63e8c98ec3fcd98"
+  },
+  "interpretation": [
+    "The APK bytes reached committed installer sessions; a larger transfer timeout alone does not address the observed pending confirmation.",
+    "Both real screenshots, XML and foreground identify the same Backroad Rally Play Protect old-version warning.",
+    "APK Analysis SAFE is only one scan result; final POTENTIALLY_UNWANTED and UI wording are preserved without declaring either maliciousness or an exclusive permanent cause.",
+    "The second mode retained the first active install session and opened another. This is not two fresh emulator installations.",
+    "No Install anyway control exists in the captured collapsed view. Expansion has not been executed or observed."
+  ],
+  "suggestedNextStep": "Only under the separately authorized bounded QA helper, reacquire and verify this exact APK/app/dialog, expand the real More details node, capture fresh XML/PNG, and continue only if an explicit Install anyway for this same app is actually present. Any mismatch stops; never change verifier settings.",
+  "productionOrDeviceChanges": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false
+}

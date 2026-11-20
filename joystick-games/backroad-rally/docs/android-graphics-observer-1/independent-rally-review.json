@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "status": "independent-static-review-passed",
+  "reviewedAtUtc": "2026-11-19T23:44:08.653858+00:00",
+  "sourceInventory": {
+    "bytes": 1852,
+    "sha256": "b26f82e342f3ba3ec02c904e01fc6e1678d6f3eeae6139c25fa68608561060b2"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/graphics-observer/build.py": {
+      "bytes": 4876,
+      "sha256": "014f60e337551af35babfc89afe82f678416672753fa2efb2e5ff069eff7d47c"
+    },
+    "joystick-games/qa/android/graphics-observer/graphics.js": {
+      "bytes": 4470,
+      "sha256": "decc9966cab6312d2684936ada870e29b0e4f2befae5536629ea67ce3a2680fb"
+    },
+    "joystick-games/qa/android/graphics-observer/run.py": {
+      "bytes": 28106,
+      "sha256": "1cc52a82d1c3a21a37304d3e11894e78933e8f715f4f61808c339ca12d7a7263"
+    },
+    "joystick-games/qa/android/graphics-observer/src/com/ecojust/graphicsqa/BoundedEvents.java": {
+      "bytes": 2022,
+      "sha256": "0c02671deec63ea8264aa62caa6eb7a0d310d853e9690b8f807eb06b146c765f"
+    },
+    "joystick-games/qa/android/graphics-observer/src/com/ecojust/graphicsqa/GraphicsObserver.java": {
+      "bytes": 10825,
+      "sha256": "ee546fed8341e716c90bba948d9e5a3616edf4da9676648430a908f353cbdf1a"
+    },
+    "joystick-games/qa/android/graphics-observer/tests/BoundedEventsTest.java": {
+      "bytes": 1508,
+      "sha256": "73a5e826a578a15d04fd3d93cc5b72a9424e086d4a88cfeb20f1b7c2b491eb6d"
+    },
+    "joystick-games/qa/android/graphics-observer/tests/HeaderBudgetTest.java": {
+      "bytes": 2127,
+      "sha256": "47d26acd4bd45b078fe1cb83263c62e6f5cc4b5322cf8caae6258a56971d8741"
+    },
+    "joystick-games/qa/android/graphics-observer/tests/graphics.test.cjs": {
+      "bytes": 4038,
+      "sha256": "53f54976c579b5ff2ad03ec6cb8126d5b02c94d6dfcaa0a6b5105146f9b7a584"
+    },
+    "joystick-games/qa/android/graphics-observer/tests/test_driver.py": {
+      "bytes": 12233,
+      "sha256": "9f1205c2777fb280d0f3f7d93099992b55f71376c0719916b6adba22c8b93b8e"
+    }
+  },
+  "priorFinding": {
+    "record": "independent-rally-review-before-initial-document.json",
+    "sha256": "50753234d743967bf571a7e90fa0483815bf5032ad6b2c4f8871e2187b18f1d6",
+    "status": "resolved-by-narrow-initial-document-handling",
+    "observedOriginalNativeFailure": false
+  },
+  "checks": [
+    "Exact about:blank with no JoystickGameQA is pending and graphicsRead=false; only setup initial wait passes allow_initial_blank=True. The real initialized target menu remains required. Existing foreign-document and game/Observer error rejection is unchanged.",
+    "New Node fixture checks about:blank without/with existing QA; the driver fixture checks pending-to-real-menu progression and rejects pending after initial wait, foreign URL, invented cached game and genuine error. Original pre-fix source and logs remain preserved.",
+    "Final Java uses Handler.post and a private ten-second latch. Timeout removes a queued callback and expires the request; later callbacks cannot become a different request success. Header byte and total-time budgets are explicit; no cached response is substituted.",
+    "Console attaches only to the existing original WebView before load, with no preexisting Chrome client. WebViewClient, game model, clocks, renderer and input callbacks are not replaced. The callback returns false; actual startup behavior still awaits native CI.",
+    "JS calls the existing read-only QA snapshot once; original puretv.ts snapshot reads controller.peek, copied game observations and renderer counters. There are no consuming native snapshots or GL-context/framebuffer API calls. DOM/style/resource reads and bounded console collection are diagnostic overhead, not performance measurements.",
+    "Only fixed original 4b6/run44625676430/artifact14579726223 APK bytes and separate newly signed graphics Observer are installed after independent checks. Old Observer is validated but never started. Installed base APK SHA is checked.",
+    "Device observations require explicit disposable flag and actual qemu=1; rejected preflight never reaches final ADB capture. New target35 install failure only records bounded existing diagnostics and never invokes the older target29 confirmation routine.",
+    "Original SDK is used through the existing transparent wire recorder; 30 source-bound menu steps preserve their original predicates/timeouts, exact down/release ACK pair, same controller ID/session, all nine keys released and two new polls. Only original step33 exact start-query navigation may reset document poll baseline. No full game/lifecycle/occupied-port/storage acceptance is claimed.",
+    "Each HTTP result is recorded; failed transport is not replaced by an older success. Independent final system PNG is attempted before Observer final reads. Failed run status and actual screenshot/console data remain available.",
+    "All 9 live source hashes equal the final inventory. Executed source closure and actual output names are covered by the frozen companion exporter allowlist. The two real original test fixtures remain separately hash-bound; they must accompany an isolated QA checkout."
+  ],
+  "validationReadNotRepeated": {
+    "javaRingChecks": 161,
+    "headerParser": "owner actual final Java compile/test log read; Java and DEX unchanged by the subsequent JS-only build 5",
+    "driverTests": 12,
+    "driverLog": {
+      "bytes": 111,
+      "sha256": "81b5e209985a993f3fa64d09460e87f83813e88d89c09666058883369a95fb35"
+    },
+    "nodeLog": {
+      "bytes": 128,
+      "sha256": "7d8081a21deb9bf285e7b72bc02131064773c19347e8f20c701e474a4d74b040"
+    }
+  },
+  "actualUnsignedInspection": {
+    "kind": "Actual read-only inspection of new build 5 after initial-document correction; no signing",
+    "path": "/dev/shm/racing-review-driving/graphics-observer-build-5/backroad-graphics-observer-unsigned.apk",
+    "identity": {
+      "bytes": 11289,
+      "sha256": "8713e93eb26066465513537a6694b693344e46414ab51b9759f4904bd8beccaf",
+      "packageName": "com.ecojust.joystickgraphicsqa.backroadrally",
+      "versionCode": 1,
+      "versionName": "1.0",
+      "certificateSha256": null,
+      "minSdk": 26,
+      "targetSdk": 35,
+      "testOnly": true
+    },
+    "content": {
+      "AndroidManifest.xml": {
+        "bytes": 2032,
+        "sha256": "59a6d1beb8cc9b756cb8246b8968608a3b0042d7b2e916b6a68983fa007accb9"
+      },
+      "assets/graphics.js": {
+        "bytes": 4470,
+        "sha256": "decc9966cab6312d2684936ada870e29b0e4f2befae5536629ea67ce3a2680fb"
+      },
+      "classes.dex": {
+        "bytes": 16112,
+        "sha256": "0b21db9a001340512dfedb62b48d22eba7ffa32c903d5c005c1bfd64349e5df1"
+      },
+      "resources.arsc": {
+        "bytes": 40,
+        "sha256": "1fa3cb291285348ec1b33c85e7317d989467707f4791c4e5302f2d312d1e18c8"
+      }
+    }
+  },
+  "limitations": [
+    "No credential read, real signing, APK install, original-game rebuild, WebView/browser run, workflow dispatch or Git push occurred in this review.",
+    "The former initial-document issue was a possible ordering proved by source, not an observed CI failure.",
+    "Native lifecycle attachment, current graphics/console outcome and actual displayed car/track still require the single separate diagnostic run.",
+    "The original blank-track delivery block and all prior formal QA outcomes remain unchanged."
+  ],
+  "formalAcceptance": false
+}

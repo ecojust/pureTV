@@ -1,0 +1,96 @@
+{
+  "runId": 44596268925,
+  "runAttempt": 1,
+  "sourceCommit": "fa7ecbedd161a7107fafa22c2b33b9b43583156e",
+  "exportCommit": "d05d18140768e200ee13c3eeeab252b6285cc18f",
+  "originalFilesVerified": 81,
+  "originalBytesVerified": 1996684,
+  "verifiedGames": [],
+  "actualWindowsBuildAndInstallPassed": true,
+  "actualRuntime": {
+    "runtime-normal": {
+      "status": "failed",
+      "tests": [
+        {
+          "name": "Native DPI-scaled minimum and initial viewport",
+          "status": "passed"
+        },
+        {
+          "name": "DNS-SD resolves actual listener and TXT",
+          "status": "passed"
+        },
+        {
+          "name": "Official SDK and single controller seat",
+          "status": "failed"
+        }
+      ],
+      "displayModesEnumerated": 13,
+      "displayBefore": [
+        1024,
+        768
+      ],
+      "displayAfter": [
+        1600,
+        900
+      ],
+      "displayRestored": [
+        1024,
+        768
+      ],
+      "displayApiReturnCodes": {
+        "testReturnCode": 0,
+        "applyReturnCode": 0,
+        "restoreReturnCode": 0
+      },
+      "originalModeRestored": true,
+      "error": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 108, in run\n    self.check('Official SDK and single controller seat',self.connect)\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 197, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 516, in connect\n    else:raise AssertionError('Second SDK controller was not rejected')\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Second SDK controller was not rejected\n"
+    },
+    "runtime-occupied": {
+      "status": "failed",
+      "tests": [
+        {
+          "name": "Native DPI-scaled minimum and initial viewport",
+          "status": "passed"
+        },
+        {
+          "name": "DNS-SD resolves actual listener and TXT",
+          "status": "passed"
+        },
+        {
+          "name": "Official SDK and single controller seat",
+          "status": "passed"
+        },
+        {
+          "name": "Actual gameplay and pause model freeze",
+          "status": "failed"
+        }
+      ],
+      "displayModesEnumerated": 13,
+      "displayBefore": [
+        1024,
+        768
+      ],
+      "displayAfter": [
+        1600,
+        900
+      ],
+      "displayRestored": [
+        1024,
+        768
+      ],
+      "displayApiReturnCodes": {
+        "testReturnCode": 0,
+        "applyReturnCode": 0,
+        "restoreReturnCode": 0
+      },
+      "originalModeRestored": true,
+      "error": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 109, in run\n    self.check('Actual gameplay and pause model freeze',self.gameplay)\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 197, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 566, in gameplay\n    stable=self.pause_stability();self.display();self.screenshot('paused.png')\n           ^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 542, in pause_stability\n    assert self.paused(state),'Pause ended without fresh START'\n           ^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 257, in paused\n    def paused(self,s):return s.get('game',{}).get('stage') in ['paused','pause'] or s.get('game',{}).get('paused') is True\n                              ^^^^^\nAttributeError: 'NoneType' object has no attribute 'get'\n"
+    }
+  },
+  "diagnosis": {
+    "normal": "The original observer recorded second-SDK hello and initial sync bytes followed by WinError 10054 and no controller_busy response. The host sent its rejection then immediately shut down both directions while the SDK could still send its remaining initial syncs. Proposed correction half-closes the send direction and drains the receive direction before bounded cleanup.",
+    "occupied": "The original paused-game check raised AttributeError because read() returned None. The original read() suppresses OSError/ValueError without retaining details, so the exact original read exception is not known. The final original diagnostic remains paused. Proposed correction reads fresh bytes with delete-sharing, explicit UTF-8 and bounded retries recording errors; it never substitutes cached state."
+  },
+  "nativeRuntimeValidated": false,
+  "originalReportsChanged": false
+}

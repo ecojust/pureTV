@@ -1,0 +1,4365 @@
+{
+  "slug": "bomb-jack",
+  "mode": "browser",
+  "startedAt": "2026-11-15T15:09:36.065Z",
+  "status": "passed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "ceb7652ca2b694f6e80c289be5c8167a65ae2b5fd91b79c16831cc5a556834ae",
+    "tools/readme-controller-qa/cases.mjs": "0378e7bb1ebcb93e6f64e0c1aa7b4320ccc6e4e30ae27cae6d2d202d8b7abe70",
+    "tools/readme-controller-qa/sdk-peer.py": "06a873650be84ee9f5c98782f07f7e4e8bd8020551779ea4eed37a1f122d47a3",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": false,
+  "syntheticNativeBridge": true,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "START begins actual game",
+      "status": "passed"
+    },
+    {
+      "name": "direction and game-specific action affect actual model",
+      "status": "passed"
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "stage": 1,
+          "stageLabel": "SELECT PLAYERS",
+          "activePlayer": 1,
+          "players": [
+            {
+              "id": 1,
+              "joined": false,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1",
+              "active": false,
+              "connected": false
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1",
+              "active": false,
+              "connected": false
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": false,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": null,
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 0,
+            "invulnerable": 90,
+            "key": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": null,
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 0,
+            "invulnerable": 90,
+            "key": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": []
+        },
+        "document": {
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            },
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 2,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 0
+        }
+      }
+    },
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "phase": "title",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "title",
+          "stage": 1,
+          "stageLabel": "SELECT PLAYERS",
+          "activePlayer": 1,
+          "players": [
+            {
+              "id": 1,
+              "joined": false,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1",
+              "active": false,
+              "connected": false
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1",
+              "active": false,
+              "connected": false
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": false,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": null,
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 0,
+            "invulnerable": 90,
+            "key": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": null,
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 0,
+            "invulnerable": 90,
+            "key": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": []
+        },
+        "document": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            },
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 2,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 0
+        }
+      }
+    },
+    {
+      "label": "started",
+      "before": null,
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-519a7556915d",
+            "session": "wifi-8bf22e55-e324-43d4-9a97-6d1877f57a7f-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "stage": 1,
+          "stageLabel": "GATE OF DAWN",
+          "activePlayer": 1,
+          "players": [
+            {
+              "id": 1,
+              "joined": true,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1 · GATE OF DAWN",
+              "active": true,
+              "connected": true
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1",
+              "active": false,
+              "connected": false
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": true,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": {
+              "kind": "action",
+              "name": "GATE OF DAWN",
+              "w": 480,
+              "h": 208,
+              "platforms": [
+                {
+                  "x": 0,
+                  "y": 200,
+                  "w": 480,
+                  "h": 8
+                },
+                {
+                  "x": 64,
+                  "y": 160,
+                  "w": 80,
+                  "h": 8
+                },
+                {
+                  "x": 176,
+                  "y": 128,
+                  "w": 64,
+                  "h": 8
+                },
+                {
+                  "x": 288,
+                  "y": 160,
+                  "w": 80,
+                  "h": 8
+                },
+                {
+                  "x": 368,
+                  "y": 104,
+                  "w": 64,
+                  "h": 8
+                }
+              ],
+              "bombs": [
+                {
+                  "x": 88,
+                  "y": 136,
+                  "collected": false,
+                  "id": 0
+                },
+                {
+                  "x": 104,
+                  "y": 128,
+                  "collected": false,
+                  "id": 1
+                },
+                {
+                  "x": 120,
+                  "y": 136,
+                  "collected": false,
+                  "id": 2
+                },
+                {
+                  "x": 192,
+                  "y": 104,
+                  "collected": false,
+                  "id": 3
+                },
+                {
+                  "x": 208,
+                  "y": 96,
+                  "collected": false,
+                  "id": 4
+                },
+                {
+                  "x": 224,
+                  "y": 104,
+                  "collected": false,
+                  "id": 5
+                },
+                {
+                  "x": 304,
+                  "y": 136,
+                  "collected": false,
+                  "id": 6
+                },
+                {
+                  "x": 320,
+                  "y": 128,
+                  "collected": false,
+                  "id": 7
+                },
+                {
+                  "x": 336,
+                  "y": 136,
+                  "collected": false,
+                  "id": 8
+                },
+                {
+                  "x": 384,
+                  "y": 80,
+                  "collected": false,
+                  "id": 9
+                },
+                {
+                  "x": 400,
+                  "y": 72,
+                  "collected": false,
+                  "id": 10
+                },
+                {
+                  "x": 416,
+                  "y": 80,
+                  "collected": false,
+                  "id": 11
+                }
+              ],
+              "chests": [
+                {
+                  "x": 32,
+                  "y": 188,
+                  "color": "brown",
+                  "reward": "key",
+                  "opened": false
+                },
+                {
+                  "x": 104,
+                  "y": 148,
+                  "color": "brown",
+                  "reward": "coin",
+                  "opened": false
+                },
+                {
+                  "x": 208,
+                  "y": 116,
+                  "color": "brown",
+                  "reward": "drink",
+                  "opened": false
+                },
+                {
+                  "x": 320,
+                  "y": 148,
+                  "color": "orange",
+                  "reward": "sphinx",
+                  "opened": false
+                }
+              ],
+              "enemies": [
+                {
+                  "id": 0,
+                  "kind": "mummy",
+                  "x": 219.3825,
+                  "y": 184,
+                  "baseY": 184,
+                  "min": 160,
+                  "max": 280,
+                  "vx": 0.55,
+                  "phase": 0.21000000000000002,
+                  "alive": true,
+                  "age": 6,
+                  "morphWarning": false
+                },
+                {
+                  "id": 1,
+                  "kind": "bat",
+                  "x": 340.91999999999996,
+                  "y": 90.63247835096026,
+                  "baseY": 68,
+                  "min": 272,
+                  "max": 420,
+                  "vx": 0.8,
+                  "phase": 1.9099999999999995,
+                  "alive": true,
+                  "age": 6,
+                  "morphWarning": false
+                }
+              ],
+              "items": [],
+              "door": {
+                "x": 444,
+                "y": 168,
+                "w": 20,
+                "h": 32
+              },
+              "secret": {
+                "x": 240,
+                "y": 168,
+                "w": 20,
+                "h": 32,
+                "open": false
+              },
+              "spawn": {
+                "x": 24,
+                "y": 184
+              },
+              "flame": -1,
+              "chain": 0,
+              "jumps": 0
+            },
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 6,
+            "invulnerable": 84,
+            "key": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": null,
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 0,
+            "invulnerable": 90,
+            "key": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": []
+        },
+        "document": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-519a7556915d",
+              "session": "wifi-8bf22e55-e324-43d4-9a97-6d1877f57a7f-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            },
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 2,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      }
+    },
+    {
+      "label": "right-position",
+      "before": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-519a7556915d",
+            "session": "wifi-8bf22e55-e324-43d4-9a97-6d1877f57a7f-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "stage": 1,
+          "stageLabel": "GATE OF DAWN",
+          "activePlayer": 1,
+          "players": [
+            {
+              "id": 1,
+              "joined": true,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1 · GATE OF DAWN",
+              "active": true,
+              "connected": true
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1",
+              "active": false,
+              "connected": false
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": true,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": {
+              "kind": "action",
+              "name": "GATE OF DAWN",
+              "w": 480,
+              "h": 208,
+              "platforms": [
+                {
+                  "x": 0,
+                  "y": 200,
+                  "w": 480,
+                  "h": 8
+                },
+                {
+                  "x": 64,
+                  "y": 160,
+                  "w": 80,
+                  "h": 8
+                },
+                {
+                  "x": 176,
+                  "y": 128,
+                  "w": 64,
+                  "h": 8
+                },
+                {
+                  "x": 288,
+                  "y": 160,
+                  "w": 80,
+                  "h": 8
+                },
+                {
+                  "x": 368,
+                  "y": 104,
+                  "w": 64,
+                  "h": 8
+                }
+              ],
+              "bombs": [
+                {
+                  "x": 88,
+                  "y": 136,
+                  "collected": false,
+                  "id": 0
+                },
+                {
+                  "x": 104,
+                  "y": 128,
+                  "collected": false,
+                  "id": 1
+                },
+                {
+                  "x": 120,
+                  "y": 136,
+                  "collected": false,
+                  "id": 2
+                },
+                {
+                  "x": 192,
+                  "y": 104,
+                  "collected": false,
+                  "id": 3
+                },
+                {
+                  "x": 208,
+                  "y": 96,
+                  "collected": false,
+                  "id": 4
+                },
+                {
+                  "x": 224,
+                  "y": 104,
+                  "collected": false,
+                  "id": 5
+                },
+                {
+                  "x": 304,
+                  "y": 136,
+                  "collected": false,
+                  "id": 6
+                },
+                {
+                  "x": 320,
+                  "y": 128,
+                  "collected": false,
+                  "id": 7
+                },
+                {
+                  "x": 336,
+                  "y": 136,
+                  "collected": false,
+                  "id": 8
+                },
+                {
+                  "x": 384,
+                  "y": 80,
+                  "collected": false,
+                  "id": 9
+                },
+                {
+                  "x": 400,
+                  "y": 72,
+                  "collected": false,
+                  "id": 10
+                },
+                {
+                  "x": 416,
+                  "y": 80,
+                  "collected": false,
+                  "id": 11
+                }
+              ],
+              "chests": [
+                {
+                  "x": 32,
+                  "y": 188,
+                  "color": "brown",
+                  "reward": "key",
+                  "opened": false
+                },
+                {
+                  "x": 104,
+                  "y": 148,
+                  "color": "brown",
+                  "reward": "coin",
+                  "opened": false
+                },
+                {
+                  "x": 208,
+                  "y": 116,
+                  "color": "brown",
+                  "reward": "drink",
+                  "opened": false
+                },
+                {
+                  "x": 320,
+                  "y": 148,
+                  "color": "orange",
+                  "reward": "sphinx",
+                  "opened": false
+                }
+              ],
+              "enemies": [
+                {
+                  "id": 0,
+                  "kind": "mummy",
+                  "x": 219.3825,
+                  "y": 184,
+                  "baseY": 184,
+                  "min": 160,
+                  "max": 280,
+                  "vx": 0.55,
+                  "phase": 0.21000000000000002,
+                  "alive": true,
+                  "age": 6,
+                  "morphWarning": false
+                },
+                {
+                  "id": 1,
+                  "kind": "bat",
+                  "x": 340.91999999999996,
+                  "y": 90.63247835096026,
+                  "baseY": 68,
+                  "min": 272,
+                  "max": 420,
+                  "vx": 0.8,
+                  "phase": 1.9099999999999995,
+                  "alive": true,
+                  "age": 6,
+                  "morphWarning": false
+                }
+              ],
+              "items": [],
+              "door": {
+                "x": 444,
+                "y": 168,
+                "w": 20,
+                "h": 32
+              },
+              "secret": {
+                "x": 240,
+                "y": 168,
+                "w": 20,
+                "h": 32,
+                "open": false
+              },
+              "spawn": {
+                "x": 24,
+                "y": 184
+              },
+              "flame": -1,
+              "chain": 0,
+              "jumps": 0
+            },
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 6,
+            "invulnerable": 84,
+            "key": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": null,
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 0,
+            "invulnerable": 90,
+            "key": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": []
+        },
+        "document": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-519a7556915d",
+              "session": "wifi-8bf22e55-e324-43d4-9a97-6d1877f57a7f-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            },
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 2,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      },
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-519a7556915d",
+            "session": "wifi-8bf22e55-e324-43d4-9a97-6d1877f57a7f-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "stage": 1,
+          "stageLabel": "GATE OF DAWN",
+          "activePlayer": 1,
+          "players": [
+            {
+              "id": 1,
+              "joined": true,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1 · GATE OF DAWN",
+              "active": true,
+              "connected": true
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1",
+              "active": false,
+              "connected": false
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": true,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": {
+              "kind": "action",
+              "name": "GATE OF DAWN",
+              "w": 480,
+              "h": 208,
+              "platforms": [
+                {
+                  "x": 0,
+                  "y": 200,
+                  "w": 480,
+                  "h": 8
+                },
+                {
+                  "x": 64,
+                  "y": 160,
+                  "w": 80,
+                  "h": 8
+                },
+                {
+                  "x": 176,
+                  "y": 128,
+                  "w": 64,
+                  "h": 8
+                },
+                {
+                  "x": 288,
+                  "y": 160,
+                  "w": 80,
+                  "h": 8
+                },
+                {
+                  "x": 368,
+                  "y": 104,
+                  "w": 64,
+                  "h": 8
+                }
+              ],
+              "bombs": [
+                {
+                  "x": 88,
+                  "y": 136,
+                  "collected": false,
+                  "id": 0
+                },
+                {
+                  "x": 104,
+                  "y": 128,
+                  "collected": false,
+                  "id": 1
+                },
+                {
+                  "x": 120,
+                  "y": 136,
+                  "collected": false,
+                  "id": 2
+                },
+                {
+                  "x": 192,
+                  "y": 104,
+                  "collected": false,
+                  "id": 3
+                },
+                {
+                  "x": 208,
+                  "y": 96,
+                  "collected": false,
+                  "id": 4
+                },
+                {
+                  "x": 224,
+                  "y": 104,
+                  "collected": false,
+                  "id": 5
+                },
+                {
+                  "x": 304,
+                  "y": 136,
+                  "collected": false,
+                  "id": 6
+                },
+                {
+                  "x": 320,
+                  "y": 128,
+                  "collected": false,
+                  "id": 7
+                },
+                {
+                  "x": 336,
+                  "y": 136,
+                  "collected": false,
+                  "id": 8
+                },
+                {
+                  "x": 384,
+                  "y": 80,
+                  "collected": false,
+                  "id": 9
+                },
+                {
+                  "x": 400,
+                  "y": 72,
+                  "collected": false,
+                  "id": 10
+                },
+                {
+                  "x": 416,
+                  "y": 80,
+                  "collected": false,
+                  "id": 11
+                }
+              ],
+              "chests": [
+                {
+                  "x": 32,
+                  "y": 188,
+                  "color": "brown",
+                  "reward": "key",
+                  "opened": false
+                },
+                {
+                  "x": 104,
+                  "y": 148,
+                  "color": "brown",
+                  "reward": "coin",
+                  "opened": false
+                },
+                {
+                  "x": 208,
+                  "y": 116,
+                  "color": "brown",
+                  "reward": "drink",
+                  "opened": false
+                },
+                {
+                  "x": 320,
+                  "y": 148,
+                  "color": "orange",
+                  "reward": "sphinx",
+                  "opened": false
+                }
+              ],
+              "enemies": [
+                {
+                  "id": 0,
+                  "kind": "mummy",
+                  "x": 226.14749999999998,
+                  "y": 184,
+                  "baseY": 184,
+                  "min": 160,
+                  "max": 280,
+                  "vx": 0.55,
+                  "phase": 0.6300000000000003,
+                  "alive": true,
+                  "age": 18,
+                  "morphWarning": false
+                },
+                {
+                  "id": 1,
+                  "kind": "bat",
+                  "x": 350.7599999999999,
+                  "y": 85.40922529920365,
+                  "baseY": 68,
+                  "min": 272,
+                  "max": 420,
+                  "vx": 0.8,
+                  "phase": 2.3300000000000005,
+                  "alive": true,
+                  "age": 18,
+                  "morphWarning": false
+                }
+              ],
+              "items": [],
+              "door": {
+                "x": 444,
+                "y": 168,
+                "w": 20,
+                "h": 32
+              },
+              "secret": {
+                "x": 240,
+                "y": 168,
+                "w": 20,
+                "h": 32,
+                "open": false
+              },
+              "spawn": {
+                "x": 24,
+                "y": 184
+              },
+              "flame": -1,
+              "chain": 0,
+              "jumps": 0
+            },
+            "actionRoom": null,
+            "x": 36,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 18,
+            "invulnerable": 72,
+            "key": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": null,
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 0,
+            "invulnerable": 90,
+            "key": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": []
+        },
+        "document": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-519a7556915d",
+              "session": "wifi-8bf22e55-e324-43d4-9a97-6d1877f57a7f-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            },
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 2,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      }
+    },
+    {
+      "label": "left-position",
+      "before": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-519a7556915d",
+            "session": "wifi-8bf22e55-e324-43d4-9a97-6d1877f57a7f-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "stage": 1,
+          "stageLabel": "GATE OF DAWN",
+          "activePlayer": 1,
+          "players": [
+            {
+              "id": 1,
+              "joined": true,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1 · GATE OF DAWN",
+              "active": true,
+              "connected": true
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1",
+              "active": false,
+              "connected": false
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": true,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": {
+              "kind": "action",
+              "name": "GATE OF DAWN",
+              "w": 480,
+              "h": 208,
+              "platforms": [
+                {
+                  "x": 0,
+                  "y": 200,
+                  "w": 480,
+                  "h": 8
+                },
+                {
+                  "x": 64,
+                  "y": 160,
+                  "w": 80,
+                  "h": 8
+                },
+                {
+                  "x": 176,
+                  "y": 128,
+                  "w": 64,
+                  "h": 8
+                },
+                {
+                  "x": 288,
+                  "y": 160,
+                  "w": 80,
+                  "h": 8
+                },
+                {
+                  "x": 368,
+                  "y": 104,
+                  "w": 64,
+                  "h": 8
+                }
+              ],
+              "bombs": [
+                {
+                  "x": 88,
+                  "y": 136,
+                  "collected": false,
+                  "id": 0
+                },
+                {
+                  "x": 104,
+                  "y": 128,
+                  "collected": false,
+                  "id": 1
+                },
+                {
+                  "x": 120,
+                  "y": 136,
+                  "collected": false,
+                  "id": 2
+                },
+                {
+                  "x": 192,
+                  "y": 104,
+                  "collected": false,
+                  "id": 3
+                },
+                {
+                  "x": 208,
+                  "y": 96,
+                  "collected": false,
+                  "id": 4
+                },
+                {
+                  "x": 224,
+                  "y": 104,
+                  "collected": false,
+                  "id": 5
+                },
+                {
+                  "x": 304,
+                  "y": 136,
+                  "collected": false,
+                  "id": 6
+                },
+                {
+                  "x": 320,
+                  "y": 128,
+                  "collected": false,
+                  "id": 7
+                },
+                {
+                  "x": 336,
+                  "y": 136,
+                  "collected": false,
+                  "id": 8
+                },
+                {
+                  "x": 384,
+                  "y": 80,
+                  "collected": false,
+                  "id": 9
+                },
+                {
+                  "x": 400,
+                  "y": 72,
+                  "collected": false,
+                  "id": 10
+                },
+                {
+                  "x": 416,
+                  "y": 80,
+                  "collected": false,
+                  "id": 11
+                }
+              ],
+              "chests": [
+                {
+                  "x": 32,
+                  "y": 188,
+                  "color": "brown",
+                  "reward": "key",
+                  "opened": false
+                },
+                {
+                  "x": 104,
+                  "y": 148,
+                  "color": "brown",
+                  "reward": "coin",
+                  "opened": false
+                },
+                {
+                  "x": 208,
+                  "y": 116,
+                  "color": "brown",
+                  "reward": "drink",
+                  "opened": false
+                },
+                {
+                  "x": 320,
+                  "y": 148,
+                  "color": "orange",
+                  "reward": "sphinx",
+                  "opened": false
+                }
+              ],
+              "enemies": [
+                {
+                  "id": 0,
+                  "kind": "mummy",
+                  "x": 226.14749999999998,
+                  "y": 184,
+                  "baseY": 184,
+                  "min": 160,
+                  "max": 280,
+                  "vx": 0.55,
+                  "phase": 0.6300000000000003,
+                  "alive": true,
+                  "age": 18,
+                  "morphWarning": false
+                },
+                {
+                  "id": 1,
+                  "kind": "bat",
+                  "x": 350.7599999999999,
+                  "y": 85.40922529920365,
+                  "baseY": 68,
+                  "min": 272,
+                  "max": 420,
+                  "vx": 0.8,
+                  "phase": 2.3300000000000005,
+                  "alive": true,
+                  "age": 18,
+                  "morphWarning": false
+                }
+              ],
+              "items": [],
+              "door": {
+                "x": 444,
+                "y": 168,
+                "w": 20,
+                "h": 32
+              },
+              "secret": {
+                "x": 240,
+                "y": 168,
+                "w": 20,
+                "h": 32,
+                "open": false
+              },
+              "spawn": {
+                "x": 24,
+                "y": 184
+              },
+              "flame": -1,
+              "chain": 0,
+              "jumps": 0
+            },
+            "actionRoom": null,
+            "x": 36,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 18,
+            "invulnerable": 72,
+            "key": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": null,
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 0,
+            "invulnerable": 90,
+            "key": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": []
+        },
+        "document": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-519a7556915d",
+              "session": "wifi-8bf22e55-e324-43d4-9a97-6d1877f57a7f-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            },
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 2,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      },
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-519a7556915d",
+            "session": "wifi-8bf22e55-e324-43d4-9a97-6d1877f57a7f-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "stage": 1,
+          "stageLabel": "GATE OF DAWN",
+          "activePlayer": 1,
+          "players": [
+            {
+              "id": 1,
+              "joined": true,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1 · GATE OF DAWN",
+              "active": true,
+              "connected": true
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1",
+              "active": false,
+              "connected": false
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": true,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": {
+              "kind": "action",
+              "name": "GATE OF DAWN",
+              "w": 480,
+              "h": 208,
+              "platforms": [
+                {
+                  "x": 0,
+                  "y": 200,
+                  "w": 480,
+                  "h": 8
+                },
+                {
+                  "x": 64,
+                  "y": 160,
+                  "w": 80,
+                  "h": 8
+                },
+                {
+                  "x": 176,
+                  "y": 128,
+                  "w": 64,
+                  "h": 8
+                },
+                {
+                  "x": 288,
+                  "y": 160,
+                  "w": 80,
+                  "h": 8
+                },
+                {
+                  "x": 368,
+                  "y": 104,
+                  "w": 64,
+                  "h": 8
+                }
+              ],
+              "bombs": [
+                {
+                  "x": 88,
+                  "y": 136,
+                  "collected": false,
+                  "id": 0
+                },
+                {
+                  "x": 104,
+                  "y": 128,
+                  "collected": false,
+                  "id": 1
+                },
+                {
+                  "x": 120,
+                  "y": 136,
+                  "collected": false,
+                  "id": 2
+                },
+                {
+                  "x": 192,
+                  "y": 104,
+                  "collected": false,
+                  "id": 3
+                },
+                {
+                  "x": 208,
+                  "y": 96,
+                  "collected": false,
+                  "id": 4
+                },
+                {
+                  "x": 224,
+                  "y": 104,
+                  "collected": false,
+                  "id": 5
+                },
+                {
+                  "x": 304,
+                  "y": 136,
+                  "collected": false,
+                  "id": 6
+                },
+                {
+                  "x": 320,
+                  "y": 128,
+                  "collected": false,
+                  "id": 7
+                },
+                {
+                  "x": 336,
+                  "y": 136,
+                  "collected": false,
+                  "id": 8
+                },
+                {
+                  "x": 384,
+                  "y": 80,
+                  "collected": false,
+                  "id": 9
+                },
+                {
+                  "x": 400,
+                  "y": 72,
+                  "collected": false,
+                  "id": 10
+                },
+                {
+                  "x": 416,
+                  "y": 80,
+                  "collected": false,
+                  "id": 11
+                }
+              ],
+              "chests": [
+                {
+                  "x": 32,
+                  "y": 188,
+                  "color": "brown",
+                  "reward": "key",
+                  "opened": false
+                },
+                {
+                  "x": 104,
+                  "y": 148,
+                  "color": "brown",
+                  "reward": "coin",
+                  "opened": false
+                },
+                {
+                  "x": 208,
+                  "y": 116,
+                  "color": "brown",
+                  "reward": "drink",
+                  "opened": false
+                },
+                {
+                  "x": 320,
+                  "y": 148,
+                  "color": "orange",
+                  "reward": "sphinx",
+                  "opened": false
+                }
+              ],
+              "enemies": [
+                {
+                  "id": 0,
+                  "kind": "mummy",
+                  "x": 232.91249999999997,
+                  "y": 184,
+                  "baseY": 184,
+                  "min": 160,
+                  "max": 280,
+                  "vx": 0.55,
+                  "phase": 1.0500000000000005,
+                  "alive": true,
+                  "age": 30,
+                  "morphWarning": false
+                },
+                {
+                  "id": 1,
+                  "kind": "bat",
+                  "x": 360.5999999999998,
+                  "y": 77.15986380925591,
+                  "baseY": 68,
+                  "min": 272,
+                  "max": 420,
+                  "vx": 0.8,
+                  "phase": 2.750000000000002,
+                  "alive": true,
+                  "age": 30,
+                  "morphWarning": false
+                }
+              ],
+              "items": [],
+              "door": {
+                "x": 444,
+                "y": 168,
+                "w": 20,
+                "h": 32
+              },
+              "secret": {
+                "x": 240,
+                "y": 168,
+                "w": 20,
+                "h": 32,
+                "open": false
+              },
+              "spawn": {
+                "x": 24,
+                "y": 184
+              },
+              "flame": -1,
+              "chain": 0,
+              "jumps": 0
+            },
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 30,
+            "invulnerable": 60,
+            "key": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": null,
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 0,
+            "invulnerable": 90,
+            "key": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": []
+        },
+        "document": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-519a7556915d",
+              "session": "wifi-8bf22e55-e324-43d4-9a97-6d1877f57a7f-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            },
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 2,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      }
+    },
+    {
+      "label": "jump",
+      "before": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": false,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-519a7556915d",
+            "session": "wifi-8bf22e55-e324-43d4-9a97-6d1877f57a7f-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "stage": 1,
+          "stageLabel": "GATE OF DAWN",
+          "activePlayer": 1,
+          "players": [
+            {
+              "id": 1,
+              "joined": true,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1 · GATE OF DAWN",
+              "active": true,
+              "connected": true
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1",
+              "active": false,
+              "connected": false
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": true,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": {
+              "kind": "action",
+              "name": "GATE OF DAWN",
+              "w": 480,
+              "h": 208,
+              "platforms": [
+                {
+                  "x": 0,
+                  "y": 200,
+                  "w": 480,
+                  "h": 8
+                },
+                {
+                  "x": 64,
+                  "y": 160,
+                  "w": 80,
+                  "h": 8
+                },
+                {
+                  "x": 176,
+                  "y": 128,
+                  "w": 64,
+                  "h": 8
+                },
+                {
+                  "x": 288,
+                  "y": 160,
+                  "w": 80,
+                  "h": 8
+                },
+                {
+                  "x": 368,
+                  "y": 104,
+                  "w": 64,
+                  "h": 8
+                }
+              ],
+              "bombs": [
+                {
+                  "x": 88,
+                  "y": 136,
+                  "collected": false,
+                  "id": 0
+                },
+                {
+                  "x": 104,
+                  "y": 128,
+                  "collected": false,
+                  "id": 1
+                },
+                {
+                  "x": 120,
+                  "y": 136,
+                  "collected": false,
+                  "id": 2
+                },
+                {
+                  "x": 192,
+                  "y": 104,
+                  "collected": false,
+                  "id": 3
+                },
+                {
+                  "x": 208,
+                  "y": 96,
+                  "collected": false,
+                  "id": 4
+                },
+                {
+                  "x": 224,
+                  "y": 104,
+                  "collected": false,
+                  "id": 5
+                },
+                {
+                  "x": 304,
+                  "y": 136,
+                  "collected": false,
+                  "id": 6
+                },
+                {
+                  "x": 320,
+                  "y": 128,
+                  "collected": false,
+                  "id": 7
+                },
+                {
+                  "x": 336,
+                  "y": 136,
+                  "collected": false,
+                  "id": 8
+                },
+                {
+                  "x": 384,
+                  "y": 80,
+                  "collected": false,
+                  "id": 9
+                },
+                {
+                  "x": 400,
+                  "y": 72,
+                  "collected": false,
+                  "id": 10
+                },
+                {
+                  "x": 416,
+                  "y": 80,
+                  "collected": false,
+                  "id": 11
+                }
+              ],
+              "chests": [
+                {
+                  "x": 32,
+                  "y": 188,
+                  "color": "brown",
+                  "reward": "key",
+                  "opened": false
+                },
+                {
+                  "x": 104,
+                  "y": 148,
+                  "color": "brown",
+                  "reward": "coin",
+                  "opened": false
+                },
+                {
+                  "x": 208,
+                  "y": 116,
+                  "color": "brown",
+                  "reward": "drink",
+                  "opened": false
+                },
+                {
+                  "x": 320,
+                  "y": 148,
+                  "color": "orange",
+                  "reward": "sphinx",
+                  "opened": false
+                }
+              ],
+              "enemies": [
+                {
+                  "id": 0,
+                  "kind": "mummy",
+                  "x": 232.91249999999997,
+                  "y": 184,
+                  "baseY": 184,
+                  "min": 160,
+                  "max": 280,
+                  "vx": 0.55,
+                  "phase": 1.0500000000000005,
+                  "alive": true,
+                  "age": 30,
+                  "morphWarning": false
+                },
+                {
+                  "id": 1,
+                  "kind": "bat",
+                  "x": 360.5999999999998,
+                  "y": 77.15986380925591,
+                  "baseY": 68,
+                  "min": 272,
+                  "max": 420,
+                  "vx": 0.8,
+                  "phase": 2.750000000000002,
+                  "alive": true,
+                  "age": 30,
+                  "morphWarning": false
+                }
+              ],
+              "items": [],
+              "door": {
+                "x": 444,
+                "y": 168,
+                "w": 20,
+                "h": 32
+              },
+              "secret": {
+                "x": 240,
+                "y": 168,
+                "w": 20,
+                "h": 32,
+                "open": false
+              },
+              "spawn": {
+                "x": 24,
+                "y": 184
+              },
+              "flame": -1,
+              "chain": 0,
+              "jumps": 0
+            },
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 30,
+            "invulnerable": 60,
+            "key": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": null,
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 0,
+            "invulnerable": 90,
+            "key": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": []
+        },
+        "document": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": false,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-519a7556915d",
+              "session": "wifi-8bf22e55-e324-43d4-9a97-6d1877f57a7f-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            },
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 2,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      },
+      "after": {
+        "phase": "playing",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "a": true,
+            "cancelSeq": 1,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": true,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "virtual-519a7556915d",
+            "session": "wifi-8bf22e55-e324-43d4-9a97-6d1877f57a7f-1",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": true,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 1,
+            "aimX": 0
+          },
+          {
+            "a": false,
+            "cancelSeq": 0,
+            "b": false,
+            "select": false,
+            "buttons": {
+              "A": false,
+              "DOWN": false,
+              "B": false,
+              "LEFT": false,
+              "X": false,
+              "RIGHT": false,
+              "Y": false,
+              "START": false,
+              "UP": false
+            },
+            "controllerId": "",
+            "session": "",
+            "start": false,
+            "transport": "wifi",
+            "inputActive": true,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimY": 0,
+            "id": 2,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "playing",
+          "stage": 1,
+          "stageLabel": "GATE OF DAWN",
+          "activePlayer": 1,
+          "players": [
+            {
+              "id": 1,
+              "joined": true,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1 · GATE OF DAWN",
+              "active": true,
+              "connected": true
+            },
+            {
+              "id": 2,
+              "joined": false,
+              "alive": true,
+              "lives": 3,
+              "score": 0,
+              "level": 1,
+              "stageLabel": "STAGE 1",
+              "active": false,
+              "connected": false
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "joined": true,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": {
+              "kind": "action",
+              "name": "GATE OF DAWN",
+              "w": 480,
+              "h": 208,
+              "platforms": [
+                {
+                  "x": 0,
+                  "y": 200,
+                  "w": 480,
+                  "h": 8
+                },
+                {
+                  "x": 64,
+                  "y": 160,
+                  "w": 80,
+                  "h": 8
+                },
+                {
+                  "x": 176,
+                  "y": 128,
+                  "w": 64,
+                  "h": 8
+                },
+                {
+                  "x": 288,
+                  "y": 160,
+                  "w": 80,
+                  "h": 8
+                },
+                {
+                  "x": 368,
+                  "y": 104,
+                  "w": 64,
+                  "h": 8
+                }
+              ],
+              "bombs": [
+                {
+                  "x": 88,
+                  "y": 136,
+                  "collected": false,
+                  "id": 0
+                },
+                {
+                  "x": 104,
+                  "y": 128,
+                  "collected": false,
+                  "id": 1
+                },
+                {
+                  "x": 120,
+                  "y": 136,
+                  "collected": false,
+                  "id": 2
+                },
+                {
+                  "x": 192,
+                  "y": 104,
+                  "collected": false,
+                  "id": 3
+                },
+                {
+                  "x": 208,
+                  "y": 96,
+                  "collected": false,
+                  "id": 4
+                },
+                {
+                  "x": 224,
+                  "y": 104,
+                  "collected": false,
+                  "id": 5
+                },
+                {
+                  "x": 304,
+                  "y": 136,
+                  "collected": false,
+                  "id": 6
+                },
+                {
+                  "x": 320,
+                  "y": 128,
+                  "collected": false,
+                  "id": 7
+                },
+                {
+                  "x": 336,
+                  "y": 136,
+                  "collected": false,
+                  "id": 8
+                },
+                {
+                  "x": 384,
+                  "y": 80,
+                  "collected": false,
+                  "id": 9
+                },
+                {
+                  "x": 400,
+                  "y": 72,
+                  "collected": false,
+                  "id": 10
+                },
+                {
+                  "x": 416,
+                  "y": 80,
+                  "collected": false,
+                  "id": 11
+                }
+              ],
+              "chests": [
+                {
+                  "x": 32,
+                  "y": 188,
+                  "color": "brown",
+                  "reward": "key",
+                  "opened": false
+                },
+                {
+                  "x": 104,
+                  "y": 148,
+                  "color": "brown",
+                  "reward": "coin",
+                  "opened": false
+                },
+                {
+                  "x": 208,
+                  "y": 116,
+                  "color": "brown",
+                  "reward": "drink",
+                  "opened": false
+                },
+                {
+                  "x": 320,
+                  "y": 148,
+                  "color": "orange",
+                  "reward": "sphinx",
+                  "opened": false
+                }
+              ],
+              "enemies": [
+                {
+                  "id": 0,
+                  "kind": "mummy",
+                  "x": 237.98624999999996,
+                  "y": 184,
+                  "baseY": 184,
+                  "min": 160,
+                  "max": 280,
+                  "vx": 0.55,
+                  "phase": 1.3649999999999998,
+                  "alive": true,
+                  "age": 39,
+                  "morphWarning": false
+                },
+                {
+                  "id": 1,
+                  "kind": "bat",
+                  "x": 367.97999999999973,
+                  "y": 69.83642691010182,
+                  "baseY": 68,
+                  "min": 272,
+                  "max": 420,
+                  "vx": 0.8,
+                  "phase": 3.0650000000000035,
+                  "alive": true,
+                  "age": 39,
+                  "morphWarning": false
+                }
+              ],
+              "items": [],
+              "door": {
+                "x": 444,
+                "y": 168,
+                "w": 20,
+                "h": 32
+              },
+              "secret": {
+                "x": 240,
+                "y": 168,
+                "w": 20,
+                "h": 32,
+                "open": false
+              },
+              "spawn": {
+                "x": 24,
+                "y": 184
+              },
+              "flame": -1,
+              "chain": 0,
+              "jumps": 0
+            },
+            "actionRoom": null,
+            "x": 24,
+            "y": 146.2,
+            "vx": 0,
+            "vy": -3.719999999999999,
+            "onGround": false,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 39,
+            "invulnerable": 51,
+            "key": false
+          },
+          {
+            "id": 2,
+            "joined": false,
+            "alive": true,
+            "finished": false,
+            "lives": 3,
+            "score": 0,
+            "level": 1,
+            "stage": 1,
+            "room": null,
+            "actionRoom": null,
+            "x": 24,
+            "y": 184,
+            "vx": 0,
+            "vy": 0,
+            "onGround": true,
+            "floating": false,
+            "mightyCoins": 0,
+            "power": 0,
+            "powerTicks": 0,
+            "time": 60,
+            "timer": 0,
+            "invulnerable": 90,
+            "key": false
+          }
+        ],
+        "effects": {
+          "bullets": [],
+          "weapons": [],
+          "events": []
+        },
+        "document": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "nativeInfo": {
+          "language": "zh",
+          "url": "http://127.0.0.1:1/",
+          "qr": "",
+          "addresses": [
+            "127.0.0.1"
+          ],
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Desktop QA receiver; no Android NSD",
+            "port": 39013,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "127.0.0.1"
+            ],
+            "inputActive": true
+          }
+        },
+        "receiver": {
+          "players": [
+            {
+              "a": true,
+              "cancelSeq": 1,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": true,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "virtual-519a7556915d",
+              "session": "wifi-8bf22e55-e324-43d4-9a97-6d1877f57a7f-1",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": true,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 1,
+              "aimX": 0
+            },
+            {
+              "a": false,
+              "cancelSeq": 0,
+              "b": false,
+              "select": false,
+              "buttons": {
+                "A": false,
+                "DOWN": false,
+                "B": false,
+                "LEFT": false,
+                "X": false,
+                "RIGHT": false,
+                "Y": false,
+                "START": false,
+                "UP": false
+              },
+              "controllerId": "",
+              "session": "",
+              "start": false,
+              "transport": "wifi",
+              "inputActive": true,
+              "connected": false,
+              "x": 0,
+              "y": 0,
+              "aimY": 0,
+              "id": 2,
+              "aimX": 0
+            }
+          ],
+          "inputActive": true,
+          "connections": 1
+        }
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:05.450Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-519a7556915d"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:05.450Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-519a7556915d",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:05.450Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-519a7556915d",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:05.450Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-519a7556915d",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:05.450Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-519a7556915d",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:05.450Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-519a7556915d",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:05.450Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-519a7556915d",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:05.450Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-519a7556915d",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:05.450Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-519a7556915d",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:05.455Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-519a7556915d",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:05.547Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:05.547Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:05.547Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:05.558Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:05.567Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:05.567Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:05.567Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:05.573Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:05.573Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:05.573Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:05.958Z",
+      "message": {
+        "type": "button",
+        "seq": 11,
+        "controller_id": "virtual-519a7556915d",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:05.961Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:06.457Z",
+      "message": {
+        "type": "button",
+        "seq": 12,
+        "controller_id": "virtual-519a7556915d",
+        "key": "START",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 501
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:06.458Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:06.656Z",
+      "message": {
+        "type": "ping",
+        "seq": 13,
+        "controller_id": "virtual-519a7556915d"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:06.657Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:06.964Z",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-519a7556915d",
+        "key": "START",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 997
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:06.966Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:08.762Z",
+      "message": {
+        "type": "button",
+        "seq": 15,
+        "controller_id": "virtual-519a7556915d",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:08.769Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:09.260Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-519a7556915d",
+        "key": "RIGHT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:09.272Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:11.283Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-519a7556915d",
+        "key": "RIGHT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 2525
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:11.286Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:11.666Z",
+      "message": {
+        "type": "ping",
+        "seq": 18,
+        "controller_id": "virtual-519a7556915d"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:11.669Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:12.727Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-519a7556915d",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:12.732Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:13.233Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-519a7556915d",
+        "key": "LEFT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 501
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:13.238Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:16.655Z",
+      "message": {
+        "type": "ping",
+        "seq": 21,
+        "controller_id": "virtual-519a7556915d"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:16.658Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:18.338Z",
+      "message": {
+        "type": "button",
+        "seq": 22,
+        "controller_id": "virtual-519a7556915d",
+        "key": "LEFT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 5652
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:18.339Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:19.862Z",
+      "message": {
+        "type": "button",
+        "seq": 23,
+        "controller_id": "virtual-519a7556915d",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:19.863Z",
+      "message": {
+        "type": "ack",
+        "seq": 23
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:20.360Z",
+      "message": {
+        "type": "button",
+        "seq": 24,
+        "controller_id": "virtual-519a7556915d",
+        "key": "A",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:20.362Z",
+      "message": {
+        "type": "ack",
+        "seq": 24
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:20.967Z",
+      "message": {
+        "type": "button",
+        "seq": 25,
+        "controller_id": "virtual-519a7556915d",
+        "key": "A",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 1106
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:20.969Z",
+      "message": {
+        "type": "ack",
+        "seq": 25
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:21.652Z",
+      "message": {
+        "type": "ping",
+        "seq": 26,
+        "controller_id": "virtual-519a7556915d"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:21.653Z",
+      "message": {
+        "type": "ack",
+        "seq": 26
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:26.851Z",
+      "message": {
+        "type": "ping",
+        "seq": 27,
+        "controller_id": "virtual-519a7556915d"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:26.853Z",
+      "message": {
+        "type": "ack",
+        "seq": 27
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-15T15:10:31.651Z",
+      "message": {
+        "type": "ping",
+        "seq": 28,
+        "controller_id": "virtual-519a7556915d"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-15T15:10:31.657Z",
+      "message": {
+        "type": "ack",
+        "seq": 28
+      }
+    }
+  ],
+  "screenshots": [
+    "menu-960.png",
+    "menu-1280.png",
+    "gameplay.png"
+  ],
+  "limitations": [
+    "Desktop JVM and Chromium; Android lifecycle/NSD not exercised."
+  ],
+  "assetHashes": {
+    "audio.js": "1a6b4dabc158cf16541776985ff8f6c50aa96e67324679beac694fa124de7680",
+    "bootstrap.js": "59b685b15c441527e2ce793165e217976c74040c6864e3ee9d6eb3ea296e020d",
+    "controller.css": "a8bac051eb660edf9ea5b9417491ee4febb83b042fbe04bfc83164ba35e80020",
+    "controller.html": "94d9e9539c6d559581abef0c5caca9c8297221fb683dbbba94619978a937533a",
+    "controller.js": "d1511551430c3a94384b02c6e87591dae78dd760ec3236382104f797209b761d",
+    "game-model.js": "d331061a3e37a5d873b5e988d573eb94b2b506d160a6768f50eb9ecdbc321d2c",
+    "game.js": "c771e59090ffd6dc7e078839d3005b0888c09c991d7449f5a8988722b56fa42e",
+    "levels.js": "dc85bebb37c9841a2d2a5e1175c28a35d1fac607be7915be4ffa84832e459755",
+    "puretv-controller.js": "8c243014032fa5cd84573338b0d287adda32ef6f32862b1e21c90596c17edcb2",
+    "renderer.js": "2b51c2858c3102f45013f55c995f35ea666eccfe0693ef792104966ac8d6f787",
+    "runtime.js": "4da9a5bcea8e57b8a206064aad8d30a8fabb506f53f39eb953cd00303ac5cb0e",
+    "tv.css": "15f6bac8cd0d58cb30117be168eadf87534c3ac10ea49d5a2ea1842ee97cf42d",
+    "tv.html": "553392f2866854f23f4894a0995d6515684e0926ccc10ad59d248bc23bfc22f4"
+  },
+  "pageErrors": [],
+  "ports": {
+    "tcpPort": 39013,
+    "httpPort": 45049,
+    "observerPort": 32855
+  },
+  "scope": "menu, actual SDK startup and gameplay case only",
+  "finishedAt": "2026-11-15T15:10:34.623Z"
+}

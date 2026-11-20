@@ -1,0 +1,101 @@
+{
+  "reviewedAt": "2026-11-19T20:08:16.522088+00:00",
+  "status": "completed-with-two-size-capture-failure",
+  "report": "browser-attempt-8/report.json",
+  "originalReportPassed": false,
+  "reportSha256": "7d7b182134a4a13b0b5d3ec8c9ca8d7f015d789269a425fd46c16afad71e7c66",
+  "scriptSha256": "f8bd5d28d663146b79c2c2d3b311f590d8746421f4de9051a17f1de4d21b212e",
+  "distManifest": "browser-attempt-8/dist-sha256.json",
+  "distManifestSha256": "d36595566ed622cc34f94b638fb1de2f207135cccb84e7f23608316e5d8f38a6",
+  "checksPassed": 9,
+  "checksFailed": 1,
+  "checks": [
+    {
+      "name": "pause freezes original position/race clock/ammunition",
+      "pass": true
+    },
+    {
+      "name": "paused focus loss and resume-held START >800ms do not re-pause",
+      "pass": true
+    },
+    {
+      "name": "disconnect clears all held gameplay controls",
+      "pass": true
+    },
+    {
+      "name": "held reconnect stays paused",
+      "pass": true
+    },
+    {
+      "name": "one native snapshot per game frame",
+      "pass": true
+    },
+    {
+      "name": "actual supplied controller ID visible",
+      "pass": true
+    },
+    {
+      "name": "normal menus produce persisted original save",
+      "pass": true
+    },
+    {
+      "name": "no mutable original debug API exported",
+      "pass": true
+    },
+    {
+      "name": "original vehicle accelerated",
+      "pass": true
+    },
+    {
+      "name": "actual gameplay captured at both target sizes",
+      "pass": false
+    }
+  ],
+  "errors": [],
+  "failedRequests": [],
+  "captureWarnings": [
+    {
+      "name": "focus-pause-1280",
+      "error": "TimeoutError: page.screenshot: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n",
+      "stage": "paused",
+      "phase": "racing"
+    },
+    {
+      "name": "playing-1280",
+      "error": "TimeoutError: page.screenshot: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n",
+      "stage": "playing",
+      "phase": "racing"
+    }
+  ],
+  "scope": "Synthetic native bridge with original game and normal menu input; not SDK TCP or installed native acceptance",
+  "observed": [
+    "Held LEFT remains on original LOW setting then A applies it.",
+    "Normal original new game/car creates save; three DOWN inputs navigate garage to track.",
+    "Original countdown reaches racing naturally before throttle; original speed/position/fire ammunition change.",
+    "Pause freezes original position/time/ammunition; held START after resume does not re-pause.",
+    "Disconnect clears held controls; held reconnect remains paused.",
+    "Actual provided ID displayed and one consuming native snapshot per animation frame.",
+    "After isolated visual-spring fix, actual 960 race body is restored.",
+    "1280 state reached paused and then racing, but current-source 1280 gameplay screenshots failed."
+  ],
+  "visualReview": "visual-review.json",
+  "limitations": [
+    "Short opening race only, no completed lap/race/career.",
+    "Synthetic native bridge, not original TCP SDK or installed native acceptance.",
+    "Current-source full two-size visual requirement remains incomplete; original report false retained.",
+    "No physical device performance or signal-strength claim."
+  ],
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "priorAttemptsPreserved": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

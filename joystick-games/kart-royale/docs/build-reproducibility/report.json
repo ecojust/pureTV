@@ -1,0 +1,39 @@
+{
+  "time": "2026-11-19T19:31:07.268259+00:00",
+  "originalCi": {
+    "run": 44597105538,
+    "sourceCommit": "8f283c73f52f857777306eafc88f710262367834",
+    "exportCommit": "a95b504fd6278aec7758e3b49c1b1896500235ab",
+    "log": "original-ci-web-build-check.log",
+    "logSha256": "5239649290ba4de92b5d04d5d69caac465c4992428812dece6d2e3ab235c8db7",
+    "error": "Stale kart-royale.js",
+    "node": "22.23.4"
+  },
+  "independentReproduction": {
+    "isolatedDirectoryWithoutSourceNodeModules": true,
+    "originalBuildCheckPassed": false,
+    "originalBuildCheckError": "Stale kart-royale.js",
+    "preFixAdapterUnitTestsPassed": 8
+  },
+  "cause": "Ignored src/node_modules from prior source work was resolved ahead of root locked packages. Clean CI correctly installed only root node_modules, changing esbuild module-path labels.",
+  "sixImportedDependencyFilesAllBytesIdentical": true,
+  "fix": "Builder and test bundler explicitly alias the four fixed runtime packages to root node_modules and preserve symlink module IDs. Obsolete ignored source-local install moved to scratch quarantine.",
+  "allJavascriptExceptDependencyPathLabelsIdentical": true,
+  "rootLockUnchanged": true,
+  "freshOfflineNpmCi": {
+    "command": "npm ci --offline --ignore-scripts --no-audit --no-fund --cache /dev/shm/racing-review-arcade/npm-cache",
+    "exitCode": 0,
+    "node": "24.22.1",
+    "cacheContainsOriginalLockIntegrity": true
+  },
+  "verification": {
+    "localSymlinkInstallUnitTestsPassed": 8,
+    "localSymlinkInstallBuildCheckPassed": true,
+    "cleanPhysicalRootInstallUnitTestsPassed": 8,
+    "cleanPhysicalRootInstallBuildCheckPassed": true,
+    "verifiedDistributionFiles": 5
+  },
+  "nativeCiRebuildPending": true,
+  "nativePassed": false,
+  "nextBrowserRequiresNewDistribution": true
+}

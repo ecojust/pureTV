@@ -1,0 +1,26 @@
+{
+  "status": "no_blocker_after_release_index_fix",
+  "reviewType": "Independent static review and original file/hash inspection; no tests rerun or package downloads",
+  "baseline": "41f8db4dff81a26dc9374476e54c1e5c45b5007e",
+  "sourceFiles": {
+    "joystick-games/tools/windows-inputs.py": {
+      "bytes": 18856,
+      "sha256": "3819b9eca9462c8cf56c2aeac9ccb67db96cf6c08b4a93d170361c65c9163cb6"
+    },
+    "joystick-games/shared/windows/tests/source-scope.test.py": {
+      "bytes": 31281,
+      "sha256": "19e62b531a9140420b3f2afaa67e1a54beb4c2df6c0d1c5f5153f4d1bc2b11c3"
+    }
+  },
+  "earlierFinding": "Initial37-test fixture omitted windows-release.json; release_outputs then reintroduced remote names into excluded. Exact failed reproduction and initial evidence are retained.",
+  "checks": [
+    "External platform names are still confined to the existing android/macos/windows loop; extension, basename, case collision, exact repository/release tag/version/URL, size/SHA, positive asset IDs and local-node conflict checks remain.",
+    "Only fully validated remote basenames are removed from outputs after release_outputs. Thus all three platforms keep their release descriptor as bound source without allowing it to hide a missing tracked remote-name file.",
+    "Restoring the two narrow changes reconstructs the entire baseline windows-inputs.py byte-for-byte; local file hash/format validation and all other selection rules remain unchanged.",
+    "Final Windows fixture includes both exact ZIP/EXE metadata and windows-release.json. New tests explicitly keep remote names out of exclusions, reject missing tracked names, reject unknown directory code and local conflicts; Android/Mac release-index counterparts are covered.",
+    "All original source-scope test function ASTs remain identical. Final38-tests log is inspected only; not rerun.",
+    "Earlier v5 real package sizes are evidence of the storage need only; its failed runtime and unpublished new metadata remain unverified."
+  ],
+  "actualPublishedWindowsMetadataChecked": false,
+  "newNativeRunOrPackagePublished": false
+}

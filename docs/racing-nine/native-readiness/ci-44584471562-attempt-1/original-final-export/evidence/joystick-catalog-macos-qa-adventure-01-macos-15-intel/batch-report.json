@@ -1,0 +1,81 @@
+{
+  "sourceCommit": "eb450428a33ebcfa22462c6abbdc1aa2a8a8b28e",
+  "batch": "adventure-01",
+  "runner": "macos-15-intel",
+  "expectedArchitecture": "x86_64",
+  "status": "passed",
+  "games": [
+    {
+      "game": "glup",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/glup",
+            "--output",
+            "/Users/runner/work/_temp/qa/glup/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "glup/package-verification.log",
+          "startedAt": "2026-11-19T18:11:46.497658+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "glup",
+            "--app",
+            "/Users/runner/work/_temp/packages/glup/installed/GLUP.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/glup/native"
+          ],
+          "status": "passed",
+          "log": "glup/native.log",
+          "startedAt": "2026-11-19T18:12:04.604551+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "emberbrood",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/emberbrood",
+            "--output",
+            "/Users/runner/work/_temp/qa/emberbrood/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "emberbrood/package-verification.log",
+          "startedAt": "2026-11-19T18:13:06.853272+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "emberbrood",
+            "--app",
+            "/Users/runner/work/_temp/packages/emberbrood/installed/Emberbrood.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/emberbrood/native"
+          ],
+          "status": "passed",
+          "log": "emberbrood/native.log",
+          "startedAt": "2026-11-19T18:13:25.836729+00:00",
+          "returncode": 0
+        }
+      ]
+    }
+  ]
+}

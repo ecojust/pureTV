@@ -1,0 +1,375 @@
+{
+  "status": "passed",
+  "scope": "Synthetic DOM display and unchanged adapter regression; not Android or actual TCP/device acceptance",
+  "sourceHashes": {
+    "resource/game-kit/web/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a",
+    "resource/game-kit/legacy-controller-web/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a",
+    "resource/apps/tank/src/main/assets/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a",
+    "resource/apps/jackal/src/main/assets/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a",
+    "resource/apps/jewel/src/main/assets/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a",
+    "resource/apps/tetris/src/main/assets/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a",
+    "resource/apps/adventure-island/src/main/assets/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a",
+    "resource/apps/bomb-jack/src/main/assets/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a",
+    "resource/apps/super-mario/src/main/assets/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a",
+    "resource/apps/coast-kart/src/main/assets/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a",
+    "resource/apps/cozy-island/src/main/assets/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a",
+    "resource/apps/used-car-racing/src/main/assets/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a",
+    "resource/apps/alien-shooter/src/main/assets/puretv-controller.js": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a"
+  },
+  "tests": [
+    {
+      "name": "all thirteen module copies match and the original input adapter body is unchanged",
+      "status": "passed",
+      "result": {
+        "copies": 13,
+        "originalInputBodySha256": "307fe332660d2e696dbfe48d41f514035fdd37f1193d808b9f0564921cb94ef7",
+        "productionModuleSha256": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a"
+      }
+    },
+    {
+      "name": "zero connections and phone input stay hidden; genuine cached Wi-Fi identities are displayed",
+      "status": "passed",
+      "result": {
+        "empty": true,
+        "phone": true,
+        "hidden": false,
+        "text": "1PConnectedID: esp32-001122334455",
+        "id": "esp32-001122334455",
+        "seat": "1",
+        "svg": 1
+      }
+    },
+    {
+      "name": "buttons, cancellation and session changes never rewrite the stable ID DOM or poll input",
+      "status": "passed",
+      "result": {
+        "sameNode": true,
+        "mutations": 0,
+        "reads": 0
+      }
+    },
+    {
+      "name": "two controller IDs retain separate seats, deterministic order and honest disconnection",
+      "status": "passed",
+      "result": {
+        "before": [
+          [
+            "1",
+            "esp32-001122334455"
+          ],
+          [
+            "2",
+            "virtual-abc123abc123"
+          ]
+        ],
+        "after": [
+          [
+            "2",
+            "virtual-abc123abc123"
+          ]
+        ],
+        "stable": true,
+        "disconnected": true,
+        "reconnected": "esp32-001122334455"
+      }
+    },
+    {
+      "name": "IDs are literal text and safe attributes; untranslated RSSI or device names are never invented",
+      "status": "passed",
+      "result": {
+        "unsafe": "<img src=x onerror=\"window.pwned=true\">&<script>window.pwned=true</script>",
+        "id": "<img src=x onerror=\"window.pwned=true\">&<script>window.pwned=true</script>",
+        "text": "ID: <img src=x onerror=\"window.pwned=true\">&<script>window.pwned=true</script>",
+        "injected": 0,
+        "pwned": false,
+        "rssi": false,
+        "name": false
+      }
+    },
+    {
+      "name": "localization updates once and styles are installed once per document",
+      "status": "passed",
+      "result": {
+        "zh": "已连接",
+        "en": "Connected",
+        "styleCount": 1,
+        "label": "已连接的 pureTV 手柄",
+        "live": "polite"
+      }
+    },
+    {
+      "name": "full ninety-six-character IDs wrap without ellipsis in 150 and 174 pixel columns at both viewports",
+      "status": "passed",
+      "result": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "columns": [
+            {
+              "name": "clients",
+              "identity": "esp32-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "text": "ID: esp32-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "box": {
+                "left": 24,
+                "right": 174,
+                "top": 105.65625,
+                "bottom": 275.21875
+              },
+              "rects": [
+                {
+                  "left": 65,
+                  "right": 158.921875,
+                  "top": 133.84375,
+                  "bottom": 147.84375
+                },
+                {
+                  "left": 65,
+                  "right": 158.921875,
+                  "top": 150.640625,
+                  "bottom": 164.640625
+                },
+                {
+                  "left": 65,
+                  "right": 158.921875,
+                  "top": 167.4375,
+                  "bottom": 181.4375
+                },
+                {
+                  "left": 65,
+                  "right": 158.921875,
+                  "top": 184.234375,
+                  "bottom": 198.234375
+                },
+                {
+                  "left": 65,
+                  "right": 158.921875,
+                  "top": 201.03125,
+                  "bottom": 215.03125
+                },
+                {
+                  "left": 65,
+                  "right": 158.921875,
+                  "top": 217.828125,
+                  "bottom": 231.828125
+                },
+                {
+                  "left": 65,
+                  "right": 158.921875,
+                  "top": 234.625,
+                  "bottom": 248.625
+                },
+                {
+                  "left": 65,
+                  "right": 130.03125,
+                  "top": 251.421875,
+                  "bottom": 265.421875
+                }
+              ],
+              "overflow": 0,
+              "whiteSpace": "normal",
+              "overflowWrap": "anywhere",
+              "textOverflow": "clip",
+              "lines": 8
+            },
+            {
+              "name": "second",
+              "identity": "esp32-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "text": "ID: esp32-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "box": {
+                "left": 198,
+                "right": 372,
+                "top": 105.65625,
+                "bottom": 316.40625
+              },
+              "rects": [
+                {
+                  "left": 239,
+                  "right": 361.828125,
+                  "top": 133.84375,
+                  "bottom": 147.84375
+                },
+                {
+                  "left": 239,
+                  "right": 361.828125,
+                  "top": 150.640625,
+                  "bottom": 164.640625
+                },
+                {
+                  "left": 239,
+                  "right": 361.828125,
+                  "top": 167.4375,
+                  "bottom": 181.4375
+                },
+                {
+                  "left": 239,
+                  "right": 361.828125,
+                  "top": 184.234375,
+                  "bottom": 198.234375
+                },
+                {
+                  "left": 239,
+                  "right": 361.828125,
+                  "top": 201.03125,
+                  "bottom": 215.03125
+                },
+                {
+                  "left": 239,
+                  "right": 347.375,
+                  "top": 217.828125,
+                  "bottom": 231.828125
+                }
+              ],
+              "overflow": 0,
+              "whiteSpace": "normal",
+              "overflowWrap": "anywhere",
+              "textOverflow": "clip",
+              "lines": 6
+            }
+          ],
+          "screenshot": "identity-layout-960.png"
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "columns": [
+            {
+              "name": "clients",
+              "identity": "esp32-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "text": "ID: esp32-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "box": {
+                "left": 24,
+                "right": 174,
+                "top": 105.65625,
+                "bottom": 275.21875
+              },
+              "rects": [
+                {
+                  "left": 65,
+                  "right": 158.921875,
+                  "top": 133.84375,
+                  "bottom": 147.84375
+                },
+                {
+                  "left": 65,
+                  "right": 158.921875,
+                  "top": 150.640625,
+                  "bottom": 164.640625
+                },
+                {
+                  "left": 65,
+                  "right": 158.921875,
+                  "top": 167.4375,
+                  "bottom": 181.4375
+                },
+                {
+                  "left": 65,
+                  "right": 158.921875,
+                  "top": 184.234375,
+                  "bottom": 198.234375
+                },
+                {
+                  "left": 65,
+                  "right": 158.921875,
+                  "top": 201.03125,
+                  "bottom": 215.03125
+                },
+                {
+                  "left": 65,
+                  "right": 158.921875,
+                  "top": 217.828125,
+                  "bottom": 231.828125
+                },
+                {
+                  "left": 65,
+                  "right": 158.921875,
+                  "top": 234.625,
+                  "bottom": 248.625
+                },
+                {
+                  "left": 65,
+                  "right": 130.03125,
+                  "top": 251.421875,
+                  "bottom": 265.421875
+                }
+              ],
+              "overflow": 0,
+              "whiteSpace": "normal",
+              "overflowWrap": "anywhere",
+              "textOverflow": "clip",
+              "lines": 8
+            },
+            {
+              "name": "second",
+              "identity": "esp32-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "text": "ID: esp32-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "box": {
+                "left": 198,
+                "right": 372,
+                "top": 105.65625,
+                "bottom": 316.40625
+              },
+              "rects": [
+                {
+                  "left": 239,
+                  "right": 361.828125,
+                  "top": 133.84375,
+                  "bottom": 147.84375
+                },
+                {
+                  "left": 239,
+                  "right": 361.828125,
+                  "top": 150.640625,
+                  "bottom": 164.640625
+                },
+                {
+                  "left": 239,
+                  "right": 361.828125,
+                  "top": 167.4375,
+                  "bottom": 181.4375
+                },
+                {
+                  "left": 239,
+                  "right": 361.828125,
+                  "top": 184.234375,
+                  "bottom": 198.234375
+                },
+                {
+                  "left": 239,
+                  "right": 361.828125,
+                  "top": 201.03125,
+                  "bottom": 215.03125
+                },
+                {
+                  "left": 239,
+                  "right": 347.375,
+                  "top": 217.828125,
+                  "bottom": 231.828125
+                }
+              ],
+              "overflow": 0,
+              "whiteSpace": "normal",
+              "overflowWrap": "anywhere",
+              "textOverflow": "clip",
+              "lines": 6
+            }
+          ],
+          "screenshot": "identity-layout-1280.png"
+        }
+      ]
+    }
+  ],
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "reusedInputRegression": {
+    "report": "../attempt-1/report.json",
+    "reason": "Only CSS gap-to-margin compatibility changed; the unchanged input body is still checked against the original public source."
+  },
+  "pageErrors": []
+}

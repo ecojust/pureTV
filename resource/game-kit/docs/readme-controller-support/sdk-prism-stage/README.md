@@ -1,0 +1,9 @@
+# Prism protocol setup after a natural result
+
+The preserved Android report completed six controller groups, then timed out waiting for a pause. All 48 original SDK messages had matching ACKs. Normal RIGHT+A in the disconnect case rotated the first mirror into the solved orientation. The recorded reconnect state had charge 3/20, and its screenshot shows the active light path. The final best score changed from 0 to 1958 while the current model returned to its initial orientation. In the unchanged APK model, 1958 is 200 + 1000 + 379×2, the normal win score at model tick 71. The unchanged runtime uses START on a result screen to start a fresh round. No won snapshot was persisted; this causal inference is explicitly distinguished from the raw observations.
+
+The only driver change is the seventh group's setup. It records real states and uses at most three ordinary START presses, continuing only after observing paused. It handles a result already visible or a round finishing between the read and the press. The nine-key, long-hold and every-message ACK assertions remain unchanged. No game model, clock, production asset or original SDK was changed.
+
+The complete browser run uses assets extracted byte-for-byte from the signed Prism 0.2.2 APK and passed all eight groups, with 60 messages and 60 ACKs. This run paused on its first setup press; it did not reproduce the natural result transition. Seven clearly labelled synthetic helper-control-flow checks cover won/lost, the read/press race, and strict failure after three unpaused presses. They are not gameplay evidence.
+
+`original/` preserves the actual failed Android case and exact executed scripts. `full-browser/` preserves the later report, screenshots and executed scripts; directly redirected stdout/stderr are adjacent. `verification.json` binds all executed source hashes and APK assets. The actual APK retry and physical TV/phone/ESP32 testing are not claimed here.

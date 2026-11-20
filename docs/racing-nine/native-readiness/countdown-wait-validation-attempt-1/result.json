@@ -1,0 +1,97 @@
+{
+  "at": "2026-11-19T20:32:25.350746+00:00",
+  "baseHead": "68d343d22c762c904eb83854d4ab9c4113a7c30f",
+  "scope": "QA observation deadlines only. No new native tests or package build/sign.",
+  "status": "passed",
+  "schemaOnlyProductionChange": "Finite positive per-step timeoutSeconds upper bound 60 -> 240; other validation and observer/pause deadlines unchanged.",
+  "exactPlanChanges": [
+    {
+      "path": "joystick-games/ponpoko-kart/qa-plan.json",
+      "jsonPointer": "/steps/4/timeoutSeconds",
+      "step": "Skip authored intro with jump and wait for real countdown",
+      "before": 60,
+      "after": 240,
+      "allOtherDataExactlyEqual": true
+    },
+    {
+      "path": "joystick-games/turbo-kart-rush/qa-plan.json",
+      "jsonPointer": "/steps/3/timeoutSeconds",
+      "step": "Start selected original course and wait real countdown",
+      "before": 60,
+      "after": 240,
+      "allOtherDataExactlyEqual": true
+    }
+  ],
+  "inputs": {
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 5102,
+      "sha256": "da42981df65741d793be59a96dba330226ddb885c9bf186b968eafef8f78a569"
+    },
+    "joystick-games/shared/macos/tests/catalog-tools.test.py": {
+      "bytes": 23802,
+      "sha256": "6b25291bc480369c677e212b75a430d7927bdfd4bad7215d482619cacce64de3"
+    },
+    "joystick-games/ponpoko-kart/qa-plan.json": {
+      "bytes": 3658,
+      "sha256": "cea39515f37cd9da3f706aaf92108f48390d9b4fdb5745c3328466c465ccd512"
+    },
+    "joystick-games/turbo-kart-rush/qa-plan.json": {
+      "bytes": 3387,
+      "sha256": "38072507f3424574c89317a491f485683a4232012f8bee10d2890dbcdbcb1ac9"
+    }
+  },
+  "unchangedGameFilesCompared": 217,
+  "allTrackedGameFilesExceptDocsAndQaPlanByteIdentical": true,
+  "originalSignedApks": {
+    "ponpoko-kart": {
+      "bytes": 1602736,
+      "sha256": "a1c9a0f6de56fd5ec87e25d4a6b5be541c9a04686e76b31484d99cc890b86e22",
+      "originalSignedBytesUnchanged": true
+    },
+    "turbo-kart-rush": {
+      "bytes": 545968,
+      "sha256": "f4663f43839f45a24a913a93067e77c07528439cdc6f234aba6df1e877d03e6c",
+      "originalSignedBytesUnchanged": true
+    }
+  },
+  "existingAndNewSchemaTests": {
+    "total": 17,
+    "passed": true,
+    "acceptSeconds": [
+      60,
+      240
+    ],
+    "rejectSeconds": [
+      0,
+      -1,
+      241,
+      true,
+      "240",
+      "NaN",
+      "Infinity"
+    ],
+    "defaultTmpFailurePreserved": true
+  },
+  "allCurrentPlansValidated": [
+    "joystick-games/backroad-rally/qa-plan.json",
+    "joystick-games/dirt-crown/qa-plan.json",
+    "joystick-games/emberbrood/qa-plan.json",
+    "joystick-games/glup/qa-plan.json",
+    "joystick-games/kart-royale/qa-plan.json",
+    "joystick-games/kart-rush/qa-plan.json",
+    "joystick-games/last-track/qa-plan.json",
+    "joystick-games/night-racer/qa-plan.json",
+    "joystick-games/penguintrack/qa-plan.json",
+    "joystick-games/ponpoko-kart/qa-plan.json",
+    "joystick-games/sugarplum-drop/qa-plan.json",
+    "joystick-games/turbo-kart-rush/qa-plan.json"
+  ],
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "priorWindowsFailureRun": 44606210717,
+  "priorResultsRemainFailed": true,
+  "notes": [
+    "Original Windows diagnostics show countdown advanced naturally to Pon 1.3 and Turbo 1.4 during 60-second observations.",
+    "Only the two confirmed countdown observation steps receive 240 seconds; original key holds, expectations, sequence, pause semantics and production clocks are unchanged."
+  ]
+}

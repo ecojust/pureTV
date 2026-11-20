@@ -1,0 +1,46 @@
+{
+  "status": "passed",
+  "reviewOnly": true,
+  "productionFilesModified": false,
+  "previousResultSha256": "3e391d95b616ad96b77f6cf535910be7846695493d3c02b0dba3d5958ea80fed",
+  "tests": [
+    {
+      "script": "joystick-games/shared/windows/tests/source-scope.test.py",
+      "exitCode": 0,
+      "log": "source-scope.test.py.log"
+    },
+    {
+      "script": "joystick-games/shared/windows/tests/assets.test.py",
+      "exitCode": 0,
+      "log": "assets.test.py.log"
+    }
+  ],
+  "sourceFiles": {
+    "joystick-games/tools/windows-inputs.py": {
+      "bytes": 9613,
+      "sha256": "b42d132dd2745e5700dc6249629f93a20c06de95437345805ed49a3f324ff25b"
+    },
+    "joystick-games/tools/windows-build.py": {
+      "bytes": 13041,
+      "sha256": "a3fb12849083bf28d089be3d254b6b1b95baca292a85705615022aee8fac143e"
+    },
+    "joystick-games/shared/windows/tests/source-scope.test.py": {
+      "bytes": 8704,
+      "sha256": "a552d08ea22c97c857a8068fa5173d81458388c0a751d8cef1bcdf6e0541e78b"
+    },
+    "joystick-games/shared/windows/tests/assets.test.py": {
+      "bytes": 3355,
+      "sha256": "dc1b852baa68fcecb5519968ef5d4fb4482f48ae92d077da9a297274da0e3d83"
+    }
+  },
+  "findings": [
+    "Packaged-assets traversal rejects CACHE names instead of excluding real dist bytes.",
+    "Frozen Git inventory no longer ignores cache-named paths under game/dist, so deleted tracked assets remain detectable.",
+    "Builder resource validation independently rejects all CACHE path components.",
+    "Other platform/history exclusions, original source and local-dependency closures remain unchanged."
+  ],
+  "onlyReviewedDistBoundaryDiffVerifiedAgainstPriorSha": {
+    "joystick-games/tools/windows-inputs.py": true,
+    "joystick-games/tools/windows-build.py": true
+  }
+}

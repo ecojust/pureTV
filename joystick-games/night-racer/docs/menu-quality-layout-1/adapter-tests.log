@@ -1,0 +1,23 @@
+
+> puretv-night-racer@0.1.0 test
+> node --test tests/*.test.mjs
+
+✔ nine physical keys keep steering, throttle, brake, drift and nitro independent (1.716339ms)
+✔ held nitro does not repeat without a new press; camera and reset do not spend it (0.141759ms)
+✔ B closing a pause menu cannot spend nitro; menu throttle/drift wait for release (0.264179ms)
+✔ nitro edge survives render-only frames and is cleared by a physics step or cancel (0.297859ms)
+✔ ordinary keyboard driving and original steering sign remain available (0.155339ms)
+✔ disconnect discards a charged drift without changing motion or granting boost (0.193355ms)
+✔ original settings/profile keys persist inside one native record (6.169809ms)
+✔ invalid save payload starts clean without losing subsequently stored progress (0.177261ms)
+✔ large replays on different maps do not exceed a single combined native value (37.884907ms)
+✔ renderer loop samples input once and exposes no upstream simulation mutation hook (1.376308ms)
+✔ original driving physics and every track definition remain byte-identical (1.363539ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 148.906255

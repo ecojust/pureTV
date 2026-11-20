@@ -1,0 +1,76 @@
+{
+  "status": "local-checks-passed-native-retest-pending",
+  "sourceRunId": 44606210717,
+  "originalCaptureFailures": [
+    "last-track runtime-normal PermissionError minimum-window.png",
+    "dirt-crown runtime-normal PermissionError connected-menu.png",
+    "kart-royale runtime-occupied Missing native screenshot connected-menu.png"
+  ],
+  "originalCaptures": [
+    {
+      "path": "docs/racing-nine/windows-failures-44606210717/last-track/original-export/evidence/runtime-normal/diagnostics/minimum-window.png",
+      "bytes": 559419,
+      "sha256": "ec82f4f299123437ee7cabcc275edfe35286be95ba4d9fa6af8e9228e10bbd2f",
+      "allChunkCrcAndIendVerified": true,
+      "originalFailureUnchanged": true
+    },
+    {
+      "path": "docs/racing-nine/windows-failures-44606210717/dirt-crown/original-export/evidence/runtime-normal/diagnostics/connected-menu.png",
+      "bytes": 609478,
+      "sha256": "d09ca4bf843e7e1c67f494bc3408367ccef68140024656b94e21895ecde70263",
+      "allChunkCrcAndIendVerified": true,
+      "originalFailureUnchanged": true
+    },
+    {
+      "path": "docs/racing-nine/windows-failures-44606210717/kart-royale/original-export/evidence/runtime-occupied/diagnostics/connected-menu.png",
+      "bytes": 1131742,
+      "sha256": "81c0b8c675480d6688be0942674627bbf6ed786cc39fba1f79ad7840830e583a",
+      "allChunkCrcAndIendVerified": true,
+      "originalFailureUnchanged": true
+    }
+  ],
+  "tests": {
+    "observation": {
+      "registered": 14,
+      "passed": 13,
+      "skipped": 1,
+      "skippedReason": "Actual Windows CreateFile/MoveFile replacement requires Windows; original Win10 native result is separate."
+    },
+    "windowLifecycle": {
+      "registered": 8,
+      "passed": 8,
+      "method": "Synthetic monotonic timing/states, including slow 2-second callbacks, fewer than 4 samples by 15 seconds, and late model motion."
+    }
+  },
+  "changes": {
+    "windowsPngWaitMaximumSeconds": 60,
+    "nativePngBytesNeverReplacedOrReencoded": true,
+    "crcEveryChunk": true,
+    "iendRequired": true,
+    "hashAndSizeFromSameBytes": true,
+    "pauseSamplingMaximumSeconds": 15,
+    "distinctNativeSnapshotsRequired": 4,
+    "minimumStableSeconds": 0.5,
+    "foregroundPollingRequired": true,
+    "eachSampleRecorded": true,
+    "macGameOrClockChanges": false
+  },
+  "inputFiles": {
+    "joystick-games/tools/windows-observation.py": {
+      "bytes": 5526,
+      "sha256": "99ac7dae5eb1d37c5e8191d0a18bf00335f744e66269b340dbe94a74a6dc88a4"
+    },
+    "joystick-games/tools/windows-verify.py": {
+      "bytes": 20636,
+      "sha256": "09c5f9fdd715f8185e58c06449811f505fb3ca7dcc25d04e37200c4acc5c5983"
+    },
+    "joystick-games/shared/windows/tests/observation.test.py": {
+      "bytes": 8890,
+      "sha256": "10ea7491d37721a3dc3816bbfa08f4a65427b4af81a71326c9bc4abed00820a0"
+    },
+    "joystick-games/shared/windows/tests/window-lifecycle.test.py": {
+      "bytes": 4550,
+      "sha256": "eee927abf46be7e32d7ee3c46a9334ac08ce3a766bb17b79d77139cedeb2e5a0"
+    }
+  }
+}

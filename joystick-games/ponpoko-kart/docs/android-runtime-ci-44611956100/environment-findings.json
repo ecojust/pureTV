@@ -1,0 +1,116 @@
+{
+  "at": "2026-11-19T21:07:27.952612+00:00",
+  "runId": 44611956100,
+  "attempt": 1,
+  "qaSourceSha": "5855f5c18f925e04e6f4233ccdb3469c2db418ff",
+  "originalArtifactSourceSha": "8f283c73f52f857777306eafc88f710262367834",
+  "exportCommit": "9773900b1bf1ed8b4af3eb3216ef94fcb479a0c0",
+  "actualEmulatorVersion": "37.3.10.0",
+  "actualEmulatorBuild": "16970787",
+  "versionEvidence": "original-runtime-job.log lines 2281 and 2308; original-export/evidence/joystick-android-runtime-ponpoko-kart/ponpoko-kart/emulator-version.txt",
+  "bootedAt": "2026-11-19T20:57:06.0608453Z",
+  "samples": 61,
+  "minimumMemAvailableKiB": 10137960,
+  "lastObservedEmulator": {
+    "at": "2026-11-19T20:58:58.843020+00:00",
+    "pid": 4527,
+    "executableName": "qemu-system-x86_64-headless",
+    "exitCode": null,
+    "exitCodeReason": "EmulatorIsNotAnOwnedChild",
+    "state": "I",
+    "parentPid": 1,
+    "starttimeTicks": 84753,
+    "residentPages": 1222799,
+    "startTimeEpochSeconds": 1795121789.53,
+    "memory": {
+      "VmSize": {
+        "value": 6565552,
+        "unit": "kB"
+      },
+      "VmHWM": {
+        "value": 4891764,
+        "unit": "kB"
+      },
+      "VmRSS": {
+        "value": 4891764,
+        "unit": "kB"
+      },
+      "Threads": {
+        "value": 103,
+        "unit": "count"
+      }
+    }
+  },
+  "goneEvents": [
+    {
+      "at": "2026-11-19T20:59:03.853656+00:00",
+      "observations": [
+        {
+          "pid": 4527,
+          "starttimeTicks": 84753,
+          "observation": "gone",
+          "exitCode": null,
+          "cause": "unknown"
+        }
+      ]
+    }
+  ],
+  "allSampledWrapperCgroupOomCountersZero": true,
+  "cgroupObservationScope": "Wrapper /proc/self/cgroup only. QEMU-specific membership, ancestor limits and process limits were not captured.",
+  "kernelBefore": {
+    "at": "2026-11-19T20:57:08.369859+00:00",
+    "method": "sudo -n dmesg (OOM/kill lines and numeric emulator faults only)",
+    "lines": [],
+    "emulatorFaults": [],
+    "status": "read",
+    "exitCode": 0,
+    "stderr": "",
+    "captureLimited": false,
+    "unfilteredBytesRead": 122491,
+    "matchingLinesOmitted": 0,
+    "rootCauseProven": false
+  },
+  "kernelAfter": {
+    "at": "2026-11-19T21:02:07.066521+00:00",
+    "method": "sudo -n dmesg (OOM/kill lines and numeric emulator faults only)",
+    "lines": [],
+    "emulatorFaults": [],
+    "status": "read",
+    "exitCode": 0,
+    "stderr": "",
+    "captureLimited": false,
+    "unfilteredBytesRead": 122491,
+    "matchingLinesOmitted": 0,
+    "rootCauseProven": false
+  },
+  "crashMetadata": {
+    "at": "2026-11-19T21:02:07.084898+00:00",
+    "scope": "Current observed emulator PID and start time only",
+    "rawDatabaseCopied": false,
+    "rawMemoryCopied": false,
+    "environmentCopied": false,
+    "commandArgumentsCopied": false,
+    "rootCauseProven": false,
+    "files": [],
+    "limits": {
+      "files": 32,
+      "perFileBytes": 16777216,
+      "totalReadBytes": 33554432,
+      "wallSeconds": 3
+    },
+    "bytesRead": 0,
+    "truncated": false,
+    "omittedReasons": {},
+    "status": "sampled"
+  },
+  "emulatorExitCode": null,
+  "rootCauseProven": false,
+  "runtimeAccepted": false,
+  "conclusions": [
+    "The exact official stable build was actually run, but the QEMU process again disappeared between the retained last-seen and first-gone samples.",
+    "Normal mode only passed fresh-app-data setup, then initial-menu timed out; occupied mode failed waiting for ADB before any game checks.",
+    "The bounded crash collector found no eligible dump bytes; an empty result does not establish that every possible crash database layout was inspected.",
+    "Available host RAM and sampled wrapper cgroup counters do not demonstrate host memory exhaustion. QEMU-specific limits and user-space kill decisions remain unobserved.",
+    "This controlled version comparison did not resolve the failure; no automatic retries or gameplay success are claimed."
+  ]
+}

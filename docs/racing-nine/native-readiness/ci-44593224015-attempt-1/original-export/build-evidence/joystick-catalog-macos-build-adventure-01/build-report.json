@@ -1,0 +1,260 @@
+{
+  "sourceCommit": "33e8183835f5eaf6c7361eaa41ff34c1462dfdee",
+  "batch": "adventure-01",
+  "status": "passed",
+  "shared": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "joystick-games/shared/macos/tests/web-bridge.test.mjs"
+      ],
+      "status": "passed",
+      "log": "shared/00.log",
+      "startedAt": "2026-11-19T18:58:20.186625+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/build-source.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/01.log",
+      "startedAt": "2026-11-19T18:58:20.358216+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-reuse.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/02.log",
+      "startedAt": "2026-11-19T18:58:20.607592+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-tools.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/03.log",
+      "startedAt": "2026-11-19T18:58:23.661870+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/local-assets.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/04.log",
+      "startedAt": "2026-11-19T18:58:25.019352+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/local-network-prompts.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/05.log",
+      "startedAt": "2026-11-19T18:58:38.242661+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/native-observation.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/06.log",
+      "startedAt": "2026-11-19T18:58:38.397838+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/reuse-source.test.py"
+      ],
+      "status": "passed",
+      "log": "shared/07.log",
+      "startedAt": "2026-11-19T18:58:39.003882+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "5",
+        "joystick-games/shared/macos/Sources/ControllerServer.swift",
+        "joystick-games/shared/macos/tests/ControllerServerTests.swift",
+        "-o",
+        "/Users/runner/work/_temp/controller-tests"
+      ],
+      "status": "passed",
+      "log": "shared/08.log",
+      "startedAt": "2026-11-19T18:58:39.651559+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/runner/work/_temp/controller-tests"
+      ],
+      "status": "passed",
+      "log": "shared/09.log",
+      "startedAt": "2026-11-19T18:58:42.868140+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "5",
+        "joystick-games/shared/macos/Sources/GameStorage.swift",
+        "joystick-games/shared/macos/tests/GameStorageTests.swift",
+        "-o",
+        "/Users/runner/work/_temp/storage-tests"
+      ],
+      "status": "passed",
+      "log": "shared/10.log",
+      "startedAt": "2026-11-19T18:58:42.897803+00:00",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/runner/work/_temp/storage-tests"
+      ],
+      "status": "passed",
+      "log": "shared/11.log",
+      "startedAt": "2026-11-19T18:58:43.419146+00:00",
+      "returncode": 0
+    }
+  ],
+  "games": [
+    {
+      "game": "glup",
+      "status": "passed",
+      "originalTestScript": "node src/tools/check-levels.js && node src/tools/humo.js && node tests/pause.cjs && node tests/input.cjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "glup/dependencies.log",
+          "startedAt": "2026-11-19T18:58:43.498162+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "glup/original-tests.log",
+          "startedAt": "2026-11-19T18:58:45.045587+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "glup/frozen-dist.log",
+          "startedAt": "2026-11-19T18:58:50.608571+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "command": [
+          "python3",
+          "joystick-games/tools/macos-build.py",
+          "--game",
+          "glup",
+          "--output",
+          "/Users/runner/work/_temp/build/glup",
+          "--host-cache",
+          "/Users/runner/work/_temp/host-cache"
+        ],
+        "status": "passed",
+        "log": "glup/native-build.log",
+        "startedAt": "2026-11-19T18:58:50.876288+00:00",
+        "returncode": 0
+      }
+    },
+    {
+      "game": "emberbrood",
+      "status": "passed",
+      "originalTestScript": "node src/test/run.mjs",
+      "testProvided": true,
+      "tests": [
+        {
+          "command": [
+            "npm",
+            "ci",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "status": "passed",
+          "log": "emberbrood/dependencies.log",
+          "startedAt": "2026-11-19T18:59:52.948916+00:00",
+          "returncode": 0,
+          "name": "dependencies"
+        },
+        {
+          "command": [
+            "npm",
+            "test"
+          ],
+          "status": "passed",
+          "log": "emberbrood/original-tests.log",
+          "startedAt": "2026-11-19T18:59:54.111644+00:00",
+          "returncode": 0,
+          "name": "original-tests"
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "build:check"
+          ],
+          "status": "passed",
+          "log": "emberbrood/frozen-dist.log",
+          "startedAt": "2026-11-19T18:59:54.676432+00:00",
+          "returncode": 0,
+          "name": "frozen-dist"
+        }
+      ],
+      "build": {
+        "command": [
+          "python3",
+          "joystick-games/tools/macos-build.py",
+          "--game",
+          "emberbrood",
+          "--output",
+          "/Users/runner/work/_temp/build/emberbrood",
+          "--host-cache",
+          "/Users/runner/work/_temp/host-cache"
+        ],
+        "status": "passed",
+        "log": "emberbrood/native-build.log",
+        "startedAt": "2026-11-19T18:59:55.115202+00:00",
+        "returncode": 0
+      }
+    }
+  ]
+}

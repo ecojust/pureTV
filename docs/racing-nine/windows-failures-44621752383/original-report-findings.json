@@ -1,0 +1,914 @@
+{
+  "source": "039d210cfa4cc65f59adf0859a777f3591853a70",
+  "run": 44621752383,
+  "attempt": 1,
+  "export": "f559a71e99ff27c8f262ed2a82a70674ee90f9dc",
+  "reports": [
+    {
+      "game": "ponpoko-kart",
+      "mode": "bootstrap",
+      "path": "original-small-export/joystick-windows-evidence-ponpoko-kart/runtime-bootstrap/report.json",
+      "bytes": 1312,
+      "sha256": "269fa9f18704d94e67d8c019dd060627d5d6558b1fe66961b0d31867d523c30f",
+      "status": "failed",
+      "error": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\shared\\windows\\tests\\navigation-storage.test.py\", line 60, in main\n    else:raise AssertionError('Document fixture timed out: '+json.dumps(last))\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Document fixture timed out: null\n",
+      "tests": []
+    },
+    {
+      "game": "backroad-rally",
+      "mode": "bootstrap",
+      "path": "original-small-export/joystick-windows-evidence-backroad-rally/runtime-bootstrap/report.json",
+      "bytes": 7784,
+      "sha256": "c75afa204966392c89ce7cd5f50bd97d4bc156732e2263874b8f236c0af957a4",
+      "status": "passed",
+      "error": null,
+      "tests": []
+    },
+    {
+      "game": "backroad-rally",
+      "mode": "normal",
+      "path": "original-small-export/joystick-windows-evidence-backroad-rally/runtime-normal/report.json",
+      "bytes": 7364541,
+      "sha256": "b0478bf2d026d2c83e5e02a5181b99f56b4535ea0045c9ba67d126bcca18cf46",
+      "status": "failed",
+      "error": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 358, in run\n    self.check('Actual gameplay and pause model freeze',self.gameplay)\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 204, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 158, in gameplay\n    cases.append(self.menu_tap(step,before));self.settle_input('Plan controls released: '+step['name']);continue\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 685, in menu_tap\n    raise AssertionError(step['name']+' released menuTap expectation did not remain stable across two fresh game frames')\nAssertionError: Start and wait for untouched warm-up/countdown released menuTap expectation did not remain stable across two fresh game frames\n",
+      "tests": [
+        {
+          "name": "Native DPI-scaled minimum and initial viewport",
+          "status": "passed"
+        },
+        {
+          "name": "DNS-SD resolves actual listener and TXT",
+          "status": "passed"
+        },
+        {
+          "name": "Official SDK and single controller seat",
+          "status": "passed"
+        },
+        {
+          "name": "Actual gameplay and pause model freeze",
+          "status": "failed"
+        }
+      ],
+      "qaSourceHashesVerified": 7,
+      "finalState": {
+        "timestamp": 1014.64,
+        "documentEpoch": 2,
+        "ready": true,
+        "active": true,
+        "lastJavaScriptError": "",
+        "frames": 260,
+        "stage": "paused",
+        "paused": true,
+        "renderer": "webgl2",
+        "pollCount": 274,
+        "gameplay": {
+          "camera": "default",
+          "carId": "swift",
+          "clock": 0,
+          "controls": {
+            "brake": 0,
+            "digitalSteer": true,
+            "handbrake": true,
+            "steer": 0,
+            "throttle": 0
+          },
+          "menuFocus": "resume",
+          "menuValue": "",
+          "penalties": 0,
+          "phase": "intro",
+          "ready": true,
+          "recovers": 0,
+          "speed": 2.354386639595032,
+          "stageId": "finland",
+          "tractionAssist": true,
+          "x": 54,
+          "y": 24.3275203704834,
+          "yaw": 0,
+          "z": 0
+        }
+      },
+      "lastMenuTap": {
+        "name": "Start and wait for untouched warm-up/countdown",
+        "key": "A",
+        "status": "failed",
+        "declaredHoldMs": 100,
+        "requestedTapMs": 16,
+        "beforeOwner": {
+          "controllerId": "virtual-85af13809297",
+          "session": "wifi-2eabe5cb93441a41022d7db66ddfe13e-1",
+          "buttonCounters": {
+            "A": 6,
+            "B": 3,
+            "DOWN": 22,
+            "LEFT": 0,
+            "RIGHT": 1,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          }
+        },
+        "sampleCount": 1664,
+        "samplesTruncated": true,
+        "sdkDownSequence": 164,
+        "sdkReleaseSequence": 165,
+        "sdkCallHeldMs": 32.00000000003911,
+        "elapsedSeconds": 240.03200000000004,
+        "error": "AssertionError: Start and wait for untouched warm-up/countdown released menuTap expectation did not remain stable across two fresh game frames",
+        "beforeFrame": 251,
+        "beforeGameplay": {
+          "carIndex": 0,
+          "careerStarted": true,
+          "flow": "quick",
+          "menuFocus": "start",
+          "menuValue": "",
+          "phase": "menu",
+          "quality": "low",
+          "screen": "stageselect",
+          "stageIndex": 0
+        },
+        "distinctRetainedQualifiedPolls": [],
+        "firstRetainedSample": {
+          "at": "2026-11-19T21:55:15.560366+00:00",
+          "timestamp": 775.375,
+          "pollCount": 266,
+          "releasedAndCounterExact": false,
+          "expectationMatches": false,
+          "qualified": false
+        },
+        "lastRetainedSample": {
+          "at": "2026-11-19T21:59:15.403285+00:00",
+          "timestamp": 1014.64,
+          "pollCount": 274,
+          "releasedAndCounterExact": true,
+          "expectationMatches": false,
+          "qualified": false
+        }
+      }
+    },
+    {
+      "game": "backroad-rally",
+      "mode": "occupied",
+      "path": "original-small-export/joystick-windows-evidence-backroad-rally/runtime-occupied/report.json",
+      "bytes": 7369044,
+      "sha256": "a060bf5f32630993eeda0945b58d48659ff71488de6de4f3b25d33f7dbe4ff74",
+      "status": "failed",
+      "error": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 358, in run\n    self.check('Actual gameplay and pause model freeze',self.gameplay)\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 204, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 158, in gameplay\n    cases.append(self.menu_tap(step,before));self.settle_input('Plan controls released: '+step['name']);continue\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 685, in menu_tap\n    raise AssertionError(step['name']+' released menuTap expectation did not remain stable across two fresh game frames')\nAssertionError: Start and wait for untouched warm-up/countdown released menuTap expectation did not remain stable across two fresh game frames\n",
+      "tests": [
+        {
+          "name": "Native DPI-scaled minimum and initial viewport",
+          "status": "passed"
+        },
+        {
+          "name": "DNS-SD resolves actual listener and TXT",
+          "status": "passed"
+        },
+        {
+          "name": "Official SDK and single controller seat",
+          "status": "passed"
+        },
+        {
+          "name": "Actual gameplay and pause model freeze",
+          "status": "failed"
+        }
+      ],
+      "qaSourceHashesVerified": 7,
+      "finalState": {
+        "timestamp": 1638.468,
+        "documentEpoch": 2,
+        "ready": true,
+        "active": true,
+        "lastJavaScriptError": "",
+        "frames": 260,
+        "stage": "paused",
+        "paused": true,
+        "renderer": "webgl2",
+        "pollCount": 274,
+        "gameplay": {
+          "camera": "default",
+          "carId": "swift",
+          "clock": 0,
+          "controls": {
+            "brake": 0,
+            "digitalSteer": true,
+            "handbrake": true,
+            "steer": 0,
+            "throttle": 0
+          },
+          "menuFocus": "resume",
+          "menuValue": "",
+          "penalties": 0,
+          "phase": "intro",
+          "ready": true,
+          "recovers": 0,
+          "speed": 2.354386639595032,
+          "stageId": "finland",
+          "tractionAssist": true,
+          "x": 54,
+          "y": 24.3275203704834,
+          "yaw": 0,
+          "z": 0
+        }
+      },
+      "lastMenuTap": {
+        "name": "Start and wait for untouched warm-up/countdown",
+        "key": "A",
+        "status": "failed",
+        "declaredHoldMs": 100,
+        "requestedTapMs": 16,
+        "beforeOwner": {
+          "controllerId": "virtual-faf74841419e",
+          "session": "wifi-83979277aaa2bac318e7cde5557ae8a8-1",
+          "buttonCounters": {
+            "A": 6,
+            "B": 3,
+            "DOWN": 22,
+            "LEFT": 0,
+            "RIGHT": 1,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          }
+        },
+        "sampleCount": 1740,
+        "samplesTruncated": true,
+        "sdkDownSequence": 162,
+        "sdkReleaseSequence": 163,
+        "sdkCallHeldMs": 15.000000000100044,
+        "elapsedSeconds": 240.125,
+        "error": "AssertionError: Start and wait for untouched warm-up/countdown released menuTap expectation did not remain stable across two fresh game frames",
+        "beforeFrame": 247,
+        "beforeGameplay": {
+          "carIndex": 0,
+          "careerStarted": true,
+          "flow": "quick",
+          "menuFocus": "start",
+          "menuValue": "",
+          "phase": "menu",
+          "quality": "low",
+          "screen": "stageselect",
+          "stageIndex": 0
+        },
+        "distinctRetainedQualifiedPolls": [],
+        "firstRetainedSample": {
+          "at": "2026-11-19T22:05:39.136133+00:00",
+          "timestamp": 1398.984,
+          "pollCount": 262,
+          "releasedAndCounterExact": false,
+          "expectationMatches": false,
+          "qualified": false
+        },
+        "lastRetainedSample": {
+          "at": "2026-11-19T22:09:39.079799+00:00",
+          "timestamp": 1638.468,
+          "pollCount": 274,
+          "releasedAndCounterExact": true,
+          "expectationMatches": false,
+          "qualified": false
+        }
+      }
+    },
+    {
+      "game": "kart-royale",
+      "mode": "bootstrap",
+      "path": "original-small-export/joystick-windows-evidence-kart-royale/runtime-bootstrap/report.json",
+      "bytes": 7784,
+      "sha256": "6a62e474debe18f2bd83cded23d746e13d884dee4a97eddc47b88a34d29c067c",
+      "status": "passed",
+      "error": null,
+      "tests": []
+    },
+    {
+      "game": "kart-royale",
+      "mode": "normal",
+      "path": "original-small-export/joystick-windows-evidence-kart-royale/runtime-normal/report.json",
+      "bytes": 582174,
+      "sha256": "0fea20f7e7fa5b93630607bbeebe2e468dfb521f6c31a9bec48dcb34ef3f9dfe",
+      "status": "failed",
+      "error": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 358, in run\n    self.check('Actual gameplay and pause model freeze',self.gameplay)\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 204, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 158, in gameplay\n    cases.append(self.menu_tap(step,before));self.settle_input('Plan controls released: '+step['name']);continue\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 685, in menu_tap\n    raise AssertionError(step['name']+' released menuTap expectation did not remain stable across two fresh game frames')\nAssertionError: Open original roster from Start button released menuTap expectation did not remain stable across two fresh game frames\n",
+      "tests": [
+        {
+          "name": "Native DPI-scaled minimum and initial viewport",
+          "status": "passed"
+        },
+        {
+          "name": "DNS-SD resolves actual listener and TXT",
+          "status": "passed"
+        },
+        {
+          "name": "Official SDK and single controller seat",
+          "status": "passed"
+        },
+        {
+          "name": "Actual gameplay and pause model freeze",
+          "status": "failed"
+        }
+      ],
+      "qaSourceHashesVerified": 7,
+      "finalState": {
+        "timestamp": 1908.031,
+        "documentEpoch": 1,
+        "ready": true,
+        "active": true,
+        "lastJavaScriptError": "",
+        "frames": 63,
+        "stage": "menu",
+        "paused": false,
+        "renderer": "webgl2",
+        "pollCount": 63,
+        "gameplay": {
+          "boostTime": 0,
+          "controlHand": "left",
+          "controls": {
+            "accel": 0,
+            "accelAuto": false,
+            "anyPressed": false,
+            "brake": 0,
+            "drift": false,
+            "driftPressed": false,
+            "itemPressed": false,
+            "lookBack": false,
+            "pausePressed": false,
+            "steer": 0
+          },
+          "driftCharge": 0,
+          "driftDir": 0,
+          "driftTier": 0,
+          "focus": "Start race",
+          "lap": 0,
+          "menu": "select",
+          "phase": "menu",
+          "place": 1,
+          "position": [
+            -5.681087776630743,
+            4.071870497593568,
+            -9.973263242096365
+          ],
+          "savedControls": true,
+          "speed": -2.768904382460005e-19,
+          "state": 0,
+          "time": 0
+        }
+      },
+      "lastMenuTap": {
+        "name": "Open original roster from Start button",
+        "key": "A",
+        "status": "failed",
+        "declaredHoldMs": 180,
+        "requestedTapMs": 16,
+        "beforeOwner": {
+          "controllerId": "virtual-2315f614e3e8",
+          "session": "wifi-6540b18a25d6197f0fac7416f20f19b5-1",
+          "buttonCounters": {
+            "A": 2,
+            "B": 1,
+            "DOWN": 1,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 6
+          }
+        },
+        "sampleCount": 329,
+        "samplesTruncated": true,
+        "sdkDownSequence": 102,
+        "sdkReleaseSequence": 103,
+        "sdkCallHeldMs": 62.99999999987449,
+        "elapsedSeconds": 60.062999999999874,
+        "error": "AssertionError: Open original roster from Start button released menuTap expectation did not remain stable across two fresh game frames",
+        "beforeFrame": 55,
+        "beforeGameplay": {
+          "boostTime": 0,
+          "controlHand": "left",
+          "controls": {
+            "accel": 0,
+            "accelAuto": false,
+            "anyPressed": false,
+            "brake": 0,
+            "drift": false,
+            "driftPressed": false,
+            "itemPressed": false,
+            "lookBack": false,
+            "pausePressed": false,
+            "steer": 0
+          },
+          "driftCharge": 0,
+          "driftDir": 0,
+          "driftTier": 0,
+          "focus": "Start",
+          "lap": 0,
+          "menu": "title",
+          "phase": "menu",
+          "place": 1,
+          "position": [
+            -5.681087777058439,
+            4.071870478283959,
+            -9.973263242809429
+          ],
+          "savedControls": true,
+          "speed": -1.5984603593097217e-19,
+          "state": 0,
+          "time": 0
+        },
+        "distinctRetainedQualifiedPolls": [
+          62,
+          63
+        ],
+        "firstRetainedSample": {
+          "at": "2026-11-19T21:53:56.811982+00:00",
+          "timestamp": 1854.078,
+          "pollCount": 55,
+          "releasedAndCounterExact": false,
+          "expectationMatches": false,
+          "qualified": false
+        },
+        "lastRetainedSample": {
+          "at": "2026-11-19T21:54:56.730237+00:00",
+          "timestamp": 1908.031,
+          "pollCount": 63,
+          "releasedAndCounterExact": true,
+          "expectationMatches": true,
+          "qualified": true
+        }
+      },
+      "navigationSnapshots": [
+        {
+          "label": "Focus controls option Left actual SDK input",
+          "at": "2026-11-19T21:52:15.953086+00:00",
+          "frames": 40,
+          "pollCount": 40,
+          "focus": "Right",
+          "controlHand": "right",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": true
+          }
+        },
+        {
+          "label": "Focus controls option Left actual gameplay observation",
+          "at": "2026-11-19T21:52:16.148906+00:00",
+          "frames": 40,
+          "pollCount": 40,
+          "focus": "Right",
+          "controlHand": "right",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": true
+          }
+        },
+        {
+          "label": "Plan controls released: Focus controls option Left",
+          "at": "2026-11-19T21:52:22.438969+00:00",
+          "frames": 41,
+          "pollCount": 41,
+          "focus": "Right",
+          "controlHand": "right",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "Plan controls released: Save original left-handed preference through Controls",
+          "at": "2026-11-19T21:53:09.210231+00:00",
+          "frames": 48,
+          "pollCount": 48,
+          "focus": "Left",
+          "controlHand": "left",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        },
+        {
+          "label": "Plan controls released: Close Controls explicitly",
+          "at": "2026-11-19T21:53:56.744349+00:00",
+          "frames": 55,
+          "pollCount": 55,
+          "focus": "Start",
+          "controlHand": "left",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        }
+      ]
+    },
+    {
+      "game": "kart-royale",
+      "mode": "occupied",
+      "path": "original-small-export/joystick-windows-evidence-kart-royale/runtime-occupied/report.json",
+      "bytes": 497075,
+      "sha256": "0c3215e29c1e176cd06bd7064867a0ba7ca54cf0cc7314235b091045a8696cf6",
+      "status": "failed",
+      "error": "Traceback (most recent call last):\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 358, in run\n    self.check('Actual gameplay and pause model freeze',self.gameplay)\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 204, in check\n    try:r['details']=fn();r['status']='passed'\n                     ^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\windows-verify.py\", line 158, in gameplay\n    cases.append(self.menu_tap(step,before));self.settle_input('Plan controls released: '+step['name']);continue\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\pureTV\\pureTV\\joystick-games\\tools\\macos-verify.py\", line 685, in menu_tap\n    raise AssertionError(step['name']+' released menuTap expectation did not remain stable across two fresh game frames')\nAssertionError: Save original left-handed preference through Controls released menuTap expectation did not remain stable across two fresh game frames\n",
+      "tests": [
+        {
+          "name": "Native DPI-scaled minimum and initial viewport",
+          "status": "passed"
+        },
+        {
+          "name": "DNS-SD resolves actual listener and TXT",
+          "status": "passed"
+        },
+        {
+          "name": "Official SDK and single controller seat",
+          "status": "passed"
+        },
+        {
+          "name": "Actual gameplay and pause model freeze",
+          "status": "failed"
+        }
+      ],
+      "qaSourceHashesVerified": 7,
+      "finalState": {
+        "timestamp": 2288.015,
+        "documentEpoch": 1,
+        "ready": true,
+        "active": true,
+        "lastJavaScriptError": "",
+        "frames": 53,
+        "stage": "menu",
+        "paused": false,
+        "renderer": "webgl2",
+        "pollCount": 53,
+        "gameplay": {
+          "boostTime": 0,
+          "controlHand": "right",
+          "controls": {
+            "accel": 0,
+            "accelAuto": false,
+            "anyPressed": false,
+            "brake": 0,
+            "drift": false,
+            "driftPressed": false,
+            "itemPressed": false,
+            "lookBack": false,
+            "pausePressed": false,
+            "steer": 0
+          },
+          "driftCharge": 0,
+          "driftDir": 0,
+          "driftTier": 0,
+          "focus": "Right",
+          "lap": 0,
+          "menu": "controls",
+          "phase": "menu",
+          "place": 1,
+          "position": [
+            -5.681087777141326,
+            4.071870474541855,
+            -9.973263242947613
+          ],
+          "savedControls": true,
+          "speed": -2.283010218840231e-19,
+          "state": 0,
+          "time": 0
+        }
+      },
+      "lastMenuTap": {
+        "name": "Save original left-handed preference through Controls",
+        "key": "A",
+        "status": "failed",
+        "declaredHoldMs": 180,
+        "requestedTapMs": 16,
+        "beforeOwner": {
+          "controllerId": "virtual-eda53979c9e1",
+          "session": "wifi-fbb47b96235383de2019e06e33fcb88b-1",
+          "buttonCounters": {
+            "A": 1,
+            "B": 0,
+            "DOWN": 1,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 6
+          }
+        },
+        "sampleCount": 307,
+        "samplesTruncated": true,
+        "sdkDownSequence": 82,
+        "sdkReleaseSequence": 83,
+        "sdkCallHeldMs": 30.99999999994907,
+        "elapsedSeconds": 60.077999999999975,
+        "error": "AssertionError: Save original left-handed preference through Controls released menuTap expectation did not remain stable across two fresh game frames",
+        "beforeFrame": 45,
+        "beforeGameplay": {
+          "boostTime": 0,
+          "controlHand": "right",
+          "controls": {
+            "accel": 0,
+            "accelAuto": false,
+            "anyPressed": false,
+            "brake": 0,
+            "drift": false,
+            "driftPressed": false,
+            "itemPressed": false,
+            "lookBack": false,
+            "pausePressed": false,
+            "steer": 0
+          },
+          "driftCharge": 0,
+          "driftDir": 0,
+          "driftTier": 0,
+          "focus": "Steer buttonsTwo big pads. Nothing to hold steady.",
+          "lap": 0,
+          "menu": "controls",
+          "phase": "menu",
+          "place": 1,
+          "position": [
+            -5.68108777888027,
+            4.071870396032036,
+            -9.973263245846834
+          ],
+          "savedControls": false,
+          "speed": 1.152097157163857e-20,
+          "state": 0,
+          "time": 0
+        },
+        "distinctRetainedQualifiedPolls": [],
+        "firstRetainedSample": {
+          "at": "2026-11-19T22:00:16.784111+00:00",
+          "timestamp": 2234.171,
+          "pollCount": 45,
+          "releasedAndCounterExact": false,
+          "expectationMatches": false,
+          "qualified": false
+        },
+        "lastRetainedSample": {
+          "at": "2026-11-19T22:01:16.741162+00:00",
+          "timestamp": 2288.015,
+          "pollCount": 53,
+          "releasedAndCounterExact": true,
+          "expectationMatches": false,
+          "qualified": false
+        }
+      },
+      "navigationSnapshots": [
+        {
+          "label": "Focus controls option Left actual SDK input",
+          "at": "2026-11-19T22:00:10.266018+00:00",
+          "frames": 44,
+          "pollCount": 44,
+          "focus": "Steer buttonsTwo big pads. Nothing to hold steady.",
+          "controlHand": "right",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": true
+          }
+        },
+        {
+          "label": "Focus controls option Left actual gameplay observation",
+          "at": "2026-11-19T22:00:10.454211+00:00",
+          "frames": 44,
+          "pollCount": 44,
+          "focus": "Steer buttonsTwo big pads. Nothing to hold steady.",
+          "controlHand": "right",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": true
+          }
+        },
+        {
+          "label": "Plan controls released: Focus controls option Left",
+          "at": "2026-11-19T22:00:16.743550+00:00",
+          "frames": 45,
+          "pollCount": 45,
+          "focus": "Steer buttonsTwo big pads. Nothing to hold steady.",
+          "controlHand": "right",
+          "semanticButtons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          }
+        }
+      ]
+    },
+    {
+      "game": "turbo-kart-rush",
+      "mode": "bootstrap",
+      "path": "original-small-export/joystick-windows-evidence-turbo-kart-rush/runtime-bootstrap/report.json",
+      "bytes": 7780,
+      "sha256": "e03fb43810e93d8f07a0fb844781ee96761b1183e6ad51a19736b548b7e4016e",
+      "status": "passed",
+      "error": null,
+      "tests": []
+    },
+    {
+      "game": "turbo-kart-rush",
+      "mode": "normal",
+      "path": "original-small-export/joystick-windows-evidence-turbo-kart-rush/runtime-normal/report.json",
+      "bytes": 1276837,
+      "sha256": "00e014003eadaa668fc6b7b749740e4cfbee4137266e963fca82a5e879f5488b",
+      "status": "passed",
+      "error": null,
+      "tests": [
+        {
+          "name": "Native DPI-scaled minimum and initial viewport",
+          "status": "passed"
+        },
+        {
+          "name": "DNS-SD resolves actual listener and TXT",
+          "status": "passed"
+        },
+        {
+          "name": "Official SDK and single controller seat",
+          "status": "passed"
+        },
+        {
+          "name": "Actual gameplay and pause model freeze",
+          "status": "passed"
+        },
+        {
+          "name": "Three minimize and restore cycles keep endpoint stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect and held-sync reconnect remain paused",
+          "status": "passed"
+        },
+        {
+          "name": "Normal gameplay saves reach native store",
+          "status": "passed"
+        },
+        {
+          "name": "Every SDK message receives exact sequence ACK",
+          "status": "passed"
+        },
+        {
+          "name": "Normal close releases TCP",
+          "status": "passed"
+        },
+        {
+          "name": "Real save restored with fresh browser cache",
+          "status": "passed"
+        }
+      ],
+      "qaSourceHashesVerified": 7,
+      "finalState": {
+        "timestamp": 610.875,
+        "documentEpoch": 1,
+        "ready": false,
+        "active": false,
+        "lastJavaScriptError": "",
+        "frames": null,
+        "stage": null,
+        "paused": null,
+        "renderer": null,
+        "pollCount": null,
+        "gameplay": {}
+      },
+      "storageRestart": {
+        "required": false,
+        "status": "not_exercised",
+        "actualStoredKeys": [],
+        "nativeSavedAfterQuit": {},
+        "cleanBrowserCacheVerified": true,
+        "initialHydrationEqual": true
+      }
+    },
+    {
+      "game": "turbo-kart-rush",
+      "mode": "occupied",
+      "path": "original-small-export/joystick-windows-evidence-turbo-kart-rush/runtime-occupied/report.json",
+      "bytes": 1284050,
+      "sha256": "19bd8437132013099bb2e6f1e6f6ff567d21a8bf773cff8f752a7663e2abe394",
+      "status": "passed",
+      "error": null,
+      "tests": [
+        {
+          "name": "Native DPI-scaled minimum and initial viewport",
+          "status": "passed"
+        },
+        {
+          "name": "DNS-SD resolves actual listener and TXT",
+          "status": "passed"
+        },
+        {
+          "name": "Official SDK and single controller seat",
+          "status": "passed"
+        },
+        {
+          "name": "Actual gameplay and pause model freeze",
+          "status": "passed"
+        },
+        {
+          "name": "Three minimize and restore cycles keep endpoint stable",
+          "status": "passed"
+        },
+        {
+          "name": "Disconnect and held-sync reconnect remain paused",
+          "status": "passed"
+        },
+        {
+          "name": "Normal gameplay saves reach native store",
+          "status": "passed"
+        },
+        {
+          "name": "Every SDK message receives exact sequence ACK",
+          "status": "passed"
+        },
+        {
+          "name": "Normal close releases TCP",
+          "status": "passed"
+        },
+        {
+          "name": "Real save restored with fresh browser cache",
+          "status": "passed"
+        }
+      ],
+      "qaSourceHashesVerified": 7,
+      "finalState": {
+        "timestamp": 944.671,
+        "documentEpoch": 1,
+        "ready": false,
+        "active": false,
+        "lastJavaScriptError": "",
+        "frames": null,
+        "stage": null,
+        "paused": null,
+        "renderer": null,
+        "pollCount": null,
+        "gameplay": {}
+      },
+      "storageRestart": {
+        "required": false,
+        "status": "not_exercised",
+        "actualStoredKeys": [],
+        "nativeSavedAfterQuit": {},
+        "cleanBrowserCacheVerified": true,
+        "initialHydrationEqual": true
+      }
+    }
+  ],
+  "noProductionChangeOrRerun": true,
+  "findings": [
+    "Only Turbo originally passed both native modes. Its save-restart requirement is false and storageRestart.status is not_exercised with no actual saved keys, so the generic ten green checks do not establish a real game-save lifecycle.",
+    "Ponpoko never reached the SDK scenarios: document-start fixture produced no observed state before its timeout. Current report alone does not establish a renderer, process-exit or storage-injection root cause.",
+    "Backroad both modes reached the final original Start step, but the last state is paused while phase=intro, ready=true and menuFocus=resume. No retained sample satisfies the final race predicate during 240 seconds. This is separate from installation/bootstrap/SDK handshake, which passed; the pause trigger is not yet established.",
+    "Royale normal never reached the new 600-second race-start step. Its prior roster-open menuTap reached the correct select menu and Start race focus at final poll63, but the retained qualifying polls are 62 and 63 (baseline plus only one subsequent poll), so the required two subsequent fresh polls did not occur within 60 seconds.",
+    "Royale occupied failed before closing Controls: six Y navigation steps only assert that the controls menu remains open, not their named focused option. The final Focus controls option Left observation/release is still on Steer buttons; the subsequent A ends on Right and saves right. These old predicates can accept before navigation has been consumed. No evidence that its 600-second countdown or game physics were exercised.",
+    "Potential narrow follow-up for review: make the six original Y menu actions require their actual distinct focus targets and use existing short menuTap; retain the present budgets and original gameplay predicates and do not alter clocks or physics. This is a proposal only, not applied."
+  ]
+}

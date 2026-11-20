@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-11-10T13:41:27.489901+00:00",
+  "status": "passed",
+  "serial": "emulator-5554",
+  "packageName": "com.ecojust.operatv",
+  "apkSha256": "82394459350d03a15a1b9e177934f2f6baeb0d958d62f0bdd7ffac4fd29acce0",
+  "stages": [
+    {
+      "name": "Check explicit clean emulator and APK identity",
+      "startedAt": "2026-11-10T13:41:27.490435+00:00",
+      "status": "passed",
+      "currentUser": "0",
+      "deviceProperties": {
+        "ro.build.version.sdk": "36",
+        "ro.build.fingerprint": "google/sdk_google_atv64_x86_64/emu64xa:16/BT2A.260319.001/15058170:user/dev-keys",
+        "ro.product.cpu.abilist": "x86_64,arm64-v8a",
+        "ro.product.cpu.abilist32": "",
+        "ro.product.cpu.abilist64": "x86_64,arm64-v8a",
+        "ro.build.characteristics": "emulator"
+      },
+      "durationSeconds": 0.972
+    },
+    {
+      "name": "Generate local H264/AAC media and serve bounded fixture",
+      "startedAt": "2026-11-10T13:41:28.462755+00:00",
+      "status": "passed",
+      "videoSha256": "a212f1f2dea4b44d97299e7418f8cea47384386053e41dcbf2e6bf045d14f88a",
+      "bytes": 2857622,
+      "durationSeconds": 2.265,
+      "videoCodec": "H264 baseline",
+      "audioCodec": "AAC",
+      "playlistUrl": "http://10.0.2.2:8765/opera-fixture.m3u"
+    },
+    {
+      "name": "Install original signed APK for the current user and open main UI",
+      "startedAt": "2026-11-10T13:41:30.733895+00:00",
+      "status": "passed",
+      "durationSeconds": 18.56
+    },
+    {
+      "name": "Import generated playlist through the visible UI",
+      "startedAt": "2026-11-10T13:41:49.294745+00:00",
+      "status": "passed",
+      "cardDescription": "card:e88dc6f62cf8157b67f272be8ee4460763d0e08e807caecc4860362db167a005",
+      "durationSeconds": 21.404
+    },
+    {
+      "name": "Save favorite and open the imported video",
+      "startedAt": "2026-11-10T13:42:10.698699+00:00",
+      "status": "passed",
+      "durationSeconds": 11.477
+    },
+    {
+      "name": "Observe genuine local playback and pause",
+      "startedAt": "2026-11-10T13:42:22.175525+00:00",
+      "status": "passed",
+      "sample": {
+        "positionSeconds": 3,
+        "durationSeconds": 40,
+        "visibleStatus": "Paused",
+        "observedAt": "2026-11-10T13:42:28.457603+00:00",
+        "foreground": [
+          "topResumedActivity=ActivityRecord{106062467 u0 com.ecojust.operatv/.PlaybackActivity t6}",
+          "ResumedActivity: ActivityRecord{106062467 u0 com.ecojust.operatv/.PlaybackActivity t6}"
+        ]
+      },
+      "durationSeconds": 6.679
+    },
+    {
+      "name": "Confirm pause keeps the media clock still",
+      "startedAt": "2026-11-10T13:42:28.854973+00:00",
+      "status": "passed",
+      "before": {
+        "positionSeconds": 3,
+        "durationSeconds": 40,
+        "visibleStatus": "Paused",
+        "observedAt": "2026-11-10T13:42:28.457603+00:00",
+        "foreground": [
+          "topResumedActivity=ActivityRecord{106062467 u0 com.ecojust.operatv/.PlaybackActivity t6}",
+          "ResumedActivity: ActivityRecord{106062467 u0 com.ecojust.operatv/.PlaybackActivity t6}"
+        ]
+      },
+      "after": {
+        "positionSeconds": 3,
+        "durationSeconds": 40,
+        "visibleStatus": "Paused",
+        "observedAt": "2026-11-10T13:42:34.809731+00:00",
+        "foreground": [
+          "topResumedActivity=ActivityRecord{106062467 u0 com.ecojust.operatv/.PlaybackActivity t6}",
+          "ResumedActivity: ActivityRecord{106062467 u0 com.ecojust.operatv/.PlaybackActivity t6}"
+        ]
+      },
+      "durationSeconds": 5.97
+    },
+    {
+      "name": "Resume and verify the real media clock advances",
+      "startedAt": "2026-11-10T13:42:34.825527+00:00",
+      "status": "passed",
+      "before": {
+        "positionSeconds": 3,
+        "durationSeconds": 40,
+        "visibleStatus": "Paused",
+        "observedAt": "2026-11-10T13:42:34.809731+00:00",
+        "foreground": [
+          "topResumedActivity=ActivityRecord{106062467 u0 com.ecojust.operatv/.PlaybackActivity t6}",
+          "ResumedActivity: ActivityRecord{106062467 u0 com.ecojust.operatv/.PlaybackActivity t6}"
+        ]
+      },
+      "after": {
+        "positionSeconds": 13,
+        "durationSeconds": 40,
+        "visibleStatus": "Paused",
+        "observedAt": "2026-11-10T13:42:52.483903+00:00",
+        "foreground": [
+          "topResumedActivity=ActivityRecord{106062467 u0 com.ecojust.operatv/.PlaybackActivity t6}",
+          "ResumedActivity: ActivityRecord{106062467 u0 com.ecojust.operatv/.PlaybackActivity t6}"
+        ]
+      },
+      "durationSeconds": 17.921
+    },
+    {
+      "name": "Restart application and resume saved favorite",
+      "startedAt": "2026-11-10T13:42:52.746701+00:00",
+      "status": "passed",
+      "savedPositionSeconds": 13,
+      "restartedSample": {
+        "positionSeconds": 15,
+        "durationSeconds": 40,
+        "visibleStatus": "Paused",
+        "observedAt": "2026-11-10T13:43:11.109102+00:00",
+        "foreground": [
+          "topResumedActivity=ActivityRecord{150605951 u0 com.ecojust.operatv/.PlaybackActivity t7}",
+          "ResumedActivity: ActivityRecord{150605951 u0 com.ecojust.operatv/.PlaybackActivity t7}"
+        ]
+      },
+      "durationSeconds": 18.647
+    }
+  ],
+  "publicPlayback": {
+    "status": "passed",
+    "startedAt": "2026-11-10T13:43:11.394008+00:00",
+    "source": "first visible public CCTV item; no fixture substitution",
+    "cardDescription": "card:cctv:8a5ff15522544190ae69b1c2b86de467",
+    "title": "《CCTV空中剧院》 20261023 黄梅戏《五月的鲜花》选场\n空中剧院",
+    "sample": {
+      "positionSeconds": 4,
+      "durationSeconds": 3599,
+      "visibleStatus": "Paused",
+      "observedAt": "2026-11-10T13:43:30.670455+00:00",
+      "foreground": [
+        "topResumedActivity=ActivityRecord{122643539 u0 com.ecojust.operatv/.PlaybackActivity t7}",
+        "ResumedActivity: ActivityRecord{122643539 u0 com.ecojust.operatv/.PlaybackActivity t7}"
+      ]
+    },
+    "finishedAt": "2026-11-10T13:43:31.290508+00:00"
+  },
+  "physicalTvTested": false,
+  "audioAudibilityVerified": false,
+  "screenshotVisualReviewPerformed": false,
+  "fixtureMedia": "generated H264/AAC color-pattern video, not opera content",
+  "currentUser": "0",
+  "deviceProperties": {
+    "ro.build.version.sdk": "36",
+    "ro.build.fingerprint": "google/sdk_google_atv64_x86_64/emu64xa:16/BT2A.260319.001/15058170:user/dev-keys",
+    "ro.product.cpu.abilist": "x86_64,arm64-v8a",
+    "ro.product.cpu.abilist32": "",
+    "ro.product.cpu.abilist64": "x86_64,arm64-v8a",
+    "ro.build.characteristics": "emulator"
+  },
+  "corePlayback": "passed",
+  "evidenceCollectionErrors": [],
+  "cleanup": {
+    "status": "passed",
+    "scope": "only this run's package/current user and UI XML; emulator left running"
+  },
+  "fixtureHttpRequests": [
+    {
+      "at": "2026-11-10T13:42:08.282186+00:00",
+      "method": "GET",
+      "path": "/opera-fixture.m3u",
+      "range": null,
+      "status": 200,
+      "bodyBytes": 100
+    },
+    {
+      "at": "2026-11-10T13:42:21.859836+00:00",
+      "method": "GET",
+      "path": "/opera-fixture.mp4",
+      "range": null,
+      "status": 200,
+      "bodyBytes": 2857622
+    },
+    {
+      "at": "2026-11-10T13:43:05.595304+00:00",
+      "method": "GET",
+      "path": "/opera-fixture.mp4",
+      "range": null,
+      "status": 200,
+      "bodyBytes": 2857622
+    }
+  ],
+  "finishedAt": "2026-11-10T13:43:33.540986+00:00"
+}

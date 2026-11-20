@@ -1,0 +1,99 @@
+{
+  "status": "passed",
+  "scope": "controller client status acceptance",
+  "game": "prism-relay",
+  "version": "0.2.3",
+  "artifactSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "qaSourceSha": "802c48bcec9d060bdce691045330c822c4f1cf83",
+  "runtimeRun": "43846050276",
+  "sourceWorkflowResult": "failure",
+  "sourceGroupResult": "passed",
+  "apk": {
+    "packageName": "com.ecojust.prismrelaytv",
+    "versionCode": 6,
+    "versionName": "0.2.3",
+    "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+    "bytes": 312751,
+    "sha256": "5b23bd1fb734e59aefaff8941b8db4e47a574b243faf73b9b25d8a9fdf9d1a77"
+  },
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "nativeSourceReceiptMatchesCommit": true,
+  "inPlaceUpgradeInstalled": true,
+  "controllerClientStatusAcceptancePassed": true,
+  "fullGameplayAcceptancePerformedInThisUpdate": false,
+  "modelReuse": {
+    "sourceRef": "9af9f197855eb7a0ce7174c0e6295c8974b3250d:resource/apps/prism-relay/src/main/assets/game-model.js",
+    "sha256": "e98f8673cde6f2a4458ad70f5de16f0d6041b5106b396d2517c3efadfb3f5096",
+    "bytes": 13331,
+    "matchesNewApk": true
+  },
+  "previousReleaseVerification": {
+    "version": "0.2.2",
+    "metadata": "resource/apps/prism-relay/docs/controller-status-baseline/0.2.2/resource.json",
+    "scope": "Historical evidence, not current UI captures"
+  },
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "connected status displays the real SDK identity and controller icon",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-922ea8d3d0cd",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "disconnect removes the ID and same-ID reconnect restores its seat",
+      "status": "passed",
+      "result": {
+        "controllerId": "virtual-922ea8d3d0cd",
+        "playerId": 1
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK status message",
+      "status": "passed",
+      "result": {
+        "messages": 22,
+        "acks": 22,
+        "connections": 2
+      }
+    }
+  ],
+  "originalEvidence": "docs/controller-client-status/android/43846050276/evidence/controller-runtime-kit-3/prism-relay",
+  "originalDriverSha256": "e45e600d3cd2f14597c6847ae3b30451ac91847abf9f473f354070e2bc01a87d",
+  "captures": {
+    "menu-android.png": {
+      "sha256": "2c22910c527bbd45c597574cc03ebde9e3110389aecdb88504c536bb11740d98",
+      "bytes": 381884
+    },
+    "controller-connected-android.png": {
+      "sha256": "5f59788aa0a6560de8b12aaa5a39fa59907c377cc26c510b5e13c689346213c7",
+      "bytes": 380130
+    },
+    "controller-disconnected.png": {
+      "sha256": "1e4d3923043de00522ba2f0ad1e83453652afaac95b7e560b3fe9e0bbf944ec3",
+      "bytes": 378482
+    },
+    "controller-reconnected.png": {
+      "sha256": "2f8b44958840ae47e35c8418f035a1508f994521f61b20130be3c7f72acd688f",
+      "bytes": 380123
+    }
+  },
+  "connectedCaptureSha256": "5f59788aa0a6560de8b12aaa5a39fa59907c377cc26c510b5e13c689346213c7",
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false
+}

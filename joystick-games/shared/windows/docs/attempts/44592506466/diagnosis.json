@@ -1,0 +1,88 @@
+{
+  "runId": 44592506466,
+  "runAttempt": 1,
+  "sourceCommit": "2fc11b94bdf0d5eda3fbc84fb5dbc6c39d4cf446",
+  "exportCommit": "f9b92805ceb4410ac07d6f3af27c04d5c0af3f86",
+  "originalExportFilesVerified": 70,
+  "originalExportBytesVerified": 837419,
+  "actualWindowsBuildPassed": true,
+  "actualPackageVerification": {
+    "status": "passed",
+    "game": "sugarplum-drop",
+    "sourceCommit": "2fc11b94bdf0d5eda3fbc84fb5dbc6c39d4cf446",
+    "packageHashesVerified": true,
+    "zipCrcVerified": true,
+    "completeFileSetVerified": true,
+    "silentInstallerExecuted": true,
+    "uninstallPreservesUnrelatedFiles": true,
+    "uninstallRemovesOnlyPackagedFiles": true,
+    "installedBytesMatchPortable": true,
+    "peMachine": "AMD64",
+    "authenticodeSigned": false,
+    "installedApp": "D:\\a\\_temp\\install-verification\\installed",
+    "binarySha256": "5bc257c1bd81ad4df16589c749ecfc85bd76629633083a095967787ded666bea",
+    "packages": {
+      "SugarplumDrop-0.1.0-windows-x64.zip": {
+        "bytes": 310129,
+        "sha256": "9099365d56a5b9053c59e1a183f6606e11300eafb54a52015f0fdda47ef37801"
+      },
+      "SugarplumDrop-0.1.0-windows-x64-setup.exe": {
+        "bytes": 392395,
+        "sha256": "a836f4205302ed0136ebefabdc35ee3694f532f0fb76a6894936dda3eb52beda"
+      }
+    }
+  },
+  "actualRuntime": {
+    "runtime-normal": {
+      "status": "failed",
+      "tests": [
+        {
+          "name": "Native DPI-scaled minimum and initial viewport",
+          "status": "failed"
+        }
+      ],
+      "ready": true,
+      "active": true,
+      "actualWindowDpi": 96,
+      "actualClientPixels": {
+        "height": 720,
+        "width": 1028
+      },
+      "actualDocumentViewport": {
+        "width": 1028,
+        "height": 720
+      },
+      "renderer": "canvas2d",
+      "listenerPort": 63485,
+      "errorLocation": "windows-verify.py:48 Actual initial logical viewport restored timed out"
+    },
+    "runtime-occupied": {
+      "status": "failed",
+      "tests": [
+        {
+          "name": "Native DPI-scaled minimum and initial viewport",
+          "status": "failed"
+        }
+      ],
+      "ready": true,
+      "active": true,
+      "actualWindowDpi": 96,
+      "actualClientPixels": {
+        "height": 720,
+        "width": 1028
+      },
+      "actualDocumentViewport": {
+        "width": 1028,
+        "height": 720
+      },
+      "renderer": "canvas2d",
+      "listenerPort": 65339,
+      "errorLocation": "windows-verify.py:48 Actual initial logical viewport restored timed out"
+    }
+  },
+  "verifiedGames": [],
+  "nativeRuntimeValidated": false,
+  "physicalControllerTested": false,
+  "diagnosis": "The verifier restored the original saved outer size and then required a 1280x720 client; actual restored client was 1028x720 at 96 DPI. The original evidence did not capture display modes/work area, so a screen-size explanation remains a hypothesis until the next native run records it. No original QA result is changed.",
+  "nextChange": "QA will enumerate and record original display modes and work area, test an enumerated >=1600x900 mode, temporarily apply/read back it, and restore the original mode in finally. No native host/game change and no relaxed window assertion."
+}

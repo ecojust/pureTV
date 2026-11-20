@@ -1,0 +1,158 @@
+{
+  "sourceCommit": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+  "originalRunId": 44606071748,
+  "originalRunAttempt": 1,
+  "originalJobId": 135852415679,
+  "recoveryRunId": 44608777482,
+  "recoveryCommit": "742a31ef09869e15a35a638fe16e55e484c1d064",
+  "evidenceFilesVerified": 53,
+  "status": "original-runtime-failed-at-first-menu-action",
+  "identityRepairObserved": true,
+  "drivingObserved": false,
+  "avdDisconnectionProven": false,
+  "modes": [
+    {
+      "mode": "normal",
+      "reportSha256": "9bd0f07af09e39eec0091a35e76747741689d7b1cc0ad00c6b112444cdd1102a",
+      "status": "failed",
+      "checks": [
+        {
+          "name": "catalog scenario starts with fresh app data before launch",
+          "status": "passed"
+        },
+        {
+          "name": "installed target launches initialized game menu with no controller card",
+          "status": "passed"
+        },
+        {
+          "name": "original SDK hello and nine sync messages create actual controller ID card",
+          "status": "passed"
+        }
+      ],
+      "sdkMessages": 66,
+      "matchingAcks": 66,
+      "snapshots": [
+        {
+          "label": "initial-menu",
+          "game": "penguintrack",
+          "frames": 4,
+          "screen": "menu",
+          "focus": "Play",
+          "renderer": "webgl2",
+          "connected": false,
+          "snapshotError": null
+        },
+        {
+          "label": "before-plan-Open original campaign",
+          "game": "penguintrack",
+          "frames": 58,
+          "screen": "menu",
+          "focus": "Controller",
+          "renderer": "webgl2",
+          "connected": true,
+          "snapshotError": null
+        },
+        {
+          "label": "timeout-plan-gameplay-Open original campaign",
+          "game": "penguintrack",
+          "frames": 290,
+          "screen": "menu",
+          "focus": "Continue",
+          "renderer": "webgl2",
+          "connected": true,
+          "snapshotError": "TimeoutError('timed out')"
+        }
+      ],
+      "apkReportedByOriginalRuntime": {
+        "bytes": 2342332,
+        "sha256": "e1f9aa255413819bda917543c2d2258dd685a8eff61f982f26a98dfcfc827827"
+      }
+    },
+    {
+      "mode": "occupied",
+      "reportSha256": "465b714978bb97bc51943990893f2051b4f9c9351ebf541aa1ba20320c65e712",
+      "status": "failed",
+      "checks": [
+        {
+          "name": "catalog scenario starts with fresh app data before launch",
+          "status": "passed"
+        },
+        {
+          "name": "installed target launches initialized game menu with no controller card",
+          "status": "passed"
+        },
+        {
+          "name": "original SDK hello and nine sync messages create actual controller ID card",
+          "status": "passed"
+        }
+      ],
+      "sdkMessages": 65,
+      "matchingAcks": 65,
+      "snapshots": [
+        {
+          "label": "initial-menu",
+          "game": "penguintrack",
+          "frames": 3,
+          "screen": "menu",
+          "focus": "Play",
+          "renderer": "webgl2",
+          "connected": false,
+          "snapshotError": null
+        },
+        {
+          "label": "before-plan-Open original campaign",
+          "game": "penguintrack",
+          "frames": 57,
+          "screen": "menu",
+          "focus": "Controller",
+          "renderer": "webgl2",
+          "connected": true,
+          "snapshotError": null
+        },
+        {
+          "label": "timeout-plan-gameplay-Open original campaign",
+          "game": "penguintrack",
+          "frames": 322,
+          "screen": "menu",
+          "focus": "Continue",
+          "renderer": "webgl2",
+          "connected": true,
+          "snapshotError": "TimeoutError('timed out')"
+        }
+      ],
+      "apkReportedByOriginalRuntime": {
+        "bytes": 2342332,
+        "sha256": "e1f9aa255413819bda917543c2d2258dd685a8eff61f982f26a98dfcfc827827"
+      }
+    }
+  ],
+  "visualReview": {
+    "viewedOriginalImage": "original-evidence/artifact/penguintrack-normal/connected.png",
+    "viewedExtractedVideoFrame": "penguin-normal-last-frame.png",
+    "frameSha256": "c85b4ba5c51abcc2780d16d34c78803baaefb29f98a8c7f8b1dd316a00b31719",
+    "finding": "The actual connected view focuses Controller, not Play. The final original-video frame shows the Controller help modal with Continue focused. No race is shown.",
+    "extractionCommand": [
+      "ffmpeg",
+      "-v",
+      "error",
+      "-threads",
+      "1",
+      "-sseof",
+      "-2",
+      "-i",
+      "original-evidence/artifact/penguintrack-normal/controller-gameplay.mp4",
+      "-frames:v",
+      "1",
+      "-threads",
+      "1",
+      "penguin-normal-last-frame.png"
+    ]
+  },
+  "interpretation": "Both actual modes pass initialized identity, menu and SDK/card setup. Their first A action opens Controller help because focus changed from initial Play to Controller before the plan. Native frame counts keep advancing and all wire messages are acknowledged. The cause of focus migration is not proven by these reports.",
+  "originalReportsUnchanged": true,
+  "installPackagesValidated": false,
+  "gameSourceModified": false,
+  "physicalTvTested": false,
+  "physicalEsp32Tested": false,
+  "checkedAt": "2026-11-19T20:30:19.969703+00:00"
+}

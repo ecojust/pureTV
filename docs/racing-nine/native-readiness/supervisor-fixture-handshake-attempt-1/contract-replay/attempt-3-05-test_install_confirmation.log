@@ -1,0 +1,23 @@
+................E.
+======================================================================
+ERROR: test_catalog_default_does_not_enable_and_explicit_flag_is_backroad_only (__main__.IntegrationContracts.test_catalog_default_does_not_enable_and_explicit_flag_is_backroad_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/dev/shm/racing-native-readiness/pon-v7-contract-replay/source/joystick-games/qa/android/test_install_confirmation.py", line 275, in test_catalog_default_does_not_enable_and_explicit_flag_is_backroad_only
+    self.catalog.runtime(SimpleNamespace(game='night-racer', confirm_backroad_install='true'))
+  File "/dev/shm/racing-native-readiness/pon-v7-contract-replay/source/joystick-games/tools/android-catalog.py", line 28, in runtime
+    meta = build.metadata(args.game)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/racing-native-readiness/pon-v7-contract-replay/source/joystick-games/tools/android-build.py", line 106, in metadata
+    value = builder().metadata(ROOT / 'joystick-games' / slug)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/racing-native-readiness/pon-v7-contract-replay/source/resource/game-kit/build.py", line 112, in metadata
+    require(path.is_file() and not path.is_symlink(), 'Missing regular game.json')
+  File "/dev/shm/racing-native-readiness/pon-v7-contract-replay/source/resource/game-kit/build.py", line 56, in require
+    raise ValueError(message)
+ValueError: Missing regular game.json
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.863s
+
+FAILED (errors=1)

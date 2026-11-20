@@ -1,0 +1,47 @@
+{
+  "status": "configured",
+  "disposableEmulator": true,
+  "serial": "emulator-5554",
+  "kernelQemu": "1",
+  "fingerprint": "google/sdk_google_atv_x86/generic_x86:10/QTU1.200805.001/6738020:user/test-keys",
+  "sdk": "29",
+  "before": {
+    "verifier_verify_adb_installs": "0",
+    "package_verifier_enable": "1"
+  },
+  "after": {
+    "verifier_verify_adb_installs": "0",
+    "package_verifier_enable": "0"
+  },
+  "commands": [
+    {
+      "command": [
+        "/usr/local/lib/android/sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "settings",
+        "put",
+        "global",
+        "verifier_verify_adb_installs",
+        "0"
+      ],
+      "stdout": ""
+    },
+    {
+      "command": [
+        "/usr/local/lib/android/sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "settings",
+        "put",
+        "global",
+        "package_verifier_enable",
+        "0"
+      ],
+      "stdout": ""
+    }
+  ],
+  "purpose": "Only this disposable CI emulator skips cloud ADB install verification; release APK signature verification remains required."
+}

@@ -1,0 +1,79 @@
+{
+  "platform": "Linux; actual Swift HTTP/NSUserDefaults tests require macOS, local-assets cases skipped honestly",
+  "sourceFiles": {
+    "joystick-games/tools/macos-build.py": {
+      "bytes": 20487,
+      "sha256": "4fa65936293a5d6c5e728577780edc30429a500627e8799c1c83a5095470b853"
+    },
+    "joystick-games/tools/macos-packages.py": {
+      "bytes": 7235,
+      "sha256": "40082d42ab3c2608351ba8f1a0e6bd2dee8d74b47218576311f6ec0e81c1409f"
+    },
+    "joystick-games/shared/macos/Sources/LocalAssetServer.swift": {
+      "bytes": 23466,
+      "sha256": "7cc869ba4ac721b348aa8039641a74edbac80ce433effee4883f0145ad1fbd11"
+    },
+    "joystick-games/shared/macos/tests/catalog-tools.test.py": {
+      "bytes": 22818,
+      "sha256": "58af25d1272dcc2d901f0221d1900fc43a410933716261d4dc42e06fd580bb34"
+    },
+    "joystick-games/shared/macos/tests/local-assets.test.py": {
+      "bytes": 18372,
+      "sha256": "936e14642a6c728c676e4350b0d1ecf9981ba6418d6748ff4217b1880460e4e9"
+    },
+    "joystick-games/shared/macos/tests/GameStorageTests.swift": {
+      "bytes": 3000,
+      "sha256": "ec4225d33dff64135235bb978a3142dfd20330af8e1d19caff6b1a50564c3ae6"
+    }
+  },
+  "tests": [
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-tools.test.py"
+      ],
+      "returncode": 0,
+      "log": "catalog-tools.log"
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/local-assets.test.py"
+      ],
+      "returncode": 0,
+      "log": "local-assets.log"
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/catalog-reuse.test.py"
+      ],
+      "returncode": 0,
+      "log": "catalog-reuse.log"
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/native-observation.test.py"
+      ],
+      "returncode": 0,
+      "log": "native-observation.log"
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/build-source.test.py"
+      ],
+      "returncode": 0,
+      "log": "build-source.log"
+    },
+    {
+      "command": [
+        "python3",
+        "joystick-games/shared/macos/tests/reuse-source.test.py"
+      ],
+      "returncode": 0,
+      "log": "reuse-source.log"
+    }
+  ]
+}

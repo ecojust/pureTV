@@ -1,0 +1,417 @@
+{
+  "phase": "complete-bounded-review-not-platform-acceptance",
+  "rubric": "graphics 50 + gameplay 50; not GitHub stars",
+  "games": [
+    {
+      "title": "Ponpoko Kart",
+      "slug": "ponpoko-kart",
+      "graphicsScore": 44,
+      "gameplayScore": 41,
+      "totalScore": 85,
+      "graphicsSubscores": {
+        "sceneAndArtDirection": 14,
+        "vehicleDesign": 8,
+        "lightingAndEffects": 9,
+        "readability": 9,
+        "motionPresentation": 4
+      },
+      "gameplaySubscores": {
+        "drivingAndControl": 13,
+        "competitionAndFeedback": 8,
+        "trackAndModeVariety": 9,
+        "progressionAndReplay": 7,
+        "completeRaceLoop": 4
+      },
+      "reviewEvidencePaths": [
+        "docs/racing-nine/reviews/karts/ponpoko-kart/source-evidence.json",
+        "docs/racing-nine/reviews/karts/ponpoko-kart/source/README.md",
+        "docs/racing-nine/reviews/karts/ponpoko-kart/live-attempt-1/report.json",
+        "docs/racing-nine/reviews/karts/ponpoko-kart/live-attempt-2/report.json",
+        "docs/racing-nine/reviews/karts/author-captures.json"
+      ],
+      "bestGameplayImage": "docs/racing-nine/reviews/karts/ponpoko-kart/author-captures/matsuri.jpg",
+      "evidenceKind": "作者固定版本实战图；本轮正常选角/选赛道、到加载与比赛HUD，未保存驾驶画面",
+      "confidence": "medium; fixed author gameplay pixels and source; second live preview reached track loading/HUD but gameplay screenshot timed out",
+      "limitations": [
+        "Quality estimate combines inspected gameplay pixels with pinned source feature review; not a full-campaign review.",
+        "Live deployments are not proven byte-equal to pinned source; fixed upstream screenshots are labelled separately.",
+        "No physical TV/controller or three-platform package acceptance has been done.",
+        "Software GPU throughput not used as TV performance or visual score.",
+        "第二轮普通输入通过选角、选赛道，日志出现 LAP 1/3、0 km/h、6位；保存到的 after-start.png 仍为加载页，后续截图超时，不能声称完成驾驶或漂移体验。"
+      ],
+      "packagingNotes": [
+        "Three.js须离线打包，保持原和伞/漂移/物理与3条和风赛道。",
+        "需要完整九键菜单/音频暂停与粗指针TV布局验证。"
+      ],
+      "previewFollowupPending": false,
+      "sourceCommit": "88edb72d25c2f957431cc4d12547d3138d1bca48",
+      "bestGameplayImageSha256": "d4d30a74585c545b9128f0e7cf7d0fb9c543c1500d2396bd400868b0f980a6cb",
+      "scoreRationale": {
+        "graphics": {
+          "sceneAndArtDirection": "稻田夕照、鸟居与夏祭三套场景有独立地域设计；固定作者图已目视。",
+          "vehicleDesign": "狸、狐等角色与和伞模型有独特轮廓，但车辆细节密度低于 Kart Royale。",
+          "lightingAndEffects": "夕照/夜祭灯光与花火丰富，夜祭局部过曝。",
+          "readability": "大号圈数、名次与道具图标易辨；标题界面与赛道主题一致。",
+          "motionPresentation": "从源码镜头/漂移火花/伞翼系统和作者比赛图评估，未以本机帧率推断。"
+        },
+        "gameplay": {
+          "drivingAndControl": "源码含三级漂移与和伞滑翔；本轮仅通过普通菜单到比赛 HUD，未验证驾控手感。",
+          "competitionAndFeedback": "8人场、道具与结果，竞争机制由固定源码确认。",
+          "trackAndModeVariety": "三条主题赛道带铁路、滑翔和不同环境机制，难度三级。",
+          "progressionAndReplay": "角色/难度/路线重复游玩的差异较明确，但未验证长期解锁。",
+          "completeRaceLoop": "源码有比赛、终点、结果与重开；未以正常输入完成一整局。"
+        }
+      },
+      "licenseAndAssets": {
+        "finding": "根 LICENSE MIT。作者称角色、赛道和音乐原创；Three.js MIT；Dela Gothic One、M PLUS Rounded 1c、Yuji Syuku 为 SIL OFL，线上从 Google Fonts 加载。",
+        "sourcePaths": [
+          "docs/racing-nine/reviews/karts/ponpoko-kart/source/LICENSE",
+          "docs/racing-nine/reviews/karts/ponpoko-kart/source/README.md"
+        ]
+      }
+    },
+    {
+      "title": "Kart Royale",
+      "slug": "kart-royale",
+      "graphicsScore": 44,
+      "gameplayScore": 35,
+      "totalScore": 79,
+      "graphicsSubscores": {
+        "sceneAndArtDirection": 14,
+        "vehicleDesign": 9,
+        "lightingAndEffects": 9,
+        "readability": 8,
+        "motionPresentation": 4
+      },
+      "gameplaySubscores": {
+        "drivingAndControl": 12,
+        "competitionAndFeedback": 9,
+        "trackAndModeVariety": 4,
+        "progressionAndReplay": 6,
+        "completeRaceLoop": 4
+      },
+      "reviewEvidencePaths": [
+        "docs/racing-nine/reviews/karts/kart-royale/source-evidence.json",
+        "docs/racing-nine/reviews/karts/kart-royale/source/README.md",
+        "docs/racing-nine/reviews/karts/kart-royale/live-attempt-1/report.json",
+        "docs/racing-nine/reviews/karts/author-captures.json",
+        "docs/racing-nine/reviews/karts/kart-royale/fixed-source-attempt-2/report.json",
+        "docs/racing-nine/reviews/karts/kart-royale/fixed-source-attempt-2/process.json"
+      ],
+      "bestGameplayImage": "docs/racing-nine/reviews/karts/kart-royale/author-captures/hero-drift.png",
+      "evidenceKind": "作者固定版本实战图；在线版本已换联机包装",
+      "confidence": "medium-low on playability; inspected fixed author gameplay frame and source, no successful normal-input drive",
+      "limitations": [
+        "Quality estimate combines inspected gameplay pixels with pinned source feature review; not a full-campaign review.",
+        "Live deployments are not proven byte-equal to pinned source; fixed upstream screenshots are labelled separately.",
+        "No physical TV/controller or three-platform package acceptance has been done.",
+        "Software GPU throughput not used as TV performance or visual score.",
+        "作者固定 README 披露多数漂移尝试未兑现加速、收益集中于单弯；这是作者自测，未独立复现，据此将驾控从初评14调整12。",
+        "固定源码本地构建 index/bundle HTTP 200，但原 __gameReady 在90秒读取等待内未变true，未取得本地画面。仅是本次初始化预算边界，不视为电视性能结论。"
+      ],
+      "packagingNotes": [
+        "原4运行依赖已按原lock恢复；本地预览原103文件Git blob全通过。",
+        "几何/后处理较复杂，需实际TV性能方案；不能将本机SwiftShader慢计入画面分。",
+        "原LICENSE MIT，package.json ISC，保留两者事实；不用新增线上房间当原版本功能。"
+      ],
+      "previewFollowupPending": false,
+      "sourceCommit": "036c0efb025f5ecf8fc31c405e9d818c61e03e21",
+      "bestGameplayImageSha256": "822891104d1d943b8dcdc0fb0a3d0c9d048d41d5a6f5e57ca9913debc4c4e751",
+      "scoreRationale": {
+        "graphics": {
+          "sceneAndArtDirection": "村落、布旗、观众与路边物件密度高，风格统一。",
+          "vehicleDesign": "作者漂移图能看清车漆、轮胎与机械部件，六款中细节突出。",
+          "lightingAndEffects": "漂移粒子、材质反射与后处理完整，仍需本机实际渲染补充。",
+          "readability": "速度镜头与景深有表现力，但远端赛道读取略弱。",
+          "motionPresentation": "倾斜镜头/漂移反馈有设计，不以渲染吞吐评分。"
+        },
+        "gameplay": {
+          "drivingAndControl": "源码有轮胎侧偏、悬挂与漂移；作者自己披露 83% 漂移未兑现加速，初评由14调12，待普通驾驶验证。",
+          "competitionAndFeedback": "AI、碰撞和道具为完整竞赛结构；不计入后来在线房间的新功能。",
+          "trackAndModeVariety": "固定版本仅一条主要赛道，内容广度明显受限。",
+          "progressionAndReplay": "重复追求路线/漂移有空间，但源码未显示与多杯赛同量级内容。",
+          "completeRaceLoop": "固定源码有完整比赛循环；在线新版本与本地固定源码预览均未完成初始化/正常驾驶，本轮未完赛。"
+        }
+      },
+      "licenseAndAssets": {
+        "finding": "根 LICENSE MIT，而 package.json 写 ISC，须保留两份事实。README 称所有网格、纹理、声音和文字由代码生成；依赖保留各自许可。",
+        "sourcePaths": [
+          "docs/racing-nine/reviews/karts/kart-royale/source/LICENSE",
+          "docs/racing-nine/reviews/karts/kart-royale/source/README.md"
+        ]
+      }
+    },
+    {
+      "title": "Turbo Kart Rush",
+      "slug": "turbo-kart-rush",
+      "graphicsScore": 40,
+      "gameplayScore": 40,
+      "totalScore": 80,
+      "graphicsSubscores": {
+        "sceneAndArtDirection": 12,
+        "vehicleDesign": 8,
+        "lightingAndEffects": 8,
+        "readability": 9,
+        "motionPresentation": 3
+      },
+      "gameplaySubscores": {
+        "drivingAndControl": 13,
+        "competitionAndFeedback": 8,
+        "trackAndModeVariety": 9,
+        "progressionAndReplay": 6,
+        "completeRaceLoop": 4
+      },
+      "reviewEvidencePaths": [
+        "docs/racing-nine/reviews/karts/turbo-kart-rush/source-evidence.json",
+        "docs/racing-nine/reviews/karts/turbo-kart-rush/source/README.md",
+        "docs/racing-nine/reviews/karts/turbo-kart-rush/live-attempt-1/report.json",
+        "docs/racing-nine/reviews/karts/author-captures.json",
+        "docs/racing-nine/reviews/karts/turbo-kart-rush/live-attempt-2/report.json",
+        "docs/racing-nine/reviews/karts/turbo-kart-rush/live-attempt-2/process.json"
+      ],
+      "bestGameplayImage": "docs/racing-nine/reviews/karts/turbo-kart-rush/live-attempt-2/drive.png",
+      "evidenceKind": "本轮普通菜单进入实际起跑网格；未开始驾驶",
+      "confidence": "medium; actual ordinary-menu race-grid pixels and pinned source; no post-countdown driving",
+      "limitations": [
+        "Quality estimate combines inspected gameplay pixels with pinned source feature review; not a full-campaign review.",
+        "Live deployments are not proven byte-equal to pinned source; fixed upstream screenshots are labelled separately.",
+        "No physical TV/controller or three-platform package acceptance has been done.",
+        "Software GPU throughput not used as TV performance or visual score.",
+        "二轮4张图且脚本 observed/exit0，但后两帧仍处开场镜头/倒计时，HUD 0 km/h 与0:00.000；不能把脚本名 drive/after-drive 当作驾驶成功。"
+      ],
+      "packagingNotes": [
+        "Three.js/TS静态构建，程序化素材；四赛道/十道具保留。",
+        "九键动作映射要区分漂移、道具、回看、暂停；离线字体/依赖需要收拢。"
+      ],
+      "previewFollowupPending": false,
+      "sourceCommit": "6c0456c7642447eae29e0832e7e542fec07ec07d",
+      "bestGameplayImageSha256": "1dfeab47f9cd01d122ff9638e8009fde6c9bb5a5ecb9393109b19de5baa288a2",
+      "scoreRationale": {
+        "graphics": {
+          "sceneAndArtDirection": "本轮普通菜单进入 Sunny Circuit 实际起跑网格，明亮草地、轮胎墙、看台与路缘清楚，细节较前两者简化。",
+          "vehicleDesign": "8位车手有配色与体重区分，模型形态简洁。",
+          "lightingAndEffects": "漂移/道具/加速粒子与后处理均有源码，作者比赛图可见。",
+          "readability": "大 HUD、路缘与背景对比友好。",
+          "motionPresentation": "源码含动态相机与速度特效，尚无正常驾驶动态证据，保守3/5。"
+        },
+        "gameplay": {
+          "drivingAndControl": "三级漂移、碰撞体重、冲刺由固定源码确认；普通输入已到实际起跑网格，但倒计时后驾控尚未观测。",
+          "competitionAndFeedback": "7 AI、位置加权十道具、名次/圈数完整。",
+          "trackAndModeVariety": "四主题路线与难度有区别；菜单预览不等于实际跑过四条。",
+          "progressionAndReplay": "角色及难度提供重玩，未确认深度职业/解锁。",
+          "completeRaceLoop": "状态机到结果/重开完整；正常输入未跑完。"
+        }
+      },
+      "licenseAndAssets": {
+        "finding": "根 LICENSE MIT。README 称角色、赛道、名称、美术、音乐和代码原创，无商业游戏提取资产；依赖另附许可。",
+        "sourcePaths": [
+          "docs/racing-nine/reviews/karts/turbo-kart-rush/source/LICENSE",
+          "docs/racing-nine/reviews/karts/turbo-kart-rush/source/README.md"
+        ]
+      }
+    },
+    {
+      "title": "Turbo Kart Rally",
+      "slug": "turbo-kart-rally",
+      "graphicsScore": 38,
+      "gameplayScore": 35,
+      "totalScore": 73,
+      "graphicsSubscores": {
+        "sceneAndArtDirection": 11,
+        "vehicleDesign": 7,
+        "lightingAndEffects": 7,
+        "readability": 9,
+        "motionPresentation": 4
+      },
+      "gameplaySubscores": {
+        "drivingAndControl": 13,
+        "competitionAndFeedback": 8,
+        "trackAndModeVariety": 4,
+        "progressionAndReplay": 6,
+        "completeRaceLoop": 4
+      },
+      "reviewEvidencePaths": [
+        "docs/racing-nine/reviews/karts/turbo-kart-rally/source-evidence.json",
+        "docs/racing-nine/reviews/karts/turbo-kart-rally/source/README.md",
+        "docs/racing-nine/reviews/karts/turbo-kart-rally/live-attempt-1/report.json",
+        "docs/racing-nine/reviews/karts/author-captures.json",
+        "docs/racing-nine/reviews/karts/turbo-kart-rally/live-attempt-2/report.json",
+        "docs/racing-nine/reviews/karts/turbo-kart-rally/live-attempt-2/process.json"
+      ],
+      "bestGameplayImage": "docs/racing-nine/reviews/karts/turbo-kart-rally/live-attempt-2/drive.png",
+      "evidenceKind": "本轮普通菜单进入实际起跑网格/倒计时；未开始驾驶",
+      "confidence": "medium; actual ordinary-menu grid/countdown pixels and pinned source; no post-countdown driving",
+      "limitations": [
+        "Quality estimate combines inspected gameplay pixels with pinned source feature review; not a full-campaign review.",
+        "Live deployments are not proven byte-equal to pinned source; fixed upstream screenshots are labelled separately.",
+        "No physical TV/controller or three-platform package acceptance has been done.",
+        "Software GPU throughput not used as TV performance or visual score.",
+        "二轮4张图且脚本 observed/exit0，但 HUD 仍0 km/h、0:00.00。探测脚本看到 LAP 就停止菜单输入，未按可见 ENTER-SKIP 提示跳过开场；不据此断言游戏不能开始。"
+      ],
+      "packagingNotes": [
+        "原index importmap引用Three r170 CDN，必须固定依赖离线化。",
+        "只有一个正式赛道，不能当多赛道大奖赛；原漂移和八道具保留。"
+      ],
+      "previewFollowupPending": false,
+      "sourceCommit": "c52aca3f10c7995884c316810cac6514daa40e9c",
+      "bestGameplayImageSha256": "057d4e81ca416a1d226a7a55a78d111cc69dad3d599c58a279c8b9b0396926a0",
+      "scoreRationale": {
+        "graphics": {
+          "sceneAndArtDirection": "本轮实际起跑帧：棕榈山谷、巨型看台、车道与大 HUD 明快易读；单赛道场景变化少。",
+          "vehicleDesign": "角色配色清楚，模型细节中等。",
+          "lightingAndEffects": "水面、天气灯光与道具粒子完整，光照较平。",
+          "readability": "大 HUD 与干净赛道易辨。",
+          "motionPresentation": "漂移、飞跃与速度线反馈源码/作者比赛图可见；不评本机FPS。"
+        },
+        "gameplay": {
+          "drivingAndControl": "源码三级漂移、起步加速、跳台技巧；普通输入到实际起跑/倒计时，未观察赛后驾控。",
+          "competitionAndFeedback": "7 AI与八道具，位置权重和碰撞反馈齐全。",
+          "trackAndModeVariety": "只有 Palm Cove 一条正式赛道；难度不能替代内容广度。",
+          "progressionAndReplay": "角色/引擎/技巧可重玩，长期扩展少。",
+          "completeRaceLoop": "race.js 完整计圈和结算，未普通输入跑完。"
+        }
+      },
+      "licenseAndAssets": {
+        "finding": "根 LICENSE MIT。README 称角色/赛道/美术/音乐原创；index.html 外链 Three 0.170.0 与 Google Fonts（Lilita One、Nunito），离线包须带各自许可。",
+        "sourcePaths": [
+          "docs/racing-nine/reviews/karts/turbo-kart-rally/source/LICENSE",
+          "docs/racing-nine/reviews/karts/turbo-kart-rally/source/README.md"
+        ]
+      }
+    },
+    {
+      "title": "Elden Kart",
+      "slug": "elden-kart",
+      "graphicsScore": 36,
+      "gameplayScore": 39,
+      "totalScore": 75,
+      "graphicsSubscores": {
+        "sceneAndArtDirection": 11,
+        "vehicleDesign": 8,
+        "lightingAndEffects": 7,
+        "readability": 7,
+        "motionPresentation": 3
+      },
+      "gameplaySubscores": {
+        "drivingAndControl": 12,
+        "competitionAndFeedback": 8,
+        "trackAndModeVariety": 9,
+        "progressionAndReplay": 6,
+        "completeRaceLoop": 4
+      },
+      "reviewEvidencePaths": [
+        "docs/racing-nine/reviews/karts/elden-kart/source-evidence.json",
+        "docs/racing-nine/reviews/karts/elden-kart/source/README.md",
+        "docs/racing-nine/reviews/karts/elden-kart/live-attempt-1/report.json",
+        "docs/racing-nine/reviews/karts/author-captures.json",
+        "docs/racing-nine/reviews/karts/elden-kart/source-addendum.json"
+      ],
+      "bestGameplayImage": "docs/racing-nine/reviews/karts/elden-kart/live-attempt-1/drive.png",
+      "evidenceKind": "本轮普通输入实玩",
+      "confidence": "medium; short drive and pinned source review",
+      "limitations": [
+        "Quality estimate combines inspected gameplay pixels with pinned source feature review; not a full-campaign review.",
+        "Live deployments are not proven byte-equal to pinned source; fixed upstream screenshots are labelled separately.",
+        "No physical TV/controller or three-platform package acceptance has been done.",
+        "Software GPU throughput not used as TV performance or visual score."
+      ],
+      "packagingNotes": [
+        "原角色/四赛道/十道具与金黑风格保留；移除发布平台analytics依赖。",
+        "MIT代码，README称非商业非官方粉丝作；明确上游与品牌事实。"
+      ],
+      "previewFollowupPending": false,
+      "sourceCommit": "0b9c39844e19abc677ad6adcfc4a7500ecd8a852",
+      "bestGameplayImageSha256": "7d0f0576d42f6c5e4d2d710ec907961defc310f3fdcc23d565a30fff9b532f5c",
+      "scoreRationale": {
+        "graphics": {
+          "sceneAndArtDirection": "实际 Limgrave 画面以金黑、石路、古建筑形成主题，但路边细节偏简单。",
+          "vehicleDesign": "角色化的发光卡丁车能与主题区分。",
+          "lightingAndEffects": "金色光与材质较统一，场景过渡和远景层次中等。",
+          "readability": "金色细字叠亮背景偏弱，HUD主体仍可读。",
+          "motionPresentation": "本轮短时实际驾驶有速度/名次变化；仅观察启动阶段，不夸大全程。"
+        },
+        "gameplay": {
+          "drivingAndControl": "普通输入加速0到60到102 km/h，发送转向/漂移键；未验证漂移收益。",
+          "competitionAndFeedback": "比赛中名次变化，固定源码有AI与十道具。",
+          "trackAndModeVariety": "四赛道、GP/快速赛与三引擎级由源码确认。",
+          "progressionAndReplay": "杯赛与角色提供重玩，但未验证全部解锁流程。",
+          "completeRaceLoop": "保存实际驾驶帧，未完赛；结算流程依据固定源码。"
+        }
+      },
+      "licenseAndAssets": {
+        "finding": "根 LICENSE MIT 只覆盖原创代码。DISCLAIMER.md 明确非商业非官方粉丝作、Elden Ring 等名称/角色/背景权利属于原权利方，MIT 不授权这些引用；素材由代码生成，未提取商业游戏资产。",
+        "sourcePaths": [
+          "docs/racing-nine/reviews/karts/elden-kart/source/LICENSE",
+          "docs/racing-nine/reviews/karts/elden-kart/source/README.md"
+        ]
+      }
+    },
+    {
+      "title": "Kartipelago",
+      "slug": "kartipelago",
+      "graphicsScore": 38,
+      "gameplayScore": 38,
+      "totalScore": 76,
+      "graphicsSubscores": {
+        "sceneAndArtDirection": 12,
+        "vehicleDesign": 8,
+        "lightingAndEffects": 6,
+        "readability": 8,
+        "motionPresentation": 4
+      },
+      "gameplaySubscores": {
+        "drivingAndControl": 12,
+        "competitionAndFeedback": 8,
+        "trackAndModeVariety": 8,
+        "progressionAndReplay": 6,
+        "completeRaceLoop": 4
+      },
+      "reviewEvidencePaths": [
+        "docs/racing-nine/reviews/karts/kartipelago/source-evidence.json",
+        "docs/racing-nine/reviews/karts/kartipelago/source/README.md",
+        "docs/racing-nine/reviews/karts/kartipelago/live-attempt-1/report.json",
+        "docs/racing-nine/reviews/karts/author-captures.json",
+        "docs/racing-nine/reviews/karts/kartipelago/source-addendum.json"
+      ],
+      "bestGameplayImage": "docs/racing-nine/reviews/karts/kartipelago/live-attempt-1/after-drive.png",
+      "evidenceKind": "本轮普通输入实玩",
+      "confidence": "medium; short drive and pinned source review",
+      "limitations": [
+        "Quality estimate combines inspected gameplay pixels with pinned source feature review; not a full-campaign review.",
+        "Live deployments are not proven byte-equal to pinned source; fixed upstream screenshots are labelled separately.",
+        "No physical TV/controller or three-platform package acceptance has been done.",
+        "Software GPU throughput not used as TV performance or visual score."
+      ],
+      "packagingNotes": [
+        "Canvas菜单和HUD需直接接原输入路由，不依赖DOM鼠标焦点。",
+        "保留恐龙复古3D；Adventure未完成，不把路线图当正式功能。"
+      ],
+      "previewFollowupPending": false,
+      "sourceCommit": "286aa36cbf0436c168f10bc28e957c1a9536a143",
+      "bestGameplayImageSha256": "2c6782135e2eb021c92c3765d15050d1eefcaa44a1a3303518850bb6945ce17d",
+      "scoreRationale": {
+        "graphics": {
+          "sceneAndArtDirection": "实际帧呈明确复古像素3D热带岛屿，有独立风格。",
+          "vehicleDesign": "恐龙车手与车辆轮廓鲜明，低细节属于风格设计。",
+          "lightingAndEffects": "色彩明快，光影复杂度较简单。",
+          "readability": "Canvas HUD 大而清楚，赛道/草地边界明显。",
+          "motionPresentation": "普通输入帧呈加速、转向出路和名次变化，反馈易读。"
+        },
+        "gameplay": {
+          "drivingAndControl": "本轮0到100到113 km/h，右转驶上草地；更深漂移/道具需后续。",
+          "competitionAndFeedback": "实际名次1到2到3；源码支持AI和竞赛反馈。",
+          "trackAndModeVariety": "4条正式 Dinosaur Valley 与6条原型明确区分；Adventure 未完成不计正式模式。",
+          "progressionAndReplay": "路线/角色重玩具备；不能将路线图当内容完成。",
+          "completeRaceLoop": "四张普通输入截图，未完赛；完整结算依据源码。"
+        }
+      },
+      "licenseAndAssets": {
+        "finding": "根 LICENSE MIT；固定 assets/CREDITS.md 列第三方资产 none yet，明确合成音乐/音效、像素字体、logo、角色、赛道、预览图均为本项目原创，按 MIT。",
+        "sourcePaths": [
+          "docs/racing-nine/reviews/karts/kartipelago/source/LICENSE",
+          "docs/racing-nine/reviews/karts/kartipelago/source/README.md"
+        ]
+      }
+    }
+  ]
+}

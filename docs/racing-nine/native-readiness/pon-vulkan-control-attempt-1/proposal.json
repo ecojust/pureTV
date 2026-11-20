@@ -1,0 +1,187 @@
+{
+  "status": "implemented_and_locally_tested_pending_independent_review_and_controlled_ci",
+  "qaBaseCommit": "d3b9178bfc4748ef0d8b983f4c6775969f946625",
+  "productionExclusion": "Future isolated QA ref must use the original d3b9178 production tree, with only these three QA paths overlaid; do not use HEAD which contains 4b6cf0b Backroad Java/target35 changes. Root creates/pushes/dispatches that ref.",
+  "originalRunId": 44622571226,
+  "originalEvidenceExport": "b94f6dc6001e20bf5d2959aa72937fc247fa184a",
+  "originalEvidenceReferences": {
+    "joystick-games/ponpoko-kart/docs/emulator-supervisor-v6-44622571226/findings.json": {
+      "bytes": 11565,
+      "sha256": "db1940dd1967d7382e0ab6163fd97f6f2581c76007dc06165a45ccc8bb6fbc9a"
+    },
+    "joystick-games/ponpoko-kart/docs/emulator-supervisor-v6-44622571226/original-export/evidence/joystick-android-runtime-ponpoko-kart/ponpoko-kart/emulator-launch-supervisor/launch/report.json": {
+      "bytes": 2770,
+      "sha256": "c07a4f60177555683cdf4095b95e32e38d55be60c4c7e968b2bf44ad83f7a647"
+    },
+    "joystick-games/ponpoko-kart/docs/emulator-supervisor-v6-44622571226/original-export/evidence/joystick-android-runtime-ponpoko-kart/ponpoko-kart/emulator-launch-supervisor/launch/stdout.log": {
+      "bytes": 14705,
+      "sha256": "1c63b86eea7ab5cddab6adeac8b1706a3b36c0f74f76098a4e97a49d95a9dd2e"
+    },
+    "joystick-games/ponpoko-kart/docs/emulator-supervisor-v6-44622571226/original-export/evidence/joystick-android-runtime-ponpoko-kart/ponpoko-kart/emulator-launch-supervisor/launch/stderr.log": {
+      "bytes": 112,
+      "sha256": "15cb112a7ab1a7eb6b5f9318ba966336fb7ac48fe87d46395dcc65a4acdf6770"
+    },
+    "joystick-games/ponpoko-kart/docs/emulator-supervisor-v6-44622571226/original-export/evidence/joystick-android-runtime-ponpoko-kart/ponpoko-kart/emulator-launch-supervisor/state.json": {
+      "bytes": 1169,
+      "sha256": "15212b80cf28fbc85b4f8d9e0f1e605f87ee5d366247b531943094cd872a15e8"
+    }
+  },
+  "exactOriginalBackendLines": [
+    {
+      "line": 19,
+      "text": "INFO         | emuglConfig_init: vulkan_mode_selected:swiftshader gles_mode_selected:swiftshader"
+    },
+    {
+      "line": 34,
+      "text": "INFO         | Setting ICD filenames for the loader = /usr/local/lib/android/sdk/emulator/lib64/vulkan/vk_swiftshader_icd.json"
+    },
+    {
+      "line": 39,
+      "text": "INFO         | Selecting Vulkan device: SwiftShader Device (Subzero), Version: 1.3.0"
+    },
+    {
+      "line": 132,
+      "text": "INFO         | Graphics API Version OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)"
+    },
+    {
+      "line": 184,
+      "text": "INFO         | Created VkInstance:0x555e166b2000 for application:'' engine:''."
+    },
+    {
+      "line": 185,
+      "text": "INFO         | Destroyed VkInstance:0x555e166b2000 for application:'' engine:''."
+    }
+  ],
+  "observedFailure": {
+    "samePidStartQemuExitCode": -11,
+    "signal": 11,
+    "elapsedSeconds": 154.77950021900006,
+    "supervisorIntervention": null,
+    "rootCauseProven": false,
+    "stderr": "protected-range unmap warning, no native stack binding that warning to Vulkan",
+    "guestLogcatAvailable": false
+  },
+  "officialSources": [
+    {
+      "url": "https://developer.android.com/studio/run/emulator-troubleshooting",
+      "retrievedAtUtc": "2026-11-19T22:11:18.284964+00:00",
+      "originalBody": {
+        "path": "docs/racing-nine/native-readiness/pon-vulkan-control-attempt-1/official-sources/emulator-troubleshooting.html",
+        "bytes": 316388,
+        "sha256": "7dfb49b7ac8774991dcbf11deddaf22a580ff1316a156e75dc8ac5bc88f4d4f7"
+      },
+      "excerpts": [
+        {
+          "searchText": "Can't open webpage correctly",
+          "textOffsetAfterHtmlToText": 19476,
+          "excerpt": "ll and avoid using apps with Vulkan, such as Chrome on API 30 or higher, if you want to use snapshots as part of your development workflow. Can't open webpage correctly Starting with API level 30, Chrome uses the Vulkan graphics library as its rendering backend, and it might have compatibility issues on certain machines. If Chrome doesn't render correctly for you, try to launch the emulator from the command line with the flag -feature -Vulkan . GPU Driver Warning - Falling Back To Software If you are receiving a warning about GPU driver falling back, you might be on an unsupported GPU. By default it uses auto which might pick softwa"
+        }
+      ]
+    },
+    {
+      "url": "https://developer.android.com/studio/releases/emulator",
+      "retrievedAtUtc": "2026-11-19T22:11:18.299735+00:00",
+      "originalBody": {
+        "path": "docs/racing-nine/native-readiness/pon-vulkan-control-attempt-1/official-sources/emulator-release-notes.html",
+        "bytes": 450139,
+        "sha256": "87292c838231dcefd235ed8f1d685beaa49398820e664b3fb02b819ce0864504"
+      },
+      "excerpts": [
+        {
+          "searchText": "37.3.10 Stable (Nov 19, 2026)",
+          "textOffsetAfterHtmlToText": 12023,
+          "excerpt": "st recent versions of Android Emulator, see the closed issues . For known issues and troubleshooting, please see Emulator Troubleshooting . 37.3.10 Stable (Nov 19, 2026) Added support for the KosmicKrisp Vulkan-on-Metal graphics driver on macOS 26+ Enabled SD card support on ARM64 virtual devices in QEMU ( Issue #281967260 ) [Bug Fix] Issue #568816248 Android Emulator hangs on Windows when the AVD or user directory path contains non-ASCII characters [Bug Fix] Issue #568423542 Fatal crash ( Unsupported snapshot version: 0x2 ) when loading a 37.2 Quick Boot snapshot after upgrading to 37.3 [Bug Fix] Issue #557246817 Quick Boot snapshot load restores wallpaper and launcher icon textures as black or corrupted noise on Windows (API 37.1) [Bug Fix] Issue #562546399 Severe UI and performance lag on macOS caused by App Nap and process latency scheduling [Bug Fix] Issue #572278410 Headless emulator on Windows with Intel hybrid CPUs is power-throttled onto E-cores, causing 2\u20133x slower cold boot and ANR storms [Bug Fix] Issue #574875267 Emulator always starts with GMT+00:00 time zone on non-English Windows 11 hosts instead of detecting the host time zone [Bug Fix] Issue #532790747 Emulator resets time zone when performing a cold boot [Bug Fix] Issue #532592079 Emulator fails to boot or hangs on startup due to netsim initialization deadlock [Bug Fix] Issue #555286414 Emulator keyboard reports incorrect InputDevice properties ( isVirtual , source ) when hw.dPad is disabled [Bug Fix] Issue #537617326 Android Studio emulator startup and stability impact on Windows 11 when hidden window creation interacts with host utilities [Bug Fix] Issue #357855425 Android Emulator on macOS does not detect changes to the default audio hardware device [Bug Fix] Issue #357859014 Race condition in the macOS CoreAudio backend [Bug Fix] Issue #324995885 SIGSEGV crash while running the emulator [Bug Fix] Issue #320819731 Android 14 emulator becomes inaccessible from ADB after repeated HTTP requests to an unreachable devtools socket [Bug Fix] Issue #291804276 Concurrent emulator startup fails due to a race condition during %TMP%\\avd\\running\\pid_*.ini discovery file cleanup [Bug Fix] Issue #115396624 On exit, snapshot is saved to default_boot instead of the snapshot name specified using the -snapshot argument [Bug Fix] Issue #333829166 Emulator fails to start on Linux when libXdmcp or libbsd.so.0 is missing (now uses hermetic libxcb-a"
+        },
+        {
+          "searchText": "Really disable Vulkan API calls",
+          "textOffsetAfterHtmlToText": 24662,
+          "excerpt": "ice API [Bug Fix] Issue #348598513 Emulator has unnecessary thread-unsafe public method in a multi-threaded lock [Bug Fix] Issue #356896486 Really disable Vulkan API calls when running with -feature -Vulkan 35.4.4 Canary (Dec 12, 2024) New Android XR Emulator We added a new, experimental Android XR emulator for developing and testing apps built with the Jetpack XR SDK for headsets. See Jetpack XR SDK Setup for information about installing the Android XR emulator and setting up your development environment. The Android XR emulator is an experimental tool. We decided to share early with you nevertheless - to allow you to test early on"
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/github/docs/main/data/reusables/actions/inputs-vs-github-event-inputs.md",
+      "originalBody": {
+        "path": "docs/racing-nine/native-readiness/pon-vulkan-control-attempt-1/official-sources/github-workflow-input-limits.md",
+        "bytes": 543,
+        "sha256": "39241a4151d87b046567798754a6735f3b8a62ec3710b5b35ba52cc0c8679a56"
+      },
+      "relevance": "GitHub.com permits 25 workflow_dispatch input properties; this workflow adds an eleventh Boolean."
+    }
+  ],
+  "interpretation": "Official documentation establishes a supported Vulkan-disable control and prior fixes to that control. Original runtime shows both SwiftShader Vulkan and GLES initialization. These facts justify a single-variable diagnostic comparison, but do not identify the SIGSEGV cause. Current 37.3.10 notes also list generic SIGSEGV and unreachable-devtools fixes; without a matching native stack these are not identified as this failure. Chrome documentation is relevant background, not proof of the particular WebView backend.",
+  "sourceFiles": {
+    ".github/workflows/joystick-catalog-android-runtime.yml": {
+      "current": {
+        "bytes": 26240,
+        "sha256": "3fc28805e7f23958b1068b97e12c59810bc90d5e2719a2fa1c99407e40846009"
+      },
+      "baseSha256": "582a5fe30c8d497ef1a4712fc99a89c5f2058526a209efd4a676b964cde75fa5",
+      "baseGitBlob": "0f92213716f439b6e825a76a1be0341c67c41cbf"
+    },
+    "joystick-games/tools/android-emulator-supervisor.py": {
+      "current": {
+        "bytes": 21468,
+        "sha256": "03b50fff82e96f37903ebcc7df877fb216012f691cf87f60701f1390e3b65fd0"
+      },
+      "baseSha256": "7822a7e077adbdcc187f437c651bf1a5c536093e28f10015423f414085cd17c1",
+      "baseGitBlob": "6199179d0307305627f321a831ffd3c6fa84e6a4"
+    },
+    "joystick-games/qa/android/test_emulator_supervisor.py": {
+      "current": {
+        "bytes": 21958,
+        "sha256": "83abdb0c22e062cb50b95ea61a4e45086d7ef718c6f5f0fe461b52d1ce2488db"
+      },
+      "baseSha256": "b87a0d47702e1abe763fcddc8cd64e6036564ca314181818f8ea0190eb790102",
+      "baseGitBlob": "abbeee166ca8c4284d857c47962beb5840ae3d17"
+    }
+  },
+  "control": {
+    "default": false,
+    "input": "pon_disable_vulkan",
+    "environment": "PON_DISABLE_VULKAN",
+    "requiresExistingSupervisorOptIn": true,
+    "onlyArgumentDelta": [
+      "-feature",
+      "-Vulkan"
+    ],
+    "originalApkSource": "8f283c73f52f857777306eafc88f710262367834",
+    "originalApkRun": 44597115244,
+    "originalApkExport": "4249f5c0ec3053a1dec652a7880a040e1bb143f0",
+    "game": "ponpoko-kart",
+    "batch": "racing-01",
+    "apiLevel": 36,
+    "target": "android-tv",
+    "arch": "x86_64",
+    "memoryMiB": 2048,
+    "emulatorBuild": "16970787",
+    "gpu": "swiftshader_indirect",
+    "apkRebuilt": false,
+    "acceptanceThresholdsChanged": false
+  },
+  "localValidation": {
+    "supervisorTests": {
+      "count": 19,
+      "status": "passed",
+      "scope": "Real small ELF/process fixtures, not actual emulator/native game acceptance",
+      "log": {
+        "bytes": 3143,
+        "sha256": "a480e3efaf5a498d190fc361e4ac3514bfc58e74ece80bbe2767de31b1e98f9a"
+      }
+    },
+    "actionlint": {
+      "version": "1.7.12",
+      "exitCode": 0,
+      "log": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "gitDiffCheck": {
+      "exitCode": 0
+    }
+  },
+  "nativeComparisonExecuted": false,
+  "workflowDispatched": false,
+  "originalResultsModified": false
+}

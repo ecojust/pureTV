@@ -1,0 +1,95 @@
+{
+  "status": "frozen-candidate-awaiting-independent-review-and-root-materialization",
+  "parentCommit": "15c9c1044b8cd2173e07b8eedfb836738cc79e1c",
+  "sourceFiles": [
+    {
+      "path": "joystick-games/penguintrack/qa-plan.json",
+      "bytes": 5889,
+      "sha256": "51f8626368ebd2d3789ffb497e756c46a38493af0efc4852705d5ef90d0e6e63"
+    },
+    {
+      "path": "joystick-games/qa/android/run.py",
+      "bytes": 57905,
+      "sha256": "a27c387c281bc83319a9ea229d6d6e30a39e62df0dc55fd73c0683f1fa9bdbe7"
+    },
+    {
+      "path": "joystick-games/qa/android/test_runner.py",
+      "bytes": 51361,
+      "sha256": "9922a26439e72d3e7457133974e2f5f39f0c9235f31949631de3d54bfb24d829"
+    }
+  ],
+  "sourceOnlyThreeFiles": true,
+  "originalPackage": {
+    "source": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+    "run": 44606071748,
+    "attempt": 1,
+    "export": "35fca55f5a05d38785fb531004eca9add6913f04",
+    "apkBytes": 2342332,
+    "apkSha256": "e1f9aa255413819bda917543c2d2258dd685a8eff61f982f26a98dfcfc827827",
+    "unchanged": true
+  },
+  "originalFailure": {
+    "run": 44630032256,
+    "qaSource": "15c9c1044b8cd2173e07b8eedfb836738cc79e1c",
+    "export": "f2db2957e3179a8eaf35b80e37ee8708b3df107a",
+    "findingsPath": "joystick-games/penguintrack/docs/android-runtime-44630032256/findings.json",
+    "bytes": 11860,
+    "sha256": "bfaf43834457ec59476c0c451b6f6be9c38189ed4925ddc6a369e1be4c988639",
+    "normalDownMeasuredSeconds": 2.2225834900000336,
+    "occupiedDownMeasuredSeconds": 2.226433608999969,
+    "finalFocus": "SettingsSound, graphics, keys",
+    "intermediatePlayCaptured": false,
+    "preservedFailed": true
+  },
+  "change": "Only second DOWN gets menuTap. First UP remains original held/clamping route because before focus can already be Controller. Original four generic helpers and menuTap dispatch borrowed from independently reviewed Royale; no reload exception. Every other held path/expectation/60-second deadline stays unchanged.",
+  "tests": {
+    "originalTestMethodsAstIdentical": 39,
+    "newBoundaryMethods": 12,
+    "totalTestsPassed": 51,
+    "seconds": 10.285,
+    "runnerLog": "runner-tests.log",
+    "observerDelaySeconds": 0.45,
+    "sdkPulseAssertion": "Actual original SDK TCP fixture instructed16ms; wire holds>=16ms and<380ms even when first post-release Observer callback sleeps450ms; exact2ACK/connection and two fresh released samples required. No native Android counter is fabricated.",
+    "planSchema": "Parent original qa-plan.load_plan passed",
+    "supportFiles": 176,
+    "unchangedRunnerAstOutsideExplicitFourHelpersAndBranch": true
+  },
+  "dom": {
+    "report": "dom-attempt-1/report.json",
+    "cases": 4,
+    "viewports": [
+      "960x540",
+      "1280x720"
+    ],
+    "initialFocusFixtures": [
+      "Play",
+      "Controller"
+    ],
+    "heldMsRange": [
+      2225.60000000149,
+      2242
+    ],
+    "longDownObservedPath": [
+      "Play",
+      "EditorBuild a track",
+      "ReplaysWatch and share runs",
+      "AI LabTrain a driver",
+      "SettingsSound, graphics, keys"
+    ],
+    "upClampsController": true,
+    "shortDownReachesPlay": true,
+    "aCallsOriginalCampaignHandlerOnce": true,
+    "scope": "Original Menu/UI/TV adapter/repeater/reducer DOM-only, synthetic host normal edge consumed once; no WebGL/model/native transport. Per-input and actually served assets verified against frozen15c9 Git bytes. Separate actual SDK tests validate wire timing.",
+    "visualInspected": [
+      "play-960-from-controller.png",
+      "play-1280-from-play.png"
+    ],
+    "visual": "Play focused and Controller top button/side ID visible; full Penguin-DOM-42 wraps across2 lines without clipping; controls within viewport. Menu screenshots are not gameplay evidence."
+  },
+  "limitations": [
+    "No new Android native run or physical TV/phone/gamepad test. No build/sign/ref/POST.",
+    "Original native intermediate Play was not sampled; repeat explanation uses original source plus separately observed DOM reproduction.",
+    "GDB/QEMU diagnostics and other game fixes are not included."
+  ],
+  "dispatchByRootOnly": true
+}

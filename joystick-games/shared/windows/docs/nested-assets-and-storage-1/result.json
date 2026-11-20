@@ -1,0 +1,95 @@
+{
+  "recordedAt": "2026-11-19T18:42:39.796640+00:00",
+  "status": "passed",
+  "platform": "linux",
+  "baseHead": "a30b54fa9d9e014b6235b789b19b932d05d3a268",
+  "sourceFrozen": false,
+  "nativeWindowsTested": false,
+  "ntfsJunctionTest": "Skipped locally; real Windows-only case retained for native CI",
+  "windowsHostBuilt": false,
+  "tests": [
+    {
+      "name": "asset-tests",
+      "command": [
+        "python3",
+        "joystick-games/shared/windows/tests/assets.test.py"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "source-scope-tests",
+      "command": [
+        "python3",
+        "joystick-games/shared/windows/tests/source-scope.test.py"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "source-inputs-tests",
+      "command": [
+        "python3",
+        "joystick-games/shared/windows/tests/source-inputs.test.py"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "installer-tests",
+      "command": [
+        "python3",
+        "joystick-games/shared/windows/tests/installer.test.py"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "bridge-tests",
+      "command": [
+        "node",
+        "--test",
+        "joystick-games/shared/windows/tests/web-bridge.test.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "preferences-compile",
+      "command": [
+        "g++",
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-I",
+        "/dev/shm/windows-host-deps",
+        "joystick-games/shared/windows/tests/preferences.test.cpp",
+        "-o",
+        "/dev/shm/windows-nested-validation/preferences-test"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "preferences-tests",
+      "command": [
+        "/dev/shm/windows-nested-validation/preferences-test"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "sourceHashes": {
+    "joystick-games/tools/windows-build.py": "d2af044b94ef6e1ef57991d4a462fe73f468fe89634ea2695f35d961f21bd0eb",
+    "joystick-games/tools/windows-inputs.py": "df60e1124ee28a9d21bcacdcf9cb130942bf7f445f80bc6d770b9f5bda10e68e",
+    "joystick-games/tools/asset-policy.py": "49c67cdb1b71fcc65f7bd6f89765ac6857314a1a4bfa8dc7c69e3d768a05b751",
+    "joystick-games/shared/windows/CMakeLists.txt": "25acd99578ac62fe49ba6f292815c68b44b9e2eac3faff4bec1f5e7eaf15cf5d",
+    "joystick-games/shared/windows/Sources/main.cpp": "28cc6bc36c428b3eac2b2cd23444a99a89750290cc51e98a27d134a00a1901e4",
+    "joystick-games/shared/windows/Sources/Preferences.hpp": "c42b76a7a502bd33071c29f7d4f2f8603cab85f5709591e67a1f653ae699b4ae",
+    "joystick-games/shared/windows/tests/preferences.test.cpp": "ac5d89184f84ba32fb99f5083e924a9187a1707be5b7b5c1c3bc213cd2fa582c",
+    "joystick-games/shared/windows/tests/assets.test.py": "b1802edfe139d016692eb65b1e4d06ae315fb459fd744143b875e1c2d2a84809"
+  },
+  "limits": {
+    "explicitStorageKeys": 512,
+    "defaultStorageKeys": 64,
+    "valueBytes": 1048576,
+    "serializedNativeStoreBytes": 67108864,
+    "preferenceMessageBytes": 8388608
+  },
+  "nativeStorageBehavior": "Serialize and bound the candidate first, atomically write, only then replace in-memory preferences. This header regression is not an actual Windows filesystem write/restart test."
+}

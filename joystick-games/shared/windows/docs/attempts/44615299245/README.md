@@ -1,0 +1,18 @@
+# Windows eight-game run 44615299245
+
+Fixed source: `6c7cb4fdb99dce236b634c842326bae6aed5f232`. Attempt 1 finished with overall **failure**; its export job succeeded and published immutable commit `6dc14b79a364dc8679f370f17099e0636acef356`.
+
+Night Racer, Penguintrack, Last Track and Dirt Crown each passed all 10 original native checks in both normal-port and occupied-port modes. Ponpoko Kart, Backroad Rally, Turbo Kart Rush and Kart Royale failed their actual-gameplay check after their first three checks passed. These outcomes are not changed by this archive or by subsequent QA fixes.
+
+`original-bounded-export/` contains 69 original reports/manifests/logs (38,986,087 bytes), plus eight original final diagnostic state files. All downloaded files were checked against the immutable Git blob and original export SHA256 inventory; the report set was also checked against each original evidence manifest. Every game report's source and binary hash matches its original build manifest. No package or screenshot was downloaded by this restoration. The root agent handles successful package delivery separately.
+
+The first local reader stopped at its five-megabyte file limit because Backroad's two original reports are 7,317,924 and 7,340,740 bytes. The failed reader and partial files are retained. The second reader bounded individual files below eight megabytes and the selected inventory below 64 megabytes, reusing already verified downloads. Its result is `bounded-report-verification.json`; final-state checks are separate in `original-final-state-verification.json`.
+
+Original findings:
+
+- Ponpoko completed actual driving and paused. Its two 15-second observation windows each captured three new snapshots, with native polls approximately 4.2 seconds apart; all sampled original model fields stayed frozen. The unchanged original reports remain failed. The later bounded 30-second QA proposal keeps four fresh snapshots, at least half a second, actual foreground poll growth and all model-freeze requirements.
+- Backroad passed the first 32 menu taps, including normal Low-quality selection and a real career save. Both query navigations reached the intended stage with matching document epoch 2 and Low stored in both native and web storage. At 60 seconds the actual renderer had drawn 53 frames, the original curtain was still unready, phase remained `intro`, and clock was zero. The original loop limits elapsed time to 0.1 seconds per rendered frame; the warmup maximum is six seconds, followed by its fade, intro and countdown. See `backroad-original-warmup-analysis.json`; it does not reclassify this failure as gameplay success.
+- Turbo reached its actual `racing` mode and advanced race time. Its failure is the subsequent acceleration expectation. Its reported `countdown` value is elapsed countdown time, not remaining time; short wall-clock input duration on this slow renderer requires separate raw/semantic and physics analysis.
+- Royale passed the corrected menus and entered the original countdown, but did not reach `racing` before the 60-second limit. Its original countdown and frame-step limits remain unchanged; a countdown screen is not a passed race.
+
+The completed-job CLI failure logs are preserved. Earlier artifact GETs for Ponpoko and Turbo were rejected by the artifact storage service; their failure metadata retain no signed URL query. No workflow was dispatched by the monitor. The old workflow uploaded package artifacts only after successful verification, so the four failed games have no retained package artifact in this run; a source or manifest hash alone is not recoverable package bytes.

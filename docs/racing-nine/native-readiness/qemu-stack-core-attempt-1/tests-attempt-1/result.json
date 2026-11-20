@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "tests": 20,
+  "skipped": 0,
+  "seconds": 1.487,
+  "scope": "Real disposable compiled ELF + GDB13.1/MI processes; separate parser/ownership/synthetic cleanup boundary tests. No AVD, Android app or gameplay acceptance.",
+  "command": [
+    "python3",
+    "-B",
+    "joystick-games/qa/android/test_qemu_stack.py"
+  ],
+  "environmentOverrides": {
+    "TMPDIR": "/dev/shm/racing-review-karts/qemu-stack-tests-attempt-1",
+    "PURETV_QEMU_TEST_GDB": "/dev/shm/racing-native-readiness/gdb-local/minimal/usr/bin/gdb",
+    "PURETV_QEMU_TEST_GDB_LIBRARY_PATH": "/dev/shm/racing-native-readiness/gdb-local/minimal/usr/lib/x86_64-linux-gnu",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "helperUnchangedDuringExecution": true,
+  "files": [
+    {
+      "path": "android-qemu-stack.py",
+      "bytes": 31619,
+      "sha256": "fa9d9bec508aa7c2f1b9d4e521a7ed9c115edf01f81ab61bc33b785b298aa556"
+    },
+    {
+      "path": "source-after.sha256",
+      "bytes": 220,
+      "sha256": "725048c3d5a0724e76ed5677e278e83a6f1bc8b40ef70a4f991b8d5cf111ddc0"
+    },
+    {
+      "path": "source-before.sha256",
+      "bytes": 220,
+      "sha256": "725048c3d5a0724e76ed5677e278e83a6f1bc8b40ef70a4f991b8d5cf111ddc0"
+    },
+    {
+      "path": "test_qemu_stack.py",
+      "bytes": 16262,
+      "sha256": "abdd62a061e37d3d7e185797720d63f5738fe7d86b6e0f222cdb35583681a91b"
+    },
+    {
+      "path": "tests.log",
+      "bytes": 2968,
+      "sha256": "1b103f74bbba004c4daf385fd0720a767eed58ac202e5bd7a54d579728f48cfd"
+    }
+  ],
+  "limits": "MI command0.2sec synthetic cases; actual fixture starts only after ready+owned attach handshake via test SIGUSR1. Actual timeout.5sec. Parent return codes asserted fatal=-11, handled-then-fatal=-11, externalTERM=-15, INT=-2; healthy afterdetach=0. No target core allowed.",
+  "cleanupScope": "Only disposable fixture ELF/MI peer gets test cleanup terminate; production helper never inherits that cleanup. Unknown cleanup case uses mocks without attaching and must remain blocked/attachment unresolved, no kill/terminate."
+}
