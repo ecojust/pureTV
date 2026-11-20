@@ -6,7 +6,7 @@ Android TV 0.1.4 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/
 
 ## Android TV 适配
 
-0.1.5（versionCode 6）在软件 GPU 上暂停时保留赛道画面，继续逐帧读取手柄；窗口尺寸变化或 WebGL 上下文恢复时重绘。恢复比赛仍需重新按下 START。Android 最低 API 26，目标 API 35。
+0.1.5（versionCode 6）在软件 GPU 上暂停时保留赛道画面，继续逐帧读取手柄；窗口尺寸变化或 WebGL 上下文恢复时重绘。恢复比赛仍需重新按下 START。Mesa 软件渲染的浏览器测试中，暂停后 0.49 秒内读取了 9 次手柄，原赛道背景的 21,600 个像素均保持一致。调整窗口后重绘一帧，断线重连后仍需主动恢复。Android 最低 API 26，目标 API 35。[暂停与恢复的原始读数和截图清单](docs/browser-0.1.5-software-pause/verification.json) · [恢复驾驶原图](docs/browser-0.1.5-software-pause/resumed.png)
 
 0.1.4（versionCode 5）面向 Android API 35 构建，最低仍为 API 26。0.1.2（target 29）在 API 34 / 720p 的这次复验中，Google Play Protect 的旧目标版本警告阻止了两个模式的首次安装。安装器已经收到原包，两种场景都停在确认界面，尚未启动游戏。[旧签名包两种安装会话及原始系统画面](docs/android-0.1.2/api34.json)
 
