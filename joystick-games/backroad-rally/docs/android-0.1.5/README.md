@@ -9,3 +9,5 @@ Android TV API 36 上的 `Android Emulator OpenGL ES Translator (Google SwiftSha
 独立的桌面 Chromium 编译对照用两版本的真实 dist 加载同一芬兰赛段，仅模拟旧设备名称以进入目标分支。0.1.4 没有片元程序包含该 sRGB 解码，0.1.5 观察到两个实际链接的片元程序使用原公式。目标绘制在桌面上绑定浮点 RGB 属性，材质颜色参数与原日落的 Gravel 色调 (1.06, 0.84, 0.66, 1.15) 一致。Android 设备的默认帧缓冲读数与这组桌面着色器检查分别记录。[取样坐标、颜色统计、着色器指纹与桌面绑定](sample-and-shader.json)
 
 原芬兰 GLB 中，Gravel 对应 18 个颜色 accessor，解码后有 17,822 个顶点、100 种 RGB。三个通道的范围依次为 78–184、45–163、22–138。没有顶点的蓝色通道同时超过红色与绿色。桌面对照中第一份匹配绘制的属性开头是 (78,45,22)/255。[模型原数据和 GPU 输入对照](sample-and-shader.json)
+
+在旧 GLES 的完整 39 步流程中，默认端口和端口占用回退各做完 77 项手柄与生命周期检查，接纳的 952 / 970 条 SDK 消息均获唯一 ACK。两张赛中图的固定世界区各取 1,705 个像素，饱和蓝紫像素分别为 1,412 和 1,567。芬兰赛段画面检查两次都拒绝这些蓝色路面与黑色车身，生产流程保留了失败及两套截图。[默认端口原图和报告](https://github.com/ecojust/pureTV/tree/55e222982f2b06ae4f0471ddce4f58e847aaccea/artifact/backroad-rally-normal) · [端口回退原图和报告](https://github.com/ecojust/pureTV/tree/55e222982f2b06ae4f0471ddce4f58e847aaccea/artifact/backroad-rally-occupied)
