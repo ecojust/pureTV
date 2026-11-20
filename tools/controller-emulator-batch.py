@@ -30,6 +30,7 @@ DEFAULT_BATCHES = tuple(BATCHES)
 HOME_BATCHES = ('arcade-1', 'arcade-2', 'arcade-3', 'home-coast', 'worlds-2', 'home-kit')
 BATCHES.update({
     'retry-used-car': ('worlds', ['used-car-racing']),
+    'retry-used-car-mesa': ('worlds', ['used-car-racing']),
     'retry-alien': ('worlds', ['alien-shooter']),
     'retry-super-mario': ('arcade', ['super-mario']),
     'retry-jackal': ('arcade', ['jackal']),
@@ -103,6 +104,10 @@ def runtime_plan(requested='', acceptance_mode='complete', scope='all'):
                'emulatorOptions': (standard_options.replace('-gpu swiftshader_indirect', '-gpu swiftshader') if name == 'retry-used-car' else standard_options)
                     + (' -feature -Vulkan -verbose' if name in ['worlds-2', 'retry-used-car', 'retry-arcade-visual'] else '')}
               for name in selected]
+    for row in matrix:
+        if row['batch'] == 'retry-used-car-mesa':
+            row.update(renderer='host',
+                       emulatorOptions=standard_options.replace('-gpu swiftshader_indirect', '-gpu host'))
     return {**acceptance, 'requestedBatches': names, 'selectedBatches': selected, 'plannedSlugs': slugs,
             'completeCatalogRequested': len(slugs) == len(release.ALL_SLUGS),
             'matrix': {'include': matrix},
