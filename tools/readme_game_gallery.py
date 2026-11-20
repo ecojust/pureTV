@@ -76,9 +76,16 @@ def game_card(card, locale):
     # The adjacent name labels the link even if the cover fails to load.
     page = card_link(card['page'], card['covers'][locale], title, '')
     icons = []
-    for platform, url in card['downloads'].items():
-        icon, system, package = PLATFORM_ICONS[platform]
-        label = f'{title} {system} {package}'
+    release = 'https://github.com/ecojust/pureTV/releases/download/catalog-player-v1.0.0/'
+    for platform, (icon, system, package) in PLATFORM_ICONS.items():
+        url = card['downloads'].get(platform)
+        if url:
+            label = f'{title} {system} {package}'
+        else:
+            filename = 'pureTV-Games.exe' if platform == 'windows' else 'pureTV-Games-portable.zip'
+            url = release + filename
+            player = '游戏启动器' if locale == 'zh' else 'game player'
+            label = f'{title} · {system} {player}'
         content = support_icon(icon, label)
         icons.append(f'<a href="{escape(url)}" title="{escape(label)}">{content}</a>')
     if card['controller']:
