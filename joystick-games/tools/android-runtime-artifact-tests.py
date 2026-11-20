@@ -102,22 +102,34 @@ class Payload(unittest.TestCase):
                     **{name:b'phone fixture' for name in inputs.PHONE},
                     f'joystick-games/{GAME}/dist/tv.html':b'<html>fixture</html>',
                     f'joystick-games/{GAME}/dist/assets/track.glb':b'original nested geometry'}
+    def replay(self, meta, registration, files):
+        registry = load(HERE.parent / 'catalog-registry.json')
+        registry['games'][GAME] = registration
+        frozen = dict(files)
+        frozen['joystick-games/tools/android-build.py'] = (HERE / 'android-build.py').read_bytes()
+        frozen['joystick-games/tools/asset-policy.py'] = (HERE / 'asset-policy.py').read_bytes()
+        frozen[f'joystick-games/{GAME}/game.json'] = json.dumps(meta).encode()
+        frozen['joystick-games/catalog-registry.json'] = json.dumps(registry).encode()
+        frozen['resource/game-kit/android/src/main/AndroidManifest.xml'] = b'<manifest/>'
+        return inputs.frozen_payload(frozen, GAME)
+
     def test_explicit_matching_policy_preserves_nested_assets_and_index(self):
-        payload=inputs.frozen_payload(self.meta,self.registration,self.files,GAME)
+        payload=self.replay(self.meta,self.registration,self.files)
         self.assertEqual(payload['assets/track.glb'],b'original nested geometry')
+        self.assertEqual(json.loads(payload['game-config.json'])['phoneControllerButtons'], 9)
         self.assertIn('assets/track.glb',json.loads(payload['assets-index.json']))
     def test_legacy_policy_still_rejects_nested_assets(self):
         self.meta.pop('assetPolicy');self.registration.pop('assetPolicy')
-        with self.assertRaises((AssertionError,ValueError,RuntimeError)): inputs.frozen_payload(self.meta,self.registration,self.files,GAME)
+        with self.assertRaises((AssertionError,ValueError,RuntimeError)): self.replay(self.meta,self.registration,self.files)
     def test_mismatched_policy_and_case_alias_and_reserved_paths_rejected(self):
         altered=copy.deepcopy(self.registration);altered['assetPolicy']['maxTotalBytes']-=1
-        with self.assertRaises(AssertionError):inputs.frozen_payload(self.meta,altered,self.files,GAME)
+        with self.assertRaises(AssertionError):self.replay(self.meta,altered,self.files)
         for name in ['assets/TRACK.glb','game-config.json','../outside','assets/../outside.js']:
             bad=dict(self.files);bad[f'joystick-games/{GAME}/dist/'+name]=b'bad'
-            with self.subTest(name=name),self.assertRaises((AssertionError,ValueError,RuntimeError)):inputs.frozen_payload(self.meta,self.registration,bad,GAME)
+            with self.subTest(name=name),self.assertRaises((AssertionError,ValueError,RuntimeError)):self.replay(self.meta,self.registration,bad)
     def test_default_flat_payload_retains_original_bytes(self):
         self.meta.pop('assetPolicy');self.registration.pop('assetPolicy');self.files.pop(f'joystick-games/{GAME}/dist/assets/track.glb')
-        payload=inputs.frozen_payload(self.meta,self.registration,self.files,GAME)
+        payload=self.replay(self.meta,self.registration,self.files)
         self.assertEqual(set(payload),{'tv.html','controller.html','controller.js','controller.css','game-config.json','assets-index.json'})
 
 
