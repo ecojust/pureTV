@@ -25,7 +25,7 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 
 ### 九款赛车游戏下载
 
-标为 **测试版** 的安装包仍在做原生手柄验收。Android 测试 APK 沿用固定发布证书，每款的已知问题和测试范围见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
+首次连接与开赛方式见[九款赛车手柄操作](#九款赛车手柄操作)。标为 **测试版** 的安装包仍在做原生手柄验收。Android 测试 APK 沿用固定发布证书，每款的已知问题和测试范围见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
 
 | 游戏 | Android TV | macOS | Windows x64 |
 | --- | --- | --- | --- |
@@ -44,6 +44,24 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 九款赛车的签名 Android APK 均已在电视模拟器上实际进入赛道。三款测试版的原生记录各有不同的覆盖范围：Backroad Rally 0.1.2 在可用图形后端上用手柄驶过芬兰起跑线，Ponpoko Kart 的公开 0.1.4 在默认端口通过 49 项，Kart Royale 0.1.3 在端口占用回退下通过 58 项。[Backroad 驾驶原图](https://raw.githubusercontent.com/ecojust/pureTV/2bd09dd52f3f5346d7c4d8ce155c7a6c8a6f10fb/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/original-stage-accelerated.png) · [Ponpoko 手柄及赛中记录](ponpoko-kart/README.md) · [Kart Royale 驾驶原图](https://raw.githubusercontent.com/ecojust/pureTV/e26766b346009537383d785463ee2c0b44f193ed/evidence/joystick-android-runtime-kart-royale/kart-royale-occupied/driving-checkpoint.png)
 
 以上 Mac 赛车需要 macOS 11+ 与 WebGL2；Apple Silicon 原生、端口占用及 Rosetta 均有通过记录，**Intel 图形运行仍未验证**。Backroad Rally 的预发布 ZIP 已通过 Apple Silicon 原生存档重启复验；包采用 ad-hoc 签名，未经过 Apple 公证。Windows 需要 Windows 10 1903+ x64／Windows 11、WebView2 Runtime 和相应 WebGL 支持；未做 Authenticode 签名，原生检查覆盖 96 DPI，其他显示缩放和实体手柄未测试。各游戏目录列出原包哈希、实际测试范围和保留的失败记录。
+
+### 九款赛车手柄操作
+
+把电视或电脑与 pureTV 手柄接到同一局域网，一次打开一款游戏。按手柄搜索键（GPIO 23），等画面出现手柄 ID 后即可操作。比赛时用 ←/→ 转向。断线或失焦后，重新连接并手动恢复比赛。
+
+| 游戏 | 怎样开赛 | 油门、刹车和特殊操作 | Android TV 画面 |
+| --- | --- | --- | --- |
+| [Backroad Rally](https://github.com/ecojust/pureTV/blob/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/backroad-rally/README.md#L31-L39) | 选 Quick Stage 进入车库，选 Choose Stage，再选 Start，用 A 确认。 | ↑ 油门，↓ 刹车，A 手刹，B 扶正车辆（有罚时）。 | [赛中原图](https://raw.githubusercontent.com/ecojust/pureTV/2bd09dd52f3f5346d7c4d8ce155c7a6c8a6f10fb/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/original-stage-accelerated.png) |
+| [Ponpoko Kart](https://github.com/ecojust/pureTV/blob/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/ponpoko-kart/README.md#L55-L63) | START 选角色，A 确认后选赛道，START 开赛。A 可跳过片头。 | ↑ 加速，↓ 刹车／倒车。点 A 跳跃，按住 A 并转向漂移。B 用道具，↓＋B 向后投掷。 | [赛中原图](https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/ponpoko-kart/docs/android-0.1.4/default-driving.png) |
+| [Night Racer](https://github.com/ecojust/pureTV/blob/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/night-racer/README.md#L27-L35) | 在标题页按 START 开赛，等倒数结束。 | ↑ 油门，↓ 刹车，A 漂移，B 氮气。 | [赛中原图](https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/night-racer/docs/android-delivery/original-export/evidence/joystick-android-runtime-night-racer/night-racer-normal/playing.png) |
+| [Penguintrack](https://github.com/ecojust/pureTV/blob/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/penguintrack/README.md#L29-L36) | 选 Play 按 A 进入战役，再选首条赛道按 A 起跑。 | ↑ 或 A 加速，↓ 或 B 制动。X 回检查点，Y 换镜头。 | [赛中原图](https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/penguintrack/docs/android-delivery/original-export/evidence/joystick-android-runtime-penguintrack/penguintrack-normal/playing.png) |
+| [Last Track](https://github.com/ecojust/pureTV/blob/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/last-track/README.md#L25-L33) | 选 New Game 和车辆，在车库选 TO THE TRACK。选赛道后，依次用 A 确认 NEXT: SETUP、START RACE。 | ↑ 油门，↓ 刹车，B 漂移。A 射击，X 换武器，Y 氮气。 | [赛中原图](https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/last-track/docs/android-delivery/race-normal.png) |
+| [Dirt Crown](https://github.com/ecojust/pureTV/blob/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/dirt-crown/README.md#L27-L37) | 在标题页选 Free Race 按 A，选 Race 再按 A 开赛。 | 按住 ↑ 给油，↓ 刹车。按住 A 漂移，按住 B 用氮气。 | [赛中原图](https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/dirt-crown/docs/android-runtime-44608423645/original-export/evidence/joystick-android-runtime-dirt-crown/dirt-crown-normal/playing.png) |
+| [Turbo Kart Rush](https://github.com/ecojust/pureTV/blob/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/turbo-kart-rush/README.md#L33-L41) | START 选车手，A 确认后选赛道，START 开赛。 | ↑ 加速，↓ 刹车／倒车。点 A 跳跃，按住 A 漂移。B 用道具，配合刹车或回看可向后投掷。 | [赛中原图](https://raw.githubusercontent.com/ecojust/pureTV/dee5a42698422aaf0de64c3f1c312e6a102a67c3/reports/joystick-android-report-runtime-turbo-kart-rush/turbo-kart-rush-occupied/playing.png) |
+| [Kart Rush](https://github.com/ecojust/pureTV/blob/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/kart-rush/README.md#L21-L33) | 首次按 A 进入姓名键盘，用方向键选字母、A 输入、Y 完成。按 START 开始单场比赛。 | ↑ 油门，↓ 刹车／倒车。持续转向自动漂移。A 用道具，B 反向投掷。 | [赛中原图](https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/kart-rush/docs/android-attempt-2/original/reports/joystick-android-report-runtime-kart-rush/kart-rush-normal/playing.png) |
+| [Kart Royale](https://github.com/ecojust/pureTV/blob/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/kart-royale/README.md#L28-L36) | 在标题页选 Start 按 A，进入车手选择后选 Start race，再按 A 起跑。 | ↑ 或 A 给油，↓ 制动，B 漂移，X 用道具。 | [赛中原图](https://raw.githubusercontent.com/ecojust/pureTV/e26766b346009537383d785463ee2c0b44f193ed/evidence/joystick-android-runtime-kart-royale/kart-royale-occupied/driving-checkpoint.png) |
+
+### 其他游戏适配进度
 
 原清单的 **93 款**已完成逐项[电视适配评估](../docs/claude-games/tv-assessment.md)：51 款可继续使用现有 Web 宿主，42 款需补齐许可、素材或其他引擎运行方案。后续新增的 GitHub 参考清单与这 93 款适配范围分开记录。
 
