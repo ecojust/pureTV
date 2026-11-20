@@ -12,66 +12,42 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           FIXED_SPEC: >-
-            {"run":44762298740,"source":"42086043c14dc91d7c342659fbde83407983ead4","workflow":".github/workflows/joystick-catalog-android.yml","job":"sign","artifact":14642970736,"artifact_name":"joystick-android-signed","release":452834419,"tag":"catalog-tv-controls-v1.0.0","target":"20e50e1e1e5ef4b2cdd8f1fa4f482916258b7284","files":[["packages/emberbrood/emberbrood-0.1.2.apk","emberbrood-0.1.2.apk",null]]}
+            {"mode":"raw","label":"compact TV updates 0.5.6","release":452834419,"tag":"catalog-tv-controls-v1.0.0","target":"20e50e1e1e5ef4b2cdd8f1fa4f482916258b7284","files":[["tank-0.5.6.apk","https://raw.githubusercontent.com/ecojust/pureTV/96dcc7863130e6bdb2461e170ecc5e258f999865/packages/tank/tank-0.5.6.apk",276852,"547e1565bf7ad09903861293eb342ac1e106f292f8bde042efc12f200bc44667"]]}
         shell: bash
         run: |
           python - <<'PY'
-          """Run on a GitHub-hosted runner with a pinned original Actions artifact and existing draft."""
           import hashlib
           import json
           import os
+          import re
           import subprocess
-          import zipfile
           from pathlib import Path
+          from urllib.request import urlopen
 
-          def api(path):
-              return json.loads(subprocess.check_output(['gh', 'api', 'repos/ecojust/pureTV/' + path]))
-
-          def digest(path):
-              with path.open('rb') as f:
-                  d = hashlib.sha256()
-                  for block in iter(lambda: f.read(1024 * 1024), b''):
-                      d.update(block)
-                  return 'sha256:' + d.hexdigest()
-
-          def stage(spec):
-              assert os.environ['GITHUB_REPOSITORY']=='ecojust/pureTV'
-              run=api('actions/runs/'+str(spec['run']))
-              assert run['head_sha']==spec['source'] and run['path']==spec['workflow']
-              assert run['head_repository']['full_name']==run['repository']['full_name']=='ecojust/pureTV'
-              jobs=api('actions/runs/'+str(spec['run'])+'/jobs?per_page=100')['jobs']
-              assert any(j['name']==spec['job'] and j['conclusion']=='success' for j in jobs)
-              artifact=api('actions/artifacts/'+str(spec['artifact']))
-              assert artifact['workflow_run']['id']==run['id'] and artifact['name']==spec['artifact_name'] and not artifact['expired']
-              def release():
-                  r=api('releases/'+str(spec['release']))
-                  assert r['draft'] and r['tag_name']==spec['tag'] and r['target_commitish']==spec['target']
-                  return r
-              release()
-              archive=Path('original.zip')
-              with archive.open('wb') as f:
-                  subprocess.run(['gh','api','repos/ecojust/pureTV/actions/artifacts/'+str(artifact['id'])+'/zip'],check=True,stdout=f)
-              assert archive.stat().st_size==artifact['size_in_bytes'] and digest(archive)==artifact['digest']
-              with zipfile.ZipFile(archive) as z:
-                  for row in spec['files']:
-                      inside,name,sha=row
-                      assert name==Path(name).name and name in {p[1] for p in spec['files']}
-                      info=z.getinfo(inside)
-                      assert z.namelist().count(inside)==1 and info.file_size<512*1024*1024
-                      out=Path(name)
-                      with out.open('wb') as f, z.open(info) as source:
-                          for block in iter(lambda:source.read(1024*1024),b''):
-                              f.write(block)
-                      fingerprint=digest(out)
-                      assert sha is None or fingerprint=='sha256:'+sha
-                      assets={a['name']:a for a in release()['assets']}
-                      if name not in assets:
-                          subprocess.run(['gh','release','upload',spec['tag'],str(out),'-R','ecojust/pureTV'],check=True)
-                      result=next(a for a in release()['assets'] if a['name']==name)
-                      assert result['digest']==fingerprint and result['size']==out.stat().st_size
-                      print(name, result['size'], fingerprint)
-
-          args=json.loads(os.environ['FIXED_SPEC'])
-          for group in args.get('groups',[args]):
-              stage(group)
+          spec=json.loads(os.environ['FIXED_SPEC'])
+          assert os.environ['GITHUB_REPOSITORY']=='ecojust/pureTV'
+          def release():
+              data=json.loads(subprocess.check_output(['gh','api','repos/ecojust/pureTV/releases/'+str(spec['release'])]))
+              assert data['draft'] and data['tag_name']==spec['tag'] and data['target_commitish']==spec['target']
+              return {asset['name']:asset for asset in data['assets']}
+          assets=release()
+          for row in spec['files']:
+              name, url, size, digest=row
+              assert re.fullmatch(r'[a-z0-9-]+-[0-9]+\.[0-9]+\.[0-9]+\.apk',name)
+              assert re.fullmatch(r'https://raw\.githubusercontent\.com/ecojust/pureTV/[a-f0-9]{40}/[a-zA-Z0-9_./-]+',url)
+              assert 0<size<100*1024*1024 and len(digest)==64
+              if name not in assets:
+                  block_hash=hashlib.sha256()
+                  with urlopen(url,timeout=90) as source,Path(name).open('xb') as out:
+                      assert source.status==200
+                      for block in iter(lambda:source.read(1024*1024),b''):
+                          out.write(block)
+                          assert out.tell()<=size
+                          block_hash.update(block)
+                  assert Path(name).stat().st_size==size and block_hash.hexdigest()==digest
+                  subprocess.run(['gh','release','upload',spec['tag'],name,'-R','ecojust/pureTV'],check=True)
+                  Path(name).unlink()
+                  assets=release()
+              assert assets[name]['size']==size and assets[name]['digest']=='sha256:'+digest
+              print(name,size,digest)
           PY
