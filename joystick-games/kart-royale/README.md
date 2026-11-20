@@ -2,7 +2,9 @@
 
 基于 [ryancampbell/kart-royale](https://github.com/ryancampbell/kart-royale/tree/036c0efb025f5ecf8fc31c405e9d818c61e03e21) 的 pureTV 手柄版。固定原源为 `036c0efb025f5ecf8fc31c405e9d818c61e03e21`，保留 Sunset Bay Circuit、八辆卡丁车、AI 对手、道具、原轮胎/悬架物理和漂移奖励规则。网上后来替换的 homie 多人版本不属于本次移植。
 
-Android TV 0.1.2 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/kart-royale-0.1.2.apk)。原生手柄验收进展见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
+Android TV 0.1.3 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/kart-royale-0.1.3.apk)。原生手柄验收进展见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
+
+0.1.3 最低支持 Android 8，目标 SDK 为 35。在软件 GPU 上，它用轻量着色器绘制原车、原纹理和赛道，并降低部分背景装饰的几何复杂度。Linux llvmpipe 的真实输入已从标题页进入比赛并驱动车辆，冷启动在这台共享双核主机上用时数分钟。Android TV 14 与 16 的独立验证仍在进行。[Android TV 14](https://github.com/ecojust/pureTV/actions/runs/44690586603) · [Android TV 16](https://github.com/ecojust/pureTV/actions/runs/44689811645)
 
 
 ## Windows 下载
