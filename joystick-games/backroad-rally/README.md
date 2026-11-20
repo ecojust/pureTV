@@ -2,7 +2,9 @@
 
 基于 [jason-c-dev/backroad-rally](https://github.com/jason-c-dev/backroad-rally/tree/e5542f96b9a9a2912fdaa160396054e81f022f23) 的 pureTV 手柄适配。保留原作五辆车、六个地区、天气、正反赛段、幽灵车、生涯、存档和 Rapier 物理；不是重新实现或换皮。
 
-Android TV 0.1.2 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/backroad-rally-0.1.2.apk)。原生手柄验收进展见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
+## Android TV 测试下载
+
+0.1.2 支持 Android 8.0 及以上。APK 使用固定发布证书，包内 333 个网页文件均与芬兰赛段驾驶复验时的文件逐字节一致。两种端口模式的 Android TV 赛道画面仍在复测。[下载 0.1.2 APK](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/backroad-rally-0.1.2.apk) · [SHA-256](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/SHA256SUMS-Backroad-0.1.2.txt) · [原签名包核验](https://github.com/ecojust/pureTV/actions/runs/44688535161/job/136128536372)
 
 ## WebGL2 兼容性
 
