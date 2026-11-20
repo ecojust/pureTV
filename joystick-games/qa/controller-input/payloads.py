@@ -26,7 +26,7 @@ def prepare(root, slug, output):
         for name in sorted([*originals, *generated]):
             item = ZipInfo('assets/'+name,(2026,11,20,0,0,0))
             item.compress_type = ZIP_DEFLATED
-            packed.writestr(item, generated[name] if name in generated else originals[name].read_bytes())
+            packed.writestr(item, generated[name] if name in generated else originals[name].read_bytes(), compresslevel=1)
 
 
 if __name__=='__main__':

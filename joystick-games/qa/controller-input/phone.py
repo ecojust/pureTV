@@ -68,7 +68,8 @@ def verify(browser, mobile_browser, java, slug, packed, output, timeout):
                     [*java, 'decode', str(shot), *map(str, rect)],
                     capture_output=True, text=True, timeout=12)
                 if scan.returncode == 0:
-                    assert scan.stdout.strip() == info['room'], 'Displayed QR points to a different room'
+                    room = scan.stdout.strip()
+                    assert room == info['room'], 'Displayed QR points to a different room'
                     break
                 # A game can start polling before its opaque startup curtain actually disappears.
                 if time.monotonic() >= deadline:

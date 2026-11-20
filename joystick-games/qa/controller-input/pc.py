@@ -15,7 +15,7 @@ SNAPSHOT = "window.JoystickGameQA?.snapshot?.()"
 FLAGS = ['--disable-dev-shm-usage', '--disable-background-timer-throttling', '--enable-unsafe-swiftshader']
 
 
-def verify(browser, host_path, slug, archive, timeout):
+def verify(browser, host_path, slug, archive, timeout, editable_text=None):
     with archive.open('rb') as packed:
         result = {'game': slug, 'payloadSha256': hashlib.file_digest(packed, 'sha256').hexdigest()}
     proc = subprocess.Popen([sys.executable, str(host_path), '--game', slug, '--apk', str(archive),
@@ -57,6 +57,15 @@ def verify(browser, host_path, slug, archive, timeout):
         # A directional input may land on an editable game field (e.g. Emberbrood's world seed).
         # Let the browser leave it with Tab before testing gameplay shortcuts.
         editable = "input, textarea, select, [contenteditable]:not([contenteditable=false])"
+        if editable_text is not None:
+            phase = 'typing into the focused game field'
+            field = page.locator('input:focus, textarea:focus')
+            assert field.count() == 1, 'The tested game must have focused its text field'
+            page.keyboard.press('ControlOrMeta+a')
+            page.keyboard.type(editable_text, delay=40)
+            result['typedValue'] = field.input_value()
+            assert result['typedValue'] == editable_text, result['typedValue']
+            phase = 'keyboard after disconnect'
         tab_count = 0
         while page.evaluate("(s) => !!document.activeElement?.closest(s)", editable):
             assert tab_count < 12, 'Could not leave the editable game controls with Tab'
@@ -87,6 +96,7 @@ def main():
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--chromium', default='/usr/bin/chromium')
     p.add_argument('--timeout', type=int, default=300)
+    p.add_argument('--editable-text', help='Type this value when the tested game focuses its text input')
     p.add_argument('--angle', choices=['auto', 'swiftshader', 'gl-egl'], default='auto')
     p.add_argument('games', nargs='+')
     args = p.parse_args()
@@ -99,7 +109,7 @@ def main():
         try:
             ok = True
             for slug in args.games:
-                report = verify(browser, args.host, slug, args.payloads / (slug + '.zip'), args.timeout)
+                report = verify(browser, args.host, slug, args.payloads / (slug + '.zip'), args.timeout, args.editable_text)
                 report.update(browser=browser.version, angle=args.angle)
                 (args.output / (slug + '.json')).write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
                 print(slug, report.get('passed'), report.get('error', ''), flush=True)
