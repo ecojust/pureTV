@@ -1033,4 +1033,17 @@ class InstallFailureEvidence(unittest.TestCase):
             self.assertEqual((row['status'],row['timeoutSeconds'],row['stdout']),('timed-out',240,'original install stdout'))
             self.assertTrue(acceptance.report['installFailureEvidence']['originalFailurePreserved'])
 
+class BackroadHalfResolution(unittest.TestCase):
+    def test_observe_both_original_canvas_dimensions_at_half_after_layout_rounding(self):
+        canvas = dict(visible=True, width=480, height=270, clientWidth=961, clientHeight=541)
+        state = {'page': {'width': 961, 'height': 541, 'canvases': [canvas]}}
+        self.assertEqual(runner.backroad_half_resolution_canvas(state), canvas)
+        canvas['height'] = 541
+        with self.assertRaises(AssertionError):
+            runner.backroad_half_resolution_canvas(state)
+        canvas.update(height=270, clientWidth=0)
+        with self.assertRaises(AssertionError):
+            runner.backroad_half_resolution_canvas(state)
+
+
 if __name__=='__main__': unittest.main(verbosity=2)

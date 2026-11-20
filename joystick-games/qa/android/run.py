@@ -78,6 +78,18 @@ def backroad_scene_colors(path, ghost_labels=()):
     return backroad_scene_sample(path, ghost_labels)['colors']
 
 
+def backroad_half_resolution_canvas(state):
+    page = state['page']
+    canvases = [c for c in page['canvases'] if c['visible']
+                and c['clientWidth'] > 0 and c['clientHeight'] > 0
+                and abs(c['clientWidth'] - page['width']) <= 1
+                and abs(c['clientHeight'] - page['height']) <= 1
+                and abs(c['width'] - c['clientWidth'] * 0.5) <= 1
+                and abs(c['height'] - c['clientHeight'] * 0.5) <= 1]
+    assert len(canvases) == 1, 'The original driving canvas must use the selected 50% render resolution'
+    return canvases[0]
+
+
 def backroad_finland_violet_scene(capture, sample):
     # Only this unchanged Finnish quick-stage, stage-default weather and Swift Mk1
     # has a native reference. Its dirt/grass never fills the picture with saturated violet.
@@ -1084,6 +1096,9 @@ def main():
         acceptance.scenarios()
         if a.game == 'backroad-rally':
             playing = next(c for c in acceptance.captures if c['path'] == 'playing.png')
+            if any(step['name'] == 'Select original render resolution 50%' for step in acceptance.plan['steps']):
+                sizes = {moment: backroad_half_resolution_canvas(playing[moment]) for moment in ('before', 'after')}
+                acceptance.passed('original Finland game renders at the selected 50% resolution', sizes)
             labels = [rect for moment in ('before', 'after') for rect in playing[moment]['page'].get('backroadGhostLabels', [])]
             sample = backroad_scene_sample(acceptance.out / 'playing.png', labels)
             acceptance.report['playingSceneColors'] = sample['colors']
