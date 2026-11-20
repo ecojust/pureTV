@@ -79,7 +79,7 @@ def runtime_plan(requested='', acceptance_mode='complete', scope='all'):
     """Validate dispatch selection before it can become a matrix or shell input."""
     acceptance = acceptance_config(acceptance_mode)
     available = release.scoped_games(release.ALL_SLUGS, scope)
-    defaults = HOME_BATCHES if scope == 'home-12' else DEFAULT_BATCHES
+    defaults = {'home-12': HOME_BATCHES, 'arcade-7': ('arcade-1', 'arcade-2', 'arcade-3')}.get(scope, DEFAULT_BATCHES)
     names = json.loads(requested) if requested.strip() else list(defaults)
     assert isinstance(names, list) and names, 'batches must be a nonempty JSON array'
     assert all(isinstance(name, str) and name in BATCHES for name in names), 'Only predefined batch names are accepted'
