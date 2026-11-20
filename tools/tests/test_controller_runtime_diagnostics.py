@@ -96,6 +96,14 @@ class BatchIsolation(unittest.TestCase):
         with self.assertRaises(AssertionError):
             batch.runtime_plan('["arcade-1"]', scope='arcade-recovery-6')
 
+    def test_coast_scope_builds_and_runs_a_single_signed_world_game(self):
+        plan=batch.runtime_plan(scope='coast-1')
+        self.assertEqual(plan['plannedSlugs'], ['coast-kart'])
+        self.assertEqual(batch.release.scoped_games(batch.release.SLUGS, 'coast-1'), ['coast-kart'])
+        self.assertEqual(batch.release.scoped_games(batch.release.KIT_SLUGS, 'coast-1'), [])
+        with self.assertRaises(AssertionError):
+            batch.runtime_plan('["retry-alien"]', scope='coast-1')
+
     def test_only_exact_requested_retry_aliases_exist(self):
         aliases = set(batch.BATCHES) - set(batch.DEFAULT_BATCHES) - set(batch.HOME_BATCHES)
         self.assertEqual(aliases, {'retry-used-car', 'retry-alien', 'retry-prism', 'retry-arcade-visual', 'retry-cozy', 'retry-super-mario', 'retry-jackal', 'retry-used-car-mesa'})
