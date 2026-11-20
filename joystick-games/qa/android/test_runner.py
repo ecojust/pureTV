@@ -208,6 +208,40 @@ class MenuTapContracts(unittest.TestCase):
             {'path': 'gameplay.menu.focusId', 'op': 'eq', 'value': 'start'},
             {'path': 'gameplay.ready', 'op': 'eq', 'value': True}])
 
+    def test_final_ack_and_disconnect_exclude_a_concurrent_sdk_heartbeat(self):
+        attempted = threading.Event()
+        lock_was_held = []
+        extra_ping = []
+
+        def heartbeat():
+            immediate = self.client.lock.acquire(blocking=False)
+            lock_was_held.append(not immediate)
+            if immediate:
+                self.client.lock.release()
+            attempted.set()
+            with self.client.lock:
+                if self.client.sock is not None:
+                    self.client.ping()
+                    extra_ping.append(self.client.seq)
+
+        worker = threading.Thread(target=heartbeat, daemon=True)
+        wait_for_ack = self.acceptance.wait_sent_ack
+
+        def wait_during_heartbeat(client, sequence):
+            worker.start()
+            self.assertTrue(attempted.wait(2))
+            wait_for_ack(client, sequence)
+
+        with mock.patch.object(self.acceptance, 'wait_sent_ack', side_effect=wait_during_heartbeat):
+            self.acceptance.ack_barrier(disconnect=True)
+        worker.join(2)
+        self.assertFalse(worker.is_alive())
+        self.assertEqual(lock_was_held, [True])
+        self.assertEqual(extra_ping, [])
+        wire = self.proxy.summary()
+        self.assertEqual(wire['matchingAcks'], wire['acceptedSdkMessages'])
+        self.assertEqual(wire['missingAcks'], [])
+
     def test_real_sdk_short_pair_ack_and_two_subsequent_fresh_polls(self):
         self.use_samples([{'game': None}, self.state(101, index=2), self.state(101, index=2),
                           self.state(102, index=2), self.state(103, index=2)])
