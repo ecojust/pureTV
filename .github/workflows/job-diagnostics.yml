@@ -1,45 +1,94 @@
-name: Read failed job diagnostics
-on:
-  workflow_dispatch:
-    inputs:
-      job_id:
-        description: Failed GitHub Actions job ID
-        required: true
+name: Independently inspect the original nine racing APKs
+on: workflow_dispatch
 permissions:
   actions: read
+  contents: write
 jobs:
-  diagnostics:
-    runs-on: ubuntu-latest
+  receipts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {run: '44759623931', games: 'backroad-rally,ponpoko-kart,night-racer'}
+          - {run: '44759633278', games: 'penguintrack,last-track,dirt-crown'}
+          - {run: '44759642522', games: 'turbo-kart-rush,kart-rush,kart-royale'}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RUN: ${{ matrix.run }}
+      GAMES: ${{ matrix.games }}
+      SOURCE: e4d4c11e0b8e6a73994491e5d3b3d7b0395f6ad1
     steps:
-      - name: Report verification log tail
-        env:
-          GH_TOKEN: ${{ github.token }}
-          JOB_ID: ${{ inputs.job_id }}
-          REPOSITORY: ${{ github.repository }}
+      - name: Identify the original production run and its exact signed artifact
+        id: original
         run: |
           python - <<'PY'
-          import os, re, subprocess
-          job = os.environ['JOB_ID']
-          assert job.isdigit()
-          result = subprocess.run(['gh', 'api', '--allow-escape-sequences', f"repos/{os.environ['REPOSITORY']}/actions/jobs/{job}/logs"], capture_output=True, text=True)
-          log = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', result.stdout + result.stderr)
-          # Diagnostics need error context, never credential-bearing download URLs.
-          log = re.sub(r"https?://[^\s<>\"']+", '[URL omitted]', log)
-          log = re.sub(r'\b(?:gh[pousr]_[A-Za-z0-9_]+|github_pat_[A-Za-z0-9_]+)\b', '[token omitted]', log)
-          log = re.sub(r'(?im)((?:authorization|(?:gh|github)[_-]token)\s*[:=]\s*)(?:bearer\s+|basic\s+)?[^\s]+', r'\1[token omitted]', log)
-          log = re.sub(r'(?im)^.*androidboot\.qemu\.adb\.pubkey=.*$', '[emulator public key omitted]', log)
-          lines = log.splitlines()
-          primary = [i for i, line in enumerate(lines) if re.search(r'FAILURE: Build failed|\* What went wrong:', line) and '##[error]' not in line]
-          fallback = [i for i, line in enumerate(lines) if re.search(r'(?:error:|Error:|TimeoutError|ui\.mjs:|> Task .+ FAILED|Execution failed for task|failed with exit code|emulator: ERROR)', line)]
-          # Boot polling can log transient adb failures before the fatal step.
-          fatal = [i for i in fallback if '##[error]' in lines[i]]
-          matches = primary or fatal or fallback
-          if matches:
-              before = '\n'.join(lines[max(0, matches[0] - 50):matches[0]])[-3500:]
-              print('::notice title=Failure preceding context::' + before.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
-              start = max(0, matches[0] - 2)
-              selected = '\n'.join(lines[start:start + 65])[:3500]
-          else:
-              selected = log[-3500:]
-          print('::notice title=Failed job log::' + selected.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
+          import json,os,subprocess,re
+          run=os.environ['RUN']
+          def api(path):
+            return json.loads(subprocess.check_output(['gh','api','repos/'+os.environ['GITHUB_REPOSITORY']+'/'+path]))
+          workflow=api('actions/runs/'+run)
+          assert workflow['path']=='.github/workflows/joystick-catalog-android.yml' and workflow['head_sha']==os.environ['SOURCE'] and workflow['run_attempt']==1
+          jobs={j['name']:j for j in api('actions/runs/'+run+'/jobs?per_page=100')['jobs']}
+          for job in ['sign']+['build ('+g+')' for g in os.environ['GAMES'].split(',')]:
+            assert jobs[job]['conclusion']=='success'
+          unique=[a for a in api('actions/runs/'+run+'/artifacts?per_page=75')['artifacts'] if a['name']=='joystick-android-signed' and not a['expired']]
+          assert len(unique)==1
+          artifact=unique[0]
+          assert artifact['workflow_run']['id']==int(run) and re.fullmatch('sha256:[a-f0-9]{64}',artifact['digest'])
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:print('id='+str(artifact['id']),file=f);print('digest='+artifact['digest'],file=f)
           PY
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ steps.original.outputs.id }}
+          run-id: ${{ matrix.run }}
+          github-token: ${{ github.token }}
+          merge-multiple: true
+          path: original
+      - name: Check each original game and Observer APK against its receipt, manifest and certificate
+        env:
+          ARTIFACT: ${{ steps.original.outputs.id }}
+          ARCHIVE_DIGEST: ${{ steps.original.outputs.digest }}
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json,os,subprocess,re
+          pin='eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23'
+          versions={'backroad-rally':('0.1.7',8),'ponpoko-kart':('0.1.6',7),'night-racer':('0.1.1',2),'penguintrack':('0.1.1',2),'last-track':('0.1.1',2),'dirt-crown':('0.1.1',2),'turbo-kart-rush':('0.1.2',3),'kart-rush':('0.1.1',2),'kart-royale':('0.1.5',6)}
+          tools=Path(os.environ['ANDROID_HOME'])/'build-tools'/'34.0.0'
+          boards=[]
+          def record(path):
+            with path.open('rb') as f:return {'bytes':path.stat().st_size,'sha256':hashlib.file_digest(f,'sha256').hexdigest()}
+          def validate(path,receipt,package,code,version=None):
+            identity=record(path)
+            assert all(receipt[k]==v for k,v in identity.items())
+            signer=subprocess.check_output([tools/'apksigner','verify','--print-certs',path],text=True)
+            assert re.findall(r'Signer #\d+ certificate SHA-256 digest: ([a-f0-9]+)',signer)==[pin]
+            badging=subprocess.check_output([tools/'aapt','dump','badging',path],text=True)
+            line=badging.splitlines()[0];expected=f"package: name='{package}' versionCode='{code}'"
+            assert line.startswith(expected) and (version is None or "versionName='"+version+"'" in line)
+            return {**identity,'packageName':package,'versionCode':code,'certificateSha256':pin,'pathInOriginalArchive':path.relative_to('original').as_posix(),'manifestBadging':line}
+          for slug in os.environ['GAMES'].split(','):
+            ver,code=versions[slug];game='com.ecojust.joystick.'+slug.replace('-',''); observer='com.ecojust.joystickqa.'+slug.replace('-','')
+            pkg=Path('original/packages')/slug; op=Path('original/observers')/slug
+            sr=pkg/'signing-receipt.json';r=json.loads(sr.read_bytes());obs=op/'observer-signing-receipt.json';o=json.loads(obs.read_bytes())
+            assert r['game']==slug and r['sourceSha']==os.environ['SOURCE'] and str(r['runId'])==os.environ['RUN'] and r['signatureVerified'] is True and r['certificateSha256']==pin
+            assert (r['versionName'],r['versionCode'],r['packageName'])==(ver,code,game)
+            assert o['signatureVerified'] is True and o['apkIdentity']['packageName']==observer and o['apkIdentity']['certificateSha256']==pin
+            application=validate(pkg/(slug+'-'+ver+'.apk'),r,game,code,ver)
+            instrument=validate(op/o['apk'],o['apkIdentity'],observer,1)
+            boards.append(dict(game=slug,versionName=ver,application=application,observer=instrument,sourceInputs=len(r['sourceInputs']),originalSigningReceipt=record(sr),originalObserverSigningReceipt=record(obs)))
+          out=Path('receipt-export');out.mkdir()
+          report=dict(source=os.environ['SOURCE'],buildRunId=int(os.environ['RUN']),attempt=1,originalSignedArtifactId=int(os.environ['ARTIFACT']),originalSignedArtifactName='joystick-android-signed',originalSignedArchiveDigest=os.environ['ARCHIVE_DIGEST'],originalSignedArtifactURL='https://github.com/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+os.environ['RUN']+'/artifacts/'+os.environ['ARTIFACT'],verifiedGames=boards)
+          (out/'signed-originals.json').write_text(json.dumps(report,indent=2)+'\n')
+          print(json.dumps(report,indent=2))
+          PY
+          branch="build-assets/racing-nine-signed-receipts-$RUN-$GITHUB_RUN_ID"
+          gh auth setup-git
+          git -C receipt-export init -q --initial-branch="$branch"
+          git -C receipt-export config user.name 'github-actions[bot]'
+          git -C receipt-export config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C receipt-export add signed-originals.json
+          git -C receipt-export commit -qm 'Independent receipt for original signed racing game packages'
+          git -C receipt-export push "https://github.com/$GITHUB_REPOSITORY.git" "--force-with-lease=refs/heads/$branch:" "HEAD:refs/heads/$branch"
