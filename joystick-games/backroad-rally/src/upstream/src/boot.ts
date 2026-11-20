@@ -11,12 +11,32 @@ import { RoadMarks } from './fx/roadMarks';
 /** Identify software renderers by the driver name that WebGL exposes, including the Android TV emulator. */
 export function webglOutputPolicy(name: string, halfFloat: boolean, dpr: number) {
   const software = /swiftshader|llvmpipe|softpipe|lavapipe|software (?:renderer|rasterizer)|microsoft basic render driver/i.test(name);
-  return { halfFloat: halfFloat && !software, pixelRatio: Math.min(dpr, software ? 1 : 2) };
+  return { halfFloat: halfFloat && !software, pixelRatio: Math.min(dpr, software ? 1 : 2), antialias: !software };
 }
 
 function webglName(gl: WebGL2RenderingContext): string {
   const info = gl.getExtension('WEBGL_debug_renderer_info');
   return info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : 'webgl2';
+}
+
+// WebGL context attributes are fixed by the first getContext call. Once the detached
+// canvas identifies a software driver, ask for a single-sample canvas before initializing Three.
+export function createRenderCanvas(forceWebGL: boolean, dpr: number, makeCanvas = () => document.createElement('canvas')) {
+  const attributes: WebGLContextAttributes = { powerPreference: 'high-performance', antialias: true, alpha: true, depth: true, stencil: false };
+  let canvas = makeCanvas();
+  let context = forceWebGL ? canvas.getContext('webgl2', attributes) ?? undefined : undefined;
+  const halfFloat = !context || context.getExtension('EXT_color_buffer_float') || context.getExtension('EXT_color_buffer_half_float');
+  const output = webglOutputPolicy(context ? webglName(context) : '', !!halfFloat, dpr);
+  if (context && !output.antialias && context.getContextAttributes()?.antialias) {
+    const singleCanvas = makeCanvas();
+    const singleContext = singleCanvas.getContext('webgl2', { ...attributes, antialias: false });
+    if (singleContext) {
+      context.getExtension('WEBGL_lose_context')?.loseContext();
+      canvas = singleCanvas;
+      context = singleContext;
+    }
+  }
+  return { canvas, context, output };
 }
 
 /**
@@ -38,19 +58,9 @@ export async function createRenderer(params: URLSearchParams, trackTimestamp: bo
   const software = !!info && (!!info.isFallbackAdapter || !!info.info?.isFallbackAdapter
     || /swiftshader|llvmpipe|software/i.test(`${info.info?.vendor ?? ''} ${info.info?.architecture ?? ''} ${info.info?.description ?? ''}`));
   const forceWebGL = !gpuAdapter || software;
-  const canvas = document.createElement('canvas');
-  const context = forceWebGL
-    ? canvas.getContext('webgl2', { powerPreference: 'high-performance', antialias: true, alpha: true, depth: true, stencil: false }) ?? undefined
-    : undefined;
-  // WebGL2 alone does not guarantee an RGBA16F framebuffer. Three's scene pass
-  // and even its direct tone-mapping pass otherwise allocate half-float buffers.
-  const halfFloatOutput = !context || context.getExtension('EXT_color_buffer_float')
-    || context.getExtension('EXT_color_buffer_half_float');
-  // The Android TV SwiftShader translator advertises float targets but presents a uniform stage.
-  // Reuse the RGBA8 direct renderer and avoid multiplying software raster work by the TV's density.
-  const output = webglOutputPolicy(context ? webglName(context) : '', !!halfFloatOutput, devicePixelRatio);
+  const { canvas, context, output } = createRenderCanvas(forceWebGL, devicePixelRatio);
   const renderer = new THREE.WebGPURenderer({
-    canvas, context, antialias: true, forceWebGL, powerPreference: 'high-performance', trackTimestamp,
+    canvas, context, antialias: output.antialias, forceWebGL, powerPreference: 'high-performance', trackTimestamp,
     outputBufferType: output.halfFloat ? THREE.HalfFloatType : THREE.UnsignedByteType,
   });
   renderer.setPixelRatio(output.pixelRatio);
