@@ -470,7 +470,9 @@ class Diagnosis:
         require(not original.plan.matches(step['expect'], game(before), game(before)), 'Menu expectation was already true')
         item = {'originalIndex': index, 'step': step, 'status': 'running', 'before': before, 'samples': []}
         self.report['steps'].append(item)
-        deadline = time.monotonic() + step['timeoutSeconds']
+        observation_seconds = 3 * step['timeoutSeconds']
+        item['observationTimeoutSeconds'] = observation_seconds
+        deadline = time.monotonic() + observation_seconds
         key = step['keys'][0]
         with client.lock:
             client.button(key, 'down'); down = client.seq

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: backroad-original-apk-graphics-diagnostic
+  group: backroad-original-apk-mesa-graphics-diagnostic
   cancel-in-progress: false
 
 permissions:
@@ -176,7 +176,7 @@ jobs:
                   shutil.copyfile(path,out/name)
           PY
       - name: Observe one normal-port SDK reproduction with the unchanged original APK
-        # Same emulator/API/RAM/GPU as the original 382de comparison; no Vulkan switch.
+        # Preserve the API, TV image, RAM and original APK while comparing the Mesa software driver.
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
           emulator-build: '16970787'
@@ -187,7 +187,7 @@ jobs:
           avd-name: JoystickGamesValidation
           force-avd-creation: true
           disable-animations: true
-          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          emulator-options: -no-window -memory 2048 -gpu lavapipe -noaudio -no-boot-anim -no-snapshot
           script: >-
             python3 joystick-games/qa/android/graphics-observer/run.py
             --input "$RUNNER_TEMP/original-input" --observer-input "$RUNNER_TEMP/observer-signed"

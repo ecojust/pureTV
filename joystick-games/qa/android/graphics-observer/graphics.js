@@ -71,22 +71,34 @@
         // The game has drawn a new frame in this animation cycle. Copy its existing canvas,
         // without DOM overlays, before Chromium presents and may discard the drawing buffer.
         try {
+          function stats(bytes) {
+            var rgb = new Set(), visible = 0, opaque = 0;
+            for (var i = 0; i < bytes.length; i += 4) {
+              if (bytes[i + 3] === 255) opaque++;
+              if (bytes[i + 3] === 0) continue;
+              visible++;
+              rgb.add((bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2]);
+            }
+            return {alphaNonzeroPixels:visible,opaquePixels:opaque,distinctVisibleRgb:rgb.size};
+          }
+          // Read one central rectangle only when the original renderer left the default framebuffer
+          // and standard CPU packing active. Do not change bindings or consume the game's error flags.
+          var framebuffer = {read:false};
+          if (gl && gl.getParameter(gl.READ_FRAMEBUFFER_BINDING) === null && gl.getParameter(gl.PIXEL_PACK_BUFFER_BINDING) === null
+              && gl.getParameter(gl.PACK_ROW_LENGTH) === 0 && gl.getParameter(gl.PACK_SKIP_ROWS) === 0 && gl.getParameter(gl.PACK_SKIP_PIXELS) === 0
+              && gl.drawingBufferWidth >= 96 && gl.drawingBufferHeight >= 54) {
+            var w = 96, h = 54, pixels = new Uint8Array(w*h*4);
+            gl.readPixels(Math.floor((gl.drawingBufferWidth-w)/2), Math.floor((gl.drawingBufferHeight-h)/2), w, h, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+            framebuffer = Object.assign({read:true,width:w,height:h},stats(pixels));
+          }
           var copy = document.createElement('canvas');
           copy.width = 160; copy.height = 90;
           var context = copy.getContext('2d', {willReadFrequently:true});
           context.imageSmoothingEnabled = false;
           context.drawImage(source, 0, 0, copy.width, copy.height);
-          var pixels = context.getImageData(0, 0, copy.width, copy.height).data;
-          var rgb = new Set(), visible = 0, opaque = 0;
-          for (var i = 0; i < pixels.length; i += 4) {
-            if (pixels[i + 3] === 255) opaque++;
-            if (pixels[i + 3] === 0) continue;
-            visible++;
-            rgb.add((pixels[i] << 16) | (pixels[i + 1] << 8) | pixels[i + 2]);
-          }
-          console.info('BackroadCanvasProbe ' + JSON.stringify({initialFrame:startFrame,drawnFrame:next.frames,
-            width:copy.width,height:copy.height,alphaNonzeroPixels:visible,opaquePixels:opaque,
-            distinctVisibleRgb:rgb.size,sourceWidth:source.width,sourceHeight:source.height}));
+          var copied = stats(context.getImageData(0, 0, copy.width, copy.height).data);
+          console.info('BackroadCanvasProbe ' + JSON.stringify(Object.assign({initialFrame:startFrame,drawnFrame:next.frames,
+            width:copy.width,height:copy.height,framebuffer:framebuffer,sourceWidth:source.width,sourceHeight:source.height},copied)));
         } catch (error) {
           console.info('BackroadCanvasProbe ' + JSON.stringify({error:String(error),initialFrame:startFrame,drawnFrame:next.frames}));
         }

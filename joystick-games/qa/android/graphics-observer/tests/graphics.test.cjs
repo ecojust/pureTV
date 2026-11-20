@@ -28,7 +28,9 @@ sandbox.document.getElementById=()=>null;
 canvas.getContext=(kind)=>{
   assert.equal(kind,'webgl2');contextCalls++;
   return {getSupportedExtensions:()=>['EXT_color_buffer_half_float'],getExtension:()=>null,
-    isContextLost:()=>false,getInternalformatParameter:()=>[],checkFramebufferStatus:()=>0x8cd5,getParameter:()=>'',getContextAttributes:()=>({alpha:true})};
+    drawingBufferWidth:480,drawingBufferHeight:270,READ_FRAMEBUFFER_BINDING:1,PIXEL_PACK_BUFFER_BINDING:2,PACK_ROW_LENGTH:3,PACK_SKIP_ROWS:4,PACK_SKIP_PIXELS:5,
+    readPixels(x,y,w,h,format,kind,data){assert.deepEqual([x,y,w,h],[192,108,96,54]);data.set([7,8,9,255,9,8,7,255]);},
+    isContextLost:()=>false,getInternalformatParameter:()=>[],checkFramebufferStatus:()=>0x8cd5,getParameter:p=>p===1||p===2?null:0,getContextAttributes:()=>({alpha:true})};
 };
 const caps=vm.runInNewContext(source,sandbox);
 assert.equal(caps.contextRead,true);assert.equal(contextCalls,1);assert.equal(caps.extColorBufferFloat,false);
@@ -55,6 +57,6 @@ sandbox.document.createElement=(tag)=>{
 assert.equal(vm.runInNewContext(source,sandbox).contextRead,true);
 assert.equal(copyCount,0);nextCall();assert.equal(copyCount,0);
 frames++;nextCall();
-assert.equal(copyCount,1);assert.equal(logged.drawnFrame,4);assert.equal(logged.initialFrame,3);
+assert.equal(copyCount,1);assert.equal(logged.framebuffer.read,true);assert.equal(logged.framebuffer.distinctVisibleRgb,2);assert.equal(logged.drawnFrame,4);assert.equal(logged.initialFrame,3);
 assert.equal(logged.alphaNonzeroPixels,3);assert.equal(logged.opaquePixels,2);assert.equal(logged.distinctVisibleRgb,2);
 console.log('Stage canvas sample observes one new frame, excludes transparent colors and deduplicates visible colors');
