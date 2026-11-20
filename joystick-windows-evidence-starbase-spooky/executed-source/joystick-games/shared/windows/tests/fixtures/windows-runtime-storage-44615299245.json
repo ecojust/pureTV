@@ -1,0 +1,749 @@
+{
+  "sourceRunId": 44615299245,
+  "sourceRunAttempt": 1,
+  "sourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+  "immutableExportCommit": "6dc14b79a364dc8679f370f17099e0636acef356",
+  "description": "Exact selected scalar/map fields from eight immutable original Windows reports plus four complete original installation reports. Test statuses/names are extracted without original details; qaPlan retains only storageRestartRequired. Original report byte sizes and SHA256 are retained, not hashes of these extracted subsets. No original evidence was edited.",
+  "games": {
+    "night-racer": {
+      "originalReports": {
+        "runtime-normal": {
+          "originalPath": "joystick-games/night-racer/docs/windows-delivery/original-evidence/runtime-normal/report.json",
+          "bytes": 2418007,
+          "sha256": "f97760468ada04d9d5bb54e42b6582bc20df3fae0d5fe4c9be34ba086694ad5d"
+        },
+        "runtime-occupied": {
+          "originalPath": "joystick-games/night-racer/docs/windows-delivery/original-evidence/runtime-occupied/report.json",
+          "bytes": 2412963,
+          "sha256": "103b1551690a4a4105bf74d280225fa7860a3b61d8fa6833ed835eea6cb9b237"
+        }
+      },
+      "originalInstallation": {
+        "originalPath": "joystick-games/night-racer/docs/windows-delivery/original-evidence/package-verification.json",
+        "bytes": 943,
+        "sha256": "1821d4935256b00b756600bdea8b38b7f3fc7d3e58f4b2c9d5161f327b4eade1"
+      },
+      "installation": {
+        "status": "passed",
+        "game": "night-racer",
+        "sourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+        "packageHashesVerified": true,
+        "zipCrcVerified": true,
+        "completeFileSetVerified": true,
+        "silentInstallerExecuted": true,
+        "uninstallPreservesUnrelatedFiles": true,
+        "uninstallRemovesOnlyPackagedFiles": true,
+        "installedBytesMatchPortable": true,
+        "peMachine": "AMD64",
+        "authenticodeSigned": false,
+        "installedApp": "D:\\a\\_temp\\install-verification\\installed",
+        "binarySha256": "96da381c57d4c12d19454260b2b5596eea22bd6ded8d57cdfc35cd3ad48fd6f8",
+        "packages": {
+          "NightRacer-0.1.0-windows-x64.zip": {
+            "bytes": 21323745,
+            "sha256": "02aa472946cc77f53ffa62efa66db7c2d78e325d8cd619dec732b690e8e3d749"
+          },
+          "NightRacer-0.1.0-windows-x64-setup.exe": {
+            "bytes": 21423109,
+            "sha256": "59e13326112f6b5e879ab95196862bec31c982eaac4b04680e3ae5dead5a81d9"
+          }
+        }
+      },
+      "reports": {
+        "runtime-normal": {
+          "game": "night-racer",
+          "status": "passed",
+          "qaSourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+          "binarySha256": "96da381c57d4c12d19454260b2b5596eea22bd6ded8d57cdfc35cd3ad48fd6f8",
+          "sourceHashes": {
+            "joystick-games/tools/windows-verify.py": "eff977f2423c02bf77e827d00694d39d299739b296c3dae1f69b773a8caece64",
+            "joystick-games/tools/macos-verify.py": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17",
+            "joystick-games/tools/qa-plan.py": "26888d21e6cb2dd4b0da8a835af79d6fa0b02506b2e7f8264607c300f3390fb3",
+            "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+            "joystick-games/night-racer/qa-plan.json": "b6acedaaa50bfaa326b1dc7296c2b08a9e975bb4b34c2c15099b9c6ce6c07abc",
+            "joystick-games/tools/windows-display.py": "3a4bca5a17fd0cf33385812678d00dfd0cdde39d59f3342d906f5fb7b7b9ced1",
+            "joystick-games/tools/windows-observation.py": "99ac7dae5eb1d37c5e8191d0a18bf00335f744e66269b340dbe94a74a6dc88a4"
+          },
+          "tests": [
+            {
+              "name": "Native DPI-scaled minimum and initial viewport",
+              "status": "passed"
+            },
+            {
+              "name": "DNS-SD resolves actual listener and TXT",
+              "status": "passed"
+            },
+            {
+              "name": "Official SDK and single controller seat",
+              "status": "passed"
+            },
+            {
+              "name": "Actual gameplay and pause model freeze",
+              "status": "passed"
+            },
+            {
+              "name": "Three minimize and restore cycles keep endpoint stable",
+              "status": "passed"
+            },
+            {
+              "name": "Disconnect and held-sync reconnect remain paused",
+              "status": "passed"
+            },
+            {
+              "name": "Normal gameplay saves reach native store",
+              "status": "passed"
+            },
+            {
+              "name": "Every SDK message receives exact sequence ACK",
+              "status": "passed"
+            },
+            {
+              "name": "Normal close releases TCP",
+              "status": "passed"
+            },
+            {
+              "name": "Real save restored with fresh browser cache",
+              "status": "passed"
+            }
+          ],
+          "storageRestart": {
+            "status": "passed",
+            "initialHydrationEqual": true,
+            "cleanBrowserCacheVerified": true,
+            "nativeSavedAfterQuit": {
+              "night-racer.v1": "{\"nr-profile\":{\"coins\":400,\"sel\":\"gt\",\"cars\":{\"gt\":{\"upg\":{\"engine\":0,\"tires\":0,\"nitro\":0},\"paint\":13111342,\"glow\":0}},\"paints\":[13111342,15263456,1447450],\"glows\":[0,5],\"streak\":{\"day\":20261119,\"n\":1},\"daily\":{\"day\":20261119,\"tasks\":[{\"id\":\"nitro\",\"prog\":0,\"claimed\":false},{\"id\":\"drift\",\"prog\":0,\"claimed\":false},{\"id\":\"branch\",\"prog\":0,\"claimed\":false}]},\"priceCuts\":{\"hyper\":true}},\"nr-uid\":\"bv03nv9wmd9rmwo1lybe\",\"nr-gfx\":\"low\",\"nr-cam\":1}"
+            }
+          },
+          "qaPlan": {
+            "storageRestartRequired": true
+          }
+        },
+        "runtime-occupied": {
+          "game": "night-racer",
+          "status": "passed",
+          "qaSourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+          "binarySha256": "96da381c57d4c12d19454260b2b5596eea22bd6ded8d57cdfc35cd3ad48fd6f8",
+          "sourceHashes": {
+            "joystick-games/tools/windows-verify.py": "eff977f2423c02bf77e827d00694d39d299739b296c3dae1f69b773a8caece64",
+            "joystick-games/tools/macos-verify.py": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17",
+            "joystick-games/tools/qa-plan.py": "26888d21e6cb2dd4b0da8a835af79d6fa0b02506b2e7f8264607c300f3390fb3",
+            "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+            "joystick-games/night-racer/qa-plan.json": "b6acedaaa50bfaa326b1dc7296c2b08a9e975bb4b34c2c15099b9c6ce6c07abc",
+            "joystick-games/tools/windows-display.py": "3a4bca5a17fd0cf33385812678d00dfd0cdde39d59f3342d906f5fb7b7b9ced1",
+            "joystick-games/tools/windows-observation.py": "99ac7dae5eb1d37c5e8191d0a18bf00335f744e66269b340dbe94a74a6dc88a4"
+          },
+          "tests": [
+            {
+              "name": "Native DPI-scaled minimum and initial viewport",
+              "status": "passed"
+            },
+            {
+              "name": "DNS-SD resolves actual listener and TXT",
+              "status": "passed"
+            },
+            {
+              "name": "Official SDK and single controller seat",
+              "status": "passed"
+            },
+            {
+              "name": "Actual gameplay and pause model freeze",
+              "status": "passed"
+            },
+            {
+              "name": "Three minimize and restore cycles keep endpoint stable",
+              "status": "passed"
+            },
+            {
+              "name": "Disconnect and held-sync reconnect remain paused",
+              "status": "passed"
+            },
+            {
+              "name": "Normal gameplay saves reach native store",
+              "status": "passed"
+            },
+            {
+              "name": "Every SDK message receives exact sequence ACK",
+              "status": "passed"
+            },
+            {
+              "name": "Normal close releases TCP",
+              "status": "passed"
+            },
+            {
+              "name": "Real save restored with fresh browser cache",
+              "status": "passed"
+            }
+          ],
+          "storageRestart": {
+            "status": "passed",
+            "initialHydrationEqual": true,
+            "cleanBrowserCacheVerified": true,
+            "nativeSavedAfterQuit": {
+              "night-racer.v1": "{\"nr-profile\":{\"coins\":400,\"sel\":\"gt\",\"cars\":{\"gt\":{\"upg\":{\"engine\":0,\"tires\":0,\"nitro\":0},\"paint\":13111342,\"glow\":0}},\"paints\":[13111342,15263456,1447450],\"glows\":[0,5],\"streak\":{\"day\":20261119,\"n\":1},\"daily\":{\"day\":20261119,\"tasks\":[{\"id\":\"nitro\",\"prog\":0,\"claimed\":false},{\"id\":\"drift\",\"prog\":0,\"claimed\":false},{\"id\":\"branch\",\"prog\":0,\"claimed\":false}]},\"priceCuts\":{\"hyper\":true}},\"nr-uid\":\"evx8d08yjkikmwo1swr8\",\"nr-gfx\":\"low\",\"nr-cam\":1}"
+            }
+          },
+          "qaPlan": {
+            "storageRestartRequired": true
+          }
+        }
+      }
+    },
+    "penguintrack": {
+      "originalReports": {
+        "runtime-normal": {
+          "originalPath": "joystick-games/penguintrack/docs/windows-delivery/original-evidence/runtime-normal/report.json",
+          "bytes": 2038827,
+          "sha256": "b62c03b7f8f7d18edfab1429fb6bbc73d69d2bad1eee489a9f39161cb19c022e"
+        },
+        "runtime-occupied": {
+          "originalPath": "joystick-games/penguintrack/docs/windows-delivery/original-evidence/runtime-occupied/report.json",
+          "bytes": 2036710,
+          "sha256": "053c4e40851f1d1c37d79f9b7fe390e4a44802d78faca44b7d8e6934ea9f2470"
+        }
+      },
+      "originalInstallation": {
+        "originalPath": "joystick-games/penguintrack/docs/windows-delivery/original-evidence/package-verification.json",
+        "bytes": 946,
+        "sha256": "09eed5e4ddd144274fa01f48435f211ba8a4a48d63a319106943bb1a8ffff220"
+      },
+      "installation": {
+        "status": "passed",
+        "game": "penguintrack",
+        "sourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+        "packageHashesVerified": true,
+        "zipCrcVerified": true,
+        "completeFileSetVerified": true,
+        "silentInstallerExecuted": true,
+        "uninstallPreservesUnrelatedFiles": true,
+        "uninstallRemovesOnlyPackagedFiles": true,
+        "installedBytesMatchPortable": true,
+        "peMachine": "AMD64",
+        "authenticodeSigned": false,
+        "installedApp": "D:\\a\\_temp\\install-verification\\installed",
+        "binarySha256": "2fb1dac76f5683c2c7cf882963d4a128f53b9f83133da4ca3562bb4d0c57185a",
+        "packages": {
+          "Penguintrack-0.1.0-windows-x64.zip": {
+            "bytes": 2360273,
+            "sha256": "ea171a21376db356ed7889796bef722ce681f7e2c3a362e9e267df3076522af2"
+          },
+          "Penguintrack-0.1.0-windows-x64-setup.exe": {
+            "bytes": 2424280,
+            "sha256": "7845a4e9a9ff7f2625f1060379af8139937e3717d9ad725ca900a9141089dc98"
+          }
+        }
+      },
+      "reports": {
+        "runtime-normal": {
+          "game": "penguintrack",
+          "status": "passed",
+          "qaSourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+          "binarySha256": "2fb1dac76f5683c2c7cf882963d4a128f53b9f83133da4ca3562bb4d0c57185a",
+          "sourceHashes": {
+            "joystick-games/tools/windows-verify.py": "eff977f2423c02bf77e827d00694d39d299739b296c3dae1f69b773a8caece64",
+            "joystick-games/tools/macos-verify.py": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17",
+            "joystick-games/tools/qa-plan.py": "26888d21e6cb2dd4b0da8a835af79d6fa0b02506b2e7f8264607c300f3390fb3",
+            "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+            "joystick-games/penguintrack/qa-plan.json": "7c33fea5c547b8bf6a9e3ad43679c2ba43ad178e3269481488d23234cad2f720",
+            "joystick-games/tools/windows-display.py": "3a4bca5a17fd0cf33385812678d00dfd0cdde39d59f3342d906f5fb7b7b9ced1",
+            "joystick-games/tools/windows-observation.py": "99ac7dae5eb1d37c5e8191d0a18bf00335f744e66269b340dbe94a74a6dc88a4"
+          },
+          "tests": [
+            {
+              "name": "Native DPI-scaled minimum and initial viewport",
+              "status": "passed"
+            },
+            {
+              "name": "DNS-SD resolves actual listener and TXT",
+              "status": "passed"
+            },
+            {
+              "name": "Official SDK and single controller seat",
+              "status": "passed"
+            },
+            {
+              "name": "Actual gameplay and pause model freeze",
+              "status": "passed"
+            },
+            {
+              "name": "Three minimize and restore cycles keep endpoint stable",
+              "status": "passed"
+            },
+            {
+              "name": "Disconnect and held-sync reconnect remain paused",
+              "status": "passed"
+            },
+            {
+              "name": "Normal gameplay saves reach native store",
+              "status": "passed"
+            },
+            {
+              "name": "Every SDK message receives exact sequence ACK",
+              "status": "passed"
+            },
+            {
+              "name": "Normal close releases TCP",
+              "status": "passed"
+            },
+            {
+              "name": "Real save restored with fresh browser cache",
+              "status": "passed"
+            }
+          ],
+          "storageRestart": {
+            "status": "passed",
+            "initialHydrationEqual": true,
+            "cleanBrowserCacheVerified": true,
+            "nativeSavedAfterQuit": {
+              "penguintrack:settings": "{\"volume\":{\"master\":0.8,\"sfx\":0.9,\"music\":0.5},\"quality\":\"medium\",\"reducedMotion\":true,\"camera\":\"chase\",\"showGhost\":false,\"showTasGhost\":false,\"showAiGhost\":false,\"showEmperorGhost\":false,\"showSplits\":true,\"showMinimap\":true,\"units\":\"kmh\",\"touchControls\":\"auto\",\"padSensitivity\":1,\"padDeadzone\":0.12,\"bindings\":{\"gas\":[\"ArrowUp\",\"KeyW\"],\"brake\":[\"ArrowDown\",\"KeyS\"],\"left\":[\"ArrowLeft\",\"KeyA\"],\"right\":[\"ArrowRight\",\"KeyD\"],\"respawn\":[\"Enter\",\"NumpadEnter\"],\"restart\":[\"Backspace\",\"Delete\"],\"camera1\":[\"Digit1\",\"Numpad1\"],\"camera2\":[\"Digit2\",\"Numpad2\"],\"camera3\":[\"Digit3\",\"Numpad3\"],\"cameraCycle\":[\"KeyC\"],\"ghost\":[\"KeyG\"],\"pause\":[\"Escape\",\"KeyP\"],\"tasMark\":[\"KeyC\"],\"tasRewind\":[\"KeyR\",\"Backspace\"],\"tasPrev\":[\"BracketLeft\"],\"tasNext\":[\"BracketRight\"]}}"
+            }
+          },
+          "qaPlan": {
+            "storageRestartRequired": true
+          }
+        },
+        "runtime-occupied": {
+          "game": "penguintrack",
+          "status": "passed",
+          "qaSourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+          "binarySha256": "2fb1dac76f5683c2c7cf882963d4a128f53b9f83133da4ca3562bb4d0c57185a",
+          "sourceHashes": {
+            "joystick-games/tools/windows-verify.py": "eff977f2423c02bf77e827d00694d39d299739b296c3dae1f69b773a8caece64",
+            "joystick-games/tools/macos-verify.py": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17",
+            "joystick-games/tools/qa-plan.py": "26888d21e6cb2dd4b0da8a835af79d6fa0b02506b2e7f8264607c300f3390fb3",
+            "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+            "joystick-games/penguintrack/qa-plan.json": "7c33fea5c547b8bf6a9e3ad43679c2ba43ad178e3269481488d23234cad2f720",
+            "joystick-games/tools/windows-display.py": "3a4bca5a17fd0cf33385812678d00dfd0cdde39d59f3342d906f5fb7b7b9ced1",
+            "joystick-games/tools/windows-observation.py": "99ac7dae5eb1d37c5e8191d0a18bf00335f744e66269b340dbe94a74a6dc88a4"
+          },
+          "tests": [
+            {
+              "name": "Native DPI-scaled minimum and initial viewport",
+              "status": "passed"
+            },
+            {
+              "name": "DNS-SD resolves actual listener and TXT",
+              "status": "passed"
+            },
+            {
+              "name": "Official SDK and single controller seat",
+              "status": "passed"
+            },
+            {
+              "name": "Actual gameplay and pause model freeze",
+              "status": "passed"
+            },
+            {
+              "name": "Three minimize and restore cycles keep endpoint stable",
+              "status": "passed"
+            },
+            {
+              "name": "Disconnect and held-sync reconnect remain paused",
+              "status": "passed"
+            },
+            {
+              "name": "Normal gameplay saves reach native store",
+              "status": "passed"
+            },
+            {
+              "name": "Every SDK message receives exact sequence ACK",
+              "status": "passed"
+            },
+            {
+              "name": "Normal close releases TCP",
+              "status": "passed"
+            },
+            {
+              "name": "Real save restored with fresh browser cache",
+              "status": "passed"
+            }
+          ],
+          "storageRestart": {
+            "status": "passed",
+            "initialHydrationEqual": true,
+            "cleanBrowserCacheVerified": true,
+            "nativeSavedAfterQuit": {
+              "penguintrack:settings": "{\"volume\":{\"master\":0.8,\"sfx\":0.9,\"music\":0.5},\"quality\":\"medium\",\"reducedMotion\":true,\"camera\":\"chase\",\"showGhost\":false,\"showTasGhost\":false,\"showAiGhost\":false,\"showEmperorGhost\":false,\"showSplits\":true,\"showMinimap\":true,\"units\":\"kmh\",\"touchControls\":\"auto\",\"padSensitivity\":1,\"padDeadzone\":0.12,\"bindings\":{\"gas\":[\"ArrowUp\",\"KeyW\"],\"brake\":[\"ArrowDown\",\"KeyS\"],\"left\":[\"ArrowLeft\",\"KeyA\"],\"right\":[\"ArrowRight\",\"KeyD\"],\"respawn\":[\"Enter\",\"NumpadEnter\"],\"restart\":[\"Backspace\",\"Delete\"],\"camera1\":[\"Digit1\",\"Numpad1\"],\"camera2\":[\"Digit2\",\"Numpad2\"],\"camera3\":[\"Digit3\",\"Numpad3\"],\"cameraCycle\":[\"KeyC\"],\"ghost\":[\"KeyG\"],\"pause\":[\"Escape\",\"KeyP\"],\"tasMark\":[\"KeyC\"],\"tasRewind\":[\"KeyR\",\"Backspace\"],\"tasPrev\":[\"BracketLeft\"],\"tasNext\":[\"BracketRight\"]}}"
+            }
+          },
+          "qaPlan": {
+            "storageRestartRequired": true
+          }
+        }
+      }
+    },
+    "last-track": {
+      "originalReports": {
+        "runtime-normal": {
+          "originalPath": "joystick-games/last-track/docs/windows-delivery/original-evidence/runtime-normal/report.json",
+          "bytes": 2550980,
+          "sha256": "0a8c73178e3adc1381c24d204a350e3bf4bc9085fe39fdaabfba0fbf2a92fe05"
+        },
+        "runtime-occupied": {
+          "originalPath": "joystick-games/last-track/docs/windows-delivery/original-evidence/runtime-occupied/report.json",
+          "bytes": 2571999,
+          "sha256": "87c2a36dccbca86062d7a1502070e75889e4043d4637e0ce3f72729a25a440a9"
+        }
+      },
+      "originalInstallation": {
+        "originalPath": "joystick-games/last-track/docs/windows-delivery/original-evidence/package-verification.json",
+        "bytes": 938,
+        "sha256": "f4e035e11aa6bb1afe11b4183ebc71adec1204a78d5bb5cfcb78b7b139fd2d46"
+      },
+      "installation": {
+        "status": "passed",
+        "game": "last-track",
+        "sourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+        "packageHashesVerified": true,
+        "zipCrcVerified": true,
+        "completeFileSetVerified": true,
+        "silentInstallerExecuted": true,
+        "uninstallPreservesUnrelatedFiles": true,
+        "uninstallRemovesOnlyPackagedFiles": true,
+        "installedBytesMatchPortable": true,
+        "peMachine": "AMD64",
+        "authenticodeSigned": false,
+        "installedApp": "D:\\a\\_temp\\install-verification\\installed",
+        "binarySha256": "2bb181132ac398c9220be82d21d667eed6d52a4b3706d83789dc31f29c563b22",
+        "packages": {
+          "LastTrack-0.1.0-windows-x64.zip": {
+            "bytes": 8881237,
+            "sha256": "751c405c0bf8d72f48da2ab5ca834cd111c28c859c2932c8b307e8c79bcb5cc1"
+          },
+          "LastTrack-0.1.0-windows-x64-setup.exe": {
+            "bytes": 8934793,
+            "sha256": "21bad2362387619c0777ab7428c31a064dc742dacbe1bdae6a65f88990c6b50c"
+          }
+        }
+      },
+      "reports": {
+        "runtime-normal": {
+          "game": "last-track",
+          "status": "passed",
+          "qaSourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+          "binarySha256": "2bb181132ac398c9220be82d21d667eed6d52a4b3706d83789dc31f29c563b22",
+          "sourceHashes": {
+            "joystick-games/tools/windows-verify.py": "eff977f2423c02bf77e827d00694d39d299739b296c3dae1f69b773a8caece64",
+            "joystick-games/tools/macos-verify.py": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17",
+            "joystick-games/tools/qa-plan.py": "26888d21e6cb2dd4b0da8a835af79d6fa0b02506b2e7f8264607c300f3390fb3",
+            "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+            "joystick-games/last-track/qa-plan.json": "2dda477fb4acaaa0773a3c8682d57ff7973a37beca167ae8cf142b19414ad10e",
+            "joystick-games/tools/windows-display.py": "3a4bca5a17fd0cf33385812678d00dfd0cdde39d59f3342d906f5fb7b7b9ced1",
+            "joystick-games/tools/windows-observation.py": "99ac7dae5eb1d37c5e8191d0a18bf00335f744e66269b340dbe94a74a6dc88a4"
+          },
+          "tests": [
+            {
+              "name": "Native DPI-scaled minimum and initial viewport",
+              "status": "passed"
+            },
+            {
+              "name": "DNS-SD resolves actual listener and TXT",
+              "status": "passed"
+            },
+            {
+              "name": "Official SDK and single controller seat",
+              "status": "passed"
+            },
+            {
+              "name": "Actual gameplay and pause model freeze",
+              "status": "passed"
+            },
+            {
+              "name": "Three minimize and restore cycles keep endpoint stable",
+              "status": "passed"
+            },
+            {
+              "name": "Disconnect and held-sync reconnect remain paused",
+              "status": "passed"
+            },
+            {
+              "name": "Normal gameplay saves reach native store",
+              "status": "passed"
+            },
+            {
+              "name": "Every SDK message receives exact sequence ACK",
+              "status": "passed"
+            },
+            {
+              "name": "Normal close releases TCP",
+              "status": "passed"
+            },
+            {
+              "name": "Real save restored with fresh browser cache",
+              "status": "passed"
+            }
+          ],
+          "storageRestart": {
+            "status": "passed",
+            "initialHydrationEqual": true,
+            "cleanBrowserCacheVerified": true,
+            "nativeSavedAfterQuit": {
+              "lasttrack.quality": "low",
+              "lasttrack.save.v1": "{\"version\":1,\"cash\":5000,\"carId\":\"wasp\",\"upgrades\":{\"armor\":0,\"engine\":0,\"tyres\":0},\"damage\":0,\"weapons\":[{\"id\":\"machinegun\",\"ammo\":200}],\"wins\":0,\"races\":0,\"kills\":0,\"bestTimes\":{},\"passedTracks\":[],\"earned\":{\"prize\":0,\"killBonus\":0,\"contractNet\":0},\"winShown\":false,\"paint\":null,\"accent\":null,\"number\":\"\",\"decalsOwned\":[],\"decals\":[],\"spikes\":{\"front\":0,\"rear\":0,\"wheels\":0},\"contract\":null}",
+              "lasttrack.settings": "{\"quality\":\"low\",\"master\":0.7,\"music\":0.8,\"sfx\":0.9,\"muted\":false,\"hints\":true,\"nameplates\":true,\"analytics\":true,\"camera\":\"chase\"}",
+              "lasttrack.started": "1"
+            }
+          },
+          "qaPlan": {
+            "storageRestartRequired": true
+          }
+        },
+        "runtime-occupied": {
+          "game": "last-track",
+          "status": "passed",
+          "qaSourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+          "binarySha256": "2bb181132ac398c9220be82d21d667eed6d52a4b3706d83789dc31f29c563b22",
+          "sourceHashes": {
+            "joystick-games/tools/windows-verify.py": "eff977f2423c02bf77e827d00694d39d299739b296c3dae1f69b773a8caece64",
+            "joystick-games/tools/macos-verify.py": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17",
+            "joystick-games/tools/qa-plan.py": "26888d21e6cb2dd4b0da8a835af79d6fa0b02506b2e7f8264607c300f3390fb3",
+            "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+            "joystick-games/last-track/qa-plan.json": "2dda477fb4acaaa0773a3c8682d57ff7973a37beca167ae8cf142b19414ad10e",
+            "joystick-games/tools/windows-display.py": "3a4bca5a17fd0cf33385812678d00dfd0cdde39d59f3342d906f5fb7b7b9ced1",
+            "joystick-games/tools/windows-observation.py": "99ac7dae5eb1d37c5e8191d0a18bf00335f744e66269b340dbe94a74a6dc88a4"
+          },
+          "tests": [
+            {
+              "name": "Native DPI-scaled minimum and initial viewport",
+              "status": "passed"
+            },
+            {
+              "name": "DNS-SD resolves actual listener and TXT",
+              "status": "passed"
+            },
+            {
+              "name": "Official SDK and single controller seat",
+              "status": "passed"
+            },
+            {
+              "name": "Actual gameplay and pause model freeze",
+              "status": "passed"
+            },
+            {
+              "name": "Three minimize and restore cycles keep endpoint stable",
+              "status": "passed"
+            },
+            {
+              "name": "Disconnect and held-sync reconnect remain paused",
+              "status": "passed"
+            },
+            {
+              "name": "Normal gameplay saves reach native store",
+              "status": "passed"
+            },
+            {
+              "name": "Every SDK message receives exact sequence ACK",
+              "status": "passed"
+            },
+            {
+              "name": "Normal close releases TCP",
+              "status": "passed"
+            },
+            {
+              "name": "Real save restored with fresh browser cache",
+              "status": "passed"
+            }
+          ],
+          "storageRestart": {
+            "status": "passed",
+            "initialHydrationEqual": true,
+            "cleanBrowserCacheVerified": true,
+            "nativeSavedAfterQuit": {
+              "lasttrack.quality": "low",
+              "lasttrack.save.v1": "{\"version\":1,\"cash\":5000,\"carId\":\"wasp\",\"upgrades\":{\"armor\":0,\"engine\":0,\"tyres\":0},\"damage\":0,\"weapons\":[{\"id\":\"machinegun\",\"ammo\":200}],\"wins\":0,\"races\":0,\"kills\":0,\"bestTimes\":{},\"passedTracks\":[],\"earned\":{\"prize\":0,\"killBonus\":0,\"contractNet\":0},\"winShown\":false,\"paint\":null,\"accent\":null,\"number\":\"\",\"decalsOwned\":[],\"decals\":[],\"spikes\":{\"front\":0,\"rear\":0,\"wheels\":0},\"contract\":null}",
+              "lasttrack.settings": "{\"quality\":\"low\",\"master\":0.7,\"music\":0.8,\"sfx\":0.9,\"muted\":false,\"hints\":true,\"nameplates\":true,\"analytics\":true,\"camera\":\"chase\"}",
+              "lasttrack.started": "1"
+            }
+          },
+          "qaPlan": {
+            "storageRestartRequired": true
+          }
+        }
+      }
+    },
+    "dirt-crown": {
+      "originalReports": {
+        "runtime-normal": {
+          "originalPath": "joystick-games/dirt-crown/docs/windows-delivery/original-evidence/runtime-normal/report.json",
+          "bytes": 2215202,
+          "sha256": "535af596fd82fbc15d56d75b23ee5df9e42810884c7a6ee54955cf97ece57b24"
+        },
+        "runtime-occupied": {
+          "originalPath": "joystick-games/dirt-crown/docs/windows-delivery/original-evidence/runtime-occupied/report.json",
+          "bytes": 2209766,
+          "sha256": "8b0df48cc820dd7af8d386013758c23f3578b9c3b6e1529e2702befb2c82099e"
+        }
+      },
+      "originalInstallation": {
+        "originalPath": "joystick-games/dirt-crown/docs/windows-delivery/original-evidence/package-verification.json",
+        "bytes": 938,
+        "sha256": "82a1a2a810e60df06aaf4adc5cf653adb0237faae633aa3064ab9e3bf93b9003"
+      },
+      "installation": {
+        "status": "passed",
+        "game": "dirt-crown",
+        "sourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+        "packageHashesVerified": true,
+        "zipCrcVerified": true,
+        "completeFileSetVerified": true,
+        "silentInstallerExecuted": true,
+        "uninstallPreservesUnrelatedFiles": true,
+        "uninstallRemovesOnlyPackagedFiles": true,
+        "installedBytesMatchPortable": true,
+        "peMachine": "AMD64",
+        "authenticodeSigned": false,
+        "installedApp": "D:\\a\\_temp\\install-verification\\installed",
+        "binarySha256": "fb0bbc323ed89e9093e9fb056dbd9f1f38ae034de5fafb868be0773577041862",
+        "packages": {
+          "DirtCrown-0.1.0-windows-x64.zip": {
+            "bytes": 1138201,
+            "sha256": "78d6b6f9be96d3a08b2de498f2dac71b880ea78a9d95ff8e971ee83bbcdf79b3"
+          },
+          "DirtCrown-0.1.0-windows-x64-setup.exe": {
+            "bytes": 1212925,
+            "sha256": "07e5cace547fc2e54b962c3bb25aa03d0abf9489229aaa9f6fa46eb6b58c132a"
+          }
+        }
+      },
+      "reports": {
+        "runtime-normal": {
+          "game": "dirt-crown",
+          "status": "passed",
+          "qaSourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+          "binarySha256": "fb0bbc323ed89e9093e9fb056dbd9f1f38ae034de5fafb868be0773577041862",
+          "sourceHashes": {
+            "joystick-games/tools/windows-verify.py": "eff977f2423c02bf77e827d00694d39d299739b296c3dae1f69b773a8caece64",
+            "joystick-games/tools/macos-verify.py": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17",
+            "joystick-games/tools/qa-plan.py": "26888d21e6cb2dd4b0da8a835af79d6fa0b02506b2e7f8264607c300f3390fb3",
+            "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+            "joystick-games/dirt-crown/qa-plan.json": "49069feb54e577dbedddcba74586d804e77d52a8631e908a447f3c2f8216c6d2",
+            "joystick-games/tools/windows-display.py": "3a4bca5a17fd0cf33385812678d00dfd0cdde39d59f3342d906f5fb7b7b9ced1",
+            "joystick-games/tools/windows-observation.py": "99ac7dae5eb1d37c5e8191d0a18bf00335f744e66269b340dbe94a74a6dc88a4"
+          },
+          "tests": [
+            {
+              "name": "Native DPI-scaled minimum and initial viewport",
+              "status": "passed"
+            },
+            {
+              "name": "DNS-SD resolves actual listener and TXT",
+              "status": "passed"
+            },
+            {
+              "name": "Official SDK and single controller seat",
+              "status": "passed"
+            },
+            {
+              "name": "Actual gameplay and pause model freeze",
+              "status": "passed"
+            },
+            {
+              "name": "Three minimize and restore cycles keep endpoint stable",
+              "status": "passed"
+            },
+            {
+              "name": "Disconnect and held-sync reconnect remain paused",
+              "status": "passed"
+            },
+            {
+              "name": "Normal gameplay saves reach native store",
+              "status": "passed"
+            },
+            {
+              "name": "Every SDK message receives exact sequence ACK",
+              "status": "passed"
+            },
+            {
+              "name": "Normal close releases TCP",
+              "status": "passed"
+            },
+            {
+              "name": "Real save restored with fresh browser cache",
+              "status": "passed"
+            }
+          ],
+          "storageRestart": {
+            "status": "passed",
+            "initialHydrationEqual": true,
+            "cleanBrowserCacheVerified": true,
+            "nativeSavedAfterQuit": {
+              "dirt-crown.v1.profile": "{\"name\":\"Kit\",\"coins\":150,\"levels\":{\"engine\":0,\"drive\":0,\"tires\":0,\"susp\":0,\"body\":0,\"nitro\":0},\"paint\":\"primer\",\"livery\":\"none\",\"trim\":\"white\",\"num\":27,\"owned\":{\"paint\":[\"primer\"],\"livery\":[\"none\"]},\"results\":{},\"seen\":{\"prologue\":true},\"stats\":{\"races\":0,\"wins\":0,\"coins\":0,\"jumps\":0,\"airtime\":0,\"drift\":0},\"done\":false,\"created\":1795122601284}",
+              "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":1,\"autoGas\":false,\"shake\":true}"
+            }
+          },
+          "qaPlan": {
+            "storageRestartRequired": true
+          }
+        },
+        "runtime-occupied": {
+          "game": "dirt-crown",
+          "status": "passed",
+          "qaSourceCommit": "6c7cb4fdb99dce236b634c842326bae6aed5f232",
+          "binarySha256": "fb0bbc323ed89e9093e9fb056dbd9f1f38ae034de5fafb868be0773577041862",
+          "sourceHashes": {
+            "joystick-games/tools/windows-verify.py": "eff977f2423c02bf77e827d00694d39d299739b296c3dae1f69b773a8caece64",
+            "joystick-games/tools/macos-verify.py": "296abbfb2874658db0826c0797964f6ecc8602a7082af6cc2ee80418e0aaab17",
+            "joystick-games/tools/qa-plan.py": "26888d21e6cb2dd4b0da8a835af79d6fa0b02506b2e7f8264607c300f3390fb3",
+            "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+            "joystick-games/dirt-crown/qa-plan.json": "49069feb54e577dbedddcba74586d804e77d52a8631e908a447f3c2f8216c6d2",
+            "joystick-games/tools/windows-display.py": "3a4bca5a17fd0cf33385812678d00dfd0cdde39d59f3342d906f5fb7b7b9ced1",
+            "joystick-games/tools/windows-observation.py": "99ac7dae5eb1d37c5e8191d0a18bf00335f744e66269b340dbe94a74a6dc88a4"
+          },
+          "tests": [
+            {
+              "name": "Native DPI-scaled minimum and initial viewport",
+              "status": "passed"
+            },
+            {
+              "name": "DNS-SD resolves actual listener and TXT",
+              "status": "passed"
+            },
+            {
+              "name": "Official SDK and single controller seat",
+              "status": "passed"
+            },
+            {
+              "name": "Actual gameplay and pause model freeze",
+              "status": "passed"
+            },
+            {
+              "name": "Three minimize and restore cycles keep endpoint stable",
+              "status": "passed"
+            },
+            {
+              "name": "Disconnect and held-sync reconnect remain paused",
+              "status": "passed"
+            },
+            {
+              "name": "Normal gameplay saves reach native store",
+              "status": "passed"
+            },
+            {
+              "name": "Every SDK message receives exact sequence ACK",
+              "status": "passed"
+            },
+            {
+              "name": "Normal close releases TCP",
+              "status": "passed"
+            },
+            {
+              "name": "Real save restored with fresh browser cache",
+              "status": "passed"
+            }
+          ],
+          "storageRestart": {
+            "status": "passed",
+            "initialHydrationEqual": true,
+            "cleanBrowserCacheVerified": true,
+            "nativeSavedAfterQuit": {
+              "dirt-crown.v1.profile": "{\"name\":\"Kit\",\"coins\":150,\"levels\":{\"engine\":0,\"drive\":0,\"tires\":0,\"susp\":0,\"body\":0,\"nitro\":0},\"paint\":\"primer\",\"livery\":\"none\",\"trim\":\"white\",\"num\":27,\"owned\":{\"paint\":[\"primer\"],\"livery\":[\"none\"]},\"results\":{},\"seen\":{\"prologue\":true},\"stats\":{\"races\":0,\"wins\":0,\"coins\":0,\"jumps\":0,\"airtime\":0,\"drift\":0},\"done\":false,\"created\":1795122938948}",
+              "dirt-crown.v1.settings": "{\"master\":0.8,\"music\":0.55,\"sfx\":0.8,\"muted\":false,\"quality\":\"auto\",\"camera\":1,\"autoGas\":false,\"shake\":true}"
+            }
+          },
+          "qaPlan": {
+            "storageRestartRequired": true
+          }
+        }
+      }
+    }
+  }
+}
