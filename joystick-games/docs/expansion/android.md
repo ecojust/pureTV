@@ -6,9 +6,24 @@
 
 | 游戏 | 模拟器 | 计划内的游戏操作 | 双端口作业 |
 | --- | --- | --- | --- |
-| Kart Royale | Android TV 14 | 菜单、选车、起步、加速与漂移 | [运行中](https://github.com/ecojust/pureTV/actions/runs/44822909081/job/136588624821) |
-| Turbo Kart Rally | Android TV 14 | 选手、竞速、转向、漂移与暂停 | [运行中](https://github.com/ecojust/pureTV/actions/runs/44824074057/job/136594484311) |
-| Clawd Pop | Android TV 14 | 进入实验室、移动与射击 | [运行中](https://github.com/ecojust/pureTV/actions/runs/44824074057/job/136594484431) |
+| Kart Royale | Android TV 14 | 菜单、选车、起步、加速与漂移 | [双端口通过](https://github.com/ecojust/pureTV/actions/runs/44822909081/job/136588624821) |
+| Turbo Kart Rally | Android TV 14 | 选手、竞速、转向、漂移与暂停 | [双端口通过](https://github.com/ecojust/pureTV/actions/runs/44824074057/job/136594484311) |
+| Clawd Pop | Android TV 14 | 进入实验室、移动与射击 | [默认端口通过，备用端口达到时限](https://github.com/ecojust/pureTV/actions/runs/44824074057/job/136594484431) |
 | 光刃魔塔 | Android TV 16 | 探索、怪物手册与暂停 | [双端口通过](https://github.com/ecojust/pureTV/actions/runs/44824074057/job/136594484392) |
 | Operation Ironhold | Android TV 16 | 前进、转向、开火与换枪 | [双端口通过](https://github.com/ecojust/pureTV/actions/runs/44824074057/job/136594484439) |
-| Lumenrift | Android TV 16 | 进入战役、建墙与召唤第一波 | [运行中](https://github.com/ecojust/pureTV/actions/runs/44824074057/job/136594484333) |
+| Lumenrift | Android TV 16 | 进入战役、建墙与召唤第一波 | [双端口通过](https://github.com/ecojust/pureTV/actions/runs/44824074057/job/136594484333) |
+
+## 原始记录
+
+下列报告记录安装包哈希、实际服务端口、逐项结果和操作录像。
+
+| 游戏 | 默认端口 | 备用端口 |
+| --- | --- | --- |
+| Kart Royale | [58 项通过](https://raw.githubusercontent.com/ecojust/pureTV/90004c8eb694d054a974fac783609759fe4ae6d6/evidence/joystick-android-runtime-kart-royale/kart-royale-normal/report.json) | [58 项通过](https://raw.githubusercontent.com/ecojust/pureTV/90004c8eb694d054a974fac783609759fe4ae6d6/evidence/joystick-android-runtime-kart-royale/kart-royale-occupied/report.json) |
+| Turbo Kart Rally | [46 项通过](https://raw.githubusercontent.com/ecojust/pureTV/3b0d818857cd897b9d4a1a4db02aa5998921a050/reports/joystick-android-report-runtime-turbo-kart-rally/turbo-kart-rally-normal/report.json) | [46 项通过](https://raw.githubusercontent.com/ecojust/pureTV/3b0d818857cd897b9d4a1a4db02aa5998921a050/reports/joystick-android-report-runtime-turbo-kart-rally/turbo-kart-rally-occupied/report.json) |
+| Clawd Pop 3D | [41 项通过](https://raw.githubusercontent.com/ecojust/pureTV/3b0d818857cd897b9d4a1a4db02aa5998921a050/reports/joystick-android-report-runtime-clawd-pop/clawd-pop-normal/report.json) | [通过 35 项后中断](https://raw.githubusercontent.com/ecojust/pureTV/3b0d818857cd897b9d4a1a4db02aa5998921a050/reports/joystick-android-report-runtime-clawd-pop/clawd-pop-occupied/report.json) |
+| Saber Magic Tower | [44 项通过](https://raw.githubusercontent.com/ecojust/pureTV/3b0d818857cd897b9d4a1a4db02aa5998921a050/reports/joystick-android-report-runtime-saber-magic-tower/saber-magic-tower-normal/report.json) | [44 项通过](https://raw.githubusercontent.com/ecojust/pureTV/3b0d818857cd897b9d4a1a4db02aa5998921a050/reports/joystick-android-report-runtime-saber-magic-tower/saber-magic-tower-occupied/report.json) |
+| Operation Ironhold | [43 项通过](https://raw.githubusercontent.com/ecojust/pureTV/3b0d818857cd897b9d4a1a4db02aa5998921a050/reports/joystick-android-report-runtime-operation-ironhold/operation-ironhold-normal/report.json) | [43 项通过](https://raw.githubusercontent.com/ecojust/pureTV/3b0d818857cd897b9d4a1a4db02aa5998921a050/reports/joystick-android-report-runtime-operation-ironhold/operation-ironhold-occupied/report.json) |
+| Lumenrift | [43 项通过](https://raw.githubusercontent.com/ecojust/pureTV/3b0d818857cd897b9d4a1a4db02aa5998921a050/reports/joystick-android-report-runtime-lumenrift/lumenrift-normal/report.json) | [43 项通过](https://raw.githubusercontent.com/ecojust/pureTV/3b0d818857cd897b9d4a1a4db02aa5998921a050/reports/joystick-android-report-runtime-lumenrift/lumenrift-occupied/report.json) |
+
+Clawd Pop 在两个端口都进入实验室，完成移动与开火。备用端口第 35 项完成后，作业达到 40 分钟上限，后续退出、断开和重连等检查尚未完成。原始报告保留了截止时的快照。
