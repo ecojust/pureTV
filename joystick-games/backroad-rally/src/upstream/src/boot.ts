@@ -31,7 +31,14 @@ export async function createRenderer(params: URLSearchParams, trackTimestamp: bo
   const context = forceWebGL
     ? canvas.getContext('webgl2', { powerPreference: 'high-performance', antialias: true, alpha: true, depth: true, stencil: false }) ?? undefined
     : undefined;
-  const renderer = new THREE.WebGPURenderer({ canvas, context, antialias: true, forceWebGL, powerPreference: 'high-performance', trackTimestamp });
+  // WebGL2 alone does not guarantee an RGBA16F framebuffer. Three's scene pass
+  // and even its direct tone-mapping pass otherwise allocate half-float buffers.
+  const halfFloatOutput = !context || context.getExtension('EXT_color_buffer_float')
+    || context.getExtension('EXT_color_buffer_half_float');
+  const renderer = new THREE.WebGPURenderer({
+    canvas, context, antialias: true, forceWebGL, powerPreference: 'high-performance', trackTimestamp,
+    outputBufferType: halfFloatOutput ? THREE.HalfFloatType : THREE.UnsignedByteType,
+  });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.setSize(innerWidth, innerHeight);
   renderer.shadowMap.enabled = true;
