@@ -5,13 +5,21 @@
 Android TV 0.1.1 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/kart-royale-0.1.1.apk)。Windows x64 0.1.0 另有[测试安装程序](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/KartRoyale-0.1.0-windows-x64-setup.exe)和[便携 ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/KartRoyale-0.1.0-windows-x64.zip)。原生手柄验收进展见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
 
 
+## Windows 下载
+
+Windows x64 0.1.1 支持 Windows 10 1903 或更新版本，需要 Microsoft Edge WebView2 Runtime 和 WebGL 2。可运行安装程序，也可将便携版完整解压后运行 `PureTVGame.exe`。该版本未做 Authenticode 签名。
+
+[下载 EXE 安装程序](windows/KartRoyale-0.1.1-windows-x64-setup.exe) · [下载 ZIP 便携版](windows/KartRoyale-0.1.1-windows-x64.zip) · [SHA-256 校验](SHA256SUMS.txt)
+
+默认 TCP 63485 和端口占用回退两种模式各通过 10 项原生检查，覆盖手柄连接、选车、驾驶、暂停、断线重连和控制设置保存。安装与卸载已在 Windows x64 验证。显示比例覆盖 96 DPI，实体手柄与完整比赛未实测。[原生运行核验](docs/windows-delivery/verification.json) · [实机截图](docs/windows-delivery/visual-review.md) · [Windows 构建记录](https://github.com/ecojust/pureTV/actions/runs/44680258590)
+
 ## macOS 下载
 
 0.1.0 Universal：[DMG](macos/KartRoyale-0.1.0-macos-universal.dmg)（2,046,696 字节）· [ZIP](macos/KartRoyale-0.1.0-macos-universal.zip)（1,540,639 字节）· [SHA256 校验](SHA256SUMS.txt)。DMG 内应用可拖入 Applications；ZIP 解压后提供相同应用。需要 **macOS 11 或更新版本及 WebGL 2**，包包含 arm64 / x86_64，采用 ad-hoc 签名，未经过 Apple 公证。
 
 Apple Silicon 原生、默认端口占用回退及 Rosetta 三种模式各通过 9 项原 SDK 和实际游戏检查。**Intel Mac 图形运行仍未验证**；Intel 原失败和初始化分类结果保留，独立探针的 context-loss 不能证明游戏失败原因。原控制设置 `kr.controls.v1` 已完成真实保存、退出和换本地地址重启恢复验证。 未做实体手柄或完整通关测试。
 
-原三种模式的菜单、手柄 ID、比赛 HUD 和四个暂停按钮清楚可见；Rosetta 的赛中原图有近处赛道墙遮挡部分车身，属于原镜头中的场景遮挡。 本次 Mac 原截图为 1024×642／1024×645，浏览器的 960×540／1280×720 布局检查是另一组证据。详情见 [Mac 交付核验](docs/macos-delivery/) 与 [逐张目视记录](docs/macos-ci-44615880581-visual-review.json)。安装文件沿用源码 `6c7cb4fdb99dce236b634c842326bae6aed5f232`、原流程 [44615880581](https://github.com/ecojust/pureTV/actions/runs/44615880581) 的原始字节，未重新打包；Android、Windows 仍待各自验收。
+原三种模式的菜单、手柄 ID、比赛 HUD 和四个暂停按钮清楚可见；Rosetta 的赛中原图有近处赛道墙遮挡部分车身，属于原镜头中的场景遮挡。 本次 Mac 原截图为 1024×642／1024×645，浏览器的 960×540／1280×720 布局检查是另一组证据。详情见 [Mac 交付核验](docs/macos-delivery/) 与 [逐张目视记录](docs/macos-ci-44615880581-visual-review.json)。安装文件沿用源码 `6c7cb4fdb99dce236b634c842326bae6aed5f232`、原流程 [44615880581](https://github.com/ecojust/pureTV/actions/runs/44615880581) 的原始字节。
 
 | 按键 | 比赛 | 菜单 |
 | --- | --- | --- |
@@ -42,4 +50,4 @@ python3 -m http.server 8080 --directory dist
 
 需要 WebGL2 和现代 WebView。手柄版 0.1.1 在识别到 SwiftShader、llvmpipe 或 Microsoft Basic Render Driver 等软件渲染器时默认使用游戏自带的低画质。硬件 GPU 继续按设备选档，显式 `?quality=` 设置优先。0.1.2 的软件低画质直接绘制当前镜头内的原场景，按需编译着色器与上传几何数据，启动与图形上下文恢复均使用此路径。上方 0.1.0 Mac 下载沿用原默认设置。
 
-已提供上方 macOS 原包和限定验证范围；Android、Windows 仍待各自验收，实体电视尚未测试。原 SDK TCP、各平台原生与浏览器模拟桥接结果分别保存。
+上方提供 Windows 和 macOS 安装包。Android 仍在验证，实体电视尚未测试。原 SDK TCP、各平台原生与浏览器模拟桥接结果分别保存。
