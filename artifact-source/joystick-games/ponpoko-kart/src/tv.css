@@ -1,0 +1,20 @@
+html, body { margin: 0; height: 100%; overflow: hidden; background: #15120f; }
+#app { position: fixed; inset: 0; }
+#app canvas { display: block; }
+#puretv-controller-panel { top: auto !important; bottom: 12px; right: 12px; max-height: calc(100vh - 24px); }
+#puretv-controller-panel:not([data-playing=true]) { background: rgba(37, 25, 21, .95); border-color: #b68b4f; }
+#puretv-controller-panel .ptv-client-card { background: rgba(37, 25, 21, .95); border-color: #b68b4f; }
+#puretv-controller-panel .ptv-client-icon { color: #f4d179; }
+#puretv-controller-panel[data-playing=true] { top: 28% !important; bottom: auto; left: 12px; right: auto !important; max-height: 45vh; }
+#puretv-controller-panel[data-playing=true] .ptv-client-card { background: rgba(37, 25, 21, .95); border-color: #b68b4f; }
+#puretv-controller-panel:is([data-screen=chars],[data-screen=course],[data-screen=results]) { top: 8px !important; bottom: auto; left: 50%; right: auto !important; transform: translateX(-50%); max-height: 26vh; }
+#puretv-controller-panel:is([data-screen=chars],[data-screen=course],[data-screen=results]) .ptv-host-title,
+#puretv-controller-panel:is([data-screen=chars],[data-screen=course],[data-screen=results]) .tv-control-help,
+#puretv-controller-panel:is([data-screen=chars],[data-screen=course],[data-screen=results])[data-connected=true] .ptv-host-info { display: none; }
+.tv-control-help { margin-top: 8px; padding-top: 7px; border-top: 1px solid #a67d4c66; font: 12px/1.65 system-ui,sans-serif; color: #fff4d9; }
+.tv-control-help strong, .tv-control-help span { display: block; margin-bottom: 4px; }
+#puretv-controller-panel[data-playing=true] .tv-control-help { display: none; }
+#puretv-controller-panel[data-playing=true][data-help=true] { max-height: calc(72vh - 12px); }
+#puretv-controller-panel[data-playing=true][data-help=true] .tv-control-help { display: block; padding: 10px; border: 1px solid #b68b4f; border-radius: 9px; background: rgba(37, 25, 21, .95); }
+#tv-error { position: fixed; inset: 15% 12%; color: #fff4d9; font: 22px/1.7 system-ui,sans-serif; white-space: pre-wrap; }
+@media(max-height: 600px) { #puretv-controller-panel { bottom: 8px; right: 8px; width: 172px !important; } .tv-control-help { font-size: 11px; } }

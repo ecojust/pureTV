@@ -1,0 +1,3283 @@
+{
+  "game": "ponpoko-kart",
+  "targetPackage": "com.ecojust.joystick.ponpokokart",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": false,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "5028fba2c1945cd4c5aa4d71fd0aade671a55040",
+  "apk": {
+    "path": "/home/runner/work/_temp/signed/packages/ponpoko-kart/ponpoko-kart-0.1.2.apk",
+    "bytes": 8783465,
+    "sha256": "a966613aba4e4ec3ed3da7a7b32295dc86467f14d7165897c3b1f73e70e83b92"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/signed/observers/ponpoko-kart/observer-ponpoko-kart.apk",
+    "bytes": 16783,
+    "sha256": "7d36c16cf2fe0813df8931a8d4c83a2eb3ea146a09c7e659960ddbdaec2c7bba"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 63879,
+      "sha256": "7fbd236e292828e126d270defcb822d29f70cb19209ee52686fcc4267e911835"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11264,
+      "sha256": "c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 12693,
+      "sha256": "3bf677cf2634fe364325e37a1439afab82a8a1f993efa77b64d56e14fe10bb8d"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 7106,
+      "sha256": "8fa99646235d8d3369e6606b94b1facaafda934dcc1df3ad693233f9bcfe6e54"
+    },
+    "joystick-games/ponpoko-kart/qa-plan.json": {
+      "bytes": 3658,
+      "sha256": "cea39515f37cd9da3f706aaf92108f48390d9b4fdb5745c3328466c465ccd512"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 7735,
+      "sha256": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d"
+    }
+  },
+  "tests": [
+    {
+      "name": "catalog scenario starts with fresh app data before launch",
+      "status": "passed",
+      "details": {
+        "mode": "fresh-install-app-data",
+        "targetPackage": "com.ecojust.joystick.ponpokokart",
+        "method": "pm clear",
+        "phase": "before-target-launch",
+        "status": "passed",
+        "stdout": "Success"
+      }
+    },
+    {
+      "name": "installed target launches initialized game menu with no controller card",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "original SDK hello and nine sync messages create actual controller ID card",
+      "status": "passed",
+      "details": {
+        "identity": "virtual-129bd57bc853"
+      }
+    },
+    {
+      "name": "actual SDK gameplay: Open original character selection",
+      "status": "passed",
+      "details": {
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "chars"
+          }
+        ],
+        "holdMs": 700
+      }
+    },
+    {
+      "name": "actual SDK gameplay: Choose next original character",
+      "status": "passed",
+      "details": {
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "chars"
+          }
+        ],
+        "holdMs": 200
+      }
+    },
+    {
+      "name": "actual SDK gameplay: Confirm character and open course selection",
+      "status": "passed",
+      "details": {
+        "expect": [
+          {
+            "path": "gameplay.screen",
+            "op": "eq",
+            "value": "course"
+          }
+        ],
+        "holdMs": 700
+      }
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "initial-menu",
+      "wallTime": 1795155439.6075108,
+      "snapshot": {
+        "game": {
+          "game": "ponpoko-kart",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "frames": 1,
+          "gameplay": {
+            "screen": "title",
+            "mode": "idle",
+            "course": "",
+            "character": "",
+            "tick": 0,
+            "time": 0,
+            "countdown": 0,
+            "worldTime": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "progress": 0,
+            "lap": 0,
+            "position": 0,
+            "driftActive": false,
+            "driftLevel": 0,
+            "driftCharge": 0,
+            "boost": 0,
+            "jumpHeld": false,
+            "item": "",
+            "itemPending": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "framePolls": 1,
+            "renderCalls": 1
+          },
+          "audioState": "not_created",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Ponpoko Kart",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 1,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Ponpoko Kart",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1440,
+              "height": 810,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 777,
+                  "top": 258.4609375,
+                  "right": 947,
+                  "bottom": 531.4609375
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.ponpokokart"
+      }
+    },
+    {
+      "label": "before-plan-Open original character selection",
+      "wallTime": 1795155499.3312643,
+      "snapshot": {
+        "game": {
+          "game": "ponpoko-kart",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "frames": 37,
+          "gameplay": {
+            "screen": "title",
+            "mode": "idle",
+            "course": "",
+            "character": "",
+            "tick": 0,
+            "time": 0,
+            "countdown": 0,
+            "worldTime": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "progress": 0,
+            "lap": 0,
+            "position": 0,
+            "driftActive": false,
+            "driftLevel": 0,
+            "driftCharge": 0,
+            "boost": 0,
+            "jumpHeld": false,
+            "item": "",
+            "itemPending": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "framePolls": 37,
+            "renderCalls": 1
+          },
+          "audioState": "not_created",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-129bd57bc853",
+                "session": "wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-129bd57bc853\",\"wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Ponpoko Kart",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 37,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Ponpoko Kart",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1440,
+              "height": 810,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 787,
+                  "top": 221.96875,
+                  "right": 937,
+                  "bottom": 287.9609375,
+                  "width": 150,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 777,
+                  "top": 187.46875,
+                  "right": 947,
+                  "bottom": 531.46875
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-129bd57bc853",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-129bd57bc853",
+                    "idText": "ID: virtual-129bd57bc853",
+                    "visible": true,
+                    "rect": {
+                      "left": 787,
+                      "top": 221.96875,
+                      "right": 937,
+                      "bottom": 287.9609375,
+                      "width": 150,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 777,
+                      "top": 187.46875,
+                      "right": 947,
+                      "bottom": 531.46875
+                    },
+                    "idRect": {
+                      "left": 828,
+                      "top": 249.1640625,
+                      "right": 928,
+                      "bottom": 279.9609375,
+                      "width": 100,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 777,
+                      "top": 187.46875,
+                      "right": 947,
+                      "bottom": 531.46875
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 828,
+                        "top": 250.1640625,
+                        "right": 927.0234375,
+                        "bottom": 262.6640625,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 828,
+                        "top": 265.5625,
+                        "right": 887.4140625,
+                        "bottom": 278.0625,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 100,
+                    "idScrollWidth": 100,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 796,
+                      "top": 229.96875,
+                      "right": 820,
+                      "bottom": 253.96875,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.ponpokokart"
+      }
+    },
+    {
+      "label": "after-plan-Open original character selection",
+      "wallTime": 1795155527.253244,
+      "snapshot": {
+        "game": {
+          "game": "ponpoko-kart",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "frames": 47,
+          "gameplay": {
+            "screen": "chars",
+            "mode": "idle",
+            "course": "",
+            "character": "",
+            "tick": 0,
+            "time": 0,
+            "countdown": 0,
+            "worldTime": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "progress": 0,
+            "lap": 0,
+            "position": 0,
+            "driftActive": false,
+            "driftLevel": 0,
+            "driftCharge": 0,
+            "boost": 0,
+            "jumpHeld": false,
+            "item": "",
+            "itemPending": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "framePolls": 47,
+            "renderCalls": 1
+          },
+          "audioState": "running",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": true,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-129bd57bc853",
+                "session": "wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": true,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": true,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-129bd57bc853\",\"wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Ponpoko Kart",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 47,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Ponpoko Kart",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1440,
+              "height": 810,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 405,
+                  "top": 19,
+                  "right": 555,
+                  "bottom": 84.9921875,
+                  "width": 150,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 395,
+                  "top": 9,
+                  "right": 565,
+                  "bottom": 95
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-129bd57bc853",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-129bd57bc853",
+                    "idText": "ID: virtual-129bd57bc853",
+                    "visible": true,
+                    "rect": {
+                      "left": 405,
+                      "top": 19,
+                      "right": 555,
+                      "bottom": 84.9921875,
+                      "width": 150,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 395,
+                      "top": 9,
+                      "right": 565,
+                      "bottom": 95
+                    },
+                    "idRect": {
+                      "left": 446,
+                      "top": 46.1953125,
+                      "right": 546,
+                      "bottom": 76.9921875,
+                      "width": 100,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 395,
+                      "top": 9,
+                      "right": 565,
+                      "bottom": 95
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 446,
+                        "top": 47.1953125,
+                        "right": 545.0234375,
+                        "bottom": 59.6953125,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 446,
+                        "top": 62.59375,
+                        "right": 505.4140625,
+                        "bottom": 75.09375,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 100,
+                    "idScrollWidth": 100,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 414,
+                      "top": 27,
+                      "right": 438,
+                      "bottom": 51,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.ponpokokart"
+      }
+    },
+    {
+      "label": "before-plan-Choose next original character",
+      "wallTime": 1795155537.9097486,
+      "snapshot": {
+        "game": {
+          "game": "ponpoko-kart",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "frames": 63,
+          "gameplay": {
+            "screen": "chars",
+            "mode": "idle",
+            "course": "",
+            "character": "",
+            "tick": 0,
+            "time": 0,
+            "countdown": 0,
+            "worldTime": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "progress": 0,
+            "lap": 0,
+            "position": 0,
+            "driftActive": false,
+            "driftLevel": 0,
+            "driftCharge": 0,
+            "boost": 0,
+            "jumpHeld": false,
+            "item": "",
+            "itemPending": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "framePolls": 63,
+            "renderCalls": 1
+          },
+          "audioState": "running",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-129bd57bc853",
+                "session": "wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-129bd57bc853\",\"wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Ponpoko Kart",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 63,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Ponpoko Kart",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1296,
+              "height": 729,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 405,
+                  "top": 19,
+                  "right": 555,
+                  "bottom": 84.9921875,
+                  "width": 150,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 395,
+                  "top": 9,
+                  "right": 565,
+                  "bottom": 95
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-129bd57bc853",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-129bd57bc853",
+                    "idText": "ID: virtual-129bd57bc853",
+                    "visible": true,
+                    "rect": {
+                      "left": 405,
+                      "top": 19,
+                      "right": 555,
+                      "bottom": 84.9921875,
+                      "width": 150,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 395,
+                      "top": 9,
+                      "right": 565,
+                      "bottom": 95
+                    },
+                    "idRect": {
+                      "left": 446,
+                      "top": 46.1953125,
+                      "right": 546,
+                      "bottom": 76.9921875,
+                      "width": 100,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 395,
+                      "top": 9,
+                      "right": 565,
+                      "bottom": 95
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 446,
+                        "top": 47.1953125,
+                        "right": 545.0234375,
+                        "bottom": 59.6953125,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 446,
+                        "top": 62.59375,
+                        "right": 505.4140625,
+                        "bottom": 75.09375,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 100,
+                    "idScrollWidth": 100,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 414,
+                      "top": 27,
+                      "right": 438,
+                      "bottom": 51,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.ponpokokart"
+      }
+    },
+    {
+      "label": "after-plan-Choose next original character",
+      "wallTime": 1795155563.733087,
+      "snapshot": {
+        "game": {
+          "game": "ponpoko-kart",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "frames": 73,
+          "gameplay": {
+            "screen": "chars",
+            "mode": "idle",
+            "course": "",
+            "character": "",
+            "tick": 0,
+            "time": 0,
+            "countdown": 0,
+            "worldTime": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "progress": 0,
+            "lap": 0,
+            "position": 0,
+            "driftActive": false,
+            "driftLevel": 0,
+            "driftCharge": 0,
+            "boost": 0,
+            "jumpHeld": false,
+            "item": "",
+            "itemPending": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "framePolls": 73,
+            "renderCalls": 1
+          },
+          "audioState": "running",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": true,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-129bd57bc853",
+                "session": "wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 1,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": true,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-129bd57bc853\",\"wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Ponpoko Kart",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 73,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Ponpoko Kart",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1296,
+              "height": 729,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 405,
+                  "top": 19,
+                  "right": 555,
+                  "bottom": 84.9921875,
+                  "width": 150,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 395,
+                  "top": 9,
+                  "right": 565,
+                  "bottom": 95
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-129bd57bc853",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-129bd57bc853",
+                    "idText": "ID: virtual-129bd57bc853",
+                    "visible": true,
+                    "rect": {
+                      "left": 405,
+                      "top": 19,
+                      "right": 555,
+                      "bottom": 84.9921875,
+                      "width": 150,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 395,
+                      "top": 9,
+                      "right": 565,
+                      "bottom": 95
+                    },
+                    "idRect": {
+                      "left": 446,
+                      "top": 46.1953125,
+                      "right": 546,
+                      "bottom": 76.9921875,
+                      "width": 100,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 395,
+                      "top": 9,
+                      "right": 565,
+                      "bottom": 95
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 446,
+                        "top": 47.1953125,
+                        "right": 545.0234375,
+                        "bottom": 59.6953125,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 446,
+                        "top": 62.59375,
+                        "right": 505.4140625,
+                        "bottom": 75.09375,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 100,
+                    "idScrollWidth": 100,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 414,
+                      "top": 27,
+                      "right": 438,
+                      "bottom": 51,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.ponpokokart"
+      }
+    },
+    {
+      "label": "before-plan-Confirm character and open course selection",
+      "wallTime": 1795155583.1094646,
+      "snapshot": {
+        "game": {
+          "game": "ponpoko-kart",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "frames": 102,
+          "gameplay": {
+            "screen": "chars",
+            "mode": "idle",
+            "course": "",
+            "character": "",
+            "tick": 0,
+            "time": 0,
+            "countdown": 0,
+            "worldTime": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "progress": 0,
+            "lap": 0,
+            "position": 0,
+            "driftActive": false,
+            "driftLevel": 0,
+            "driftCharge": 0,
+            "boost": 0,
+            "jumpHeld": false,
+            "item": "",
+            "itemPending": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "framePolls": 102,
+            "renderCalls": 1
+          },
+          "audioState": "running",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-129bd57bc853",
+                "session": "wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-129bd57bc853\",\"wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Ponpoko Kart",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 102,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdcSURBVHic7d3Bbhs5FEXB8SD//8uadbRIj9BhP1KnahvEsmT7gIsL9s/r9Xr9AxD07/Q3ADBFAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyfj39gj8/P0+/5KNer9cf/331+7/7+lf//67p93/l7uez+vOt//38bU6AQJYAAlkCCGQJIJAlgECWAAJZAghkPb4DvPL0DuhTp++wVu8U7/78pndy0zu/u6Zf/8pufz9OgECWAAJZAghkCSCQJYBAlgACWQIIZG23A7yy+31yq1//6v3f3amtfv/TO7vp15/eEX7738+nnACBLAEEsgQQyBJAIEsAgSwBBLIEEMg6bgf47VY/l/au6e9v9f9fvRM8bSf37ZwAgSwBBLIEEMgSQCBLAIEsAQSyBBDIsgN82PR9e1d2e27rp6bf//R9f3zGCRDIEkAgSwCBLAEEsgQQyBJAIEsAgazjdoCn76imnzt7ZffPd/V9g9PPDV5t9+/vaU6AQJYAAlkCCGQJIJAlgECWAAJZAghkbbcDPP0+utV2fy7v3Z3Z6h3e9O/X7jvQGidAIEsAgSwBBLIEEMgSQCBLAIEsAQSyHt8B1u8jO/2+uemd3131z5/fOQECWQIIZAkgkCWAQJYAAlkCCGQJIJD1+A5w+rm10zuz1f9/+r681Tu13Xd80/fxTf/873p65+gECGQJIJAlgECWAAJZAghkCSCQJYBA1s/r4eGNndKfrd7hrf78d9/p3bX7TpLPOAECWQIIZAkgkCWAQJYAAlkCCGQJIJD1+A5wmh3hrNPvO7xreie5+32YT3MCBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/HnAu9ueqc3/dze3Xdo0zu/3Xdu9ff/KSdAIEsAgSwBBLIEEMgSQCBLAIEsAQSyHt8BTu+Upu+jW72jmt7JXTl95zj9XOPpv58rpz032QkQyBJAIEsAgSwBBLIEEMgSQCBLAIGsx58LfPoObfed2F3TP5/Vaju3T53++/spJ0AgSwCBLAEEsgQQyBJAIEsAgSwBBLIe3wGuNv1c2/rOcPfnHq82fZ/h3a9/Zfr1/zYnQCBLAIEsAQSyBBDIEkAgSwCBLAEEsr7uucCrX3/1Tuvbd4yrTf9+TT+Xefr34zROgECWAAJZAghkCSCQJYBAlgACWQIIZG13H+DpO67pHdiV6e9v+r67b//8d99xTr/+OydAIEsAgSwBBLIEEMgSQCBLAIEsAQSyvm4HuPvO6u7Xv2v6vsEr0/fZTe88p/8cd9vpreYECGQJIJAlgECWAAJZAghkCSCQJYBA1uPPBZ52d8c1vfNafZ/d9H2AV07f+a129/19+87xnRMgkCWAQJYAAlkCCGQJIJAlgECWAAJZj98HePoOa/cd35Xp58ZO78imd47TP/+7dtvx3eUECGQJIJAlgECWAAJZAghkCSCQJYBA1nb3AU7vxK5MPzd19x3c6p3n7s91Pn3nt9r03887J0AgSwCBLAEEsgQQyBJAIEsAgSwBBLK22wFO7/iunH4f2uod3vR9g1d23xHu/vu1+rnDT3MCBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/HnAt91+nNdp7/+atOfz/QOcfffz+md5fTv5zsnQCBLAIEsAQSyBBDIEkAgSwCBLAEEsuwA35y+A7uyeke32unf35XpHehpO767nACBLAEEsgQQyBJAIEsAgSwBBLIEEMh6/LnA0/fFXdl9R7b757f7Tm/a6vc//fmetiN0AgSyBBDIEkAgSwCBLAEEsgQQyBJAIOu4+wBPN31f4OnPxb1r+rm4V6a/v+md6NOcAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHp8B7j7Tuyu6R3X7qZ3YNP31a3e4U3v+KY/3085AQJZAghkCSCQJYBAlgACWQIIZAkgkPX4c4Gv7LYTejf93OHpndjuz2V2nyGfcAIEsgQQyBJAIEsAgSwBBLIEEMgSQCBrux3glenn6k6b3umttnrHN/31r/7/9M/n7uez+9/POydAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjtsBnm56J7X7Tm16B3fac23frf757v7+P+UECGQJIJAlgECWAAJZAghkCSCQJYBAlh0gv1l9X970c39Xm76vcXqnufvP550TIJAlgECWAAJZAghkCSCQJYBAlgACWcftAE/bGb2b3sFN79RWO/25wFemfz6n//29cwIEsgQQyBJAIEsAgSwBBLIEEMgSQCBrux3g7juzabvvyHa/7256x3fl7uuv3jnetdt9gk6AQJYAAlkCCGQJIJAlgECWAAJZAghk/by+7YIvgP/JCRDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBrP8AE4zukJgscsEAAAAASUVORK5CYII=",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Ponpoko Kart",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1296,
+              "height": 729,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 405,
+                  "top": 19,
+                  "right": 555,
+                  "bottom": 84.9921875,
+                  "width": 150,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 395,
+                  "top": 9,
+                  "right": 565,
+                  "bottom": 95
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-129bd57bc853",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-129bd57bc853",
+                    "idText": "ID: virtual-129bd57bc853",
+                    "visible": true,
+                    "rect": {
+                      "left": 405,
+                      "top": 19,
+                      "right": 555,
+                      "bottom": 84.9921875,
+                      "width": 150,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 395,
+                      "top": 9,
+                      "right": 565,
+                      "bottom": 95
+                    },
+                    "idRect": {
+                      "left": 446,
+                      "top": 46.1953125,
+                      "right": 546,
+                      "bottom": 76.9921875,
+                      "width": 100,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 395,
+                      "top": 9,
+                      "right": 565,
+                      "bottom": 95
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 446,
+                        "top": 47.1953125,
+                        "right": 545.0234375,
+                        "bottom": 59.6953125,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 446,
+                        "top": 62.59375,
+                        "right": 505.4140625,
+                        "bottom": 75.09375,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 100,
+                    "idScrollWidth": 100,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 414,
+                      "top": 27,
+                      "right": 438,
+                      "bottom": 51,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.ponpokokart"
+      }
+    },
+    {
+      "label": "after-plan-Confirm character and open course selection",
+      "wallTime": 1795155604.8911717,
+      "snapshot": {
+        "game": {
+          "game": "ponpoko-kart",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "frames": 109,
+          "gameplay": {
+            "screen": "course",
+            "mode": "idle",
+            "course": "",
+            "character": "",
+            "tick": 0,
+            "time": 0,
+            "countdown": 0,
+            "worldTime": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "progress": 0,
+            "lap": 0,
+            "position": 0,
+            "driftActive": false,
+            "driftLevel": 0,
+            "driftCharge": 0,
+            "boost": 0,
+            "jumpHeld": false,
+            "item": "",
+            "itemPending": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "framePolls": 109,
+            "renderCalls": 1
+          },
+          "audioState": "running",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": true,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-129bd57bc853",
+                "session": "wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": true,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": true,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-129bd57bc853\",\"wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+              "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdcSURBVHic7d3Bbhs5FEXB8SD//8uadbRIj9BhP1KnahvEsmT7gIsL9s/r9Xr9AxD07/Q3ADBFAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyfj39gj8/P0+/5KNer9cf/331+7/7+lf//67p93/l7uez+vOt//38bU6AQJYAAlkCCGQJIJAlgECWAAJZAghkPb4DvPL0DuhTp++wVu8U7/78pndy0zu/u6Zf/8pufz9OgECWAAJZAghkCSCQJYBAlgACWQIIZG23A7yy+31yq1//6v3f3amtfv/TO7vp15/eEX7738+nnACBLAEEsgQQyBJAIEsAgSwBBLIEEMg6bgf47VY/l/au6e9v9f9fvRM8bSf37ZwAgSwBBLIEEMgSQCBLAIEsAQSyBBDIsgN82PR9e1d2e27rp6bf//R9f3zGCRDIEkAgSwCBLAEEsgQQyBJAIEsAgazjdoCn76imnzt7ZffPd/V9g9PPDV5t9+/vaU6AQJYAAlkCCGQJIJAlgECWAAJZAghkbbcDPP0+utV2fy7v3Z3Z6h3e9O/X7jvQGidAIEsAgSwBBLIEEMgSQCBLAIEsAQSyHt8B1u8jO/2+uemd3131z5/fOQECWQIIZAkgkCWAQJYAAlkCCGQJIJD1+A5w+rm10zuz1f9/+r681Tu13Xd80/fxTf/873p65+gECGQJIJAlgECWAAJZAghkCSCQJYBA1s/r4eGNndKfrd7hrf78d9/p3bX7TpLPOAECWQIIZAkgkCWAQJYAAlkCCGQJIJD1+A5wmh3hrNPvO7xreie5+32YT3MCBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/HnAu9ueqc3/dze3Xdo0zu/3Xdu9ff/KSdAIEsAgSwBBLIEEMgSQCBLAIEsAQSyHt8BTu+Upu+jW72jmt7JXTl95zj9XOPpv58rpz032QkQyBJAIEsAgSwBBLIEEMgSQCBLAIGsx58LfPoObfed2F3TP5/Vaju3T53++/spJ0AgSwCBLAEEsgQQyBJAIEsAgSwBBLIe3wGuNv1c2/rOcPfnHq82fZ/h3a9/Zfr1/zYnQCBLAIEsAQSyBBDIEkAgSwCBLAEEsr7uucCrX3/1Tuvbd4yrTf9+TT+Xefr34zROgECWAAJZAghkCSCQJYBAlgACWQIIZG13H+DpO67pHdiV6e9v+r67b//8d99xTr/+OydAIEsAgSwBBLIEEMgSQCBLAIEsAQSyvm4HuPvO6u7Xv2v6vsEr0/fZTe88p/8cd9vpreYECGQJIJAlgECWAAJZAghkCSCQJYBA1uPPBZ52d8c1vfNafZ/d9H2AV07f+a129/19+87xnRMgkCWAQJYAAlkCCGQJIJAlgECWAAJZj98HePoOa/cd35Xp58ZO78imd47TP/+7dtvx3eUECGQJIJAlgECWAAJZAghkCSCQJYBA1nb3AU7vxK5MPzd19x3c6p3n7s91Pn3nt9r03887J0AgSwCBLAEEsgQQyBJAIEsAgSwBBLK22wFO7/iunH4f2uod3vR9g1d23xHu/vu1+rnDT3MCBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/HnAt91+nNdp7/+atOfz/QOcfffz+md5fTv5zsnQCBLAIEsAQSyBBDIEkAgSwCBLAEEsuwA35y+A7uyeke32unf35XpHehpO767nACBLAEEsgQQyBJAIEsAgSwBBLIEEMh6/LnA0/fFXdl9R7b757f7Tm/a6vc//fmetiN0AgSyBBDIEkAgSwCBLAEEsgQQyBJAIOu4+wBPN31f4OnPxb1r+rm4V6a/v+md6NOcAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHp8B7j7Tuyu6R3X7qZ3YNP31a3e4U3v+KY/3085AQJZAghkCSCQJYBAlgACWQIIZAkgkPX4c4Gv7LYTejf93OHpndjuz2V2nyGfcAIEsgQQyBJAIEsAgSwBBLIEEMgSQCBrux3glenn6k6b3umttnrHN/31r/7/9M/n7uez+9/POydAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjtsBnm56J7X7Tm16B3fac23frf757v7+P+UECGQJIJAlgECWAAJZAghkCSCQJYBAlh0gv1l9X970c39Xm76vcXqnufvP550TIJAlgECWAAJZAghkCSCQJYBAlgACWcftAE/bGb2b3sFN79RWO/25wFemfz6n//29cwIEsgQQyBJAIEsAgSwBBLIEEMgSQCBrux3g7juzabvvyHa/7256x3fl7uuv3jnetdt9gk6AQJYAAlkCCGQJIJAlgECWAAJZAghk/by+7YIvgP/JCRDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBrP8AE4zukJgscsEAAAAASUVORK5CYII=",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Ponpoko Kart",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 109,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Ponpoko Kart",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1296,
+              "height": 729,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 405,
+                  "top": 19,
+                  "right": 555,
+                  "bottom": 84.9921875,
+                  "width": 150,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 395,
+                  "top": 9,
+                  "right": 565,
+                  "bottom": 95
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-129bd57bc853",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-129bd57bc853",
+                    "idText": "ID: virtual-129bd57bc853",
+                    "visible": true,
+                    "rect": {
+                      "left": 405,
+                      "top": 19,
+                      "right": 555,
+                      "bottom": 84.9921875,
+                      "width": 150,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 395,
+                      "top": 9,
+                      "right": 565,
+                      "bottom": 95
+                    },
+                    "idRect": {
+                      "left": 446,
+                      "top": 46.1953125,
+                      "right": 546,
+                      "bottom": 76.9921875,
+                      "width": 100,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 395,
+                      "top": 9,
+                      "right": 565,
+                      "bottom": 95
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 446,
+                        "top": 47.1953125,
+                        "right": 545.0234375,
+                        "bottom": 59.6953125,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 446,
+                        "top": 62.59375,
+                        "right": 505.4140625,
+                        "bottom": 75.09375,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 100,
+                    "idScrollWidth": 100,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 414,
+                      "top": 27,
+                      "right": 438,
+                      "bottom": 51,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.ponpokokart"
+      }
+    },
+    {
+      "label": "before-plan-Start selected original three-lap course",
+      "wallTime": 1795155618.1066887,
+      "snapshot": {
+        "game": {
+          "game": "ponpoko-kart",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "frames": 129,
+          "gameplay": {
+            "screen": "course",
+            "mode": "idle",
+            "course": "",
+            "character": "",
+            "tick": 0,
+            "time": 0,
+            "countdown": 0,
+            "worldTime": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "progress": 0,
+            "lap": 0,
+            "position": 0,
+            "driftActive": false,
+            "driftLevel": 0,
+            "driftCharge": 0,
+            "boost": 0,
+            "jumpHeld": false,
+            "item": "",
+            "itemPending": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "framePolls": 129,
+            "renderCalls": 1
+          },
+          "audioState": "running",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-129bd57bc853",
+                "session": "wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-129bd57bc853\",\"wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+              "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdcSURBVHic7d3Bbhs5FEXB8SD//8uadbRIj9BhP1KnahvEsmT7gIsL9s/r9Xr9AxD07/Q3ADBFAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyfj39gj8/P0+/5KNer9cf/331+7/7+lf//67p93/l7uez+vOt//38bU6AQJYAAlkCCGQJIJAlgECWAAJZAghkPb4DvPL0DuhTp++wVu8U7/78pndy0zu/u6Zf/8pufz9OgECWAAJZAghkCSCQJYBAlgACWQIIZG23A7yy+31yq1//6v3f3amtfv/TO7vp15/eEX7738+nnACBLAEEsgQQyBJAIEsAgSwBBLIEEMg6bgf47VY/l/au6e9v9f9fvRM8bSf37ZwAgSwBBLIEEMgSQCBLAIEsAQSyBBDIsgN82PR9e1d2e27rp6bf//R9f3zGCRDIEkAgSwCBLAEEsgQQyBJAIEsAgazjdoCn76imnzt7ZffPd/V9g9PPDV5t9+/vaU6AQJYAAlkCCGQJIJAlgECWAAJZAghkbbcDPP0+utV2fy7v3Z3Z6h3e9O/X7jvQGidAIEsAgSwBBLIEEMgSQCBLAIEsAQSyHt8B1u8jO/2+uemd3131z5/fOQECWQIIZAkgkCWAQJYAAlkCCGQJIJD1+A5w+rm10zuz1f9/+r681Tu13Xd80/fxTf/873p65+gECGQJIJAlgECWAAJZAghkCSCQJYBA1s/r4eGNndKfrd7hrf78d9/p3bX7TpLPOAECWQIIZAkgkCWAQJYAAlkCCGQJIJD1+A5wmh3hrNPvO7xreie5+32YT3MCBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/HnAu9ueqc3/dze3Xdo0zu/3Xdu9ff/KSdAIEsAgSwBBLIEEMgSQCBLAIEsAQSyHt8BTu+Upu+jW72jmt7JXTl95zj9XOPpv58rpz032QkQyBJAIEsAgSwBBLIEEMgSQCBLAIGsx58LfPoObfed2F3TP5/Vaju3T53++/spJ0AgSwCBLAEEsgQQyBJAIEsAgSwBBLIe3wGuNv1c2/rOcPfnHq82fZ/h3a9/Zfr1/zYnQCBLAIEsAQSyBBDIEkAgSwCBLAEEsr7uucCrX3/1Tuvbd4yrTf9+TT+Xefr34zROgECWAAJZAghkCSCQJYBAlgACWQIIZG13H+DpO67pHdiV6e9v+r67b//8d99xTr/+OydAIEsAgSwBBLIEEMgSQCBLAIEsAQSyvm4HuPvO6u7Xv2v6vsEr0/fZTe88p/8cd9vpreYECGQJIJAlgECWAAJZAghkCSCQJYBA1uPPBZ52d8c1vfNafZ/d9H2AV07f+a129/19+87xnRMgkCWAQJYAAlkCCGQJIJAlgECWAAJZj98HePoOa/cd35Xp58ZO78imd47TP/+7dtvx3eUECGQJIJAlgECWAAJZAghkCSCQJYBA1nb3AU7vxK5MPzd19x3c6p3n7s91Pn3nt9r03887J0AgSwCBLAEEsgQQyBJAIEsAgSwBBLK22wFO7/iunH4f2uod3vR9g1d23xHu/vu1+rnDT3MCBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/HnAt91+nNdp7/+atOfz/QOcfffz+md5fTv5zsnQCBLAIEsAQSyBBDIEkAgSwCBLAEEsuwA35y+A7uyeke32unf35XpHehpO767nACBLAEEsgQQyBJAIEsAgSwBBLIEEMh6/LnA0/fFXdl9R7b757f7Tm/a6vc//fmetiN0AgSyBBDIEkAgSwCBLAEEsgQQyBJAIOu4+wBPN31f4OnPxb1r+rm4V6a/v+md6NOcAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHp8B7j7Tuyu6R3X7qZ3YNP31a3e4U3v+KY/3085AQJZAghkCSCQJYBAlgACWQIIZAkgkPX4c4Gv7LYTejf93OHpndjuz2V2nyGfcAIEsgQQyBJAIEsAgSwBBLIEEMgSQCBrux3glenn6k6b3umttnrHN/31r/7/9M/n7uez+9/POydAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjtsBnm56J7X7Tm16B3fac23frf757v7+P+UECGQJIJAlgECWAAJZAghkCSCQJYBAlh0gv1l9X970c39Xm76vcXqnufvP550TIJAlgECWAAJZAghkCSCQJYBAlgACWcftAE/bGb2b3sFN79RWO/25wFemfz6n//29cwIEsgQQyBJAIEsAgSwBBLIEEMgSQCBrux3g7juzabvvyHa/7256x3fl7uuv3jnetdt9gk6AQJYAAlkCCGQJIJAlgECWAAJZAghk/by+7YIvgP/JCRDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBrP8AE4zukJgscsEAAAAASUVORK5CYII=",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Ponpoko Kart",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 129,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Ponpoko Kart",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1152,
+              "height": 648,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 405,
+                  "top": 19,
+                  "right": 555,
+                  "bottom": 84.9921875,
+                  "width": 150,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 395,
+                  "top": 9,
+                  "right": 565,
+                  "bottom": 95
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-129bd57bc853",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-129bd57bc853",
+                    "idText": "ID: virtual-129bd57bc853",
+                    "visible": true,
+                    "rect": {
+                      "left": 405,
+                      "top": 19,
+                      "right": 555,
+                      "bottom": 84.9921875,
+                      "width": 150,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 395,
+                      "top": 9,
+                      "right": 565,
+                      "bottom": 95
+                    },
+                    "idRect": {
+                      "left": 446,
+                      "top": 46.1953125,
+                      "right": 546,
+                      "bottom": 76.9921875,
+                      "width": 100,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 395,
+                      "top": 9,
+                      "right": 565,
+                      "bottom": 95
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 446,
+                        "top": 47.1953125,
+                        "right": 545.0234375,
+                        "bottom": 59.6953125,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 446,
+                        "top": 62.59375,
+                        "right": 505.4140625,
+                        "bottom": 75.09375,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 100,
+                    "idScrollWidth": 100,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 414,
+                      "top": 27,
+                      "right": 438,
+                      "bottom": 51,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.ponpokokart"
+      }
+    }
+  ],
+  "captures": [
+    {
+      "path": "connected.png",
+      "bytes": 2012694,
+      "sha256": "a69484c4bfbe1d4dd1fd1576009d56a335a21127438435e07e6aa6cdc5f53768",
+      "startedAt": 1795155459.4795568,
+      "endedAt": 1795155472.8063564,
+      "before": {
+        "game": {
+          "game": "ponpoko-kart",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "frames": 11,
+          "gameplay": {
+            "screen": "title",
+            "mode": "idle",
+            "course": "",
+            "character": "",
+            "tick": 0,
+            "time": 0,
+            "countdown": 0,
+            "worldTime": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "progress": 0,
+            "lap": 0,
+            "position": 0,
+            "driftActive": false,
+            "driftLevel": 0,
+            "driftCharge": 0,
+            "boost": 0,
+            "jumpHeld": false,
+            "item": "",
+            "itemPending": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "framePolls": 11,
+            "renderCalls": 1
+          },
+          "audioState": "not_created",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-129bd57bc853",
+                "session": "wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-129bd57bc853\",\"wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Ponpoko Kart",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 11,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Ponpoko Kart",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1440,
+              "height": 810,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 787,
+                  "top": 221.96875,
+                  "right": 937,
+                  "bottom": 287.9609375,
+                  "width": 150,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 777,
+                  "top": 187.46875,
+                  "right": 947,
+                  "bottom": 531.46875
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-129bd57bc853",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-129bd57bc853",
+                    "idText": "ID: virtual-129bd57bc853",
+                    "visible": true,
+                    "rect": {
+                      "left": 787,
+                      "top": 221.96875,
+                      "right": 937,
+                      "bottom": 287.9609375,
+                      "width": 150,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 777,
+                      "top": 187.46875,
+                      "right": 947,
+                      "bottom": 531.46875
+                    },
+                    "idRect": {
+                      "left": 828,
+                      "top": 249.1640625,
+                      "right": 928,
+                      "bottom": 279.9609375,
+                      "width": 100,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 777,
+                      "top": 187.46875,
+                      "right": 947,
+                      "bottom": 531.46875
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 828,
+                        "top": 250.1640625,
+                        "right": 927.0234375,
+                        "bottom": 262.6640625,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 828,
+                        "top": 265.5625,
+                        "right": 887.4140625,
+                        "bottom": 278.0625,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 100,
+                    "idScrollWidth": 100,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 796,
+                      "top": 229.96875,
+                      "right": 820,
+                      "bottom": 253.96875,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.ponpokokart"
+      },
+      "after": {
+        "game": {
+          "game": "ponpoko-kart",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "frames": 19,
+          "gameplay": {
+            "screen": "title",
+            "mode": "idle",
+            "course": "",
+            "character": "",
+            "tick": 0,
+            "time": 0,
+            "countdown": 0,
+            "worldTime": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "progress": 0,
+            "lap": 0,
+            "position": 0,
+            "driftActive": false,
+            "driftLevel": 0,
+            "driftCharge": 0,
+            "boost": 0,
+            "jumpHeld": false,
+            "item": "",
+            "itemPending": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "framePolls": 19,
+            "renderCalls": 1
+          },
+          "audioState": "not_created",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-129bd57bc853",
+                "session": "wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-129bd57bc853\",\"wifi-a43e4693-c238-4636-9a04-c86fdaa69d00-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Ponpoko Kart",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 19,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:37503/?room=1VjnfLBUG5NOpzlOvm66kH0-pKocGOXF",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Ponpoko Kart",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1440,
+              "height": 810,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 787,
+                  "top": 221.96875,
+                  "right": 937,
+                  "bottom": 287.9609375,
+                  "width": 150,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 777,
+                  "top": 187.46875,
+                  "right": 947,
+                  "bottom": 531.46875
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-129bd57bc853",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-129bd57bc853",
+                    "idText": "ID: virtual-129bd57bc853",
+                    "visible": true,
+                    "rect": {
+                      "left": 787,
+                      "top": 221.96875,
+                      "right": 937,
+                      "bottom": 287.9609375,
+                      "width": 150,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 777,
+                      "top": 187.46875,
+                      "right": 947,
+                      "bottom": 531.46875
+                    },
+                    "idRect": {
+                      "left": 828,
+                      "top": 249.1640625,
+                      "right": 928,
+                      "bottom": 279.9609375,
+                      "width": 100,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 777,
+                      "top": 187.46875,
+                      "right": 947,
+                      "bottom": 531.46875
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 828,
+                        "top": 250.1640625,
+                        "right": 927.0234375,
+                        "bottom": 262.6640625,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 828,
+                        "top": 265.5625,
+                        "right": 887.4140625,
+                        "bottom": 278.0625,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 100,
+                    "idScrollWidth": 100,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 796,
+                      "top": 229.96875,
+                      "right": 820,
+                      "bottom": 253.96875,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.ponpokokart"
+      },
+      "manualPixelReviewRequired": true
+    }
+  ],
+  "installationSetup": {
+    "mode": "fresh-install-app-data",
+    "targetPackage": "com.ecojust.joystick.ponpokokart",
+    "method": "pm clear",
+    "phase": "before-target-launch",
+    "status": "passed",
+    "stdout": "Success"
+  },
+  "observerTransportEvents": [
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155427.1005654,
+      "endedAt": 1795155427.1286972,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155427.2491074,
+      "endedAt": 1795155427.2505996,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155427.3711338,
+      "endedAt": 1795155427.3725739,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155427.4932275,
+      "endedAt": 1795155427.4970367,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155427.6176035,
+      "endedAt": 1795155427.6189196,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155427.7395077,
+      "endedAt": 1795155427.741006,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155427.8617246,
+      "endedAt": 1795155427.863473,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155427.984098,
+      "endedAt": 1795155427.9868517,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155428.109605,
+      "endedAt": 1795155428.1154006,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155428.238631,
+      "endedAt": 1795155428.2450156,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155428.3655307,
+      "endedAt": 1795155428.368438,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155428.4890845,
+      "endedAt": 1795155428.4938695,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155428.6145906,
+      "endedAt": 1795155428.6158571,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155428.7405932,
+      "endedAt": 1795155428.7465932,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155428.867264,
+      "endedAt": 1795155428.8687615,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 6,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155428.9894922,
+      "endedAt": 1795155428.9918582,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 6,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155429.1125124,
+      "endedAt": 1795155429.1145875,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 6,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155429.2353814,
+      "endedAt": 1795155429.2380257,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 7,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155429.3625188,
+      "endedAt": 1795155429.3707252,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 7,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155429.4914744,
+      "endedAt": 1795155429.4948652,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 7,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155429.6155968,
+      "endedAt": 1795155429.6170092,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 8,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155429.7380044,
+      "endedAt": 1795155429.7448869,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 8,
+      "operation": "GET /snapshot",
+      "status": "transport-recovered",
+      "attempt": 2,
+      "priorTransportFailures": 1,
+      "startedAt": 1795155429.8655834,
+      "endedAt": 1795155430.0048325,
+      "responseFromNewGet": true
+    },
+    {
+      "snapshotCall": 42,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155622.7493696,
+      "endedAt": 1795155635.0812104,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 42,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155635.2106209,
+      "endedAt": 1795155645.3072243,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 42,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155645.4355886,
+      "endedAt": 1795155655.6164007,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 43,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155655.6208384,
+      "endedAt": 1795155665.7287693,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 43,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155665.861603,
+      "endedAt": 1795155675.950958,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 43,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795155676.0773065,
+      "endedAt": 1795155686.0908122,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    }
+  ],
+  "adbForwards": {
+    "observer": 37755,
+    "controller": 38481
+  },
+  "controllerService": {
+    "state": "available",
+    "serviceName": "Ponpoko Kart",
+    "port": 63485,
+    "serviceType": "_puretv._tcp",
+    "version": "1",
+    "error": 0
+  },
+  "targetPid": "2837",
+  "freshnessChecks": [
+    {
+      "label": "all-released",
+      "startedAt": 1795155487.2951536,
+      "endedAt": 1795155492.4543104,
+      "beforePollCount": 29,
+      "afterPollCount": 34,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "plan-held-Open original character selection",
+      "startedAt": 1795155499.3313236,
+      "endedAt": 1795155505.245012,
+      "beforePollCount": 37,
+      "afterPollCount": 42,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795155521.1263726,
+      "endedAt": 1795155527.253191,
+      "beforePollCount": 51,
+      "afterPollCount": 56,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795155530.1174965,
+      "endedAt": 1795155531.776265,
+      "beforePollCount": 59,
+      "afterPollCount": 60,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "plan-held-Choose next original character",
+      "startedAt": 1795155537.910605,
+      "endedAt": 1795155544.795309,
+      "beforePollCount": 63,
+      "afterPollCount": 68,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795155554.098205,
+      "endedAt": 1795155563.7330425,
+      "beforePollCount": 78,
+      "afterPollCount": 87,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795155569.2531993,
+      "endedAt": 1795155575.6619668,
+      "beforePollCount": 91,
+      "afterPollCount": 97,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "plan-held-Confirm character and open course selection",
+      "startedAt": 1795155583.1095166,
+      "endedAt": 1795155587.3572574,
+      "beforePollCount": 102,
+      "afterPollCount": 107,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795155598.3004713,
+      "endedAt": 1795155604.8911142,
+      "beforePollCount": 111,
+      "afterPollCount": 116,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795155609.3145106,
+      "endedAt": 1795155614.7398255,
+      "beforePollCount": 120,
+      "afterPollCount": 125,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "plan-held-Start selected original three-lap course",
+      "startedAt": 1795155618.106996,
+      "endedAt": 1795155622.0485525,
+      "beforePollCount": 129,
+      "afterPollCount": 135,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    }
+  ],
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1035, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n                        ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 565, in scenarios\n    return self.catalog_scenarios()\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 856, in catalog_scenarios\n    after = self.finish_catalog_hold(step, before, held)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 818, in finish_catalog_hold\n    self.release()\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 396, in release\n    before = self.snapshot()\n             ^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 323, in snapshot\n    value = read_observer_snapshot('http://127.0.0.1:' + str(self.observer_port) + '/snapshot', timeout, event)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 90, in read_observer_snapshot\n    with urlopen(url, timeout=request_timeout) as response:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 515, in open\n    response = self._open(req, data)\n               ^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 532, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1373, in http_open\n    return self.do_open(http.client.HTTPConnection, req)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/urllib/request.py\", line 1348, in do_open\n    r = h.getresponse()\n        ^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 1457, in getresponse\n    response.begin()\n  File \"/usr/lib/python3.12/http/client.py\", line 336, in begin\n    version, status, reason = self._read_status()\n                              ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/http/client.py\", line 305, in _read_status\n    raise RemoteDisconnected(\"Remote end closed connection without\"\nhttp.client.RemoteDisconnected: Remote end closed connection without response\n",
+  "wire": {
+    "sdkMessages": 200,
+    "acceptedSdkMessages": 200,
+    "rejectedSdkMessages": 0,
+    "hostReplies": 200,
+    "matchingAcks": 200,
+    "missingAcks": [],
+    "expectedBusyIds": [],
+    "rejectedConnections": [],
+    "unexpectedReplies": [],
+    "duplicateAcks": [],
+    "keysSent": [
+      "A",
+      "B",
+      "DOWN",
+      "LEFT",
+      "RIGHT",
+      "START",
+      "UP",
+      "X",
+      "Y"
+    ],
+    "errors": []
+  },
+  "video": {
+    "path": "controller-gameplay.mp4",
+    "bytes": 4522971,
+    "sha256": "7ea90a2b504b83dc0eac99a018bae35102078eb74f64c4cc7227e9a4d1f72c0b",
+    "scope": "Actual screen recording of SDK-driven acceptance; no model or clock changes"
+  },
+  "finishedAt": 1795155687.102727
+}
