@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
     inputs:
       bundle_manifest:
-        description: 'JSON: sourceSha, optional legacySourceSha, legacyRunId, legacyAttempt, kitRuns mapping all nine Game Kit IDs to successful signing run IDs'
+        description: 'JSON: sourceSha, optional legacySourceSha, legacyRunId, legacyAttempt, kitRuns mapping Game Kit IDs to successful signing run IDs; optional scope (all or home-12)'
         type: string
         required: true
       batches:
-        description: 'Optional JSON array of predefined batch names; empty means all eight batches'
+        description: 'Optional JSON array of predefined batch names; empty means all batches in the selected scope'
         type: string
         required: false
         default: ''
@@ -46,6 +46,7 @@ jobs:
         id: selection
         env:
           REQUESTED_BATCHES: ${{ inputs.batches }}
+          BUNDLE_MANIFEST: ${{ inputs.bundle_manifest }}
           ACCEPTANCE_MODE: ${{ inputs.acceptance_mode }}
         run: |
           python3 - <<'PY'
@@ -53,7 +54,8 @@ jobs:
           sys.path.insert(0,'tools')
           spec=importlib.util.spec_from_file_location('runtime_batch','tools/controller-emulator-batch.py')
           batch=importlib.util.module_from_spec(spec);spec.loader.exec_module(batch)
-          plan=batch.runtime_plan(os.environ['REQUESTED_BATCHES'],os.environ.get('ACCEPTANCE_MODE') or 'complete')
+          scope=json.loads(os.environ['BUNDLE_MANIFEST']).get('scope', 'all')
+          plan=batch.runtime_plan(os.environ['REQUESTED_BATCHES'],os.environ.get('ACCEPTANCE_MODE') or 'complete',scope)
           plan['qaSourceSha']=os.environ['GITHUB_SHA']
           with open(os.environ['GITHUB_OUTPUT'],'a') as out:
               out.write('matrix='+json.dumps(plan['matrix'],separators=(',',':'))+'\n')

@@ -17,6 +17,15 @@ on:
       - 'resource/apps/**/src/**'
       - 'resource/apps/**/build.gradle'
   workflow_dispatch:
+    inputs:
+      scope:
+        description: Games to build and corresponding signing observers
+        type: choice
+        options: [all, home-12]
+        default: all
+
+env:
+  CONTROLLER_RELEASE_SCOPE: ${{ inputs.scope || 'all' }}
 
 permissions:
   contents: read
@@ -41,7 +50,7 @@ jobs:
         run: |
           set -euo pipefail
           resource/launcher/puretv/gradlew --no-daemon --project-dir resource/game-kit/android testDebugUnitTest lintDebug 2>&1 | tee "$RUNNER_TEMP/shared-host.log"
-      - name: Build read-only instrumentation observers for all twenty games
+      - name: Build read-only instrumentation observers for the selected games
         run: |
           set -euo pipefail
           for slug in $(python3 tools/controller-release.py list --all); do

@@ -373,7 +373,7 @@
       last = 0;
       cancelAnimationFrame(frame);
       if (sound) sound.pause(!visible || suspended);
-      if (visible && game) frame = requestAnimationFrame(animate);
+      if (visible && game && !renderFailed) frame = requestAnimationFrame(animate);
       else if (game) {
         try {
           if (bridge)
@@ -404,6 +404,7 @@
       publish();
       if (visible) frame = requestAnimationFrame(animate);
     } catch (error) {
+      renderFailed = true;
       root.TankStartup.fail(error);
     }
     return root[config.api];

@@ -130,8 +130,9 @@ def prepare_requests(args):
     assert not args.output.resolve().is_relative_to(ROOT)
     args.output.mkdir(parents=True, exist_ok=False)
     rows = []
+    games = batch.release.scoped_games(batch.release.KIT_SLUGS, args.scope)
     for game in read(ROLLOUT)['games']:
-        if game['host'] != 'game-kit':
+        if game['id'] not in games or game['host'] != 'game-kit':
             continue
         app = ROOT / 'resource/apps' / game['id']
         prefixes = ['resource/game-kit/android/src/main', 'resource/game-kit/web',
@@ -151,7 +152,7 @@ def prepare_requests(args):
                    '--source-sha', args.source_sha, '--output', str(args.output/'requests-tree')]
         subprocess.run(request, cwd=ROOT, check=True)
         rows.append({'game':game['id'], 'build':str(output), 'request':str(args.output/'requests-tree/requests'/game['id'])})
-    assert len(rows) == 9
+    assert sorted(row['game'] for row in rows) == sorted(games)
     write(args.output/'prepared-requests.json', {'sourceSha':args.source_sha, 'signed':False, 'dispatched':False, 'games':rows})
     print(json.dumps({'requestsPrepared':len(rows), 'sourceSha':args.source_sha, 'signed':False}))
 
@@ -395,6 +396,7 @@ def main():
     commands = parser.add_subparsers(dest='command', required=True)
     request = commands.add_parser('requests')
     request.add_argument('--source-sha', required=True)
+    request.add_argument('--scope', choices=batch.release.RELEASE_SCOPES, default='all')
     request.add_argument('--output', type=Path, required=True)
     for name in ['sdk','jdk','zxing']:
         request.add_argument('--'+name, type=Path, required=True)

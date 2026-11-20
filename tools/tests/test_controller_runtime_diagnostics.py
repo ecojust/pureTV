@@ -67,8 +67,20 @@ class BatchIsolation(unittest.TestCase):
             self.assertEqual(row['emulatorOptions'], standard + (' -feature -Vulkan -verbose' if row['batch'] == 'worlds-2' else ''))
             self.assertEqual((row['apiLevel'], row['arch'], row['renderer']), (36, 'x86_64', 'swiftshader_indirect'))
 
+    def test_home_scope_matches_the_game_and_observer_selection(self):
+        plan = batch.runtime_plan(scope='home-12')
+        self.assertEqual(len(plan['plannedSlugs']), 12)
+        self.assertEqual(set(plan['plannedSlugs']), batch.release.HOME_GAMES)
+        self.assertEqual(batch.release.scoped_games(batch.release.KIT_SLUGS, 'home-12'), ['neon-rush', 'tower-overlap'])
+        self.assertEqual(len(batch.release.scoped_games(batch.release.SLUGS, 'home-12')), 10)
+        self.assertNotIn('cozy-island', plan['plannedSlugs'])
+        with self.assertRaisesRegex(AssertionError, 'outside the signed selection'):
+            batch.runtime_plan('["worlds-1"]', scope='home-12')
+        with self.assertRaisesRegex(AssertionError, 'Unknown controller release scope'):
+            batch.runtime_plan(scope='unknown')
+
     def test_only_exact_requested_retry_aliases_exist(self):
-        aliases = set(batch.BATCHES) - set(batch.DEFAULT_BATCHES)
+        aliases = set(batch.BATCHES) - set(batch.DEFAULT_BATCHES) - set(batch.HOME_BATCHES)
         self.assertEqual(aliases, {'retry-used-car', 'retry-alien', 'retry-prism', 'retry-arcade-visual', 'retry-cozy'})
         plan = batch.runtime_plan('["retry-used-car","retry-alien","retry-prism"]')
         self.assertEqual(plan['plannedSlugs'], ['used-car-racing', 'alien-shooter', 'prism-relay'])
