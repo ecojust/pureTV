@@ -6,8 +6,44 @@ permissions:
 jobs:
   upgrade:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 18
+    strategy:
+      max-parallel: 4
+      fail-fast: false
+      matrix:
+        include:
+          - game: glup
+            run: '44758693480'
+            artifact: '14639688129'
+          - game: sugarplum-drop
+            run: '44758693540'
+            artifact: '14639668138'
+          - game: starsling
+            run: '44758693772'
+            artifact: '14640177463'
+          - game: solder-and-rain
+            run: '44758693772'
+            artifact: '14640177463'
+          - game: oathstones
+            run: '44758693772'
+            artifact: '14640177463'
+          - game: alchemists-lattice
+            run: '44758694102'
+            artifact: '14640587725'
+          - game: story-thief
+            run: '44758694102'
+            artifact: '14640587725'
+          - game: bumble-basket
+            run: '44758694102'
+            artifact: '14640587725'
+          - game: neon-arcana
+            run: '44758694225'
+            artifact: '14640222574'
+          - game: atlas-of-ink
+            run: '44758694225'
+            artifact: '14640222574'
     env:
+      UPGRADE_GAME: ${{ matrix.game }}
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
@@ -23,59 +59,14 @@ jobs:
       - uses: android-actions/setup-android@v3
         with:
           packages: platform-tools build-tools;34.0.0
-      - name: Retrieve original signed artifact 14640280629
+      - name: Retrieve this game’s signed source artifact
         uses: actions/download-artifact@v4
         with:
-          artifact-ids: 14640280629
-          run-id: 44757260595
+          artifact-ids: ${{ matrix.artifact }}
+          run-id: ${{ matrix.run }}
           repository: ecojust/pureTV
           github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/signed-upgrades/44757260595
-          merge-multiple: true
-      - name: Retrieve original signed artifact 14639688129
-        uses: actions/download-artifact@v4
-        with:
-          artifact-ids: 14639688129
-          run-id: 44758693480
-          repository: ecojust/pureTV
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/signed-upgrades/44758693480
-          merge-multiple: true
-      - name: Retrieve original signed artifact 14639668138
-        uses: actions/download-artifact@v4
-        with:
-          artifact-ids: 14639668138
-          run-id: 44758693540
-          repository: ecojust/pureTV
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/signed-upgrades/44758693540
-          merge-multiple: true
-      - name: Retrieve original signed artifact 14640177463
-        uses: actions/download-artifact@v4
-        with:
-          artifact-ids: 14640177463
-          run-id: 44758693772
-          repository: ecojust/pureTV
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/signed-upgrades/44758693772
-          merge-multiple: true
-      - name: Retrieve original signed artifact 14640587725
-        uses: actions/download-artifact@v4
-        with:
-          artifact-ids: 14640587725
-          run-id: 44758694102
-          repository: ecojust/pureTV
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/signed-upgrades/44758694102
-          merge-multiple: true
-      - name: Retrieve original signed artifact 14640222574
-        uses: actions/download-artifact@v4
-        with:
-          artifact-ids: 14640222574
-          run-id: 44758694225
-          repository: ecojust/pureTV
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/signed-upgrades/44758694225
+          path: ${{ runner.temp }}/signed-upgrades/${{ matrix.run }}
           merge-multiple: true
       - name: Independently verify both APKs and the original signing run
         run: python3 .github/joystick-upgrade/probe.py prepare
@@ -97,7 +88,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: android-controller-upgrade-receipts
+          name: android-upgrade-${{ matrix.game }}
           path: ${{ runner.temp }}/upgrade-evidence
           retention-days: 30
           if-no-files-found: warn
@@ -111,8 +102,29 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: android-controller-upgrade-receipts
-          path: ${{ runner.temp }}/receipts
+          pattern: android-upgrade-*
+          path: ${{ runner.temp }}/originals
+          merge-multiple: false
+      - name: Aggregate distinct original operations
+        run: |
+          python - <<'PY_EVIDENCE'
+          from pathlib import Path
+          import json,os,shutil
+          temp=Path(os.environ['RUNNER_TEMP'])
+          dest=temp/'receipts';dest.mkdir()
+          games={};signatures=[];images={}
+          for directory in sorted((temp/'originals').glob('android-upgrade-*')):
+              slug=directory.name.removeprefix('android-upgrade-')
+              if (directory/'verified-signatures.json').exists(): signatures.extend(json.loads((directory/'verified-signatures.json').read_bytes()))
+              if (directory/'upgrade-report.json').exists():
+                  report=json.loads((directory/'upgrade-report.json').read_bytes())
+                  assert set(report['games'])=={slug} and slug not in games and report['androidApi']=='36'
+                  games[slug]=report['games'][slug];images[slug]=report['image']
+              diagnostics=directory/'diagnostics'/slug
+              if diagnostics.is_dir():shutil.copytree(diagnostics,dest/'diagnostics'/slug)
+          (dest/'verified-signatures.json').write_text(json.dumps(signatures,indent=2)+'\n')
+          (dest/'upgrade-report.json').write_text(json.dumps(dict(androidApi='36',imageByGame=images,physicalDevice=False,games=games),indent=2)+'\n')
+          PY_EVIDENCE
       - name: Preserve exact original diagnostics for both successful and unsuccessful replacements
         env:
           GH_TOKEN: ${{ github.token }}
@@ -123,14 +135,14 @@ jobs:
           python - <<'PY_REPORT'
           import hashlib, json, os
           from pathlib import Path
-          records={p.name: {'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in Path('.').glob('*.json')}
+          records={p.as_posix(): {'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in Path('.').rglob('*') if p.is_file()}
           Path('manifest.json').write_text(json.dumps(dict(source=os.environ['GITHUB_SHA'],run=os.environ['GITHUB_RUN_ID'],status=os.environ['UPGRADES_RESULT'],files=records),indent=2)+'\n')
           PY_REPORT
           branch="build-assets/joystick-controls-upgrade-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
           git init -q --initial-branch "$branch" .
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add -- *.json
+          git add -- .
           git commit -qm "Android Package Manager upgrade observations ${GITHUB_RUN_ID}"
           gh auth setup-git
           git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"

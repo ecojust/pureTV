@@ -12,7 +12,11 @@ import concurrent.futures
 
 base = Path(os.environ["RUNNER_TEMP"])
 work = Path(__file__).parent
-sources = json.loads((work / "sources.json").read_text())
+suite = json.loads((work / "sources.json").read_text())
+selected = os.environ['UPGRADE_GAME']
+sources = [{**row, 'games': [g for g in row['games'] if g['game'] == selected]} for row in suite]
+sources = [row for row in sources if row['games']]
+assert len(sources) == 1 and len(sources[0]['games']) == 1
 certificate = Path("tools/puretv-release-certificate-v2.sha256").read_text().strip().split()[0].lower()
 tools = Path(os.environ["ANDROID_HOME"]) / "build-tools" / "34.0.0"
 out = base / "upgrade-evidence"
@@ -93,7 +97,7 @@ def installed(pkg):
 
 def device(rows):
     report={'androidApi':command('adb','shell','getprop','ro.build.version.sdk'),'image':command('adb','shell','getprop','ro.build.fingerprint'),'physicalDevice':False,'games':{}}
-    assert len(rows)==len({r['package'] for r in rows})==14
+    assert len(rows)==len({r['package'] for r in rows})==1 and rows[0]['game']==selected
     for row in rows:
         pkg=row['package']; slug=row['game']
         item=report['games'][slug]={k:v for k,v in row.items() if k not in ['oldPath','newPath']}
@@ -112,6 +116,21 @@ def device(rows):
         except Exception as exc:
             item['status']='failed';item['error']=repr(exc)
             if isinstance(exc,subprocess.CalledProcessError):item['output']=exc.output[-4000:]
+            diagnostics = out/'diagnostics'/slug
+            diagnostics.mkdir(parents=True,exist_ok=True)
+            for filename, call in [('window.txt',['shell','dumpsys','window']),
+                                   ('packages.txt',['shell','cmd','package','list','packages','-U',pkg]),
+                                   ('activity.txt',['shell','dumpsys','activity','activities']),
+                                   ('screen.png',['exec-out','screencap','-p'])]:
+                try:
+                    (diagnostics/filename).write_bytes(subprocess.check_output(['adb',*call],timeout=20))
+                except Exception:
+                    pass
+            try:
+                command('adb','shell','uiautomator','dump','/sdcard/upgrade-failure.xml',timeout=20)
+                (diagnostics/'ui.xml').write_bytes(subprocess.check_output(['adb','exec-out','cat','/sdcard/upgrade-failure.xml'],timeout=15))
+            except Exception:
+                pass
         print(slug,item['status'],flush=True)
         (out/'upgrade-report.json').write_text(json.dumps(report,indent=2)+'\n')
     assert all(x['status']=='passed' for x in report['games'].values()), 'An Android package replacement failed'
