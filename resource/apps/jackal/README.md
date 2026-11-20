@@ -1,13 +1,23 @@
 # Jackal TV · 赤色要塞
 
+## Android 0.5.5 · 手柄与手机连接
+
+<!-- apk-resource:start -->
+[下载签名 APK](jackal-0.5.5.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
+<!-- apk-resource:end -->
+
+可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
+
+此签名 APK 已从 0.5.4 在 Android TV 模拟器完成覆盖安装。原版手柄 SDK 通过 9 项检查，实际发出的 96 条消息全部收到同序号确认。[游戏截图](docs/releases/0.5.5/gameplay.png) · [Android 玩法录像](docs/releases/0.5.5/gameplay.mp4?raw=1) · [验证记录与测试范围](docs/releases/0.5.5/verification.json)
+
 [中文](README.md) · [English](README.en.md)
 
 <!-- controller-client-status:start -->
-## 0.5.4 · 手柄连接标识
+## 历史版本 0.5.4 · 手柄连接标识
 
-<!-- apk-resource:start -->
+<!-- previous-apk-resource:start -->
 [下载签名 APK](jackal-0.5.4.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
-<!-- apk-resource:end -->
+<!-- previous-apk-resource:end -->
 
 Android **0.5.4 / versionCode 8**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
@@ -20,7 +30,7 @@ Android **0.5.4 / versionCode 8**：手柄连接后，侧边显示手柄图标�
 
 Jackal TV 独立重写红白机 NES 版《赤色要塞》的六关玩法：吉普车驾驶、营救战俘、直升机撤离、武器升级和六种首领战。电视显示游戏和房间二维码，手机扫码后使用左侧摇杆、右侧 A/B 与 START/SELECT 控制，支持 1–2 人局域网合作。
 
-当前版本为 **0.5.4**。安装后即可游玩，无须导入 ROM；包名保持不变。此版本包含六关重写内容，AI、部分碰撞、动画时序与音色尚有差异，尚未完成电视实机及逐帧对照验证。
+当前版本为 **0.5.5**。安装后即可游玩，无须导入 ROM；包名保持不变。此版本包含六关重写内容，AI、部分碰撞、动画时序与音色尚有差异，尚未完成电视实机及逐帧对照验证。
 
 <!-- visual-release:start -->
 ## 历史：0.5.2 视觉更新与验证

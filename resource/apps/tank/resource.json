@@ -3,12 +3,12 @@
   "name": "Tank TV",
   "author": "ecojust / 桔子桑",
   "description": "独立重写的 35 关坦克大战，支持手机扫码双人合作",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "packageName": "com.ecojust.tanktv",
-  "versionCode": 11,
-  "apk": "tank-0.5.4.apk",
+  "versionCode": 12,
+  "apk": "tank-0.5.5.apk",
   "apkBytes": 276852,
-  "sha256": "6a3e6dde98692a0447cccfd7625d7dffcd512701601b702ff0654b97464e8e95",
+  "sha256": "7ffe2bac456c36a25d12bb9ef033ea805ad7891f9149d67bb112cf179eb66b40",
   "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
   "supportsLayoutJson": false,
   "languages": [
@@ -16,27 +16,26 @@
     "en"
   ],
   "cover": "thumb.png",
-  "coverSource": "Unmodified connected-controller screenshot of this signed APK running in an Android TV emulator.",
+  "coverSource": "Unmodified Android TV emulator gameplay screenshot of the signed 0.5.5 APK, captured during the original controller SDK checks.",
   "license": "MIT (application code); third-party art and music retain their original rights",
-  "sourceCommit": "802c48bcec9d060bdce691045330c822c4f1cf83",
-  "buildRun": "https://github.com/ecojust/pureTV/actions/runs/43844665851",
+  "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+  "buildRun": "https://github.com/ecojust/pureTV/actions/runs/44756990162",
   "assetNotices": [
     "docs/reference-art-audio.md"
   ],
   "romIncluded": false,
   "verification": {
     "status": "passed",
-    "scope": "controller client status acceptance",
+    "scope": "complete controller acceptance",
     "signatureVerified": true,
     "sourceAssetsMatchApk": true,
     "inPlaceUpgradeInstalled": true,
-    "controllerClientStatusAcceptancePassed": true,
-    "fullGameplayAcceptancePerformedInThisUpdate": false,
+    "fullGameplayAcceptancePerformedInThisUpdate": true,
     "actualAndroidEmulator": true,
     "physicalTvTested": false,
     "physicalPhoneTested": false,
     "physicalEsp32Tested": false,
-    "verificationReport": "docs/releases/0.5.4/verification.json"
+    "verificationReport": "docs/releases/0.5.5/verification.json"
   },
   "minSdk": 26,
   "wifiController": {
@@ -140,14 +139,68 @@
         "guide": "../../../docs/readme-controller-support/README.md"
       },
       "metadata": "docs/controller-status-baseline/0.5.3/resource.json"
+    },
+    {
+      "kind": "app",
+      "name": "Tank TV",
+      "author": "ecojust / 桔子桑",
+      "description": "独立重写的 35 关坦克大战，支持手机扫码双人合作",
+      "version": "0.5.4",
+      "packageName": "com.ecojust.tanktv",
+      "versionCode": 11,
+      "apk": "tank-0.5.4.apk",
+      "apkBytes": 276852,
+      "sha256": "6a3e6dde98692a0447cccfd7625d7dffcd512701601b702ff0654b97464e8e95",
+      "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+      "supportsLayoutJson": false,
+      "languages": [
+        "zh",
+        "en"
+      ],
+      "cover": "docs/releases/0.5.4/connected.png",
+      "coverSource": "Unmodified connected-controller screenshot of this signed APK running in an Android TV emulator.",
+      "license": "MIT (application code); third-party art and music retain their original rights",
+      "sourceCommit": "802c48bcec9d060bdce691045330c822c4f1cf83",
+      "buildRun": "https://github.com/ecojust/pureTV/actions/runs/43844665851",
+      "assetNotices": [
+        "docs/reference-art-audio.md"
+      ],
+      "romIncluded": false,
+      "verification": {
+        "status": "passed",
+        "scope": "controller client status acceptance",
+        "signatureVerified": true,
+        "sourceAssetsMatchApk": true,
+        "inPlaceUpgradeInstalled": true,
+        "controllerClientStatusAcceptancePassed": true,
+        "fullGameplayAcceptancePerformedInThisUpdate": false,
+        "actualAndroidEmulator": true,
+        "physicalTvTested": false,
+        "physicalPhoneTested": false,
+        "physicalEsp32Tested": false,
+        "verificationReport": "docs/releases/0.5.4/verification.json"
+      },
+      "minSdk": 26,
+      "wifiController": {
+        "protocol": "puretv-tcp-jsonl-v1",
+        "defaultPort": 63485,
+        "discovery": "_puretv._tcp",
+        "maxPlayers": 2,
+        "buttonMapping": "A/X primary, B secondary, Y SELECT",
+        "guide": "../../../docs/readme-controller-support/README.md",
+        "clientIdentityDisplay": true,
+        "signalStrength": "Unavailable: current controller protocol does not report RSSI; signal strength is not displayed."
+      },
+      "controllerStatusVideo": "docs/releases/0.5.4/controller-status.mp4",
+      "controllerStatusMetadata": "docs/releases/0.5.4/controller-status.json",
+      "historicalGameplayVideo": {
+        "version": "0.5.3",
+        "video": "docs/releases/0.5.3/gameplay.mp4",
+        "metadata": "docs/releases/0.5.3/gameplay.json",
+        "currentUiEvidence": false
+      }
     }
   ],
-  "controllerStatusVideo": "docs/releases/0.5.4/controller-status.mp4",
-  "controllerStatusMetadata": "docs/releases/0.5.4/controller-status.json",
-  "historicalGameplayVideo": {
-    "version": "0.5.3",
-    "video": "docs/releases/0.5.3/gameplay.mp4",
-    "metadata": "docs/releases/0.5.3/gameplay.json",
-    "currentUiEvidence": false
-  }
+  "gameplayVideo": "docs/releases/0.5.5/gameplay.mp4",
+  "gameplayMetadata": "docs/releases/0.5.5/verification.json"
 }

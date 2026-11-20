@@ -1,0 +1,81 @@
+{
+  "status": "passed",
+  "scope": "complete controller acceptance",
+  "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+  "version": "0.5.5",
+  "versionCode": 12,
+  "packageName": "com.ecojust.tanktv",
+  "apk": "tank-0.5.5.apk",
+  "apkBytes": 276852,
+  "sha256": "7ffe2bac456c36a25d12bb9ef033ea805ad7891f9149d67bb112cf179eb66b40",
+  "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "apkAssetsMatchedSigningReceipt": 25,
+  "sourceCheckedAssets": 25,
+  "inPlaceUpgradeInstalled": true,
+  "upgradedFrom": "0.5.4",
+  "upgradedFromVersionCode": 11,
+  "fullGameplayAcceptancePerformedInThisUpdate": true,
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "userSaveMigrationTested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "evidence": {
+    "buildRun": "https://github.com/ecojust/pureTV/actions/runs/44756990162",
+    "signedExportCommit": "4dd73170c16f48bcb57ca2b6ccd1152829255cee",
+    "signedRawPackage": "https://github.com/ecojust/pureTV/blob/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/tank/tank-0.5.5.apk",
+    "runtimeRun": "https://github.com/ecojust/pureTV/actions/runs/44759906140",
+    "runtimeSourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+    "runtimeExportCommit": "4523c4174af976f6a77b1ece043d8d27e218e52f",
+    "runtimeCase": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-1/tank/case.json",
+    "runtimeDriverReport": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-1/tank/gameplay/report.json",
+    "inputVerification": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-1/input-verification.json",
+    "observationApkSha256": "51134ece2870ece635d8e093fecc5b28a1fe763fecb6712f6c435577e063d2a5",
+    "checkedNativeSourceReceipt": true,
+    "originalControllerPort": 63485,
+    "readOnlyObserver": true,
+    "androidRecording": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-1/tank/gameplay.mp4",
+    "menuScreenshot": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-1/tank/gameplay/menu-android.png",
+    "reconnectScreenshot": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-1/tank/gameplay/reconnected.png"
+  },
+  "gameplayChecks": [
+    "menu layout and service address",
+    "official hello and nine sync messages leave menu unchanged",
+    "START begins actual game",
+    "direction and game-specific action affect actual model",
+    "START pause freezes game, fresh START resumes",
+    "disconnect clears held input, reconnect sync requires fresh START",
+    "all nine official keys and long hold have real protocol receipts",
+    "two official SDK identities retain separate seats and held-sync safety",
+    "same-sequence ACK for every original SDK message"
+  ],
+  "originalSdkWire": {
+    "messages": 99,
+    "acks": 99,
+    "connections": 4
+  },
+  "gameplayVideo": {
+    "file": "gameplay.mp4",
+    "sha256": "a36b21a862c042a2b897db910f82c4e4ece4bda132a7ee48fd32b6b813dc4025",
+    "bytes": 608721,
+    "durationSeconds": 33.211767,
+    "fullDecodeVerified": true
+  },
+  "gameplayScreenshot": {
+    "file": "gameplay.png",
+    "sha256": "572f25f632ecf8c9d438f88e38095e029d18bc1e4eac6d7ca8983b371e81792f"
+  },
+  "desktopBrowserPhoneRoom": {
+    "game": "tank",
+    "signedAssetsCompared": 25,
+    "gameAssetSetMatchesOriginalApk": true,
+    "assetsByGame": "resource/game-kit/qa/controller-browser-2026-11-20/signed-assets.json",
+    "reportByGame": "resource/game-kit/qa/controller-browser-2026-11-20/report.json",
+    "testEnvironment": "Desktop Chromium TV and phone browser clients with the production Java LAN game room. No physical phone or TV.",
+    "status": "passed"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "status": "passed",
+  "scope": "complete controller acceptance",
+  "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+  "version": "0.5.5",
+  "versionCode": 7,
+  "packageName": "com.ecojust.adventureislandtv",
+  "apk": "adventure-island-0.5.5.apk",
+  "apkBytes": 103871,
+  "sha256": "82866569a92907325339339c28435810d14e926fd1238b560d86e2325fd4a588",
+  "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "apkAssetsMatchedSigningReceipt": 12,
+  "sourceCheckedAssets": 12,
+  "inPlaceUpgradeInstalled": true,
+  "upgradedFrom": "0.5.4",
+  "upgradedFromVersionCode": 6,
+  "fullGameplayAcceptancePerformedInThisUpdate": true,
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "userSaveMigrationTested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "evidence": {
+    "buildRun": "https://github.com/ecojust/pureTV/actions/runs/44756990162",
+    "signedExportCommit": "4dd73170c16f48bcb57ca2b6ccd1152829255cee",
+    "signedRawPackage": "https://github.com/ecojust/pureTV/blob/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/adventure-island/adventure-island-0.5.5.apk",
+    "runtimeRun": "https://github.com/ecojust/pureTV/actions/runs/44759906140",
+    "runtimeSourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+    "runtimeExportCommit": "4523c4174af976f6a77b1ece043d8d27e218e52f",
+    "runtimeCase": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-3/adventure-island/case.json",
+    "runtimeDriverReport": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-3/adventure-island/gameplay/report.json",
+    "inputVerification": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-3/input-verification.json",
+    "observationApkSha256": "96645f2bdaa466f1546420ec5a9f0dec188edf4f22b96342443cf628c13b17a0",
+    "checkedNativeSourceReceipt": true,
+    "originalControllerPort": 63485,
+    "readOnlyObserver": true,
+    "androidRecording": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-3/adventure-island/gameplay.mp4",
+    "menuScreenshot": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-3/adventure-island/gameplay/menu-android.png",
+    "reconnectScreenshot": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-3/adventure-island/gameplay/reconnected.png"
+  },
+  "gameplayChecks": [
+    "menu layout and service address",
+    "official hello and nine sync messages leave menu unchanged",
+    "START begins actual game",
+    "direction and game-specific action affect actual model",
+    "START pause freezes game, fresh START resumes",
+    "disconnect clears held input, reconnect sync requires fresh START",
+    "all nine official keys and long hold have real protocol receipts",
+    "two official SDK identities retain separate seats and held-sync safety",
+    "same-sequence ACK for every original SDK message"
+  ],
+  "originalSdkWire": {
+    "messages": 96,
+    "acks": 96,
+    "connections": 4
+  },
+  "gameplayVideo": {
+    "file": "gameplay.mp4",
+    "sha256": "e9081520c9ab7b6ccb48a5e2cb46b53c82d24f8576e6aae4b7f37a30fb97f29f",
+    "bytes": 658791,
+    "durationSeconds": 23.944022,
+    "fullDecodeVerified": true
+  },
+  "gameplayScreenshot": {
+    "file": "gameplay.png",
+    "sha256": "97d94964f6202012afa141462388ae07e75766072cb587f1bea43387415d6291"
+  },
+  "desktopBrowserPhoneRoom": {
+    "game": "adventure-island",
+    "signedAssetsCompared": 12,
+    "gameAssetSetMatchesOriginalApk": true,
+    "assetsByGame": "resource/game-kit/qa/controller-browser-2026-11-20/signed-assets.json",
+    "reportByGame": "resource/game-kit/qa/controller-browser-2026-11-20/report.json",
+    "testEnvironment": "Desktop Chromium TV and phone browser clients with the production Java LAN game room. No physical phone or TV.",
+    "status": "passed"
+  }
+}

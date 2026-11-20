@@ -1,0 +1,81 @@
+{
+  "status": "passed",
+  "scope": "complete controller acceptance",
+  "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+  "version": "0.5.5",
+  "versionCode": 7,
+  "packageName": "com.ecojust.tetristv",
+  "apk": "tetris-0.5.5.apk",
+  "apkBytes": 95679,
+  "sha256": "6370c9b2283e5f50a1325dfe9c323b6aeeeb25ddf8dfeea0b25c25c90a5863d3",
+  "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "apkAssetsMatchedSigningReceipt": 12,
+  "sourceCheckedAssets": 12,
+  "inPlaceUpgradeInstalled": true,
+  "upgradedFrom": "0.5.4",
+  "upgradedFromVersionCode": 6,
+  "fullGameplayAcceptancePerformedInThisUpdate": true,
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "userSaveMigrationTested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "evidence": {
+    "buildRun": "https://github.com/ecojust/pureTV/actions/runs/44756990162",
+    "signedExportCommit": "4dd73170c16f48bcb57ca2b6ccd1152829255cee",
+    "signedRawPackage": "https://github.com/ecojust/pureTV/blob/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/tetris/tetris-0.5.5.apk",
+    "runtimeRun": "https://github.com/ecojust/pureTV/actions/runs/44759906140",
+    "runtimeSourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+    "runtimeExportCommit": "4523c4174af976f6a77b1ece043d8d27e218e52f",
+    "runtimeCase": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-2/tetris/case.json",
+    "runtimeDriverReport": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-2/tetris/gameplay/report.json",
+    "inputVerification": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-2/input-verification.json",
+    "observationApkSha256": "758c41b6279be1af297b6e271e8ea346cf2017e6e3c10eb709dfb3fc3e6bea99",
+    "checkedNativeSourceReceipt": true,
+    "originalControllerPort": 63485,
+    "readOnlyObserver": true,
+    "androidRecording": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-2/tetris/gameplay.mp4",
+    "menuScreenshot": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-2/tetris/gameplay/menu-android.png",
+    "reconnectScreenshot": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-2/tetris/gameplay/reconnected.png"
+  },
+  "gameplayChecks": [
+    "menu layout and service address",
+    "official hello and nine sync messages leave menu unchanged",
+    "START begins actual game",
+    "direction and game-specific action affect actual model",
+    "START pause freezes game, fresh START resumes",
+    "disconnect clears held input, reconnect sync requires fresh START",
+    "all nine official keys and long hold have real protocol receipts",
+    "two official SDK identities retain separate seats and held-sync safety",
+    "same-sequence ACK for every original SDK message"
+  ],
+  "originalSdkWire": {
+    "messages": 102,
+    "acks": 102,
+    "connections": 4
+  },
+  "gameplayVideo": {
+    "file": "gameplay.mp4",
+    "sha256": "86377c3073ddbebc2a7a04161ddb1b22cd71e30556abe730eac02af5a1eb6b73",
+    "bytes": 619262,
+    "durationSeconds": 36.004089,
+    "fullDecodeVerified": true
+  },
+  "gameplayScreenshot": {
+    "file": "gameplay.png",
+    "sha256": "20151302c9ee20117b63f1e741ab2256ca211fcdade9ac0d396b37fc2fc53b6d"
+  },
+  "desktopBrowserPhoneRoom": {
+    "game": "tetris",
+    "signedAssetsCompared": 12,
+    "gameAssetSetMatchesOriginalApk": true,
+    "assetsByGame": "resource/game-kit/qa/controller-browser-2026-11-20/signed-assets.json",
+    "reportByGame": "resource/game-kit/qa/controller-browser-2026-11-20/report.json",
+    "testEnvironment": "Desktop Chromium TV and phone browser clients with the production Java LAN game room. No physical phone or TV.",
+    "status": "passed"
+  }
+}
