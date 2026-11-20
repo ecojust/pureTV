@@ -1,14 +1,14 @@
 {
   "upstreamCommit": "88edb72d25c2f957431cc4d12547d3138d1bca48",
   "baselineFileCount": 104,
-  "unchangedFileCount": 95,
+  "unchangedFileCount": 94,
   "changes": [
     {
       "path": "src/upstream/src/core/Game.js",
       "originalSha256": "036768a706bf319d6d74de195608a4149e19ad4a6fda29d3a3d94731971f5290",
-      "adaptedSha256": "55d78587cdc6ee2336758a6ea12470951ad4e8f46f4ad7b390f76878150f9270",
-      "adaptedBytes": 21492,
-      "reason": "One native poll per original animation frame, read-only completion count, explicit pause/resume hooks and standard-gamepad disconnection cancellation; physics/rendering preserved."
+      "adaptedSha256": "4c87f61658a1887259d53ab32ce2864917dfe16654a7384ef4d1203f2e56b220",
+      "adaptedBytes": 21613,
+      "reason": "One native poll per original animation frame, read-only completion count, explicit pause/resume hooks and standard-gamepad disconnection cancellation; physics/rendering preserved. Before constructing the selected world, wait for its optional local road textures to decode."
     },
     {
       "path": "src/upstream/src/core/Input.js",
@@ -65,6 +65,13 @@
       "adaptedSha256": "7588cdefbaa2b5db196e33937a6dec9a29e83385c19f502c5538d5d9806e671d",
       "adaptedBytes": 12070,
       "reason": "Render planar water reflections using RGBA8 when half-float render targets are unavailable."
+    },
+    {
+      "path": "src/upstream/src/track/roadTextures.js",
+      "originalSha256": "17b231cf84ae653ad370313f2c71f8e8940ccaf724efafd07183d2acc172c549",
+      "reason": "Populate the original per-course texture cache from offline albedo and normal maps using the original sampling settings.",
+      "adaptedBytes": 12183,
+      "adaptedSha256": "723ecfed5fc827432946b476550b2e4e5c2cef096f74b84c56b7e0998fe8a02f"
     }
   ],
   "entry": "src/main.js supplies original Game/UI/menus/audio composition without upstream developer/autopilot hooks.",
@@ -73,5 +80,6 @@
     "integrity": "sha512-blFeqb49wRCSGUGj7gtpfnSGHy2lwDk94RhUmS1c/hTby70kvChbWpkJ4Pm1390LqzzvTmzgXKHPEafJwCb8jA==",
     "matchesOriginalLock": true
   },
-  "tvArt": "src/menu-art/ contains nine 160px item icons and eight 256px driver portraits rendered with the pinned upstream src/items/icons.js renderItemIcons() and renderPortraits() defaults. Stored as lossless PNGs."
+  "tvArt": "src/menu-art/ contains nine 160px item icons and eight 256px driver portraits rendered with the pinned upstream src/items/icons.js renderItemIcons() and renderPortraits() defaults. Stored as lossless PNGs.",
+  "courseArt": "The six PNGs in src/track-art contain the original generated road materials. docs/course-textures.json records each authored seed, image and decoded RGBA SHA-256."
 }

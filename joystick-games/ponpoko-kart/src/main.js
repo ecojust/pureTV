@@ -3,6 +3,7 @@ import './tv.css';
 import menuArt from './menu-art/index.js';
 import { Game } from './upstream/src/core/Game.js';
 import { STAGES } from './upstream/src/stages/index.js';
+import { preloadRoadTextures } from './upstream/src/track/roadTextures.js';
 import { runMenus } from './upstream/src/core/Menus.js';
 import { CHARACTERS } from './upstream/src/kart/characters.js';
 import { createKartModel } from './upstream/src/kart/KartModel.js';
@@ -21,6 +22,14 @@ try {
   const game = new Game(document.getElementById('app'), {
     ui, audio, stages: STAGES, characters: CHARACTERS,
     kartApi: { createKartModel, createGlider }, itemApi: itemModels,
+    async prepareCourse(stage) {
+      const base = './road-' + stage.id;
+      try {
+        await preloadRoadTextures(stage.trackStyle, base + '-map.png', base + '-normal.png');
+      } catch (error) {
+        console.warn('Using the original procedural road texture for', stage.id, error);
+      }
+    },
   });
   adapter.attach(game, ui, audio);
   game.tv = adapter;

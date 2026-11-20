@@ -24,9 +24,10 @@ function safe(obj) {
 }
 
 export class Game {
-  constructor(app, { ui = null, audio = null, stages = [], characters = [], kartApi = null, itemApi = null } = {}) {
+  constructor(app, { ui = null, audio = null, stages = [], characters = [], kartApi = null, itemApi = null, prepareCourse = null } = {}) {
     this.app = app;
     this.renderer = new Renderer(app);
+    this.prepareCourse = prepareCourse;
     this.input = new Input();
     this.input.onCancel = () => {
       this.cancelControls();
@@ -67,6 +68,7 @@ export class Game {
     const def = this.stages.find((s) => s.id === courseId) || this.stages[0];
     this.def = def;
     await new Promise((r) => setTimeout(r, 30)); // let the loading screen paint
+    if (this.prepareCourse) await this.prepareCourse(def);
     const world = new World(this.renderer, def, { quality: this.quality });
     await world.decorate({ fx: null, audio: this.audio });
     this.world = world;
