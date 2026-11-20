@@ -1,0 +1,69 @@
+{
+  "game": "turbo-kart-rally",
+  "targetPackage": "com.ecojust.joystick.turbokartrally",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": true,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "f5b9743be438b715085cc58e119da81eceb6c022",
+  "apk": {
+    "path": "/home/runner/work/_temp/signed/packages/turbo-kart-rally/turbo-kart-rally-0.1.0.apk",
+    "bytes": 562352,
+    "sha256": "a60e60f347bb8d04858fe6345aac1a6fb80d4c28af00463f385ebd06d4f9047f"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/signed/observers/turbo-kart-rally/observer-turbo-kart-rally.apk",
+    "bytes": 16783,
+    "sha256": "cae5cc70f7207a5570708d2ebfec985694c7f398add33b25ac39c1a55c91481e"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 77581,
+      "sha256": "fa5ac4b08a35d2a9ae28bceb5671feba1b4993f1c3adbcfd6ee50afc6274a236"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11491,
+      "sha256": "9c10a920e18a094c2650ab86924192cc9745daf8b0a792a732639295fa52ff0e"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 13196,
+      "sha256": "08fd35de2a0e64ea20a57e2ea7b2da41fa80df8ab167a072d86fa3f06eec8bd4"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 8288,
+      "sha256": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9"
+    },
+    "joystick-games/turbo-kart-rally/qa-plan.json": {
+      "bytes": 2598,
+      "sha256": "eb2aeaef96351b3d58e72c22b38af7d7f596a3869b6c9a474fe5703a9d3fe62d"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 10903,
+      "sha256": "fdf40f6d67eafd45ce9914ba1ae508ed2befc966b8bd4861f98a4cc9cd7c05f0"
+    }
+  },
+  "tests": [],
+  "snapshots": [],
+  "captures": [],
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1230, in main\n    acceptance.setup()\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 586, in setup\n    self.command('wait-for-device')\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 344, in command\n    result = subprocess.run(record['command'], capture_output=True, check=False, timeout=timeout)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 550, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 1209, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 2116, in _communicate\n    self._check_timeout(endtime, orig_timeout, stdout, stderr)\n  File \"/usr/lib/python3.12/subprocess.py\", line 1253, in _check_timeout\n    raise TimeoutExpired(\nsubprocess.TimeoutExpired: Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'wait-for-device']' timed out after 45 seconds\n"
+}

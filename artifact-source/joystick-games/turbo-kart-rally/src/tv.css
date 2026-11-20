@@ -1,0 +1,37 @@
+@import "./upstream/styles.css";
+
+@font-face {
+  font-family: 'Lilita One';
+  src: url('@fontsource/lilita-one/files/lilita-one-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+}
+@font-face {
+  font-family: Nunito;
+  src: url('@fontsource/nunito/files/nunito-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+}
+@font-face {
+  font-family: Nunito;
+  src: url('@fontsource/nunito/files/nunito-latin-900-normal.woff2') format('woff2');
+  font-weight: 900;
+}
+#boot-message { text-align: center; margin-top: 45vh; }
+#puretv-controller-panel[data-playing=true] { top: 48% !important; }
+body[data-state=select] .select-screen,
+body[data-state=paused] .pause-screen { right: 196px; }
+.sel-grid { width: 51%; }
+.sel-side { width: 46%; }
+.sel-side .preview { flex-direction: row; }
+.pv-portrait { flex-shrink: 0; width: 77px; height: 77px; }
+.pv-info { min-width: 0; }
+.pv-info .bar i { width: 12px; }
+#puretv-controller-panel .tv-mapping { margin: 6px 0 0; font: 12px/1.5 system-ui; }
+#puretv-controller-panel[data-playing=true] .tv-mapping { display: none; }
+@media (max-width: 1090px) {
+  .card-stats { grid-template-columns: 1fr; }
+  .card-portrait { width: 45px; height: 45px; }
+  .card { grid-template-columns: 45px 1fr; gap: 3px; }
+  .opt { grid-template-columns: 48px 22px 1fr 22px; }
+  .opt-val { font-size: 18px; }
+  .sel-side .preview { padding: 9px; }
+}
