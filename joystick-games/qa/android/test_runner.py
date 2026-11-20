@@ -725,6 +725,19 @@ class InitialMenuReadiness(unittest.TestCase):
         self.assertEqual(advancing, 300)
         self.assertEqual(rows[-1]['deadlineSeconds'], 300)
 
+    def test_frozen_royale_normal_software_cold_wait_still_times_out_at_450(self):
+        a = self.acceptance()
+        a.report.update(defaultPortOccupiedFixture=False, apk={'sha256':'d227411ef53690fa780a42ea580197e607018f6e00f06e00f1e5a382e3199494'})
+        clock = [0]
+        def sample(**kwargs):
+            clock[0] += min(20, kwargs['timeout'])
+            return 1
+        a.snapshot = sample
+        with mock.patch.object(runner.time, 'monotonic', side_effect=lambda:clock[0]), mock.patch.object(runner.time, 'sleep'):
+            with self.assertRaisesRegex(AssertionError, 'initial-menu timed out'):
+                a.wait(lambda state:False, timeout=150, label='initial-menu', progress=lambda state:1)
+        self.assertEqual(clock[0], 450)
+
     def test_legacy_startup_gate_does_not_gain_catalog_renderer_requirements(self):
         a = self.acceptance(); a.plan = None
         state = self.state('legacy-value', 0, 1)

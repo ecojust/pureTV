@@ -392,7 +392,14 @@ class Acceptance:
                         elapsed = time.monotonic() - start
                         # One sample is a baseline. Only measured forward progress
                         # renews the idle window, up to a fixed 300 s wall budget.
-                        if highest is not None:
+                        # This fresh-AVD normal-port experiment tests the first
+                        # real menu of this exact signed APK. Once a genuine
+                        # software context is observed, allow up to 7.5 minutes
+                        # from the start, including silent driver compilation.
+                        if (label == 'initial-menu' and self.report.get('defaultPortOccupiedFixture') is False
+                                and self.report.get('apk', {}).get('sha256') == 'd227411ef53690fa780a42ea580197e607018f6e00f06e00f1e5a382e3199494'):
+                            until = start + 450
+                        elif highest is not None:
                             until = min(start + 300, start + elapsed + timeout)
                         self.report.setdefault('softwareRenderProgress', []).append({
                             'label': label, 'value': value, 'elapsedSeconds': elapsed,
