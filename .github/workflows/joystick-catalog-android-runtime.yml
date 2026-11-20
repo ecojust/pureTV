@@ -237,6 +237,7 @@ jobs:
           python3 joystick-games/tools/android-runtime-artifact-tests.py 2>&1 | tee "$RUNNER_TEMP/reuse-contracts.log"
           python3 -B joystick-games/qa/android/test_environment_diagnostics.py 2>&1 | tee "$RUNNER_TEMP/environment-diagnostics-tests.log"
           python3 -B joystick-games/qa/android/test_install_confirmation.py 2>&1 | tee "$RUNNER_TEMP/install-confirmation-tests.log"
+          python3 -B joystick-games/qa/android/test_boot_services.py
           python3 -B joystick-games/qa/android/test_emulator_supervisor.py 2>&1 | tee "$RUNNER_TEMP/emulator-supervisor-tests.log"
       - name: Bind original signed packages to their frozen source and current QA checkout
         run: |
@@ -283,6 +284,7 @@ jobs:
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
       - name: Run normal and occupied-port QA independently against unchanged signed bytes
+        if: matrix.game != 'kart-royale' && matrix.game != 'clawd-pop' && matrix.game != 'turbo-kart-rally'
         # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
@@ -310,6 +312,29 @@ jobs:
             python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
             --input "$RUNNER_TEMP/input" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
             --confirm-backroad-install "$CONFIRM_BACKROAD_INSTALL"
+      - name: Run both controller port modes on Android TV 14
+        if: matrix.game == 'kart-royale' || matrix.game == 'clawd-pop' || matrix.game == 'turbo-kart-rally'
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          emulator-build: '16970787'
+          api-level: 34
+          target: android-tv
+          arch: x86
+          profile: tv_720p
+          avd-name: JoystickGamesValidation
+          force-avd-creation: true
+          disable-animations: true
+          emulator-options: -no-window -memory 3072 -gpu lavapipe -noaudio -no-boot-anim -no-snapshot -feature -Vulkan
+          script: >-
+            python3 joystick-games/tools/android-environment-diagnostics.py
+            --output "$RUNNER_TEMP/runtime/$GAME/environment-diagnostics" --
+            bash -e -o pipefail -c '
+            python3 joystick-games/qa/android/observe_boot_services.py
+            --adb "$ANDROID_HOME/platform-tools/adb"
+            --output "$RUNNER_TEMP/runtime/$GAME/boot-services.json" &&
+            python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
+            --input "$RUNNER_TEMP/input" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
+            --confirm-backroad-install "$CONFIRM_BACKROAD_INSTALL"'
       - name: Restore the exact disposable SDK launcher after optional supervision
         if: always() && inputs.supervise_pon_emulator
         run: >-

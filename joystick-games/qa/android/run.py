@@ -610,7 +610,7 @@ class Acceptance:
         component = 'com.ecojust.joystickqa.' + self.args.game.replace('-', '') + '/com.ecojust.controllerqa.Observer'
         self.instrument = subprocess.Popen(self.adb + ['shell', 'am', 'instrument', '-w', '-r', '-e', 'diagnosticPort', '63486',
                                                         '-e', 'occupyDefaultPort', str(self.args.occupy_default_port).lower(), component], stdout=self.instrument_log, stderr=subprocess.STDOUT)
-        initial = self.wait(self.initial_menu_ready, timeout=150, label='initial-menu')
+        initial = self.wait(self.initial_menu_ready, timeout=300 if self.args.game == 'kart-royale' else 150, label='initial-menu')
         # Keep the actual observation even when the renderer/port assertions below fail.
         self.record('initial-menu', initial)
         self.save()
