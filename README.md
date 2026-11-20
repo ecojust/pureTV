@@ -149,9 +149,11 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 第三方应用见 [fork/ 分类目录](fork/README.md)：收录 TVAPP 中小于 10 MB 的 14 款应用、23 个 APK，另按指定加入儿歌多多TV、宝宝趣学、茉莉音乐、淘知学堂TV和七星戏曲，共 19 款应用、28 个 APK，提供图标、介绍封面与 manifest。[超限文件与复刻参考](fork/OVERSIZED.md)保留全部 205 个超限文件，其中 5 份已收录，其余 200 份未收录。
 
-## 手柄游戏专用目录（5）
+## 手柄游戏专用目录
 
-[joystick-games/](joystick-games/) 提供以下 5 款游戏的 Android TV APK 与 macOS 通用安装包，均支持 pureTV 九键、开始／暂停及完整客户端 ID 显示。保留各自的玩法和画面，来源、操作与验证范围见[目录说明](joystick-games/README.md)。Android 要求 8.0+；运输船 CF 与 QQ 飞车还需要 WebGL2，新增三款使用 Canvas 2D 或 DOM。
+[九款赛车游戏下载](joystick-games/README.md#九款赛车游戏下载) · [九款解谜与益智手柄游戏](docs/puzzle-nine/README.md)
+
+以下 5 款较早推出的手柄游戏均提供 Android TV APK 与 macOS 通用安装包，均支持 pureTV 九键、开始／暂停及完整客户端 ID 显示。保留各自的玩法和画面，来源、操作与验证范围见[目录说明](joystick-games/README.md)。Android 要求 8.0+；运输船 CF 与 QQ 飞车还需要 WebGL2，新增三款使用 Canvas 2D 或 DOM。
 
 <table>
 <tr>
