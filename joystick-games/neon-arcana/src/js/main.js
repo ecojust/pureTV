@@ -138,6 +138,7 @@ function startQuest() {
 
 function startGame(g) {
     tv.reset();
+    audio.resumeForPlay();
     G = g;
     for (const id of [...ui.stack]) ui.closeScreen(id);
     // a focused button would swallow Space and Enter for the whole game

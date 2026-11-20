@@ -18,8 +18,20 @@ export class Audio {
         this._peak = 0;
     }
 
+    suspend() {
+        if (!this.ctx || this.ctx.state === 'closed') return;
+        this.awaitingResume = true;
+        this.ctx.suspend().catch(() => {});
+    }
+
     init() {
-        if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+        if (this.ctx) {
+            if (this.awaitingResume || this.ctx.state === 'suspended') {
+                this.awaitingResume = false;
+                this.ctx.resume().catch(() => {});
+            }
+            return;
+        }
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return;
         const ctx = this.ctx = new AC();

@@ -49,7 +49,9 @@ function refreshTitle() { $('btn-continue').hidden = !hasSave(); ui.showBest(loa
 refreshTitle();
 ui.openScreen('title');
 
-const unlock = () => audio.init();
+const unlock = () => {
+    if (!document.hidden && !tvPaused && !ui.stack.includes('pause')) audio.init();
+};
 for (const ev of ['pointerdown', 'keydown']) window.addEventListener(ev, unlock, { capture: true });
 
 // ?debug=1&seed=N makes New Season deterministic for the browser tests
@@ -70,7 +72,7 @@ $('pause-menu').addEventListener('click', (e) => {
     if (!b) return;
     audio.ui('click');
     const act = b.dataset.act;
-    if (act === 'resume') ui.closeScreen('pause');
+    if (act === 'resume') { ui.closeScreen('pause'); unlock(); }
     else if (act === 'quit') { saveGame(G); toTitle(); }
     else if (act === 'brief') { ui.showBrief(G, false); ui.openScreen('brief'); }
     else ui.openScreen(act);
@@ -126,6 +128,7 @@ function pause() {
     if (!canAct()) return;
     audio.ui('open');
     saveGame(G);
+    audio.suspend();
     ui.openScreen('pause');
 }
 
@@ -154,7 +157,7 @@ function handlePresses() {
     if (ui.anyScreen()) {
         if (key === 'ArrowDown') ui.moveFocus(1);
         else if (key === 'ArrowUp') ui.moveFocus(-1);
-        else if ((key === 'Escape' || key === 'KeyP') && CLOSABLE.has(ui.top())) { audio.ui('close'); ui.closeTop(); }
+        else if ((key === 'Escape' || key === 'KeyP') && CLOSABLE.has(ui.top())) { audio.ui('close'); ui.closeTop(); unlock(); }
         else if (key === 'Enter' && press.pad) document.activeElement?.click?.();
         return;
     }
@@ -255,7 +258,7 @@ const tv = createTV({
     suspend: suspendTV,
     observe() {
         return { stage: mode === 'title' ? 'menu' : mode === 'over' ? 'ended' : ui.top() === 'pause' ? 'paused' : 'playing',
-            paused: ui.top() === 'pause', gameplay: { tick: G.t, quillX: G.q.x, quillY: G.q.y, casts: G.casts,
+            audioState: audio.ctx?.state || 'uninitialized', paused: ui.top() === 'pause', gameplay: { tick: G.t, quillX: G.q.x, quillY: G.q.y, casts: G.casts,
                 inked: G.ink.filter(Boolean).length, focus: G.channel?.focus || 0, commission: G.idx, points: G.points,
                 phase: G.phase, screen: ui.top() || 'map', timeLeft: G.timeLeft, found: G.found.length } };
     },
@@ -272,6 +275,7 @@ window.addEventListener('keydown', event => {
 }, true);
 window.addEventListener('keyup', event => { if (event.code === 'KeyP') window.PureGame.key('Start', false); });
 function suspendTV() {
+    audio.suspend();
     input.clear();
     input.tv = {};
     // Disconnection during a scry must not cast on the owner's next frame.
@@ -288,7 +292,7 @@ function pollTV() {
     if (f.pressed.START) {
         input.clear();
         input.tv = {};
-        if (ui.top() === 'pause') { tvPaused = false; ui.closeScreen('pause'); }
+        if (ui.top() === 'pause') { tvPaused = false; ui.closeScreen('pause'); unlock(); }
         else if (mode === 'title' && ui.top() === 'title') document.querySelector('#title-menu button:not([hidden])').click();
         else if (mode === 'over') $('over-again').click();
         else if (canAct()) pause();

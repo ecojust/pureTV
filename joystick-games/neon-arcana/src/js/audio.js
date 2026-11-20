@@ -1,8 +1,7 @@
 // Procedural sound, all Web Audio, no files. Effects answer simulation events; the music is a
 // look-ahead sequencer in D minor (i – VI – III – VII) whose filter opens and whose layers come in
 // as the arcana are rekindled, with an arpeggio that quickens with resonance.
-// The context is made on the first user gesture, and ../lib/page-audio.js suspends it while the tab
-// is hidden.
+// The context is made on the first user action. The TV lifecycle also gates the real audio context.
 
 const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
 const SCALE = [0, 2, 3, 5, 7, 8, 10];                 // D natural minor, from D
@@ -12,6 +11,7 @@ const BPM = 84;
 export class Audio {
     constructor() {
         this.ctx = null;
+        this.hostSuspended = false;
         this.sfxVol = 0.8;
         this.musicVol = 0.55;
         this.restore = 0;          // 0..1, how much of the world is back
@@ -20,7 +20,22 @@ export class Audio {
         this.lastPitch = 0;
     }
 
+    suspendForHost() {
+        this.hostSuspended = true;
+        if (this.ctx && this.ctx.state !== 'closed') this.ctx.suspend().catch(() => {});
+    }
+
+    resumeForPlay() {
+        if (document.hidden) return;
+        const suspended = this.hostSuspended;
+        this.hostSuspended = false;
+        // A rapid return may arrive before a pending suspend() changes state.
+        if (suspended && this.ctx && this.ctx.state !== 'closed') this.ctx.resume().catch(() => {});
+        else this.init();
+    }
+
     init() {
+        if (this.hostSuspended || document.hidden) return;
         if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return;

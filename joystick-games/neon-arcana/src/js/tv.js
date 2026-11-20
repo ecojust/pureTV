@@ -20,6 +20,7 @@ export function mountTV({ view, audio, ui, ctl, input, mode, game, pause }) {
         return items;
     }
     function suspend() {
+        audio.suspendForHost();
         input.flush();
         ctl.drag = null;
         ctl.hover = null;
@@ -53,7 +54,11 @@ export function mountTV({ view, audio, ui, ctl, input, mode, game, pause }) {
     });
 
     function resume() {
-        if (ui.top() === 'pause') { resumeLocked = false; ui.closeScreen('pause'); }
+        if (ui.top() === 'pause') {
+            resumeLocked = false;
+            audio.resumeForPlay();
+            ui.closeScreen('pause');
+        }
     }
     function poll() {
         const { pressed, cancelled } = tv.poll(mode() === 'play' && !ui.anyScreen());
