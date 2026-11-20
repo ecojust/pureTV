@@ -496,8 +496,8 @@ class CatalogContracts(unittest.TestCase):
         snapshot.update(activityState='resumed', windowFocused=True)
         snapshot['game'].update(renderer='webgl2', webglVersion=2,
                                 gameplay={'screen': 'trackSelect', 'menuFocus': 'SELECT'})
-        snapshot['page'].update(hidden=False, focused=True, width=960, height=540)
-        snapshot['page']['canvases'][0].update(visible=False, clientWidth=960, clientHeight=540)
+        snapshot['page'].update(hidden=False, focused=True, width=961, height=541)
+        snapshot['page']['canvases'][0].update(visible=False, clientWidth=961.5023193359375, clientHeight=540.8450317382812)
         step = {'expect': [{'path': 'gameplay.screen', 'op': 'eq', 'value': 'trackSelect'},
                            {'path': 'gameplay.menuFocus', 'op': 'eq', 'value': 'SELECT'}]}
         acceptance.validate_catalog_snapshot(snapshot, step)
@@ -506,7 +506,8 @@ class CatalogContracts(unittest.TestCase):
         for container, field, bad in [('page', 'hidden', True), ('page', 'focused', False),
                                       ('game', 'stage', 'playing'), ('game', 'webglVersion', 1),
                                       ('game', 'gameplay', {'screen': 'trackSelect', 'menuFocus': 'BACK'}),
-                                      ('page', 'canvases', [])]:
+                                      ('page', 'canvases', []),
+                                      ('page', 'width', 964)]:
             with self.subTest(field=field):
                 changed = copy.deepcopy(snapshot)
                 changed[container][field] = bad

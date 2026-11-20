@@ -685,7 +685,8 @@ class Acceptance:
             # These HTML/SVG menus hide the WebGL canvas using CSS visibility.
             # Its laid-out backing surface remains underneath the focused menu.
             assert any(c.get('width', 0) > 0 and c.get('height', 0) > 0 and
-                       c.get('clientWidth') == page['width'] and c.get('clientHeight') == page['height']
+                       abs(c.get('clientWidth', 0) - page['width']) <= 1 and
+                       abs(c.get('clientHeight', 0) - page['height']) <= 1
                        for c in page.get('canvases', [])), 'Missing retained full-screen game canvas'
             assert plan.matches(dom_menu_step['expect'], game, game), 'Unexpected focused game menu'
         elif self.plan['renderer'] != 'dom':
@@ -899,10 +900,10 @@ class Acceptance:
             time.sleep(step['holdMs'] / 1000)
             # Capture gameplay while input is still held; release-only changes can also satisfy the plan below.
             after = self.finish_catalog_hold(step, before, held)
+            self.record('after-plan-' + step['name'], after)
             self.validate_catalog_snapshot(after, step if step.get('androidDomMenu') else None)
             if step.get('androidDomMenu'):
                 self.capture('dom-menu-' + str(self.plan['steps'].index(step)), [self.clients[0].identity])
-            self.record('after-plan-' + step['name'], after)
             self.passed('actual SDK gameplay: ' + step['name'], {'expect': step['expect'], 'holdMs': step['holdMs']})
         self.capture('playing', [self.clients[0].identity])
         self.catalog_pause()
