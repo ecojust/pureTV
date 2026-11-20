@@ -66,6 +66,9 @@ def backroad_scene_colors(path):
 OBSERVER_REQUEST_TIMEOUT = 15
 OBSERVER_SNAPSHOT_TIMEOUT = 45
 OBSERVER_SNAPSHOT_ATTEMPTS = 3
+OBSERVER_TRANSPORT_ERRORS = (RemoteDisconnected, ConnectionResetError, ConnectionAbortedError,
+                             ConnectionRefusedError, TimeoutError)
+OBSERVER_READ_ERRORS = OBSERVER_TRANSPORT_ERRORS + (URLError,)
 NIGHT_LOW_RELOAD_APK = '66e2589ece8a13bc03d9796259b2662aef34c56c166265db0a63d3baa2b72c91'
 NIGHT_LOW_RELOAD_SOURCES = {
     'joystick-games/night-racer/src/src/main.js': 'ad1edb9d785799db5cd357d614005d2e044b79bed7c7635e019e693e65b49004',
@@ -81,6 +84,12 @@ def install_timeout(apk_bytes):
     return min(240, max(45, 30 + 2 * math.ceil(apk_bytes / 1_000_000)))
 
 
+def dropped_observer_transport(error):
+    return isinstance(error, OBSERVER_TRANSPORT_ERRORS) or (
+        isinstance(error, URLError) and not isinstance(error, HTTPError)
+        and isinstance(error.reason, OBSERVER_TRANSPORT_ERRORS))
+
+
 def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None):
     """Retry only failed read-only transports; never reuse a previous snapshot.
 
@@ -91,9 +100,6 @@ def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None):
     assert 0 < timeout <= OBSERVER_SNAPSHOT_TIMEOUT
     deadline = time.monotonic() + timeout
     failures = 0
-    transport_errors = (RemoteDisconnected, ConnectionResetError, ConnectionAbortedError,
-                        ConnectionRefusedError, TimeoutError)
-    caught_errors = transport_errors + (URLError,)
     for attempt in range(1, OBSERVER_SNAPSHOT_ATTEMPTS + 1):
         remaining = deadline - time.monotonic()
         if remaining <= 0:
@@ -105,10 +111,10 @@ def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None):
                 value = json.load(response)
             if time.monotonic() > deadline:
                 raise TimeoutError('Read-only observer snapshot wall deadline expired')
-        except caught_errors as error:
+        except OBSERVER_READ_ERRORS as error:
             # HTTPError is also a URLError: a valid HTTP error is not a dropped
             # connection. Unknown URL errors and malformed JSON remain fatal.
-            if isinstance(error, HTTPError) or (isinstance(error, URLError) and not isinstance(error.reason, transport_errors)):
+            if not dropped_observer_transport(error):
                 raise
             failures += 1
             remaining = deadline - time.monotonic()
@@ -843,6 +849,39 @@ class Acceptance:
                 try: self.button(key, False)
                 except Exception: pass
 
+    def finish_catalog_hold(self, step, before, held):
+        budget = step.get('timeoutSeconds', 15)
+        deadline = time.monotonic() + budget
+        try:
+            observed = self.snapshot(timeout=min(OBSERVER_SNAPSHOT_TIMEOUT, budget))
+        except OBSERVER_READ_ERRORS as error:
+            if not dropped_observer_transport(error):
+                raise
+            observed = None
+        finally:
+            # The declared hold already elapsed after the game observed the real SDK down.
+            self.release()
+
+        def expected(state):
+            return plan.matches(step['expect'], self.game(state), self.game(before))
+
+        if observed is not None:
+            if expected(observed):
+                return observed
+            return self.wait_fresh(held, expected, timeout=budget, label='plan-gameplay-' + step['name'])
+
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError(step['name'] + ' exhausted its observer budget')
+        # A busy WebView may close three GETs while compiling a course. Recover only
+        # with new observations of a released, advancing game that meets all predicates.
+        def released_and_expected(state):
+            buttons = self.native_buttons(state)
+            return all(buttons.get(key) is False for key in step['keys']) and expected(state)
+
+        return self.wait_fresh(held, released_and_expected, timeout=remaining,
+                               label='plan-gameplay-released-' + step['name'])
+
     def catalog_scenarios(self):
         # The per-game plan owns startup/menu navigation as well as gameplay inputs.
         assert self.game(self.snapshot()).get('stage') == 'menu'
@@ -859,11 +898,7 @@ class Acceptance:
                                    label='plan-held-' + step['name'])
             time.sleep(step['holdMs'] / 1000)
             # Capture gameplay while input is still held; release-only changes can also satisfy the plan below.
-            observed = self.snapshot()
-            self.release()
-            after = observed if plan.matches(step['expect'], self.game(observed), self.game(before)) else self.wait_fresh(
-                held, lambda s: plan.matches(step['expect'], self.game(s), self.game(before)),
-                timeout=step.get('timeoutSeconds', 15), label='plan-gameplay-' + step['name'])
+            after = self.finish_catalog_hold(step, before, held)
             self.validate_catalog_snapshot(after, step if step.get('androidDomMenu') else None)
             if step.get('androidDomMenu'):
                 self.capture('dom-menu-' + str(self.plan['steps'].index(step)), [self.clients[0].identity])
