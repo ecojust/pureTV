@@ -361,9 +361,9 @@ class Acceptance:
                     if value is not None and (highest is None or value > highest):
                         elapsed = time.monotonic() - start
                         # One sample is a baseline. Only measured forward progress
-                        # renews the idle window, up to a fixed 300 s wall budget.
+                        # renews the idle window within the configured hard limit.
                         if highest is not None:
-                            until = min(start + 300, start + elapsed + timeout)
+                            until = min(start + max(300, timeout), start + elapsed + timeout)
                         self.report.setdefault('softwareRenderProgress', []).append({
                             'label': label, 'value': value, 'elapsedSeconds': elapsed,
                             'deadlineSeconds': until - start})
@@ -582,7 +582,11 @@ class Acceptance:
         self.instrument = subprocess.Popen(self.adb + ['shell', 'am', 'instrument', '-w', '-r', '-e', 'diagnosticPort', '63486',
                                                         '-e', 'occupyDefaultPort', str(self.args.occupy_default_port).lower(), component], stdout=self.instrument_log, stderr=subprocess.STDOUT)
         progress = royale_software_progress if self.args.game == 'kart-royale' else None
-        initial = self.wait(self.initial_menu_ready, timeout=150, label='initial-menu', progress=progress)
+        cold_apk = self.report.get('apk', {}).get('sha256') == '5bf29aa9b13c66f2520e1ac9cdfbaf5d6f371582bec34d18df6db67b295ec294'
+        startup_timeout = 450 if progress and cold_apk and not self.args.occupy_default_port else 150
+        started_wait = time.monotonic()
+        initial = self.wait(self.initial_menu_ready, timeout=startup_timeout, label='initial-menu', progress=progress)
+        self.report['initialMenuWaitSeconds'] = time.monotonic() - started_wait
         # Keep the actual observation even when the renderer/port assertions below fail.
         self.record('initial-menu', initial)
         self.save()

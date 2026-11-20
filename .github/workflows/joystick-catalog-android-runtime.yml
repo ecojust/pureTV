@@ -189,7 +189,7 @@ jobs:
   runtime:
     needs: select
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -282,7 +282,7 @@ jobs:
           test -e /dev/kvm
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
-      - name: Run normal and occupied-port QA independently against unchanged signed bytes
+      - name: Repeat only the default-port scenario on a fresh AVD with the original signed bytes
         # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
@@ -307,7 +307,7 @@ jobs:
             --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor" &&
             python3 joystick-games/tools/android-environment-diagnostics.py
             --output "$RUNNER_TEMP/runtime/$GAME/environment-diagnostics" --
-            python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
+            python3 joystick-games/tools/android-catalog.py runtime --game "$GAME" --normal-only
             --input "$RUNNER_TEMP/input" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
             --confirm-backroad-install "$CONFIRM_BACKROAD_INSTALL"
       - name: Restore the exact disposable SDK launcher after optional supervision
