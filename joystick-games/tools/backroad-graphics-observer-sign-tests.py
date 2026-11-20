@@ -50,7 +50,7 @@ class SigningBoundaries(unittest.TestCase):
                         'committedInputsVerified': True, 'minSdk': 26, 'targetSdk': 35,
                         'testOnly': True, 'signed': False, 'targetApkBuilt': False, 'targetApkChanged': False,
                         'modelWrites': False, 'clockOverrides': False, 'nativeInputPolls': False, 'glContextCalls': True,
-                        'readonlyEndpoints': ['/status', '/console', '/graphics', '/capabilities'], 'apk': m.UNSIGNED,
+                        'fixedTestInputEndpoints': ['POST /post-key'], 'readonlyEndpoints': ['/status', '/console', '/graphics', '/capabilities'], 'apk': m.UNSIGNED,
                         'apkIdentity': m.record(self.input / m.UNSIGNED),
                         'content': {name: m.record_bytes(value) for name, value in self.entries.items()},
                         'sourceFiles': {name: m.record(self.root / name) for name in m.SOURCE_NAMES}}

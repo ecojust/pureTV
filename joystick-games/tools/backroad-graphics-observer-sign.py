@@ -178,7 +178,7 @@ def validate_build(directory, tools, identity, apk_required=True):
                 'minSdk': 26, 'targetSdk': 35, 'testOnly': True, 'signed': False,
                 'targetApkBuilt': False, 'targetApkChanged': False, 'modelWrites': False,
                 'clockOverrides': False, 'nativeInputPolls': False, 'glContextCalls': True,
-                'readonlyEndpoints': ['/status', '/console', '/graphics', '/capabilities'], 'apk': UNSIGNED}
+                'fixedTestInputEndpoints': ['POST /post-key'], 'readonlyEndpoints': ['/status', '/console', '/graphics', '/capabilities'], 'apk': UNSIGNED}
     for key, value in expected.items():
         require(type(receipt.get(key)) is type(value) and receipt[key] == value, 'build_' + key)
     require(receipt['sourceFiles'] == source_records(SOURCE_NAMES, identity['sourceSha']), 'build_source_inventory')

@@ -73,7 +73,7 @@ def main():
                'minSdk': 26, 'targetSdk': 35, 'testOnly': True, 'signed': False,
                'targetApkBuilt': False, 'targetApkChanged': False, 'modelWrites': False, 'clockOverrides': False,
                'nativeInputPolls': False, 'glContextCalls': True,
-               'readonlyEndpoints': ['/status', '/console', '/graphics', '/capabilities'],
+               'fixedTestInputEndpoints': ['POST /post-key'], 'readonlyEndpoints': ['/status', '/console', '/graphics', '/capabilities'],
                'apk': apk.name, 'apkIdentity': record(apk), 'content': contents}
     (out / 'observer-build.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print(json.dumps({'apk': str(apk), 'identity': receipt['apkIdentity'], 'signed': False, 'targetApkBuilt': False}))

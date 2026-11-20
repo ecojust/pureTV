@@ -6,6 +6,10 @@ import android.app.Instrumentation;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.InputDevice;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
@@ -28,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/** Separate test APK. Never changes the target APK, renderer, game input or WebViewClient. */
+/** Separate test APK. Reads the unchanged target. A fixed, stage-only comparison can deliver two upstream P key presses. */
 public final class GraphicsObserver extends Instrumentation {
     public static final String TARGET="com.ecojust.joystick.backroadrally";
     private volatile Activity activity;
@@ -109,7 +113,7 @@ public final class GraphicsObserver extends Instrumentation {
         }catch(Throwable error){Bundle failed=new Bundle();failed.putString("observerError",error.toString());finish(Activity.RESULT_CANCELED,failed);}
     }
     private JSONObject status() throws Exception {
-        return new JSONObject().put("readonly",true).put("targetPackage",TARGET).put("activityState",activityState)
+        return new JSONObject().put("readonly",false).put("fixedTestInput","stage-only upstream P, at most twice").put("targetPackage",TARGET).put("activityState",activityState)
             .put("consoleAttachedBeforeLoad",consoleAttached).put("diagnosticPort",port)
             .put("targetApkChanged",false).put("modelWrites",false).put("nativeInputPolls",false).put("glCapabilitiesEndpoint",true);
     }
@@ -133,6 +137,34 @@ public final class GraphicsObserver extends Instrumentation {
         if(!done.await(10,TimeUnit.SECONDS)){expired.set(true);main.removeCallbacks(observation);throw new IllegalStateException("Readonly graphics observation timed out");}
         return result.get();
     }
+    private static final String STAGE = "https://game-kit.invalid/tv.html?mode=quick&stage=finland&car=swift&cond=stage&weather=stage";
+    private int postKeys;
+    private String postKey() throws Exception {
+        JSONObject before = new JSONObject(graphics(false));
+        JSONObject game = before.optJSONObject("cachedGame");
+        if (postKeys >= 2 || game == null || !STAGE.equals(before.optString("url")) ||
+                !"playing".equals(game.optString("stage")) || game.optBoolean("paused", true) ||
+                !"running".equals(game.getJSONObject("gameplay").optString("phase"))) {
+            throw new IllegalStateException("Original active racing stage required");
+        }
+        ++postKeys; // Do not replay input after an uncertain result.
+        final AtomicBoolean delivered = new AtomicBoolean(false);
+        runOnMainSync(() -> {
+            Activity current = activity;
+            WebView web = current == null ? null : find(current.getWindow().getDecorView());
+            if (web == null || !STAGE.equals(web.getUrl()) || !current.hasWindowFocus()) return;
+            long now = SystemClock.uptimeMillis();
+            // The Activity maps physical P to the remote START button. This test targets
+            // Chromium's existing keyboard listener directly, using the Android scan code for P.
+            for (int action : new int[]{KeyEvent.ACTION_DOWN, KeyEvent.ACTION_UP}) {
+                web.dispatchKeyEvent(new KeyEvent(now, SystemClock.uptimeMillis(), action, KeyEvent.KEYCODE_P,
+                    0, 0, KeyCharacterMap.VIRTUAL_KEYBOARD, 25, 0, InputDevice.SOURCE_KEYBOARD));
+            }
+            delivered.set(true);
+        });
+        return new JSONObject().put("dispatched", delivered.get()).put("count", postKeys).toString();
+    }
+
     private String console() throws Exception {
         JSONArray list=new JSONArray();for(BoundedEvents.Event e:events.snapshot())list.put(new JSONObject()
             .put("sequence",e.sequence).put("wallTime",e.wallTime).put("kind",e.kind).put("message",e.message).put("source",e.source).put("line",e.line));
@@ -145,6 +177,7 @@ public final class GraphicsObserver extends Instrumentation {
         while((header=headerLine(input,budget,deadline))!=null&&!header.isEmpty()){}
         String body,code="200 OK";
         if("GET /status HTTP/1.1".equals(request)||"GET /status HTTP/1.0".equals(request))body=status().toString();
+        else if("POST /post-key HTTP/1.1".equals(request)||"POST /post-key HTTP/1.0".equals(request))body=postKey();
         else if("GET /console HTTP/1.1".equals(request)||"GET /console HTTP/1.0".equals(request))body=console();
         else if("GET /graphics HTTP/1.1".equals(request)||"GET /graphics HTTP/1.0".equals(request))body=graphics(false);
         else if("GET /capabilities HTTP/1.1".equals(request)||"GET /capabilities HTTP/1.0".equals(request))body=graphics(true);

@@ -19,7 +19,7 @@ import threading
 import time
 from http.client import RemoteDisconnected
 from urllib.error import HTTPError, URLError
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[3]
@@ -455,13 +455,18 @@ class Diagnosis:
         expected = 'post on' if enabled else 'post off'
         require(previous in (state.get('frameHud') or ''), 'Upstream post state unavailable before keypress')
         initial_frame = game(state)['frames']
-        self.command('shell', 'input', 'keyevent', 'KEYCODE_P')
+        # MainActivity intercepts P as the TV remote's START shortcut. The separate test APK
+        # delivers one hardware-style key pair to Chromium, without invoking any renderer setter.
+        request = Request(f'http://127.0.0.1:{self.port}/post-key', data=b'', method='POST')
+        with urlopen(request, timeout=40) as response:
+            delivery = json.loads(response.read(2048))
+        require(delivery.get('dispatched') is True, 'Original P key was not delivered to the WebView')
         changed = self.wait(lambda observation: observation.get('url') == STAGE_URL
                             and game(observation).get('frames', 0) > initial_frame + 2
                             and expected in (observation.get('frameHud') or ''), 90, label)
         validated(changed)
         self.report.setdefault('upstreamPostToggles', []).append({'key':'KEYCODE_P','previous':previous,'observed':expected,
-            'initialFrame':initial_frame,'observedFrame':game(changed)['frames']})
+            'delivery':delivery,'initialFrame':initial_frame,'observedFrame':game(changed)['frames']})
         return self.capture(label)
 
     def menu(self, index, step):
