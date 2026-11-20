@@ -19,3 +19,7 @@ WebGL2 报告设备为 Android Emulator OpenGL ES Translator (Google SwiftShader
 ## 原生手柄加速
 
 另一次独立模拟器启动使用相同签名包、ANGLE/Vulkan 后端和原 SDK。按住上方向键后，游戏状态记录车速从接近零升到 7.38 km/h，x 从 54.00 移至 54.45 米。后续 Android 系统截图显示 9 km/h、计时 2.733 秒，白色赛车、土路、起跑门、观众和房车均可见。368 条 SDK 消息全部获得确认。此次默认帧缓冲采得 919 种颜色，整画布采样为 4,957 种颜色。[驾驶截图](https://github.com/ecojust/pureTV/blob/2bd09dd52f3f5346d7c4d8ce155c7a6c8a6f10fb/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/original-stage-accelerated.png) · [SDK 指令、速度、位置与颜色记录](https://github.com/ecojust/pureTV/blob/2bd09dd52f3f5346d7c4d8ce155c7a6c8a6f10fb/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/report.json)
+
+## 扩展手柄流程与菜单响应
+
+完整流程还经过设置、生涯、车库和涂装。720p ANGLE/Vulkan 模拟器中，按原菜单选择 Low 后保留默认渲染分辨率。正常端口完成 28 项、486 条输入均获确认。打开车库后，8.48 秒时已观察到涂装焦点与松键，10.59 秒获得下一帧，同一观察服务随后连续三次 GET 超时。端口占用回退完成 19 项、312 条输入均获确认，画质菜单在 4.1 秒已响应方向键，等待松键观察时超时。两次都停留在菜单，未完成完整驾驶验收。同期系统日志记录游戏主线程分别跳过 1,345 和 1,012 帧。[默认端口原报告](https://github.com/ecojust/pureTV/blob/2e58f27be6eea5b6ed8cdfd229115ee384d91793/evidence/joystick-android-runtime-backroad-rally/backroad-rally-normal/report.json) · [端口回退原报告](https://github.com/ecojust/pureTV/blob/2e58f27be6eea5b6ed8cdfd229115ee384d91793/evidence/joystick-android-runtime-backroad-rally/backroad-rally-occupied/report.json) · [系统日志、录屏及原始指令](https://github.com/ecojust/pureTV/tree/2e58f27be6eea5b6ed8cdfd229115ee384d91793/evidence/joystick-android-runtime-backroad-rally)
