@@ -2,6 +2,7 @@
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
+import os
 from pathlib import Path
 import shutil
 import sys
@@ -116,7 +117,8 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(SimpleHTTPRequestHandler, dir
     Thread(target=server.serve_forever, daemon=True).start()
     url = f"http://127.0.0.1:{server.server_port}/tv.html"
     browser = playwright.chromium.launch(executable_path=shutil.which("chromium"), headless=True,
-        args=["--no-sandbox", "--disable-accelerated-2d-canvas", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"])
+        env={**os.environ, "LIBGL_ALWAYS_SOFTWARE": "1"},
+        args=["--no-sandbox", "--disable-accelerated-2d-canvas", "--ignore-gpu-blocklist", "--use-gl=angle", "--use-angle=gl-egl"])
     try:
         for case in [(960, 540, "keyboard"), (960, 540, "phone"), (1280, 720, "wifi")]:
             play(browser, url, *case)

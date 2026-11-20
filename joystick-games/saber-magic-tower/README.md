@@ -28,3 +28,5 @@
 - `npm test` 验证 21 层通关、三场首领战、钥匙消耗、往返楼梯、格挡、失败冻结和存档读取。
 - `npm run build:check` 将重建的页面和许可文件与 `dist/` 逐字节比较。
 - 浏览器实玩检查见 [tests/browser.py](tests/browser.py)。启动 HTTP 静态服务器后传入页面 URL 和截图输出目录。脚本使用真实键盘事件，连接变化使用浏览器中的宿主桥模拟。
+
+本轮 Linux Chromium / SwiftShader 已在 720×480、960×540 与 1280×720 完成第一层实玩与连接变化检查。1280×720 还通过 Wi-Fi 桥输入击败敌人，用手机桥输入恢复并移动。完整 21 层通关由规则测试验证。实体电视、实体手机与实体手柄待测。[验证记录](docs/browser-verification.json)

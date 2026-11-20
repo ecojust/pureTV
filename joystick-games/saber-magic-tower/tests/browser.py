@@ -52,16 +52,20 @@ with sync_playwright() as pw:
           window.PureGameHost={snapshot:()=>JSON.stringify(fixture),getInfo:()=>JSON.stringify({wifiController:{port:63485}})};
         }""")
         wait('.controller.connected'); assert canvas.bounding_box()==bounds
+        page.evaluate("fixture.players[0].buttons.A=true"); wait('.gameplay.kills>0')
+        page.evaluate("fixture.players[0].buttons.A=false"); wait('.controller.buttons.A===false')
         page.evaluate('fixture.players=[]');wait('.paused');assert canvas.bounding_box()==bounds
         page.evaluate("fixture.players=[{connected:true,id:1,x:0,y:0,transport:'phone'}]")
         wait(".controller.transport==='phone'")
         assert page.evaluate(snap)['paused']
         page.evaluate('fixture.players[0].start=true');wait(".stage==='playing'")
-        page.evaluate('fixture.players[0].start=false')
+        steps=page.evaluate(snap)['gameplay']['steps']
+        page.evaluate('fixture.players[0].start=false; fixture.players[0].y=-1')
+        wait(f'.gameplay.steps>{steps}'); page.evaluate('fixture.players[0].y=0')
         assert canvas.bounding_box()==bounds
         assert not errors, errors
         result.append({'viewport':[width,height],'keyboard':'move, bestiary, pause, saber hit',
-                       'bridgeFixture':'wifi join, disconnect pause, phone join, explicit START',
+                       'bridgeFixture':'wifi kill, disconnect pause, phone join, explicit START and move',
                        'canvasBounds':bounds,'pageErrors':errors})
         page.close()
     browser.close()

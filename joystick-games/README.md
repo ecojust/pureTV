@@ -22,6 +22,15 @@
 
 在仓库根目录运行 `python3 -m http.server 8000 --bind 127.0.0.1`，然后打开 `http://127.0.0.1:8000/joystick-games/<游戏目录>/dist/tv.html` 即可用键盘试玩。每行链接指向对应的游戏目录，内含具体键位。
 
+电脑要使用局域网无线手柄时，可以在仓库根目录运行下列命令启动同一版本。把两处游戏 ID 和 ZIP 文件名换成表内的目录名即可切换游戏。
+
+```sh
+python3 -m pip install -r tools/pc-games/requirements.txt
+python3 joystick-games/qa/controller-input/payloads.py --output .local-games lumenrift
+python3 tools/pc-games/host.py --game lumenrift --apk .local-games/lumenrift.zip
+```
+
+
 ## 安装包
 
 首版 **0.1.0** 提供 Android TV APK，以及同时包含 Apple Silicon 与 Intel 的 macOS DMG／ZIP。

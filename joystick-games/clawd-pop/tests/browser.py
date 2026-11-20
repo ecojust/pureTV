@@ -3,6 +3,7 @@ import argparse
 import functools
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
+import os
 import faulthandler
 from pathlib import Path
 import shutil
@@ -35,8 +36,8 @@ def run(pw, output):
     handler = functools.partial(SimpleHTTPRequestHandler, directory=ROOT / 'dist')
     server = ThreadingHTTPServer(('127.0.0.1', 0), handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
-    browser = pw.chromium.launch(executable_path=shutil.which('chromium'), args=[
-        '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader',
+    browser = pw.chromium.launch(executable_path=shutil.which('chromium'), env={**os.environ, 'LIBGL_ALWAYS_SOFTWARE': '1'}, args=[
+        '--disable-accelerated-2d-canvas', '--ignore-gpu-blocklist', '--use-gl=angle', '--use-angle=gl-egl',
         '--no-sandbox', '--autoplay-policy=no-user-gesture-required'
     ])
     page = browser.new_page(viewport={'width': 960, 'height': 540}, device_scale_factor=.75)

@@ -1,7 +1,16 @@
 // Both published renderers bundle the same simulation. Bind the additional
 // rows at their respective table initializers, before budgets are derived.
 export function adaptRenderer(source) {
+  const factory = source.match(/this\.viewEnvironment=(\w+)\(this\.backend\.createPmrem\(\)\)/)?.[1];
+  if (!factory) throw new Error('Upstream reflection map factory changed');
   const hooks = [
+    // Low-end televisions and software WebGL spend much of startup filtering
+    // the two reflection probes. Keep the light rigs and reduce cubemap texels.
+    [/\.fromScene\(new (\w+),\.04\)\.texture/, (_, scene) =>
+      '.fromScene(new ' + scene + ',.04,.1,100,{size:this.quality.level==="low"?32:256}).texture'],
+    ['function ' + factory + '(n){', 'function ' + factory + '(n,probeSize){'],
+    [factory + '(this.backend.createPmrem())', factory + '(this.backend.createPmrem(),this.quality.level==="low"?32:128)'],
+    ['.02,.1,40,{size:128}', '.02,.1,40,{size:probeSize}'],
     [/walker:\{name:"walker"/, '...PureLab.rules,walker:{name:"walker"'],
     [/walker:(\w+),runner:\{\.\.\.\1,tint:/, (_, base) => '...PureLab.skins(' + base + '),walker:' + base + ',runner:{...' + base + ',tint:'],
     ['killBase:{walker:100', 'killBase:{...PureLab.scores,walker:100'],

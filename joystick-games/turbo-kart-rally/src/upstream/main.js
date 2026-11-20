@@ -326,6 +326,12 @@ function disposeWorld() {
 // ---------------------------------------------------------------------------------------------
 function buildAttract() {
   disposeWorld();
+  // Software GPUs can show the original lightweight menu immediately, then build
+  // Palm Cove once for the actual race instead of constructing two entire worlds.
+  if (reducedEffects) {
+    uiRoot.classList.add('no-world');
+    return;
+  }
   try {
     world = buildWorld({ mode: 'attract' });
     world.race.startImmediately();
@@ -604,6 +610,7 @@ function frame() {
     safe('audio.update', () => audio.update(dt, { camera }));
   }
 
+  if (!world || state === 'paused') return;
   try { if (composer) composer.render(dt); else renderer.render(renderPass.scene, camera); } catch (e) { report('render', e); }
 }
 
