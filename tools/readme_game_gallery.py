@@ -118,10 +118,10 @@ def game_index(catalog, locale):
     total = sum(card['controller'] for card in cards)
     android, macos, windows = [sum(key in card['downloads'] for card in cards) for key in ('apk', 'macos', 'windows')]
     if locale == 'zh':
-        summary = (f'**{total} 款手柄游戏** · [在电脑上玩](docs/guide/README.md#在电脑上玩) · '
+        summary = (f'**{total} 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · '
                    f'Android TV {android} 款 · macOS 独立安装包 {macos} 款 · Windows x64 独立安装包 {windows} 款')
     else:
-        summary = (f'**{total} controller games** · [Play on a computer](docs/guide/README.en.md#play-on-a-computer) · '
+        summary = (f'**{total} controller games** · [Play every game on a computer](docs/guide/README.en.md#play-on-a-computer) · '
                    f'Android TV ({android}) · Standalone macOS downloads ({macos}) · Standalone Windows x64 downloads ({windows})')
 
     headings = []

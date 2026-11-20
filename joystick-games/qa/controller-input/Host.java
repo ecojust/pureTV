@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
+import java.util.concurrent.Executors;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import org.json.JSONArray;
@@ -35,8 +36,9 @@ public class Host {
         return "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes.toByteArray());
     }
 
-    static String decode(File file) throws Exception {
+    static String decode(File file, String[] args) throws Exception {
         var image = ImageIO.read(file);
+        if (args.length == 6) image = image.getSubimage(Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
         int w = image.getWidth(), h = image.getHeight();
         var pixels = new RGBLuminanceSource(w, h, image.getRGB(0, 0, w, h, null, 0, w));
         return new MultiFormatReader().decode(new BinaryBitmap(new HybridBinarizer(pixels))).getText();
@@ -44,10 +46,10 @@ public class Host {
 
     public static void main(String[] args) throws Exception {
         if (args[0].equals("decode")) {
-            System.out.println(decode(new File(args[1])));
+            System.out.println(decode(new File(args[1]), args));
             return;
         }
-        var assets = Path.of(args[0]);
+        var assets = Path.of(args[0]).toRealPath();
         try (var phone = new LanGameServer(name -> Files.newInputStream(assets.resolve(name)));
              var wifi = new WifiControllerServer()) {
             var room = "http://127.0.0.1:" + phone.start() + "/?room=" + phone.roomToken();
@@ -57,6 +59,8 @@ public class Host {
             var info = new JSONObject().put("url", room).put("qr", qrData(room))
                     .put("language", "zh").put("wifiController", controller).toString();
             var web = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 10);
+            var workers = Executors.newFixedThreadPool(8);
+            web.setExecutor(workers);
             web.createContext("/", request -> {
                 try {
                     byte[] body;
@@ -69,11 +73,21 @@ public class Host {
                             body = sample.getBytes(StandardCharsets.UTF_8);
                         }
                         case "/room" -> body = info.getBytes(StandardCharsets.UTF_8);
-                        case "/tv.html" -> {
-                            body = Files.readAllBytes(assets.resolve("tv.html"));
-                            type = "text/html; charset=utf-8";
+                        default -> {
+                            String name = request.getRequestURI().getPath().substring(1);
+                            Path file = assets.resolve(name).normalize();
+                            if (!file.startsWith(assets) || !Files.isRegularFile(file)) {
+                                request.sendResponseHeaders(404, -1);
+                                return;
+                            }
+                            String mime = Files.probeContentType(file);
+                            if (name.endsWith(".js") || name.endsWith(".mjs")) mime = "application/javascript";
+                            if (name.endsWith(".wasm")) mime = "application/wasm";
+                            request.getResponseHeaders().set("Content-Type", mime == null ? "application/octet-stream" : mime);
+                            request.sendResponseHeaders(200, Files.size(file));
+                            Files.copy(file, request.getResponseBody());
+                            return;
                         }
-                        default -> { request.sendResponseHeaders(404, -1); return; }
                     }
                     request.getResponseHeaders().set("Content-Type", type);
                     request.getResponseHeaders().set("Cache-Control", "no-store");
@@ -93,6 +107,7 @@ public class Host {
                 System.in.read();
             } finally {
                 web.stop(0);
+                workers.shutdownNow();
             }
         }
     }

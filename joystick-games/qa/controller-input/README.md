@@ -22,6 +22,21 @@ The check compiles the original Java LAN and TCP servers. A loopback fixture for
 
 The retained [Sugarplum Drop result](results/android-sugarplum.json) records the tested source revision and program hashes.
 
+## Phone room in each game
+
+Build the staged game archives with `payloads.py`, then run the same phone check for one or more game IDs.
+
+```sh
+python joystick-games/qa/controller-input/payloads.py --output /tmp/phone-payloads \
+  backroad-rally glup
+python joystick-games/qa/controller-input/phone.py \
+  --payloads /tmp/phone-payloads --output /tmp/phone-room-qa \
+  --android-json /path/to/android-json.jar --zxing /path/to/core-3.5.3.jar \
+  backroad-rally glup
+```
+
+The TV browser loads the game's own assets at 960×540. ZXing decodes the QR from the saved viewport screenshot. In a separate touch-enabled browser, the original mobile page opens the decoded room and sends a DOWN press and release. The check observes both button states through the game's controller snapshot, then closes the phone and checks for a disconnected controller with neutral input. The output directory retains the menu screenshot, its digest, the QR bounds, each game's stage and the timing.
+
 ## Portable PC game host
 
 Install the portable host's Python dependencies from `tools/pc-games/requirements.txt` and Playwright for Python. Use one `<game-id>.zip` per game in the payload directory, with the exact files under `assets/`. The script accepts multiple game IDs.
@@ -34,4 +49,9 @@ python joystick-games/qa/controller-input/pc.py \
   sugarplum-drop kart-rush story-thief
 ```
 
-The check launches the portable host on unused HTTP and TCP ports, opens its entry in Chromium, and observes the game's own controller frames. The actual SDK client must appear on the visible identity card and its DOWN press and release must reach the game. After disconnect, a trusted browser keyboard press and release must also reach the game. Each game's JSON report includes its payload hash, browser version, startup time and outcome. This check covers the portable host and the desktop browser. Android WebView, native Windows and macOS packages, and physical devices have separate acceptance runs.
+The check launches the portable host on unused HTTP and TCP ports, opens its entry in Chromium, and observes the game's own controller frames. The actual SDK client must appear on the visible identity card and its DOWN press and release must reach the game. After disconnect, a trusted browser keyboard press and release must also reach the game. If the SDK moved focus to an editable field, the test presses Tab to leave it before sending a gameplay shortcut. For Emberbrood, add `--editable-text amber123` to type the full seed in the focused field and check its value before tabbing away. Each game's JSON report includes its payload hash, browser version, startup time and outcome. This check covers the portable host and the desktop browser. Android WebView, native Windows and macOS packages, and physical devices have separate acceptance runs.
+
+
+## Catalogue evidence
+
+The [per-game results](results/catalogue.json) identify the frozen source, runtime, archive digests and original raw evidence for each title. The initial CI archive used DEFLATE level 6. Use `payloads.py --compression-level 6` to reproduce its digest or the default level 1 for the portable catalogue archive. Both contain the same asset bytes. The Kart Royale follow-up waits for actual QR pixels after the boot curtain has disappeared.

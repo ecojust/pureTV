@@ -80,7 +80,7 @@
 
 <!-- game-index:start -->
 
-**35 款手柄游戏** · [在电脑上玩](docs/guide/README.md#在电脑上玩) · Android TV 35 款 · macOS 独立安装包 24 款 · Windows x64 独立安装包 19 款
+**35 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · Android TV 35 款 · macOS 独立安装包 24 款 · Windows x64 独立安装包 19 款
 
 [竞速与体育（13）](#controller-racing) · [动作、角色扮演与探索（2）](#controller-action) · [平台、弹幕与街机（6）](#controller-arcade) · [策略、塔防与卡牌（1）](#controller-strategy) · [解谜与益智（12）](#controller-puzzle) · [单键街机（1）](#controller-one-button)
 
