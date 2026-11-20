@@ -2,12 +2,13 @@
 
 基于 [ryancampbell/kart-royale](https://github.com/ryancampbell/kart-royale/tree/036c0efb025f5ecf8fc31c405e9d818c61e03e21) 的 pureTV 手柄版。固定原源为 `036c0efb025f5ecf8fc31c405e9d818c61e03e21`，保留 Sunset Bay Circuit、八辆卡丁车、AI 对手、道具、原轮胎/悬架物理和漂移奖励规则。网上后来替换的 homie 多人版本不属于本次移植。
 
-Android TV 0.1.3 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/kart-royale-0.1.3.apk)。原生手柄验收进展见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
+## Android TV
 
-Android TV 另有 0.1.4 测试包，可在软件 GPU 上优先绘制赛车与赛道。Android TV 14 的回退端口已通过 58 项，默认端口在新建模拟器上遇到 Google 系统组件更新，Android 在游戏启动后 24.7 秒终止了依赖字体服务的游戏进程。系统服务稳定后的启动正在复测。[下载 0.1.4 测试 APK](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/kart-royale-0.1.4.apk) · [两种端口和原始画面](docs/android-tv-20261120.md)
+[下载 Kart Royale 0.1.3 签名 APK](kart-royale-0.1.3.apk)。最低系统为 Android 8（API 26），游戏需要 WebGL 2。安装后启动游戏，在同一局域网连接 pureTV 手柄，用十字键和 A 选择车手并开始比赛。
 
-0.1.3 最低支持 Android 8，目标 SDK 为 35。在软件 GPU 上，它用轻量着色器绘制原车、原纹理和赛道，并降低部分背景装饰的几何复杂度。Linux llvmpipe 的真实输入已从标题页进入比赛并驱动车辆，冷启动在这台共享双核主机上用时数分钟。Android TV 14 的端口占用模式已通过 58 项，游戏截图显示首圈第四名。该轮默认端口也在 Google 字体服务退出时被 Android 终止。标准 Android TV 16 的启动验收仍有失败记录。[三份系统日志与时间](docs/android-tv14-first-boot-exits.json)[Android 原生赛中图](https://raw.githubusercontent.com/ecojust/pureTV/e26766b346009537383d785463ee2c0b44f193ed/evidence/joystick-android-runtime-kart-royale/kart-royale-occupied/driving-checkpoint.png) [Android TV 14](https://github.com/ecojust/pureTV/actions/runs/44690586603) · [Android TV 16](https://github.com/ecojust/pureTV/actions/runs/44689811645)
+Android TV 模拟器安装原包后，通过默认端口 63485 和占用时的回退端口 34137 分别跑完 58 项检查。两种模式都在原赛道完成真实加速、暂停与重新连接。在新建 Android TV 14 模拟器首次更新 Google 系统组件时，系统曾随字体服务退出一并终止游戏。软件 GPU 的启动时间也受设备性能影响。[系统退出记录](docs/android-tv14-first-boot-exits.json) · [Android 验证与行驶原图](docs/android-delivery/README.md) · [各版本环境与耗时](docs/android-tv-20261120.md)
 
+另可下载保留的 [Android 0.1.4 测试 APK](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/kart-royale-0.1.4.apk)。该版本的端口、环境与画面见[各版本实测记录](docs/android-tv-20261120.md)。
 
 ## Windows 下载
 
@@ -56,4 +57,4 @@ python3 -m http.server 8080 --directory dist
 
 需要 WebGL2 和现代 WebView。手柄版 0.1.1 在识别到 SwiftShader、llvmpipe 或 Microsoft Basic Render Driver 等软件渲染器时默认使用游戏自带的低画质。硬件 GPU 继续按设备选档，显式 `?quality=` 设置优先。0.1.2 的软件低画质直接绘制当前镜头内的原场景，按需编译着色器与上传几何数据，启动与图形上下文恢复均使用此路径。上方 0.1.0 Mac 下载沿用原默认设置。
 
-上方提供 Windows 和 macOS 安装包。Android 仍在验证，实体电视尚未测试。原 SDK TCP、各平台原生与浏览器模拟桥接结果分别保存。
+上方提供 Android TV、Windows 和 macOS 安装包。实体电视尚未测试。原 SDK TCP、各平台原生与浏览器模拟桥接结果分别保存。
