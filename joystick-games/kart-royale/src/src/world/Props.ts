@@ -3230,6 +3230,15 @@ export function patch(mat: THREE.Material, key: string, fn: PatchFn) {
  */
 const DEPTH_PATCH_KEY = /^(lod|wind\d|bob|crowd|cloth|bird)/;
 
+/** Share the original distance LOD and animation uniforms with an alternate draw pass. */
+export function copyVertexPatches(source: THREE.Material, target: THREE.Material): void {
+  const entry = PATCHES.get(source);
+  if (!entry) return;
+  for (let i = 0; i < entry.keys.length; i++) {
+    if (DEPTH_PATCH_KEY.test(entry.keys[i])) patch(target, entry.keys[i], entry.fns[i]);
+  }
+}
+
 /**
  * A depth material that agrees with `mat` about where its vertices are.
  *
@@ -3267,9 +3276,7 @@ const DEPTH_PATCH_KEY = /^(lod|wind\d|bob|crowd|cloth|bird)/;
 export function depthMaterialFor(mat: THREE.Material): THREE.Material | null {
   const e = PATCHES.get(mat);
   if (!e) return null;
-  const wanted: number[] = [];
-  for (let i = 0; i < e.keys.length; i++) if (DEPTH_PATCH_KEY.test(e.keys[i])) wanted.push(i);
-  if (!wanted.length) return null;
+  if (!e.keys.some(key => DEPTH_PATCH_KEY.test(key))) return null;
 
   const src = mat as THREE.MeshStandardMaterial;
   const d = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking });
@@ -3279,7 +3286,7 @@ export function depthMaterialFor(mat: THREE.Material): THREE.Material | null {
   }
   if (src.alphaToCoverage) d.alphaToCoverage = true;
   d.side = src.side;
-  for (const i of wanted) patch(d, e.keys[i], e.fns[i]);
+  copyVertexPatches(mat, d);
   return d;
 }
 
@@ -4711,14 +4718,16 @@ export function buildHouse(out: HouseParts, rng: RNG, xform: THREE.Matrix4, w: n
 // --- reusable prop geometries ---------------------------------------------
 
 /** Louvred shutter, unit sized (1 x 1) so instances can scale it to any window. */
-export function shutterGeo(): THREE.BufferGeometry {
+export function shutterGeo(low = false): THREE.BufferGeometry {
   const acc = new GeoAccum();
   // The panel is the only part big enough for a chamfer to read; the louvres
   // are 7 cm deep and there are nearly a thousand of these in the village.
-  acc.add(bevelBox(1, 1, 0.06, 0.012, 1.6), trs(0, 0, 0, 0), new THREE.Color(1, 1, 1));
+  const panel = low ? plainBox(1, 1, 0.06, 1.6) : bevelBox(1, 1, 0.06, 0.012, 1.6);
+  acc.add(panel, trs(0, 0, 0, 0), new THREE.Color(1, 1, 1));
   const slat = plainBox(0.88, 0.08, 0.05, 3);
-  for (let i = 0; i < 5; i++) {
-    const y = -0.4 + (i / 4) * 0.8;
+  const slats = low ? 3 : 5;
+  for (let i = 0; i < slats; i++) {
+    const y = -0.4 + (i / (slats - 1)) * 0.8;
     acc.add(slat, trs(0, y, 0.045, 0, 1, 1, 1, -0.34), new THREE.Color(0.88, 0.88, 0.88));
   }
   const rail = plainBox(0.94, 0.07, 0.075, 3);
@@ -4736,11 +4745,13 @@ export function doorGeo(): THREE.BufferGeometry {
   return acc.build()!;
 }
 
-export function balconyGeo(): THREE.BufferGeometry {
+export function balconyGeo(low = false): THREE.BufferGeometry {
   const acc = new GeoAccum();
   const white = new THREE.Color(1, 1, 1);
-  acc.add(bevelBox(1, 0.09, 0.72, 0.02, 1.6), trs(0, 0, 0.3, 0), white); // slab
-  acc.add(bevelBox(1, 0.055, 0.055, 0.014, 4), trs(0, 0.92, 0.64, 0), white); // handrail
+  const slab = low ? plainBox(1, 0.09, 0.72, 1.6) : bevelBox(1, 0.09, 0.72, 0.02, 1.6);
+  acc.add(slab, trs(0, 0, 0.3, 0), white); // slab
+  const handrail = low ? plainBox(1, 0.055, 0.055, 4) : bevelBox(1, 0.055, 0.055, 0.014, 4);
+  acc.add(handrail, trs(0, 0.92, 0.64, 0), white); // handrail
   const lowRail = plainBox(1, 0.04, 0.04, 4);
   acc.add(lowRail, trs(0, 0.3, 0.64, 0), white);
   const post = plainBox(0.045, 0.94, 0.045, 4);
@@ -4751,7 +4762,8 @@ export function balconyGeo(): THREE.BufferGeometry {
     acc.add(plainBox(0.045, 0.05, 0.66, 4), trs(s * 0.47, 0.92, 0.32, 0), white);
     acc.add(plainBox(0.1, 0.22, 0.3, 3), trs(s * 0.4, -0.14, 0.14, 0), white); // corbel
   }
-  for (let i = 0; i < 7; i++) acc.add(baluster, trs(-0.42 + (i / 6) * 0.84, 0.46, 0.64, 0), white);
+  const bars = low ? 3 : 7;
+  for (let i = 0; i < bars; i++) acc.add(baluster, trs(-0.42 + (i / (bars - 1)) * 0.84, 0.46, 0.64, 0), white);
   return acc.build()!;
 }
 
@@ -5324,7 +5336,7 @@ export function buntingFlagGeo(): THREE.BufferGeometry {
  * tell, and the fix that costs nothing is a different OUTLINE, not more polys.
  *   0 standing  1 arms up  2 child (short, no cap)  3 adult with a sun hat
  */
-export function spectatorGeo(variant = 0): THREE.BufferGeometry {
+export function spectatorGeo(variant = 0, low = false): THREE.BufferGeometry {
   const acc = new GeoAccum();
   const skin = new THREE.Color(1, 1, 1);
   const dark = new THREE.Color(0.42, 0.4, 0.44);
@@ -5344,8 +5356,8 @@ export function spectatorGeo(variant = 0): THREE.BufferGeometry {
   // not the extra 40 triangles.
   const torso = loft(
     (t, o) => o.set(0, (0.62 + t * 0.56) * sc, 0),
-    4,
-    6,
+    low ? 2 : 4,
+    low ? 4 : 6,
     // shoulder taper: widest at the chest, necked in at the collar
     (t) => (0.185 + Math.sin(Math.min(t * 1.35, 1) * Math.PI) * 0.045 - Math.pow(t, 3) * 0.07) * build * sc,
     1,
@@ -5355,16 +5367,16 @@ export function spectatorGeo(variant = 0): THREE.BufferGeometry {
   setUv(torso, 1, 0.5);
   acc.add(torso, trs(0, 0, 0, 0), white);
   // legs, set wider apart with a visible gap between them
-  const legG = loft((t, o) => o.set(0, t * 0.66 * sc, 0), 2, 5, (t) => (0.078 - t * 0.014) * sc, 1, true, true);
+  const legG = loft((t, o) => o.set(0, t * 0.66 * sc, 0), low ? 1 : 2, low ? 4 : 5, (t) => (0.078 - t * 0.014) * sc, 1, true, true);
   setUv(legG, 0, 0.4);
   const stance = variant === 3 ? 0.125 : 0.105;
   for (const s of [-1, 1]) acc.add(legG, trs(s * stance * sc, 0, 0, 0, 1, 1, 1, 0, s * 0.05), dark);
   const shoulderX = 0.235 * sc * build;
   if (variant === 1) {
     // arms straight up — this is the silhouette that reads "crowd" at 60 m
-    const sleeve = loft((t, o) => o.set(0, (1.06 + t * 0.3) * sc, 0), 1, 4, () => 0.054 * sc, 1, true, true);
+    const sleeve = loft((t, o) => o.set(0, (1.06 + t * 0.3) * sc, 0), 1, low ? 3 : 4, () => 0.054 * sc, 1, true, true);
     setUv(sleeve, 1, 0.96);
-    const fore = loft((t, o) => o.set(0, (1.34 + t * 0.4) * sc, 0), 1, 4, (t) => (0.048 - t * 0.008) * sc, 1, true, true);
+    const fore = loft((t, o) => o.set(0, (1.34 + t * 0.4) * sc, 0), 1, low ? 3 : 4, (t) => (0.048 - t * 0.008) * sc, 1, true, true);
     setUv(fore, 0, 0.96);
     for (const s of [-1, 1]) {
       acc.add(sleeve, trs(s * shoulderX, 0, 0, 0, 1, 1, 1, 0, s * 0.24), white);
@@ -5373,28 +5385,28 @@ export function spectatorGeo(variant = 0): THREE.BufferGeometry {
   } else {
     // Arms hang OUT from the body: upper arm swung clear, forearm bare.
     const swing = variant === 3 ? 0.34 : 0.26;
-    const sleeve = loft((t, o) => o.set(0, (1.12 - t * 0.26) * sc, 0), 1, 4, () => 0.057 * sc, 1, true, true);
+    const sleeve = loft((t, o) => o.set(0, (1.12 - t * 0.26) * sc, 0), 1, low ? 3 : 4, () => 0.057 * sc, 1, true, true);
     setUv(sleeve, 1, 0.96);
-    const fore = loft((t, o) => o.set(0, (0.9 - t * 0.24) * sc, 0), 1, 4, (t) => (0.046 - t * 0.006) * sc, 1, true, true);
+    const fore = loft((t, o) => o.set(0, (0.9 - t * 0.24) * sc, 0), 1, low ? 3 : 4, (t) => (0.046 - t * 0.006) * sc, 1, true, true);
     setUv(fore, 0, 0.96);
     for (const s of [-1, 1]) {
       acc.add(sleeve, trs(s * shoulderX, 0, 0, 0, 1, 1, 1, 0, s * swing), white);
       acc.add(fore, trs(s * (shoulderX + 0.075 * sc), 0, 0.02 * sc, 0, 1, 1, 1, -0.22, s * (swing * 0.55)), skin);
     }
   }
-  const head = loft((t, o) => o.set(0, (1.2 + t * 0.2) * sc, 0), 2, 6, (t) => Math.sin((0.18 + t * 0.72) * Math.PI) * 0.115 * sc, 1, true, true);
+  const head = loft((t, o) => o.set(0, (1.2 + t * 0.2) * sc, 0), 2, low ? 4 : 6, (t) => Math.sin((0.18 + t * 0.72) * Math.PI) * 0.115 * sc, 1, true, true);
   setUv(head, 0, 0.5);
   acc.add(head, trs(0, 0, 0, 0), skin);
   if (variant === 3) {
     // wide-brimmed sun hat: a completely different head silhouette
-    const brim = loft((t, o) => o.set(0, (1.34 + t * 0.05) * sc, 0), 1, 8, (t) => lerp(0.26, 0.2, t) * sc, 1, true, true);
+    const brim = loft((t, o) => o.set(0, (1.34 + t * 0.05) * sc, 0), 1, low ? 5 : 8, (t) => lerp(0.26, 0.2, t) * sc, 1, true, true);
     setUv(brim, 1, 0.5);
     acc.add(brim, trs(0, 0, 0, 0), white);
-    const crown = loft((t, o) => o.set(0, (1.37 + t * 0.14) * sc, 0), 2, 6, (t) => 0.108 * (1 - t * 0.35) * sc, 1, false, true);
+    const crown = loft((t, o) => o.set(0, (1.37 + t * 0.14) * sc, 0), 2, low ? 4 : 6, (t) => 0.108 * (1 - t * 0.35) * sc, 1, false, true);
     setUv(crown, 1, 0.5);
     acc.add(crown, trs(0, 0, 0, 0), white);
   } else if (!child) {
-    const cap = loft((t, o) => o.set(0, (1.33 + t * 0.09) * sc, 0), 2, 6, (t) => 0.115 * Math.cos(t * 1.2) * sc, 1, false, true);
+    const cap = loft((t, o) => o.set(0, (1.33 + t * 0.09) * sc, 0), 2, low ? 4 : 6, (t) => 0.115 * Math.cos(t * 1.2) * sc, 1, false, true);
     setUv(cap, 1, 0.5);
     acc.add(cap, trs(0, 0, 0, 0), white);
   }

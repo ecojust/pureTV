@@ -110,10 +110,14 @@ def metadata(slug):
 
 
 def target_sdk(slug):
-    # This one registered APK is a separate target-35 compatibility trial.
-    # Game metadata/payload and the shared default target are not changed.
     assert slug in registered_packages(), 'Unregistered target SDK selection'
-    return 35 if slug == 'backroad-rally' else 29
+    if slug == 'backroad-rally':
+        return 35
+    if slug in ('ponpoko-kart', 'kart-royale'):
+        target = metadata(slug).get('androidTargetSdk', 29)
+        assert type(target) is int and target in (29, 35), 'Unsupported catalog Android target SDK'
+        return target
+    return 29
 
 
 def policy_registration(slug):

@@ -21706,8 +21706,8 @@
   function WebGLProgram(renderer, cacheKey, parameters, bindingStates) {
     const gl = renderer.getContext();
     const defines = parameters.defines;
-    let vertexShader = parameters.vertexShader;
-    let fragmentShader = parameters.fragmentShader;
+    let vertexShader2 = parameters.vertexShader;
+    let fragmentShader2 = parameters.fragmentShader;
     const shadowMapTypeDefine = generateShadowMapTypeDefine(parameters);
     const envMapTypeDefine = generateEnvMapTypeDefine(parameters);
     const envMapModeDefine = generateEnvMapModeDefine(parameters);
@@ -21955,14 +21955,14 @@
         "\n"
       ].filter(filterEmptyLine).join("\n");
     }
-    vertexShader = resolveIncludes(vertexShader);
-    vertexShader = replaceLightNums(vertexShader, parameters);
-    vertexShader = replaceClippingPlaneNums(vertexShader, parameters);
-    fragmentShader = resolveIncludes(fragmentShader);
-    fragmentShader = replaceLightNums(fragmentShader, parameters);
-    fragmentShader = replaceClippingPlaneNums(fragmentShader, parameters);
-    vertexShader = unrollLoops(vertexShader);
-    fragmentShader = unrollLoops(fragmentShader);
+    vertexShader2 = resolveIncludes(vertexShader2);
+    vertexShader2 = replaceLightNums(vertexShader2, parameters);
+    vertexShader2 = replaceClippingPlaneNums(vertexShader2, parameters);
+    fragmentShader2 = resolveIncludes(fragmentShader2);
+    fragmentShader2 = replaceLightNums(fragmentShader2, parameters);
+    fragmentShader2 = replaceClippingPlaneNums(fragmentShader2, parameters);
+    vertexShader2 = unrollLoops(vertexShader2);
+    fragmentShader2 = unrollLoops(fragmentShader2);
     if (parameters.isRawShaderMaterial !== true) {
       versionString = "#version 300 es\n";
       prefixVertex = [
@@ -21987,8 +21987,8 @@
         "#define textureCubeGradEXT textureGrad"
       ].join("\n") + "\n" + prefixFragment;
     }
-    const vertexGlsl = versionString + prefixVertex + vertexShader;
-    const fragmentGlsl = versionString + prefixFragment + fragmentShader;
+    const vertexGlsl = versionString + prefixVertex + vertexShader2;
+    const fragmentGlsl = versionString + prefixFragment + fragmentShader2;
     const glVertexShader = WebGLShader(gl, gl.VERTEX_SHADER, vertexGlsl);
     const glFragmentShader = WebGLShader(gl, gl.FRAGMENT_SHADER, fragmentGlsl);
     gl.attachShader(program, glVertexShader);
@@ -22134,15 +22134,15 @@
       if (geometry.morphAttributes.position !== void 0) morphTextureStride = 1;
       if (geometry.morphAttributes.normal !== void 0) morphTextureStride = 2;
       if (geometry.morphAttributes.color !== void 0) morphTextureStride = 3;
-      let vertexShader, fragmentShader;
+      let vertexShader2, fragmentShader2;
       let customVertexShaderID, customFragmentShaderID;
       if (shaderID) {
         const shader = ShaderLib[shaderID];
-        vertexShader = shader.vertexShader;
-        fragmentShader = shader.fragmentShader;
+        vertexShader2 = shader.vertexShader;
+        fragmentShader2 = shader.fragmentShader;
       } else {
-        vertexShader = material.vertexShader;
-        fragmentShader = material.fragmentShader;
+        vertexShader2 = material.vertexShader;
+        fragmentShader2 = material.fragmentShader;
         const vertexShaderStage = _customShaders.getVertexShaderStage(material);
         const fragmentShaderStage = _customShaders.getFragmentShaderStage(material);
         _customShaders.update(material, vertexShaderStage, fragmentShaderStage);
@@ -22198,8 +22198,8 @@
         shaderID,
         shaderType: material.type,
         shaderName: material.name,
-        vertexShader,
-        fragmentShader,
+        vertexShader: vertexShader2,
+        fragmentShader: fragmentShader2,
         defines: material.defines,
         customVertexShaderID,
         customFragmentShaderID,
@@ -34363,12 +34363,12 @@ box-shadow:0 0 10px rgba(255,75,75,.9); animation:recpulse 1.1s ease-in-out infi
     }
   }
   function integrateEffect(prefix, effect, data) {
-    let fragmentShader = effect.getFragmentShader();
-    let vertexShader = effect.getVertexShader();
-    const mainImageExists = fragmentShader !== void 0 && /mainImage/.test(fragmentShader);
-    const mainUvExists = fragmentShader !== void 0 && /mainUv/.test(fragmentShader);
+    let fragmentShader2 = effect.getFragmentShader();
+    let vertexShader2 = effect.getVertexShader();
+    const mainImageExists = fragmentShader2 !== void 0 && /mainImage/.test(fragmentShader2);
+    const mainUvExists = fragmentShader2 !== void 0 && /mainUv/.test(fragmentShader2);
     data.attributes |= effect.getAttributes();
-    if (fragmentShader === void 0) {
+    if (fragmentShader2 === void 0) {
       throw new Error(`Missing fragment shader (${effect.name})`);
     } else if (mainUvExists && (data.attributes & EffectAttribute.CONVOLUTION) !== 0) {
       throw new Error(`Effects that transform UVs are incompatible with convolution effects (${effect.name})`);
@@ -34389,22 +34389,22 @@ box-shadow:0 0 10px rgba(255,75,75,.9); animation:recpulse 1.1s ease-in-out infi
 `;
         data.uvTransformation = true;
       }
-      if (vertexShader !== null && /mainSupport/.test(vertexShader)) {
-        const needsUv = /mainSupport *\([\w\s]*?uv\s*?\)/.test(vertexShader);
+      if (vertexShader2 !== null && /mainSupport/.test(vertexShader2)) {
+        const needsUv = /mainSupport *\([\w\s]*?uv\s*?\)/.test(vertexShader2);
         vertexMainSupport += `	${prefix}MainSupport(`;
         vertexMainSupport += needsUv ? "vUv);\n" : ");\n";
-        for (const m2 of vertexShader.matchAll(/(?:varying\s+\w+\s+([\S\s]*?);)/g)) {
+        for (const m2 of vertexShader2.matchAll(/(?:varying\s+\w+\s+([\S\s]*?);)/g)) {
           for (const n of m2[1].split(/\s*,\s*/)) {
             data.varyings.add(n);
             varyings.add(n);
             names.add(n);
           }
         }
-        for (const m2 of vertexShader.matchAll(functionRegExp)) {
+        for (const m2 of vertexShader2.matchAll(functionRegExp)) {
           names.add(m2[1]);
         }
       }
-      for (const m2 of fragmentShader.matchAll(functionRegExp)) {
+      for (const m2 of fragmentShader2.matchAll(functionRegExp)) {
         names.add(m2[1]);
       }
       for (const d of effect.defines.keys()) {
@@ -34418,11 +34418,11 @@ box-shadow:0 0 10px rgba(255,75,75,.9); animation:recpulse 1.1s ease-in-out infi
       names.delete("if");
       effect.uniforms.forEach((val, key2) => data.uniforms.set(prefix + key2.charAt(0).toUpperCase() + key2.slice(1), val));
       effect.defines.forEach((val, key2) => data.defines.set(prefix + key2.charAt(0).toUpperCase() + key2.slice(1), val));
-      const shaders = /* @__PURE__ */ new Map([["fragment", fragmentShader], ["vertex", vertexShader]]);
+      const shaders = /* @__PURE__ */ new Map([["fragment", fragmentShader2], ["vertex", vertexShader2]]);
       prefixSubstrings(prefix, names, data.defines);
       prefixSubstrings(prefix, names, shaders);
-      fragmentShader = shaders.get("fragment");
-      vertexShader = shaders.get("vertex");
+      fragmentShader2 = shaders.get("fragment");
+      vertexShader2 = shaders.get("vertex");
       const blendMode = effect.blendMode;
       data.blendModes.set(blendMode.blendFunction, blendMode);
       if (mainImageExists) {
@@ -34436,7 +34436,7 @@ box-shadow:0 0 10px rgba(255,75,75,.9); animation:recpulse 1.1s ease-in-out infi
         }
         const depthParamRegExp = /MainImage *\([\w\s,]*?depth[\w\s,]*?\)/;
         fragmentMainImage += `${prefix}MainImage(color0, UV, `;
-        if ((data.attributes & EffectAttribute.DEPTH) !== 0 && depthParamRegExp.test(fragmentShader)) {
+        if ((data.attributes & EffectAttribute.DEPTH) !== 0 && depthParamRegExp.test(fragmentShader2)) {
           fragmentMainImage += "depth, ";
           data.readDepth = true;
         }
@@ -34450,9 +34450,9 @@ box-shadow:0 0 10px rgba(255,75,75,.9); animation:recpulse 1.1s ease-in-out infi
 
 `;
       }
-      fragmentHead += fragmentShader + "\n";
-      if (vertexShader !== null) {
-        vertexHead += vertexShader + "\n";
+      fragmentHead += fragmentShader2 + "\n";
+      if (vertexShader2 !== null) {
+        vertexHead += vertexShader2 + "\n";
       }
       shaderParts.set(EffectShaderSection.FRAGMENT_HEAD, fragmentHead);
       shaderParts.set(EffectShaderSection.FRAGMENT_MAIN_UV, fragmentMainUv);
@@ -36530,20 +36530,20 @@ gl_FragDepth=readDepth(vUv);
          * @param {Set<WebGLExtension>} [options.extensions] - WebGL extensions.
          * @param {String} [options.vertexShader=null] - The vertex shader. Most effects don't need one.
          */
-        constructor(name, fragmentShader, {
+        constructor(name, fragmentShader2, {
           attributes = EffectAttribute.NONE,
           blendFunction = BlendFunction.NORMAL,
           defines = /* @__PURE__ */ new Map(),
           uniforms = /* @__PURE__ */ new Map(),
           extensions = null,
-          vertexShader = null
+          vertexShader: vertexShader2 = null
         } = {}) {
           super();
           this.name = name;
           this.renderer = null;
           this.attributes = attributes;
-          this.fragmentShader = fragmentShader;
-          this.vertexShader = vertexShader;
+          this.fragmentShader = fragmentShader2;
+          this.vertexShader = vertexShader2;
           this.defines = defines;
           this.uniforms = uniforms;
           this.extensions = extensions;
@@ -36695,8 +36695,8 @@ gl_FragDepth=readDepth(vUv);
          * @protected
          * @param {String} fragmentShader - The fragment shader.
          */
-        setFragmentShader(fragmentShader) {
-          this.fragmentShader = fragmentShader;
+        setFragmentShader(fragmentShader2) {
+          this.fragmentShader = fragmentShader2;
           this.setChanged();
         }
         /**
@@ -36713,8 +36713,8 @@ gl_FragDepth=readDepth(vUv);
          * @protected
          * @param {String} vertexShader - The vertex shader.
          */
-        setVertexShader(vertexShader) {
-          this.vertexShader = vertexShader;
+        setVertexShader(vertexShader2) {
+          this.vertexShader = vertexShader2;
           this.setChanged();
         }
         /**
@@ -44078,890 +44078,6 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
     }
   });
 
-  // src/src/render/Renderer.ts
-  function probeDevice() {
-    const caps2 = glCapabilities();
-    return {
-      webgl2: caps2.webgl2,
-      halfFloat: caps2.halfFloatRenderable,
-      software: caps2.software,
-      name: caps2.renderer
-    };
-  }
-  function describeProgram(gl, vs, fs) {
-    let name = "";
-    let world = false;
-    for (const shader of [vs, fs]) {
-      let src = "";
-      try {
-        src = gl.getShaderSource(shader) || "";
-      } catch {
-        src = "";
-      }
-      if (src === "") continue;
-      if (name === "") {
-        const m = src.match(/#define SHADER_NAME (\S+)/);
-        if (m !== null) name = m[1];
-      }
-      if (/RE_Direct_Physical|RE_Direct_BlinnPhong|RE_Direct_Lambert|RE_Direct_Toon/.test(src)) {
-        world = true;
-      }
-    }
-    return { label: name !== "" ? name : world ? "an unnamed lit material" : "unknown", world };
-  }
-  function pipelineSignature(s) {
-    return s.quality & 3 | (s.shadows ? 1 << 2 : 0) | (s.ssao ? 1 << 3 : 0) | (s.bloom ? 1 << 4 : 0) | (s.motionBlur ? 1 << 5 : 0) | (s.dof ? 1 << 6 : 0) | Math.round(MathUtils.clamp(s.renderScale, 0.25, 2) * 64) << 7 | Math.round(MathUtils.clamp(s.maxPixelRatio, 0.5, 4) * 8) << 16;
-  }
-  var RUNG_NAMES, POST_QUADS, RenderPipeline;
-  var init_Renderer = __esm({
-    "src/src/render/Renderer.ts"() {
-      init_three_module();
-      init_build();
-      init_types();
-      init_PostFX();
-      init_Settings();
-      init_Diagnostics();
-      RUNG_NAMES = ["hdr-composer", "ldr-composer", "direct", "safe-materials", "flat-materials", "dead"];
-      POST_QUADS = 20;
-      RenderPipeline = class {
-        constructor(canvasParent) {
-          __publicField(this, "canvasParent", canvasParent);
-          __publicField(this, "renderer");
-          /** Public so debug tooling and a quality menu can reach into the chain. */
-          __publicField(this, "composer", null);
-          __publicField(this, "fx", new PostFX());
-          /**
-           * False from the moment the GPU takes the context away until the rebuild
-           * after `webglcontextrestored` has finished. NOTHING may draw while it is
-           * false — every GL call in that window is a silent no-op, so a loop that
-           * keeps calling `render()` is just burning CPU and queueing work that will
-           * never be presented.
-           */
-          __publicField(this, "contextLost", false);
-          /**
-           * Raised as soon as the context is lost, before anything else. The frame loop
-           * subscribes so it can stop simulating on the same tick.
-           */
-          __publicField(this, "onContextLost", null);
-          /**
-           * Raised after the composer, its render targets and the effect chain have
-           * been rebuilt against the new context. Everything that owns GPU state three
-           * cannot re-derive on its own — the PMREM environment probe above all, whose
-           * texture comes back allocated but EMPTY — has to re-bake here. May be async;
-           * the notice stays up until it settles.
-           */
-          __publicField(this, "onContextRestored", null);
-          __publicField(this, "ctx");
-          __publicField(this, "device", { webgl2: false, halfFloat: false, software: false, name: "" });
-          __publicField(this, "usePost", false);
-          /** Current position on the fallback ladder. Only ever moves downward. */
-          __publicField(this, "rung", 0 /* Hdr */);
-          /** The material every object is drawn with at Rung.Safe / Rung.Flat. */
-          __publicField(this, "overrideMat", null);
-          /** Scratch for `sampleFrame`, allocated at most once per width. */
-          __publicField(this, "samplePixels", null);
-          /** True only while `trialDraw` is running, so its own failures are not counted. */
-          __publicField(this, "inTrial", false);
-          __publicField(this, "width", 1);
-          __publicField(this, "height", 1);
-          __publicField(this, "signature", -1);
-          /** Last values `applyResolution` actually pushed at the GL side. */
-          __publicField(this, "appliedRatio", -1);
-          __publicField(this, "appliedW", -1);
-          __publicField(this, "appliedH", -1);
-          __publicField(this, "appliedSamples", -1);
-          __publicField(this, "notice", null);
-          __publicField(this, "gl", null);
-          /**
-           * Draw calls the SCENE pass submitted on the last frame.
-           *
-           * Sampled before the composer's fullscreen passes run, because three resets
-           * `info.render` at the top of every `render()` and the last pass in the frame
-           * is a single quad — read afterwards, an empty world and a healthy one both
-           * report about the same number. The diagnostics watchdog uses this to tell
-           * "the world is not being drawn" apart from "the world is fine".
-           */
-          __publicField(this, "lastSceneCalls", 0);
-          // -------------------------------------------------------------------------
-          //  Context loss / restore
-          // -------------------------------------------------------------------------
-          __publicField(this, "handleContextLost", (event) => {
-            event.preventDefault();
-            if (this.contextLost) return;
-            this.contextLost = true;
-            console.warn("[render] WebGL context lost \u2014 pausing until it is restored");
-            try {
-              this.fx.dispose();
-            } catch {
-            }
-            try {
-              this.composer?.dispose();
-            } catch {
-            }
-            this.composer = null;
-            this.showNotice("Graphics paused", "The device reclaimed the renderer. Restoring\u2026");
-            try {
-              this.onContextLost?.();
-            } catch (err) {
-              console.error("[render] onContextLost threw", err);
-            }
-          });
-          __publicField(this, "handleContextRestored", () => {
-            console.info("[render] WebGL context restored \u2014 rebuilding the pipeline");
-            this.usePost = this.device.webgl2 && this.rung <= 1 /* Ldr */;
-            this.composer = null;
-            this.invalidateResolutionCache();
-            this.signature = pipelineSignature(this.ctx.settings);
-            try {
-              this.gl = this.renderer.getContext();
-            } catch {
-              this.gl = null;
-            }
-            this.renderer.shadowMap.enabled = this.ctx.settings.shadows;
-            this.renderer.shadowMap.needsUpdate = true;
-            this.contextLost = false;
-            this.applyResolution();
-            this.rebuild();
-            const done = () => {
-              if (this.contextLost) return;
-              this.hideNotice();
-              console.info("[render] pipeline restored");
-            };
-            try {
-              const p = this.onContextRestored?.();
-              if (p !== void 0 && p !== null && typeof p.then === "function") {
-                p.then(done, (err) => {
-                  console.error("[render] onContextRestored failed", err);
-                  done();
-                });
-              } else {
-                done();
-              }
-            } catch (err) {
-              console.error("[render] onContextRestored threw", err);
-              done();
-            }
-          });
-          // -------------------------------------------------------------------------
-          /**
-           * The pixel ratio the internal buffers are actually allocated at, which is
-           * what every per-sample cost in the chain scales with. Not the same thing as
-           * `devicePixelRatio`: `maxPixelRatio` caps it, `renderScale` scales it, and a
-           * software rasteriser is pinned to 1.
-           */
-          /**
-           * Dynamic resolution, 0.5..1. Deliberately NOT part of `Settings`, because
-           * `pipelineSignature` covers `renderScale` and any change there tears down and
-           * rebuilds the entire effect chain. Adaptive scaling has to be able to move
-           * every second or two; rebuilding the chain that often would cost far more
-           * than it saves.
-           */
-          __publicField(this, "dynamicScale", 1);
-        }
-        get softwareLow() {
-          return usesSoftwareLow(this.ctx.settings.quality, this.device.software);
-        }
-        init(ctx) {
-          this.ctx = ctx;
-          this.device = probeDevice();
-          this.usePost = this.device.webgl2;
-          const caps2 = glCapabilities();
-          if (!caps2.webgl2) {
-            this.showFatal(
-              "This browser cannot start WebGL 2",
-              "The game needs WebGL 2, and this browser or graphics driver is not providing it. Updating the graphics driver, or enabling hardware acceleration in the browser settings, usually fixes it."
-            );
-            logPipeline("fatal", "no WebGL2 context \u2014 nothing can be rendered");
-            throw new Error("WebGL 2 is unavailable, so the renderer cannot be created.");
-          }
-          if (!caps2.halfFloatRenderable) this.rung = 1 /* Ldr */;
-          if (!caps2.byteRenderable || this.softwareLow) this.rung = 2 /* Direct */;
-          if (this.rung !== 0 /* Hdr */) {
-            logPipeline("start", `pipeline starts on ${RUNG_NAMES[this.rung]} (boot probe)`);
-          }
-          this.usePost = caps2.webgl2 && this.rung <= 1 /* Ldr */;
-          let renderer;
-          try {
-            renderer = this.createRenderer(ctx);
-          } catch (err) {
-            this.showFatal(
-              "Graphics could not start",
-              "The browser refused to create a WebGL context for this page. Updating the graphics driver, or enabling hardware acceleration in the browser settings, usually fixes it."
-            );
-            logPipeline("fatal", "WebGLRenderer could not be constructed: " + String(err));
-            throw err;
-          }
-          this.finishInit(ctx, renderer);
-        }
-        createRenderer(ctx) {
-          const renderer = new WebGLRenderer({
-            // With the composer running, MSAA lives on the composer's render target
-            // and the default framebuffer only ever receives one fullscreen triangle.
-            // Without a composer, the driver's MSAA is the only edge treatment left.
-            antialias: !this.usePost && !this.softwareLow,
-            powerPreference: "high-performance",
-            stencil: false,
-            depth: true,
-            alpha: false,
-            // False in normal play: keeping the drawing buffer costs a copy every
-            // frame. But `?debug=frames` exists to read that buffer back, and with
-            // this false the read returns DISCARDED contents — measured as all zeros
-            // on a frame that presented perfectly — so the watchdog reports 100%
-            // black on a healthy frame. An instrument that lies is worse than none.
-            preserveDrawingBuffer: new URLSearchParams(location.search).get("debug") === "frames",
-            failIfMajorPerformanceCaveat: false
-          });
-          renderer.outputColorSpace = SRGBColorSpace;
-          renderer.toneMapping = ACESFilmicToneMapping;
-          renderer.toneMappingExposure = 1.05;
-          renderer.shadowMap.enabled = ctx.settings.shadows;
-          renderer.shadowMap.type = PCFShadowMap;
-          renderer.shadowMap.autoUpdate = true;
-          renderer.domElement.setAttribute("aria-hidden", "true");
-          this.canvasParent.appendChild(renderer.domElement);
-          renderer.domElement.addEventListener("webglcontextlost", this.handleContextLost, false);
-          renderer.domElement.addEventListener("webglcontextrestored", this.handleContextRestored, false);
-          renderer.domElement.addEventListener("webglcontextcreationerror", ((e) => {
-            console.error("[render] context creation error:", e.statusMessage);
-          }), false);
-          return renderer;
-        }
-        finishInit(ctx, renderer) {
-          this.renderer = renderer;
-          try {
-            this.gl = renderer.getContext();
-          } catch {
-            this.gl = null;
-          }
-          ctx.renderer = renderer;
-          globalThis.__render = this;
-          renderer.debug.onShaderError = (gl, program, vs, fs) => {
-            const who = describeProgram(gl, vs, fs);
-            const text = `program link failed for "${who.label}"${who.world ? " (a lit world material)" : ""}
-  program: ${gl.getProgramInfoLog(program) || "(no log)"}
-  vertex : ${gl.getShaderInfoLog(vs) || "(ok)"}
-  frag   : ${gl.getShaderInfoLog(fs) || "(ok)"}`;
-            recordShaderError(text, who.label, who.world && !this.inTrial);
-            console.error("[render] " + text);
-          };
-          this.width = Math.max(1, ctx.width);
-          this.height = Math.max(1, ctx.height);
-          this.signature = pipelineSignature(ctx.settings);
-          this.applyResolution();
-          const trial = this.trialDraw();
-          if (!trial.ok) {
-            logPipeline("trial", "a representative PBR material drew nothing: " + trial.detail);
-            if (this.rung < 3 /* Safe */) this.rung = 3 /* Safe */;
-          }
-          this.rebuild();
-        }
-        /**
-         * Tears the effect chain down and reassembles it against the current
-         * settings and the current rung. Safe to call at any time — quality may
-         * change mid-race, and so may the rung.
-         *
-         * Each attempt that fails moves one rung DOWN and is retried, so a device
-         * that cannot build the composer ends this call on the direct path with a
-         * frame in hand rather than with an exception and a black canvas. The loop
-         * is bounded by the number of rungs; it cannot spin.
-         */
-        rebuild() {
-          if (this.contextLost) return;
-          for (let attempt = 0; attempt <= 5 /* Dead */; attempt++) {
-            if (this.tryBuild()) return;
-          }
-        }
-        /** One attempt at the current rung. False means "moved down, try again". */
-        tryBuild() {
-          this.applyMaterialOverride();
-          this.renderer.shadowMap.enabled = this.ctx.settings.shadows && this.rung < 3 /* Safe */;
-          this.usePost = this.rung <= 1 /* Ldr */;
-          if (!this.usePost) {
-            this.fx.dispose();
-            if (this.composer !== null) {
-              try {
-                this.composer.removeAllPasses();
-                this.composer.dispose();
-              } catch {
-              }
-              this.composer = null;
-            }
-            this.renderer.autoClear = true;
-            this.invalidateResolutionCache();
-            this.applyResolution();
-            return true;
-          }
-          if (this.composer === null) {
-            try {
-              if (forcedFailure("composer")) throw new Error("forced by ?glfail=composer");
-              this.composer = new EffectComposer(this.renderer, {
-                depthBuffer: true,
-                stencilBuffer: false,
-                multisampling: 0,
-                // Half float is what makes a high bloom threshold and our own tone
-                // map meaningful; without it the scene clips to white before there
-                // is anything left to grade. `Rung.Ldr` is that trade taken
-                // deliberately, on a device that proved it cannot do the other one.
-                frameBufferType: this.rung === 0 /* Hdr */ ? HalfFloatType : UnsignedByteType
-              });
-              this.invalidateResolutionCache();
-            } catch (err) {
-              this.dropComposer();
-              this.fall(`composer could not be constructed: ${String(err)}`);
-              return false;
-            }
-          } else {
-            this.fx.dispose();
-            this.composer.removeAllPasses();
-          }
-          this.setMultisampling(this.msaaSamples());
-          try {
-            this.fx.build(this.ctx, this.composer, {
-              software: this.device.software,
-              // The chain has to know it is writing into 8 bits: with an LDR buffer
-              // the scene is clamped at 1.0 before bloom ever sees it, so a threshold
-              // authored against scene-linear HDR selects nothing at all.
-              ldr: this.rung >= 1 /* Ldr */
-            });
-          } catch (err) {
-            this.dropComposer();
-            this.fall(`effect chain failed to build: ${String(err)}`);
-            return false;
-          }
-          this.applyResolution();
-          const status = this.targetStatus(this.composer.inputBuffer);
-          if (!status.ok) {
-            this.dropComposer();
-            this.fall(`the composer's ${this.rung === 0 /* Hdr */ ? "half-float" : "8-bit"} buffer is not renderable at ${this.appliedW}x${this.appliedH} (framebuffer status 0x${status.status.toString(16)})`);
-            return false;
-          }
-          return true;
-        }
-        /** Releases the effect chain and the composer, tolerating a dead context. */
-        dropComposer() {
-          this.fx.dispose();
-          try {
-            this.composer?.removeAllPasses();
-            this.composer?.dispose();
-          } catch {
-          }
-          this.composer = null;
-          this.usePost = false;
-          this.renderer.autoClear = true;
-          this.invalidateResolutionCache();
-        }
-        /** Steps one rung down from inside a build attempt, and says why. */
-        fall(reason) {
-          const from = RUNG_NAMES[this.rung];
-          this.rung = Math.min(this.rung + 1, 5 /* Dead */);
-          logPipeline("degrade", `${from} -> ${RUNG_NAMES[this.rung]}: ${reason}`);
-        }
-        /**
-         * Is this render target's framebuffer complete and error-free?
-         *
-         * `setRenderTarget` is what makes three allocate and bind it, so this is also
-         * the moment the allocation either happens or does not.
-         */
-        targetStatus(rt) {
-          const gl = this.gl;
-          if (gl === null) return { ok: true, status: 0 };
-          const prev = this.renderer.getRenderTarget();
-          let status = 0;
-          let err = 0;
-          try {
-            drainErrors(gl);
-            this.renderer.setRenderTarget(rt);
-            status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-            err = gl.getError();
-          } catch {
-            return { ok: false, status: 0 };
-          } finally {
-            this.renderer.setRenderTarget(prev);
-          }
-          return { ok: status === gl.FRAMEBUFFER_COMPLETE && err === gl.NO_ERROR, status };
-        }
-        render(ctx) {
-          if (this.contextLost || this.renderer === void 0) return;
-          const sig = pipelineSignature(ctx.settings);
-          if (sig !== this.signature) {
-            this.signature = sig;
-            this.rebuild();
-            this.applyResolution();
-          }
-          if (this.composer !== null) {
-            this.fx.sync(ctx, ctx.dt);
-            this.renderer.info.autoReset = false;
-            this.renderer.info.reset();
-            this.composer.render(ctx.dt);
-            this.lastSceneCalls = Math.max(0, this.renderer.info.render.calls - POST_QUADS);
-            this.renderer.info.autoReset = true;
-          } else {
-            this.renderer.setRenderTarget(null);
-            this.renderer.clear(true, true, false);
-            this.renderer.render(ctx.scene, ctx.camera);
-            this.lastSceneCalls = this.renderer.info.render.calls;
-          }
-        }
-        resize(w, h) {
-          const nw = Math.max(1, Math.round(w));
-          const nh = Math.max(1, Math.round(h));
-          if (nw === this.width && nh === this.height) return;
-          this.width = nw;
-          this.height = nh;
-          this.applyResolution();
-        }
-        dispose() {
-          const el2 = this.renderer?.domElement;
-          if (el2 !== void 0) {
-            el2.removeEventListener("webglcontextlost", this.handleContextLost, false);
-            el2.removeEventListener("webglcontextrestored", this.handleContextRestored, false);
-          }
-          this.fx.dispose();
-          if (this.composer !== null) {
-            this.composer.dispose();
-            this.composer = null;
-          }
-          if (this.overrideMat !== null) {
-            if (this.ctx?.scene?.overrideMaterial === this.overrideMat) this.ctx.scene.overrideMaterial = null;
-            this.overrideMat.dispose();
-            this.overrideMat = null;
-          }
-          this.samplePixels = null;
-          this.notice?.remove();
-          this.notice = null;
-          this.renderer?.dispose();
-          if (el2 !== void 0 && el2.parentNode !== null) el2.parentNode.removeChild(el2);
-        }
-        /**
-         * Give up on post-processing and run the direct path from here on.
-         *
-         * The chain already degrades when it cannot be *built*; this is the same
-         * retreat for a chain that built fine and then started throwing at render
-         * time, which is what a driver in trouble looks like from up here. A game
-         * without a grade is a worse-looking game; a game that throws once per frame
-         * is a black rectangle.
-         */
-        disablePostProcessing(reason) {
-          if (this.rung >= 2 /* Direct */) return;
-          logPipeline("degrade", `${RUNG_NAMES[this.rung]} -> ${RUNG_NAMES[2 /* Direct */]}: ${reason}`);
-          this.rung = 2 /* Direct */;
-          this.dropComposer();
-          this.rebuild();
-        }
-        // -------------------------------------------------------------------------
-        //  The fallback ladder, driven from Diagnostics
-        // -------------------------------------------------------------------------
-        /**
-         * Step one rung down and rebuild. Returns false when there is nothing left
-         * below — which is the only condition under which the banner is allowed.
-         *
-         * Called by the watchdogs in Diagnostics, which is deliberate: the pipeline
-         * knows how to degrade and the diagnostics know when to. Neither of them
-         * should be deciding both.
-         */
-        degrade(reason) {
-          if (this.rung >= 4 /* Flat */) {
-            logPipeline("degrade", `already on ${RUNG_NAMES[this.rung]}; nothing simpler to try (${reason})`);
-            return false;
-          }
-          this.fall(reason);
-          this.rebuild();
-          return true;
-        }
-        /**
-         * Jump straight to the simple-material rung.
-         *
-         * Used when the cause is KNOWN to be a material family the driver rejected.
-         * Walking down through the composer rungs first would waste several seconds
-         * of the player's time on changes that cannot possibly help: the shader is
-         * broken wherever it is composited to.
-         */
-        degradeToSafeMaterials(reason) {
-          if (this.rung >= 3 /* Safe */) {
-            logPipeline("degrade", `already on ${RUNG_NAMES[this.rung]}, which covers this (${reason})`);
-            return true;
-          }
-          logPipeline("degrade", `${RUNG_NAMES[this.rung]} -> ${RUNG_NAMES[3 /* Safe */]}: ${reason}`);
-          this.rung = 3 /* Safe */;
-          this.rebuild();
-          return true;
-        }
-        rungName() {
-          return RUNG_NAMES[this.rung];
-        }
-        capabilities() {
-          return glCapabilities();
-        }
-        /**
-         * Read two strips of the finished frame back and score them.
-         *
-         * THE ONLY HONEST ORACLE IN THE FILE. Draw calls, framebuffer status and
-         * shader logs are all proxies; this is the picture. It works without
-         * `preserveDrawingBuffer` because it runs inside the same task that drew the
-         * frame — the drawing buffer is only discarded when the compositor takes the
-         * surface, which cannot happen until this task yields.
-         *
-         * `readPixels` is a synchronous pipeline stall, so this is called a handful
-         * of times in the life of the page and never in a steady state; see
-         * FIRST_LOOK in Diagnostics. The strips are 4 rows each at 45% and 75% of
-         * frame height, which crosses sky, horizon, trackside and road — a band that
-         * is featureless in every one of the failure modes and never featureless in a
-         * working frame.
-         */
-        sampleFrame() {
-          const gl = this.gl;
-          if (gl === null || this.contextLost) return null;
-          const w = gl.drawingBufferWidth | 0;
-          const h = gl.drawingBufferHeight | 0;
-          if (w < 8 || h < 8) return null;
-          const rows = 4;
-          const need = w * rows * 4;
-          if (this.samplePixels === null || this.samplePixels.length < need) {
-            this.samplePixels = new Uint8Array(need);
-          }
-          const buf = this.samplePixels;
-          let n = 0;
-          let sum = 0;
-          let sum2 = 0;
-          let lit2 = 0;
-          const prev = this.renderer.getRenderTarget();
-          try {
-            this.renderer.setRenderTarget(null);
-            drainErrors(gl);
-            for (const frac of [0.45, 0.75]) {
-              const y = Math.min(h - rows, Math.max(0, Math.round(h * frac)));
-              gl.readPixels(0, y, w, rows, gl.RGBA, gl.UNSIGNED_BYTE, buf);
-              if (gl.getError() !== gl.NO_ERROR) return { lit: 0, mean: 0, sd: 0, ok: false };
-              for (let i = 0; i < need; i += 4) {
-                const luma = 0.2126 * buf[i] + 0.7152 * buf[i + 1] + 0.0722 * buf[i + 2];
-                n++;
-                sum += luma;
-                sum2 += luma * luma;
-                if (luma > 12) lit2++;
-              }
-            }
-          } catch {
-            return { lit: 0, mean: 0, sd: 0, ok: false };
-          } finally {
-            this.renderer.setRenderTarget(prev);
-          }
-          if (n === 0) return { lit: 0, mean: 0, sd: 0, ok: false };
-          const mean = sum / n;
-          return { lit: lit2 / n, mean, sd: Math.sqrt(Math.max(0, sum2 / n - mean * mean)), ok: true };
-        }
-        /**
-         * Draws a representative material into a small off-screen target and reads
-         * the result back. Runs once, at boot, before any of the world exists.
-         *
-         * A clearcoated MeshPhysicalMaterial under a directional light is the game's
-         * headline material (art bible §4) and shares its entire shader family with
-         * the road, the kerbs, the buildings and the karts. If this comes back the
-         * colour of the clear, that family does not draw on this GPU — which is the
-         * leading theory for the empty-world reports, and the whole point of asking
-         * before the player has anything to lose.
-         */
-        trialDraw() {
-          if (forcedFailure("trial")) return { ok: false, detail: "forced by ?glfail=trial" };
-          const size = 8;
-          let rt = null;
-          const scene = new Scene();
-          const geo = new PlaneGeometry(4, 4);
-          const mat2 = new MeshPhysicalMaterial({
-            color: 14697791,
-            metalness: 0,
-            roughness: 0.28,
-            clearcoat: 1,
-            clearcoatRoughness: 0.06
-          });
-          mat2.name = "boot-trial-physical";
-          const prevTarget = this.renderer.getRenderTarget();
-          const prevClear = new Color();
-          this.renderer.getClearColor(prevClear);
-          const prevAlpha = this.renderer.getClearAlpha();
-          this.inTrial = true;
-          try {
-            rt = new WebGLRenderTarget(size, size, { type: UnsignedByteType, depthBuffer: true });
-            const cam = new PerspectiveCamera(50, 1, 0.1, 20);
-            cam.position.set(0, 0, 2.4);
-            const key2 = new DirectionalLight(16767400, 4.2);
-            key2.position.set(0.5, 0.9, 1.4);
-            scene.add(key2, new AmbientLight(11061503, 0.8), new Mesh(geo, mat2));
-            this.renderer.setRenderTarget(rt);
-            this.renderer.setClearColor(0, 1);
-            this.renderer.clear(true, true, false);
-            this.renderer.render(scene, cam);
-            const px2 = new Uint8Array(size * size * 4);
-            this.renderer.readRenderTargetPixels(rt, 0, 0, size, size, px2);
-            let brightest = 0;
-            for (let i = 0; i < px2.length; i += 4) {
-              brightest = Math.max(brightest, px2[i], px2[i + 1], px2[i + 2]);
-            }
-            return brightest >= 8 ? { ok: true, detail: "" } : { ok: false, detail: `brightest channel was ${brightest}/255 on a fully-lit quad` };
-          } catch (err) {
-            return { ok: false, detail: String(err) };
-          } finally {
-            this.inTrial = false;
-            this.renderer.setRenderTarget(prevTarget);
-            this.renderer.setClearColor(prevClear, prevAlpha);
-            scene.clear();
-            geo.dispose();
-            mat2.dispose();
-            rt?.dispose();
-          }
-        }
-        /**
-         * Installs, updates or removes the whole-scene material override.
-         *
-         * `Scene.overrideMaterial` is a blunt instrument and that is exactly what is
-         * wanted here: at this point the driver has told us it will not draw the
-         * materials the world is made of, and the choice is between one simple
-         * material for everything and nothing at all. The geometry, the layout, the
-         * karts and the track are all still there — they stop being invisible.
-         */
-        applyMaterialOverride() {
-          const scene = this.ctx?.scene;
-          if (scene === void 0 || scene === null) return;
-          const want = this.rung >= 4 /* Flat */ ? "flat" : this.rung >= 3 /* Safe */ ? "safe" : null;
-          const have = this.overrideMat === null ? null : this.overrideMat.userData.kartFallback;
-          if (want === have) return;
-          if (this.overrideMat !== null) {
-            if (scene.overrideMaterial === this.overrideMat) scene.overrideMaterial = null;
-            this.overrideMat.dispose();
-            this.overrideMat = null;
-          }
-          if (want === null) return;
-          const mat2 = want === "safe" ? new MeshLambertMaterial({ color: 12169894, fog: true }) : new MeshNormalMaterial();
-          mat2.userData.kartFallback = want;
-          this.overrideMat = mat2;
-          scene.overrideMaterial = mat2;
-          logPipeline("materials", `every material replaced with the ${want} variant`);
-        }
-        /**
-         * A full-page explanation for the failures that leave nothing to render at
-         * all, attached to <html> rather than <body>.
-         *
-         * That is not a stylistic choice. When the pipeline cannot be constructed,
-         * `init` throws, and main.ts's boot handler replaces the entire contents of
-         * <body> with a stack trace — which would take a panel inside it with it. A
-         * node parented to the document element survives, so the player gets a
-         * sentence they can act on instead of a red monospace dump.
-         */
-        showFatal(title, detail) {
-          if (document.getElementById("gl-fatal") !== null) return;
-          const el2 = document.createElement("div");
-          el2.id = "gl-fatal";
-          el2.setAttribute("role", "alert");
-          el2.style.cssText = [
-            "position:fixed",
-            "inset:0",
-            "z-index:9999",
-            "display:flex",
-            "flex-direction:column",
-            "align-items:center",
-            "justify-content:center",
-            "gap:.6em",
-            "padding:8vmin",
-            "text-align:center",
-            "font-family:system-ui,-apple-system,sans-serif",
-            "color:#f6efe4",
-            "background:radial-gradient(120% 100% at 50% 30%,#1d2436 0%,#0b0f18 70%)"
-          ].join(";");
-          const h = document.createElement("div");
-          h.style.cssText = "font-weight:800;font-size:clamp(18px,3.2vmin,26px);letter-spacing:.02em";
-          h.textContent = title;
-          const p = document.createElement("div");
-          p.style.cssText = "max-width:34em;opacity:.8;font-size:clamp(13px,2vmin,16px);line-height:1.6";
-          p.textContent = detail;
-          el2.append(h, p);
-          document.documentElement.appendChild(el2);
-        }
-        /**
-         * Put a line of text over the canvas, or take it away again with `null`.
-         * The frame loop uses this for the one failure the pipeline cannot see from
-         * in here: a renderer that keeps throwing without ever losing its context.
-         */
-        announce(title, detail = "") {
-          if (title === null) this.hideNotice();
-          else this.showNotice(title, detail);
-        }
-        /**
-         * Test hook: drop the context on purpose, and optionally hand it back.
-         *
-         * Recovery code that has never been run is decoration, and the only way to
-         * run this one is to ask the driver to take the context away. Exposed through
-         * `__render` alongside the rest of the harness surface.
-         */
-        debugLoseContext(restoreAfterMs = 900) {
-          const ext = this.renderer.getContext().getExtension("WEBGL_lose_context");
-          if (ext === null) {
-            console.warn("[render] WEBGL_lose_context unavailable; cannot simulate a loss");
-            return;
-          }
-          ext.loseContext();
-          if (restoreAfterMs >= 0) setTimeout(() => ext.restoreContext(), restoreAfterMs);
-        }
-        /**
-         * A calm line of text over the frozen canvas. A black rectangle with no
-         * explanation is the worst version of this; the frame underneath is stale but
-         * it is still a picture of the game, so the notice sits on top of it rather
-         * than replacing it.
-         */
-        showNotice(title, detail) {
-          if (this.notice === null) {
-            const el2 = document.createElement("div");
-            el2.id = "gl-notice";
-            el2.setAttribute("role", "status");
-            el2.style.cssText = [
-              "position:fixed",
-              "inset:auto 0 0 0",
-              "z-index:120",
-              "display:flex",
-              "flex-direction:column",
-              "align-items:center",
-              "gap:.35em",
-              "padding:1.4em 1.2em calc(1.4em + env(safe-area-inset-bottom))",
-              "font-family:system-ui,-apple-system,sans-serif",
-              "text-align:center",
-              "color:#f3f6fb",
-              "pointer-events:none",
-              "background:linear-gradient(180deg,rgba(8,11,22,0) 0%,rgba(8,11,22,.82) 46%,rgba(8,11,22,.94) 100%)",
-              "opacity:0",
-              "transition:opacity .35s ease"
-            ].join(";");
-            el2.innerHTML = '<b style="font-size:clamp(15px,2.4vmin,20px);font-weight:800;letter-spacing:.06em"></b><span style="font-size:clamp(12px,1.8vmin,15px);letter-spacing:.04em;color:rgba(233,240,250,.66)"></span>';
-            document.body.appendChild(el2);
-            this.notice = el2;
-          }
-          const [b, s] = [this.notice.querySelector("b"), this.notice.querySelector("span")];
-          if (b !== null) b.textContent = title;
-          if (s !== null) s.textContent = detail;
-          requestAnimationFrame(() => {
-            if (this.notice !== null) this.notice.style.opacity = "1";
-          });
-        }
-        hideNotice() {
-          const el2 = this.notice;
-          if (el2 === null) return;
-          el2.style.opacity = "0";
-          setTimeout(() => {
-            if (this.notice === el2) {
-              el2.remove();
-              this.notice = null;
-            }
-          }, 420);
-        }
-        /**
-         * Adjust internal render resolution without rebuilding the chain.
-         *
-         * This is the correct response to a GPU that cannot keep up, and it is what
-         * replaced halving the PRESENT rate. For a racing game a smooth 25 fps at 80%
-         * resolution beats a juddering 12 fps at full resolution every time: present
-         * cadence is what the eye reads as motion, and the sim was already running at
-         * full rate underneath, so halving the present only added judder and changed
-         * nothing about latency.
-         */
-        setDynamicScale(scale) {
-          const next = MathUtils.clamp(scale, 0.5, 1);
-          if (Math.abs(next - this.dynamicScale) < 0.01) return;
-          this.dynamicScale = next;
-          this.applyResolution();
-        }
-        effectivePixelRatio() {
-          const s = this.ctx.settings;
-          const cap = this.device.software ? 1 : Math.max(0.5, s.maxPixelRatio);
-          const scale = MathUtils.clamp(s.renderScale, 0.25, 2) * this.dynamicScale;
-          const dpr = MathUtils.clamp(globalThis.devicePixelRatio || 1, 0.5, 4);
-          const ratio = Math.min(dpr, cap) * scale;
-          const limit = Math.min(
-            this.renderer?.capabilities?.maxTextureSize ?? 4096,
-            this.maxRenderbufferSize()
-          );
-          const longest = Math.max(this.width, this.height);
-          if (longest * ratio > limit) return Math.max(0.25, limit / longest * scale);
-          const budget = 4e6;
-          const pixels = this.width * this.height * ratio * ratio;
-          if (pixels > budget) {
-            return Math.max(0.25, Math.sqrt(budget / (this.width * this.height)) * scale);
-          }
-          return ratio;
-        }
-        maxRenderbufferSize() {
-          const gl = this.gl;
-          if (gl === null) return 4096;
-          try {
-            return gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) || 4096;
-          } catch {
-            return 4096;
-          }
-        }
-        msaaSamples() {
-          if (!this.device.webgl2) return 0;
-          const q = this.ctx.settings.quality;
-          if (this.ctx.settings.ssao) return 0;
-          if (this.device.software) return q >= 2 /* High */ ? 2 : 0;
-          if (q < 1 /* Medium */) return 0;
-          if (q === 1 /* Medium */) return 2;
-          return this.effectivePixelRatio() >= 1.5 ? 2 : 4;
-        }
-        /**
-         * Resolution policy. `renderScale` folds into the device pixel ratio, so the
-         * canvas keeps its full CSS size and the compositor does the upscale on
-         * present — while the internal buffers, the AO targets, the bloom mip chain
-         * and the bokeh targets all shrink together.
-         */
-        applyResolution() {
-          if (this.renderer === void 0 || this.contextLost) return;
-          const ratio = this.effectivePixelRatio();
-          const bufW = Math.floor(this.width * ratio);
-          const bufH = Math.floor(this.height * ratio);
-          if (bufW === this.appliedW && bufH === this.appliedH && ratio === this.appliedRatio) {
-            if (this.composer !== null) this.setMultisampling(this.msaaSamples());
-            return;
-          }
-          this.appliedW = bufW;
-          this.appliedH = bufH;
-          this.appliedRatio = ratio;
-          this.renderer.setPixelRatio(ratio);
-          if (this.composer !== null) {
-            this.setMultisampling(this.msaaSamples());
-            this.composer.setSize(this.width, this.height, true);
-          } else {
-            this.renderer.setSize(this.width, this.height, true);
-          }
-        }
-        /**
-         * Assigns the composer's sample count only when it genuinely changes.
-         *
-         * The comment this replaces claimed "the setter is a no-op when the value is
-         * unchanged". It is not: postprocessing's setter reads
-         *
-         *     if (multisampling > 0 && value > 0) { buffer.samples = value; buffer.dispose(); }
-         *
-         * — an unconditional `dispose()` of the input buffer whenever both the old
-         * and the new value are non-zero, which is every assignment on every tier
-         * above Low. `dispose()` releases the GPU-side attachment and marks the
-         * target for reallocation on next use, so handing the setter the value it
-         * already holds throws away a half-float MSAA HDR buffer and builds an
-         * identical one. Once per quality change is nothing; once per resize event,
-         * on a platform that fires resize events in bursts, is the difference between
-         * a steady footprint and a sawtooth.
-         */
-        /** Forgets what was last pushed, so the next `applyResolution` pushes it all. */
-        invalidateResolutionCache() {
-          this.appliedRatio = -1;
-          this.appliedW = -1;
-          this.appliedH = -1;
-          this.appliedSamples = -1;
-        }
-        setMultisampling(samples) {
-          if (this.composer === null || samples === this.appliedSamples) return;
-          this.appliedSamples = samples;
-          this.composer.multisampling = samples;
-        }
-      };
-    }
-  });
-
   // node_modules/simplex-noise/dist/esm/simplex-noise.js
   function createNoise2D(random = Math.random) {
     const perm = buildPermutationTable(random);
@@ -49366,6 +48482,4832 @@ vec3 triWeights() {
     }
   });
 
+  // src/src/world/Props.ts
+  function mulberry322(seed) {
+    let a = seed >>> 0;
+    return () => {
+      a = a + 1831565813 >>> 0;
+      let t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function cv(size) {
+    const c = document.createElement("canvas");
+    c.width = c.height = size;
+    const g = c.getContext("2d");
+    return [c, g];
+  }
+  function finish(c, srgb, aniso, repeat = true) {
+    const t = new CanvasTexture(c);
+    if (srgb) t.colorSpace = SRGBColorSpace;
+    t.wrapS = t.wrapT = repeat ? RepeatWrapping : ClampToEdgeWrapping;
+    t.anisotropy = aniso;
+    t.generateMipmaps = true;
+    t.minFilter = LinearMipmapLinearFilter;
+    t.needsUpdate = true;
+    return t;
+  }
+  function dilateRGB(px2, size, passes = 8) {
+    const known = new Uint8Array(size * size);
+    for (let i = 0; i < size * size; i++) known[i] = px2[i * 4 + 3] > 6 ? 1 : 0;
+    const next = new Uint8Array(known);
+    for (let p = 0; p < passes; p++) {
+      let grew = false;
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          const i = y * size + x;
+          if (known[i]) continue;
+          let r2 = 0, g2 = 0, b2 = 0, n2 = 0;
+          for (let k = 0; k < 4; k++) {
+            const nx = x + (k === 0 ? -1 : k === 1 ? 1 : 0);
+            const ny = y + (k === 2 ? -1 : k === 3 ? 1 : 0);
+            if (nx < 0 || ny < 0 || nx >= size || ny >= size) continue;
+            const j = ny * size + nx;
+            if (!known[j]) continue;
+            r2 += px2[j * 4];
+            g2 += px2[j * 4 + 1];
+            b2 += px2[j * 4 + 2];
+            n2++;
+          }
+          if (!n2) continue;
+          px2[i * 4] = r2 / n2 | 0;
+          px2[i * 4 + 1] = g2 / n2 | 0;
+          px2[i * 4 + 2] = b2 / n2 | 0;
+          next[i] = 1;
+          grew = true;
+        }
+      }
+      known.set(next);
+      if (!grew) break;
+    }
+    let r = 0, g = 0, b = 0, n = 0;
+    for (let i = 0; i < size * size; i++) {
+      if (!known[i]) continue;
+      r += px2[i * 4];
+      g += px2[i * 4 + 1];
+      b += px2[i * 4 + 2];
+      n++;
+    }
+    if (!n) return;
+    r = r / n | 0;
+    g = g / n | 0;
+    b = b / n | 0;
+    for (let i = 0; i < size * size; i++) {
+      if (known[i]) continue;
+      px2[i * 4] = r;
+      px2[i * 4 + 1] = g;
+      px2[i * 4 + 2] = b;
+    }
+  }
+  function coverageMips(base, size, ref) {
+    const out = [{ data: base, width: size, height: size }];
+    const refB = ref * 255;
+    let target = 0;
+    for (let i = 0; i < size * size; i++) if (base[i * 4 + 3] >= refB) target++;
+    target /= size * size;
+    let prev = base;
+    let pw = size;
+    while (pw > 1) {
+      const w = pw >> 1;
+      const dst = new Uint8Array(w * w * 4);
+      for (let y = 0; y < w; y++) {
+        for (let x = 0; x < w; x++) {
+          let r = 0, g = 0, b = 0, a = 0, wsum = 0;
+          for (let dy = 0; dy < 2; dy++) {
+            for (let dx = 0; dx < 2; dx++) {
+              const s = ((y * 2 + dy) * pw + (x * 2 + dx)) * 4;
+              const av = prev[s + 3];
+              const wgt = av + 1;
+              r += prev[s] * wgt;
+              g += prev[s + 1] * wgt;
+              b += prev[s + 2] * wgt;
+              a += av;
+              wsum += wgt;
+            }
+          }
+          const o = (y * w + x) * 4;
+          dst[o] = r / wsum | 0;
+          dst[o + 1] = g / wsum | 0;
+          dst[o + 2] = b / wsum | 0;
+          dst[o + 3] = a / 4 | 0;
+        }
+      }
+      if (target > 0 && w >= 1) {
+        let lo = 0.02, hi = 40;
+        for (let it = 0; it < 14; it++) {
+          const mid = (lo + hi) * 0.5;
+          let cov = 0;
+          for (let i = 0; i < w * w; i++) if (Math.min(255, dst[i * 4 + 3] * mid) >= refB) cov++;
+          if (cov / (w * w) < target) lo = mid;
+          else hi = mid;
+        }
+        const sc = (lo + hi) * 0.5;
+        let peak = 0;
+        for (let i = 0; i < w * w; i++) {
+          const a = Math.min(255, dst[i * 4 + 3] * sc | 0);
+          dst[i * 4 + 3] = a;
+          if (a > peak) peak = a;
+        }
+        if (peak < refB) {
+          const lift = refB / Math.max(1, peak);
+          for (let i = 0; i < w * w; i++) dst[i * 4 + 3] = Math.min(255, Math.ceil(dst[i * 4 + 3] * lift));
+        }
+      }
+      out.push({ data: dst, width: w, height: w });
+      prev = dst;
+      pw = w;
+    }
+    return out;
+  }
+  function hash22(x, y, seed) {
+    let h = Math.imul(x, 374761393) + Math.imul(y, 668265263) + Math.imul(seed, 1442695041);
+    h = Math.imul(h ^ h >>> 13, 1274126177);
+    return ((h ^ h >>> 16) >>> 0) / 4294967296;
+  }
+  function vnoise(u, v2, px2, py2, seed) {
+    const x = u * px2, y = v2 * py2;
+    const xi = Math.floor(x), yi = Math.floor(y);
+    const xf = x - xi, yf = y - yi;
+    const sx = xf * xf * (3 - 2 * xf);
+    const sy = yf * yf * (3 - 2 * yf);
+    const x0 = (xi % px2 + px2) % px2, x1 = (x0 + 1) % px2;
+    const y0 = (yi % py2 + py2) % py2, y1 = (y0 + 1) % py2;
+    const a = hash22(x0, y0, seed), b = hash22(x1, y0, seed);
+    const c = hash22(x0, y1, seed), d = hash22(x1, y1, seed);
+    return (a + (b - a) * sx) * (1 - sy) + (c + (d - c) * sx) * sy;
+  }
+  function fbm(seed, u, v2, px2, py2, oct, gain = 0.5, res = 1024) {
+    let amp = 1, sum = 0, norm = 0, a = px2, b = py2;
+    const lim = res / 4;
+    for (let o = 0; o < oct; o++) {
+      if (o > 0 && (a > lim || b > lim)) break;
+      sum += amp * vnoise(u, v2, a | 0, b | 0, seed + o * 131);
+      norm += amp;
+      amp *= gain;
+      a *= 2;
+      b *= 2;
+    }
+    return sum / norm * 2 - 1;
+  }
+  function normalFromHeight(h, size, strength, aniso) {
+    const [c, g] = cv(size);
+    const img = g.createImageData(size, size);
+    const d = img.data;
+    const w = (x, y) => h[(y + size) % size * size + (x + size) % size];
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        const dx = (w(x + 1, y) - w(x - 1, y)) * strength;
+        const dy = (w(x, y + 1) - w(x, y - 1)) * strength;
+        const l = 1 / Math.sqrt(dx * dx + dy * dy + 1);
+        const i = (y * size + x) * 4;
+        d[i] = (-dx * l * 0.5 + 0.5) * 255;
+        d[i + 1] = (-dy * l * 0.5 + 0.5) * 255;
+        d[i + 2] = (l * 0.5 + 0.5) * 255;
+        d[i + 3] = 255;
+      }
+    }
+    g.putImageData(img, 0, 0);
+    return finish(c, false, aniso);
+  }
+  function greyFromField(f, size, aniso) {
+    const [c, g] = cv(size);
+    const img = g.createImageData(size, size);
+    const d = img.data;
+    for (let i = 0; i < size * size; i++) {
+      const v2 = clamp3(f[i], 0, 1) * 255;
+      d[i * 4] = d[i * 4 + 1] = d[i * 4 + 2] = v2;
+      d[i * 4 + 3] = 255;
+    }
+    g.putImageData(img, 0, 0);
+    return finish(c, false, aniso);
+  }
+  function bevelBox(w, h, d, c = 0.035, uvScale = 1) {
+    const hx = w / 2, hy = h / 2, hz = d / 2;
+    c = Math.min(c, hx * 0.45, hy * 0.45, hz * 0.45);
+    const P2 = [];
+    const N = [];
+    const U = [];
+    const corner = (sx, sy, sz, axis) => {
+      const x = sx * (axis === 0 ? hx : hx - c);
+      const y = sy * (axis === 1 ? hy : hy - c);
+      const z = sz * (axis === 2 ? hz : hz - c);
+      return [x, y, z];
+    };
+    const tri = (a, b, cc) => {
+      const ux = b[0] - a[0], uy = b[1] - a[1], uz = b[2] - a[2];
+      const vx = cc[0] - a[0], vy = cc[1] - a[1], vz = cc[2] - a[2];
+      let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
+      const l = Math.hypot(nx, ny, nz) || 1;
+      nx /= l;
+      ny /= l;
+      nz /= l;
+      if (nx * (a[0] + b[0] + cc[0]) + ny * (a[1] + b[1] + cc[1]) + nz * (a[2] + b[2] + cc[2]) < 0) {
+        nx = -nx;
+        ny = -ny;
+        nz = -nz;
+        const t = b;
+        b = cc;
+        cc = t;
+      }
+      const ax = Math.abs(nx), ay = Math.abs(ny), az = Math.abs(nz);
+      for (const p of [a, b, cc]) {
+        P2.push(p[0], p[1], p[2]);
+        N.push(nx, ny, nz);
+        if (ax >= ay && ax >= az) U.push(p[2] * uvScale, p[1] * uvScale);
+        else if (ay >= az) U.push(p[0] * uvScale, p[2] * uvScale);
+        else U.push(p[0] * uvScale, p[1] * uvScale);
+      }
+    };
+    const quad2 = (a, b, cc, dd) => {
+      tri(a, b, cc);
+      tri(a, cc, dd);
+    };
+    for (let axis = 0; axis < 3; axis++) {
+      for (let s = -1; s <= 1; s += 2) {
+        const pts = [];
+        for (let i = 0; i < 4; i++) {
+          const a = i === 0 || i === 3 ? -1 : 1;
+          const b = i < 2 ? -1 : 1;
+          pts.push(axis === 0 ? corner(s, a * s, b, 0) : axis === 1 ? corner(a, s, b * s, 1) : corner(a * s, b, s, 2));
+        }
+        quad2(pts[0], pts[1], pts[2], pts[3]);
+      }
+    }
+    for (const [a1, a2] of [
+      [0, 1],
+      [1, 2],
+      [2, 0]
+    ]) {
+      const a3 = 3 - a1 - a2;
+      for (let s1 = -1; s1 <= 1; s1 += 2)
+        for (let s2 = -1; s2 <= 1; s2 += 2) {
+          const mk = (s3, axis) => {
+            const s = [0, 0, 0];
+            s[a1] = s1;
+            s[a2] = s2;
+            s[a3] = s3;
+            return corner(s[0], s[1], s[2], axis);
+          };
+          const p0 = mk(-1, a1), p1 = mk(-1, a2), p23 = mk(1, a2), p3 = mk(1, a1);
+          if (s1 * s2 * (a1 === 0 && a2 === 1 ? 1 : a1 === 1 && a2 === 2 ? 1 : -1) > 0) quad2(p0, p1, p23, p3);
+          else quad2(p3, p23, p1, p0);
+        }
+    }
+    for (let sx = -1; sx <= 1; sx += 2)
+      for (let sy = -1; sy <= 1; sy += 2)
+        for (let sz = -1; sz <= 1; sz += 2) {
+          const px2 = corner(sx, sy, sz, 0), py2 = corner(sx, sy, sz, 1), pz2 = corner(sx, sy, sz, 2);
+          if (sx * sy * sz > 0) tri(px2, py2, pz2);
+          else tri(px2, pz2, py2);
+        }
+    const g = new BufferGeometry();
+    g.setAttribute("position", new Float32BufferAttribute(P2, 3));
+    g.setAttribute("normal", new Float32BufferAttribute(N, 3));
+    g.setAttribute("uv", new Float32BufferAttribute(U, 2));
+    return g;
+  }
+  function plainBox(w, h, d, uvScale = 1) {
+    const g = new BoxGeometry(w, h, d);
+    const uv = g.getAttribute("uv");
+    const pos = g.getAttribute("position");
+    const nor = g.getAttribute("normal");
+    for (let i = 0; i < uv.count; i++) {
+      const nx = Math.abs(nor.getX(i)), ny = Math.abs(nor.getY(i));
+      const px2 = pos.getX(i), py2 = pos.getY(i), pz2 = pos.getZ(i);
+      if (nx > 0.5) uv.setXY(i, pz2 * uvScale, py2 * uvScale);
+      else if (ny > 0.5) uv.setXY(i, px2 * uvScale, pz2 * uvScale);
+      else uv.setXY(i, px2 * uvScale, py2 * uvScale);
+    }
+    uv.needsUpdate = true;
+    return g;
+  }
+  function wallWithOpenings(w, h, openings, depth = 0.2, uvScale = 0.5) {
+    const P2 = [];
+    const N = [];
+    const U = [];
+    const C2 = [];
+    const push = (x, y, z, nx, ny, nz, u, v2, c = 1) => {
+      P2.push(x, y, z);
+      N.push(nx, ny, nz);
+      U.push(u, v2);
+      C2.push(c, c, c);
+    };
+    const quad2 = (pts, n, uvs, cols) => {
+      for (const i of [0, 1, 2, 0, 2, 3]) push(pts[i][0], pts[i][1], pts[i][2], n[0], n[1], n[2], uvs[i][0], uvs[i][1], cols ? cols[i] : 1);
+    };
+    const AO_FACE = 1;
+    const AO_JAMB_LIP = 0.78;
+    const AO_JAMB_BACK = 0.34;
+    const AO_HEAD_LIP = 0.55;
+    const AO_HEAD_BACK = 0.2;
+    const AO_SILL_LIP = 0.98;
+    const AO_SILL_BACK = 0.62;
+    const xs = /* @__PURE__ */ new Set([0, w]);
+    const ys = /* @__PURE__ */ new Set([0, h]);
+    for (const o of openings) {
+      xs.add(clamp3(o.x, 0, w));
+      xs.add(clamp3(o.x + o.w, 0, w));
+      ys.add(clamp3(o.y, 0, h));
+      ys.add(clamp3(o.y + o.h, 0, h));
+    }
+    const X = [...xs].sort((a, b) => a - b);
+    const Y = [...ys].sort((a, b) => a - b);
+    for (let i = 0; i < X.length - 1; i++) {
+      for (let j = 0; j < Y.length - 1; j++) {
+        const x0 = X[i], x1 = X[i + 1], y0 = Y[j], y1 = Y[j + 1];
+        const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+        if (openings.some((o) => cx > o.x && cx < o.x + o.w && cy > o.y && cy < o.y + o.h)) continue;
+        if (x1 - x0 < 1e-4 || y1 - y0 < 1e-4) continue;
+        quad2(
+          [
+            [x0, y0, 0],
+            [x1, y0, 0],
+            [x1, y1, 0],
+            [x0, y1, 0]
+          ],
+          [0, 0, 1],
+          [
+            [x0 * uvScale, y0 * uvScale],
+            [x1 * uvScale, y0 * uvScale],
+            [x1 * uvScale, y1 * uvScale],
+            [x0 * uvScale, y1 * uvScale]
+          ]
+        );
+      }
+    }
+    for (const o of openings) {
+      const x0 = o.x, x1 = o.x + o.w, y0 = o.y, y1 = o.y + o.h, z = -depth;
+      quad2(
+        [
+          [x0, y0, 0],
+          [x0, y0, z],
+          [x0, y1, z],
+          [x0, y1, 0]
+        ],
+        [1, 0, 0],
+        [
+          [y0 * uvScale, 0],
+          [y0 * uvScale, depth * uvScale],
+          [y1 * uvScale, depth * uvScale],
+          [y1 * uvScale, 0]
+        ],
+        [AO_JAMB_LIP, AO_JAMB_BACK, AO_JAMB_BACK * 0.75, AO_JAMB_LIP * 0.8]
+      );
+      quad2(
+        [
+          [x1, y1, 0],
+          [x1, y1, z],
+          [x1, y0, z],
+          [x1, y0, 0]
+        ],
+        [-1, 0, 0],
+        [
+          [y1 * uvScale, 0],
+          [y1 * uvScale, depth * uvScale],
+          [y0 * uvScale, depth * uvScale],
+          [y0 * uvScale, 0]
+        ],
+        [AO_JAMB_LIP * 0.8, AO_JAMB_BACK * 0.75, AO_JAMB_BACK, AO_JAMB_LIP]
+      );
+      quad2(
+        [
+          [x1, y0, 0],
+          [x1, y0, z],
+          [x0, y0, z],
+          [x0, y0, 0]
+        ],
+        [0, 1, 0],
+        [
+          [x1 * uvScale, 0],
+          [x1 * uvScale, depth * uvScale],
+          [x0 * uvScale, depth * uvScale],
+          [x0 * uvScale, 0]
+        ],
+        [AO_SILL_LIP, AO_SILL_BACK, AO_SILL_BACK, AO_SILL_LIP]
+      );
+      quad2(
+        [
+          [x0, y1, 0],
+          [x0, y1, z],
+          [x1, y1, z],
+          [x1, y1, 0]
+        ],
+        [0, -1, 0],
+        [
+          [x0 * uvScale, 0],
+          [x0 * uvScale, depth * uvScale],
+          [x1 * uvScale, depth * uvScale],
+          [x1 * uvScale, 0]
+        ],
+        [AO_HEAD_LIP, AO_HEAD_BACK, AO_HEAD_BACK, AO_HEAD_LIP]
+      );
+    }
+    void AO_FACE;
+    const g = new BufferGeometry();
+    g.setAttribute("position", new Float32BufferAttribute(P2, 3));
+    g.setAttribute("normal", new Float32BufferAttribute(N, 3));
+    g.setAttribute("uv", new Float32BufferAttribute(U, 2));
+    g.setAttribute("color", new Float32BufferAttribute(C2, 3));
+    return g;
+  }
+  function loft(path, rings, sides, radius, uvRepeat = 1, capStart = false, capEnd = false) {
+    const pos = [];
+    const uv = [];
+    const idx = [];
+    const p = new Vector3(), pPrev = new Vector3(), tan = new Vector3();
+    const up = new Vector3(0, 1, 0);
+    const nrmA = new Vector3(), nrmB = new Vector3();
+    for (let r = 0; r <= rings; r++) {
+      const t = r / rings;
+      path(t, p);
+      path(Math.min(1, t + 1e-3), pPrev);
+      tan.subVectors(pPrev, p);
+      if (tan.lengthSq() < 1e-9) {
+        path(Math.max(0, t - 1e-3), pPrev);
+        tan.subVectors(p, pPrev);
+      }
+      tan.normalize();
+      nrmA.copy(Math.abs(tan.y) > 0.95 ? new Vector3(1, 0, 0) : up).cross(tan).normalize();
+      nrmB.crossVectors(tan, nrmA).normalize();
+      for (let s = 0; s <= sides; s++) {
+        const a = s / sides * Math.PI * 2;
+        const rr2 = radius(t, a);
+        pos.push(p.x + (nrmA.x * Math.cos(a) + nrmB.x * Math.sin(a)) * rr2, p.y + (nrmA.y * Math.cos(a) + nrmB.y * Math.sin(a)) * rr2, p.z + (nrmA.z * Math.cos(a) + nrmB.z * Math.sin(a)) * rr2);
+        uv.push(s / sides * uvRepeat, t * uvRepeat);
+      }
+    }
+    const stride = sides + 1;
+    for (let r = 0; r < rings; r++)
+      for (let s = 0; s < sides; s++) {
+        const a = r * stride + s, b = a + stride;
+        idx.push(a, a + 1, b, a + 1, b + 1, b);
+      }
+    const capOf = (ring, flip) => {
+      const base = pos.length / 3;
+      path(ring === 0 ? 0 : 1, p);
+      pos.push(p.x, p.y, p.z);
+      uv.push(0.5, 0.5);
+      const off = ring * stride;
+      for (let s = 0; s < sides; s++) {
+        const a = off + s, b = off + s + 1;
+        if (flip) idx.push(base, b, a);
+        else idx.push(base, a, b);
+      }
+    };
+    if (capStart) capOf(0, true);
+    if (capEnd) capOf(rings, false);
+    const g = new BufferGeometry();
+    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
+    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+  function fbm1(n, t, y, oct) {
+    let acc = 0, amp = 1, tot = 0, f = 1;
+    for (let k = 0; k < oct; k++) {
+      acc += n(t * f + k * 19.73, y + k * 7.31) * amp;
+      tot += amp;
+      amp *= 0.5;
+      f *= 2.03;
+    }
+    return acc / tot;
+  }
+  function ridged1(n, t, y, oct) {
+    let acc = 0, amp = 1, tot = 0, f = 1;
+    for (let k = 0; k < oct; k++) {
+      const s = 1 - Math.abs(n(t * f + k * 11.29, y + k * 5.17));
+      acc += s * s * amp;
+      tot += amp;
+      amp *= 0.5;
+      f *= 2.03;
+    }
+    return acc / tot;
+  }
+  function ridgeGeo(o) {
+    const segs = Math.max(8, o.segs ?? 56);
+    const rings = Math.max(4, o.rings ?? 10);
+    const jag = o.jag ?? 1;
+    const shoulder = clamp3(o.shoulder ?? 0.25, 0, 1);
+    const skirt = o.skirt ?? o.height * 0.3 + 26;
+    const uvS = o.uvScale ?? Math.max(10, o.height * 0.2);
+    const strata = o.strata ?? Math.max(5, o.height * 0.07);
+    const rng = mulberry322(o.seed);
+    const n = createNoise2D(rng);
+    const crestC = o.crestTint ?? _lc.setRGB(1.06, 1.02, 0.94).clone();
+    const footC = o.footTint ?? _lc.setRGB(0.7, 0.74, 0.82).clone();
+    const chDir = rng() < 0.5 ? 1 : -1;
+    const chMassif = 0.5 + rng() * 0.95;
+    const chWarp = 0.22 + rng() * 0.5;
+    const chBroad = rng();
+    const chTanDip = 0.26 + rng() * 0.2;
+    const chTanFace = 0.85 + rng() * 0.95;
+    const chCrag = 0.22 + rng() * 0.28;
+    const chVC = 0.27 + rng() * 0.18;
+    const chFaceP = 0.68 + rng() * 0.34;
+    const chBackP = 1.12 + rng() * 0.55;
+    const chSpurF = 5 + rng() * 6;
+    const dx = o.length / segs;
+    const lamMin = Math.max(dx * 6, o.length * 0.055);
+    const lamMassif = o.length / chMassif;
+    const lamSub = Math.max(lamMin * 1.6, lamMassif * 0.34);
+    const lamCrag = Math.max(lamMin * 1.5, o.length * 0.19);
+    const sy = o.seed * 0.017;
+    const prof = new Float32Array(segs + 1);
+    const lean = new Float32Array(segs + 1);
+    for (let i = 0; i <= segs; i++) {
+      const u = i / segs;
+      const x = u * o.length;
+      const xw = x + fbm1(n, x / (lamMassif * 1.7), sy + 3.7, 2) * lamMassif * chWarp;
+      let m = 0.5 + 0.5 * fbm1(n, xw / lamMassif, sy + 11.3, 2);
+      m = smoothstep3(0.2 + chBroad * 0.16, 0.94, m);
+      const sub = 0.5 + 0.5 * fbm1(n, xw / lamSub, sy + 47.1, 2);
+      prof[i] = m * (0.6 + 0.4 * sub);
+      lean[i] = fbm1(n, x / (lamMassif * 0.9) + 21.3, sy + 9.9, 2) * 0.26;
+    }
+    const dDip = chTanDip * dx / Math.max(1, o.height);
+    const dFace = chTanFace * dx / Math.max(1, o.height);
+    const dFwd = chDir > 0 ? dDip : dFace;
+    const dBwd = chDir > 0 ? dFace : dDip;
+    const dil = new Float32Array(segs + 1);
+    let e = prof[0];
+    for (let i = 0; i <= segs; i++) {
+      e = Math.max(prof[i], e - dFwd);
+      dil[i] = e;
+    }
+    e = prof[segs];
+    for (let i = segs; i >= 0; i--) {
+      e = Math.max(prof[i], e - dBwd);
+      if (e > dil[i]) dil[i] = e;
+    }
+    for (let i = 0; i <= segs; i++) prof[i] = lerp4(prof[i], dil[i], 0.78);
+    for (let i = 0; i <= segs; i++) {
+      const x = i / segs * o.length;
+      const notch = Math.max(0, -fbm1(n, x / lamCrag, sy + 63.4, 2));
+      const deep = ridged1(n, x / (lamCrag * 2.3), sy + 88.2, 1);
+      prof[i] *= Math.max(0.05, 1 - chCrag * jag * notch * prof[i] * (0.55 + 0.75 * deep));
+    }
+    const sm = new Float32Array(segs + 1);
+    const smPasses = clamp3(Math.round(lamCrag / dx / 2.6), 2, 6);
+    for (let pass = 0; pass < smPasses; pass++) {
+      for (let i = 0; i <= segs; i++) {
+        const a = prof[Math.max(0, i - 1)];
+        const b = prof[i];
+        const c = prof[Math.min(segs, i + 1)];
+        sm[i] = (a + 2 * b + c) * 0.25;
+      }
+      prof.set(sm);
+    }
+    {
+      const lamStep = Math.max(lamMin * 2.2, o.length * 0.24);
+      for (let i = 0; i <= segs; i++) {
+        const x = i / segs * o.length;
+        const a = fbm1(n, x / lamStep, sy + 131.7, 2);
+        const b = fbm1(n, x / (lamStep * 0.46) + 5.1, sy + 177.3, 1);
+        const bench = Math.max(0, chDir > 0 ? a : -a) * (0.55 + 0.45 * Math.max(0, b));
+        prof[i] *= 1 - 0.3 * jag * bench * clamp3(prof[i] * 1.4, 0, 1);
+      }
+      for (let i = 0; i <= segs; i++) sm[i] = (prof[Math.max(0, i - 1)] + 2 * prof[i] + prof[Math.min(segs, i + 1)]) * 0.25;
+      prof.set(sm);
+    }
+    for (let i = 0; i <= segs; i++) {
+      const u = i / segs;
+      prof[i] *= lerp4(Math.pow(Math.sin(Math.PI * u), 0.8), 1, shoulder) * lerp4(0.45, 1, smoothstep3(0, 0.06, Math.min(u, 1 - u)));
+    }
+    let profMax = 1e-6;
+    for (let i = 0; i <= segs; i++) profMax = Math.max(profMax, prof[i]);
+    const profNorm = 1 / profMax;
+    for (let i = 0; i <= segs; i++) prof[i] = clamp3(prof[i] * profNorm, 0.015, 1);
+    const pos = [];
+    const uv = [];
+    const col = [];
+    const idx = [];
+    const bestY = new Float32Array(segs + 1).fill(-1e9);
+    const bestXYZ = new Float32Array((segs + 1) * 3);
+    const VC = chVC;
+    const spurF = Math.min(chSpurF, segs / 14);
+    const gulF = Math.min(15.4, segs / 8);
+    for (let j = 0; j <= rings; j++) {
+      const jf = Math.max(3, Math.round(rings * 0.55));
+      const v2 = j <= jf ? VC * Math.pow(j / jf, 1.4) : VC + (1 - VC) * ((j - jf) / (rings - jf));
+      const shape = v2 <= VC ? Math.pow(Math.sin(Math.PI * 0.5 * (v2 / VC)), chFaceP) : Math.pow(Math.sin(Math.PI * 0.5 * ((1 - v2) / (1 - VC))), chBackP);
+      const toe = j === 0 || j === rings;
+      for (let i = 0; i <= segs; i++) {
+        const u = i / segs;
+        const x = (u - 0.5) * o.length;
+        let z = (v2 - 0.42 + lean[i]) * o.depth;
+        const c = prof[i];
+        const spur = n(u * spurF + 40.2, v2 * 2.6) * 0.5 + n(u * spurF * 2.33 + 3.4, v2 * 5.1) * 0.26;
+        const rib = 0.25 + 3 * shape * (1 - shape);
+        let y = o.height * c * shape * (1 + spur * (0.2 + 0.26 * jag) * rib);
+        const gul = Math.max(0, -n(u * gulF + 77, v2 * 4.2));
+        y -= o.height * 0.075 * jag * gul * shape * (1.35 - 0.65 * shape) * rib;
+        z += o.depth * (0.24 * spur + 0.06 * gul * chDir) * (1 - Math.abs(2 * v2 - 1));
+        if (toe) y = -skirt;
+        if (y > bestY[i]) {
+          bestY[i] = y;
+          bestXYZ[i * 3] = x;
+          bestXYZ[i * 3 + 1] = y;
+          bestXYZ[i * 3 + 2] = z;
+        }
+        pos.push(x, y, z);
+        uv.push(u * o.length / uvS, (v2 * o.depth + y * 0.6) / uvS);
+        const hRel = clamp3(y / Math.max(1, o.height), 0, 1);
+        _lc.copy(footC).lerp(crestC, Math.pow(hRel, 0.62));
+        if (o.scrubTint) {
+          const s0 = n(x * 0.0125 + 91.4, z * 0.0125 - 12.6) * 0.62 + n(x * 0.031 - 4.2, z * 0.031 + 55.9) * 0.38;
+          const veg = clamp3(s0 * 0.9 + 0.42, 0, 1) * lerp4(1, 0.35, Math.pow(hRel, 1.5)) * lerp4(0.45, 1, clamp3(shape * 1.4, 0, 1));
+          _lc.lerp(o.scrubTint, veg * 0.55);
+        }
+        let m = 1;
+        if (o.sunLocal !== void 0) {
+          const face = v2 <= VC ? 1 : -1;
+          const facing = Math.cos(o.sunLocal) * face;
+          m *= 1 + clamp3(facing, 0, 1) * Math.pow(hRel, 3.2) * 0.3;
+        }
+        if (strata > 0) {
+          const warp = n(x * 4e-3 + 12.7, z * 4e-3) * strata * 0.9;
+          const b = (y + warp) / strata;
+          m *= 1 + 0.115 * Math.sin(b * Math.PI * 2) + 0.055 * Math.sin(b * Math.PI * 5.17 + 1.3);
+        }
+        m *= lerp4(0.9, 1.04, clamp3(shape, 0, 1));
+        m *= lerp4(0.58, 1, smoothstep3(0, o.height * 0.13, y));
+        col.push(_lc.r * m, _lc.g * m, _lc.b * m);
+      }
+    }
+    const stride = segs + 1;
+    for (let j = 0; j < rings; j++)
+      for (let i = 0; i < segs; i++) {
+        const a = j * stride + i;
+        idx.push(a, a + stride, a + 1, a + 1, a + stride, a + stride + 1);
+      }
+    if (o.crestOut) for (let i = 0; i < bestXYZ.length; i++) o.crestOut.push(bestXYZ[i]);
+    if (o.flankOut) {
+      o.flankOut.cols = stride;
+      o.flankOut.rings = rings + 1;
+      o.flankOut.p = Float32Array.from(pos);
+    }
+    const g = new BufferGeometry();
+    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
+    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
+    g.setAttribute("color", new Float32BufferAttribute(col, 3));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+  function ridgeContour(fl, f, i0, span) {
+    const out = [];
+    const { cols, rings, p } = fl;
+    if (cols < 2 || rings < 3) return out;
+    const frac = clamp3(f, 0.02, 0.98);
+    for (let k = 0; k <= span; k++) {
+      const ci = clamp3(i0 + k, 0, cols - 1) | 0;
+      let jc = 1;
+      let cy = -1e9;
+      for (let j = 1; j < rings - 1; j++) {
+        const y = p[(j * cols + ci) * 3 + 1];
+        if (y > cy) {
+          cy = y;
+          jc = j;
+        }
+      }
+      const want = Math.max(0, cy) * frac;
+      let j1 = jc;
+      for (let j = jc; j >= 1; j--) {
+        j1 = j;
+        if (p[(j * cols + ci) * 3 + 1] <= want) break;
+      }
+      const j0 = Math.min(jc, j1 + 1);
+      const k0 = (j1 * cols + ci) * 3;
+      const k1 = (j0 * cols + ci) * 3;
+      const y0 = p[k0 + 1];
+      const y1 = p[k1 + 1];
+      const a = Math.abs(y1 - y0) < 1e-4 ? 0 : clamp3((want - y0) / (y1 - y0), 0, 1);
+      out.push(lerp4(p[k0], p[k1], a), lerp4(y0, y1, a), lerp4(p[k0 + 2], p[k1 + 2], a));
+    }
+    return out;
+  }
+  function ribbonStrip(a, b, uvScale = 12) {
+    const n = Math.min(a.length, b.length) / 3;
+    if (n < 2) return null;
+    const pos = [];
+    const uv = [];
+    const idx = [];
+    let s = 0;
+    for (let i = 0; i < n; i++) {
+      if (i) s += Math.hypot(a[i * 3] - a[i * 3 - 3], a[i * 3 + 1] - a[i * 3 - 2], a[i * 3 + 2] - a[i * 3 - 1]);
+      pos.push(a[i * 3], a[i * 3 + 1], a[i * 3 + 2], b[i * 3], b[i * 3 + 1], b[i * 3 + 2]);
+      const u = s / uvScale;
+      uv.push(u, 0, u, 1);
+    }
+    for (let i = 0; i + 1 < n; i++) {
+      const k = i * 2;
+      idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2);
+    }
+    const g = new BufferGeometry();
+    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
+    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+  function islandGeo(o) {
+    const segs = Math.max(12, o.segs ?? 40);
+    const rings = Math.max(4, o.rings ?? 10);
+    const jag = o.jag ?? 1;
+    const squash = o.squash ?? 1;
+    const skirt = o.skirt ?? o.height * 0.35 + 34;
+    const uvS = o.uvScale ?? Math.max(8, o.height * 0.2);
+    const strata = o.strata ?? Math.max(4, o.height * 0.07);
+    const rng = mulberry322(o.seed);
+    const n = createNoise2D(rng);
+    const crestC = o.crestTint ?? _lc.setRGB(1.06, 1.02, 0.94).clone();
+    const footC = o.footTint ?? _lc.setRGB(0.7, 0.74, 0.82).clone();
+    const shore = new Float32Array(segs + 1);
+    const crown = new Float32Array(segs + 1);
+    for (let i = 0; i <= segs; i++) {
+      const a = i / segs * Math.PI * 2;
+      const cx = Math.cos(a), cz = Math.sin(a);
+      shore[i] = 1 + n(cx * 1.6, cz * 1.6) * 0.32 * jag + n(cx * 4.3 + 11, cz * 4.3) * 0.15 * jag;
+      const r0 = 0.5 + 0.5 * n(cx * 2.1 + 30, cz * 2.1);
+      const r1 = 0.5 + 0.5 * n(cx * 4.6 + 71, cz * 4.6);
+      crown[i] = 0.4 + 0.6 * smoothstep3(0.14, 0.92, r0) * (0.72 + 0.28 * r1);
+    }
+    const pos = [];
+    const uv = [];
+    const col = [];
+    const idx = [];
+    for (let j = 0; j <= rings; j++) {
+      const v2 = j / rings;
+      const toe = j === 0;
+      for (let i = 0; i <= segs; i++) {
+        const a = i / segs * Math.PI * 2;
+        const rr2 = o.radius * shore[i] * (1 - Math.pow(v2, 1.55) * 0.9);
+        const x = Math.cos(a) * rr2;
+        const z = Math.sin(a) * rr2 * squash;
+        const flank = Math.pow(v2, 0.95);
+        const spur = n(Math.cos(a) * 5.4 + 60, Math.sin(a) * 5.4) * 0.4 + n(a * 9.1, v2 * 3.3) * 0.18;
+        let y = o.height * crown[i] * flank * (1 + spur * 0.26 * jag * flank);
+        y -= o.height * 0.05 * jag * Math.max(0, -n(a * 13 + 91, v2 * 4)) * flank;
+        if (toe) y = -skirt;
+        pos.push(x, y, z);
+        uv.push(a * o.radius / uvS, (v2 * o.height + y * 0.5) / uvS);
+        const hRel = clamp3(y / Math.max(1, o.height), 0, 1);
+        _lc.copy(footC).lerp(crestC, Math.pow(hRel, 0.62));
+        let m = 1;
+        if (strata > 0) {
+          const warp = n(x * 6e-3 + 4.2, z * 6e-3) * strata * 0.9;
+          const b = (y + warp) / strata;
+          m *= 1 + 0.115 * Math.sin(b * Math.PI * 2) + 0.055 * Math.sin(b * Math.PI * 5.17 + 1.3);
+        }
+        m *= lerp4(0.84, 1.05, flank);
+        m *= lerp4(0.6, 1, smoothstep3(0, o.height * 0.14, y));
+        col.push(_lc.r * m, _lc.g * m, _lc.b * m);
+      }
+    }
+    const stride = segs + 1;
+    for (let j = 0; j < rings; j++)
+      for (let i = 0; i < segs; i++) {
+        const a = j * stride + i;
+        idx.push(a, a + stride, a + 1, a + 1, a + stride, a + stride + 1);
+      }
+    const g = new BufferGeometry();
+    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
+    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
+    g.setAttribute("color", new Float32BufferAttribute(col, 3));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+  function card(w, h, uOff = 0, uScale = 1) {
+    const g = new PlaneGeometry(w, h, 1, 3);
+    g.translate(0, h / 2, 0);
+    const uv = g.getAttribute("uv");
+    for (let i = 0; i < uv.count; i++) uv.setX(i, uOff + uv.getX(i) * uScale);
+    uv.needsUpdate = true;
+    return g;
+  }
+  function mergeStaticSets(sets, castOf, cell = STATIC_CELL) {
+    const merged = [];
+    const kept = [];
+    const buckets = /* @__PURE__ */ new Map();
+    const matKey = /* @__PURE__ */ new Map();
+    for (const set of sets) {
+      if (!set.isStatic || set.count === 0) {
+        kept.push(set);
+        continue;
+      }
+      const s = set.snapshot();
+      const g = s.geo;
+      const p = g.attributes.position;
+      if (!p) {
+        kept.push(set);
+        continue;
+      }
+      const n = g.attributes.normal;
+      const u = g.attributes.uv;
+      const c0 = g.attributes.color;
+      const index = g.index;
+      const vc = s.mat.vertexColors === true;
+      const cast = castOf(s.name);
+      if (!matKey.has(s.mat)) matKey.set(s.mat, matKey.size);
+      const mk = matKey.get(s.mat);
+      for (let inst = 0; inst < s.mats.length; inst++) {
+        const m = s.mats[inst];
+        const cx = Math.floor(m.elements[12] / cell);
+        const cz = Math.floor(m.elements[14] / cell);
+        const key2 = mk + "|" + (cast ? 1 : 0) + "|" + cx + "|" + cz;
+        let b = buckets.get(key2);
+        if (!b) {
+          b = {
+            mat: s.mat,
+            cast,
+            vc,
+            pos: [],
+            nrm: [],
+            uv: [],
+            col: [],
+            tint: [],
+            iuv: [],
+            lod: [],
+            org: [],
+            idx: [],
+            base: 0,
+            names: /* @__PURE__ */ new Set()
+          };
+          buckets.set(key2, b);
+        }
+        b.names.add(s.name);
+        _mm.getNormalMatrix(m);
+        const tr = s.useCol ? s.cols[inst * 3] : 1;
+        const tg = s.useCol ? s.cols[inst * 3 + 1] : 1;
+        const tb = s.useCol ? s.cols[inst * 3 + 2] : 1;
+        const ux = s.useUv ? s.uvs[inst * 4] : 1;
+        const uy = s.useUv ? s.uvs[inst * 4 + 1] : 1;
+        const uz = s.useUv ? s.uvs[inst * 4 + 2] : 0;
+        const uw = s.useUv ? s.uvs[inst * 4 + 3] : 0;
+        const lod = s.useLod ? s.lods[inst] : 0;
+        const ox = m.elements[12], oy = m.elements[13], oz = m.elements[14];
+        for (let i = 0; i < p.count; i++) {
+          _mv.fromBufferAttribute(p, i).applyMatrix4(m);
+          b.pos.push(_mv.x, _mv.y, _mv.z);
+          if (n) {
+            _mv.fromBufferAttribute(n, i).applyMatrix3(_mm).normalize();
+            b.nrm.push(_mv.x, _mv.y, _mv.z);
+          } else b.nrm.push(0, 1, 0);
+          if (u) b.uv.push(u.getX(i), u.getY(i));
+          else b.uv.push(0, 0);
+          if (vc) {
+            if (c0) b.col.push(c0.getX(i), c0.getY(i), c0.getZ(i));
+            else b.col.push(1, 1, 1);
+          }
+          b.tint.push(tr, tg, tb);
+          b.iuv.push(ux, uy, uz, uw);
+          b.lod.push(lod);
+          b.org.push(ox, oy, oz);
+        }
+        if (index) for (let i = 0; i < index.count; i++) b.idx.push(b.base + index.getX(i));
+        else for (let i = 0; i < p.count; i++) b.idx.push(b.base + i);
+        b.base += p.count;
+      }
+    }
+    for (const b of buckets.values()) {
+      const g = new BufferGeometry();
+      g.setAttribute("position", new Float32BufferAttribute(b.pos, 3));
+      g.setAttribute("normal", new Float32BufferAttribute(b.nrm, 3));
+      g.setAttribute("uv", new Float32BufferAttribute(b.uv, 2));
+      if (b.vc) g.setAttribute("color", new Float32BufferAttribute(b.col, 3));
+      g.setAttribute("aTint", new Float32BufferAttribute(b.tint, 3));
+      g.setAttribute("aUv", new Float32BufferAttribute(b.iuv, 4));
+      g.setAttribute("aLod", new Float32BufferAttribute(b.lod, 1));
+      g.setAttribute("aOrigin", new Float32BufferAttribute(b.org, 3));
+      g.setIndex(b.idx);
+      g.computeBoundingSphere();
+      const mesh = new Mesh(g, b.mat);
+      mesh.name = "static-" + [...b.names].sort().join("+");
+      mesh.castShadow = b.cast;
+      mesh.receiveShadow = true;
+      mesh.matrixAutoUpdate = false;
+      merged.push(mesh);
+    }
+    return { merged, kept };
+  }
+  function makeShared() {
+    return {
+      uTime: { value: 0 },
+      uCam: { value: new Vector3() },
+      uWindDir: { value: new Vector2(0.86, 0.51) },
+      uWindAmp: { value: 1 },
+      uSunView: { value: new Vector3(0, 1, 0) },
+      uSunWorld: { value: new Vector3(-0.62, 0.245, -0.745).normalize() },
+      uSunCol: { value: new Color(16767400) },
+      uCheer: { value: 0 },
+      uSeaLevel: { value: 0 }
+    };
+  }
+  function patch(mat2, key2, fn) {
+    let e = PATCHES.get(mat2);
+    if (!e) {
+      const prior = mat2.onBeforeCompile;
+      const priorCacheKey = mat2.customProgramCacheKey;
+      const hasPrior = typeof prior === "function" && prior !== Material.prototype.onBeforeCompile;
+      let baseKey = "";
+      if (hasPrior && typeof priorCacheKey === "function") {
+        try {
+          baseKey = "base:" + priorCacheKey.call(mat2);
+        } catch {
+          baseKey = "base";
+        }
+      }
+      e = { keys: hasPrior ? [baseKey || "base"] : [], fns: hasPrior ? [(sh, r) => prior.call(mat2, sh, r)] : [] };
+      PATCHES.set(mat2, e);
+      const entry = e;
+      mat2.onBeforeCompile = (sh, renderer) => {
+        for (const f of entry.fns) f(sh, renderer);
+      };
+      mat2.customProgramCacheKey = () => entry.keys.join("|");
+    }
+    if (e.keys.indexOf(key2) >= 0) return;
+    e.keys.push(key2);
+    e.fns.push(fn);
+    mat2.needsUpdate = true;
+  }
+  function copyVertexPatches(source, target) {
+    const entry = PATCHES.get(source);
+    if (!entry) return;
+    for (let i = 0; i < entry.keys.length; i++) {
+      if (DEPTH_PATCH_KEY.test(entry.keys[i])) patch(target, entry.keys[i], entry.fns[i]);
+    }
+  }
+  function patchInstUv(mat2) {
+    patch(mat2, "iuv", (sh) => {
+      sh.vertexShader = "attribute vec4 aUv;\n" + sh.vertexShader.replace(
+        "#include <uv_vertex>",
+        `#include <uv_vertex>
+      #ifdef USE_MAP
+        vMapUv = vMapUv * aUv.xy + aUv.zw;
+      #endif
+      #ifdef USE_NORMALMAP
+        vNormalMapUv = vNormalMapUv * aUv.xy + aUv.zw;
+      #endif
+      #ifdef USE_ROUGHNESSMAP
+        vRoughnessMapUv = vRoughnessMapUv * aUv.xy + aUv.zw;
+      #endif
+      #ifdef USE_ALPHAMAP
+        vAlphaMapUv = vAlphaMapUv * aUv.xy + aUv.zw;
+      #endif`
+      );
+    });
+  }
+  function patchTint(mat2, maskFromUvX = false) {
+    patch(mat2, "tint" + (maskFromUvX ? "M" : ""), (sh) => {
+      sh.vertexShader = "attribute vec3 aTint;\nvarying vec3 vTintI;\n" + (maskFromUvX ? "varying float vTintMask;\n" : "") + sh.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\n  vTintI = aTint;" + (maskFromUvX ? "\n  vTintMask = clamp(uv.x, 0.0, 1.0);" : ""));
+      sh.fragmentShader = "varying vec3 vTintI;\n" + (maskFromUvX ? "varying float vTintMask;\n" : "") + sh.fragmentShader.replace(
+        "#include <color_fragment>",
+        maskFromUvX ? `#include <color_fragment>
+           diffuseColor.rgb *= mix(vec3(1.0), vTintI, vTintMask);` : `#include <color_fragment>
+           diffuseColor.rgb *= vTintI;`
+      );
+    });
+  }
+  function patchInstAlpha(mat2) {
+    patch(mat2, "ialpha", (sh) => {
+      sh.vertexShader = "attribute vec3 aTint;\nvarying float vIAlpha;\n" + sh.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\n  vIAlpha = aTint.r;");
+      sh.fragmentShader = "varying float vIAlpha;\n" + sh.fragmentShader.replace("#include <color_fragment>", "#include <color_fragment>\n  diffuseColor.a *= vIAlpha;");
+    });
+  }
+  function patchLod(mat2, u) {
+    patch(mat2, "lod", (sh) => {
+      sh.uniforms.uCam = u.uCam;
+      sh.vertexShader = "attribute float aLod;\nattribute vec3 aOrigin;\nuniform vec3 uCam;\n" + sh.vertexShader.replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+       #ifdef USE_INSTANCING
+         if (aLod > 0.0) {
+           vec3 iOrigin = (modelMatrix * instanceMatrix * vec4(0.0,0.0,0.0,1.0)).xyz;
+           float dCam = distance(iOrigin, uCam);
+           // fade the last 15% of the range by shrinking, then collapse
+           transformed *= 1.0 - smoothstep(aLod * 0.86, aLod, dCam);
+         }
+       #else
+         // Same collapse for a set that mergeStaticSets has baked flat. There
+         // is no instanceMatrix to read the origin out of any more, so the
+         // merger writes each baked instance's own origin into aOrigin and the
+         // scale happens about that instead of about the merged geometry's
+         // origin -- which is somewhere out in the middle of a 400 m cell, and
+         // would send every prop in the batch sliding towards it.
+         if (aLod > 0.0) {
+           float dCam = distance((modelMatrix * vec4(aOrigin, 1.0)).xyz, uCam);
+           transformed = aOrigin +
+             (transformed - aOrigin) * (1.0 - smoothstep(aLod * 0.86, aLod, dCam));
+         }
+       #endif`
+      );
+    });
+  }
+  function patchWind(mat2, u, flutterAxis = 0) {
+    patch(mat2, "wind" + flutterAxis, (sh) => {
+      sh.uniforms.uTime = u.uTime;
+      sh.uniforms.uWindDir = u.uWindDir;
+      sh.uniforms.uWindAmp = u.uWindAmp;
+      sh.vertexShader = `attribute vec4 aWind;
+       uniform float uTime; uniform vec2 uWindDir; uniform float uWindAmp;
+       float kartSway(float phase, float h, float stiff){
+         float t = uTime * 1.15 + phase;
+         float a = sin(t) * 0.62 + sin(t * 1.73 + 1.3) * 0.27 + sin(t * 3.31 + 2.1) * 0.11;
+         return a * pow(max(h, 0.0), stiff) * uWindAmp;
+       }
+` + sh.vertexShader.replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+         {
+           float instS = 1.0;
+           #ifdef USE_INSTANCING
+             instS = length(instanceMatrix[1].xyz);
+           #endif
+           // A positive reference height lets a detached part (a frond) inherit
+           // the sway its parent (the trunk) has at the attachment point. Both
+           // work in WORLD metres, and the offset is divided back out through
+           // the instance scale, so a crown and its fronds never separate.
+           float hRef = aWind.z > 0.0 ? aWind.z : transformed.y * instS;
+           float s = kartSway(aWind.x, hRef, max(aWind.y, 0.001)) * 0.09;
+           transformed.xz += uWindDir * s / max(instS, 0.001);
+           // flutter: high-frequency ripple along the leaf's own length
+           float fl = aWind.w * 0.055 * sin(uTime * 5.4 + aWind.x * 3.0 + transformed.${flutterAxis === 0 ? "x" : "z"} * 2.6);
+           transformed.y += fl;
+           transformed.${flutterAxis === 0 ? "z" : "x"} += fl * 0.6;
+         }`
+      );
+    });
+  }
+  function patchTranslucency(mat2, u, strength = 1) {
+    patch(mat2, "trans", (sh) => {
+      sh.uniforms.uSunView = u.uSunView;
+      sh.uniforms.uSunCol = u.uSunCol;
+      sh.uniforms.uTransStrength = { value: strength };
+      sh.uniforms.uSap = { value: SAP };
+      sh.vertexShader = "varying vec2 vLeafUv;\n" + sh.vertexShader.replace("#include <uv_vertex>", "#include <uv_vertex>\n  vLeafUv = uv;");
+      sh.fragmentShader = "uniform vec3 uSunView; uniform vec3 uSunCol; uniform float uTransStrength; uniform vec3 uSap;\nvarying vec2 vLeafUv;\n" + sh.fragmentShader.replace(
+        "#include <lights_fragment_end>",
+        `#include <lights_fragment_end>
+         {
+           // vViewPosition points from the fragment TOWARD the eye, so -V is the
+           // view direction and dot(-V, L) fires only when the leaf sits between
+           // the camera and the sun \u2014 which is exactly the backlit-palm case.
+           vec3 V = normalize(vViewPosition);
+           // Wrap widened 0.55 -> 0.60 of a hemisphere. This is the term that
+           // decides whether a canopy has any light in it at all when the sun is
+           // not directly behind it, and the umbrella pine in scenery.png \u2014 lit
+           // from three-quarter rear, silhouetted against a pale sky \u2014 came back
+           // as a flat dark cut-out. Wrap lighting is what a leaf actually does:
+           // light entering the far side scatters through and leaves the near
+           // side, so the terminator on a leaf sits well past 90\xB0.
+           float wrap = clamp((dot(normal, uSunView) + 0.60) / 1.60, 0.0, 1.0);
+           float back = pow(clamp(dot(-V, uSunView), 0.0, 1.0), 3.0);
+           // clamped so solid-geometry foliage (uv tiles past 1) stays neutral
+           float lu = clamp(vLeafUv.x, 0.0, 1.0);
+           float lv = clamp(vLeafUv.y, 0.0, 1.0);
+           // thin toward the frond tip and toward the leaflet edges: that is the
+           // part of a palm that actually goes translucent
+           float thin = mix(0.42, 1.0, lu) * mix(0.5, 1.0, abs(lv - 0.5) * 2.0);
+           vec3 sap = mix(diffuseColor.rgb, uSap, 0.62);
+           reflectedLight.directDiffuse += uSunCol * sap * back * 3.8 * thin * uTransStrength;
+           // 0.42 -> 0.80. \xA74 calls a backlit palm at golden hour "a hero
+           // moment \u2014 do not waste it", and at 0.42 the wrap was contributing
+           // roughly a tenth of a stop against a 4.2-intensity key: arithmetically
+           // present, visually absent. This is the whole difference between a
+           // canopy that glows and a green sticker.
+           reflectedLight.directDiffuse += uSunCol * mix(diffuseColor.rgb, uSap, 0.34) * wrap * 0.80 * uTransStrength;
+         }`
+      );
+    });
+  }
+  function patchRoughFromTint(mat2, lo = 0.55, hi = 0.88) {
+    patch(mat2, "roughtint", (sh) => {
+      sh.uniforms.uRtRange = { value: new Vector2(lo, hi) };
+      sh.fragmentShader = "uniform vec2 uRtRange;\n" + sh.fragmentShader.replace(
+        "#include <roughnessmap_fragment>",
+        `#include <roughnessmap_fragment>
+         {
+           float v = dot(vTintI, vec3(0.2126, 0.7152, 0.0722));
+           roughnessFactor = mix(uRtRange.x, uRtRange.y, clamp((v - 0.28) / 0.55, 0.0, 1.0));
+         }`
+      );
+    });
+  }
+  function patchRoughVary(mat2, lo = 0.72, hi = 1.22, scale = 7) {
+    patch(mat2, "roughvary" + lo.toFixed(2) + hi.toFixed(2), (sh) => {
+      sh.uniforms.uRvScale = { value: 1 / scale };
+      sh.uniforms.uRvRange = { value: new Vector2(lo, hi) };
+      sh.vertexShader = "varying vec3 vRvPos;\n" + sh.vertexShader.replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+         {
+           vec4 rvW = vec4(transformed, 1.0);
+           #ifdef USE_INSTANCING
+             rvW = instanceMatrix * rvW;
+           #endif
+           vRvPos = (modelMatrix * rvW).xyz;
+         }`
+      );
+      sh.fragmentShader = `varying vec3 vRvPos; uniform float uRvScale; uniform vec2 uRvRange;
+       float rvHash(vec2 p){ p = fract(p * vec2(127.1, 311.7)); p += dot(p, p + 34.7); return fract(p.x * p.y); }
+       float rvNoise(vec2 p){
+         vec2 i = floor(p), f = fract(p);
+         f = f * f * (3.0 - 2.0 * f);
+         return mix(mix(rvHash(i), rvHash(i + vec2(1.0, 0.0)), f.x),
+                    mix(rvHash(i + vec2(0.0, 1.0)), rvHash(i + vec2(1.0, 1.0)), f.x), f.y);
+       }
+` + // Anchored on metalnessmap_fragment, not roughnessmap_fragment: the
+      // shared library REPLACES the latter outright for its tiling breakup, so
+      // that token no longer exists by the time we run. roughnessFactor is in
+      // scope either way, and metalness is the next include along.
+      sh.fragmentShader.replace(
+        "#include <metalnessmap_fragment>",
+        `{
+           vec2 rp = vRvPos.xz * uRvScale + vRvPos.y * uRvScale * 0.31;
+           float rn = rvNoise(rp) * 0.62 + rvNoise(rp * 2.37 + 11.3) * 0.38;
+           roughnessFactor = clamp(roughnessFactor * mix(uRvRange.x, uRvRange.y, rn), 0.05, 1.0);
+         }
+         #include <metalnessmap_fragment>`
+      );
+    });
+  }
+  function patchMacroBreak(mat2, scale = 9, amount = 0.16) {
+    patch(mat2, "macrobrk" + scale.toFixed(1) + amount.toFixed(2), (sh) => {
+      sh.uniforms.uMbScale = { value: 1 / scale };
+      sh.uniforms.uMbAmt = { value: amount };
+      sh.vertexShader = "varying vec3 vMbPos;\n" + sh.vertexShader.replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+         {
+           vec4 mbW = vec4(transformed, 1.0);
+           #ifdef USE_INSTANCING
+             mbW = instanceMatrix * mbW;
+           #endif
+           vMbPos = (modelMatrix * mbW).xyz;
+         }`
+      );
+      sh.fragmentShader = `varying vec3 vMbPos; uniform float uMbScale; uniform float uMbAmt;
+       float mbH(vec2 p){ p = fract(p * vec2(127.1, 311.7)); p += dot(p, p + 29.1); return fract(p.x * p.y); }
+       float mbN(vec2 p){
+         vec2 i = floor(p), f = fract(p);
+         f = f * f * (3.0 - 2.0 * f);
+         return mix(mix(mbH(i), mbH(i + vec2(1.0, 0.0)), f.x),
+                    mix(mbH(i + vec2(0.0, 1.0)), mbH(i + vec2(1.0, 1.0)), f.x), f.y);
+       }
+` + sh.fragmentShader.replace(
+        "#include <color_fragment>",
+        `#include <color_fragment>
+         {
+           vec2 mp = vMbPos.xz * uMbScale + vMbPos.y * uMbScale * 0.53;
+           // 1 : 2.71 \u2014 deliberately irrational-ish, so the two octaves never
+           // beat against each other or against the map's own tile
+           float mn = mbN(mp) * 0.63 + mbN(mp * 2.71 + 7.9) * 0.37;
+           diffuseColor.rgb *= 1.0 + (mn - 0.5) * 2.0 * uMbAmt;
+         }`
+      );
+    });
+  }
+  function patchBob(mat2, u) {
+    patch(mat2, "bob", (sh) => {
+      sh.uniforms.uTime = u.uTime;
+      sh.vertexShader = "attribute vec4 aBob;\nuniform float uTime;\n" + sh.vertexShader.replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+       {
+         float t = uTime * 0.9 + aBob.y;
+         float heave = (sin(t) * 0.7 + sin(t * 1.62 + 1.1) * 0.3) * aBob.x;
+         float roll  = sin(t * 0.83 + 0.6) * aBob.z;
+         float pitch = sin(t * 1.21 + 2.4) * aBob.z * 0.55;
+         float cr = cos(roll), sr = sin(roll);
+         float cp = cos(pitch), sp = sin(pitch);
+         vec3 q = transformed;
+         q = vec3(q.x * cr - q.y * sr, q.x * sr + q.y * cr, q.z);
+         q = vec3(q.x, q.y * cp - q.z * sp, q.y * sp + q.z * cp);
+         transformed = q + vec3(0.0, heave, 0.0);
+       }`
+      );
+    });
+  }
+  function patchCrowd(mat2, u) {
+    patch(mat2, "crowd", (sh) => {
+      sh.uniforms.uTime = u.uTime;
+      sh.uniforms.uCheer = u.uCheer;
+      sh.vertexShader = "attribute vec4 aWind;\nuniform float uTime; uniform float uCheer;\n" + sh.vertexShader.replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+       {
+         float ph = aWind.x;
+         float idle = sin(uTime * 1.7 + ph) * 0.018 + sin(uTime * 2.9 + ph * 1.7) * 0.008;
+         // cheer: a sharp hop, staggered so the stand ripples instead of pulsing
+         float ct = fract(uTime * 0.7 + ph * 0.11);
+         float hop = max(0.0, sin(ct * 3.14159)) * uCheer * (0.25 + aWind.w * 0.35);
+         float sway = sin(uTime * 1.1 + ph * 0.7) * 0.035 * (0.4 + uCheer);
+         transformed.y += idle + hop;
+         transformed.x += sway * smoothstep(0.4, 1.6, transformed.y);
+         // arms up when cheering: the arm verts are flagged via uv.y > 0.92
+         transformed.y += step(0.92, uv.y) * uCheer * 0.34;
+       }`
+      );
+    });
+  }
+  function patchCloth(mat2, u, amp = 1) {
+    patch(mat2, "cloth" + amp.toFixed(2), (sh) => {
+      sh.uniforms.uTime = u.uTime;
+      sh.uniforms.uWindAmp = u.uWindAmp;
+      sh.uniforms.uClothAmp = { value: amp };
+      sh.vertexShader = "attribute vec4 aWind;\nuniform float uTime; uniform float uWindAmp; uniform float uClothAmp;\n" + sh.vertexShader.replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+       {
+         float u0 = uv.x;                     // 0 at the mast / line, 1 at the free edge
+         float ph = aWind.x;
+         float w = sin(u0 * 7.0 - uTime * 4.2 + ph) * 0.5 + sin(u0 * 12.0 - uTime * 6.7 + ph * 1.7) * 0.22;
+         float g = u0 * u0;                   // rooted edge stays put
+         transformed.z += w * g * 0.30 * uClothAmp * uWindAmp;
+         transformed.y += sin(u0 * 5.0 - uTime * 3.1 + ph) * g * 0.07 * uClothAmp * uWindAmp;
+         transformed.x -= g * 0.035 * uClothAmp * abs(w);
+       }`
+      );
+    });
+  }
+  function patchBird(mat2, u) {
+    patch(mat2, "bird", (sh) => {
+      sh.uniforms.uTime = u.uTime;
+      sh.vertexShader = "attribute vec4 aBob;\nuniform float uTime;\n" + sh.vertexShader.replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+       {
+         // aBob = (orbit radius, angular speed, phase, flap rate)
+         float a = uTime * aBob.y + aBob.z;
+         float flap = sin(uTime * aBob.w + aBob.z * 3.0);
+         // wing dihedral from |uv.x - 0.5|, the span coordinate
+         float span = abs(uv.x - 0.5) * 2.0;
+         transformed.y += flap * span * span * 0.42;
+         transformed.z -= flap * span * 0.06;
+         float ca = cos(a), sa = sin(a);
+         vec3 q = vec3(transformed.x * ca - transformed.z * sa, transformed.y, transformed.x * sa + transformed.z * ca);
+         transformed = q + vec3(sa * aBob.x, sin(a * 2.0 + aBob.z) * 1.6, -ca * aBob.x);
+       }`
+      );
+    });
+  }
+  function patchAerial(mat2, u, near = 220, far = 4400) {
+    patch(mat2, "aerial", (sh) => {
+      sh.uniforms.uCam = u.uCam;
+      sh.uniforms.uSunW = u.uSunWorld;
+      sh.uniforms.uAerial = { value: new Vector2(near, far) };
+      sh.uniforms.uHazeWarm = { value: new Color(PAL.skyWarm) };
+      sh.uniforms.uHazeCool = { value: new Color(11120840) };
+      sh.vertexShader = "varying vec3 vWorldA;\n" + sh.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\n  vWorldA = (modelMatrix * vec4(transformed,1.0)).xyz;");
+      sh.fragmentShader = "varying vec3 vWorldA; uniform vec3 uCam; uniform vec2 uAerial; uniform vec3 uSunW; uniform vec3 uHazeWarm; uniform vec3 uHazeCool;\n" + sh.fragmentShader.replace(
+        "#include <fog_fragment>",
+        `{
+           float d = distance(vWorldA, uCam);
+           float h = smoothstep(uAerial.x, uAerial.y, d);
+           // the haze is a LAYER: thin it with altitude so summits stay crisper
+           h *= mix(1.0, 0.40, clamp((vWorldA.y - uCam.y) / 400.0, 0.0, 1.0));
+           vec3 fwd = vWorldA - uCam; fwd.y = 0.0;
+           vec3 sunXZ = vec3(uSunW.x, 0.0, uSunW.z);
+           float az = dot(normalize(fwd + vec3(1e-4, 0.0, 1e-4)), normalize(sunXZ + vec3(1e-4, 0.0, 1e-4)));
+           // ROUND 2. The azimuth ramp used to open at az = -0.45, i.e. 117
+           // degrees off the sun, so five sixths of the horizon was being
+           // painted with the WARM haze key. Combined with the desaturation
+           // below that is a machine for turning any authored colour into the
+           // same orange, and it is the direct cause of "four separate ranges
+           // at four different distances all render as the same solid orange".
+           // Golden hour genuinely is warm looking INTO the sun and violet-blue
+           // looking away from it, and that contrast across the sky is most of
+           // what makes the hour look like the hour. Narrowed to the near-sun
+           // sector so the ladder gets both ends of it.
+           vec3 haze = mix(uHazeCool, uHazeWarm, smoothstep(0.15, 0.92, az));
+           float l = dot(gl_FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+           // 0.82 -> 0.42. Aerial perspective does desaturate, but 82% at the
+           // far band destroyed the band keys BEFORE the haze tint ran, so the
+           // ladder's hue separation never survived to be seen \u2014 every layer
+           // arrived as neutral grey and left painted with the same haze. The
+           // band table's own pre-fade (see BACKDROP_BANDS) now carries the
+           // convergence, and it can do it per band, which this cannot.
+           gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(l), h * 0.42);
+           gl_FragColor.rgb = mix(gl_FragColor.rgb, haze, h * 0.34);
+         }
+         #include <fog_fragment>`
+      );
+    });
+  }
+  function patchBackdropForm(mat2, u, nearD = 260, farD = 2400, nearV = 0.42, farV = 0.78) {
+    patch(mat2, "bdform", (sh) => {
+      sh.uniforms.uCamF = u.uCam;
+      sh.uniforms.uSunF = u.uSunWorld;
+      sh.uniforms.uBdVal = { value: new Vector4(nearD, farD, nearV, farV) };
+      sh.uniforms.uBdShade = { value: new Vector3(0.7, 0.76, 0.9) };
+      sh.uniforms.uBdSun = { value: new Vector3(1.18, 1.12, 0.99) };
+      sh.vertexShader = "varying vec3 vBdW; varying vec3 vBdN;\n" + sh.vertexShader.replace("#include <beginnormal_vertex>", "#include <beginnormal_vertex>\n  vBdN = normalize(mat3(modelMatrix) * objectNormal);").replace("#include <begin_vertex>", "#include <begin_vertex>\n  vBdW = (modelMatrix * vec4(transformed, 1.0)).xyz;");
+      sh.fragmentShader = `varying vec3 vBdW; varying vec3 vBdN;
+       uniform vec3 uCamF; uniform vec3 uSunF; uniform vec4 uBdVal;
+       uniform vec3 uBdShade; uniform vec3 uBdSun;
+       float bdH(vec2 p){ p = fract(p * vec2(127.1, 311.7)); p += dot(p, p + 41.3); return fract(p.x * p.y); }
+       float bdN2(vec2 p){
+         vec2 i = floor(p), f = fract(p);
+         f = f * f * (3.0 - 2.0 * f);
+         return mix(mix(bdH(i), bdH(i + vec2(1.0, 0.0)), f.x),
+                    mix(bdH(i + vec2(0.0, 1.0)), bdH(i + vec2(1.0, 1.0)), f.x), f.y);
+       }
+` + sh.fragmentShader.replace(
+        "#include <map_fragment>",
+        `#include <map_fragment>
+           {
+             // Three macro octaves. Sampled on the world XZ plane plus altitude,
+             // so a flank reads as bedded rock rather than as a projected
+             // wallpaper, and none of them is finer than 6 m \u2014 anything smaller
+             // than that is below a pixel at 600 m and can only alias.
+             vec2 q = vBdW.xz + vBdW.y * 0.42;
+             float o1 = bdN2(q / 70.0);
+             float o2 = bdN2(q / 22.0 + 13.7);
+             float o3 = bdN2(q / 6.0 - 41.1);
+             float macro = o1 * 0.54 + o2 * 0.31 + o3 * 0.15;
+             // Strata: horizontal bedding, warped by the coarse octave so the
+             // bands wander with the rock instead of ruling round the landform.
+             float bed = sin((vBdW.y + o1 * 26.0) * 0.19) * 0.5 + 0.5;
+             diffuseColor.rgb *= 0.78 + macro * 0.44 + bed * 0.10;
+             // SUNLIT FACE vs SHADED FACE. An albedo-space terminator, because
+             // the real key has almost no normal variation to work with out here.
+             float sf = dot(normalize(vBdN), uSunF);
+             float lit = smoothstep(-0.30, 0.55, sf);
+             diffuseColor.rgb *= mix(uBdShade, uBdSun, lit);
+             // and a warm rim on the faces that actually turn into the sun
+             diffuseColor.rgb *= 1.0 + vec3(0.16, 0.11, 0.03) * smoothstep(0.58, 0.95, sf);
+           }`
+      ).replace(
+        "#include <fog_fragment>",
+        `{
+             // THE VALUE LADDER. Applied to the shaded result and before any fog,
+             // so the haze's luminance-preserving chroma drain carries it intact.
+             float bdD = distance(vBdW, uCamF);
+             float bdT = smoothstep(uBdVal.x, uBdVal.y, bdD);
+             gl_FragColor.rgb *= mix(uBdVal.z, uBdVal.w, bdT);
+           }
+           #include <fog_fragment>`
+      );
+    });
+  }
+  function patchDesatMap(mat2, amount = 0.86) {
+    const a = clamp3(amount, 0, 1).toFixed(3);
+    patch(mat2, "desatmap" + a, (sh) => {
+      sh.fragmentShader = sh.fragmentShader.replace(
+        "#include <map_fragment>",
+        `#include <map_fragment>
+       #ifdef USE_MAP
+         { float kL = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+           diffuseColor.rgb = mix(diffuseColor.rgb, vec3(kL), ${a}); }
+       #endif`
+      );
+    });
+  }
+  function trs(px2, py2, pz2, ry, sx = 1, sy = sx, sz = sx, rx = 0, rz = 0) {
+    _q.setFromEuler(new Euler(rx, ry, rz, "YXZ"));
+    return _m2.compose(_v.set(px2, py2, pz2), _q, _s.set(sx, sy, sz)).clone();
+  }
+  function newHouseParts(walls, roof, trim) {
+    return {
+      walls: walls ?? new GeoAccum(),
+      roof: roof ?? new GeoAccum(),
+      trim: trim ?? new GeoAccum(),
+      shutters: [],
+      glass: [],
+      balcony: [],
+      flowerbox: [],
+      awning: [],
+      door: [],
+      lamp: [],
+      lineAnchors: []
+    };
+  }
+  function gableWedge(halfZ, rise, thick) {
+    const hx = thick / 2;
+    const P2 = [];
+    const N = [];
+    const U = [];
+    const idx = [];
+    const tri = (a, b, c, n) => {
+      const base = P2.length / 3;
+      for (const v2 of [a, b, c]) {
+        P2.push(v2[0], v2[1], v2[2]);
+        N.push(n[0], n[1], n[2]);
+        U.push(v2[2] * 0.42, v2[1] * 0.42);
+      }
+      idx.push(base, base + 1, base + 2);
+    };
+    for (const s of [-1, 1]) {
+      const x = s * hx;
+      const a = [x, 0, -halfZ];
+      const b = [x, 0, halfZ];
+      const c = [x, rise, 0];
+      if (s > 0) tri(a, b, c, [1, 0, 0]);
+      else tri(b, a, c, [-1, 0, 0]);
+    }
+    const q = (a, b, c, dd, n) => {
+      tri(a, b, c, n);
+      tri(a, c, dd, n);
+    };
+    const sl = Math.hypot(halfZ, rise);
+    q([-hx, 0, halfZ], [hx, 0, halfZ], [hx, rise, 0], [-hx, rise, 0], [0, halfZ / sl, rise / sl]);
+    q([hx, 0, -halfZ], [-hx, 0, -halfZ], [-hx, rise, 0], [hx, rise, 0], [0, halfZ / sl, -rise / sl]);
+    q([-hx, 0, -halfZ], [hx, 0, -halfZ], [hx, 0, halfZ], [-hx, 0, halfZ], [0, -1, 0]);
+    const g = new BufferGeometry();
+    g.setAttribute("position", new Float32BufferAttribute(P2, 3));
+    g.setAttribute("normal", new Float32BufferAttribute(N, 3));
+    g.setAttribute("uv", new Float32BufferAttribute(U, 2));
+    g.setIndex(idx);
+    return g;
+  }
+  function buildHouse(out, rng, xform, w, d, floors, tint) {
+    const floorH = 3.05 + rng() * 0.35;
+    const h = floorH * floors + 0.45;
+    const wAO = wallAOFor(h);
+    const openings = [];
+    const winW = 0.95 + rng() * 0.25;
+    const winH = 1.55 + rng() * 0.3;
+    const cols = Math.max(2, Math.round((w - 1) / 2.3));
+    const doorCol = rng() * cols | 0;
+    const winPos = [];
+    for (let f = 0; f < floors; f++) {
+      for (let c = 0; c < cols; c++) {
+        const x = (c + 0.5) / cols * w - w / 2;
+        if (f === 0 && c === doorCol) {
+          openings.push({ x: x - 0.55, y: 0.02, w: 1.1, h: 2.3 });
+          continue;
+        }
+        const y = f * floorH + 1.05;
+        openings.push({ x: x - winW / 2, y, w: winW, h: winH });
+        winPos.push({ x, y, f, c });
+      }
+    }
+    const facade = wallWithOpenings(w, h, openings.map((o) => ({ x: o.x + w / 2, y: o.y, w: o.w, h: o.h })), 0.22, 0.42);
+    facade.translate(-w / 2, 0, d / 2);
+    const rearAndSides = new GeoAccum();
+    const back = bevelBox(w, h, 0.3, 0.05, 0.42);
+    rearAndSides.add(back, trs(0, h / 2, -d / 2 + 0.15, 0), void 0, wAO);
+    const side = bevelBox(0.3, h, d - 0.3, 0.05, 0.42);
+    const sideCols = Math.max(1, Math.round((d - 1.4) / 3.1));
+    for (const sx of [-1, 1]) {
+      const ops = [];
+      const glassAt = [];
+      for (let f = 0; f < floors; f++) {
+        for (let c = 0; c < sideCols; c++) {
+          if (rng() < 0.4) continue;
+          const zc = (c + 0.5) / sideCols * d;
+          const ow = 0.72 + rng() * 0.22;
+          const oh = 1.1 + rng() * 0.3;
+          const oy = f * floorH + 1.15;
+          ops.push({ x: zc - ow / 2, y: oy, w: ow, h: oh });
+          glassAt.push({ z: sx * (d / 2 - zc), y: oy, w: ow, h: oh });
+        }
+      }
+      if (!ops.length) {
+        rearAndSides.add(side, trs(sx * (w / 2 - 0.15), h / 2, 0, 0), void 0, wAO);
+        continue;
+      }
+      const sw = wallWithOpenings(d, h, ops, 0.19, 0.42);
+      const rot = new Matrix4().makeRotationY(sx * Math.PI / 2);
+      const mv = new Matrix4().makeTranslation(sx * (w / 2), 0, sx * d / 2);
+      rearAndSides.add(sw, mv.multiply(rot), void 0, wAO);
+      rearAndSides.add(bevelBox(0.16, h, d - 0.3, 0.04, 0.42), trs(sx * (w / 2 - 0.27), h / 2, 0, 0), void 0, wAO);
+      for (const gq of glassAt) {
+        out.glass.push(
+          _m2.multiplyMatrices(
+            xform,
+            new Matrix4().compose(
+              new Vector3(sx * (w / 2 - 0.18), gq.y + gq.h / 2, gq.z),
+              new Quaternion().setFromEuler(new Euler(0, sx * Math.PI / 2, 0)),
+              new Vector3(gq.w * 0.94, gq.h * 0.94, 1)
+            )
+          ).clone()
+        );
+      }
+    }
+    rearAndSides.add(bevelBox(w - 0.4, 0.2, d - 0.4, 0.02, 0.42), trs(0, h - 0.4, 0, 0), void 0, () => 0.32);
+    for (const sx of [-1, 1])
+      for (const sz of [-1, 1])
+        rearAndSides.add(bevelBox(0.06, h, 0.06, 0.014, 0.42), trs(sx * (w / 2 - 0.02), h / 2, sz * (d / 2 - 0.02), Math.PI / 4), void 0, wAO);
+    out.walls.add(facade, xform, tint, wAO);
+    const rs = rearAndSides.build();
+    if (rs) out.walls.add(rs, xform, tint, void 0);
+    const pitch = 0.38 + rng() * 0.14;
+    const overZ = 0.46;
+    const overX = 0.13;
+    const halfZ = d / 2 + overZ;
+    const rise = halfZ * pitch;
+    const slopeLen = Math.hypot(halfZ, rise);
+    const thick = 0.3;
+    const rm = ROOF_MULT[rng() * ROOF_MULT.length | 0];
+    const roofCol = new Color().setHSL(rm[0], rm[1] * (0.9 + rng() * 0.2), rm[2] * (0.95 + rng() * 0.1));
+    const gab = gableWedge(halfZ - 0.04, rise, 0.26);
+    for (const s of [-1, 1]) out.walls.add(gab, _m2.multiplyMatrices(xform, trs(s * w / 2, h, 0, 0)).clone(), tint, () => 0.62);
+    const slab = bevelBox(w + overX * 2, thick, slopeLen, 0.04, 0.9);
+    const ang = Math.atan2(rise, halfZ);
+    for (const s of [-1, 1]) {
+      const mm = new Matrix4().compose(
+        new Vector3(0, h + rise / 2 + thick / 2 * Math.cos(ang), s * halfZ / 2),
+        new Quaternion().setFromEuler(new Euler(s * ang, 0, 0)),
+        new Vector3(1, 1, 1)
+      );
+      out.roof.add(slab, _m2.multiplyMatrices(xform, mm).clone(), roofCol, (_x2, y) => lerp4(0.68, 1, smoothstep3(-thick * 0.5, thick * 0.5, y)));
+    }
+    const halfWr = w / 2 + overX;
+    const ridgeY = h + rise + thick / Math.cos(ang) + 0.03;
+    const ridge = loft((t, o) => o.set(-halfWr + t * halfWr * 2, 0, 0), 3, 8, () => 0.17, 1.4, true, true);
+    out.roof.add(ridge, _m2.multiplyMatrices(xform, trs(0, ridgeY, 0, 0)).clone(), roofCol.clone().multiplyScalar(1.08));
+    const corn = bevelBox(w + 0.18, 0.15, d + 0.18, 0.035, 0.7);
+    out.trim.add(corn, _m2.multiplyMatrices(xform, trs(0, h - 0.075, 0, 0)).clone(), new Color(14141872), (_x2, y) => lerp4(0.55, 1, smoothstep3(-0.075, 0.02, y)));
+    if (rng() < 0.75) {
+      const cw = 0.5 + rng() * 0.22;
+      const cx = (rng() - 0.5) * (w - 1.6);
+      const ch = 1.1 + rng() * 1;
+      const cy = h + rise * 0.86;
+      out.walls.add(bevelBox(cw, ch, cw, 0.04, 0.9), _m2.multiplyMatrices(xform, trs(cx, cy + ch / 2 - 0.25, 0.12, 0)).clone(), tint, () => 0.85);
+      out.trim.add(bevelBox(cw + 0.2, 0.14, cw + 0.2, 0.03, 1.2), _m2.multiplyMatrices(xform, trs(cx, cy + ch - 0.28, 0.12, 0)).clone(), new Color(14272946));
+    }
+    const shutterCol = new Color(pick(rng, PAL.shutters));
+    const DRIP = tint.clone().multiplyScalar(0.8).lerp(new Color(10128246), 0.42);
+    const HEADSHADE = tint.clone().multiplyScalar(0.55).lerp(new Color(6250608), 0.34);
+    for (const wp of winPos) {
+      const z = d / 2 + 0.01;
+      const hs = new PlaneGeometry(winW + 0.08, 0.24, 1, 1);
+      out.walls.add(hs, _m2.multiplyMatrices(xform, trs(wp.x, wp.y + winH + 0.12, z + 4e-3, 0)).clone(), HEADSHADE, (_x2, y) => lerp4(1, 0.42, smoothstep3(-0.12, 0.12, y)));
+      for (const s of [-1, 1]) {
+        const dg = new PlaneGeometry(0.2, 1.05, 1, 1);
+        out.walls.add(dg, _m2.multiplyMatrices(xform, trs(wp.x + s * (winW / 2 + 0.11), wp.y - 0.62, z + 4e-3, 0)).clone(), DRIP, (_x2, y) => lerp4(0.66, 1, smoothstep3(-0.52, 0.5, -y)) * 0.96);
+      }
+      out.trim.add(bevelBox(winW + 0.34, 0.1, 0.3, 0.02, 1.4), _m2.multiplyMatrices(xform, trs(wp.x, wp.y - 0.06, z + 0.06, 0)).clone(), new Color(15261646));
+      out.trim.add(bevelBox(winW + 0.4, 0.06, 0.08, 0.015, 2.2), _m2.multiplyMatrices(xform, trs(wp.x, wp.y - 0.13, z + 0.19, 0)).clone(), new Color(14471098));
+      out.glass.push(
+        _m2.multiplyMatrices(
+          xform,
+          trs(wp.x, wp.y + winH / 2, z - 0.2, (rng() - 0.5) * 0.055, winW * 0.94, winH * 0.94, 1, -0.012 - rng() * 0.045, (rng() - 0.5) * 0.03)
+        ).clone()
+      );
+      const openA = rng() < 0.4 ? 0.6 + rng() * 0.7 : 0.02;
+      for (const s of [-1, 1]) {
+        const hingeX = wp.x + s * (winW / 2 + 0.02);
+        const mm = new Matrix4().compose(new Vector3(hingeX, wp.y + winH / 2, z + 0.03), new Quaternion().setFromEuler(new Euler(0, -s * openA, 0)), new Vector3(1, 1, 1)).multiply(new Matrix4().makeTranslation(-s * winW / 4, 0, 0)).multiply(new Matrix4().makeScale(winW / 2, winH, 1));
+        out.shutters.push({ m: _m2.multiplyMatrices(xform, mm).clone(), color: shutterCol, uv: new Vector4(0.5, 1, 0, 0) });
+      }
+      if (wp.f < 2 && rng() < 0.62) {
+        out.flowerbox.push({ m: _m2.multiplyMatrices(xform, trs(wp.x, wp.y - 0.02, z + 0.16, 0, winW / 1, 1, 1)).clone(), color: new Color(pick(rng, [9067066, 7171927, 11047546])) });
+      }
+      if (wp.f >= 1 && rng() < 0.45) {
+        out.balcony.push(_m2.multiplyMatrices(xform, trs(wp.x, wp.y - 0.06, z + 0.05, 0, Math.max(1, winW + 0.6), 1, 1)).clone());
+        if (rng() < 0.6) out.lineAnchors.push(new Vector3().setFromMatrixPosition(_m2.multiplyMatrices(xform, trs(wp.x, wp.y + winH, z + 0.6, 0)).clone()));
+      }
+    }
+    const dx = (doorCol + 0.5) / cols * w - w / 2;
+    out.door.push({ m: _m2.multiplyMatrices(xform, trs(dx, 0.02, d / 2 - 0.06, 0, 1.06, 2.24, 1)).clone(), color: new Color(pick(rng, PAL.shutters)) });
+    out.trim.add(bevelBox(1.5, 0.16, 0.34, 0.03, 1.3), _m2.multiplyMatrices(xform, trs(dx, 2.36, d / 2 + 0.1, 0)).clone(), new Color(15261646));
+    if (rng() < 0.45) {
+      const cell = rng() * 4 | 0;
+      out.awning.push({ m: _m2.multiplyMatrices(xform, trs(dx, 2.6, d / 2 + 0.02, 0, 1.9 + rng() * 0.8, 1, 1)).clone(), uv: new Vector4(0.25, 0.25, cell * 0.25, (rng() * 4 | 0) * 0.25) });
+    }
+    if (rng() < 0.5) out.lamp.push(_m2.multiplyMatrices(xform, trs(dx + 0.95, 2.9, d / 2 + 0.06, 0)).clone());
+    out.trim.add(bevelBox(1.7, 0.16, 0.4, 0.02, 1.1), _m2.multiplyMatrices(xform, trs(dx, -0.06, d / 2 + 0.2, 0)).clone(), new Color(14076854));
+    out.trim.add(bevelBox(2, 0.16, 0.6, 0.02, 1.1), _m2.multiplyMatrices(xform, trs(dx, -0.2, d / 2 + 0.42, 0)).clone(), new Color(14076854));
+    if (rng() < 0.5) out.lineAnchors.push(new Vector3().setFromMatrixPosition(_m2.multiplyMatrices(xform, trs((rng() - 0.5) * w * 0.7, h - 1.2, d / 2 + 0.25, 0)).clone()));
+  }
+  function shutterGeo(low = false) {
+    const acc = new GeoAccum();
+    const panel2 = low ? plainBox(1, 1, 0.06, 1.6) : bevelBox(1, 1, 0.06, 0.012, 1.6);
+    acc.add(panel2, trs(0, 0, 0, 0), new Color(1, 1, 1));
+    const slat = plainBox(0.88, 0.08, 0.05, 3);
+    const slats = low ? 3 : 5;
+    for (let i = 0; i < slats; i++) {
+      const y = -0.4 + i / (slats - 1) * 0.8;
+      acc.add(slat, trs(0, y, 0.045, 0, 1, 1, 1, -0.34), new Color(0.88, 0.88, 0.88));
+    }
+    const rail = plainBox(0.94, 0.07, 0.075, 3);
+    acc.add(rail, trs(0, 0.46, 0.02, 0), new Color(1, 1, 1));
+    acc.add(rail, trs(0, -0.46, 0.02, 0), new Color(1, 1, 1));
+    return acc.build();
+  }
+  function doorGeo() {
+    const acc = new GeoAccum();
+    acc.add(bevelBox(1, 1, 0.08, 0.014, 1.4).translate(0, 0.5, 0), trs(0, 0, 0, 0), new Color(1, 1, 1));
+    for (const y of [0.28, 0.68]) {
+      acc.add(bevelBox(0.66, 0.28, 0.045, 0.012, 3), trs(0, y, 0.05, 0), new Color(0.82, 0.82, 0.82));
+    }
+    return acc.build();
+  }
+  function balconyGeo(low = false) {
+    const acc = new GeoAccum();
+    const white = new Color(1, 1, 1);
+    const slab = low ? plainBox(1, 0.09, 0.72, 1.6) : bevelBox(1, 0.09, 0.72, 0.02, 1.6);
+    acc.add(slab, trs(0, 0, 0.3, 0), white);
+    const handrail = low ? plainBox(1, 0.055, 0.055, 4) : bevelBox(1, 0.055, 0.055, 0.014, 4);
+    acc.add(handrail, trs(0, 0.92, 0.64, 0), white);
+    const lowRail = plainBox(1, 0.04, 0.04, 4);
+    acc.add(lowRail, trs(0, 0.3, 0.64, 0), white);
+    const post = plainBox(0.045, 0.94, 0.045, 4);
+    const baluster = plainBox(0.03, 0.9, 0.03, 6);
+    for (const s of [-1, 1]) {
+      acc.add(post, trs(s * 0.47, 0.47, 0.64, 0), white);
+      acc.add(post, trs(s * 0.47, 0.46, 0.02, 0), white);
+      acc.add(plainBox(0.045, 0.05, 0.66, 4), trs(s * 0.47, 0.92, 0.32, 0), white);
+      acc.add(plainBox(0.1, 0.22, 0.3, 3), trs(s * 0.4, -0.14, 0.14, 0), white);
+    }
+    const bars = low ? 3 : 7;
+    for (let i = 0; i < bars; i++) acc.add(baluster, trs(-0.42 + i / (bars - 1) * 0.84, 0.46, 0.64, 0), white);
+    return acc.build();
+  }
+  function flowerBoxGeo() {
+    const acc = new GeoAccum();
+    acc.add(bevelBox(1, 0.26, 0.28, 0.02, 2.4), trs(0, 0.13, 0, 0), new Color(1, 1, 1));
+    return acc.build();
+  }
+  function awningGeo() {
+    const segs = 10;
+    const pos = [];
+    const uv = [];
+    const idx = [];
+    const rows = 4;
+    for (let j = 0; j <= rows; j++) {
+      const v2 = j / rows;
+      for (let i = 0; i <= segs; i++) {
+        const u = i / segs;
+        const scallop = j === rows ? Math.sin(u * Math.PI * 5) * 0.05 : 0;
+        const sag = Math.sin(u * Math.PI) * 0.06 * v2;
+        pos.push((u - 0.5) * 1, -v2 * 0.62 - sag + scallop * 0.3, v2 * 0.95);
+        uv.push(u, v2);
+      }
+    }
+    for (let j = 0; j < rows; j++)
+      for (let i = 0; i < segs; i++) {
+        const a = j * (segs + 1) + i;
+        idx.push(a, a + segs + 1, a + 1, a + 1, a + segs + 1, a + segs + 2);
+      }
+    const g = new BufferGeometry();
+    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
+    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+  function lampGeo() {
+    const acc = new GeoAccum();
+    const w = new Color(1, 1, 1);
+    acc.add(bevelBox(0.06, 0.06, 0.5, 0.015, 6), trs(0, 0, 0.24, 0), w);
+    acc.add(bevelBox(0.05, 0.3, 0.05, 0.012, 6), trs(0, -0.16, 0.46, 0), w);
+    acc.add(bevelBox(0.26, 0.06, 0.26, 0.015, 5), trs(0, -0.02, 0.46, 0), w);
+    return { arm: acc.build(), glow: bevelBox(0.17, 0.24, 0.17, 0.05, 4).translate(0, -0.44, 0.46) };
+  }
+  function hullGeo(len, beam, depth, kind) {
+    const rings = 22, sides = 14;
+    return loft(
+      (t, o) => {
+        const z = (t - 0.5) * len;
+        const sheer = Math.pow(Math.abs(t - 0.5) * 2, 2.2) * depth * 0.28;
+        o.set(0, sheer, z);
+      },
+      rings,
+      sides,
+      (t, a) => {
+        const bow = smoothstep3(1, 0.72, t);
+        const stern = kind === 0 ? smoothstep3(0, 0.16, t) : smoothstep3(0, 0.3, t);
+        const plan = Math.pow(Math.sin(clamp3(t, 0, 1) * Math.PI), 0.42) * bow * stern;
+        const s = Math.sin(a), c = Math.cos(a);
+        const vShape = 1 - Math.pow(clamp3(-s, 0, 1), 1.7) * 0.35;
+        const r = plan * (0.5 + 0.5 * Math.abs(c)) * beam * 0.5 * vShape;
+        const rv = plan * depth * 0.5 * (s < 0 ? 1 : 0.72);
+        return Math.hypot(r * c, rv * s) * 0.5 + (r * 0.5 + Math.abs(rv) * 0.5) * 0.5;
+      },
+      2,
+      true,
+      true
+    );
+  }
+  function boatGeo(rng, kind) {
+    const len = kind === 0 ? 6.4 + rng() * 2.6 : 9.5 + rng() * 4;
+    const beam = len * (0.3 + rng() * 0.06);
+    const depth = len * 0.19;
+    const hullAcc = new GeoAccum();
+    const h = hullGeo(len, beam, depth, kind);
+    hullAcc.add(h, trs(0, 0, 0, 0), new Color(1, 1, 1));
+    const strake = loft(
+      (t, o) => {
+        const z = (t - 0.5) * len * 0.98;
+        o.set(0, Math.pow(Math.abs(t - 0.5) * 2, 2.2) * depth * 0.28 + depth * 0.34, z);
+      },
+      18,
+      6,
+      (t) => 0.06 * Math.pow(Math.sin(clamp3(t, 0, 1) * Math.PI), 0.3),
+      2
+    );
+    void strake;
+    const rigAcc = new GeoAccum();
+    const w = new Color(1, 1, 1);
+    hullAcc.add(bevelBox(beam * 0.82, 0.08, len * 0.72, 0.02, 1.6), trs(0, depth * 0.36, 0, 0), new Color(0.82, 0.78, 0.7));
+    if (kind === 0) {
+      for (let i = 0; i < 3; i++) rigAcc.add(bevelBox(beam * 0.7, 0.07, 0.28, 0.015, 3), trs(0, depth * 0.42, (i - 1) * len * 0.2, 0), w);
+      rigAcc.add(bevelBox(beam * 0.62, 0.62, len * 0.2, 0.04, 1.2), trs(0, depth * 0.36 + 0.31, len * 0.24, 0), w);
+      rigAcc.add(bevelBox(0.22, 0.5, 0.34, 0.05, 3), trs(0, depth * 0.3, -len * 0.46, 0), new Color(0.35, 0.35, 0.38));
+    } else {
+      rigAcc.add(bevelBox(beam * 0.66, 1.15, len * 0.26, 0.05, 1.1), trs(0, depth * 0.36 + 0.58, len * 0.06, 0), w);
+      rigAcc.add(bevelBox(beam * 0.5, 0.1, len * 0.22, 0.02, 1.6), trs(0, depth * 0.36 + 1.2, len * 0.06, 0), new Color(0.88, 0.86, 0.8));
+      const mast = loft((t, o) => o.set(0, t * (len * 0.62), 0), 4, 7, (t) => 0.075 * (1 - t * 0.45), 2, true, true);
+      rigAcc.add(mast, trs(0, depth * 0.42, -len * 0.06, 0), w);
+      rigAcc.add(bevelBox(0.09, 0.09, len * 0.34, 0.02, 4), trs(0, depth * 0.42 + len * 0.2, -len * 0.2, 0), w);
+    }
+    return { hull: hullAcc.build(), rig: rigAcc.build() };
+  }
+  function bollardGeo() {
+    const acc = new GeoAccum();
+    const w = new Color(1, 1, 1);
+    const body = loft((t, o) => o.set(0, t * 0.62, 0), 6, 12, (t) => 0.16 - t * 0.035 + Math.pow(t, 6) * 0.02, 1.4, true, false);
+    acc.add(body, trs(0, 0, 0, 0), w);
+    const head = loft((t, o) => o.set(0, 0.6 + t * 0.16, 0), 5, 12, (t) => 0.145 + Math.sin(t * Math.PI) * 0.075, 1.2, false, true);
+    acc.add(head, trs(0, 0, 0, 0), w);
+    acc.add(loft((t, o) => o.set(0, t * 0.07, 0), 2, 12, () => 0.24, 1, true, true), trs(0, 0, 0, 0), new Color(0.85, 0.85, 0.85));
+    return acc.build();
+  }
+  function crateGeo(rng) {
+    const acc = new GeoAccum();
+    const w = 0.6 + rng() * 0.35, h = 0.42 + rng() * 0.3, d = 0.5 + rng() * 0.3;
+    acc.add(bevelBox(w, h, d, 0.02, 1.8), trs(0, h / 2, 0, 0), new Color(1, 1, 1));
+    const c2 = new Color(0.86, 0.82, 0.74);
+    for (const s of [-1, 1]) {
+      acc.add(bevelBox(w + 0.03, 0.07, 0.06, 0.012, 4), trs(0, h * (0.5 + s * 0.34), d / 2, 0), c2);
+      acc.add(bevelBox(0.06, h, 0.06, 0.012, 4), trs(s * (w / 2 - 0.04), h / 2, d / 2, 0), c2);
+    }
+    return acc.build();
+  }
+  function barrelGeo() {
+    const acc = new GeoAccum();
+    acc.add(loft((t, o) => o.set(0, t * 0.82, 0), 8, 14, (t) => 0.26 + Math.sin(t * Math.PI) * 0.055, 2, true, true), trs(0, 0, 0, 0), new Color(1, 1, 1));
+    for (const y of [0.16, 0.41, 0.66]) acc.add(loft((t, o) => o.set(0, y + t * 0.05, 0), 1, 14, () => 0.29, 1.5), trs(0, 0, 0, 0), new Color(0.5, 0.44, 0.36));
+    return acc.build();
+  }
+  function netGeo(w, h) {
+    const nx = 8, ny = 6;
+    const pos = [], uv = [], idx = [];
+    for (let j = 0; j <= ny; j++)
+      for (let i = 0; i <= nx; i++) {
+        const u = i / nx, v2 = j / ny;
+        const sag = Math.sin(u * Math.PI) * 0.25 * v2;
+        pos.push((u - 0.5) * w, -v2 * h - sag, Math.sin(u * Math.PI * 2) * 0.12 * v2);
+        uv.push(u * 3, v2 * 3);
+      }
+    for (let j = 0; j < ny; j++)
+      for (let i = 0; i < nx; i++) {
+        const a = j * (nx + 1) + i;
+        idx.push(a, a + nx + 1, a + 1, a + 1, a + nx + 1, a + nx + 2);
+      }
+    const g = new BufferGeometry();
+    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
+    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+  function ropeGeo(a, b, sag, radius = 0.035) {
+    return loft(
+      (t, o) => {
+        o.lerpVectors(a, b, t);
+        o.y -= Math.sin(t * Math.PI) * sag;
+      },
+      10,
+      5,
+      () => radius,
+      1
+    );
+  }
+  function tyreGeo() {
+    const acc = new GeoAccum();
+    const tor = new TorusGeometry(0.34, 0.13, 6, 14);
+    tor.rotateX(Math.PI / 2);
+    acc.add(tor, trs(0, 0.13, 0, 0), new Color(1, 1, 1));
+    const block = plainBox(0.06, 0.055, 0.16, 6);
+    for (let i = 0; i < 10; i++) {
+      const a = i / 10 * Math.PI * 2;
+      acc.add(block, trs(Math.cos(a) * 0.46, 0.13, Math.sin(a) * 0.46, -a), new Color(0.8, 0.8, 0.8));
+    }
+    return acc.build();
+  }
+  function parasolGeo() {
+    const pole = loft((t, o) => o.set(0, t * 2.3, 0), 3, 7, (t) => 0.045 - t * 0.012, 1, true, true);
+    const segs = 16, rows = 3;
+    const pos = [], uv = [], idx = [];
+    for (let j = 0; j <= rows; j++) {
+      const v2 = j / rows;
+      for (let i = 0; i <= segs; i++) {
+        const u = i / segs;
+        const a = u * Math.PI * 2;
+        const rib = Math.abs(u * 8 % 1 - 0.5) * 2;
+        const r = v2 * 1.35 * (1 + (1 - rib) * 0.035 * v2);
+        pos.push(Math.cos(a) * r, 2.3 - v2 * v2 * 0.44 - (1 - rib) * 0.05 * v2, Math.sin(a) * r);
+        uv.push(u * 2, v2);
+      }
+    }
+    for (let j = 0; j < rows; j++)
+      for (let i = 0; i < segs; i++) {
+        const a = j * (segs + 1) + i;
+        idx.push(a, a + 1, a + segs + 1, a + 1, a + segs + 2, a + segs + 1);
+      }
+    const canopy = new BufferGeometry();
+    canopy.setAttribute("position", new Float32BufferAttribute(pos, 3));
+    canopy.setAttribute("uv", new Float32BufferAttribute(uv, 2));
+    canopy.setIndex(idx);
+    canopy.computeVertexNormals();
+    return { pole, canopy };
+  }
+  function deckchairGeo() {
+    const acc = new GeoAccum();
+    const w = new Color(1, 1, 1);
+    for (const s of [-1, 1]) {
+      acc.add(bevelBox(0.05, 1.06, 0.05, 0.012, 6), trs(s * 0.28, 0.44, -0.16, 0, 1, 1, 1, -0.5), w);
+      acc.add(bevelBox(0.05, 0.92, 0.05, 0.012, 6), trs(s * 0.28, 0.3, 0.22, 0, 1, 1, 1, 0.66), w);
+    }
+    acc.add(bevelBox(0.62, 0.05, 0.05, 0.012, 6), trs(0, 0.02, -0.42, 0), w);
+    acc.add(bevelBox(0.62, 0.05, 0.05, 0.012, 6), trs(0, 0.02, 0.42, 0), w);
+    const clothG = new PlaneGeometry(0.56, 1.25, 1, 5);
+    const p = clothG.getAttribute("position");
+    for (let i = 0; i < p.count; i++) {
+      const v2 = p.getY(i) / 1.25 + 0.5;
+      p.setXYZ(i, p.getX(i), 0.16 + v2 * 0.62 - Math.sin(v2 * Math.PI) * 0.06, -0.42 + v2 * 0.72);
+    }
+    clothG.computeVertexNormals();
+    return { frame: acc.build(), cloth: clothG };
+  }
+  function marshalGeo() {
+    const acc = new GeoAccum();
+    const w = new Color(1, 1, 1);
+    acc.add(bevelBox(0.9, 1.1, 0.7, 0.04, 1.2), trs(0, 0.55, 0, 0), w);
+    acc.add(bevelBox(1.06, 0.09, 0.86, 0.02, 1.6), trs(0, 1.14, 0, 0), new Color(0.85, 0.85, 0.85));
+    acc.add(loft((t, o) => o.set(0, t * 2.5, 0), 3, 7, () => 0.045, 1, true, true), trs(0.5, 1.1, 0.28, 0), w);
+    const flag = new PlaneGeometry(1, 0.62, 8, 3);
+    flag.translate(0.5, 0, 0);
+    flag.rotateY(Math.PI / 2);
+    flag.translate(0.5, 3.3, 0.28);
+    return { post: acc.build(), flag };
+  }
+  function bannerArchGeo(span, height) {
+    const acc = new GeoAccum();
+    const w = new Color(1, 1, 1);
+    for (const s of [-1, 1]) {
+      const x = s * span / 2;
+      acc.add(bevelBox(0.75, height, 0.75, 0.05, 1), trs(x, height / 2, 0, 0), w);
+      acc.add(bevelBox(1.15, 0.24, 1.15, 0.04, 1.2), trs(x, 0.12, 0, 0), new Color(0.86, 0.86, 0.86));
+      acc.add(bevelBox(1, 0.2, 1, 0.04, 1.2), trs(x, height + 0.1, 0, 0), new Color(0.9, 0.9, 0.9));
+      acc.add(bevelBox(0.16, 2.2, 0.16, 0.03, 3), trs(x - s * 0.7, height - 1, 0, 0, 1, 1, 1, 0, s * 0.5), w);
+    }
+    const chord = 0.34;
+    for (const y of [height + 0.28, height + 1.42]) acc.add(bevelBox(span + 1.6, chord, 0.5, 0.05, 0.35), trs(0, y, 0, 0), w);
+    const webN = Math.max(6, Math.round(span / 2.2));
+    for (let i = 0; i <= webN; i++) {
+      const x = -((span + 1) / 2) + i / webN * (span + 1);
+      acc.add(bevelBox(0.14, 1.34, 0.34, 0.03, 2.4), trs(x, height + 0.85, 0, 0, 1, 1, 1, 0, (i % 2 ? 1 : -1) * 0.62), new Color(0.92, 0.92, 0.92));
+    }
+    acc.add(bevelBox(span + 1.2, 0.2, 0.4, 0.03, 2), trs(0, height + 2.2, 0, 0), new Color(0.9, 0.9, 0.9));
+    const banner = new PlaneGeometry(span + 1.2, 2.8, 14, 3);
+    banner.translate(0, height + 0.78, 0.34);
+    bannerUvs(banner);
+    return { struct: acc.build(), banner };
+  }
+  function bannerUvs(g) {
+    const uv = g.getAttribute("uv");
+    const n = uv.count;
+    const uv1 = new Float32Array(n * 2);
+    for (let i = 0; i < n; i++) {
+      const u = uv.getX(i);
+      const v2 = uv.getY(i);
+      uv1[i * 2] = u;
+      uv1[i * 2 + 1] = 0.752 + v2 * 0.246;
+      uv.setXY(i, 1 - v2, u);
+    }
+    uv.needsUpdate = true;
+    g.setAttribute("uv1", new BufferAttribute(uv1, 2));
+  }
+  function grandstandGeo(len, rows) {
+    const acc = new GeoAccum();
+    const w = new Color(1, 1, 1);
+    const seats = [];
+    const rowH = 0.52, rowD = 0.82;
+    for (let r = 0; r < rows; r++) {
+      const y = r * rowH;
+      const z = -r * rowD;
+      acc.add(bevelBox(len, rowH, rowD, 0.03, 0.35), trs(0, y + rowH / 2, z, 0), r % 2 ? new Color(0.92, 0.9, 0.86) : new Color(0.84, 0.82, 0.78));
+      acc.add(bevelBox(len, 0.34, 0.09, 0.02, 0.9), trs(0, y + rowH + 0.17, z - rowD * 0.44, 0), new Color(0.78, 0.8, 0.84));
+      seats.push({ x: 0, y: y + rowH, z });
+    }
+    const totalD = rows * rowD;
+    acc.add(bevelBox(len + 0.6, rows * rowH + 1.4, 0.35, 0.05, 0.4), trs(0, (rows * rowH + 1.4) / 2, -totalD - 0.1, 0), w);
+    const capH = rows * rowH + 3.4;
+    for (let i = 0; i <= 6; i++) {
+      const x = -len / 2 + i / 6 * len;
+      acc.add(bevelBox(0.22, capH, 0.22, 0.03, 3), trs(x, capH / 2, 0.5, 0), w);
+    }
+    acc.add(bevelBox(len + 1.2, 0.22, totalD + 1.6, 0.04, 0.45), trs(0, capH + 0.6, -totalD / 2 + 0.4, 0, 1, 1, 1, 0.08), new Color(0.9, 0.88, 0.84));
+    acc.add(bevelBox(len + 1.2, 0.34, 0.24, 0.03, 2), trs(0, capH + 0.42, 0.9, 0), new Color(0.86, 0.4, 0.36));
+    for (const s of [-1, 1]) acc.add(bevelBox(0.3, rows * rowH + 0.6, totalD, 0.04, 0.45), trs(s * len / 2, rows * rowH / 2, -totalD / 2, 0), w);
+    return { struct: acc.build(), seats };
+  }
+  function bellTowerGeo(rng, base, h) {
+    const wall = new GeoAccum();
+    const trim = new GeoAccum();
+    const roof = new GeoAccum();
+    const white = new Color(1, 1, 1);
+    const shaftH = h * 0.74;
+    wall.add(bevelBox(base, shaftH, base, 0.07, 0.42), trs(0, shaftH / 2, 0, 0), white, (_x2, y) => lerp4(0.4, 1, smoothstep3(0, 2.2, y)));
+    for (let i = 1; i <= 3; i++) {
+      const y = shaftH * i / 4;
+      trim.add(bevelBox(base + 0.22, 0.16, base + 0.22, 0.035, 0.9), trs(0, y, 0, 0), new Color(14668732));
+    }
+    for (let i = 0; i < 3; i++) {
+      const y = shaftH * (0.24 + i * 0.22);
+      for (const s of [-1, 1]) {
+        wall.add(new PlaneGeometry(0.28, 1, 1, 1), trs(s * base / 2 + s * 6e-3, y, 0, s > 0 ? Math.PI / 2 : -Math.PI / 2), new Color(2763312));
+        wall.add(new PlaneGeometry(0.28, 1, 1, 1), trs(0, y, s * base / 2 + s * 6e-3, s > 0 ? 0 : Math.PI), new Color(2763312));
+      }
+    }
+    const belH = h * 0.16;
+    const belW = base + 0.5;
+    const py2 = shaftH;
+    trim.add(bevelBox(belW + 0.3, 0.2, belW + 0.3, 0.04, 0.9), trs(0, py2 + 0.1, 0, 0), new Color(14997954));
+    const pier = 0.42;
+    for (const sx of [-1, 1])
+      for (const sz of [-1, 1]) {
+        wall.add(bevelBox(pier, belH, pier, 0.04, 0.9), trs(sx * (belW - pier) / 2, py2 + belH / 2 + 0.2, sz * (belW - pier) / 2, 0), white, () => 0.9);
+      }
+    for (const s of [-1, 1]) {
+      wall.add(new PlaneGeometry(belW - pier * 1.4, belH * 0.82, 1, 1), trs(0, py2 + belH * 0.55, s * (belW - pier) / 2 - s * 0.02, s > 0 ? 0 : Math.PI), new Color(2367266));
+      wall.add(new PlaneGeometry(belW - pier * 1.4, belH * 0.82, 1, 1), trs(s * (belW - pier) / 2 - s * 0.02, py2 + belH * 0.55, 0, s * Math.PI / 2), new Color(2367266));
+    }
+    wall.add(loft((t, o) => o.set(0, -t * 0.5, 0), 4, 8, (t) => 0.1 + Math.pow(t, 1.6) * 0.2, 1, false, true), trs(0, py2 + belH * 0.82, 0, 0), new Color(7166516));
+    const capH = h * 0.1;
+    trim.add(bevelBox(belW + 0.44, 0.18, belW + 0.44, 0.04, 0.9), trs(0, py2 + belH + 0.29, 0, 0), new Color(14997954));
+    const cap = loft((t, o) => o.set(0, t * capH, 0), 2, 4, (t) => (1 - t) * (belW + 0.5) * 0.72, 1.6, false, false);
+    cap.rotateY(Math.PI / 4);
+    roof.add(cap, trs(0, py2 + belH + 0.38, 0, 0), new Color().setHSL(0.04, 0.2, 0.74));
+    trim.add(loft((t, o) => o.set(0, t * 1.1, 0), 2, 5, (t) => 0.06 * (1 - t * 0.6), 1, true, true), trs(0, py2 + belH + capH + 0.38, 0, 0), new Color(13615268));
+    void rng;
+    return { wall: wall.build(), trim: trim.build(), roof: roof.build(), height: py2 + belH + capH + 1.5 };
+  }
+  function stallGeo(rng) {
+    const acc = new GeoAccum();
+    const w = 2.6 + rng() * 1.1;
+    const d = 1.7 + rng() * 0.5;
+    const hh = 2.15 + rng() * 0.25;
+    const white = new Color(1, 1, 1);
+    for (const sx of [-1, 1])
+      for (const sz of [-1, 1]) acc.add(bevelBox(0.1, hh, 0.1, 0.02, 3), trs(sx * (w - 0.2) / 2, hh / 2, sz * (d - 0.2) / 2, 0), white);
+    acc.add(bevelBox(w, 0.12, d, 0.025, 1.1), trs(0, 0.95, 0, 0), new Color(0.88, 0.84, 0.76));
+    acc.add(bevelBox(w - 0.2, 0.85, 0.1, 0.02, 1.1), trs(0, 0.5, (d - 0.1) / 2, 0), new Color(0.8, 0.76, 0.68));
+    for (let i = 0; i < 3; i++) {
+      const s = 0.3 + rng() * 0.14;
+      acc.add(bevelBox(s, s * 0.7, s * 0.8, 0.02, 2), trs(-w / 2 + 0.4 + i * (w / 3.4), 1.06 + s * 0.7 / 2, (rng() - 0.5) * 0.4, rng() * 3), new Color(0.9, 0.78, 0.6));
+    }
+    acc.add(bevelBox(w + 0.16, 0.08, 0.1, 0.02, 2), trs(0, hh, (d - 0.2) / 2, 0), white);
+    const can = new GeoAccum();
+    const sl = Math.hypot(d / 2 + 0.28, 0.34);
+    for (const s of [-1, 1]) {
+      const g = new PlaneGeometry(w + 0.5, sl, 1, 1);
+      g.rotateX(-Math.PI / 2);
+      can.add(g, trs(0, hh + 0.16 - 0.17, s * (d / 2 + 0.28) / 2, 0, 1, 1, 1, -s * 0.62 / 1), white);
+    }
+    const canopy = can.build();
+    return { frame: acc.build(), canopy };
+  }
+  function tentGeo(rng) {
+    const acc = new GeoAccum();
+    const w = 2.8 + rng() * 1.4;
+    const d = 3.4 + rng() * 1.6;
+    const hh = 1.5 + rng() * 0.5;
+    const wall = 0.6 + rng() * 0.35;
+    const white = new Color(1, 1, 1);
+    acc.add(bevelBox(w, wall, d, 0.04, 0.55), trs(0, wall / 2, 0, 0), white, (_x2, y) => lerp4(0.5, 1, smoothstep3(0, 0.8, y)));
+    const sl = Math.hypot(w / 2 + 0.2, hh);
+    for (const s of [-1, 1]) {
+      const g = new PlaneGeometry(sl, d + 0.4, 1, 1);
+      g.rotateX(-Math.PI / 2);
+      g.rotateZ(s * Math.atan2(hh, w / 2 + 0.2));
+      g.translate(-s * (w / 2 + 0.2) / 2, wall + hh / 2, 0);
+      acc.add(g, trs(0, 0, 0, 0), new Color(0.94, 0.92, 0.88));
+    }
+    for (const s of [-1, 1]) {
+      const t = new BufferGeometry();
+      const x = w / 2 + 0.2;
+      t.setAttribute("position", new Float32BufferAttribute(s > 0 ? [-x, wall, 0, x, wall, 0, 0, wall + hh, 0] : [x, wall, 0, -x, wall, 0, 0, wall + hh, 0], 3));
+      t.setAttribute("normal", new Float32BufferAttribute([0, 0, s, 0, 0, s, 0, 0, s], 3));
+      t.setAttribute("uv", new Float32BufferAttribute([0, 0, 1, 0, 0.5, 1], 2));
+      acc.add(t, trs(0, 0, s * (d + 0.4) / 2, 0), new Color(0.8, 0.78, 0.75));
+    }
+    return { body: acc.build() };
+  }
+  function buoyGeo() {
+    const acc = new GeoAccum();
+    acc.add(loft((t, o) => o.set(0, -0.4 + t * 1.3, 0), 5, 8, (t) => Math.sin((0.12 + t * 0.78) * Math.PI) * 0.42, 1.4, true, true), trs(0, 0, 0, 0), new Color(1, 1, 1));
+    acc.add(bevelBox(0.06, 1.5, 0.06, 0.015, 3), trs(0, 1.4, 0, 0), new Color(0.8, 0.8, 0.84));
+    acc.add(loft((t, o) => o.set(0, t * 0.34, 0), 2, 4, (tt) => (1 - tt) * 0.2, 1, false, false), trs(0, 1.95, 0, 0), new Color(0.2, 0.2, 0.24));
+    return acc.build();
+  }
+  function startLightsGeo(span) {
+    const acc = new GeoAccum();
+    const lens = new GeoAccum();
+    const white = new Color(1, 1, 1);
+    const n = 5;
+    const wBox = Math.min(0.78, span * 0.5 / n);
+    acc.add(bevelBox(wBox * n * 1.35, 0.16, 0.34, 0.03, 1.4), trs(0, 0.42, 0, 0), new Color(0.28, 0.28, 0.32));
+    for (let i = 0; i < n; i++) {
+      const x = (i - (n - 1) / 2) * wBox * 1.3;
+      acc.add(bevelBox(wBox, wBox * 1.05, 0.3, 0.035, 1.6), trs(x, 0, 0, 0), new Color(0.22, 0.22, 0.26));
+      acc.add(bevelBox(wBox * 1.1, 0.1, 0.42, 0.02, 2), trs(x, wBox * 0.56, 0.06, 0, 1, 1, 1, 0.25), new Color(0.18, 0.18, 0.21));
+      const g = new CircleGeometry(wBox * 0.34, 12);
+      lens.add(g, trs(x, 0, 0.17, 0), white);
+    }
+    return { frame: acc.build(), lens: lens.build() };
+  }
+  function aFrameSignGeo() {
+    const acc = new GeoAccum();
+    const pan = new GeoAccum();
+    const white = new Color(1, 1, 1);
+    const hh = 1.25;
+    const wdt = 1.9;
+    for (const s of [-1, 1]) {
+      for (const sx of [-1, 1]) acc.add(bevelBox(0.08, hh, 0.08, 0.02, 3), trs(sx * wdt / 2, hh / 2, s * 0.3, 0, 1, 1, 1, -s * 0.42 / 1), white);
+      acc.add(bevelBox(wdt + 0.1, 0.07, 0.07, 0.015, 2), trs(0, 0.14, s * 0.55, 0), new Color(0.85, 0.85, 0.85));
+      const g = new PlaneGeometry(wdt * 0.94, hh * 0.72, 1, 1);
+      g.rotateX(s > 0 ? 0.42 : -0.42);
+      g.translate(0, hh * 0.56, s * 0.24);
+      if (s < 0) g.rotateY(Math.PI);
+      pan.add(g, trs(0, 0, 0, 0), s > 0 ? white : new Color(0.9, 0.9, 0.9));
+    }
+    return { frame: acc.build(), panel: pan.build() };
+  }
+  function wallSignGeo() {
+    const acc = new GeoAccum();
+    const pan = new GeoAccum();
+    const white = new Color(1, 1, 1);
+    acc.add(bevelBox(3.2, 0.1, 0.12, 0.02, 2), trs(0, 1.62, 0, 0), white);
+    acc.add(bevelBox(3.2, 0.1, 0.12, 0.02, 2), trs(0, 0.72, 0, 0), white);
+    for (const s of [-1, 1]) acc.add(bevelBox(0.1, 1.15, 0.24, 0.02, 2), trs(s * 1.5, 1.17, -0.1, 0), new Color(0.86, 0.86, 0.86));
+    const g = new PlaneGeometry(3.1, 0.82, 1, 1);
+    g.translate(0, 1.17, 0.07);
+    pan.add(g, trs(0, 0, 0, 0), white);
+    return { frame: acc.build(), panel: pan.build() };
+  }
+  function buntingFlagGeo() {
+    const g = new BufferGeometry();
+    const w = 0.26, hh = 0.36;
+    g.setAttribute("position", new Float32BufferAttribute([-w / 2, 0, 0, w / 2, 0, 0, 0, -hh, 0], 3));
+    g.setAttribute("normal", new Float32BufferAttribute([0, 0, 1, 0, 0, 1, 0, 0, 1], 3));
+    g.setAttribute("uv", new Float32BufferAttribute([0, 0, 0, 1, 1, 0.5], 2));
+    return g;
+  }
+  function spectatorGeo(variant = 0, low = false) {
+    const acc = new GeoAccum();
+    const skin = new Color(1, 1, 1);
+    const dark = new Color(0.42, 0.4, 0.44);
+    const white = new Color(1, 1, 1);
+    const child = variant === 2;
+    const sc = child ? 0.72 : 1;
+    const build = 1 + (variant === 3 ? 0.14 : 0) - (child ? 0.06 : 0);
+    const torso = loft(
+      (t, o) => o.set(0, (0.62 + t * 0.56) * sc, 0),
+      low ? 2 : 4,
+      low ? 4 : 6,
+      // shoulder taper: widest at the chest, necked in at the collar
+      (t) => (0.185 + Math.sin(Math.min(t * 1.35, 1) * Math.PI) * 0.045 - Math.pow(t, 3) * 0.07) * build * sc,
+      1,
+      true,
+      true
+    );
+    setUv(torso, 1, 0.5);
+    acc.add(torso, trs(0, 0, 0, 0), white);
+    const legG = loft((t, o) => o.set(0, t * 0.66 * sc, 0), low ? 1 : 2, low ? 4 : 5, (t) => (0.078 - t * 0.014) * sc, 1, true, true);
+    setUv(legG, 0, 0.4);
+    const stance = variant === 3 ? 0.125 : 0.105;
+    for (const s of [-1, 1]) acc.add(legG, trs(s * stance * sc, 0, 0, 0, 1, 1, 1, 0, s * 0.05), dark);
+    const shoulderX = 0.235 * sc * build;
+    if (variant === 1) {
+      const sleeve = loft((t, o) => o.set(0, (1.06 + t * 0.3) * sc, 0), 1, low ? 3 : 4, () => 0.054 * sc, 1, true, true);
+      setUv(sleeve, 1, 0.96);
+      const fore = loft((t, o) => o.set(0, (1.34 + t * 0.4) * sc, 0), 1, low ? 3 : 4, (t) => (0.048 - t * 8e-3) * sc, 1, true, true);
+      setUv(fore, 0, 0.96);
+      for (const s of [-1, 1]) {
+        acc.add(sleeve, trs(s * shoulderX, 0, 0, 0, 1, 1, 1, 0, s * 0.24), white);
+        acc.add(fore, trs(s * (shoulderX + 0.09 * sc), 0, 0, 0, 1, 1, 1, 0, s * 0.12), skin);
+      }
+    } else {
+      const swing = variant === 3 ? 0.34 : 0.26;
+      const sleeve = loft((t, o) => o.set(0, (1.12 - t * 0.26) * sc, 0), 1, low ? 3 : 4, () => 0.057 * sc, 1, true, true);
+      setUv(sleeve, 1, 0.96);
+      const fore = loft((t, o) => o.set(0, (0.9 - t * 0.24) * sc, 0), 1, low ? 3 : 4, (t) => (0.046 - t * 6e-3) * sc, 1, true, true);
+      setUv(fore, 0, 0.96);
+      for (const s of [-1, 1]) {
+        acc.add(sleeve, trs(s * shoulderX, 0, 0, 0, 1, 1, 1, 0, s * swing), white);
+        acc.add(fore, trs(s * (shoulderX + 0.075 * sc), 0, 0.02 * sc, 0, 1, 1, 1, -0.22, s * (swing * 0.55)), skin);
+      }
+    }
+    const head = loft((t, o) => o.set(0, (1.2 + t * 0.2) * sc, 0), 2, low ? 4 : 6, (t) => Math.sin((0.18 + t * 0.72) * Math.PI) * 0.115 * sc, 1, true, true);
+    setUv(head, 0, 0.5);
+    acc.add(head, trs(0, 0, 0, 0), skin);
+    if (variant === 3) {
+      const brim = loft((t, o) => o.set(0, (1.34 + t * 0.05) * sc, 0), 1, low ? 5 : 8, (t) => lerp4(0.26, 0.2, t) * sc, 1, true, true);
+      setUv(brim, 1, 0.5);
+      acc.add(brim, trs(0, 0, 0, 0), white);
+      const crown = loft((t, o) => o.set(0, (1.37 + t * 0.14) * sc, 0), 2, low ? 4 : 6, (t) => 0.108 * (1 - t * 0.35) * sc, 1, false, true);
+      setUv(crown, 1, 0.5);
+      acc.add(crown, trs(0, 0, 0, 0), white);
+    } else if (!child) {
+      const cap = loft((t, o) => o.set(0, (1.33 + t * 0.09) * sc, 0), 2, low ? 4 : 6, (t) => 0.115 * Math.cos(t * 1.2) * sc, 1, false, true);
+      setUv(cap, 1, 0.5);
+      acc.add(cap, trs(0, 0, 0, 0), white);
+    }
+    const g = acc.build();
+    const pa = g.getAttribute("position");
+    const uv1 = new Float32Array(pa.count * 2);
+    for (let i = 0; i < pa.count; i++) {
+      const x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i);
+      const a = Math.atan2(z, x) / (Math.PI * 2) + 0.5;
+      uv1[i * 2] = Math.abs(a * 2 - 1);
+      uv1[i * 2 + 1] = clamp3(y / 1.62, 0, 1);
+    }
+    g.setAttribute("uv1", new BufferAttribute(uv1, 2));
+    return g;
+  }
+  function setUv(g, x, y) {
+    const uv = g.getAttribute("uv");
+    for (let i = 0; i < uv.count; i++) uv.setXY(i, x, y);
+    uv.needsUpdate = true;
+  }
+  function gullGeo() {
+    const pos = [], uv = [], idx = [];
+    const push = (x, y, z, u, v2) => {
+      pos.push(x, y, z);
+      uv.push(u, v2);
+    };
+    const span = 0.62;
+    const pts = [
+      [-1, 0],
+      [-0.55, 0.06],
+      [0, 0.02],
+      [0.55, 0.06],
+      [1, 0]
+    ];
+    for (let i = 0; i < pts.length; i++) {
+      const [sx, sz] = pts[i];
+      push(sx * span, 0, sz * 0.1 - 0.03, (sx + 1) / 2, 0);
+      push(sx * span, 0, sz * 0.1 + 0.14 - Math.abs(sx) * 0.1, (sx + 1) / 2, 1);
+    }
+    for (let i = 0; i < pts.length - 1; i++) {
+      const a = i * 2;
+      idx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3);
+    }
+    const base = pos.length / 3;
+    const bl = 0.3;
+    push(0, 0, -bl, 0.5, 0.5);
+    push(-0.045, 0.02, 0, 0.5, 0.5);
+    push(0.045, 0.02, 0, 0.5, 0.5);
+    push(0, -0.02, 0.06, 0.5, 0.5);
+    push(0, 0.01, bl * 0.7, 0.5, 0.5);
+    idx.push(base, base + 1, base + 2, base + 1, base + 4, base + 2, base + 1, base + 3, base + 4, base + 2, base + 4, base + 3, base, base + 3, base + 1, base, base + 2, base + 3);
+    const g = new BufferGeometry();
+    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
+    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+  function lighthouseGeo(baseY, seaY) {
+    const stoneA = new GeoAccum();
+    const trimA = new GeoAccum();
+    const w = new Color(1, 1, 1);
+    const plinthH = Math.max(2.5, baseY - seaY + 3);
+    const plinth = loft((t, o) => o.set(0, -plinthH + t * plinthH, 0), 5, 10, (t, a) => (7.5 - t * 3.4) * (1 + Math.sin(a * 3 + t * 2) * 0.09), 3, false, true);
+    stoneA.add(plinth, trs(0, 0, 0, 0), new Color(0.86, 0.82, 0.74));
+    const towerH = 15.5;
+    const tower = loft((t, o) => o.set(0, t * towerH, 0), 12, 16, (t) => 2.35 - Math.pow(t, 0.85) * 1.15, 4, true, false);
+    stoneA.add(tower, trs(0, 0, 0, 0), w);
+    trimA.add(loft((t, o) => o.set(0, towerH + t * 0.42, 0), 3, 16, (t) => 1.75 - t * 0.25, 3, false, true), trs(0, 0, 0, 0), new Color(0.94, 0.9, 0.84));
+    for (let i = 0; i < 16; i++) {
+      const a = i / 16 * Math.PI * 2;
+      trimA.add(bevelBox(0.07, 0.9, 0.07, 0.015, 5), trs(Math.cos(a) * 1.6, towerH + 0.86, Math.sin(a) * 1.6, -a), new Color(0.8, 0.3, 0.28));
+    }
+    trimA.add(loft((t, o) => o.set(0, towerH + 1.3 + t * 0.12, 0), 1, 16, () => 1.66, 3, false, false), trs(0, 0, 0, 0), new Color(0.8, 0.3, 0.28));
+    const lampY = towerH + 1.4;
+    const glass = loft((t, o) => o.set(0, lampY + t * 2, 0), 2, 12, () => 1.15, 2, false, false);
+    trimA.add(loft((t, o) => o.set(0, lampY + 2 + t * 1.05, 0), 4, 12, (t) => 1.3 * (1 - t * t), 2, false, true), trs(0, 0, 0, 0), new Color(0.8, 0.3, 0.28));
+    for (let i = 0; i < 8; i++) {
+      const a = i / 8 * Math.PI * 2;
+      trimA.add(bevelBox(0.09, 2, 0.09, 0.02, 4), trs(Math.cos(a) * 1.14, lampY + 1, Math.sin(a) * 1.14, -a), new Color(0.35, 0.34, 0.36));
+    }
+    return { stone: stoneA.build(), trim: trimA.build(), glass, lampY: lampY + 1 };
+  }
+  function windmillGeo() {
+    const towerA = new GeoAccum();
+    const trimA = new GeoAccum();
+    const w = new Color(1, 1, 1);
+    const H = 9.5;
+    towerA.add(loft((t, o) => o.set(0, t * H, 0), 10, 14, (t) => 3.1 - t * 1.25, 3, true, false), trs(0, 0, 0, 0), w);
+    for (let i = 0; i < 3; i++) {
+      const a = i * 2.1;
+      trimA.add(bevelBox(0.6, 0.85, 0.35, 0.03, 2), trs(Math.cos(a) * 2.35, 2.6 + i * 1.9, Math.sin(a) * 2.35, -a), new Color(0.4, 0.36, 0.34));
+    }
+    trimA.add(loft((t, o) => o.set(0, H + t * 2.4, 0), 6, 14, (t) => 2.05 * Math.pow(1 - t, 0.72), 3, false, true), trs(0, 0, 0, 0), new Color(0.78, 0.42, 0.3));
+    trimA.add(loft((t, o) => o.set(0, H - 0.1 + t * 0.22, 0), 1, 14, () => 2.2, 3, false, false), trs(0, 0, 0, 0), new Color(0.92, 0.88, 0.8));
+    const hubY = H + 1.35, hubZ = 2.3;
+    const rotorA = new GeoAccum();
+    rotorA.add(loft((t, o) => o.set(0, 0, -0.1 + t * 0.6), 3, 10, (t) => 0.34 - t * 0.1, 1.5, true, true), trs(0, 0, 0, 0), w);
+    for (let i = 0; i < 4; i++) {
+      const a = i / 4 * Math.PI * 2;
+      const ca = Math.cos(a), sa = Math.sin(a);
+      const L = 5.6;
+      rotorA.add(bevelBox(0.16, L, 0.16, 0.03, 3), trs(ca * L / 2, sa * L / 2, 0, 0, 1, 1, 1, 0, a - Math.PI / 2), w);
+      for (let k = 1; k <= 7; k++) {
+        const r = k / 8 * L;
+        rotorA.add(bevelBox(0.9, 0.07, 0.07, 0.015, 4), trs(ca * r, sa * r, 0.05, 0, 1, 1, 1, 0, a - Math.PI / 2), new Color(0.9, 0.9, 0.9));
+      }
+    }
+    const sail = new PlaneGeometry(0.95, 4.6, 3, 8);
+    sail.translate(0.55, 2.6, 0.14);
+    const suv = sail.getAttribute("uv");
+    for (let i = 0; i < suv.count; i++) suv.setXY(i, suv.getX(i) * 0.5, suv.getY(i) * 0.5);
+    return { tower: towerA.build(), trim: trimA.build(), rotor: rotorA.build(), sail, hubY, hubZ };
+  }
+  function landmassGeo(radius, height, seed, seaY, jag = 1, segs = 40, rings = 12) {
+    const rng = mulberry322(seed);
+    const n1 = createNoise2D(rng);
+    const pos = [], uv = [], idx = [];
+    const skirt = height * 0.6 + 40;
+    for (let j = 0; j <= rings; j++) {
+      const v2 = j / rings;
+      for (let i = 0; i <= segs; i++) {
+        const u = i / segs;
+        const a = u * Math.PI * 2;
+        const wob = 1 + n1(Math.cos(a) * 1.5, Math.sin(a) * 1.5) * 0.34 * jag + n1(Math.cos(a) * 4.1 + 9, Math.sin(a) * 4.1) * 0.14 * jag;
+        const r = radius * wob * Math.sqrt(Math.max(0, 1 - v2 * v2));
+        const ridge = n1(Math.cos(a) * 2.2 + 30, Math.sin(a) * 2.2) * 0.3 + n1(u * 7 + 51, v2 * 3) * 0.16;
+        const y = seaY + height * Math.pow(v2, 0.72) * (1 + ridge * jag);
+        pos.push(Math.cos(a) * r, j === 0 ? seaY - skirt : y, Math.sin(a) * r);
+        uv.push(u * 8, v2 * 5);
+      }
+    }
+    for (let j = 0; j < rings; j++)
+      for (let i = 0; i < segs; i++) {
+        const a = j * (segs + 1) + i;
+        idx.push(a, a + segs + 1, a + 1, a + 1, a + segs + 1, a + segs + 2);
+      }
+    const g = new BufferGeometry();
+    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
+    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+  function debrisGeo(rng) {
+    const acc = new GeoAccum();
+    const k = rng() * 3 | 0;
+    if (k === 0) {
+      const L = 0.5 + rng() * 1.1;
+      acc.add(loft((t, o) => o.set(0, 0, (t - 0.5) * L), 5, 6, (t) => 0.05 + Math.sin(t * Math.PI) * 0.035, 2, true, true), trs(0, 0.06, 0, rng() * 6), new Color(0.78, 0.72, 0.62));
+    } else if (k === 1) {
+      for (let i = 0; i < 4; i++) acc.add(bevelBox(0.12 + rng() * 0.14, 0.07 + rng() * 0.06, 0.12 + rng() * 0.12, 0.02, 4), trs((rng() - 0.5) * 0.4, 0.04, (rng() - 0.5) * 0.4, rng() * 6), new Color(0.9, 0.87, 0.8));
+    } else {
+      for (let i = 0; i < 5; i++) acc.add(bevelBox(0.22 + rng() * 0.2, 0.05, 0.1 + rng() * 0.1, 0.02, 4), trs((rng() - 0.5) * 0.5, 0.03, (rng() - 0.5) * 0.5, rng() * 6, 1, 1, 1, 0, rng() * 0.4), new Color(0.34, 0.36, 0.26));
+    }
+    return acc.build();
+  }
+  var PAL, lerp4, clamp3, smoothstep3, pick, TexLib, _lc, _nm, _v, GeoAccum, InstSet, _mm, _mv, STATIC_CELL, PATCHES, DEPTH_PATCH_KEY, SAP, MatLib, _m2, _q, _s, wallAOFor, ROOF_MULT;
+  var init_Props = __esm({
+    "src/src/world/Props.ts"() {
+      init_three_module();
+      init_simplex_noise();
+      init_Materials();
+      PAL = {
+        sand: 14928019,
+        grass: 7314247,
+        grassTip: 8893270,
+        seaDeep: 875130,
+        seaShallow: 4180420,
+        foam: 15661823,
+        stone: 11047546,
+        roofTile: 11887679,
+        skyWarm: 16765088,
+        kerbRed: 14697791,
+        kerbWhite: 15920352,
+        pastels: [15911328, 15246752, 16114352, 11126996, 14465240, 15784383, 13621696],
+        shutters: [4156276, 3104067, 9061427, 5922698, 7819311],
+        boatHulls: [15920352, 14697791, 3107744, 3104067, 16114352, 4144970],
+        clothes: [15920352, 11126996, 15246752, 16114352, 14465240, 10469544],
+        crowd: [14697791, 5227519, 16751918, 12606719, 15920352, 7314247, 16114352, 15246752, 3107744, 14465240],
+        skin: [1578e4, 14263672, 11104575, 7291942, 16243133]
+      };
+      lerp4 = (a, b, t) => a + (b - a) * t;
+      clamp3 = (v2, a, b) => v2 < a ? a : v2 > b ? b : v2;
+      smoothstep3 = (e0, e1, x) => {
+        const t = clamp3((x - e0) / (e1 - e0), 0, 1);
+        return t * t * (3 - 2 * t);
+      };
+      pick = (rng, arr) => arr[rng() * arr.length | 0];
+      TexLib = class {
+        constructor(renderer) {
+          __publicField(this, "cache", /* @__PURE__ */ new Map());
+          __publicField(this, "aniso");
+          __publicField(this, "alphaCache", /* @__PURE__ */ new Map());
+          this.aniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+        }
+        memo(key2, gen) {
+          let m = this.cache.get(key2);
+          if (!m) {
+            m = gen();
+            this.cache.set(key2, m);
+          }
+          return m;
+        }
+        // -- stucco / lime plaster: the village walls -----------------------------
+        plaster(size = 1024) {
+          return this.memo("plaster", () => {
+            const [c, g] = cv(size);
+            const h = new Float32Array(size * size);
+            const r = new Float32Array(size * size);
+            const img = g.createImageData(size, size);
+            const d = img.data;
+            for (let y = 0; y < size; y++) {
+              for (let x = 0; x < size; x++) {
+                const u = x / size, v2 = y / size;
+                const grain = fbm(11, u, v2, 192, 192, 4);
+                const trowel = fbm(23, u, v2, 8, 26, 3) * 0.9;
+                const blotch = fbm(37, u, v2, 4, 4, 2);
+                const i = y * size + x;
+                h[i] = grain * 0.55 + trowel * 0.45;
+                const t = 0.5 + h[i] * 0.5;
+                const damp5 = smoothstep3(0.12, 0.34, blotch) * 0.14;
+                const rr2 = lerp4(0.9, 1, t) - damp5 * 0.9;
+                const gg = lerp4(0.875, 0.985, t) - damp5 * 0.75;
+                const bb = lerp4(0.83, 0.95, t) - damp5 * 0.5;
+                const o = i * 4;
+                d[o] = rr2 * 255;
+                d[o + 1] = gg * 255;
+                d[o + 2] = bb * 255;
+                d[o + 3] = 255;
+                r[i] = 0.62 + trowel * 0.16 + grain * 0.1 + damp5 * 1.2;
+              }
+            }
+            g.putImageData(img, 0, 0);
+            const rng = mulberry322(7717);
+            g.lineCap = "round";
+            for (let k = 0; k < 26; k++) {
+              let x = rng() * size, y = rng() * size, a = rng() * Math.PI * 2;
+              g.strokeStyle = `rgba(120,105,92,${0.18 + rng() * 0.22})`;
+              g.lineWidth = 0.7 + rng() * 1.3;
+              g.beginPath();
+              g.moveTo(x, y);
+              const steps = 12 + (rng() * 26 | 0);
+              for (let s = 0; s < steps; s++) {
+                a += (rng() - 0.5) * 0.9;
+                x += Math.cos(a) * 6;
+                y += Math.sin(a) * 6;
+                g.lineTo(x, y);
+                const ix = ((x | 0) + size) % size, iy = ((y | 0) + size) % size;
+                h[iy * size + ix] -= 0.5;
+              }
+              g.stroke();
+            }
+            return {
+              map: finish(c, true, this.aniso),
+              normalMap: normalFromHeight(h, size, 26, this.aniso),
+              roughnessMap: greyFromField(r, size, this.aniso)
+            };
+          });
+        }
+        // -- terracotta barrel roof tiles ----------------------------------------
+        roofTile(size = 1024) {
+          return this.memo("roof", () => {
+            const [c, g] = cv(size);
+            const h = new Float32Array(size * size);
+            const r = new Float32Array(size * size);
+            const img = g.createImageData(size, size);
+            const d = img.data;
+            const cols = 8;
+            const rows = 10;
+            const rng = mulberry322(4242);
+            const jitter = new Float32Array(cols * rows * 3);
+            for (let i = 0; i < jitter.length; i++) jitter[i] = rng();
+            for (let y = 0; y < size; y++) {
+              const fv = y / size;
+              const rowF = fv * rows;
+              const row = Math.floor(rowF);
+              const rowT = rowF - row;
+              for (let x = 0; x < size; x++) {
+                const fu = x / size;
+                const off = row & 1 ? 0.5 : 0;
+                const colF = fu * cols + off;
+                const col = Math.floor(colF) % cols;
+                const ct = colF - Math.floor(colF);
+                const ji = row % rows * cols * 3 + col * 3;
+                const j0 = jitter[ji], j1 = jitter[ji + 1], j2 = jitter[ji + 2];
+                const slip = (j1 - 0.5) * 0.16;
+                const rowS = clamp3(rowT - slip, 0, 1);
+                const barrel = Math.sin(ct * Math.PI);
+                const lap = smoothstep3(0, 0.3, rowS);
+                const proud = j2 > 0.86 ? 0.16 : 0;
+                const broken = j0 > 0.975 ? 1 : 0;
+                const gap = Math.pow(barrel, 0.6) * (1 - broken * 0.72);
+                const i = y * size + x;
+                h[i] = gap * 0.9 + lap * 0.35 - (1 - lap) * 0.5 + proud + fbm(41, fu, fv, 96, 96, 2, 0.5, size) * 0.09;
+                const shade = (0.55 + 0.45 * gap) * (0.62 + 0.38 * lap) * (1 - broken * 0.28);
+                const hueT = j0 * 0.5 + j1 * 0.2;
+                const val = 1 + (j2 - 0.5) * 0.3;
+                let rr2 = lerp4(0.62, 0.8, hueT) * shade * val;
+                let gg = lerp4(0.3, 0.42, hueT + (j1 - 0.5) * 0.12) * shade * val;
+                let bb = lerp4(0.21, 0.28, hueT * 0.8) * shade * val;
+                const moss = clamp3((1 - barrel) * 1.4 - 0.55 + (1 - lap) * 0.35, 0, 1) * (0.25 + j2 * 0.5) * smoothstep3(0.15, 0.6, fbm(53, fu, fv, 8, 8, 2, 0.5, size) + 0.5);
+                rr2 = lerp4(rr2, 0.34, moss * 0.55);
+                gg = lerp4(gg, 0.38, moss * 0.55);
+                bb = lerp4(bb, 0.24, moss * 0.55);
+                const o = i * 4;
+                d[o] = clamp3(rr2, 0, 1) * 255;
+                d[o + 1] = clamp3(gg, 0, 1) * 255;
+                d[o + 2] = clamp3(bb, 0, 1) * 255;
+                d[o + 3] = 255;
+                r[i] = 0.55 + (1 - barrel) * 0.3 + j1 * 0.12 + moss * 0.15;
+              }
+            }
+            g.putImageData(img, 0, 0);
+            return {
+              map: finish(c, true, this.aniso),
+              normalMap: normalFromHeight(h, size, 34, this.aniso),
+              roughnessMap: greyFromField(r, size, this.aniso)
+            };
+          });
+        }
+        // -- painted timber: shutters, doors, jetties, hulls, crates --------------
+        wood(size = 1024) {
+          return this.memo("wood", () => {
+            const [c, g] = cv(size);
+            const h = new Float32Array(size * size);
+            const r = new Float32Array(size * size);
+            const img = g.createImageData(size, size);
+            const d = img.data;
+            const planks = 6;
+            const rng = mulberry322(9091);
+            const pj = new Float32Array(planks * 2);
+            for (let i = 0; i < pj.length; i++) pj[i] = rng();
+            for (let y = 0; y < size; y++) {
+              for (let x = 0; x < size; x++) {
+                const u = x / size, v2 = y / size;
+                const pf = u * planks;
+                const p = Math.floor(pf) % planks;
+                const pt = pf - Math.floor(pf);
+                const edge = smoothstep3(0, 0.035, pt) * smoothstep3(1, 0.965, pt);
+                const grain = fbm(61 + p * 7, u, v2, 96, 6, 4);
+                const fine = fbm(71 + p * 5, u, v2, 256, 24, 2);
+                const i2 = y * size + x;
+                const gr = grain * 0.7 + fine * 0.3;
+                h[i2] = gr * 0.5 + (edge - 1) * 1.1;
+                const base = 0.86 + gr * 0.14;
+                const bright = base * lerp4(0.76, 1.08, pj[p * 2]) * lerp4(0.55, 1, edge);
+                const o = i2 * 4;
+                d[o] = clamp3(bright, 0, 1) * 255;
+                d[o + 1] = clamp3(bright * (0.97 - gr * 0.05), 0, 1) * 255;
+                d[o + 2] = clamp3(bright * (0.93 - gr * 0.09), 0, 1) * 255;
+                d[o + 3] = 255;
+                const sealed = pj[p * 2 + 1] < 0.42 ? 0.58 : 0.9;
+                r[i2] = sealed + Math.abs(gr) * 0.22 + (1 - edge) * 0.18 - 0.12;
+              }
+            }
+            g.putImageData(img, 0, 0);
+            return {
+              map: finish(c, true, this.aniso),
+              normalMap: normalFromHeight(h, size, 22, this.aniso),
+              roughnessMap: greyFromField(r, size, this.aniso)
+            };
+          });
+        }
+        // -- weathered ashlar: quay walls, lighthouse base, plinths ---------------
+        stone(size = 1024) {
+          return this.memo("stone", () => {
+            const [c, g] = cv(size);
+            const h = new Float32Array(size * size);
+            const r = new Float32Array(size * size);
+            const img = g.createImageData(size, size);
+            const d = img.data;
+            const rows = 7;
+            const rng = mulberry322(3313);
+            const rowOff = [];
+            const blockJ = [];
+            for (let y = 0; y < rows; y++) {
+              rowOff.push(rng());
+              const cols = 4 + (rng() * 3 | 0);
+              const js = [];
+              for (let i = 0; i < cols * 3; i++) js.push(rng());
+              js.push(cols);
+              blockJ.push(js);
+            }
+            for (let y = 0; y < size; y++) {
+              const v2 = y / size;
+              const rf = v2 * rows;
+              const row = Math.floor(rf) % rows;
+              const rt = rf - Math.floor(rf);
+              const js = blockJ[row];
+              const cols = js[js.length - 1];
+              for (let x = 0; x < size; x++) {
+                const u = x / size;
+                const cf = u * cols + rowOff[row];
+                const col = Math.floor(cf) % cols;
+                const ct = cf - Math.floor(cf);
+                const m = 0.028;
+                const inBlock = smoothstep3(0, m, ct) * smoothstep3(1, 1 - m, ct) * smoothstep3(0, m * rows / cols, rt) * smoothstep3(1, 1 - m * rows / cols, rt);
+                const j0 = js[col * 3] ?? 0.5, j1 = js[col * 3 + 1] ?? 0.5, j2 = js[col * 3 + 2] ?? 0.5;
+                const rough = fbm(83 + col * 13 + row * 29, u, v2, 128, 128, 4);
+                const wide = fbm(97, u, v2, 6, 6, 3);
+                const i = y * size + x;
+                h[i] = inBlock * 1.85 - 0.6 + rough * 0.35 * inBlock;
+                const tone = lerp4(0.72, 1, j0) * (0.9 + rough * 0.2) * lerp4(0.72, 1, inBlock);
+                let rr2 = 0.66 * tone, gg = 0.575 * tone, bb = 0.48 * tone;
+                const damp5 = clamp3(wide * 1.6 + 0.25 - v2 * 0.7, 0, 1) * 0.35 * j1;
+                rr2 = lerp4(rr2, 0.32, damp5);
+                gg = lerp4(gg, 0.38, damp5);
+                bb = lerp4(bb, 0.28, damp5);
+                const o = i * 4;
+                d[o] = clamp3(rr2, 0, 1) * 255;
+                d[o + 1] = clamp3(gg, 0, 1) * 255;
+                d[o + 2] = clamp3(bb, 0, 1) * 255;
+                d[o + 3] = 255;
+                r[i] = 0.7 + rough * 0.2 + (1 - inBlock) * 0.2 - j2 * 0.12 + damp5 * 0.2;
+              }
+            }
+            g.putImageData(img, 0, 0);
+            return {
+              map: finish(c, true, this.aniso),
+              normalMap: normalFromHeight(h, size, 40, this.aniso),
+              roughnessMap: greyFromField(r, size, this.aniso)
+            };
+          });
+        }
+        // -- painted / lacquered metal: bollards, rails, lamp posts, tyres --------
+        paintedMetal(size = 512) {
+          return this.memo("metal", () => {
+            const [c, g] = cv(size);
+            const h = new Float32Array(size * size);
+            const r = new Float32Array(size * size);
+            const img = g.createImageData(size, size);
+            const d = img.data;
+            for (let y = 0; y < size; y++) {
+              for (let x = 0; x < size; x++) {
+                const u = x / size, v2 = y / size;
+                const orange = fbm(101, u, v2, 96, 96, 4);
+                const chip = clamp3(fbm(103, u, v2, 24, 24, 3) * 2.4 - 0.85, 0, 1);
+                const i = y * size + x;
+                h[i] = orange * 0.5 - chip * 1.6;
+                const base = 0.94 + orange * 0.06;
+                const rust = chip * 0.8;
+                const o = i * 4;
+                d[o] = clamp3(lerp4(base, 0.45, rust), 0, 1) * 255;
+                d[o + 1] = clamp3(lerp4(base, 0.26, rust), 0, 1) * 255;
+                d[o + 2] = clamp3(lerp4(base, 0.18, rust), 0, 1) * 255;
+                d[o + 3] = 255;
+                r[i] = 0.3 + orange * 0.14 + rust * 0.55;
+              }
+            }
+            g.putImageData(img, 0, 0);
+            return {
+              map: finish(c, true, this.aniso),
+              normalMap: normalFromHeight(h, size, 16, this.aniso),
+              roughnessMap: greyFromField(r, size, this.aniso)
+            };
+          });
+        }
+        /**
+         * 4x4 atlas of striped awning / parasol / sail canvas. Per-instance UV
+         * transform picks a cell, so all fabric in the world is one draw call and
+         * still shows six different stripe schemes.
+         */
+        fabricAtlas(size = 1024) {
+          return this.memo("fabric", () => {
+            const [c, g] = cv(size);
+            const cell = size / 4;
+            const rng = mulberry322(5150);
+            const schemes = [
+              ["#f2ece0", "#e0453f"],
+              ["#f2ece0", "#3f6b74"],
+              ["#f5e2b0", "#b5643f"],
+              ["#f2ece0", "#2f6ba0"],
+              ["#eaf0ea", "#2f5d43"],
+              ["#f2ece0", "#ff9d2e"],
+              ["#f0e4f0", "#dcb8d8"],
+              ["#f2ece0", "#f2ece0"]
+            ];
+            for (let cy = 0; cy < 4; cy++) {
+              for (let cx = 0; cx < 4; cx++) {
+                const idx = cy * 4 + cx;
+                const [a, b] = schemes[idx % schemes.length];
+                const x0 = cx * cell, y0 = cy * cell;
+                g.fillStyle = a;
+                g.fillRect(x0, y0, cell, cell);
+                const bands = 4 + idx % 4;
+                g.fillStyle = b;
+                for (let i = 0; i < bands; i++) {
+                  const w = cell / (bands * 2);
+                  g.fillRect(x0 + i * cell / bands + w * 0.5, y0, w, cell);
+                }
+                const grad = g.createLinearGradient(x0, y0, x0, y0 + cell);
+                grad.addColorStop(0, "rgba(255,240,215,0.22)");
+                grad.addColorStop(0.65, "rgba(0,0,0,0)");
+                grad.addColorStop(1, "rgba(60,45,35,0.20)");
+                g.fillStyle = grad;
+                g.fillRect(x0, y0, cell, cell);
+                for (let k = 0; k < 40; k++) {
+                  g.fillStyle = `rgba(90,72,55,${rng() * 0.05})`;
+                  g.beginPath();
+                  g.arc(x0 + rng() * cell, y0 + cell * (0.6 + rng() * 0.4), rng() * 9, 0, 7);
+                  g.fill();
+                }
+              }
+            }
+            const h = new Float32Array(size * size);
+            const r = new Float32Array(size * size);
+            for (let y = 0; y < size; y++)
+              for (let x = 0; x < size; x++) {
+                const i = y * size + x;
+                const weave = Math.sin(x * 1.9) * Math.sin(y * 1.9) * 0.4 + fbm(107, x / size, y / size, 256, 256, 2) * 0.6;
+                h[i] = weave;
+                r[i] = 0.78 + weave * 0.12;
+              }
+            return {
+              map: finish(c, true, this.aniso),
+              normalMap: normalFromHeight(h, size, 8, this.aniso),
+              roughnessMap: greyFromField(r, size, this.aniso)
+            };
+          });
+        }
+        /** 2 x 4 atlas of trackside sponsor boards. */
+        /**
+         * The start-line banner: course name, chequer flashes and a sponsor rule.
+         * §1 asks for a banner arch over the start line and a bare timber gantry is
+         * not one. 4:1 so the lettering is legible across the road.
+         */
+        bannerCloth(size = 1024) {
+          return this.memo("bannercloth", () => {
+            const [c, g] = cv(size);
+            const hh = size / 4;
+            g.fillStyle = "#e0453f";
+            g.fillRect(0, 0, size, hh);
+            const q = hh / 4;
+            for (let bx = 0; bx < 3; bx++)
+              for (let by = 0; by < 4; by++) {
+                if ((bx + by) % 2) continue;
+                for (const side of [0, 1]) {
+                  g.fillStyle = "#f2ece0";
+                  g.fillRect(side ? size - (bx + 1) * q : bx * q, by * q, q, q);
+                }
+              }
+            g.fillStyle = "#2f3340";
+            g.fillRect(0, hh * 0.8, size, hh * 0.2);
+            g.fillStyle = "#f5e2b0";
+            g.font = `700 ${hh * 0.13}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
+            g.textAlign = "center";
+            g.textBaseline = "middle";
+            g.letterSpacing = "6px";
+            g.fillText("NITRO  \xB7  AMALFI OIL  \xB7  BOOST CO.  \xB7  MARINA", size / 2, hh * 0.9);
+            g.fillStyle = "#f2ece0";
+            g.font = `900 ${hh * 0.42}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
+            g.letterSpacing = "10px";
+            g.strokeStyle = "rgba(60,20,16,0.55)";
+            g.lineWidth = 7;
+            g.strokeText("SUNSET BAY", size / 2, hh * 0.4);
+            g.fillText("SUNSET BAY", size / 2, hh * 0.4);
+            g.fillStyle = "#c8382f";
+            g.fillRect(0, hh, size, size - hh);
+            const h = new Float32Array(size * size);
+            const r = new Float32Array(size * size);
+            for (let y = 0; y < size; y++)
+              for (let x = 0; x < size; x++) {
+                const i = y * size + x;
+                const weave = Math.sin(x * 2.1) * Math.sin(y * 2.1) * 0.35 + fbm(211, x / size, y / size, 220, 220, 2) * 0.65;
+                h[i] = weave * 0.5 + Math.sin(x * 0.055 + fbm(213, x / size, y / size, 6, 6, 2) * 4) * 0.5;
+                r[i] = 0.74 + weave * 0.12;
+              }
+            return {
+              map: finish(c, true, this.aniso, false),
+              normalMap: normalFromHeight(h, size, 12, this.aniso),
+              roughnessMap: greyFromField(r, size, this.aniso)
+            };
+          });
+        }
+        /**
+         * ==========================================================================
+         *  crowdCloth — the spectators' clothing atlas.
+         * ==========================================================================
+         *  BLOCKER FROM ROUND 1. The crowd material was
+         *      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.78 })
+         *  — no map, no normal, no roughness map. §4 names a flat untextured
+         *  MeshStandardMaterial as an automatic fail, and in hud.png a band of these
+         *  sits fifteen metres from the lens, so it is the one place in the game where
+         *  that fail is unmissable.
+         *
+         *  A 3x3 grid of 256² garment cards. Each card is a whole figure's worth of
+         *  clothing read bottom-to-top — trousers / skirt, then the shirt, then a
+         *  collar — because the body UV runs 0..1 up the figure, so a card that only
+         *  painted a shirt would leave the legs untextured. Nine designs across
+         *  stripes, hoops, block, plain and a sash, and the existing per-instance
+         *  `vertexColors` tint still multiplies over the top, so nine cards times ten
+         *  roster colours is ninety distinct spectators before the pose variants.
+         *
+         *  Patterns are authored to be SEAMLESS IN U, because u is the angle around
+         *  the body: vertical stripes come in whole counts across the cell and hoops
+         *  are horizontal, so nothing shows a seam down the spectator's back.
+         *
+         *  Roughness runs 0.62 on the synthetics (the blocks and the sash, which read
+         *  as a sports shirt) to 0.90 on the cottons — two visibly different surface
+         *  responses inside one crowd, which is what stops several hundred figures
+         *  from sharing one plastic sheen.
+         */
+        crowdCloth(size = 768) {
+          return this.memo("crowdcloth", () => {
+            const [c, g] = cv(size);
+            const cell = size / 3;
+            const cards = [
+              ["#3c4356", "#f2ece0", "#2f6ba0", 0, 0.15],
+              // plain cotton tee
+              ["#4a4034", "#e8e2d2", "#e0453f", 1, 0.55],
+              // vertical stripes
+              ["#2f3340", "#4fc3ff", "#f5f9ff", 2, 0.95],
+              // hoops, synthetic
+              ["#5a4a38", "#f5e2b0", "#8f5a2f", 3, 0.2],
+              // check
+              ["#37404e", "#e0453f", "#f9f4ea", 4, 0.85],
+              // block + sash
+              ["#4d4238", "#9fc0a8", "#40614c", 1, 0.3],
+              // fine stripe, linen
+              ["#2e3542", "#dcb8d8", "#7a4f76", 5, 0.25],
+              // speckled weave
+              ["#514436", "#ff9d2e", "#2b2b34", 4, 0.9],
+              // hi-vis block
+              ["#39404c", "#a9c8d4", "#f2ece0", 2, 0.45]
+              // wide hoop
+            ];
+            const rough = new Float32Array(size * size);
+            for (let k = 0; k < 9; k++) {
+              const cx = k % 3 * cell;
+              const cy = (k / 3 | 0) * cell;
+              const [trouser, base, accent, kind, synth] = cards[k];
+              g.fillStyle = trouser;
+              g.fillRect(cx, cy + cell * 0.56, cell, cell * 0.44);
+              g.fillStyle = base;
+              g.fillRect(cx, cy, cell, cell * 0.56);
+              g.save();
+              g.beginPath();
+              g.rect(cx, cy, cell, cell * 0.56);
+              g.clip();
+              g.fillStyle = accent;
+              if (kind === 1) {
+                for (let i = 0; i < 8; i += 2) g.fillRect(cx + i / 8 * cell, cy, cell / 16, cell);
+              } else if (kind === 2) {
+                for (let i = 0; i < 5; i++) g.fillRect(cx, cy + cell * (0.05 + i * 0.11), cell, cell * 0.052);
+              } else if (kind === 3) {
+                g.globalAlpha = 0.55;
+                for (let i = 0; i < 6; i += 2) g.fillRect(cx + i / 6 * cell, cy, cell / 12, cell);
+                for (let i = 0; i < 5; i += 2) g.fillRect(cx, cy + i / 9 * cell, cell, cell / 18);
+                g.globalAlpha = 1;
+              } else if (kind === 4) {
+                g.fillRect(cx, cy + cell * 0.34, cell, cell * 0.22);
+                g.beginPath();
+                g.moveTo(cx, cy + cell * 0.1);
+                g.lineTo(cx + cell, cy + cell * 0.3);
+                g.lineTo(cx + cell, cy + cell * 0.38);
+                g.lineTo(cx, cy + cell * 0.18);
+                g.closePath();
+                g.fill();
+              } else if (kind === 5) {
+                g.globalAlpha = 0.5;
+                for (let i = 0; i < 320; i++) {
+                  const rx = cx + i * 61 % cell;
+                  const ry = cy + i * 137 % (cell * 0.56);
+                  g.fillRect(rx, ry, 3, 3);
+                }
+                g.globalAlpha = 1;
+              }
+              g.restore();
+              g.fillStyle = "rgba(20,16,20,0.30)";
+              g.fillRect(cx, cy, cell, cell * 0.035);
+              const r0 = lerp4(0.9, 0.62, synth);
+              for (let y = 0; y < cell; y++)
+                for (let x = 0; x < cell; x++) {
+                  const gx = cx + x | 0;
+                  const gy = cy + y | 0;
+                  rough[gy * size + gx] = r0;
+                }
+            }
+            const h = new Float32Array(size * size);
+            for (let y = 0; y < size; y++)
+              for (let x = 0; x < size; x++) {
+                const i = y * size + x;
+                const weave = Math.sin(x * 0.9) * Math.sin(y * 0.9) * 0.4;
+                const fold = fbm(317, x / size, y / size, 9, 9, 2, 0.5, size);
+                h[i] = weave * 0.45 + fold * 0.55;
+                rough[i] = clamp3(rough[i] + fold * 0.14 + weave * 0.05, 0.3, 0.99);
+              }
+            return {
+              map: finish(c, true, this.aniso, false),
+              normalMap: normalFromHeight(h, size, 5, this.aniso),
+              roughnessMap: greyFromField(rough, size, this.aniso)
+            };
+          });
+        }
+        sponsorAtlas(size = 2048) {
+          return this.memo("sponsor", () => {
+            const [c, g] = cv(size);
+            const w = size / 2, h0 = size / 4;
+            const boards = [
+              ["#e0453f", "#f9f4ea", "SUNSET"],
+              ["#2f6ba0", "#f5e2b0", "TURBO"],
+              ["#f5e2b0", "#8f3f22", "AMALFI"],
+              ["#2f5d43", "#f2ece0", "MARINA"],
+              ["#ff9d2e", "#2b2b34", "NITRO"],
+              ["#2b2f3a", "#4fc3ff", "ROYALE"],
+              ["#c78ec2", "#2b2430", "GOLD"],
+              ["#4fc3ff", "#20303c", "BOOST"]
+            ];
+            for (let i = 0; i < 8; i++) {
+              const cx = i % 2 * w, cy = (i / 2 | 0) * h0;
+              const [bg, fg, text] = boards[i];
+              g.fillStyle = bg;
+              g.fillRect(cx, cy, w, h0);
+              g.save();
+              g.beginPath();
+              g.rect(cx, cy, w, h0);
+              g.clip();
+              g.globalAlpha = 0.16;
+              g.fillStyle = fg;
+              for (let k = -2; k < 10; k++) {
+                g.beginPath();
+                g.moveTo(cx + k * 60, cy + h0);
+                g.lineTo(cx + k * 60 + 34, cy + h0);
+                g.lineTo(cx + k * 60 + 34 + h0 * 0.5, cy);
+                g.lineTo(cx + k * 60 + h0 * 0.5, cy);
+                g.closePath();
+                g.fill();
+              }
+              g.globalAlpha = 1;
+              g.font = `900 ${h0 * 0.52}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
+              g.textAlign = "center";
+              g.textBaseline = "middle";
+              g.letterSpacing = `${Math.round(h0 * 0.035)}px`;
+              g.lineJoin = "round";
+              g.fillStyle = "rgba(18,12,10,0.34)";
+              g.fillText(text, cx + w / 2 + h0 * 0.018, cy + h0 / 2 + h0 * 0.022, w * 0.9);
+              g.strokeStyle = "rgba(20,16,14,0.62)";
+              g.lineWidth = h0 * 0.07;
+              g.strokeText(text, cx + w / 2, cy + h0 / 2, w * 0.9);
+              g.fillStyle = fg;
+              g.fillText(text, cx + w / 2, cy + h0 / 2, w * 0.9);
+              g.strokeStyle = "rgba(0,0,0,0.4)";
+              g.lineWidth = h0 * 0.035;
+              g.strokeRect(cx + h0 * 0.018, cy + h0 * 0.018, w - h0 * 0.036, h0 - h0 * 0.036);
+              g.strokeStyle = "rgba(255,255,255,0.22)";
+              g.lineWidth = h0 * 0.016;
+              g.strokeRect(cx + h0 * 0.055, cy + h0 * 0.055, w - h0 * 0.11, h0 - h0 * 0.11);
+              g.restore();
+            }
+            const ns = 1024;
+            const [mc, mg] = cv(ns);
+            const mw = ns / 2, mh = ns / 4;
+            mg.fillStyle = "#000";
+            mg.fillRect(0, 0, ns, ns);
+            for (let i = 0; i < 8; i++) {
+              const cx = i % 2 * mw, cy = (i / 2 | 0) * mh;
+              mg.save();
+              mg.beginPath();
+              mg.rect(cx, cy, mw, mh);
+              mg.clip();
+              mg.font = `900 ${mh * 0.52}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
+              mg.textAlign = "center";
+              mg.textBaseline = "middle";
+              mg.letterSpacing = `${Math.round(mh * 0.035)}px`;
+              mg.fillStyle = "#fff";
+              mg.fillText(boards[i][2], cx + mw / 2, cy + mh / 2, mw * 0.9);
+              mg.strokeStyle = "#c8c8c8";
+              mg.lineWidth = mh * 0.035;
+              mg.strokeRect(cx + mh * 0.018, cy + mh * 0.018, mw - mh * 0.036, mh - mh * 0.036);
+              mg.restore();
+              const bev = mh * 0.045;
+              const grd = mg.createLinearGradient(cx, cy, cx, cy + bev);
+              grd.addColorStop(0, "#4a4a4a");
+              grd.addColorStop(1, "#000");
+              mg.fillStyle = grd;
+              mg.fillRect(cx, cy, mw, bev);
+              mg.fillStyle = "#2a2a2a";
+              mg.fillRect(cx, cy + mh - bev, mw, bev);
+              mg.fillRect(cx, cy, bev, mh);
+              mg.fillRect(cx + mw - bev, cy, bev, mh);
+              mg.fillStyle = "#e8e8e8";
+              for (const sx of [0.045, 0.5, 0.955])
+                for (const sy of [0.11, 0.89]) {
+                  mg.beginPath();
+                  mg.arc(cx + mw * sx, cy + mh * sy, mh * 0.022, 0, Math.PI * 2);
+                  mg.fill();
+                }
+            }
+            const mpx = mg.getImageData(0, 0, ns, ns).data;
+            const hf = new Float32Array(ns * ns);
+            const rf = new Float32Array(ns * ns);
+            for (let y = 0; y < ns; y++)
+              for (let x = 0; x < ns; x++) {
+                const i = y * ns + x;
+                const u = x / ns, v2 = y / ns;
+                const patch2 = fbm(109, u, v2, 14, 14, 2, 0.5, ns);
+                const streak = fbm(113, u, v2, 26, 3, 2, 0.5, ns);
+                const weave = fbm(127, u, v2, 96, 96, 1, 0.5, ns);
+                const ink = mpx[i * 4] / 255;
+                hf[i] = patch2 * 0.34 + streak * 0.18 + weave * 0.09 + ink * 0.62;
+                const base = lerp4(0.35, 0.72, ink);
+                rf[i] = clamp3(base + patch2 * 0.16 + streak * 0.1 + weave * 0.04, 0.1, 0.95);
+              }
+            void mc;
+            return {
+              map: finish(c, true, this.aniso, false),
+              // 2.2 -> 3.4. The substrate is still flat printed vinyl, but the ink and
+              // the bevel are real relief now and they are low frequency, so raising
+              // this sharpens the letterform without reintroducing the high-frequency
+              // shimmer the old value was pulled down to avoid.
+              normalMap: normalFromHeight(hf, ns, 3.4, this.aniso),
+              roughnessMap: greyFromField(rf, ns, this.aniso)
+            };
+          });
+        }
+        /** Palm / pine bark: stacked leaf-scar rings for palms, plated for pines. */
+        bark(kind = "palm", size = 512) {
+          return this.memo("bark" + kind, () => {
+            const [c, g] = cv(size);
+            const h = new Float32Array(size * size);
+            const r = new Float32Array(size * size);
+            const img = g.createImageData(size, size);
+            const d = img.data;
+            const palm = kind === "palm";
+            for (let y = 0; y < size; y++) {
+              for (let x = 0; x < size; x++) {
+                const u = x / size, v2 = y / size;
+                const i = y * size + x;
+                let hh, tone;
+                if (palm) {
+                  const drift = Math.sin(v2 * 6.283 * 7.3 + 1.1) * 0.09 + Math.sin(u * 6.283 * 3) * 0.14;
+                  const ring = Math.abs((v2 * 22 + drift) % 1 - 0.5) * 2;
+                  const stagger = Math.abs((u * 11 + Math.floor(v2 * 22) * 0.5 + Math.sin(v2 * 17) * 0.16) % 1 - 0.5) * 2;
+                  const scar = smoothstep3(0.75, 0.26, ring) * smoothstep3(0.85, 0.32, stagger);
+                  const fibre = fbm(113, u, v2, 34, 96, 2, 0.5, size);
+                  hh = scar * 0.55 - 0.24 + fibre * 0.24;
+                  tone = 0.56 + scar * 0.18 + fibre * 0.14;
+                } else {
+                  const plate = fbm(127, u, v2, 14, 20, 3);
+                  const fissure = smoothstep3(0.06, -0.02, Math.abs(plate));
+                  const grain = fbm(131, u, v2, 192, 40, 3);
+                  hh = (1 - fissure) * 0.8 - 0.4 + grain * 0.35;
+                  tone = 0.44 + (1 - fissure) * 0.34 + grain * 0.2;
+                }
+                const moss = clamp3(fbm(137, u, v2, 10, 10, 2) * 2 - 0.5, 0, 1) * 0.4;
+                h[i] = hh;
+                const o = i * 4;
+                d[o] = clamp3(lerp4(tone * (palm ? 0.72 : 0.58), 0.28, moss), 0, 1) * 255;
+                d[o + 1] = clamp3(lerp4(tone * (palm ? 0.62 : 0.45), 0.34, moss), 0, 1) * 255;
+                d[o + 2] = clamp3(lerp4(tone * (palm ? 0.46 : 0.36), 0.22, moss), 0, 1) * 255;
+                d[o + 3] = 255;
+                r[i] = 0.74 + Math.abs(hh) * 0.16 + moss * 0.1;
+              }
+            }
+            g.putImageData(img, 0, 0);
+            return {
+              map: finish(c, true, this.aniso),
+              // Palm 30 -> 18: the scar relief is now half the amplitude it was, and
+              // a normal strength tuned against the old height field turned what is
+              // left into contrast the geometry does not have.
+              normalMap: normalFromHeight(h, size, palm ? 18 : 38, this.aniso),
+              roughnessMap: greyFromField(r, size, this.aniso)
+            };
+          });
+        }
+        /** Radial soft blob for prop contact shadows. */
+        contactShadow(size = 256) {
+          const key2 = "__cs";
+          const cached = this[key2];
+          if (cached) return cached;
+          const [c, g] = cv(size);
+          const grad = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+          grad.addColorStop(0, "rgba(255,255,255,1)");
+          grad.addColorStop(0.42, "rgba(255,255,255,0.82)");
+          grad.addColorStop(0.78, "rgba(255,255,255,0.22)");
+          grad.addColorStop(1, "rgba(255,255,255,0)");
+          g.fillStyle = grad;
+          g.fillRect(0, 0, size, size);
+          g.globalCompositeOperation = "destination-out";
+          const rng = mulberry322(31337);
+          for (let i = 0; i < 26; i++) {
+            const a = rng() * 7, r = size * (0.32 + rng() * 0.2);
+            g.fillStyle = `rgba(0,0,0,${0.1 + rng() * 0.25})`;
+            g.beginPath();
+            g.arc(size / 2 + Math.cos(a) * r, size / 2 + Math.sin(a) * r, size * (0.06 + rng() * 0.1), 0, 7);
+            g.fill();
+          }
+          const t = finish(c, false, 1, false);
+          this[key2] = t;
+          return t;
+        }
+        /**
+         * Verge transition strip: the scuffed dirt/gravel band where a kerb meets
+         * grass. Grass butting straight against tarmac on a razor line is one of the
+         * loudest "generated" tells in a road scene, and the fix is not a shader —
+         * it is the metre of trodden dirt that exists at the edge of every real
+         * road. U runs ACROSS the strip (0 = kerb side, 1 = grass side); V runs
+         * along the road, and carries the ragged edge so the band never reads as a
+         * ruled offset of the kerb.
+         */
+        vergeScuff(size = 512) {
+          return this.memo("vergescuff", () => {
+            const [c, g] = cv(size);
+            const img = g.createImageData(size, size);
+            const d = img.data;
+            const h = new Float32Array(size * size);
+            const r = new Float32Array(size * size);
+            for (let y = 0; y < size; y++) {
+              for (let x = 0; x < size; x++) {
+                const u = x / size, v2 = y / size;
+                const i = y * size + x;
+                const edge = fbm(41, v2, 0.5, 24, 1, 3) * 0.5 + 0.5;
+                const grit = fbm(59, u, v2, 96, 96, 4) * 0.5 + 0.5;
+                const patch2 = fbm(73, u, v2, 6, 14, 2) * 0.5 + 0.5;
+                const reach = 0.34 + edge * 0.5;
+                let a = 1 - smoothstep3(reach * 0.35, reach, u);
+                a = Math.max(a, smoothstep3(0.62, 0.86, grit) * (1 - smoothstep3(reach, 1, u)) * 0.85);
+                a *= 0.55 + patch2 * 0.65;
+                const tone = 0.62 + grit * 0.3 + patch2 * 0.12;
+                const dry = smoothstep3(0.1, 0.8, u);
+                const o = i * 4;
+                d[o] = clamp3(tone * lerp4(0.8, 1, dry), 0, 1) * 255;
+                d[o + 1] = clamp3(tone * lerp4(0.7, 0.93, dry), 0, 1) * 255;
+                d[o + 2] = clamp3(tone * lerp4(0.58, 0.8, dry), 0, 1) * 255;
+                d[o + 3] = clamp3(a, 0, 1) * 255;
+                h[i] = grit * 0.7 + patch2 * 0.3;
+                r[i] = 0.82 + grit * 0.14;
+              }
+            }
+            g.putImageData(img, 0, 0);
+            return {
+              // Clamped, not repeated: the quad's UVs are exactly 0..1, and with
+              // RepeatWrapping the coarse mips bleed the opaque kerb-side column into
+              // the transparent outer edge, which puts a hard band along the band.
+              map: finish(c, true, this.aniso, false),
+              normalMap: normalFromHeight(h, size, 3.2, this.aniso),
+              roughnessMap: greyFromField(r, size, this.aniso)
+            };
+          });
+        }
+        // -- foliage alpha sheets -------------------------------------------------
+        /** A single pinnate palm frond, rachis running along +U. */
+        palmFrond(size = 512) {
+          return this.alpha("frond", size, (g, s) => {
+            const rng = mulberry322(606);
+            const midY = s * 0.5;
+            for (let side = -1; side <= 1; side += 2) {
+              for (let i = 0; i < 46; i++) {
+                const t = i / 46;
+                const x = s * (0.06 + t * 0.9);
+                const len = s * 0.44 * Math.sin(Math.pow(t, 0.55) * Math.PI) * (0.82 + rng() * 0.36);
+                const droop = Math.pow(t, 1.6) * s * 0.06;
+                const ang = side * (0.42 + t * 0.5) + (rng() - 0.5) * 0.18;
+                const g0 = 0.22 + t * 0.16 + rng() * 0.08;
+                g.strokeStyle = `rgb(${70 + g0 * 120 | 0},${120 + g0 * 190 | 0},${46 + g0 * 70 | 0})`;
+                g.lineWidth = s * 0.017 * (0.7 + rng() * 0.6);
+                g.lineCap = "round";
+                g.beginPath();
+                g.moveTo(x, midY + droop);
+                g.quadraticCurveTo(x + Math.cos(ang) * len * 0.5 + len * 0.25, midY + droop + Math.sin(ang) * len * 0.45, x + Math.cos(ang) * len * 0.4 + len * 0.5, midY + droop + Math.sin(ang) * len);
+                g.stroke();
+              }
+            }
+            const grad = g.createLinearGradient(0, 0, s, 0);
+            grad.addColorStop(0, "#7a6a3a");
+            grad.addColorStop(0.5, "#8fa348");
+            grad.addColorStop(1, "#c8cf72");
+            g.strokeStyle = grad;
+            g.lineWidth = s * 0.022;
+            g.beginPath();
+            g.moveTo(s * 0.02, midY);
+            g.quadraticCurveTo(s * 0.5, midY + s * 0.02, s * 0.99, midY + s * 0.06);
+            g.stroke();
+            void rng;
+          }, 0.38);
+        }
+        /** Umbrella-pine needle cluster. */
+        pineCluster(size = 512) {
+          return this.alpha("pine", size, (g, s) => {
+            const rng = mulberry322(808);
+            for (let i = 0; i < 260; i++) {
+              const cx = s * (0.08 + rng() * 0.84);
+              const cy = s * (0.12 + rng() * 0.76);
+              const spread = s * (0.05 + rng() * 0.1);
+              const base = 0.3 + rng() * 0.6;
+              g.strokeStyle = `rgb(${38 + base * 60 | 0},${78 + base * 105 | 0},${40 + base * 46 | 0})`;
+              g.lineWidth = s * 6e-3;
+              for (let k = 0; k < 9; k++) {
+                const a = rng() * Math.PI * 2;
+                g.beginPath();
+                g.moveTo(cx, cy);
+                g.lineTo(cx + Math.cos(a) * spread, cy + Math.sin(a) * spread);
+                g.stroke();
+              }
+            }
+          }, 0.42);
+        }
+        /** Broadleaf shrub / hedge mass. */
+        shrubLeaves(size = 512) {
+          return this.alpha("shrub", size, (g, s) => {
+            const rng = mulberry322(1212);
+            for (let i = 0; i < 340; i++) {
+              const cx = s * (0.06 + rng() * 0.88);
+              const cy = s * (0.08 + rng() * 0.88);
+              const rr2 = s * (0.018 + rng() * 0.034);
+              const edge = 1 - Math.max(Math.abs(cx / s - 0.5), Math.abs(cy / s - 0.5)) * 2;
+              if (rng() > edge * 1.5 + 0.25) continue;
+              const base = 0.25 + rng() * 0.75;
+              g.fillStyle = `rgb(${46 + base * 78 | 0},${84 + base * 106 | 0},${38 + base * 52 | 0})`;
+              g.save();
+              g.translate(cx, cy);
+              g.rotate(rng() * 7);
+              g.beginPath();
+              g.ellipse(0, 0, rr2 * 1.5, rr2, 0, 0, 7);
+              g.fill();
+              g.restore();
+            }
+          }, 0.44);
+        }
+        /**
+         * Tuft of grass blades, rooted at the bottom edge.
+         *
+         * Drawn per blade in three passes — root, mid, tip — so a blade darkens at
+         * the base (#4e7534, where a clump self-shadows) and bleaches toward the tip
+         * (#87b356 fresh / #9aa858 dry). One flat green stroke per blade is what made
+         * the round-1 verge read as astroturf: real grass has its whole value range
+         * inside a single blade, not just between clumps.
+         */
+        grassBlades(size = 512) {
+          return this.alpha("grass", size, (g, s) => {
+            const rng = mulberry322(2424);
+            g.lineCap = "round";
+            const blades = 44;
+            for (let i = 0; i < blades; i++) {
+              const x = s * (0.05 + rng() * 0.9);
+              const hgt = s * (0.42 + rng() * 0.56);
+              const bend = (rng() - 0.5) * s * 0.46;
+              const dry = rng() < 0.28;
+              const lw = s * (0.011 + rng() * 0.011);
+              const segs = 3;
+              for (let k = 0; k < segs; k++) {
+                const t0 = k / segs;
+                const t1 = (k + 1) / segs;
+                const p = (u) => [x + bend * u * u, s - hgt * u];
+                const [x0, y0] = p(t0);
+                const [x1, y1] = p(t1);
+                const sh = t0 * 0.85 + rng() * 0.15;
+                const r = dry ? 118 + sh * 46 : 66 + sh * 66;
+                const gr = dry ? 130 + sh * 46 : 108 + sh * 71;
+                const bl = dry ? 62 + sh * 34 : 44 + sh * 42;
+                g.strokeStyle = `rgb(${r | 0},${gr | 0},${bl | 0})`;
+                g.lineWidth = lw * (1.25 - t0 * 0.75);
+                g.beginPath();
+                g.moveTo(x0, y0);
+                g.lineTo(x1, y1);
+                g.stroke();
+              }
+            }
+          }, 0.34);
+        }
+        /** Geranium / bougainvillea blossom cluster for window boxes. */
+        flowers(size = 256) {
+          return this.alpha("flowers", size, (g, s) => {
+            const rng = mulberry322(3636);
+            const cols = ["#e0453f", "#ff6f8a", "#dcb8d8", "#f5e2b0", "#f2ece0", "#ff9d2e"];
+            for (let i = 0; i < 90; i++) {
+              const cx = s * (0.1 + rng() * 0.8);
+              const cy = s * (0.12 + rng() * 0.76);
+              const rr2 = s * (0.02 + rng() * 0.03);
+              g.fillStyle = rng() < 0.42 ? `rgb(${52 + rng() * 40 | 0},${104 + rng() * 50 | 0},${44 + rng() * 26 | 0})` : cols[rng() * cols.length | 0];
+              for (let p = 0; p < 5; p++) {
+                const a = p / 5 * Math.PI * 2 + rng();
+                g.beginPath();
+                g.arc(cx + Math.cos(a) * rr2 * 0.8, cy + Math.sin(a) * rr2 * 0.8, rr2 * 0.72, 0, 7);
+                g.fill();
+              }
+            }
+          }, 0.4);
+        }
+        /**
+         * Opaque needle surface for the cypress spindle. It has to be opaque: the
+         * cypress is a solid form, and wrapping it in a cut-out leaf sheet would
+         * either punch holes into a hollow interior or (with alphaTest off) paint it
+         * with the transparent canvas's black.
+         */
+        needleSurface(size = 512) {
+          return this.memo("needle", () => {
+            const [c, g] = cv(size);
+            const h = new Float32Array(size * size);
+            const r = new Float32Array(size * size);
+            const img = g.createImageData(size, size);
+            const d = img.data;
+            for (let y = 0; y < size; y++) {
+              for (let x = 0; x < size; x++) {
+                const u = x / size, v2 = y / size;
+                const i = y * size + x;
+                const spray = fbm(211, u, v2, 96, 22, 4, 0.5, size);
+                const clump = fbm(223, u, v2, 14, 10, 3, 0.5, size);
+                const shade = 0.5 + spray * 0.32 + clump * 0.28;
+                h[i] = spray * 0.75 + clump * 0.4;
+                const dark = clamp3(shade, 0, 1);
+                const o = i * 4;
+                d[o] = (0.1 + dark * 0.2) * 255;
+                d[o + 1] = (0.17 + dark * 0.34) * 255;
+                d[o + 2] = (0.08 + dark * 0.16) * 255;
+                d[o + 3] = 255;
+                r[i] = 0.72 + Math.abs(spray) * 0.2 + clump * 0.08;
+              }
+            }
+            g.putImageData(img, 0, 0);
+            return {
+              map: finish(c, true, this.aniso),
+              // 26 -> 15: a cypress is a mass of needles, not a rock face, and a
+              // normal this strong on a spindle whose whole job is silhouette is a
+              // specular crawl generator at any distance past 20 m.
+              normalMap: normalFromHeight(h, size, 15, this.aniso),
+              roughnessMap: greyFromField(r, size, this.aniso)
+            };
+          });
+        }
+        /** Knotted fishing net — a diamond weave with slack, frayed strands. */
+        netWeave(size = 256) {
+          return this.alpha("net", size, (g, s) => {
+            const rng = mulberry322(1717);
+            g.strokeStyle = "#cbb894";
+            g.lineCap = "round";
+            for (let k = 0; k < 2; k++) {
+              const dir = k ? 1 : -1;
+              for (let i = -8; i < 16; i++) {
+                g.lineWidth = s * (8e-3 + rng() * 6e-3);
+                g.beginPath();
+                const x0 = i / 8 * s;
+                g.moveTo(x0, 0);
+                for (let y = 0; y <= 8; y++) {
+                  const t = y / 8;
+                  g.lineTo(x0 + dir * t * s + Math.sin(t * 9 + i) * s * 0.012, t * s);
+                }
+                g.stroke();
+              }
+            }
+            g.fillStyle = "#b8a480";
+            for (let i = 0; i < 130; i++) {
+              const x = (rng() * 8 | 0) * (s / 8) + (rng() - 0.5) * 3;
+              const y = (rng() * 8 | 0) * (s / 8) + (rng() - 0.5) * 3;
+              g.beginPath();
+              g.arc(x, y, s * 0.012, 0, 7);
+              g.fill();
+            }
+          }, 0.35);
+        }
+        /** Laundry: shirts and sheets on a line, as an alpha strip of 4 cells. */
+        laundry(size = 512) {
+          return this.alpha("laundry", size, (g, s) => {
+            const cell = s / 4;
+            const cols = ["#f2ece0", "#a9c8d4", "#e8a5a0", "#f5e2b0"];
+            for (let i = 0; i < 4; i++) {
+              const x0 = i * cell;
+              g.fillStyle = cols[i];
+              g.save();
+              g.translate(x0 + cell * 0.5, 0);
+              if (i === 0 || i === 2) {
+                g.beginPath();
+                g.moveTo(-cell * 0.3, cell * 0.06);
+                g.lineTo(-cell * 0.42, cell * 0.3);
+                g.lineTo(-cell * 0.28, cell * 0.36);
+                g.lineTo(-cell * 0.26, s * 0.88);
+                g.lineTo(cell * 0.26, s * 0.88);
+                g.lineTo(cell * 0.28, cell * 0.36);
+                g.lineTo(cell * 0.42, cell * 0.3);
+                g.lineTo(cell * 0.3, cell * 0.06);
+                g.closePath();
+                g.fill();
+              } else {
+                g.beginPath();
+                g.moveTo(-cell * 0.4, cell * 0.04);
+                g.lineTo(cell * 0.4, cell * 0.04);
+                g.lineTo(cell * 0.36, s * 0.9);
+                for (let k = 1; k >= 0; k -= 0.1) g.lineTo(-cell * 0.4 + k * cell * 0.76, s * (0.9 + Math.sin(k * 9) * 0.02));
+                g.closePath();
+                g.fill();
+              }
+              g.restore();
+              const grad = g.createLinearGradient(x0, 0, x0 + cell, 0);
+              grad.addColorStop(0, "rgba(40,30,25,0.30)");
+              grad.addColorStop(0.4, "rgba(255,255,255,0.12)");
+              grad.addColorStop(1, "rgba(40,30,25,0.24)");
+              g.globalCompositeOperation = "source-atop";
+              g.fillStyle = grad;
+              g.fillRect(x0, 0, cell, s);
+              g.globalCompositeOperation = "source-over";
+            }
+          }, 0.45);
+        }
+        /**
+         * `ref` is the alphaTest the material will use; the mip chain is built to
+         * preserve coverage at exactly that threshold. Pass the real value or fronds
+         * will still thin out at range.
+         */
+        alpha(key2, size, draw, ref = 0.4) {
+          let t = this.alphaCache.get(key2);
+          if (t) return t;
+          const [c, g] = cv(size);
+          g.clearRect(0, 0, size, size);
+          draw(g, size);
+          const src = g.getImageData(0, 0, size, size).data;
+          const px2 = new Uint8Array(size * size * 4);
+          const row = size * 4;
+          for (let y = 0; y < size; y++) px2.set(src.subarray((size - 1 - y) * row, (size - y) * row), y * row);
+          dilateRGB(px2, size);
+          const mips = coverageMips(px2, size, ref);
+          const tex2 = new DataTexture(mips[0].data, size, size, RGBAFormat, UnsignedByteType);
+          tex2.mipmaps = mips;
+          tex2.generateMipmaps = false;
+          tex2.colorSpace = SRGBColorSpace;
+          tex2.wrapS = tex2.wrapT = ClampToEdgeWrapping;
+          tex2.minFilter = LinearMipmapLinearFilter;
+          tex2.magFilter = LinearFilter;
+          tex2.anisotropy = this.aniso;
+          tex2.flipY = false;
+          tex2.needsUpdate = true;
+          this.alphaCache.set(key2, tex2);
+          return tex2;
+        }
+      };
+      _lc = new Color();
+      _nm = new Matrix3();
+      _v = new Vector3();
+      GeoAccum = class {
+        constructor() {
+          __publicField(this, "pos", []);
+          __publicField(this, "nrm", []);
+          __publicField(this, "uv", []);
+          __publicField(this, "col", []);
+          __publicField(this, "idx", []);
+          __publicField(this, "vcount", 0);
+          __publicField(this, "count", 0);
+        }
+        /** `aoFn(localY)` bakes contact darkening at the foot of every wall. */
+        add(geo, m, color2, aoFn, uvOff) {
+          const p = geo.getAttribute("position");
+          const n = geo.getAttribute("normal");
+          const u = geo.getAttribute("uv");
+          const c0 = geo.getAttribute("color");
+          const index = geo.getIndex();
+          _nm.getNormalMatrix(m);
+          const base = this.vcount;
+          for (let i = 0; i < p.count; i++) {
+            _v.fromBufferAttribute(p, i);
+            const lx = _v.x, ly = _v.y, lz = _v.z;
+            _v.applyMatrix4(m);
+            this.pos.push(_v.x, _v.y, _v.z);
+            if (n) {
+              _v.fromBufferAttribute(n, i).applyMatrix3(_nm).normalize();
+              this.nrm.push(_v.x, _v.y, _v.z);
+            } else this.nrm.push(0, 1, 0);
+            if (u) this.uv.push(u.getX(i) + (uvOff ? uvOff.x : 0), u.getY(i) + (uvOff ? uvOff.y : 0));
+            else this.uv.push(0, 0);
+            const ao = aoFn ? aoFn(lx, ly, lz) : 1;
+            const br = c0 ? c0.getX(i) : 1;
+            const bg = c0 ? c0.getY(i) : 1;
+            const bb = c0 ? c0.getZ(i) : 1;
+            if (color2) this.col.push(color2.r * br * ao, color2.g * bg * ao, color2.b * bb * ao);
+            else this.col.push(br * ao, bg * ao, bb * ao);
+          }
+          if (index) for (let i = 0; i < index.count; i++) this.idx.push(base + index.getX(i));
+          else for (let i = 0; i < p.count; i++) this.idx.push(base + i);
+          this.vcount += p.count;
+          this.count++;
+        }
+        build() {
+          if (!this.vcount) return null;
+          const g = new BufferGeometry();
+          g.setAttribute("position", new Float32BufferAttribute(this.pos, 3));
+          g.setAttribute("normal", new Float32BufferAttribute(this.nrm, 3));
+          g.setAttribute("uv", new Float32BufferAttribute(this.uv, 2));
+          g.setAttribute("color", new Float32BufferAttribute(this.col, 3));
+          g.setIndex(this.idx);
+          g.computeBoundingSphere();
+          this.pos = this.nrm = this.uv = this.col = this.idx = [];
+          return g;
+        }
+      };
+      InstSet = class {
+        constructor(geo, mat2, name) {
+          __publicField(this, "geo", geo);
+          __publicField(this, "mat", mat2);
+          __publicField(this, "name", name);
+          __publicField(this, "mats", []);
+          __publicField(this, "cols", []);
+          __publicField(this, "uvs", []);
+          __publicField(this, "winds", []);
+          __publicField(this, "lods", []);
+          __publicField(this, "bobs", []);
+          __publicField(this, "useCol", false);
+          __publicField(this, "useUv", false);
+          __publicField(this, "useWind", false);
+          __publicField(this, "useLod", false);
+          __publicField(this, "useBob", false);
+        }
+        get count() {
+          return this.mats.length;
+        }
+        /**
+         * True when nothing about this set moves after build: no wind sway, no bob.
+         * Those two are the only patches that read the instance transform at runtime
+         * (`patchWind` needs the instance scale, `patchBob` rotates about the
+         * instance origin), so they are the only two that stop a set from being
+         * baked flat by `mergeStaticSets`.
+         */
+        get isStatic() {
+          return !this.useWind && !this.useBob;
+        }
+        /** Raw per-instance data, for `mergeStaticSets`. */
+        snapshot() {
+          return {
+            geo: this.geo,
+            mat: this.mat,
+            name: this.name,
+            mats: this.mats,
+            cols: this.cols,
+            uvs: this.uvs,
+            lods: this.lods,
+            useCol: this.useCol,
+            useUv: this.useUv,
+            useLod: this.useLod
+          };
+        }
+        add(m, o) {
+          this.mats.push(m.clone());
+          if (o?.color) {
+            this.useCol = true;
+            this.cols.push(o.color.r, o.color.g, o.color.b);
+          } else this.cols.push(1, 1, 1);
+          if (o?.uv) {
+            this.useUv = true;
+            this.uvs.push(o.uv.x, o.uv.y, o.uv.z, o.uv.w);
+          } else this.uvs.push(1, 1, 0, 0);
+          if (o?.wind) {
+            this.useWind = true;
+            this.winds.push(o.wind.x, o.wind.y, o.wind.z, o.wind.w);
+          } else this.winds.push(0, 0, 0, 0);
+          if (o?.lod) {
+            this.useLod = true;
+            this.lods.push(o.lod);
+          } else this.lods.push(0);
+          if (o?.bob) {
+            this.useBob = true;
+            this.bobs.push(o.bob.x, o.bob.y, o.bob.z, o.bob.w);
+          } else this.bobs.push(0, 0, 0, 0);
+        }
+        build(castShadow = true, receiveShadow = true) {
+          const n = this.mats.length;
+          if (!n) return null;
+          const mesh = new InstancedMesh(this.geo, this.mat, n);
+          mesh.name = this.name;
+          for (let i = 0; i < n; i++) mesh.setMatrixAt(i, this.mats[i]);
+          mesh.instanceMatrix.needsUpdate = true;
+          const attr = (arr, size, name) => mesh.geometry.setAttribute(name, new InstancedBufferAttribute(new Float32Array(arr), size));
+          if (this.useCol) attr(this.cols, 3, "aTint");
+          if (this.useUv) attr(this.uvs, 4, "aUv");
+          if (this.useWind) attr(this.winds, 4, "aWind");
+          if (this.useLod) attr(this.lods, 1, "aLod");
+          if (this.useBob) attr(this.bobs, 4, "aBob");
+          mesh.castShadow = castShadow;
+          mesh.receiveShadow = receiveShadow;
+          mesh.computeBoundingSphere();
+          this.mats = [];
+          this.cols = this.uvs = this.winds = this.lods = this.bobs = [];
+          return mesh;
+        }
+      };
+      _mm = new Matrix3();
+      _mv = new Vector3();
+      STATIC_CELL = 400;
+      PATCHES = /* @__PURE__ */ new WeakMap();
+      DEPTH_PATCH_KEY = /^(lod|wind\d|bob|crowd|cloth|bird)/;
+      SAP = new Color(10146922).convertSRGBToLinear();
+      MatLib = class {
+        constructor(renderer, u) {
+          __publicField(this, "u", u);
+          __publicField(this, "tex");
+          __publicField(this, "env", null);
+          __publicField(this, "all", []);
+          __publicField(this, "wall");
+          __publicField(this, "roof");
+          __publicField(this, "trim");
+          __publicField(this, "wood");
+          __publicField(this, "woodInst");
+          __publicField(this, "stone");
+          __publicField(this, "stoneInst");
+          __publicField(this, "metal");
+          __publicField(this, "glass");
+          __publicField(this, "fabric");
+          __publicField(this, "sponsor");
+          __publicField(this, "rubber");
+          __publicField(this, "crowd");
+          __publicField(this, "cloth");
+          __publicField(this, "banner");
+          __publicField(this, "bunting");
+          __publicField(this, "laundry");
+          __publicField(this, "rope");
+          __publicField(this, "backdrop");
+          __publicField(this, "shadowDecal");
+          __publicField(this, "vergeDecal");
+          __publicField(this, "lamp");
+          __publicField(this, "bird");
+          __publicField(this, "flowerMat");
+          __publicField(this, "netMat");
+          /**
+           * Pull a surface from the material specialist's shared cache. `Ctx` has no
+           * slot for that system, so it publishes a module singleton; `variant()` hands
+           * back a private clone that shares the texture set, which is the only safe
+           * thing to patch. Falls back to our own generator if the call fails — the
+           * scenery must not refuse to boot because another module moved underneath it.
+           */
+          __publicField(this, "sharedDown", false);
+          __publicField(this, "variantSeq", 0);
+          this.tex = new TexLib(renderer);
+          this.build();
+        }
+        shared(name, key2, tweak) {
+          if (this.sharedDown) return null;
+          try {
+            const m = getMaterials().variant(name, { key: key2 });
+            if (!m || !m.isMaterial) return null;
+            tweak?.(m);
+            this.all.push(m);
+            return m;
+          } catch (e) {
+            this.sharedDown = true;
+            console.warn("[scenery] shared materials unavailable, using local set", e);
+            return null;
+          }
+        }
+        std(maps, o = {}, normalScale = 1) {
+          const m = new MeshStandardMaterial({
+            map: maps.map,
+            normalMap: maps.normalMap,
+            roughnessMap: maps.roughnessMap,
+            roughness: 1,
+            metalness: 0,
+            envMapIntensity: 1,
+            ...o
+          });
+          m.normalScale.set(normalScale, normalScale);
+          this.all.push(m);
+          return m;
+        }
+        build() {
+          const T2 = this.tex;
+          const vcN = (n) => (m) => {
+            m.vertexColors = true;
+            if (m.normalScale) m.normalScale.set(n, n);
+          };
+          const nOnly = (n) => (m) => {
+            if (m.normalScale) m.normalScale.set(n, n);
+          };
+          this.wall = this.shared("stucco", "scenery-wall", vcN(2.1)) ?? this.std(T2.plaster(), { vertexColors: true }, 2.1);
+          this.roof = this.shared("roof-tile", "scenery-roof", vcN(1.9)) ?? this.std(T2.roofTile(), { vertexColors: true }, 1.9);
+          this.trim = this.shared("marble", "scenery-trim", vcN(1.5)) ?? this.std(T2.stone(), { vertexColors: true }, 1.5);
+          patchRoughVary(this.wall, 0.78, 1.3, 8.5);
+          patchRoughVary(this.roof, 0.5, 0.86, 6);
+          patchMacroBreak(this.roof, 5, 0.19);
+          patchMacroBreak(this.wall, 7.5, 0.11);
+          this.wall.envMapIntensity = 0.25;
+          this.roof.envMapIntensity = 0.9;
+          this.wood = this.shared("wood-plank", "scenery-wood", vcN(2.2)) ?? this.std(T2.wood(), { vertexColors: true }, 2.2);
+          patchRoughVary(this.wood, 0.66, 1.3, 3.2);
+          this.woodInst = this.woodVariant();
+          this.stone = this.shared("stone-wall", "scenery-stone", vcN(2.6)) ?? this.std(T2.stone(), { vertexColors: true }, 2.6);
+          this.stoneInst = this.shared("stone-wall", "scenery-stone-inst", nOnly(2.6)) ?? this.std(T2.stone(), {}, 2.6);
+          patchRoughVary(this.stone, 0.7, 1.25, 5);
+          patchInstUv(this.stoneInst);
+          patchTint(this.stoneInst);
+          patchLod(this.stoneInst, this.u);
+          this.metal = this.shared("metal-painted", "scenery-metal") ?? this.std(T2.paintedMetal(), {}, 0.6);
+          patchInstUv(this.metal);
+          patchTint(this.metal);
+          patchLod(this.metal, this.u);
+          this.glass = this.shared("glass", "scenery-glass", (m) => {
+            m.color.set(1780531);
+            m.roughness = 0.05;
+            m.envMapIntensity = 2.6;
+            if ("clearcoat" in m) {
+              m.clearcoat = 1;
+              m.clearcoatRoughness = 0.05;
+            }
+          }) ?? new MeshPhysicalMaterial({
+            color: 1780531,
+            roughness: 0.05,
+            metalness: 0.25,
+            envMapIntensity: 2.6,
+            clearcoat: 1,
+            clearcoatRoughness: 0.05
+          });
+          if (this.all.indexOf(this.glass) < 0) this.all.push(this.glass);
+          patchLod(this.glass, this.u);
+          this.fabric = this.std(T2.fabricAtlas(), { side: DoubleSide }, 0.5);
+          patchInstUv(this.fabric);
+          patchLod(this.fabric, this.u);
+          this.sponsor = this.std(T2.sponsorAtlas(), { side: FrontSide, vertexColors: true, envMapIntensity: 1.15 }, 1.05);
+          patchInstUv(this.sponsor);
+          patchLod(this.sponsor, this.u);
+          this.rubber = this.shared("rubber", "scenery-rubber") ?? this.std(T2.paintedMetal(), { color: 2829104 }, 1.4);
+          this.rubber.envMapIntensity = 0.55;
+          this.rubber.emissive = new Color(1511951);
+          this.rubber.emissiveIntensity = 1;
+          patchInstUv(this.rubber);
+          patchTint(this.rubber);
+          patchLod(this.rubber, this.u);
+          const cm = T2.crowdCloth();
+          for (const t of [cm.map, cm.normalMap, cm.roughnessMap]) if (t) t.channel = 1;
+          this.crowd = new MeshStandardMaterial({
+            map: cm.map,
+            normalMap: cm.normalMap,
+            roughnessMap: cm.roughnessMap,
+            vertexColors: true,
+            roughness: 1,
+            metalness: 0,
+            envMapIntensity: 0.35
+          });
+          this.crowd.normalScale.set(0.7, 0.7);
+          this.all.push(this.crowd);
+          patchInstUv(this.crowd);
+          patchTint(this.crowd, true);
+          patchCrowd(this.crowd, this.u);
+          patchLod(this.crowd, this.u);
+          this.cloth = this.std(T2.fabricAtlas(), { side: DoubleSide }, 0.5);
+          patchInstUv(this.cloth);
+          patchCloth(this.cloth, this.u, 1);
+          patchLod(this.cloth, this.u);
+          const bm = T2.bannerCloth();
+          for (const t of [bm.map, bm.normalMap, bm.roughnessMap]) if (t) t.channel = 1;
+          this.banner = this.std(bm, { side: DoubleSide }, 1.1);
+          patchCloth(this.banner, this.u, 1.15);
+          this.bunting = new MeshStandardMaterial({ roughness: 0.86, metalness: 0, side: DoubleSide });
+          this.all.push(this.bunting);
+          patchTint(this.bunting);
+          patchCloth(this.bunting, this.u, 0.85);
+          patchLod(this.bunting, this.u);
+          const lt = T2.laundry();
+          this.laundry = new MeshStandardMaterial({ map: lt, alphaTest: 0.45, side: DoubleSide, roughness: 0.88, metalness: 0 });
+          this.laundry.alphaToCoverage = true;
+          this.all.push(this.laundry);
+          patchInstUv(this.laundry);
+          patchCloth(this.laundry, this.u, 0.5);
+          patchLod(this.laundry, this.u);
+          this.rope = new MeshStandardMaterial({ color: 13086856, roughness: 0.95, metalness: 0 });
+          this.all.push(this.rope);
+          this.backdrop = this.shared("cliff-rock", "scenery-backdrop", (m) => {
+            m.vertexColors = true;
+            m.roughness = 1;
+            m.metalness = 0;
+            if (m.normalScale) m.normalScale.set(0.95, 0.95);
+            m.envMapIntensity = 0.4;
+          }) ?? this.std(T2.stone(), { vertexColors: true, roughness: 1 }, 0.4);
+          patchDesatMap(this.backdrop, 0.7);
+          patchBackdropForm(this.backdrop, this.u, 260, 2400, 0.42, 0.8);
+          patchAerial(this.backdrop, this.u, 620, 2900);
+          this.shadowDecal = new MeshBasicMaterial({
+            map: T2.contactShadow(),
+            transparent: true,
+            opacity: 0.44,
+            color: 3351580,
+            depthWrite: false,
+            polygonOffset: true,
+            polygonOffsetFactor: -4,
+            polygonOffsetUnits: -6,
+            fog: true,
+            toneMapped: false
+          });
+          this.all.push(this.shadowDecal);
+          patchInstUv(this.shadowDecal);
+          patchInstAlpha(this.shadowDecal);
+          patchLod(this.shadowDecal, this.u);
+          this.vergeDecal = this.std(T2.vergeScuff(), { transparent: true, opacity: 0.92, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -5 }, 1.8);
+          patchLod(this.vergeDecal, this.u);
+          this.flowerMat = this.foliage(T2.flowers(), { alphaTest: 0.4, trans: 0.9, wind: true });
+          this.netMat = new MeshStandardMaterial({ map: T2.netWeave(), alphaTest: 0.35, side: DoubleSide, roughness: 0.92, metalness: 0 });
+          this.netMat.alphaToCoverage = true;
+          this.all.push(this.netMat);
+          patchTint(this.netMat);
+          patchLod(this.netMat, this.u);
+          this.lamp = new MeshStandardMaterial({ color: 16773324, emissive: 16761963, emissiveIntensity: 3.2, roughness: 0.4, metalness: 0 });
+          this.all.push(this.lamp);
+          patchLod(this.lamp, this.u);
+          this.bird = new MeshStandardMaterial({ color: 15920352, roughness: 0.72, metalness: 0, side: DoubleSide });
+          this.all.push(this.bird);
+          patchBird(this.bird, this.u);
+          patchTint(this.bird);
+        }
+        /**
+         * A fresh instanced-timber material. Callers that need extra vertex work
+         * (the moored boats bob on the GPU) must not patch the shared one.
+         */
+        woodVariant(key2 = "scenery-wood-inst-" + this.variantSeq++) {
+          const m = this.shared("wood-plank", key2, (mm) => {
+            if (mm.normalScale) mm.normalScale.set(2.2, 2.2);
+          }) ?? this.std(this.tex.wood(), {}, 2.2);
+          patchInstUv(m);
+          patchTint(m);
+          patchRoughVary(m, 0.62, 1.34, 2.4);
+          patchLod(m, this.u);
+          return m;
+        }
+        /** Foliage materials are built on demand because Foliage owns their textures. */
+        foliage(map, opts = {}) {
+          const m = new MeshStandardMaterial({
+            map,
+            color: opts.color ?? 16777215,
+            // `vcol` is opt-in: only geometry that actually carries a `color`
+            // attribute may ask for it, and only the palm frond does (its junction
+            // AO). Turning it on globally would render every other foliage set black.
+            vertexColors: opts.vcol === true,
+            alphaTest: opts.alphaTest ?? 0.42,
+            side: DoubleSide,
+            roughness: 0.72,
+            metalness: 0,
+            // Leaves are thin: flipping the normal on backfaces keeps them lit from
+            // whichever side the sun is actually on.
+            shadowSide: DoubleSide
+          });
+          m.alphaToCoverage = true;
+          this.all.push(m);
+          patchTint(m);
+          patchTranslucency(m, this.u, opts.trans ?? 1);
+          if (opts.wind !== false) patchWind(m, this.u);
+          if (opts.lod !== false) patchLod(m, this.u);
+          return m;
+        }
+        register(m) {
+          this.all.push(m);
+        }
+        /** Sky agent produces the env map after us on some quality paths; adopt it late. */
+        setEnv(env) {
+          if (env === this.env) return;
+          this.env = env;
+          for (const m of this.all) {
+            const a = m;
+            if ("envMap" in a) {
+              a.envMap = env;
+              a.needsUpdate = true;
+            }
+          }
+        }
+        dispose() {
+          for (const m of this.all) m.dispose();
+        }
+      };
+      _m2 = new Matrix4();
+      _q = new Quaternion();
+      _s = new Vector3();
+      wallAOFor = (h) => (_x2, y, _z2) => lerp4(0.42, 1, smoothstep3(0, 1.6, y)) * lerp4(0.5, 1, smoothstep3(h, h - 1, y));
+      ROOF_MULT = [
+        [0.038, 0.2, 0.7],
+        [0.034, 0.22, 0.66],
+        [0.042, 0.18, 0.73],
+        [0.036, 0.24, 0.68],
+        [0.04, 0.2, 0.71]
+      ];
+    }
+  });
+
+  // src/src/render/SoftwareSurfaces.ts
+  function eligible(material) {
+    return material.isMeshStandardMaterial && !material.transparent && material.alphaTest === 0 && !/boost|water|glow|decal|item|particle|hazard/i.test(material.name);
+  }
+  function installSoftwareSurfaces(renderer, ctx, enabled) {
+    const surfaces = /* @__PURE__ */ new Map();
+    const draw = renderer.renderBufferDirect;
+    function release(event) {
+      const source = event.target;
+      source.removeEventListener("dispose", release);
+      surfaces.get(source)?.dispose();
+      surfaces.delete(source);
+    }
+    renderer.renderBufferDirect = function(camera, scene, geometry, material, object, group) {
+      if (scene === ctx.scene && ctx.sun && enabled() && eligible(material)) {
+        let surface = surfaces.get(material);
+        if (!surface) {
+          const fog = scene.fog;
+          surface = new ShaderMaterial({
+            name: "software-surface",
+            vertexShader,
+            fragmentShader,
+            vertexColors: true,
+            side: material.side,
+            depthWrite: material.depthWrite,
+            depthTest: material.depthTest,
+            depthFunc: material.depthFunc,
+            colorWrite: material.colorWrite,
+            polygonOffset: material.polygonOffset,
+            polygonOffsetFactor: material.polygonOffsetFactor,
+            polygonOffsetUnits: material.polygonOffsetUnits,
+            toneMapped: material.toneMapped,
+            uniforms: {
+              baseColor: { value: material.color },
+              emission: { value: material.emissive },
+              emissionStrength: { value: material.emissiveIntensity },
+              albedo: { value: material.map },
+              mapped: { value: !!material.map },
+              mapTransform: { value: material.map?.matrix ?? new Matrix3() },
+              maskTint: { value: material.customProgramCacheKey().split("|").includes("tintM") },
+              usePaint: { value: material.vertexColors },
+              sunDirection: { value: ctx.sunDirection },
+              sunPower: { value: ctx.sun.color.clone().multiplyScalar(ctx.sun.intensity / Math.PI) },
+              hazeColor: { value: fog?.color ?? new Color() },
+              hazeDensity: { value: fog && material.fog ? 13e-4 : 0 }
+            }
+          });
+          copyVertexPatches(material, surface);
+          if (material.map?.matrixAutoUpdate) material.map.updateMatrix();
+          Object.assign(surface.defaultAttributeValues, { aTint: [1, 1, 1], aUv: [1, 1, 0, 0] });
+          material.addEventListener("dispose", release);
+          surfaces.set(material, surface);
+        }
+        surface.uniforms.emissionStrength.value = material.emissiveIntensity;
+        material = surface;
+      }
+      draw.call(this, camera, scene, geometry, material, object, group);
+    };
+    return () => {
+      renderer.renderBufferDirect = draw;
+      for (const source of surfaces.keys()) release({ target: source });
+    };
+  }
+  var vertexShader, fragmentShader;
+  var init_SoftwareSurfaces = __esm({
+    "src/src/render/SoftwareSurfaces.ts"() {
+      init_three_module();
+      init_Props();
+      vertexShader = /* glsl */
+      `
+  uniform vec3 sunDirection;
+  uniform vec3 sunPower;
+  uniform mat3 mapTransform;
+  uniform bool usePaint;
+  uniform bool maskTint;
+  attribute vec3 aTint;
+  attribute vec4 aUv;
+  varying vec2 surfaceUv;
+  varying vec3 surfaceLight;
+  varying vec3 paint;
+  varying float depth;
+
+  void main() {
+    #include <begin_vertex>
+    vec4 point = vec4(transformed, 1.0);
+    vec3 localNormal = normal;
+    #ifdef USE_INSTANCING
+      mat3 basis = mat3(instanceMatrix);
+      localNormal /= max(vec3(dot(basis[0], basis[0]), dot(basis[1], basis[1]),
+                              dot(basis[2], basis[2])), vec3(1e-8));
+      localNormal = basis * localNormal;
+      point = instanceMatrix * point;
+    #endif
+    vec3 viewNormal = normalize(normalMatrix * localNormal);
+    float sky = dot(viewNormal, viewMatrix[1].xyz) * 0.5 + 0.5;
+    float sunlight = max(dot(viewNormal, mat3(viewMatrix) * sunDirection), 0.0);
+    surfaceLight = mix(vec3(0.35, 0.41, 0.50), vec3(0.65, 0.69, 0.78), sky)
+                 + sunPower * sunlight;
+    vec3 tint = maskTint ? mix(vec3(1.0), aTint, clamp(uv.x, 0.0, 1.0)) : aTint;
+    paint = (usePaint ? color.rgb : vec3(1.0)) * tint;
+    #ifdef USE_INSTANCING_COLOR
+      paint *= instanceColor;
+    #endif
+    surfaceUv = (mapTransform * vec3(uv, 1.0)).xy * aUv.xy + aUv.zw;
+    vec4 viewPoint = modelViewMatrix * point;
+    depth = -viewPoint.z;
+    gl_Position = projectionMatrix * viewPoint;
+  }`;
+      fragmentShader = /* glsl */
+      `
+  #define PURETV_SOFTWARE_SURFACE
+  uniform vec3 baseColor;
+  uniform vec3 emission;
+  uniform float emissionStrength;
+  uniform sampler2D albedo;
+  uniform bool mapped;
+  uniform vec3 hazeColor;
+  uniform float hazeDensity;
+  varying vec2 surfaceUv;
+  varying vec3 surfaceLight;
+  varying vec3 paint;
+  varying float depth;
+
+  void main() {
+    vec3 texel = mapped ? texture2D(albedo, surfaceUv).rgb : vec3(1.0);
+    vec3 lit = texel * baseColor * paint * surfaceLight + emission * emissionStrength;
+    float haze = clamp(1.0 - exp(-max(depth, 0.0) * hazeDensity), 0.0, 0.78);
+    gl_FragColor = vec4(mix(lit, hazeColor, haze), 1.0);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }`;
+    }
+  });
+
+  // src/src/render/Renderer.ts
+  function probeDevice() {
+    const caps2 = glCapabilities();
+    return {
+      webgl2: caps2.webgl2,
+      halfFloat: caps2.halfFloatRenderable,
+      software: caps2.software,
+      name: caps2.renderer
+    };
+  }
+  function describeProgram(gl, vs, fs) {
+    let name = "";
+    let world = false;
+    for (const shader of [vs, fs]) {
+      let src = "";
+      try {
+        src = gl.getShaderSource(shader) || "";
+      } catch {
+        src = "";
+      }
+      if (src === "") continue;
+      if (name === "") {
+        const m = src.match(/#define SHADER_NAME (\S+)/);
+        if (m !== null) name = m[1];
+      }
+      if (/RE_Direct_Physical|RE_Direct_BlinnPhong|RE_Direct_Lambert|RE_Direct_Toon|PURETV_SOFTWARE_SURFACE/.test(src)) {
+        world = true;
+      }
+    }
+    return { label: name !== "" ? name : world ? "an unnamed lit material" : "unknown", world };
+  }
+  function pipelineSignature(s) {
+    return s.quality & 3 | (s.shadows ? 1 << 2 : 0) | (s.ssao ? 1 << 3 : 0) | (s.bloom ? 1 << 4 : 0) | (s.motionBlur ? 1 << 5 : 0) | (s.dof ? 1 << 6 : 0) | Math.round(MathUtils.clamp(s.renderScale, 0.25, 2) * 64) << 7 | Math.round(MathUtils.clamp(s.maxPixelRatio, 0.5, 4) * 8) << 16;
+  }
+  var RUNG_NAMES, POST_QUADS, RenderPipeline;
+  var init_Renderer = __esm({
+    "src/src/render/Renderer.ts"() {
+      init_three_module();
+      init_build();
+      init_types();
+      init_PostFX();
+      init_SoftwareSurfaces();
+      init_Settings();
+      init_Diagnostics();
+      RUNG_NAMES = ["hdr-composer", "ldr-composer", "direct", "safe-materials", "flat-materials", "dead"];
+      POST_QUADS = 20;
+      RenderPipeline = class {
+        constructor(canvasParent) {
+          __publicField(this, "canvasParent", canvasParent);
+          __publicField(this, "renderer");
+          /** Public so debug tooling and a quality menu can reach into the chain. */
+          __publicField(this, "composer", null);
+          __publicField(this, "fx", new PostFX());
+          /**
+           * False from the moment the GPU takes the context away until the rebuild
+           * after `webglcontextrestored` has finished. NOTHING may draw while it is
+           * false — every GL call in that window is a silent no-op, so a loop that
+           * keeps calling `render()` is just burning CPU and queueing work that will
+           * never be presented.
+           */
+          __publicField(this, "contextLost", false);
+          /**
+           * Raised as soon as the context is lost, before anything else. The frame loop
+           * subscribes so it can stop simulating on the same tick.
+           */
+          __publicField(this, "onContextLost", null);
+          /**
+           * Raised after the composer, its render targets and the effect chain have
+           * been rebuilt against the new context. Everything that owns GPU state three
+           * cannot re-derive on its own — the PMREM environment probe above all, whose
+           * texture comes back allocated but EMPTY — has to re-bake here. May be async;
+           * the notice stays up until it settles.
+           */
+          __publicField(this, "onContextRestored", null);
+          __publicField(this, "ctx");
+          __publicField(this, "device", { webgl2: false, halfFloat: false, software: false, name: "" });
+          __publicField(this, "usePost", false);
+          __publicField(this, "releaseSoftwareSurfaces", null);
+          /** Current position on the fallback ladder. Only ever moves downward. */
+          __publicField(this, "rung", 0 /* Hdr */);
+          /** The material every object is drawn with at Rung.Safe / Rung.Flat. */
+          __publicField(this, "overrideMat", null);
+          /** Scratch for `sampleFrame`, allocated at most once per width. */
+          __publicField(this, "samplePixels", null);
+          /** True only while `trialDraw` is running, so its own failures are not counted. */
+          __publicField(this, "inTrial", false);
+          __publicField(this, "width", 1);
+          __publicField(this, "height", 1);
+          __publicField(this, "signature", -1);
+          /** Last values `applyResolution` actually pushed at the GL side. */
+          __publicField(this, "appliedRatio", -1);
+          __publicField(this, "appliedW", -1);
+          __publicField(this, "appliedH", -1);
+          __publicField(this, "appliedSamples", -1);
+          __publicField(this, "notice", null);
+          __publicField(this, "gl", null);
+          /**
+           * Draw calls the SCENE pass submitted on the last frame.
+           *
+           * Sampled before the composer's fullscreen passes run, because three resets
+           * `info.render` at the top of every `render()` and the last pass in the frame
+           * is a single quad — read afterwards, an empty world and a healthy one both
+           * report about the same number. The diagnostics watchdog uses this to tell
+           * "the world is not being drawn" apart from "the world is fine".
+           */
+          __publicField(this, "lastSceneCalls", 0);
+          // -------------------------------------------------------------------------
+          //  Context loss / restore
+          // -------------------------------------------------------------------------
+          __publicField(this, "handleContextLost", (event) => {
+            event.preventDefault();
+            if (this.contextLost) return;
+            this.contextLost = true;
+            console.warn("[render] WebGL context lost \u2014 pausing until it is restored");
+            try {
+              this.fx.dispose();
+            } catch {
+            }
+            try {
+              this.composer?.dispose();
+            } catch {
+            }
+            this.composer = null;
+            this.showNotice("Graphics paused", "The device reclaimed the renderer. Restoring\u2026");
+            try {
+              this.onContextLost?.();
+            } catch (err) {
+              console.error("[render] onContextLost threw", err);
+            }
+          });
+          __publicField(this, "handleContextRestored", () => {
+            console.info("[render] WebGL context restored \u2014 rebuilding the pipeline");
+            this.usePost = this.device.webgl2 && this.rung <= 1 /* Ldr */;
+            this.composer = null;
+            this.invalidateResolutionCache();
+            this.signature = pipelineSignature(this.ctx.settings);
+            try {
+              this.gl = this.renderer.getContext();
+            } catch {
+              this.gl = null;
+            }
+            this.renderer.shadowMap.enabled = this.ctx.settings.shadows;
+            this.renderer.shadowMap.needsUpdate = true;
+            this.contextLost = false;
+            this.applyResolution();
+            this.rebuild();
+            const done = () => {
+              if (this.contextLost) return;
+              this.hideNotice();
+              console.info("[render] pipeline restored");
+            };
+            try {
+              const p = this.onContextRestored?.();
+              if (p !== void 0 && p !== null && typeof p.then === "function") {
+                p.then(done, (err) => {
+                  console.error("[render] onContextRestored failed", err);
+                  done();
+                });
+              } else {
+                done();
+              }
+            } catch (err) {
+              console.error("[render] onContextRestored threw", err);
+              done();
+            }
+          });
+          // -------------------------------------------------------------------------
+          /**
+           * The pixel ratio the internal buffers are actually allocated at, which is
+           * what every per-sample cost in the chain scales with. Not the same thing as
+           * `devicePixelRatio`: `maxPixelRatio` caps it, `renderScale` scales it, and a
+           * software rasteriser is pinned to 1.
+           */
+          /**
+           * Dynamic resolution, 0.5..1. Deliberately NOT part of `Settings`, because
+           * `pipelineSignature` covers `renderScale` and any change there tears down and
+           * rebuilds the entire effect chain. Adaptive scaling has to be able to move
+           * every second or two; rebuilding the chain that often would cost far more
+           * than it saves.
+           */
+          __publicField(this, "dynamicScale", 1);
+        }
+        get softwareLow() {
+          return usesSoftwareLow(this.ctx.settings.quality, this.device.software);
+        }
+        init(ctx) {
+          this.ctx = ctx;
+          this.device = probeDevice();
+          this.usePost = this.device.webgl2;
+          const caps2 = glCapabilities();
+          if (!caps2.webgl2) {
+            this.showFatal(
+              "This browser cannot start WebGL 2",
+              "The game needs WebGL 2, and this browser or graphics driver is not providing it. Updating the graphics driver, or enabling hardware acceleration in the browser settings, usually fixes it."
+            );
+            logPipeline("fatal", "no WebGL2 context \u2014 nothing can be rendered");
+            throw new Error("WebGL 2 is unavailable, so the renderer cannot be created.");
+          }
+          if (!caps2.halfFloatRenderable) this.rung = 1 /* Ldr */;
+          if (!caps2.byteRenderable || this.softwareLow) this.rung = 2 /* Direct */;
+          if (this.rung !== 0 /* Hdr */) {
+            logPipeline("start", `pipeline starts on ${RUNG_NAMES[this.rung]} (boot probe)`);
+          }
+          this.usePost = caps2.webgl2 && this.rung <= 1 /* Ldr */;
+          let renderer;
+          try {
+            renderer = this.createRenderer(ctx);
+          } catch (err) {
+            this.showFatal(
+              "Graphics could not start",
+              "The browser refused to create a WebGL context for this page. Updating the graphics driver, or enabling hardware acceleration in the browser settings, usually fixes it."
+            );
+            logPipeline("fatal", "WebGLRenderer could not be constructed: " + String(err));
+            throw err;
+          }
+          this.finishInit(ctx, renderer);
+        }
+        createRenderer(ctx) {
+          const renderer = new WebGLRenderer({
+            // With the composer running, MSAA lives on the composer's render target
+            // and the default framebuffer only ever receives one fullscreen triangle.
+            // Without a composer, the driver's MSAA is the only edge treatment left.
+            antialias: !this.usePost && !this.softwareLow,
+            powerPreference: "high-performance",
+            stencil: false,
+            depth: true,
+            alpha: false,
+            // False in normal play: keeping the drawing buffer costs a copy every
+            // frame. But `?debug=frames` exists to read that buffer back, and with
+            // this false the read returns DISCARDED contents — measured as all zeros
+            // on a frame that presented perfectly — so the watchdog reports 100%
+            // black on a healthy frame. An instrument that lies is worse than none.
+            preserveDrawingBuffer: new URLSearchParams(location.search).get("debug") === "frames",
+            failIfMajorPerformanceCaveat: false
+          });
+          renderer.outputColorSpace = SRGBColorSpace;
+          renderer.toneMapping = ACESFilmicToneMapping;
+          renderer.toneMappingExposure = 1.05;
+          renderer.shadowMap.enabled = ctx.settings.shadows;
+          renderer.shadowMap.type = PCFShadowMap;
+          renderer.shadowMap.autoUpdate = true;
+          renderer.domElement.setAttribute("aria-hidden", "true");
+          this.canvasParent.appendChild(renderer.domElement);
+          renderer.domElement.addEventListener("webglcontextlost", this.handleContextLost, false);
+          renderer.domElement.addEventListener("webglcontextrestored", this.handleContextRestored, false);
+          renderer.domElement.addEventListener("webglcontextcreationerror", ((e) => {
+            console.error("[render] context creation error:", e.statusMessage);
+          }), false);
+          return renderer;
+        }
+        finishInit(ctx, renderer) {
+          this.renderer = renderer;
+          try {
+            this.gl = renderer.getContext();
+          } catch {
+            this.gl = null;
+          }
+          ctx.renderer = renderer;
+          if (this.device.software) {
+            this.releaseSoftwareSurfaces = installSoftwareSurfaces(renderer, ctx, () => this.softwareLow && this.rung === 2 /* Direct */);
+          }
+          globalThis.__render = this;
+          renderer.debug.onShaderError = (gl, program, vs, fs) => {
+            const who = describeProgram(gl, vs, fs);
+            const text = `program link failed for "${who.label}"${who.world ? " (a lit world material)" : ""}
+  program: ${gl.getProgramInfoLog(program) || "(no log)"}
+  vertex : ${gl.getShaderInfoLog(vs) || "(ok)"}
+  frag   : ${gl.getShaderInfoLog(fs) || "(ok)"}`;
+            recordShaderError(text, who.label, who.world && !this.inTrial);
+            console.error("[render] " + text);
+          };
+          this.width = Math.max(1, ctx.width);
+          this.height = Math.max(1, ctx.height);
+          this.signature = pipelineSignature(ctx.settings);
+          this.applyResolution();
+          const trial = this.trialDraw();
+          if (!trial.ok) {
+            logPipeline("trial", "a representative PBR material drew nothing: " + trial.detail);
+            if (this.rung < 3 /* Safe */) this.rung = 3 /* Safe */;
+          }
+          this.rebuild();
+        }
+        /**
+         * Tears the effect chain down and reassembles it against the current
+         * settings and the current rung. Safe to call at any time — quality may
+         * change mid-race, and so may the rung.
+         *
+         * Each attempt that fails moves one rung DOWN and is retried, so a device
+         * that cannot build the composer ends this call on the direct path with a
+         * frame in hand rather than with an exception and a black canvas. The loop
+         * is bounded by the number of rungs; it cannot spin.
+         */
+        rebuild() {
+          if (this.contextLost) return;
+          for (let attempt = 0; attempt <= 5 /* Dead */; attempt++) {
+            if (this.tryBuild()) return;
+          }
+        }
+        /** One attempt at the current rung. False means "moved down, try again". */
+        tryBuild() {
+          this.applyMaterialOverride();
+          this.renderer.shadowMap.enabled = this.ctx.settings.shadows && this.rung < 3 /* Safe */;
+          this.usePost = this.rung <= 1 /* Ldr */;
+          if (!this.usePost) {
+            this.fx.dispose();
+            if (this.composer !== null) {
+              try {
+                this.composer.removeAllPasses();
+                this.composer.dispose();
+              } catch {
+              }
+              this.composer = null;
+            }
+            this.renderer.autoClear = true;
+            this.invalidateResolutionCache();
+            this.applyResolution();
+            return true;
+          }
+          if (this.composer === null) {
+            try {
+              if (forcedFailure("composer")) throw new Error("forced by ?glfail=composer");
+              this.composer = new EffectComposer(this.renderer, {
+                depthBuffer: true,
+                stencilBuffer: false,
+                multisampling: 0,
+                // Half float is what makes a high bloom threshold and our own tone
+                // map meaningful; without it the scene clips to white before there
+                // is anything left to grade. `Rung.Ldr` is that trade taken
+                // deliberately, on a device that proved it cannot do the other one.
+                frameBufferType: this.rung === 0 /* Hdr */ ? HalfFloatType : UnsignedByteType
+              });
+              this.invalidateResolutionCache();
+            } catch (err) {
+              this.dropComposer();
+              this.fall(`composer could not be constructed: ${String(err)}`);
+              return false;
+            }
+          } else {
+            this.fx.dispose();
+            this.composer.removeAllPasses();
+          }
+          this.setMultisampling(this.msaaSamples());
+          try {
+            this.fx.build(this.ctx, this.composer, {
+              software: this.device.software,
+              // The chain has to know it is writing into 8 bits: with an LDR buffer
+              // the scene is clamped at 1.0 before bloom ever sees it, so a threshold
+              // authored against scene-linear HDR selects nothing at all.
+              ldr: this.rung >= 1 /* Ldr */
+            });
+          } catch (err) {
+            this.dropComposer();
+            this.fall(`effect chain failed to build: ${String(err)}`);
+            return false;
+          }
+          this.applyResolution();
+          const status = this.targetStatus(this.composer.inputBuffer);
+          if (!status.ok) {
+            this.dropComposer();
+            this.fall(`the composer's ${this.rung === 0 /* Hdr */ ? "half-float" : "8-bit"} buffer is not renderable at ${this.appliedW}x${this.appliedH} (framebuffer status 0x${status.status.toString(16)})`);
+            return false;
+          }
+          return true;
+        }
+        /** Releases the effect chain and the composer, tolerating a dead context. */
+        dropComposer() {
+          this.fx.dispose();
+          try {
+            this.composer?.removeAllPasses();
+            this.composer?.dispose();
+          } catch {
+          }
+          this.composer = null;
+          this.usePost = false;
+          this.renderer.autoClear = true;
+          this.invalidateResolutionCache();
+        }
+        /** Steps one rung down from inside a build attempt, and says why. */
+        fall(reason) {
+          const from = RUNG_NAMES[this.rung];
+          this.rung = Math.min(this.rung + 1, 5 /* Dead */);
+          logPipeline("degrade", `${from} -> ${RUNG_NAMES[this.rung]}: ${reason}`);
+        }
+        /**
+         * Is this render target's framebuffer complete and error-free?
+         *
+         * `setRenderTarget` is what makes three allocate and bind it, so this is also
+         * the moment the allocation either happens or does not.
+         */
+        targetStatus(rt) {
+          const gl = this.gl;
+          if (gl === null) return { ok: true, status: 0 };
+          const prev = this.renderer.getRenderTarget();
+          let status = 0;
+          let err = 0;
+          try {
+            drainErrors(gl);
+            this.renderer.setRenderTarget(rt);
+            status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+            err = gl.getError();
+          } catch {
+            return { ok: false, status: 0 };
+          } finally {
+            this.renderer.setRenderTarget(prev);
+          }
+          return { ok: status === gl.FRAMEBUFFER_COMPLETE && err === gl.NO_ERROR, status };
+        }
+        render(ctx) {
+          if (this.contextLost || this.renderer === void 0) return;
+          const sig = pipelineSignature(ctx.settings);
+          if (sig !== this.signature) {
+            this.signature = sig;
+            this.rebuild();
+            this.applyResolution();
+          }
+          if (this.composer !== null) {
+            this.fx.sync(ctx, ctx.dt);
+            this.renderer.info.autoReset = false;
+            this.renderer.info.reset();
+            this.composer.render(ctx.dt);
+            this.lastSceneCalls = Math.max(0, this.renderer.info.render.calls - POST_QUADS);
+            this.renderer.info.autoReset = true;
+          } else {
+            this.renderer.setRenderTarget(null);
+            this.renderer.clear(true, true, false);
+            this.renderer.render(ctx.scene, ctx.camera);
+            this.lastSceneCalls = this.renderer.info.render.calls;
+          }
+        }
+        resize(w, h) {
+          const nw = Math.max(1, Math.round(w));
+          const nh = Math.max(1, Math.round(h));
+          if (nw === this.width && nh === this.height) return;
+          this.width = nw;
+          this.height = nh;
+          this.applyResolution();
+        }
+        dispose() {
+          const el2 = this.renderer?.domElement;
+          if (el2 !== void 0) {
+            el2.removeEventListener("webglcontextlost", this.handleContextLost, false);
+            el2.removeEventListener("webglcontextrestored", this.handleContextRestored, false);
+          }
+          this.fx.dispose();
+          if (this.composer !== null) {
+            this.composer.dispose();
+            this.composer = null;
+          }
+          if (this.overrideMat !== null) {
+            if (this.ctx?.scene?.overrideMaterial === this.overrideMat) this.ctx.scene.overrideMaterial = null;
+            this.overrideMat.dispose();
+            this.overrideMat = null;
+          }
+          this.samplePixels = null;
+          this.notice?.remove();
+          this.notice = null;
+          this.releaseSoftwareSurfaces?.();
+          this.releaseSoftwareSurfaces = null;
+          this.renderer?.dispose();
+          if (el2 !== void 0 && el2.parentNode !== null) el2.parentNode.removeChild(el2);
+        }
+        /**
+         * Give up on post-processing and run the direct path from here on.
+         *
+         * The chain already degrades when it cannot be *built*; this is the same
+         * retreat for a chain that built fine and then started throwing at render
+         * time, which is what a driver in trouble looks like from up here. A game
+         * without a grade is a worse-looking game; a game that throws once per frame
+         * is a black rectangle.
+         */
+        disablePostProcessing(reason) {
+          if (this.rung >= 2 /* Direct */) return;
+          logPipeline("degrade", `${RUNG_NAMES[this.rung]} -> ${RUNG_NAMES[2 /* Direct */]}: ${reason}`);
+          this.rung = 2 /* Direct */;
+          this.dropComposer();
+          this.rebuild();
+        }
+        // -------------------------------------------------------------------------
+        //  The fallback ladder, driven from Diagnostics
+        // -------------------------------------------------------------------------
+        /**
+         * Step one rung down and rebuild. Returns false when there is nothing left
+         * below — which is the only condition under which the banner is allowed.
+         *
+         * Called by the watchdogs in Diagnostics, which is deliberate: the pipeline
+         * knows how to degrade and the diagnostics know when to. Neither of them
+         * should be deciding both.
+         */
+        degrade(reason) {
+          if (this.rung >= 4 /* Flat */) {
+            logPipeline("degrade", `already on ${RUNG_NAMES[this.rung]}; nothing simpler to try (${reason})`);
+            return false;
+          }
+          this.fall(reason);
+          this.rebuild();
+          return true;
+        }
+        /**
+         * Jump straight to the simple-material rung.
+         *
+         * Used when the cause is KNOWN to be a material family the driver rejected.
+         * Walking down through the composer rungs first would waste several seconds
+         * of the player's time on changes that cannot possibly help: the shader is
+         * broken wherever it is composited to.
+         */
+        degradeToSafeMaterials(reason) {
+          if (this.rung >= 3 /* Safe */) {
+            logPipeline("degrade", `already on ${RUNG_NAMES[this.rung]}, which covers this (${reason})`);
+            return true;
+          }
+          logPipeline("degrade", `${RUNG_NAMES[this.rung]} -> ${RUNG_NAMES[3 /* Safe */]}: ${reason}`);
+          this.rung = 3 /* Safe */;
+          this.rebuild();
+          return true;
+        }
+        rungName() {
+          return RUNG_NAMES[this.rung];
+        }
+        capabilities() {
+          return glCapabilities();
+        }
+        /**
+         * Read two strips of the finished frame back and score them.
+         *
+         * THE ONLY HONEST ORACLE IN THE FILE. Draw calls, framebuffer status and
+         * shader logs are all proxies; this is the picture. It works without
+         * `preserveDrawingBuffer` because it runs inside the same task that drew the
+         * frame — the drawing buffer is only discarded when the compositor takes the
+         * surface, which cannot happen until this task yields.
+         *
+         * `readPixels` is a synchronous pipeline stall, so this is called a handful
+         * of times in the life of the page and never in a steady state; see
+         * FIRST_LOOK in Diagnostics. The strips are 4 rows each at 45% and 75% of
+         * frame height, which crosses sky, horizon, trackside and road — a band that
+         * is featureless in every one of the failure modes and never featureless in a
+         * working frame.
+         */
+        sampleFrame() {
+          const gl = this.gl;
+          if (gl === null || this.contextLost) return null;
+          const w = gl.drawingBufferWidth | 0;
+          const h = gl.drawingBufferHeight | 0;
+          if (w < 8 || h < 8) return null;
+          const rows = 4;
+          const need = w * rows * 4;
+          if (this.samplePixels === null || this.samplePixels.length < need) {
+            this.samplePixels = new Uint8Array(need);
+          }
+          const buf = this.samplePixels;
+          let n = 0;
+          let sum = 0;
+          let sum2 = 0;
+          let lit2 = 0;
+          const prev = this.renderer.getRenderTarget();
+          try {
+            this.renderer.setRenderTarget(null);
+            drainErrors(gl);
+            for (const frac of [0.45, 0.75]) {
+              const y = Math.min(h - rows, Math.max(0, Math.round(h * frac)));
+              gl.readPixels(0, y, w, rows, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+              if (gl.getError() !== gl.NO_ERROR) return { lit: 0, mean: 0, sd: 0, ok: false };
+              for (let i = 0; i < need; i += 4) {
+                const luma = 0.2126 * buf[i] + 0.7152 * buf[i + 1] + 0.0722 * buf[i + 2];
+                n++;
+                sum += luma;
+                sum2 += luma * luma;
+                if (luma > 12) lit2++;
+              }
+            }
+          } catch {
+            return { lit: 0, mean: 0, sd: 0, ok: false };
+          } finally {
+            this.renderer.setRenderTarget(prev);
+          }
+          if (n === 0) return { lit: 0, mean: 0, sd: 0, ok: false };
+          const mean = sum / n;
+          return { lit: lit2 / n, mean, sd: Math.sqrt(Math.max(0, sum2 / n - mean * mean)), ok: true };
+        }
+        /**
+         * Draws a representative material into a small off-screen target and reads
+         * the result back. Runs once, at boot, before any of the world exists.
+         *
+         * A clearcoated MeshPhysicalMaterial under a directional light is the game's
+         * headline material (art bible §4) and shares its entire shader family with
+         * the road, the kerbs, the buildings and the karts. If this comes back the
+         * colour of the clear, that family does not draw on this GPU — which is the
+         * leading theory for the empty-world reports, and the whole point of asking
+         * before the player has anything to lose.
+         */
+        trialDraw() {
+          if (forcedFailure("trial")) return { ok: false, detail: "forced by ?glfail=trial" };
+          const size = 8;
+          let rt = null;
+          const scene = new Scene();
+          const geo = new PlaneGeometry(4, 4);
+          const mat2 = new MeshPhysicalMaterial({
+            color: 14697791,
+            metalness: 0,
+            roughness: 0.28,
+            clearcoat: 1,
+            clearcoatRoughness: 0.06
+          });
+          mat2.name = "boot-trial-physical";
+          const prevTarget = this.renderer.getRenderTarget();
+          const prevClear = new Color();
+          this.renderer.getClearColor(prevClear);
+          const prevAlpha = this.renderer.getClearAlpha();
+          this.inTrial = true;
+          try {
+            rt = new WebGLRenderTarget(size, size, { type: UnsignedByteType, depthBuffer: true });
+            const cam = new PerspectiveCamera(50, 1, 0.1, 20);
+            cam.position.set(0, 0, 2.4);
+            const key2 = new DirectionalLight(16767400, 4.2);
+            key2.position.set(0.5, 0.9, 1.4);
+            scene.add(key2, new AmbientLight(11061503, 0.8), new Mesh(geo, mat2));
+            this.renderer.setRenderTarget(rt);
+            this.renderer.setClearColor(0, 1);
+            this.renderer.clear(true, true, false);
+            this.renderer.render(scene, cam);
+            const px2 = new Uint8Array(size * size * 4);
+            this.renderer.readRenderTargetPixels(rt, 0, 0, size, size, px2);
+            let brightest = 0;
+            for (let i = 0; i < px2.length; i += 4) {
+              brightest = Math.max(brightest, px2[i], px2[i + 1], px2[i + 2]);
+            }
+            return brightest >= 8 ? { ok: true, detail: "" } : { ok: false, detail: `brightest channel was ${brightest}/255 on a fully-lit quad` };
+          } catch (err) {
+            return { ok: false, detail: String(err) };
+          } finally {
+            this.inTrial = false;
+            this.renderer.setRenderTarget(prevTarget);
+            this.renderer.setClearColor(prevClear, prevAlpha);
+            scene.clear();
+            geo.dispose();
+            mat2.dispose();
+            rt?.dispose();
+          }
+        }
+        /**
+         * Installs, updates or removes the whole-scene material override.
+         *
+         * `Scene.overrideMaterial` is a blunt instrument and that is exactly what is
+         * wanted here: at this point the driver has told us it will not draw the
+         * materials the world is made of, and the choice is between one simple
+         * material for everything and nothing at all. The geometry, the layout, the
+         * karts and the track are all still there — they stop being invisible.
+         */
+        applyMaterialOverride() {
+          const scene = this.ctx?.scene;
+          if (scene === void 0 || scene === null) return;
+          const want = this.rung >= 4 /* Flat */ ? "flat" : this.rung >= 3 /* Safe */ ? "safe" : null;
+          const have = this.overrideMat === null ? null : this.overrideMat.userData.kartFallback;
+          if (want === have) return;
+          if (this.overrideMat !== null) {
+            if (scene.overrideMaterial === this.overrideMat) scene.overrideMaterial = null;
+            this.overrideMat.dispose();
+            this.overrideMat = null;
+          }
+          if (want === null) return;
+          const mat2 = want === "safe" ? new MeshLambertMaterial({ color: 12169894, fog: true }) : new MeshNormalMaterial();
+          mat2.userData.kartFallback = want;
+          this.overrideMat = mat2;
+          scene.overrideMaterial = mat2;
+          logPipeline("materials", `every material replaced with the ${want} variant`);
+        }
+        /**
+         * A full-page explanation for the failures that leave nothing to render at
+         * all, attached to <html> rather than <body>.
+         *
+         * That is not a stylistic choice. When the pipeline cannot be constructed,
+         * `init` throws, and main.ts's boot handler replaces the entire contents of
+         * <body> with a stack trace — which would take a panel inside it with it. A
+         * node parented to the document element survives, so the player gets a
+         * sentence they can act on instead of a red monospace dump.
+         */
+        showFatal(title, detail) {
+          if (document.getElementById("gl-fatal") !== null) return;
+          const el2 = document.createElement("div");
+          el2.id = "gl-fatal";
+          el2.setAttribute("role", "alert");
+          el2.style.cssText = [
+            "position:fixed",
+            "inset:0",
+            "z-index:9999",
+            "display:flex",
+            "flex-direction:column",
+            "align-items:center",
+            "justify-content:center",
+            "gap:.6em",
+            "padding:8vmin",
+            "text-align:center",
+            "font-family:system-ui,-apple-system,sans-serif",
+            "color:#f6efe4",
+            "background:radial-gradient(120% 100% at 50% 30%,#1d2436 0%,#0b0f18 70%)"
+          ].join(";");
+          const h = document.createElement("div");
+          h.style.cssText = "font-weight:800;font-size:clamp(18px,3.2vmin,26px);letter-spacing:.02em";
+          h.textContent = title;
+          const p = document.createElement("div");
+          p.style.cssText = "max-width:34em;opacity:.8;font-size:clamp(13px,2vmin,16px);line-height:1.6";
+          p.textContent = detail;
+          el2.append(h, p);
+          document.documentElement.appendChild(el2);
+        }
+        /**
+         * Put a line of text over the canvas, or take it away again with `null`.
+         * The frame loop uses this for the one failure the pipeline cannot see from
+         * in here: a renderer that keeps throwing without ever losing its context.
+         */
+        announce(title, detail = "") {
+          if (title === null) this.hideNotice();
+          else this.showNotice(title, detail);
+        }
+        /**
+         * Test hook: drop the context on purpose, and optionally hand it back.
+         *
+         * Recovery code that has never been run is decoration, and the only way to
+         * run this one is to ask the driver to take the context away. Exposed through
+         * `__render` alongside the rest of the harness surface.
+         */
+        debugLoseContext(restoreAfterMs = 900) {
+          const ext = this.renderer.getContext().getExtension("WEBGL_lose_context");
+          if (ext === null) {
+            console.warn("[render] WEBGL_lose_context unavailable; cannot simulate a loss");
+            return;
+          }
+          ext.loseContext();
+          if (restoreAfterMs >= 0) setTimeout(() => ext.restoreContext(), restoreAfterMs);
+        }
+        /**
+         * A calm line of text over the frozen canvas. A black rectangle with no
+         * explanation is the worst version of this; the frame underneath is stale but
+         * it is still a picture of the game, so the notice sits on top of it rather
+         * than replacing it.
+         */
+        showNotice(title, detail) {
+          if (this.notice === null) {
+            const el2 = document.createElement("div");
+            el2.id = "gl-notice";
+            el2.setAttribute("role", "status");
+            el2.style.cssText = [
+              "position:fixed",
+              "inset:auto 0 0 0",
+              "z-index:120",
+              "display:flex",
+              "flex-direction:column",
+              "align-items:center",
+              "gap:.35em",
+              "padding:1.4em 1.2em calc(1.4em + env(safe-area-inset-bottom))",
+              "font-family:system-ui,-apple-system,sans-serif",
+              "text-align:center",
+              "color:#f3f6fb",
+              "pointer-events:none",
+              "background:linear-gradient(180deg,rgba(8,11,22,0) 0%,rgba(8,11,22,.82) 46%,rgba(8,11,22,.94) 100%)",
+              "opacity:0",
+              "transition:opacity .35s ease"
+            ].join(";");
+            el2.innerHTML = '<b style="font-size:clamp(15px,2.4vmin,20px);font-weight:800;letter-spacing:.06em"></b><span style="font-size:clamp(12px,1.8vmin,15px);letter-spacing:.04em;color:rgba(233,240,250,.66)"></span>';
+            document.body.appendChild(el2);
+            this.notice = el2;
+          }
+          const [b, s] = [this.notice.querySelector("b"), this.notice.querySelector("span")];
+          if (b !== null) b.textContent = title;
+          if (s !== null) s.textContent = detail;
+          requestAnimationFrame(() => {
+            if (this.notice !== null) this.notice.style.opacity = "1";
+          });
+        }
+        hideNotice() {
+          const el2 = this.notice;
+          if (el2 === null) return;
+          el2.style.opacity = "0";
+          setTimeout(() => {
+            if (this.notice === el2) {
+              el2.remove();
+              this.notice = null;
+            }
+          }, 420);
+        }
+        /**
+         * Adjust internal render resolution without rebuilding the chain.
+         *
+         * This is the correct response to a GPU that cannot keep up, and it is what
+         * replaced halving the PRESENT rate. For a racing game a smooth 25 fps at 80%
+         * resolution beats a juddering 12 fps at full resolution every time: present
+         * cadence is what the eye reads as motion, and the sim was already running at
+         * full rate underneath, so halving the present only added judder and changed
+         * nothing about latency.
+         */
+        setDynamicScale(scale) {
+          const next = MathUtils.clamp(scale, 0.5, 1);
+          if (Math.abs(next - this.dynamicScale) < 0.01) return;
+          this.dynamicScale = next;
+          this.applyResolution();
+        }
+        effectivePixelRatio() {
+          const s = this.ctx.settings;
+          const cap = this.device.software ? 1 : Math.max(0.5, s.maxPixelRatio);
+          const scale = MathUtils.clamp(s.renderScale, 0.25, 2) * this.dynamicScale;
+          const dpr = MathUtils.clamp(globalThis.devicePixelRatio || 1, 0.5, 4);
+          const ratio = Math.min(dpr, cap) * scale;
+          const limit = Math.min(
+            this.renderer?.capabilities?.maxTextureSize ?? 4096,
+            this.maxRenderbufferSize()
+          );
+          const longest = Math.max(this.width, this.height);
+          if (longest * ratio > limit) return Math.max(0.25, limit / longest * scale);
+          const budget = 4e6;
+          const pixels = this.width * this.height * ratio * ratio;
+          if (pixels > budget) {
+            return Math.max(0.25, Math.sqrt(budget / (this.width * this.height)) * scale);
+          }
+          return ratio;
+        }
+        maxRenderbufferSize() {
+          const gl = this.gl;
+          if (gl === null) return 4096;
+          try {
+            return gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) || 4096;
+          } catch {
+            return 4096;
+          }
+        }
+        msaaSamples() {
+          if (!this.device.webgl2) return 0;
+          const q = this.ctx.settings.quality;
+          if (this.ctx.settings.ssao) return 0;
+          if (this.device.software) return q >= 2 /* High */ ? 2 : 0;
+          if (q < 1 /* Medium */) return 0;
+          if (q === 1 /* Medium */) return 2;
+          return this.effectivePixelRatio() >= 1.5 ? 2 : 4;
+        }
+        /**
+         * Resolution policy. `renderScale` folds into the device pixel ratio, so the
+         * canvas keeps its full CSS size and the compositor does the upscale on
+         * present — while the internal buffers, the AO targets, the bloom mip chain
+         * and the bokeh targets all shrink together.
+         */
+        applyResolution() {
+          if (this.renderer === void 0 || this.contextLost) return;
+          const ratio = this.effectivePixelRatio();
+          const bufW = Math.floor(this.width * ratio);
+          const bufH = Math.floor(this.height * ratio);
+          if (bufW === this.appliedW && bufH === this.appliedH && ratio === this.appliedRatio) {
+            if (this.composer !== null) this.setMultisampling(this.msaaSamples());
+            return;
+          }
+          this.appliedW = bufW;
+          this.appliedH = bufH;
+          this.appliedRatio = ratio;
+          this.renderer.setPixelRatio(ratio);
+          if (this.composer !== null) {
+            this.setMultisampling(this.msaaSamples());
+            this.composer.setSize(this.width, this.height, true);
+          } else {
+            this.renderer.setSize(this.width, this.height, true);
+          }
+        }
+        /**
+         * Assigns the composer's sample count only when it genuinely changes.
+         *
+         * The comment this replaces claimed "the setter is a no-op when the value is
+         * unchanged". It is not: postprocessing's setter reads
+         *
+         *     if (multisampling > 0 && value > 0) { buffer.samples = value; buffer.dispose(); }
+         *
+         * — an unconditional `dispose()` of the input buffer whenever both the old
+         * and the new value are non-zero, which is every assignment on every tier
+         * above Low. `dispose()` releases the GPU-side attachment and marks the
+         * target for reallocation on next use, so handing the setter the value it
+         * already holds throws away a half-float MSAA HDR buffer and builds an
+         * identical one. Once per quality change is nothing; once per resize event,
+         * on a platform that fires resize events in bursts, is the difference between
+         * a steady footprint and a sawtooth.
+         */
+        /** Forgets what was last pushed, so the next `applyResolution` pushes it all. */
+        invalidateResolutionCache() {
+          this.appliedRatio = -1;
+          this.appliedW = -1;
+          this.appliedH = -1;
+          this.appliedSamples = -1;
+        }
+        setMultisampling(samples) {
+          if (this.composer === null || samples === this.appliedSamples) return;
+          this.appliedSamples = samples;
+          this.composer.multisampling = samples;
+        }
+      };
+    }
+  });
+
   // src/src/kart/Liveries.ts
   function lcg(seed) {
     let s = seed >>> 0;
@@ -50672,7 +54614,7 @@ void main() {
     for (let i = 0; i < 4; i++) setWheel(i, 0);
     return { mesh, setWheel };
   }
-  var ROLE_COUNT, C_CREAM, C_PLASTIC, C_STEEL, C_RUBBER, C_HUB, C_DISC, C_RIM, PAINT_NORMAL_SCALE, COAT_NORMAL_SCALE, CHROME_NORMAL_SCALE, PLASTIC_NORMAL_SCALE, CLOTH_NORMAL_SCALE, PAINT_REPEAT, COAT_REPEAT, PLASTIC_REPEAT, CLOTH_REPEAT, _detail, ENV_TARGET, PAINT_ENV_RESPONSE, _envGlobal, _gripArms, RUBBER_BASE, RUBBER_BLOCK, RUBBER_GROOVE, DUST_R, DUST_G, DUST_B, WHEEL_UV, _wheelMaps, _v, _n, Mesher, NUMBERS, SPONSORS, SKINS, _hsl, PANEL_W, PANEL_H, PANEL_UV, PANEL_SIZE, _liveries, _nextIndex, _mats, RIM_TINT, _impostor, _shadowOnly, _heroPaint, _tmpColor, SHADOW_W, SHADOW_D, SHADOW_LIFT, SHADOW_LOBE_R, SHADOW_DROOP, SHADOW_LOAD, SHADOW_LOBE_MAX, SHADOW_BODY, SHADOW_TINT, _shadowGeo, SHADOW_VERT;
+  var ROLE_COUNT, C_CREAM, C_PLASTIC, C_STEEL, C_RUBBER, C_HUB, C_DISC, C_RIM, PAINT_NORMAL_SCALE, COAT_NORMAL_SCALE, CHROME_NORMAL_SCALE, PLASTIC_NORMAL_SCALE, CLOTH_NORMAL_SCALE, PAINT_REPEAT, COAT_REPEAT, PLASTIC_REPEAT, CLOTH_REPEAT, _detail, ENV_TARGET, PAINT_ENV_RESPONSE, _envGlobal, _gripArms, RUBBER_BASE, RUBBER_BLOCK, RUBBER_GROOVE, DUST_R, DUST_G, DUST_B, WHEEL_UV, _wheelMaps, _v2, _n, Mesher, NUMBERS, SPONSORS, SKINS, _hsl, PANEL_W, PANEL_H, PANEL_UV, PANEL_SIZE, _liveries, _nextIndex, _mats, RIM_TINT, _impostor, _shadowOnly, _heroPaint, _tmpColor, SHADOW_W, SHADOW_D, SHADOW_LIFT, SHADOW_LOBE_R, SHADOW_DROOP, SHADOW_LOAD, SHADOW_LOBE_MAX, SHADOW_BODY, SHADOW_TINT, _shadowGeo, SHADOW_VERT;
   var init_Liveries = __esm({
     "src/src/kart/Liveries.ts"() {
       init_three_module();
@@ -50758,7 +54700,7 @@ void main() {
         tread: [0, 0.6, 1, 0.4]
       };
       _wheelMaps = null;
-      _v = new Vector3();
+      _v2 = new Vector3();
       _n = new Vector3();
       Mesher = class {
         constructor() {
@@ -50771,9 +54713,9 @@ void main() {
           return this.pos.length / 3;
         }
         push(x, y, z, u, v2, role, m) {
-          _v.set(x, y, z);
-          if (m) _v.applyMatrix4(m);
-          this.pos.push(_v.x, _v.y, _v.z);
+          _v2.set(x, y, z);
+          if (m) _v2.applyMatrix4(m);
+          this.pos.push(_v2.x, _v2.y, _v2.z);
           this.uv.push(u, v2);
           this.role.push(role);
         }
@@ -51291,7 +55233,7 @@ void main() {
     out[1] = c;
     for (let k = 0; k < HAZE_LOBE_G.length; k++) out[2 + k] = hazeLobe(c, HAZE_LOBE_G[k]);
   }
-  function mulberry322(seed) {
+  function mulberry323(seed) {
     let a = seed >>> 0;
     return () => {
       a = a + 1831565813 >>> 0;
@@ -52169,7 +56111,7 @@ void main() {
          */
         bakeCloudNoise() {
           const size = CLOUD_NOISE_SIZE;
-          const noise = createNoise4D(mulberry322(1592594996));
+          const noise = createNoise4D(mulberry323(1592594996));
           const data = new Uint8Array(size * size * 4);
           const TAU = Math.PI * 2;
           for (let c = 0; c < 4; c++) {
@@ -52678,7 +56620,7 @@ void main() {
     }
     return cl;
   }
-  function mulberry323(seed) {
+  function mulberry324(seed) {
     let a = seed >>> 0;
     return () => {
       a |= 0;
@@ -53110,7 +57052,7 @@ void main() {
       CORNER_MERGE = 26;
       CORNER_PER = 0.87;
       CORNER_MIN_GAP = 70;
-      rnd = mulberry323(1907240611);
+      rnd = mulberry324(1907240611);
       noiseA = createNoise2D(rnd);
       noiseB = createNoise2D(rnd);
       noiseC = createNoise2D(rnd);
@@ -53610,7 +57552,7 @@ ${body}
   function clamp013(x) {
     return x < 0 ? 0 : x > 1 ? 1 : x;
   }
-  function smoothstep3(e0, e1, x) {
+  function smoothstep4(e0, e1, x) {
     const t = clamp013((x - e0) / (e1 - e0));
     return t * t * (3 - 2 * t);
   }
@@ -54159,7 +58101,7 @@ ${body}
             Math.abs(this.sunScreenPosition.x - 0.5),
             Math.abs(this.sunScreenPosition.y - 0.5)
           );
-          this.sunScreenIntensity = smoothstep3(0, 0.25, facing) * (1 - smoothstep3(0.45, 1.1, edge));
+          this.sunScreenIntensity = smoothstep4(0, 0.25, facing) * (1 - smoothstep4(0.45, 1.1, edge));
         }
         dispose() {
           if (_originalChunks !== null) {
@@ -54190,7 +58132,7 @@ ${body}
   });
 
   // src/src/world/TrackGeometry.ts
-  function mulberry324(seed) {
+  function mulberry325(seed) {
     let a = seed >>> 0;
     return () => {
       a |= 0;
@@ -54200,7 +58142,7 @@ ${body}
       return ((x ^ x >>> 14) >>> 0) / 4294967296;
     };
   }
-  function fbm(x, y, oct, lac = 2.03, gain = 0.5) {
+  function fbm2(x, y, oct, lac = 2.03, gain = 0.5) {
     let a = 0.5, f = 1, s = 0, norm = 0;
     for (let i = 0; i < oct; i++) {
       s += a * tn1(x * f, y * f);
@@ -54342,14 +58284,14 @@ ${body}
     const base = racingLine ? 0.55 : 0.72;
     const s = bakeTexSet(
       1024,
-      (u, v2) => (fbm(u * 46, v2 * 46, 4) * 0.55 + tn2(u * 128, v2 * 128) * 0.22 + fbm(u * 4.3, v2 * 4.3, 3) * 0.4) * (racingLine ? 0.62 : 1),
+      (u, v2) => (fbm2(u * 46, v2 * 46, 4) * 0.55 + tn2(u * 128, v2 * 128) * 0.22 + fbm2(u * 4.3, v2 * 4.3, 3) * 0.4) * (racingLine ? 0.62 : 1),
       (u, v2, h, out) => {
-        const patch2 = fbm(u * 3.1 + 11, v2 * 3.1 + 11, 3);
+        const patch2 = fbm2(u * 3.1 + 11, v2 * 3.1 + 11, 3);
         out.copy(racingLine ? C_RACE : C_TARMAC).multiplyScalar(1 + h * 0.34 + patch2 * 0.14);
         out.lerp(_c22.copy(C_TARMAC).multiplyScalar(1.5), Math.max(0, tn2(u * 2.1, v2 * 0.31)) * 0.18);
-        if (racingLine) out.lerp(_c22.setRGB(0.14, 0.135, 0.15), Math.max(0, fbm(u * 14, v2 * 3, 3)) * 0.3);
+        if (racingLine) out.lerp(_c22.setRGB(0.14, 0.135, 0.15), Math.max(0, fbm2(u * 14, v2 * 3, 3)) * 0.3);
       },
-      (u, v2, h) => base - h * 0.14 + fbm(u * 7.7 + 3, v2 * 7.7 + 3, 2) * 0.09 - (racingLine ? Math.max(0, fbm(u * 14, v2 * 3, 3)) * 0.1 : 0),
+      (u, v2, h) => base - h * 0.14 + fbm2(u * 7.7 + 3, v2 * 7.7 + 3, 2) * 0.09 - (racingLine ? Math.max(0, fbm2(u * 14, v2 * 3, 3)) * 0.1 : 0),
       racingLine ? 16 : 26
     );
     lib.tune(s, 1);
@@ -54367,7 +58309,7 @@ ${body}
       1024,
       (u, v2) => {
         const b = brickField2(u, v2, 16, 22, 0.5);
-        return Math.max(0, 1 - b.d * b.d) * (0.85 + b.id * 0.15) + fbm(u * 60, v2 * 60, 3) * 0.12;
+        return Math.max(0, 1 - b.d * b.d) * (0.85 + b.id * 0.15) + fbm2(u * 60, v2 * 60, 3) * 0.12;
       },
       (u, v2, h, out) => {
         const b = brickField2(u, v2, 16, 22, 0.5);
@@ -54475,19 +58417,19 @@ ${body}
     const s = bakeTexSet(
       size,
       (u, v2) => {
-        const chip = Math.max(0, fbm(u * 26 + 5, v2 * 26 + 5, 3));
-        return fbm(u * 30, v2 * 30, 3) * 0.42 + tn2(u * 110, v2 * 110) * 0.16 - chip * 0.3;
+        const chip = Math.max(0, fbm2(u * 26 + 5, v2 * 26 + 5, 3));
+        return fbm2(u * 30, v2 * 30, 3) * 0.42 + tn2(u * 110, v2 * 110) * 0.16 - chip * 0.3;
       },
       (u, v2, h, out) => {
         const w = bandAt(v2);
         out.copy(C_KERB_R).lerp(C_KERB_W, w);
-        const chip = ss(0.35, 0.72, fbm(u * 26 + 5, v2 * 26 + 5, 3) + 0.5);
+        const chip = ss(0.35, 0.72, fbm2(u * 26 + 5, v2 * 26 + 5, 3) + 0.5);
         out.lerp(_c22.setRGB(0.36, 0.34, 0.31), chip * 0.55);
         out.multiplyScalar(0.88 + h * 0.24);
         out.lerp(_c22.setRGB(0.15, 0.145, 0.16), Math.max(0, tn2(u * 5.5, v2 * 1.7)) * 0.34);
       },
       (u, v2, h) => {
-        const chip = ss(0.35, 0.72, fbm(u * 26 + 5, v2 * 26 + 5, 3) + 0.5);
+        const chip = ss(0.35, 0.72, fbm2(u * 26 + 5, v2 * 26 + 5, 3) + 0.5);
         return 0.42 + chip * 0.44 + h * 0.16 + Math.max(0, tn2(u * 6, v2 * 2)) * 0.12;
       },
       26
@@ -54555,13 +58497,13 @@ float mcFbm(vec2 p) {
   function groundMaterial(lib) {
     const s = bakeTexSet(
       512,
-      (u, v2) => fbm(u * 22, v2 * 22, 5) * 0.6 + fbm(u * 96, v2 * 96, 2) * 0.25,
+      (u, v2) => fbm2(u * 22, v2 * 22, 5) * 0.6 + fbm2(u * 96, v2 * 96, 2) * 0.25,
       (u, v2, h, out) => {
         const t = 1 / GROUND_GAIN * (1 + h * 0.62);
         out.setRGB(t, t * 1.02, t * 0.95);
-        out.multiplyScalar(1 + fbm(u * 6.1 + 40, v2 * 6.1 + 40, 3) * 0.18);
+        out.multiplyScalar(1 + fbm2(u * 6.1 + 40, v2 * 6.1 + 40, 3) * 0.18);
       },
-      (u, v2, h) => 0.88 - h * 0.16 + fbm(u * 12 + 9, v2 * 12 + 9, 2) * 0.08,
+      (u, v2, h) => 0.88 - h * 0.16 + fbm2(u * 12 + 9, v2 * 12 + 9, 2) * 0.08,
       30
     );
     lib.tune(s, 1);
@@ -54580,14 +58522,14 @@ float mcFbm(vec2 p) {
       512,
       (u, v2) => {
         const r = 1 - Math.abs(tn1(u * 9, v2 * 9));
-        const strata = Math.sin(v2 * Math.PI * 14 + fbm(u * 3, v2 * 3, 3) * 3) * 0.12;
-        return r * r * 0.7 + fbm(u * 34, v2 * 34, 4) * 0.35 + strata;
+        const strata = Math.sin(v2 * Math.PI * 14 + fbm2(u * 3, v2 * 3, 3) * 3) * 0.12;
+        return r * r * 0.7 + fbm2(u * 34, v2 * 34, 4) * 0.35 + strata;
       },
       (u, v2, h, out) => {
         out.copy(C_STONE).multiplyScalar(0.78 + h * 0.5);
-        out.lerp(_c22.setHex(8220509), ss(0.1, 0.7, fbm(u * 5 + 21, v2 * 5 + 21, 3) + 0.5) * 0.35);
+        out.lerp(_c22.setHex(8220509), ss(0.1, 0.7, fbm2(u * 5 + 21, v2 * 5 + 21, 3) + 0.5) * 0.35);
       },
-      (u, v2, h) => 0.8 - h * 0.18 + fbm(u * 16 + 5, v2 * 16 + 5, 2) * 0.1,
+      (u, v2, h) => 0.8 - h * 0.18 + fbm2(u * 16 + 5, v2 * 16 + 5, 2) * 0.1,
       42
     );
     lib.tune(s, 1);
@@ -54607,14 +58549,14 @@ float mcFbm(vec2 p) {
       512,
       (u, v2) => {
         const b = brickField2(u, v2, 8, 14, 0.5);
-        return (1 - ss(0.86, 1, b.d)) * (0.6 + b.id * 0.25) + fbm(u * 48, v2 * 48, 4) * 0.3;
+        return (1 - ss(0.86, 1, b.d)) * (0.6 + b.id * 0.25) + fbm2(u * 48, v2 * 48, 4) * 0.3;
       },
       (u, v2, h, out) => {
         const b = brickField2(u, v2, 8, 14, 0.5);
         out.copy(C_STONE).multiplyScalar(0.84 + b.id * 0.18 + h * 0.28);
         out.lerp(_c22.setHex(8878442), ss(0.86, 1, b.d) * 0.7);
       },
-      (u, v2, h) => 0.74 + h * 0.12 + fbm(u * 20 + 7, v2 * 20 + 7, 2) * 0.1,
+      (u, v2, h) => 0.74 + h * 0.12 + fbm2(u * 20 + 7, v2 * 20 + 7, 2) * 0.1,
       36
     );
     lib.tune(s, 1);
@@ -54630,12 +58572,12 @@ float mcFbm(vec2 p) {
   function metalMaterial(lib) {
     const s = bakeTexSet(
       256,
-      (u, v2) => fbm(u * 4, v2 * 90, 3) * 0.5 + tn2(u * 40, v2 * 40) * 0.15,
+      (u, v2) => fbm2(u * 4, v2 * 90, 3) * 0.5 + tn2(u * 40, v2 * 40) * 0.15,
       (u, v2, h, out) => {
         out.setRGB(0.6, 0.62, 0.65).multiplyScalar(0.85 + h * 0.3);
-        out.lerp(_c22.setHex(9067066), Math.max(0, fbm(u * 7 + 60, v2 * 7 + 60, 3)) * 0.4);
+        out.lerp(_c22.setHex(9067066), Math.max(0, fbm2(u * 7 + 60, v2 * 7 + 60, 3)) * 0.4);
       },
-      (u, v2, h) => 0.32 + Math.max(0, fbm(u * 7 + 60, v2 * 7 + 60, 3)) * 0.42 + h * 0.08,
+      (u, v2, h) => 0.32 + Math.max(0, fbm2(u * 7 + 60, v2 * 7 + 60, 3)) * 0.42 + h * 0.08,
       18
     );
     lib.tune(s, 1);
@@ -54650,14 +58592,14 @@ float mcFbm(vec2 p) {
   function paintMaterial(lib) {
     const s = bakeTexSet(
       256,
-      (u, v2) => fbm(u * 40, v2 * 40, 3) * 0.4 + fbm(u * 150, v2 * 150, 2) * 0.2,
+      (u, v2) => fbm2(u * 40, v2 * 40, 3) * 0.4 + fbm2(u * 150, v2 * 150, 2) * 0.2,
       (u, v2, h, out) => {
         out.copy(C_PAINT).multiplyScalar(0.9 + h * 0.18);
         const agg = Math.max(0, tn2(u * 96, v2 * 96));
         out.lerp(_c22.copy(C_TARMAC).multiplyScalar(1.35), agg * 0.22);
-        out.multiplyScalar(1 - Math.max(0, fbm(u * 9 + 23, v2 * 9 + 23, 3)) * 0.14);
+        out.multiplyScalar(1 - Math.max(0, fbm2(u * 9 + 23, v2 * 9 + 23, 3)) * 0.14);
       },
-      (u, v2, h) => 0.44 + h * 0.2 + Math.max(0, fbm(u * 11 + 4, v2 * 11 + 4, 2)) * 0.14,
+      (u, v2, h) => 0.44 + h * 0.2 + Math.max(0, fbm2(u * 11 + 4, v2 * 11 + 4, 2)) * 0.14,
       18
     );
     lib.tune(s, 1);
@@ -54714,7 +58656,7 @@ float mcFbm(vec2 p) {
   function seaMaterial(lib) {
     const s = bakeTexSet(
       256,
-      (u, v2) => fbm(u * 8, v2 * 8, 4) * 0.5 + fbm(u * 26, v2 * 26, 3) * 0.3,
+      (u, v2) => fbm2(u * 8, v2 * 8, 4) * 0.5 + fbm2(u * 26, v2 * 26, 3) * 0.3,
       (u, v2, h, out) => {
         out.setHex(875130).lerp(_c22.setHex(3121070), ss(-0.2, 0.35, h));
       },
@@ -54751,7 +58693,7 @@ float mcFbm(vec2 p) {
       matte: withMatte ? [] : void 0
     };
   }
-  function finish(b) {
+  function finish2(b) {
     const g = new BufferGeometry();
     const n = b.pos.length / 3;
     g.setAttribute("position", new Float32BufferAttribute(b.pos, 3));
@@ -54787,7 +58729,7 @@ float mcFbm(vec2 p) {
     b.idx.push(v0, v1, v2, v0, v2, v3);
   }
   function buildTrackGeometry(track, ctx) {
-    const lib = new MatLib(ctx);
+    const lib = new MatLib2(ctx);
     const g = track.group;
     g.name = "circuit";
     buildRoad(track, lib, g);
@@ -55137,7 +59079,7 @@ float mcFbm(vec2 p) {
     for (const { p } of passes) run(p);
     b.idx = [];
     for (const { p } of passes) for (const i of p.idx) b.idx.push(i);
-    const geo = finish(b);
+    const geo = finish2(b);
     const mats = [];
     let off = 0;
     for (const { p, mat: mat2 } of passes) {
@@ -55331,7 +59273,7 @@ float mcFbm(vec2 p) {
     });
     lift = LIFT_PAINT;
     matte = 0;
-    const mesh = new Mesh(finish(b), lib.own("road-paint", () => {
+    const mesh = new Mesh(finish2(b), lib.own("road-paint", () => {
       const m = paintMaterial(lib);
       injectDecalMatte(m);
       return m;
@@ -55343,7 +59285,7 @@ float mcFbm(vec2 p) {
   function buildRoadDecals(track, strip, softPatch, setLift, setMatte) {
     const cl = track.cl;
     const len = cl.length;
-    const rnd2 = mulberry324(70726);
+    const rnd2 = mulberry325(70726);
     const C_IRON = new Color(0.052, 0.052, 0.058);
     const C_IRON_LIP = new Color(0.115, 0.112, 0.118);
     const C_SPON_A = paintTint(14697791, new Color());
@@ -55523,7 +59465,7 @@ float mcFbm(vec2 p) {
         prev = ring;
       }
     }
-    const mesh = new Mesh(finish(b), lib.get("boost-pad", () => boostMaterial()));
+    const mesh = new Mesh(finish2(b), lib.get("boost-pad", () => boostMaterial()));
     mesh.name = "boost-pads";
     mesh.renderOrder = 2;
     root.add(mesh);
@@ -55531,12 +59473,12 @@ float mcFbm(vec2 p) {
   function boardMaterial(lib) {
     const s = bakeTexSet(
       256,
-      (u, v2) => fbm(u * 26, v2 * 26, 3) * 0.28 + tn2(u * 150, v2 * 150) * 0.1,
+      (u, v2) => fbm2(u * 26, v2 * 26, 3) * 0.28 + tn2(u * 150, v2 * 150) * 0.1,
       (u, v2, h, out) => {
         out.setRGB(1, 1, 1).multiplyScalar(0.94 + h * 0.12);
-        out.multiplyScalar(1 - Math.max(0, fbm(u * 5 + 12, v2 * 5 + 12, 3)) * 0.16 - (1 - ss(0, 0.34, v2)) * 0.13);
+        out.multiplyScalar(1 - Math.max(0, fbm2(u * 5 + 12, v2 * 5 + 12, 3)) * 0.16 - (1 - ss(0, 0.34, v2)) * 0.13);
       },
-      (u, v2, h) => 0.38 + h * 0.16 + Math.max(0, fbm(u * 8 + 5, v2 * 8 + 5, 2)) * 0.14,
+      (u, v2, h) => 0.38 + h * 0.16 + Math.max(0, fbm2(u * 8 + 5, v2 * 8 + 5, 2)) * 0.14,
       12
     );
     lib.tune(s, 1);
@@ -55665,7 +59607,7 @@ float mcFbm(vec2 p) {
       }
     }
     if (!b.idx.length) return;
-    const mesh = new Mesh(finish(b), lib.own("corner-board", () => boardMaterial(lib)));
+    const mesh = new Mesh(finish2(b), lib.own("corner-board", () => boardMaterial(lib)));
     mesh.name = "corner-boards";
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -55710,7 +59652,7 @@ float mcFbm(vec2 p) {
         }
       }
     }
-    const geo = finish(b);
+    const geo = finish2(b);
     geo.computeVertexNormals();
     const mesh = new Mesh(geo, lib.own("ground-blend", () => groundMaterial(lib)));
     mesh.name = "shoulders";
@@ -55770,7 +59712,7 @@ float mcFbm(vec2 p) {
         quad(b, a, e, d, c);
       }
     }
-    const geo = finish(b);
+    const geo = finish2(b);
     geo.computeVertexNormals();
     const mesh = new Mesh(geo, lib.own("ground-blend", () => groundMaterial(lib)));
     mesh.name = "terrain";
@@ -55841,15 +59783,15 @@ float mcFbm(vec2 p) {
         sinceLastPost += cl.length / rings;
         if (sinceLastPost >= 4.5) {
           sinceLastPost = 0;
-          _q.setFromAxisAngle(_yAxis2, Math.atan2(cl.tx[si], cl.tz[si]));
+          _q2.setFromAxisAngle(_yAxis2, Math.atan2(cl.tx[si], cl.tz[si]));
           _p2.set(_p.x + outX * 0.03, _p.y + 0.34, _p.z + outZ * 0.03);
-          posts.push(new Matrix4().compose(_p2, _q, _sc));
+          posts.push(new Matrix4().compose(_p2, _q2, _sc));
         }
       }
     }
     const metal = lib.get("metal-painted", () => metalMaterial(lib));
     if (rail.idx.length) {
-      const geo = finish(rail);
+      const geo = finish2(rail);
       geo.computeVertexNormals();
       const m = new Mesh(geo, metal);
       m.name = "guardrail";
@@ -55935,11 +59877,11 @@ float mcFbm(vec2 p) {
       const H = TUNNEL_H;
       track.crossPoint(si, 0, _p2);
       _p2.set(_p2.x + cl.nx[si] * (H - 0.55), _p2.y + cl.ny[si] * (H - 0.55), _p2.z + cl.nz[si] * (H - 0.55));
-      _q.setFromAxisAngle(_yAxis2, Math.atan2(cl.tx[si], cl.tz[si]));
-      lights.push(new Matrix4().compose(_p2, _q, _sc));
+      _q2.setFromAxisAngle(_yAxis2, Math.atan2(cl.tx[si], cl.tz[si]));
+      lights.push(new Matrix4().compose(_p2, _q2, _sc));
     }
     const boreMat = lib.vc("tunnel-bore", () => rockMaterial(lib));
-    const bore = new Mesh(finish(b), boreMat);
+    const bore = new Mesh(finish2(b), boreMat);
     bore.name = "tunnel-bore";
     bore.castShadow = true;
     bore.receiveShadow = true;
@@ -56071,7 +60013,7 @@ float mcFbm(vec2 p) {
         prev = ring;
       }
     }
-    const geo = finish(b);
+    const geo = finish2(b);
     geo.computeVertexNormals();
     const bridgeMat = twoSided(lib.get("stone-wall", () => stoneMaterial(lib)));
     bridgeMat.name = bridgeMat.name || "bridge-stone-2s";
@@ -56082,7 +60024,7 @@ float mcFbm(vec2 p) {
     mesh.receiveShadow = true;
     root.add(mesh);
   }
-  var C_TARMAC, C_RACE, C_KERB_R, C_KERB_W, C_SAND, C_GRASS, C_GRASS_T, C_DIRT, C_STONE, C_GRIME, C_PAINT, C_RACE_MUL, C_SAND_MUL, C_DUST_MUL, C_BLEACH_MUL, C_JOINT_MUL, GROUND_GAIN, _c2, _c22, _white, _p, _p2, _q, _sc, _yAxis2, trnd, tn1, tn2, MatLib, _warp, ROAD_NL, LINE_K0, RACE_A, RACE_B, LINE_OFFS, LINE_SPAN, LINE_PLATEAU, EDGE_AO_W, roadLats, roadMask, KERB_MIN, LIFT_PATCH, LIFT_SEAM, LIFT_PAINT, LIFT_ARROW, LIFT_SPONSOR, LIFT_DRAIN, PAINT_ALBEDO, C_TAR, C_PATCH, C_BOARD_FACE, C_BOARD_BAR, C_BOARD_POST, BOARD_TOP, BOARD_H, SKIRT_QS, ARMCO, LIGHT_PITCH, C_SODIUM_MUL, C_DAMP_MUL, PARAPET;
+  var C_TARMAC, C_RACE, C_KERB_R, C_KERB_W, C_SAND, C_GRASS, C_GRASS_T, C_DIRT, C_STONE, C_GRIME, C_PAINT, C_RACE_MUL, C_SAND_MUL, C_DUST_MUL, C_BLEACH_MUL, C_JOINT_MUL, GROUND_GAIN, _c2, _c22, _white, _p, _p2, _q2, _sc, _yAxis2, trnd, tn1, tn2, MatLib2, _warp, ROAD_NL, LINE_K0, RACE_A, RACE_B, LINE_OFFS, LINE_SPAN, LINE_PLATEAU, EDGE_AO_W, roadLats, roadMask, KERB_MIN, LIFT_PATCH, LIFT_SEAM, LIFT_PAINT, LIFT_ARROW, LIFT_SPONSOR, LIFT_DRAIN, PAINT_ALBEDO, C_TAR, C_PATCH, C_BOARD_FACE, C_BOARD_BAR, C_BOARD_POST, BOARD_TOP, BOARD_H, SKIRT_QS, ARMCO, LIGHT_PITCH, C_SODIUM_MUL, C_DAMP_MUL, PARAPET;
   var init_TrackGeometry = __esm({
     "src/src/world/TrackGeometry.ts"() {
       init_three_module();
@@ -56113,13 +60055,13 @@ float mcFbm(vec2 p) {
       _white = new Color(1, 1, 1);
       _p = new Vector3();
       _p2 = new Vector3();
-      _q = new Quaternion();
+      _q2 = new Quaternion();
       _sc = new Vector3(1, 1, 1);
       _yAxis2 = new Vector3(0, 1, 0);
-      trnd = mulberry324(20260726);
+      trnd = mulberry325(20260726);
       tn1 = createNoise2D(trnd);
       tn2 = createNoise2D(trnd);
-      MatLib = class {
+      MatLib2 = class {
         constructor(ctx) {
           __publicField(this, "src");
           __publicField(this, "cache", /* @__PURE__ */ new Map());
@@ -56277,14 +60219,14 @@ float mcFbm(vec2 p) {
   function makeProbe() {
     return { y: 0, normal: new Vector3(), surface: 0 /* Road */, lateral: 0, t: 0, edgeRatio: 0 };
   }
-  var _v2, _v22, APRON_T0, APRON_FRAC, Track;
+  var _v3, _v22, APRON_T0, APRON_FRAC, Track;
   var init_Track = __esm({
     "src/src/world/Track.ts"() {
       init_three_module();
       init_types();
       init_TrackLayout();
       init_TrackGeometry();
-      _v2 = new Vector3();
+      _v3 = new Vector3();
       _v22 = new Vector3();
       APRON_T0 = 0.6;
       APRON_FRAC = 0.2;
@@ -56773,9 +60715,9 @@ float mcFbm(vec2 p) {
         /** Ground normal for a surface tilted by `slope` (dy/dLateral) at station i. */
         slopeNormal(i, slope, out) {
           const cl = this.cl;
-          _v2.set(cl.hx[i], cl.hy[i] + slope, cl.hz[i]).normalize();
+          _v3.set(cl.hx[i], cl.hy[i] + slope, cl.hz[i]).normalize();
           _v22.set(cl.tx[i], cl.ty[i], cl.tz[i]);
-          out.crossVectors(_v2, _v22).normalize();
+          out.crossVectors(_v3, _v22).normalize();
           if (out.y < 0) out.negate();
         }
         // =======================================================================
@@ -56796,7 +60738,7 @@ float mcFbm(vec2 p) {
             const side = left ? -1 : 1;
             const pen = radius - (wallL - side * L);
             if (pen <= 0) continue;
-            const footY = this.crossPoint(i, side * wallL, _v2).y;
+            const footY = this.crossPoint(i, side * wallL, _v3).y;
             if (p.y > footY + WALL_HEIGHT[type]) continue;
             this.wallAt = this.wallAt + 1 & 7;
             const r = this.wallPool[this.wallAt];
@@ -57480,3794 +61422,6 @@ void main() {
     }
   });
 
-  // src/src/world/Props.ts
-  function mulberry325(seed) {
-    let a = seed >>> 0;
-    return () => {
-      a = a + 1831565813 >>> 0;
-      let t = Math.imul(a ^ a >>> 15, 1 | a);
-      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-      return ((t ^ t >>> 14) >>> 0) / 4294967296;
-    };
-  }
-  function cv(size) {
-    const c = document.createElement("canvas");
-    c.width = c.height = size;
-    const g = c.getContext("2d");
-    return [c, g];
-  }
-  function finish2(c, srgb, aniso, repeat = true) {
-    const t = new CanvasTexture(c);
-    if (srgb) t.colorSpace = SRGBColorSpace;
-    t.wrapS = t.wrapT = repeat ? RepeatWrapping : ClampToEdgeWrapping;
-    t.anisotropy = aniso;
-    t.generateMipmaps = true;
-    t.minFilter = LinearMipmapLinearFilter;
-    t.needsUpdate = true;
-    return t;
-  }
-  function dilateRGB(px2, size, passes = 8) {
-    const known = new Uint8Array(size * size);
-    for (let i = 0; i < size * size; i++) known[i] = px2[i * 4 + 3] > 6 ? 1 : 0;
-    const next = new Uint8Array(known);
-    for (let p = 0; p < passes; p++) {
-      let grew = false;
-      for (let y = 0; y < size; y++) {
-        for (let x = 0; x < size; x++) {
-          const i = y * size + x;
-          if (known[i]) continue;
-          let r2 = 0, g2 = 0, b2 = 0, n2 = 0;
-          for (let k = 0; k < 4; k++) {
-            const nx = x + (k === 0 ? -1 : k === 1 ? 1 : 0);
-            const ny = y + (k === 2 ? -1 : k === 3 ? 1 : 0);
-            if (nx < 0 || ny < 0 || nx >= size || ny >= size) continue;
-            const j = ny * size + nx;
-            if (!known[j]) continue;
-            r2 += px2[j * 4];
-            g2 += px2[j * 4 + 1];
-            b2 += px2[j * 4 + 2];
-            n2++;
-          }
-          if (!n2) continue;
-          px2[i * 4] = r2 / n2 | 0;
-          px2[i * 4 + 1] = g2 / n2 | 0;
-          px2[i * 4 + 2] = b2 / n2 | 0;
-          next[i] = 1;
-          grew = true;
-        }
-      }
-      known.set(next);
-      if (!grew) break;
-    }
-    let r = 0, g = 0, b = 0, n = 0;
-    for (let i = 0; i < size * size; i++) {
-      if (!known[i]) continue;
-      r += px2[i * 4];
-      g += px2[i * 4 + 1];
-      b += px2[i * 4 + 2];
-      n++;
-    }
-    if (!n) return;
-    r = r / n | 0;
-    g = g / n | 0;
-    b = b / n | 0;
-    for (let i = 0; i < size * size; i++) {
-      if (known[i]) continue;
-      px2[i * 4] = r;
-      px2[i * 4 + 1] = g;
-      px2[i * 4 + 2] = b;
-    }
-  }
-  function coverageMips(base, size, ref) {
-    const out = [{ data: base, width: size, height: size }];
-    const refB = ref * 255;
-    let target = 0;
-    for (let i = 0; i < size * size; i++) if (base[i * 4 + 3] >= refB) target++;
-    target /= size * size;
-    let prev = base;
-    let pw = size;
-    while (pw > 1) {
-      const w = pw >> 1;
-      const dst = new Uint8Array(w * w * 4);
-      for (let y = 0; y < w; y++) {
-        for (let x = 0; x < w; x++) {
-          let r = 0, g = 0, b = 0, a = 0, wsum = 0;
-          for (let dy = 0; dy < 2; dy++) {
-            for (let dx = 0; dx < 2; dx++) {
-              const s = ((y * 2 + dy) * pw + (x * 2 + dx)) * 4;
-              const av = prev[s + 3];
-              const wgt = av + 1;
-              r += prev[s] * wgt;
-              g += prev[s + 1] * wgt;
-              b += prev[s + 2] * wgt;
-              a += av;
-              wsum += wgt;
-            }
-          }
-          const o = (y * w + x) * 4;
-          dst[o] = r / wsum | 0;
-          dst[o + 1] = g / wsum | 0;
-          dst[o + 2] = b / wsum | 0;
-          dst[o + 3] = a / 4 | 0;
-        }
-      }
-      if (target > 0 && w >= 1) {
-        let lo = 0.02, hi = 40;
-        for (let it = 0; it < 14; it++) {
-          const mid = (lo + hi) * 0.5;
-          let cov = 0;
-          for (let i = 0; i < w * w; i++) if (Math.min(255, dst[i * 4 + 3] * mid) >= refB) cov++;
-          if (cov / (w * w) < target) lo = mid;
-          else hi = mid;
-        }
-        const sc = (lo + hi) * 0.5;
-        let peak = 0;
-        for (let i = 0; i < w * w; i++) {
-          const a = Math.min(255, dst[i * 4 + 3] * sc | 0);
-          dst[i * 4 + 3] = a;
-          if (a > peak) peak = a;
-        }
-        if (peak < refB) {
-          const lift = refB / Math.max(1, peak);
-          for (let i = 0; i < w * w; i++) dst[i * 4 + 3] = Math.min(255, Math.ceil(dst[i * 4 + 3] * lift));
-        }
-      }
-      out.push({ data: dst, width: w, height: w });
-      prev = dst;
-      pw = w;
-    }
-    return out;
-  }
-  function hash22(x, y, seed) {
-    let h = Math.imul(x, 374761393) + Math.imul(y, 668265263) + Math.imul(seed, 1442695041);
-    h = Math.imul(h ^ h >>> 13, 1274126177);
-    return ((h ^ h >>> 16) >>> 0) / 4294967296;
-  }
-  function vnoise(u, v2, px2, py2, seed) {
-    const x = u * px2, y = v2 * py2;
-    const xi = Math.floor(x), yi = Math.floor(y);
-    const xf = x - xi, yf = y - yi;
-    const sx = xf * xf * (3 - 2 * xf);
-    const sy = yf * yf * (3 - 2 * yf);
-    const x0 = (xi % px2 + px2) % px2, x1 = (x0 + 1) % px2;
-    const y0 = (yi % py2 + py2) % py2, y1 = (y0 + 1) % py2;
-    const a = hash22(x0, y0, seed), b = hash22(x1, y0, seed);
-    const c = hash22(x0, y1, seed), d = hash22(x1, y1, seed);
-    return (a + (b - a) * sx) * (1 - sy) + (c + (d - c) * sx) * sy;
-  }
-  function fbm2(seed, u, v2, px2, py2, oct, gain = 0.5, res = 1024) {
-    let amp = 1, sum = 0, norm = 0, a = px2, b = py2;
-    const lim = res / 4;
-    for (let o = 0; o < oct; o++) {
-      if (o > 0 && (a > lim || b > lim)) break;
-      sum += amp * vnoise(u, v2, a | 0, b | 0, seed + o * 131);
-      norm += amp;
-      amp *= gain;
-      a *= 2;
-      b *= 2;
-    }
-    return sum / norm * 2 - 1;
-  }
-  function normalFromHeight(h, size, strength, aniso) {
-    const [c, g] = cv(size);
-    const img = g.createImageData(size, size);
-    const d = img.data;
-    const w = (x, y) => h[(y + size) % size * size + (x + size) % size];
-    for (let y = 0; y < size; y++) {
-      for (let x = 0; x < size; x++) {
-        const dx = (w(x + 1, y) - w(x - 1, y)) * strength;
-        const dy = (w(x, y + 1) - w(x, y - 1)) * strength;
-        const l = 1 / Math.sqrt(dx * dx + dy * dy + 1);
-        const i = (y * size + x) * 4;
-        d[i] = (-dx * l * 0.5 + 0.5) * 255;
-        d[i + 1] = (-dy * l * 0.5 + 0.5) * 255;
-        d[i + 2] = (l * 0.5 + 0.5) * 255;
-        d[i + 3] = 255;
-      }
-    }
-    g.putImageData(img, 0, 0);
-    return finish2(c, false, aniso);
-  }
-  function greyFromField(f, size, aniso) {
-    const [c, g] = cv(size);
-    const img = g.createImageData(size, size);
-    const d = img.data;
-    for (let i = 0; i < size * size; i++) {
-      const v2 = clamp3(f[i], 0, 1) * 255;
-      d[i * 4] = d[i * 4 + 1] = d[i * 4 + 2] = v2;
-      d[i * 4 + 3] = 255;
-    }
-    g.putImageData(img, 0, 0);
-    return finish2(c, false, aniso);
-  }
-  function bevelBox(w, h, d, c = 0.035, uvScale = 1) {
-    const hx = w / 2, hy = h / 2, hz = d / 2;
-    c = Math.min(c, hx * 0.45, hy * 0.45, hz * 0.45);
-    const P2 = [];
-    const N = [];
-    const U = [];
-    const corner = (sx, sy, sz, axis) => {
-      const x = sx * (axis === 0 ? hx : hx - c);
-      const y = sy * (axis === 1 ? hy : hy - c);
-      const z = sz * (axis === 2 ? hz : hz - c);
-      return [x, y, z];
-    };
-    const tri = (a, b, cc) => {
-      const ux = b[0] - a[0], uy = b[1] - a[1], uz = b[2] - a[2];
-      const vx = cc[0] - a[0], vy = cc[1] - a[1], vz = cc[2] - a[2];
-      let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
-      const l = Math.hypot(nx, ny, nz) || 1;
-      nx /= l;
-      ny /= l;
-      nz /= l;
-      if (nx * (a[0] + b[0] + cc[0]) + ny * (a[1] + b[1] + cc[1]) + nz * (a[2] + b[2] + cc[2]) < 0) {
-        nx = -nx;
-        ny = -ny;
-        nz = -nz;
-        const t = b;
-        b = cc;
-        cc = t;
-      }
-      const ax = Math.abs(nx), ay = Math.abs(ny), az = Math.abs(nz);
-      for (const p of [a, b, cc]) {
-        P2.push(p[0], p[1], p[2]);
-        N.push(nx, ny, nz);
-        if (ax >= ay && ax >= az) U.push(p[2] * uvScale, p[1] * uvScale);
-        else if (ay >= az) U.push(p[0] * uvScale, p[2] * uvScale);
-        else U.push(p[0] * uvScale, p[1] * uvScale);
-      }
-    };
-    const quad2 = (a, b, cc, dd) => {
-      tri(a, b, cc);
-      tri(a, cc, dd);
-    };
-    for (let axis = 0; axis < 3; axis++) {
-      for (let s = -1; s <= 1; s += 2) {
-        const pts = [];
-        for (let i = 0; i < 4; i++) {
-          const a = i === 0 || i === 3 ? -1 : 1;
-          const b = i < 2 ? -1 : 1;
-          pts.push(axis === 0 ? corner(s, a * s, b, 0) : axis === 1 ? corner(a, s, b * s, 1) : corner(a * s, b, s, 2));
-        }
-        quad2(pts[0], pts[1], pts[2], pts[3]);
-      }
-    }
-    for (const [a1, a2] of [
-      [0, 1],
-      [1, 2],
-      [2, 0]
-    ]) {
-      const a3 = 3 - a1 - a2;
-      for (let s1 = -1; s1 <= 1; s1 += 2)
-        for (let s2 = -1; s2 <= 1; s2 += 2) {
-          const mk = (s3, axis) => {
-            const s = [0, 0, 0];
-            s[a1] = s1;
-            s[a2] = s2;
-            s[a3] = s3;
-            return corner(s[0], s[1], s[2], axis);
-          };
-          const p0 = mk(-1, a1), p1 = mk(-1, a2), p23 = mk(1, a2), p3 = mk(1, a1);
-          if (s1 * s2 * (a1 === 0 && a2 === 1 ? 1 : a1 === 1 && a2 === 2 ? 1 : -1) > 0) quad2(p0, p1, p23, p3);
-          else quad2(p3, p23, p1, p0);
-        }
-    }
-    for (let sx = -1; sx <= 1; sx += 2)
-      for (let sy = -1; sy <= 1; sy += 2)
-        for (let sz = -1; sz <= 1; sz += 2) {
-          const px2 = corner(sx, sy, sz, 0), py2 = corner(sx, sy, sz, 1), pz2 = corner(sx, sy, sz, 2);
-          if (sx * sy * sz > 0) tri(px2, py2, pz2);
-          else tri(px2, pz2, py2);
-        }
-    const g = new BufferGeometry();
-    g.setAttribute("position", new Float32BufferAttribute(P2, 3));
-    g.setAttribute("normal", new Float32BufferAttribute(N, 3));
-    g.setAttribute("uv", new Float32BufferAttribute(U, 2));
-    return g;
-  }
-  function plainBox(w, h, d, uvScale = 1) {
-    const g = new BoxGeometry(w, h, d);
-    const uv = g.getAttribute("uv");
-    const pos = g.getAttribute("position");
-    const nor = g.getAttribute("normal");
-    for (let i = 0; i < uv.count; i++) {
-      const nx = Math.abs(nor.getX(i)), ny = Math.abs(nor.getY(i));
-      const px2 = pos.getX(i), py2 = pos.getY(i), pz2 = pos.getZ(i);
-      if (nx > 0.5) uv.setXY(i, pz2 * uvScale, py2 * uvScale);
-      else if (ny > 0.5) uv.setXY(i, px2 * uvScale, pz2 * uvScale);
-      else uv.setXY(i, px2 * uvScale, py2 * uvScale);
-    }
-    uv.needsUpdate = true;
-    return g;
-  }
-  function wallWithOpenings(w, h, openings, depth = 0.2, uvScale = 0.5) {
-    const P2 = [];
-    const N = [];
-    const U = [];
-    const C2 = [];
-    const push = (x, y, z, nx, ny, nz, u, v2, c = 1) => {
-      P2.push(x, y, z);
-      N.push(nx, ny, nz);
-      U.push(u, v2);
-      C2.push(c, c, c);
-    };
-    const quad2 = (pts, n, uvs, cols) => {
-      for (const i of [0, 1, 2, 0, 2, 3]) push(pts[i][0], pts[i][1], pts[i][2], n[0], n[1], n[2], uvs[i][0], uvs[i][1], cols ? cols[i] : 1);
-    };
-    const AO_FACE = 1;
-    const AO_JAMB_LIP = 0.78;
-    const AO_JAMB_BACK = 0.34;
-    const AO_HEAD_LIP = 0.55;
-    const AO_HEAD_BACK = 0.2;
-    const AO_SILL_LIP = 0.98;
-    const AO_SILL_BACK = 0.62;
-    const xs = /* @__PURE__ */ new Set([0, w]);
-    const ys = /* @__PURE__ */ new Set([0, h]);
-    for (const o of openings) {
-      xs.add(clamp3(o.x, 0, w));
-      xs.add(clamp3(o.x + o.w, 0, w));
-      ys.add(clamp3(o.y, 0, h));
-      ys.add(clamp3(o.y + o.h, 0, h));
-    }
-    const X = [...xs].sort((a, b) => a - b);
-    const Y = [...ys].sort((a, b) => a - b);
-    for (let i = 0; i < X.length - 1; i++) {
-      for (let j = 0; j < Y.length - 1; j++) {
-        const x0 = X[i], x1 = X[i + 1], y0 = Y[j], y1 = Y[j + 1];
-        const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
-        if (openings.some((o) => cx > o.x && cx < o.x + o.w && cy > o.y && cy < o.y + o.h)) continue;
-        if (x1 - x0 < 1e-4 || y1 - y0 < 1e-4) continue;
-        quad2(
-          [
-            [x0, y0, 0],
-            [x1, y0, 0],
-            [x1, y1, 0],
-            [x0, y1, 0]
-          ],
-          [0, 0, 1],
-          [
-            [x0 * uvScale, y0 * uvScale],
-            [x1 * uvScale, y0 * uvScale],
-            [x1 * uvScale, y1 * uvScale],
-            [x0 * uvScale, y1 * uvScale]
-          ]
-        );
-      }
-    }
-    for (const o of openings) {
-      const x0 = o.x, x1 = o.x + o.w, y0 = o.y, y1 = o.y + o.h, z = -depth;
-      quad2(
-        [
-          [x0, y0, 0],
-          [x0, y0, z],
-          [x0, y1, z],
-          [x0, y1, 0]
-        ],
-        [1, 0, 0],
-        [
-          [y0 * uvScale, 0],
-          [y0 * uvScale, depth * uvScale],
-          [y1 * uvScale, depth * uvScale],
-          [y1 * uvScale, 0]
-        ],
-        [AO_JAMB_LIP, AO_JAMB_BACK, AO_JAMB_BACK * 0.75, AO_JAMB_LIP * 0.8]
-      );
-      quad2(
-        [
-          [x1, y1, 0],
-          [x1, y1, z],
-          [x1, y0, z],
-          [x1, y0, 0]
-        ],
-        [-1, 0, 0],
-        [
-          [y1 * uvScale, 0],
-          [y1 * uvScale, depth * uvScale],
-          [y0 * uvScale, depth * uvScale],
-          [y0 * uvScale, 0]
-        ],
-        [AO_JAMB_LIP * 0.8, AO_JAMB_BACK * 0.75, AO_JAMB_BACK, AO_JAMB_LIP]
-      );
-      quad2(
-        [
-          [x1, y0, 0],
-          [x1, y0, z],
-          [x0, y0, z],
-          [x0, y0, 0]
-        ],
-        [0, 1, 0],
-        [
-          [x1 * uvScale, 0],
-          [x1 * uvScale, depth * uvScale],
-          [x0 * uvScale, depth * uvScale],
-          [x0 * uvScale, 0]
-        ],
-        [AO_SILL_LIP, AO_SILL_BACK, AO_SILL_BACK, AO_SILL_LIP]
-      );
-      quad2(
-        [
-          [x0, y1, 0],
-          [x0, y1, z],
-          [x1, y1, z],
-          [x1, y1, 0]
-        ],
-        [0, -1, 0],
-        [
-          [x0 * uvScale, 0],
-          [x0 * uvScale, depth * uvScale],
-          [x1 * uvScale, depth * uvScale],
-          [x1 * uvScale, 0]
-        ],
-        [AO_HEAD_LIP, AO_HEAD_BACK, AO_HEAD_BACK, AO_HEAD_LIP]
-      );
-    }
-    void AO_FACE;
-    const g = new BufferGeometry();
-    g.setAttribute("position", new Float32BufferAttribute(P2, 3));
-    g.setAttribute("normal", new Float32BufferAttribute(N, 3));
-    g.setAttribute("uv", new Float32BufferAttribute(U, 2));
-    g.setAttribute("color", new Float32BufferAttribute(C2, 3));
-    return g;
-  }
-  function loft(path, rings, sides, radius, uvRepeat = 1, capStart = false, capEnd = false) {
-    const pos = [];
-    const uv = [];
-    const idx = [];
-    const p = new Vector3(), pPrev = new Vector3(), tan = new Vector3();
-    const up = new Vector3(0, 1, 0);
-    const nrmA = new Vector3(), nrmB = new Vector3();
-    for (let r = 0; r <= rings; r++) {
-      const t = r / rings;
-      path(t, p);
-      path(Math.min(1, t + 1e-3), pPrev);
-      tan.subVectors(pPrev, p);
-      if (tan.lengthSq() < 1e-9) {
-        path(Math.max(0, t - 1e-3), pPrev);
-        tan.subVectors(p, pPrev);
-      }
-      tan.normalize();
-      nrmA.copy(Math.abs(tan.y) > 0.95 ? new Vector3(1, 0, 0) : up).cross(tan).normalize();
-      nrmB.crossVectors(tan, nrmA).normalize();
-      for (let s = 0; s <= sides; s++) {
-        const a = s / sides * Math.PI * 2;
-        const rr2 = radius(t, a);
-        pos.push(p.x + (nrmA.x * Math.cos(a) + nrmB.x * Math.sin(a)) * rr2, p.y + (nrmA.y * Math.cos(a) + nrmB.y * Math.sin(a)) * rr2, p.z + (nrmA.z * Math.cos(a) + nrmB.z * Math.sin(a)) * rr2);
-        uv.push(s / sides * uvRepeat, t * uvRepeat);
-      }
-    }
-    const stride = sides + 1;
-    for (let r = 0; r < rings; r++)
-      for (let s = 0; s < sides; s++) {
-        const a = r * stride + s, b = a + stride;
-        idx.push(a, a + 1, b, a + 1, b + 1, b);
-      }
-    const capOf = (ring, flip) => {
-      const base = pos.length / 3;
-      path(ring === 0 ? 0 : 1, p);
-      pos.push(p.x, p.y, p.z);
-      uv.push(0.5, 0.5);
-      const off = ring * stride;
-      for (let s = 0; s < sides; s++) {
-        const a = off + s, b = off + s + 1;
-        if (flip) idx.push(base, b, a);
-        else idx.push(base, a, b);
-      }
-    };
-    if (capStart) capOf(0, true);
-    if (capEnd) capOf(rings, false);
-    const g = new BufferGeometry();
-    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
-    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
-    g.setIndex(idx);
-    g.computeVertexNormals();
-    return g;
-  }
-  function fbm1(n, t, y, oct) {
-    let acc = 0, amp = 1, tot = 0, f = 1;
-    for (let k = 0; k < oct; k++) {
-      acc += n(t * f + k * 19.73, y + k * 7.31) * amp;
-      tot += amp;
-      amp *= 0.5;
-      f *= 2.03;
-    }
-    return acc / tot;
-  }
-  function ridged1(n, t, y, oct) {
-    let acc = 0, amp = 1, tot = 0, f = 1;
-    for (let k = 0; k < oct; k++) {
-      const s = 1 - Math.abs(n(t * f + k * 11.29, y + k * 5.17));
-      acc += s * s * amp;
-      tot += amp;
-      amp *= 0.5;
-      f *= 2.03;
-    }
-    return acc / tot;
-  }
-  function ridgeGeo(o) {
-    const segs = Math.max(8, o.segs ?? 56);
-    const rings = Math.max(4, o.rings ?? 10);
-    const jag = o.jag ?? 1;
-    const shoulder = clamp3(o.shoulder ?? 0.25, 0, 1);
-    const skirt = o.skirt ?? o.height * 0.3 + 26;
-    const uvS = o.uvScale ?? Math.max(10, o.height * 0.2);
-    const strata = o.strata ?? Math.max(5, o.height * 0.07);
-    const rng = mulberry325(o.seed);
-    const n = createNoise2D(rng);
-    const crestC = o.crestTint ?? _lc.setRGB(1.06, 1.02, 0.94).clone();
-    const footC = o.footTint ?? _lc.setRGB(0.7, 0.74, 0.82).clone();
-    const chDir = rng() < 0.5 ? 1 : -1;
-    const chMassif = 0.5 + rng() * 0.95;
-    const chWarp = 0.22 + rng() * 0.5;
-    const chBroad = rng();
-    const chTanDip = 0.26 + rng() * 0.2;
-    const chTanFace = 0.85 + rng() * 0.95;
-    const chCrag = 0.22 + rng() * 0.28;
-    const chVC = 0.27 + rng() * 0.18;
-    const chFaceP = 0.68 + rng() * 0.34;
-    const chBackP = 1.12 + rng() * 0.55;
-    const chSpurF = 5 + rng() * 6;
-    const dx = o.length / segs;
-    const lamMin = Math.max(dx * 6, o.length * 0.055);
-    const lamMassif = o.length / chMassif;
-    const lamSub = Math.max(lamMin * 1.6, lamMassif * 0.34);
-    const lamCrag = Math.max(lamMin * 1.5, o.length * 0.19);
-    const sy = o.seed * 0.017;
-    const prof = new Float32Array(segs + 1);
-    const lean = new Float32Array(segs + 1);
-    for (let i = 0; i <= segs; i++) {
-      const u = i / segs;
-      const x = u * o.length;
-      const xw = x + fbm1(n, x / (lamMassif * 1.7), sy + 3.7, 2) * lamMassif * chWarp;
-      let m = 0.5 + 0.5 * fbm1(n, xw / lamMassif, sy + 11.3, 2);
-      m = smoothstep4(0.2 + chBroad * 0.16, 0.94, m);
-      const sub = 0.5 + 0.5 * fbm1(n, xw / lamSub, sy + 47.1, 2);
-      prof[i] = m * (0.6 + 0.4 * sub);
-      lean[i] = fbm1(n, x / (lamMassif * 0.9) + 21.3, sy + 9.9, 2) * 0.26;
-    }
-    const dDip = chTanDip * dx / Math.max(1, o.height);
-    const dFace = chTanFace * dx / Math.max(1, o.height);
-    const dFwd = chDir > 0 ? dDip : dFace;
-    const dBwd = chDir > 0 ? dFace : dDip;
-    const dil = new Float32Array(segs + 1);
-    let e = prof[0];
-    for (let i = 0; i <= segs; i++) {
-      e = Math.max(prof[i], e - dFwd);
-      dil[i] = e;
-    }
-    e = prof[segs];
-    for (let i = segs; i >= 0; i--) {
-      e = Math.max(prof[i], e - dBwd);
-      if (e > dil[i]) dil[i] = e;
-    }
-    for (let i = 0; i <= segs; i++) prof[i] = lerp4(prof[i], dil[i], 0.78);
-    for (let i = 0; i <= segs; i++) {
-      const x = i / segs * o.length;
-      const notch = Math.max(0, -fbm1(n, x / lamCrag, sy + 63.4, 2));
-      const deep = ridged1(n, x / (lamCrag * 2.3), sy + 88.2, 1);
-      prof[i] *= Math.max(0.05, 1 - chCrag * jag * notch * prof[i] * (0.55 + 0.75 * deep));
-    }
-    const sm = new Float32Array(segs + 1);
-    const smPasses = clamp3(Math.round(lamCrag / dx / 2.6), 2, 6);
-    for (let pass = 0; pass < smPasses; pass++) {
-      for (let i = 0; i <= segs; i++) {
-        const a = prof[Math.max(0, i - 1)];
-        const b = prof[i];
-        const c = prof[Math.min(segs, i + 1)];
-        sm[i] = (a + 2 * b + c) * 0.25;
-      }
-      prof.set(sm);
-    }
-    {
-      const lamStep = Math.max(lamMin * 2.2, o.length * 0.24);
-      for (let i = 0; i <= segs; i++) {
-        const x = i / segs * o.length;
-        const a = fbm1(n, x / lamStep, sy + 131.7, 2);
-        const b = fbm1(n, x / (lamStep * 0.46) + 5.1, sy + 177.3, 1);
-        const bench = Math.max(0, chDir > 0 ? a : -a) * (0.55 + 0.45 * Math.max(0, b));
-        prof[i] *= 1 - 0.3 * jag * bench * clamp3(prof[i] * 1.4, 0, 1);
-      }
-      for (let i = 0; i <= segs; i++) sm[i] = (prof[Math.max(0, i - 1)] + 2 * prof[i] + prof[Math.min(segs, i + 1)]) * 0.25;
-      prof.set(sm);
-    }
-    for (let i = 0; i <= segs; i++) {
-      const u = i / segs;
-      prof[i] *= lerp4(Math.pow(Math.sin(Math.PI * u), 0.8), 1, shoulder) * lerp4(0.45, 1, smoothstep4(0, 0.06, Math.min(u, 1 - u)));
-    }
-    let profMax = 1e-6;
-    for (let i = 0; i <= segs; i++) profMax = Math.max(profMax, prof[i]);
-    const profNorm = 1 / profMax;
-    for (let i = 0; i <= segs; i++) prof[i] = clamp3(prof[i] * profNorm, 0.015, 1);
-    const pos = [];
-    const uv = [];
-    const col = [];
-    const idx = [];
-    const bestY = new Float32Array(segs + 1).fill(-1e9);
-    const bestXYZ = new Float32Array((segs + 1) * 3);
-    const VC = chVC;
-    const spurF = Math.min(chSpurF, segs / 14);
-    const gulF = Math.min(15.4, segs / 8);
-    for (let j = 0; j <= rings; j++) {
-      const jf = Math.max(3, Math.round(rings * 0.55));
-      const v2 = j <= jf ? VC * Math.pow(j / jf, 1.4) : VC + (1 - VC) * ((j - jf) / (rings - jf));
-      const shape = v2 <= VC ? Math.pow(Math.sin(Math.PI * 0.5 * (v2 / VC)), chFaceP) : Math.pow(Math.sin(Math.PI * 0.5 * ((1 - v2) / (1 - VC))), chBackP);
-      const toe = j === 0 || j === rings;
-      for (let i = 0; i <= segs; i++) {
-        const u = i / segs;
-        const x = (u - 0.5) * o.length;
-        let z = (v2 - 0.42 + lean[i]) * o.depth;
-        const c = prof[i];
-        const spur = n(u * spurF + 40.2, v2 * 2.6) * 0.5 + n(u * spurF * 2.33 + 3.4, v2 * 5.1) * 0.26;
-        const rib = 0.25 + 3 * shape * (1 - shape);
-        let y = o.height * c * shape * (1 + spur * (0.2 + 0.26 * jag) * rib);
-        const gul = Math.max(0, -n(u * gulF + 77, v2 * 4.2));
-        y -= o.height * 0.075 * jag * gul * shape * (1.35 - 0.65 * shape) * rib;
-        z += o.depth * (0.24 * spur + 0.06 * gul * chDir) * (1 - Math.abs(2 * v2 - 1));
-        if (toe) y = -skirt;
-        if (y > bestY[i]) {
-          bestY[i] = y;
-          bestXYZ[i * 3] = x;
-          bestXYZ[i * 3 + 1] = y;
-          bestXYZ[i * 3 + 2] = z;
-        }
-        pos.push(x, y, z);
-        uv.push(u * o.length / uvS, (v2 * o.depth + y * 0.6) / uvS);
-        const hRel = clamp3(y / Math.max(1, o.height), 0, 1);
-        _lc.copy(footC).lerp(crestC, Math.pow(hRel, 0.62));
-        if (o.scrubTint) {
-          const s0 = n(x * 0.0125 + 91.4, z * 0.0125 - 12.6) * 0.62 + n(x * 0.031 - 4.2, z * 0.031 + 55.9) * 0.38;
-          const veg = clamp3(s0 * 0.9 + 0.42, 0, 1) * lerp4(1, 0.35, Math.pow(hRel, 1.5)) * lerp4(0.45, 1, clamp3(shape * 1.4, 0, 1));
-          _lc.lerp(o.scrubTint, veg * 0.55);
-        }
-        let m = 1;
-        if (o.sunLocal !== void 0) {
-          const face = v2 <= VC ? 1 : -1;
-          const facing = Math.cos(o.sunLocal) * face;
-          m *= 1 + clamp3(facing, 0, 1) * Math.pow(hRel, 3.2) * 0.3;
-        }
-        if (strata > 0) {
-          const warp = n(x * 4e-3 + 12.7, z * 4e-3) * strata * 0.9;
-          const b = (y + warp) / strata;
-          m *= 1 + 0.115 * Math.sin(b * Math.PI * 2) + 0.055 * Math.sin(b * Math.PI * 5.17 + 1.3);
-        }
-        m *= lerp4(0.9, 1.04, clamp3(shape, 0, 1));
-        m *= lerp4(0.58, 1, smoothstep4(0, o.height * 0.13, y));
-        col.push(_lc.r * m, _lc.g * m, _lc.b * m);
-      }
-    }
-    const stride = segs + 1;
-    for (let j = 0; j < rings; j++)
-      for (let i = 0; i < segs; i++) {
-        const a = j * stride + i;
-        idx.push(a, a + stride, a + 1, a + 1, a + stride, a + stride + 1);
-      }
-    if (o.crestOut) for (let i = 0; i < bestXYZ.length; i++) o.crestOut.push(bestXYZ[i]);
-    if (o.flankOut) {
-      o.flankOut.cols = stride;
-      o.flankOut.rings = rings + 1;
-      o.flankOut.p = Float32Array.from(pos);
-    }
-    const g = new BufferGeometry();
-    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
-    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
-    g.setAttribute("color", new Float32BufferAttribute(col, 3));
-    g.setIndex(idx);
-    g.computeVertexNormals();
-    return g;
-  }
-  function ridgeContour(fl, f, i0, span) {
-    const out = [];
-    const { cols, rings, p } = fl;
-    if (cols < 2 || rings < 3) return out;
-    const frac = clamp3(f, 0.02, 0.98);
-    for (let k = 0; k <= span; k++) {
-      const ci = clamp3(i0 + k, 0, cols - 1) | 0;
-      let jc = 1;
-      let cy = -1e9;
-      for (let j = 1; j < rings - 1; j++) {
-        const y = p[(j * cols + ci) * 3 + 1];
-        if (y > cy) {
-          cy = y;
-          jc = j;
-        }
-      }
-      const want = Math.max(0, cy) * frac;
-      let j1 = jc;
-      for (let j = jc; j >= 1; j--) {
-        j1 = j;
-        if (p[(j * cols + ci) * 3 + 1] <= want) break;
-      }
-      const j0 = Math.min(jc, j1 + 1);
-      const k0 = (j1 * cols + ci) * 3;
-      const k1 = (j0 * cols + ci) * 3;
-      const y0 = p[k0 + 1];
-      const y1 = p[k1 + 1];
-      const a = Math.abs(y1 - y0) < 1e-4 ? 0 : clamp3((want - y0) / (y1 - y0), 0, 1);
-      out.push(lerp4(p[k0], p[k1], a), lerp4(y0, y1, a), lerp4(p[k0 + 2], p[k1 + 2], a));
-    }
-    return out;
-  }
-  function ribbonStrip(a, b, uvScale = 12) {
-    const n = Math.min(a.length, b.length) / 3;
-    if (n < 2) return null;
-    const pos = [];
-    const uv = [];
-    const idx = [];
-    let s = 0;
-    for (let i = 0; i < n; i++) {
-      if (i) s += Math.hypot(a[i * 3] - a[i * 3 - 3], a[i * 3 + 1] - a[i * 3 - 2], a[i * 3 + 2] - a[i * 3 - 1]);
-      pos.push(a[i * 3], a[i * 3 + 1], a[i * 3 + 2], b[i * 3], b[i * 3 + 1], b[i * 3 + 2]);
-      const u = s / uvScale;
-      uv.push(u, 0, u, 1);
-    }
-    for (let i = 0; i + 1 < n; i++) {
-      const k = i * 2;
-      idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2);
-    }
-    const g = new BufferGeometry();
-    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
-    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
-    g.setIndex(idx);
-    g.computeVertexNormals();
-    return g;
-  }
-  function islandGeo(o) {
-    const segs = Math.max(12, o.segs ?? 40);
-    const rings = Math.max(4, o.rings ?? 10);
-    const jag = o.jag ?? 1;
-    const squash = o.squash ?? 1;
-    const skirt = o.skirt ?? o.height * 0.35 + 34;
-    const uvS = o.uvScale ?? Math.max(8, o.height * 0.2);
-    const strata = o.strata ?? Math.max(4, o.height * 0.07);
-    const rng = mulberry325(o.seed);
-    const n = createNoise2D(rng);
-    const crestC = o.crestTint ?? _lc.setRGB(1.06, 1.02, 0.94).clone();
-    const footC = o.footTint ?? _lc.setRGB(0.7, 0.74, 0.82).clone();
-    const shore = new Float32Array(segs + 1);
-    const crown = new Float32Array(segs + 1);
-    for (let i = 0; i <= segs; i++) {
-      const a = i / segs * Math.PI * 2;
-      const cx = Math.cos(a), cz = Math.sin(a);
-      shore[i] = 1 + n(cx * 1.6, cz * 1.6) * 0.32 * jag + n(cx * 4.3 + 11, cz * 4.3) * 0.15 * jag;
-      const r0 = 0.5 + 0.5 * n(cx * 2.1 + 30, cz * 2.1);
-      const r1 = 0.5 + 0.5 * n(cx * 4.6 + 71, cz * 4.6);
-      crown[i] = 0.4 + 0.6 * smoothstep4(0.14, 0.92, r0) * (0.72 + 0.28 * r1);
-    }
-    const pos = [];
-    const uv = [];
-    const col = [];
-    const idx = [];
-    for (let j = 0; j <= rings; j++) {
-      const v2 = j / rings;
-      const toe = j === 0;
-      for (let i = 0; i <= segs; i++) {
-        const a = i / segs * Math.PI * 2;
-        const rr2 = o.radius * shore[i] * (1 - Math.pow(v2, 1.55) * 0.9);
-        const x = Math.cos(a) * rr2;
-        const z = Math.sin(a) * rr2 * squash;
-        const flank = Math.pow(v2, 0.95);
-        const spur = n(Math.cos(a) * 5.4 + 60, Math.sin(a) * 5.4) * 0.4 + n(a * 9.1, v2 * 3.3) * 0.18;
-        let y = o.height * crown[i] * flank * (1 + spur * 0.26 * jag * flank);
-        y -= o.height * 0.05 * jag * Math.max(0, -n(a * 13 + 91, v2 * 4)) * flank;
-        if (toe) y = -skirt;
-        pos.push(x, y, z);
-        uv.push(a * o.radius / uvS, (v2 * o.height + y * 0.5) / uvS);
-        const hRel = clamp3(y / Math.max(1, o.height), 0, 1);
-        _lc.copy(footC).lerp(crestC, Math.pow(hRel, 0.62));
-        let m = 1;
-        if (strata > 0) {
-          const warp = n(x * 6e-3 + 4.2, z * 6e-3) * strata * 0.9;
-          const b = (y + warp) / strata;
-          m *= 1 + 0.115 * Math.sin(b * Math.PI * 2) + 0.055 * Math.sin(b * Math.PI * 5.17 + 1.3);
-        }
-        m *= lerp4(0.84, 1.05, flank);
-        m *= lerp4(0.6, 1, smoothstep4(0, o.height * 0.14, y));
-        col.push(_lc.r * m, _lc.g * m, _lc.b * m);
-      }
-    }
-    const stride = segs + 1;
-    for (let j = 0; j < rings; j++)
-      for (let i = 0; i < segs; i++) {
-        const a = j * stride + i;
-        idx.push(a, a + stride, a + 1, a + 1, a + stride, a + stride + 1);
-      }
-    const g = new BufferGeometry();
-    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
-    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
-    g.setAttribute("color", new Float32BufferAttribute(col, 3));
-    g.setIndex(idx);
-    g.computeVertexNormals();
-    return g;
-  }
-  function card(w, h, uOff = 0, uScale = 1) {
-    const g = new PlaneGeometry(w, h, 1, 3);
-    g.translate(0, h / 2, 0);
-    const uv = g.getAttribute("uv");
-    for (let i = 0; i < uv.count; i++) uv.setX(i, uOff + uv.getX(i) * uScale);
-    uv.needsUpdate = true;
-    return g;
-  }
-  function mergeStaticSets(sets, castOf, cell = STATIC_CELL) {
-    const merged = [];
-    const kept = [];
-    const buckets = /* @__PURE__ */ new Map();
-    const matKey = /* @__PURE__ */ new Map();
-    for (const set of sets) {
-      if (!set.isStatic || set.count === 0) {
-        kept.push(set);
-        continue;
-      }
-      const s = set.snapshot();
-      const g = s.geo;
-      const p = g.attributes.position;
-      if (!p) {
-        kept.push(set);
-        continue;
-      }
-      const n = g.attributes.normal;
-      const u = g.attributes.uv;
-      const c0 = g.attributes.color;
-      const index = g.index;
-      const vc = s.mat.vertexColors === true;
-      const cast = castOf(s.name);
-      if (!matKey.has(s.mat)) matKey.set(s.mat, matKey.size);
-      const mk = matKey.get(s.mat);
-      for (let inst = 0; inst < s.mats.length; inst++) {
-        const m = s.mats[inst];
-        const cx = Math.floor(m.elements[12] / cell);
-        const cz = Math.floor(m.elements[14] / cell);
-        const key2 = mk + "|" + (cast ? 1 : 0) + "|" + cx + "|" + cz;
-        let b = buckets.get(key2);
-        if (!b) {
-          b = {
-            mat: s.mat,
-            cast,
-            vc,
-            pos: [],
-            nrm: [],
-            uv: [],
-            col: [],
-            tint: [],
-            iuv: [],
-            lod: [],
-            org: [],
-            idx: [],
-            base: 0,
-            names: /* @__PURE__ */ new Set()
-          };
-          buckets.set(key2, b);
-        }
-        b.names.add(s.name);
-        _mm.getNormalMatrix(m);
-        const tr = s.useCol ? s.cols[inst * 3] : 1;
-        const tg = s.useCol ? s.cols[inst * 3 + 1] : 1;
-        const tb = s.useCol ? s.cols[inst * 3 + 2] : 1;
-        const ux = s.useUv ? s.uvs[inst * 4] : 1;
-        const uy = s.useUv ? s.uvs[inst * 4 + 1] : 1;
-        const uz = s.useUv ? s.uvs[inst * 4 + 2] : 0;
-        const uw = s.useUv ? s.uvs[inst * 4 + 3] : 0;
-        const lod = s.useLod ? s.lods[inst] : 0;
-        const ox = m.elements[12], oy = m.elements[13], oz = m.elements[14];
-        for (let i = 0; i < p.count; i++) {
-          _mv.fromBufferAttribute(p, i).applyMatrix4(m);
-          b.pos.push(_mv.x, _mv.y, _mv.z);
-          if (n) {
-            _mv.fromBufferAttribute(n, i).applyMatrix3(_mm).normalize();
-            b.nrm.push(_mv.x, _mv.y, _mv.z);
-          } else b.nrm.push(0, 1, 0);
-          if (u) b.uv.push(u.getX(i), u.getY(i));
-          else b.uv.push(0, 0);
-          if (vc) {
-            if (c0) b.col.push(c0.getX(i), c0.getY(i), c0.getZ(i));
-            else b.col.push(1, 1, 1);
-          }
-          b.tint.push(tr, tg, tb);
-          b.iuv.push(ux, uy, uz, uw);
-          b.lod.push(lod);
-          b.org.push(ox, oy, oz);
-        }
-        if (index) for (let i = 0; i < index.count; i++) b.idx.push(b.base + index.getX(i));
-        else for (let i = 0; i < p.count; i++) b.idx.push(b.base + i);
-        b.base += p.count;
-      }
-    }
-    for (const b of buckets.values()) {
-      const g = new BufferGeometry();
-      g.setAttribute("position", new Float32BufferAttribute(b.pos, 3));
-      g.setAttribute("normal", new Float32BufferAttribute(b.nrm, 3));
-      g.setAttribute("uv", new Float32BufferAttribute(b.uv, 2));
-      if (b.vc) g.setAttribute("color", new Float32BufferAttribute(b.col, 3));
-      g.setAttribute("aTint", new Float32BufferAttribute(b.tint, 3));
-      g.setAttribute("aUv", new Float32BufferAttribute(b.iuv, 4));
-      g.setAttribute("aLod", new Float32BufferAttribute(b.lod, 1));
-      g.setAttribute("aOrigin", new Float32BufferAttribute(b.org, 3));
-      g.setIndex(b.idx);
-      g.computeBoundingSphere();
-      const mesh = new Mesh(g, b.mat);
-      mesh.name = "static-" + [...b.names].sort().join("+");
-      mesh.castShadow = b.cast;
-      mesh.receiveShadow = true;
-      mesh.matrixAutoUpdate = false;
-      merged.push(mesh);
-    }
-    return { merged, kept };
-  }
-  function makeShared() {
-    return {
-      uTime: { value: 0 },
-      uCam: { value: new Vector3() },
-      uWindDir: { value: new Vector2(0.86, 0.51) },
-      uWindAmp: { value: 1 },
-      uSunView: { value: new Vector3(0, 1, 0) },
-      uSunWorld: { value: new Vector3(-0.62, 0.245, -0.745).normalize() },
-      uSunCol: { value: new Color(16767400) },
-      uCheer: { value: 0 },
-      uSeaLevel: { value: 0 }
-    };
-  }
-  function patch(mat2, key2, fn) {
-    let e = PATCHES.get(mat2);
-    if (!e) {
-      const prior = mat2.onBeforeCompile;
-      const priorCacheKey = mat2.customProgramCacheKey;
-      const hasPrior = typeof prior === "function" && prior !== Material.prototype.onBeforeCompile;
-      let baseKey = "";
-      if (hasPrior && typeof priorCacheKey === "function") {
-        try {
-          baseKey = "base:" + priorCacheKey.call(mat2);
-        } catch {
-          baseKey = "base";
-        }
-      }
-      e = { keys: hasPrior ? [baseKey || "base"] : [], fns: hasPrior ? [(sh, r) => prior.call(mat2, sh, r)] : [] };
-      PATCHES.set(mat2, e);
-      const entry = e;
-      mat2.onBeforeCompile = (sh, renderer) => {
-        for (const f of entry.fns) f(sh, renderer);
-      };
-      mat2.customProgramCacheKey = () => entry.keys.join("|");
-    }
-    if (e.keys.indexOf(key2) >= 0) return;
-    e.keys.push(key2);
-    e.fns.push(fn);
-    mat2.needsUpdate = true;
-  }
-  function patchInstUv(mat2) {
-    patch(mat2, "iuv", (sh) => {
-      sh.vertexShader = "attribute vec4 aUv;\n" + sh.vertexShader.replace(
-        "#include <uv_vertex>",
-        `#include <uv_vertex>
-      #ifdef USE_MAP
-        vMapUv = vMapUv * aUv.xy + aUv.zw;
-      #endif
-      #ifdef USE_NORMALMAP
-        vNormalMapUv = vNormalMapUv * aUv.xy + aUv.zw;
-      #endif
-      #ifdef USE_ROUGHNESSMAP
-        vRoughnessMapUv = vRoughnessMapUv * aUv.xy + aUv.zw;
-      #endif
-      #ifdef USE_ALPHAMAP
-        vAlphaMapUv = vAlphaMapUv * aUv.xy + aUv.zw;
-      #endif`
-      );
-    });
-  }
-  function patchTint(mat2, maskFromUvX = false) {
-    patch(mat2, "tint" + (maskFromUvX ? "M" : ""), (sh) => {
-      sh.vertexShader = "attribute vec3 aTint;\nvarying vec3 vTintI;\n" + (maskFromUvX ? "varying float vTintMask;\n" : "") + sh.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\n  vTintI = aTint;" + (maskFromUvX ? "\n  vTintMask = clamp(uv.x, 0.0, 1.0);" : ""));
-      sh.fragmentShader = "varying vec3 vTintI;\n" + (maskFromUvX ? "varying float vTintMask;\n" : "") + sh.fragmentShader.replace(
-        "#include <color_fragment>",
-        maskFromUvX ? `#include <color_fragment>
-           diffuseColor.rgb *= mix(vec3(1.0), vTintI, vTintMask);` : `#include <color_fragment>
-           diffuseColor.rgb *= vTintI;`
-      );
-    });
-  }
-  function patchInstAlpha(mat2) {
-    patch(mat2, "ialpha", (sh) => {
-      sh.vertexShader = "attribute vec3 aTint;\nvarying float vIAlpha;\n" + sh.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\n  vIAlpha = aTint.r;");
-      sh.fragmentShader = "varying float vIAlpha;\n" + sh.fragmentShader.replace("#include <color_fragment>", "#include <color_fragment>\n  diffuseColor.a *= vIAlpha;");
-    });
-  }
-  function patchLod(mat2, u) {
-    patch(mat2, "lod", (sh) => {
-      sh.uniforms.uCam = u.uCam;
-      sh.vertexShader = "attribute float aLod;\nattribute vec3 aOrigin;\nuniform vec3 uCam;\n" + sh.vertexShader.replace(
-        "#include <begin_vertex>",
-        `#include <begin_vertex>
-       #ifdef USE_INSTANCING
-         if (aLod > 0.0) {
-           vec3 iOrigin = (modelMatrix * instanceMatrix * vec4(0.0,0.0,0.0,1.0)).xyz;
-           float dCam = distance(iOrigin, uCam);
-           // fade the last 15% of the range by shrinking, then collapse
-           transformed *= 1.0 - smoothstep(aLod * 0.86, aLod, dCam);
-         }
-       #else
-         // Same collapse for a set that mergeStaticSets has baked flat. There
-         // is no instanceMatrix to read the origin out of any more, so the
-         // merger writes each baked instance's own origin into aOrigin and the
-         // scale happens about that instead of about the merged geometry's
-         // origin -- which is somewhere out in the middle of a 400 m cell, and
-         // would send every prop in the batch sliding towards it.
-         if (aLod > 0.0) {
-           float dCam = distance((modelMatrix * vec4(aOrigin, 1.0)).xyz, uCam);
-           transformed = aOrigin +
-             (transformed - aOrigin) * (1.0 - smoothstep(aLod * 0.86, aLod, dCam));
-         }
-       #endif`
-      );
-    });
-  }
-  function patchWind(mat2, u, flutterAxis = 0) {
-    patch(mat2, "wind" + flutterAxis, (sh) => {
-      sh.uniforms.uTime = u.uTime;
-      sh.uniforms.uWindDir = u.uWindDir;
-      sh.uniforms.uWindAmp = u.uWindAmp;
-      sh.vertexShader = `attribute vec4 aWind;
-       uniform float uTime; uniform vec2 uWindDir; uniform float uWindAmp;
-       float kartSway(float phase, float h, float stiff){
-         float t = uTime * 1.15 + phase;
-         float a = sin(t) * 0.62 + sin(t * 1.73 + 1.3) * 0.27 + sin(t * 3.31 + 2.1) * 0.11;
-         return a * pow(max(h, 0.0), stiff) * uWindAmp;
-       }
-` + sh.vertexShader.replace(
-        "#include <begin_vertex>",
-        `#include <begin_vertex>
-         {
-           float instS = 1.0;
-           #ifdef USE_INSTANCING
-             instS = length(instanceMatrix[1].xyz);
-           #endif
-           // A positive reference height lets a detached part (a frond) inherit
-           // the sway its parent (the trunk) has at the attachment point. Both
-           // work in WORLD metres, and the offset is divided back out through
-           // the instance scale, so a crown and its fronds never separate.
-           float hRef = aWind.z > 0.0 ? aWind.z : transformed.y * instS;
-           float s = kartSway(aWind.x, hRef, max(aWind.y, 0.001)) * 0.09;
-           transformed.xz += uWindDir * s / max(instS, 0.001);
-           // flutter: high-frequency ripple along the leaf's own length
-           float fl = aWind.w * 0.055 * sin(uTime * 5.4 + aWind.x * 3.0 + transformed.${flutterAxis === 0 ? "x" : "z"} * 2.6);
-           transformed.y += fl;
-           transformed.${flutterAxis === 0 ? "z" : "x"} += fl * 0.6;
-         }`
-      );
-    });
-  }
-  function patchTranslucency(mat2, u, strength = 1) {
-    patch(mat2, "trans", (sh) => {
-      sh.uniforms.uSunView = u.uSunView;
-      sh.uniforms.uSunCol = u.uSunCol;
-      sh.uniforms.uTransStrength = { value: strength };
-      sh.uniforms.uSap = { value: SAP };
-      sh.vertexShader = "varying vec2 vLeafUv;\n" + sh.vertexShader.replace("#include <uv_vertex>", "#include <uv_vertex>\n  vLeafUv = uv;");
-      sh.fragmentShader = "uniform vec3 uSunView; uniform vec3 uSunCol; uniform float uTransStrength; uniform vec3 uSap;\nvarying vec2 vLeafUv;\n" + sh.fragmentShader.replace(
-        "#include <lights_fragment_end>",
-        `#include <lights_fragment_end>
-         {
-           // vViewPosition points from the fragment TOWARD the eye, so -V is the
-           // view direction and dot(-V, L) fires only when the leaf sits between
-           // the camera and the sun \u2014 which is exactly the backlit-palm case.
-           vec3 V = normalize(vViewPosition);
-           // Wrap widened 0.55 -> 0.60 of a hemisphere. This is the term that
-           // decides whether a canopy has any light in it at all when the sun is
-           // not directly behind it, and the umbrella pine in scenery.png \u2014 lit
-           // from three-quarter rear, silhouetted against a pale sky \u2014 came back
-           // as a flat dark cut-out. Wrap lighting is what a leaf actually does:
-           // light entering the far side scatters through and leaves the near
-           // side, so the terminator on a leaf sits well past 90\xB0.
-           float wrap = clamp((dot(normal, uSunView) + 0.60) / 1.60, 0.0, 1.0);
-           float back = pow(clamp(dot(-V, uSunView), 0.0, 1.0), 3.0);
-           // clamped so solid-geometry foliage (uv tiles past 1) stays neutral
-           float lu = clamp(vLeafUv.x, 0.0, 1.0);
-           float lv = clamp(vLeafUv.y, 0.0, 1.0);
-           // thin toward the frond tip and toward the leaflet edges: that is the
-           // part of a palm that actually goes translucent
-           float thin = mix(0.42, 1.0, lu) * mix(0.5, 1.0, abs(lv - 0.5) * 2.0);
-           vec3 sap = mix(diffuseColor.rgb, uSap, 0.62);
-           reflectedLight.directDiffuse += uSunCol * sap * back * 3.8 * thin * uTransStrength;
-           // 0.42 -> 0.80. \xA74 calls a backlit palm at golden hour "a hero
-           // moment \u2014 do not waste it", and at 0.42 the wrap was contributing
-           // roughly a tenth of a stop against a 4.2-intensity key: arithmetically
-           // present, visually absent. This is the whole difference between a
-           // canopy that glows and a green sticker.
-           reflectedLight.directDiffuse += uSunCol * mix(diffuseColor.rgb, uSap, 0.34) * wrap * 0.80 * uTransStrength;
-         }`
-      );
-    });
-  }
-  function patchRoughFromTint(mat2, lo = 0.55, hi = 0.88) {
-    patch(mat2, "roughtint", (sh) => {
-      sh.uniforms.uRtRange = { value: new Vector2(lo, hi) };
-      sh.fragmentShader = "uniform vec2 uRtRange;\n" + sh.fragmentShader.replace(
-        "#include <roughnessmap_fragment>",
-        `#include <roughnessmap_fragment>
-         {
-           float v = dot(vTintI, vec3(0.2126, 0.7152, 0.0722));
-           roughnessFactor = mix(uRtRange.x, uRtRange.y, clamp((v - 0.28) / 0.55, 0.0, 1.0));
-         }`
-      );
-    });
-  }
-  function patchRoughVary(mat2, lo = 0.72, hi = 1.22, scale = 7) {
-    patch(mat2, "roughvary" + lo.toFixed(2) + hi.toFixed(2), (sh) => {
-      sh.uniforms.uRvScale = { value: 1 / scale };
-      sh.uniforms.uRvRange = { value: new Vector2(lo, hi) };
-      sh.vertexShader = "varying vec3 vRvPos;\n" + sh.vertexShader.replace(
-        "#include <begin_vertex>",
-        `#include <begin_vertex>
-         {
-           vec4 rvW = vec4(transformed, 1.0);
-           #ifdef USE_INSTANCING
-             rvW = instanceMatrix * rvW;
-           #endif
-           vRvPos = (modelMatrix * rvW).xyz;
-         }`
-      );
-      sh.fragmentShader = `varying vec3 vRvPos; uniform float uRvScale; uniform vec2 uRvRange;
-       float rvHash(vec2 p){ p = fract(p * vec2(127.1, 311.7)); p += dot(p, p + 34.7); return fract(p.x * p.y); }
-       float rvNoise(vec2 p){
-         vec2 i = floor(p), f = fract(p);
-         f = f * f * (3.0 - 2.0 * f);
-         return mix(mix(rvHash(i), rvHash(i + vec2(1.0, 0.0)), f.x),
-                    mix(rvHash(i + vec2(0.0, 1.0)), rvHash(i + vec2(1.0, 1.0)), f.x), f.y);
-       }
-` + // Anchored on metalnessmap_fragment, not roughnessmap_fragment: the
-      // shared library REPLACES the latter outright for its tiling breakup, so
-      // that token no longer exists by the time we run. roughnessFactor is in
-      // scope either way, and metalness is the next include along.
-      sh.fragmentShader.replace(
-        "#include <metalnessmap_fragment>",
-        `{
-           vec2 rp = vRvPos.xz * uRvScale + vRvPos.y * uRvScale * 0.31;
-           float rn = rvNoise(rp) * 0.62 + rvNoise(rp * 2.37 + 11.3) * 0.38;
-           roughnessFactor = clamp(roughnessFactor * mix(uRvRange.x, uRvRange.y, rn), 0.05, 1.0);
-         }
-         #include <metalnessmap_fragment>`
-      );
-    });
-  }
-  function patchMacroBreak(mat2, scale = 9, amount = 0.16) {
-    patch(mat2, "macrobrk" + scale.toFixed(1) + amount.toFixed(2), (sh) => {
-      sh.uniforms.uMbScale = { value: 1 / scale };
-      sh.uniforms.uMbAmt = { value: amount };
-      sh.vertexShader = "varying vec3 vMbPos;\n" + sh.vertexShader.replace(
-        "#include <begin_vertex>",
-        `#include <begin_vertex>
-         {
-           vec4 mbW = vec4(transformed, 1.0);
-           #ifdef USE_INSTANCING
-             mbW = instanceMatrix * mbW;
-           #endif
-           vMbPos = (modelMatrix * mbW).xyz;
-         }`
-      );
-      sh.fragmentShader = `varying vec3 vMbPos; uniform float uMbScale; uniform float uMbAmt;
-       float mbH(vec2 p){ p = fract(p * vec2(127.1, 311.7)); p += dot(p, p + 29.1); return fract(p.x * p.y); }
-       float mbN(vec2 p){
-         vec2 i = floor(p), f = fract(p);
-         f = f * f * (3.0 - 2.0 * f);
-         return mix(mix(mbH(i), mbH(i + vec2(1.0, 0.0)), f.x),
-                    mix(mbH(i + vec2(0.0, 1.0)), mbH(i + vec2(1.0, 1.0)), f.x), f.y);
-       }
-` + sh.fragmentShader.replace(
-        "#include <color_fragment>",
-        `#include <color_fragment>
-         {
-           vec2 mp = vMbPos.xz * uMbScale + vMbPos.y * uMbScale * 0.53;
-           // 1 : 2.71 \u2014 deliberately irrational-ish, so the two octaves never
-           // beat against each other or against the map's own tile
-           float mn = mbN(mp) * 0.63 + mbN(mp * 2.71 + 7.9) * 0.37;
-           diffuseColor.rgb *= 1.0 + (mn - 0.5) * 2.0 * uMbAmt;
-         }`
-      );
-    });
-  }
-  function patchBob(mat2, u) {
-    patch(mat2, "bob", (sh) => {
-      sh.uniforms.uTime = u.uTime;
-      sh.vertexShader = "attribute vec4 aBob;\nuniform float uTime;\n" + sh.vertexShader.replace(
-        "#include <begin_vertex>",
-        `#include <begin_vertex>
-       {
-         float t = uTime * 0.9 + aBob.y;
-         float heave = (sin(t) * 0.7 + sin(t * 1.62 + 1.1) * 0.3) * aBob.x;
-         float roll  = sin(t * 0.83 + 0.6) * aBob.z;
-         float pitch = sin(t * 1.21 + 2.4) * aBob.z * 0.55;
-         float cr = cos(roll), sr = sin(roll);
-         float cp = cos(pitch), sp = sin(pitch);
-         vec3 q = transformed;
-         q = vec3(q.x * cr - q.y * sr, q.x * sr + q.y * cr, q.z);
-         q = vec3(q.x, q.y * cp - q.z * sp, q.y * sp + q.z * cp);
-         transformed = q + vec3(0.0, heave, 0.0);
-       }`
-      );
-    });
-  }
-  function patchCrowd(mat2, u) {
-    patch(mat2, "crowd", (sh) => {
-      sh.uniforms.uTime = u.uTime;
-      sh.uniforms.uCheer = u.uCheer;
-      sh.vertexShader = "attribute vec4 aWind;\nuniform float uTime; uniform float uCheer;\n" + sh.vertexShader.replace(
-        "#include <begin_vertex>",
-        `#include <begin_vertex>
-       {
-         float ph = aWind.x;
-         float idle = sin(uTime * 1.7 + ph) * 0.018 + sin(uTime * 2.9 + ph * 1.7) * 0.008;
-         // cheer: a sharp hop, staggered so the stand ripples instead of pulsing
-         float ct = fract(uTime * 0.7 + ph * 0.11);
-         float hop = max(0.0, sin(ct * 3.14159)) * uCheer * (0.25 + aWind.w * 0.35);
-         float sway = sin(uTime * 1.1 + ph * 0.7) * 0.035 * (0.4 + uCheer);
-         transformed.y += idle + hop;
-         transformed.x += sway * smoothstep(0.4, 1.6, transformed.y);
-         // arms up when cheering: the arm verts are flagged via uv.y > 0.92
-         transformed.y += step(0.92, uv.y) * uCheer * 0.34;
-       }`
-      );
-    });
-  }
-  function patchCloth(mat2, u, amp = 1) {
-    patch(mat2, "cloth" + amp.toFixed(2), (sh) => {
-      sh.uniforms.uTime = u.uTime;
-      sh.uniforms.uWindAmp = u.uWindAmp;
-      sh.uniforms.uClothAmp = { value: amp };
-      sh.vertexShader = "attribute vec4 aWind;\nuniform float uTime; uniform float uWindAmp; uniform float uClothAmp;\n" + sh.vertexShader.replace(
-        "#include <begin_vertex>",
-        `#include <begin_vertex>
-       {
-         float u0 = uv.x;                     // 0 at the mast / line, 1 at the free edge
-         float ph = aWind.x;
-         float w = sin(u0 * 7.0 - uTime * 4.2 + ph) * 0.5 + sin(u0 * 12.0 - uTime * 6.7 + ph * 1.7) * 0.22;
-         float g = u0 * u0;                   // rooted edge stays put
-         transformed.z += w * g * 0.30 * uClothAmp * uWindAmp;
-         transformed.y += sin(u0 * 5.0 - uTime * 3.1 + ph) * g * 0.07 * uClothAmp * uWindAmp;
-         transformed.x -= g * 0.035 * uClothAmp * abs(w);
-       }`
-      );
-    });
-  }
-  function patchBird(mat2, u) {
-    patch(mat2, "bird", (sh) => {
-      sh.uniforms.uTime = u.uTime;
-      sh.vertexShader = "attribute vec4 aBob;\nuniform float uTime;\n" + sh.vertexShader.replace(
-        "#include <begin_vertex>",
-        `#include <begin_vertex>
-       {
-         // aBob = (orbit radius, angular speed, phase, flap rate)
-         float a = uTime * aBob.y + aBob.z;
-         float flap = sin(uTime * aBob.w + aBob.z * 3.0);
-         // wing dihedral from |uv.x - 0.5|, the span coordinate
-         float span = abs(uv.x - 0.5) * 2.0;
-         transformed.y += flap * span * span * 0.42;
-         transformed.z -= flap * span * 0.06;
-         float ca = cos(a), sa = sin(a);
-         vec3 q = vec3(transformed.x * ca - transformed.z * sa, transformed.y, transformed.x * sa + transformed.z * ca);
-         transformed = q + vec3(sa * aBob.x, sin(a * 2.0 + aBob.z) * 1.6, -ca * aBob.x);
-       }`
-      );
-    });
-  }
-  function patchAerial(mat2, u, near = 220, far = 4400) {
-    patch(mat2, "aerial", (sh) => {
-      sh.uniforms.uCam = u.uCam;
-      sh.uniforms.uSunW = u.uSunWorld;
-      sh.uniforms.uAerial = { value: new Vector2(near, far) };
-      sh.uniforms.uHazeWarm = { value: new Color(PAL.skyWarm) };
-      sh.uniforms.uHazeCool = { value: new Color(11120840) };
-      sh.vertexShader = "varying vec3 vWorldA;\n" + sh.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\n  vWorldA = (modelMatrix * vec4(transformed,1.0)).xyz;");
-      sh.fragmentShader = "varying vec3 vWorldA; uniform vec3 uCam; uniform vec2 uAerial; uniform vec3 uSunW; uniform vec3 uHazeWarm; uniform vec3 uHazeCool;\n" + sh.fragmentShader.replace(
-        "#include <fog_fragment>",
-        `{
-           float d = distance(vWorldA, uCam);
-           float h = smoothstep(uAerial.x, uAerial.y, d);
-           // the haze is a LAYER: thin it with altitude so summits stay crisper
-           h *= mix(1.0, 0.40, clamp((vWorldA.y - uCam.y) / 400.0, 0.0, 1.0));
-           vec3 fwd = vWorldA - uCam; fwd.y = 0.0;
-           vec3 sunXZ = vec3(uSunW.x, 0.0, uSunW.z);
-           float az = dot(normalize(fwd + vec3(1e-4, 0.0, 1e-4)), normalize(sunXZ + vec3(1e-4, 0.0, 1e-4)));
-           // ROUND 2. The azimuth ramp used to open at az = -0.45, i.e. 117
-           // degrees off the sun, so five sixths of the horizon was being
-           // painted with the WARM haze key. Combined with the desaturation
-           // below that is a machine for turning any authored colour into the
-           // same orange, and it is the direct cause of "four separate ranges
-           // at four different distances all render as the same solid orange".
-           // Golden hour genuinely is warm looking INTO the sun and violet-blue
-           // looking away from it, and that contrast across the sky is most of
-           // what makes the hour look like the hour. Narrowed to the near-sun
-           // sector so the ladder gets both ends of it.
-           vec3 haze = mix(uHazeCool, uHazeWarm, smoothstep(0.15, 0.92, az));
-           float l = dot(gl_FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-           // 0.82 -> 0.42. Aerial perspective does desaturate, but 82% at the
-           // far band destroyed the band keys BEFORE the haze tint ran, so the
-           // ladder's hue separation never survived to be seen \u2014 every layer
-           // arrived as neutral grey and left painted with the same haze. The
-           // band table's own pre-fade (see BACKDROP_BANDS) now carries the
-           // convergence, and it can do it per band, which this cannot.
-           gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(l), h * 0.42);
-           gl_FragColor.rgb = mix(gl_FragColor.rgb, haze, h * 0.34);
-         }
-         #include <fog_fragment>`
-      );
-    });
-  }
-  function patchBackdropForm(mat2, u, nearD = 260, farD = 2400, nearV = 0.42, farV = 0.78) {
-    patch(mat2, "bdform", (sh) => {
-      sh.uniforms.uCamF = u.uCam;
-      sh.uniforms.uSunF = u.uSunWorld;
-      sh.uniforms.uBdVal = { value: new Vector4(nearD, farD, nearV, farV) };
-      sh.uniforms.uBdShade = { value: new Vector3(0.7, 0.76, 0.9) };
-      sh.uniforms.uBdSun = { value: new Vector3(1.18, 1.12, 0.99) };
-      sh.vertexShader = "varying vec3 vBdW; varying vec3 vBdN;\n" + sh.vertexShader.replace("#include <beginnormal_vertex>", "#include <beginnormal_vertex>\n  vBdN = normalize(mat3(modelMatrix) * objectNormal);").replace("#include <begin_vertex>", "#include <begin_vertex>\n  vBdW = (modelMatrix * vec4(transformed, 1.0)).xyz;");
-      sh.fragmentShader = `varying vec3 vBdW; varying vec3 vBdN;
-       uniform vec3 uCamF; uniform vec3 uSunF; uniform vec4 uBdVal;
-       uniform vec3 uBdShade; uniform vec3 uBdSun;
-       float bdH(vec2 p){ p = fract(p * vec2(127.1, 311.7)); p += dot(p, p + 41.3); return fract(p.x * p.y); }
-       float bdN2(vec2 p){
-         vec2 i = floor(p), f = fract(p);
-         f = f * f * (3.0 - 2.0 * f);
-         return mix(mix(bdH(i), bdH(i + vec2(1.0, 0.0)), f.x),
-                    mix(bdH(i + vec2(0.0, 1.0)), bdH(i + vec2(1.0, 1.0)), f.x), f.y);
-       }
-` + sh.fragmentShader.replace(
-        "#include <map_fragment>",
-        `#include <map_fragment>
-           {
-             // Three macro octaves. Sampled on the world XZ plane plus altitude,
-             // so a flank reads as bedded rock rather than as a projected
-             // wallpaper, and none of them is finer than 6 m \u2014 anything smaller
-             // than that is below a pixel at 600 m and can only alias.
-             vec2 q = vBdW.xz + vBdW.y * 0.42;
-             float o1 = bdN2(q / 70.0);
-             float o2 = bdN2(q / 22.0 + 13.7);
-             float o3 = bdN2(q / 6.0 - 41.1);
-             float macro = o1 * 0.54 + o2 * 0.31 + o3 * 0.15;
-             // Strata: horizontal bedding, warped by the coarse octave so the
-             // bands wander with the rock instead of ruling round the landform.
-             float bed = sin((vBdW.y + o1 * 26.0) * 0.19) * 0.5 + 0.5;
-             diffuseColor.rgb *= 0.78 + macro * 0.44 + bed * 0.10;
-             // SUNLIT FACE vs SHADED FACE. An albedo-space terminator, because
-             // the real key has almost no normal variation to work with out here.
-             float sf = dot(normalize(vBdN), uSunF);
-             float lit = smoothstep(-0.30, 0.55, sf);
-             diffuseColor.rgb *= mix(uBdShade, uBdSun, lit);
-             // and a warm rim on the faces that actually turn into the sun
-             diffuseColor.rgb *= 1.0 + vec3(0.16, 0.11, 0.03) * smoothstep(0.58, 0.95, sf);
-           }`
-      ).replace(
-        "#include <fog_fragment>",
-        `{
-             // THE VALUE LADDER. Applied to the shaded result and before any fog,
-             // so the haze's luminance-preserving chroma drain carries it intact.
-             float bdD = distance(vBdW, uCamF);
-             float bdT = smoothstep(uBdVal.x, uBdVal.y, bdD);
-             gl_FragColor.rgb *= mix(uBdVal.z, uBdVal.w, bdT);
-           }
-           #include <fog_fragment>`
-      );
-    });
-  }
-  function patchDesatMap(mat2, amount = 0.86) {
-    const a = clamp3(amount, 0, 1).toFixed(3);
-    patch(mat2, "desatmap" + a, (sh) => {
-      sh.fragmentShader = sh.fragmentShader.replace(
-        "#include <map_fragment>",
-        `#include <map_fragment>
-       #ifdef USE_MAP
-         { float kL = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-           diffuseColor.rgb = mix(diffuseColor.rgb, vec3(kL), ${a}); }
-       #endif`
-      );
-    });
-  }
-  function trs(px2, py2, pz2, ry, sx = 1, sy = sx, sz = sx, rx = 0, rz = 0) {
-    _q2.setFromEuler(new Euler(rx, ry, rz, "YXZ"));
-    return _m2.compose(_v3.set(px2, py2, pz2), _q2, _s.set(sx, sy, sz)).clone();
-  }
-  function newHouseParts(walls, roof, trim) {
-    return {
-      walls: walls ?? new GeoAccum(),
-      roof: roof ?? new GeoAccum(),
-      trim: trim ?? new GeoAccum(),
-      shutters: [],
-      glass: [],
-      balcony: [],
-      flowerbox: [],
-      awning: [],
-      door: [],
-      lamp: [],
-      lineAnchors: []
-    };
-  }
-  function gableWedge(halfZ, rise, thick) {
-    const hx = thick / 2;
-    const P2 = [];
-    const N = [];
-    const U = [];
-    const idx = [];
-    const tri = (a, b, c, n) => {
-      const base = P2.length / 3;
-      for (const v2 of [a, b, c]) {
-        P2.push(v2[0], v2[1], v2[2]);
-        N.push(n[0], n[1], n[2]);
-        U.push(v2[2] * 0.42, v2[1] * 0.42);
-      }
-      idx.push(base, base + 1, base + 2);
-    };
-    for (const s of [-1, 1]) {
-      const x = s * hx;
-      const a = [x, 0, -halfZ];
-      const b = [x, 0, halfZ];
-      const c = [x, rise, 0];
-      if (s > 0) tri(a, b, c, [1, 0, 0]);
-      else tri(b, a, c, [-1, 0, 0]);
-    }
-    const q = (a, b, c, dd, n) => {
-      tri(a, b, c, n);
-      tri(a, c, dd, n);
-    };
-    const sl = Math.hypot(halfZ, rise);
-    q([-hx, 0, halfZ], [hx, 0, halfZ], [hx, rise, 0], [-hx, rise, 0], [0, halfZ / sl, rise / sl]);
-    q([hx, 0, -halfZ], [-hx, 0, -halfZ], [-hx, rise, 0], [hx, rise, 0], [0, halfZ / sl, -rise / sl]);
-    q([-hx, 0, -halfZ], [hx, 0, -halfZ], [hx, 0, halfZ], [-hx, 0, halfZ], [0, -1, 0]);
-    const g = new BufferGeometry();
-    g.setAttribute("position", new Float32BufferAttribute(P2, 3));
-    g.setAttribute("normal", new Float32BufferAttribute(N, 3));
-    g.setAttribute("uv", new Float32BufferAttribute(U, 2));
-    g.setIndex(idx);
-    return g;
-  }
-  function buildHouse(out, rng, xform, w, d, floors, tint) {
-    const floorH = 3.05 + rng() * 0.35;
-    const h = floorH * floors + 0.45;
-    const wAO = wallAOFor(h);
-    const openings = [];
-    const winW = 0.95 + rng() * 0.25;
-    const winH = 1.55 + rng() * 0.3;
-    const cols = Math.max(2, Math.round((w - 1) / 2.3));
-    const doorCol = rng() * cols | 0;
-    const winPos = [];
-    for (let f = 0; f < floors; f++) {
-      for (let c = 0; c < cols; c++) {
-        const x = (c + 0.5) / cols * w - w / 2;
-        if (f === 0 && c === doorCol) {
-          openings.push({ x: x - 0.55, y: 0.02, w: 1.1, h: 2.3 });
-          continue;
-        }
-        const y = f * floorH + 1.05;
-        openings.push({ x: x - winW / 2, y, w: winW, h: winH });
-        winPos.push({ x, y, f, c });
-      }
-    }
-    const facade = wallWithOpenings(w, h, openings.map((o) => ({ x: o.x + w / 2, y: o.y, w: o.w, h: o.h })), 0.22, 0.42);
-    facade.translate(-w / 2, 0, d / 2);
-    const rearAndSides = new GeoAccum();
-    const back = bevelBox(w, h, 0.3, 0.05, 0.42);
-    rearAndSides.add(back, trs(0, h / 2, -d / 2 + 0.15, 0), void 0, wAO);
-    const side = bevelBox(0.3, h, d - 0.3, 0.05, 0.42);
-    const sideCols = Math.max(1, Math.round((d - 1.4) / 3.1));
-    for (const sx of [-1, 1]) {
-      const ops = [];
-      const glassAt = [];
-      for (let f = 0; f < floors; f++) {
-        for (let c = 0; c < sideCols; c++) {
-          if (rng() < 0.4) continue;
-          const zc = (c + 0.5) / sideCols * d;
-          const ow = 0.72 + rng() * 0.22;
-          const oh = 1.1 + rng() * 0.3;
-          const oy = f * floorH + 1.15;
-          ops.push({ x: zc - ow / 2, y: oy, w: ow, h: oh });
-          glassAt.push({ z: sx * (d / 2 - zc), y: oy, w: ow, h: oh });
-        }
-      }
-      if (!ops.length) {
-        rearAndSides.add(side, trs(sx * (w / 2 - 0.15), h / 2, 0, 0), void 0, wAO);
-        continue;
-      }
-      const sw = wallWithOpenings(d, h, ops, 0.19, 0.42);
-      const rot = new Matrix4().makeRotationY(sx * Math.PI / 2);
-      const mv = new Matrix4().makeTranslation(sx * (w / 2), 0, sx * d / 2);
-      rearAndSides.add(sw, mv.multiply(rot), void 0, wAO);
-      rearAndSides.add(bevelBox(0.16, h, d - 0.3, 0.04, 0.42), trs(sx * (w / 2 - 0.27), h / 2, 0, 0), void 0, wAO);
-      for (const gq of glassAt) {
-        out.glass.push(
-          _m2.multiplyMatrices(
-            xform,
-            new Matrix4().compose(
-              new Vector3(sx * (w / 2 - 0.18), gq.y + gq.h / 2, gq.z),
-              new Quaternion().setFromEuler(new Euler(0, sx * Math.PI / 2, 0)),
-              new Vector3(gq.w * 0.94, gq.h * 0.94, 1)
-            )
-          ).clone()
-        );
-      }
-    }
-    rearAndSides.add(bevelBox(w - 0.4, 0.2, d - 0.4, 0.02, 0.42), trs(0, h - 0.4, 0, 0), void 0, () => 0.32);
-    for (const sx of [-1, 1])
-      for (const sz of [-1, 1])
-        rearAndSides.add(bevelBox(0.06, h, 0.06, 0.014, 0.42), trs(sx * (w / 2 - 0.02), h / 2, sz * (d / 2 - 0.02), Math.PI / 4), void 0, wAO);
-    out.walls.add(facade, xform, tint, wAO);
-    const rs = rearAndSides.build();
-    if (rs) out.walls.add(rs, xform, tint, void 0);
-    const pitch = 0.38 + rng() * 0.14;
-    const overZ = 0.46;
-    const overX = 0.13;
-    const halfZ = d / 2 + overZ;
-    const rise = halfZ * pitch;
-    const slopeLen = Math.hypot(halfZ, rise);
-    const thick = 0.3;
-    const rm = ROOF_MULT[rng() * ROOF_MULT.length | 0];
-    const roofCol = new Color().setHSL(rm[0], rm[1] * (0.9 + rng() * 0.2), rm[2] * (0.95 + rng() * 0.1));
-    const gab = gableWedge(halfZ - 0.04, rise, 0.26);
-    for (const s of [-1, 1]) out.walls.add(gab, _m2.multiplyMatrices(xform, trs(s * w / 2, h, 0, 0)).clone(), tint, () => 0.62);
-    const slab = bevelBox(w + overX * 2, thick, slopeLen, 0.04, 0.9);
-    const ang = Math.atan2(rise, halfZ);
-    for (const s of [-1, 1]) {
-      const mm = new Matrix4().compose(
-        new Vector3(0, h + rise / 2 + thick / 2 * Math.cos(ang), s * halfZ / 2),
-        new Quaternion().setFromEuler(new Euler(s * ang, 0, 0)),
-        new Vector3(1, 1, 1)
-      );
-      out.roof.add(slab, _m2.multiplyMatrices(xform, mm).clone(), roofCol, (_x2, y) => lerp4(0.68, 1, smoothstep4(-thick * 0.5, thick * 0.5, y)));
-    }
-    const halfWr = w / 2 + overX;
-    const ridgeY = h + rise + thick / Math.cos(ang) + 0.03;
-    const ridge = loft((t, o) => o.set(-halfWr + t * halfWr * 2, 0, 0), 3, 8, () => 0.17, 1.4, true, true);
-    out.roof.add(ridge, _m2.multiplyMatrices(xform, trs(0, ridgeY, 0, 0)).clone(), roofCol.clone().multiplyScalar(1.08));
-    const corn = bevelBox(w + 0.18, 0.15, d + 0.18, 0.035, 0.7);
-    out.trim.add(corn, _m2.multiplyMatrices(xform, trs(0, h - 0.075, 0, 0)).clone(), new Color(14141872), (_x2, y) => lerp4(0.55, 1, smoothstep4(-0.075, 0.02, y)));
-    if (rng() < 0.75) {
-      const cw = 0.5 + rng() * 0.22;
-      const cx = (rng() - 0.5) * (w - 1.6);
-      const ch = 1.1 + rng() * 1;
-      const cy = h + rise * 0.86;
-      out.walls.add(bevelBox(cw, ch, cw, 0.04, 0.9), _m2.multiplyMatrices(xform, trs(cx, cy + ch / 2 - 0.25, 0.12, 0)).clone(), tint, () => 0.85);
-      out.trim.add(bevelBox(cw + 0.2, 0.14, cw + 0.2, 0.03, 1.2), _m2.multiplyMatrices(xform, trs(cx, cy + ch - 0.28, 0.12, 0)).clone(), new Color(14272946));
-    }
-    const shutterCol = new Color(pick(rng, PAL.shutters));
-    const DRIP = tint.clone().multiplyScalar(0.8).lerp(new Color(10128246), 0.42);
-    const HEADSHADE = tint.clone().multiplyScalar(0.55).lerp(new Color(6250608), 0.34);
-    for (const wp of winPos) {
-      const z = d / 2 + 0.01;
-      const hs = new PlaneGeometry(winW + 0.08, 0.24, 1, 1);
-      out.walls.add(hs, _m2.multiplyMatrices(xform, trs(wp.x, wp.y + winH + 0.12, z + 4e-3, 0)).clone(), HEADSHADE, (_x2, y) => lerp4(1, 0.42, smoothstep4(-0.12, 0.12, y)));
-      for (const s of [-1, 1]) {
-        const dg = new PlaneGeometry(0.2, 1.05, 1, 1);
-        out.walls.add(dg, _m2.multiplyMatrices(xform, trs(wp.x + s * (winW / 2 + 0.11), wp.y - 0.62, z + 4e-3, 0)).clone(), DRIP, (_x2, y) => lerp4(0.66, 1, smoothstep4(-0.52, 0.5, -y)) * 0.96);
-      }
-      out.trim.add(bevelBox(winW + 0.34, 0.1, 0.3, 0.02, 1.4), _m2.multiplyMatrices(xform, trs(wp.x, wp.y - 0.06, z + 0.06, 0)).clone(), new Color(15261646));
-      out.trim.add(bevelBox(winW + 0.4, 0.06, 0.08, 0.015, 2.2), _m2.multiplyMatrices(xform, trs(wp.x, wp.y - 0.13, z + 0.19, 0)).clone(), new Color(14471098));
-      out.glass.push(
-        _m2.multiplyMatrices(
-          xform,
-          trs(wp.x, wp.y + winH / 2, z - 0.2, (rng() - 0.5) * 0.055, winW * 0.94, winH * 0.94, 1, -0.012 - rng() * 0.045, (rng() - 0.5) * 0.03)
-        ).clone()
-      );
-      const openA = rng() < 0.4 ? 0.6 + rng() * 0.7 : 0.02;
-      for (const s of [-1, 1]) {
-        const hingeX = wp.x + s * (winW / 2 + 0.02);
-        const mm = new Matrix4().compose(new Vector3(hingeX, wp.y + winH / 2, z + 0.03), new Quaternion().setFromEuler(new Euler(0, -s * openA, 0)), new Vector3(1, 1, 1)).multiply(new Matrix4().makeTranslation(-s * winW / 4, 0, 0)).multiply(new Matrix4().makeScale(winW / 2, winH, 1));
-        out.shutters.push({ m: _m2.multiplyMatrices(xform, mm).clone(), color: shutterCol, uv: new Vector4(0.5, 1, 0, 0) });
-      }
-      if (wp.f < 2 && rng() < 0.62) {
-        out.flowerbox.push({ m: _m2.multiplyMatrices(xform, trs(wp.x, wp.y - 0.02, z + 0.16, 0, winW / 1, 1, 1)).clone(), color: new Color(pick(rng, [9067066, 7171927, 11047546])) });
-      }
-      if (wp.f >= 1 && rng() < 0.45) {
-        out.balcony.push(_m2.multiplyMatrices(xform, trs(wp.x, wp.y - 0.06, z + 0.05, 0, Math.max(1, winW + 0.6), 1, 1)).clone());
-        if (rng() < 0.6) out.lineAnchors.push(new Vector3().setFromMatrixPosition(_m2.multiplyMatrices(xform, trs(wp.x, wp.y + winH, z + 0.6, 0)).clone()));
-      }
-    }
-    const dx = (doorCol + 0.5) / cols * w - w / 2;
-    out.door.push({ m: _m2.multiplyMatrices(xform, trs(dx, 0.02, d / 2 - 0.06, 0, 1.06, 2.24, 1)).clone(), color: new Color(pick(rng, PAL.shutters)) });
-    out.trim.add(bevelBox(1.5, 0.16, 0.34, 0.03, 1.3), _m2.multiplyMatrices(xform, trs(dx, 2.36, d / 2 + 0.1, 0)).clone(), new Color(15261646));
-    if (rng() < 0.45) {
-      const cell = rng() * 4 | 0;
-      out.awning.push({ m: _m2.multiplyMatrices(xform, trs(dx, 2.6, d / 2 + 0.02, 0, 1.9 + rng() * 0.8, 1, 1)).clone(), uv: new Vector4(0.25, 0.25, cell * 0.25, (rng() * 4 | 0) * 0.25) });
-    }
-    if (rng() < 0.5) out.lamp.push(_m2.multiplyMatrices(xform, trs(dx + 0.95, 2.9, d / 2 + 0.06, 0)).clone());
-    out.trim.add(bevelBox(1.7, 0.16, 0.4, 0.02, 1.1), _m2.multiplyMatrices(xform, trs(dx, -0.06, d / 2 + 0.2, 0)).clone(), new Color(14076854));
-    out.trim.add(bevelBox(2, 0.16, 0.6, 0.02, 1.1), _m2.multiplyMatrices(xform, trs(dx, -0.2, d / 2 + 0.42, 0)).clone(), new Color(14076854));
-    if (rng() < 0.5) out.lineAnchors.push(new Vector3().setFromMatrixPosition(_m2.multiplyMatrices(xform, trs((rng() - 0.5) * w * 0.7, h - 1.2, d / 2 + 0.25, 0)).clone()));
-  }
-  function shutterGeo() {
-    const acc = new GeoAccum();
-    acc.add(bevelBox(1, 1, 0.06, 0.012, 1.6), trs(0, 0, 0, 0), new Color(1, 1, 1));
-    const slat = plainBox(0.88, 0.08, 0.05, 3);
-    for (let i = 0; i < 5; i++) {
-      const y = -0.4 + i / 4 * 0.8;
-      acc.add(slat, trs(0, y, 0.045, 0, 1, 1, 1, -0.34), new Color(0.88, 0.88, 0.88));
-    }
-    const rail = plainBox(0.94, 0.07, 0.075, 3);
-    acc.add(rail, trs(0, 0.46, 0.02, 0), new Color(1, 1, 1));
-    acc.add(rail, trs(0, -0.46, 0.02, 0), new Color(1, 1, 1));
-    return acc.build();
-  }
-  function doorGeo() {
-    const acc = new GeoAccum();
-    acc.add(bevelBox(1, 1, 0.08, 0.014, 1.4).translate(0, 0.5, 0), trs(0, 0, 0, 0), new Color(1, 1, 1));
-    for (const y of [0.28, 0.68]) {
-      acc.add(bevelBox(0.66, 0.28, 0.045, 0.012, 3), trs(0, y, 0.05, 0), new Color(0.82, 0.82, 0.82));
-    }
-    return acc.build();
-  }
-  function balconyGeo() {
-    const acc = new GeoAccum();
-    const white = new Color(1, 1, 1);
-    acc.add(bevelBox(1, 0.09, 0.72, 0.02, 1.6), trs(0, 0, 0.3, 0), white);
-    acc.add(bevelBox(1, 0.055, 0.055, 0.014, 4), trs(0, 0.92, 0.64, 0), white);
-    const lowRail = plainBox(1, 0.04, 0.04, 4);
-    acc.add(lowRail, trs(0, 0.3, 0.64, 0), white);
-    const post = plainBox(0.045, 0.94, 0.045, 4);
-    const baluster = plainBox(0.03, 0.9, 0.03, 6);
-    for (const s of [-1, 1]) {
-      acc.add(post, trs(s * 0.47, 0.47, 0.64, 0), white);
-      acc.add(post, trs(s * 0.47, 0.46, 0.02, 0), white);
-      acc.add(plainBox(0.045, 0.05, 0.66, 4), trs(s * 0.47, 0.92, 0.32, 0), white);
-      acc.add(plainBox(0.1, 0.22, 0.3, 3), trs(s * 0.4, -0.14, 0.14, 0), white);
-    }
-    for (let i = 0; i < 7; i++) acc.add(baluster, trs(-0.42 + i / 6 * 0.84, 0.46, 0.64, 0), white);
-    return acc.build();
-  }
-  function flowerBoxGeo() {
-    const acc = new GeoAccum();
-    acc.add(bevelBox(1, 0.26, 0.28, 0.02, 2.4), trs(0, 0.13, 0, 0), new Color(1, 1, 1));
-    return acc.build();
-  }
-  function awningGeo() {
-    const segs = 10;
-    const pos = [];
-    const uv = [];
-    const idx = [];
-    const rows = 4;
-    for (let j = 0; j <= rows; j++) {
-      const v2 = j / rows;
-      for (let i = 0; i <= segs; i++) {
-        const u = i / segs;
-        const scallop = j === rows ? Math.sin(u * Math.PI * 5) * 0.05 : 0;
-        const sag = Math.sin(u * Math.PI) * 0.06 * v2;
-        pos.push((u - 0.5) * 1, -v2 * 0.62 - sag + scallop * 0.3, v2 * 0.95);
-        uv.push(u, v2);
-      }
-    }
-    for (let j = 0; j < rows; j++)
-      for (let i = 0; i < segs; i++) {
-        const a = j * (segs + 1) + i;
-        idx.push(a, a + segs + 1, a + 1, a + 1, a + segs + 1, a + segs + 2);
-      }
-    const g = new BufferGeometry();
-    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
-    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
-    g.setIndex(idx);
-    g.computeVertexNormals();
-    return g;
-  }
-  function lampGeo() {
-    const acc = new GeoAccum();
-    const w = new Color(1, 1, 1);
-    acc.add(bevelBox(0.06, 0.06, 0.5, 0.015, 6), trs(0, 0, 0.24, 0), w);
-    acc.add(bevelBox(0.05, 0.3, 0.05, 0.012, 6), trs(0, -0.16, 0.46, 0), w);
-    acc.add(bevelBox(0.26, 0.06, 0.26, 0.015, 5), trs(0, -0.02, 0.46, 0), w);
-    return { arm: acc.build(), glow: bevelBox(0.17, 0.24, 0.17, 0.05, 4).translate(0, -0.44, 0.46) };
-  }
-  function hullGeo(len, beam, depth, kind) {
-    const rings = 22, sides = 14;
-    return loft(
-      (t, o) => {
-        const z = (t - 0.5) * len;
-        const sheer = Math.pow(Math.abs(t - 0.5) * 2, 2.2) * depth * 0.28;
-        o.set(0, sheer, z);
-      },
-      rings,
-      sides,
-      (t, a) => {
-        const bow = smoothstep4(1, 0.72, t);
-        const stern = kind === 0 ? smoothstep4(0, 0.16, t) : smoothstep4(0, 0.3, t);
-        const plan = Math.pow(Math.sin(clamp3(t, 0, 1) * Math.PI), 0.42) * bow * stern;
-        const s = Math.sin(a), c = Math.cos(a);
-        const vShape = 1 - Math.pow(clamp3(-s, 0, 1), 1.7) * 0.35;
-        const r = plan * (0.5 + 0.5 * Math.abs(c)) * beam * 0.5 * vShape;
-        const rv = plan * depth * 0.5 * (s < 0 ? 1 : 0.72);
-        return Math.hypot(r * c, rv * s) * 0.5 + (r * 0.5 + Math.abs(rv) * 0.5) * 0.5;
-      },
-      2,
-      true,
-      true
-    );
-  }
-  function boatGeo(rng, kind) {
-    const len = kind === 0 ? 6.4 + rng() * 2.6 : 9.5 + rng() * 4;
-    const beam = len * (0.3 + rng() * 0.06);
-    const depth = len * 0.19;
-    const hullAcc = new GeoAccum();
-    const h = hullGeo(len, beam, depth, kind);
-    hullAcc.add(h, trs(0, 0, 0, 0), new Color(1, 1, 1));
-    const strake = loft(
-      (t, o) => {
-        const z = (t - 0.5) * len * 0.98;
-        o.set(0, Math.pow(Math.abs(t - 0.5) * 2, 2.2) * depth * 0.28 + depth * 0.34, z);
-      },
-      18,
-      6,
-      (t) => 0.06 * Math.pow(Math.sin(clamp3(t, 0, 1) * Math.PI), 0.3),
-      2
-    );
-    void strake;
-    const rigAcc = new GeoAccum();
-    const w = new Color(1, 1, 1);
-    hullAcc.add(bevelBox(beam * 0.82, 0.08, len * 0.72, 0.02, 1.6), trs(0, depth * 0.36, 0, 0), new Color(0.82, 0.78, 0.7));
-    if (kind === 0) {
-      for (let i = 0; i < 3; i++) rigAcc.add(bevelBox(beam * 0.7, 0.07, 0.28, 0.015, 3), trs(0, depth * 0.42, (i - 1) * len * 0.2, 0), w);
-      rigAcc.add(bevelBox(beam * 0.62, 0.62, len * 0.2, 0.04, 1.2), trs(0, depth * 0.36 + 0.31, len * 0.24, 0), w);
-      rigAcc.add(bevelBox(0.22, 0.5, 0.34, 0.05, 3), trs(0, depth * 0.3, -len * 0.46, 0), new Color(0.35, 0.35, 0.38));
-    } else {
-      rigAcc.add(bevelBox(beam * 0.66, 1.15, len * 0.26, 0.05, 1.1), trs(0, depth * 0.36 + 0.58, len * 0.06, 0), w);
-      rigAcc.add(bevelBox(beam * 0.5, 0.1, len * 0.22, 0.02, 1.6), trs(0, depth * 0.36 + 1.2, len * 0.06, 0), new Color(0.88, 0.86, 0.8));
-      const mast = loft((t, o) => o.set(0, t * (len * 0.62), 0), 4, 7, (t) => 0.075 * (1 - t * 0.45), 2, true, true);
-      rigAcc.add(mast, trs(0, depth * 0.42, -len * 0.06, 0), w);
-      rigAcc.add(bevelBox(0.09, 0.09, len * 0.34, 0.02, 4), trs(0, depth * 0.42 + len * 0.2, -len * 0.2, 0), w);
-    }
-    return { hull: hullAcc.build(), rig: rigAcc.build() };
-  }
-  function bollardGeo() {
-    const acc = new GeoAccum();
-    const w = new Color(1, 1, 1);
-    const body = loft((t, o) => o.set(0, t * 0.62, 0), 6, 12, (t) => 0.16 - t * 0.035 + Math.pow(t, 6) * 0.02, 1.4, true, false);
-    acc.add(body, trs(0, 0, 0, 0), w);
-    const head = loft((t, o) => o.set(0, 0.6 + t * 0.16, 0), 5, 12, (t) => 0.145 + Math.sin(t * Math.PI) * 0.075, 1.2, false, true);
-    acc.add(head, trs(0, 0, 0, 0), w);
-    acc.add(loft((t, o) => o.set(0, t * 0.07, 0), 2, 12, () => 0.24, 1, true, true), trs(0, 0, 0, 0), new Color(0.85, 0.85, 0.85));
-    return acc.build();
-  }
-  function crateGeo(rng) {
-    const acc = new GeoAccum();
-    const w = 0.6 + rng() * 0.35, h = 0.42 + rng() * 0.3, d = 0.5 + rng() * 0.3;
-    acc.add(bevelBox(w, h, d, 0.02, 1.8), trs(0, h / 2, 0, 0), new Color(1, 1, 1));
-    const c2 = new Color(0.86, 0.82, 0.74);
-    for (const s of [-1, 1]) {
-      acc.add(bevelBox(w + 0.03, 0.07, 0.06, 0.012, 4), trs(0, h * (0.5 + s * 0.34), d / 2, 0), c2);
-      acc.add(bevelBox(0.06, h, 0.06, 0.012, 4), trs(s * (w / 2 - 0.04), h / 2, d / 2, 0), c2);
-    }
-    return acc.build();
-  }
-  function barrelGeo() {
-    const acc = new GeoAccum();
-    acc.add(loft((t, o) => o.set(0, t * 0.82, 0), 8, 14, (t) => 0.26 + Math.sin(t * Math.PI) * 0.055, 2, true, true), trs(0, 0, 0, 0), new Color(1, 1, 1));
-    for (const y of [0.16, 0.41, 0.66]) acc.add(loft((t, o) => o.set(0, y + t * 0.05, 0), 1, 14, () => 0.29, 1.5), trs(0, 0, 0, 0), new Color(0.5, 0.44, 0.36));
-    return acc.build();
-  }
-  function netGeo(w, h) {
-    const nx = 8, ny = 6;
-    const pos = [], uv = [], idx = [];
-    for (let j = 0; j <= ny; j++)
-      for (let i = 0; i <= nx; i++) {
-        const u = i / nx, v2 = j / ny;
-        const sag = Math.sin(u * Math.PI) * 0.25 * v2;
-        pos.push((u - 0.5) * w, -v2 * h - sag, Math.sin(u * Math.PI * 2) * 0.12 * v2);
-        uv.push(u * 3, v2 * 3);
-      }
-    for (let j = 0; j < ny; j++)
-      for (let i = 0; i < nx; i++) {
-        const a = j * (nx + 1) + i;
-        idx.push(a, a + nx + 1, a + 1, a + 1, a + nx + 1, a + nx + 2);
-      }
-    const g = new BufferGeometry();
-    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
-    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
-    g.setIndex(idx);
-    g.computeVertexNormals();
-    return g;
-  }
-  function ropeGeo(a, b, sag, radius = 0.035) {
-    return loft(
-      (t, o) => {
-        o.lerpVectors(a, b, t);
-        o.y -= Math.sin(t * Math.PI) * sag;
-      },
-      10,
-      5,
-      () => radius,
-      1
-    );
-  }
-  function tyreGeo() {
-    const acc = new GeoAccum();
-    const tor = new TorusGeometry(0.34, 0.13, 6, 14);
-    tor.rotateX(Math.PI / 2);
-    acc.add(tor, trs(0, 0.13, 0, 0), new Color(1, 1, 1));
-    const block = plainBox(0.06, 0.055, 0.16, 6);
-    for (let i = 0; i < 10; i++) {
-      const a = i / 10 * Math.PI * 2;
-      acc.add(block, trs(Math.cos(a) * 0.46, 0.13, Math.sin(a) * 0.46, -a), new Color(0.8, 0.8, 0.8));
-    }
-    return acc.build();
-  }
-  function parasolGeo() {
-    const pole = loft((t, o) => o.set(0, t * 2.3, 0), 3, 7, (t) => 0.045 - t * 0.012, 1, true, true);
-    const segs = 16, rows = 3;
-    const pos = [], uv = [], idx = [];
-    for (let j = 0; j <= rows; j++) {
-      const v2 = j / rows;
-      for (let i = 0; i <= segs; i++) {
-        const u = i / segs;
-        const a = u * Math.PI * 2;
-        const rib = Math.abs(u * 8 % 1 - 0.5) * 2;
-        const r = v2 * 1.35 * (1 + (1 - rib) * 0.035 * v2);
-        pos.push(Math.cos(a) * r, 2.3 - v2 * v2 * 0.44 - (1 - rib) * 0.05 * v2, Math.sin(a) * r);
-        uv.push(u * 2, v2);
-      }
-    }
-    for (let j = 0; j < rows; j++)
-      for (let i = 0; i < segs; i++) {
-        const a = j * (segs + 1) + i;
-        idx.push(a, a + 1, a + segs + 1, a + 1, a + segs + 2, a + segs + 1);
-      }
-    const canopy = new BufferGeometry();
-    canopy.setAttribute("position", new Float32BufferAttribute(pos, 3));
-    canopy.setAttribute("uv", new Float32BufferAttribute(uv, 2));
-    canopy.setIndex(idx);
-    canopy.computeVertexNormals();
-    return { pole, canopy };
-  }
-  function deckchairGeo() {
-    const acc = new GeoAccum();
-    const w = new Color(1, 1, 1);
-    for (const s of [-1, 1]) {
-      acc.add(bevelBox(0.05, 1.06, 0.05, 0.012, 6), trs(s * 0.28, 0.44, -0.16, 0, 1, 1, 1, -0.5), w);
-      acc.add(bevelBox(0.05, 0.92, 0.05, 0.012, 6), trs(s * 0.28, 0.3, 0.22, 0, 1, 1, 1, 0.66), w);
-    }
-    acc.add(bevelBox(0.62, 0.05, 0.05, 0.012, 6), trs(0, 0.02, -0.42, 0), w);
-    acc.add(bevelBox(0.62, 0.05, 0.05, 0.012, 6), trs(0, 0.02, 0.42, 0), w);
-    const clothG = new PlaneGeometry(0.56, 1.25, 1, 5);
-    const p = clothG.getAttribute("position");
-    for (let i = 0; i < p.count; i++) {
-      const v2 = p.getY(i) / 1.25 + 0.5;
-      p.setXYZ(i, p.getX(i), 0.16 + v2 * 0.62 - Math.sin(v2 * Math.PI) * 0.06, -0.42 + v2 * 0.72);
-    }
-    clothG.computeVertexNormals();
-    return { frame: acc.build(), cloth: clothG };
-  }
-  function marshalGeo() {
-    const acc = new GeoAccum();
-    const w = new Color(1, 1, 1);
-    acc.add(bevelBox(0.9, 1.1, 0.7, 0.04, 1.2), trs(0, 0.55, 0, 0), w);
-    acc.add(bevelBox(1.06, 0.09, 0.86, 0.02, 1.6), trs(0, 1.14, 0, 0), new Color(0.85, 0.85, 0.85));
-    acc.add(loft((t, o) => o.set(0, t * 2.5, 0), 3, 7, () => 0.045, 1, true, true), trs(0.5, 1.1, 0.28, 0), w);
-    const flag = new PlaneGeometry(1, 0.62, 8, 3);
-    flag.translate(0.5, 0, 0);
-    flag.rotateY(Math.PI / 2);
-    flag.translate(0.5, 3.3, 0.28);
-    return { post: acc.build(), flag };
-  }
-  function bannerArchGeo(span, height) {
-    const acc = new GeoAccum();
-    const w = new Color(1, 1, 1);
-    for (const s of [-1, 1]) {
-      const x = s * span / 2;
-      acc.add(bevelBox(0.75, height, 0.75, 0.05, 1), trs(x, height / 2, 0, 0), w);
-      acc.add(bevelBox(1.15, 0.24, 1.15, 0.04, 1.2), trs(x, 0.12, 0, 0), new Color(0.86, 0.86, 0.86));
-      acc.add(bevelBox(1, 0.2, 1, 0.04, 1.2), trs(x, height + 0.1, 0, 0), new Color(0.9, 0.9, 0.9));
-      acc.add(bevelBox(0.16, 2.2, 0.16, 0.03, 3), trs(x - s * 0.7, height - 1, 0, 0, 1, 1, 1, 0, s * 0.5), w);
-    }
-    const chord = 0.34;
-    for (const y of [height + 0.28, height + 1.42]) acc.add(bevelBox(span + 1.6, chord, 0.5, 0.05, 0.35), trs(0, y, 0, 0), w);
-    const webN = Math.max(6, Math.round(span / 2.2));
-    for (let i = 0; i <= webN; i++) {
-      const x = -((span + 1) / 2) + i / webN * (span + 1);
-      acc.add(bevelBox(0.14, 1.34, 0.34, 0.03, 2.4), trs(x, height + 0.85, 0, 0, 1, 1, 1, 0, (i % 2 ? 1 : -1) * 0.62), new Color(0.92, 0.92, 0.92));
-    }
-    acc.add(bevelBox(span + 1.2, 0.2, 0.4, 0.03, 2), trs(0, height + 2.2, 0, 0), new Color(0.9, 0.9, 0.9));
-    const banner = new PlaneGeometry(span + 1.2, 2.8, 14, 3);
-    banner.translate(0, height + 0.78, 0.34);
-    bannerUvs(banner);
-    return { struct: acc.build(), banner };
-  }
-  function bannerUvs(g) {
-    const uv = g.getAttribute("uv");
-    const n = uv.count;
-    const uv1 = new Float32Array(n * 2);
-    for (let i = 0; i < n; i++) {
-      const u = uv.getX(i);
-      const v2 = uv.getY(i);
-      uv1[i * 2] = u;
-      uv1[i * 2 + 1] = 0.752 + v2 * 0.246;
-      uv.setXY(i, 1 - v2, u);
-    }
-    uv.needsUpdate = true;
-    g.setAttribute("uv1", new BufferAttribute(uv1, 2));
-  }
-  function grandstandGeo(len, rows) {
-    const acc = new GeoAccum();
-    const w = new Color(1, 1, 1);
-    const seats = [];
-    const rowH = 0.52, rowD = 0.82;
-    for (let r = 0; r < rows; r++) {
-      const y = r * rowH;
-      const z = -r * rowD;
-      acc.add(bevelBox(len, rowH, rowD, 0.03, 0.35), trs(0, y + rowH / 2, z, 0), r % 2 ? new Color(0.92, 0.9, 0.86) : new Color(0.84, 0.82, 0.78));
-      acc.add(bevelBox(len, 0.34, 0.09, 0.02, 0.9), trs(0, y + rowH + 0.17, z - rowD * 0.44, 0), new Color(0.78, 0.8, 0.84));
-      seats.push({ x: 0, y: y + rowH, z });
-    }
-    const totalD = rows * rowD;
-    acc.add(bevelBox(len + 0.6, rows * rowH + 1.4, 0.35, 0.05, 0.4), trs(0, (rows * rowH + 1.4) / 2, -totalD - 0.1, 0), w);
-    const capH = rows * rowH + 3.4;
-    for (let i = 0; i <= 6; i++) {
-      const x = -len / 2 + i / 6 * len;
-      acc.add(bevelBox(0.22, capH, 0.22, 0.03, 3), trs(x, capH / 2, 0.5, 0), w);
-    }
-    acc.add(bevelBox(len + 1.2, 0.22, totalD + 1.6, 0.04, 0.45), trs(0, capH + 0.6, -totalD / 2 + 0.4, 0, 1, 1, 1, 0.08), new Color(0.9, 0.88, 0.84));
-    acc.add(bevelBox(len + 1.2, 0.34, 0.24, 0.03, 2), trs(0, capH + 0.42, 0.9, 0), new Color(0.86, 0.4, 0.36));
-    for (const s of [-1, 1]) acc.add(bevelBox(0.3, rows * rowH + 0.6, totalD, 0.04, 0.45), trs(s * len / 2, rows * rowH / 2, -totalD / 2, 0), w);
-    return { struct: acc.build(), seats };
-  }
-  function bellTowerGeo(rng, base, h) {
-    const wall = new GeoAccum();
-    const trim = new GeoAccum();
-    const roof = new GeoAccum();
-    const white = new Color(1, 1, 1);
-    const shaftH = h * 0.74;
-    wall.add(bevelBox(base, shaftH, base, 0.07, 0.42), trs(0, shaftH / 2, 0, 0), white, (_x2, y) => lerp4(0.4, 1, smoothstep4(0, 2.2, y)));
-    for (let i = 1; i <= 3; i++) {
-      const y = shaftH * i / 4;
-      trim.add(bevelBox(base + 0.22, 0.16, base + 0.22, 0.035, 0.9), trs(0, y, 0, 0), new Color(14668732));
-    }
-    for (let i = 0; i < 3; i++) {
-      const y = shaftH * (0.24 + i * 0.22);
-      for (const s of [-1, 1]) {
-        wall.add(new PlaneGeometry(0.28, 1, 1, 1), trs(s * base / 2 + s * 6e-3, y, 0, s > 0 ? Math.PI / 2 : -Math.PI / 2), new Color(2763312));
-        wall.add(new PlaneGeometry(0.28, 1, 1, 1), trs(0, y, s * base / 2 + s * 6e-3, s > 0 ? 0 : Math.PI), new Color(2763312));
-      }
-    }
-    const belH = h * 0.16;
-    const belW = base + 0.5;
-    const py2 = shaftH;
-    trim.add(bevelBox(belW + 0.3, 0.2, belW + 0.3, 0.04, 0.9), trs(0, py2 + 0.1, 0, 0), new Color(14997954));
-    const pier = 0.42;
-    for (const sx of [-1, 1])
-      for (const sz of [-1, 1]) {
-        wall.add(bevelBox(pier, belH, pier, 0.04, 0.9), trs(sx * (belW - pier) / 2, py2 + belH / 2 + 0.2, sz * (belW - pier) / 2, 0), white, () => 0.9);
-      }
-    for (const s of [-1, 1]) {
-      wall.add(new PlaneGeometry(belW - pier * 1.4, belH * 0.82, 1, 1), trs(0, py2 + belH * 0.55, s * (belW - pier) / 2 - s * 0.02, s > 0 ? 0 : Math.PI), new Color(2367266));
-      wall.add(new PlaneGeometry(belW - pier * 1.4, belH * 0.82, 1, 1), trs(s * (belW - pier) / 2 - s * 0.02, py2 + belH * 0.55, 0, s * Math.PI / 2), new Color(2367266));
-    }
-    wall.add(loft((t, o) => o.set(0, -t * 0.5, 0), 4, 8, (t) => 0.1 + Math.pow(t, 1.6) * 0.2, 1, false, true), trs(0, py2 + belH * 0.82, 0, 0), new Color(7166516));
-    const capH = h * 0.1;
-    trim.add(bevelBox(belW + 0.44, 0.18, belW + 0.44, 0.04, 0.9), trs(0, py2 + belH + 0.29, 0, 0), new Color(14997954));
-    const cap = loft((t, o) => o.set(0, t * capH, 0), 2, 4, (t) => (1 - t) * (belW + 0.5) * 0.72, 1.6, false, false);
-    cap.rotateY(Math.PI / 4);
-    roof.add(cap, trs(0, py2 + belH + 0.38, 0, 0), new Color().setHSL(0.04, 0.2, 0.74));
-    trim.add(loft((t, o) => o.set(0, t * 1.1, 0), 2, 5, (t) => 0.06 * (1 - t * 0.6), 1, true, true), trs(0, py2 + belH + capH + 0.38, 0, 0), new Color(13615268));
-    void rng;
-    return { wall: wall.build(), trim: trim.build(), roof: roof.build(), height: py2 + belH + capH + 1.5 };
-  }
-  function stallGeo(rng) {
-    const acc = new GeoAccum();
-    const w = 2.6 + rng() * 1.1;
-    const d = 1.7 + rng() * 0.5;
-    const hh = 2.15 + rng() * 0.25;
-    const white = new Color(1, 1, 1);
-    for (const sx of [-1, 1])
-      for (const sz of [-1, 1]) acc.add(bevelBox(0.1, hh, 0.1, 0.02, 3), trs(sx * (w - 0.2) / 2, hh / 2, sz * (d - 0.2) / 2, 0), white);
-    acc.add(bevelBox(w, 0.12, d, 0.025, 1.1), trs(0, 0.95, 0, 0), new Color(0.88, 0.84, 0.76));
-    acc.add(bevelBox(w - 0.2, 0.85, 0.1, 0.02, 1.1), trs(0, 0.5, (d - 0.1) / 2, 0), new Color(0.8, 0.76, 0.68));
-    for (let i = 0; i < 3; i++) {
-      const s = 0.3 + rng() * 0.14;
-      acc.add(bevelBox(s, s * 0.7, s * 0.8, 0.02, 2), trs(-w / 2 + 0.4 + i * (w / 3.4), 1.06 + s * 0.7 / 2, (rng() - 0.5) * 0.4, rng() * 3), new Color(0.9, 0.78, 0.6));
-    }
-    acc.add(bevelBox(w + 0.16, 0.08, 0.1, 0.02, 2), trs(0, hh, (d - 0.2) / 2, 0), white);
-    const can = new GeoAccum();
-    const sl = Math.hypot(d / 2 + 0.28, 0.34);
-    for (const s of [-1, 1]) {
-      const g = new PlaneGeometry(w + 0.5, sl, 1, 1);
-      g.rotateX(-Math.PI / 2);
-      can.add(g, trs(0, hh + 0.16 - 0.17, s * (d / 2 + 0.28) / 2, 0, 1, 1, 1, -s * 0.62 / 1), white);
-    }
-    const canopy = can.build();
-    return { frame: acc.build(), canopy };
-  }
-  function tentGeo(rng) {
-    const acc = new GeoAccum();
-    const w = 2.8 + rng() * 1.4;
-    const d = 3.4 + rng() * 1.6;
-    const hh = 1.5 + rng() * 0.5;
-    const wall = 0.6 + rng() * 0.35;
-    const white = new Color(1, 1, 1);
-    acc.add(bevelBox(w, wall, d, 0.04, 0.55), trs(0, wall / 2, 0, 0), white, (_x2, y) => lerp4(0.5, 1, smoothstep4(0, 0.8, y)));
-    const sl = Math.hypot(w / 2 + 0.2, hh);
-    for (const s of [-1, 1]) {
-      const g = new PlaneGeometry(sl, d + 0.4, 1, 1);
-      g.rotateX(-Math.PI / 2);
-      g.rotateZ(s * Math.atan2(hh, w / 2 + 0.2));
-      g.translate(-s * (w / 2 + 0.2) / 2, wall + hh / 2, 0);
-      acc.add(g, trs(0, 0, 0, 0), new Color(0.94, 0.92, 0.88));
-    }
-    for (const s of [-1, 1]) {
-      const t = new BufferGeometry();
-      const x = w / 2 + 0.2;
-      t.setAttribute("position", new Float32BufferAttribute(s > 0 ? [-x, wall, 0, x, wall, 0, 0, wall + hh, 0] : [x, wall, 0, -x, wall, 0, 0, wall + hh, 0], 3));
-      t.setAttribute("normal", new Float32BufferAttribute([0, 0, s, 0, 0, s, 0, 0, s], 3));
-      t.setAttribute("uv", new Float32BufferAttribute([0, 0, 1, 0, 0.5, 1], 2));
-      acc.add(t, trs(0, 0, s * (d + 0.4) / 2, 0), new Color(0.8, 0.78, 0.75));
-    }
-    return { body: acc.build() };
-  }
-  function buoyGeo() {
-    const acc = new GeoAccum();
-    acc.add(loft((t, o) => o.set(0, -0.4 + t * 1.3, 0), 5, 8, (t) => Math.sin((0.12 + t * 0.78) * Math.PI) * 0.42, 1.4, true, true), trs(0, 0, 0, 0), new Color(1, 1, 1));
-    acc.add(bevelBox(0.06, 1.5, 0.06, 0.015, 3), trs(0, 1.4, 0, 0), new Color(0.8, 0.8, 0.84));
-    acc.add(loft((t, o) => o.set(0, t * 0.34, 0), 2, 4, (tt) => (1 - tt) * 0.2, 1, false, false), trs(0, 1.95, 0, 0), new Color(0.2, 0.2, 0.24));
-    return acc.build();
-  }
-  function startLightsGeo(span) {
-    const acc = new GeoAccum();
-    const lens = new GeoAccum();
-    const white = new Color(1, 1, 1);
-    const n = 5;
-    const wBox = Math.min(0.78, span * 0.5 / n);
-    acc.add(bevelBox(wBox * n * 1.35, 0.16, 0.34, 0.03, 1.4), trs(0, 0.42, 0, 0), new Color(0.28, 0.28, 0.32));
-    for (let i = 0; i < n; i++) {
-      const x = (i - (n - 1) / 2) * wBox * 1.3;
-      acc.add(bevelBox(wBox, wBox * 1.05, 0.3, 0.035, 1.6), trs(x, 0, 0, 0), new Color(0.22, 0.22, 0.26));
-      acc.add(bevelBox(wBox * 1.1, 0.1, 0.42, 0.02, 2), trs(x, wBox * 0.56, 0.06, 0, 1, 1, 1, 0.25), new Color(0.18, 0.18, 0.21));
-      const g = new CircleGeometry(wBox * 0.34, 12);
-      lens.add(g, trs(x, 0, 0.17, 0), white);
-    }
-    return { frame: acc.build(), lens: lens.build() };
-  }
-  function aFrameSignGeo() {
-    const acc = new GeoAccum();
-    const pan = new GeoAccum();
-    const white = new Color(1, 1, 1);
-    const hh = 1.25;
-    const wdt = 1.9;
-    for (const s of [-1, 1]) {
-      for (const sx of [-1, 1]) acc.add(bevelBox(0.08, hh, 0.08, 0.02, 3), trs(sx * wdt / 2, hh / 2, s * 0.3, 0, 1, 1, 1, -s * 0.42 / 1), white);
-      acc.add(bevelBox(wdt + 0.1, 0.07, 0.07, 0.015, 2), trs(0, 0.14, s * 0.55, 0), new Color(0.85, 0.85, 0.85));
-      const g = new PlaneGeometry(wdt * 0.94, hh * 0.72, 1, 1);
-      g.rotateX(s > 0 ? 0.42 : -0.42);
-      g.translate(0, hh * 0.56, s * 0.24);
-      if (s < 0) g.rotateY(Math.PI);
-      pan.add(g, trs(0, 0, 0, 0), s > 0 ? white : new Color(0.9, 0.9, 0.9));
-    }
-    return { frame: acc.build(), panel: pan.build() };
-  }
-  function wallSignGeo() {
-    const acc = new GeoAccum();
-    const pan = new GeoAccum();
-    const white = new Color(1, 1, 1);
-    acc.add(bevelBox(3.2, 0.1, 0.12, 0.02, 2), trs(0, 1.62, 0, 0), white);
-    acc.add(bevelBox(3.2, 0.1, 0.12, 0.02, 2), trs(0, 0.72, 0, 0), white);
-    for (const s of [-1, 1]) acc.add(bevelBox(0.1, 1.15, 0.24, 0.02, 2), trs(s * 1.5, 1.17, -0.1, 0), new Color(0.86, 0.86, 0.86));
-    const g = new PlaneGeometry(3.1, 0.82, 1, 1);
-    g.translate(0, 1.17, 0.07);
-    pan.add(g, trs(0, 0, 0, 0), white);
-    return { frame: acc.build(), panel: pan.build() };
-  }
-  function buntingFlagGeo() {
-    const g = new BufferGeometry();
-    const w = 0.26, hh = 0.36;
-    g.setAttribute("position", new Float32BufferAttribute([-w / 2, 0, 0, w / 2, 0, 0, 0, -hh, 0], 3));
-    g.setAttribute("normal", new Float32BufferAttribute([0, 0, 1, 0, 0, 1, 0, 0, 1], 3));
-    g.setAttribute("uv", new Float32BufferAttribute([0, 0, 0, 1, 1, 0.5], 2));
-    return g;
-  }
-  function spectatorGeo(variant = 0) {
-    const acc = new GeoAccum();
-    const skin = new Color(1, 1, 1);
-    const dark = new Color(0.42, 0.4, 0.44);
-    const white = new Color(1, 1, 1);
-    const child = variant === 2;
-    const sc = child ? 0.72 : 1;
-    const build = 1 + (variant === 3 ? 0.14 : 0) - (child ? 0.06 : 0);
-    const torso = loft(
-      (t, o) => o.set(0, (0.62 + t * 0.56) * sc, 0),
-      4,
-      6,
-      // shoulder taper: widest at the chest, necked in at the collar
-      (t) => (0.185 + Math.sin(Math.min(t * 1.35, 1) * Math.PI) * 0.045 - Math.pow(t, 3) * 0.07) * build * sc,
-      1,
-      true,
-      true
-    );
-    setUv(torso, 1, 0.5);
-    acc.add(torso, trs(0, 0, 0, 0), white);
-    const legG = loft((t, o) => o.set(0, t * 0.66 * sc, 0), 2, 5, (t) => (0.078 - t * 0.014) * sc, 1, true, true);
-    setUv(legG, 0, 0.4);
-    const stance = variant === 3 ? 0.125 : 0.105;
-    for (const s of [-1, 1]) acc.add(legG, trs(s * stance * sc, 0, 0, 0, 1, 1, 1, 0, s * 0.05), dark);
-    const shoulderX = 0.235 * sc * build;
-    if (variant === 1) {
-      const sleeve = loft((t, o) => o.set(0, (1.06 + t * 0.3) * sc, 0), 1, 4, () => 0.054 * sc, 1, true, true);
-      setUv(sleeve, 1, 0.96);
-      const fore = loft((t, o) => o.set(0, (1.34 + t * 0.4) * sc, 0), 1, 4, (t) => (0.048 - t * 8e-3) * sc, 1, true, true);
-      setUv(fore, 0, 0.96);
-      for (const s of [-1, 1]) {
-        acc.add(sleeve, trs(s * shoulderX, 0, 0, 0, 1, 1, 1, 0, s * 0.24), white);
-        acc.add(fore, trs(s * (shoulderX + 0.09 * sc), 0, 0, 0, 1, 1, 1, 0, s * 0.12), skin);
-      }
-    } else {
-      const swing = variant === 3 ? 0.34 : 0.26;
-      const sleeve = loft((t, o) => o.set(0, (1.12 - t * 0.26) * sc, 0), 1, 4, () => 0.057 * sc, 1, true, true);
-      setUv(sleeve, 1, 0.96);
-      const fore = loft((t, o) => o.set(0, (0.9 - t * 0.24) * sc, 0), 1, 4, (t) => (0.046 - t * 6e-3) * sc, 1, true, true);
-      setUv(fore, 0, 0.96);
-      for (const s of [-1, 1]) {
-        acc.add(sleeve, trs(s * shoulderX, 0, 0, 0, 1, 1, 1, 0, s * swing), white);
-        acc.add(fore, trs(s * (shoulderX + 0.075 * sc), 0, 0.02 * sc, 0, 1, 1, 1, -0.22, s * (swing * 0.55)), skin);
-      }
-    }
-    const head = loft((t, o) => o.set(0, (1.2 + t * 0.2) * sc, 0), 2, 6, (t) => Math.sin((0.18 + t * 0.72) * Math.PI) * 0.115 * sc, 1, true, true);
-    setUv(head, 0, 0.5);
-    acc.add(head, trs(0, 0, 0, 0), skin);
-    if (variant === 3) {
-      const brim = loft((t, o) => o.set(0, (1.34 + t * 0.05) * sc, 0), 1, 8, (t) => lerp4(0.26, 0.2, t) * sc, 1, true, true);
-      setUv(brim, 1, 0.5);
-      acc.add(brim, trs(0, 0, 0, 0), white);
-      const crown = loft((t, o) => o.set(0, (1.37 + t * 0.14) * sc, 0), 2, 6, (t) => 0.108 * (1 - t * 0.35) * sc, 1, false, true);
-      setUv(crown, 1, 0.5);
-      acc.add(crown, trs(0, 0, 0, 0), white);
-    } else if (!child) {
-      const cap = loft((t, o) => o.set(0, (1.33 + t * 0.09) * sc, 0), 2, 6, (t) => 0.115 * Math.cos(t * 1.2) * sc, 1, false, true);
-      setUv(cap, 1, 0.5);
-      acc.add(cap, trs(0, 0, 0, 0), white);
-    }
-    const g = acc.build();
-    const pa = g.getAttribute("position");
-    const uv1 = new Float32Array(pa.count * 2);
-    for (let i = 0; i < pa.count; i++) {
-      const x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i);
-      const a = Math.atan2(z, x) / (Math.PI * 2) + 0.5;
-      uv1[i * 2] = Math.abs(a * 2 - 1);
-      uv1[i * 2 + 1] = clamp3(y / 1.62, 0, 1);
-    }
-    g.setAttribute("uv1", new BufferAttribute(uv1, 2));
-    return g;
-  }
-  function setUv(g, x, y) {
-    const uv = g.getAttribute("uv");
-    for (let i = 0; i < uv.count; i++) uv.setXY(i, x, y);
-    uv.needsUpdate = true;
-  }
-  function gullGeo() {
-    const pos = [], uv = [], idx = [];
-    const push = (x, y, z, u, v2) => {
-      pos.push(x, y, z);
-      uv.push(u, v2);
-    };
-    const span = 0.62;
-    const pts = [
-      [-1, 0],
-      [-0.55, 0.06],
-      [0, 0.02],
-      [0.55, 0.06],
-      [1, 0]
-    ];
-    for (let i = 0; i < pts.length; i++) {
-      const [sx, sz] = pts[i];
-      push(sx * span, 0, sz * 0.1 - 0.03, (sx + 1) / 2, 0);
-      push(sx * span, 0, sz * 0.1 + 0.14 - Math.abs(sx) * 0.1, (sx + 1) / 2, 1);
-    }
-    for (let i = 0; i < pts.length - 1; i++) {
-      const a = i * 2;
-      idx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3);
-    }
-    const base = pos.length / 3;
-    const bl = 0.3;
-    push(0, 0, -bl, 0.5, 0.5);
-    push(-0.045, 0.02, 0, 0.5, 0.5);
-    push(0.045, 0.02, 0, 0.5, 0.5);
-    push(0, -0.02, 0.06, 0.5, 0.5);
-    push(0, 0.01, bl * 0.7, 0.5, 0.5);
-    idx.push(base, base + 1, base + 2, base + 1, base + 4, base + 2, base + 1, base + 3, base + 4, base + 2, base + 4, base + 3, base, base + 3, base + 1, base, base + 2, base + 3);
-    const g = new BufferGeometry();
-    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
-    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
-    g.setIndex(idx);
-    g.computeVertexNormals();
-    return g;
-  }
-  function lighthouseGeo(baseY, seaY) {
-    const stoneA = new GeoAccum();
-    const trimA = new GeoAccum();
-    const w = new Color(1, 1, 1);
-    const plinthH = Math.max(2.5, baseY - seaY + 3);
-    const plinth = loft((t, o) => o.set(0, -plinthH + t * plinthH, 0), 5, 10, (t, a) => (7.5 - t * 3.4) * (1 + Math.sin(a * 3 + t * 2) * 0.09), 3, false, true);
-    stoneA.add(plinth, trs(0, 0, 0, 0), new Color(0.86, 0.82, 0.74));
-    const towerH = 15.5;
-    const tower = loft((t, o) => o.set(0, t * towerH, 0), 12, 16, (t) => 2.35 - Math.pow(t, 0.85) * 1.15, 4, true, false);
-    stoneA.add(tower, trs(0, 0, 0, 0), w);
-    trimA.add(loft((t, o) => o.set(0, towerH + t * 0.42, 0), 3, 16, (t) => 1.75 - t * 0.25, 3, false, true), trs(0, 0, 0, 0), new Color(0.94, 0.9, 0.84));
-    for (let i = 0; i < 16; i++) {
-      const a = i / 16 * Math.PI * 2;
-      trimA.add(bevelBox(0.07, 0.9, 0.07, 0.015, 5), trs(Math.cos(a) * 1.6, towerH + 0.86, Math.sin(a) * 1.6, -a), new Color(0.8, 0.3, 0.28));
-    }
-    trimA.add(loft((t, o) => o.set(0, towerH + 1.3 + t * 0.12, 0), 1, 16, () => 1.66, 3, false, false), trs(0, 0, 0, 0), new Color(0.8, 0.3, 0.28));
-    const lampY = towerH + 1.4;
-    const glass = loft((t, o) => o.set(0, lampY + t * 2, 0), 2, 12, () => 1.15, 2, false, false);
-    trimA.add(loft((t, o) => o.set(0, lampY + 2 + t * 1.05, 0), 4, 12, (t) => 1.3 * (1 - t * t), 2, false, true), trs(0, 0, 0, 0), new Color(0.8, 0.3, 0.28));
-    for (let i = 0; i < 8; i++) {
-      const a = i / 8 * Math.PI * 2;
-      trimA.add(bevelBox(0.09, 2, 0.09, 0.02, 4), trs(Math.cos(a) * 1.14, lampY + 1, Math.sin(a) * 1.14, -a), new Color(0.35, 0.34, 0.36));
-    }
-    return { stone: stoneA.build(), trim: trimA.build(), glass, lampY: lampY + 1 };
-  }
-  function windmillGeo() {
-    const towerA = new GeoAccum();
-    const trimA = new GeoAccum();
-    const w = new Color(1, 1, 1);
-    const H = 9.5;
-    towerA.add(loft((t, o) => o.set(0, t * H, 0), 10, 14, (t) => 3.1 - t * 1.25, 3, true, false), trs(0, 0, 0, 0), w);
-    for (let i = 0; i < 3; i++) {
-      const a = i * 2.1;
-      trimA.add(bevelBox(0.6, 0.85, 0.35, 0.03, 2), trs(Math.cos(a) * 2.35, 2.6 + i * 1.9, Math.sin(a) * 2.35, -a), new Color(0.4, 0.36, 0.34));
-    }
-    trimA.add(loft((t, o) => o.set(0, H + t * 2.4, 0), 6, 14, (t) => 2.05 * Math.pow(1 - t, 0.72), 3, false, true), trs(0, 0, 0, 0), new Color(0.78, 0.42, 0.3));
-    trimA.add(loft((t, o) => o.set(0, H - 0.1 + t * 0.22, 0), 1, 14, () => 2.2, 3, false, false), trs(0, 0, 0, 0), new Color(0.92, 0.88, 0.8));
-    const hubY = H + 1.35, hubZ = 2.3;
-    const rotorA = new GeoAccum();
-    rotorA.add(loft((t, o) => o.set(0, 0, -0.1 + t * 0.6), 3, 10, (t) => 0.34 - t * 0.1, 1.5, true, true), trs(0, 0, 0, 0), w);
-    for (let i = 0; i < 4; i++) {
-      const a = i / 4 * Math.PI * 2;
-      const ca = Math.cos(a), sa = Math.sin(a);
-      const L = 5.6;
-      rotorA.add(bevelBox(0.16, L, 0.16, 0.03, 3), trs(ca * L / 2, sa * L / 2, 0, 0, 1, 1, 1, 0, a - Math.PI / 2), w);
-      for (let k = 1; k <= 7; k++) {
-        const r = k / 8 * L;
-        rotorA.add(bevelBox(0.9, 0.07, 0.07, 0.015, 4), trs(ca * r, sa * r, 0.05, 0, 1, 1, 1, 0, a - Math.PI / 2), new Color(0.9, 0.9, 0.9));
-      }
-    }
-    const sail = new PlaneGeometry(0.95, 4.6, 3, 8);
-    sail.translate(0.55, 2.6, 0.14);
-    const suv = sail.getAttribute("uv");
-    for (let i = 0; i < suv.count; i++) suv.setXY(i, suv.getX(i) * 0.5, suv.getY(i) * 0.5);
-    return { tower: towerA.build(), trim: trimA.build(), rotor: rotorA.build(), sail, hubY, hubZ };
-  }
-  function landmassGeo(radius, height, seed, seaY, jag = 1, segs = 40, rings = 12) {
-    const rng = mulberry325(seed);
-    const n1 = createNoise2D(rng);
-    const pos = [], uv = [], idx = [];
-    const skirt = height * 0.6 + 40;
-    for (let j = 0; j <= rings; j++) {
-      const v2 = j / rings;
-      for (let i = 0; i <= segs; i++) {
-        const u = i / segs;
-        const a = u * Math.PI * 2;
-        const wob = 1 + n1(Math.cos(a) * 1.5, Math.sin(a) * 1.5) * 0.34 * jag + n1(Math.cos(a) * 4.1 + 9, Math.sin(a) * 4.1) * 0.14 * jag;
-        const r = radius * wob * Math.sqrt(Math.max(0, 1 - v2 * v2));
-        const ridge = n1(Math.cos(a) * 2.2 + 30, Math.sin(a) * 2.2) * 0.3 + n1(u * 7 + 51, v2 * 3) * 0.16;
-        const y = seaY + height * Math.pow(v2, 0.72) * (1 + ridge * jag);
-        pos.push(Math.cos(a) * r, j === 0 ? seaY - skirt : y, Math.sin(a) * r);
-        uv.push(u * 8, v2 * 5);
-      }
-    }
-    for (let j = 0; j < rings; j++)
-      for (let i = 0; i < segs; i++) {
-        const a = j * (segs + 1) + i;
-        idx.push(a, a + segs + 1, a + 1, a + 1, a + segs + 1, a + segs + 2);
-      }
-    const g = new BufferGeometry();
-    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
-    g.setAttribute("uv", new Float32BufferAttribute(uv, 2));
-    g.setIndex(idx);
-    g.computeVertexNormals();
-    return g;
-  }
-  function debrisGeo(rng) {
-    const acc = new GeoAccum();
-    const k = rng() * 3 | 0;
-    if (k === 0) {
-      const L = 0.5 + rng() * 1.1;
-      acc.add(loft((t, o) => o.set(0, 0, (t - 0.5) * L), 5, 6, (t) => 0.05 + Math.sin(t * Math.PI) * 0.035, 2, true, true), trs(0, 0.06, 0, rng() * 6), new Color(0.78, 0.72, 0.62));
-    } else if (k === 1) {
-      for (let i = 0; i < 4; i++) acc.add(bevelBox(0.12 + rng() * 0.14, 0.07 + rng() * 0.06, 0.12 + rng() * 0.12, 0.02, 4), trs((rng() - 0.5) * 0.4, 0.04, (rng() - 0.5) * 0.4, rng() * 6), new Color(0.9, 0.87, 0.8));
-    } else {
-      for (let i = 0; i < 5; i++) acc.add(bevelBox(0.22 + rng() * 0.2, 0.05, 0.1 + rng() * 0.1, 0.02, 4), trs((rng() - 0.5) * 0.5, 0.03, (rng() - 0.5) * 0.5, rng() * 6, 1, 1, 1, 0, rng() * 0.4), new Color(0.34, 0.36, 0.26));
-    }
-    return acc.build();
-  }
-  var PAL, lerp4, clamp3, smoothstep4, pick, TexLib, _lc, _nm, _v3, GeoAccum, InstSet, _mm, _mv, STATIC_CELL, PATCHES, SAP, MatLib2, _m2, _q2, _s, wallAOFor, ROOF_MULT;
-  var init_Props = __esm({
-    "src/src/world/Props.ts"() {
-      init_three_module();
-      init_simplex_noise();
-      init_Materials();
-      PAL = {
-        sand: 14928019,
-        grass: 7314247,
-        grassTip: 8893270,
-        seaDeep: 875130,
-        seaShallow: 4180420,
-        foam: 15661823,
-        stone: 11047546,
-        roofTile: 11887679,
-        skyWarm: 16765088,
-        kerbRed: 14697791,
-        kerbWhite: 15920352,
-        pastels: [15911328, 15246752, 16114352, 11126996, 14465240, 15784383, 13621696],
-        shutters: [4156276, 3104067, 9061427, 5922698, 7819311],
-        boatHulls: [15920352, 14697791, 3107744, 3104067, 16114352, 4144970],
-        clothes: [15920352, 11126996, 15246752, 16114352, 14465240, 10469544],
-        crowd: [14697791, 5227519, 16751918, 12606719, 15920352, 7314247, 16114352, 15246752, 3107744, 14465240],
-        skin: [1578e4, 14263672, 11104575, 7291942, 16243133]
-      };
-      lerp4 = (a, b, t) => a + (b - a) * t;
-      clamp3 = (v2, a, b) => v2 < a ? a : v2 > b ? b : v2;
-      smoothstep4 = (e0, e1, x) => {
-        const t = clamp3((x - e0) / (e1 - e0), 0, 1);
-        return t * t * (3 - 2 * t);
-      };
-      pick = (rng, arr) => arr[rng() * arr.length | 0];
-      TexLib = class {
-        constructor(renderer) {
-          __publicField(this, "cache", /* @__PURE__ */ new Map());
-          __publicField(this, "aniso");
-          __publicField(this, "alphaCache", /* @__PURE__ */ new Map());
-          this.aniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-        }
-        memo(key2, gen) {
-          let m = this.cache.get(key2);
-          if (!m) {
-            m = gen();
-            this.cache.set(key2, m);
-          }
-          return m;
-        }
-        // -- stucco / lime plaster: the village walls -----------------------------
-        plaster(size = 1024) {
-          return this.memo("plaster", () => {
-            const [c, g] = cv(size);
-            const h = new Float32Array(size * size);
-            const r = new Float32Array(size * size);
-            const img = g.createImageData(size, size);
-            const d = img.data;
-            for (let y = 0; y < size; y++) {
-              for (let x = 0; x < size; x++) {
-                const u = x / size, v2 = y / size;
-                const grain = fbm2(11, u, v2, 192, 192, 4);
-                const trowel = fbm2(23, u, v2, 8, 26, 3) * 0.9;
-                const blotch = fbm2(37, u, v2, 4, 4, 2);
-                const i = y * size + x;
-                h[i] = grain * 0.55 + trowel * 0.45;
-                const t = 0.5 + h[i] * 0.5;
-                const damp5 = smoothstep4(0.12, 0.34, blotch) * 0.14;
-                const rr2 = lerp4(0.9, 1, t) - damp5 * 0.9;
-                const gg = lerp4(0.875, 0.985, t) - damp5 * 0.75;
-                const bb = lerp4(0.83, 0.95, t) - damp5 * 0.5;
-                const o = i * 4;
-                d[o] = rr2 * 255;
-                d[o + 1] = gg * 255;
-                d[o + 2] = bb * 255;
-                d[o + 3] = 255;
-                r[i] = 0.62 + trowel * 0.16 + grain * 0.1 + damp5 * 1.2;
-              }
-            }
-            g.putImageData(img, 0, 0);
-            const rng = mulberry325(7717);
-            g.lineCap = "round";
-            for (let k = 0; k < 26; k++) {
-              let x = rng() * size, y = rng() * size, a = rng() * Math.PI * 2;
-              g.strokeStyle = `rgba(120,105,92,${0.18 + rng() * 0.22})`;
-              g.lineWidth = 0.7 + rng() * 1.3;
-              g.beginPath();
-              g.moveTo(x, y);
-              const steps = 12 + (rng() * 26 | 0);
-              for (let s = 0; s < steps; s++) {
-                a += (rng() - 0.5) * 0.9;
-                x += Math.cos(a) * 6;
-                y += Math.sin(a) * 6;
-                g.lineTo(x, y);
-                const ix = ((x | 0) + size) % size, iy = ((y | 0) + size) % size;
-                h[iy * size + ix] -= 0.5;
-              }
-              g.stroke();
-            }
-            return {
-              map: finish2(c, true, this.aniso),
-              normalMap: normalFromHeight(h, size, 26, this.aniso),
-              roughnessMap: greyFromField(r, size, this.aniso)
-            };
-          });
-        }
-        // -- terracotta barrel roof tiles ----------------------------------------
-        roofTile(size = 1024) {
-          return this.memo("roof", () => {
-            const [c, g] = cv(size);
-            const h = new Float32Array(size * size);
-            const r = new Float32Array(size * size);
-            const img = g.createImageData(size, size);
-            const d = img.data;
-            const cols = 8;
-            const rows = 10;
-            const rng = mulberry325(4242);
-            const jitter = new Float32Array(cols * rows * 3);
-            for (let i = 0; i < jitter.length; i++) jitter[i] = rng();
-            for (let y = 0; y < size; y++) {
-              const fv = y / size;
-              const rowF = fv * rows;
-              const row = Math.floor(rowF);
-              const rowT = rowF - row;
-              for (let x = 0; x < size; x++) {
-                const fu = x / size;
-                const off = row & 1 ? 0.5 : 0;
-                const colF = fu * cols + off;
-                const col = Math.floor(colF) % cols;
-                const ct = colF - Math.floor(colF);
-                const ji = row % rows * cols * 3 + col * 3;
-                const j0 = jitter[ji], j1 = jitter[ji + 1], j2 = jitter[ji + 2];
-                const slip = (j1 - 0.5) * 0.16;
-                const rowS = clamp3(rowT - slip, 0, 1);
-                const barrel = Math.sin(ct * Math.PI);
-                const lap = smoothstep4(0, 0.3, rowS);
-                const proud = j2 > 0.86 ? 0.16 : 0;
-                const broken = j0 > 0.975 ? 1 : 0;
-                const gap = Math.pow(barrel, 0.6) * (1 - broken * 0.72);
-                const i = y * size + x;
-                h[i] = gap * 0.9 + lap * 0.35 - (1 - lap) * 0.5 + proud + fbm2(41, fu, fv, 96, 96, 2, 0.5, size) * 0.09;
-                const shade = (0.55 + 0.45 * gap) * (0.62 + 0.38 * lap) * (1 - broken * 0.28);
-                const hueT = j0 * 0.5 + j1 * 0.2;
-                const val = 1 + (j2 - 0.5) * 0.3;
-                let rr2 = lerp4(0.62, 0.8, hueT) * shade * val;
-                let gg = lerp4(0.3, 0.42, hueT + (j1 - 0.5) * 0.12) * shade * val;
-                let bb = lerp4(0.21, 0.28, hueT * 0.8) * shade * val;
-                const moss = clamp3((1 - barrel) * 1.4 - 0.55 + (1 - lap) * 0.35, 0, 1) * (0.25 + j2 * 0.5) * smoothstep4(0.15, 0.6, fbm2(53, fu, fv, 8, 8, 2, 0.5, size) + 0.5);
-                rr2 = lerp4(rr2, 0.34, moss * 0.55);
-                gg = lerp4(gg, 0.38, moss * 0.55);
-                bb = lerp4(bb, 0.24, moss * 0.55);
-                const o = i * 4;
-                d[o] = clamp3(rr2, 0, 1) * 255;
-                d[o + 1] = clamp3(gg, 0, 1) * 255;
-                d[o + 2] = clamp3(bb, 0, 1) * 255;
-                d[o + 3] = 255;
-                r[i] = 0.55 + (1 - barrel) * 0.3 + j1 * 0.12 + moss * 0.15;
-              }
-            }
-            g.putImageData(img, 0, 0);
-            return {
-              map: finish2(c, true, this.aniso),
-              normalMap: normalFromHeight(h, size, 34, this.aniso),
-              roughnessMap: greyFromField(r, size, this.aniso)
-            };
-          });
-        }
-        // -- painted timber: shutters, doors, jetties, hulls, crates --------------
-        wood(size = 1024) {
-          return this.memo("wood", () => {
-            const [c, g] = cv(size);
-            const h = new Float32Array(size * size);
-            const r = new Float32Array(size * size);
-            const img = g.createImageData(size, size);
-            const d = img.data;
-            const planks = 6;
-            const rng = mulberry325(9091);
-            const pj = new Float32Array(planks * 2);
-            for (let i = 0; i < pj.length; i++) pj[i] = rng();
-            for (let y = 0; y < size; y++) {
-              for (let x = 0; x < size; x++) {
-                const u = x / size, v2 = y / size;
-                const pf = u * planks;
-                const p = Math.floor(pf) % planks;
-                const pt = pf - Math.floor(pf);
-                const edge = smoothstep4(0, 0.035, pt) * smoothstep4(1, 0.965, pt);
-                const grain = fbm2(61 + p * 7, u, v2, 96, 6, 4);
-                const fine = fbm2(71 + p * 5, u, v2, 256, 24, 2);
-                const i2 = y * size + x;
-                const gr = grain * 0.7 + fine * 0.3;
-                h[i2] = gr * 0.5 + (edge - 1) * 1.1;
-                const base = 0.86 + gr * 0.14;
-                const bright = base * lerp4(0.76, 1.08, pj[p * 2]) * lerp4(0.55, 1, edge);
-                const o = i2 * 4;
-                d[o] = clamp3(bright, 0, 1) * 255;
-                d[o + 1] = clamp3(bright * (0.97 - gr * 0.05), 0, 1) * 255;
-                d[o + 2] = clamp3(bright * (0.93 - gr * 0.09), 0, 1) * 255;
-                d[o + 3] = 255;
-                const sealed = pj[p * 2 + 1] < 0.42 ? 0.58 : 0.9;
-                r[i2] = sealed + Math.abs(gr) * 0.22 + (1 - edge) * 0.18 - 0.12;
-              }
-            }
-            g.putImageData(img, 0, 0);
-            return {
-              map: finish2(c, true, this.aniso),
-              normalMap: normalFromHeight(h, size, 22, this.aniso),
-              roughnessMap: greyFromField(r, size, this.aniso)
-            };
-          });
-        }
-        // -- weathered ashlar: quay walls, lighthouse base, plinths ---------------
-        stone(size = 1024) {
-          return this.memo("stone", () => {
-            const [c, g] = cv(size);
-            const h = new Float32Array(size * size);
-            const r = new Float32Array(size * size);
-            const img = g.createImageData(size, size);
-            const d = img.data;
-            const rows = 7;
-            const rng = mulberry325(3313);
-            const rowOff = [];
-            const blockJ = [];
-            for (let y = 0; y < rows; y++) {
-              rowOff.push(rng());
-              const cols = 4 + (rng() * 3 | 0);
-              const js = [];
-              for (let i = 0; i < cols * 3; i++) js.push(rng());
-              js.push(cols);
-              blockJ.push(js);
-            }
-            for (let y = 0; y < size; y++) {
-              const v2 = y / size;
-              const rf = v2 * rows;
-              const row = Math.floor(rf) % rows;
-              const rt = rf - Math.floor(rf);
-              const js = blockJ[row];
-              const cols = js[js.length - 1];
-              for (let x = 0; x < size; x++) {
-                const u = x / size;
-                const cf = u * cols + rowOff[row];
-                const col = Math.floor(cf) % cols;
-                const ct = cf - Math.floor(cf);
-                const m = 0.028;
-                const inBlock = smoothstep4(0, m, ct) * smoothstep4(1, 1 - m, ct) * smoothstep4(0, m * rows / cols, rt) * smoothstep4(1, 1 - m * rows / cols, rt);
-                const j0 = js[col * 3] ?? 0.5, j1 = js[col * 3 + 1] ?? 0.5, j2 = js[col * 3 + 2] ?? 0.5;
-                const rough = fbm2(83 + col * 13 + row * 29, u, v2, 128, 128, 4);
-                const wide = fbm2(97, u, v2, 6, 6, 3);
-                const i = y * size + x;
-                h[i] = inBlock * 1.85 - 0.6 + rough * 0.35 * inBlock;
-                const tone = lerp4(0.72, 1, j0) * (0.9 + rough * 0.2) * lerp4(0.72, 1, inBlock);
-                let rr2 = 0.66 * tone, gg = 0.575 * tone, bb = 0.48 * tone;
-                const damp5 = clamp3(wide * 1.6 + 0.25 - v2 * 0.7, 0, 1) * 0.35 * j1;
-                rr2 = lerp4(rr2, 0.32, damp5);
-                gg = lerp4(gg, 0.38, damp5);
-                bb = lerp4(bb, 0.28, damp5);
-                const o = i * 4;
-                d[o] = clamp3(rr2, 0, 1) * 255;
-                d[o + 1] = clamp3(gg, 0, 1) * 255;
-                d[o + 2] = clamp3(bb, 0, 1) * 255;
-                d[o + 3] = 255;
-                r[i] = 0.7 + rough * 0.2 + (1 - inBlock) * 0.2 - j2 * 0.12 + damp5 * 0.2;
-              }
-            }
-            g.putImageData(img, 0, 0);
-            return {
-              map: finish2(c, true, this.aniso),
-              normalMap: normalFromHeight(h, size, 40, this.aniso),
-              roughnessMap: greyFromField(r, size, this.aniso)
-            };
-          });
-        }
-        // -- painted / lacquered metal: bollards, rails, lamp posts, tyres --------
-        paintedMetal(size = 512) {
-          return this.memo("metal", () => {
-            const [c, g] = cv(size);
-            const h = new Float32Array(size * size);
-            const r = new Float32Array(size * size);
-            const img = g.createImageData(size, size);
-            const d = img.data;
-            for (let y = 0; y < size; y++) {
-              for (let x = 0; x < size; x++) {
-                const u = x / size, v2 = y / size;
-                const orange = fbm2(101, u, v2, 96, 96, 4);
-                const chip = clamp3(fbm2(103, u, v2, 24, 24, 3) * 2.4 - 0.85, 0, 1);
-                const i = y * size + x;
-                h[i] = orange * 0.5 - chip * 1.6;
-                const base = 0.94 + orange * 0.06;
-                const rust = chip * 0.8;
-                const o = i * 4;
-                d[o] = clamp3(lerp4(base, 0.45, rust), 0, 1) * 255;
-                d[o + 1] = clamp3(lerp4(base, 0.26, rust), 0, 1) * 255;
-                d[o + 2] = clamp3(lerp4(base, 0.18, rust), 0, 1) * 255;
-                d[o + 3] = 255;
-                r[i] = 0.3 + orange * 0.14 + rust * 0.55;
-              }
-            }
-            g.putImageData(img, 0, 0);
-            return {
-              map: finish2(c, true, this.aniso),
-              normalMap: normalFromHeight(h, size, 16, this.aniso),
-              roughnessMap: greyFromField(r, size, this.aniso)
-            };
-          });
-        }
-        /**
-         * 4x4 atlas of striped awning / parasol / sail canvas. Per-instance UV
-         * transform picks a cell, so all fabric in the world is one draw call and
-         * still shows six different stripe schemes.
-         */
-        fabricAtlas(size = 1024) {
-          return this.memo("fabric", () => {
-            const [c, g] = cv(size);
-            const cell = size / 4;
-            const rng = mulberry325(5150);
-            const schemes = [
-              ["#f2ece0", "#e0453f"],
-              ["#f2ece0", "#3f6b74"],
-              ["#f5e2b0", "#b5643f"],
-              ["#f2ece0", "#2f6ba0"],
-              ["#eaf0ea", "#2f5d43"],
-              ["#f2ece0", "#ff9d2e"],
-              ["#f0e4f0", "#dcb8d8"],
-              ["#f2ece0", "#f2ece0"]
-            ];
-            for (let cy = 0; cy < 4; cy++) {
-              for (let cx = 0; cx < 4; cx++) {
-                const idx = cy * 4 + cx;
-                const [a, b] = schemes[idx % schemes.length];
-                const x0 = cx * cell, y0 = cy * cell;
-                g.fillStyle = a;
-                g.fillRect(x0, y0, cell, cell);
-                const bands = 4 + idx % 4;
-                g.fillStyle = b;
-                for (let i = 0; i < bands; i++) {
-                  const w = cell / (bands * 2);
-                  g.fillRect(x0 + i * cell / bands + w * 0.5, y0, w, cell);
-                }
-                const grad = g.createLinearGradient(x0, y0, x0, y0 + cell);
-                grad.addColorStop(0, "rgba(255,240,215,0.22)");
-                grad.addColorStop(0.65, "rgba(0,0,0,0)");
-                grad.addColorStop(1, "rgba(60,45,35,0.20)");
-                g.fillStyle = grad;
-                g.fillRect(x0, y0, cell, cell);
-                for (let k = 0; k < 40; k++) {
-                  g.fillStyle = `rgba(90,72,55,${rng() * 0.05})`;
-                  g.beginPath();
-                  g.arc(x0 + rng() * cell, y0 + cell * (0.6 + rng() * 0.4), rng() * 9, 0, 7);
-                  g.fill();
-                }
-              }
-            }
-            const h = new Float32Array(size * size);
-            const r = new Float32Array(size * size);
-            for (let y = 0; y < size; y++)
-              for (let x = 0; x < size; x++) {
-                const i = y * size + x;
-                const weave = Math.sin(x * 1.9) * Math.sin(y * 1.9) * 0.4 + fbm2(107, x / size, y / size, 256, 256, 2) * 0.6;
-                h[i] = weave;
-                r[i] = 0.78 + weave * 0.12;
-              }
-            return {
-              map: finish2(c, true, this.aniso),
-              normalMap: normalFromHeight(h, size, 8, this.aniso),
-              roughnessMap: greyFromField(r, size, this.aniso)
-            };
-          });
-        }
-        /** 2 x 4 atlas of trackside sponsor boards. */
-        /**
-         * The start-line banner: course name, chequer flashes and a sponsor rule.
-         * §1 asks for a banner arch over the start line and a bare timber gantry is
-         * not one. 4:1 so the lettering is legible across the road.
-         */
-        bannerCloth(size = 1024) {
-          return this.memo("bannercloth", () => {
-            const [c, g] = cv(size);
-            const hh = size / 4;
-            g.fillStyle = "#e0453f";
-            g.fillRect(0, 0, size, hh);
-            const q = hh / 4;
-            for (let bx = 0; bx < 3; bx++)
-              for (let by = 0; by < 4; by++) {
-                if ((bx + by) % 2) continue;
-                for (const side of [0, 1]) {
-                  g.fillStyle = "#f2ece0";
-                  g.fillRect(side ? size - (bx + 1) * q : bx * q, by * q, q, q);
-                }
-              }
-            g.fillStyle = "#2f3340";
-            g.fillRect(0, hh * 0.8, size, hh * 0.2);
-            g.fillStyle = "#f5e2b0";
-            g.font = `700 ${hh * 0.13}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
-            g.textAlign = "center";
-            g.textBaseline = "middle";
-            g.letterSpacing = "6px";
-            g.fillText("NITRO  \xB7  AMALFI OIL  \xB7  BOOST CO.  \xB7  MARINA", size / 2, hh * 0.9);
-            g.fillStyle = "#f2ece0";
-            g.font = `900 ${hh * 0.42}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
-            g.letterSpacing = "10px";
-            g.strokeStyle = "rgba(60,20,16,0.55)";
-            g.lineWidth = 7;
-            g.strokeText("SUNSET BAY", size / 2, hh * 0.4);
-            g.fillText("SUNSET BAY", size / 2, hh * 0.4);
-            g.fillStyle = "#c8382f";
-            g.fillRect(0, hh, size, size - hh);
-            const h = new Float32Array(size * size);
-            const r = new Float32Array(size * size);
-            for (let y = 0; y < size; y++)
-              for (let x = 0; x < size; x++) {
-                const i = y * size + x;
-                const weave = Math.sin(x * 2.1) * Math.sin(y * 2.1) * 0.35 + fbm2(211, x / size, y / size, 220, 220, 2) * 0.65;
-                h[i] = weave * 0.5 + Math.sin(x * 0.055 + fbm2(213, x / size, y / size, 6, 6, 2) * 4) * 0.5;
-                r[i] = 0.74 + weave * 0.12;
-              }
-            return {
-              map: finish2(c, true, this.aniso, false),
-              normalMap: normalFromHeight(h, size, 12, this.aniso),
-              roughnessMap: greyFromField(r, size, this.aniso)
-            };
-          });
-        }
-        /**
-         * ==========================================================================
-         *  crowdCloth — the spectators' clothing atlas.
-         * ==========================================================================
-         *  BLOCKER FROM ROUND 1. The crowd material was
-         *      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.78 })
-         *  — no map, no normal, no roughness map. §4 names a flat untextured
-         *  MeshStandardMaterial as an automatic fail, and in hud.png a band of these
-         *  sits fifteen metres from the lens, so it is the one place in the game where
-         *  that fail is unmissable.
-         *
-         *  A 3x3 grid of 256² garment cards. Each card is a whole figure's worth of
-         *  clothing read bottom-to-top — trousers / skirt, then the shirt, then a
-         *  collar — because the body UV runs 0..1 up the figure, so a card that only
-         *  painted a shirt would leave the legs untextured. Nine designs across
-         *  stripes, hoops, block, plain and a sash, and the existing per-instance
-         *  `vertexColors` tint still multiplies over the top, so nine cards times ten
-         *  roster colours is ninety distinct spectators before the pose variants.
-         *
-         *  Patterns are authored to be SEAMLESS IN U, because u is the angle around
-         *  the body: vertical stripes come in whole counts across the cell and hoops
-         *  are horizontal, so nothing shows a seam down the spectator's back.
-         *
-         *  Roughness runs 0.62 on the synthetics (the blocks and the sash, which read
-         *  as a sports shirt) to 0.90 on the cottons — two visibly different surface
-         *  responses inside one crowd, which is what stops several hundred figures
-         *  from sharing one plastic sheen.
-         */
-        crowdCloth(size = 768) {
-          return this.memo("crowdcloth", () => {
-            const [c, g] = cv(size);
-            const cell = size / 3;
-            const cards = [
-              ["#3c4356", "#f2ece0", "#2f6ba0", 0, 0.15],
-              // plain cotton tee
-              ["#4a4034", "#e8e2d2", "#e0453f", 1, 0.55],
-              // vertical stripes
-              ["#2f3340", "#4fc3ff", "#f5f9ff", 2, 0.95],
-              // hoops, synthetic
-              ["#5a4a38", "#f5e2b0", "#8f5a2f", 3, 0.2],
-              // check
-              ["#37404e", "#e0453f", "#f9f4ea", 4, 0.85],
-              // block + sash
-              ["#4d4238", "#9fc0a8", "#40614c", 1, 0.3],
-              // fine stripe, linen
-              ["#2e3542", "#dcb8d8", "#7a4f76", 5, 0.25],
-              // speckled weave
-              ["#514436", "#ff9d2e", "#2b2b34", 4, 0.9],
-              // hi-vis block
-              ["#39404c", "#a9c8d4", "#f2ece0", 2, 0.45]
-              // wide hoop
-            ];
-            const rough = new Float32Array(size * size);
-            for (let k = 0; k < 9; k++) {
-              const cx = k % 3 * cell;
-              const cy = (k / 3 | 0) * cell;
-              const [trouser, base, accent, kind, synth] = cards[k];
-              g.fillStyle = trouser;
-              g.fillRect(cx, cy + cell * 0.56, cell, cell * 0.44);
-              g.fillStyle = base;
-              g.fillRect(cx, cy, cell, cell * 0.56);
-              g.save();
-              g.beginPath();
-              g.rect(cx, cy, cell, cell * 0.56);
-              g.clip();
-              g.fillStyle = accent;
-              if (kind === 1) {
-                for (let i = 0; i < 8; i += 2) g.fillRect(cx + i / 8 * cell, cy, cell / 16, cell);
-              } else if (kind === 2) {
-                for (let i = 0; i < 5; i++) g.fillRect(cx, cy + cell * (0.05 + i * 0.11), cell, cell * 0.052);
-              } else if (kind === 3) {
-                g.globalAlpha = 0.55;
-                for (let i = 0; i < 6; i += 2) g.fillRect(cx + i / 6 * cell, cy, cell / 12, cell);
-                for (let i = 0; i < 5; i += 2) g.fillRect(cx, cy + i / 9 * cell, cell, cell / 18);
-                g.globalAlpha = 1;
-              } else if (kind === 4) {
-                g.fillRect(cx, cy + cell * 0.34, cell, cell * 0.22);
-                g.beginPath();
-                g.moveTo(cx, cy + cell * 0.1);
-                g.lineTo(cx + cell, cy + cell * 0.3);
-                g.lineTo(cx + cell, cy + cell * 0.38);
-                g.lineTo(cx, cy + cell * 0.18);
-                g.closePath();
-                g.fill();
-              } else if (kind === 5) {
-                g.globalAlpha = 0.5;
-                for (let i = 0; i < 320; i++) {
-                  const rx = cx + i * 61 % cell;
-                  const ry = cy + i * 137 % (cell * 0.56);
-                  g.fillRect(rx, ry, 3, 3);
-                }
-                g.globalAlpha = 1;
-              }
-              g.restore();
-              g.fillStyle = "rgba(20,16,20,0.30)";
-              g.fillRect(cx, cy, cell, cell * 0.035);
-              const r0 = lerp4(0.9, 0.62, synth);
-              for (let y = 0; y < cell; y++)
-                for (let x = 0; x < cell; x++) {
-                  const gx = cx + x | 0;
-                  const gy = cy + y | 0;
-                  rough[gy * size + gx] = r0;
-                }
-            }
-            const h = new Float32Array(size * size);
-            for (let y = 0; y < size; y++)
-              for (let x = 0; x < size; x++) {
-                const i = y * size + x;
-                const weave = Math.sin(x * 0.9) * Math.sin(y * 0.9) * 0.4;
-                const fold = fbm2(317, x / size, y / size, 9, 9, 2, 0.5, size);
-                h[i] = weave * 0.45 + fold * 0.55;
-                rough[i] = clamp3(rough[i] + fold * 0.14 + weave * 0.05, 0.3, 0.99);
-              }
-            return {
-              map: finish2(c, true, this.aniso, false),
-              normalMap: normalFromHeight(h, size, 5, this.aniso),
-              roughnessMap: greyFromField(rough, size, this.aniso)
-            };
-          });
-        }
-        sponsorAtlas(size = 2048) {
-          return this.memo("sponsor", () => {
-            const [c, g] = cv(size);
-            const w = size / 2, h0 = size / 4;
-            const boards = [
-              ["#e0453f", "#f9f4ea", "SUNSET"],
-              ["#2f6ba0", "#f5e2b0", "TURBO"],
-              ["#f5e2b0", "#8f3f22", "AMALFI"],
-              ["#2f5d43", "#f2ece0", "MARINA"],
-              ["#ff9d2e", "#2b2b34", "NITRO"],
-              ["#2b2f3a", "#4fc3ff", "ROYALE"],
-              ["#c78ec2", "#2b2430", "GOLD"],
-              ["#4fc3ff", "#20303c", "BOOST"]
-            ];
-            for (let i = 0; i < 8; i++) {
-              const cx = i % 2 * w, cy = (i / 2 | 0) * h0;
-              const [bg, fg, text] = boards[i];
-              g.fillStyle = bg;
-              g.fillRect(cx, cy, w, h0);
-              g.save();
-              g.beginPath();
-              g.rect(cx, cy, w, h0);
-              g.clip();
-              g.globalAlpha = 0.16;
-              g.fillStyle = fg;
-              for (let k = -2; k < 10; k++) {
-                g.beginPath();
-                g.moveTo(cx + k * 60, cy + h0);
-                g.lineTo(cx + k * 60 + 34, cy + h0);
-                g.lineTo(cx + k * 60 + 34 + h0 * 0.5, cy);
-                g.lineTo(cx + k * 60 + h0 * 0.5, cy);
-                g.closePath();
-                g.fill();
-              }
-              g.globalAlpha = 1;
-              g.font = `900 ${h0 * 0.52}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
-              g.textAlign = "center";
-              g.textBaseline = "middle";
-              g.letterSpacing = `${Math.round(h0 * 0.035)}px`;
-              g.lineJoin = "round";
-              g.fillStyle = "rgba(18,12,10,0.34)";
-              g.fillText(text, cx + w / 2 + h0 * 0.018, cy + h0 / 2 + h0 * 0.022, w * 0.9);
-              g.strokeStyle = "rgba(20,16,14,0.62)";
-              g.lineWidth = h0 * 0.07;
-              g.strokeText(text, cx + w / 2, cy + h0 / 2, w * 0.9);
-              g.fillStyle = fg;
-              g.fillText(text, cx + w / 2, cy + h0 / 2, w * 0.9);
-              g.strokeStyle = "rgba(0,0,0,0.4)";
-              g.lineWidth = h0 * 0.035;
-              g.strokeRect(cx + h0 * 0.018, cy + h0 * 0.018, w - h0 * 0.036, h0 - h0 * 0.036);
-              g.strokeStyle = "rgba(255,255,255,0.22)";
-              g.lineWidth = h0 * 0.016;
-              g.strokeRect(cx + h0 * 0.055, cy + h0 * 0.055, w - h0 * 0.11, h0 - h0 * 0.11);
-              g.restore();
-            }
-            const ns = 1024;
-            const [mc, mg] = cv(ns);
-            const mw = ns / 2, mh = ns / 4;
-            mg.fillStyle = "#000";
-            mg.fillRect(0, 0, ns, ns);
-            for (let i = 0; i < 8; i++) {
-              const cx = i % 2 * mw, cy = (i / 2 | 0) * mh;
-              mg.save();
-              mg.beginPath();
-              mg.rect(cx, cy, mw, mh);
-              mg.clip();
-              mg.font = `900 ${mh * 0.52}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
-              mg.textAlign = "center";
-              mg.textBaseline = "middle";
-              mg.letterSpacing = `${Math.round(mh * 0.035)}px`;
-              mg.fillStyle = "#fff";
-              mg.fillText(boards[i][2], cx + mw / 2, cy + mh / 2, mw * 0.9);
-              mg.strokeStyle = "#c8c8c8";
-              mg.lineWidth = mh * 0.035;
-              mg.strokeRect(cx + mh * 0.018, cy + mh * 0.018, mw - mh * 0.036, mh - mh * 0.036);
-              mg.restore();
-              const bev = mh * 0.045;
-              const grd = mg.createLinearGradient(cx, cy, cx, cy + bev);
-              grd.addColorStop(0, "#4a4a4a");
-              grd.addColorStop(1, "#000");
-              mg.fillStyle = grd;
-              mg.fillRect(cx, cy, mw, bev);
-              mg.fillStyle = "#2a2a2a";
-              mg.fillRect(cx, cy + mh - bev, mw, bev);
-              mg.fillRect(cx, cy, bev, mh);
-              mg.fillRect(cx + mw - bev, cy, bev, mh);
-              mg.fillStyle = "#e8e8e8";
-              for (const sx of [0.045, 0.5, 0.955])
-                for (const sy of [0.11, 0.89]) {
-                  mg.beginPath();
-                  mg.arc(cx + mw * sx, cy + mh * sy, mh * 0.022, 0, Math.PI * 2);
-                  mg.fill();
-                }
-            }
-            const mpx = mg.getImageData(0, 0, ns, ns).data;
-            const hf = new Float32Array(ns * ns);
-            const rf = new Float32Array(ns * ns);
-            for (let y = 0; y < ns; y++)
-              for (let x = 0; x < ns; x++) {
-                const i = y * ns + x;
-                const u = x / ns, v2 = y / ns;
-                const patch2 = fbm2(109, u, v2, 14, 14, 2, 0.5, ns);
-                const streak = fbm2(113, u, v2, 26, 3, 2, 0.5, ns);
-                const weave = fbm2(127, u, v2, 96, 96, 1, 0.5, ns);
-                const ink = mpx[i * 4] / 255;
-                hf[i] = patch2 * 0.34 + streak * 0.18 + weave * 0.09 + ink * 0.62;
-                const base = lerp4(0.35, 0.72, ink);
-                rf[i] = clamp3(base + patch2 * 0.16 + streak * 0.1 + weave * 0.04, 0.1, 0.95);
-              }
-            void mc;
-            return {
-              map: finish2(c, true, this.aniso, false),
-              // 2.2 -> 3.4. The substrate is still flat printed vinyl, but the ink and
-              // the bevel are real relief now and they are low frequency, so raising
-              // this sharpens the letterform without reintroducing the high-frequency
-              // shimmer the old value was pulled down to avoid.
-              normalMap: normalFromHeight(hf, ns, 3.4, this.aniso),
-              roughnessMap: greyFromField(rf, ns, this.aniso)
-            };
-          });
-        }
-        /** Palm / pine bark: stacked leaf-scar rings for palms, plated for pines. */
-        bark(kind = "palm", size = 512) {
-          return this.memo("bark" + kind, () => {
-            const [c, g] = cv(size);
-            const h = new Float32Array(size * size);
-            const r = new Float32Array(size * size);
-            const img = g.createImageData(size, size);
-            const d = img.data;
-            const palm = kind === "palm";
-            for (let y = 0; y < size; y++) {
-              for (let x = 0; x < size; x++) {
-                const u = x / size, v2 = y / size;
-                const i = y * size + x;
-                let hh, tone;
-                if (palm) {
-                  const drift = Math.sin(v2 * 6.283 * 7.3 + 1.1) * 0.09 + Math.sin(u * 6.283 * 3) * 0.14;
-                  const ring = Math.abs((v2 * 22 + drift) % 1 - 0.5) * 2;
-                  const stagger = Math.abs((u * 11 + Math.floor(v2 * 22) * 0.5 + Math.sin(v2 * 17) * 0.16) % 1 - 0.5) * 2;
-                  const scar = smoothstep4(0.75, 0.26, ring) * smoothstep4(0.85, 0.32, stagger);
-                  const fibre = fbm2(113, u, v2, 34, 96, 2, 0.5, size);
-                  hh = scar * 0.55 - 0.24 + fibre * 0.24;
-                  tone = 0.56 + scar * 0.18 + fibre * 0.14;
-                } else {
-                  const plate = fbm2(127, u, v2, 14, 20, 3);
-                  const fissure = smoothstep4(0.06, -0.02, Math.abs(plate));
-                  const grain = fbm2(131, u, v2, 192, 40, 3);
-                  hh = (1 - fissure) * 0.8 - 0.4 + grain * 0.35;
-                  tone = 0.44 + (1 - fissure) * 0.34 + grain * 0.2;
-                }
-                const moss = clamp3(fbm2(137, u, v2, 10, 10, 2) * 2 - 0.5, 0, 1) * 0.4;
-                h[i] = hh;
-                const o = i * 4;
-                d[o] = clamp3(lerp4(tone * (palm ? 0.72 : 0.58), 0.28, moss), 0, 1) * 255;
-                d[o + 1] = clamp3(lerp4(tone * (palm ? 0.62 : 0.45), 0.34, moss), 0, 1) * 255;
-                d[o + 2] = clamp3(lerp4(tone * (palm ? 0.46 : 0.36), 0.22, moss), 0, 1) * 255;
-                d[o + 3] = 255;
-                r[i] = 0.74 + Math.abs(hh) * 0.16 + moss * 0.1;
-              }
-            }
-            g.putImageData(img, 0, 0);
-            return {
-              map: finish2(c, true, this.aniso),
-              // Palm 30 -> 18: the scar relief is now half the amplitude it was, and
-              // a normal strength tuned against the old height field turned what is
-              // left into contrast the geometry does not have.
-              normalMap: normalFromHeight(h, size, palm ? 18 : 38, this.aniso),
-              roughnessMap: greyFromField(r, size, this.aniso)
-            };
-          });
-        }
-        /** Radial soft blob for prop contact shadows. */
-        contactShadow(size = 256) {
-          const key2 = "__cs";
-          const cached = this[key2];
-          if (cached) return cached;
-          const [c, g] = cv(size);
-          const grad = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-          grad.addColorStop(0, "rgba(255,255,255,1)");
-          grad.addColorStop(0.42, "rgba(255,255,255,0.82)");
-          grad.addColorStop(0.78, "rgba(255,255,255,0.22)");
-          grad.addColorStop(1, "rgba(255,255,255,0)");
-          g.fillStyle = grad;
-          g.fillRect(0, 0, size, size);
-          g.globalCompositeOperation = "destination-out";
-          const rng = mulberry325(31337);
-          for (let i = 0; i < 26; i++) {
-            const a = rng() * 7, r = size * (0.32 + rng() * 0.2);
-            g.fillStyle = `rgba(0,0,0,${0.1 + rng() * 0.25})`;
-            g.beginPath();
-            g.arc(size / 2 + Math.cos(a) * r, size / 2 + Math.sin(a) * r, size * (0.06 + rng() * 0.1), 0, 7);
-            g.fill();
-          }
-          const t = finish2(c, false, 1, false);
-          this[key2] = t;
-          return t;
-        }
-        /**
-         * Verge transition strip: the scuffed dirt/gravel band where a kerb meets
-         * grass. Grass butting straight against tarmac on a razor line is one of the
-         * loudest "generated" tells in a road scene, and the fix is not a shader —
-         * it is the metre of trodden dirt that exists at the edge of every real
-         * road. U runs ACROSS the strip (0 = kerb side, 1 = grass side); V runs
-         * along the road, and carries the ragged edge so the band never reads as a
-         * ruled offset of the kerb.
-         */
-        vergeScuff(size = 512) {
-          return this.memo("vergescuff", () => {
-            const [c, g] = cv(size);
-            const img = g.createImageData(size, size);
-            const d = img.data;
-            const h = new Float32Array(size * size);
-            const r = new Float32Array(size * size);
-            for (let y = 0; y < size; y++) {
-              for (let x = 0; x < size; x++) {
-                const u = x / size, v2 = y / size;
-                const i = y * size + x;
-                const edge = fbm2(41, v2, 0.5, 24, 1, 3) * 0.5 + 0.5;
-                const grit = fbm2(59, u, v2, 96, 96, 4) * 0.5 + 0.5;
-                const patch2 = fbm2(73, u, v2, 6, 14, 2) * 0.5 + 0.5;
-                const reach = 0.34 + edge * 0.5;
-                let a = 1 - smoothstep4(reach * 0.35, reach, u);
-                a = Math.max(a, smoothstep4(0.62, 0.86, grit) * (1 - smoothstep4(reach, 1, u)) * 0.85);
-                a *= 0.55 + patch2 * 0.65;
-                const tone = 0.62 + grit * 0.3 + patch2 * 0.12;
-                const dry = smoothstep4(0.1, 0.8, u);
-                const o = i * 4;
-                d[o] = clamp3(tone * lerp4(0.8, 1, dry), 0, 1) * 255;
-                d[o + 1] = clamp3(tone * lerp4(0.7, 0.93, dry), 0, 1) * 255;
-                d[o + 2] = clamp3(tone * lerp4(0.58, 0.8, dry), 0, 1) * 255;
-                d[o + 3] = clamp3(a, 0, 1) * 255;
-                h[i] = grit * 0.7 + patch2 * 0.3;
-                r[i] = 0.82 + grit * 0.14;
-              }
-            }
-            g.putImageData(img, 0, 0);
-            return {
-              // Clamped, not repeated: the quad's UVs are exactly 0..1, and with
-              // RepeatWrapping the coarse mips bleed the opaque kerb-side column into
-              // the transparent outer edge, which puts a hard band along the band.
-              map: finish2(c, true, this.aniso, false),
-              normalMap: normalFromHeight(h, size, 3.2, this.aniso),
-              roughnessMap: greyFromField(r, size, this.aniso)
-            };
-          });
-        }
-        // -- foliage alpha sheets -------------------------------------------------
-        /** A single pinnate palm frond, rachis running along +U. */
-        palmFrond(size = 512) {
-          return this.alpha("frond", size, (g, s) => {
-            const rng = mulberry325(606);
-            const midY = s * 0.5;
-            for (let side = -1; side <= 1; side += 2) {
-              for (let i = 0; i < 46; i++) {
-                const t = i / 46;
-                const x = s * (0.06 + t * 0.9);
-                const len = s * 0.44 * Math.sin(Math.pow(t, 0.55) * Math.PI) * (0.82 + rng() * 0.36);
-                const droop = Math.pow(t, 1.6) * s * 0.06;
-                const ang = side * (0.42 + t * 0.5) + (rng() - 0.5) * 0.18;
-                const g0 = 0.22 + t * 0.16 + rng() * 0.08;
-                g.strokeStyle = `rgb(${70 + g0 * 120 | 0},${120 + g0 * 190 | 0},${46 + g0 * 70 | 0})`;
-                g.lineWidth = s * 0.017 * (0.7 + rng() * 0.6);
-                g.lineCap = "round";
-                g.beginPath();
-                g.moveTo(x, midY + droop);
-                g.quadraticCurveTo(x + Math.cos(ang) * len * 0.5 + len * 0.25, midY + droop + Math.sin(ang) * len * 0.45, x + Math.cos(ang) * len * 0.4 + len * 0.5, midY + droop + Math.sin(ang) * len);
-                g.stroke();
-              }
-            }
-            const grad = g.createLinearGradient(0, 0, s, 0);
-            grad.addColorStop(0, "#7a6a3a");
-            grad.addColorStop(0.5, "#8fa348");
-            grad.addColorStop(1, "#c8cf72");
-            g.strokeStyle = grad;
-            g.lineWidth = s * 0.022;
-            g.beginPath();
-            g.moveTo(s * 0.02, midY);
-            g.quadraticCurveTo(s * 0.5, midY + s * 0.02, s * 0.99, midY + s * 0.06);
-            g.stroke();
-            void rng;
-          }, 0.38);
-        }
-        /** Umbrella-pine needle cluster. */
-        pineCluster(size = 512) {
-          return this.alpha("pine", size, (g, s) => {
-            const rng = mulberry325(808);
-            for (let i = 0; i < 260; i++) {
-              const cx = s * (0.08 + rng() * 0.84);
-              const cy = s * (0.12 + rng() * 0.76);
-              const spread = s * (0.05 + rng() * 0.1);
-              const base = 0.3 + rng() * 0.6;
-              g.strokeStyle = `rgb(${38 + base * 60 | 0},${78 + base * 105 | 0},${40 + base * 46 | 0})`;
-              g.lineWidth = s * 6e-3;
-              for (let k = 0; k < 9; k++) {
-                const a = rng() * Math.PI * 2;
-                g.beginPath();
-                g.moveTo(cx, cy);
-                g.lineTo(cx + Math.cos(a) * spread, cy + Math.sin(a) * spread);
-                g.stroke();
-              }
-            }
-          }, 0.42);
-        }
-        /** Broadleaf shrub / hedge mass. */
-        shrubLeaves(size = 512) {
-          return this.alpha("shrub", size, (g, s) => {
-            const rng = mulberry325(1212);
-            for (let i = 0; i < 340; i++) {
-              const cx = s * (0.06 + rng() * 0.88);
-              const cy = s * (0.08 + rng() * 0.88);
-              const rr2 = s * (0.018 + rng() * 0.034);
-              const edge = 1 - Math.max(Math.abs(cx / s - 0.5), Math.abs(cy / s - 0.5)) * 2;
-              if (rng() > edge * 1.5 + 0.25) continue;
-              const base = 0.25 + rng() * 0.75;
-              g.fillStyle = `rgb(${46 + base * 78 | 0},${84 + base * 106 | 0},${38 + base * 52 | 0})`;
-              g.save();
-              g.translate(cx, cy);
-              g.rotate(rng() * 7);
-              g.beginPath();
-              g.ellipse(0, 0, rr2 * 1.5, rr2, 0, 0, 7);
-              g.fill();
-              g.restore();
-            }
-          }, 0.44);
-        }
-        /**
-         * Tuft of grass blades, rooted at the bottom edge.
-         *
-         * Drawn per blade in three passes — root, mid, tip — so a blade darkens at
-         * the base (#4e7534, where a clump self-shadows) and bleaches toward the tip
-         * (#87b356 fresh / #9aa858 dry). One flat green stroke per blade is what made
-         * the round-1 verge read as astroturf: real grass has its whole value range
-         * inside a single blade, not just between clumps.
-         */
-        grassBlades(size = 512) {
-          return this.alpha("grass", size, (g, s) => {
-            const rng = mulberry325(2424);
-            g.lineCap = "round";
-            const blades = 44;
-            for (let i = 0; i < blades; i++) {
-              const x = s * (0.05 + rng() * 0.9);
-              const hgt = s * (0.42 + rng() * 0.56);
-              const bend = (rng() - 0.5) * s * 0.46;
-              const dry = rng() < 0.28;
-              const lw = s * (0.011 + rng() * 0.011);
-              const segs = 3;
-              for (let k = 0; k < segs; k++) {
-                const t0 = k / segs;
-                const t1 = (k + 1) / segs;
-                const p = (u) => [x + bend * u * u, s - hgt * u];
-                const [x0, y0] = p(t0);
-                const [x1, y1] = p(t1);
-                const sh = t0 * 0.85 + rng() * 0.15;
-                const r = dry ? 118 + sh * 46 : 66 + sh * 66;
-                const gr = dry ? 130 + sh * 46 : 108 + sh * 71;
-                const bl = dry ? 62 + sh * 34 : 44 + sh * 42;
-                g.strokeStyle = `rgb(${r | 0},${gr | 0},${bl | 0})`;
-                g.lineWidth = lw * (1.25 - t0 * 0.75);
-                g.beginPath();
-                g.moveTo(x0, y0);
-                g.lineTo(x1, y1);
-                g.stroke();
-              }
-            }
-          }, 0.34);
-        }
-        /** Geranium / bougainvillea blossom cluster for window boxes. */
-        flowers(size = 256) {
-          return this.alpha("flowers", size, (g, s) => {
-            const rng = mulberry325(3636);
-            const cols = ["#e0453f", "#ff6f8a", "#dcb8d8", "#f5e2b0", "#f2ece0", "#ff9d2e"];
-            for (let i = 0; i < 90; i++) {
-              const cx = s * (0.1 + rng() * 0.8);
-              const cy = s * (0.12 + rng() * 0.76);
-              const rr2 = s * (0.02 + rng() * 0.03);
-              g.fillStyle = rng() < 0.42 ? `rgb(${52 + rng() * 40 | 0},${104 + rng() * 50 | 0},${44 + rng() * 26 | 0})` : cols[rng() * cols.length | 0];
-              for (let p = 0; p < 5; p++) {
-                const a = p / 5 * Math.PI * 2 + rng();
-                g.beginPath();
-                g.arc(cx + Math.cos(a) * rr2 * 0.8, cy + Math.sin(a) * rr2 * 0.8, rr2 * 0.72, 0, 7);
-                g.fill();
-              }
-            }
-          }, 0.4);
-        }
-        /**
-         * Opaque needle surface for the cypress spindle. It has to be opaque: the
-         * cypress is a solid form, and wrapping it in a cut-out leaf sheet would
-         * either punch holes into a hollow interior or (with alphaTest off) paint it
-         * with the transparent canvas's black.
-         */
-        needleSurface(size = 512) {
-          return this.memo("needle", () => {
-            const [c, g] = cv(size);
-            const h = new Float32Array(size * size);
-            const r = new Float32Array(size * size);
-            const img = g.createImageData(size, size);
-            const d = img.data;
-            for (let y = 0; y < size; y++) {
-              for (let x = 0; x < size; x++) {
-                const u = x / size, v2 = y / size;
-                const i = y * size + x;
-                const spray = fbm2(211, u, v2, 96, 22, 4, 0.5, size);
-                const clump = fbm2(223, u, v2, 14, 10, 3, 0.5, size);
-                const shade = 0.5 + spray * 0.32 + clump * 0.28;
-                h[i] = spray * 0.75 + clump * 0.4;
-                const dark = clamp3(shade, 0, 1);
-                const o = i * 4;
-                d[o] = (0.1 + dark * 0.2) * 255;
-                d[o + 1] = (0.17 + dark * 0.34) * 255;
-                d[o + 2] = (0.08 + dark * 0.16) * 255;
-                d[o + 3] = 255;
-                r[i] = 0.72 + Math.abs(spray) * 0.2 + clump * 0.08;
-              }
-            }
-            g.putImageData(img, 0, 0);
-            return {
-              map: finish2(c, true, this.aniso),
-              // 26 -> 15: a cypress is a mass of needles, not a rock face, and a
-              // normal this strong on a spindle whose whole job is silhouette is a
-              // specular crawl generator at any distance past 20 m.
-              normalMap: normalFromHeight(h, size, 15, this.aniso),
-              roughnessMap: greyFromField(r, size, this.aniso)
-            };
-          });
-        }
-        /** Knotted fishing net — a diamond weave with slack, frayed strands. */
-        netWeave(size = 256) {
-          return this.alpha("net", size, (g, s) => {
-            const rng = mulberry325(1717);
-            g.strokeStyle = "#cbb894";
-            g.lineCap = "round";
-            for (let k = 0; k < 2; k++) {
-              const dir = k ? 1 : -1;
-              for (let i = -8; i < 16; i++) {
-                g.lineWidth = s * (8e-3 + rng() * 6e-3);
-                g.beginPath();
-                const x0 = i / 8 * s;
-                g.moveTo(x0, 0);
-                for (let y = 0; y <= 8; y++) {
-                  const t = y / 8;
-                  g.lineTo(x0 + dir * t * s + Math.sin(t * 9 + i) * s * 0.012, t * s);
-                }
-                g.stroke();
-              }
-            }
-            g.fillStyle = "#b8a480";
-            for (let i = 0; i < 130; i++) {
-              const x = (rng() * 8 | 0) * (s / 8) + (rng() - 0.5) * 3;
-              const y = (rng() * 8 | 0) * (s / 8) + (rng() - 0.5) * 3;
-              g.beginPath();
-              g.arc(x, y, s * 0.012, 0, 7);
-              g.fill();
-            }
-          }, 0.35);
-        }
-        /** Laundry: shirts and sheets on a line, as an alpha strip of 4 cells. */
-        laundry(size = 512) {
-          return this.alpha("laundry", size, (g, s) => {
-            const cell = s / 4;
-            const cols = ["#f2ece0", "#a9c8d4", "#e8a5a0", "#f5e2b0"];
-            for (let i = 0; i < 4; i++) {
-              const x0 = i * cell;
-              g.fillStyle = cols[i];
-              g.save();
-              g.translate(x0 + cell * 0.5, 0);
-              if (i === 0 || i === 2) {
-                g.beginPath();
-                g.moveTo(-cell * 0.3, cell * 0.06);
-                g.lineTo(-cell * 0.42, cell * 0.3);
-                g.lineTo(-cell * 0.28, cell * 0.36);
-                g.lineTo(-cell * 0.26, s * 0.88);
-                g.lineTo(cell * 0.26, s * 0.88);
-                g.lineTo(cell * 0.28, cell * 0.36);
-                g.lineTo(cell * 0.42, cell * 0.3);
-                g.lineTo(cell * 0.3, cell * 0.06);
-                g.closePath();
-                g.fill();
-              } else {
-                g.beginPath();
-                g.moveTo(-cell * 0.4, cell * 0.04);
-                g.lineTo(cell * 0.4, cell * 0.04);
-                g.lineTo(cell * 0.36, s * 0.9);
-                for (let k = 1; k >= 0; k -= 0.1) g.lineTo(-cell * 0.4 + k * cell * 0.76, s * (0.9 + Math.sin(k * 9) * 0.02));
-                g.closePath();
-                g.fill();
-              }
-              g.restore();
-              const grad = g.createLinearGradient(x0, 0, x0 + cell, 0);
-              grad.addColorStop(0, "rgba(40,30,25,0.30)");
-              grad.addColorStop(0.4, "rgba(255,255,255,0.12)");
-              grad.addColorStop(1, "rgba(40,30,25,0.24)");
-              g.globalCompositeOperation = "source-atop";
-              g.fillStyle = grad;
-              g.fillRect(x0, 0, cell, s);
-              g.globalCompositeOperation = "source-over";
-            }
-          }, 0.45);
-        }
-        /**
-         * `ref` is the alphaTest the material will use; the mip chain is built to
-         * preserve coverage at exactly that threshold. Pass the real value or fronds
-         * will still thin out at range.
-         */
-        alpha(key2, size, draw, ref = 0.4) {
-          let t = this.alphaCache.get(key2);
-          if (t) return t;
-          const [c, g] = cv(size);
-          g.clearRect(0, 0, size, size);
-          draw(g, size);
-          const src = g.getImageData(0, 0, size, size).data;
-          const px2 = new Uint8Array(size * size * 4);
-          const row = size * 4;
-          for (let y = 0; y < size; y++) px2.set(src.subarray((size - 1 - y) * row, (size - y) * row), y * row);
-          dilateRGB(px2, size);
-          const mips = coverageMips(px2, size, ref);
-          const tex2 = new DataTexture(mips[0].data, size, size, RGBAFormat, UnsignedByteType);
-          tex2.mipmaps = mips;
-          tex2.generateMipmaps = false;
-          tex2.colorSpace = SRGBColorSpace;
-          tex2.wrapS = tex2.wrapT = ClampToEdgeWrapping;
-          tex2.minFilter = LinearMipmapLinearFilter;
-          tex2.magFilter = LinearFilter;
-          tex2.anisotropy = this.aniso;
-          tex2.flipY = false;
-          tex2.needsUpdate = true;
-          this.alphaCache.set(key2, tex2);
-          return tex2;
-        }
-      };
-      _lc = new Color();
-      _nm = new Matrix3();
-      _v3 = new Vector3();
-      GeoAccum = class {
-        constructor() {
-          __publicField(this, "pos", []);
-          __publicField(this, "nrm", []);
-          __publicField(this, "uv", []);
-          __publicField(this, "col", []);
-          __publicField(this, "idx", []);
-          __publicField(this, "vcount", 0);
-          __publicField(this, "count", 0);
-        }
-        /** `aoFn(localY)` bakes contact darkening at the foot of every wall. */
-        add(geo, m, color2, aoFn, uvOff) {
-          const p = geo.getAttribute("position");
-          const n = geo.getAttribute("normal");
-          const u = geo.getAttribute("uv");
-          const c0 = geo.getAttribute("color");
-          const index = geo.getIndex();
-          _nm.getNormalMatrix(m);
-          const base = this.vcount;
-          for (let i = 0; i < p.count; i++) {
-            _v3.fromBufferAttribute(p, i);
-            const lx = _v3.x, ly = _v3.y, lz = _v3.z;
-            _v3.applyMatrix4(m);
-            this.pos.push(_v3.x, _v3.y, _v3.z);
-            if (n) {
-              _v3.fromBufferAttribute(n, i).applyMatrix3(_nm).normalize();
-              this.nrm.push(_v3.x, _v3.y, _v3.z);
-            } else this.nrm.push(0, 1, 0);
-            if (u) this.uv.push(u.getX(i) + (uvOff ? uvOff.x : 0), u.getY(i) + (uvOff ? uvOff.y : 0));
-            else this.uv.push(0, 0);
-            const ao = aoFn ? aoFn(lx, ly, lz) : 1;
-            const br = c0 ? c0.getX(i) : 1;
-            const bg = c0 ? c0.getY(i) : 1;
-            const bb = c0 ? c0.getZ(i) : 1;
-            if (color2) this.col.push(color2.r * br * ao, color2.g * bg * ao, color2.b * bb * ao);
-            else this.col.push(br * ao, bg * ao, bb * ao);
-          }
-          if (index) for (let i = 0; i < index.count; i++) this.idx.push(base + index.getX(i));
-          else for (let i = 0; i < p.count; i++) this.idx.push(base + i);
-          this.vcount += p.count;
-          this.count++;
-        }
-        build() {
-          if (!this.vcount) return null;
-          const g = new BufferGeometry();
-          g.setAttribute("position", new Float32BufferAttribute(this.pos, 3));
-          g.setAttribute("normal", new Float32BufferAttribute(this.nrm, 3));
-          g.setAttribute("uv", new Float32BufferAttribute(this.uv, 2));
-          g.setAttribute("color", new Float32BufferAttribute(this.col, 3));
-          g.setIndex(this.idx);
-          g.computeBoundingSphere();
-          this.pos = this.nrm = this.uv = this.col = this.idx = [];
-          return g;
-        }
-      };
-      InstSet = class {
-        constructor(geo, mat2, name) {
-          __publicField(this, "geo", geo);
-          __publicField(this, "mat", mat2);
-          __publicField(this, "name", name);
-          __publicField(this, "mats", []);
-          __publicField(this, "cols", []);
-          __publicField(this, "uvs", []);
-          __publicField(this, "winds", []);
-          __publicField(this, "lods", []);
-          __publicField(this, "bobs", []);
-          __publicField(this, "useCol", false);
-          __publicField(this, "useUv", false);
-          __publicField(this, "useWind", false);
-          __publicField(this, "useLod", false);
-          __publicField(this, "useBob", false);
-        }
-        get count() {
-          return this.mats.length;
-        }
-        /**
-         * True when nothing about this set moves after build: no wind sway, no bob.
-         * Those two are the only patches that read the instance transform at runtime
-         * (`patchWind` needs the instance scale, `patchBob` rotates about the
-         * instance origin), so they are the only two that stop a set from being
-         * baked flat by `mergeStaticSets`.
-         */
-        get isStatic() {
-          return !this.useWind && !this.useBob;
-        }
-        /** Raw per-instance data, for `mergeStaticSets`. */
-        snapshot() {
-          return {
-            geo: this.geo,
-            mat: this.mat,
-            name: this.name,
-            mats: this.mats,
-            cols: this.cols,
-            uvs: this.uvs,
-            lods: this.lods,
-            useCol: this.useCol,
-            useUv: this.useUv,
-            useLod: this.useLod
-          };
-        }
-        add(m, o) {
-          this.mats.push(m.clone());
-          if (o?.color) {
-            this.useCol = true;
-            this.cols.push(o.color.r, o.color.g, o.color.b);
-          } else this.cols.push(1, 1, 1);
-          if (o?.uv) {
-            this.useUv = true;
-            this.uvs.push(o.uv.x, o.uv.y, o.uv.z, o.uv.w);
-          } else this.uvs.push(1, 1, 0, 0);
-          if (o?.wind) {
-            this.useWind = true;
-            this.winds.push(o.wind.x, o.wind.y, o.wind.z, o.wind.w);
-          } else this.winds.push(0, 0, 0, 0);
-          if (o?.lod) {
-            this.useLod = true;
-            this.lods.push(o.lod);
-          } else this.lods.push(0);
-          if (o?.bob) {
-            this.useBob = true;
-            this.bobs.push(o.bob.x, o.bob.y, o.bob.z, o.bob.w);
-          } else this.bobs.push(0, 0, 0, 0);
-        }
-        build(castShadow = true, receiveShadow = true) {
-          const n = this.mats.length;
-          if (!n) return null;
-          const mesh = new InstancedMesh(this.geo, this.mat, n);
-          mesh.name = this.name;
-          for (let i = 0; i < n; i++) mesh.setMatrixAt(i, this.mats[i]);
-          mesh.instanceMatrix.needsUpdate = true;
-          const attr = (arr, size, name) => mesh.geometry.setAttribute(name, new InstancedBufferAttribute(new Float32Array(arr), size));
-          if (this.useCol) attr(this.cols, 3, "aTint");
-          if (this.useUv) attr(this.uvs, 4, "aUv");
-          if (this.useWind) attr(this.winds, 4, "aWind");
-          if (this.useLod) attr(this.lods, 1, "aLod");
-          if (this.useBob) attr(this.bobs, 4, "aBob");
-          mesh.castShadow = castShadow;
-          mesh.receiveShadow = receiveShadow;
-          mesh.computeBoundingSphere();
-          this.mats = [];
-          this.cols = this.uvs = this.winds = this.lods = this.bobs = [];
-          return mesh;
-        }
-      };
-      _mm = new Matrix3();
-      _mv = new Vector3();
-      STATIC_CELL = 400;
-      PATCHES = /* @__PURE__ */ new WeakMap();
-      SAP = new Color(10146922).convertSRGBToLinear();
-      MatLib2 = class {
-        constructor(renderer, u) {
-          __publicField(this, "u", u);
-          __publicField(this, "tex");
-          __publicField(this, "env", null);
-          __publicField(this, "all", []);
-          __publicField(this, "wall");
-          __publicField(this, "roof");
-          __publicField(this, "trim");
-          __publicField(this, "wood");
-          __publicField(this, "woodInst");
-          __publicField(this, "stone");
-          __publicField(this, "stoneInst");
-          __publicField(this, "metal");
-          __publicField(this, "glass");
-          __publicField(this, "fabric");
-          __publicField(this, "sponsor");
-          __publicField(this, "rubber");
-          __publicField(this, "crowd");
-          __publicField(this, "cloth");
-          __publicField(this, "banner");
-          __publicField(this, "bunting");
-          __publicField(this, "laundry");
-          __publicField(this, "rope");
-          __publicField(this, "backdrop");
-          __publicField(this, "shadowDecal");
-          __publicField(this, "vergeDecal");
-          __publicField(this, "lamp");
-          __publicField(this, "bird");
-          __publicField(this, "flowerMat");
-          __publicField(this, "netMat");
-          /**
-           * Pull a surface from the material specialist's shared cache. `Ctx` has no
-           * slot for that system, so it publishes a module singleton; `variant()` hands
-           * back a private clone that shares the texture set, which is the only safe
-           * thing to patch. Falls back to our own generator if the call fails — the
-           * scenery must not refuse to boot because another module moved underneath it.
-           */
-          __publicField(this, "sharedDown", false);
-          __publicField(this, "variantSeq", 0);
-          this.tex = new TexLib(renderer);
-          this.build();
-        }
-        shared(name, key2, tweak) {
-          if (this.sharedDown) return null;
-          try {
-            const m = getMaterials().variant(name, { key: key2 });
-            if (!m || !m.isMaterial) return null;
-            tweak?.(m);
-            this.all.push(m);
-            return m;
-          } catch (e) {
-            this.sharedDown = true;
-            console.warn("[scenery] shared materials unavailable, using local set", e);
-            return null;
-          }
-        }
-        std(maps, o = {}, normalScale = 1) {
-          const m = new MeshStandardMaterial({
-            map: maps.map,
-            normalMap: maps.normalMap,
-            roughnessMap: maps.roughnessMap,
-            roughness: 1,
-            metalness: 0,
-            envMapIntensity: 1,
-            ...o
-          });
-          m.normalScale.set(normalScale, normalScale);
-          this.all.push(m);
-          return m;
-        }
-        build() {
-          const T2 = this.tex;
-          const vcN = (n) => (m) => {
-            m.vertexColors = true;
-            if (m.normalScale) m.normalScale.set(n, n);
-          };
-          const nOnly = (n) => (m) => {
-            if (m.normalScale) m.normalScale.set(n, n);
-          };
-          this.wall = this.shared("stucco", "scenery-wall", vcN(2.1)) ?? this.std(T2.plaster(), { vertexColors: true }, 2.1);
-          this.roof = this.shared("roof-tile", "scenery-roof", vcN(1.9)) ?? this.std(T2.roofTile(), { vertexColors: true }, 1.9);
-          this.trim = this.shared("marble", "scenery-trim", vcN(1.5)) ?? this.std(T2.stone(), { vertexColors: true }, 1.5);
-          patchRoughVary(this.wall, 0.78, 1.3, 8.5);
-          patchRoughVary(this.roof, 0.5, 0.86, 6);
-          patchMacroBreak(this.roof, 5, 0.19);
-          patchMacroBreak(this.wall, 7.5, 0.11);
-          this.wall.envMapIntensity = 0.25;
-          this.roof.envMapIntensity = 0.9;
-          this.wood = this.shared("wood-plank", "scenery-wood", vcN(2.2)) ?? this.std(T2.wood(), { vertexColors: true }, 2.2);
-          patchRoughVary(this.wood, 0.66, 1.3, 3.2);
-          this.woodInst = this.woodVariant();
-          this.stone = this.shared("stone-wall", "scenery-stone", vcN(2.6)) ?? this.std(T2.stone(), { vertexColors: true }, 2.6);
-          this.stoneInst = this.shared("stone-wall", "scenery-stone-inst", nOnly(2.6)) ?? this.std(T2.stone(), {}, 2.6);
-          patchRoughVary(this.stone, 0.7, 1.25, 5);
-          patchInstUv(this.stoneInst);
-          patchTint(this.stoneInst);
-          patchLod(this.stoneInst, this.u);
-          this.metal = this.shared("metal-painted", "scenery-metal") ?? this.std(T2.paintedMetal(), {}, 0.6);
-          patchInstUv(this.metal);
-          patchTint(this.metal);
-          patchLod(this.metal, this.u);
-          this.glass = this.shared("glass", "scenery-glass", (m) => {
-            m.color.set(1780531);
-            m.roughness = 0.05;
-            m.envMapIntensity = 2.6;
-            if ("clearcoat" in m) {
-              m.clearcoat = 1;
-              m.clearcoatRoughness = 0.05;
-            }
-          }) ?? new MeshPhysicalMaterial({
-            color: 1780531,
-            roughness: 0.05,
-            metalness: 0.25,
-            envMapIntensity: 2.6,
-            clearcoat: 1,
-            clearcoatRoughness: 0.05
-          });
-          if (this.all.indexOf(this.glass) < 0) this.all.push(this.glass);
-          patchLod(this.glass, this.u);
-          this.fabric = this.std(T2.fabricAtlas(), { side: DoubleSide }, 0.5);
-          patchInstUv(this.fabric);
-          patchLod(this.fabric, this.u);
-          this.sponsor = this.std(T2.sponsorAtlas(), { side: FrontSide, vertexColors: true, envMapIntensity: 1.15 }, 1.05);
-          patchInstUv(this.sponsor);
-          patchLod(this.sponsor, this.u);
-          this.rubber = this.shared("rubber", "scenery-rubber") ?? this.std(T2.paintedMetal(), { color: 2829104 }, 1.4);
-          this.rubber.envMapIntensity = 0.55;
-          this.rubber.emissive = new Color(1511951);
-          this.rubber.emissiveIntensity = 1;
-          patchInstUv(this.rubber);
-          patchTint(this.rubber);
-          patchLod(this.rubber, this.u);
-          const cm = T2.crowdCloth();
-          for (const t of [cm.map, cm.normalMap, cm.roughnessMap]) if (t) t.channel = 1;
-          this.crowd = new MeshStandardMaterial({
-            map: cm.map,
-            normalMap: cm.normalMap,
-            roughnessMap: cm.roughnessMap,
-            vertexColors: true,
-            roughness: 1,
-            metalness: 0,
-            envMapIntensity: 0.35
-          });
-          this.crowd.normalScale.set(0.7, 0.7);
-          this.all.push(this.crowd);
-          patchInstUv(this.crowd);
-          patchTint(this.crowd, true);
-          patchCrowd(this.crowd, this.u);
-          patchLod(this.crowd, this.u);
-          this.cloth = this.std(T2.fabricAtlas(), { side: DoubleSide }, 0.5);
-          patchInstUv(this.cloth);
-          patchCloth(this.cloth, this.u, 1);
-          patchLod(this.cloth, this.u);
-          const bm = T2.bannerCloth();
-          for (const t of [bm.map, bm.normalMap, bm.roughnessMap]) if (t) t.channel = 1;
-          this.banner = this.std(bm, { side: DoubleSide }, 1.1);
-          patchCloth(this.banner, this.u, 1.15);
-          this.bunting = new MeshStandardMaterial({ roughness: 0.86, metalness: 0, side: DoubleSide });
-          this.all.push(this.bunting);
-          patchTint(this.bunting);
-          patchCloth(this.bunting, this.u, 0.85);
-          patchLod(this.bunting, this.u);
-          const lt = T2.laundry();
-          this.laundry = new MeshStandardMaterial({ map: lt, alphaTest: 0.45, side: DoubleSide, roughness: 0.88, metalness: 0 });
-          this.laundry.alphaToCoverage = true;
-          this.all.push(this.laundry);
-          patchInstUv(this.laundry);
-          patchCloth(this.laundry, this.u, 0.5);
-          patchLod(this.laundry, this.u);
-          this.rope = new MeshStandardMaterial({ color: 13086856, roughness: 0.95, metalness: 0 });
-          this.all.push(this.rope);
-          this.backdrop = this.shared("cliff-rock", "scenery-backdrop", (m) => {
-            m.vertexColors = true;
-            m.roughness = 1;
-            m.metalness = 0;
-            if (m.normalScale) m.normalScale.set(0.95, 0.95);
-            m.envMapIntensity = 0.4;
-          }) ?? this.std(T2.stone(), { vertexColors: true, roughness: 1 }, 0.4);
-          patchDesatMap(this.backdrop, 0.7);
-          patchBackdropForm(this.backdrop, this.u, 260, 2400, 0.42, 0.8);
-          patchAerial(this.backdrop, this.u, 620, 2900);
-          this.shadowDecal = new MeshBasicMaterial({
-            map: T2.contactShadow(),
-            transparent: true,
-            opacity: 0.44,
-            color: 3351580,
-            depthWrite: false,
-            polygonOffset: true,
-            polygonOffsetFactor: -4,
-            polygonOffsetUnits: -6,
-            fog: true,
-            toneMapped: false
-          });
-          this.all.push(this.shadowDecal);
-          patchInstUv(this.shadowDecal);
-          patchInstAlpha(this.shadowDecal);
-          patchLod(this.shadowDecal, this.u);
-          this.vergeDecal = this.std(T2.vergeScuff(), { transparent: true, opacity: 0.92, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -5 }, 1.8);
-          patchLod(this.vergeDecal, this.u);
-          this.flowerMat = this.foliage(T2.flowers(), { alphaTest: 0.4, trans: 0.9, wind: true });
-          this.netMat = new MeshStandardMaterial({ map: T2.netWeave(), alphaTest: 0.35, side: DoubleSide, roughness: 0.92, metalness: 0 });
-          this.netMat.alphaToCoverage = true;
-          this.all.push(this.netMat);
-          patchTint(this.netMat);
-          patchLod(this.netMat, this.u);
-          this.lamp = new MeshStandardMaterial({ color: 16773324, emissive: 16761963, emissiveIntensity: 3.2, roughness: 0.4, metalness: 0 });
-          this.all.push(this.lamp);
-          patchLod(this.lamp, this.u);
-          this.bird = new MeshStandardMaterial({ color: 15920352, roughness: 0.72, metalness: 0, side: DoubleSide });
-          this.all.push(this.bird);
-          patchBird(this.bird, this.u);
-          patchTint(this.bird);
-        }
-        /**
-         * A fresh instanced-timber material. Callers that need extra vertex work
-         * (the moored boats bob on the GPU) must not patch the shared one.
-         */
-        woodVariant(key2 = "scenery-wood-inst-" + this.variantSeq++) {
-          const m = this.shared("wood-plank", key2, (mm) => {
-            if (mm.normalScale) mm.normalScale.set(2.2, 2.2);
-          }) ?? this.std(this.tex.wood(), {}, 2.2);
-          patchInstUv(m);
-          patchTint(m);
-          patchRoughVary(m, 0.62, 1.34, 2.4);
-          patchLod(m, this.u);
-          return m;
-        }
-        /** Foliage materials are built on demand because Foliage owns their textures. */
-        foliage(map, opts = {}) {
-          const m = new MeshStandardMaterial({
-            map,
-            color: opts.color ?? 16777215,
-            // `vcol` is opt-in: only geometry that actually carries a `color`
-            // attribute may ask for it, and only the palm frond does (its junction
-            // AO). Turning it on globally would render every other foliage set black.
-            vertexColors: opts.vcol === true,
-            alphaTest: opts.alphaTest ?? 0.42,
-            side: DoubleSide,
-            roughness: 0.72,
-            metalness: 0,
-            // Leaves are thin: flipping the normal on backfaces keeps them lit from
-            // whichever side the sun is actually on.
-            shadowSide: DoubleSide
-          });
-          m.alphaToCoverage = true;
-          this.all.push(m);
-          patchTint(m);
-          patchTranslucency(m, this.u, opts.trans ?? 1);
-          if (opts.wind !== false) patchWind(m, this.u);
-          if (opts.lod !== false) patchLod(m, this.u);
-          return m;
-        }
-        register(m) {
-          this.all.push(m);
-        }
-        /** Sky agent produces the env map after us on some quality paths; adopt it late. */
-        setEnv(env) {
-          if (env === this.env) return;
-          this.env = env;
-          for (const m of this.all) {
-            const a = m;
-            if ("envMap" in a) {
-              a.envMap = env;
-              a.needsUpdate = true;
-            }
-          }
-        }
-        dispose() {
-          for (const m of this.all) m.dispose();
-        }
-      };
-      _m2 = new Matrix4();
-      _q2 = new Quaternion();
-      _s = new Vector3();
-      wallAOFor = (h) => (_x2, y, _z2) => lerp4(0.42, 1, smoothstep4(0, 1.6, y)) * lerp4(0.5, 1, smoothstep4(h, h - 1, y));
-      ROOF_MULT = [
-        [0.038, 0.2, 0.7],
-        [0.034, 0.22, 0.66],
-        [0.042, 0.18, 0.73],
-        [0.036, 0.24, 0.68],
-        [0.04, 0.2, 0.71]
-      ];
-    }
-  });
-
   // src/src/world/Foliage.ts
   var _mat, _euler, _quat, _pos2, _scl, _col, clamp014, PALM_H, PINE_H, Foliage;
   var init_Foliage = __esm({
@@ -61835,13 +61989,14 @@ void main() {
         { offset: 1750, slots: 14, jitter: 0.08, height: [430, 740], depth: [660, 980], jag: 1.4, shoulder: 0.6, segs: 96, rings: 7, crest: 13028315, foot: 10134460, haze: 0.22, tint: 12765404, seaClear: 0, seaChance: 0.28, seaH: 0.42, dress: true, terraces: false }
       ];
       _Scenery = class _Scenery {
-        constructor() {
+        constructor(softwareLow) {
+          __publicField(this, "softwareLow", softwareLow);
           __publicField(this, "group", new Group());
           __publicField(this, "u", makeShared());
           __publicField(this, "mats");
           __publicField(this, "water");
           __publicField(this, "foliage");
-          __publicField(this, "rng", mulberry325(1));
+          __publicField(this, "rng", mulberry322(1));
           __publicField(this, "ctx");
           __publicField(this, "seaLevel", 0);
           __publicField(this, "flatWorld", false);
@@ -61907,9 +62062,9 @@ void main() {
         // ==========================================================================
         init(ctx) {
           this.ctx = ctx;
-          this.rng = mulberry325(12241662);
+          this.rng = mulberry322(12241662);
           this.group.name = "scenery";
-          this.mats = new MatLib2(ctx.renderer, this.u);
+          this.mats = new MatLib(ctx.renderer, this.u);
           this.mats.setEnv(ctx.envMap);
           this.surveyWorld();
           this.foliage = new Foliage(this.mats, this.u, this.rng);
@@ -62182,11 +62337,11 @@ void main() {
           const data = new Uint8Array(n * 4);
           for (let c = 0; c < n; c++) {
             const d = Math.min(dist[c], 4e3);
-            const steep = smoothstep4(10, 38, shoreY[c]);
+            const steep = smoothstep3(10, 38, shoreY[c]);
             const shelf = lerp4(82, 19, steep);
-            const depth = smoothstep4(2.5, shelf, d);
-            const shoreFoam = (1 - smoothstep4(2, 24, d)) * (1 - steep);
-            const cliffFoam = (1 - smoothstep4(1, 12, d)) * steep;
+            const depth = smoothstep3(2.5, shelf, d);
+            const shoreFoam = (1 - smoothstep3(2, 24, d)) * (1 - steep);
+            const cliffFoam = (1 - smoothstep3(1, 12, d)) * steep;
             const o = c * 4;
             data[o] = clamp3(depth, 0, 1) * 255;
             data[o + 1] = clamp3(shoreFoam, 0, 1) * 255;
@@ -62245,6 +62400,7 @@ void main() {
         // Instance sets
         // ==========================================================================
         makeSets() {
+          const low = this.softwareLow();
           const M = this.mats;
           const rng = this.rng;
           const S = (k, g, m) => this.sets[k] = new InstSet(g, m, k);
@@ -62258,9 +62414,9 @@ void main() {
           A("backdrop");
           const hullMat = M.woodVariant();
           patchBob(hullMat, this.u);
-          S("shutter", shutterGeo(), M.woodInst);
+          S("shutter", shutterGeo(low), M.woodInst);
           S("door", doorGeo(), M.woodInst);
-          S("balcony", balconyGeo(), M.stoneInst);
+          S("balcony", balconyGeo(low), M.stoneInst);
           S("flowerbox", flowerBoxGeo(), M.woodInst);
           S("flowers", this.flowerClusterGeo(), M.flowerMat);
           S("awning", awningGeo(), M.fabric);
@@ -62290,17 +62446,17 @@ void main() {
           const mar = marshalGeo();
           S("marshal", mar.post, M.woodInst);
           S("marshalFlag", mar.flag, M.cloth);
-          for (let k = 0; k < 3; k++) S("debris" + k, debrisGeo(mulberry325(900 + k)), M.stoneInst);
-          for (let k = 0; k < 4; k++) S("crowd" + k, spectatorGeo(k), M.crowd);
+          for (let k = 0; k < 3; k++) S("debris" + k, debrisGeo(mulberry322(900 + k)), M.stoneInst);
+          for (let k = 0; k < 4; k++) S("crowd" + k, spectatorGeo(k, low), M.crowd);
           S("gull", gullGeo(), M.bird);
           S("flag", this.pennantGeo(), M.cloth);
           S("bunting", buntingFlagGeo(), M.bunting);
           S("buoy", buoyGeo(), M.woodInst);
           for (let k = 0; k < 2; k++) {
-            const st = stallGeo(mulberry325(4400 + k));
+            const st = stallGeo(mulberry322(4400 + k));
             S("stallFrame" + k, st.frame, M.woodInst);
             S("stallCanopy" + k, st.canopy, M.fabric);
-            S("tent" + k, tentGeo(mulberry325(5500 + k)).body, M.fabric);
+            S("tent" + k, tentGeo(mulberry322(5500 + k)).body, M.fabric);
           }
           const af = aFrameSignGeo();
           S("aframe", af.frame, M.woodInst);
@@ -62483,7 +62639,7 @@ void main() {
           const yaw = Math.atan2(-st.binormal.x * land, -st.binormal.z * land);
           const gm = trs(_p3.x, _p3.y, _p3.z, yaw);
           this.acc.wood.add(gs.struct, gm, new Color(15854044));
-          this.acc.stone.add(bevelBox(60, 4.6, 12, 0.08, 0.28), _m4.multiplyMatrices(gm, trs(0, -2.2, -4.2, 0)).clone(), new Color(14273976), (_x2, y) => lerp4(0.42, 1, smoothstep4(-2.3, -0.4, y)));
+          this.acc.stone.add(bevelBox(60, 4.6, 12, 0.08, 0.28), _m4.multiplyMatrices(gm, trs(0, -2.2, -4.2, 0)).clone(), new Color(14273976), (_x2, y) => lerp4(0.42, 1, smoothstep3(-2.3, -0.4, y)));
           for (let k = 0; k < 5; k++) {
             const off = (k / 4 - 0.5) * 48;
             _p22.set(_p3.x + Math.cos(yaw) * off, _p3.y, _p3.z - Math.sin(yaw) * off);
@@ -62570,12 +62726,12 @@ void main() {
             const w = this.findWaterline(t, s, seaSide);
             if (w === null) return;
             moored++;
-            const rr2 = mulberry325(20736 + moored);
+            const rr2 = mulberry322(20736 + moored);
             this.at(t, seaSide * (w - 1.4), _p22, s);
             this.settle(_p22, t);
             const yq = Math.atan2(s.tangent.x, s.tangent.z);
             const dropQ = Math.max(2, _p22.y - this.seaLevel + 1.6);
-            this.acc.stone.add(bevelBox(2.2, dropQ, 13, 0.05, 0.3), trs(_p22.x, _p22.y - dropQ / 2 + 0.35, _p22.z, yq), new Color(14470836), (_x2, y) => lerp4(0.4, 1, smoothstep4(-dropQ, 0, y)));
+            this.acc.stone.add(bevelBox(2.2, dropQ, 13, 0.05, 0.3), trs(_p22.x, _p22.y - dropQ / 2 + 0.35, _p22.z, yq), new Color(14470836), (_x2, y) => lerp4(0.4, 1, smoothstep3(-dropQ, 0, y)));
             for (let k = 0; k < 3; k++) {
               this.at(t + (k - 1) * (4.2 / (track.length || 1)), seaSide * (w + 3.4 + rr2() * 4.5), _p3, s);
               _p3.y = this.seaLevel;
@@ -62636,7 +62792,7 @@ void main() {
          *  accumulators, the boats into the existing hull/rig instance sets.
          */
         harbourMass() {
-          const rng = mulberry325(9162305);
+          const rng = mulberry322(9162305);
           const track = this.ctx.track;
           const L = track.length || 1;
           let apex = null;
@@ -62655,7 +62811,7 @@ void main() {
               bevelBox(3, drop, 11.6, 0.05, 0.3),
               trs(_p3.x, _p3.y - drop / 2 + 0.42, _p3.z, yaw),
               new Color(14865594),
-              (_x2, y) => lerp4(0.38, 1, smoothstep4(-drop, -drop * 0.15, y))
+              (_x2, y) => lerp4(0.38, 1, smoothstep3(-drop, -drop * 0.15, y))
             );
             this.acc.stone.add(bevelBox(3.3, 0.34, 11.6, 0.05, 0.55), trs(_p3.x, _p3.y + 0.5, _p3.z, yaw), new Color(15919058));
             for (let k = 0; k < 3; k++) {
@@ -62717,7 +62873,7 @@ void main() {
          * has, and it is what tells the eye the water is water.
          */
         dressMarina() {
-          const rng = mulberry325(3830188);
+          const rng = mulberry322(3830188);
           const L = this.ctx.track.length || 1;
           let built = 0;
           this.walk(0.1, 0.225, 30, (t, s) => {
@@ -62747,7 +62903,7 @@ void main() {
                   bevelBox(2, 0.34, 7.6, 0.05, 0.9),
                   trs(_p3.x, this.seaLevel + 0.36, _p3.z, fYaw + Math.PI / 2),
                   new Color(14141096),
-                  (_x2, y) => lerp4(0.62, 1, smoothstep4(-0.17, 0.1, y))
+                  (_x2, y) => lerp4(0.62, 1, smoothstep3(-0.17, 0.1, y))
                 );
                 if (k % 2 === 0)
                   this.acc.wood.add(bevelBox(0.22, 3, 0.22, 0.04, 2.2), trs(_p3.x + s.binormal.x * sea * 1.1, this.seaLevel - 0.4, _p3.z + s.binormal.z * sea * 1.1, fYaw), new Color(11575430));
@@ -62839,7 +62995,7 @@ void main() {
          *  crowd watching from behind them. All instanced sets that already exist.
          */
         villagePlaza() {
-          const rng = mulberry325(4312583);
+          const rng = mulberry322(4312583);
           const track = this.ctx.track;
           let bt = -1;
           let bc = 0;
@@ -62887,7 +63043,7 @@ void main() {
             } else if (k < 0.7 && placed === 0) {
               placed = 1;
               const yq = rng() * 6.28;
-              this.acc.stone.add(bevelBox(3.6, 0.9, 3.6, 0.1, 0.5), trs(_p3.x, _p3.y + 0.45, _p3.z, yq), new Color(15129282), (_x2, y) => lerp4(0.5, 1, smoothstep4(0, 0.7, y)));
+              this.acc.stone.add(bevelBox(3.6, 0.9, 3.6, 0.1, 0.5), trs(_p3.x, _p3.y + 0.45, _p3.z, yq), new Color(15129282), (_x2, y) => lerp4(0.5, 1, smoothstep3(0, 0.7, y)));
               this.acc.stone.add(bevelBox(2.9, 0.22, 2.9, 0.05, 0.9), trs(_p3.x, _p3.y + 0.98, _p3.z, yq), new Color(13812646));
               this.acc.trim.add(bevelBox(0.55, 2.2, 0.55, 0.08, 1.4), trs(_p3.x, _p3.y + 2, _p3.z, yq + 0.4), new Color(15787728));
               this.acc.trim.add(bevelBox(1.5, 0.2, 1.5, 0.05, 1.2), trs(_p3.x, _p3.y + 2.55, _p3.z, yq + 0.4), new Color(15128764));
@@ -62913,7 +63069,7 @@ void main() {
             this.at(t, sea * (s.halfWidth + 1.4), _p3, s);
             this.settle(_p3, t);
             const hgt = 1 + t * 137 % 0.28;
-            this.acc.stone.add(bevelBox(0.24, hgt, 0.24, 0.03, 1.1), trs(_p3.x, _p3.y + hgt * 0.45, _p3.z, rng() * 6.28), new Color(15788248), (_x2, y) => lerp4(0.5, 1, smoothstep4(-hgt * 0.4, -hgt * 0.1, y)));
+            this.acc.stone.add(bevelBox(0.24, hgt, 0.24, 0.03, 1.1), trs(_p3.x, _p3.y + hgt * 0.45, _p3.z, rng() * 6.28), new Color(15788248), (_x2, y) => lerp4(0.5, 1, smoothstep3(-hgt * 0.4, -hgt * 0.1, y)));
             this.acc.trim.add(bevelBox(0.3, 0.09, 0.3, 0.02, 2), trs(_p3.x, _p3.y + hgt * 0.95, _p3.z, 0), new Color(14697791));
             this.dropShadow(_p3, 0.34, t, 0.7);
             if (rng() < 0.55) {
@@ -63027,7 +63183,7 @@ void main() {
             if (this.isSea(t, lat, s)) return;
             const yaw = Math.atan2(s.tangent.x, s.tangent.z);
             const hgt = 1.15;
-            this.acc.wood.add(bevelBox(0.2, hgt, 0.2, 0.03, 2.4), trs(_p3.x, _p3.y + hgt * 0.42, _p3.z, yaw), new Color(15787732), (_x2, y) => lerp4(0.45, 1, smoothstep4(-hgt * 0.42, -hgt * 0.1, y)));
+            this.acc.wood.add(bevelBox(0.2, hgt, 0.2, 0.03, 2.4), trs(_p3.x, _p3.y + hgt * 0.42, _p3.z, yaw), new Color(15787732), (_x2, y) => lerp4(0.45, 1, smoothstep3(-hgt * 0.42, -hgt * 0.1, y)));
             this.dropShadow(_p3, 0.3, t, 0.65);
             if (i % 3 === 0) this.pennant(trs(_p3.x, _p3.y, _p3.z, yaw, 1, 0.9, 1), rng);
             if (i % 5 === 2) {
@@ -63049,7 +63205,7 @@ void main() {
             const wm = windmillGeo();
             const yaw = Math.atan2(-s.binormal.x * land, -s.binormal.z * land);
             const base = trs(_p3.x, _p3.y, _p3.z, yaw);
-            this.acc.wall.add(wm.tower, base, new Color(15985888), (_x2, y) => lerp4(0.55, 1, smoothstep4(0, 2.4, y)));
+            this.acc.wall.add(wm.tower, base, new Color(15985888), (_x2, y) => lerp4(0.55, 1, smoothstep3(0, 2.4, y)));
             this.acc.trim.add(wm.trim, base, new Color(15260875));
             this.acc.stone.add(bevelBox(9.2, 2.6, 9.2, 0.1, 0.28), _m4.multiplyMatrices(base, trs(0, -1.15, 0, 0)).clone(), new Color(13615528));
             const rotor = new Group();
@@ -63179,7 +63335,7 @@ void main() {
          * whole pass is zero additional draw calls.
          */
         dressOutsideShoulder() {
-          const rng = mulberry325(1045997);
+          const rng = mulberry322(1045997);
           const L = this.ctx.track.length || 1;
           let alt = 1;
           this.walk(0, 1, 22, (t, s, idx) => {
@@ -63426,7 +63582,7 @@ void main() {
               bevelBox(0.62, ph, 0.62, 0.05, 1.2),
               trs(_p22.x, _p22.y + ph / 2, _p22.z, rng() * 6.28),
               new Color(14205860),
-              (_x2, y) => lerp4(0.55, 1, smoothstep4(-ph / 2, 0, y))
+              (_x2, y) => lerp4(0.55, 1, smoothstep3(-ph / 2, 0, y))
             );
             _p3.set(_p22.x, _p22.y + ph * 0.85, _p22.z);
             this.foliage.bush(_p3.clone(), 0.85 + rng() * 0.45, rng() * 6.28, ss2.t);
@@ -63451,7 +63607,7 @@ void main() {
             bevelBox(0.55, wh, wl, 0.06, 0.6),
             trs(_p22.x, _p22.y + wh * 0.42, _p22.z, inward),
             new Color(13614238),
-            (_x2, y) => lerp4(0.5, 1, smoothstep4(-wh / 2, 0, y))
+            (_x2, y) => lerp4(0.5, 1, smoothstep3(-wh / 2, 0, y))
           );
           this.acc.trim.add(bevelBox(0.72, 0.11, wl, 0.02, 1.6), trs(_p22.x, _p22.y + wh * 0.92, _p22.z, inward), new Color(14997695));
           this.sets.awning.add(trs(_p22.x, _p22.y + wh * 0.82, _p22.z, inward, 2.1 + rng() * 0.8, 1, 1), {
@@ -63509,7 +63665,7 @@ void main() {
               landmassGeo(r, h, this.signSeq++ * 977 | 0, 0, 1.9, 20, 6),
               trs(_p22.x, this.seaLevel - 0.5, _p22.z, rng() * 6.28),
               new Color(11575431),
-              (_x2, y) => lerp4(0.42, 1.05, smoothstep4(0, h * 0.5, y))
+              (_x2, y) => lerp4(0.42, 1.05, smoothstep3(0, h * 0.5, y))
             );
             for (let q = 0; q < 2; q++) {
               const a = rng() * 6.28;
@@ -63650,7 +63806,7 @@ void main() {
          * it never climbs, there is no bank here and nothing to do.
          */
         dressBankCrest() {
-          const rng = mulberry325(1867351);
+          const rng = mulberry322(1867351);
           const density = clamp3(this.ctx.settings.foliageDensity ?? 1, 0.25, 1.5);
           this.walk(0, 1, 15 / density, (t, s, idx) => {
             if (t > 0.49 && t < 0.63) return;
@@ -63733,7 +63889,7 @@ void main() {
                   landmassGeo(r, h, seed++, 0, 1.8, 26, 8),
                   trs(_p3.x, this.seaLevel - 0.6, _p3.z, this.hash1(idx, 181) * 6.28),
                   new Color(12101261),
-                  (_x2, y) => lerp4(0.5, 1.05, smoothstep4(0, h * 0.55, y))
+                  (_x2, y) => lerp4(0.5, 1.05, smoothstep3(0, h * 0.55, y))
                 );
                 for (let k = 0; k < 2; k++) {
                   const a = this.hash1(idx * 5 + k, 198) * 6.28;
@@ -63812,7 +63968,7 @@ void main() {
                 bevelBox(w, h, w * 0.8, 0.06, 0.4),
                 _m4.multiplyMatrices(base, trs(0, h / 2, 0, 0)).clone(),
                 _col2.set(pick(rng, PAL.pastels)).clone(),
-                (_x2, y) => lerp4(0.55, 1, smoothstep4(-h * 0.5, -h * 0.1, y))
+                (_x2, y) => lerp4(0.55, 1, smoothstep3(-h * 0.5, -h * 0.1, y))
               );
               this.acc.roof.add(bevelBox(w + 0.8, 0.3, w * 0.95, 0.05, 0.7), _m4.multiplyMatrices(base, trs(0, h + 0.15, 0, 0, 1, 1, 1, 0.22)).clone(), new Color(11887679));
               this.acc.wood.add(bevelBox(w * 0.55, 2.3, 0.18, 0.03, 2), _m4.multiplyMatrices(base, trs(w * 0.1, 1.15, w * 0.42, 0)).clone(), new Color(14273458));
@@ -64087,7 +64243,7 @@ void main() {
                 this.at(t, lat + land * k * 3.4, _p22, s);
                 this.settle(_p22, t);
                 const yaw = Math.atan2(s.tangent.x, s.tangent.z);
-                this.acc.stone.add(bevelBox(1.1, 1.5, 12 + rng() * 8, 0.06, 0.4), trs(_p22.x, _p22.y - 0.2, _p22.z, yaw), new Color(13220252), (_x2, y) => lerp4(0.5, 1, smoothstep4(-0.75, 0.4, y)));
+                this.acc.stone.add(bevelBox(1.1, 1.5, 12 + rng() * 8, 0.06, 0.4), trs(_p22.x, _p22.y - 0.2, _p22.z, yaw), new Color(13220252), (_x2, y) => lerp4(0.5, 1, smoothstep3(-0.75, 0.4, y)));
               }
             }
           });
@@ -64154,7 +64310,7 @@ void main() {
             this.at(tt, lat, _p22, ss2);
             this.settle(_p22, tt);
             const h = 0.85 + rng() * 0.45;
-            this.acc.stone.add(bevelBox(0.55, h, 3.3, 0.05, 0.75), trs(_p22.x, _p22.y + h / 2 - 0.15, _p22.z, yaw0 + (rng() - 0.5) * 0.1), new Color(13615270), (_x2, y) => lerp4(0.45, 1, smoothstep4(-h / 2, 0, y)));
+            this.acc.stone.add(bevelBox(0.55, h, 3.3, 0.05, 0.75), trs(_p22.x, _p22.y + h / 2 - 0.15, _p22.z, yaw0 + (rng() - 0.5) * 0.1), new Color(13615270), (_x2, y) => lerp4(0.45, 1, smoothstep3(-h / 2, 0, y)));
           }
         }
         // ==========================================================================
@@ -64251,7 +64407,7 @@ void main() {
             _p22.set(_p3.x + s.tangent.x * off, this.seaLevel, _p3.z + s.tangent.z * off);
             if (!this.flatWorld && this.groundY(_p22, t) > this.seaLevel + 0.6) continue;
             const hgt = 5.4 - Math.abs(k - segs / 2) * 0.11 + Math.sin(k * 1.7) * 0.35;
-            this.acc.stone.add(bevelBox(9.5, hgt, segLen * 1.04, 0.25, 0.18), trs(_p22.x, this.seaLevel + hgt / 2 - 2.6, _p22.z, yaw + Math.sin(k * 0.4) * 0.05), new Color(12562069), (_x2, y) => lerp4(0.5, 1, smoothstep4(-hgt * 0.5, -hgt * 0.15, y)));
+            this.acc.stone.add(bevelBox(9.5, hgt, segLen * 1.04, 0.25, 0.18), trs(_p22.x, this.seaLevel + hgt / 2 - 2.6, _p22.z, yaw + Math.sin(k * 0.4) * 0.05), new Color(12562069), (_x2, y) => lerp4(0.5, 1, smoothstep3(-hgt * 0.5, -hgt * 0.15, y)));
             if (k % 2 === 0) {
               this.sets["debris" + k % 3].add(trs(_p22.x + s.binormal.x * sea * 5.6, this.seaLevel - 0.4, _p22.z + s.binormal.z * sea * 5.6, k * 1.3, 3 + rng() * 1.6), {
                 color: _col2.set(11707532).clone(),
@@ -64283,7 +64439,7 @@ void main() {
          * into that window, and every one of them rides an existing instance set.
          */
         dressSeaTraffic() {
-          const rng = mulberry325(99226110);
+          const rng = mulberry322(99226110);
           const sailSet = this.sets.farSail;
           this.walk(0, 1, 52, (t, s, i) => {
             const sea = this.seaSide(t);
@@ -64420,7 +64576,7 @@ void main() {
               geo,
               trs(_p3.x, this.seaLevel - 0.6, _p3.z, this.hash1(seed, 100) * 6.28),
               new Color(12101261),
-              (_x2, y) => lerp4(0.5, 1.05, smoothstep4(0, h * 0.55, y))
+              (_x2, y) => lerp4(0.5, 1.05, smoothstep3(0, h * 0.55, y))
             );
             for (let k = 0; k < 3; k++) {
               const a = this.hash1(seed * 7 + k, 117) * 6.28;
@@ -64842,7 +64998,7 @@ void main() {
                   bevelBox(4.6, 1.4, 4, 0.05, 0.5),
                   trs(_p22.x, _p22.y - 0.26, _p22.z, yaw0),
                   new Color(12892062),
-                  (_x2, y) => lerp4(0.42, 1, smoothstep4(-0.75, 0.35, y))
+                  (_x2, y) => lerp4(0.42, 1, smoothstep3(-0.75, 0.35, y))
                 );
               }
               _p3.y += 0.44;
@@ -64956,7 +65112,7 @@ void main() {
                 const ay = Math.atan2(-as.binormal.x * side, -as.binormal.z * side);
                 for (let k = 0; k < 5; k++) {
                   _p3.copy(_p22).addScaledVector(as.binormal, side * k * 0.85);
-                  this.acc.stone.add(bevelBox(alley + 0.6, 0.26, 0.95, 0.03, 0.9), trs(_p3.x, _p22.y + 0.13 + k * 0.24, _p3.z, ay), new Color(13944491), (_x2, y) => lerp4(0.62, 1, smoothstep4(-0.13, 0.13, y)));
+                  this.acc.stone.add(bevelBox(alley + 0.6, 0.26, 0.95, 0.03, 0.9), trs(_p3.x, _p22.y + 0.13 + k * 0.24, _p3.z, ay), new Color(13944491), (_x2, y) => lerp4(0.62, 1, smoothstep3(-0.13, 0.13, y)));
                 }
               }
               d += alley;
@@ -65101,7 +65257,7 @@ void main() {
           const authored = BACKDROP_BANDS[BACKDROP_BANDS.length - 1].offset;
           const fit = Math.min(1, maxOffset / authored);
           this.buildSeaBearings(cx, cz, cr);
-          const rng = mulberry325(776553);
+          const rng = mulberry322(776553);
           let seed = 11;
           for (const band of BACKDROP_BANDS) {
             const R = inner + band.offset * fit;
@@ -65566,7 +65722,7 @@ void main() {
          * masts the far-sail set, the boats the hull sets. Not one new mesh.
          */
         dressMidground() {
-          const rng = mulberry325(10297082);
+          const rng = mulberry322(10297082);
           const density = clamp3(this.ctx.settings.foliageDensity ?? 1, 0.25, 1.5);
           this.walk(0, 1, 42 / density, (t, s, i) => {
             if (t > 0.495 && t < 0.625) return;
@@ -65611,7 +65767,7 @@ void main() {
                     bevelBox(0.7, h, 9.4, 0.05, 0.6),
                     trs(_p3.x, _p3.y + h * 0.4, _p3.z, yaw + (rng() - 0.5) * 0.08),
                     _col2.set(13351836).clone(),
-                    (_x2, y) => lerp4(0.5, 1, smoothstep4(-h / 2, 0.1, y))
+                    (_x2, y) => lerp4(0.5, 1, smoothstep3(-h / 2, 0.1, y))
                   );
                 }
                 _p22.set(_p3.x + (rng() - 0.5) * 4, _p3.y + 0.6, _p3.z + (rng() - 0.5) * 4);
@@ -65661,7 +65817,7 @@ void main() {
               bevelBox(bw, bh, bw * 0.85, 0.07, 0.5),
               _m4.multiplyMatrices(base, trs(bx, by + bh / 2, bz, (rng() - 0.5) * 0.35)).clone(),
               wall,
-              (_x2, y) => lerp4(0.55, 1, smoothstep4(-bh * 0.5, -bh * 0.15, y))
+              (_x2, y) => lerp4(0.55, 1, smoothstep3(-bh * 0.5, -bh * 0.15, y))
             );
             this.acc.roof.add(bevelBox(bw + 0.9, 0.55, bw * 0.95, 0.06, 0.8), _m4.multiplyMatrices(base, trs(bx, by + bh + 0.28, bz, (rng() - 0.5) * 0.35)).clone(), roof);
           }
@@ -65728,7 +65884,7 @@ void main() {
               bevelBox(6.5, h, 13.5, 0.12, 0.35),
               trs(_p3.x, this.seaLevel + h * 0.35, _p3.z, Math.atan2(ss2.tangent.x, ss2.tangent.z) + (rng() - 0.5) * 0.12),
               _col2.set(12168082).clone(),
-              (_x2, y) => lerp4(0.42, 1, smoothstep4(-h / 2, 0, y))
+              (_x2, y) => lerp4(0.42, 1, smoothstep3(-h / 2, 0, y))
             );
             if (k % 2 === 0)
               this.sets.debris0.add(trs(_p3.x + s.binormal.x * side * 8, this.seaLevel + 0.4, _p3.z + s.binormal.z * side * 8, rng() * 6.28, 3.5 + rng() * 2.5), {
@@ -65753,7 +65909,7 @@ void main() {
          * distance cue in the game and it is what a real bay is full of.
          */
         dressFarSails() {
-          const rng = mulberry325(368917);
+          const rng = mulberry322(368917);
           const set = this.sets.farSail;
           if (!set) return;
           this.walk(0, 1, 34, (t, s, i) => {
@@ -84324,7 +84480,7 @@ html[data-kc-open] .kr-screens { opacity: 0; }
       var sky = new Sky();
       var materials = new Materials();
       var track = new Track();
-      var scenery = new Scenery();
+      var scenery = new Scenery(() => pipeline2.softwareLow);
       var effects = new Effects();
       var items = new Items();
       var race = new Race();

@@ -16,6 +16,7 @@ import * as THREE from 'three';
 import { EffectComposer } from 'postprocessing';
 import { Quality, type Ctx, type Settings, type System } from '../types';
 import { PostFX } from './PostFX';
+import { installSoftwareSurfaces } from './SoftwareSurfaces';
 import { glCapabilities, usesSoftwareLow, forcedFailure, drainErrors, type GLCapabilities } from '../core/Settings';
 import { logPipeline, recordShaderError, type FrameSample } from '../core/Diagnostics';
 
@@ -123,7 +124,7 @@ function describeProgram(
     }
     // The lit families three ships. Any of them being rejected takes visible
     // geometry with it; a postprocessing EffectMaterial being rejected does not.
-    if (/RE_Direct_Physical|RE_Direct_BlinnPhong|RE_Direct_Lambert|RE_Direct_Toon/.test(src)) {
+    if (/RE_Direct_Physical|RE_Direct_BlinnPhong|RE_Direct_Lambert|RE_Direct_Toon|PURETV_SOFTWARE_SURFACE/.test(src)) {
       world = true;
     }
   }
@@ -174,6 +175,7 @@ export class RenderPipeline implements System {
   private ctx!: Ctx;
   private device: DeviceProfile = { webgl2: false, halfFloat: false, software: false, name: '' };
   private usePost = false;
+  private releaseSoftwareSurfaces: (() => void) | null = null;
   /** Current position on the fallback ladder. Only ever moves downward. */
   private rung: Rung = Rung.Hdr;
   /** The material every object is drawn with at Rung.Safe / Rung.Flat. */
@@ -324,6 +326,9 @@ export class RenderPipeline implements System {
     this.renderer = renderer;
     try { this.gl = renderer.getContext(); } catch { this.gl = null; }
     ctx.renderer = renderer;
+    if (this.device.software) {
+      this.releaseSoftwareSurfaces = installSoftwareSurfaces(renderer, ctx, () => this.softwareLow && this.rung === Rung.Direct);
+    }
     // Same contract as `window.__drawBudget`: the capture and perf harnesses
     // need to read the device profile and reach into the effect chain (which
     // is deliberately not on Ctx) to A/B a single pass.
@@ -667,6 +672,8 @@ export class RenderPipeline implements System {
     this.samplePixels = null;
     this.notice?.remove();
     this.notice = null;
+    this.releaseSoftwareSurfaces?.();
+    this.releaseSoftwareSurfaces = null;
     this.renderer?.dispose();
     if (el !== undefined && el.parentNode !== null) el.parentNode.removeChild(el);
   }

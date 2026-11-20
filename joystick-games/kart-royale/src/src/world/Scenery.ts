@@ -287,6 +287,8 @@ const BACKDROP_BANDS: BackdropBand[] = [
 ];
 
 export class Scenery implements System {
+  constructor(private readonly softwareLow: () => boolean) {}
+
   readonly group = new THREE.Group();
 
   private u: Shared = makeShared();
@@ -734,6 +736,7 @@ export class Scenery implements System {
   // ==========================================================================
 
   private makeSets() {
+    const low = this.softwareLow();
     const M = this.mats;
     const rng = this.rng;
     const S = (k: string, g: THREE.BufferGeometry, m: THREE.Material) => (this.sets[k] = new InstSet(g, m, k));
@@ -752,9 +755,9 @@ export class Scenery implements System {
     const hullMat = M.woodVariant();
     patchBob(hullMat, this.u);
 
-    S('shutter', shutterGeo(), M.woodInst);
+    S('shutter', shutterGeo(low), M.woodInst);
     S('door', doorGeo(), M.woodInst);
-    S('balcony', balconyGeo(), M.stoneInst);
+    S('balcony', balconyGeo(low), M.stoneInst);
     S('flowerbox', flowerBoxGeo(), M.woodInst);
     S('flowers', this.flowerClusterGeo(), M.flowerMat);
     S('awning', awningGeo(), M.fabric);
@@ -787,7 +790,7 @@ export class Scenery implements System {
     for (let k = 0; k < 3; k++) S('debris' + k, debrisGeo(mulberry32(900 + k)), M.stoneInst);
     // Four spectator silhouettes. One capsule repeated is the single loudest
     // placeholder tell in the round-1 set; a different OUTLINE costs nothing.
-    for (let k = 0; k < 4; k++) S('crowd' + k, spectatorGeo(k), M.crowd);
+    for (let k = 0; k < 4; k++) S('crowd' + k, spectatorGeo(k, low), M.crowd);
     S('gull', gullGeo(), M.bird);
     S('flag', this.pennantGeo(), M.cloth);
     S('bunting', buntingFlagGeo(), M.bunting);

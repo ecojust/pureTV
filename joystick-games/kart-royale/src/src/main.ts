@@ -77,7 +77,7 @@ const input = new Input();
 const sky = new Sky();
 const materials = new Materials();
 const track = new Track();
-const scenery = new Scenery();
+const scenery = new Scenery(() => pipeline.softwareLow);
 const effects = new Effects();
 const items = new Items();
 const race = new Race();
