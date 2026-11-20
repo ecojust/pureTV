@@ -112,8 +112,8 @@ jobs:
               assert re.fullmatch('[a-f0-9]{40}',os.environ['ARTIFACT_EXPORT']) and not os.environ['ARTIFACT_ATTEMPT']
           else:
               for key in ['ARTIFACT_ID','ARTIFACT_ATTEMPT']:assert re.fullmatch('[1-9][0-9]*',os.environ[key])
-          assert os.environ['GAMES']=='kart-royale' and os.environ['ARTIFACT_SOURCE']=='5636ee87703fc764d72ce8389dda965a538588fe'
-          assert os.environ['ARTIFACT_RUN']=='44689811645' and os.environ['ARTIFACT_ID']=='14608601581'
+          assert os.environ['GAMES']=='kart-royale' and os.environ['ARTIFACT_SOURCE']=='a10c8c82b204faf151001beaeed7d3aa85a751e0'
+          assert os.environ['ARTIFACT_RUN']=='44692259891' and os.environ['ARTIFACT_ID']=='14609486272'
           assert os.environ['REQUESTED_QA']==os.environ['GITHUB_SHA']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
           assert os.environ['CONFIRM_BACKROAD_INSTALL'] in ('true','false')
           if os.environ['CONFIRM_BACKROAD_INSTALL']=='true':
