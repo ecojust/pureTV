@@ -8,7 +8,7 @@
 
 在 1920×1080 的 Android TV 16 模拟器中，默认端口和默认端口占用两种模式各通过 48 项检查。原版 pureTV SDK 完成了选车、选赛道、油门、转向、漂移键、暂停及断线重连。赛中帮助卡展开时会覆盖右下小地图的一部分。测试使用虚拟手柄，未测试实体电视或完整通关。 [赛中截图](https://github.com/ecojust/pureTV/blob/dee5a42698422aaf0de64c3f1c312e6a102a67c3/reports/joystick-android-report-runtime-turbo-kart-rush/turbo-kart-rush-occupied/playing.png) · [原始报告与录像](https://github.com/ecojust/pureTV/tree/dee5a42698422aaf0de64c3f1c312e6a102a67c3/reports/joystick-android-report-runtime-turbo-kart-rush) · [签名和核验记录](docs/android-delivery/verification.json)
 
-
+同一签名 APK 也在 1280×720 的 Android TV 16 模拟器上使用 Mesa Lavapipe 通过了两种端口模式，每种 48 项检查。两场分别收到 651 和 635 个匹配的 SDK 回执。 [720p 赛中截图](https://github.com/ecojust/pureTV/blob/c861baaa826082178c792d26ef4eed987118f0b5/evidence/joystick-android-runtime-turbo-kart-rush/turbo-kart-rush-occupied/playing.png) · [720p 验证记录](docs/android-delivery/720p-verification.json)
 
 0.1.1 的渲染器会在不支持半浮点渲染目标的 WebGL 2 设备和已识别的软件 GPU 上直接绘制赛道与赛车，跳过辉光、环境反射和阴影，并将 3D 画面限制在 960×540 以内。菜单与 HUD 保持原显示尺寸。下方 0.1.0 的下载及其验证范围按各平台列出。
 
