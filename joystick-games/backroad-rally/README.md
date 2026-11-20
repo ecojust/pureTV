@@ -4,7 +4,7 @@
 
 ## Android TV 测试下载
 
-0.1.2 支持 Android 8.0 及以上。APK 使用固定发布证书，包内 333 个网页文件均与芬兰赛段驾驶复验时的文件逐字节一致。Android TV 16 的 SwiftShader 实测已通过菜单并进入芬兰赛段，但系统截图仍只有 HUD，中部没有绘出赛车或道路。[原包截图、像素读数和 116 个手柄回执](docs/android-0.1.2/)[下载 0.1.2 APK](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/backroad-rally-0.1.2.apk) · [SHA-256](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/SHA256SUMS-Backroad-0.1.2.txt) · [原签名包核验](https://github.com/ecojust/pureTV/actions/runs/44688535161/job/136128536372)
+0.1.2 支持 Android 8.0 及以上。APK 使用固定发布证书，包内 333 个网页文件均与芬兰赛段驾驶复验时的文件逐字节一致。Android TV 16 在 lavapipe 模拟器配置下进入芬兰赛段，起跑门、白色赛车、观众和道路均已在系统截图中确认，WebGL 实际由 ANGLE/Vulkan SwiftShader 提供。默认 GLES 翻译器在同一段只显示 HUD，赛道透明。[正常起跑原图](https://github.com/ecojust/pureTV/blob/18600af5d01945f397666e720421469b23567c03/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/original-stage-running.png) · [原包截图、像素读数和 116 个手柄回执](docs/android-0.1.2/)[下载 0.1.2 APK](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/backroad-rally-0.1.2.apk) · [SHA-256](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/SHA256SUMS-Backroad-0.1.2.txt) · [原签名包核验](https://github.com/ecojust/pureTV/actions/runs/44688535161/job/136128536372)
 
 ## WebGL2 兼容性
 
