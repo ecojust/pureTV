@@ -41,8 +41,21 @@ int main(int argc,char **argv) {
  if(!strcmp(mode,"signal15")){raise(SIGTERM);return 99;}
  if(!strcmp(mode,"ignore")){signal(SIGTERM,SIG_IGN);for(;;)pause();}
  if(!strcmp(mode,"hang")){for(;;)pause();}
- if(!strcmp(mode,"output")){for(int i=0;i<1500000;i++){putchar('x');fputc('y',stderr);}return 27;}
+ if(!strcmp(mode,"output")){setvbuf(stderr,NULL,_IOFBF,BUFSIZ);for(int i=0;i<1500000;i++){putchar('x');fputc('y',stderr);}return 27;}
  printf("argv0=%s\n",argv[0]);for(int i=1;i<argc;i++)printf("arg%d=%s\n",i,argv[i]);fflush(stdout);
+ const char *observed=getenv("PURETV_SUPERVISOR_OBSERVED_REPORT");
+ if(observed && !strcmp(mode,"nonzero")){
+  // Wait for the unchanged supervisor to publish its real /proc exec observation.
+  for(int attempt=0;attempt<400;attempt++){
+   FILE *report=fopen(observed,"r");
+   if(report){char line[512];int found=0;
+    while(fgets(line,sizeof(line),report)){if(strstr(line,"\"qemuExecutable\": true")){found=1;break;}}
+    fclose(report);if(found)return 23;
+   }
+   usleep(20000);
+  }
+  return 98;
+ }
  usleep(150000);return !strcmp(mode,"nonzero")?23:0;
 }
 '''
@@ -194,10 +207,19 @@ class SupervisorTests(unittest.TestCase):
         selection = "${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}"
         self.assertEqual(options.count(selection), 1)
         prefix = ['-port', '5554', '-avd', 'JoystickGamesValidation']
-        self.assertEqual(prefix + options.replace(selection, '').split(), m.EXPECTED_ARGS)
-        self.assertEqual(prefix + options.replace(selection, ' -feature -Vulkan').split(),
+        profile = "${{ matrix.game == 'kart-royale' && '-memory 3072 -gpu lavapipe' || '-memory 2048 -gpu swiftshader_indirect' }}"
+        self.assertEqual(options.count(profile), 1)
+        pon_options = options.replace(profile, '-memory 2048 -gpu swiftshader_indirect')
+        self.assertEqual(prefix + pon_options.replace(selection, '').split(), m.EXPECTED_ARGS)
+        self.assertEqual(prefix + pon_options.replace(selection, ' -feature -Vulkan').split(),
                          m.EXPECTED_ARGS + ['-feature', '-Vulkan'])
-        self.assertIn("emulator-build: '16970787'", workflow); self.assertIn('api-level: 36', workflow)
+        royale_options = options.replace(profile, '-memory 3072 -gpu lavapipe')
+        self.assertEqual(prefix + royale_options.replace(selection, '').split(),
+                         prefix + ['-no-window', '-memory', '3072', '-gpu', 'lavapipe',
+                                   '-noaudio', '-no-boot-anim', '-no-snapshot'])
+        self.assertIn("emulator-build: '16970787'", workflow); self.assertIn("api-level: ${{ matrix.game == 'kart-royale' && '34' || '36' }}", workflow)
+        self.assertIn("arch: ${{ matrix.game == 'kart-royale' && 'x86' || 'x86_64' }}", workflow)
+        self.assertIn("profile: ${{ matrix.game == 'kart-royale' && 'tv_720p' || 'tv_1080p' }}", workflow)
         declared = workflow.split('      pon_disable_vulkan:', 1)[1].split('\n\nconcurrency:', 1)[0]
         self.assertIn('default: false', declared); self.assertIn('type: boolean', declared)
 
@@ -357,7 +379,9 @@ class SupervisorTests(unittest.TestCase):
     def test_same_pid_qemu_exec_is_bound_but_forked_launcher_exit_is_unknown(self):
         qemu = self.sdk/'emulator/qemu/linux-x86_64/qemu-system-x86_64-headless'; qemu.parent.mkdir(parents=True)
         shutil.copyfile(self.entry, qemu); qemu.chmod(0o755)
-        with patch.dict(os.environ, {'PURETV_SUPERVISOR_EXEC_TARGET': str(qemu)}): result = self.child_case('exec', 'exec')
+        with patch.dict(os.environ, {'PURETV_SUPERVISOR_EXEC_TARGET': str(qemu),
+                                     'PURETV_SUPERVISOR_OBSERVED_REPORT': str(self.root/'exec/report.json')}):
+            result = self.child_case('exec', 'exec', seconds=10)
         self.assertEqual(result['returnCode'], 23); self.assertTrue(result['actualQemuExitProven']); self.assertEqual(result['qemuExitCode'], 23)
         fork = self.child_case('fork', 'fork')
         self.assertEqual(fork['returnCode'], 0); self.assertFalse(fork['actualQemuExitProven']); self.assertIsNone(fork['qemuExitCode'])
