@@ -1,0 +1,55 @@
+name: Preserve frozen controller checks
+on:
+  push:
+    branches: [qa/catalog-input-report-20261120]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  retain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - kind: pc
+            run: '44760023219'
+            sha: 61a4ce261ce13fa94c0417a31218cff24100135d
+          - kind: phone
+            run: '44761042155'
+            sha: 2c7ef216d65f059cf654fae8aa379600d37ae3bc
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_RUN: ${{ matrix.run }}
+      EXPECTED_SHA: ${{ matrix.sha }}
+      KIND: ${{ matrix.kind }}
+    steps:
+      - name: Wait for original report uploads
+        run: |
+          for i in $(seq 1 185); do
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN" > "$RUNNER_TEMP/source.json"
+            test "$(jq -r '.head_sha' "$RUNNER_TEMP/source.json")" = "$EXPECTED_SHA"
+            if test "$(jq -r '.status' "$RUNNER_TEMP/source.json")" = completed; then exit 0; fi
+            sleep 20
+          done
+          exit 1
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ matrix.run }}
+          pattern: frozen-${{ matrix.kind }}-*
+          path: ${{ runner.temp }}/receipts
+      - name: Keep original JSON and rendered game menus on a dedicated evidence branch
+        run: |
+          cd "$RUNNER_TEMP/receipts"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN/artifacts" --paginate --jq '.artifacts[]|{id,name,digest,size_in_bytes}' | jq -s . > artifacts.json
+          jq '{id,head_sha,conclusion,html_url,run_attempt,created_at,updated_at}' "$RUNNER_TEMP/source.json" > source.json
+          test "$(find . -mindepth 2 -name '*.json' | wc -l)" -gt 0
+          git init -q
+          git config user.name github-actions
+          git config user.email github-actions@users.noreply.github.com
+          git add .
+          git commit -qm "Preserve original $KIND reports from $SOURCE_RUN"
+          gh auth setup-git
+          git push "https://github.com/$GITHUB_REPOSITORY.git" "HEAD:refs/heads/build-assets/catalog-controller-$KIND-$SOURCE_RUN"
