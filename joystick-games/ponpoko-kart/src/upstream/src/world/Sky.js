@@ -1,6 +1,7 @@
 // Stylized anime-like sky: gradient, sun disk & glow, procedural cloud layer, stars & moon,
 // plus big billboard cumulus clouds near the horizon. Also generates the PMREM environment.
 import * as THREE from 'three';
+import { supportsHalfFloatTargets } from '../core/renderTargets.js';
 
 const skyVert = /* glsl */ `
 varying vec3 vDir;
@@ -296,6 +297,8 @@ export class Sky {
 
   /** Build a PMREM environment texture from the sky (call once per course). */
   buildEnvironment(renderer) {
+    // PMREM requires a half-float render target. Other lights still illuminate the scene.
+    if (!supportsHalfFloatTargets(renderer)) return null;
     const pmrem = new THREE.PMREMGenerator(renderer);
     const envScene = new THREE.Scene();
     const dome = this.dome.clone();

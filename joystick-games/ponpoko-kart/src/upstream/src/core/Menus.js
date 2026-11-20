@@ -231,7 +231,7 @@ function easeOutBack(x) {
   return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
 }
 
-export function runMenus(game, { ui, audio, characters, stages }) {
+export function runMenus(game, { ui, audio, characters, stages, menuArt }) {
   const menu = new MenuScene(game);
   menu.decorate();
   const state = { characterId: characters[0].id, courseId: stages[0].id, difficulty: '100cc' };
@@ -319,13 +319,17 @@ export function runMenus(game, { ui, audio, characters, stages }) {
     title();
   };
 
-  // item icons & portraits (rendered once from the 3D models)
-  import('../items/icons.js')
-    .then(async (m) => {
-      const [itemIcons, portraits] = await Promise.all([m.renderItemIcons ? m.renderItemIcons() : null, m.renderPortraits ? m.renderPortraits() : null]);
-      ui.setAssets({ itemIcons: itemIcons || undefined, portraits: portraits || undefined });
-    })
-    .catch((e) => console.warn('icons unavailable', e));
+  if (menuArt) {
+    ui.setAssets(menuArt);
+  } else {
+    // item icons & portraits (rendered once from the 3D models)
+    import('../items/icons.js')
+      .then(async (m) => {
+        const [itemIcons, portraits] = await Promise.all([m.renderItemIcons ? m.renderItemIcons() : null, m.renderPortraits ? m.renderPortraits() : null]);
+        ui.setAssets({ itemIcons: itemIcons || undefined, portraits: portraits || undefined });
+      })
+      .catch((e) => console.warn('icons unavailable', e));
+  }
 
   enterMenuScene();
   title();

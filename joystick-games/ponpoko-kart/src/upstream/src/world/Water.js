@@ -1,13 +1,14 @@
 // Water: planar-reflection capable water surfaces (rice paddies "水鏡", rivers, ponds).
 import * as THREE from 'three';
+import { supportsHalfFloatTargets } from '../core/renderTargets.js';
 import { FogState } from '../core/fog.js';
 
 /** Renders a mirrored view of the scene about the plane y = height into a texture. */
 export class PlanarReflection {
-  constructor(height, { scale = 0.5 } = {}) {
+  constructor(height, { scale = 0.5, type = THREE.HalfFloatType } = {}) {
     this.height = height;
     this.scale = scale;
-    this.target = new THREE.WebGLRenderTarget(16, 16, { type: THREE.HalfFloatType, samples: 0 });
+    this.target = new THREE.WebGLRenderTarget(16, 16, { type, samples: 0 });
     this.target.texture.generateMipmaps = false;
     this.camera = new THREE.PerspectiveCamera();
     this.camera.layers.set(0); // layer 1 (small vegetation) is not reflected
@@ -286,7 +287,10 @@ export class WaterSystem {
     this.materials = [];
     this.meshes = [];
     this.sunDir = sunDir;
-    this.reflection = reflection ? new PlanarReflection(reflectionHeight, { scale: reflectionScale }) : null;
+    this.reflection = reflection ? new PlanarReflection(reflectionHeight, {
+      scale: reflectionScale,
+      type: supportsHalfFloatTargets(renderer) ? THREE.HalfFloatType : THREE.UnsignedByteType,
+    }) : null;
     this.time = 0;
   }
 

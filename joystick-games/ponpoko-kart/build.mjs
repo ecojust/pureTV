@@ -8,7 +8,7 @@ const result = await esbuild.build({
   absWorkingDir: root, entryPoints: ['src/main.js'], outfile: 'game.js',
   bundle: true, splitting: false, format: 'iife', target: 'es2020',
   minify: true, write: false, legalComments: 'inline',
-  loader: { '.ttf': 'dataurl' },
+  loader: { '.ttf': 'dataurl', '.png': 'dataurl' },
 });
 const files = Object.fromEntries(result.outputFiles.map(f => [path.basename(f.path), Buffer.from(f.contents)]));
 files['tv.html'] = fs.readFileSync(path.join(root, 'src/tv.html'));

@@ -1,5 +1,6 @@
 import './fonts/fonts.css';
 import './tv.css';
+import menuArt from './menu-art/index.js';
 import { Game } from './upstream/src/core/Game.js';
 import { STAGES } from './upstream/src/stages/index.js';
 import { runMenus } from './upstream/src/core/Menus.js';
@@ -26,7 +27,7 @@ try {
   const unlock = () => { if (!game.paused) audio.unlock(); };
   addEventListener('pointerdown', unlock, { capture: true });
   addEventListener('keydown', unlock, { capture: true });
-  runMenus(game, { ui, audio, characters: CHARACTERS, stages: STAGES });
+  runMenus(game, { ui, audio, characters: CHARACTERS, stages: STAGES, menuArt });
 } catch (error) {
   adapter.fail(error);
   const message = document.createElement('p');
