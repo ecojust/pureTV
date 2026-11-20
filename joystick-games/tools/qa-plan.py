@@ -69,7 +69,7 @@ def validate_plan(plan):
         assert numeric(step.get('timeoutSeconds', 15)) and 0 < step.get('timeoutSeconds', 15) <= 240
         expectations = step.get('expect')
         assert isinstance(expectations, list) and expectations
-        # These opt-ins are consumed only by the Windows verifier. Keep the
+        # Keep the platform-specific timing opt-ins narrow and the
         # ordinary/platform-shared budget unchanged; long startup observation
         # is not a blanket extension for arbitrary actions or held buttons.
         startup = step.get('windowsStartupWait')
@@ -82,9 +82,11 @@ def validate_plan(plan):
                 {'path': path, 'op': 'eq', 'value': phase}
                 for path in ['gameplay.phase', 'gameplay.mode'] for phase in ['racing', 'running']
             ], 'Extended startup must observe the original running phase'
-        if 'windowsHoldUntilExpect' in step:
-            assert type(step['windowsHoldUntilExpect']) is bool
-            if step['windowsHoldUntilExpect']:
+        for hold_option in ('windowsHoldUntilExpect', 'androidHoldUntilExpect'):
+            if hold_option not in step:
+                continue
+            assert type(step[hold_option]) is bool
+            if step[hold_option]:
                 assert keys == ['UP'] and not step.get('menuTap') and startup is None
                 assert step.get('timeoutSeconds', 15) <= 60
                 assert len(expectations) == 2

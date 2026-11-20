@@ -847,7 +847,16 @@ class Acceptance:
                                    label='plan-held-' + step['name'])
             time.sleep(step['holdMs'] / 1000)
             # Capture gameplay while input is still held; release-only changes can also satisfy the plan below.
-            observed = self.snapshot()
+            if step.get('androidHoldUntilExpect'):
+                try:
+                    observed = self.wait_fresh(
+                        held, lambda s: self.native_buttons(s).get('UP') is True
+                        and plan.matches(step['expect'], self.game(s), self.game(before)),
+                        timeout=step.get('timeoutSeconds', 15), label='plan-held-throttle-' + step['name'])
+                finally:
+                    self.button('UP', False)
+            else:
+                observed = self.snapshot()
             self.release()
             after = observed if plan.matches(step['expect'], self.game(observed), self.game(before)) else self.wait_fresh(
                 held, lambda s: plan.matches(step['expect'], self.game(s), self.game(before)),
