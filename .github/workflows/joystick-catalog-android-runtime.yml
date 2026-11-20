@@ -51,11 +51,15 @@ on:
         required: false
         default: false
         type: boolean
-      pon_tv34:
-        description: Exercise the frozen Ponpoko Kart 0.1.1 APK on the 720p Android TV API 34 image
+      pon_profile:
+        description: Android TV runtime configuration for the frozen Ponpoko Kart 0.1.1 APK
         required: false
-        default: false
-        type: boolean
+        default: original
+        type: choice
+        options:
+          - original
+          - adaptive-api36-1080p
+          - adaptive-api34-720p
       pon_capture_qemu_stack:
         description: Diagnostic only; exact original supervised Vulkan-off Pon, bounded same-user GDB stacks, never native acceptance
         required: false
@@ -81,7 +85,7 @@ env:
   CONFIRM_BACKROAD_INSTALL: ${{ inputs.confirm_backroad_install && 'true' || 'false' }}
   SUPERVISE_PON_EMULATOR: ${{ inputs.supervise_pon_emulator && 'true' || 'false' }}
   PON_DISABLE_VULKAN: ${{ inputs.pon_disable_vulkan && 'true' || 'false' }}
-  PON_TV34: ${{ inputs.pon_tv34 && 'true' || 'false' }}
+  PON_PROFILE: ${{ inputs.pon_profile || 'original' }}
   PON_CAPTURE_QEMU_STACK: ${{ inputs.pon_capture_qemu_stack && 'true' || 'false' }}
 
 jobs:
@@ -138,13 +142,14 @@ jobs:
               assert os.environ['ARTIFACT_RUN']=='44597115244' and os.environ['ARTIFACT_EXPORT']=='4249f5c0ec3053a1dec652a7880a040e1bb143f0'
               assert not os.environ['ARTIFACT_ID'] and not os.environ['ARTIFACT_ATTEMPT']
               assert os.environ['CONFIRM_BACKROAD_INSTALL']=='false'
-          if os.environ['PON_TV34']=='true':
+          if os.environ['PON_PROFILE'] != 'original':
+              assert os.environ['PON_PROFILE'] in ('adaptive-api36-1080p','adaptive-api34-720p')
               assert os.environ['SUPERVISE_PON_EMULATOR']=='false' and os.environ['CONFIRM_BACKROAD_INSTALL']=='false'
               assert os.environ['GAMES']=='ponpoko-kart' and os.environ['BATCH']=='racing-01'
               assert os.environ['ARTIFACT_SOURCE']=='88be72b403edb6dc79f5ca7282d7a2d31fec9882'
               assert os.environ['ARTIFACT_RUN']=='44680918757'
           out=Path(os.environ['RUNNER_TEMP'])/'provenance';out.mkdir()
-          (out/'requested-inputs.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'batch':os.environ['BATCH'],'games':os.environ['GAMES'],'confirmBackroadInstall':os.environ['CONFIRM_BACKROAD_INSTALL']=='true','supervisePonEmulator':os.environ['SUPERVISE_PON_EMULATOR']=='true','ponDisableVulkan':os.environ['PON_DISABLE_VULKAN']=='true','ponTv34':os.environ['PON_TV34']=='true','ponCaptureQemuStack':os.environ['PON_CAPTURE_QEMU_STACK']=='true','nativeAcceptanceAllowed':os.environ['PON_CAPTURE_QEMU_STACK']!='true'},indent=2)+'\n')
+          (out/'requested-inputs.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'batch':os.environ['BATCH'],'games':os.environ['GAMES'],'confirmBackroadInstall':os.environ['CONFIRM_BACKROAD_INSTALL']=='true','supervisePonEmulator':os.environ['SUPERVISE_PON_EMULATOR']=='true','ponDisableVulkan':os.environ['PON_DISABLE_VULKAN']=='true','ponProfile':os.environ['PON_PROFILE'],'ponCaptureQemuStack':os.environ['PON_CAPTURE_QEMU_STACK']=='true','nativeAcceptanceAllowed':os.environ['PON_CAPTURE_QEMU_STACK']!='true'},indent=2)+'\n')
           PY
           python3 joystick-games/tools/android-catalog.py select --batch "$BATCH" --games "$GAMES" | tee "$RUNNER_TEMP/provenance/selection.json"
       - uses: actions/checkout@v4
@@ -300,16 +305,16 @@ jobs:
           # Controlled original-APK comparison: official stable 37.3.10 (2026-11-19), not a claimed crash fix.
           # https://dl.google.com/android/repository/repository2-3.xml — emulator-linux_x64-16970787.zip
           emulator-build: '16970787'
-          api-level: ${{ inputs.pon_tv34 && '34' || '36' }}
+          api-level: ${{ inputs.pon_profile == 'adaptive-api34-720p' && '34' || '36' }}
           target: android-tv
-          arch: ${{ inputs.pon_tv34 && 'x86' || 'x86_64' }}
-          profile: ${{ inputs.pon_tv34 && 'tv_720p' || 'tv_1080p' }}
+          arch: ${{ inputs.pon_profile == 'adaptive-api34-720p' && 'x86' || 'x86_64' }}
+          profile: ${{ inputs.pon_profile == 'adaptive-api34-720p' && 'tv_720p' || 'tv_1080p' }}
           avd-name: JoystickGamesValidation
           force-avd-creation: true
           disable-animations: true
           # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
           # Optional controlled Vulkan-off comparison; not an established crash cause or fix.
-          emulator-options: -no-window -memory 2048 -gpu ${{ inputs.pon_tv34 && 'lavapipe' || 'swiftshader_indirect' }} -noaudio -no-boot-anim -no-snapshot${{ (inputs.pon_tv34 || inputs.pon_disable_vulkan) && ' -feature -Vulkan' || '' }}
+          emulator-options: -no-window -memory 2048 -gpu ${{ startsWith(inputs.pon_profile, 'adaptive-') && 'lavapipe' || 'swiftshader_indirect' }} -noaudio -no-boot-anim -no-snapshot${{ (startsWith(inputs.pon_profile, 'adaptive-') || inputs.pon_disable_vulkan) && ' -feature -Vulkan' || '' }}
           pre-emulator-launch-script: >-
             python3 joystick-games/tools/android-emulator-supervisor.py prepare
             --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
