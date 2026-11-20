@@ -2,9 +2,15 @@
 
 日本乡村、樱花鸟居、夏祭花火三条原版赛道；八位动物车手、三档难度、道具、蓄力漂移、跳跃特技和和伞滑翔。保留 [たぬ的原作](https://github.com/tanuu5/ponpoko-kart/tree/88edb72d25c2f957431cc4d12547d3138d1bca48) 的完整程序生成场景、原 HUD 与日文菜单，不依赖在线模型、图片、音频或字体。
 
-Android TV 0.1.4 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/ponpoko-kart-0.1.4.apk)。原生手柄验收进展见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
+## Android TV 下载
 
-另可下载已在 Android TV 14 默认端口通过 49 项检查的 0.1.3 原包。该版目标 SDK 为 29，部分系统可能显示旧目标版本安装警告；0.1.4 已提高到目标 SDK 35。[下载已实驾的 0.1.3](https://raw.githubusercontent.com/ecojust/pureTV/dbb43456edd22d2b5f349c43b1f9852ef330dd02/packages/ponpoko-kart/ponpoko-kart-0.1.3.apk)
+[下载 Ponpoko Kart 0.1.5 签名 APK](ponpoko-kart-0.1.5.apk) · [SHA256 校验](SHA256SUMS.txt) · [原生验证及驾驶画面](docs/android-delivery/README.md)
+
+最低 Android 8.0（API 26），需要支持 WebGL 2 的系统 WebView。安装后连接 pureTV 手柄，用 START 进入选人，A 确认，↑ 加速。Android TV 14 / 720p 模拟器已完成两种端口的原 SDK 驾驶、暂停、焦点切换和重连。默认端口 63485 和占用回退端口 38447 各通过 49 项，分别收到了 922 和 841 个匹配的原始 SDK 回复。
+
+默认端口加速截图可见赛车、赛道和 45 km/h。回退端口的早期加速截图只有 HUD，后续比赛截图已绘出赛车和村落。[默认端口驾驶](docs/android-delivery/normal-driving.png) · [回退端口比赛](docs/android-delivery/occupied-playing.png) · [回退端口早期截图](docs/android-delivery/occupied-hud-checkpoint.png)
+
+此前的 0.1.4 和 0.1.3 各在默认端口通过 49 项。0.1.3 的目标 SDK 为 29，部分系统会提示旧版本警告。[0.1.4 历史测试包](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/ponpoko-kart-0.1.4.apk) · [0.1.3 原包](https://raw.githubusercontent.com/ecojust/pureTV/dbb43456edd22d2b5f349c43b1f9852ef330dd02/packages/ponpoko-kart/ponpoko-kart-0.1.3.apk)
 
 ## Android TV 适配
 
