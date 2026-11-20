@@ -198,6 +198,7 @@ export class Renderer {
     this._time = 0;
     this.resize();
     window.addEventListener('resize', () => this.resize());
+    renderer.domElement.addEventListener('webglcontextrestored', () => { this.hasRenderedFrame = false; });
   }
 
   get domElement() {
@@ -229,6 +230,7 @@ export class Renderer {
   }
 
   resize() {
+    this.hasRenderedFrame = false;
     const w = window.innerWidth;
     const h = window.innerHeight;
     this.renderer.setPixelRatio(this.pixelRatio);
@@ -264,6 +266,7 @@ export class Renderer {
     this._time += dt;
     this.fx.uTime.value = this._time;
     this.composer.render(dt);
+    this.hasRenderedFrame = true;
     this._adapt(dt, this._time);
   }
 }
