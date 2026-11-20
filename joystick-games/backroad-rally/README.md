@@ -12,6 +12,8 @@
 
 0.1.2 的 Android TV 原包在 ANGLE/Vulkan 后端可见芬兰赛段的赛车、起跑门和道路。相同 APK 在 swiftshader_indirect 后端只显示 HUD，新渲染帧的 14,400 个画布样本全部透明。[Android TV 原包报告与截图](docs/android-0.1.2/README.md)
 
+0.1.3 在上述旧版 GLES 软件驱动上恢复了可见像素和驾驶操作，芬兰赛段仍有大片紫色地面和黑色车身。[Android 原生驾驶截图与 RGBA 记录](docs/android-0.1.3/README.md)
+
 ## macOS 下载
 
 0.1.0 Universal 预发布：[DMG](https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-v0.1.0/BackroadRally-0.1.0-macos-universal.dmg) · [ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-v0.1.0/BackroadRally-0.1.0-macos-universal.zip) · [SHA256](macos/SHA256SUMS.txt)。两个原包超过 GitHub 单文件 100 MiB 限制，存放在 Release；源码和记录仍在本目录。要求 **macOS 11+、WebGL2**，包含 arm64 与 x86_64，ad-hoc 签名，尚未 Apple 公证。
