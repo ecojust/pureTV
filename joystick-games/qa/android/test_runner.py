@@ -268,6 +268,30 @@ class MenuTapContracts(unittest.TestCase):
         self.acceptance.report['apk']['sha256'] = '0' * 64
         self.assertIsNone(self.acceptance.menu_reload_basis(self.step, before))
 
+    def test_new_night_reload_requires_matching_signed_bytes_and_navigation_sources(self):
+        self.reload_step()
+        with tempfile.TemporaryDirectory() as temp:
+            apk = Path(temp) / 'night-racer-0.1.1.apk'
+            apk.write_bytes(b'fixture for receipt binding')
+            self.acceptance.args.apk = apk
+            self.acceptance.report['apk'] = identity = runner.file_info(apk)
+            self.acceptance.report['sourceCommit'] = '0' * 40
+            proof = runner.NIGHT_LOW_RELOAD_SOURCES
+            sources = {name: runner.file_info(runner.ROOT / name) for name in proof}
+            receipt = {'game': 'night-racer', 'packageName': runner.PACKAGES['night-racer'],
+                       'versionName': '0.1.1', 'versionCode': 2, 'signatureVerified': True,
+                       'certificateSha256': 'eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23',
+                       'sourceInputs': sources, 'sourceSha': '0' * 40, **identity}
+            path = apk.parent / 'signing-receipt.json'
+            path.write_text(json.dumps(receipt))
+            self.use_samples([self.state(2, low=True), self.state(3, low=True), self.state(4, low=True)])
+            self.acceptance.catalog_menu_tap(self.step, self.state(70))
+            for field, value in (('versionCode', 1), ('signatureVerified', False), ('sha256', '0' * 64),
+                                 ('certificateSha256', '0' * 64), ('sourceInputs', {})):
+                path.write_text(json.dumps({**receipt, field: value}))
+                with self.assertRaises((AssertionError, KeyError)):
+                    self.acceptance.signed_reload_source('night-racer')
+
     def test_exact_night_low_reload_requires_new_baseline_then_two_new_polls(self):
         self.reload_step()
         self.use_samples([self.state(2, low=True), self.state(2, low=True), self.state(3, low=True), self.state(4, low=True)])
@@ -298,6 +322,19 @@ class MenuTapContracts(unittest.TestCase):
         after = self.acceptance.catalog_menu_tap(self.step, self.state(100))
         self.assertEqual(after['game']['controller']['pollCount'], 106)
         self.assertEqual(self.reads, 6)
+
+    def test_historic_night_reload_requires_its_original_signing_receipt(self):
+        self.reload_step()
+        relative = runner.NIGHT_LOW_RELOAD_DELIVERY / 'original-package-proof/signing-receipt.json'
+        receipt = json.loads((runner.ROOT / relative).read_bytes())
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / relative).parent.mkdir(parents=True)
+            receipt['sha256'] = '0' * 64
+            (root / relative).write_text(json.dumps(receipt))
+            with mock.patch.object(runner, 'ROOT', root):
+                with self.assertRaisesRegex(AssertionError, 'Night reload receipt changed'):
+                    self.acceptance.menu_reload_basis(self.step, self.state(288))
 
     def test_reload_proof_rejects_changed_apk_source_wrong_state_and_expectation(self):
         self.reload_step(); before = self.state(288)

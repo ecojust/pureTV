@@ -174,6 +174,9 @@ jobs:
 
   sign:
     needs: [select, build]
+    outputs:
+      signed_artifact_id: ${{ steps.signed_upload.outputs.artifact-id }}
+      signed_artifact_digest: ${{ steps.signed_upload.outputs.artifact-digest }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -210,6 +213,7 @@ jobs:
             --input "$RUNNER_TEMP/unsigned" --output "$RUNNER_TEMP/signed" \
             --build-tools "$ANDROID_HOME/build-tools/34.0.0" 2>&1 | tee "$RUNNER_TEMP/sign.log"
       - uses: actions/upload-artifact@v4
+        id: signed_upload
         with:
           name: joystick-android-signed
           path: ${{ runner.temp }}/signed/
@@ -225,7 +229,7 @@ jobs:
   runtime:
     needs: [select, sign]
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -264,17 +268,40 @@ jobs:
           test -e /dev/kvm
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Configure host Mesa OpenGL and a CPU Vulkan ICD for the Android graphics transport
+        if: matrix.game == 'backroad-rally'
+        env:
+          GAME: ${{ matrix.game }}
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends xvfb mesa-utils mesa-vulkan-drivers vulkan-tools
+          out="$RUNNER_TEMP/runtime/$GAME/host-renderer"
+          mkdir -p "$out"
+          dpkg-query -W xvfb mesa-utils mesa-vulkan-drivers vulkan-tools > "$out/packages.txt"
+          mapfile -t drivers < <(dpkg-query -L mesa-vulkan-drivers:amd64 | grep -E '/lvp_icd(\.x86_64)?\.json$')
+          test "${#drivers[@]}" -eq 1
+          Xvfb -displayfd 3 -screen 0 1280x720x24 -nolisten tcp -ac +extension GLX 3>"$out/display-number" >"$out/xvfb.log" 2>&1 &
+          for i in {1..40}; do test -s "$out/display-number" && break; sleep .25; done
+          export DISPLAY=":$(cat "$out/display-number")" LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe
+          export VK_DRIVER_FILES="${drivers[0]}" VK_ICD_FILENAMES="${drivers[0]}"
+          cat "$VK_DRIVER_FILES" > "$out/mesa-icd.json"
+          glxinfo -B > "$out/host-gl.txt"
+          grep -i 'OpenGL renderer string:.*llvmpipe' "$out/host-gl.txt"
+          vulkaninfo --summary > "$out/host-vulkan.txt"
+          grep -i 'deviceName.*llvmpipe' "$out/host-vulkan.txt"
+          env | grep -E '^(DISPLAY|LIBGL_ALWAYS_SOFTWARE|GALLIUM_DRIVER|VK_DRIVER_FILES|VK_ICD_FILENAMES)=' >> "$GITHUB_ENV"
       - name: Operate the actual APK using the original pureTV TCP SDK
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 36
           target: android-tv
           arch: x86_64
-          profile: tv_1080p
+          profile: ${{ matrix.game == 'backroad-rally' && 'tv_720p' || 'tv_1080p' }}
           avd-name: JoystickGamesValidation
           force-avd-creation: true
           disable-animations: true
-          emulator-options: -no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          emulator-options: -no-window -memory 3072 -gpu ${{ matrix.game == 'backroad-rally' && 'host' || 'swiftshader_indirect' }} -noaudio -no-boot-anim -no-snapshot
           script: >-
             python3 joystick-games/tools/android-catalog.py runtime --game '${{ matrix.game }}'
             --input "$RUNNER_TEMP/signed" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
@@ -383,6 +410,8 @@ jobs:
       - name: Export original reports and packages to an isolated branch
         env:
           GH_TOKEN: ${{ github.token }}
+          SIGNED_ARTIFACT_ID: ${{ needs.sign.outputs.signed_artifact_id }}
+          SIGNED_ARTIFACT_DIGEST: ${{ needs.sign.outputs.signed_artifact_digest }}
           BUILD_RESULT: ${{ needs.build.result }}
           SIGN_RESULT: ${{ needs.sign.result }}
           RUNTIME_RESULT: ${{ needs.runtime.result }}
@@ -398,6 +427,21 @@ jobs:
               for game in os.environ['GAMES'].split(','):
                   for name in build.sources(game):
                       source=Path(name);target=out/'artifact-source'/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,target)
+          external={}
+          for apk in (out/'packages').glob('*/*.apk'):
+              if apk.stat().st_size<100_000_000:continue
+              import re
+              receipt=json.loads((apk.parent/'signing-receipt.json').read_bytes())
+              info={'bytes':apk.stat().st_size,'sha256':hashlib.sha256(apk.read_bytes()).hexdigest()}
+              assert os.environ['SIGN_RESULT']=='success' and receipt['sourceSha']==os.environ['GITHUB_SHA']
+              assert receipt['signatureVerified'] is True and all(receipt[k]==v for k,v in info.items())
+              aid=os.environ['SIGNED_ARTIFACT_ID'];digest=os.environ['SIGNED_ARTIFACT_DIGEST'].removeprefix('sha256:')
+              assert aid.isdecimal() and re.fullmatch(r'[0-9a-f]{64}',digest)
+              path=apk.relative_to(out).as_posix()
+              external[path]={**info,'pathInOriginalSignedArtifact':path,'archiveSha256':digest,'artifactId':aid,
+                  'url':'https://github.com/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+os.environ['GITHUB_RUN_ID']+'/artifacts/'+aid}
+              apk.unlink()
+          if external:(out/'large-original-signed-packages.json').write_text(json.dumps(external,indent=2)+'\n')
           files={}
           for p in sorted(out.rglob('*')):
               assert not p.is_symlink()
