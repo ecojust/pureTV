@@ -2,7 +2,7 @@
 
 [简体中文](README.md) · **English** · [Home](../../README.en.md) · [Developer guide](development.en.md)
 
-pureTV Manager runs on your computer and manages Android TV and Google TV devices over ADB. To browse, install or check for apps directly on your TV, install putrtv Store. To play a controller game, install the game on the TV or computer and connect the controller to the game. [putrtv Store 0.1.1 APK](../../resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1) · [Controller game catalog](../../README.en.md#controller-games-by-genre)
+pureTV Manager runs on your computer and manages Android TV and Google TV devices over ADB. To browse, install or check for apps directly on your TV, install putrtv Store. To play a controller game, install the game on the TV or computer and connect the controller to the game. [putrtv Store 0.1.1 APK](../../resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1) · [Browse games by genre](../../README.en.md#games)
 
 ## Install or upgrade the desktop manager
 
@@ -46,7 +46,7 @@ The TV store works with updated launchers to let you choose the position of an a
 
 ## Install a game and connect a controller
 
-1. Choose a game from [Apps - Games](../../README.en.md#featured-tv-games) or the [controller games by genre](../../README.en.md#controller-games-by-genre). On Android TV, install its APK. Where a desktop version is available, download the DMG for Mac or the setup EXE for Windows x64. Follow the game title or preview for controls, portable packages and tested platforms.
+1. Choose a game by genre on the project homepage. Each card lists the available downloads. Use the APK for Android TV, the DMG for Mac or the setup EXE for Windows x64. Open the game title or preview for controls, portable packages and tested platforms. [Browse games by genre](../../README.en.md#games)
 2. Connect the controller and game device to the same reachable LAN. Open the game and press the controller's **GPIO 23 search button**. The firmware automatically connects when it finds exactly one valid service. If several games are open, close the other services or enter the game's IPv4 address and port on the controller's setup page.
 3. The default TCP port is **63485**. If it was occupied at startup, use the actual port displayed by the game. A connected controller appears in the side indicator with its icon, player seat and full client ID. Its entry disappears on disconnect. Press **START (GPIO 27)** to begin or pause. The D-pad and A commonly select and confirm. Consult each game's instructions for other buttons, two-player support and resuming after disconnect. [Controller mappings and multiplayer (Chinese)](../readme-controller-support/README.md) · [Connection indicator examples](../controller-client-status/README.md)
 

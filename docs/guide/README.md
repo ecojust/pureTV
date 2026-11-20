@@ -2,7 +2,7 @@
 
 **简体中文** · [English](README.en.md) · [返回首页](../../README.md) · [开发指南](development.md)
 
-pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电视上直接浏览、安装应用或检查更新，可以安装 putrtv 商城。要玩手柄游戏，在电视或电脑上安装所选游戏，再让手柄连接游戏。[电视端商城 APK 0.1.1](../../resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1) · [手柄游戏目录](../../README.md#手柄游戏专用目录)
+pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电视上直接浏览、安装应用或检查更新，可以安装 putrtv 商城。要玩手柄游戏，在电视或电脑上安装所选游戏，再让手柄连接游戏。[电视端商城 APK 0.1.1](../../resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1) · [按类型浏览游戏](../../README.md#games)
 
 ## 安装与升级电脑管理器
 
@@ -46,7 +46,7 @@ pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电�
 
 ## 安装游戏与连接手柄
 
-1. 从首页的[应用-游戏](../../README.md#featured-tv-games)或[手柄游戏分类](../../README.md#手柄游戏专用目录)选择游戏。Android TV 下载并安装 APK。提供桌面版的游戏可在 Mac 下载 DMG，在 Windows x64 下载安装版 EXE。点击游戏名称或截图查看按键、便携包和该版本的兼容性。
+1. 在首页游戏专栏按类型选择游戏。每款卡片列出可用的安装包，Android TV 使用 APK，Mac 使用 DMG，Windows x64 使用安装版 EXE。点击游戏名称或截图可查看按键、便携包和该版本的兼容性。[按类型浏览游戏](../../README.md#games)
 2. 将手柄和运行游戏的电视或电脑接入同一个可互通的局域网，启动游戏。按手柄搜索键 **GPIO 23** 发现游戏。当前固件只会自动连接发现的唯一有效服务。若同时打开了其他游戏，先关闭其他服务，或在手柄配网页手动填写游戏主机的 IPv4 地址和实际端口。
 3. 游戏默认使用 TCP **63485**。如果启动时端口已被占用，以游戏显示的实际端口为准。连接后侧栏显示手柄图标、玩家席位和完整客户端 ID，断开后移除相应标识。按 **START（GPIO 27）** 开始或暂停。方向键和 A 常用于选择和确认，其他操作、双人支持与断线后如何继续请按该游戏说明。[按键与双人支持](../readme-controller-support/README.md) · [客户端标识示例](../controller-client-status/README.md)
 
