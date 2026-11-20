@@ -167,6 +167,16 @@ jobs:
         run: >-
           python3 joystick-games/tools/android-release.py verify
           --input "$RUNNER_TEMP/signed" --build-tools "$ANDROID_HOME/build-tools/34.0.0"
+      - name: Resolve the verified APK for this game version
+        env:
+          GAME: ${{ matrix.game }}
+        run: |
+          set -euo pipefail
+          folder="$RUNNER_TEMP/signed/packages/$GAME"
+          version=$(jq -er '.versionName' "$folder/signing-receipt.json")
+          apk="$folder/$GAME-$version.apk"
+          test -f "$apk"
+          echo "VERIFIED_GAME_APK=$apk" >> "$GITHUB_ENV"
       - name: Enable disposable emulator acceleration
         run: |
           test -e /dev/kvm
@@ -185,11 +195,11 @@ jobs:
           emulator-options: -no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           script: >-
             python3 joystick-games/qa/android/run.py --game '${{ matrix.game }}'
-            --apk "$RUNNER_TEMP/signed/packages/${{ matrix.game }}/${{ matrix.game }}-0.1.0.apk"
+            --apk "$VERIFIED_GAME_APK"
             --observer "$RUNNER_TEMP/signed/observers/${{ matrix.game }}/observer-${{ matrix.game }}.apk"
             --output "$RUNNER_TEMP/runtime/${{ matrix.game }}-normal" --adb "$ANDROID_HOME/platform-tools/adb" &&
             python3 joystick-games/qa/android/run.py --game '${{ matrix.game }}'
-            --apk "$RUNNER_TEMP/signed/packages/${{ matrix.game }}/${{ matrix.game }}-0.1.0.apk"
+            --apk "$VERIFIED_GAME_APK"
             --observer "$RUNNER_TEMP/signed/observers/${{ matrix.game }}/observer-${{ matrix.game }}.apk"
             --output "$RUNNER_TEMP/runtime/${{ matrix.game }}-occupied" --adb "$ANDROID_HOME/platform-tools/adb" --occupy-default-port
       - name: Preserve exact executed QA scripts and emulator description
