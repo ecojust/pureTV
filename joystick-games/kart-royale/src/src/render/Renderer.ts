@@ -16,7 +16,7 @@ import * as THREE from 'three';
 import { EffectComposer } from 'postprocessing';
 import { Quality, type Ctx, type Settings, type System } from '../types';
 import { PostFX } from './PostFX';
-import { glCapabilities, forcedFailure, drainErrors, type GLCapabilities } from '../core/Settings';
+import { glCapabilities, usesSoftwareLow, forcedFailure, drainErrors, type GLCapabilities } from '../core/Settings';
 import { logPipeline, recordShaderError, type FrameSample } from '../core/Diagnostics';
 
 interface DeviceProfile {
@@ -195,6 +195,10 @@ export class RenderPipeline implements System {
 
   constructor(private readonly canvasParent: HTMLElement) {}
 
+  get softwareLow(): boolean {
+    return usesSoftwareLow(this.ctx.settings.quality, this.device.software);
+  }
+
   init(ctx: Ctx) {
     this.ctx = ctx;
     this.device = probeDevice();
@@ -219,7 +223,7 @@ export class RenderPipeline implements System {
       throw new Error('WebGL 2 is unavailable, so the renderer cannot be created.');
     }
     if (!caps.halfFloatRenderable) this.rung = Rung.Ldr;
-    if (!caps.byteRenderable) this.rung = Rung.Direct;
+    if (!caps.byteRenderable || this.softwareLow) this.rung = Rung.Direct;
     if (this.rung !== Rung.Hdr) {
       logPipeline('start', `pipeline starts on ${RUNG_NAMES[this.rung]} (boot probe)`);
     }
@@ -249,7 +253,7 @@ export class RenderPipeline implements System {
       // With the composer running, MSAA lives on the composer's render target
       // and the default framebuffer only ever receives one fullscreen triangle.
       // Without a composer, the driver's MSAA is the only edge treatment left.
-      antialias: !this.usePost,
+      antialias: !this.usePost && !this.softwareLow,
       powerPreference: 'high-performance',
       stencil: false,
       depth: true,

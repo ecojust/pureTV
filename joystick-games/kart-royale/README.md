@@ -40,6 +40,6 @@ python3 -m http.server 8080 --directory dist
 
 `src/` 保留完整 103 个原源文件及其原 package-lock；新增桥接也在该目录维护。根适配包固定原四个运行依赖的精确版本，额外使用 esbuild 0.28.2 生成离线 IIFE/CSS。构建明确从根依赖锁解析，忽略原源目录里可能存在的旧 node_modules；干净 npm ci 与本地缓存安装的资产一致性见 docs/build-reproducibility/。所有网格、纹理、声音由原代码生成，没有运行时 CDN。根 LICENSE 是 MIT（Ryan Campbell），原 package.json 标记 ISC，两者事实均保留；依赖许可随 dist/THIRD-PARTY-NOTICES.txt 打包。
 
-需要 WebGL2 和现代 WebView。手柄版 0.1.1 在识别到 SwiftShader、llvmpipe 或 Microsoft Basic Render Driver 等软件渲染器时默认使用游戏自带的低画质。硬件 GPU 继续按设备选档，显式 `?quality=` 设置优先。上方 0.1.0 Mac 下载沿用原默认设置。
+需要 WebGL2 和现代 WebView。手柄版 0.1.1 在识别到 SwiftShader、llvmpipe 或 Microsoft Basic Render Driver 等软件渲染器时默认使用游戏自带的低画质。硬件 GPU 继续按设备选档，显式 `?quality=` 设置优先。0.1.2 的软件低画质直接绘制当前镜头内的原场景，按需编译着色器与上传几何数据，启动与图形上下文恢复均使用此路径。上方 0.1.0 Mac 下载沿用原默认设置。
 
 已提供上方 macOS 原包和限定验证范围；Android、Windows 仍待各自验收，实体电视尚未测试。原 SDK TCP、各平台原生与浏览器模拟桥接结果分别保存。

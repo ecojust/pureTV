@@ -395,6 +395,11 @@ export function glCapabilities(): GLCapabilities {
   return caps;
 }
 
+/** Full-scene warming and post-processing both contend with the first visible frame on CPU rasterizers. */
+export function usesSoftwareLow(quality: Quality, software: boolean): boolean {
+  return software && quality === Quality.Low;
+}
+
 export function selectQuality(dev: DeviceProfile, gl: GLCapabilities, requested: string | null): Quality {
   if (requested) {
     switch (requested) {

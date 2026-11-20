@@ -7,7 +7,7 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const result = await build({
   absWorkingDir: root,
   stdin: {
-    contents: "export { selectQuality } from './src/src/core/Settings'; export { Quality } from './src/src/types';",
+    contents: "export { selectQuality, usesSoftwareLow } from './src/src/core/Settings'; export { Quality } from './src/src/types';",
     resolveDir: root,
     loader: 'ts',
   },
@@ -16,7 +16,7 @@ const result = await build({
   platform: 'node',
   format: 'esm',
 });
-const { selectQuality, Quality } = await import('data:text/javascript;base64,' + Buffer.from(result.outputFiles[0].contents).toString('base64'));
+const { selectQuality, usesSoftwareLow, Quality } = await import('data:text/javascript;base64,' + Buffer.from(result.outputFiles[0].contents).toString('base64'));
 const desktop = { handheld: false, touchPrimary: false, cores: 8, memoryGB: 8 };
 const tablet = { ...desktop, touchPrimary: true };
 const software = { webgl2: true, software: true, renderer: 'SwiftShader' };
@@ -34,4 +34,13 @@ test('hardware keeps the original desktop and touch tiers', () => {
   assert.equal(selectQuality(desktop, { ...gpu, renderer: 'Apple M2' }, null), Quality.Ultra);
   assert.equal(selectQuality(tablet, gpu, null), Quality.Medium);
   assert.equal(selectQuality({ ...tablet, handheld: true }, gpu, null), Quality.Low);
+});
+
+test('only the software low tier uses direct rendering without a whole-scene prewarm', () => {
+  assert.equal(usesSoftwareLow(Quality.Low, true), true);
+  assert.equal(usesSoftwareLow(Quality.Low, false), false);
+  for (const tier of [Quality.Medium, Quality.High, Quality.Ultra]) {
+    assert.equal(usesSoftwareLow(tier, true), false);
+    assert.equal(usesSoftwareLow(tier, false), false);
+  }
 });

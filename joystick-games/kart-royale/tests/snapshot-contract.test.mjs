@@ -30,11 +30,12 @@ function fixture({ version = 'WebGL 2.0 contract context', state = 2, contextAva
     let frame = freeze({ pollCount: 41, buttons: {}, pressed: {}, released: {}, connected: true });
     let contextVersion = version;
     const forbidden = name => () => { throw new Error(`snapshot invoked ${name}`); };
-    const gl = { VERSION: 0x1f02, getParameter(parameter) {
+    const gl = { getExtension: () => null, VERSION: 0x1f02, getParameter(parameter) {
         assert.equal(parameter, this.VERSION); calls.glReads++; return contextVersion;
     } };
     const position = freeze({ x: 1, y: 2, z: 3, toArray() { return [this.x, this.y, this.z]; } });
     const ctx = freeze({
+        settings: { quality: 0 },
         race: { state, raceTime: 12.5, setPaused: forbidden('setPaused'), update: forbidden('race update'),
             player: { forwardSpeed: 57, position, lap: 2, place: 3, driftDir: -1, driftTier: 2,
                 driftCharge: 0.6, boostTime: 0.2, cancelControllerDrift: forbidden('cancelControllerDrift') } },
