@@ -919,6 +919,15 @@ class ObserverTransportTests(unittest.TestCase):
         a.report = {}; a.snapshots = []
         return a
 
+    def test_original_backroad_waits_for_one_queued_get_inside_the_original_wall_budget(self):
+        server = self.serve([('slow', .08)])
+        acceptance = self.acceptance(server)
+        acceptance.report['apk'] = {'sha256': runner.BACKROAD_ORIGINAL_APK}
+        with mock.patch.object(runner, 'OBSERVER_REQUEST_TIMEOUT', .02), mock.patch.dict(runner.os.environ, {'BACKROAD_VULKAN_OBSERVATION': 'true'}):
+            self.assertEqual(acceptance.snapshot(timeout=.3), {'late': True})
+        self.assertEqual(server.requests, [('GET', '/snapshot')])
+        self.assertNotIn('observerTransportEvents', acceptance.report)
+
     def value(self, count=12):
         return {'info': {'wifiController': {'port': 63485}},
                 'game': {'game': 'dirt-crown', 'renderer': 'webgl2', 'webglVersion': 2,
