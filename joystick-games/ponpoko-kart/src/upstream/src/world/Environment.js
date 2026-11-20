@@ -51,7 +51,7 @@ export function buildEnvironment(scene, renderer, env) {
       sky.update(dt, camera);
     },
     dispose() {
-      envTex.dispose();
+      envTex?.dispose();
     },
   };
 }
