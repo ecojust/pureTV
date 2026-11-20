@@ -8,6 +8,7 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const fixture = await build({
   stdin: {
     contents: `export { Track } from './src/src/world/Track';
+      export { Menus } from './src/src/ui/Menus';
       export { RacingLine } from './src/src/game/AI';
       export { activeCircuit, resolveCircuit } from './src/src/world/Circuits';
       export { BOOST_PADS } from './src/src/world/TrackLayout';`,
@@ -50,3 +51,22 @@ for (const [id, metres] of [['sunset-bay', 1600], ['cape-crown', 1920], ['marina
     }
   });
 }
+
+test('changing circuits navigates to an allowed TV entry and preserves host query parameters', () => {
+  const entry = 'https://game-kit.invalid/tv.html?scale=0.75';
+  for (const circuitIndex of [1, 2]) {
+    let next;
+    const page = {
+      location: { href: entry, search: '?scale=0.75', replace(href) { next = new URL(href); } },
+      URL, URLSearchParams,
+    };
+    runInNewContext(fixture.outputFiles[0].text, page);
+    const { Menus, resolveCircuit } = page.circuitFixture;
+    Menus.prototype.chooseRacer.call({circuitIndex});
+    assert.equal(next.origin + next.pathname, 'https://game-kit.invalid/tv.html');
+    assert.equal(next.hash, ''); // Android LocalGameUrl rejects fragments, even on tv.html.
+    assert.equal(next.searchParams.get('scale'), '0.75');
+    assert.equal(next.searchParams.get('chooseRacer'), '1');
+    assert.equal(resolveCircuit(next.search).id, circuitIndex === 1 ? 'cape-crown' : 'marina-esses');
+  }
+});
