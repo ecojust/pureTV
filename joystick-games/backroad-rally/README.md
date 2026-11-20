@@ -4,7 +4,7 @@
 
 ## 0.1.1 的 WebGL2 兼容性
 
-不提供浮点颜色缓冲区扩展的设备使用 RGBA8，直接绘制原作场景。在 Chromium 中屏蔽两项扩展后，芬兰赛段到达准备状态，起跑线、赛车、道路和两侧树木均可见。当次就绪采样为第 219 帧，尚处于赛前介绍。[实际截图](docs/browser-rgba8-0.1.1/finland.png) · [环境、原始日志与复现方法](docs/browser-rgba8-0.1.1/README.md)
+不提供浮点颜色缓冲区扩展的设备使用 RGBA8，直接绘制原作场景。在 Chromium 中屏蔽两项扩展后，芬兰赛段的第 219 帧就绪采样可见起跑线、赛车和道路。独立 Chrome 复验在起跑后按下 W，Swift Mk1 驶出 23.4 米，驾驶截图显示 51 km/h。[起跑截图](docs/browser-rgba8-0.1.1/finland.png) · [驾驶截图](docs/browser-rgba8-0.1.1/driving.png) · [环境、脚本与日志](docs/browser-rgba8-0.1.1/README.md)
 
 ## macOS 下载
 
