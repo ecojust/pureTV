@@ -1,6 +1,8 @@
 # 维护与复现
 
-超过10 MB的全部205份文件见 [完整清单与复刻参考](OVERSIZED.md)，包括按用户要求额外收录的5份和仍未收录的200份。未归档文件的版本、系统和架构仅为文件名线索；已归档条目关联实际manifest。应用家族与开发评估维护在 `planning/app-notes.json`，运行 `python3 tools/update-tvapp-oversized.py` 生成 Markdown、JSON、CSV，使用 `--check` 验证205个文件的完整覆盖及当前归档状态。
+维护命令位于 [tools/tvapp/](../tools/tvapp/)。下列命令从仓库根目录运行。历史命令中的 `tools/<脚本名>.py` 继续调用对应实现。
+
+超过10 MB的全部205份文件见 [完整清单与复刻参考](OVERSIZED.md)，包括按用户要求额外收录的5份和仍未收录的200份。未归档文件的版本、系统和架构仅为文件名线索；已归档条目关联实际manifest。应用家族与开发评估维护在 `planning/app-notes.json`，运行 `python3 tools/tvapp/update-tvapp-oversized.py` 生成 Markdown、JSON、CSV，使用 `--check` 验证205个文件的完整覆盖及当前归档状态。
 
 范围为上游固定提交的实际APK文件，基础规则为 **0 < bytes < 10,000,000**，保留所有合格版本和架构命名变体：228个APK中符合条件23个，按实际包名分为14款应用。另按2026-11-10用户明确要求收录儿歌多多TV1.3.1.0、宝宝趣学3.0.1、茉莉音乐1.0.2、淘知学堂TV1.0.0、七星戏曲1.0，具体路径、字节数、Git blob及原因登记在 `upstream/selection-overrides.json`。共19款应用、28个APK；只有登记的五个原文件享有体积例外，不扩大到其他版本或七星智教。分类由用途和上游目录确定；娱乐目录中的直播、音乐、戏曲归media，游戏归game。
 
@@ -11,7 +13,7 @@
 需要Python 3及Pillow，不需要重新下载APK或执行APK：
 
 ```bash
-python3 tools/verify-fork-tvapp.py --root fork --report /tmp/tvapp-verification.json
+python3 tools/tvapp/verify-fork-tvapp.py --root fork --report /tmp/tvapp-verification.json
 ```
 
 校验器对照完整上游树及显式例外清单检查筛选是否漏项或多收，核对实际APK大小、SHA256、Git blob、ZIP结构、签名证据、分类统计、图像、SVG静态子集、manifest及校验清单。原始aapt与apksigner输出保存在 `verification/apks/<GitBlobSHA>/`。
@@ -27,20 +29,20 @@ TVAPP_STAGE=/absolute/scratch/tvapp
 TVAPP_BUILD_TOOLS=/absolute/android-sdk/build-tools/34.0.0
 TVAPP_JDK=/absolute/jdk17
 
-python3 tools/fetch-tvapp-apks.py \
+python3 tools/tvapp/fetch-tvapp-apks.py \
   --inventory fork/upstream/candidates-raw.json \
   --output "$TVAPP_STAGE" --build-tools "$TVAPP_BUILD_TOOLS" --java-home "$TVAPP_JDK"
 
-python3 tools/import-tvapp.py \
+python3 tools/tvapp/import-tvapp.py \
   --inventory fork/upstream --audit "$TVAPP_STAGE/apk-audit" \
   --apks "$TVAPP_STAGE/apks" --output fork \
   --batch-output "$TVAPP_STAGE/assets-batch.json"
 
-python3 tools/fork-tvapp-assets.py \
+python3 tools/tvapp/fork-tvapp-assets.py \
   --batch "$TVAPP_STAGE/assets-batch.json" --build-tools "$TVAPP_BUILD_TOOLS"
 
-python3 tools/import-tvapp.py --output fork --finalize
-python3 tools/verify-fork-tvapp.py --root fork --report "$TVAPP_STAGE/report.json"
+python3 tools/tvapp/import-tvapp.py --output fork --finalize
+python3 tools/tvapp/verify-fork-tvapp.py --root fork --report "$TVAPP_STAGE/report.json"
 ```
 
 下载工具固定仓库、提交和Git blob，不信任清单中的任意下载域名。检查时不执行APK。导入器遇到同名但哈希不同的本地APK会停止；`--move`仅用于移动专用暂存目录中的已验证文件以减少磁盘占用。

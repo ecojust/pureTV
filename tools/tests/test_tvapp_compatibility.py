@@ -33,7 +33,7 @@ class CompatibilityTest(unittest.TestCase):
                         'apkExecuted': False}
             manifest_path = folder / 'manifest.json'
             manifest_path.write_text(json.dumps(manifest))
-            script = Path(__file__).resolve().parents[1] / 'import-tvapp.py'
+            script = Path(__file__).resolve().parents[1] / 'tvapp' / 'import-tvapp.py'
             for content, expected in [(b'1', True), (b'2', False)]:
                 with self.subTest(content=content):
                     (folder / 'sample.apk').write_bytes(content)

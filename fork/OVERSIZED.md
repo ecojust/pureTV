@@ -152,4 +152,4 @@ VsTV的ARM/x86_64/HarmonyOS小包已在[收录目录](media/vstv/)与[HarmonyOS�
 
 只列入固定树中实际存在的超限APK。README中指向其他仓库、外站或仅有说明而未存放APK的条目不计入这205份。
 
-维护：编辑[应用评估](planning/app-notes.json)，运行 `python3 tools/update-tvapp-oversized.py`；用 `--check` 核对所有文件恰好覆盖一次以及生成文档一致。
+维护：编辑[应用评估](planning/app-notes.json)，运行 `python3 tools/tvapp/update-tvapp-oversized.py`；用 `--check` 核对所有文件恰好覆盖一次以及生成文档一致。
