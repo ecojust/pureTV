@@ -45,7 +45,11 @@
 - 未做实体电视／手机测试时明确记录 `physicalTvTested:false` / `physicalPhoneTested:false`。软件浏览器结果和视频导出帧率不能当作设备帧率。
 - 运行与改动有关的检查；通过后除非有新修改、失败或未解决疑点，不反复运行相同测试。
 
-## 游戏 App 接入 pureTV Wi-Fi 手柄
+<a id="游戏-app-接入-puretv-wi-fi-手柄"></a>
+
+## 游戏输入与连接显示
+
+新开发及移植的游戏必须按[游戏输入与连接显示规范](docs/guide/game-controls.md)设计。发布前按其清单分别验证电脑键盘、电脑无线手柄、电视扫码手机和电视无线手柄，并在逐款记录中核对玩家加入、断开前后的画布与连接提示。
 
 开发或验收支持手柄的游戏时，参考 [puretv-joystick/README.md](puretv-joystick/README.md) 中的服务发现、TCP 协议和虚拟手柄测试说明。
 
