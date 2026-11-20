@@ -445,7 +445,11 @@ class Diagnosis:
         require(not original.plan.matches(step['expect'], game(before), game(before)), 'Menu expectation was already true')
         item = {'originalIndex': index, 'step': step, 'status': 'running', 'before': before, 'samples': []}
         self.report['steps'].append(item)
-        deadline = time.monotonic() + step['timeoutSeconds']
+        # Mesa took 30 s to present only one subsequent fresh garage frame. Give
+        # the software backend longer to present the same three distinct samples.
+        seconds = step['timeoutSeconds'] * (3 if self.args.mesa_comparison else 1)
+        item['observationTimeoutSeconds'] = seconds
+        deadline = time.monotonic() + seconds
         key = step['keys'][0]
         with client.lock:
             client.button(key, 'down'); down = client.seq
@@ -539,6 +543,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for key in ('input', 'observer-input', 'output', 'build-tools'): parser.add_argument('--' + key, type=Path, required=True)
     parser.add_argument('--adb', required=True)
+    parser.add_argument('--mesa-comparison', action='store_true',
+                        help='Allow the Mesa software GPU longer to present the original SDK steps')
     args = parser.parse_args()
     raise SystemExit(0 if Diagnosis(args).run() else 1)
 

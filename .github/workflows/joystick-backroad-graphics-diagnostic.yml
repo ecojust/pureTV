@@ -196,7 +196,7 @@ jobs:
           emulator-options: -no-window -memory 2048 -gpu ${{ inputs.mesa_comparison && 'lavapipe' || 'swiftshader_indirect' }} -noaudio -no-boot-anim -no-snapshot
           script: |
             adb shell dumpsys SurfaceFlinger | grep -m 1 'GLES:' || true
-            python3 joystick-games/qa/android/graphics-observer/run.py --input "$RUNNER_TEMP/original-input" --observer-input "$RUNNER_TEMP/observer-signed" --output "$RUNNER_TEMP/graphics-diagnostic" --adb "$ANDROID_HOME/platform-tools/adb" --build-tools "$ANDROID_HOME/build-tools/34.0.0"
+            python3 joystick-games/qa/android/graphics-observer/run.py --input "$RUNNER_TEMP/original-input" --observer-input "$RUNNER_TEMP/observer-signed" --output "$RUNNER_TEMP/graphics-diagnostic" --adb "$ANDROID_HOME/platform-tools/adb" --build-tools "$ANDROID_HOME/build-tools/34.0.0" ${{ inputs.mesa_comparison && '--mesa-comparison' || '' }}
       - name: Preserve one diagnostic attempt evidence
         uses: actions/upload-artifact@v4
         if: always()
