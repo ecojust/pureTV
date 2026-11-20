@@ -2,9 +2,12 @@
 
 基于 [jason-c-dev/backroad-rally](https://github.com/jason-c-dev/backroad-rally/tree/e5542f96b9a9a2912fdaa160396054e81f022f23) 的 pureTV 手柄适配。保留原作五辆车、六个地区、天气、正反赛段、幽灵车、生涯、存档和 Rapier 物理；不是重新实现或换皮。
 
-## Android TV 测试下载
+## Android TV 下载
 
-0.1.2 支持 Android 8.0 及以上。APK 使用固定发布证书，包内 333 个网页文件均与芬兰赛段驾驶复验时的文件逐字节一致。Android TV 16 在 lavapipe 模拟器配置下进入芬兰赛段，原手柄 SDK 已驱动车辆，截图显示 9 km/h，起跑门、白色赛车、观众和道路清晰可见，WebGL 实际由 ANGLE/Vulkan SwiftShader 提供。默认 GLES 翻译器在同一段只显示 HUD，赛道透明。[原生驾驶原图](https://github.com/ecojust/pureTV/blob/2bd09dd52f3f5346d7c4d8ce155c7a6c8a6f10fb/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/original-stage-accelerated.png) · [原包截图、像素读数和 116 个手柄回执](docs/android-0.1.2/)[下载 0.1.2 APK](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/backroad-rally-0.1.2.apk) · [SHA-256](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/SHA256SUMS-Backroad-0.1.2.txt) · [原签名包核验](https://github.com/ecojust/pureTV/actions/runs/44688535161/job/136128536372)
+0.1.2 版支持 Android 8.0 及以上，需要 WebGL 2。APK 共 105,024,551 字节，使用 pureTV 发布证书签名。[下载签名 APK](https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-android-v0.1.2/backroad-rally-0.1.2.apk) · [SHA-256](android/SHA256SUMS.txt) · [版本清单](android-release.json)
+
+在 720p Android TV 16 模拟器上，原手柄 SDK 在默认端口和端口占用回退两次都完成芬兰快速赛的驾驶、暂停和断线重连，每种模式各通过 56 项检查并收到 552 条输入确认。四张系统截图都能看清赛车、碎石路和绿色草地。此配置的 Android 合成器报告 Mesa llvmpipe；旧版 GLES 模拟器上可能只显示 HUD。实体电视与 ESP32 手柄尚未实测。[双端口截图、录像及验收范围](docs/android-delivery/) · [其他图形配置](docs/android-0.1.2/)
+
 
 ## WebGL2 兼容性
 
@@ -26,7 +29,6 @@
 
 0.1.0 支持 Windows 10 1903 及以上 x64 系统，需要 WebView2 Evergreen Runtime 与 WebGL2。原生安装、卸载、手柄驾驶及存档重启已通过验证。 [安装器](https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-windows-v0.1.0/BackroadRally-0.1.0-windows-x64-setup.exe) · [便携 ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-windows-v0.1.0/BackroadRally-0.1.0-windows-x64.zip) · [SHA256](windows/SHA256SUMS.txt) · [原生测试记录](docs/windows-delivery/verification.json)
 
-Android TV 继续验证。
 
 | 按键 | 比赛中 | 菜单中 |
 | --- | --- | --- |
