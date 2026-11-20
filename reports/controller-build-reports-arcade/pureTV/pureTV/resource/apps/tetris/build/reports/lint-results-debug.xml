@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.5.2">
+
+    <issue
+        id="VectorRaster"
+        severity="Warning"
+        message="Limit vector icons sizes to 200×200 to keep icon drawing fast; see https://developer.android.com/studio/write/vector-asset-studio#when for more"
+        category="Correctness"
+        priority="5"
+        summary="Vector Image Generation"
+        explanation="Vector icons require API 21 or API 24 depending on used features, but when `minSdkVersion` is less than 21 or 24 and Android Gradle plugin 1.4 or higher is used, a vector drawable placed in the `drawable` folder is automatically moved to `drawable-anydpi-v21` or `drawable-anydpi-v24` and bitmap images are generated for different screen resolutions for backwards compatibility.&#xA;&#xA;However, there are some limitations to this raster image generation, and this lint check flags elements and attributes that are not fully supported. You should manually check whether the generated output is acceptable for those older devices."
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:width=&quot;320dp&quot; android:height=&quot;180dp&quot; android:viewportWidth=&quot;320&quot; android:viewportHeight=&quot;180&quot;>"
+        errorLine2="                                                                                  ~~~~~">
+        <location
+            file="/home/runner/work/pureTV/pureTV/resource/apps/tetris/src/main/res/drawable/banner.xml"
+            line="1"
+            column="83"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        severity="Warning"
+        message="Should not restrict activity to fixed orientation. This may not be suitable for different form factors, causing the app to be letterboxed."
+        category="Correctness"
+        priority="2"
+        summary="Using discouraged APIs"
+        explanation="Discouraged APIs are allowed and are not deprecated, but they may be unfit for common use (e.g. due to slow performance or subtle behavior)."
+        errorLine1="        &lt;activity android:name=&quot;.MainActivity&quot; android:exported=&quot;true&quot; android:screenOrientation=&quot;landscape&quot;"
+        errorLine2="                                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/pureTV/pureTV/resource/apps/tetris/src/main/AndroidManifest.xml"
+            line="9"
+            column="72"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        severity="Warning"
+        message="Very long vector path (1680 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        category="Performance"
+        priority="5"
+        summary="Long vector paths"
+        explanation="Using long vector paths is bad for performance. There are several ways to make the `pathData` shorter:&#xA;* Using less precision&#xA;* Removing some minor details&#xA;* Using the Android Studio vector conversion tool&#xA;* Rasterizing the image (converting to PNG)"
+        errorLine1="    &lt;path android:fillColor=&quot;#E9F2FF&quot; android:pathData=&quot;M140,65h3v3h-3zM143,65h3v3h-3zM146,65h3v3h-3zM149,65h3v3h-3zM152,65h3v3h-3zM146,68h3v3h-3zM146,71h3v3h-3zM146,74h3v3h-3zM146,77h3v3h-3zM146,80h3v3h-3zM146,83h3v3h-3zM158,65h3v3h-3zM161,65h3v3h-3zM164,65h3v3h-3zM167,65h3v3h-3zM170,65h3v3h-3zM158,68h3v3h-3zM158,71h3v3h-3zM158,74h3v3h-3zM161,74h3v3h-3zM164,74h3v3h-3zM167,74h3v3h-3zM158,77h3v3h-3zM158,80h3v3h-3zM158,83h3v3h-3zM161,83h3v3h-3zM164,83h3v3h-3zM167,83h3v3h-3zM170,83h3v3h-3zM176,65h3v3h-3zM179,65h3v3h-3zM182,65h3v3h-3zM185,65h3v3h-3zM188,65h3v3h-3zM182,68h3v3h-3zM182,71h3v3h-3zM182,74h3v3h-3zM182,77h3v3h-3zM182,80h3v3h-3zM182,83h3v3h-3zM194,65h3v3h-3zM197,65h3v3h-3zM200,65h3v3h-3zM203,65h3v3h-3zM194,68h3v3h-3zM206,68h3v3h-3zM194,71h3v3h-3zM206,71h3v3h-3zM194,74h3v3h-3zM197,74h3v3h-3zM200,74h3v3h-3zM203,74h3v3h-3zM194,77h3v3h-3zM200,77h3v3h-3zM194,80h3v3h-3zM203,80h3v3h-3zM194,83h3v3h-3zM206,83h3v3h-3zM212,65h3v3h-3zM215,65h3v3h-3zM218,65h3v3h-3zM221,65h3v3h-3zM224,65h3v3h-3zM218,68h3v3h-3zM218,71h3v3h-3zM218,74h3v3h-3zM218,77h3v3h-3zM218,80h3v3h-3zM212,83h3v3h-3zM215,83h3v3h-3zM218,83h3v3h-3zM221,83h3v3h-3zM224,83h3v3h-3zM233,65h3v3h-3zM236,65h3v3h-3zM239,65h3v3h-3zM242,65h3v3h-3zM230,68h3v3h-3zM230,71h3v3h-3zM233,74h3v3h-3zM236,74h3v3h-3zM239,74h3v3h-3zM242,77h3v3h-3zM242,80h3v3h-3zM230,83h3v3h-3zM233,83h3v3h-3zM236,83h3v3h-3zM239,83h3v3h-3zM266,65h3v3h-3zM269,65h3v3h-3zM272,65h3v3h-3zM275,65h3v3h-3zM278,65h3v3h-3zM272,68h3v3h-3zM272,71h3v3h-3zM272,74h3v3h-3zM272,77h3v3h-3zM272,80h3v3h-3zM272,83h3v3h-3zM284,65h3v3h-3zM296,65h3v3h-3zM284,68h3v3h-3zM296,68h3v3h-3zM284,71h3v3h-3zM296,71h3v3h-3zM284,74h3v3h-3zM296,74h3v3h-3zM284,77h3v3h-3zM296,77h3v3h-3zM287,80h3v3h-3zM293,80h3v3h-3zM290,83h3v3h-3z&quot; />"
+        errorLine2="                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/pureTV/pureTV/resource/apps/tetris/src/main/res/drawable/banner.xml"
+            line="13"
+            column="57"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        severity="Warning"
+        message="Very long vector path (1424 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        category="Performance"
+        priority="5"
+        summary="Long vector paths"
+        explanation="Using long vector paths is bad for performance. There are several ways to make the `pathData` shorter:&#xA;* Using less precision&#xA;* Removing some minor details&#xA;* Using the Android Studio vector conversion tool&#xA;* Rasterizing the image (converting to PNG)"
+        errorLine1="    &lt;path android:fillColor=&quot;#8CA7CD&quot; android:pathData=&quot;M142,106h2v2h-2zM144,106h2v2h-2zM146,106h2v2h-2zM148,106h2v2h-2zM142,108h2v2h-2zM150,108h2v2h-2zM142,110h2v2h-2zM150,110h2v2h-2zM142,112h2v2h-2zM144,112h2v2h-2zM146,112h2v2h-2zM148,112h2v2h-2zM142,114h2v2h-2zM142,116h2v2h-2zM142,118h2v2h-2zM154,106h2v2h-2zM162,106h2v2h-2zM154,108h2v2h-2zM162,108h2v2h-2zM154,110h2v2h-2zM162,110h2v2h-2zM154,112h2v2h-2zM162,112h2v2h-2zM154,114h2v2h-2zM162,114h2v2h-2zM154,116h2v2h-2zM162,116h2v2h-2zM156,118h2v2h-2zM158,118h2v2h-2zM160,118h2v2h-2zM166,106h2v2h-2zM168,106h2v2h-2zM170,106h2v2h-2zM172,106h2v2h-2zM174,106h2v2h-2zM174,108h2v2h-2zM172,110h2v2h-2zM170,112h2v2h-2zM168,114h2v2h-2zM166,116h2v2h-2zM166,118h2v2h-2zM168,118h2v2h-2zM170,118h2v2h-2zM172,118h2v2h-2zM174,118h2v2h-2zM178,106h2v2h-2zM180,106h2v2h-2zM182,106h2v2h-2zM184,106h2v2h-2zM186,106h2v2h-2zM186,108h2v2h-2zM184,110h2v2h-2zM182,112h2v2h-2zM180,114h2v2h-2zM178,116h2v2h-2zM178,118h2v2h-2zM180,118h2v2h-2zM182,118h2v2h-2zM184,118h2v2h-2zM186,118h2v2h-2zM190,106h2v2h-2zM190,108h2v2h-2zM190,110h2v2h-2zM190,112h2v2h-2zM190,114h2v2h-2zM190,116h2v2h-2zM190,118h2v2h-2zM192,118h2v2h-2zM194,118h2v2h-2zM196,118h2v2h-2zM198,118h2v2h-2zM202,106h2v2h-2zM204,106h2v2h-2zM206,106h2v2h-2zM208,106h2v2h-2zM210,106h2v2h-2zM202,108h2v2h-2zM202,110h2v2h-2zM202,112h2v2h-2zM204,112h2v2h-2zM206,112h2v2h-2zM208,112h2v2h-2zM202,114h2v2h-2zM202,116h2v2h-2zM202,118h2v2h-2zM204,118h2v2h-2zM206,118h2v2h-2zM208,118h2v2h-2zM210,118h2v2h-2z&quot; />"
+        errorLine2="                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/pureTV/pureTV/resource/apps/tetris/src/main/res/drawable/banner.xml"
+            line="14"
+            column="57"/>
+    </issue>
+
+</issues>
