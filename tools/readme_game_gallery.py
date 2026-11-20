@@ -25,6 +25,7 @@ def game_catalog(genres, resources, english, root):
                 titles = {'zh': info['name'], 'en': english[key]['name'], **item.get('title', {})}
                 covers = {'zh': page + info['cover'], 'en': english[key]['cover'], **item.get('cover', {})}
                 downloads = {'apk': page + info['apk'] + '?raw=1'}
+                controller = bool(info.get('wifiController'))
                 if 'macos' in item:
                     dmg = Path(item['macos'])
                     assert not dmg.is_absolute() and '..' not in dmg.parts and dmg.suffix == '.dmg', f'{key}: invalid DMG path'
@@ -33,6 +34,8 @@ def game_catalog(genres, resources, english, root):
             else:
                 page = item['page']
                 assert re.fullmatch(r'joystick-games/[a-z0-9-]+/', page), f'Invalid game page: {page}'
+                # This directory contains the standalone pureTV controller ports.
+                controller = True
                 titles = item['title']
                 covers = item['cover']
                 if isinstance(covers, str):
@@ -46,9 +49,21 @@ def game_catalog(genres, resources, english, root):
             preview = item.get('macosPreview', False)
             assert not preview or 'macos' in downloads, f'{page}: missing macOS preview download'
             pages.add(page)
-            cards.append({'page': page, 'titles': titles, 'covers': covers, 'downloads': downloads, 'macosPreview': preview})
+            cards.append({'page': page, 'titles': titles, 'covers': covers, 'downloads': downloads,
+                          'macosPreview': preview, 'controller': controller})
         catalog.append({'id': genre_id, 'zh': genre['zh'], 'en': genre['en'], 'cards': cards})
     return catalog
+
+
+PLATFORM_ICONS = {
+    'apk': ('android-tv', 'Android TV', 'APK'),
+    'macos': ('macos', 'macOS', 'DMG'),
+    'windows': ('windows', 'Windows x64', 'EXE'),
+}
+
+
+def support_icon(name, alt=''):
+    return f'<img src="docs/branding/platforms/{name}.png" width="22" height="22" alt="{escape(alt)}">'
 
 
 def game_card(card, locale):
@@ -56,11 +71,26 @@ def game_card(card, locale):
     alt = title + ('游戏画面' if locale == 'zh' else ' gameplay')
     image = f'<img src="{escape(card["covers"][locale])}" width="180" alt="{escape(alt)}">'
     page = f'<a href="{escape(card["page"])}">{image}<br>{escape(title)}</a>'
-    labels = {'apk': 'APK', 'macos': 'macOS', 'windows': 'Windows'}
-    if card['macosPreview']:
-        labels['macos'] = 'macOS 预览' if locale == 'zh' else 'macOS preview'
-    links = [f'<a href="{escape(url)}">{labels[platform]}</a>' for platform, url in card['downloads'].items()]
-    return f'    <td align="center" valign="top" width="25%">{page}<br>{" · ".join(links)}</td>'
+    icons = []
+    for platform, url in card['downloads'].items():
+        icon, system, package = PLATFORM_ICONS[platform]
+        preview = ''
+        if platform == 'macos' and card['macosPreview']:
+            preview = '预览' if locale == 'zh' else 'Preview'
+        label = ' '.join(filter(None, (title, system, package, preview)))
+        content = support_icon(icon, label)
+        if preview:
+            content += '&nbsp;' + preview
+        icons.append(f'<a href="{escape(url)}" title="{escape(label)}">{content}</a>')
+    if card['controller']:
+        if locale == 'zh':
+            guide = 'docs/guide/README.md#安装游戏与连接手柄'
+            label = '支持手柄，查看连接说明'
+        else:
+            guide = 'docs/guide/README.en.md#install-a-game-and-connect-a-controller'
+            label = 'Controller supported. View setup guide'
+        icons.append(f'<a href="{guide}" title="{label}">{support_icon("controller", label)}</a>')
+    return f'    <td align="center" valign="top" width="25%">{page}<br>{" ".join(icons)}</td>'
 
 
 def table_rows(cells):
@@ -73,7 +103,7 @@ def table_rows(cells):
 
 def game_index(catalog, locale):
     cards = [card for genre in catalog for card in genre['cards']]
-    total = len(cards)
+    total = sum(card['controller'] for card in cards)
     android, macos, windows = [sum(key in card['downloads'] for card in cards) for key in ('apk', 'macos', 'windows')]
     if locale == 'zh':
         summary = f'**{total} 款手柄游戏** · Android TV {android} 款 · macOS {macos} 款 · Windows x64 {windows} 款'
@@ -92,4 +122,7 @@ def game_index(catalog, locale):
         cells = [game_card(card, locale) for card in genre['cards']]
         sections.extend(table_rows(cells))
         sections.extend(['</table>', ''])
-    return '\n'.join([summary, '', ' · '.join(headings), '', *sections]).rstrip()
+    legend = [f'{support_icon(icon)} {system}' for icon, system, _ in PLATFORM_ICONS.values()]
+    controller_label = '支持手柄' if locale == 'zh' else 'Controller supported'
+    legend.append(f'{support_icon("controller")} {controller_label}')
+    return '\n'.join([summary, '', ' · '.join(headings), '', *sections, ' · '.join(legend)])

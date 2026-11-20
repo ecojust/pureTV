@@ -46,7 +46,7 @@ The TV store works with updated launchers to let you choose the position of an a
 
 ## Install a game and connect a controller
 
-1. Choose a game by genre on the project homepage. Each card lists the available downloads. Use the APK for Android TV, the DMG for Mac or the setup EXE for Windows x64. Open the game title or preview for controls, portable packages and tested platforms. [Browse games by genre](../../README.en.md#games)
+1. Choose a game by genre on the project homepage. Select the TV, Apple or Windows icon below the game title to download the Android TV APK, Mac DMG or Windows x64 installer. The gamepad icon marks pureTV controller support. Open the game title or preview for controls, portable packages and tested platforms. [Browse games by genre](../../README.en.md#games)
 2. Connect the controller and game device to the same reachable LAN. Open the game and press the controller's **GPIO 23 search button**. The firmware automatically connects when it finds exactly one valid service. If several games are open, close the other services or enter the game's IPv4 address and port on the controller's setup page.
 3. The default TCP port is **63485**. If it was occupied at startup, use the actual port displayed by the game. A connected controller appears in the side indicator with its icon, player seat and full client ID. Its entry disappears on disconnect. Press **START (GPIO 27)** to begin or pause. The D-pad and A commonly select and confirm. Consult each game's instructions for other buttons, two-player support and resuming after disconnect. [Controller mappings and multiplayer (Chinese)](../readme-controller-support/README.md) · [Connection indicator examples](../controller-client-status/README.md)
 
