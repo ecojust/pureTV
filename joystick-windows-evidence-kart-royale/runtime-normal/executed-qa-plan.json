@@ -1,0 +1,390 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "storageRestartRequired": true,
+  "pauseStablePaths": [
+    "gameplay.time",
+    "gameplay.position",
+    "gameplay.speed",
+    "gameplay.lap",
+    "gameplay.driftCharge",
+    "gameplay.boostTime"
+  ],
+  "steps": [
+    {
+      "name": "Focus original Controls menu",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "Controls"
+        }
+      ],
+      "menuTap": true
+    },
+    {
+      "name": "Open original Controls",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu",
+          "op": "eq",
+          "value": "controls"
+        }
+      ],
+      "menuTap": true
+    },
+    {
+      "name": "Focus controls option Floating stick",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu",
+          "op": "eq",
+          "value": "controls"
+        },
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "Floating stickAppears wherever your thumb lands. Never look for it."
+        }
+      ],
+      "menuTap": true
+    },
+    {
+      "name": "Focus controls option Fixed stick",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu",
+          "op": "eq",
+          "value": "controls"
+        },
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "Fixed stickAlways in the same place. Muscle memory, no drift."
+        }
+      ],
+      "menuTap": true
+    },
+    {
+      "name": "Focus controls option Tilt to steer",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu",
+          "op": "eq",
+          "value": "controls"
+        },
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "Tilt to steerRoll the phone. Both thumbs free for the buttons."
+        }
+      ],
+      "menuTap": true
+    },
+    {
+      "name": "Focus controls option Steer buttons",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu",
+          "op": "eq",
+          "value": "controls"
+        },
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "Steer buttonsTwo big pads. Nothing to hold steady."
+        }
+      ],
+      "menuTap": true
+    },
+    {
+      "name": "Focus controls option Right",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu",
+          "op": "eq",
+          "value": "controls"
+        },
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "Right"
+        }
+      ],
+      "menuTap": true
+    },
+    {
+      "name": "Focus controls option Left",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu",
+          "op": "eq",
+          "value": "controls"
+        },
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "Left"
+        }
+      ],
+      "menuTap": true
+    },
+    {
+      "name": "Save original left-handed preference through Controls",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.controlHand",
+          "op": "eq",
+          "value": "left"
+        },
+        {
+          "path": "gameplay.savedControls",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "menuTap": true
+    },
+    {
+      "name": "Close Controls explicitly",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu",
+          "op": "eq",
+          "value": "title"
+        }
+      ],
+      "menuTap": true
+    },
+    {
+      "name": "Open original roster from Start button",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.menu",
+          "op": "eq",
+          "value": "select"
+        },
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "Start race"
+        }
+      ],
+      "menuTap": true
+    },
+    {
+      "name": "Start race and wait original countdown",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.phase",
+          "op": "eq",
+          "value": "racing"
+        }
+      ],
+      "windowsStartupWait": {
+        "timeoutSeconds": 600
+      }
+    },
+    {
+      "name": "Accelerate original kart from grid",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 3500,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "gt",
+          "value": 1
+        },
+        {
+          "path": "gameplay.position",
+          "op": "changed"
+        }
+      ],
+      "windowsHoldUntilExpect": true,
+      "windowsReleaseWait": {
+        "timeoutSeconds": 45
+      }
+    },
+    {
+      "name": "Steer and request original drift",
+      "keys": [
+        "UP",
+        "RIGHT",
+        "B"
+      ],
+      "holdMs": 1200,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.position",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Steer opposite direction and look back",
+      "keys": [
+        "A",
+        "LEFT",
+        "Y"
+      ],
+      "holdMs": 800,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.position",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Brake using original input",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 800,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Request item through X (empty inventory is not an item-use claim)",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.phase",
+          "op": "eq",
+          "value": "racing"
+        }
+      ]
+    },
+    {
+      "name": "Pause original race",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Deliberately resume with START held without re-pausing",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 1200,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "Continue actual driving after explicit resume",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 2000,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "gt",
+          "value": 1
+        },
+        {
+          "path": "gameplay.position",
+          "op": "changed"
+        }
+      ]
+    }
+  ],
+  "windowsPauseWait": {
+    "timeoutSeconds": 45
+  }
+}
