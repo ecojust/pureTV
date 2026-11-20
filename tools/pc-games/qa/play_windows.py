@@ -26,7 +26,7 @@ SCRATCH = Path(os.environ['RUNNER_TEMP'])
 FILES = SCRATCH / 'sample-files'
 RESULTS = SCRATCH / 'sample-results'
 CATALOG = ROOT / 'tools/pc-games/catalog.json'
-PORT = 63721
+PORT_FILE = SCRATCH / "windows-game-test-source-port.txt"
 
 
 def sha(path):
@@ -36,6 +36,8 @@ def sha(path):
 
 def prepare():
     FILES.mkdir(exist_ok=True)
+    port = free_port()
+    PORT_FILE.write_text(str(port), encoding='ascii')
     original=json.loads(CATALOG.read_text(encoding='utf-8'))
     rows=[g for g in original if g['id'] in GAMES]
     assert len(rows)==2
@@ -51,7 +53,7 @@ def prepare():
             assert tvhash=='8a62186c1b00bef9a197ef7ec221e884a66f2d5ffb688ddd28d7b06f578328cd'
         else:
             assert sha(package)=='23caf1f988765a8f074120046b626055e7a7cf76dbb3a12ae1c6840961baaf74'
-        game.update(url=f'http://127.0.0.1:{PORT}/{slug}.apk',bytes=package.stat().st_size,sha256=sha(package))
+        game.update(url=f'http://127.0.0.1:{port}/{slug}.apk',bytes=package.stat().st_size,sha256=sha(package))
     CATALOG.write_text(json.dumps(rows,ensure_ascii=False),encoding='utf-8')
 
 
@@ -190,7 +192,7 @@ def main():
     RESULTS.mkdir(exist_ok=True)
     class Handler(http.server.SimpleHTTPRequestHandler):
         def __init__(self,*a,**kw):super().__init__(*a,directory=FILES,**kw)
-    with http.server.ThreadingHTTPServer(('127.0.0.1',PORT),Handler) as server:
+    with http.server.ThreadingHTTPServer(('127.0.0.1',int(PORT_FILE.read_text())),Handler) as server:
         worker=threading.Thread(target=server.serve_forever,daemon=True);worker.start()
         try:
             with sync_playwright() as pw:
