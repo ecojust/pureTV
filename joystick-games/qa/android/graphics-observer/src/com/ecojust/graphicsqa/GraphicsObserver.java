@@ -149,7 +149,7 @@ public final class GraphicsObserver extends Instrumentation {
         }
         ++postKeys; // Do not replay input after an uncertain result.
         final AtomicBoolean delivered = new AtomicBoolean(false);
-        runOnMainSync(() -> {
+        runOnMainSync(new Runnable() { public void run() {
             Activity current = activity;
             WebView web = current == null ? null : find(current.getWindow().getDecorView());
             if (web == null || !STAGE.equals(web.getUrl()) || !current.hasWindowFocus()) return;
@@ -161,7 +161,7 @@ public final class GraphicsObserver extends Instrumentation {
                     0, 0, KeyCharacterMap.VIRTUAL_KEYBOARD, 25, 0, InputDevice.SOURCE_KEYBOARD));
             }
             delivered.set(true);
-        });
+        }});
         return new JSONObject().put("dispatched", delivered.get()).put("count", postKeys).toString();
     }
 
