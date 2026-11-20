@@ -1,0 +1,109 @@
+{
+  "chromium": "156.0.8078.79",
+  "before": {
+    "sha256": "b3c42e5ccc77e692b69de064ae7d136a337df10941fcd89f11ba12671c8b6454",
+    "initial": {
+      "stage": "playing",
+      "audio": "running",
+      "frames": 5,
+      "errors": []
+    },
+    "cases": [
+      {
+        "lifecycle": "PureGame.focus(false)",
+        "loss": {
+          "stage": "paused",
+          "audio": "running",
+          "frames": 7,
+          "errors": []
+        },
+        "foregroundWithB": {
+          "stage": "paused",
+          "audio": "running",
+          "frames": 11,
+          "errors": []
+        },
+        "explicitStart": {
+          "stage": "playing",
+          "audio": "running",
+          "frames": 15,
+          "errors": []
+        }
+      },
+      {
+        "lifecycle": "PureGame.suspend(true)",
+        "loss": {
+          "stage": "paused",
+          "audio": "running",
+          "frames": 17,
+          "errors": []
+        },
+        "foregroundWithB": {
+          "stage": "paused",
+          "audio": "running",
+          "frames": 21,
+          "errors": []
+        },
+        "explicitStart": {
+          "stage": "playing",
+          "audio": "running",
+          "frames": 25,
+          "errors": []
+        }
+      }
+    ]
+  },
+  "after": {
+    "sha256": "59e9a9202c1978390a85cd851375469e4c5f6695368b7ab300e6d814d9a08e78",
+    "initial": {
+      "stage": "playing",
+      "audio": "running",
+      "frames": 10,
+      "errors": []
+    },
+    "cases": [
+      {
+        "lifecycle": "PureGame.focus(false)",
+        "loss": {
+          "stage": "paused",
+          "audio": "suspended",
+          "frames": 12,
+          "errors": []
+        },
+        "foregroundWithB": {
+          "stage": "paused",
+          "audio": "suspended",
+          "frames": 16,
+          "errors": []
+        },
+        "explicitStart": {
+          "stage": "playing",
+          "audio": "running",
+          "frames": 20,
+          "errors": []
+        }
+      },
+      {
+        "lifecycle": "PureGame.suspend(true)",
+        "loss": {
+          "stage": "paused",
+          "audio": "suspended",
+          "frames": 22,
+          "errors": []
+        },
+        "foregroundWithB": {
+          "stage": "paused",
+          "audio": "suspended",
+          "frames": 26,
+          "errors": []
+        },
+        "explicitStart": {
+          "stage": "playing",
+          "audio": "running",
+          "frames": 30,
+          "errors": []
+        }
+      }
+    ]
+  }
+}

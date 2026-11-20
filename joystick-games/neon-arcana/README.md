@@ -15,6 +15,8 @@
 
 在本目录执行 `npm ci`、`npm test`、`npm run build`、`npm run build:check`。产物为 `dist/tv.html` 与 `dist/THIRD-PARTY-NOTICES.txt`。原版 Three.js 0.165.0、Cinzel / Orbitron 的 Latin 字体子集与全部着色器随包内嵌，卡面、格盘、粒子与音效在本地生成。
 
-原作模拟测试覆盖放置、连线清除、能力、存档、确定性及自动玩家的完整恢复进程。浏览器手柄复验使用仓库的 Python TCP SDK、Playwright 和 Chromium。构建后在本目录执行 `python docs/browser/verify.py --output /tmp/neon-arcana-test`。真实音频上下文的暂停与恢复可用 `python docs/browser/verify-audio.py --output /tmp/neon-audio.json` 复验。三端原生验收步骤见 [qa-plan.json](qa-plan.json)。
+原作模拟测试覆盖放置、连线清除、能力、存档、确定性及自动玩家的完整恢复进程。浏览器手柄复验使用仓库的 Python TCP SDK、Playwright 和 Chromium。构建后在本目录执行 `python docs/browser/verify.py --output /tmp/neon-arcana-test`。[浏览器手柄记录](docs/browser/results.json) · [540p 浏览器截图](docs/browser/board-960x540.png) · [720p 浏览器截图](docs/browser/board-1280x720.png)
+
+[音频对照记录](docs/browser/audio.json) 显示 0.1.1 在应用失焦和挂起时将 AudioContext 切到 suspended，返回后按 B 保持静音，按 START 才切回 running。真实音频上下文的暂停与恢复可用 `python docs/browser/verify-audio.py --output /tmp/neon-audio.json` 复验。三端原生验收步骤见 [qa-plan.json](qa-plan.json)。
 
 [Andrew Wooldridge 的原作与固定源版本](https://github.com/triptych/web-games-andrew/tree/a7051c34fe2e7550fd206e6272f758df171855b0/game-111) · [上游文件清单](upstream.json) · [许可证与字体归属](NOTICE.md)

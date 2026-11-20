@@ -25,3 +25,5 @@
 原作 149 项模型检查通过。Chromium 156 在 960 × 540、1280 × 720 两种分辨率使用 Wi-Fi 手柄接口夹具，通过六步手柄计划、失焦暂停、保持 START 重连后继续暂停，以及主动恢复。网页运行期间未发出外部网络请求。[逐步游戏数值](docs/browser/report.json) · [浏览器脚本](tests/browser.mjs) · [构建及验证摘要](docs/verification.json)
 
 失焦、手柄断线或系统暂停时，游戏暂停音乐和音效的 AudioContext。重新获得焦点或重连时仍保持静音，恢复游玩后才重新发声。
+
+Chromium 156 在 960 × 540 及 1280 × 720 检查了实际游戏操作、失焦、持 START 重连，以及游戏自身音频上下文的挂起和显式恢复。另有同一音频源码的独立验证，静音期间音频时钟保持不变。[游戏运行记录](docs/browser/report.json) · [音频观测](docs/audio-lifecycle.json) · [构建、源码及图像校验](docs/verification.json)
