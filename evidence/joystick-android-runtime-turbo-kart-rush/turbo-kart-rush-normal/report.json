@@ -1,0 +1,3356 @@
+{
+  "game": "turbo-kart-rush",
+  "targetPackage": "com.ecojust.joystick.turbokartrush",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": false,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "2cf1333faadccc1a150c0f6fcae99ffcd963cb54",
+  "apk": {
+    "path": "/home/runner/work/_temp/input/packages/turbo-kart-rush/turbo-kart-rush-0.1.0.apk",
+    "bytes": 545968,
+    "sha256": "f4663f43839f45a24a913a93067e77c07528439cdc6f234aba6df1e877d03e6c"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/input/observers/turbo-kart-rush/observer-turbo-kart-rush.apk",
+    "bytes": 16783,
+    "sha256": "e074acca21cb37412300640a70d008d728a812f64594dd823fc670b9f4bb4637"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 50358,
+      "sha256": "b20a1054a1e84e7e8fba29da6426e37d6348c3241a9bcb0ec73a963a8d4002cb"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11264,
+      "sha256": "c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 12693,
+      "sha256": "3bf677cf2634fe364325e37a1439afab82a8a1f993efa77b64d56e14fe10bb8d"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 5101,
+      "sha256": "d225d849e547737e428d6c0ed83031a1d817237a4cdcfd78d4e942e0fbcdd582"
+    },
+    "joystick-games/turbo-kart-rush/qa-plan.json": {
+      "bytes": 3386,
+      "sha256": "64190352ff374685ca910298e0ae87e5df0bad02ca97e938262ec5e406665fb3"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 7735,
+      "sha256": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d"
+    }
+  },
+  "tests": [
+    {
+      "name": "catalog scenario starts with fresh app data before launch",
+      "status": "passed",
+      "details": {
+        "mode": "fresh-install-app-data",
+        "targetPackage": "com.ecojust.joystick.turbokartrush",
+        "method": "pm clear",
+        "phase": "before-target-launch",
+        "status": "passed",
+        "stdout": "Success"
+      }
+    },
+    {
+      "name": "installed target launches initialized game menu with no controller card",
+      "status": "passed",
+      "details": null
+    },
+    {
+      "name": "original SDK hello and nine sync messages create actual controller ID card",
+      "status": "passed",
+      "details": {
+        "identity": "virtual-92abb6ef717a"
+      }
+    },
+    {
+      "name": "actual SDK gameplay: Open original racer selection",
+      "status": "passed",
+      "details": {
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "characterSelect"
+          }
+        ],
+        "holdMs": 500
+      }
+    },
+    {
+      "name": "actual SDK gameplay: Choose another original racer",
+      "status": "passed",
+      "details": {
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "characterSelect"
+          }
+        ],
+        "holdMs": 250
+      }
+    },
+    {
+      "name": "actual SDK gameplay: Confirm racer and open four-track selector",
+      "status": "passed",
+      "details": {
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "trackSelect"
+          }
+        ],
+        "holdMs": 500
+      }
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "initial-menu",
+      "wallTime": 1795152430.251824,
+      "snapshot": {
+        "game": {
+          "game": "turbo-kart-rush",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "audioState": "not_created",
+          "gameplay": {
+            "mode": "title",
+            "course": "",
+            "character": "",
+            "time": 0,
+            "countdown": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "heading": 0,
+            "progress": 0,
+            "lap": 0,
+            "place": 0,
+            "checkpoint": 0,
+            "driftActive": false,
+            "driftCharge": 0,
+            "driftStage": 0,
+            "boost": 0,
+            "item": "none",
+            "itemCount": 0,
+            "itemPending": false,
+            "driftHeld": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "postfxEnabled": true,
+            "renderCalls": 1
+          },
+          "frames": 1,
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Turbo Kart Rush",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 1,
+            "native": true,
+            "inputAvailable": true
+          },
+          "helpOpen": false,
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Turbo Kart Rush",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 775,
+                  "top": 258.4609375,
+                  "right": 947,
+                  "bottom": 531.4609375
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.turbokartrush"
+      }
+    },
+    {
+      "label": "before-plan-Open original racer selection",
+      "wallTime": 1795152470.76256,
+      "snapshot": {
+        "game": {
+          "game": "turbo-kart-rush",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "audioState": "not_created",
+          "gameplay": {
+            "mode": "title",
+            "course": "",
+            "character": "",
+            "time": 0,
+            "countdown": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "heading": 0,
+            "progress": 0,
+            "lap": 0,
+            "place": 0,
+            "checkpoint": 0,
+            "driftActive": false,
+            "driftCharge": 0,
+            "driftStage": 0,
+            "boost": 0,
+            "item": "none",
+            "itemCount": 0,
+            "itemPending": false,
+            "driftHeld": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "postfxEnabled": true,
+            "renderCalls": 1
+          },
+          "frames": 28,
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-92abb6ef717a",
+                "session": "wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-92abb6ef717a\",\"wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Turbo Kart Rush",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 28,
+            "native": true,
+            "inputAvailable": true
+          },
+          "helpOpen": false,
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Turbo Kart Rush",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 785,
+                  "top": 221.96875,
+                  "right": 937,
+                  "bottom": 287.9609375,
+                  "width": 152,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 775,
+                  "top": 187.46875,
+                  "right": 947,
+                  "bottom": 531.46875
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-92abb6ef717a",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-92abb6ef717a",
+                    "idText": "ID: virtual-92abb6ef717a",
+                    "visible": true,
+                    "rect": {
+                      "left": 785,
+                      "top": 221.96875,
+                      "right": 937,
+                      "bottom": 287.9609375,
+                      "width": 152,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 775,
+                      "top": 187.46875,
+                      "right": 947,
+                      "bottom": 531.46875
+                    },
+                    "idRect": {
+                      "left": 826,
+                      "top": 249.1640625,
+                      "right": 928,
+                      "bottom": 279.9609375,
+                      "width": 102,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 775,
+                      "top": 187.46875,
+                      "right": 947,
+                      "bottom": 531.46875
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 826,
+                        "top": 250.1640625,
+                        "right": 925.0234375,
+                        "bottom": 262.6640625,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 826,
+                        "top": 265.5625,
+                        "right": 885.4140625,
+                        "bottom": 278.0625,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 102,
+                    "idScrollWidth": 102,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 794,
+                      "top": 229.96875,
+                      "right": 818,
+                      "bottom": 253.96875,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.turbokartrush"
+      }
+    },
+    {
+      "label": "after-plan-Open original racer selection",
+      "wallTime": 1795152501.1629386,
+      "snapshot": {
+        "game": {
+          "game": "turbo-kart-rush",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "audioState": "running",
+          "gameplay": {
+            "mode": "characterSelect",
+            "course": "",
+            "character": "",
+            "time": 0,
+            "countdown": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "heading": 0,
+            "progress": 0,
+            "lap": 0,
+            "place": 0,
+            "checkpoint": 0,
+            "driftActive": false,
+            "driftCharge": 0,
+            "driftStage": 0,
+            "boost": 0,
+            "item": "none",
+            "itemCount": 0,
+            "itemPending": false,
+            "driftHeld": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "postfxEnabled": true,
+            "renderCalls": 1
+          },
+          "frames": 36,
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": true,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-92abb6ef717a",
+                "session": "wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": true,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": true,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-92abb6ef717a\",\"wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Turbo Kart Rush",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 36,
+            "native": true,
+            "inputAvailable": true
+          },
+          "helpOpen": false,
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdDSURBVHic7d3LbuQ4FkXRdqP+/5ejx+1BEYZMXdJ7rWkirXjYGxocUF+fz+fzH4Cg/06/AIApAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQ9c/bF/z6+nr7kq/6fD7/+u+73//u6z/9+av//9TT60///5X6389vcwcIZAkgkCWAQJYAAlkCCGQJIJAlgEDW6zvAlbd3QD91+w7r6Y7t9J3cyu2vf2X6+iun/f24AwSyBBDIEkAgSwCBLAEEsgQQyBJAIOu4HeDK9Hl6u03v9JwnOHue3/T7e2r67+en3AECWQIIZAkgkCWAQJYAAlkCCGQJIJB13Q7wr9t9Xt309aefizu947ttJ/fXuQMEsgQQyBJAIEsAgSwBBLIEEMgSQCDLDvBlu3dgt+/MpneC0ztK3uUOEMgSQCBLAIEsAQSyBBDIEkAgSwCBrOt2gLfvqE4/L++p6ecKPzV93uFup7++t7kDBLIEEMgSQCBLAIEsAQSyBBDIEkAg67gd4PSO7XTTz+3dvYO7/fWv/PUd6G3cAQJZAghkCSCQJYBAlgACWQIIZAkgkPX1cUDYUaZ3YtO/DtOvr/7517gDBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/XzAKefC7v7vLTd5+Gt7D4vb2V6xza945s2/f0/9fbvjztAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjjsPcHqnN/3c2d07vNvf38rpr/+wP7c8d4BAlgACWQIIZAkgkCWAQJYAAlkCCGS9vgOcPm9sZfeObDef76zpneXK9A7zNO4AgSwBBLIEEMgSQCBLAIEsAQSyBBDIev25wPXn3p7++u3w7j7vz87vZ9wBAlkCCGQJIJAlgECWAAJZAghkCSCQ9foO8OlOa/cOafcObPfrn34u78r0Tm36/T81/fmt3LajdAcIZAkgkCWAQJYAAlkCCGQJIJAlgEDW688FnnbbTult0zuz06/vPMWzX/9PuQMEsgQQyBJAIEsAgSwBBLIEEMgSQCDr9R3g6c+1Pf31nW73+zv985v+/Xn681emr//b3AECWQIIZAkgkCWAQJYAAlkCCGQJIJD1+nOBp3dAt++Yps+r231e3/TO7/Qd39Prr0x//m9zBwhkCSCQJYBAlgACWQIIZAkgkCWAQNbrO8Cnpndau3dcT03v/Hb//NN3nNOf/8r0zm/6+t+5AwSyBBDIEkAgSwCBLAEEsgQQyBJAIOvPPRd4+vqn7Zy+m35u71PTn//0+9vt9N/f3+YOEMgSQCBLAIEsAQSyBBDIEkAgSwCBrON2gPWd1+nnDU47fYd2+u/P9N/Had+fO0AgSwCBLAEEsgQQyBJAIEsAgSwBBLKuey7wyu4d1PSO6qnpHdnK9HNxn/rrn+9pO76n3AECWQIIZAkgkCWAQJYAAlkCCGQJIJD1+nmAK7fv5Kavv/v1795BTu8sp7//053+/f+UO0AgSwCBLAEEsgQQyBJAIEsAgSwBBLKuey7w9M9/ev2n6q9/eud3+s5yt+m/r9/mDhDIEkAgSwCBLAEEsgQQyBJAIEsAgazjzgN8anrHtfLXd2TT5+VNf76n//5M70infz+/cwcIZAkgkCWAQJYAAlkCCGQJIJAlgEDWP9Mv4DZPd1jTO8Xp60+b3gnuNn2e5vT7/yl3gECWAAJZAghkCSCQJYBAlgACWQIIZL2+A7x9R3b6eXLTO7/pn//U6c8NPp3zAAEuIYBAlgACWQIIZAkgkCWAQJYAAlmv7wBP2wF9N/3c1JXp896e/vzddr+/23eOdoz/zx0gkCWAQJYAAlkCCGQJIJAlgECWAAJZzgP8Zbufm7r785v+fnbv9J6a3tFN7zj/2k7QHSCQJYBAlgACWQIIZAkgkCWAQJYAAlmv7wBXTj8vcPeOa2X6ubWn//+V23eUp/993MYdIJAlgECWAAJZAghkCSCQJYBAlgACWcftAFfqO6vTz2ubvv70jvDp+58+T+/08xh/mztAIEsAgSwBBLIEEMgSQCBLAIEsAQSyrtsB3m56J7d7pza9I9t93uD097dy+vd7GneAQJYAAlkCCGQJIJAlgECWAAJZAghk2QEeZnpndvp5eafvBHdff+X28xbf5g4QyBJAIEsAgSwBBLIEEMgSQCBLAIGs63aAt+2Mvnu607p9pzd9Xt7und30zvD0nehp3AECWQIIZAkgkCWAQJYAAlkCCGQJIJB13A5weid2ut07wtM//+n3f/oO7vQd4WmfrztAIEsAgSwBBLIEEMgSQCBLAIEsAQSyvj6nD5sANnEHCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgEDW/wD9rgujFcfIXgAAAABJRU5ErkJggg==",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Turbo Kart Rush",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 785,
+                  "top": 23,
+                  "right": 937,
+                  "bottom": 88.9921875,
+                  "width": 152,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 775,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 99
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-92abb6ef717a",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-92abb6ef717a",
+                    "idText": "ID: virtual-92abb6ef717a",
+                    "visible": true,
+                    "rect": {
+                      "left": 785,
+                      "top": 23,
+                      "right": 937,
+                      "bottom": 88.9921875,
+                      "width": 152,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 775,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 99
+                    },
+                    "idRect": {
+                      "left": 826,
+                      "top": 50.1953125,
+                      "right": 928,
+                      "bottom": 80.9921875,
+                      "width": 102,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 775,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 99
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 826,
+                        "top": 51.1953125,
+                        "right": 925.0234375,
+                        "bottom": 63.6953125,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 826,
+                        "top": 66.59375,
+                        "right": 885.4140625,
+                        "bottom": 79.09375,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 102,
+                    "idScrollWidth": 102,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 794,
+                      "top": 31,
+                      "right": 818,
+                      "bottom": 55,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.turbokartrush"
+      }
+    },
+    {
+      "label": "before-plan-Choose another original racer",
+      "wallTime": 1795152521.6711102,
+      "snapshot": {
+        "game": {
+          "game": "turbo-kart-rush",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "audioState": "running",
+          "gameplay": {
+            "mode": "characterSelect",
+            "course": "",
+            "character": "",
+            "time": 0,
+            "countdown": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "heading": 0,
+            "progress": 0,
+            "lap": 0,
+            "place": 0,
+            "checkpoint": 0,
+            "driftActive": false,
+            "driftCharge": 0,
+            "driftStage": 0,
+            "boost": 0,
+            "item": "none",
+            "itemCount": 0,
+            "itemPending": false,
+            "driftHeld": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "postfxEnabled": true,
+            "renderCalls": 1
+          },
+          "frames": 56,
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-92abb6ef717a",
+                "session": "wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-92abb6ef717a\",\"wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Turbo Kart Rush",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 56,
+            "native": true,
+            "inputAvailable": true
+          },
+          "helpOpen": false,
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Turbo Kart Rush",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 785,
+                  "top": 23,
+                  "right": 937,
+                  "bottom": 88.9921875,
+                  "width": 152,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 775,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 99
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-92abb6ef717a",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-92abb6ef717a",
+                    "idText": "ID: virtual-92abb6ef717a",
+                    "visible": true,
+                    "rect": {
+                      "left": 785,
+                      "top": 23,
+                      "right": 937,
+                      "bottom": 88.9921875,
+                      "width": 152,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 775,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 99
+                    },
+                    "idRect": {
+                      "left": 826,
+                      "top": 50.1953125,
+                      "right": 928,
+                      "bottom": 80.9921875,
+                      "width": 102,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 775,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 99
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 826,
+                        "top": 51.1953125,
+                        "right": 925.0234375,
+                        "bottom": 63.6953125,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 826,
+                        "top": 66.59375,
+                        "right": 885.4140625,
+                        "bottom": 79.09375,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 102,
+                    "idScrollWidth": 102,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 794,
+                      "top": 31,
+                      "right": 818,
+                      "bottom": 55,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.turbokartrush"
+      }
+    },
+    {
+      "label": "after-plan-Choose another original racer",
+      "wallTime": 1795152548.8136554,
+      "snapshot": {
+        "game": {
+          "game": "turbo-kart-rush",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "audioState": "running",
+          "gameplay": {
+            "mode": "characterSelect",
+            "course": "",
+            "character": "",
+            "time": 0,
+            "countdown": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "heading": 0,
+            "progress": 0,
+            "lap": 0,
+            "place": 0,
+            "checkpoint": 0,
+            "driftActive": false,
+            "driftCharge": 0,
+            "driftStage": 0,
+            "boost": 0,
+            "item": "none",
+            "itemCount": 0,
+            "itemPending": false,
+            "driftHeld": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "postfxEnabled": true,
+            "renderCalls": 1
+          },
+          "frames": 64,
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": true,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-92abb6ef717a",
+                "session": "wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 1,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": true,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-92abb6ef717a\",\"wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Turbo Kart Rush",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 64,
+            "native": true,
+            "inputAvailable": true
+          },
+          "helpOpen": false,
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Turbo Kart Rush",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 785,
+                  "top": 23,
+                  "right": 937,
+                  "bottom": 88.9921875,
+                  "width": 152,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 775,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 99
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-92abb6ef717a",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-92abb6ef717a",
+                    "idText": "ID: virtual-92abb6ef717a",
+                    "visible": true,
+                    "rect": {
+                      "left": 785,
+                      "top": 23,
+                      "right": 937,
+                      "bottom": 88.9921875,
+                      "width": 152,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 775,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 99
+                    },
+                    "idRect": {
+                      "left": 826,
+                      "top": 50.1953125,
+                      "right": 928,
+                      "bottom": 80.9921875,
+                      "width": 102,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 775,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 99
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 826,
+                        "top": 51.1953125,
+                        "right": 925.0234375,
+                        "bottom": 63.6953125,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 826,
+                        "top": 66.59375,
+                        "right": 885.4140625,
+                        "bottom": 79.09375,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 102,
+                    "idScrollWidth": 102,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 794,
+                      "top": 31,
+                      "right": 818,
+                      "bottom": 55,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.turbokartrush"
+      }
+    },
+    {
+      "label": "before-plan-Confirm racer and open four-track selector",
+      "wallTime": 1795152571.1326315,
+      "snapshot": {
+        "game": {
+          "game": "turbo-kart-rush",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "audioState": "running",
+          "gameplay": {
+            "mode": "characterSelect",
+            "course": "",
+            "character": "",
+            "time": 0,
+            "countdown": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "heading": 0,
+            "progress": 0,
+            "lap": 0,
+            "place": 0,
+            "checkpoint": 0,
+            "driftActive": false,
+            "driftCharge": 0,
+            "driftStage": 0,
+            "boost": 0,
+            "item": "none",
+            "itemCount": 0,
+            "itemPending": false,
+            "driftHeld": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "postfxEnabled": true,
+            "renderCalls": 1
+          },
+          "frames": 84,
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-92abb6ef717a",
+                "session": "wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-92abb6ef717a\",\"wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Turbo Kart Rush",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 84,
+            "native": true,
+            "inputAvailable": true
+          },
+          "helpOpen": false,
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Turbo Kart Rush",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 785,
+                  "top": 23,
+                  "right": 937,
+                  "bottom": 88.9921875,
+                  "width": 152,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 775,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 99
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-92abb6ef717a",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-92abb6ef717a",
+                    "idText": "ID: virtual-92abb6ef717a",
+                    "visible": true,
+                    "rect": {
+                      "left": 785,
+                      "top": 23,
+                      "right": 937,
+                      "bottom": 88.9921875,
+                      "width": 152,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 775,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 99
+                    },
+                    "idRect": {
+                      "left": 826,
+                      "top": 50.1953125,
+                      "right": 928,
+                      "bottom": 80.9921875,
+                      "width": 102,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 775,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 99
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 826,
+                        "top": 51.1953125,
+                        "right": 925.0234375,
+                        "bottom": 63.6953125,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 826,
+                        "top": 66.59375,
+                        "right": 885.4140625,
+                        "bottom": 79.09375,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 102,
+                    "idScrollWidth": 102,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 794,
+                      "top": 31,
+                      "right": 818,
+                      "bottom": 55,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.turbokartrush"
+      }
+    },
+    {
+      "label": "after-plan-Confirm racer and open four-track selector",
+      "wallTime": 1795152602.9725504,
+      "snapshot": {
+        "game": {
+          "game": "turbo-kart-rush",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "audioState": "running",
+          "gameplay": {
+            "mode": "trackSelect",
+            "course": "",
+            "character": "",
+            "time": 0,
+            "countdown": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "heading": 0,
+            "progress": 0,
+            "lap": 0,
+            "place": 0,
+            "checkpoint": 0,
+            "driftActive": false,
+            "driftCharge": 0,
+            "driftStage": 0,
+            "boost": 0,
+            "item": "none",
+            "itemCount": 0,
+            "itemPending": false,
+            "driftHeld": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "postfxEnabled": true,
+            "renderCalls": 1
+          },
+          "frames": 93,
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": true,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-92abb6ef717a",
+                "session": "wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": true,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": true,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-92abb6ef717a\",\"wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Turbo Kart Rush",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 93,
+            "native": true,
+            "inputAvailable": true
+          },
+          "helpOpen": false,
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Turbo Kart Rush",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 785,
+                  "top": 23,
+                  "right": 937,
+                  "bottom": 88.9921875,
+                  "width": 152,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 775,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 99
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-92abb6ef717a",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-92abb6ef717a",
+                    "idText": "ID: virtual-92abb6ef717a",
+                    "visible": true,
+                    "rect": {
+                      "left": 785,
+                      "top": 23,
+                      "right": 937,
+                      "bottom": 88.9921875,
+                      "width": 152,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 775,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 99
+                    },
+                    "idRect": {
+                      "left": 826,
+                      "top": 50.1953125,
+                      "right": 928,
+                      "bottom": 80.9921875,
+                      "width": 102,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 775,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 99
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 826,
+                        "top": 51.1953125,
+                        "right": 925.0234375,
+                        "bottom": 63.6953125,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 826,
+                        "top": 66.59375,
+                        "right": 885.4140625,
+                        "bottom": 79.09375,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 102,
+                    "idScrollWidth": 102,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 794,
+                      "top": 31,
+                      "right": 818,
+                      "bottom": 55,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.turbokartrush"
+      }
+    },
+    {
+      "label": "before-plan-Start selected original course and wait real countdown",
+      "wallTime": 1795152619.8325963,
+      "snapshot": {
+        "game": {
+          "game": "turbo-kart-rush",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "audioState": "running",
+          "gameplay": {
+            "mode": "trackSelect",
+            "course": "",
+            "character": "",
+            "time": 0,
+            "countdown": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "heading": 0,
+            "progress": 0,
+            "lap": 0,
+            "place": 0,
+            "checkpoint": 0,
+            "driftActive": false,
+            "driftCharge": 0,
+            "driftStage": 0,
+            "boost": 0,
+            "item": "none",
+            "itemCount": 0,
+            "itemPending": false,
+            "driftHeld": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "postfxEnabled": true,
+            "renderCalls": 1
+          },
+          "frames": 112,
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-92abb6ef717a",
+                "session": "wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-92abb6ef717a\",\"wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+              "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdDSURBVHic7d3LbuQ4FkXRdqP+/5ejx+1BEYZMXdJ7rWkirXjYGxocUF+fz+fzH4Cg/06/AIApAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQ9c/bF/z6+nr7kq/6fD7/+u+73//u6z/9+av//9TT60///5X6389vcwcIZAkgkCWAQJYAAlkCCGQJIJAlgEDW6zvAlbd3QD91+w7r6Y7t9J3cyu2vf2X6+iun/f24AwSyBBDIEkAgSwCBLAEEsgQQyBJAIOu4HeDK9Hl6u03v9JwnOHue3/T7e2r67+en3AECWQIIZAkgkCWAQJYAAlkCCGQJIJB13Q7wr9t9Xt309aefizu947ttJ/fXuQMEsgQQyBJAIEsAgSwBBLIEEMgSQCDLDvBlu3dgt+/MpneC0ztK3uUOEMgSQCBLAIEsAQSyBBDIEkAgSwCBrOt2gLfvqE4/L++p6ecKPzV93uFup7++t7kDBLIEEMgSQCBLAIEsAQSyBBDIEkAg67gd4PSO7XTTz+3dvYO7/fWv/PUd6G3cAQJZAghkCSCQJYBAlgACWQIIZAkgkPX1cUDYUaZ3YtO/DtOvr/7517gDBLIEEMgSQCBLAIEsAQSyBBDIEkAg6/XzAKefC7v7vLTd5+Gt7D4vb2V6xza945s2/f0/9fbvjztAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjjsPcHqnN/3c2d07vNvf38rpr/+wP7c8d4BAlgACWQIIZAkgkCWAQJYAAlkCCGS9vgOcPm9sZfeObDef76zpneXK9A7zNO4AgSwBBLIEEMgSQCBLAIEsAQSyBBDIev25wPXn3p7++u3w7j7vz87vZ9wBAlkCCGQJIJAlgECWAAJZAghkCSCQ9foO8OlOa/cOafcObPfrn34u78r0Tm36/T81/fmt3LajdAcIZAkgkCWAQJYAAlkCCGQJIJAlgEDW688FnnbbTult0zuz06/vPMWzX/9PuQMEsgQQyBJAIEsAgSwBBLIEEMgSQCDr9R3g6c+1Pf31nW73+zv985v+/Xn681emr//b3AECWQIIZAkgkCWAQJYAAlkCCGQJIJD1+nOBp3dAt++Yps+r231e3/TO7/Qd39Prr0x//m9zBwhkCSCQJYBAlgACWQIIZAkgkCWAQNbrO8Cnpndau3dcT03v/Hb//NN3nNOf/8r0zm/6+t+5AwSyBBDIEkAgSwCBLAEEsgQQyBJAIOvPPRd4+vqn7Zy+m35u71PTn//0+9vt9N/f3+YOEMgSQCBLAIEsAQSyBBDIEkAgSwCBrON2gPWd1+nnDU47fYd2+u/P9N/Had+fO0AgSwCBLAEEsgQQyBJAIEsAgSwBBLKuey7wyu4d1PSO6qnpHdnK9HNxn/rrn+9pO76n3AECWQIIZAkgkCWAQJYAAlkCCGQJIJD1+nmAK7fv5Kavv/v1795BTu8sp7//053+/f+UO0AgSwCBLAEEsgQQyBJAIEsAgSwBBLKuey7w9M9/ev2n6q9/eud3+s5yt+m/r9/mDhDIEkAgSwCBLAEEsgQQyBJAIEsAgazjzgN8anrHtfLXd2TT5+VNf76n//5M70infz+/cwcIZAkgkCWAQJYAAlkCCGQJIJAlgEDWP9Mv4DZPd1jTO8Xp60+b3gnuNn2e5vT7/yl3gECWAAJZAghkCSCQJYBAlgACWQIIZL2+A7x9R3b6eXLTO7/pn//U6c8NPp3zAAEuIYBAlgACWQIIZAkgkCWAQJYAAlmv7wBP2wF9N/3c1JXp896e/vzddr+/23eOdoz/zx0gkCWAQJYAAlkCCGQJIJAlgECWAAJZzgP8Zbufm7r785v+fnbv9J6a3tFN7zj/2k7QHSCQJYBAlgACWQIIZAkgkCWAQJYAAlmv7wBXTj8vcPeOa2X6ubWn//+V23eUp/993MYdIJAlgECWAAJZAghkCSCQJYBAlgACWcftAFfqO6vTz2ubvv70jvDp+58+T+/08xh/mztAIEsAgSwBBLIEEMgSQCBLAIEsAQSyrtsB3m56J7d7pza9I9t93uD097dy+vd7GneAQJYAAlkCCGQJIJAlgECWAAJZAghk2QEeZnpndvp5eafvBHdff+X28xbf5g4QyBJAIEsAgSwBBLIEEMgSQCBLAIGs63aAt+2Mvnu607p9pzd9Xt7und30zvD0nehp3AECWQIIZAkgkCWAQJYAAlkCCGQJIJB13A5weid2ut07wtM//+n3f/oO7vQd4WmfrztAIEsAgSwBBLIEEMgSQCBLAIEsAQSyvj6nD5sANnEHCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgEDW/wD9rgujFcfIXgAAAABJRU5ErkJggg==",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Turbo Kart Rush",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 112,
+            "native": true,
+            "inputAvailable": true
+          },
+          "helpOpen": false,
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Turbo Kart Rush",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 785,
+                  "top": 23,
+                  "right": 937,
+                  "bottom": 88.9921875,
+                  "width": 152,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 775,
+                  "top": 13,
+                  "right": 947,
+                  "bottom": 99
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-92abb6ef717a",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-92abb6ef717a",
+                    "idText": "ID: virtual-92abb6ef717a",
+                    "visible": true,
+                    "rect": {
+                      "left": 785,
+                      "top": 23,
+                      "right": 937,
+                      "bottom": 88.9921875,
+                      "width": 152,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 775,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 99
+                    },
+                    "idRect": {
+                      "left": 826,
+                      "top": 50.1953125,
+                      "right": 928,
+                      "bottom": 80.9921875,
+                      "width": 102,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 775,
+                      "top": 13,
+                      "right": 947,
+                      "bottom": 99
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 826,
+                        "top": 51.1953125,
+                        "right": 925.0234375,
+                        "bottom": 63.6953125,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 826,
+                        "top": 66.59375,
+                        "right": 885.4140625,
+                        "bottom": 79.09375,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 102,
+                    "idScrollWidth": 102,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 794,
+                      "top": 31,
+                      "right": 818,
+                      "bottom": 55,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.turbokartrush"
+      }
+    },
+    {
+      "label": "timeout-plan-gameplay-Start selected original course and wait real countdown",
+      "snapshot": {
+        "game": {
+          "game": "turbo-kart-rush",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "playing",
+          "paused": false,
+          "audioState": "running",
+          "gameplay": {
+            "mode": "countdown",
+            "course": "sunny_circuit",
+            "character": "pixel",
+            "time": 0,
+            "countdown": 1.2999999999999978,
+            "playerX": 0.9572047623597835,
+            "playerY": 0,
+            "playerZ": 21.732569559441515,
+            "speed": 0,
+            "heading": -0.011206257852678387,
+            "progress": -0.02289343422808432,
+            "lap": 1,
+            "place": 8,
+            "checkpoint": 0,
+            "driftActive": false,
+            "driftCharge": 0,
+            "driftStage": 0,
+            "boost": 0,
+            "item": "none",
+            "itemCount": 0,
+            "itemPending": false,
+            "driftHeld": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "postfxEnabled": true,
+            "renderCalls": 1
+          },
+          "frames": 162,
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-92abb6ef717a",
+                "session": "wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-92abb6ef717a\",\"wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Turbo Kart Rush",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 165,
+            "native": true,
+            "inputAvailable": true
+          },
+          "helpOpen": false,
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Turbo Kart Rush",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 440,
+              "height": 440,
+              "clientWidth": 220,
+              "clientHeight": 220,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 774,
+                  "top": 172.796875,
+                  "right": 948,
+                  "bottom": 238.7890625,
+                  "width": 174,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 774,
+                  "top": 172.796875,
+                  "right": 948,
+                  "bottom": 238.796875
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-92abb6ef717a",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-92abb6ef717a",
+                    "idText": "ID: virtual-92abb6ef717a",
+                    "visible": true,
+                    "rect": {
+                      "left": 774,
+                      "top": 172.796875,
+                      "right": 948,
+                      "bottom": 238.7890625,
+                      "width": 174,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 774,
+                      "top": 172.796875,
+                      "right": 948,
+                      "bottom": 238.796875
+                    },
+                    "idRect": {
+                      "left": 815,
+                      "top": 199.9921875,
+                      "right": 939,
+                      "bottom": 230.7890625,
+                      "width": 124,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 774,
+                      "top": 172.796875,
+                      "right": 948,
+                      "bottom": 238.796875
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 815,
+                        "top": 200.9921875,
+                        "right": 933.8203125,
+                        "bottom": 213.4921875,
+                        "width": 118.8203125,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 815,
+                        "top": 216.390625,
+                        "right": 854.609375,
+                        "bottom": 228.890625,
+                        "width": 39.609375,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 124,
+                    "idScrollWidth": 124,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 783,
+                      "top": 180.796875,
+                      "right": 807,
+                      "bottom": 204.796875,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.turbokartrush"
+      },
+      "error": "TimeoutError('timed out')"
+    }
+  ],
+  "captures": [
+    {
+      "path": "connected.png",
+      "bytes": 3014483,
+      "sha256": "c1eec91515cd97e9c5bf35e07910daaea39dfee363c6898be7a81312e6ec4be8",
+      "startedAt": 1795152445.1847084,
+      "endedAt": 1795152460.1472704,
+      "before": {
+        "game": {
+          "game": "turbo-kart-rush",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "audioState": "not_created",
+          "gameplay": {
+            "mode": "title",
+            "course": "",
+            "character": "",
+            "time": 0,
+            "countdown": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "heading": 0,
+            "progress": 0,
+            "lap": 0,
+            "place": 0,
+            "checkpoint": 0,
+            "driftActive": false,
+            "driftCharge": 0,
+            "driftStage": 0,
+            "boost": 0,
+            "item": "none",
+            "itemCount": 0,
+            "itemPending": false,
+            "driftHeld": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "postfxEnabled": true,
+            "renderCalls": 1
+          },
+          "frames": 11,
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-92abb6ef717a",
+                "session": "wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-92abb6ef717a\",\"wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Turbo Kart Rush",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 11,
+            "native": true,
+            "inputAvailable": true
+          },
+          "helpOpen": false,
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Turbo Kart Rush",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 785,
+                  "top": 221.96875,
+                  "right": 937,
+                  "bottom": 287.9609375,
+                  "width": 152,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 775,
+                  "top": 187.46875,
+                  "right": 947,
+                  "bottom": 531.46875
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-92abb6ef717a",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-92abb6ef717a",
+                    "idText": "ID: virtual-92abb6ef717a",
+                    "visible": true,
+                    "rect": {
+                      "left": 785,
+                      "top": 221.96875,
+                      "right": 937,
+                      "bottom": 287.9609375,
+                      "width": 152,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 775,
+                      "top": 187.46875,
+                      "right": 947,
+                      "bottom": 531.46875
+                    },
+                    "idRect": {
+                      "left": 826,
+                      "top": 249.1640625,
+                      "right": 928,
+                      "bottom": 279.9609375,
+                      "width": 102,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 775,
+                      "top": 187.46875,
+                      "right": 947,
+                      "bottom": 531.46875
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 826,
+                        "top": 250.1640625,
+                        "right": 925.0234375,
+                        "bottom": 262.6640625,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 826,
+                        "top": 265.5625,
+                        "right": 885.4140625,
+                        "bottom": 278.0625,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 102,
+                    "idScrollWidth": 102,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 794,
+                      "top": 229.96875,
+                      "right": 818,
+                      "bottom": 253.96875,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.turbokartrush"
+      },
+      "after": {
+        "game": {
+          "game": "turbo-kart-rush",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "audioState": "not_created",
+          "gameplay": {
+            "mode": "title",
+            "course": "",
+            "character": "",
+            "time": 0,
+            "countdown": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "heading": 0,
+            "progress": 0,
+            "lap": 0,
+            "place": 0,
+            "checkpoint": 0,
+            "driftActive": false,
+            "driftCharge": 0,
+            "driftStage": 0,
+            "boost": 0,
+            "item": "none",
+            "itemCount": 0,
+            "itemPending": false,
+            "driftHeld": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "postfxEnabled": true,
+            "renderCalls": 1
+          },
+          "frames": 21,
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": true,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "transport": "wifi",
+                "controllerId": "virtual-92abb6ef717a",
+                "session": "wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1",
+                "connected": true,
+                "cancelSeq": 1,
+                "inputActive": true,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "buttons": {
+                  "UP": false,
+                  "DOWN": false,
+                  "LEFT": false,
+                  "RIGHT": false,
+                  "START": false,
+                  "A": false,
+                  "B": false,
+                  "X": false,
+                  "Y": false
+                }
+              }
+            ],
+            "source": "[1,\"virtual-92abb6ef717a\",\"wifi-bdc601bd-0027-4ae9-8d05-39d6527a6bed-1\"]",
+            "info": {
+              "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Turbo Kart Rush",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 21,
+            "native": true,
+            "inputAvailable": true
+          },
+          "helpOpen": false,
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:44313/?room=vnvMBD44YDPJ1NTVhn8Ezp3Tp6u7G714",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Turbo Kart Rush",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 785,
+                  "top": 221.96875,
+                  "right": 937,
+                  "bottom": 287.9609375,
+                  "width": 152,
+                  "height": 65.9921875
+                },
+                "clip": {
+                  "left": 775,
+                  "top": 187.46875,
+                  "right": 947,
+                  "bottom": 531.46875
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-92abb6ef717a",
+                    "playerId": 1,
+                    "text": "1P已连接ID: virtual-92abb6ef717a",
+                    "idText": "ID: virtual-92abb6ef717a",
+                    "visible": true,
+                    "rect": {
+                      "left": 785,
+                      "top": 221.96875,
+                      "right": 937,
+                      "bottom": 287.9609375,
+                      "width": 152,
+                      "height": 65.9921875
+                    },
+                    "clip": {
+                      "left": 775,
+                      "top": 187.46875,
+                      "right": 947,
+                      "bottom": 531.46875
+                    },
+                    "idRect": {
+                      "left": 826,
+                      "top": 249.1640625,
+                      "right": 928,
+                      "bottom": 279.9609375,
+                      "width": 102,
+                      "height": 30.796875
+                    },
+                    "idClip": {
+                      "left": 775,
+                      "top": 187.46875,
+                      "right": 947,
+                      "bottom": 531.46875
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 826,
+                        "top": 250.1640625,
+                        "right": 925.0234375,
+                        "bottom": 262.6640625,
+                        "width": 99.0234375,
+                        "height": 12.5
+                      },
+                      {
+                        "left": 826,
+                        "top": 265.5625,
+                        "right": 885.4140625,
+                        "bottom": 278.0625,
+                        "width": 59.4140625,
+                        "height": 12.5
+                      }
+                    ],
+                    "idClientWidth": 102,
+                    "idScrollWidth": 102,
+                    "idClientHeight": 31,
+                    "idScrollHeight": 31,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 794,
+                      "top": 229.96875,
+                      "right": 818,
+                      "bottom": 253.96875,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.turbokartrush"
+      },
+      "manualPixelReviewRequired": true
+    }
+  ],
+  "installationSetup": {
+    "mode": "fresh-install-app-data",
+    "targetPackage": "com.ecojust.joystick.turbokartrush",
+    "method": "pm clear",
+    "phase": "before-target-launch",
+    "status": "passed",
+    "stdout": "Success"
+  },
+  "observerTransportEvents": [
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152418.20636,
+      "endedAt": 1795152418.2450206,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152418.3655186,
+      "endedAt": 1795152418.3674042,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152418.488826,
+      "endedAt": 1795152418.4922576,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152418.6132185,
+      "endedAt": 1795152418.620214,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152418.7410905,
+      "endedAt": 1795152418.7433908,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152418.8650982,
+      "endedAt": 1795152418.8994122,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152419.0200853,
+      "endedAt": 1795152419.0222077,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152419.1427865,
+      "endedAt": 1795152419.2601838,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152419.3860874,
+      "endedAt": 1795152419.3880055,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152419.508779,
+      "endedAt": 1795152419.5112998,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152419.6322708,
+      "endedAt": 1795152419.6371832,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152419.7577717,
+      "endedAt": 1795152419.7590742,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152419.8797786,
+      "endedAt": 1795152419.8810651,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152420.006237,
+      "endedAt": 1795152420.0085914,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152420.1293147,
+      "endedAt": 1795152420.134356,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 6,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152420.2551064,
+      "endedAt": 1795152420.2566051,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 6,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152420.378088,
+      "endedAt": 1795152420.3803144,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 6,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152420.5009515,
+      "endedAt": 1795152420.5101767,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 54,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 4.786349314000063,
+      "requestTimeoutSeconds": 4.786343873000078,
+      "startedAt": 1795152694.7812955,
+      "endedAt": 1795152699.5734422,
+      "errorType": "TimeoutError",
+      "error": "timed out",
+      "retryScheduled": false
+    }
+  ],
+  "adbForwards": {
+    "observer": 42175,
+    "controller": 33201
+  },
+  "controllerService": {
+    "state": "available",
+    "serviceName": "Turbo Kart Rush",
+    "port": 63485,
+    "serviceType": "_puretv._tcp",
+    "version": "1",
+    "error": 0
+  },
+  "targetPid": "2696",
+  "freshnessChecks": [
+    {
+      "label": "all-released",
+      "startedAt": 1795152469.084812,
+      "endedAt": 1795152470.6989717,
+      "beforePollCount": 26,
+      "afterPollCount": 27,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "plan-held-Open original racer selection",
+      "startedAt": 1795152470.7626245,
+      "endedAt": 1795152475.289813,
+      "beforePollCount": 28,
+      "afterPollCount": 30,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795152495.8498542,
+      "endedAt": 1795152501.1628718,
+      "beforePollCount": 41,
+      "afterPollCount": 45,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795152509.6886432,
+      "endedAt": 1795152514.921659,
+      "beforePollCount": 49,
+      "afterPollCount": 52,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "plan-held-Choose another original racer",
+      "startedAt": 1795152521.6711712,
+      "endedAt": 1795152524.0204942,
+      "beforePollCount": 56,
+      "afterPollCount": 59,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795152542.06166,
+      "endedAt": 1795152548.8136144,
+      "beforePollCount": 68,
+      "afterPollCount": 72,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795152555.762513,
+      "endedAt": 1795152564.6965902,
+      "beforePollCount": 77,
+      "afterPollCount": 81,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "plan-held-Confirm racer and open four-track selector",
+      "startedAt": 1795152571.1326768,
+      "endedAt": 1795152575.316906,
+      "beforePollCount": 84,
+      "afterPollCount": 88,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795152586.9925947,
+      "endedAt": 1795152602.972492,
+      "beforePollCount": 95,
+      "afterPollCount": 101,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795152610.3147848,
+      "endedAt": 1795152614.4758098,
+      "beforePollCount": 105,
+      "afterPollCount": 109,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "plan-held-Start selected original course and wait real countdown",
+      "startedAt": 1795152619.8327758,
+      "endedAt": 1795152626.4302032,
+      "beforePollCount": 112,
+      "afterPollCount": 116,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    },
+    {
+      "label": "all-released",
+      "startedAt": 1795152630.142635,
+      "endedAt": 1795152639.5675697,
+      "beforePollCount": 120,
+      "afterPollCount": 126,
+      "minimumFrames": 1,
+      "maximumWallSeconds": 60
+    }
+  ],
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 840, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n                        ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 530, in scenarios\n    return self.catalog_scenarios()\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 662, in catalog_scenarios\n    after = observed if plan.matches(step['expect'], self.game(observed), self.game(before)) else self.wait_fresh(\n                                                                                                  ^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 314, in wait_fresh\n    after = self.wait(lambda s: self.frame_advanced(s, before, frames) and predicate(s), timeout=timeout, label=label)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 304, in wait\n    raise AssertionError(label + ' timed out; last snapshot retained')\nAssertionError: plan-gameplay-Start selected original course and wait real countdown timed out; last snapshot retained\n",
+  "wire": {
+    "sdkMessages": 220,
+    "acceptedSdkMessages": 220,
+    "rejectedSdkMessages": 0,
+    "hostReplies": 220,
+    "matchingAcks": 220,
+    "missingAcks": [],
+    "expectedBusyIds": [],
+    "rejectedConnections": [],
+    "unexpectedReplies": [],
+    "duplicateAcks": [],
+    "keysSent": [
+      "A",
+      "B",
+      "DOWN",
+      "LEFT",
+      "RIGHT",
+      "START",
+      "UP",
+      "X",
+      "Y"
+    ],
+    "errors": []
+  },
+  "video": {
+    "path": "controller-gameplay.mp4",
+    "bytes": 1304716,
+    "sha256": "e76692b626bcb6cb8228ca3a6e0edcee55334f84aa5a5ba94954324dd9f69303",
+    "scope": "Actual screen recording of SDK-driven acceptance; no model or clock changes"
+  },
+  "finishedAt": 1795152700.540475
+}
