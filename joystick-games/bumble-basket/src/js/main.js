@@ -761,11 +761,12 @@ board.hooks = {
 // Frame loop
 // ============================================================
 
-let last = performance.now();
+// The first animation timestamp can predate synchronous scene setup.
+let last = null;
 let elapsed = 0;
 function frame(now) {
     requestAnimationFrame(frame);
-    const dt = Math.min((now - last) / 1000, 0.05);
+    const dt = last === null ? 0 : Math.max(0, Math.min((now - last) / 1000, 0.05));
     last = now;
     pollTV();
     markCursor();
