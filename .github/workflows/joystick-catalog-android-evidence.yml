@@ -45,6 +45,7 @@ jobs:
           (out/'package.json').write_text(json.dumps(dict(filename=p.name,**{k:r[k] for k in ('packageName','versionName','versionCode','sha256','bytes','certificateSha256','sourceSha','runId')}),indent=2)+'\n')
           PY
           cp signing-receipt.json build-receipt.json SHA256SUMS.txt ../../../receipt/
+          cp ../../observers/backroad-rally/observer-signing-receipt.json ../../../receipt/
           cd ../../../receipt
           branch="build-assets/backroad-011-signing-receipt-$GITHUB_RUN_ID-attempt-$GITHUB_RUN_ATTEMPT"
           gh auth setup-git
