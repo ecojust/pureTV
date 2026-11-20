@@ -55,3 +55,5 @@ The check launches the portable host on unused HTTP and TCP ports, opens its ent
 ## Catalogue evidence
 
 The [per-game results](results/catalogue.json) identify the frozen source, runtime, archive digests and original raw evidence for each title. The initial CI archive used DEFLATE level 6. Use `payloads.py --compression-level 6` to reproduce its digest or the default level 1 for the portable catalogue archive. Both contain the same asset bytes. The Kart Royale follow-up waits for actual QR pixels after the boot curtain has disappeared.
+
+Microsoft Edge on Windows Server 2022 x64 also ran Ponpoko Kart 0.1.6 and Emberbrood 0.1.2 from the packaged Windows executable. Keyboard and SDK inputs selected and drove the kart on the Inaka course, then created a seeded adventure and travelled to the Low Fields. The test catalogue pointed to the two original signed APKs on a loopback file server. Both games paused when their controller disconnected. [Windows results, screenshots and reproducible test](results/windows-two.json)
