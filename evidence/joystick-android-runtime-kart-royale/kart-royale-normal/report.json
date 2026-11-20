@@ -1,0 +1,79 @@
+{
+  "game": "kart-royale",
+  "targetPackage": "com.ecojust.joystick.kartroyale",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": false,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "f6c5e49b654489511ab0e9a83d1fb4644fae1211",
+  "apk": {
+    "path": "/home/runner/work/_temp/input/packages/kart-royale/kart-royale-0.1.2.apk",
+    "bytes": 1221895,
+    "sha256": "5bf29aa9b13c66f2520e1ac9cdfbaf5d6f371582bec34d18df6db67b295ec294"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/input/observers/kart-royale/observer-kart-royale.apk",
+    "bytes": 16783,
+    "sha256": "b2e0647921d2023a283a7589964221d777f0355b0e7558f4bb0e009eb11cfe42"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 66211,
+      "sha256": "d0f654e51e1084eefab6a4cf6dbd91800c7ba1678b0b69904df4b27de94102e3"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11264,
+      "sha256": "c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 13049,
+      "sha256": "be47887c8fa964e0a17c8fc3d8ba3195e5ae503af4bbd728afab24bd9453277b"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 7777,
+      "sha256": "940fb5fd860f47a52f5b5de4d82d6aa5d3bcd98be83bed769346e1dd25d1309e"
+    },
+    "joystick-games/kart-royale/qa-plan.json": {
+      "bytes": 7776,
+      "sha256": "b1fc1fc03744a5cd11400ee533e25edceb3d49f2c64286a7eafa903c318f2125"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 7735,
+      "sha256": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d"
+    }
+  },
+  "tests": [],
+  "snapshots": [],
+  "captures": [],
+  "installFailureEvidence": {
+    "path": "install-failure/report.json",
+    "bytes": 4556,
+    "sha256": "101753b11153ff75ac9a39286bb6633e0ac242fa5ae7d2bef7a74094a670babe",
+    "elapsedSeconds": 2.401305253999965,
+    "originalFailurePreserved": true,
+    "uiActionsSent": false,
+    "settingsChanged": false
+  },
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1064, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 558, in setup\n    self.command('install', '-r', str(self.args.apk))\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 305, in command\n    result = subprocess.run(record['command'], capture_output=True, check=False, timeout=timeout)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 550, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 1209, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 2116, in _communicate\n    self._check_timeout(endtime, orig_timeout, stdout, stderr)\n  File \"/usr/lib/python3.12/subprocess.py\", line 1253, in _check_timeout\n    raise TimeoutExpired(\nsubprocess.TimeoutExpired: Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'install', '-r', '/home/runner/work/_temp/input/packages/kart-royale/kart-royale-0.1.2.apk']' timed out after 45 seconds\n",
+  "finishedAt": 1795160931.0822961
+}
