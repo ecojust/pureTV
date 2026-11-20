@@ -53,21 +53,29 @@ def validate_english():
         assert translated['cover']==expected,f'{key}: use its dedicated English preview'
         assert (root/expected).is_file(),f'{key}: missing English preview {expected}'
 
-def root_readme_groups(groups):
-    """Feature a temporary selection from the hundred games, keeping older games."""
-    featured=json.loads((root/'tools/readme-featured-games.json').read_text())
-    progress=json.loads((root/'resource/game-kit/progress.json').read_text())
-    hundred={'apps/'+game['id'] for game in progress['games']}
-    assert len(featured)==len(set(featured)),'Duplicate featured game'
-    assert set(featured)<=hundred,'Featured games must belong to the hundred-game collection'
-    return {**groups,'game':[(key,info) for key,info in groups['game'] if key not in hundred or key in featured]}
+def featured_downloads(games):
+    """Read the bilingual homepages' game order and optional macOS downloads."""
+    featured = {}
+    for item in json.loads((root/'tools/readme-app-games.json').read_text()):
+        key = item['resource']
+        assert key in games, f'{key}: featured resource must be a game in the complete catalog'
+        assert key not in featured, f'{key}: duplicate featured game'
+        macos = item.get('macos')
+        if macos:
+            path = Path(macos)
+            assert not path.is_absolute() and '..' not in path.parts and path.suffix == '.dmg', f'{key}: invalid macOS download path'
+            assert (root/'resource'/key/path).is_file(), f'{key}: missing macOS download {macos}'
+        featured[key] = macos
+    return featured
 
-def tables(prefix,groups,locale='zh'):
+def tables(prefix,groups,locale='zh',featured=None):
     labels=LOCALES[locale]
     output=[]
     for group in ('launcher','media','game','tools'):
         count=len(groups[group])
         suffix=f'（{count}）' if locale=='zh' else f' ({count})'
+        if group == 'game' and featured is not None:
+            output += ['<a id="featured-tv-games"></a>', '']
         output+=['### '+labels[group]+suffix,'']
         output+=['<table>']
         cells=[]
@@ -81,7 +89,14 @@ def tables(prefix,groups,locale='zh'):
             size=(root/'resource'/key/info['apk']).stat().st_size
             assert size==info['apkBytes']
             link=escape(directory,quote=True)
-            cells.append(f'    <td align="center" valign="top" width="25%"><a href="{link}">{image}<br>{escape(name)}</a></td>')
+            downloads = ''
+            if group == 'game' and featured is not None:
+                apk = escape(directory + info['apk'] + '?raw=1', quote=True)
+                downloads = f'<br><a href="{apk}">APK</a>'
+                if featured[key]:
+                    dmg = escape(directory + featured[key] + '?raw=1', quote=True)
+                    downloads += f' · <a href="{dmg}">macOS</a>'
+            cells.append(f'    <td align="center" valign="top" width="25%"><a href="{link}">{image}<br>{escape(name)}</a>{downloads}</td>')
         for start in range(0,len(cells),4):
             row=cells[start:start+4]
             row+=['    <td width="25%"></td>']*(4-len(row))
@@ -91,14 +106,23 @@ def tables(prefix,groups,locale='zh'):
 def main():
     validate_english()
     groups=ordered_groups()
-    featured_groups=root_readme_groups(groups)
+    games = dict(groups['game'])
+    featured = featured_downloads(games)
+    featured_groups = {**groups, 'game': [(key, games[key]) for key in featured]}
+    rendered = {}
     for filename,locale in [('README.md','zh'),('README.en.md','en')]:
         p=root/filename;text=p.read_text()
         for kind,label in [('launcher','launchers'),('app','apps')]:
             text,replaced=re.subn(r'(https://img\.shields\.io/badge/'+label+r'-)\d+(?=-)',lambda match:match[1]+str(counts[kind]),text)
             assert replaced<=1,f'{filename}: duplicate {label} count badge'
-        start='<!-- resource-index:start -->';end='<!-- resource-index:end -->';left=text.index(start)+len(start);right=text.index(end);p.write_text(text[:left]+'\n\n'+tables('resource/',featured_groups,locale)+'\n\n'+text[right:])
-    (root/'resource/README.md').write_text('# 电视 APK 资源目录\n\n目录分为 `launcher/`（启动器）和 `apps/`（应用）。源码与 APK 放在同一软件目录。每个软件文件夹至少包含一个真实 APK，以及 resource.json、许可证和校验文件；可附对应源码及封面。点击软件名称进入文件夹下载。当前收录桔子桑（ecojust）开发的启动器和电视应用。\n\n启动器布局自定义使用管理器可识别的 layout.json 接口，当前配套启动器使用 v5 users/system 协议。界面预览与相关许可见各文件夹说明。\n\n'+tables('',groups)+'\n\n开发者请参阅 [开发与协议 README](README-development.md)，包含 layout.json 字段说明、画面对照、构建与测试。'+'\n\n维护校验：`python tools/resource_catalog.py --build-tools <Android Build Tools 34.0.0 目录>`。索引由 `python tools/update-resource-index.py` 根据资源元数据生成。\n')
+        start='<!-- resource-index:start -->';end='<!-- resource-index:end -->';left=text.index(start)+len(start);right=text.index(end)
+        outside_index = text[:left] + text[right:]
+        for key in featured:
+            assert not re.search(rf'<a\s+href="resource/{re.escape(key)}/">\s*<img\b', outside_index), f'{filename}: duplicate game card outside the resource index: {key}'
+        rendered[p] = text[:left]+'\n\n'+tables('resource/',featured_groups,locale,featured)+'\n\n'+text[right:]
+    rendered[root/'resource/README.md'] = ('# 电视 APK 资源目录\n\n目录分为 `launcher/`（启动器）和 `apps/`（应用）。源码与 APK 放在同一软件目录。每个软件文件夹至少包含一个真实 APK，以及 resource.json、许可证和校验文件；可附对应源码及封面。点击软件名称进入文件夹下载。当前收录桔子桑（ecojust）开发的启动器和电视应用。\n\n启动器布局自定义使用管理器可识别的 layout.json 接口，当前配套启动器使用 v5 users/system 协议。界面预览与相关许可见各文件夹说明。\n\n'+tables('',groups)+'\n\n开发者请参阅 [开发与协议 README](README-development.md)，包含 layout.json 字段说明、画面对照、构建与测试。'+'\n\n维护校验：`python tools/resource_catalog.py --build-tools <Android Build Tools 34.0.0 目录>`。索引由 `python tools/update-resource-index.py` 根据资源元数据生成。\n')
+    for path, content in rendered.items():
+        path.write_text(content)
 
 if __name__=='__main__':
     main()

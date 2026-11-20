@@ -57,38 +57,28 @@
   </tr>
 </table>
 
-### Apps - Games (20)
+<a id="featured-tv-games"></a>
+
+### Apps - Games (9)
 
 <table>
   <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/neon-rush/"><img src="docs/previews/en/app-neon-rush.png" width="180" alt="Neon Rush TV preview"><br>Neon Rush TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/twenty-four/"><img src="docs/previews/en/app-twenty-four.png" width="180" alt="Twenty Four preview"><br>Twenty Four</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/torch-bridge/"><img src="docs/previews/en/app-torch-bridge.png" width="180" alt="Torch Bridge preview"><br>Torch Bridge</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tower-overlap/"><img src="docs/previews/en/app-tower-overlap.png" width="180" alt="Tower Overlap preview"><br>Tower Overlap</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/neon-rush/"><img src="docs/previews/en/app-neon-rush.png" width="180" alt="Neon Rush TV preview"><br>Neon Rush TV</a><br><a href="resource/apps/neon-rush/neon-rush-0.1.3.apk?raw=1">APK</a> · <a href="resource/apps/neon-rush/macos/NeonRush-0.1.4-macos-universal.dmg?raw=1">macOS</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/used-car-racing/"><img src="docs/previews/en/app-used-car-racing.png" width="180" alt="Used Car Racing TV preview"><br>Used Car Racing TV</a><br><a href="resource/apps/used-car-racing/used-car-racing-0.1.5.apk?raw=1">APK</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/alien-shooter/"><img src="docs/previews/en/app-alien-shooter.png" width="180" alt="Alien Shooter TV preview"><br>Alien Shooter TV</a><br><a href="resource/apps/alien-shooter/alien-shooter-0.1.4.apk?raw=1">APK</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/coast-kart/"><img src="docs/previews/en/app-coast-kart.png" width="180" alt="Coast Kart TV preview"><br>Coast Kart TV</a><br><a href="resource/apps/coast-kart/coast-kart-0.5.4.apk?raw=1">APK</a></td>
   </tr>
   <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/packing-sculptor/"><img src="docs/previews/en/app-packing-sculptor.png" width="180" alt="Packing Sculptor preview"><br>Packing Sculptor</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/conveyor-window/"><img src="docs/previews/en/app-conveyor-window.png" width="180" alt="Conveyor Window (Chinese UI) preview"><br>Conveyor Window (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/glass-fold/"><img src="docs/previews/en/app-glass-fold.png" width="180" alt="Glass Fold (Chinese UI) preview"><br>Glass Fold (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tension-span/"><img src="docs/previews/en/app-tension-span.png" width="180" alt="Tension Span (Chinese UI) preview"><br>Tension Span (Chinese UI)</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/super-mario/"><img src="docs/previews/en/app-super-mario.png" width="180" alt="Super Mario TV preview"><br>Super Mario TV</a><br><a href="resource/apps/super-mario/super-mario-0.5.4.apk?raw=1">APK</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/tetris/"><img src="docs/previews/en/app-tetris.png" width="180" alt="Tetris TV preview"><br>Tetris TV</a><br><a href="resource/apps/tetris/tetris-0.5.4.apk?raw=1">APK</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/jewel/"><img src="docs/previews/en/app-jewel.png" width="180" alt="Magic Jewelry TV preview"><br>Magic Jewelry TV</a><br><a href="resource/apps/jewel/jewel-0.5.4.apk?raw=1">APK</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/jackal/"><img src="docs/previews/en/app-jackal.png" width="180" alt="Jackal TV preview"><br>Jackal TV</a><br><a href="resource/apps/jackal/jackal-0.5.4.apk?raw=1">APK</a></td>
   </tr>
   <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/prism-relay/"><img src="docs/previews/en/app-prism-relay.png" width="180" alt="Light Relay (Chinese UI) preview"><br>Light Relay (Chinese UI)</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/alien-shooter/"><img src="docs/previews/en/app-alien-shooter.png" width="180" alt="Alien Shooter TV preview"><br>Alien Shooter TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/used-car-racing/"><img src="docs/previews/en/app-used-car-racing.png" width="180" alt="Used Car Racing TV preview"><br>Used Car Racing TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/cozy-island/"><img src="docs/previews/en/app-cozy-island.png" width="180" alt="Cozy Island TV preview"><br>Cozy Island TV</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/coast-kart/"><img src="docs/previews/en/app-coast-kart.png" width="180" alt="Coast Kart TV preview"><br>Coast Kart TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/super-mario/"><img src="docs/previews/en/app-super-mario.png" width="180" alt="Super Mario TV preview"><br>Super Mario TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/bomb-jack/"><img src="docs/previews/en/app-bomb-jack.png" width="180" alt="Mighty Bomb Jack TV preview"><br>Mighty Bomb Jack TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/adventure-island/"><img src="docs/previews/en/app-adventure-island.png" width="180" alt="Adventure Island TV preview"><br>Adventure Island TV</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tetris/"><img src="docs/previews/en/app-tetris.png" width="180" alt="Tetris TV preview"><br>Tetris TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/jewel/"><img src="docs/previews/en/app-jewel.png" width="180" alt="Magic Jewelry TV preview"><br>Magic Jewelry TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/jackal/"><img src="docs/previews/en/app-jackal.png" width="180" alt="Jackal TV preview"><br>Jackal TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tank/"><img src="docs/previews/en/app-tank.png" width="180" alt="Tank TV preview"><br>Tank TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/tank/"><img src="docs/previews/en/app-tank.png" width="180" alt="Tank TV preview"><br>Tank TV</a><br><a href="resource/apps/tank/tank-0.5.4.apk?raw=1">APK</a></td>
+    <td width="25%"></td>
+    <td width="25%"></td>
+    <td width="25%"></td>
   </tr>
 </table>
 
@@ -107,13 +97,15 @@
 
 ## Controller games by genre
 
-**43 controller games** · Android TV (43) · macOS (24) · Windows x64 (19)
+**34 controller games** · Android TV (34) · macOS (23) · Windows x64 (19)
 
-[Racing and sports (13)](#controller-racing) · [Action, RPGs and exploration (2)](#controller-action) · [Platformers, bullet hell and arcade (7)](#controller-arcade) · [Strategy, tower defense and card games (1)](#controller-strategy) · [Puzzles and brainteasers (18)](#controller-puzzle) · [Management, sandbox and casual games (1)](#controller-casual) · [One-button arcade (1)](#controller-one-button)
+The [9 featured TV games](#featured-tv-games) also support controllers.
+
+[Racing and sports (10)](#controller-racing) · [Action, RPGs and exploration (1)](#controller-action) · [Platformers, bullet hell and arcade (4)](#controller-arcade) · [Strategy, tower defense and card games (1)](#controller-strategy) · [Puzzles and brainteasers (16)](#controller-puzzle) · [Management, sandbox and casual games (1)](#controller-casual) · [One-button arcade (1)](#controller-one-button)
 
 <a id="controller-racing"></a>
 
-### Racing and sports (13)
+### Racing and sports (10)
 
 <table>
 <tr>
@@ -131,39 +123,28 @@
 <tr>
 <td align="center" valign="top"><a href="joystick-games/kart-royale/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/f42bad392bf2444cfe4573653805d83f2f8a6a90/evidence/joystick-android-runtime-kart-royale/kart-royale-occupied/driving-checkpoint.png" width="180" alt="Kart Royale gameplay"><br>Kart Royale</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/36b91f81533f10ff5d37ec091c3701913d4a42e4/joystick-games/kart-royale/kart-royale-0.1.4.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/kart-royale/macos/KartRoyale-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/kart-royale/windows/KartRoyale-0.1.1-windows-x64-setup.exe">Windows</a></td>
 <td align="center" valign="top"><a href="joystick-games/qq-speed/"><img src="joystick-games/qq-speed/thumb.png" width="180" alt="QQ Speed gameplay"><br>QQ Speed</a><br><a href="joystick-games/qq-speed/qq-speed-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/qq-speed/macos/QQSpeed-0.1.0-macos-universal.dmg?raw=1">macOS</a></td>
-<td align="center" valign="top"><a href="resource/apps/neon-rush/"><img src="resource/apps/neon-rush/thumb.png" width="180" alt="Neon Rush TV gameplay"><br>Neon Rush TV</a><br><a href="resource/apps/neon-rush/neon-rush-0.1.3.apk?raw=1">APK</a> · <a href="resource/apps/neon-rush/macos/NeonRush-0.1.4-macos-universal.dmg?raw=1">macOS</a></td>
-<td align="center" valign="top"><a href="resource/apps/coast-kart/"><img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV gameplay"><br>Coast Kart TV</a><br><a href="resource/apps/coast-kart/coast-kart-0.5.4.apk?raw=1">APK</a></td>
-</tr>
-<tr>
-<td align="center" valign="top"><a href="resource/apps/used-car-racing/"><img src="resource/apps/used-car-racing/thumb.png" width="180" alt="Used Car Racing TV gameplay"><br>Used Car Racing TV</a><br><a href="resource/apps/used-car-racing/used-car-racing-0.1.5.apk?raw=1">APK</a></td>
 </tr>
 </table>
 
 <a id="controller-action"></a>
 
-### Action, RPGs and exploration (2)
+### Action, RPGs and exploration (1)
 
 <table>
 <tr>
 <td align="center" valign="top"><a href="joystick-games/cf-transport-ship/"><img src="joystick-games/cf-transport-ship/thumb.png" width="180" alt="CF Transport Ship gameplay"><br>CF Transport Ship</a><br><a href="joystick-games/cf-transport-ship/cf-transport-ship-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/cf-transport-ship/macos/CFTransportShip-0.1.0-macos-universal.dmg?raw=1">macOS</a></td>
-<td align="center" valign="top"><a href="resource/apps/alien-shooter/"><img src="resource/apps/alien-shooter/thumb.png" width="180" alt="Alien Shooter TV gameplay"><br>Alien Shooter TV</a><br><a href="resource/apps/alien-shooter/alien-shooter-0.1.4.apk?raw=1">APK</a></td>
 </tr>
 </table>
 
 <a id="controller-arcade"></a>
 
-### Platformers, bullet hell and arcade (7)
+### Platformers, bullet hell and arcade (4)
 
 <table>
 <tr>
 <td align="center" valign="top"><a href="joystick-games/glup/"><img src="joystick-games/glup/thumb.png" width="180" alt="GLUP gameplay"><br>GLUP</a><br><a href="joystick-games/glup/glup-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/glup/Glup-0.1.0-macos-universal.dmg?raw=1">macOS</a></td>
-<td align="center" valign="top"><a href="resource/apps/super-mario/"><img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV gameplay"><br>Super Mario TV</a><br><a href="resource/apps/super-mario/super-mario-0.5.4.apk?raw=1">APK</a></td>
 <td align="center" valign="top"><a href="resource/apps/bomb-jack/"><img src="resource/apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV gameplay"><br>Mighty Bomb Jack TV</a><br><a href="resource/apps/bomb-jack/bomb-jack-0.5.4.apk?raw=1">APK</a></td>
 <td align="center" valign="top"><a href="resource/apps/adventure-island/"><img src="resource/apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV gameplay"><br>Adventure Island TV</a><br><a href="resource/apps/adventure-island/adventure-island-0.5.4.apk?raw=1">APK</a></td>
-</tr>
-<tr>
-<td align="center" valign="top"><a href="resource/apps/jackal/"><img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV gameplay"><br>Jackal TV</a><br><a href="resource/apps/jackal/jackal-0.5.4.apk?raw=1">APK</a></td>
-<td align="center" valign="top"><a href="resource/apps/tank/"><img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV gameplay"><br>Tank TV</a><br><a href="resource/apps/tank/tank-0.5.4.apk?raw=1">APK</a></td>
 <td align="center" valign="top"><a href="resource/apps/conveyor-window/"><img src="resource/apps/conveyor-window/thumb.png" width="180" alt="Conveyor Window (Chinese UI) gameplay"><br>Conveyor Window (Chinese UI)</a><br><a href="resource/apps/conveyor-window/conveyor-window-0.2.2.apk?raw=1">APK</a></td>
 </tr>
 </table>
@@ -180,7 +161,7 @@
 
 <a id="controller-puzzle"></a>
 
-### Puzzles and brainteasers (18)
+### Puzzles and brainteasers (16)
 
 <table>
 <tr>
@@ -206,10 +187,6 @@
 <td align="center" valign="top"><a href="resource/apps/glass-fold/"><img src="resource/apps/glass-fold/thumb.png" width="180" alt="Glass Fold (Chinese UI) gameplay"><br>Glass Fold (Chinese UI)</a><br><a href="resource/apps/glass-fold/glass-fold-0.2.2.apk?raw=1">APK</a></td>
 <td align="center" valign="top"><a href="resource/apps/tension-span/"><img src="resource/apps/tension-span/thumb.png" width="180" alt="Tension Span (Chinese UI) gameplay"><br>Tension Span (Chinese UI)</a><br><a href="resource/apps/tension-span/tension-span-0.2.3.apk?raw=1">APK</a></td>
 <td align="center" valign="top"><a href="resource/apps/prism-relay/"><img src="resource/apps/prism-relay/thumb.png" width="180" alt="Light Relay (Chinese UI) gameplay"><br>Light Relay (Chinese UI)</a><br><a href="resource/apps/prism-relay/prism-relay-0.2.3.apk?raw=1">APK</a></td>
-</tr>
-<tr>
-<td align="center" valign="top"><a href="resource/apps/tetris/"><img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV gameplay"><br>Tetris TV</a><br><a href="resource/apps/tetris/tetris-0.5.4.apk?raw=1">APK</a></td>
-<td align="center" valign="top"><a href="resource/apps/jewel/"><img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV gameplay"><br>Magic Jewelry TV</a><br><a href="resource/apps/jewel/jewel-0.5.4.apk?raw=1">APK</a></td>
 </tr>
 </table>
 

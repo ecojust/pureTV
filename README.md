@@ -57,38 +57,28 @@
   </tr>
 </table>
 
-### 应用-游戏（20）
+<a id="featured-tv-games"></a>
+
+### 应用-游戏（9）
 
 <table>
   <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/neon-rush/"><img src="resource/apps/neon-rush/thumb.png" width="180" alt="霓虹飞车 界面"><br>霓虹飞车</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/twenty-four/"><img src="resource/apps/twenty-four/thumb.png" width="180" alt="四则二十四 界面"><br>四则二十四</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/torch-bridge/"><img src="resource/apps/torch-bridge/thumb.png" width="180" alt="夜桥接力 界面"><br>夜桥接力</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tower-overlap/"><img src="resource/apps/tower-overlap/thumb.png" width="180" alt="叠塔工匠 界面"><br>叠塔工匠</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/neon-rush/"><img src="resource/apps/neon-rush/thumb.png" width="180" alt="霓虹飞车 界面"><br>霓虹飞车</a><br><a href="resource/apps/neon-rush/neon-rush-0.1.3.apk?raw=1">APK</a> · <a href="resource/apps/neon-rush/macos/NeonRush-0.1.4-macos-universal.dmg?raw=1">macOS</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/used-car-racing/"><img src="resource/apps/used-car-racing/thumb.png" width="180" alt="极品二手车 界面"><br>极品二手车</a><br><a href="resource/apps/used-car-racing/used-car-racing-0.1.5.apk?raw=1">APK</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/alien-shooter/"><img src="resource/apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV 界面"><br>孤胆枪手 TV</a><br><a href="resource/apps/alien-shooter/alien-shooter-0.1.4.apk?raw=1">APK</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/coast-kart/"><img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"><br>Coast Kart TV</a><br><a href="resource/apps/coast-kart/coast-kart-0.5.4.apk?raw=1">APK</a></td>
   </tr>
   <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/packing-sculptor/"><img src="resource/apps/packing-sculptor/thumb.png" width="180" alt="异形装箱 界面"><br>异形装箱</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/conveyor-window/"><img src="resource/apps/conveyor-window/thumb.png" width="180" alt="窗口装配 界面"><br>窗口装配</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/glass-fold/"><img src="resource/apps/glass-fold/thumb.png" width="180" alt="折光工坊 界面"><br>折光工坊</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tension-span/"><img src="resource/apps/tension-span/thumb.png" width="180" alt="拉索桥梁 界面"><br>拉索桥梁</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/super-mario/"><img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"><br>Super Mario TV</a><br><a href="resource/apps/super-mario/super-mario-0.5.4.apk?raw=1">APK</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/tetris/"><img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"><br>Tetris TV</a><br><a href="resource/apps/tetris/tetris-0.5.4.apk?raw=1">APK</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/jewel/"><img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"><br>Magic Jewelry TV</a><br><a href="resource/apps/jewel/jewel-0.5.4.apk?raw=1">APK</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/jackal/"><img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"><br>Jackal TV</a><br><a href="resource/apps/jackal/jackal-0.5.4.apk?raw=1">APK</a></td>
   </tr>
   <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/prism-relay/"><img src="resource/apps/prism-relay/thumb.png" width="180" alt="镜光接力 界面"><br>镜光接力</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/alien-shooter/"><img src="resource/apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV 界面"><br>孤胆枪手 TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/used-car-racing/"><img src="resource/apps/used-car-racing/thumb.png" width="180" alt="极品二手车 界面"><br>极品二手车</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/cozy-island/"><img src="resource/apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV 界面"><br>Cozy Island TV</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/coast-kart/"><img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV 界面"><br>Coast Kart TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/super-mario/"><img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV 界面"><br>Super Mario TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/bomb-jack/"><img src="resource/apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV 界面"><br>Mighty Bomb Jack TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/adventure-island/"><img src="resource/apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV 界面"><br>Adventure Island TV</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tetris/"><img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV 界面"><br>Tetris TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/jewel/"><img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV 界面"><br>Magic Jewelry TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/jackal/"><img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV 界面"><br>Jackal TV</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tank/"><img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV 界面"><br>Tank TV</a></td>
+    <td align="center" valign="top" width="25%"><a href="resource/apps/tank/"><img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV 界面"><br>Tank TV</a><br><a href="resource/apps/tank/tank-0.5.4.apk?raw=1">APK</a></td>
+    <td width="25%"></td>
+    <td width="25%"></td>
+    <td width="25%"></td>
   </tr>
 </table>
 
@@ -107,13 +97,15 @@
 
 ## 手柄游戏专用目录
 
-**43 款手柄游戏** · Android TV 43 款 · macOS 24 款 · Windows x64 19 款
+**34 款手柄游戏** · Android TV 34 款 · macOS 23 款 · Windows x64 19 款
 
-[竞速与体育（13）](#controller-racing) · [动作、角色扮演与探索（2）](#controller-action) · [平台、弹幕与街机（7）](#controller-arcade) · [策略、塔防与卡牌（1）](#controller-strategy) · [解谜与益智（18）](#controller-puzzle) · [经营、沙盒与休闲（1）](#controller-casual) · [单键街机（1）](#controller-one-button)
+另有 [9 款支持手柄的电视游戏](#featured-tv-games)。
+
+[竞速与体育（10）](#controller-racing) · [动作、角色扮演与探索（1）](#controller-action) · [平台、弹幕与街机（4）](#controller-arcade) · [策略、塔防与卡牌（1）](#controller-strategy) · [解谜与益智（16）](#controller-puzzle) · [经营、沙盒与休闲（1）](#controller-casual) · [单键街机（1）](#controller-one-button)
 
 <a id="controller-racing"></a>
 
-### 竞速与体育（13）
+### 竞速与体育（10）
 
 <table>
 <tr>
@@ -131,39 +123,28 @@
 <tr>
 <td align="center" valign="top"><a href="joystick-games/kart-royale/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/f42bad392bf2444cfe4573653805d83f2f8a6a90/evidence/joystick-android-runtime-kart-royale/kart-royale-occupied/driving-checkpoint.png" width="180" alt="Kart Royale游戏画面"><br>Kart Royale</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/36b91f81533f10ff5d37ec091c3701913d4a42e4/joystick-games/kart-royale/kart-royale-0.1.4.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/kart-royale/macos/KartRoyale-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/kart-royale/windows/KartRoyale-0.1.1-windows-x64-setup.exe">Windows</a></td>
 <td align="center" valign="top"><a href="joystick-games/qq-speed/"><img src="joystick-games/qq-speed/thumb.png" width="180" alt="QQ 飞车游戏画面"><br>QQ 飞车</a><br><a href="joystick-games/qq-speed/qq-speed-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/qq-speed/macos/QQSpeed-0.1.0-macos-universal.dmg?raw=1">macOS</a></td>
-<td align="center" valign="top"><a href="resource/apps/neon-rush/"><img src="resource/apps/neon-rush/thumb.png" width="180" alt="霓虹飞车游戏画面"><br>霓虹飞车</a><br><a href="resource/apps/neon-rush/neon-rush-0.1.3.apk?raw=1">APK</a> · <a href="resource/apps/neon-rush/macos/NeonRush-0.1.4-macos-universal.dmg?raw=1">macOS</a></td>
-<td align="center" valign="top"><a href="resource/apps/coast-kart/"><img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV游戏画面"><br>Coast Kart TV</a><br><a href="resource/apps/coast-kart/coast-kart-0.5.4.apk?raw=1">APK</a></td>
-</tr>
-<tr>
-<td align="center" valign="top"><a href="resource/apps/used-car-racing/"><img src="resource/apps/used-car-racing/thumb.png" width="180" alt="极品二手车游戏画面"><br>极品二手车</a><br><a href="resource/apps/used-car-racing/used-car-racing-0.1.5.apk?raw=1">APK</a></td>
 </tr>
 </table>
 
 <a id="controller-action"></a>
 
-### 动作、角色扮演与探索（2）
+### 动作、角色扮演与探索（1）
 
 <table>
 <tr>
 <td align="center" valign="top"><a href="joystick-games/cf-transport-ship/"><img src="joystick-games/cf-transport-ship/thumb.png" width="180" alt="运输船 CF游戏画面"><br>运输船 CF</a><br><a href="joystick-games/cf-transport-ship/cf-transport-ship-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/cf-transport-ship/macos/CFTransportShip-0.1.0-macos-universal.dmg?raw=1">macOS</a></td>
-<td align="center" valign="top"><a href="resource/apps/alien-shooter/"><img src="resource/apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV游戏画面"><br>孤胆枪手 TV</a><br><a href="resource/apps/alien-shooter/alien-shooter-0.1.4.apk?raw=1">APK</a></td>
 </tr>
 </table>
 
 <a id="controller-arcade"></a>
 
-### 平台、弹幕与街机（7）
+### 平台、弹幕与街机（4）
 
 <table>
 <tr>
 <td align="center" valign="top"><a href="joystick-games/glup/"><img src="joystick-games/glup/thumb.png" width="180" alt="GLUP · 沼泽猫鱼游戏画面"><br>GLUP · 沼泽猫鱼</a><br><a href="joystick-games/glup/glup-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/glup/Glup-0.1.0-macos-universal.dmg?raw=1">macOS</a></td>
-<td align="center" valign="top"><a href="resource/apps/super-mario/"><img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV游戏画面"><br>Super Mario TV</a><br><a href="resource/apps/super-mario/super-mario-0.5.4.apk?raw=1">APK</a></td>
 <td align="center" valign="top"><a href="resource/apps/bomb-jack/"><img src="resource/apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV游戏画面"><br>Mighty Bomb Jack TV</a><br><a href="resource/apps/bomb-jack/bomb-jack-0.5.4.apk?raw=1">APK</a></td>
 <td align="center" valign="top"><a href="resource/apps/adventure-island/"><img src="resource/apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV游戏画面"><br>Adventure Island TV</a><br><a href="resource/apps/adventure-island/adventure-island-0.5.4.apk?raw=1">APK</a></td>
-</tr>
-<tr>
-<td align="center" valign="top"><a href="resource/apps/jackal/"><img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV游戏画面"><br>Jackal TV</a><br><a href="resource/apps/jackal/jackal-0.5.4.apk?raw=1">APK</a></td>
-<td align="center" valign="top"><a href="resource/apps/tank/"><img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV游戏画面"><br>Tank TV</a><br><a href="resource/apps/tank/tank-0.5.4.apk?raw=1">APK</a></td>
 <td align="center" valign="top"><a href="resource/apps/conveyor-window/"><img src="resource/apps/conveyor-window/thumb.png" width="180" alt="窗口装配游戏画面"><br>窗口装配</a><br><a href="resource/apps/conveyor-window/conveyor-window-0.2.2.apk?raw=1">APK</a></td>
 </tr>
 </table>
@@ -180,7 +161,7 @@
 
 <a id="controller-puzzle"></a>
 
-### 解谜与益智（18）
+### 解谜与益智（16）
 
 <table>
 <tr>
@@ -206,10 +187,6 @@
 <td align="center" valign="top"><a href="resource/apps/glass-fold/"><img src="resource/apps/glass-fold/thumb.png" width="180" alt="折光工坊游戏画面"><br>折光工坊</a><br><a href="resource/apps/glass-fold/glass-fold-0.2.2.apk?raw=1">APK</a></td>
 <td align="center" valign="top"><a href="resource/apps/tension-span/"><img src="resource/apps/tension-span/thumb.png" width="180" alt="拉索桥梁游戏画面"><br>拉索桥梁</a><br><a href="resource/apps/tension-span/tension-span-0.2.3.apk?raw=1">APK</a></td>
 <td align="center" valign="top"><a href="resource/apps/prism-relay/"><img src="resource/apps/prism-relay/thumb.png" width="180" alt="镜光接力游戏画面"><br>镜光接力</a><br><a href="resource/apps/prism-relay/prism-relay-0.2.3.apk?raw=1">APK</a></td>
-</tr>
-<tr>
-<td align="center" valign="top"><a href="resource/apps/tetris/"><img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV游戏画面"><br>Tetris TV</a><br><a href="resource/apps/tetris/tetris-0.5.4.apk?raw=1">APK</a></td>
-<td align="center" valign="top"><a href="resource/apps/jewel/"><img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV游戏画面"><br>Magic Jewelry TV</a><br><a href="resource/apps/jewel/jewel-0.5.4.apk?raw=1">APK</a></td>
 </tr>
 </table>
 

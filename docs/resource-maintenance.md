@@ -26,11 +26,11 @@ python tools/update-resource-index.py
 python tools/update-tv-store-catalog.py --build-tools "$ANDROID_HOME/build-tools/34.0.0"
 ```
 
-README 的启动器、影音应用、游戏和工具各组按制作顺序倒序展示。`tools/resource-order.json` 按**从早到晚**记录每组资源目录；新增资源时追加到所属数组末尾，版本更新、重新截图或目录文件修改不调整位置。索引生成器逆序展示，并检查重复、缺失和分类错误，不使用文件修改时间或最近发布版本排序。
+[完整资源目录](../resource/README.md)中的启动器、影音应用、游戏和工具各组按制作顺序倒序展示。`tools/resource-order.json` 按**从早到晚**记录每组资源目录；新增资源时追加到所属数组末尾，版本更新、重新截图或目录文件修改不调整位置。索引生成器逆序展示，并检查重复、缺失和分类错误，不使用文件修改时间或最近发布版本排序。
 
 现有顺序依据首次新增资源的 Git 历史（目录搬迁前的条目继续追溯原路径），百款 Game Kit 游戏依据 `resource/game-kit/progress.json` 的 `number` 从 1 到 100 登记。旧游戏先于这百款游戏；影音从早到晚为 ShortVideo TV、WebTV、HIFINi TV、CCTV Live。同一提交批量新增、无法证明独立制作先后的条目按目录名固定登记，不把这些条目之间的位置视为精确的时间先后。新资源尚未提交时也须先登记，因此浅克隆或源码归档中重新生成索引会得到相同顺序。
 
-根目录中英文 README 对新增百款游戏暂时只展示 `tools/readme-featured-games.json` 中的精选项，原有游戏仍显示；`resource/README.md` 保持完整目录。各分类标题显示该页收录的数量。调整精选名单后运行同一索引生成器，无需删除游戏或修改百款完成记录。
+中英文首页的「应用-游戏」只展示 [首页游戏清单](../tools/readme-app-games.json) 中的九款，并采用清单中的顺序。每项的 `resource` 是相对 `resource/` 的游戏目录，卡片从该目录的 `resource.json` 读取当前 APK 文件名。提供 macOS 下载时，另在该项的 `macos` 字段填写相对游戏目录的 DMG 路径。调整清单后运行同一索引生成器即可同步两种语言。手柄目录可链接 [首页游戏](../README.md#featured-tv-games)，避免重复展示卡片。各分类标题显示该页收录的数量。
 
 ## 更新 Android APK
 
@@ -63,4 +63,4 @@ python tools/prepare-launcher-resource.py \
 
 putrtv商城使用本仓库的 `resource/tv-store-catalog.json`，按真实包名、versionCode、最低系统和证书判断更新。它与电脑管理器的 Gitee 上架目录分别发布。新增或更新 APK 时，在严格资源校验通过后重新生成电视目录；具体命令见商城构建说明。目录和 APK 必须在同一个提交中可读取，不能只修改显示版本而没有对应安装包。
 
-工具应用在 `tools/resource-order.json` 的 `tools` 数组登记，仍按创建顺序倒序展示。根目录八款百款游戏精选规则不影响商城和完整资源目录。
+工具应用在 `tools/resource-order.json` 的 `tools` 数组登记，仍按创建顺序倒序展示。商城和完整资源目录均包含所有已登记的游戏。
