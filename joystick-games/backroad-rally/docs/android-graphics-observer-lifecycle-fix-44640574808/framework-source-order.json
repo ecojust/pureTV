@@ -1,0 +1,83 @@
+{
+  "scope": "Actual Android16/API36 AOSP source order; immutable full GET matched tagged bytes. No Android runtime claim.",
+  "sources": {
+    "Instrumentation.java": {
+      "url": "https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/99b01a65cc4c104933788b3143285ab6bae65827/core/java/android/app/Instrumentation.java",
+      "status": 200,
+      "bytes": 109278,
+      "sha256": "e1e0d288a52f0c36e44b203bd6760ff5913c9dd8ebde3623d89cdd751a0820b6",
+      "tag": "android-16.0.0_r1",
+      "commit": "99b01a65cc4c104933788b3143285ab6bae65827",
+      "excerpts": [
+        {
+          "firstLine": 1484,
+          "lastLine": 1523,
+          "text": "    private void prePerformCreate(Activity activity) {\n        if (mWaitingActivities != null) {\n            synchronized (mSync) {\n                final int N = mWaitingActivities.size();\n                for (int i=0; i<N; i++) {\n                    final ActivityWaiter aw = mWaitingActivities.get(i);\n                    final Intent intent = aw.intent;\n                    if (intent.filterEquals(activity.getIntent())) {\n                        aw.activity = activity;\n                        mMessageQueue.addIdleHandler(new ActivityGoing(aw));\n                    }\n                }\n            }\n        }\n    }\n\n    private void postPerformCreate(Activity activity) {\n        if (mActivityMonitors != null) {\n            synchronized (mSync) {\n                final int N = mActivityMonitors.size();\n                for (int i=0; i<N; i++) {\n                    final ActivityMonitor am = mActivityMonitors.get(i);\n                    am.match(activity, activity, activity.getIntent());\n                }\n            }\n        }\n    }\n\n    /**\n     * Perform calling of an activity's {@link Activity#onCreate}\n     * method.  The default implementation simply calls through to that method.\n     *\n     * @param activity The activity being created.\n     * @param icicle The previously frozen state (or null) to pass through to onCreate().\n     */\n    public void callActivityOnCreate(Activity activity, Bundle icicle) {\n        prePerformCreate(activity);\n        activity.performCreate(icicle);\n        postPerformCreate(activity);\n    }",
+          "sourceUrl": "https://github.com/aosp-mirror/platform_frameworks_base/blob/99b01a65cc4c104933788b3143285ab6bae65827/core/java/android/app/Instrumentation.java#L1484"
+        },
+        {
+          "firstLine": 1690,
+          "lastLine": 1702,
+          "text": "     * Perform calling of an activity's {@link Activity#onStart}\n     * method.  The default implementation simply calls through to that method.\n     * \n     * @param activity The activity being started.\n     */\n    public void callActivityOnStart(Activity activity) {\n        activity.onStart();\n    }\n\n    /**\n     * Perform calling of an activity's {@link Activity#onRestart}\n     * method.  The default implementation simply calls through to that method.\n     * ",
+          "sourceUrl": "https://github.com/aosp-mirror/platform_frameworks_base/blob/99b01a65cc4c104933788b3143285ab6bae65827/core/java/android/app/Instrumentation.java#L1690"
+        }
+      ]
+    },
+    "Activity.java": {
+      "url": "https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/99b01a65cc4c104933788b3143285ab6bae65827/core/java/android/app/Activity.java",
+      "status": 200,
+      "bytes": 446205,
+      "sha256": "1b9327a6b634673de3d436d93593ae64c9d35c154b55234e48292498ee5a08e7",
+      "tag": "android-16.0.0_r1",
+      "commit": "99b01a65cc4c104933788b3143285ab6bae65827",
+      "excerpts": [
+        {
+          "firstLine": 1582,
+          "lastLine": 1592,
+          "text": "    private void dispatchActivityCreated(@Nullable Bundle savedInstanceState) {\n        getApplication().dispatchActivityCreated(this, savedInstanceState);\n        Object[] callbacks = collectActivityLifecycleCallbacks();\n        if (callbacks != null) {\n            for (int i = 0; i < callbacks.length; i++) {\n                ((Application.ActivityLifecycleCallbacks) callbacks[i]).onActivityCreated(this,\n                        savedInstanceState);\n            }\n        }\n    }\n",
+          "sourceUrl": "https://github.com/aosp-mirror/platform_frameworks_base/blob/99b01a65cc4c104933788b3143285ab6bae65827/core/java/android/app/Activity.java#L1582"
+        },
+        {
+          "firstLine": 1874,
+          "lastLine": 1887,
+          "text": "\n        if (savedInstanceState != null) {\n            getAutofillClientController().onActivityCreated(savedInstanceState);\n\n            Parcelable p = savedInstanceState.getParcelable(FRAGMENTS_TAG);\n            mFragments.restoreAllState(p, mLastNonConfigurationInstances != null\n                    ? mLastNonConfigurationInstances.fragments : null);\n        }\n        mFragments.dispatchCreate();\n        dispatchActivityCreated(savedInstanceState);\n        if (mVoiceInteractor != null) {\n            mVoiceInteractor.attachActivity(this);\n        }\n        mRestoredFromBundle = savedInstanceState != null;",
+          "sourceUrl": "https://github.com/aosp-mirror/platform_frameworks_base/blob/99b01a65cc4c104933788b3143285ab6bae65827/core/java/android/app/Activity.java#L1874"
+        },
+        {
+          "firstLine": 9132,
+          "lastLine": 9170,
+          "text": "    final void performCreate(Bundle icicle) {\n        performCreate(icicle, null);\n    }\n\n    @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.R, trackingBug = 170729553)\n    final void performCreate(Bundle icicle, PersistableBundle persistentState) {\n        if (Trace.isTagEnabled(Trace.TRACE_TAG_WINDOW_MANAGER)) {\n            Trace.traceBegin(Trace.TRACE_TAG_WINDOW_MANAGER, \"performCreate:\"\n                    + mComponent.getClassName());\n        }\n        dispatchActivityPreCreated(icicle);\n        mCanEnterPictureInPicture = true;\n        // initialize mIsInMultiWindowMode and mIsInPictureInPictureMode before onCreate\n        final int windowingMode = getResources().getConfiguration().windowConfiguration\n                .getWindowingMode();\n        mIsInMultiWindowMode = inMultiWindowMode(windowingMode);\n        mIsInPictureInPictureMode = windowingMode == WINDOWING_MODE_PINNED;\n        mShouldDockBigOverlays = getResources().getBoolean(R.bool.config_dockBigOverlayWindows);\n        restoreHasCurrentPermissionRequest(icicle);\n        final long startTime = SystemClock.uptimeMillis();\n        if (persistentState != null) {\n            onCreate(icicle, persistentState);\n        } else {\n            onCreate(icicle);\n        }\n        final long duration = SystemClock.uptimeMillis() - startTime;\n        EventLogTags.writeWmOnCreateCalled(mIdent, getComponentName().getClassName(),\n                \"performCreate\", duration);\n        mActivityTransitionState.readState(icicle);\n\n        mVisibleFromClient = !mWindow.getWindowStyle().getBoolean(\n                com.android.internal.R.styleable.Window_windowNoDisplay, false);\n        mFragments.dispatchActivityCreated();\n        mActivityTransitionState.setEnterSceneTransitionInfo(this, getSceneTransitionInfo());\n        dispatchActivityPostCreated(icicle);\n        Trace.traceEnd(Trace.TRACE_TAG_WINDOW_MANAGER);\n    }\n\n    final void performNewIntent(@NonNull Intent intent) {",
+          "sourceUrl": "https://github.com/aosp-mirror/platform_frameworks_base/blob/99b01a65cc4c104933788b3143285ab6bae65827/core/java/android/app/Activity.java#L9132"
+        },
+        {
+          "firstLine": 9187,
+          "lastLine": 9206,
+          "text": "    final void performStart(String reason) {\n        if (Trace.isTagEnabled(Trace.TRACE_TAG_WINDOW_MANAGER)) {\n            Trace.traceBegin(Trace.TRACE_TAG_WINDOW_MANAGER, \"performStart:\"\n                    + mComponent.getClassName());\n        }\n        dispatchActivityPreStarted();\n        mActivityTransitionState.setEnterSceneTransitionInfo(this, getSceneTransitionInfo());\n        mFragments.noteStateNotSaved();\n        mCalled = false;\n        mFragments.execPendingActions();\n        final long startTime = SystemClock.uptimeMillis();\n        mInstrumentation.callActivityOnStart(this);\n        final long duration = SystemClock.uptimeMillis() - startTime;\n        EventLogTags.writeWmOnStartCalled(mIdent, getComponentName().getClassName(), reason,\n                duration);\n\n        if (!mCalled) {\n            throw new SuperNotCalledException(\n                \"Activity \" + mComponent.toShortString() +\n                \" did not call through to super.onStart()\");",
+          "sourceUrl": "https://github.com/aosp-mirror/platform_frameworks_base/blob/99b01a65cc4c104933788b3143285ab6bae65827/core/java/android/app/Activity.java#L9187"
+        }
+      ]
+    },
+    "ActivityThread.java": {
+      "url": "https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/99b01a65cc4c104933788b3143285ab6bae65827/core/java/android/app/ActivityThread.java",
+      "status": 200,
+      "bytes": 411308,
+      "sha256": "a096f6bd38a1e632a3226bee4673cd7c0f13384ad04e4e66ed49d402d17603f5",
+      "tag": "android-16.0.0_r1",
+      "commit": "99b01a65cc4c104933788b3143285ab6bae65827",
+      "excerpts": [
+        {
+          "firstLine": 4252,
+          "lastLine": 4271,
+          "text": "                activity.mLaunchedFromBubble = r.mLaunchedFromBubble;\n                activity.mCalled = false;\n                // Assigning the activity to the record before calling onCreate() allows\n                // ActivityThread#getActivity() lookup for the callbacks triggered from\n                // ActivityLifecycleCallbacks#onActivityCreated() or\n                // ActivityLifecycleCallback#onActivityPostCreated().\n                r.activity = activity;\n                if (r.isPersistable()) {\n                    mInstrumentation.callActivityOnCreate(activity, r.state, r.persistentState);\n                } else {\n                    mInstrumentation.callActivityOnCreate(activity, r.state);\n                }\n                if (!activity.mCalled) {\n                    throw new SuperNotCalledException(\n                        \"Activity \" + r.intent.getComponent().toShortString() +\n                        \" did not call through to super.onCreate()\");\n                }\n                r.mLastReportedWindowingMode = config.windowConfiguration.getWindowingMode();\n            }\n            r.setState(ON_CREATE);",
+          "sourceUrl": "https://github.com/aosp-mirror/platform_frameworks_base/blob/99b01a65cc4c104933788b3143285ab6bae65827/core/java/android/app/ActivityThread.java#L4252"
+        },
+        {
+          "firstLine": 4289,
+          "lastLine": 4307,
+          "text": "            PendingTransactionActions pendingActions, SceneTransitionInfo sceneTransitionInfo) {\n        final Activity activity = r.activity;\n        if (!r.stopped) {\n            throw new IllegalStateException(\"Can't start activity that is not stopped.\");\n        }\n        if (r.activity.mFinished) {\n            // TODO(lifecycler): How can this happen?\n            return;\n        }\n\n        unscheduleGcIdler();\n        if (sceneTransitionInfo != null) {\n            activity.mSceneTransitionInfo = sceneTransitionInfo;\n        }\n\n        // Start\n        activity.performStart(\"handleStartActivity\");\n        r.setState(ON_START);\n",
+          "sourceUrl": "https://github.com/aosp-mirror/platform_frameworks_base/blob/99b01a65cc4c104933788b3143285ab6bae65827/core/java/android/app/ActivityThread.java#L4289"
+        }
+      ]
+    }
+  }
+}

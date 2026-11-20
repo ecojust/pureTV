@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "status": "minimal-observer-timing-fix-locally-built",
+  "sourceFiles": {
+    "joystick-games/qa/android/graphics-observer/src/com/ecojust/graphicsqa/GraphicsObserver.java": {
+      "bytes": 11200,
+      "sha256": "d34bcebc2c4fffaccbf36a3edaa9ae9b1facb588f9644911225fdbd0aead66d1"
+    }
+  },
+  "change": "Attach synchronously after super.callActivityOnCreate returns, before the frozen target onStart; lifecycle callbacks retain state/events only.",
+  "unchanged": [
+    "target APK/source/assets/host",
+    "driver/SDK/menu actions",
+    "no-existing-client/null-URL/WebView guards",
+    "read-only graphics and console endpoints",
+    "ten-second observation timeout and bounded headers"
+  ],
+  "frameworkEvidence": "framework-source-order.json",
+  "originalFailure": "original-failure-reference.json",
+  "localChecks": [
+    "Actual JDK17 javac and D8 build against Android35 completed",
+    "Existing HeaderBudgetTest executed against the new compiled actual GraphicsObserver.class passed",
+    "Actual javap records invokespecial Instrumentation.callActivityOnCreate before target-only attachConsole",
+    "Actual aapt/apksigner inspected exact distinct test-only manifest and unsigned status; only classes.dex differs from local build5"
+  ],
+  "unsignedObserver": {
+    "bytes": 11373,
+    "sha256": "ed2a842d2762363a1b7d7c0f5ca991a770b2de8e685d91a508ac3c1a40f4300e",
+    "packageName": "com.ecojust.joystickgraphicsqa.backroadrally",
+    "versionCode": 1,
+    "versionName": "1.0",
+    "certificateSha256": null,
+    "minSdk": 26,
+    "targetSdk": 35,
+    "testOnly": true
+  },
+  "unchangedTestsNotRepeated": [
+    "12 Python driver tests",
+    "Node graphics boundary fixture",
+    "161 BoundedEvents checks",
+    "signer/exporter boundary suites"
+  ],
+  "newMirrorTestsAdded": false,
+  "signed": false,
+  "nativeTested": false,
+  "targetApkChanged": false,
+  "postPerformed": false
+}

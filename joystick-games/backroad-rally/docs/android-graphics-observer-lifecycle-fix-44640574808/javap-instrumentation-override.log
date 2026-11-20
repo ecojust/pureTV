@@ -1,0 +1,862 @@
+Compiled from "GraphicsObserver.java"
+public final class com.ecojust.graphicsqa.GraphicsObserver extends android.app.Instrumentation {
+  public static final java.lang.String TARGET;
+
+  private volatile android.app.Activity activity;
+
+  private volatile java.lang.String activityState;
+
+  private volatile boolean consoleAttached;
+
+  private int port;
+
+  private java.lang.String graphicsScript;
+
+  private final com.ecojust.graphicsqa.BoundedEvents events;
+
+  public com.ecojust.graphicsqa.GraphicsObserver();
+    Code:
+       0: aload_0
+       1: invokespecial #30                 // Method android/app/Instrumentation."<init>":()V
+       4: aload_0
+       5: ldc           #36                 // String not-started
+       7: putfield      #15                 // Field activityState:Ljava/lang/String;
+      10: aload_0
+      11: ldc           #38                 // int 63487
+      13: putfield      #39                 // Field port:I
+      16: aload_0
+      17: new           #43                 // class com/ecojust/graphicsqa/BoundedEvents
+      20: dup
+      21: invokespecial #45                 // Method com/ecojust/graphicsqa/BoundedEvents."<init>":()V
+      24: putfield      #26                 // Field events:Lcom/ecojust/graphicsqa/BoundedEvents;
+      27: return
+
+  public void onCreate(android.os.Bundle);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #46                 // Method android/app/Instrumentation.onCreate:(Landroid/os/Bundle;)V
+       5: aload_1
+       6: ifnull        31
+       9: aload_1
+      10: ldc           #50                 // String diagnosticPort
+      12: invokevirtual #52                 // Method android/os/Bundle.containsKey:(Ljava/lang/String;)Z
+      15: ifeq          31
+      18: aload_0
+      19: aload_1
+      20: ldc           #50                 // String diagnosticPort
+      22: invokevirtual #58                 // Method android/os/Bundle.getString:(Ljava/lang/String;)Ljava/lang/String;
+      25: invokestatic  #62                 // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+      28: putfield      #39                 // Field port:I
+      31: aload_0
+      32: getfield      #39                 // Field port:I
+      35: sipush        1024
+      38: if_icmplt     50
+      41: aload_0
+      42: getfield      #39                 // Field port:I
+      45: ldc           #68                 // int 65535
+      47: if_icmple     60
+      50: new           #69                 // class java/lang/IllegalArgumentException
+      53: dup
+      54: ldc           #71                 // String Invalid diagnostic port
+      56: invokespecial #73                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      59: athrow
+      60: aload_0
+      61: invokevirtual #76                 // Method start:()V
+      64: return
+
+  private android.webkit.WebView find(android.view.View);
+    Code:
+       0: aload_1
+       1: instanceof    #79                 // class android/webkit/WebView
+       4: ifeq          12
+       7: aload_1
+       8: checkcast     #79                 // class android/webkit/WebView
+      11: areturn
+      12: aload_1
+      13: instanceof    #81                 // class android/view/ViewGroup
+      16: ifeq          59
+      19: aload_1
+      20: checkcast     #81                 // class android/view/ViewGroup
+      23: astore_2
+      24: iconst_0
+      25: istore_3
+      26: iload_3
+      27: aload_2
+      28: invokevirtual #83                 // Method android/view/ViewGroup.getChildCount:()I
+      31: if_icmpge     59
+      34: aload_0
+      35: aload_2
+      36: iload_3
+      37: invokevirtual #87                 // Method android/view/ViewGroup.getChildAt:(I)Landroid/view/View;
+      40: invokespecial #7                  // Method find:(Landroid/view/View;)Landroid/webkit/WebView;
+      43: astore        4
+      45: aload         4
+      47: ifnull        53
+      50: aload         4
+      52: areturn
+      53: iinc          3, 1
+      56: goto          26
+      59: aconst_null
+      60: areturn
+
+  private void created(android.app.Activity);
+    Code:
+       0: ldc           #91                 // String com.ecojust.joystick.backroadrally
+       2: aload_1
+       3: invokevirtual #93                 // Method android/app/Activity.getPackageName:()Ljava/lang/String;
+       6: invokevirtual #99                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       9: ifne          13
+      12: return
+      13: aload_0
+      14: aload_1
+      15: putfield      #18                 // Field activity:Landroid/app/Activity;
+      18: aload_0
+      19: ldc           #105                // String created
+      21: putfield      #15                 // Field activityState:Ljava/lang/String;
+      24: aload_0
+      25: iconst_0
+      26: putfield      #11                 // Field consoleAttached:Z
+      29: return
+
+  public void callActivityOnCreate(android.app.Activity, android.os.Bundle);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #106                // Method android/app/Instrumentation.callActivityOnCreate:(Landroid/app/Activity;Landroid/os/Bundle;)V
+       6: ldc           #91                 // String com.ecojust.joystick.backroadrally
+       8: aload_1
+       9: invokevirtual #93                 // Method android/app/Activity.getPackageName:()Ljava/lang/String;
+      12: invokevirtual #99                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      15: ifne          19
+      18: return
+      19: aload_0
+      20: aload_1
+      21: invokespecial #110                // Method attachConsole:(Landroid/app/Activity;)V
+      24: goto          44
+      27: astore_3
+      28: aload_0
+      29: getfield      #26                 // Field events:Lcom/ecojust/graphicsqa/BoundedEvents;
+      32: ldc           #115                // String console-unavailable
+      34: aload_3
+      35: invokevirtual #117                // Method java/lang/RuntimeException.toString:()Ljava/lang/String;
+      38: ldc           #120                // String
+      40: iconst_0
+      41: invokevirtual #122                // Method com/ecojust/graphicsqa/BoundedEvents.add:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+      44: return
+    Exception table:
+       from    to  target type
+          19    24    27   Class java/lang/RuntimeException
+
+  private void attachConsole(android.app.Activity);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #126                // Method android/app/Activity.getWindow:()Landroid/view/Window;
+       5: invokevirtual #130                // Method android/view/Window.getDecorView:()Landroid/view/View;
+       8: invokespecial #7                  // Method find:(Landroid/view/View;)Landroid/webkit/WebView;
+      11: astore_2
+      12: aload_2
+      13: ifnonnull     31
+      16: aload_0
+      17: getfield      #26                 // Field events:Lcom/ecojust/graphicsqa/BoundedEvents;
+      20: ldc           #115                // String console-unavailable
+      22: ldc           #136                // String No WebView after Activity.onCreate returned
+      24: ldc           #120                // String
+      26: iconst_0
+      27: invokevirtual #122                // Method com/ecojust/graphicsqa/BoundedEvents.add:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+      30: return
+      31: aload_2
+      32: invokevirtual #138                // Method android/webkit/WebView.getWebChromeClient:()Landroid/webkit/WebChromeClient;
+      35: ifnull        53
+      38: aload_0
+      39: getfield      #26                 // Field events:Lcom/ecojust/graphicsqa/BoundedEvents;
+      42: ldc           #115                // String console-unavailable
+      44: ldc           #142                // String Existing WebChromeClient preserved
+      46: ldc           #120                // String
+      48: iconst_0
+      49: invokevirtual #122                // Method com/ecojust/graphicsqa/BoundedEvents.add:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+      52: return
+      53: aload_2
+      54: invokevirtual #144                // Method android/webkit/WebView.getUrl:()Ljava/lang/String;
+      57: ifnull        77
+      60: aload_0
+      61: getfield      #26                 // Field events:Lcom/ecojust/graphicsqa/BoundedEvents;
+      64: ldc           #115                // String console-unavailable
+      66: ldc           #147                // String Document already started; refusing late instrumentation
+      68: aload_2
+      69: invokevirtual #144                // Method android/webkit/WebView.getUrl:()Ljava/lang/String;
+      72: iconst_0
+      73: invokevirtual #122                // Method com/ecojust/graphicsqa/BoundedEvents.add:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+      76: return
+      77: aload_2
+      78: new           #149                // class com/ecojust/graphicsqa/GraphicsObserver$1
+      81: dup
+      82: aload_0
+      83: invokespecial #151                // Method com/ecojust/graphicsqa/GraphicsObserver$1."<init>":(Lcom/ecojust/graphicsqa/GraphicsObserver;)V
+      86: invokevirtual #154                // Method android/webkit/WebView.setWebChromeClient:(Landroid/webkit/WebChromeClient;)V
+      89: aload_0
+      90: iconst_1
+      91: putfield      #11                 // Field consoleAttached:Z
+      94: aload_0
+      95: getfield      #26                 // Field events:Lcom/ecojust/graphicsqa/BoundedEvents;
+      98: ldc           #158                // String console-attached
+     100: ldc           #160                // String after Activity.onCreate returned; before target onStart/loadUrl
+     102: ldc           #120                // String
+     104: iconst_0
+     105: invokevirtual #122                // Method com/ecojust/graphicsqa/BoundedEvents.add:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+     108: return
+
+  private java.lang.String script() throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: invokevirtual #162                // Method getContext:()Landroid/content/Context;
+       4: invokevirtual #166                // Method android/content/Context.getAssets:()Landroid/content/res/AssetManager;
+       7: ldc           #172                // String graphics.js
+       9: invokevirtual #174                // Method android/content/res/AssetManager.open:(Ljava/lang/String;)Ljava/io/InputStream;
+      12: astore_1
+      13: new           #180                // class java/io/ByteArrayOutputStream
+      16: dup
+      17: invokespecial #182                // Method java/io/ByteArrayOutputStream."<init>":()V
+      20: astore_2
+      21: sipush        4096
+      24: newarray       byte
+      26: astore_3
+      27: aload_1
+      28: aload_3
+      29: invokevirtual #183                // Method java/io/InputStream.read:([B)I
+      32: dup
+      33: istore        4
+      35: iconst_m1
+      36: if_icmpeq     72
+      39: aload_2
+      40: invokevirtual #189                // Method java/io/ByteArrayOutputStream.size:()I
+      43: iload         4
+      45: iadd
+      46: ldc           #192                // int 65536
+      48: if_icmple     61
+      51: new           #193                // class java/lang/IllegalStateException
+      54: dup
+      55: ldc           #195                // String Oversized diagnostic script
+      57: invokespecial #197                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      60: athrow
+      61: aload_2
+      62: aload_3
+      63: iconst_0
+      64: iload         4
+      66: invokevirtual #198                // Method java/io/ByteArrayOutputStream.write:([BII)V
+      69: goto          27
+      72: new           #202                // class java/lang/StringBuilder
+      75: dup
+      76: invokespecial #204                // Method java/lang/StringBuilder."<init>":()V
+      79: ldc           #205                // String JSON.stringify(
+      81: invokevirtual #207                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      84: new           #100                // class java/lang/String
+      87: dup
+      88: aload_2
+      89: invokevirtual #211                // Method java/io/ByteArrayOutputStream.toByteArray:()[B
+      92: getstatic     #215                // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+      95: invokespecial #221                // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+      98: invokevirtual #207                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     101: ldc           #224                // String )
+     103: invokevirtual #207                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     106: invokevirtual #226                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     109: astore        5
+     111: aload_1
+     112: ifnull        119
+     115: aload_1
+     116: invokevirtual #227                // Method java/io/InputStream.close:()V
+     119: aload         5
+     121: areturn
+     122: astore_2
+     123: aload_1
+     124: ifnull        140
+     127: aload_1
+     128: invokevirtual #227                // Method java/io/InputStream.close:()V
+     131: goto          140
+     134: astore_3
+     135: aload_2
+     136: aload_3
+     137: invokevirtual #232                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     140: aload_2
+     141: athrow
+    Exception table:
+       from    to  target type
+          13   111   122   Class java/lang/Throwable
+         127   131   134   Class java/lang/Throwable
+
+  public void onStart();
+    Code:
+       0: aload_0
+       1: invokespecial #236                // Method android/app/Instrumentation.onStart:()V
+       4: ldc           #91                 // String com.ecojust.joystick.backroadrally
+       6: aload_0
+       7: invokevirtual #239                // Method getTargetContext:()Landroid/content/Context;
+      10: invokevirtual #242                // Method android/content/Context.getPackageName:()Ljava/lang/String;
+      13: invokevirtual #99                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      16: ifne          29
+      19: new           #193                // class java/lang/IllegalStateException
+      22: dup
+      23: ldc           #243                // String Wrong target package
+      25: invokespecial #197                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      28: athrow
+      29: aload_0
+      30: aload_0
+      31: invokespecial #245                // Method script:()Ljava/lang/String;
+      34: putfield      #1                  // Field graphicsScript:Ljava/lang/String;
+      37: aload_0
+      38: invokevirtual #239                // Method getTargetContext:()Landroid/content/Context;
+      41: invokevirtual #248                // Method android/content/Context.getApplicationContext:()Landroid/content/Context;
+      44: checkcast     #251                // class android/app/Application
+      47: astore_1
+      48: aload_1
+      49: new           #253                // class com/ecojust/graphicsqa/GraphicsObserver$2
+      52: dup
+      53: aload_0
+      54: invokespecial #255                // Method com/ecojust/graphicsqa/GraphicsObserver$2."<init>":(Lcom/ecojust/graphicsqa/GraphicsObserver;)V
+      57: invokevirtual #256                // Method android/app/Application.registerActivityLifecycleCallbacks:(Landroid/app/Application$ActivityLifecycleCallbacks;)V
+      60: aload_0
+      61: invokevirtual #239                // Method getTargetContext:()Landroid/content/Context;
+      64: invokevirtual #260                // Method android/content/Context.getPackageManager:()Landroid/content/pm/PackageManager;
+      67: ldc           #91                 // String com.ecojust.joystick.backroadrally
+      69: invokevirtual #264                // Method android/content/pm/PackageManager.getLaunchIntentForPackage:(Ljava/lang/String;)Landroid/content/Intent;
+      72: astore_2
+      73: aload_2
+      74: ifnonnull     88
+      77: new           #193                // class java/lang/IllegalStateException
+      80: dup
+      81: ldc_w         #270                // String No target launch activity
+      84: invokespecial #197                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      87: athrow
+      88: aload_0
+      89: aload_0
+      90: aload_2
+      91: ldc_w         #274                // int 268435456
+      94: invokevirtual #275                // Method android/content/Intent.addFlags:(I)Landroid/content/Intent;
+      97: invokevirtual #279                // Method startActivitySync:(Landroid/content/Intent;)Landroid/app/Activity;
+     100: putfield      #18                 // Field activity:Landroid/app/Activity;
+     103: new           #283                // class java/net/ServerSocket
+     106: dup
+     107: aload_0
+     108: getfield      #39                 // Field port:I
+     111: iconst_4
+     112: ldc_w         #285                // String 127.0.0.1
+     115: invokestatic  #287                // Method java/net/InetAddress.getByName:(Ljava/lang/String;)Ljava/net/InetAddress;
+     118: invokespecial #293                // Method java/net/ServerSocket."<init>":(IILjava/net/InetAddress;)V
+     121: astore_3
+     122: new           #53                 // class android/os/Bundle
+     125: dup
+     126: invokespecial #296                // Method android/os/Bundle."<init>":()V
+     129: astore        4
+     131: aload         4
+     133: ldc_w         #297                // String observer
+     136: ldc_w         #299                // String graphics-ready
+     139: invokevirtual #301                // Method android/os/Bundle.putString:(Ljava/lang/String;Ljava/lang/String;)V
+     142: aload         4
+     144: ldc           #50                 // String diagnosticPort
+     146: aload_0
+     147: getfield      #39                 // Field port:I
+     150: invokevirtual #305                // Method android/os/Bundle.putInt:(Ljava/lang/String;I)V
+     153: aload_0
+     154: iconst_0
+     155: aload         4
+     157: invokevirtual #309                // Method sendStatus:(ILandroid/os/Bundle;)V
+     160: invokestatic  #313                // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+     163: invokevirtual #319                // Method java/lang/Thread.isInterrupted:()Z
+     166: ifne          247
+     169: aload_3
+     170: invokevirtual #323                // Method java/net/ServerSocket.accept:()Ljava/net/Socket;
+     173: astore        5
+     175: aload_0
+     176: aload         5
+     178: invokespecial #327                // Method handle:(Ljava/net/Socket;)V
+     181: goto          204
+     184: astore        6
+     186: aload_0
+     187: getfield      #26                 // Field events:Lcom/ecojust/graphicsqa/BoundedEvents;
+     190: ldc_w         #333                // String request-error
+     193: aload         6
+     195: invokevirtual #335                // Method java/lang/Exception.toString:()Ljava/lang/String;
+     198: ldc           #120                // String
+     200: iconst_0
+     201: invokevirtual #122                // Method com/ecojust/graphicsqa/BoundedEvents.add:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+     204: aload         5
+     206: ifnull        244
+     209: aload         5
+     211: invokevirtual #336                // Method java/net/Socket.close:()V
+     214: goto          244
+     217: astore        6
+     219: aload         5
+     221: ifnull        241
+     224: aload         5
+     226: invokevirtual #336                // Method java/net/Socket.close:()V
+     229: goto          241
+     232: astore        7
+     234: aload         6
+     236: aload         7
+     238: invokevirtual #232                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     241: aload         6
+     243: athrow
+     244: goto          160
+     247: aload_3
+     248: invokevirtual #339                // Method java/net/ServerSocket.close:()V
+     251: goto          275
+     254: astore        4
+     256: aload_3
+     257: invokevirtual #339                // Method java/net/ServerSocket.close:()V
+     260: goto          272
+     263: astore        5
+     265: aload         4
+     267: aload         5
+     269: invokevirtual #232                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     272: aload         4
+     274: athrow
+     275: goto          304
+     278: astore_1
+     279: new           #53                 // class android/os/Bundle
+     282: dup
+     283: invokespecial #296                // Method android/os/Bundle."<init>":()V
+     286: astore_2
+     287: aload_2
+     288: ldc_w         #340                // String observerError
+     291: aload_1
+     292: invokevirtual #342                // Method java/lang/Throwable.toString:()Ljava/lang/String;
+     295: invokevirtual #301                // Method android/os/Bundle.putString:(Ljava/lang/String;Ljava/lang/String;)V
+     298: aload_0
+     299: iconst_0
+     300: aload_2
+     301: invokevirtual #343                // Method finish:(ILandroid/os/Bundle;)V
+     304: return
+    Exception table:
+       from    to  target type
+         175   181   184   Class java/lang/Exception
+         175   204   217   Class java/lang/Throwable
+         224   229   232   Class java/lang/Throwable
+         122   247   254   Class java/lang/Throwable
+         256   260   263   Class java/lang/Throwable
+           4   275   278   Class java/lang/Throwable
+
+  private org.json.JSONObject status() throws java.lang.Exception;
+    Code:
+       0: new           #346                // class org/json/JSONObject
+       3: dup
+       4: invokespecial #348                // Method org/json/JSONObject."<init>":()V
+       7: ldc_w         #349                // String readonly
+      10: iconst_1
+      11: invokevirtual #351                // Method org/json/JSONObject.put:(Ljava/lang/String;Z)Lorg/json/JSONObject;
+      14: ldc_w         #355                // String targetPackage
+      17: ldc           #91                 // String com.ecojust.joystick.backroadrally
+      19: invokevirtual #357                // Method org/json/JSONObject.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+      22: ldc_w         #360                // String activityState
+      25: aload_0
+      26: getfield      #15                 // Field activityState:Ljava/lang/String;
+      29: invokevirtual #357                // Method org/json/JSONObject.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+      32: ldc_w         #361                // String consoleAttachedBeforeLoad
+      35: aload_0
+      36: getfield      #11                 // Field consoleAttached:Z
+      39: invokevirtual #351                // Method org/json/JSONObject.put:(Ljava/lang/String;Z)Lorg/json/JSONObject;
+      42: ldc           #50                 // String diagnosticPort
+      44: aload_0
+      45: getfield      #39                 // Field port:I
+      48: invokevirtual #363                // Method org/json/JSONObject.put:(Ljava/lang/String;I)Lorg/json/JSONObject;
+      51: ldc_w         #366                // String targetApkChanged
+      54: iconst_0
+      55: invokevirtual #351                // Method org/json/JSONObject.put:(Ljava/lang/String;Z)Lorg/json/JSONObject;
+      58: ldc_w         #368                // String modelWrites
+      61: iconst_0
+      62: invokevirtual #351                // Method org/json/JSONObject.put:(Ljava/lang/String;Z)Lorg/json/JSONObject;
+      65: ldc_w         #370                // String nativeInputPolls
+      68: iconst_0
+      69: invokevirtual #351                // Method org/json/JSONObject.put:(Ljava/lang/String;Z)Lorg/json/JSONObject;
+      72: ldc_w         #372                // String glContextCalls
+      75: iconst_0
+      76: invokevirtual #351                // Method org/json/JSONObject.put:(Ljava/lang/String;Z)Lorg/json/JSONObject;
+      79: areturn
+
+  private java.lang.String graphics() throws java.lang.Exception;
+    Code:
+       0: new           #374                // class java/util/concurrent/atomic/AtomicReference
+       3: dup
+       4: invokespecial #376                // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+       7: astore_1
+       8: new           #377                // class java/util/concurrent/CountDownLatch
+      11: dup
+      12: iconst_1
+      13: invokespecial #379                // Method java/util/concurrent/CountDownLatch."<init>":(I)V
+      16: astore_2
+      17: new           #382                // class java/util/concurrent/atomic/AtomicBoolean
+      20: dup
+      21: iconst_0
+      22: invokespecial #384                // Method java/util/concurrent/atomic/AtomicBoolean."<init>":(Z)V
+      25: astore_3
+      26: new           #387                // class android/os/Handler
+      29: dup
+      30: invokestatic  #389                // Method android/os/Looper.getMainLooper:()Landroid/os/Looper;
+      33: invokespecial #395                // Method android/os/Handler."<init>":(Landroid/os/Looper;)V
+      36: astore        4
+      38: new           #398                // class com/ecojust/graphicsqa/GraphicsObserver$3
+      41: dup
+      42: aload_0
+      43: aload_3
+      44: aload_1
+      45: aload_2
+      46: invokespecial #400                // Method com/ecojust/graphicsqa/GraphicsObserver$3."<init>":(Lcom/ecojust/graphicsqa/GraphicsObserver;Ljava/util/concurrent/atomic/AtomicBoolean;Ljava/util/concurrent/atomic/AtomicReference;Ljava/util/concurrent/CountDownLatch;)V
+      49: astore        5
+      51: aload         4
+      53: aload         5
+      55: invokevirtual #403                // Method android/os/Handler.post:(Ljava/lang/Runnable;)Z
+      58: ifne          72
+      61: new           #193                // class java/lang/IllegalStateException
+      64: dup
+      65: ldc_w         #407                // String Main observation queue unavailable
+      68: invokespecial #197                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      71: athrow
+      72: aload_2
+      73: ldc2_w        #409                // long 10l
+      76: getstatic     #411                // Field java/util/concurrent/TimeUnit.SECONDS:Ljava/util/concurrent/TimeUnit;
+      79: invokevirtual #417                // Method java/util/concurrent/CountDownLatch.await:(JLjava/util/concurrent/TimeUnit;)Z
+      82: ifne          108
+      85: aload_3
+      86: iconst_1
+      87: invokevirtual #421                // Method java/util/concurrent/atomic/AtomicBoolean.set:(Z)V
+      90: aload         4
+      92: aload         5
+      94: invokevirtual #424                // Method android/os/Handler.removeCallbacks:(Ljava/lang/Runnable;)V
+      97: new           #193                // class java/lang/IllegalStateException
+     100: dup
+     101: ldc_w         #428                // String Readonly graphics observation timed out
+     104: invokespecial #197                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     107: athrow
+     108: aload_1
+     109: invokevirtual #430                // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+     112: checkcast     #100                // class java/lang/String
+     115: areturn
+
+  private java.lang.String console() throws java.lang.Exception;
+    Code:
+       0: new           #434                // class org/json/JSONArray
+       3: dup
+       4: invokespecial #436                // Method org/json/JSONArray."<init>":()V
+       7: astore_1
+       8: aload_0
+       9: getfield      #26                 // Field events:Lcom/ecojust/graphicsqa/BoundedEvents;
+      12: invokevirtual #437                // Method com/ecojust/graphicsqa/BoundedEvents.snapshot:()Ljava/util/List;
+      15: invokeinterface #441,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      20: astore_2
+      21: aload_2
+      22: invokeinterface #447,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      27: ifeq          115
+      30: aload_2
+      31: invokeinterface #452,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      36: checkcast     #455                // class com/ecojust/graphicsqa/BoundedEvents$Event
+      39: astore_3
+      40: aload_1
+      41: new           #346                // class org/json/JSONObject
+      44: dup
+      45: invokespecial #348                // Method org/json/JSONObject."<init>":()V
+      48: ldc_w         #457                // String sequence
+      51: aload_3
+      52: getfield      #459                // Field com/ecojust/graphicsqa/BoundedEvents$Event.sequence:J
+      55: invokevirtual #462                // Method org/json/JSONObject.put:(Ljava/lang/String;J)Lorg/json/JSONObject;
+      58: ldc_w         #465                // String wallTime
+      61: aload_3
+      62: getfield      #467                // Field com/ecojust/graphicsqa/BoundedEvents$Event.wallTime:J
+      65: invokevirtual #462                // Method org/json/JSONObject.put:(Ljava/lang/String;J)Lorg/json/JSONObject;
+      68: ldc_w         #469                // String kind
+      71: aload_3
+      72: getfield      #471                // Field com/ecojust/graphicsqa/BoundedEvents$Event.kind:Ljava/lang/String;
+      75: invokevirtual #357                // Method org/json/JSONObject.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+      78: ldc_w         #473                // String message
+      81: aload_3
+      82: getfield      #475                // Field com/ecojust/graphicsqa/BoundedEvents$Event.message:Ljava/lang/String;
+      85: invokevirtual #357                // Method org/json/JSONObject.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+      88: ldc_w         #477                // String source
+      91: aload_3
+      92: getfield      #479                // Field com/ecojust/graphicsqa/BoundedEvents$Event.source:Ljava/lang/String;
+      95: invokevirtual #357                // Method org/json/JSONObject.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+      98: ldc_w         #481                // String line
+     101: aload_3
+     102: getfield      #483                // Field com/ecojust/graphicsqa/BoundedEvents$Event.line:I
+     105: invokevirtual #363                // Method org/json/JSONObject.put:(Ljava/lang/String;I)Lorg/json/JSONObject;
+     108: invokevirtual #485                // Method org/json/JSONArray.put:(Ljava/lang/Object;)Lorg/json/JSONArray;
+     111: pop
+     112: goto          21
+     115: aload_0
+     116: invokespecial #488                // Method status:()Lorg/json/JSONObject;
+     119: ldc_w         #492                // String events
+     122: aload_1
+     123: invokevirtual #357                // Method org/json/JSONObject.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+     126: ldc_w         #493                // String dropped
+     129: aload_0
+     130: getfield      #26                 // Field events:Lcom/ecojust/graphicsqa/BoundedEvents;
+     133: invokevirtual #495                // Method com/ecojust/graphicsqa/BoundedEvents.dropped:()J
+     136: invokevirtual #462                // Method org/json/JSONObject.put:(Ljava/lang/String;J)Lorg/json/JSONObject;
+     139: ldc_w         #498                // String storedPayloadBytes
+     142: aload_0
+     143: getfield      #26                 // Field events:Lcom/ecojust/graphicsqa/BoundedEvents;
+     146: invokevirtual #500                // Method com/ecojust/graphicsqa/BoundedEvents.bytes:()I
+     149: invokevirtual #363                // Method org/json/JSONObject.put:(Ljava/lang/String;I)Lorg/json/JSONObject;
+     152: invokevirtual #503                // Method org/json/JSONObject.toString:()Ljava/lang/String;
+     155: areturn
+
+  private void handle(java.net.Socket) throws java.lang.Exception;
+    Code:
+       0: aload_1
+       1: sipush        12000
+       4: invokevirtual #504                // Method java/net/Socket.setSoTimeout:(I)V
+       7: new           #507                // class java/io/BufferedReader
+      10: dup
+      11: new           #509                // class java/io/InputStreamReader
+      14: dup
+      15: aload_1
+      16: invokevirtual #511                // Method java/net/Socket.getInputStream:()Ljava/io/InputStream;
+      19: getstatic     #515                // Field java/nio/charset/StandardCharsets.US_ASCII:Ljava/nio/charset/Charset;
+      22: invokespecial #518                // Method java/io/InputStreamReader."<init>":(Ljava/io/InputStream;Ljava/nio/charset/Charset;)V
+      25: invokespecial #521                // Method java/io/BufferedReader."<init>":(Ljava/io/Reader;)V
+      28: astore_2
+      29: iconst_1
+      30: newarray       int
+      32: dup
+      33: iconst_0
+      34: sipush        8192
+      37: iastore
+      38: astore_3
+      39: invokestatic  #524                // Method java/lang/System.nanoTime:()J
+      42: getstatic     #411                // Field java/util/concurrent/TimeUnit.SECONDS:Ljava/util/concurrent/TimeUnit;
+      45: ldc2_w        #529                // long 12l
+      48: invokevirtual #531                // Method java/util/concurrent/TimeUnit.toNanos:(J)J
+      51: ladd
+      52: lstore        4
+      54: aload_2
+      55: aload_3
+      56: lload         4
+      58: invokestatic  #535                // Method headerLine:(Ljava/io/BufferedReader;[IJ)Ljava/lang/String;
+      61: astore        6
+      63: aload_2
+      64: aload_3
+      65: lload         4
+      67: invokestatic  #535                // Method headerLine:(Ljava/io/BufferedReader;[IJ)Ljava/lang/String;
+      70: dup
+      71: astore        7
+      73: ifnull        87
+      76: aload         7
+      78: invokevirtual #539                // Method java/lang/String.isEmpty:()Z
+      81: ifne          87
+      84: goto          63
+      87: ldc_w         #542                // String 200 OK
+      90: astore        9
+      92: ldc_w         #544                // String GET /status HTTP/1.1
+      95: aload         6
+      97: invokevirtual #99                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     100: ifne          114
+     103: ldc_w         #546                // String GET /status HTTP/1.0
+     106: aload         6
+     108: invokevirtual #99                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     111: ifeq          126
+     114: aload_0
+     115: invokespecial #488                // Method status:()Lorg/json/JSONObject;
+     118: invokevirtual #503                // Method org/json/JSONObject.toString:()Ljava/lang/String;
+     121: astore        8
+     123: goto          198
+     126: ldc_w         #548                // String GET /console HTTP/1.1
+     129: aload         6
+     131: invokevirtual #99                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     134: ifne          148
+     137: ldc_w         #550                // String GET /console HTTP/1.0
+     140: aload         6
+     142: invokevirtual #99                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     145: ifeq          157
+     148: aload_0
+     149: invokespecial #552                // Method console:()Ljava/lang/String;
+     152: astore        8
+     154: goto          198
+     157: ldc_w         #555                // String GET /graphics HTTP/1.1
+     160: aload         6
+     162: invokevirtual #99                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     165: ifne          179
+     168: ldc_w         #557                // String GET /graphics HTTP/1.0
+     171: aload         6
+     173: invokevirtual #99                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     176: ifeq          188
+     179: aload_0
+     180: invokespecial #559                // Method graphics:()Ljava/lang/String;
+     183: astore        8
+     185: goto          198
+     188: ldc_w         #562                // String {\"error\":\"Read-only route not found\"}
+     191: astore        8
+     193: ldc_w         #564                // String 404 Not Found
+     196: astore        9
+     198: aload         8
+     200: getstatic     #215                // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+     203: invokevirtual #566                // Method java/lang/String.getBytes:(Ljava/nio/charset/Charset;)[B
+     206: astore        10
+     208: aload_1
+     209: invokevirtual #570                // Method java/net/Socket.getOutputStream:()Ljava/io/OutputStream;
+     212: astore        11
+     214: aload         11
+     216: new           #202                // class java/lang/StringBuilder
+     219: dup
+     220: invokespecial #204                // Method java/lang/StringBuilder."<init>":()V
+     223: ldc_w         #574                // String HTTP/1.1
+     226: invokevirtual #207                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     229: aload         9
+     231: invokevirtual #207                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     234: ldc_w         #576                // String \r\nContent-Type: application/json; charset=utf-8\r\nCache-Control: no-store\r\nConnection: close\r\nContent-Length:
+     237: invokevirtual #207                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     240: aload         10
+     242: arraylength
+     243: invokevirtual #578                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     246: ldc_w         #581                // String \r\n\r\n
+     249: invokevirtual #207                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     252: invokevirtual #226                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     255: getstatic     #515                // Field java/nio/charset/StandardCharsets.US_ASCII:Ljava/nio/charset/Charset;
+     258: invokevirtual #566                // Method java/lang/String.getBytes:(Ljava/nio/charset/Charset;)[B
+     261: invokevirtual #583                // Method java/io/OutputStream.write:([B)V
+     264: aload         11
+     266: aload         10
+     268: invokevirtual #583                // Method java/io/OutputStream.write:([B)V
+     271: aload         11
+     273: invokevirtual #588                // Method java/io/OutputStream.flush:()V
+     276: return
+
+  private static java.lang.String headerLine(java.io.BufferedReader, int[]) throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #524                // Method java/lang/System.nanoTime:()J
+       5: getstatic     #411                // Field java/util/concurrent/TimeUnit.SECONDS:Ljava/util/concurrent/TimeUnit;
+       8: ldc2_w        #529                // long 12l
+      11: invokevirtual #531                // Method java/util/concurrent/TimeUnit.toNanos:(J)J
+      14: ladd
+      15: invokestatic  #535                // Method headerLine:(Ljava/io/BufferedReader;[IJ)Ljava/lang/String;
+      18: areturn
+
+  private static java.lang.String headerLine(java.io.BufferedReader, int[], long) throws java.lang.Exception;
+    Code:
+       0: new           #202                // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #204                // Method java/lang/StringBuilder."<init>":()V
+       7: astore        4
+       9: invokestatic  #524                // Method java/lang/System.nanoTime:()J
+      12: lload_2
+      13: lcmp
+      14: iflt          28
+      17: new           #69                 // class java/lang/IllegalArgumentException
+      20: dup
+      21: ldc_w         #591                // String Header deadline expired
+      24: invokespecial #73                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      27: athrow
+      28: aload_0
+      29: invokevirtual #593                // Method java/io/BufferedReader.read:()I
+      32: istore        5
+      34: iload         5
+      36: iconst_m1
+      37: if_icmpne     43
+      40: goto          97
+      43: aload_1
+      44: iconst_0
+      45: dup2
+      46: iaload
+      47: iconst_1
+      48: isub
+      49: dup_x2
+      50: iastore
+      51: ifge          65
+      54: new           #69                 // class java/lang/IllegalArgumentException
+      57: dup
+      58: ldc_w         #595                // String Request too large
+      61: invokespecial #73                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      64: athrow
+      65: iload         5
+      67: bipush        10
+      69: if_icmpne     78
+      72: aload         4
+      74: invokevirtual #226                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      77: areturn
+      78: iload         5
+      80: bipush        13
+      82: if_icmpeq     9
+      85: aload         4
+      87: iload         5
+      89: i2c
+      90: invokevirtual #597                // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      93: pop
+      94: goto          9
+      97: aload         4
+      99: invokevirtual #600                // Method java/lang/StringBuilder.length:()I
+     102: ifne          109
+     105: aconst_null
+     106: goto          114
+     109: aload         4
+     111: invokevirtual #226                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     114: areturn
+
+  static com.ecojust.graphicsqa.BoundedEvents access$000(com.ecojust.graphicsqa.GraphicsObserver);
+    Code:
+       0: aload_0
+       1: getfield      #26                 // Field events:Lcom/ecojust/graphicsqa/BoundedEvents;
+       4: areturn
+
+  static void access$100(com.ecojust.graphicsqa.GraphicsObserver, android.app.Activity);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #22                 // Method created:(Landroid/app/Activity;)V
+       5: return
+
+  static android.app.Activity access$202(com.ecojust.graphicsqa.GraphicsObserver, android.app.Activity);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: dup_x1
+       3: putfield      #18                 // Field activity:Landroid/app/Activity;
+       6: areturn
+
+  static java.lang.String access$302(com.ecojust.graphicsqa.GraphicsObserver, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: dup_x1
+       3: putfield      #15                 // Field activityState:Ljava/lang/String;
+       6: areturn
+
+  static android.app.Activity access$200(com.ecojust.graphicsqa.GraphicsObserver);
+    Code:
+       0: aload_0
+       1: getfield      #18                 // Field activity:Landroid/app/Activity;
+       4: areturn
+
+  static boolean access$402(com.ecojust.graphicsqa.GraphicsObserver, boolean);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: dup_x1
+       3: putfield      #11                 // Field consoleAttached:Z
+       6: ireturn
+
+  static android.webkit.WebView access$500(com.ecojust.graphicsqa.GraphicsObserver, android.view.View);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #7                  // Method find:(Landroid/view/View;)Landroid/webkit/WebView;
+       5: areturn
+
+  static java.lang.String access$600(com.ecojust.graphicsqa.GraphicsObserver);
+    Code:
+       0: aload_0
+       1: getfield      #1                  // Field graphicsScript:Ljava/lang/String;
+       4: areturn
+
+  static java.lang.String access$300(com.ecojust.graphicsqa.GraphicsObserver);
+    Code:
+       0: aload_0
+       1: getfield      #15                 // Field activityState:Ljava/lang/String;
+       4: areturn
+
+  static boolean access$400(com.ecojust.graphicsqa.GraphicsObserver);
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field consoleAttached:Z
+       4: ireturn
+}
