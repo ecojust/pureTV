@@ -26,13 +26,20 @@ function freeze(value) {
 }
 
 function fixture({ version = 'WebGL 2.0 contract context', state = 2, contextAvailable = true } = {}) {
-    const calls = { peek: 0, poll: 0, storageWrites: 0, glReads: 0 };
+    const calls = { peek: 0, poll: 0, storageWrites: 0, glReads: 0, rendererReads: 0 };
     let frame = freeze({ pollCount: 41, buttons: {}, pressed: {}, released: {}, connected: true });
-    let contextVersion = version;
     const forbidden = name => () => { throw new Error(`snapshot invoked ${name}`); };
-    const gl = { getExtension: () => null, VERSION: 0x1f02, getParameter(parameter) {
-        assert.equal(parameter, this.VERSION); calls.glReads++; return contextVersion;
-    } };
+    function makeContext(version, renderer) {
+        return { version, renderer, lost: false, canvas: new EventTarget(), VERSION: 0x1f02,
+            isContextLost() { return this.lost; },
+            getExtension: () => ({ UNMASKED_RENDERER_WEBGL: 0x9246 }),
+            getParameter(parameter) {
+                assert.equal(this.lost, false);
+                if (parameter === this.VERSION) { calls.glReads++; return this.version; }
+                assert.equal(parameter, 0x9246); calls.rendererReads++; return this.renderer;
+            } };
+    }
+    let gl = makeContext(version, 'original GPU');
     const position = freeze({ x: 1, y: 2, z: 3, toArray() { return [this.x, this.y, this.z]; } });
     const ctx = freeze({
         settings: { quality: 0 },
@@ -53,19 +60,46 @@ function fixture({ version = 'WebGL 2.0 contract context', state = 2, contextAva
     sandbox.TVAdapterContract.installTV(ctx, input);
     const before = JSON.stringify({ ctx, input });
     return { calls, ctx, input, before, snapshot: () => sandbox.window.JoystickGameQA.snapshot(),
-        setVersion(value) { contextVersion = value; },
+        get gl() { return gl; },
+        replaceContext(version, renderer) { gl = makeContext(version, renderer); },
         setFrameCount(value) { frame = freeze({ ...frame, pollCount: value }); } };
 }
 
 test('production snapshot identifies Kart Royale and reads the current renderer context', () => {
     const f = fixture();
     for (const [version, renderer] of [['WebGL 2.0 contract context', 'webgl2'], ['WebGL 1.0 contract context', 'webgl1'], [null, null]]) {
-        f.setVersion(version);
+        f.replaceContext(version, 'current GPU');
         const snapshot = f.snapshot();
         assert.equal(snapshot.game, 'kart-royale');
         assert.equal(snapshot.renderer, renderer); assert.equal(snapshot.webglVersion, version);
     }
     assert.ok(f.calls.glReads > 0); assert.equal(f.calls.poll, 0);
+});
+
+test('renderer identity is sampled once per live context and refreshed after restore or replacement', () => {
+    const f = fixture();
+    function expectIdentity(renderer, version, device, reads) {
+        const snap = f.snapshot();
+        assert.deepEqual([snap.renderer, snap.webglVersion, snap.webglRenderer], [renderer, version, device]);
+        assert.deepEqual([f.calls.glReads, f.calls.rendererReads], [reads, reads]);
+    }
+    expectIdentity('webgl2', f.gl.version, 'original GPU', 1);
+    expectIdentity('webgl2', f.gl.version, 'original GPU', 1);
+    f.gl.lost = true;
+    expectIdentity(null, null, null, 1);
+    f.gl.lost = false;
+    f.gl.renderer = 'restored GPU';
+    f.gl.canvas.dispatchEvent(new Event('webglcontextrestored'));
+    expectIdentity('webgl2', f.gl.version, 'restored GPU', 2);
+    // The same context object may also finish recovering between observations.
+    f.gl.version = 'WebGL 2.0 renewed contract context';
+    f.gl.canvas.dispatchEvent(new Event('webglcontextrestored'));
+    expectIdentity('webgl2', f.gl.version, 'restored GPU', 3);
+    const oldCanvas = f.gl.canvas;
+    f.replaceContext('WebGL 1.0 replacement context', 'replacement GPU');
+    expectIdentity('webgl1', f.gl.version, 'replacement GPU', 4);
+    oldCanvas.dispatchEvent(new Event('webglcontextrestored'));
+    expectIdentity('webgl1', f.gl.version, 'replacement GPU', 4);
 });
 
 test('missing, lost or unknown contexts cannot report an available WebGL renderer', () => {
