@@ -46,9 +46,27 @@ The TV store works with updated launchers to let you choose the position of an a
 
 ## Install a game and connect a controller
 
+### Play on a computer
+
+Open the Windows x64 player, choose a game with the arrow keys and press Enter. The player downloads the game on first launch, verifies it and opens it in your default browser. Subsequent launches use the local copy. Follow the game's own keyboard prompts, or use a pureTV Wi-Fi controller on the same LAN. Keep the player running while you play. [Download the Windows player](https://github.com/ecojust/pureTV/releases/download/catalog-player-v1.0.0/pureTV-Games.exe)
+
+On macOS or Linux, extract the portable ZIP, open a terminal in the extracted folder and run the following commands with Python 3.10 or later. Pass a game ID to start it directly, for example `.venv/bin/python launcher.py tetris`. [Download the portable player](https://github.com/ecojust/pureTV/releases/download/catalog-player-v1.0.0/pureTV-Games-portable.zip)
+
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python launcher.py
+```
+
+### Join a TV game from a phone
+
+Open the game on the TV. Connect your phone to the same LAN and scan the QR code on the game's menu. The page on the phone becomes a virtual controller. Use its direction pad and action buttons while watching the TV. The connection display shows the occupied seat. Open the menu or pause screen to view connection details.
+
+### Connect a pureTV Wi-Fi controller
+
 1. Choose a game by genre on the project homepage. Select the TV, Apple or Windows icon below the game title to download the Android TV APK, Mac DMG or Windows x64 installer. The gamepad icon marks pureTV controller support. Open the game title or preview for controls, portable packages and tested platforms. [Browse games by genre](../../README.en.md#games)
 2. Connect the controller and game device to the same reachable LAN. Open the game and press the controller's **GPIO 23 search button**. The firmware automatically connects when it finds exactly one valid service. If several games are open, close the other services or enter the game's IPv4 address and port on the controller's setup page.
-3. The default TCP port is **63485**. If it was occupied at startup, use the actual port displayed by the game. A connected controller appears in the side indicator with its icon, player seat and full client ID. Its entry disappears on disconnect. Press **START (GPIO 27)** to begin or pause. The D-pad and A commonly select and confirm. Consult each game's instructions for other buttons, two-player support and resuming after disconnect. [Controller mappings and multiplayer (Chinese)](../readme-controller-support/README.md) · [Connection indicator examples](../controller-client-status/README.md)
+3. The default TCP port is **63485**. If it was occupied at startup, use the actual port displayed by the game. Connection details identify the seat and controller ID. The game updates the seat when the controller disconnects. Press **START (GPIO 27)** to begin or pause. The D-pad and A commonly select and confirm. Consult each game's instructions for other buttons, two-player support and resuming after disconnect. [Controller mappings and multiplayer (Chinese)](../readme-controller-support/README.md) · [Connection indicator examples](../controller-client-status/README.md)
 
 The controller-enabled APKs for the 20 featured TV games in the original catalog require Android 8.0 or later. Check each game's WebView and graphics requirements. Some 3D games require WebGL2. The nine desktop racers require macOS 11+ on Mac, or Windows 10 1903+ x64 or Windows 11 with the WebView2 Runtime on Windows. Universal Mac packages contain Apple Silicon and Intel binaries. Consult per-game results for tested gameplay. Among the nine puzzle games, Story Thief, Atlas of Ink and Starbase Spooky passed native Intel gameplay checks. The remaining six timed out before displaying the menu on the test machine. [Racing downloads](../../joystick-games/README.md#九款赛车游戏下载) · [Puzzle downloads and test records](../puzzle-nine/README.md#下载安装)
 

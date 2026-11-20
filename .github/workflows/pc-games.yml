@@ -32,7 +32,11 @@ jobs:
         run: |
           python -m unittest discover -v
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python -m PyInstaller --clean --onefile --name pureTV-Games --add-data 'catalog.json:.' --add-data 'pc-bridge.js:.' --collect-all zeroconf launcher.py
+          node --test test_bridge.cjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python package.py --output dist
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m PyInstaller --clean --onefile --name pureTV-Games --add-data 'catalog.json:.' --add-data 'pc-bridge.js:.' --collect-all zeroconf --recursive-copy-metadata zeroconf launcher.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $games = .\dist\pureTV-Games.exe --list
           if ($LASTEXITCODE -ne 0 -or $games.Count -eq 0) { throw 'The packaged catalog did not open' }
@@ -41,5 +45,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: pureTV-Games-windows-x64
-          path: tools/pc-games/dist/pureTV-Games.exe
+          path: |
+            tools/pc-games/dist/pureTV-Games.exe
+            tools/pc-games/dist/pureTV-Games-portable.zip
           if-no-files-found: error

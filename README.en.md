@@ -80,7 +80,7 @@
 
 <!-- game-index:start -->
 
-**35 controller games** · Android TV (35) · macOS (24) · Windows x64 (19)
+**35 controller games** · [Play on a computer](docs/guide/README.en.md#play-on-a-computer) · Android TV (35) · Standalone macOS downloads (24) · Standalone Windows x64 downloads (19)
 
 [Racing and sports (13)](#controller-racing) · [Action, RPGs and exploration (2)](#controller-action) · [Platformers, bullet hell and arcade (6)](#controller-arcade) · [Strategy, tower defense and card games (1)](#controller-strategy) · [Puzzles and brainteasers (12)](#controller-puzzle) · [One-button arcade (1)](#controller-one-button)
 
