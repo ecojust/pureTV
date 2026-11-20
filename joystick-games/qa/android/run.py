@@ -1088,7 +1088,7 @@ def main():
         acceptance.scenarios()
         if a.game == 'backroad-rally':
             playing = next(c for c in acceptance.captures if c['path'] == 'playing.png')
-            labels = [rect for moment in ('before', 'after') for rect in playing[moment]['page']['backroadGhostLabels']]
+            labels = [rect for moment in ('before', 'after') for rect in playing[moment]['page'].get('backroadGhostLabels', [])]
             colors = backroad_scene_colors(acceptance.out / 'playing.png', labels)
             acceptance.report['playingSceneColors'] = colors
             if colors <= 1:
