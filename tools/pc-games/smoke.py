@@ -65,8 +65,14 @@ def exercise(command, browser_channel):
                 wait_for(page, '() => ' + phase + ' === "title"')
                 page.keyboard.press('Enter', delay=100)
                 wait_for(page, '() => ' + phase + ' === "playing"')
-                page.keyboard.press('p', delay=100)
-                wait_for(page, '() => ' + phase + ' === "paused"')
+                piece_x = 'window.PureTVQA.snapshot().players[0].piece?.x'
+                start_x = page.evaluate('() => ' + piece_x)
+                page.keyboard.down('ArrowLeft')
+                try:
+                    wait_for(page, 'start => ' + piece_x + ' < start', start_x)
+                finally:
+                    page.keyboard.up('ArrowLeft')
+                print('Keyboard started Tetris and moved the falling piece', flush=True)
                 page.reload(wait_until='domcontentloaded')
                 wait_for(page, '() => ' + phase + ' === "title"')
                 client = JoystickClient('127.0.0.1', controller_port)
@@ -84,6 +90,11 @@ def exercise(command, browser_channel):
                     client.button('START', 'down')
                     wait_for(page, '() => ' + phase + ' === "playing"')
                     client.button('START', 'tap', 100)
+                    start_x = page.evaluate('() => ' + piece_x)
+                    client.button('RIGHT', 'down')
+                    wait_for(page, 'start => ' + piece_x + ' > start', start_x)
+                    client.button('RIGHT', 'tap', 100)
+                    print('Wi-Fi protocol started Tetris and moved the falling piece', flush=True)
                 finally:
                     stopped.set()
                     heartbeat.join()
@@ -91,7 +102,11 @@ def exercise(command, browser_channel):
                 wait_for(page, 'id => !document.body.innerText.includes(id)', client.identity)
                 browser.close()
         finally:
-            child.terminate()
+            if os.name == 'nt' and child.poll() is None:
+                # The PyInstaller one-file bootloader owns a second player process.
+                subprocess.run(['taskkill', '/PID', str(child.pid), '/T', '/F'], check=False)
+            elif child.poll() is None:
+                child.terminate()
             child.wait(timeout=25)
 
 
