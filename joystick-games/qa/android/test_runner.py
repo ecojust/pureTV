@@ -93,6 +93,16 @@ class HeldInputObservation(unittest.TestCase):
             self.assertEqual(self.finish(), states[-1])
         self.acceptance.release.assert_called_once_with()
 
+    def test_successful_first_read_keeps_ordinary_hold_semantics(self):
+        self.step['timeoutSeconds'] = 15
+        playing = self.state(52, 'playing', True)
+        self.acceptance.snapshot = mock.Mock(return_value=playing)
+        self.acceptance.wait_fresh = mock.Mock()
+        self.assertEqual(self.finish(), playing)
+        self.acceptance.snapshot.assert_called_once_with()
+        self.acceptance.wait_fresh.assert_not_called()
+        self.acceptance.release.assert_called_once_with()
+
     def test_http_error_and_exhausted_budget_do_not_pass(self):
         self.acceptance.wait_fresh = mock.Mock()
         self.acceptance.snapshot = mock.Mock(side_effect=runner.HTTPError('http://localhost/', 500, 'error', {}, None))
