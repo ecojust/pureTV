@@ -21,7 +21,7 @@ player = scratch / 'player'
 kart_commit = 'f1e41ebba5c58d6ab78a10eca07b3720bb2c5c79'
 upgrade_commit = 'b9dbfd704e5d45e0a8849e72ea6da6855c3c54b0'
 subject_commit = '34236b9b8e287997335e90e1546cf7397aa2f041'
-games = ['turbo-kart-rally', 'saber-magic-tower', 'operation-ironhold', 'lumenrift', 'kart-royale', 'clawd-pop']
+games = ['clawd-pop']
 apk_commits = {slug: kart_commit if slug == 'kart-royale' else upgrade_commit for slug in games}
 pkgdir = tools / 'packages'
 
@@ -78,11 +78,11 @@ status=0
 for slug in games:
     # Isolate the browser process for each title so an early GPU context loss cannot mask unrelated titles.
     try:
-        run=subprocess.run([sys.executable, str(project/'joystick-games/qa/controller-input/pc.py'),
+        run=subprocess.run([sys.executable, str(workspace/'qa/verify_menu.py'),
             '--chromium',str(chrome),'--host',str(player/'host.py'),'--payloads',str(scratch),
             '--output',str(result),'--timeout','180',slug],timeout=380)
         game=json.loads((result/(slug+'.json')).read_text(encoding='utf-8'))
-        passed=run.returncode==0 and game['passed']
+        passed=run.returncode==0 and game['passed'] and game['initial']['stage'] == 'menu' and game['initial']['renderer'] == 'webgl2'
         print('SIGNED_GAME_RESULT '+json.dumps(game,ensure_ascii=True),flush=True)
     except Exception as exc:
         print(slug, str(exc), flush=True)

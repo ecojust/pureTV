@@ -1,7 +1,7 @@
-name: Six signed games on Windows and macOS
+name: Clawd Pop macOS menu and controller
 on:
   push:
-    branches: [qa/expansion-six-desktop-sdk35-20261120]
+    branches: [qa/clawd-desktop-sdk35-menu-20261120]
   workflow_dispatch:
 permissions:
   contents: read
@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-2022, macos-15]
+        os: [macos-15]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     env:
