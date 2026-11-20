@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": [
+    "gameplay.turn",
+    "gameplay.moves",
+    "gameplay.crystals",
+    "gameplay.swaps"
+  ],
+  "steps": [
+    {
+      "name": "Open the first stage briefing",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 350,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "brief"
+        }
+      ]
+    },
+    {
+      "name": "Enter the original battle",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 350,
+      "expect": [
+        {
+          "path": "gameplay.ready",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Move to the next board cell",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 350,
+      "expect": [
+        {
+          "path": "gameplay.cursor",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Select the board stone",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 350,
+      "expect": [
+        {
+          "path": "gameplay.selected",
+          "op": "eq",
+          "value": 25
+        }
+      ]
+    },
+    {
+      "name": "Swap adjacent stones",
+      "keys": [
+        "LEFT"
+      ],
+      "holdMs": 350,
+      "expect": [
+        {
+          "path": "gameplay.swaps",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Pause the game",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 350,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Resume explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 350,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    }
+  ],
+  "storageRestartRequired": true
+}
