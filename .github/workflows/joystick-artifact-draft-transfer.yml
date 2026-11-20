@@ -25,6 +25,14 @@ jobs:
           github-token: ${{ github.token }}
           merge-multiple: true
           path: original/kart-royale
+      - name: Fetch original signed backroad-rally
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '14607123434'
+          run-id: '44687697371'
+          github-token: ${{ github.token }}
+          merge-multiple: true
+          path: original/backroad-rally
       - name: Recheck individual APK signatures and upload original files
         run: |
           set -euo pipefail
@@ -36,7 +44,7 @@ jobs:
           release_id=452313702
           repo='ecojust/pureTV'
           pin='eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23'
-          games=[('ponpoko-kart', '5028fba2c1945cd4c5aa4d71fd0aade671a55040', '44685477973', '14605519412', 'f8a58ec80d0a648583a4adb3a475f68be3b7163f570f15a6b93191731a9b7975'), ('kart-royale', '620fa8829d0b273ebcb6ec1539b97461c283c45c', '44684303462', '14606610194', '3bbe0e794aaed3faa3f1f8327a8f2a3ab9a5699d4971a245dfad5c53afab2f46')]
+          games=[('ponpoko-kart', '5028fba2c1945cd4c5aa4d71fd0aade671a55040', '44685477973', '14605519412', 'f8a58ec80d0a648583a4adb3a475f68be3b7163f570f15a6b93191731a9b7975'), ('kart-royale', '620fa8829d0b273ebcb6ec1539b97461c283c45c', '44684303462', '14606610194', '3bbe0e794aaed3faa3f1f8327a8f2a3ab9a5699d4971a245dfad5c53afab2f46'), ('backroad-rally', 'a5b51e14b506995bc8da67f024f00d107962518d', '44687697371', '14607123434', 'f7a66bca44ff9d7583baeefdaeb05cc981ba8a012ce35be81cfa10e2b81183ce')]
           def api(path):
            return json.loads(subprocess.check_output(['gh','api','repos/'+repo+'/'+path]))
           def upload(path,content_type):
@@ -58,7 +66,7 @@ jobs:
           for game,source,run_id,artifact_id,archive_digest in games:
            run=api('actions/runs/'+run_id)
            jobs=api('actions/runs/'+run_id+'/jobs')['jobs']
-           assert run['head_sha']==source and run['run_attempt']==1 and run['path']=='.github/workflows/joystick-catalog-android.yml'
+           assert run['head_sha']==source and run['run_attempt']==(1 if game=='backroad-rally' else 1) and run['path']=='.github/workflows/joystick-catalog-android.yml'
            for job in ['build ('+game+')','sign']:
             assert [j['conclusion'] for j in jobs if j['name']==job]==['success']
            artifact=api('actions/artifacts/'+artifact_id)
@@ -76,9 +84,27 @@ jobs:
            assert re.findall(r'Signer #\d+ certificate SHA-256 digest: (\w+)',signer)==[pin]
            badging=subprocess.check_output([str(build_tools/'aapt'),'dump','badging',str(apk)],text=True)
            assert f"package: name='{package}' versionCode='{code}' versionName='{version}'" in badging
-           assert upload(apk,'application/vnd.android.package-archive')==digest
-           checksums.append(digest+'  '+apk.name+'\n')
-          path=pathlib.Path('SHA256SUMS-Ponpoko-Royale-0.1.2.txt')
+           fields=('game','sourceSha','runId','packageName','versionName','versionCode','minSdk','targetSdk','certificateSha256','sha256','bytes','signatureVerified')
+           record={k:info[k] for k in fields if k in info}
+           record['signingReceiptSha256']=hashlib.file_digest((folder/'signing-receipt.json').open('rb'),'sha256').hexdigest()
+           record['signedArtifactId']=artifact_id
+           record['sourceInputCount']=len(info['sourceInputs'])
+           if game=='backroad-rally':
+            obs_folder=pathlib.Path('original')/game/'observers'/game
+            obs_receipt=json.loads((obs_folder/'observer-signing-receipt.json').read_text())
+            identity=obs_receipt['apkIdentity']
+            obs_apk=next(obs_folder.glob('*.apk'))
+            assert (obs_receipt['sourceSha'],str(obs_receipt['runId']),identity['certificateSha256'])==(source,run_id,pin)
+            assert (obs_apk.stat().st_size,hashlib.file_digest(obs_apk.open('rb'),'sha256').hexdigest())==(identity['bytes'],identity['sha256'])
+            record['observerIdentity']=identity
+           print('ORIGINAL_SIGNING_RECEIPT '+json.dumps(record,sort_keys=True),flush=True)
+           if game=='backroad-rally':
+            assert upload(apk,'application/vnd.android.package-archive')==digest
+            checksums.append(digest+'  '+apk.name+'\n')
+           else:
+            matched=[a for a in api(f'releases/{release_id}/assets') if a['name']==apk.name]
+            assert len(matched)==1 and (matched[0]['size'],matched[0]['digest'])==(info['bytes'],'sha256:'+digest)
+          path=pathlib.Path('SHA256SUMS-Backroad-0.1.2.txt')
           path.write_text(''.join(checksums))
           upload(path,'text/plain')
           PYTHON
