@@ -1,0 +1,108 @@
+{
+  "viewport": [
+    1280,
+    720
+  ],
+  "steps": [
+    {
+      "name": "Begin the restoration",
+      "keys": [
+        "START"
+      ],
+      "observed": {
+        "stage": "playing"
+      }
+    },
+    {
+      "name": "Select the first dealt glyph",
+      "keys": [
+        "B"
+      ],
+      "observed": {
+        "gameplay.selected": 0
+      }
+    },
+    {
+      "name": "Move the selected glyph left on the lattice",
+      "keys": [
+        "LEFT"
+      ],
+      "observed": {
+        "gameplay.cursorX": 2
+      }
+    },
+    {
+      "name": "Choose the next dealt glyph and its legal anchor",
+      "keys": [
+        "B"
+      ],
+      "observed": {
+        "gameplay.selected": 1
+      }
+    },
+    {
+      "name": "Place the glyph on the actual lattice",
+      "keys": [
+        "A"
+      ],
+      "observed": {
+        "gameplay.moves": 1,
+        "gameplay.score": 4
+      }
+    },
+    {
+      "name": "Inspect the first Arcana power",
+      "keys": [
+        "X"
+      ],
+      "observed": {
+        "gameplay.palette": "transmute"
+      }
+    },
+    {
+      "name": "Highlight the Lantern",
+      "keys": [
+        "RIGHT"
+      ],
+      "observed": {
+        "gameplay.palette": "lantern"
+      }
+    },
+    {
+      "name": "Return to the lattice",
+      "keys": [
+        "Y"
+      ],
+      "observed": {
+        "stage": "playing",
+        "gameplay.palette": "board"
+      }
+    },
+    {
+      "name": "Pause the reading",
+      "keys": [
+        "START"
+      ],
+      "observed": {
+        "stage": "paused",
+        "paused": true
+      }
+    },
+    {
+      "name": "Resume the reading",
+      "keys": [
+        "START"
+      ],
+      "observed": {
+        "stage": "playing",
+        "paused": false
+      }
+    }
+  ],
+  "status": "passed",
+  "renderer": "webgl2",
+  "disconnectPause": true,
+  "explicitResume": true,
+  "externalRequests": [],
+  "pageErrors": []
+}

@@ -1,0 +1,79 @@
+{
+  "viewport": [
+    960,
+    540
+  ],
+  "steps": [
+    {
+      "name": "Open the first stage briefing",
+      "keys": [
+        "START"
+      ],
+      "observed": {
+        "gameplay.screen": "brief"
+      }
+    },
+    {
+      "name": "Enter the original battle",
+      "keys": [
+        "A"
+      ],
+      "observed": {
+        "gameplay.ready": true
+      }
+    },
+    {
+      "name": "Move to the next board cell",
+      "keys": [
+        "RIGHT"
+      ],
+      "observed": {
+        "gameplay.cursor": 25
+      }
+    },
+    {
+      "name": "Select the board stone",
+      "keys": [
+        "A"
+      ],
+      "observed": {
+        "gameplay.selected": 25
+      }
+    },
+    {
+      "name": "Swap adjacent stones",
+      "keys": [
+        "LEFT"
+      ],
+      "observed": {
+        "gameplay.swaps": 1
+      }
+    },
+    {
+      "name": "Pause the game",
+      "keys": [
+        "START"
+      ],
+      "observed": {
+        "stage": "paused",
+        "paused": true
+      }
+    },
+    {
+      "name": "Resume explicitly",
+      "keys": [
+        "START"
+      ],
+      "observed": {
+        "stage": "playing",
+        "paused": false
+      }
+    }
+  ],
+  "status": "passed",
+  "renderer": "webgl2",
+  "disconnectPause": true,
+  "explicitResume": true,
+  "externalRequests": [],
+  "pageErrors": []
+}
