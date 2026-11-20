@@ -2,6 +2,10 @@
 
 日本乡村、樱花鸟居、夏祭花火三条原版赛道；八位动物车手、三档难度、道具、蓄力漂移、跳跃特技和和伞滑翔。保留 [たぬ的原作](https://github.com/tanuu5/ponpoko-kart/tree/88edb72d25c2f957431cc4d12547d3138d1bca48) 的完整程序生成场景、原 HUD 与日文菜单，不依赖在线模型、图片、音频或字体。
 
+## Android TV 适配
+
+0.1.1（versionCode 2）根据 WebGL 2 设备支持的颜色缓冲和多重采样格式选择渲染路径。支持 HDR 的设备保留泛光效果；其余设备以 RGBA8 绘制赛道、角色和水面倒影。八位车手的头像和九张道具图使用原版模型预先渲染，进入菜单时只需创建游戏画布。Android TV 安装包正在验证中。
+
 ## Windows 下载
 
 0.1.0 x64：[安装程序](PonpokoKart-0.1.0-windows-x64-setup.exe) · [便携 ZIP](PonpokoKart-0.1.0-windows-x64.zip) · [SHA256 校验](SHA256SUMS.txt)。需要 **Windows 10 1903 或更新版本、Microsoft Edge WebView2 Runtime 和 WebGL 2**；缺少 WebView2 时程序会提示前往微软页面安装。游戏资源随包离线提供，安装程序没有捆绑 WebView2 运行时，也未作 Authenticode 签名。
