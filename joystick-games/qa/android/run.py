@@ -10,6 +10,7 @@ from http.client import RemoteDisconnected
 from collections import Counter
 import hashlib
 import json
+import os
 import math
 import re
 import shutil
@@ -806,7 +807,11 @@ class Acceptance:
                   'declaredHoldMs': step['holdMs'], 'beforePollCount': self.game(before)['controller']['pollCount'],
                   'reloadBasis': basis, 'samples': [], 'sampleCount': 0, 'samplesTruncated': False}
         self.report.setdefault('menuTapObservations', []).append(record)
-        started = time.monotonic(); deadline = started + step.get('timeoutSeconds', 15)
+        started = time.monotonic(); transition_deadline = started + step.get('timeoutSeconds', 15)
+        deadline = transition_deadline
+        vulkan_observer = (self.args.game == 'backroad-rally'
+                           and self.report.get('apk', {}).get('sha256') == '67f61471e0e23e9ea963475425d5c43fa9d3265167f9028bd55dc319494fbe3c'
+                           and os.environ.get('BACKROAD_VULKAN_OBSERVATION') == 'true')
         candidate = None; stable = 0; down_sent = False; released = False
         try:
             with client.lock:
@@ -832,6 +837,21 @@ class Acceptance:
                 # snapshot is only a baseline, never itself a successful frame.
                 fresh = self.frame_advanced(state, before) or (basis is not None and type(count) is int and count > 0)
                 qualified = fresh and release_seen and expected
+                observed_at = time.monotonic()
+                if vulkan_observer:
+                    assert observed_at <= deadline, 'Backroad fresh observation arrived after its fixed deadline'
+                    regressed = candidate is not None and type(count) is int and count < self.game(candidate)['controller']['pollCount']
+                    if not qualified or regressed:
+                        assert observed_at <= transition_deadline, 'Backroad menu reverted during fresh confirmation'
+                        deadline = transition_deadline
+                    elif candidate is None:
+                        assert observed_at <= transition_deadline, 'Backroad menu transition was observed too late'
+                        # The two later GETs must corroborate this already timely qualified response.
+                        # Slow software GPU frames can delay independent Activity/WebView observations.
+                        deadline = max(transition_deadline, observed_at + 2 * OBSERVER_SNAPSHOT_TIMEOUT)
+                        record.update(qualifiedAtSeconds=observed_at-started,
+                                      transitionBudgetSeconds=transition_deadline-started,
+                                      confirmationBudgetSeconds=2 * OBSERVER_SNAPSHOT_TIMEOUT)
                 record['sampleCount'] += 1
                 record['samples'].append({'pollCount': count, 'released': release_seen, 'expectationMatches': expected,
                                           'qualified': qualified, 'elapsedSeconds': time.monotonic() - started})
