@@ -178,7 +178,7 @@ jobs:
           avd-name: JoystickGamesValidation
           force-avd-creation: true
           disable-animations: true
-          emulator-options: -no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          emulator-options: -no-window -memory 3072 -gpu lavapipe -noaudio -no-boot-anim -no-snapshot
           script: >-
             python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
             --input "$RUNNER_TEMP/input" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"

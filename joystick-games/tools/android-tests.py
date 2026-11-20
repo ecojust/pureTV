@@ -205,5 +205,46 @@ class CatalogRegistrationBoundaries(unittest.TestCase):
                 with self.assertRaises(AssertionError): build.sources('fixture-game')
 
 
+class FrozenPayloadBoundaries(unittest.TestCase):
+    def setUp(self):
+        spec = importlib.util.spec_from_file_location('frozen_payload_under_test', HERE / 'android-runtime-inputs.py')
+        self.inputs = importlib.util.module_from_spec(spec); spec.loader.exec_module(self.inputs)
+        self.slug = 'penguintrack'
+        self.meta = json.loads((HERE.parent / self.slug / 'game.json').read_text())
+        self.registration = json.loads((HERE.parent / 'catalog-registry.json').read_text())['games'][self.slug]
+        self.files = {'resource/game-kit/build.py': (HERE.parents[1] / 'resource/game-kit/build.py').read_bytes(),
+                      **{name: b'phone fixture' for name in self.inputs.PHONE},
+                      'joystick-games/penguintrack/dist/tv.html': b'<html>fixture</html>',
+                      'joystick-games/penguintrack/dist/js/game.js': b'original nested source'}
+
+    def payload(self, files=None):
+        return self.inputs.frozen_payload(self.meta, self.registration, self.files if files is None else files, self.slug)
+
+    def test_matching_declared_policy_keeps_original_nested_bytes_and_index(self):
+        value = self.payload()
+        self.assertEqual(value['js/game.js'], b'original nested source')
+        self.assertEqual(json.loads(value['assets-index.json']), sorted(set(value) - {'assets-index.json'}))
+
+    def test_missing_or_mismatched_policy_cannot_admit_nested_assets(self):
+        self.registration['assetPolicy']['maxTotalBytes'] -= 1
+        with self.assertRaises(AssertionError): self.payload()
+        self.meta.pop('assetPolicy'); self.registration.pop('assetPolicy')
+        with self.assertRaises((AssertionError, ValueError, RuntimeError)): self.payload()
+
+    def test_unsafe_alias_reserved_and_traversal_names_are_rejected(self):
+        for name in ('js/GAME.js', 'game-config.json', 'assets-index.json', '../outside.js', 'js/../outside.js', '/outside.js', 'js\\bad.js'):
+            with self.subTest(name=name), self.assertRaises((AssertionError, ValueError, RuntimeError)):
+                self.payload({**self.files, 'joystick-games/penguintrack/dist/' + name: b'rejected'})
+
+    def test_default_flat_payload_is_byte_identical_to_original_rule(self):
+        self.meta.pop('assetPolicy'); self.registration.pop('assetPolicy')
+        self.files.pop('joystick-games/penguintrack/dist/js/game.js')
+        value = self.payload()
+        expected = {'tv.html': b'<html>fixture</html>', **{Path(n).name: self.files[n] for n in self.inputs.PHONE}}
+        expected['game-config.json'] = (json.dumps(self.meta, ensure_ascii=False, separators=(',', ':')) + '\n').encode()
+        expected['assets-index.json'] = (json.dumps(sorted(expected), separators=(',', ':')) + '\n').encode()
+        self.assertEqual(value, expected)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
