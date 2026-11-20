@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { createRenderCanvas, webglOutputPolicy } from '../src/boot';
+import { createRenderCanvas, useLegacyCanvasOutput, webglOutputPolicy } from '../src/boot';
 
 it('uses the RGBA8 direct renderer at CSS resolution on identified software GPUs', () => {
   for (const gpu of ['Android Emulator OpenGL ES Translator (Google SwiftShader)', 'Mesa llvmpipe', 'Microsoft Basic Render Driver']) {
@@ -40,5 +40,12 @@ it('only replaces a usable multisampled software context after a single-sample c
     expect(released).toBe(secondNeeded && replacementAvailable);
     expect(result.context).toBe(contexts[contexts.length - 1]);
     expect(result.output.antialias).toBe(gpu === 'Adreno');
+  }
+});
+
+it('isolates the original direct-canvas comparison to the legacy Android translator', () => {
+  expect(useLegacyCanvasOutput('Android Emulator OpenGL ES Translator (Google SwiftShader)')).toBe(true);
+  for (const gpu of ['Adreno (TM) 740', 'ANGLE (Google, SwiftShader)', 'Android Emulator OpenGL ES Translator (ANGLE (Google, Vulkan 1.2.0 (SwiftShader Device (Subzero))))']) {
+    expect(useLegacyCanvasOutput(gpu)).toBe(false);
   }
 });
