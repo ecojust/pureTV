@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "storageRestartRequired": true,
+  "pauseStablePaths": [
+    "gameplay.playerX",
+    "gameplay.playerZ",
+    "gameplay.time",
+    "gameplay.speed",
+    "gameplay.heading",
+    "gameplay.progress"
+  ],
+  "steps": [
+    {
+      "name": "Open racer selection",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 280,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.mode",
+          "op": "eq",
+          "value": "select"
+        }
+      ]
+    },
+    {
+      "name": "Choose the next driver",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 220,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.characterIndex",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Confirm the driver",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 250,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.menuZone",
+          "op": "eq",
+          "value": "opts"
+        }
+      ]
+    },
+    {
+      "name": "Start Palm Cove Circuit and wait for the countdown",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 280,
+      "timeoutSeconds": 240,
+      "expect": [
+        {
+          "path": "gameplay.mode",
+          "op": "eq",
+          "value": "racing"
+        }
+      ]
+    },
+    {
+      "name": "Accelerate in the original physics simulation",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 1500,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "gt",
+          "value": 2
+        },
+        {
+          "path": "gameplay.progress",
+          "op": "changed"
+        }
+      ],
+      "windowsHoldUntilExpect": true
+    },
+    {
+      "name": "Steer into a corner while hopping",
+      "keys": [
+        "UP",
+        "RIGHT",
+        "A"
+      ],
+      "holdMs": 750,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.heading",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Pause",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 300,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Continue with fresh input",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 300,
+      "timeoutSeconds": 40,
+      "expect": [
+        {
+          "path": "gameplay.mode",
+          "op": "eq",
+          "value": "racing"
+        }
+      ]
+    }
+  ]
+}

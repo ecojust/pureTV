@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "storageRestartRequired": true,
+  "pauseStablePaths": ["gameplay.position", "gameplay.floor", "gameplay.hp", "gameplay.steps"],
+  "steps": [
+    {"name":"Enter tower", "keys":["A"], "holdMs":160, "timeoutSeconds":45, "expect":[{"path":"stage","op":"eq","value":"playing"}]},
+    {"name":"Walk east from entrance", "keys":["RIGHT"], "holdMs":300, "timeoutSeconds":30, "expect":[{"path":"gameplay.steps","op":"increased"}]},
+    {"name":"Open monster book", "keys":["Y"], "holdMs":160, "timeoutSeconds":30, "expect":[{"path":"gameplay.overlay","op":"eq","value":"book"}]},
+    {"name":"Return to floor", "keys":["B"], "holdMs":160, "timeoutSeconds":30, "expect":[{"path":"stage","op":"eq","value":"playing"}]},
+    {"name":"Pause", "keys":["START"], "holdMs":160, "timeoutSeconds":30, "expect":[{"path":"stage","op":"eq","value":"paused"}]},
+    {"name":"Resume", "keys":["START"], "holdMs":160, "timeoutSeconds":30, "expect":[{"path":"stage","op":"eq","value":"playing"}]}
+  ]
+}
