@@ -10,7 +10,7 @@
 
 0.1.2 的 Chrome 复验保留了 SwiftShader 提供的两项浮点扩展。设备像素比为 2，逻辑窗口为 960 × 540，游戏按 50% 分辨率绘制，实际缓冲区为 480 × 270。芬兰赛段使用原作的直接渲染路径，按 W 后车辆从 x=54.00 米驶至 67.44 米，随后截图仪表盘显示 45 km/h。[驾驶截图](https://github.com/ecojust/pureTV/blob/18f32db4c550ca50ee864b9ff4b14998ed4146ae/driving.png) · [原始输入、扩展与画面记录](https://github.com/ecojust/pureTV/blob/18f32db4c550ca50ee864b9ff4b14998ed4146ae/driving.log) · [当次脚本](https://github.com/ecojust/pureTV/blob/18f32db4c550ca50ee864b9ff4b14998ed4146ae/drive.cjs)
 
-0.1.2 的 Android TV 原包诊断在新渲染帧上采样 14,400 个画布像素，全部透明。系统截图也只有 HUD 和画布底色。[Android TV 原包报告与截图](docs/android-0.1.2/README.md)
+0.1.2 的 Android TV 原包在 ANGLE/Vulkan 后端可见芬兰赛段的赛车、起跑门和道路。相同 APK 在 swiftshader_indirect 后端只显示 HUD，新渲染帧的 14,400 个画布样本全部透明。[Android TV 原包报告与截图](docs/android-0.1.2/README.md)
 
 ## macOS 下载
 
@@ -20,7 +20,7 @@
 
 ## Android TV 测试下载
 
-0.1.2 APK 支持 Android 8.0 及以上，包名为 `com.ecojust.joystick.backroadrally`，版本号为 3。公开文件与构建签名收据的 SHA-256 一致。包内 333 份网页构建文件与上面 Chrome 驾驶复验使用的文件逐份相同。Android TV 模拟器中，手柄能进入芬兰赛段，计时和仪表正常，赛道和赛车仍不可见。[APK](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/backroad-rally-0.1.2.apk) · [SHA-256](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/SHA256SUMS-Backroad-0.1.2.txt) · [原签名包复核](https://github.com/ecojust/pureTV/actions/runs/44688535161/job/136128536372)
+0.1.2 APK 支持 Android 8.0 及以上，包名为 `com.ecojust.joystick.backroadrally`，版本号为 3。公开文件与构建签名收据的 SHA-256 一致。包内 333 份网页构建文件与上面 Chrome 驾驶复验使用的文件逐份相同。Android TV API 36 模拟器显示的赛道画面取决于图形后端。[APK](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/backroad-rally-0.1.2.apk) · [SHA-256](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/SHA256SUMS-Backroad-0.1.2.txt) · [原签名包复核](https://github.com/ecojust/pureTV/actions/runs/44688535161/job/136128536372)
 
 | 按键 | 比赛中 | 菜单中 |
 | --- | --- | --- |
