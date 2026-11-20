@@ -64,7 +64,8 @@ def resource_card(key, info, prefix, locale, show_download=False):
         cover = directory + cover
     apk = info['apk']
     assert (root / 'resource' / key / apk).stat().st_size == info['apkBytes']
-    content = card_link(directory, cover, name, LOCALES[locale]['alt'].format(name=name))
+    alt = '' if prefix == 'resource/' else LOCALES[locale]['alt'].format(name=name)
+    content = card_link(directory, cover, name, alt)
     if show_download:
         link = escape(directory + apk + '?raw=1')
         download = '下载' if locale == 'zh' else 'Download'
@@ -86,8 +87,7 @@ def management_table(tool_apps, locale):
         platforms = 'Windows, macOS, Linux'
         guide = 'docs/guide/README.en.md#install-or-upgrade-the-desktop-manager'
         download = 'Download'
-    manager = card_link(guide, f'docs/previews/manager-{locale}.png', 'pureTV Manager',
-                        LOCALES[locale]['alt'].format(name='pureTV Manager'))
+    manager = card_link(guide, f'docs/previews/manager-{locale}.png', 'pureTV Manager', '')
     manager += f'<br>{description}<br>{platforms}<br><a href="{release}">{download} {version}</a>'
     cards = [manager]
     cards.extend(resource_card(key, info, 'resource/', locale, show_download=True) for key, info in tool_apps)

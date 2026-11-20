@@ -13,8 +13,8 @@
 
 <table>
   <tr>
-    <td align="center" valign="top" width="207"><a href="docs/guide/README.en.md#install-or-upgrade-the-desktop-manager"><img src="docs/previews/manager-en.png" width="180" alt="pureTV Manager preview"><br>pureTV Manager</a><br>Manage TV apps and launchers from a computer<br>Windows, macOS, Linux<br><a href="https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.9">Download 0.5.9</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/apps/putrtv-store/"><img src="docs/previews/en/app-putrtv-store.png" width="180" alt="putrtv Store preview"><br>putrtv Store</a><br>Browse, install and check TV app updates directly on your television<br>Android TV<br><a href="resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1">Download 0.1.1 APK</a></td>
+    <td align="center" valign="top" width="207"><a href="docs/guide/README.en.md#install-or-upgrade-the-desktop-manager"><img src="docs/previews/manager-en.png" width="180" alt=""><br>pureTV Manager</a><br>Manage TV apps and launchers from a computer<br>Windows, macOS, Linux<br><a href="https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.9">Download 0.5.9</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/putrtv-store/"><img src="docs/previews/en/app-putrtv-store.png" width="180" alt=""><br>putrtv Store</a><br>Browse, install and check TV app updates directly on your television<br>Android TV<br><a href="resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1">Download 0.1.1 APK</a></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
@@ -32,20 +32,20 @@
 
 <table>
   <tr>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/sol/"><img src="docs/previews/en/launcher-sol.png" width="180" alt="Sol TV preview"><br>Sol TV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/pixel/"><img src="docs/previews/en/launcher-pixel.png" width="180" alt="Pixel TV preview"><br>Pixel TV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/moss/"><img src="docs/previews/en/launcher-moss.png" width="180" alt="Moss TV preview"><br>Moss TV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/mono/"><img src="docs/previews/en/launcher-mono.png" width="180" alt="Mono TV preview"><br>Mono TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/sol/"><img src="docs/previews/en/launcher-sol.png" width="180" alt=""><br>Sol TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/pixel/"><img src="docs/previews/en/launcher-pixel.png" width="180" alt=""><br>Pixel TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/moss/"><img src="docs/previews/en/launcher-moss.png" width="180" alt=""><br>Moss TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/mono/"><img src="docs/previews/en/launcher-mono.png" width="180" alt=""><br>Mono TV</a></td>
   </tr>
   <tr>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/forma/"><img src="docs/previews/en/launcher-forma.png" width="180" alt="Forma TV preview"><br>Forma TV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/drift/"><img src="docs/previews/en/launcher-drift.png" width="180" alt="Drift TV preview"><br>Drift TV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/circuit/"><img src="docs/previews/en/launcher-circuit.png" width="180" alt="Circuit TV preview"><br>Circuit TV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/aster/"><img src="docs/previews/en/launcher-aster.png" width="180" alt="Aster TV preview"><br>Aster TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/forma/"><img src="docs/previews/en/launcher-forma.png" width="180" alt=""><br>Forma TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/drift/"><img src="docs/previews/en/launcher-drift.png" width="180" alt=""><br>Drift TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/circuit/"><img src="docs/previews/en/launcher-circuit.png" width="180" alt=""><br>Circuit TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/aster/"><img src="docs/previews/en/launcher-aster.png" width="180" alt=""><br>Aster TV</a></td>
   </tr>
   <tr>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/nova/"><img src="docs/previews/en/launcher-nova.png" width="180" alt="Nova TV preview"><br>Nova TV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/puretv/"><img src="docs/previews/en/launcher-puretv.png" width="180" alt="pureTV Launcher preview"><br>pureTV Launcher</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/nova/"><img src="docs/previews/en/launcher-nova.png" width="180" alt=""><br>Nova TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/puretv/"><img src="docs/previews/en/launcher-puretv.png" width="180" alt=""><br>pureTV Launcher</a></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
@@ -55,14 +55,14 @@
 
 <table>
   <tr>
-    <td align="center" valign="top" width="207"><a href="resource/apps/opera/"><img src="docs/previews/en/app-opera.png" width="180" alt="Opera TV preview"><br>Opera TV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/apps/bilibili/"><img src="docs/previews/en/app-bilibili.png" width="180" alt="BiliTV preview"><br>BiliTV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/apps/cctv/"><img src="docs/previews/en/app-cctv.png" width="180" alt="CCTV Live preview"><br>CCTV Live</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/apps/hifini/"><img src="docs/previews/en/app-hifini.png" width="180" alt="HIFINi TV preview"><br>HIFINi TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/opera/"><img src="docs/previews/en/app-opera.png" width="180" alt=""><br>Opera TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/bilibili/"><img src="docs/previews/en/app-bilibili.png" width="180" alt=""><br>BiliTV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/cctv/"><img src="docs/previews/en/app-cctv.png" width="180" alt=""><br>CCTV Live</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/hifini/"><img src="docs/previews/en/app-hifini.png" width="180" alt=""><br>HIFINi TV</a></td>
   </tr>
   <tr>
-    <td align="center" valign="top" width="207"><a href="resource/apps/webtv/"><img src="docs/previews/en/app-webtv.png" width="180" alt="WebTV preview"><br>WebTV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/apps/shortvideo/"><img src="docs/previews/en/app-shortvideo.png" width="180" alt="ShortVideo TV preview"><br>ShortVideo TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/webtv/"><img src="docs/previews/en/app-webtv.png" width="180" alt=""><br>WebTV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/shortvideo/"><img src="docs/previews/en/app-shortvideo.png" width="180" alt=""><br>ShortVideo TV</a></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
