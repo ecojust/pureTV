@@ -48,9 +48,9 @@ pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电�
 
 ### 在电脑上玩
 
-Windows x64 用户打开游戏启动器，用方向键选择游戏，按回车开始。启动器首次下载并校验游戏，在默认浏览器中打开。之后可从本机缓存启动。键盘操作按各游戏画面的提示，也可以连接同一局域网内的 pureTV 无线手柄。游玩时请保持启动器运行。[下载 Windows 启动器](https://raw.githubusercontent.com/ecojust/pureTV/d03513ef9f6d775bf0cd9530582826dce98cd6af/tools/pc-games/packages/pureTV-Games.exe)
+Windows x64 用户打开游戏启动器，用方向键选择游戏，按回车开始。启动器首次下载并校验游戏，在默认浏览器中打开。之后可从本机缓存启动。键盘操作按各游戏画面的提示，也可以连接同一局域网内的 pureTV 无线手柄。游玩时请保持启动器运行。[下载 Windows 启动器](https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/tools/pc-games/packages/pureTV-Games.exe)
 
-macOS 和 Linux 用户可解压便携包，在解压目录用 Python 3.10 或更新版本运行下面的命令。若要直接打开某款游戏，可在启动命令后加游戏 ID，例如 `.venv/bin/python launcher.py tetris`。[下载便携启动器](https://raw.githubusercontent.com/ecojust/pureTV/d03513ef9f6d775bf0cd9530582826dce98cd6af/tools/pc-games/packages/pureTV-Games-portable.zip)
+macOS 和 Linux 用户可解压便携包，在解压目录用 Python 3.10 或更新版本运行下面的命令。若要直接打开某款游戏，可在启动命令后加游戏 ID，例如 `.venv/bin/python launcher.py tetris`。[下载便携启动器](https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/tools/pc-games/packages/pureTV-Games-portable.zip)
 
 ```sh
 python3 -m venv .venv

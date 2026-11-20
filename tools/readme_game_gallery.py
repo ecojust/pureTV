@@ -56,7 +56,7 @@ def game_catalog(genres, resources, english, root):
 
 
 PLAYER_DOWNLOADS = (
-    'https://raw.githubusercontent.com/ecojust/pureTV/d03513ef9f6d775bf0cd9530582826dce98cd6af/'
+    'https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/'
     'tools/pc-games/packages/'
 )
 
