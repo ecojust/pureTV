@@ -1,0 +1,83 @@
+name: Verify game input after the visible menu is ready
+on:
+  push:
+    branches: [qa/catalog-input-recheck-20261120]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - game: kart-royale
+            mode: phone
+          - game: emberbrood
+            mode: pc
+    env:
+      GAME: ${{ matrix.game }}
+      MODE: ${{ matrix.mode }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /joystick-games/qa/controller-input/
+            /joystick-games/${{ matrix.game }}/dist/
+            /joystick-games/${{ matrix.game }}/game.json
+            /resource/game-kit/web/controller.*
+            /resource/game-kit/android/src/main/java/com/ecojust/gamekit/
+            /tools/pc-games/
+            /puretv-joystick/joystick_sdk.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        if: matrix.mode == 'phone'
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Verify the original frozen game and its input
+        run: |
+          python -m pip install 'playwright==1.62.0' -r tools/pc-games/requirements.txt
+          python joystick-games/qa/controller-input/payloads.py --output "$RUNNER_TEMP/games" "$GAME"
+          ARGS=()
+          if [ "$MODE" = phone ]; then
+            curl --fail --location --retry 3 https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar --output "$RUNNER_TEMP/zxing.jar"
+            curl --fail --location --retry 3 https://repo.maven.apache.org/maven2/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar --output "$RUNNER_TEMP/android-json.jar"
+            echo "8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82  $RUNNER_TEMP/zxing.jar" | sha256sum -c -
+            echo "dfb7bae2f404cfe0b72b4d23944698cb716b7665171812a0a4d0f5926c0fac79  $RUNNER_TEMP/android-json.jar" | sha256sum -c -
+            ARGS+=(--android-json "$RUNNER_TEMP/android-json.jar" --zxing "$RUNNER_TEMP/zxing.jar")
+          fi
+          python "joystick-games/qa/controller-input/$MODE.py" --chromium "$(command -v google-chrome)" --payloads "$RUNNER_TEMP/games" --output "$RUNNER_TEMP/result" --timeout 300 "${ARGS[@]}" "$GAME"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frozen-${{ matrix.mode }}-retest
+          path: ${{ runner.temp }}/result/
+  receipts:
+    needs: check
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/receipts
+      - name: Preserve original per-game results
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd "$RUNNER_TEMP/receipts"
+          test "$(find . -name '*.json' | wc -l)" -ge 1
+          git init -q
+          git config user.name github-actions
+          git config user.email github-actions@users.noreply.github.com
+          git add .
+          git commit -qm "Preserve original frozen game reports from $GITHUB_RUN_ID"
+          gh auth setup-git
+          git push "https://github.com/$GITHUB_REPOSITORY.git" "HEAD:refs/heads/build-assets/catalog-controller-recheck-$GITHUB_RUN_ID"
