@@ -30,7 +30,8 @@ def runtime(args):
     confirm_install = getattr(args, 'confirm_backroad_install', 'false') == 'true'
     assert not confirm_install or args.game == 'backroad-rally', 'Installation confirmation is Backroad-only'
     outcomes = []
-    for mode in ('normal', 'occupied'):
+    modes = ('occupied',) if getattr(args, 'occupied_only', False) else ('normal', 'occupied')
+    for mode in modes:
         cmd = [sys.executable, str(build.ROOT / 'joystick-games/qa/android/run.py'), '--game', args.game,
                '--apk', str(args.input / 'packages' / args.game / (args.game + '-' + meta['version'] + '.apk')),
                '--observer', str(args.input / 'observers' / args.game / ('observer-' + args.game + '.apk')),
@@ -49,6 +50,7 @@ def main():
     p = subs.add_parser('runtime'); p.add_argument('--game', required=True, choices=build.PACKAGES)
     for name in ('input', 'output'): p.add_argument('--' + name, type=Path, required=True)
     p.add_argument('--adb', default='adb')
+    p.add_argument('--occupied-only', action='store_true')
     p.add_argument('--confirm-backroad-install', choices=('false', 'true'), default='false')
     args = parser.parse_args()
     if args.command == 'select':

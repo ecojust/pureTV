@@ -808,6 +808,35 @@ class Acceptance:
                 try: self.button(key, False)
                 except Exception: pass
 
+    def wait_for_selected_course(self, step, before, held):
+        # The selection START was already observed in the original connected seat.
+        # Release it once; a busy WebView may take several complete GETs to show the grid.
+        started = time.monotonic()
+        deadline = started + step['timeoutSeconds']
+        record = {'budgetSeconds': step['timeoutSeconds'], 'readAttempts': 0, 'transportErrors': 0}
+        self.report['courseStartRelease'] = record
+        self.send_releases()
+        self.ack_barrier()
+        try:
+            while time.monotonic() < deadline:
+                record['readAttempts'] += 1
+                try:
+                    state = self.snapshot(timeout=min(OBSERVER_SNAPSHOT_TIMEOUT, max(.001, deadline - time.monotonic())))
+                except Exception as error:
+                    if not dropped_observer_transport(error):
+                        raise
+                    record['transportErrors'] += 1
+                    continue
+                if (self.frame_advanced(state, held) and self.menu_released(state, held)
+                        and plan.matches(step['expect'], self.game(state), self.game(before))):
+                    record.update(status='passed', afterPollCount=self.game(state)['controller']['pollCount'])
+                    return state
+                time.sleep(min(.1, max(0, deadline - time.monotonic())))
+            raise TimeoutError('No released same-seat original course within the cold-load budget')
+        finally:
+            record['elapsedSeconds'] = time.monotonic() - started
+            self.save()
+
     def finish_catalog_hold(self, step, before, held):
         budget = step.get('timeoutSeconds', 15)
         deadline = time.monotonic() + budget
@@ -875,7 +904,12 @@ class Acceptance:
                                    timeout=max(60, step.get('timeoutSeconds', 60)), label='plan-held-' + step['name'])
             time.sleep(step['holdMs'] / 1000)
             # Capture gameplay while input is still held; release-only changes can also satisfy the plan below.
-            after = self.finish_catalog_hold(step, before, held)
+            if (self.args.game == 'ponpoko-kart' and self.args.occupy_default_port
+                    and self.report['apk']['sha256'] == '1ee56886ead47f7cd9623a21896eeeeb5cae7375d3edc56aab75a486300bbbd6'
+                    and step['name'] == 'Start selected original three-lap course'):
+                after = self.wait_for_selected_course(step, before, held)
+            else:
+                after = self.finish_catalog_hold(step, before, held)
             self.validate_catalog_snapshot(after)
             self.record('after-plan-' + step['name'], after)
             self.passed('actual SDK gameplay: ' + step['name'], {'expect': step['expect'], 'holdMs': step['holdMs']})

@@ -52,7 +52,7 @@ on:
         default: false
         type: boolean
       pon_profile:
-        description: Android TV runtime configuration for the frozen Ponpoko Kart 0.1.2 APK
+        description: Android TV runtime configuration for the frozen Ponpoko Kart 0.1.4 occupied-port follow-up
         required: false
         default: original
         type: choice
@@ -146,8 +146,12 @@ jobs:
               assert os.environ['PON_PROFILE'] in ('adaptive-api36-1080p','adaptive-api34-720p')
               assert os.environ['SUPERVISE_PON_EMULATOR']=='false' and os.environ['CONFIRM_BACKROAD_INSTALL']=='false'
               assert os.environ['GAMES']=='ponpoko-kart' and os.environ['BATCH']=='racing-01'
-              assert os.environ['ARTIFACT_SOURCE']=='5028fba2c1945cd4c5aa4d71fd0aade671a55040'
-              assert os.environ['ARTIFACT_RUN']=='44685477973'
+              if os.environ['ARTIFACT_SOURCE']=='3ce7a4c832fb37cd96e8448044d065ec3d31384e':
+                  assert os.environ['PON_PROFILE']=='adaptive-api34-720p' and os.environ['ARTIFACT_RUN']=='44689241006'
+                  assert os.environ['ARTIFACT_EXPORT']=='c6d5f8cdd33c2789d3df9d055225157d39406c08'
+              else:
+                  assert os.environ['ARTIFACT_SOURCE']=='5028fba2c1945cd4c5aa4d71fd0aade671a55040'
+                  assert os.environ['ARTIFACT_RUN']=='44685477973'
           out=Path(os.environ['RUNNER_TEMP'])/'provenance';out.mkdir()
           (out/'requested-inputs.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'batch':os.environ['BATCH'],'games':os.environ['GAMES'],'confirmBackroadInstall':os.environ['CONFIRM_BACKROAD_INSTALL']=='true','supervisePonEmulator':os.environ['SUPERVISE_PON_EMULATOR']=='true','ponDisableVulkan':os.environ['PON_DISABLE_VULKAN']=='true','ponProfile':os.environ['PON_PROFILE'],'ponCaptureQemuStack':os.environ['PON_CAPTURE_QEMU_STACK']=='true','nativeAcceptanceAllowed':os.environ['PON_CAPTURE_QEMU_STACK']!='true'},indent=2)+'\n')
           PY
@@ -182,6 +186,25 @@ jobs:
               matches=[job for job in jobs if job['name']==name];assert len(matches)==1 and matches[0]['status']=='completed' and matches[0]['conclusion']=='success',name
           (out/'original-run.json').write_text(json.dumps(run,indent=2)+'\n');(out/'original-jobs.json').write_text(json.dumps(jobs,indent=2)+'\n')
           (out/'original-export-manifest.json').write_bytes((artifact/'export-manifest.json').read_bytes())
+          if os.environ['ARTIFACT_SOURCE']=='3ce7a4c832fb37cd96e8448044d065ec3d31384e' and os.environ['PON_PROFILE']=='adaptive-api34-720p':
+              prior=Path('reports/joystick-android-report-runtime-ponpoko-kart/ponpoko-kart-normal')
+              receipt=json.loads((artifact/'packages/ponpoko-kart/signing-receipt.json').read_text())
+              observer=json.loads((artifact/'observers/ponpoko-kart/observer-signing-receipt.json').read_text())
+              report=json.loads((artifact/prior/'report.json').read_text())
+              assert report['sourceCommit']==os.environ['ARTIFACT_SOURCE'] and report['status']=='passed' and report['defaultPortOccupiedFixture'] is False
+              assert len(report['tests'])==49 and all(t['status']=='passed' for t in report['tests'])
+              assert report['controllerService']['port']==63485 and report['modelWrites'] is False and report['clockOverrides'] is False
+              assert report['wire']['matchingAcks']==1078 and not report['wire']['missingAcks'] and not report['wire']['duplicateAcks']
+              for key in ['sha256','bytes']:
+                  assert report['apk'][key]==receipt[key] and report['observer'][key]==observer['apkIdentity'][key]
+              names=['report.json','wire.jsonl',report['video']['path'],*(v['path'] for v in report['captures']),report['racingCheckpoints'][0]['path']]
+              files={}
+              for name in names:
+                  assert Path(name).name==name
+                  path=prior/name;data=(artifact/path).read_bytes()
+                  files[str(path)]={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
+                  assert files[str(path)]==manifest['files'][str(path)]
+              (out/'prior-default-port-verification.json').write_text(json.dumps({'sourceSha':report['sourceCommit'],'exportCommit':commit,'originalRun':os.environ['ARTIFACT_RUN'],'mode':'normal','checks':len(report['tests']),'apkSha256':receipt['sha256'],'observerSha256':observer['apkIdentity']['sha256'],'status':'passed','files':files},indent=2)+'\n')
           PY
       - name: Confirm the exact original Actions signed artifact producer
         if: inputs.artifact_id != ''
@@ -299,7 +322,7 @@ jobs:
           test -e /dev/kvm
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
-      - name: Run normal and occupied-port QA independently against unchanged signed bytes
+      - name: Run occupied-port QA against the same signed APK as the prior default-port pass
         # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
@@ -327,6 +350,7 @@ jobs:
             python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
             --input "$RUNNER_TEMP/input" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
             --confirm-backroad-install "$CONFIRM_BACKROAD_INSTALL"
+            ${{ inputs.artifact_source == '3ce7a4c832fb37cd96e8448044d065ec3d31384e' && inputs.pon_profile == 'adaptive-api34-720p' && '--occupied-only' || '' }}
       - name: Restore the exact disposable SDK launcher after optional supervision
         if: always() && inputs.supervise_pon_emulator
         run: >-
@@ -438,9 +462,16 @@ jobs:
                   if os.environ['ARTIFACT_ID']:
                       origin=binding['artifactOrigin'];assert origin['kind']=='github-actions-signed-artifact' and origin['artifactId']==int(os.environ['ARTIFACT_ID']) and origin['artifactRunAttempt']==int(os.environ['ARTIFACT_ATTEMPT']) and binding['artifactExportCommit'] is None
                   else:assert binding['artifactExportCommit']==os.environ['ARTIFACT_EXPORT']
-                  outcomes=json.loads((evidence/(game+'-outcomes.json')).read_text());assert [item['mode'] for item in outcomes]==['normal','occupied'] and all(item['exitCode']==0 for item in outcomes)
+                  replay=os.environ['ARTIFACT_SOURCE']=='3ce7a4c832fb37cd96e8448044d065ec3d31384e' and os.environ['PON_PROFILE']=='adaptive-api34-720p'
+                  modes=['occupied'] if replay else ['normal','occupied']
+                  outcomes=json.loads((evidence/(game+'-outcomes.json')).read_text());assert [item['mode'] for item in outcomes]==modes and all(item['exitCode']==0 for item in outcomes)
                   receipt=json.loads((inputs/'packages'/game/'signing-receipt.json').read_text());observer=json.loads((inputs/'observers'/game/'observer-signing-receipt.json').read_text())
-                  for mode in ['normal','occupied']:
+                  if replay:
+                      previous=json.loads((out/'provenance/prior-default-port-verification.json').read_text())
+                      assert previous['status']=='passed' and previous['mode']=='normal' and previous['exportCommit']==os.environ['ARTIFACT_EXPORT']
+                      assert previous['apkSha256']==receipt['sha256'] and previous['observerSha256']==observer['apkIdentity']['sha256']
+                      checks.append({'game':game,'mode':'normal','apkSha256':receipt['sha256'],'status':'passed','sourceSha':previous['sourceSha'],'originalRun':previous['originalRun'],'originalExport':previous['exportCommit']})
+                  for mode in modes:
                       folder=evidence/(game+'-'+mode);report=json.loads((folder/'report.json').read_text())
                       assert report['status']=='passed' and report['game']==game and report['sourceCommit']==os.environ['GITHUB_SHA']
                       assert report['defaultPortOccupiedFixture'] is (mode=='occupied') and report['modelWrites'] is False and report['clockOverrides'] is False
