@@ -145,8 +145,11 @@ class SupervisorTests(unittest.TestCase):
                            ('ARTIFACT_EXPORT', 'c'*40), ('ARTIFACT_ID', '1'), ('PON_CAPTURE_QEMU_STACK', '1')]:
             with self.subTest(key=key), self.assertRaises(AssertionError):
                 m.capture_stack(dict(environment, **{key: value}))
-        with patch.dict(os.environ, environment), self.assertRaises((AssertionError, KeyError, FileNotFoundError)):
-            m.prepare(self.sdk, self.output)
+        helper = m.stack_module(MODULE.with_name('android-qemu-stack.py'))
+        environment['RUNNER_TEMP'] = str(self.root / 'runner-temp-without-gate')
+        with patch.dict(os.environ, environment), patch.object(m, 'stack_module', return_value=helper):
+            with self.assertRaisesRegex(helper.Rejected, '^Missing bounded permission gate$'):
+                m.prepare(self.sdk, self.output)
         self.assertEqual(self.entry.read_bytes(), self.original)
         self.assertFalse(self.entry.with_name(m.BACKUP_NAME).exists())
 
@@ -191,6 +194,13 @@ class SupervisorTests(unittest.TestCase):
         selection = "${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}"
         self.assertEqual(options.count(selection), 1)
         prefix = ['-port', '5554', '-avd', 'JoystickGamesValidation']
+        backroad_driver = "${{ matrix.game == 'backroad-rally' && 'lavapipe' || 'swiftshader_indirect' }}"
+        self.assertEqual(options.count(backroad_driver), 1)
+        rally_args = prefix + options.replace(backroad_driver, 'lavapipe').replace(selection, '').split()
+        expected_rally = list(m.EXPECTED_ARGS)
+        expected_rally[expected_rally.index('-gpu') + 1] = 'lavapipe'
+        self.assertEqual(rally_args, expected_rally)
+        options = options.replace(backroad_driver, 'swiftshader_indirect')
         self.assertEqual(prefix + options.replace(selection, '').split(), m.EXPECTED_ARGS)
         self.assertEqual(prefix + options.replace(selection, ' -feature -Vulkan').split(),
                          m.EXPECTED_ARGS + ['-feature', '-Vulkan'])
