@@ -1,0 +1,1183 @@
+# Technical reference
+
+This page gives the technical details of the web game: the controls, the URL options,
+the systems and the tools. The text is in ASD-STE100 Simplified Technical English.
+For the story of how the game was made, read [the making-of](making-of/README.md).
+
+## Contents
+
+- [Development](#development)
+- [Menus](#menus)
+- [A stage run](#a-stage-run)
+- [Settings](#settings)
+- [Saves](#saves)
+- [Career](#career)
+- [Ghosts](#ghosts)
+- [Stages](#stages)
+- [Keys and gamepad](#keys-and-gamepad)
+- [URL options](#url-options)
+- [The look](#the-look)
+- [Weather](#weather)
+- [Quality tiers and performance](#quality-tiers-and-performance)
+- [Browsers](#browsers)
+- [Effects](#effects)
+- [Damage](#damage)
+- [HUD](#hud)
+- [Audio](#audio)
+- [Handling tests](#handling-tests)
+- [Asset conversion](#asset-conversion)
+- [Checks in a browser](#checks-in-a-browser)
+
+## Development
+
+You need Node 24 or later.
+
+```sh
+npm ci
+npm run dev        # http://localhost:5173/
+npm test           # unit tests
+npm run test:handling   # headless handling tests (all cars, both surfaces)
+npm run build      # production build into dist/, served under /backroad-rally/
+```
+
+### The build and the cache
+
+- **Content hashes.** The build gives each file in `public/` a content hash
+  (`vite.config.ts`) and adds it to each URL that the game fetches at runtime:
+  `data/fx.json?v=422aaad973` (`src/data.ts` `publicUrl`). GitHub Pages lets browsers
+  keep each file for 10 minutes (`max-age=600`). After a deploy, a normal reload gets
+  the new page, the page gets the new bundle, and the bundle asks for each changed file
+  with a new URL. Files that did not change keep their URL and stay in the cache.
+  `tools/check/cachebust.mjs` tests this.
+- **Compressed models.** GitHub Pages compresses text files, but not binary files. The
+  build thus compresses each GLB with gzip to `.glb.gz` (stages −23 to −34%, cars −84%),
+  and the game unpacks it with `DecompressionStream` (`src/data.ts` `loadGlb`).
+- **Chunks.** three.js (290 kB with gzip) and Rapier (1.7 MB with gzip, with its
+  WebAssembly inside) are separate chunks. They change only when a dependency changes, so
+  a deploy of new game code does not download them again.
+- **Prefetch.** When the menus show, the game fetches in the background what a run on the
+  backdrop's stage needs in addition: the effect, damage and HUD data, the rival lines and
+  the car models. The stage files are already in the cache, because the backdrop is that
+  stage. A stage page starts its small data files together with the big ones.
+
+### Load time
+
+Measured with `tools/check/load.mjs` (20 Mbit/s, 20 ms latency, a cold cache, headless
+Chrome on the integrated GPU, `tools/check/serve.mjs`):
+
+| | Before (slice 10) | Now |
+|---|---|---|
+| Title: time | 8.2–8.4 s | 8.1–8.6 s |
+| Title: download | 7.49 MB, 33 requests | 6.43 MB, 35 requests |
+| Quick stage (wales) from the title: curtain up / countdown | 6.5–7.0 s / 9.0–9.5 s | 6.6–7.4 s / 9.1–9.9 s |
+| Quick stage: download | 6.56 MB | 5.41 MB |
+| Again, with the cache: title / stage | 2.9 s / 3.1 s | 3.0 s / 3.2 s |
+| A deploy of new game code: JavaScript to download again | 2.03 MB | 0.10 MB |
+
+The time is mostly not the network: the build of the stage, the warm-up of every shader
+(about 1.1 s) and the auto quality measurement (1.5 to 2.5 s) are behind the curtain. The
+warm-up now draws every mesh of the stage, so that no shader compiles during the run.
+
+## Menus
+
+The game opens on the title screen. The menus are in `src/menu/`. They are lowercase
+Inter text on light panels, as in the original.
+
+| Screen | Contents |
+|---|---|
+| Title | career, quick stage, time attack, settings |
+| Career hub | The season, the group and the era, your points and place, the restarts left, the four rallies with their stages, then "start rally", "next stage" or "rally results", "standings", "new career", "back" (see [Career](#career)) |
+| Garage | The car and its livery, the spec sheet and the bio, "choose stage" ("start rally" in the career: the season's cars only), "back" |
+| Stage select | The stage (with its flag), the direction, the time of day, the weather, the best time, "start", "back" |
+| Loading card | The stage name, the location, the length, the direction, the time of day, the weather, the mode, the car and the controls |
+| Rally results, standings, season complete | After each rally of the career (see [Career](#career)) |
+
+- **Quick stage** has half damage (`menu.json` `quick_damage_level`). **Time attack** has no
+  damage. Both race the ghost of your best run and the rival ghosts (see [Ghosts](#ghosts)).
+- **Time of day and weather.** "(default)" is the stage's own choice for the direction.
+- **Locked cars and liveries.** A fresh save has the swift and the pip (`career.json`
+  `start_cars`). The other cars and the bonus liveries are locked, as in the original: the
+  car is out of focus under a turning padlock, and "choose stage" is refused. The career
+  unlocks them. `?unlockall` unlocks all of them for development.
+- **The backdrop** is a live diorama: the stage of the selected location, with the selected
+  car parked on the road and a camera that turns around it (`menu.json` `diorama`). The car,
+  the livery and the time of day change at once. A different location or weather loads the
+  page again behind the curtain, with the menu as it was. The diorama has no crowd, no
+  effects and no engine sound.
+- **Music.** The menu tracks play (`audio_mix.json` `menu`). The song continues when the
+  backdrop changes. The bottom right shows the song.
+- **Input.** Keyboard, mouse and gamepad move one highlight:
+
+| Action | Keyboard | Mouse | Gamepad |
+|---|---|---|---|
+| Choose a row | Up / Down (or W / S) | Hover, or the wheel | D-pad or left stick |
+| Change a value | Left / Right (or A / D) | Click the value or ‹ ›, right click for −1, hold an arrow to repeat | D-pad or left stick |
+| Select | Enter or Space | Click | A |
+| Back | Esc or Backspace | | B |
+| Next song | . (, for the previous) | | Right shoulder |
+
+### Page flow
+
+The menus and a stage run are separate page loads. When you start a stage, quit a stage
+or change the backdrop, the page loads again. Thus the old stage releases all its memory.
+`sessionStorage` keeps the screen, the selections and the song for the next page. A stage
+run from the menus has an address like
+`?mode=quick&stage=wales&car=pip&livery=1&cond=stage&weather=stage`. A career stage has
+`?mode=career`: the page takes the stage, the car and the livery from the save, not from
+the address. An address with
+`?stage=`, `?car=` or `?autopilot=` and no `?mode=` goes directly to the stage, as before
+the menus (for development and the check scripts).
+
+### Loading indicator
+
+All waits between screens show one loading indicator: the lowercase word "loading" and
+three dots that pulse, in Inter, in the soft ink of the menus (`src/menu/busy.ts`,
+`.busy` in `src/style.css`). It tells you what loads:
+
+| Where | Text | Position |
+|---|---|---|
+| The first load, before the game code starts | loading | On the curtain, to the right of where the menu panel comes |
+| The menus while the backdrop builds or changes (another location or weather) | loading, then rally phrases (see below) | On the curtain, halfway between the right edge of the panel and the right edge of the screen |
+| The loading card of a stage | loading stage, then rally phrases (see below) | In the card, where the card had "loading" |
+| Quit to the menu, or a career rally that is complete | loading | On the curtain |
+| The career's next stage | loading stage | In the loading card of the next stage, which comes down over the results |
+| The garage, while the model of another car downloads | loading car | Over the car, on a small light panel |
+
+"Preparing graphics" is the shader warm-up and the auto quality measurement (see
+[Auto quality](#auto-quality)). On a first visit it can take several seconds.
+
+These rules apply:
+
+- The indicator waits 0.25 s, then fades in. A short wait (a car from the cache, a
+  restart) shows nothing.
+- When a page goes to the next page, it keeps its curtain and card in `sessionStorage`
+  (`backroad-rally.boot`). `index.html` shows them again before the first paint of the
+  next page, with the indicator already on. Thus the screen does not go blank between
+  the pages, and the indicator does not wait again.
+- The animation changes only the opacity. The browser's compositor runs it, so the dots
+  keep their movement while the main thread builds shaders. Before the warm-up starts,
+  the game changes the text and lets the page draw one frame.
+- During the shader warm-up and the auto quality settle, the text is a rally phrase,
+  for example "warming the engine", "checking the oil" or "reading the pace notes"
+  (`GETTING_READY` in `src/menu/busy.ts`, 18 phrases). A new phrase comes every 2.5 s,
+  in a random order with no repeat until all have shown. A timer on the main thread
+  changes the phrase, so a phrase can stay longer while shaders build.
+- The indicator is in the curtain or in the card. It fades with them (0.6 s on a stage,
+  0.8 s in the menus). When they are gone it has `display: none`, so it costs nothing
+  during a run.
+- With `prefers-reduced-motion`, the dots do not move: the text is a static
+  "loading...".
+- `index.html` preloads the Inter font of the indicator. The font has `font-display:
+  block`, so without the preload the text was invisible until the font loaded.
+
+## A stage run
+
+A run has these steps:
+
+1. The loading card stays until the stage draws steadily: 45 frames in sequence under
+   25 ms (at least 1.5 s, at most 6 s). Then it fades out in 0.6 s. The simulation does not
+   start before this.
+2. An intro card shows for 2.5 s.
+3. A 3-2-1 countdown starts. The clock starts on "go".
+4. You drive about 3 km to the finish arch.
+5. The car coasts for 3 s. Then the results show: the time, the penalties, the total and,
+   in quick stage and time attack, the best time ("new best time" when you beat it) and the
+   rival ghosts that raced. Select "restart stage", "choose another stage" or "main menu".
+   In the career, the results show the stage with all the rivals (see [Career](#career)).
+
+**Pause.** Esc or the gamepad's Start opens the pause menu: resume, restart stage, recover
+car (+5 s), settings, quit to menu. In the career, the menu shows the restarts that are
+left, and "quit to career" keeps the career at this stage. The pause stops the simulation, the stage clock, the
+effects and all sounds except the music and the menu sounds.
+
+These rules apply during the run:
+
+- The car can go more than 12 m off the road for 0.4 s. Then the game puts it back on
+  the road a few metres behind. The car is stopped, and you get a +5 s penalty.
+- R (recover) does the same, with the same +5 s penalty.
+- Enter restarts the stage (outside the menus).
+- A sufficiently hard crash wrecks the car. The car coasts to a stop, and the run ends as
+  "dnf · terminal damage".
+
+## Settings
+
+The settings screen is in the title menu and in the pause menu
+(`src/menu/settingsPanel.ts`). A change applies at once and is saved at once.
+
+| Page | Row | Values (default) |
+|---|---|---|
+| settings | camera | near / default / far / top (default) |
+| | field of view | 30–56° in steps of 2 (the camera's own, 40°) |
+| | stability assist | off–100% in steps of 25 (100%) |
+| | counter-steer assist | off–100% in steps of 25 (100%) |
+| | traction assist | on / off (on) |
+| | speed units | km/h / mph |
+| | speed display | number / dial |
+| | hud size | 80–130% (100%) |
+| | ghost of best run | on / off (on). It applies at once. |
+| | rival ghosts | off / 3 / all (3). Quick stage and time attack race 3 or all nine rivals. The career races all of them unless the setting is off. It applies at the next start. |
+| sound | master, music, effects, engine, tyres and surface, crowd, ambience, weather, interface | off–100% in steps of 10 (master 80%, the groups 100%); sound on / muted |
+| display & graphics | display | window / fullscreen |
+| | graphics quality | auto / low / medium / high (auto) |
+| | frame-rate limit | 30 / 60 / 120 / 144 fps / uncapped (60) |
+| | render resolution | auto / 100% to 50% in steps of 5 (auto) |
+| | draw distance | near / medium / far / max (far) |
+
+- The assists multiply the car's own assist values (`cars_tuning.json`). At 100%, the car
+  is the same as in the handling tests.
+- **Graphics quality.** Auto is the adaptive ladder (see
+  [Auto quality](#auto-quality)). The original's highest tier, "epic", is high here: the
+  web version has no higher tier.
+- **Render resolution and draw distance are separate knobs.** Render resolution draws fewer
+  pixels, and the browser stretches them to the window. "Auto" lets the quality ladder set
+  it. Draw distance sets how far trees, shrubs and plants show.
+- **Frame-rate limit.** The game loop skips the display's frames that come too early. Auto
+  quality then counts a frame as slow only when it is later than the limit allows.
+- **The debug panel** (F3) is off by default.
+- The original had four volume rows on page 1. The web version shows all nine mix groups
+  on their own page.
+
+The settings stay in the browser (`src/settings.ts`), with one `localStorage` key for each
+section:
+
+| Key | Contents |
+|---|---|
+| `backroad-rally.hud` | `v`, units, speed display, HUD size, the debug panel |
+| `backroad-rally.game` | camera, field of view, stability, counter-steer, traction assist, ghost, rival ghosts |
+| `backroad-rally.display` | quality, frame-rate limit, render resolution, draw distance |
+| `backroad-rally.audio` | master, mute, the volume of each group |
+| `backroad-rally.run` | the last selections: stage, direction, time of day, weather, car, livery |
+
+## Saves
+
+The save is in `src/game/save.ts`, under the `localStorage` key `backroad-rally.save`. It
+has a version number (now 1).
+
+| Field | Contents |
+|---|---|
+| `best` | The best total time (penalties included) for each mode, stage, direction, car and weather, for example `quick:finland:fwd:swift:clear`, with the car and the date. The original kept one time for each car group. |
+| `unlocks` | `groups`, `cars`, and `liveries` (the cars with an unlocked bonus livery) |
+| `career` | The career in progress (see [Career](#career)), empty until a career starts |
+
+- A missing, unreadable or damaged save loads as the defaults. The game keeps each field
+  that is still valid. The career has its own check: each field that is not valid goes back
+  to its default.
+- The ghosts of the best runs are not in the save. Each ghost has its own key (see
+  [Ghosts](#ghosts)), so a bad ghost cannot damage the save.
+- An older save is migrated. A save from a newer version keeps the fields that this version
+  knows.
+- Only finished runs in quick stage and time attack record a best time. A retirement does not.
+
+## Career
+
+The career is in `src/game/career.ts` (the rules) and `src/menu/menu.ts` (the screens). It
+uses `career.json` format 2, as the original.
+
+- **Seasons.** There are four seasons: group 2 (1960s), group 4 (1970s), group b (1980s) and
+  group a (1990s). Each season has four rallies. Each rally has two stages: forward, then
+  reverse. The time of day and the weather are fixed for each stage.
+- **Cars.** The garage shows only the cars of the season. You select the car and the livery
+  at the start of each rally.
+- **Service and damage.** At the start of a rally the car is repaired. Damage stays between
+  the two stages of a rally, at the career's damage level (`damage_level` 1.0). The damage
+  lights show the damage from the stage before.
+- **Restarts.** You have three restarts in each season. When you restart after the result
+  is saved, the stage goes back to how it was before the start, and the rivals keep their
+  times.
+- **Save.** The game saves after each stage and at the start of each stage. "Quit to career" keeps
+  the career at the current stage.
+- **Results.** After each stage: the stage table with the nine rivals (position, stage time,
+  gap, the rally total from the second stage, a note for a rival that crashed). After the
+  last stage of a rally: "continue · rally results". Then the rally results (total, gap,
+  points), the season standings and, after the last rally, the "season complete" card
+  with the unlocks.
+- **Unlocks.** A finished season unlocks the next group and its cars. A season podium (first
+  to third) unlocks the bonus livery of each car that you drove in that season.
+- **New career.** "New career" starts again from group 2. The unlocks and the best times
+  stay.
+
+### The rival simulation
+
+Each of the nine rivals has a skill from 1.0 to 1.12. The rival's stage time is
+`target × (skill + 0.012 × N(0, 1))`:
+
+- `target` is `target_times[stage][fwd|rev][group]` in clear weather. In rain or snow it is
+  `target_times_weather[stage][fwd|rev][weather][group]`. Without a measured value it is the
+  clear target × `weather_factor[weather][surface]`.
+- A rival crashes with a chance of 5% and loses 5 to 25 s. A rival retires (dnf) with a
+  chance of 1.2%.
+- The random stream is a port of UE's `FRandomStream` and `HashCombine`. The seed comes from
+  the career seed, the season, the rally, the stage and the group. Thus a restart does not
+  change the rivals' times. A new career adds 7919 to the seed.
+
+### Points and standings
+
+- Points for the rally classification: 25, 18, 15, 12, 10, 8, 6, 4, 2, 1. A dnf in a stage
+  is a dnf for the rally, and a dnf gets no points.
+- In the stage table, the finishers come first by time, then the dnf rows. If you retire,
+  you are last. If your time is the same as a rival's time, the rival is first.
+- The standings sort by points, then by the better best finish, then by the lower driver
+  number (you are driver 0).
+
+### Old saves
+
+A career from a different `career.json` format restarts its current season at the first
+rally (the original's `MigrateCareer`). If the career is still in the first rally and that
+rally has the same stages in the new list, the career does not change. The finished
+seasons, the unlocks, the best times and the seed stay.
+
+## Ghosts
+
+The ghosts are in `src/game/ghosts.ts`. They read the car and the run, but they do not
+change them. They have no collision and no sound, and they cast no shadow.
+
+### The ghost of your best run
+
+- In quick stage and time attack, the game records each run at 15 Hz: the position, the
+  rotation, the front-wheel steer and the stage progress.
+- A new best time keeps the run as the ghost for that stage, direction, car and weather.
+  The next run races it.
+- The ghost is a light blue (#7FA8E6) see-through car at 0.4 opacity. Its colours (and
+  the rivals' livery colours) go through the same double sRGB decode as every vertex
+  colour in the look. With one decode, the ghosts were pale and whitish on bright gravel. It fades near your
+  car and near the camera, and 0.6 s after its finish. The setting "ghost of best run"
+  switches it off.
+- Playback uses Catmull-Rom curves for the position and slerp for the rotation. A jump of
+  more than 15 m (a recover) is not smoothed.
+- **The HUD delta** is your stage time minus the ghost's time at the same progress. It
+  updates five times each second, from 25 m. Green is ahead, red is behind. Under it, the
+  HUD shows your best time ("no best time yet" before the first finish).
+
+### Rival ghosts
+
+- Each stage and direction has one reference line: a clean autopilot run from the original
+  (`public/data/rival_lines/<stage>_<fwd|rev>.json`). `index.json` tells which car drove
+  each line.
+- Each rival drives the line on its own clock. The pace changes by up to ±4.5% between
+  random nodes every 300 m. Then the game scales the pace, so that the ghost crosses the
+  finish on the rival's simulated time.
+- A rival that crashed stops at a random point for the crash time. A rival that retired
+  stops and fades out.
+- Each rival has a lateral slot (±120 cm), plus a 35 cm weave. The slot stays inside the
+  road.
+- Each ghost is the rival's car (a car of the season in the career, a car of your group in
+  quick stage) in a livery tinted with the rival's colour. A name label with a colour dot
+  shows over each ghost near the camera.
+- **The live position** ("p3 / 10") counts the rivals whose time at your progress is less
+  than your time with penalties. It updates five times each second, and a change must hold
+  for 0.5 s. At the finish it is the same as the results table.
+- **A restart** in quick stage or time attack picks the rivals again (a new best time
+  changes the picks). The new ghosts load in the background, and the old ones stay on the
+  grid until the new ones are ready.
+- **Which rivals.** The career races all nine, with the times of the results. Quick stage
+  and time attack give the rivals times from the targets of your car's group and the
+  weather (no crashes). With "3", the two nearest rivals that are faster than your best
+  time and the nearest slower one race. Without a best time, three from the middle of the
+  field race.
+
+### Cost
+
+- All ghosts use one material. Each ghost is one mesh in its rest pose (the wheels do not
+  turn), so each ghost is one draw call. The loading curtain builds the shader. Thus no
+  shader compiles during a run.
+- Measured on the Intel iGPU at 1920×1080, auto quality (alps, best ghost and nine
+  rivals): 60 fps held, the same GPU time as without ghosts, +5 draw calls.
+
+### The ghost codec
+
+The codec is in `src/game/ghostCodec.ts`. It is a port of the original's codec, byte for
+byte, so the original's reference lines load.
+
+- The samples are in UE units: centimetres and degrees, UE axes.
+- Struct of arrays, little-endian. Each channel stores the difference to the sample before
+  it:
+
+| Channel | Type | Unit |
+|---|---|---|
+| position x, y, z | int32 | cm |
+| yaw, pitch, roll | int16 | 1/182 degree (65536 for 360°), the values wrap |
+| steer | int8 | 0.5 degree (not delta-coded) |
+| progress | int32 | dm |
+
+- This is 23 bytes for each sample. Then zlib (the browser's `CompressionStream('deflate')`)
+  and base64. If the packed length is the same as `raw_bytes`, the data is not compressed.
+- **Storage.** Each best ghost is a `localStorage` key `backroad-rally.ghost.<best-time key>`,
+  next to the save. One ghost of a 1:50 stage is about 14–18 kB. The game keeps 60 ghosts at
+  most (about 1 MB): when there are more, or when the storage is full, the oldest ghosts go.
+- `test/ghostCodec.test.ts` decodes every reference line and encodes it again to the same
+  bytes. It also sends a recorded run through zlib and base64 and back.
+
+## Stages
+
+There are six point-to-point stages of about 3 km. You can drive each stage forward or
+in reverse. Select them in the stage select, or use `?stage=` and `?dir=reverse`, or N and B
+in the game. The game downloads only the stage that you select. A stage is 4.4–5.1 MB:
+the terrain, its props and plants, the instance table and the road.
+
+| Stage | Road | Features |
+|---|---|---|
+| finland | gravel | crest jump, lakeside meadow, wooden bridge and log chicane, yumps |
+| japan | tarmac with lines | cherry-blossom avenue, a ladder of four hairpins, river bridge |
+| alps | tarmac | five switchbacks, snow poles, a tarn, cows with bells |
+| wales | gravel | stone walls, a ford through a stream, the moor, a slate quarry, sheep |
+| arizona | gravel, with a cracked-tarmac start | wash dips with four jumps, a one-lane canyon, buttes on the skyline |
+| vermont | gravel | a covered bridge over the river, the sugar-maple tunnel, a pond |
+
+- **Fords.** The water slows the car when it is below the wheels' depth and faster than
+  8 km/h. The drag is 0.15 × the speed, per second. The car throws spray to the two
+  sides, and you hear a splash.
+- **Canyon walls.** While the car is in the canyon, the walls between the camera and the
+  car dither out. The roof of the covered bridge does the same. It casts no shadow while
+  the car is under it.
+- **Each stage has its own** ambience and music, location sounds near the animals
+  (cowbells, sheep), water colour, and light for each time of day. `?cond=stage` selects
+  the stage's own time for each direction.
+- **Animals graze.** Cows and sheep (category `animal`, `stage_runtime.json`
+  `features.idle`) nod their head down and back up, turn a little and breathe: a 4° nod
+  and a 1.5 cm bob, one cycle in 3 to 8 s. The vertex shader moves them (the original
+  moved each one on the CPU), so they cost nothing. From the chase camera the movement is
+  small, as in the original.
+- **Instance table.** The table holds each plant and prop as x, y, z, heading, scale and
+  tint. The converter quantizes the values to 16 bits (about 5 cm on a 3 km stage) and
+  compresses the table with gzip. The browser's `DecompressionStream` unpacks it at load.
+  The converter removes some dense scatter far from the road, as the original did at load
+  (the trees on vermont and the cherry trees on japan).
+
+## Keys and gamepad
+
+| Key | Action |
+|---|---|
+| W / S | Throttle / brake |
+| A / D | Steer |
+| Space | Handbrake |
+| R | Recover (+5 s) |
+| Esc | Pause menu |
+| T | Traction assist on or off |
+| C | Camera |
+| L | Livery |
+| Enter | Restart |
+| K | Next time of day |
+| J | Next weather: clear, rain, snow (the game keeps the choice and loads the stage again) |
+| P | Post-processing on or off |
+| U | Speed in km/h or mph |
+| I | Speed as a number or a dial |
+| F3 | The debug panel |
+| M | Mute |
+| V | The volume panel |
+| . and , | Next and previous music track |
+| N / Shift+N | Next / previous stage (development) |
+| B | The other direction (development) |
+
+A gamepad also works:
+
+| Gamepad | Action |
+|---|---|
+| Triggers | Throttle and brake |
+| Left stick | Steer |
+| L1 | Handbrake |
+| Y | Recover |
+| X | Camera |
+| Start | Pause menu |
+
+## URL options
+
+Add the options to the page address, for example `?car=pip&cond=night`.
+
+| Option | Effect |
+|---|---|
+| `?car=<id>` | The car: swift, pip, lama, quint or kaze. Goes directly to the stage. |
+| `?livery=<n>` | The livery (0 is the first) |
+| `?mode=quick\|attack` | A stage run from the menus: quick stage (half damage) or time attack (no damage). The results offer "choose another stage", and a finish records the best time. |
+| `?mode=career` | The career's next stage, from the save |
+| `?rivals=<n>` | For development: race n rival ghosts (0 to 9) in any mode, also on a development page |
+| `?devghost=1` | For development: race the stage's reference line as the best-run ghost (perf checks) |
+| `?autocontinue` | For headless checks: the menus and the results continue by themselves through a career. With it, `?autopilot` and `?timescale` stay on from page to page. |
+| `?menu` | Open the menus, also with stage options in the address |
+| `?unlockall` | For development: unlock all cars and bonus liveries in the save |
+| `?fps=<n>` | Frame-rate limit for one visit (0 = uncapped). Runs with `?autopilot` or `?timescale` are always uncapped. |
+| `?stage=<id>` | The stage: finland (the default), japan, alps, wales, arizona or vermont |
+| `?dir=reverse` | Run the stage backwards |
+| `?stage=test` | The flat handling test bench, not a stage |
+| `?draw=near\|medium\|far\|max` | Draw distance for one visit: ×1, ×1.5, ×2 or ×3 the base fade bands. The default is the setting (far). |
+| `?cond=morning\|afternoon\|sunset\|night\|fog` | Time of day. The default is afternoon. `?cond=stage` uses the stage's own choice for each direction (finland: sunset forward, afternoon in reverse). |
+| `?weather=clear\|rain\|snow\|stage` | The weather. The default is the last choice of the J key, else clear. `?weather=stage` uses the stage's own weather for each direction: alps forward snow, wales forward rain, vermont reverse rain, else clear. |
+| `?quality=auto\|high\|medium\|low` | Render quality for one visit. The default is the setting, auto: it measures frame times and selects the tier that holds 60 fps (see [Quality tiers and performance](#quality-tiers-and-performance)). |
+| `?scale=0.5..1` | Render scale: the game draws a smaller canvas, and the browser stretches it to the window. This pins the scale, also under auto. |
+| `?upscale=fsr` | With a render scale below 1, upscale with FSR 1 in the post chain. This is sharper, but costs more. |
+| `?post=0` | No post-processing: the scene goes straight to the screen at the same exposure. P toggles it. |
+| `?ao=0`, `?dof=0`, `?bloom=0`, `?msaa=0`, `?cascades=1`, `?hlshadow=0`, `?shadowmap=1024`, `?shadowfar=100` | Switch off or reduce one effect, on top of the quality preset |
+| `?hide=tree,grass`, `?lodcuts=50,120,200`, `?lodblend=0.1`, `?shadowrange=180`, `?lookoff=fog,mask,lit` | For development: hide instance categories, move the vegetation detail switches, and switch off shader features to measure their cost |
+| `?seamtest` | For development: the background is magenta, and each pixel with nothing drawn on it is pure magenta after the post-processing. `tools/check/seam.mjs` counts these pixels. |
+| `?damage=0\|0.5\|1` | Damage level: 1 is full (the default), 0.5 is half, 0 is off. With 0, hits still make sparks and sound. |
+| `?startdamage=0.8` | For development: start the first run with damage (smoke from 0.35, fire from 0.7) |
+| `?units=kmh\|mph`, `?speedo=number\|dial`, `?hud=80..130` | HUD speed units, speed display and HUD size (%) for this visit. The game does not save them. |
+| `?hud=0` | Hide all overlays (for screenshots) |
+| `?fx=0` | No effects (to measure their cost) |
+| `?crowd=0` | No spectators (to measure their cost) |
+| `?audio=0` | No sound |
+| `?gputime` | Measure the GPU time for each frame with timer queries (for the check scripts) |
+| `?autostart=<rung>` | For checks: start auto quality on this rung of the ladder (0 = high, 5 = low at 55%), not on the remembered or guessed one |
+| `?stagesky=sky,r,g,b`, `?sakura=sat,value`, `?idlenod=<deg>` | For development: tune the stage sky fill, the sakura colour and the nod of the grazing animals (see [The look](#the-look)) |
+| `?webgl` | Use the WebGL2 renderer, not WebGPU |
+| `?autopilot=120` | A robot drives: pure pursuit on the centreline, at 120 km/h maximum. Add `&minturn=0.3`. `&apkeys=1` drives as a good keyboard player (it taps toward the steer that it wants). `&apkeys=2` drives as a heavy-handed player (it holds the key). |
+| `?timescale=4` | Run the game four times faster than the clock (for headless checks) |
+
+## The look
+
+The meshes have no textures. They are flat-shaded and use their vertex colours. The
+lighting and the colour grade change with the time of day, from
+`public/data/conditions.json`.
+
+### Materials
+
+- All materials share one set of uniforms: a colour grade for each surface and
+  condition, the night glow and the wind.
+- Vegetation sways in the vertex shader. The sway stops beyond 90 m.
+- Trees, grass and props fade in with distance. Foliage between the camera and the car
+  dithers away, so the car stays visible.
+- Both fades are alpha-tested dithers. They are never blended, and the shadows ignore
+  them.
+- Lakes have a lighter shore colour where the water is shallow.
+- The cherry trees on japan get more saturated and darker vertex colours at load
+  (saturation ×2, value ×0.82). Their authored colours are pastel. In the original, most
+  of each canopy was in a deep magenta shade, and with our lighting they were too pale.
+
+### Lighting
+
+- A sun with three shadow cascades.
+- A hemisphere sky light. On arizona in clear weather by day, the sky light is 2.2 times
+  stronger and lights from below with a red-brown colour. This copies the bounce light
+  from the sunlit canyon rock in the original. Without it, the shade in the canyon was
+  about a third as bright as in the original.
+- Height fog that follows the car. At sunset the fog glows toward the sun.
+- At night, two headlight spots and lit windows.
+
+### Post-processing
+
+The post chain uses the three.js TSL pipeline, on WebGPU and on WebGL2. It has these
+steps:
+
+- tilt-shift depth of field, with the focus on the car;
+- ambient occlusion;
+- bloom;
+- colour grade and a filmic tone curve;
+- vignette and grain.
+
+On WebGPU, the depth buffer cannot be multisampled and also sampled. Thus, on WebGPU the
+scene renders without MSAA, and FXAA makes the edges smooth.
+
+## Weather
+
+The weather is clear, rain or snow. It is a second setting next to the time of day, so
+every stage has 15 looks. The values are in `public/data/weather.json`. The code is in
+`src/game/weather.ts`.
+
+### Selection
+
+- `?weather=` selects it for one visit. The J key selects the next weather, keeps it in
+  the browser (`backroad-rally.run` in `src/settings.ts`) and loads the stage again. The
+  stage select (slice 9) will set the same value.
+- The intro card shows the weather after the time of day.
+
+### Grip and handling
+
+| | Tarmac | Gravel | Dirt | Grass | Rock |
+|---|---|---|---|---|---|
+| Rain | × 0.70 | × 0.86 | × 0.80 | × 0.73 | × 0.75 |
+| Snow | × 0.45 | × 0.69 | × 0.65 | × 0.64 | × 0.60 |
+
+- The weather grip multiplies the clear-weather friction of the surface under each wheel.
+- The handbrake turns the car more: the handbrake yaw help is × 1.8 in rain and × 2.6 in
+  snow. In snow, the rear grip with the handbrake on is × 0.85. The countersteer help is
+  × 1.1 in rain and × 1.15 in snow.
+- **Ice.** In snow, the tarmac has ice patches: 2.5 for each km, 14–30 m long, with grip
+  0.30. The ends blend over 3 m. They are not in the first and last 150 m, in a ford or
+  on a bridge. The original's random stream places them, so each stage has the same
+  patches in each run (japan: 7, alps: 7; the other stages have no tarmac).
+- The robot driver drives at √(weather grip) of its speed and looks up to 60 m ÷ grip
+  ahead for turns.
+
+### Look
+
+The weather changes the condition's light, fog and grade (`look` in `weather.json`).
+
+- **Rain:** the sun is × 0.1, the fog is × 2 and starts nearer, the colours are less
+  saturated. The roads are × 0.5 darker and the ground × 0.78, and both are glossier.
+  Puddles lie in the road's dips. 2600 streaks fall around the camera, and splashes come
+  up from the ground around the car. The car body is glossier, with small glints.
+- **Snow:** faces that point up are white: the cover starts where the normal's up
+  component is 0.5 and is full at 0.78, with a 3 m noise on the edge. The road is packed
+  snow with two wheel ruts. Lakes and the ford freeze. Grass tufts and flowers are not
+  shown. 4400 flakes fall and sway. Ice patches show as blue-grey glossy areas.
+- The rain streaks and the flakes are brighter in the car's headlight cone.
+- The depth of field is stronger than in clear weather, as in the original.
+- The weather code is in the shaders only in rain and snow. Clear weather has no cost from
+  it.
+- Each weather and time of day has a calibration of the exposure, the sky light and a
+  colour tint (`WEATHER_CALIB` in `src/look/look.ts`). It was measured against the
+  original's screenshots.
+
+### Effects
+
+The weather's `fx` block replaces parts of `fx.json`:
+
+- Rain: less dust, smaller and darker dust, and darker chips and skid marks. The skid
+  marks on gravel and dirt are near-black, as in clear weather (the data converter sets
+  this, `tools/convert/data.mjs`).
+- Snow: white snow powder from every surface (also tarmac), white chips and flecks, and
+  white tyre tracks behind every wheel. They stay for 60 s. The powder is darker on its
+  lower side, so that it shows against the snow.
+- Frozen fords have no drag, no spray and no splash.
+
+### Sound
+
+- Rain: the rain ambience replaces the stage's ambience, and rain sounds on the car (the
+  `weather` volume group, 0.6).
+- Snow: the snow wind replaces the ambience. A low-pass filter at 3500 Hz muffles the
+  crowd, effects and surface groups.
+- In both, the dry tyre roll is quieter (× 0.6 in rain, × 0.35 in snow), and wet, snow and
+  slush loops follow the surface under each wheel.
+
+### Handling tests in weather
+
+`npm run test:handling` runs all the tests in clear, rain and snow. Rain and snow use
+the pass bands in `testtrack.json` `targets.weather`, and the slower hairpin and power
+slide entries of each weather. Add `--weather clear` (or `rain`, `snow`) for one weather.
+
+### Performance in weather
+
+The rain streaks and the snow flakes are one draw each. The vertex shader moves them, so
+the CPU does no work for each particle. All quality tiers draw all particles
+(`PRECIP_SCALE` in `src/main.ts` can draw fewer). Snow hides the grass and flowers, so it
+draws fewer triangles than clear weather.
+
+`tools/check/perf.mjs`, 45 s from the start, frames at a 60 Hz cap. GPU is the
+timer-query mean / p95 in ms.
+
+| Stage | Weather | Integrated GPU, 1920×1080, auto | Over 25 ms | Laptop RTX, 3840×1600, high | Over 25 ms |
+|---|---|---|---|---|---|
+| alps | clear | low, GPU 10.3 / 12.9 | 0 of 2700 | GPU 11.5 / 15.8 | 83 of 2612 |
+| alps | rain | low, GPU 10.3 / 12.7 | 1 | GPU 12.0 / 16.7 | 122 of 2573 |
+| alps | snow | low, GPU 9.7 / 11.5 | 1 | GPU 10.6 / 15.8 | 42 of 2648 |
+| vermont | clear | low, GPU 10.9 / 13.7 | 16 of 2682 | GPU 10.8 / 14.9 | 35 of 2660 |
+| vermont | rain | low, GPU 10.9 / 14.1 | 28 of 2671 | GPU 10.9 / 15.2 | 37 of 2658 |
+| vermont | snow | low, GPU 10.5 / 13.2 | 10 of 2689 | GPU 9.9 / 13.3 | 4 of 2690 |
+| finland | clear | low, GPU 10.5 / 12.3 | 1 | GPU 12.5 / 14.4 | 15 of 2681 |
+| finland | rain | low, GPU 10.7 / 12.6 | 1 | GPU 12.4 / 14.6 | 22 of 2673 |
+| finland | snow | low, GPU 10.5 / 12.1 | 1 | GPU 12.5 / 14.2 | 15 of 2677 |
+
+The weather adds less than the noise between runs. The alps larch forest stays the
+heaviest part at high on the laptop RTX.
+
+## Quality tiers and performance
+
+The quality tiers are in `src/look/quality.ts`:
+
+| Quality | Shadows | AO | DOF | Bloom | Anti-aliasing | Fog | Vegetation |
+|---|---|---|---|---|---|---|---|
+| high | 3 cascades, 2048 | half resolution, 16 samples | 16 taps | on | MSAA 4× (WebGPU: FXAA) | for each vertex | full detail to 110 m |
+| medium | 2 cascades (1 at night), 2048 | half resolution, 8 samples | 12 taps | on | FXAA | for each vertex | full detail to 70 m |
+| low | 1 cascade to 130 m, 1536 | off | 8 taps | off | FXAA | for each pixel, in the post chain | full detail to 50 m, diffuse-only foliage, ground cover to 0.75× the draw distance |
+
+### Vegetation detail
+
+- Trees and shrubs have four levels of detail. The game builds them from the mesh when
+  it loads (`src/world/lod.ts`).
+- The foliage is made of single-triangle chips. Each lower level keeps an evenly spread
+  35%, 10% and 2.5% of the chips. Each kept chip is larger, so the canopy covers the
+  same area.
+- The levels change with distance through a short dithered cross-fade. They never pop.
+- On the two far levels, the trunk and the foliage are one draw.
+
+### Shadows
+
+- The shadows come from separate shadow-only copies of the vegetation on layer 1. Only
+  the shadow cameras see layer 1.
+- Near the car, the copies have full or reduced detail. Further out, they use the
+  coarser levels. Beyond the shadow range there are no copies.
+- Tall grass casts no shadow below the high tier.
+
+### The cost of dither
+
+A shader that can discard pixels loses the early depth test of the GPU. Thus, trees
+that are fully faded in, and away from the see-through zone around the car, use a twin
+material that never discards.
+
+### Auto quality
+
+Auto quality is the default (`src/look/autoQuality.ts`). A change of tier compiles the
+shaders and the shadow maps again. On an integrated GPU, this stops the game for 0.7 to
+1.4 s, also for a tier that the page used before. A change of render scale only resizes
+the canvas. Thus auto quality has two phases.
+
+1. **Settling, behind the loading curtain.** The player does not see this phase.
+   - The start is the tier that the last visit to the same stage (or the same menu
+     diorama) found, on the same GPU and window size. The game keeps it for one day in
+     `localStorage` (`backroad-rally.autoquality`). Without it, the start is a guess by GPU
+     and screen size: a discrete GPU starts high (medium above about 2560 × 1440), an
+     integrated GPU starts low (at 70% render scale on a big screen).
+   - It measures 1 s windows. It steps down the ladder (high, medium, low, then low at
+     85%, 70% and 55% render scale) when a third of a window is in frames slower than
+     20 ms. It also steps down after two "marginal" windows: more than 10% of the time
+     in slow frames, or, where the browser has a GPU timer, a GPU time (90th percentile)
+     above 75% of the frame interval. The start line is lighter than the stage, so a tier
+     that only just holds there does not hold in the forest.
+   - It has settled after two clean windows in sequence. If the tier changed, the game
+     then draws everything once more (every stage mesh, the effect pools and the ghosts),
+     so that no shader compiles during the run.
+   - The curtain waits for this, for a maximum of 14 s.
+2. **Play, after the curtain starts to lift.** The tier stays the same. Only the render
+   scale changes: it steps down (100%, 85%, 70%, 55%) after two bad 3 s windows in
+   sequence, and it steps up only when the GPU timer shows sufficient headroom for 20 s.
+   It never goes back to a scale that failed.
+
+The game applies a new render scale before it draws the frame. The resize clears the
+canvas, and the frame is drawn into it at once, so the browser never shows an empty
+canvas. Behind the canvas the page is dark (`#1b1916`), not the light colour of the
+menus.
+
+The HUD shows the tier, the scale and `(auto)`. `?quality=<tier>` pins the tier.
+`?autostart=<rung>` starts auto quality on a given rung (0 = high) for checks.
+
+### Render scale and the GPU
+
+- **Render scale** draws a smaller canvas, and the browser stretches it. This costs
+  nothing. An upscale pass at full resolution cost several milliseconds on an
+  integrated GPU.
+- **The fast GPU.** The renderer asks for `powerPreference: 'high-performance'` for the
+  WebGPU adapter and the WebGL2 context. Browsers can ignore it. Desktop Chrome on Linux
+  draws with the GPU that it runs on. On a hybrid laptop, that is the integrated GPU.
+
+### Performance on each stage
+
+`tools/check/perf.mjs --stage <id>` drives 45 s from the start, with frames at a 60 Hz
+cap. GPU is the timer-query mean / p95 in ms. On an integrated GPU, this value is too low.
+
+| Stage | Integrated GPU, 1920×1080, auto | Over 25 ms | Laptop RTX, 3840×1600, high | Over 25 ms |
+|---|---|---|---|---|
+| finland | low, GPU 10.5 / 12.4 | 2 of 2696 | GPU 12.3 / 14.3 | 13 of 2688 |
+| japan | low, GPU 10.3 / 11.4 | 0 | GPU 10.8 / 12.8 | 0 |
+| alps | low, GPU 9.9 / 12.6 | 0 | GPU 11.7 / 15.8 | 85–90 of ~2610 |
+| wales | low, GPU 9.4 / 10.7 | 2 | GPU 9.1 / 11.7 | 1 |
+| arizona | low, GPU 9.2 / 10.1 | 0 | GPU 8.9 / 11.3 | 0 |
+| vermont | low, GPU 10.8 / 13.9 | 24 of 2675 | GPU 11.1 / 14.8 | 33–46 of ~2660 |
+
+The heaviest parts are the larch forest on alps (s 600–1000) and the sugar-maple tunnel
+on vermont (s 900–1800). Their dense canopies use 14–16 ms of GPU time. On full-stage
+runs, alps dropped 1 frame in total (high), and vermont dropped 7 (integrated GPU).
+
+## Browsers
+
+Tested with `tools/check/browsers.mjs` (the title, then 30 s of a quick
+stage on finland with the autopilot, 1600 × 968, 60 fps cap), on a laptop with an Intel
+integrated GPU and an RTX 5070 Ti laptop GPU:
+
+| Browser | Backend and GPU | Auto quality | Frame rate | Console errors |
+|---|---|---|---|---|
+| Chrome, normal start (Wayland) | WebGL2, integrated GPU | low | 60.0 fps, 0 frames over 25 ms | none |
+| Chrome with WebGPU switched on | WebGPU gave a software adapter (SwiftShader), so the game uses WebGL2, integrated GPU | low | 60.0 fps | none |
+| Chrome on the RTX (X11 client) | WebGPU, discrete GPU | high | 60.0 fps, 0 over 25 ms | none |
+| Chrome on the RTX with `?webgl` | WebGL2, discrete GPU | high | 60.0 fps, 0 over 25 ms | none |
+| Firefox (Playwright build) | WebGL2 (no WebGPU on Linux), integrated GPU | low | 60.0 fps, 4 over 25 ms | none |
+
+- **Chrome on the RTX** starts as an X11 client with the NVIDIA offload variables:
+  `__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only google-chrome-stable --user-data-dir=<a separate profile> --ozone-platform=x11 --use-angle=vulkan --enable-features=Vulkan,VulkanFromANGLE --enable-unsafe-webgpu`.
+- **A software WebGPU adapter** (SwiftShader, or an adapter that says it is a fallback)
+  ran the game at 2 to 6 fps. The game now uses WebGL2 in that case, which gets the
+  hardware.
+- **Firefox's frame clock** varies more from frame to frame. Auto quality judges the mean
+  of each frame and the one before, so a steady 60 fps does not read as missed frames.
+- **Safari** was not tested: it was not available on the test machine. Safari before 18.4
+  has no music (Ogg Opus).
+
+## Effects
+
+The effects are in `src/fx/` and `src/world/crowd.ts`. The values are in
+`public/data/fx.json`.
+
+### Particle pools
+
+| Pool | Size | Notes |
+|---|---|---|
+| Dust | 3072 | |
+| Puffs | 512 | Kept for rain splashes |
+| Chips | 1536 | |
+| Sparks | 384 | |
+| Flames | 256 | |
+
+The CPU simulates the particles. Each pool is one instanced draw. Each frame, the live
+particles move to the front of their buffers, and only that part goes to the GPU. When
+a pool is full, its oldest particle starts again.
+
+### Dust
+
+- Dust comes from each wheel on loose ground from 12 km/h. It is at full rate at
+  110 km/h, and there is more when the car slides.
+- Each surface has its own colour, rate, size and life. On tarmac, dust comes only
+  while the car slides. Each time of day adds a tint.
+- The puffs are soft, translucent spheres. They fade toward their silhouette.
+- Seen from the game camera, the puffs break into fine dots at the edge from 16 to 26 m
+  away.
+- They fade where they meet the ground (0.6 m, from the depth buffer). This fade is off
+  on the low tier.
+- The sun and the sky light them without direction, and a little glow makes them
+  visible at night.
+
+### Chips and flecks
+
+- Gravel chips fly back from a wheel that slides or spins.
+- Grass and earth flecks come off the road at speed. They bounce, then lie flat.
+- A landing after 0.3 s or more in the air makes a ring of dust.
+- A crash makes sparks and a puff of dust.
+
+### Skid marks
+
+- A ring of 6144 quads of 35 cm each.
+- A tyre makes marks while it slides sideways, spins or locks, or while the handbrake is
+  on.
+- The marks stay for 25 s, then fade over 12 s. The shader does the fade from the time
+  when each mark started.
+- Where marks overlap, they do not get darker: a new mark fails the depth test where an
+  earlier mark already lies.
+
+### Breakables and solid objects
+
+- The car drives through roadside bushes, which go away in a burst of leaves.
+- The car knocks marker posts over. They tumble and then lie on the ground.
+- Breakables use a proximity test and no colliders, as in the original
+  (`src/world/breakables.ts`). A restart puts them back.
+- Trees, rocks and boulders within 30 m of the road are solid, and stop the car
+  (`src/world/colliders.ts`):
+  - trees are capsules;
+  - rocks are boxes the size of the mesh;
+  - boulders are their convex hull.
+
+### Exhaust
+
+The exhaust pops on a quick lift at high revs, on hard upshifts and on downshifts. The
+turbo cars also have an anti-lag crackle. The flames are bright enough for bloom.
+
+### Spectators
+
+- The spectators stand in the stage's crowd groups off the road (182–292 on each stage).
+- They hop when the car passes near and fast, and they step away from it.
+- They react as a group: cheers, a near miss, a gasp, a groan after a crash near them,
+  and applause at the finish.
+- As in the original, they have no colliders.
+
+### Events
+
+`src/game/events.ts` is a small typed event bus with these events: `landing`, `impact`,
+`backfire`, `splash` and `crowdReaction`. The audio code listens to them. The events
+only watch the car, so the autopilot times and the handling tests are the same with or
+without them.
+
+### Cost and check
+
+- On an integrated GPU at 1920 × 1080 (low), the effects cost about 0.3 to 0.8 ms of GPU
+  time. On a laptop RTX at 3840 × 1600 (high), they cost 0.35 ms. They cost much less
+  than 0.1 ms of CPU time for each frame.
+- `?fx=0` switches off the effects, and `?crowd=0` the spectators, for measurement.
+- `node tools/check/fx.mjs [--scenes straight,slide,landing,crowd,bush,post,crash] [--size 1920x800] [--cond night]`
+  drives scenes on finland (WebGL2). With `--webgpu --noshot`, it checks that the
+  shaders compile on WebGPU. It saves screenshots, and prints the live particles, the
+  skid segments and the events of each scene.
+
+## Damage
+
+The damage code is in `src/game/damage.ts`. The numbers are in
+`public/data/damage.json`.
+
+### Hits
+
+- Hits come from the contact impulses of the car body in the physics solver
+  (`src/game/contacts.ts`). The code reads them before each 120 Hz step and does not
+  change the simulation.
+- The size of a hit is the velocity change that it caused (impulse divided by mass), in
+  km/h.
+- Hits within 0.2 s become one hit, with the size of the largest.
+- Contacts with the ground while the car is upright (landings, scrapes) do not count.
+
+### Damage from each hit
+
+Damage = ((km/h − 15) / 85)² × the damage level.
+
+A head-on stop at 60 km/h thus costs about 0.28 at full damage. A total of 1, or one
+hit of 110 km/h or more, wrecks the car and ends the run.
+
+### Effects of damage
+
+- Engine torque × (1 − 0.3 × damage), or × 0.15 when the car is wrecked.
+- A small steering pull to one side (0.05 × damage^1.5). The first real hit sets the
+  side.
+- The paint gets dirty, toward a mud colour. Dust on loose ground adds a little too.
+- Smoke from the engine from 0.35, darker and thicker as the damage increases. Each
+  puff is a little lighter or darker than the next. The smoke is thin while it is over
+  the engine, and a light breeze moves it away from the car. Without this, the smoke
+  from above was one dark shape over the car.
+- Flames from 0.7. They draw after the smoke, so you can see them through it.
+
+### Parts, restart and events
+
+- The game also divides each hit between six parts, by where the hit was on the car:
+  front, rear, left, right, engine and suspension. The parts only control the HUD
+  warning lights. Every effect uses the total value.
+- A restart (Enter) puts the car back as it was at the start of the stage. In the career,
+  damage stays between the two stages of a rally (see [Career](#career)).
+- Events:
+  - `damage { part, amount, total, parts, kmh, terminal, stage }` on each hit that
+    causes damage;
+  - `finish { dnf, time, reason }` when a run finishes or retires.
+
+## HUD
+
+The HUD is an HTML and CSS overlay, in `src/hud/stageHud.ts`. Its layout comes from
+`public/data/hud.json`. Sizes are in units of a screen 1080 pixels tall, scaled by the
+shortest side of the window and by the HUD size setting.
+
+| Position | Contents |
+|---|---|
+| Top right | The stage time, in a panel of fixed width (tabular digits, so the width never changes). Under it: the live position against the rival ghosts ("p3 / 10"), the ghost delta, a +5.0 s pop for each penalty, the penalties until now, and the best time (quick stage and time attack) |
+| Left | The stage progress: the start at the bottom, the finish at the top |
+| Bottom left | Six damage warning lights (front, rear, engine; left, right, suspension). Off, flashing yellow for a scratch, yellow for damage, flashing red for major damage, red when broken. All red when the car is wrecked. `?damage=0` hides them. |
+| Bottom centre | The gear gate: an H pattern with the current gear lit. Reverse is red. |
+| Bottom right | The speed, as a number or a dial, in km/h or mph |
+
+### Settings
+
+U, I and F3 change and save the HUD settings. The settings screen has the same rows (see
+[Settings](#settings)). The URL options apply to one visit only.
+
+### Check
+
+`node tools/check/hud.mjs [--webgl] [--shots spec.json]` sets the window size, the HUD
+settings, the speed and the damage for each shot. It reports each HUD panel that
+overlaps another panel or goes outside the window.
+
+## Audio
+
+Sound starts on the first key or click, because browsers keep audio off until then. A
+hint tells you this. **M** mutes. **V** opens the volume panel, with a master slider and
+one slider for each group, kept in the browser. **.** and **,** skip the music.
+`?audio=0` switches off the sound.
+
+### The audio code
+
+The audio code is in `src/audio/` and uses Web Audio.
+
+- **Engine.** Each car has loops at different revs, for on-throttle and off-throttle.
+  They crossfade at equal power by a "sound rpm". The sound rpm is higher than the
+  simulation's, with a lead, a blip on a downshift, and free revs during wheelspin and
+  in the air.
+- **Rev limiter.** Its cuts are scheduled on the audio clock.
+- **Tyres.** The roll and skid sounds follow the surface under each wheel.
+- **Stage sounds.** The stage adds the ambience (the stage's own by day, one night
+  sound for all stages), the crowd from the nearest spectators, the wooden-bridge rumble,
+  the countdown and the finish. Cowbells and sheep sound from time to time near the
+  animals.
+- **Event sounds.** Crowd reactions, impacts, landings, ford splashes and backfires come from
+  `src/game/events.ts`.
+- **Music.** The music streams: the stage's own tracks, and calm night tracks at night.
+  It gets slightly quieter at full throttle.
+- The audio code only reads the game. The simulation runs the same with or without it.
+
+### The mix
+
+Final volume = level × 10^(dB/20) × group × user.
+
+- The groups and the curves come from `public/audio/mix.json`.
+- One measured calibration is added: `CALIBRATION_DB` in `src/audio/mix.ts`.
+- The targets are levels relative to the engine at full throttle. The music is about
+  4 dB below it. The targets are measured, not set by ear.
+
+### Audio conversion
+
+`node tools/convert/audio.mjs [--no-music]` writes `public/audio/`:
+
+- every effect, engine and interface sound as Ogg Opus, plus an AAC copy for browsers
+  without Opus (decoded at load);
+- the music (menu, night and the tracks of each stage, about 69 MB), as Opus only
+  (streamed, one track at a time);
+- `manifest.json` and `mix.json`.
+
+The converter pads each loop with its own wrap-around, so the codec cannot put a click
+at the seam. It removes all tags.
+
+### Audio checks
+
+- `node tools/check/audio.mjs --loops` checks the seam of each loop after an encode and
+  decode.
+- `npm run build && node tools/check/audio.mjs [--cars swift,pip] [--secs 40] [--jump-at 32] [--out dir]`
+  records a headless autopilot run for each car through measurement taps. It serves
+  `dist/` itself on port 4183. It saves `<car>.wav`, and prints:
+  - the loudness of each group against the targets;
+  - the cuts and the rate of the rev limiter;
+  - any clicks.
+
+## Handling tests
+
+`npm run test:handling` drives every car through the scripted manoeuvres in
+`public/data/testtrack.json`, and checks each result against its pass band. The
+manoeuvres are acceleration, the R40 circle, brakes, coast-down, key taps, flicks,
+handbrake turns, hairpins, power slides, light steering at high speed and lane changes.
+
+| Option | Effect |
+|---|---|
+| `--cars swift,pip` | Only these cars |
+| `--kinds corner,brake` | Only these manoeuvres |
+| `--surfaces gravel` | Only this surface |
+| `--quiet` | Show only failures |
+| `--ue <file>` | Print the original game's result for the same job under each line |
+| `--trace` | Print the state of the car ten times each second |
+
+`npx tsx tools/test/probe.ts <car> <throttle> <steer> <seconds>` prints the state of the
+car for a fixed input.
+
+### The pedals and the traction assists
+
+The pedals work like the vehicle physics of the original:
+
+- Throttle and brake move toward the key or trigger value at a limited rate. They reach
+  full in about 0.17 s and release in 0.1 s.
+- The engine gets the throttle squared, so a slide at part throttle loses speed.
+
+Traction control and the power-slide assist react to wheelspin only when the drive is
+more than the tyre can transmit. They do not react to the small slip that a tyre always
+has while it pulls.
+
+## Asset conversion
+
+The game's data, meshes and audio come from an earlier version of the game in another
+engine. That version is not in this repository. Give its location to the converters
+with `--ue <path>` or `BR_UE_ROOT`. The converted output is committed, so a build of the
+site does not need it.
+
+| Script | Output |
+|---|---|
+| `node tools/convert/data.mjs` | `public/data/`: the game data as JSON, in engine units. `src/ue.ts` converts them at load. |
+| `blender -b -P tools/blender/export_car_glb.py -- --car all` | `public/assets/cars/<id>.glb` (Blender 5.2) |
+| `node tools/convert/stage.mjs <id>` | `public/data/stages/<id>.json` (road, variants, tiles, fords, water) and `.bin` (the instance table, quantized and compressed with gzip). It prints the environment meshes that the stage needs. |
+| `blender -b <source>/Art/Source/Stages/<id>.blend -P tools/blender/export_stage_glb.py -- --stage <id>` | `public/assets/stages/<id>.glb`: terrain tiles, backdrop and bridges. The material names are the surfaces. |
+| `blender -b -P tools/blender/export_env_glb.py -- --meshes <list> --name <id>` | `public/assets/env/env_<id>.glb`: the stage's vegetation and props, one node for each mesh |
+| `node tools/convert/glb.mjs <in.glb> [out.glb]` | Compresses a GLB for the web: removes the flat normals (but keeps them on foliage, where the canopy normals shape the shading), welds, quantizes, and applies meshopt |
+| `node tools/convert/fonts.mjs` | `public/fonts/`: the HUD's Inter faces (regular, semibold) as WOFF2, with their licence. It needs `woff2_compress`. |
+
+The Blender scripts open the source files as read-only and never save them.
+
+The converter quantizes each terrain tile on its own grid. Thus the two copies of a
+vertex on the edge between two tiles can be up to 2 cm apart, and the background shows
+through a crack: a thin light line along the tile edge (also down the centre of a road
+that follows a tile edge). The game closes these cracks when it loads a stage
+(`src/world/seams.ts`). It moves the tiles into world coordinates, and gives each copy of
+an edge vertex the value of the first copy. It does this to the drawn meshes after it
+makes the colliders, so the physics does not change. This takes about 35 ms.
+`test/stageSeams.test.ts` and `tools/check/seam.mjs` find such cracks.
+
+## Checks in a browser
+
+### Set up
+
+1. Build the site.
+2. Serve `dist/` under `/backroad-rally/` with `node tools/check/serve.mjs [--port 4173] [--dir dist]`.
+   It works like GitHub Pages: gzip for text files only, `Cache-Control: max-age=600`,
+   ETags and byte ranges. (Any static server works for most checks, but load times and
+   caching are only correct with this one.)
+
+The check scripts use headless Chrome through playwright-core:
+
+- If Chrome is in a different location, set `CHROME_PATH`.
+- On Linux, set `CHROME_ARGS="--use-gl=angle --use-angle=gl-egl --ignore-gpu-blocklist"`
+  and use `--webgl`. This gets the GPU, not software rendering.
+- Headless Chrome cannot take screenshots of WebGPU.
+
+### The scripts
+
+- `node tools/check/shot.mjs [--webgl] [--size 1920x800] [--params "car=pip"] [--at <s>[,lateral]] [--still]`
+  saves screenshots at rest and while the car moves. `--at` first puts the car on the
+  road at progress `s` metres.
+- `node tools/check/look.mjs [--webgl] [--conds morning,sunset] [--spots start:62,crest:759] [--sizes 1200x675,3840x1600] [--perf 5]`
+  puts the car on the road at fixed spots, at 25 km/h. It saves a screenshot for
+  each condition, spot and size, with the HUD hidden. `--perf` holds each spot and
+  prints frame times. Add `--params gputime` for the GPU time.
+- `node tools/check/stages.mjs [--webgl] [--stages japan,wales] [--dirs fwd,rev] [--conds morning,night,stage] [--weathers clear,rain,snow] [--headed]`
+  loads each stage for each direction and time of day. It reports console errors, load
+  and build times, instances, colliders, fords, bridges and canyon zones. It saves a
+  screenshot at the start. `--headed` opens a normal window, for WebGPU.
+- `node tools/check/stage.mjs [--webgl] [--stage japan] [--cars swift,pip] [--dirs fwd,rev] [--kmh 120] [--cond night] [--params "quality=medium"]`
+  runs the full stage with the autopilot, four times faster than real time. It prints
+  the time for each car and direction, the resets, the spins and the surfaces under the
+  wheels. With `--perf --size 3840x1600 --seconds 60`, it runs at real time and prints
+  frame times, draw calls, visible instances and the cost of the instance update.
+- `node tools/check/flow.mjs [--size 1920x1080] [--input keys|pad|mouse] [--webgpu] [--noshot] [--headed]`
+  walks the game: title, garage (also a locked car), stage select (also a backdrop change),
+  the loading card, the stage, pause, the three settings pages, the results, back to the
+  stage select and the title. It saves a screenshot of each screen, checks that the clock
+  stops during the pause, and prints the console errors. `--input pad` uses a simulated
+  gamepad. With `--webgpu --noshot` it walks on WebGPU in headless Chrome.
+- `node tools/check/ghosts.mjs [--params "mode=quick&stage=finland&car=swift&rivals=9&devghost=1"] [--at 4,10,25] [--results] [--again] [--career] [--webgpu] [--noshot] [--timescale 4]`
+  drives a stage with the autopilot and the ghosts. At each clock time it saves a
+  screenshot and prints the live position, the delta and the opacity of each ghost. It
+  also prints the shader count at the curtain and at the end. `--again` loads the page
+  again after the finish, so the stored best ghost races. `--career` puts a new career in
+  the save first.
+- `node tools/check/career.mjs [--timescale 4] [--seasons 1] [--webgpu] [--noshot]`
+  plays a full career season with the autopilot, from a new browser profile. It prints
+  each stage time, the rally tables, the standings, the unlocks and the save, and saves a
+  screenshot of each screen.
+- `node tools/check/rock.mjs [--webgl] [--car swift] [--kmh 40] [--meshes SM_Rock_B,SM_Boulder_A]`
+  drives into the largest roadside rocks of each type at 40 km/h. It checks that the car
+  stops at each rock, does not fly up, and can reverse away. It saves a screenshot at
+  each rock.
+- `node tools/check/flash.mjs [--params "stage=finland&autopilot=120&fps=60"] [--seconds 25] [--size 1600x1000] [--rtx] [--webgpu]`
+  opens a headed Chrome at the size of the screen and records two things: the page's own
+  frames (and each change of canvas size), and the frames that the browser composited (a
+  screencast). It prints the auto quality changes, the shaders built after the curtain,
+  the frame gaps over 50 ms after the curtain, and each "blank" frame (more than 60% of
+  the pixels in the page background). `--rtx` starts Chrome on the NVIDIA GPU (see
+  [Browsers](#browsers)).
+- `node tools/check/transitions.mjs [--career] [--net 20] [--shots] [--headed] [--webgpu]`
+  measures each wait between screens: the first load, a car change in the garage,
+  another location and another weather in the stage select, the start of a stage,
+  restart, quit to the menu and (`--career`) the career's next stage. For each wait it
+  prints the time from the key press until the scene shows, the time with the loading
+  indicator on screen, the time with a blank screen (only the curtain colour) and what
+  shows, phase by phase. `--net` sets a home connection (Mbit/s). `--shots` saves a
+  screenshot of each wait while the indicator shows. Note: the CDP screencast does not
+  show the movement of a compositor animation while the main thread is busy. To see the
+  real movement, capture the desktop (`grim` on Hyprland).
+- `node tools/check/load.mjs [--mbit 20] [--latency 20] [--stage wales] [--menu-wait 0] [--again]`
+  measures a load on a home connection: a cold cache and a throttled network. It gives
+  the time to the title, to the stage and to the countdown, the bytes and requests, the
+  biggest downloads and any file fetched twice. `--again` does the same visit once more
+  (a returning player).
+- `node tools/check/cachebust.mjs [--file data/fx.json]` builds twice, the second time
+  with one changed file, and checks that only that file gets a new URL.
+- `node tools/check/browsers.mjs --browser chrome|chrome-webgpu|chrome-rtx|chrome-rtx-webgl|firefox`
+  opens the title and drives a quick stage in one browser setup. It prints the backend,
+  the GPU, the auto tier, the frame rate and the console errors.
+- `node tools/check/playthrough.mjs [--stage wales]` does the run actions on one quick
+  stage: the countdown, driving, recover, restart (the rival ghosts must stay), pause and
+  resume, and a DNF with its results.
+- `node tools/check/seam.mjs [--quality low,medium,high] [--size 3840x1600] [--yaws 12] [--menu 0] [--stages finland,japan] [--dirs fwd,rev] [--cond night] [--weather rain] [--webgpu] [--headed] [--dpr 1.6] [--look]`
+  finds cracks in the ground. It opens the pages with `?seamtest`. In the menus, it turns
+  the orbit camera around the car in steps (title view, then garage view). On each stage
+  it takes frames while the autopilot drives. For each frame, it counts the magenta
+  pixels in thin lines and specks (cracks). Large areas of magenta are open sky between
+  the trees, and the script does not count them. It saves the worst frames with a mask
+  (cracks white, sky grey). The result must be zero cracks. A crack that is thinner than a
+  pixel and that MSAA blends with the road does not count, so also look at the saved
+  frames. `--look` takes the same frames without `?seamtest`, for screenshots. `--webgpu`
+  needs `--headed`: in headless Chrome the WebGPU frames are blank.
+- `node tools/check/perf.mjs [--gpu igpu|dgpu] [--sizes 1920x1080,3840x1600] [--seconds 45] [--configs "quality=auto;quality=low"]`
+  drives the stage with the autopilot at real time. For each configuration, it prints
+  these values:
+  - the renderer string and the tier that auto selected;
+  - the frame times (mean, p99, maximum, frames over 25 ms);
+  - the GPU timer and the CPU costs.
+  - `--gpu dgpu` sets the NVIDIA offload variables on a hybrid laptop.
+  - `--spots 759,1500` parks the car at fixed road positions, so every configuration
+    has the same views.
+  - `--uncapped` switches off vsync. This gives the true GPU cost for a comparison of
+    configurations.
+  - `--headed` measures in a normal fullscreen browser window on the desktop. The
+    fullscreen uses the Hyprland dispatcher.
