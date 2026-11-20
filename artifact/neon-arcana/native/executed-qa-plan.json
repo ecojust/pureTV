@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": [
+    "gameplay.elapsed",
+    "gameplay.moves",
+    "gameplay.score",
+    "gameplay.cursorX",
+    "gameplay.cursorY"
+  ],
+  "storageRestartRequired": true,
+  "steps": [
+    {
+      "name": "Begin the restoration",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 220,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Select the first dealt glyph",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 220,
+      "expect": [
+        {
+          "path": "gameplay.selected",
+          "op": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "name": "Move the selected glyph left on the lattice",
+      "keys": [
+        "LEFT"
+      ],
+      "holdMs": 220,
+      "expect": [
+        {
+          "path": "gameplay.cursorX",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Choose the next dealt glyph and its legal anchor",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 220,
+      "expect": [
+        {
+          "path": "gameplay.selected",
+          "op": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Place the glyph on the actual lattice",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 220,
+      "expect": [
+        {
+          "path": "gameplay.moves",
+          "op": "increased"
+        },
+        {
+          "path": "gameplay.score",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Inspect the first Arcana power",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 220,
+      "expect": [
+        {
+          "path": "gameplay.palette",
+          "op": "eq",
+          "value": "transmute"
+        }
+      ]
+    },
+    {
+      "name": "Highlight the Lantern",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 220,
+      "expect": [
+        {
+          "path": "gameplay.palette",
+          "op": "eq",
+          "value": "lantern"
+        }
+      ]
+    },
+    {
+      "name": "Return to the lattice",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 220,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "gameplay.palette",
+          "op": "eq",
+          "value": "board"
+        }
+      ]
+    },
+    {
+      "name": "Pause the reading",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 220,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Resume the reading",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 220,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    }
+  ]
+}

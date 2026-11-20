@@ -1,0 +1,289 @@
+{
+  "schemaVersion": 1,
+  "renderer": "canvas2d",
+  "pauseStablePaths": [
+    "gameplay.tick",
+    "gameplay.room",
+    "gameplay.wireSelected",
+    "gameplay.stickers"
+  ],
+  "steps": [
+    {
+      "name": "Start the original five-day station campaign",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "gameplay.room",
+          "op": "eq",
+          "value": "deck"
+        },
+        {
+          "path": "gameplay.day",
+          "op": "eq",
+          "value": 1
+        },
+        {
+          "path": "gameplay.line",
+          "op": "eq",
+          "value": "ada.d1"
+        }
+      ]
+    },
+    {
+      "name": "Advance Captain Ada’s voiced briefing",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.line",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Hear the garden repair alert",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.line",
+          "op": "eq",
+          "value": "orby.break.garden"
+        }
+      ]
+    },
+    {
+      "name": "Finish the first-day briefing",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.line",
+          "op": "eq",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": "Read the original station map",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.map",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Return to the Command Deck",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.map",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "Open the original case notebook",
+      "keys": [
+        "Y"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "notebook"
+        }
+      ]
+    },
+    {
+      "name": "Close the case notebook",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Walk through the west airlock to the garden",
+      "keys": [
+        "LEFT"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.room",
+          "op": "eq",
+          "value": "garden"
+        }
+      ]
+    },
+    {
+      "name": "Highlight the hydroponic plants",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "spot:plants"
+        }
+      ]
+    },
+    {
+      "name": "Highlight the moon melon",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "spot:melon"
+        }
+      ]
+    },
+    {
+      "name": "Focus the original light-panel hotspot",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "spot:panel"
+        }
+      ]
+    },
+    {
+      "name": "Hear Orby explain the real wiring repair",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.line",
+          "op": "eq",
+          "value": "orby.pz.wires"
+        }
+      ]
+    },
+    {
+      "name": "Open the four-colour wiring puzzle",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.puzzle",
+          "op": "eq",
+          "value": "wires"
+        }
+      ]
+    },
+    {
+      "name": "Focus the first coloured wire",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.focus",
+          "op": "eq",
+          "value": "wl0"
+        }
+      ]
+    },
+    {
+      "name": "Select the first wire end",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.wireSelected",
+          "op": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "name": "Pause the station investigation",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Resume the original station investigation",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    }
+  ],
+  "storageRestartRequired": true
+}
