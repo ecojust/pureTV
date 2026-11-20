@@ -27,5 +27,19 @@ jobs:
                       b=p.read_bytes(); data[p.name]={'sha256':hashlib.sha256(b).hexdigest(),'bytes':base64.b64encode(b).decode()}
               assert all(n in data for n in ('raw.json','packages.json','display.json','alchemists-lattice.json','bumble-basket.json','neon-arcana.json','oathstones.json','solder-and-rain.json','starsling.json','story-thief.json'))
               payload=base64.b64encode(gzip.compress(json.dumps(data,sort_keys=True,separators=(',',':')).encode(),mtime=0)).decode()
-              print('::notice title='+root.name+'::'+payload)
+              Path(root.name+'.b64').write_text(payload)
           PY
+      - name: Preserve original macOS 15 report chunks
+        run: |
+          python3 - <<'PYCODE'
+          from pathlib import Path
+          p=Path('original-puzzle-wk-probe-macos-15-intel.b64');data=p.read_text()
+          for i in range(0,len(data),2800):print(f'::notice title={p.stem}-{i//2800:02}::'+data[i:i+2800])
+          PYCODE
+      - name: Preserve original macOS 26 report chunks
+        run: |
+          python3 - <<'PYCODE'
+          from pathlib import Path
+          p=Path('original-puzzle-wk-probe-macos-26-intel.b64');data=p.read_text()
+          for i in range(0,len(data),2800):print(f'::notice title={p.stem}-{i//2800:02}::'+data[i:i+2800])
+          PYCODE
