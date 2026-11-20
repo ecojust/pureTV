@@ -1,0 +1,129 @@
+Start testing: Nov 20 09:58 Coordinated Universal Time
+----------------------------------------------------------
+1/5 Testing: protocol
+1/5 Test: protocol
+Command: "D:/a/_temp/packages/build/Release/protocol-test.exe"
+Directory: D:/a/_temp/packages/build
+"protocol" start time: Nov 20 09:58 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+PASS 1: all nine buttons have independent states and non-consuming pulse counters
+PASS 2: initial hello and nine neutral sync frames ACK exact sequences without actions
+PASS 3: axes cancel opposing directions without merging independent buttons
+PASS 4: short down/up between snapshots retains exactly one pulse
+PASS 5: legacy A/X and B/Y aggregates never alias physical keys or double-pulse
+PASS 6: action-key held sync is quarantined until physical release
+PASS 7: foreground directional sync supplies continuous input without action pulses
+PASS 8: unpaired long_press is not a new press for any key
+PASS 9: duplicate downs while held do not increment either counter
+PASS 10: duplicate and stale sequences ACK but cannot replay down or release
+PASS 11: hello, ping, and stale valid frames refresh heartbeat without dropping held state
+PASS 12: explicit cancellation neutralizes holds and increments cancellation without a reward
+PASS 13: focus gate transitions cancel once while retaining identity and session
+PASS 14: all background messages ACK but never move, pulse, or implicitly resume
+PASS 15: every held key begun in the background stays blocked after refocus until release
+PASS 16: background sync also quarantines directions
+PASS 17: release during background clears quarantine without a new action pulse
+PASS 18: first connection in background cannot queue START for later
+PASS 19: same identity reconnect replaces old peer and resets counters, session, and sequence
+PASS 20: background reconnect retains input gate and quarantines new held keys
+PASS 21: a different controller cannot steal the occupied seat
+PASS 22: identity change on a socket fails without mutating active input
+PASS 23: disconnect clears controls but retains last ID for explicit disconnect observation
+PASS 24: four-peer admission and exact 5-second unannounced deadline
+PASS 25: valid button-first connection matches existing protocol without requiring hello
+PASS 26: invalid JSON, UTF-8, arrays, scalar roots, and concatenated documents fail closed
+PASS 27: all required fields use strict scalar types and safe integer numbers
+PASS 28: action/pressed/duration combinations are validated before state changes
+PASS 29: ID permits full ASCII protocol alphabet and the 96-byte boundary
+PASS 30: oversized receive fails without changing active state
+PASS 31: stop drops every peer and leaves monotonically newer cancellation state
+PASS 32: independent protocol instances produce different connection sessions
+32 portable controller protocol tests passed
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"protocol" end time: Nov 20 09:58 Coordinated Universal Time
+"protocol" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/5 Testing: preferences
+2/5 Test: preferences
+Command: "D:/a/_temp/packages/build/Release/preferences-test.exe"
+Directory: D:/a/_temp/packages/build
+"preferences" start time: Nov 20 09:58 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+5 serialized native preference boundary groups passed
+<end of output>
+Test time =   0.10 sec
+----------------------------------------------------------
+Test Passed.
+"preferences" end time: Nov 20 09:58 Coordinated Universal Time
+"preferences" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/5 Testing: entry-url
+3/5 Test: entry-url
+Command: "D:/a/_temp/packages/build/Release/entry-url-test.exe"
+Directory: D:/a/_temp/packages/build
+"entry-url" start time: Nov 20 09:58 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+27 exact local entry/query cases passed
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"entry-url" end time: Nov 20 09:58 Coordinated Universal Time
+"entry-url" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/5 Testing: diagnostic-log
+4/5 Test: diagnostic-log
+Command: "D:/a/_temp/packages/build/Release/diagnostic-log-test.exe"
+Directory: D:/a/_temp/packages/build
+"diagnostic-log" start time: Nov 20 09:58 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+8 bounded diagnostic log groups passed (portable C++, not Win32 startup)
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"diagnostic-log" end time: Nov 20 09:58 Coordinated Universal Time
+"diagnostic-log" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/5 Testing: controller-bind
+5/5 Test: controller-bind
+Command: "D:/a/_temp/packages/build/Release/controller-bind-test.exe"
+Directory: D:/a/_temp/packages/build
+"controller-bind" start time: Nov 20 09:58 Coordinated Universal Time
+Output:
+----------------------------------------------------------
+synthetic-policy-cases=7 passed; default=63485; fallback-at-most-once
+actual-windows-observation blocker=exclusive-wildcard accepting=0 candidate=exclusive-wildcard preferred=55228 firstError=10048 fallbackError=0 succeeded=1 fallbackAttempted=1 bindAttempts=2
+actual-windows-endpoint fallback=55229 expectedFirstError=10048
+actual-windows-case=exclusive-bound-not-listening candidate=exclusive-wildcard preferred=55228 firstError=10048 fallback=55229 bindAttempts=2 stableConnections=3 passed
+actual-windows-observation blocker=exclusive-wildcard accepting=1 candidate=exclusive-wildcard preferred=55233 firstError=10048 fallbackError=0 succeeded=1 fallbackAttempted=1 bindAttempts=2
+actual-windows-endpoint fallback=55234 expectedFirstError=10048
+actual-windows-case=exclusive-listening candidate=exclusive-wildcard preferred=55233 firstError=10048 fallback=55234 bindAttempts=2 stableConnections=3 passed
+actual-windows-observation blocker=exclusive-wildcard accepting=0 candidate=exclusive-loopback preferred=55238 firstError=10013 fallbackError=0 succeeded=1 fallbackAttempted=1 bindAttempts=2
+actual-windows-endpoint fallback=55239 expectedFirstError=10013
+actual-windows-case=exclusive-bound-not-listening candidate=exclusive-loopback preferred=55238 firstError=10013 fallback=55239 bindAttempts=2 stableConnections=3 passed
+actual-windows-observation blocker=exclusive-wildcard accepting=1 candidate=exclusive-loopback preferred=55243 firstError=10013 fallbackError=0 succeeded=1 fallbackAttempted=1 bindAttempts=2
+actual-windows-endpoint fallback=55244 expectedFirstError=10013
+actual-windows-case=exclusive-listening candidate=exclusive-loopback preferred=55243 firstError=10013 fallback=55244 bindAttempts=2 stableConnections=3 passed
+actual-windows-observation invalid-socket firstError=10038 fallbackError=0 succeeded=0 fallbackAttempted=0 bindAttempts=1
+actual-windows-case=invalid-socket firstError=10038 bindAttempts=1 fatal-preserved passed
+<end of output>
+Test time =   0.09 sec
+----------------------------------------------------------
+Test Passed.
+"controller-bind" end time: Nov 20 09:58 Coordinated Universal Time
+"controller-bind" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 20 09:58 Coordinated Universal Time
