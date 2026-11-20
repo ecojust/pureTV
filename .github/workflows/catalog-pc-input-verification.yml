@@ -1,0 +1,50 @@
+name: Six signed games on Windows and macOS
+on:
+  push:
+    branches: [qa/expansion-six-desktop-20261120]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  frozen:
+    name: Signed games · ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    env:
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: qa
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: d03513ef9f6d775bf0cd9530582826dce98cd6af
+          path: project
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/pc-games/packages/
+            /tools/pc-games/host.py
+            /tools/pc-games/requirements.txt
+            /tools/pc-games/pc-bridge.js
+            /tools/pc-games/catalog.json
+            /joystick-games/qa/controller-input/pc.py
+            /joystick-games/qa/controller-input/sdk.py
+            /puretv-joystick/joystick_sdk.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install playwright==1.62.0 -r project/tools/pc-games/requirements.txt
+      - name: Verify distributed host, launch signed games and exercise the original SDK and keyboard
+        run: python qa/run.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: signed-desktop-input-${{ matrix.os }}
+          path: results/
+          if-no-files-found: warn
