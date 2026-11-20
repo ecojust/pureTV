@@ -30,7 +30,7 @@ python tools/update-tv-store-catalog.py --build-tools "$ANDROID_HOME/build-tools
 
 现有顺序依据首次新增资源的 Git 历史（目录搬迁前的条目继续追溯原路径），百款 Game Kit 游戏依据 `resource/game-kit/progress.json` 的 `number` 从 1 到 100 登记。旧游戏先于这百款游戏；影音从早到晚为 ShortVideo TV、WebTV、HIFINi TV、CCTV Live。同一提交批量新增、无法证明独立制作先后的条目按目录名固定登记，不把这些条目之间的位置视为精确的时间先后。新资源尚未提交时也须先登记，因此浅克隆或源码归档中重新生成索引会得到相同顺序。
 
-中英文首页依次展示管理工具、应用工具、启动器和影音应用。分隔线后的游戏专栏按玩法分为七类，每款游戏只占一张卡，Android TV、macOS 和 Windows x64 的可用下载放在同一张卡上。[首页游戏专栏](../README.md#games)
+中英文首页依次展示管理工具、应用工具、启动器和影音应用。分隔线后的游戏专栏按玩法分组，每款游戏只占一张卡，Android TV、macOS 和 Windows x64 的可用下载放在同一张卡上。[首页游戏专栏](../README.md#games)
 
 新增游戏、调整分类或更新下载入口时，修改两种语言共用的游戏清单，再运行 `python tools/update-resource-index.py`。核对两份首页的分类、游戏数量和平台链接是否一致。引用游戏专栏时使用固定锚点 `#games`。[首页游戏清单](../tools/readme-app-games.json)
 

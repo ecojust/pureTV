@@ -80,9 +80,9 @@
 
 <!-- game-index:start -->
 
-**43 controller games** · Android TV (43) · macOS (24) · Windows x64 (19)
+**36 controller games** · Android TV (36) · macOS (24) · Windows x64 (19)
 
-[Racing and sports (13)](#controller-racing) · [Action, RPGs and exploration (2)](#controller-action) · [Platformers, bullet hell and arcade (7)](#controller-arcade) · [Strategy, tower defense and card games (1)](#controller-strategy) · [Puzzles and brainteasers (18)](#controller-puzzle) · [Management, sandbox and casual games (1)](#controller-casual) · [One-button arcade (1)](#controller-one-button)
+[Racing and sports (13)](#controller-racing) · [Action, RPGs and exploration (2)](#controller-action) · [Platformers, bullet hell and arcade (7)](#controller-arcade) · [Strategy, tower defense and card games (1)](#controller-strategy) · [Puzzles and brainteasers (12)](#controller-puzzle) · [One-button arcade (1)](#controller-one-button)
 
 <a id="controller-racing"></a>
 
@@ -162,7 +162,7 @@
 
 <a id="controller-puzzle"></a>
 
-### Puzzles and brainteasers (18)
+### Puzzles and brainteasers (12)
 
 <table>
   <tr>
@@ -182,31 +182,6 @@
     <td align="center" valign="top" width="25%"><a href="joystick-games/atlas-of-ink/"><img src="docs/puzzle-nine/browser/atlas-of-ink/playing-1280.jpg" width="180" alt="Atlas of Ink gameplay"><br>Atlas of Ink</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-atlas-of-ink-v0.1.1/atlas-of-ink-0.1.1.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-atlas-of-ink-v0.1.1/AtlasOfInk-0.1.1-macos-universal.dmg">macOS</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-atlas-of-ink-v0.1.1/AtlasOfInk-0.1.1-windows-x64-setup.exe">Windows</a></td>
     <td align="center" valign="top" width="25%"><a href="joystick-games/starbase-spooky/"><img src="docs/puzzle-nine/browser/starbase-spooky/playing-1280.jpg" width="180" alt="Starbase Spooky gameplay"><br>Starbase Spooky</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/starbase-spooky-0.1.2.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/StarbaseSpooky-0.1.2-macos-universal.dmg">macOS</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/StarbaseSpooky-0.1.2-windows-x64-setup.exe">Windows</a></td>
     <td align="center" valign="top" width="25%"><a href="joystick-games/sugarplum-drop/"><img src="joystick-games/sugarplum-drop/docs/browser-attempt-3/playing-1280.png" width="180" alt="Sugarplum Drop gameplay"><br>Sugarplum Drop</a><br><a href="joystick-games/sugarplum-drop/sugarplum-drop-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/sugarplum-drop/SugarplumDrop-0.1.0-macos-universal.dmg?raw=1">macOS</a> · <a href="joystick-games/sugarplum-drop/SugarplumDrop-0.1.0-windows-x64-setup.exe?raw=1">Windows</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/twenty-four/"><img src="resource/apps/twenty-four/thumb.png" width="180" alt="Twenty Four gameplay"><br>Twenty Four</a><br><a href="resource/apps/twenty-four/twenty-four-0.2.2.apk?raw=1">APK</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/torch-bridge/"><img src="resource/apps/torch-bridge/thumb.png" width="180" alt="Torch Bridge gameplay"><br>Torch Bridge</a><br><a href="resource/apps/torch-bridge/torch-bridge-0.2.2.apk?raw=1">APK</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/packing-sculptor/"><img src="resource/apps/packing-sculptor/thumb.png" width="180" alt="Packing Sculptor gameplay"><br>Packing Sculptor</a><br><a href="resource/apps/packing-sculptor/packing-sculptor-0.2.2.apk?raw=1">APK</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/glass-fold/"><img src="resource/apps/glass-fold/thumb.png" width="180" alt="Glass Fold (Chinese UI) gameplay"><br>Glass Fold (Chinese UI)</a><br><a href="resource/apps/glass-fold/glass-fold-0.2.2.apk?raw=1">APK</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tension-span/"><img src="resource/apps/tension-span/thumb.png" width="180" alt="Tension Span (Chinese UI) gameplay"><br>Tension Span (Chinese UI)</a><br><a href="resource/apps/tension-span/tension-span-0.2.3.apk?raw=1">APK</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/prism-relay/"><img src="resource/apps/prism-relay/thumb.png" width="180" alt="Light Relay (Chinese UI) gameplay"><br>Light Relay (Chinese UI)</a><br><a href="resource/apps/prism-relay/prism-relay-0.2.3.apk?raw=1">APK</a></td>
-    <td width="25%"></td>
-    <td width="25%"></td>
-  </tr>
-</table>
-
-<a id="controller-casual"></a>
-
-### Management, sandbox and casual games (1)
-
-<table>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/cozy-island/"><img src="resource/apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV gameplay"><br>Cozy Island TV</a><br><a href="resource/apps/cozy-island/cozy-island-0.5.4.apk?raw=1">APK</a></td>
-    <td width="25%"></td>
-    <td width="25%"></td>
-    <td width="25%"></td>
   </tr>
 </table>
 

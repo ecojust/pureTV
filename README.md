@@ -80,9 +80,9 @@
 
 <!-- game-index:start -->
 
-**43 款手柄游戏** · Android TV 43 款 · macOS 24 款 · Windows x64 19 款
+**36 款手柄游戏** · Android TV 36 款 · macOS 24 款 · Windows x64 19 款
 
-[竞速与体育（13）](#controller-racing) · [动作、角色扮演与探索（2）](#controller-action) · [平台、弹幕与街机（7）](#controller-arcade) · [策略、塔防与卡牌（1）](#controller-strategy) · [解谜与益智（18）](#controller-puzzle) · [经营、沙盒与休闲（1）](#controller-casual) · [单键街机（1）](#controller-one-button)
+[竞速与体育（13）](#controller-racing) · [动作、角色扮演与探索（2）](#controller-action) · [平台、弹幕与街机（7）](#controller-arcade) · [策略、塔防与卡牌（1）](#controller-strategy) · [解谜与益智（12）](#controller-puzzle) · [单键街机（1）](#controller-one-button)
 
 <a id="controller-racing"></a>
 
@@ -162,7 +162,7 @@
 
 <a id="controller-puzzle"></a>
 
-### 解谜与益智（18）
+### 解谜与益智（12）
 
 <table>
   <tr>
@@ -182,31 +182,6 @@
     <td align="center" valign="top" width="25%"><a href="joystick-games/atlas-of-ink/"><img src="docs/puzzle-nine/browser/atlas-of-ink/playing-1280.jpg" width="180" alt="墨绘地图集游戏画面"><br>墨绘地图集</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-atlas-of-ink-v0.1.1/atlas-of-ink-0.1.1.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-atlas-of-ink-v0.1.1/AtlasOfInk-0.1.1-macos-universal.dmg">macOS</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-atlas-of-ink-v0.1.1/AtlasOfInk-0.1.1-windows-x64-setup.exe">Windows</a></td>
     <td align="center" valign="top" width="25%"><a href="joystick-games/starbase-spooky/"><img src="docs/puzzle-nine/browser/starbase-spooky/playing-1280.jpg" width="180" alt="幽灵空间站游戏画面"><br>幽灵空间站</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/starbase-spooky-0.1.2.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/StarbaseSpooky-0.1.2-macos-universal.dmg">macOS</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/StarbaseSpooky-0.1.2-windows-x64-setup.exe">Windows</a></td>
     <td align="center" valign="top" width="25%"><a href="joystick-games/sugarplum-drop/"><img src="joystick-games/sugarplum-drop/docs/browser-attempt-3/playing-1280.png" width="180" alt="Sugarplum Drop游戏画面"><br>Sugarplum Drop</a><br><a href="joystick-games/sugarplum-drop/sugarplum-drop-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/sugarplum-drop/SugarplumDrop-0.1.0-macos-universal.dmg?raw=1">macOS</a> · <a href="joystick-games/sugarplum-drop/SugarplumDrop-0.1.0-windows-x64-setup.exe?raw=1">Windows</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/twenty-four/"><img src="resource/apps/twenty-four/thumb.png" width="180" alt="四则二十四游戏画面"><br>四则二十四</a><br><a href="resource/apps/twenty-four/twenty-four-0.2.2.apk?raw=1">APK</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/torch-bridge/"><img src="resource/apps/torch-bridge/thumb.png" width="180" alt="夜桥接力游戏画面"><br>夜桥接力</a><br><a href="resource/apps/torch-bridge/torch-bridge-0.2.2.apk?raw=1">APK</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/packing-sculptor/"><img src="resource/apps/packing-sculptor/thumb.png" width="180" alt="异形装箱游戏画面"><br>异形装箱</a><br><a href="resource/apps/packing-sculptor/packing-sculptor-0.2.2.apk?raw=1">APK</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/glass-fold/"><img src="resource/apps/glass-fold/thumb.png" width="180" alt="折光工坊游戏画面"><br>折光工坊</a><br><a href="resource/apps/glass-fold/glass-fold-0.2.2.apk?raw=1">APK</a></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/tension-span/"><img src="resource/apps/tension-span/thumb.png" width="180" alt="拉索桥梁游戏画面"><br>拉索桥梁</a><br><a href="resource/apps/tension-span/tension-span-0.2.3.apk?raw=1">APK</a></td>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/prism-relay/"><img src="resource/apps/prism-relay/thumb.png" width="180" alt="镜光接力游戏画面"><br>镜光接力</a><br><a href="resource/apps/prism-relay/prism-relay-0.2.3.apk?raw=1">APK</a></td>
-    <td width="25%"></td>
-    <td width="25%"></td>
-  </tr>
-</table>
-
-<a id="controller-casual"></a>
-
-### 经营、沙盒与休闲（1）
-
-<table>
-  <tr>
-    <td align="center" valign="top" width="25%"><a href="resource/apps/cozy-island/"><img src="resource/apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV游戏画面"><br>Cozy Island TV</a><br><a href="resource/apps/cozy-island/cozy-island-0.5.4.apk?raw=1">APK</a></td>
-    <td width="25%"></td>
-    <td width="25%"></td>
-    <td width="25%"></td>
   </tr>
 </table>
 
