@@ -1,68 +1,73 @@
-name: Copy original catalog artifact to existing draft
-on:
-  workflow_dispatch:
-    inputs:
-      source_run:
-        description: Original catalog run ID
-        required: true
-        type: string
-      source_attempt:
-        description: Original run attempt
-        required: true
-        default: '1'
-        type: string
-      source_sha:
-        description: Exact original 40-character source commit
-        required: true
-        type: string
-      artifact_id:
-        description: Original package artifact ID (ZIP bytes stay unchanged)
-        required: true
-        type: string
-      release_id:
-        description: Existing draft release ID with exact staging tag/source
-        required: true
-        type: string
+name: Stage verified original packages for the catalog
+on: workflow_dispatch
 permissions:
   actions: read
   contents: write
-concurrency:
-  group: artifact-draft-transfer-${{ inputs.release_id }}
-  cancel-in-progress: false
 jobs:
-  transfer:
+  stage:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
-    env:
-      GH_TOKEN: ${{ github.token }}
-      SOURCE_RUN: ${{ inputs.source_run }}
-      SOURCE_ATTEMPT: ${{ inputs.source_attempt }}
-      SOURCE_SHA: ${{ inputs.source_sha }}
-      ARTIFACT_ID: ${{ inputs.artifact_id }}
-      RELEASE_ID: ${{ inputs.release_id }}
+    timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          sparse-checkout: |
-            joystick-games/tools
-            .github/workflows
-      - name: Test transfer boundaries without network or release writes
-        run: python3 joystick-games/tools/artifact-draft-transfer-test.py
-      - name: Verify original ZIP and upload once to the existing draft
+      - name: Check source, original archive and existing draft before copying selected files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FIXED_SPEC: >-
+            {"run":44757260595,"source":"89faf2e4f5e17bd54d08859962dc9335c8b4cddb","workflow":".github/workflows/joystick-games-android.yml","job":"sign","artifact":14640280629,"artifact_name":"joystick-android-signed","release":452834419,"tag":"catalog-tv-controls-v1.0.0","target":"20e50e1e1e5ef4b2cdd8f1fa4f482916258b7284","files":[["packages/cf-transport-ship/cf-transport-ship-0.1.1.apk","cf-transport-ship-0.1.1.apk","d0fc0559891b4a12cb8bf717b1fc95c75209296bf460cc22a9a32c93ac49da54"],["packages/qq-speed/qq-speed-0.1.1.apk","qq-speed-0.1.1.apk","1231b9afc42bb524126653893cb47300399f88bb600b9c768910ad0c22cb4573"]]}
+        shell: bash
         run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py transfer \
-            --run "$SOURCE_RUN" --attempt "$SOURCE_ATTEMPT" --source "$SOURCE_SHA" \
-            --artifact "$ARTIFACT_ID" --release "$RELEASE_ID" \
-            --output "$RUNNER_TEMP/artifact-draft-transfer"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: artifact-draft-transfer-receipt
-          path: ${{ runner.temp }}/artifact-draft-transfer/receipts/transfer.json
-          if-no-files-found: warn
-      - name: Preserve only the small receipt on a new immutable branch
-        if: always()
-        run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py export-receipt \
-            --directory "$RUNNER_TEMP/artifact-draft-transfer/receipts"
+          python - <<'PY'
+          """Run on a GitHub-hosted runner with a pinned original Actions artifact and existing draft."""
+          import hashlib
+          import json
+          import os
+          import subprocess
+          import zipfile
+          from pathlib import Path
+
+          def api(path):
+              return json.loads(subprocess.check_output(['gh', 'api', 'repos/ecojust/pureTV/' + path]))
+
+          def digest(path):
+              with path.open('rb') as f:
+                  d = hashlib.sha256()
+                  for block in iter(lambda: f.read(1024 * 1024), b''):
+                      d.update(block)
+                  return 'sha256:' + d.hexdigest()
+
+          spec=json.loads(os.environ['FIXED_SPEC'])
+          assert os.environ['GITHUB_REPOSITORY']=='ecojust/pureTV'
+          run=api('actions/runs/'+str(spec['run']))
+          assert run['head_sha']==spec['source'] and run['path']==spec['workflow']
+          assert run['head_repository']['full_name']==run['repository']['full_name']=='ecojust/pureTV'
+          jobs=api('actions/runs/'+str(spec['run'])+'/jobs?per_page=100')['jobs']
+          assert any(j['name']==spec['job'] and j['conclusion']=='success' for j in jobs)
+          artifact=api('actions/artifacts/'+str(spec['artifact']))
+          assert artifact['workflow_run']['id']==run['id'] and artifact['name']==spec['artifact_name'] and not artifact['expired']
+          def release():
+              r=api('releases/'+str(spec['release']))
+              assert r['draft'] and r['tag_name']==spec['tag'] and r['target_commitish']==spec['target']
+              return r
+          release()
+          archive=Path('original.zip')
+          with archive.open('wb') as f:
+              subprocess.run(['gh','api','repos/ecojust/pureTV/actions/artifacts/'+str(artifact['id'])+'/zip'],check=True,stdout=f)
+          assert archive.stat().st_size==artifact['size_in_bytes'] and digest(archive)==artifact['digest']
+          with zipfile.ZipFile(archive) as z:
+              for row in spec['files']:
+                  inside,name,sha=row
+                  assert name==Path(name).name and name in {p[1] for p in spec['files']}
+                  info=z.getinfo(inside)
+                  assert z.namelist().count(inside)==1 and info.file_size<512*1024*1024
+                  out=Path(name)
+                  with out.open('wb') as f, z.open(info) as source:
+                      for block in iter(lambda:source.read(1024*1024),b''):
+                          f.write(block)
+                  fingerprint=digest(out)
+                  assert sha is None or fingerprint=='sha256:'+sha
+                  assets={a['name']:a for a in release()['assets']}
+                  if name not in assets:
+                      subprocess.run(['gh','release','upload',spec['tag'],str(out),'-R','ecojust/pureTV'],check=True)
+                  result=next(a for a in release()['assets'] if a['name']==name)
+                  assert result['digest']==fingerprint and result['size']==out.stat().st_size
+                  print(name, result['size'], fingerprint)
+          PY
