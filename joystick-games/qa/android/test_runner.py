@@ -100,6 +100,23 @@ class HeldInputObservation(unittest.TestCase):
         self.acceptance.snapshot.assert_called_once_with()
         self.assertEqual(self.acceptance.button.call_args_list, [mock.call(key, False) for key in runner.KEYS])
 
+    def test_race_checkpoint_only_reads_display_and_retains_capture_errors(self):
+        with tempfile.TemporaryDirectory() as folder:
+            self.acceptance.adb = ['fixture-adb']
+            self.acceptance.out = Path(folder)
+            self.acceptance.snapshot = mock.Mock(side_effect=AssertionError('unexpected observer GET'))
+            with mock.patch.object(runner.subprocess, 'check_output', return_value=b'\x89PNG\r\n\x1a\nfixture') as read:
+                self.acceptance.capture_racing_checkpoint({'game': {'frames': 191}})
+                read.assert_called_once_with(['fixture-adb', 'exec-out', 'screencap', '-p'], timeout=15)
+            with mock.patch.object(runner.subprocess, 'check_output', return_value=b'invalid'):
+                self.acceptance.capture_racing_checkpoint({'game': {'frames': 192}})
+            first, second = self.acceptance.report['racingCheckpoints']
+            self.assertEqual(first['afterFrame'], 191)
+            self.assertEqual(first['sha256'], runner.file_info(self.acceptance.out / first['path'])['sha256'])
+            self.assertIn('Invalid Android screenshot', second['error'])
+            self.acceptance.snapshot.assert_not_called()
+            self.acceptance.button.assert_not_called()
+
     def test_successful_first_read_keeps_ordinary_hold_semantics(self):
         self.step['timeoutSeconds'] = 15
         playing = self.state(52, 'playing', True)

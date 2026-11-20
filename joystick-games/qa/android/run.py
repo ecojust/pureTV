@@ -893,6 +893,22 @@ class Acceptance:
         return self.wait_fresh(held, released_and_expected, timeout=remaining,
                                label='plan-gameplay-released-' + step['name'])
 
+    def capture_racing_checkpoint(self, state):
+        # The plan already verified moving speed and progress. Collect the current
+        # display without consuming another controller frame or changing later QA.
+        checkpoint = {'afterFrame': self.game(state)['frames'], 'startedAt': time.time()}
+        self.report.setdefault('racingCheckpoints', []).append(checkpoint)
+        try:
+            data = subprocess.check_output(self.adb + ['exec-out', 'screencap', '-p'], timeout=15)
+            assert data.startswith(b'\x89PNG\r\n\x1a\n'), 'Invalid Android screenshot'
+            path = self.out / 'driving-checkpoint.png'
+            path.write_bytes(data)
+            checkpoint.update(path=path.name, **file_info(path))
+        except (OSError, AssertionError, subprocess.SubprocessError) as error:
+            checkpoint['error'] = str(error)
+        checkpoint['endedAt'] = time.time()
+        self.save()
+
     def catalog_scenarios(self):
         # The per-game plan owns startup/menu navigation as well as gameplay inputs.
         assert self.game(self.snapshot()).get('stage') == 'menu'
@@ -906,7 +922,7 @@ class Acceptance:
                 continue
             for key in step['keys']: self.button(key)
             held = self.wait_fresh(before, lambda s: all(self.native_buttons(s).get(k) is True for k in step['keys']),
-                                   label='plan-held-' + step['name'])
+                                   timeout=max(60, step.get('timeoutSeconds', 60)), label='plan-held-' + step['name'])
             time.sleep(step['holdMs'] / 1000)
             # Capture gameplay while input is still held; release-only changes can also satisfy the plan below.
             after = self.finish_catalog_hold(step, before, held)
@@ -915,6 +931,8 @@ class Acceptance:
             if step.get('androidDomMenu'):
                 self.capture('dom-menu-' + str(self.plan['steps'].index(step)), [self.clients[0].identity])
             self.passed('actual SDK gameplay: ' + step['name'], {'expect': step['expect'], 'holdMs': step['holdMs']})
+            if self.args.game == 'ponpoko-kart' and step['name'] == 'Accelerate on original course':
+                self.capture_racing_checkpoint(after)
         self.capture('playing', [self.clients[0].identity])
         self.catalog_pause()
         self.capture('paused', [self.clients[0].identity])
