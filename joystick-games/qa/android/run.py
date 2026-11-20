@@ -610,7 +610,7 @@ class Acceptance:
         component = 'com.ecojust.joystickqa.' + self.args.game.replace('-', '') + '/com.ecojust.controllerqa.Observer'
         self.instrument = subprocess.Popen(self.adb + ['shell', 'am', 'instrument', '-w', '-r', '-e', 'diagnosticPort', '63486',
                                                         '-e', 'occupyDefaultPort', str(self.args.occupy_default_port).lower(), component], stdout=self.instrument_log, stderr=subprocess.STDOUT)
-        initial = self.wait(self.initial_menu_ready, timeout=150, label='initial-menu')
+        initial = self.wait(self.initial_menu_ready, timeout=300 if self.args.game == 'kart-royale' else 150, label='initial-menu')
         # Keep the actual observation even when the renderer/port assertions below fail.
         self.record('initial-menu', initial)
         self.save()
@@ -1048,7 +1048,8 @@ class Acceptance:
             if step.get('androidDomMenu'):
                 self.capture('dom-menu-' + str(self.plan['steps'].index(step)), [self.clients[0].identity])
             self.passed('actual SDK gameplay: ' + step['name'], {'expect': step['expect'], 'holdMs': step['holdMs']})
-            if self.args.game == 'ponpoko-kart' and step['name'] == 'Accelerate on original course':
+            if ((self.args.game == 'ponpoko-kart' and step['name'] == 'Accelerate on original course')
+                    or (self.args.game == 'kart-royale' and step['name'] == 'Accelerate original kart from grid')):
                 self.capture_racing_checkpoint(after)
         self.capture('playing', [self.clients[0].identity])
         self.catalog_pause()
