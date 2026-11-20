@@ -233,6 +233,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 joystick-games/qa/android/test_runner.py 2>&1 | tee "$RUNNER_TEMP/qa-contracts.log"
+          python3 -B joystick-games/qa/android/test_boot_services.py
           python3 joystick-games/tools/android-tests.py 2>&1 | tee "$RUNNER_TEMP/artifact-contracts.log"
           python3 joystick-games/tools/android-runtime-artifact-tests.py 2>&1 | tee "$RUNNER_TEMP/reuse-contracts.log"
           python3 -B joystick-games/qa/android/test_environment_diagnostics.py 2>&1 | tee "$RUNNER_TEMP/environment-diagnostics-tests.log"
@@ -303,6 +304,8 @@ jobs:
             python3 joystick-games/tools/android-emulator-supervisor.py prepare
             --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
           script: >-
+            python3 joystick-games/qa/android/observe_boot_services.py --adb "$ANDROID_HOME/platform-tools/adb"
+            --output "$RUNNER_TEMP/runtime/$GAME/boot-services.json" &&
             python3 joystick-games/tools/android-emulator-supervisor.py assert-ready
             --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor" &&
             python3 joystick-games/tools/android-environment-diagnostics.py
