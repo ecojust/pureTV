@@ -1,0 +1,337 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "88fe1c90bc22aa44a1160c2cc75f937a993c0e72",
+  "artifactSourceCommit": "88fe1c90bc22aa44a1160c2cc75f937a993c0e72",
+  "artifactRunId": "44713647487",
+  "startedAt": "2026-11-20T09:56:25.904036+00:00",
+  "game": "neon-arcana",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "6add0ec04a022ec4d716e516199aed45e9279514d2b33246d8b88113db47ae41",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "47d65e9e50b0630dab7e6c0957293be5b0a511b8db11b290a6a0ff3d08dc9d6f",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/neon-arcana/qa-plan.json": "55272bf7876f7605d17f59a66ccffb8d98094e3a863298fa7a326591568690e1",
+    "joystick-games/tools/qa-plan.py": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9",
+    "joystick-games/tools/macos-build.py": "4fa65936293a5d6c5e728577780edc30429a500627e8799c1c83a5095470b853",
+    "joystick-games/catalog-registry.json": "d5999df4266e55efec83d9fcf6889cd801f3cfedee4c5eeff0d366754cb949e6",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaRunId": 44713647487,
+  "qaRunAttempt": 1,
+  "runnerKind": "macos-15-intel",
+  "runnerName": "GitHub Actions 1000011755",
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "webgl2",
+    "pauseStablePaths": [
+      "gameplay.elapsed",
+      "gameplay.moves",
+      "gameplay.score",
+      "gameplay.cursorX",
+      "gameplay.cursorY"
+    ],
+    "storageRestartRequired": true,
+    "steps": [
+      {
+        "name": "Begin the restoration",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 220,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      },
+      {
+        "name": "Select the first dealt glyph",
+        "keys": [
+          "B"
+        ],
+        "holdMs": 220,
+        "expect": [
+          {
+            "path": "gameplay.selected",
+            "op": "eq",
+            "value": 0
+          }
+        ]
+      },
+      {
+        "name": "Move the selected glyph left on the lattice",
+        "keys": [
+          "LEFT"
+        ],
+        "holdMs": 220,
+        "expect": [
+          {
+            "path": "gameplay.cursorX",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Choose the next dealt glyph and its legal anchor",
+        "keys": [
+          "B"
+        ],
+        "holdMs": 220,
+        "expect": [
+          {
+            "path": "gameplay.selected",
+            "op": "eq",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "name": "Place the glyph on the actual lattice",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 220,
+        "expect": [
+          {
+            "path": "gameplay.moves",
+            "op": "increased"
+          },
+          {
+            "path": "gameplay.score",
+            "op": "increased"
+          }
+        ]
+      },
+      {
+        "name": "Inspect the first Arcana power",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 220,
+        "expect": [
+          {
+            "path": "gameplay.palette",
+            "op": "eq",
+            "value": "transmute"
+          }
+        ]
+      },
+      {
+        "name": "Highlight the Lantern",
+        "keys": [
+          "RIGHT"
+        ],
+        "holdMs": 220,
+        "expect": [
+          {
+            "path": "gameplay.palette",
+            "op": "eq",
+            "value": "lantern"
+          }
+        ]
+      },
+      {
+        "name": "Return to the lattice",
+        "keys": [
+          "Y"
+        ],
+        "holdMs": 220,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "gameplay.palette",
+            "op": "eq",
+            "value": "board"
+          }
+        ]
+      },
+      {
+        "name": "Pause the reading",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 220,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "paused"
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Resume the reading",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 220,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "paused",
+            "op": "eq",
+            "value": false
+          }
+        ]
+      }
+    ]
+  },
+  "acceptedRenderers": [
+    "webgl2"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "635efd5fbdf5bbf2e84f090c45fbe138b1eb1a94732fa1e2b72bb560658c7e20",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.neon-arcana.29f06113098c4d25987761bf3c8a523b",
+    "reusedAcrossRestartOnly": true
+  },
+  "nativeProcessArchitecture": "x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 478, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 202, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": true, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"NEON ARCANA\", \"url\": \"http://127.0.0.1:64178/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.ecojust.joystick.neonarcana\", \"name\": \"霓虹秘仪\"}, \"game\": null, \"input\": {\"connections\": 0, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 4, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 4}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"neon-arcana.v1\", \"neon-arcana.v1.meta\", \"neon-arcana.v1.settings\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.4\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"霓虹秘仪\", \"state\": \"available\"}}, \"storage\": {\"current\": {\"neon-arcana.v1\": null, \"neon-arcana.v1.meta\": null, \"neon-arcana.v1.settings\": null}, \"initial\": {\"neon-arcana.v1\": null, \"neon-arcana.v1.meta\": null, \"neon-arcana.v1.settings\": null}, \"origin\": \"http://127.0.0.1:64178\"}, \"timestamp\": 1795168675.917481}\n",
+  "lastState": {
+    "active": true,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "en",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "NEON ARCANA",
+      "url": "http://127.0.0.1:64178/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystick.neonarcana",
+      "name": "霓虹秘仪"
+    },
+    "game": null,
+    "input": {
+      "connections": 0,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 4,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 4
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "neon-arcana.v1",
+        "neon-arcana.v1.meta",
+        "neon-arcana.v1.settings"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.4"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "霓虹秘仪",
+        "state": "available"
+      }
+    },
+    "storage": {
+      "current": {
+        "neon-arcana.v1": null,
+        "neon-arcana.v1.meta": null,
+        "neon-arcana.v1.settings": null
+      },
+      "initial": {
+        "neon-arcana.v1": null,
+        "neon-arcana.v1.meta": null,
+        "neon-arcana.v1.settings": null
+      },
+      "origin": "http://127.0.0.1:64178"
+    },
+    "timestamp": 1795168675.917481
+  },
+  "failurePhase": "initialization",
+  "nativeProcessAlive": true,
+  "lastStateFresh": true,
+  "phase": "initialization",
+  "finishedAt": "2026-11-20T09:57:56.217441+00:00"
+}
