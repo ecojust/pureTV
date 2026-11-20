@@ -1,0 +1,20 @@
+name: Stage the signed Used Car Racing 0.1.7 original APK
+on:
+  push:
+    branches: [build/catalog-v101-used-original]
+permissions:
+  contents: write
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /tools/qa-catalog-v101/
+      - name: Verify the immutable signer export and add only the new package to the unpublished draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 tools/qa-catalog-v101/attach_one.py
