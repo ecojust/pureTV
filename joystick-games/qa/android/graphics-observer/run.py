@@ -6,12 +6,14 @@ Observer reads cached diagnostics/DOM and records console messages. No game
 clock, model, renderer or GL context is changed by this driver.
 """
 import argparse
+from contextlib import contextmanager
 import hashlib
 import importlib.util
 import json
 import os
 from pathlib import Path
 import re
+import signal
 import subprocess
 import threading
 import time
@@ -48,6 +50,36 @@ STAGE_URL = ENTRY + '?mode=quick&stage=finland&car=swift&cond=stage&weather=stag
 def require(value, message):
     if not value:
         raise AssertionError(message)
+
+
+@contextmanager
+def observation_deadline(deadline):
+    """Interrupt one main-thread read/parse, including a slowly dripping body.
+
+    This diagnostic runs on Linux CI. Refuse an existing process timer rather
+    than taking ownership of another caller's alarm. No worker can continue a
+    timed-out GET or publish a late observation after this context returns.
+    """
+    require(threading.current_thread() is threading.main_thread(), 'Observer deadline requires the main thread')
+    require(signal.getitimer(signal.ITIMER_REAL) == (0.0, 0.0), 'Observer deadline refuses an existing alarm')
+    previous = signal.getsignal(signal.SIGALRM)
+
+    def expired(_signum, _frame):
+        raise TimeoutError('Read-only menu observation deadline expired')
+
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise TimeoutError('Read-only menu observation deadline expired')
+    signal.signal(signal.SIGALRM, expired)
+    try:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError('Read-only menu observation deadline expired')
+        signal.setitimer(signal.ITIMER_REAL, remaining)
+        yield
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, previous)
 
 
 def record(path):
@@ -201,16 +233,28 @@ class Diagnosis:
         if check: require(result.returncode == 0, 'ADB failed: ' + args[0])
         return result.stdout
 
-    def get(self, endpoint, timeout=15, save=None):
+    def get(self, endpoint, timeout=15, save=None, deadline=None):
         require(endpoint in ('status', 'console', 'graphics'), 'Read-only Observer endpoint')
         entry = {'endpoint': endpoint, 'startedAt': time.time(), 'timeoutSeconds': timeout}
         try:
-            with urlopen('http://127.0.0.1:' + str(self.port) + '/' + endpoint, timeout=timeout) as response:
-                data = response.read(512 * 1024 + 1)
-            require(len(data) <= 512 * 1024, 'Observer response budget exceeded')
-            value = json.loads(data)
-            require(isinstance(value, dict), 'Observer object expected')
-            entry.update(status='completed', bytes=len(data), sha256=hashlib.sha256(data).hexdigest())
+            def read():
+                with urlopen('http://127.0.0.1:' + str(self.port) + '/' + endpoint, timeout=timeout) as response:
+                    data = response.read(512 * 1024 + 1)
+                require(len(data) <= 512 * 1024, 'Observer response budget exceeded')
+                value = json.loads(data)
+                require(isinstance(value, dict), 'Observer object expected')
+                return data, value, hashlib.sha256(data).hexdigest()
+
+            if deadline is None:
+                data, value, digest = read()
+            else:
+                until = min(deadline, time.monotonic() + timeout)
+                with observation_deadline(until):
+                    data, value, digest = read()
+                # Never publish a body that completed/parsed after the budget.
+                if time.monotonic() >= until:
+                    raise TimeoutError('Read-only menu observation deadline expired')
+            entry.update(status='completed', bytes=len(data), sha256=digest)
             if save: (self.out / save).write_bytes(data); entry['savedAs'] = save
             if endpoint == 'graphics': self.last = value
             return value
@@ -239,6 +283,53 @@ class Diagnosis:
             time.sleep(min(.12, max(0, deadline - time.monotonic())))
         self.report['timeout'] = {'label': label, 'seconds': timeout, 'lastTransportError': last_error}
         raise AssertionError(label + ' timed out; final actual observation retained')
+
+    def menu_graphics(self, deadline):
+        """Same 45s/three-new-GET transport policy as the original QA reader.
+
+        Keep this driver's bounded body reader and raw HTTP log. The original
+        menu deadline also caps the read; no input or cached result is replayed.
+        """
+        until = min(deadline, time.monotonic() + original.OBSERVER_SNAPSHOT_TIMEOUT)
+        call = getattr(self, '_menu_graphics_calls', 0) + 1
+        self._menu_graphics_calls = call
+        transport = (RemoteDisconnected, ConnectionResetError, ConnectionAbortedError,
+                     ConnectionRefusedError, TimeoutError)
+        failures = 0
+        for attempt in range(1, original.OBSERVER_SNAPSHOT_ATTEMPTS + 1):
+            remaining = until - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError('Read-only menu observation deadline expired')
+            request_timeout = min(original.OBSERVER_REQUEST_TIMEOUT, remaining)
+            started = time.time()
+            try:
+                value = self.get('graphics', request_timeout, deadline=until)
+                if time.monotonic() > until:
+                    raise TimeoutError('Read-only menu observation deadline expired')
+            except transport + (URLError,) as error:
+                if isinstance(error, HTTPError) or (isinstance(error, URLError) and not isinstance(error.reason, transport)):
+                    raise
+                failures += 1
+                remaining = until - time.monotonic()
+                retry = attempt < original.OBSERVER_SNAPSHOT_ATTEMPTS and remaining > 0
+                self.report.setdefault('observerTransportEvents', []).append({
+                    'operation': 'GET /graphics', 'menuReadCall': call, 'status': 'transport-failed',
+                    'attempt': attempt, 'maximumAttempts': original.OBSERVER_SNAPSHOT_ATTEMPTS,
+                    'maximumWallSeconds': original.OBSERVER_SNAPSHOT_TIMEOUT,
+                    'requestTimeoutSeconds': request_timeout, 'startedAt': started, 'endedAt': time.time(),
+                    'errorType': type(error).__name__, 'retryScheduled': retry,
+                    'remainingStepSeconds': max(0, deadline-time.monotonic())})
+                if not retry:
+                    raise
+                time.sleep(min(.12, remaining / 2))
+                continue
+            if failures:
+                self.report.setdefault('observerTransportEvents', []).append({
+                    'operation': 'GET /graphics', 'menuReadCall': call, 'status': 'transport-recovered',
+                    'attempt': attempt, 'priorTransportFailures': failures, 'startedAt': started,
+                    'endedAt': time.time(), 'responseFromNewGet': True})
+            return value
+        raise AssertionError('Unreachable menu observation retry state')
 
     def provenance(self):
         receipt = signer.verify(self.args.observer_input, self.args.build_tools)
@@ -368,7 +459,7 @@ class Diagnosis:
         candidate = None
         stable = 0
         while time.monotonic() < deadline:
-            state = self.get('graphics', min(15, max(.001, deadline-time.monotonic())))
+            state = self.menu_graphics(deadline)
             require(not state.get('error') and not game(state).get('errors'), 'Actual Observer/game error during menu')
             expected = original.plan.matches(step['expect'], game(state), game(before))
             # Only the source-proven original Start action may navigate to this
