@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "steps": [
+    {
+      "name": "Start an apprenticeship",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "story"
+        }
+      ]
+    },
+    {
+      "name": "Skip to the first dialogue choice",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "story-choice"
+        }
+      ]
+    },
+    {
+      "name": "Answer the guildmaster",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "story"
+        }
+      ]
+    },
+    {
+      "name": "Finish the introduction",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "map"
+        }
+      ]
+    },
+    {
+      "name": "Travel to the first workbench",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "brief"
+        }
+      ]
+    },
+    {
+      "name": "Read the quest and start",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Choose a tile from the hand",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.selected",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Place the selected tile",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.moves",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Pause the board",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Resume explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ],
+  "pauseStablePaths": [
+    "gameplay.moves",
+    "gameplay.score",
+    "gameplay.filled"
+  ],
+  "storageRestartRequired": true
+}
