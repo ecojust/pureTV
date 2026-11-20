@@ -36,7 +36,8 @@ jobs:
         run: |
           git show HEAD:LICENSE > LICENSE
           python tools/pc-games/package.py --output dist
-          python tools/pc-games/qa/macos_portable_probe.py
+          export PYTHONPATH="$PWD/tools/pc-games/qa/trace"
+          python -u tools/pc-games/qa/macos_portable_probe.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

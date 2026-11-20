@@ -55,6 +55,7 @@ with tempfile.TemporaryDirectory() as temp:
                   artifactId=14641245660,producerRun=44756990162,portableZipSha256=digest(pczip),
                   executableFiles=original,transport='TCP SDK',games={})
     (OUT/'results.json').write_text(json.dumps(report,indent=2)+'\n')
+    print(json.dumps(report),flush=True)
     smoke.exercise([sys.executable, str(player/'launcher.py')], 'chrome')
     report['tetrisMovement'] = {'keyboard':'Enter starts; ArrowLeft moves the falling piece left',
                                 'wifi':'SDK START starts; RIGHT moves the falling piece right; disconnect removes the client'}
