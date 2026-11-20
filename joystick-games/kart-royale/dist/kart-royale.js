@@ -30578,10 +30578,17 @@ void main() {
         else focus(controls(root)[0]);
       }
     }
+    let sampledContext = null;
+    let webglRenderer = null;
     window.JoystickGameQA = { snapshot() {
       const p = ctx.race.player, panel2 = document.getElementById("puretv-controller-panel"), rect = panel2?.getBoundingClientRect();
       const frame = controller.peek(), gl = ctx.renderer?.getContext();
       const webglVersion = gl?.getParameter(gl.VERSION) ?? null;
+      if (gl && gl !== sampledContext && webglVersion) {
+        const debug = gl.getExtension("WEBGL_debug_renderer_info");
+        webglRenderer = debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : null;
+        sampledContext = gl;
+      }
       const renderer = typeof webglVersion !== "string" ? null : /^WebGL 2(?:\.|\s)/.test(webglVersion) ? "webgl2" : /^WebGL 1(?:\.|\s)/.test(webglVersion) ? "webgl1" : null;
       let savedControls = false;
       try {
@@ -30593,6 +30600,8 @@ void main() {
         stage: ctx.race.state === 5 /* Paused */ ? "paused" : ctx.race.state === 0 /* Menu */ ? "menu" : ctx.race.state === 4 /* Results */ ? "ended" : "playing",
         renderer,
         webglVersion,
+        webglRenderer: webglVersion ? webglRenderer : null,
+        quality: ctx.settings.quality,
         frames: frame.pollCount,
         controller: frame,
         paused: ctx.race.state === 5 /* Paused */,
@@ -31337,6 +31346,9 @@ void main() {
     if (!trial.ok) logPipeline("probe", "a representative material FAILED to compile/link: " + trial.log);
     gl.getExtension("WEBGL_lose_context")?.loseContext();
     return caps;
+  }
+  function usesSoftwareLow(quality, software) {
+    return software && quality === 0 /* Low */;
   }
   function selectQuality(dev, gl, requested) {
     if (requested) {
@@ -44246,6 +44258,9 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
            */
           __publicField(this, "dynamicScale", 1);
         }
+        get softwareLow() {
+          return usesSoftwareLow(this.ctx.settings.quality, this.device.software);
+        }
         init(ctx) {
           this.ctx = ctx;
           this.device = probeDevice();
@@ -44260,7 +44275,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
             throw new Error("WebGL 2 is unavailable, so the renderer cannot be created.");
           }
           if (!caps2.halfFloatRenderable) this.rung = 1 /* Ldr */;
-          if (!caps2.byteRenderable) this.rung = 2 /* Direct */;
+          if (!caps2.byteRenderable || this.softwareLow) this.rung = 2 /* Direct */;
           if (this.rung !== 0 /* Hdr */) {
             logPipeline("start", `pipeline starts on ${RUNG_NAMES[this.rung]} (boot probe)`);
           }
@@ -44283,7 +44298,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
             // With the composer running, MSAA lives on the composer's render target
             // and the default framebuffer only ever receives one fullscreen triangle.
             // Without a composer, the driver's MSAA is the only edge treatment left.
-            antialias: !this.usePost,
+            antialias: !this.usePost && !this.softwareLow,
             powerPreference: "high-performance",
             stencil: false,
             depth: true,
@@ -84392,12 +84407,14 @@ html[data-kc-open] .kr-screens { opacity: 0; }
         installResizeListeners();
         installContextRecovery();
         resize(true);
-        bootProgress(systems.length / (systems.length + 1), "compiling shaders");
-        await new Promise((r) => requestAnimationFrame(r));
-        const warm = await prewarm(ctx);
-        console.info(
-          `[prewarm] ${warm.programsBefore} -> ${warm.programsAfter} programs (${warm.objectsRevealed} hidden objects included) in ${warm.ms}ms`
-        );
+        if (!pipeline2.softwareLow) {
+          bootProgress(systems.length / (systems.length + 1), "compiling shaders");
+          await new Promise((r) => requestAnimationFrame(r));
+          const warm = await prewarm(ctx);
+          console.info(
+            `[prewarm] ${warm.programsBefore} -> ${warm.programsAfter} programs (${warm.objectsRevealed} hidden objects included) in ${warm.ms}ms`
+          );
+        }
         bootProgress(1, "ready");
         new Recorder().install();
         if (SCALER_PINNED) {
@@ -84662,11 +84679,13 @@ html[data-kc-open] .kr-screens { opacity: 0; }
           } catch (err) {
             console.error("[restore] environment re-bake failed", err);
           }
-          try {
-            const warm = await prewarm(ctx);
-            console.info(`[restore] re-warmed ${warm.programsBefore} -> ${warm.programsAfter} programs in ${warm.ms}ms`);
-          } catch (err) {
-            console.error("[restore] pre-warm failed; expect compile hitches", err);
+          if (!pipeline2.softwareLow) {
+            try {
+              const warm = await prewarm(ctx);
+              console.info(`[restore] re-warmed ${warm.programsBefore} -> ${warm.programsAfter} programs in ${warm.ms}ms`);
+            } catch (err) {
+              console.error("[restore] pre-warm failed; expect compile hitches", err);
+            }
           }
           last = performance.now();
           renderCostEma = 16.7;
