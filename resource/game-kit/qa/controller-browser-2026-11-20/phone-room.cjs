@@ -96,6 +96,10 @@ async function play(browser, slug) {
       ? "940490d703ee8b55c1df8dc3e6bb8796aeb262a3"
       : "89527853fc9c81b344b797e957c73dbe35fde67c";
     record.signedApkSha256 = receipt.apkSha256;
+  } else if (process.env.QA_USED_CAR_FIX) {
+    assert.equal(slug, "used-car-racing");
+    record.sourceCommit = "a19453ba3108efa5d5b8a4216e929688e838d84e";
+    record.signedApkSha256 = require("./used-car/signed-assets.json")[slug].apkSha256;
   } else if (process.env.QA_COAST_FIX) {
     record.sourceCommit = "1b6b026dca870f534ed4370b4a480a1c19d7d471";
     record.signedApkSha256 = require("./coast/signed-assets.json")[slug].apkSha256;
@@ -625,6 +629,10 @@ async function play(browser, slug) {
       after: value(after),
       phase: after.phase,
     });
+    if (process.env.QA_USED_CAR_FIX) {
+      const { verifyHostReturn } = require("./used-car/host-return.cjs");
+      await verifyHostReturn({ game, down, release, pass });
+    }
     const activeViews = await measure("playing");
     for (const o of activeViews) {
       assert.ok(
