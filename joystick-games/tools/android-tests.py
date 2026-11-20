@@ -97,12 +97,12 @@ class TargetSdkBoundaries(unittest.TestCase):
             with patch.object(build, 'metadata', return_value=field):
                 for slug in build.registered_packages():
                     expected = 35 if slug == 'backroad-rally' else 29
-                    if slug in ('ponpoko-kart', 'kart-royale'):
+                    if slug in ('ponpoko-kart', 'kart-royale', 'starbase-spooky'):
                         expected = configured
                     self.assertEqual(build.target_sdk(slug), expected, slug)
         for invalid in (None, True, '35', 35.0, 26, 34, 36):
             with patch.object(build, 'metadata', return_value={'androidTargetSdk': invalid}):
-                for slug in ('ponpoko-kart', 'kart-royale'):
+                for slug in ('ponpoko-kart', 'kart-royale', 'starbase-spooky'):
                     with self.assertRaises(AssertionError):
                         build.target_sdk(slug)
         with self.assertRaises(AssertionError): build.target_sdk('unregistered')
