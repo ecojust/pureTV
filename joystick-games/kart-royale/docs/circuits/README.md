@@ -13,7 +13,7 @@
 
 赛前启用游戏自带的 AI 驾驶，从发车格沿实际赛道推进。采集脚本按每步 1/30 秒更新赛车物理和追车镜头，到达标记位置后定格，交给原渲染器绘制。截取时收起倒计时、菜单等网页文字，小地图和仪表等画布仍然显示。原始画面直接编码为 JPEG。下节记录了键盘发车的独立实玩结果。
 
-在游戏目录安装 Python Playwright 与 Pillow，运行以下命令即可重拍。Linux 实际采集环境为 Chromium 156 和 Mesa llvmpipe 的 EGL 后端。可用 `--chromium` 指向已安装的 Chromium，或运行 `python -m playwright install chromium` 安装默认浏览器。车辆或粒子的位置随 AI 局势变化。
+在游戏目录安装 Python Playwright 与 Pillow，运行以下命令即可重拍。此次在 Linux 的 Xvfb 显示环境中使用 Chromium 156 和 Mesa llvmpipe EGL 后端。无显示服务的 Linux 可以在命令前加 `xvfb-run -a`。可用 `--chromium` 指向已安装的 Chromium，或运行 `python -m playwright install chromium` 安装默认浏览器。车辆或粒子的位置随 AI 局势变化。
 
 ```sh
 python docs/circuits/capture-midcourse.py --output /tmp/kart-midcourse

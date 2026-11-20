@@ -1,6 +1,6 @@
 # Turbo Kart Rally · 涡轮卡丁拉力赛
 
-[Android TV 0.1.0 签名 APK](turbo-kart-rally-0.1.0.apk?raw=true) · [扫码连接手机](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上游玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.1 签名 APK](turbo-kart-rally-0.1.1.apk?raw=true) · [扫码连接手机](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上游玩](../../docs/guide/README.md#在电脑上玩)
 
 在棕榈湾赛道上与七位电脑车手同场竞速。八位车手可选，支持 50cc、100cc、150cc 和 1、3、5 圈比赛。按住漂移键转弯蓄力，松开键发动短加速。拾取道具箱后可使用香蕉、龟壳、蘑菇或闪电。
 
