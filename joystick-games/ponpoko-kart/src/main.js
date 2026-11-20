@@ -34,6 +34,7 @@ try {
   });
   if (usesSoftwareRenderer(game.renderer.renderer.getContext())) {
     game.quality = 'low';
+    game.reusePausedFrame = true;
     game.courseShadowSize = 512;
   }
   adapter.attach(game, ui, audio);

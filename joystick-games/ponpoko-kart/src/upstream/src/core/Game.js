@@ -214,8 +214,11 @@ export class Game {
       this.togglePause();
     }
     if (this.paused) {
-      this.renderer.render(0);
-      this.tv?.rendered();
+      // The DOM pause menu remains interactive over the last composited race frame.
+      if (!this.reusePausedFrame || !this.renderer.hasRenderedFrame) {
+        this.renderer.render(0);
+        this.tv?.rendered();
+      }
       this.input.endFrame();
       return;
     }

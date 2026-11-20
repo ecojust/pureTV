@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { Game } from '../src/upstream/src/core/Game.js';
 import { Race } from '../src/upstream/src/core/Race.js';
 import { Kart } from '../src/upstream/src/kart/Kart.js';
 
@@ -20,4 +21,35 @@ test('cancel charged drift and pending item without awarding boost or consuming 
   assert.deepEqual(player.pos,{x:12,y:2,z:45}); assert.equal(player.speed,28);
   assert.equal(race.time,29); assert.equal(race.simTime,32); assert.equal(race.rocket.firstPress,-1);
   race.cancelPlayerInput(); assert.equal(awarded,0);
+});
+
+test('a paused software renderer keeps polling and only redraws an invalidated backing buffer', (t) => {
+  const originalRAF = globalThis.requestAnimationFrame;
+  globalThis.requestAnimationFrame = () => {};
+  t.after(() => {
+    if (originalRAF) globalThis.requestAnimationFrame = originalRAF;
+    else delete globalThis.requestAnimationFrame;
+  });
+
+  const counts = { polls: 0, draws: 0, rendered: 0, releases: 0 };
+  const game = Object.assign(Object.create(Game.prototype), {
+    _last: 0, time: 12, mode: 'racing', paused: true, world: {}, reusePausedFrame: true,
+    input: { menuActions: [], pollGamepad() {}, pausePressed() { return false; }, endFrame() { counts.releases++; } },
+    tv: { poll() { counts.polls++; }, rendered() { counts.rendered++; } },
+    renderer: { hasRenderedFrame: true, render(dt) {
+      assert.equal(dt, 0);
+      this.hasRenderedFrame = true;
+      counts.draws++;
+    } },
+  });
+  game._frame(16);
+  game.renderer.hasRenderedFrame = false;
+  game._frame(32);
+  game._frame(48);
+  assert.deepEqual(counts, { polls: 3, draws: 1, rendered: 1, releases: 3 });
+  assert.equal(game.time, 12);
+
+  game.reusePausedFrame = false;
+  game._frame(64);
+  assert.equal(counts.draws, 2);
 });
