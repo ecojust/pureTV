@@ -428,7 +428,8 @@ function remoteBench(f, dt) {
     }
     if (f.pressed.A) {
         const control = document.elementFromPoint(cursorX, cursorY)?.closest('button, summary, input');
-        if (control) control.click();
+        if (control?.dataset.tool) doAct({ t: 'tool', tool: control.dataset.tool });
+        else if (control) control.click();
         else {
             pointerHeld = true;
             input.ptrQueue.push({ t: 'down', x: cursorX, y: cursorY, button: 0, touch: false });
@@ -460,7 +461,12 @@ function pollTV(dt) {
     if (ui.anyScreen() || ui.phaseScreen()) {
         const root = ui.top() || ui.phaseScreen();
         if (!document.getElementById(root).contains(document.activeElement)) ui.focusFirst(root);
-        if (f.pressed.A && document.activeElement?.type === 'checkbox') document.activeElement.click();
+        const focused = document.activeElement;
+        if (focused?.type === 'number' && (f.pressed.LEFT || f.pressed.RIGHT)) {
+            if (f.pressed.RIGHT) focused.stepUp(); else focused.stepDown();
+            focused.dispatchEvent(new Event('input', { bubbles: true }));
+            focused.dispatchEvent(new Event('change', { bubbles: true }));
+        } else if (f.pressed.A && focused?.type === 'checkbox') focused.click();
         else menuInput(ui, f.pressed);
     } else if (G.phase === 'dialogue') {
         if (f.pressed.UP) ui.moveFocus(-1, 'dialogue');
