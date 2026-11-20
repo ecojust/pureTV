@@ -85,6 +85,10 @@ npm run build:check
 
 `dist/` 为可离线打包的平铺文件；可用任意本地 HTTP 服务器预览 `tv.html`。Three.js **0.186.1** 与原始 lock 的 npm 完整性值一致，esbuild **0.28.2** 仅用于打包。原始 104 个文件的基线字节/散列在 [upstream.json](upstream.json)，适配差异在 [docs/source-changes.json](docs/source-changes.json)，字体与许可证固定来源在 [src/fonts/sources.json](src/fonts/sources.json)。字体的完整许可随发布分发文件保留。
 
+## 源码版 0.1.6 的连接与操作
+
+按 Enter 进入角色和赛道选择，用方向键选项、Enter 确认。↑ 给油，↓ 刹车，← / → 转向。 电脑也可以连接同一局域网的 pureTV 无线手柄，按手柄搜索键（GPIO 23）配对。Android TV 可用同一 Wi-Fi 下的手机扫描菜单连接卡中的二维码，打开虚拟手柄。比赛时连接卡缩小，断线后重新连接，再手动继续。
+
 ## 验证范围
 
 需要支持 **WebGL 2** 的宿主 WebView / 系统浏览器；不宣称 Android 4.4 或未测试的旧电视能运行。当前目录中的浏览器报告独立标注合成桥接输入，不等于原始 SDK TCP、实体手机/电视或安装包验收。`window.JoystickGameQA.snapshot()` 只读已有游戏状态与缓存手柄帧，不修改模型，也不额外消费原生快照。

@@ -1,9 +1,13 @@
 #puretv-controller-panel { top: auto !important; bottom: 12px; max-height: calc(100vh - 24px); }
 .tv-help { margin-top: 8px; border-top: 1px solid #ffffff30; padding-top: 7px; font: 12px/1.65 system-ui,sans-serif; }
 .tv-help strong,.tv-help span { display:block; margin-bottom:4px; }
-#puretv-controller-panel[data-playing=true] { top: 32% !important; bottom: auto; max-height: 43vh; }
+/* The right edge holds the lap timer and 220px minimap. The space between the
+   item slot and place counter on the left remains free at both TV sizes. */
+#puretv-controller-panel:is([data-playing=true],[data-mode=paused]) {
+  top: 32% !important; bottom: auto; left: 12px; right: auto !important; max-height: 42vh;
+}
 #puretv-controller-panel[data-playing=true] .tv-help { display:none; }
-#puretv-controller-panel[data-playing=true][data-help=true] { max-height:calc(68vh - 12px); }
+
 #puretv-controller-panel[data-playing=true][data-help=true] .tv-help { display:block; border:1px solid #37a8ff99; border-radius:10px; padding:9px; background:#101126ed; }
 #puretv-controller-panel:is([data-mode=characterSelect],[data-mode=trackSelect],[data-mode=results]) { top:12px !important; bottom:auto; max-height:26vh; }
 #puretv-controller-panel:is([data-mode=characterSelect],[data-mode=trackSelect],[data-mode=results]) .ptv-host-title,

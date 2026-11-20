@@ -22,6 +22,10 @@
 
 12张原截图已逐张核对：最小菜单为960×540，其余为1280×720、96 DPI；两张赛中图显示3 km/h，原始状态和消息记录另证实按住油门后速度、位置变化。展开的帮助卡会叠到赛中小地图面板上沿，路线仍可见；暂停时右侧连接卡会遮住背景地图，但完整 ID、圈数、计时和三个暂停按钮可读。详见 [Windows 交付核验](docs/windows-delivery/independent-verification.json) 与 [原图目视记录](docs/windows-delivery/visual-review.json)。包沿用源码 `039d210cfa4cc65f59adf0859a777f3591853a70`、原流程 [44621752383](https://github.com/ecojust/pureTV/actions/runs/44621752383) 的原始字节，未重新打包；同批其他游戏失败没有改变本游戏原成功结果。
 
+## 源码版 0.1.2 的连接与操作
+
+按 Enter 依次确认车手与赛道，进入倒计时。↑ 给油，↓ 刹车，← / → 转向。 电脑也可以连接同一局域网的 pureTV 无线手柄，按手柄搜索键（GPIO 23）配对。Android TV 可用同一 Wi-Fi 下的手机扫描菜单连接卡中的二维码，打开虚拟手柄。比赛时连接卡缩小，断线后重新连接，再手动继续。
+
 ## macOS 下载
 
 0.1.0 Universal：[DMG](macos/TurboKartRush-0.1.0-macos-universal.dmg)（1,199,951 字节）· [ZIP](macos/TurboKartRush-0.1.0-macos-universal.zip)（850,314 字节）· [SHA256 校验](SHA256SUMS.txt)。DMG 内应用可拖入 Applications；ZIP 解压后提供相同应用。需要 **macOS 11 或更新版本及 WebGL 2**，包包含 arm64 / x86_64，采用 ad-hoc 签名，未经过 Apple 公证。

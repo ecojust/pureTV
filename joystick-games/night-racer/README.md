@@ -18,6 +18,10 @@
 
 原 Windows CI 的正常端口与占用回退两种模式各通过 10 项检查，包含实际游戏、原 SDK 手柄、失焦／断线取消、存档重启与窗口检查；安装／卸载／重装及无关文件保留也通过。检查覆盖 96 DPI 下 960×540、1280×720，未做其他 DPI 缩放、实体手柄或完整通关测试。同批其他四款失败仍保留，以上结论仅针对本游戏。安装文件沿用原始字节，未重新编译，详见 [Windows 交付记录](docs/windows-delivery/) 和 [版本清单](windows-release.json)。
 
+## 源码版 0.1.1 的连接与操作
+
+标题页按 P 开赛。W / S 给油和刹车，A / D 转向，Shift 漂移，空格释放氮气。 电脑也可以连接同一局域网的 pureTV 无线手柄，按手柄搜索键（GPIO 23）配对。Android TV 可用同一 Wi-Fi 下的手机扫描菜单连接卡中的二维码，打开虚拟手柄。比赛时连接卡缩小，断线后重新连接，再手动继续。
+
 ## macOS 下载
 
 0.1.0 Universal：[DMG](macos/NightRacer-0.1.0-macos-universal.dmg) · [ZIP](macos/NightRacer-0.1.0-macos-universal.zip) · [SHA256](SHA256SUMS.txt)。要求 **macOS 11+、WebGL2**，包含 arm64 与 x86_64。Apple Silicon 原生、端口占用及 Rosetta 模式各通过9项实际检查，包括原 SDK 控制、暂停／断线取消和真实存档重启。**Intel Mac 图形运行仍未验证**；ad-hoc 签名，未经过 Apple 公证，未做实体手柄或完整通关测试。

@@ -20,6 +20,10 @@ Windows x64 0.1.1 支持 Windows 10 1903 或更新版本，需要 Microsoft Edge
 
 默认 TCP 63485 和端口占用回退两种模式各通过 10 项原生检查，覆盖手柄连接、选车、驾驶、暂停、断线重连和控制设置保存。安装与卸载已在 Windows x64 验证。显示比例覆盖 96 DPI，实体手柄与完整比赛未实测。[原生运行核验](docs/windows-delivery/verification.json) · [实机截图](docs/windows-delivery/visual-review.md) · [Windows 构建记录](https://github.com/ecojust/pureTV/actions/runs/44680258590)
 
+## 源码版 0.1.5 的连接与操作
+
+标题页按 Enter 选车，确认开赛后用方向键驾驶。 电脑也可以连接同一局域网的 pureTV 无线手柄，按手柄搜索键（GPIO 23）配对。Android TV 可用同一 Wi-Fi 下的手机扫描菜单连接卡中的二维码，打开虚拟手柄。比赛时连接卡缩小，断线后重新连接，再手动继续。
+
 ## macOS 下载
 
 0.1.0 Universal：[DMG](macos/KartRoyale-0.1.0-macos-universal.dmg)（2,046,696 字节）· [ZIP](macos/KartRoyale-0.1.0-macos-universal.zip)（1,540,639 字节）· [SHA256 校验](SHA256SUMS.txt)。DMG 内应用可拖入 Applications；ZIP 解压后提供相同应用。需要 **macOS 11 或更新版本及 WebGL 2**，包包含 arm64 / x86_64，采用 ad-hoc 签名，未经过 Apple 公证。

@@ -79,7 +79,7 @@ export function installTV(app) {
         const race = activeRace(app), driving = !!race && race.state !== 'paused' && !modalOpen();
         const context = `${app.screenId}/${race?.state}/${modalOpen()}/${editorGrid}`;
         if (context !== lastContext) { app.controls.clearTV(); lastContext = context; }
-        app.controls.setTV(raceInput(frame, driving));
+        app.controls.setTV(raceInput(frame, driving), frame.connected);
         if (lastPlaying !== driving) { controller.setPlaying(driving); lastPlaying = driving; }
         document.documentElement.dataset.tvDriving = String(driving);
         let text = driving ? '↑ / A Gas   ↓ / B Brake   ← → Steer   X Respawn   Y Camera   START Pause' : app.screenId === 'editor' && editorGrid ? 'D-pad Grid   A Place   X Rotate   Y Controls   B Back   START Actions' : 'D-pad Focus   A Select   B Back   X / Y Previous / Next   START Menu';
