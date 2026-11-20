@@ -50,7 +50,7 @@ def game_catalog(genres, resources, english, root):
             assert not preview or 'macos' in downloads, f'{page}: missing macOS preview download'
             pages.add(page)
             cards.append({'page': page, 'titles': titles, 'covers': covers, 'downloads': downloads,
-                          'macosPreview': preview, 'controller': controller})
+                          'controller': controller})
         catalog.append({'id': genre_id, 'zh': genre['zh'], 'en': genre['en'], 'cards': cards})
     return catalog
 

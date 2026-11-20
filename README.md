@@ -13,8 +13,8 @@
 
 <table>
   <tr>
-    <td align="center" valign="top" width="207"><a href="docs/guide/README.md#安装与升级电脑管理器"><img src="docs/previews/manager-zh.png" width="180" alt="pureTV Manager 界面"><br>pureTV Manager</a><br>在电脑上管理电视应用和启动器<br>Windows、macOS、Linux<br><a href="https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.9">下载 0.5.9</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/apps/putrtv-store/"><img src="resource/apps/putrtv-store/thumb.png" width="180" alt="putrtv商城 界面"><br>putrtv商城</a><br>直接在电视上浏览、安装应用和检查更新<br>Android TV<br><a href="resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1">下载 0.1.1 APK</a></td>
+    <td align="center" valign="top" width="207"><a href="docs/guide/README.md#安装与升级电脑管理器"><img src="docs/previews/manager-zh.png" width="180" alt=""><br>pureTV Manager</a><br>在电脑上管理电视应用和启动器<br>Windows、macOS、Linux<br><a href="https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.9">下载 0.5.9</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/putrtv-store/"><img src="resource/apps/putrtv-store/thumb.png" width="180" alt=""><br>putrtv商城</a><br>直接在电视上浏览、安装应用和检查更新<br>Android TV<br><a href="resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1">下载 0.1.1 APK</a></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
@@ -32,20 +32,20 @@
 
 <table>
   <tr>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/sol/"><img src="resource/launcher/sol/thumb.png" width="180" alt="Sol TV 界面"><br>Sol TV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/pixel/"><img src="resource/launcher/pixel/thumb.png" width="180" alt="Pixel TV 像素 界面"><br>Pixel TV 像素</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/moss/"><img src="resource/launcher/moss/thumb.png" width="180" alt="Moss TV 界面"><br>Moss TV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/mono/"><img src="resource/launcher/mono/thumb.png" width="180" alt="Mono TV 墨白 界面"><br>Mono TV 墨白</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/sol/"><img src="resource/launcher/sol/thumb.png" width="180" alt=""><br>Sol TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/pixel/"><img src="resource/launcher/pixel/thumb.png" width="180" alt=""><br>Pixel TV 像素</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/moss/"><img src="resource/launcher/moss/thumb.png" width="180" alt=""><br>Moss TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/mono/"><img src="resource/launcher/mono/thumb.png" width="180" alt=""><br>Mono TV 墨白</a></td>
   </tr>
   <tr>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/forma/"><img src="resource/launcher/forma/thumb.png" width="180" alt="Forma TV 界面"><br>Forma TV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/drift/"><img src="resource/launcher/drift/thumb.png" width="180" alt="Drift TV 界面"><br>Drift TV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/circuit/"><img src="resource/launcher/circuit/thumb.png" width="180" alt="Circuit TV · 回路 界面"><br>Circuit TV · 回路</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/aster/"><img src="resource/launcher/aster/thumb.png" width="180" alt="Aster TV · 星轨 界面"><br>Aster TV · 星轨</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/forma/"><img src="resource/launcher/forma/thumb.png" width="180" alt=""><br>Forma TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/drift/"><img src="resource/launcher/drift/thumb.png" width="180" alt=""><br>Drift TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/circuit/"><img src="resource/launcher/circuit/thumb.png" width="180" alt=""><br>Circuit TV · 回路</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/aster/"><img src="resource/launcher/aster/thumb.png" width="180" alt=""><br>Aster TV · 星轨</a></td>
   </tr>
   <tr>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/nova/"><img src="resource/launcher/nova/thumb.png" width="180" alt="Nova TV 界面"><br>Nova TV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/launcher/puretv/"><img src="resource/launcher/puretv/thumb.png" width="180" alt="pureTV Launcher 界面"><br>pureTV Launcher</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/nova/"><img src="resource/launcher/nova/thumb.png" width="180" alt=""><br>Nova TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/launcher/puretv/"><img src="resource/launcher/puretv/thumb.png" width="180" alt=""><br>pureTV Launcher</a></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
@@ -55,14 +55,14 @@
 
 <table>
   <tr>
-    <td align="center" valign="top" width="207"><a href="resource/apps/opera/"><img src="resource/apps/opera/thumb.png" width="180" alt="梨园 TV 界面"><br>梨园 TV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/apps/bilibili/"><img src="resource/apps/bilibili/thumb.png" width="180" alt="BiliTV 界面"><br>BiliTV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/apps/cctv/"><img src="resource/apps/cctv/thumb.png" width="180" alt="CCTV Live 界面"><br>CCTV Live</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/apps/hifini/"><img src="resource/apps/hifini/thumb.png" width="180" alt="HIFINi TV 界面"><br>HIFINi TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/opera/"><img src="resource/apps/opera/thumb.png" width="180" alt=""><br>梨园 TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/bilibili/"><img src="resource/apps/bilibili/thumb.png" width="180" alt=""><br>BiliTV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/cctv/"><img src="resource/apps/cctv/thumb.png" width="180" alt=""><br>CCTV Live</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/hifini/"><img src="resource/apps/hifini/thumb.png" width="180" alt=""><br>HIFINi TV</a></td>
   </tr>
   <tr>
-    <td align="center" valign="top" width="207"><a href="resource/apps/webtv/"><img src="resource/apps/webtv/thumb.png" width="180" alt="WebTV 界面"><br>WebTV</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/apps/shortvideo/"><img src="resource/apps/shortvideo/thumb.png" width="180" alt="ShortVideo TV 界面"><br>ShortVideo TV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/webtv/"><img src="resource/apps/webtv/thumb.png" width="180" alt=""><br>WebTV</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/shortvideo/"><img src="resource/apps/shortvideo/thumb.png" width="180" alt=""><br>ShortVideo TV</a></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
