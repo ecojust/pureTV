@@ -22,4 +22,14 @@
 
 在共享双核配额的 Linux x86_64 环境，用 Chromium 156、ANGLE / Mesa llvmpipe（LLVM 19.1.7、OpenGL ES 3.2）、960 × 540 视口检查了该渲染改动。此轮网页构建的渲染逻辑与冻结包相同，当时尚未加入最终的只读驱动名字段。首次观察到原游戏帧需 191 秒，第 2 帧在 199 秒显示 Start，第 8 帧在 213 秒报告就绪。在该环境中启动需要三分钟以上。用原游戏输入打开角色选择并开始比赛，第 18 帧进入倒计时，第 106 帧进入 racing，按住加速键后第 109 帧速度达到 1.49，坐标改变。标题和比赛截图均可辨认赛道和车辆。这些时间包含同机其他任务负载。该轮为桌面浏览器测量，Android TV 的原生结果使用下方独立任务。[实测标题和加速画面](software-renderer-20261120.jpg)
 
+另用相同浏览器和视口对冻结的 0.1.2 bundle 做了冷启动 CPU 采样，10 毫秒采样一次，同时记录原页面的启动文字。该轮采样窗口为 315.46 秒。文字切换之间包含浏览器调度和系统初始化，CPU 栈时长还包含同步等待图形驱动的时间。
+
+| 冻结版本的阶段 | 本次观察 |
+| --- | --- |
+| 天空与环境光 | “raising the sun” 到 “mixing materials” 用时 3.21 秒。天空环境生成时首次使用 WebGL 程序的栈约 1.97 秒。 |
+| 赛道与场景装饰 | “laying the circuit” 到 “dressing the bay” 用时 11.85 秒；后者到 “rolling out the grid” 用时 35.81 秒。装饰阶段包含建筑、看台、植被与程序化纹理。 |
+| 原场景首批画面 | 95.94 秒时启动文字已显示 “ready”。在实际绘制的调用链中，three.js 的 WebGLProgram.onFirstUse 约占 190.38 秒，包含查询程序状态、Uniforms 和 Attributes。窗口结束前已观察到第 3 帧、标题页与 Start 焦点。 |
+
+解压后可在 Chrome DevTools 的 Performance 面板载入原始 CPU 采样。环境含两核 CPU 配额及并发任务，采样本身也产生开销。[CPU 采样文件](software-startup-0.1.2.cpuprofile.gz)
+
 在 0.1.2 的两次原生对照中，观察器只在游戏标识、软件驱动、WebGL2 和控制器端口均可核实时续等，且必须看到原启动步骤或原倒计时帧增加。每一段总上限为 300 秒，验收仍需真实渲染和相同的 SDK 操作。两次均输入原签名产物 14606610194。[host Mesa](https://github.com/ecojust/pureTV/actions/runs/44685089257) · [guest lavapipe](https://github.com/ecojust/pureTV/actions/runs/44685153445)
