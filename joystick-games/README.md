@@ -20,6 +20,8 @@
 | [Operation Ironhold](operation-ironhold/) | 在三分钟内清除集装箱堆场的十名对手。 | [APK 0.1.1](https://raw.githubusercontent.com/ecojust/pureTV/b9dbfd704e5d45e0a8849e72ea6da6855c3c54b0/joystick-games/operation-ironhold/operation-ironhold-0.1.1.apk) |
 | [Lumenrift · 光隙守望](lumenrift/) | 建塔、升级并守住敌人进攻的路线。 | [APK 0.1.1](https://raw.githubusercontent.com/ecojust/pureTV/b9dbfd704e5d45e0a8849e72ea6da6855c3c54b0/joystick-games/lumenrift/lumenrift-0.1.1.apk) |
 
+[Android TV 安装与逐款手柄验收](docs/expansion/android.md) · [Windows 与 macOS 手柄输入](docs/expansion/pc/native/) · [手机扫码操作](docs/expansion/phone/)
+
 在仓库根目录运行 `python3 -m http.server 8000 --bind 127.0.0.1`，然后打开 `http://127.0.0.1:8000/joystick-games/<游戏目录>/dist/tv.html` 即可用键盘试玩。每行链接指向对应的游戏目录，内含具体键位。
 
 电脑要使用局域网无线手柄时，可以在仓库根目录运行下列命令启动同一版本。把两处游戏 ID 和 ZIP 文件名换成表内的目录名即可切换游戏。
