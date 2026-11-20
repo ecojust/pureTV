@@ -31338,16 +31338,26 @@ void main() {
     gl.getExtension("WEBGL_lose_context")?.loseContext();
     return caps;
   }
-  function detectQuality(dev) {
-    const gl = glCapabilities();
-    if (!gl.webgl2) return 0 /* Low */;
+  function selectQuality(dev, gl, requested) {
+    if (requested) {
+      switch (requested) {
+        case "low":
+          return 0 /* Low */;
+        case "medium":
+          return 1 /* Medium */;
+        case "ultra":
+          return 3 /* Ultra */;
+        default:
+          return 2 /* High */;
+      }
+    }
+    if (!gl.webgl2 || gl.software) return 0 /* Low */;
     if (dev.handheld) return 0 /* Low */;
     if (dev.touchPrimary) {
       const weak = dev.cores > 0 && dev.cores <= 4 || dev.memoryGB > 0 && dev.memoryGB <= 4;
       return weak ? 0 /* Low */ : 1 /* Medium */;
     }
     const name = gl.renderer;
-    if (gl.software) return 2 /* High */;
     if (/Apple M[0-9]|RTX|Radeon RX|Arc A/i.test(name)) return 3 /* Ultra */;
     return 2 /* High */;
   }
@@ -31367,8 +31377,8 @@ void main() {
   function createSettings() {
     const dev = deviceProfile = profileDevice();
     const params = new URLSearchParams(location.search);
-    const forced = params.get("quality");
-    const q = forced ? { low: 0 /* Low */, medium: 1 /* Medium */, high: 2 /* High */, ultra: 3 /* Ultra */ }[forced] ?? 2 /* High */ : detectQuality(dev);
+    const gl = glCapabilities();
+    const q = selectQuality(dev, gl, params.get("quality"));
     const s = { quality: q, masterVolume: 0.8, ...PRESETS[q] };
     const scale = parseFloat(params.get("scale") || "");
     if (Number.isFinite(scale) && scale > 0) s.renderScale = scale;
@@ -31387,7 +31397,6 @@ void main() {
         s.maxPixelRatio = capped;
       }
     }
-    const gl = glCapabilities();
     if (gl.webgl2 && !gl.halfFloatRenderable) {
       if (s.ssao) {
         s.ssao = false;
