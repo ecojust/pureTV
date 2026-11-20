@@ -1,0 +1,2849 @@
+{
+  "qaSourceSha": "6247c410e12f909451c91efc58aa199096a9dd4c",
+  "runId": "44759906140",
+  "runtimeResult": "failure",
+  "runtimeResultScope": "selected batches only",
+  "selection": {
+    "acceptanceMode": "complete",
+    "acceptanceScope": "complete controller acceptance",
+    "fullGameplayAcceptance": true,
+    "driverFlags": [],
+    "requestedBatches": [
+      "arcade-1",
+      "arcade-2",
+      "arcade-3",
+      "home-coast",
+      "worlds-2",
+      "home-kit"
+    ],
+    "selectedBatches": [
+      "arcade-1",
+      "arcade-2",
+      "arcade-3",
+      "worlds-2",
+      "home-coast",
+      "home-kit"
+    ],
+    "plannedSlugs": [
+      "tank",
+      "jackal",
+      "jewel",
+      "tetris",
+      "bomb-jack",
+      "adventure-island",
+      "super-mario",
+      "used-car-racing",
+      "alien-shooter",
+      "coast-kart",
+      "neon-rush",
+      "tower-overlap"
+    ],
+    "completeCatalogRequested": false,
+    "matrix": {
+      "include": [
+        {
+          "group": "arcade",
+          "batch": "arcade-1",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorBuild": "",
+          "emulatorArchive": null,
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        },
+        {
+          "group": "arcade",
+          "batch": "arcade-2",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorBuild": "",
+          "emulatorArchive": null,
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        },
+        {
+          "group": "arcade",
+          "batch": "arcade-3",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorBuild": "",
+          "emulatorArchive": null,
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        },
+        {
+          "group": "worlds",
+          "batch": "worlds-2",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorBuild": "",
+          "emulatorArchive": null,
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -feature -Vulkan -verbose"
+        },
+        {
+          "group": "worlds",
+          "batch": "home-coast",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorBuild": "",
+          "emulatorArchive": null,
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        },
+        {
+          "group": "kit",
+          "batch": "home-kit",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorBuild": "",
+          "emulatorArchive": null,
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        }
+      ]
+    },
+    "worlds2GraphicsExperiment": {
+      "selected": true,
+      "description": "Disable Vulkan while retaining SwiftShader and enable verbose emulator logs; the preceding AVD failure has no established root cause."
+    },
+    "usedCarStableImageComparison": {
+      "selected": false,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "channel": "stable",
+      "revisionListedByOfficialRepository": 3,
+      "rendererComparison": {
+        "previousObservedEmulatorVersion": "37.2.13",
+        "previousRenderer": "swiftshader_indirect",
+        "requestedRenderer": "swiftshader",
+        "previousRendererDeprecatedSince": "36.4.9",
+        "officialReference": "https://developer.android.com/studio/run/emulator-acceleration"
+      },
+      "hostVersionComparison": {
+        "previousObservedEmulatorVersion": "37.2.13",
+        "requested": {
+          "version": "35.6.11",
+          "build": "13610412",
+          "url": "https://dl.google.com/android/repository/emulator-linux_x64-13610412.zip",
+          "sha256": "2fe2b56fe93ce75e1d478a40162131381d911c355efeaedb54dd1e0d0897a5cf",
+          "bytes": 319086252,
+          "officialArchive": "https://developer.android.com/studio/emulator_archive"
+        },
+        "description": "Change only the host emulator version; retain API29/x86/swiftshader/disabled Vulkan and verbose options. The preceding host RenderThread segmentation fault has no established product cause."
+      },
+      "description": "Independent AVD on the official older stable TV image; installation, WebView, WebGL and controller acceptance remain mandatory."
+    },
+    "arcadeVisualStableImageComparison": {
+      "selected": false,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "description": "Recheck Tank and Jackal after transient black regions were observed in API36 recordings; preserve full controller acceptance and new visual evidence."
+    },
+    "qaSourceSha": "6247c410e12f909451c91efc58aa199096a9dd4c"
+  },
+  "files": {
+    "evidence/controller-runtime-arcade-2/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "e9c0f1c8dd9a412e56e1a7b1ee6bdd4b267f569fe571ab93b88ffcd94e9b38a0"
+    },
+    "evidence/controller-runtime-arcade-2/bundle-manifest.json": {
+      "bytes": 201,
+      "sha256": "7076f63fe20dbf43e445905d6eb9bffa799288b2879332f5ef779268a8f19bc3"
+    },
+    "evidence/controller-runtime-arcade-2/runtime-selection.json": {
+      "bytes": 4725,
+      "sha256": "e5916f815c0dda3b39fabde263b329b77d451e67dcdd858a96583ddc9b365072"
+    },
+    "evidence/controller-runtime-arcade-2/continuous-logcat.txt": {
+      "bytes": 4348389,
+      "sha256": "dac081c95040062d035ddd7fc601173b0510ba8f6558bc903565b5768ed2ed66"
+    },
+    "evidence/controller-runtime-arcade-2/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-arcade-2/input-verification.json": {
+      "bytes": 5171,
+      "sha256": "920389869f2b2fe6dcbc861db88f00e18f28bd4d4279b8ca7952c02490291fb5"
+    },
+    "evidence/controller-runtime-arcade-2/emulator-version.json": {
+      "bytes": 727,
+      "sha256": "f3bebe07f3c32cb048481768531825909e4d72d9a85877691e03470c2c1ac29e"
+    },
+    "evidence/controller-runtime-arcade-2/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "6ab94f12a97c96513661bd5a4e961af2232d16db92c4cf41977d6ee03415d7eb"
+    },
+    "evidence/controller-runtime-arcade-2/report.json": {
+      "bytes": 26779,
+      "sha256": "324cb55d538b7892ddf6c3c23b0fdce7b7a6cd393e4d284cb94a449e0abfcdfa"
+    },
+    "evidence/controller-runtime-arcade-2/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-arcade-3/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "e9c0f1c8dd9a412e56e1a7b1ee6bdd4b267f569fe571ab93b88ffcd94e9b38a0"
+    },
+    "evidence/controller-runtime-arcade-3/bundle-manifest.json": {
+      "bytes": 201,
+      "sha256": "7076f63fe20dbf43e445905d6eb9bffa799288b2879332f5ef779268a8f19bc3"
+    },
+    "evidence/controller-runtime-arcade-3/runtime-selection.json": {
+      "bytes": 4725,
+      "sha256": "e5916f815c0dda3b39fabde263b329b77d451e67dcdd858a96583ddc9b365072"
+    },
+    "evidence/controller-runtime-arcade-3/continuous-logcat.txt": {
+      "bytes": 4641692,
+      "sha256": "f78d8274c601bdbda564ae7895dd23469ae1d46e51ec849fa39534c86d23b344"
+    },
+    "evidence/controller-runtime-arcade-3/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-arcade-3/input-verification.json": {
+      "bytes": 5171,
+      "sha256": "920389869f2b2fe6dcbc861db88f00e18f28bd4d4279b8ca7952c02490291fb5"
+    },
+    "evidence/controller-runtime-arcade-3/emulator-version.json": {
+      "bytes": 727,
+      "sha256": "f3bebe07f3c32cb048481768531825909e4d72d9a85877691e03470c2c1ac29e"
+    },
+    "evidence/controller-runtime-arcade-3/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "6ab94f12a97c96513661bd5a4e961af2232d16db92c4cf41977d6ee03415d7eb"
+    },
+    "evidence/controller-runtime-arcade-3/report.json": {
+      "bytes": 28249,
+      "sha256": "b3b86aab26400e7c721ee2a94e77b11a9fb98d03f79486388b3c03b286ae5a76"
+    },
+    "evidence/controller-runtime-arcade-3/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-arcade-1/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "e9c0f1c8dd9a412e56e1a7b1ee6bdd4b267f569fe571ab93b88ffcd94e9b38a0"
+    },
+    "evidence/controller-runtime-arcade-1/bundle-manifest.json": {
+      "bytes": 201,
+      "sha256": "7076f63fe20dbf43e445905d6eb9bffa799288b2879332f5ef779268a8f19bc3"
+    },
+    "evidence/controller-runtime-arcade-1/runtime-selection.json": {
+      "bytes": 4725,
+      "sha256": "e5916f815c0dda3b39fabde263b329b77d451e67dcdd858a96583ddc9b365072"
+    },
+    "evidence/controller-runtime-arcade-1/continuous-logcat.txt": {
+      "bytes": 4333799,
+      "sha256": "805bc3f15749536615d5a79f60326548a7bfe87bd64fd9cc5d377b22032cd007"
+    },
+    "evidence/controller-runtime-arcade-1/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-arcade-1/input-verification.json": {
+      "bytes": 5171,
+      "sha256": "920389869f2b2fe6dcbc861db88f00e18f28bd4d4279b8ca7952c02490291fb5"
+    },
+    "evidence/controller-runtime-arcade-1/emulator-version.json": {
+      "bytes": 727,
+      "sha256": "f3bebe07f3c32cb048481768531825909e4d72d9a85877691e03470c2c1ac29e"
+    },
+    "evidence/controller-runtime-arcade-1/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "6ab94f12a97c96513661bd5a4e961af2232d16db92c4cf41977d6ee03415d7eb"
+    },
+    "evidence/controller-runtime-arcade-1/report.json": {
+      "bytes": 26784,
+      "sha256": "5742d52a5b1c62ed54081af582b2c317eebfb30e20725d5cc33336130023bfef"
+    },
+    "evidence/controller-runtime-arcade-1/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-home-coast/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "e9c0f1c8dd9a412e56e1a7b1ee6bdd4b267f569fe571ab93b88ffcd94e9b38a0"
+    },
+    "evidence/controller-runtime-home-coast/bundle-manifest.json": {
+      "bytes": 201,
+      "sha256": "7076f63fe20dbf43e445905d6eb9bffa799288b2879332f5ef779268a8f19bc3"
+    },
+    "evidence/controller-runtime-home-coast/runtime-selection.json": {
+      "bytes": 4725,
+      "sha256": "e5916f815c0dda3b39fabde263b329b77d451e67dcdd858a96583ddc9b365072"
+    },
+    "evidence/controller-runtime-home-coast/continuous-logcat.txt": {
+      "bytes": 3981718,
+      "sha256": "80e40fcee4e48c8ec3bb07270c880cadd26ece30e61dffd80a432b316aaad9ea"
+    },
+    "evidence/controller-runtime-home-coast/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-home-coast/input-verification.json": {
+      "bytes": 2384,
+      "sha256": "98e276804fdfb7268ed52357d6479b492b35943b5fbd5175e3337c2190328e41"
+    },
+    "evidence/controller-runtime-home-coast/emulator-version.json": {
+      "bytes": 727,
+      "sha256": "f3bebe07f3c32cb048481768531825909e4d72d9a85877691e03470c2c1ac29e"
+    },
+    "evidence/controller-runtime-home-coast/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "6ab94f12a97c96513661bd5a4e961af2232d16db92c4cf41977d6ee03415d7eb"
+    },
+    "evidence/controller-runtime-home-coast/report.json": {
+      "bytes": 25765,
+      "sha256": "2a02ab49c4a6f4fd0e7869779a91f4997d1b1d3a48ac9fb6d7680a72249c7650"
+    },
+    "evidence/controller-runtime-home-coast/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-home-kit/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "e9c0f1c8dd9a412e56e1a7b1ee6bdd4b267f569fe571ab93b88ffcd94e9b38a0"
+    },
+    "evidence/controller-runtime-home-kit/bundle-manifest.json": {
+      "bytes": 201,
+      "sha256": "7076f63fe20dbf43e445905d6eb9bffa799288b2879332f5ef779268a8f19bc3"
+    },
+    "evidence/controller-runtime-home-kit/runtime-selection.json": {
+      "bytes": 4725,
+      "sha256": "e5916f815c0dda3b39fabde263b329b77d451e67dcdd858a96583ddc9b365072"
+    },
+    "evidence/controller-runtime-home-kit/continuous-logcat.txt": {
+      "bytes": 4219765,
+      "sha256": "425798d1365efeafd91b5d82c96ba87a41919c930f516c1733388743c0cae980"
+    },
+    "evidence/controller-runtime-home-kit/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-home-kit/input-verification.json": {
+      "bytes": 1669,
+      "sha256": "880d6512c61e5d32fcce9a9087545b9aee6abbfc49b4c9d99f1a9fc49847644c"
+    },
+    "evidence/controller-runtime-home-kit/emulator-version.json": {
+      "bytes": 727,
+      "sha256": "f3bebe07f3c32cb048481768531825909e4d72d9a85877691e03470c2c1ac29e"
+    },
+    "evidence/controller-runtime-home-kit/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "6ab94f12a97c96513661bd5a4e961af2232d16db92c4cf41977d6ee03415d7eb"
+    },
+    "evidence/controller-runtime-home-kit/report.json": {
+      "bytes": 26799,
+      "sha256": "7756e55f4ad77fa49c2f0defab449d92a7723bb61be65719af9c638547ab5134"
+    },
+    "evidence/controller-runtime-home-kit/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-worlds-2/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "e9c0f1c8dd9a412e56e1a7b1ee6bdd4b267f569fe571ab93b88ffcd94e9b38a0"
+    },
+    "evidence/controller-runtime-worlds-2/bundle-manifest.json": {
+      "bytes": 201,
+      "sha256": "7076f63fe20dbf43e445905d6eb9bffa799288b2879332f5ef779268a8f19bc3"
+    },
+    "evidence/controller-runtime-worlds-2/runtime-selection.json": {
+      "bytes": 4725,
+      "sha256": "e5916f815c0dda3b39fabde263b329b77d451e67dcdd858a96583ddc9b365072"
+    },
+    "evidence/controller-runtime-worlds-2/continuous-logcat.txt": {
+      "bytes": 3256124,
+      "sha256": "3db75c4f6b743caac668f0401316b62369d55a97f6d137b4fc4436fc82e63f7d"
+    },
+    "evidence/controller-runtime-worlds-2/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-worlds-2/input-verification.json": {
+      "bytes": 2384,
+      "sha256": "98e276804fdfb7268ed52357d6479b492b35943b5fbd5175e3337c2190328e41"
+    },
+    "evidence/controller-runtime-worlds-2/emulator-version.json": {
+      "bytes": 727,
+      "sha256": "f3bebe07f3c32cb048481768531825909e4d72d9a85877691e03470c2c1ac29e"
+    },
+    "evidence/controller-runtime-worlds-2/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "6ab94f12a97c96513661bd5a4e961af2232d16db92c4cf41977d6ee03415d7eb"
+    },
+    "evidence/controller-runtime-worlds-2/report.json": {
+      "bytes": 26770,
+      "sha256": "84d8b78e4bc09914a8ff2efa09425566b304b07e2ef91f9ca1b14420cd7896bb"
+    },
+    "evidence/controller-runtime-worlds-2/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "ae6654841fdd8af74d83eafb70e589f75f486fea08ead1ca35e9be4040d5380f"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "5a63b44a7f39e980e237ade68c112a3e998ce3e0d8cb817b9f588f42883bb091"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "9eb3f250f7dab898986da4613962380554d9711f0c5cd074ed0c3188e4f7f8ff"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "2aa79cf30346fb072754fa8e753b8b14b56bae15fb2d92c2ff7f0d4dd2dcedb3"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "83265586592fdf1098bea55591d13a73b0c27a7214351f032a63e1263fa31f05"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/host-samples.jsonl": {
+      "bytes": 253736,
+      "sha256": "6b794cbe88bf463ac6ff6a1626004711caaa0e3911d5b93bf6e43636c84a8199"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/kernel-before.txt": {
+      "bytes": 121963,
+      "sha256": "5dfe363b057b228682e7e08720a6e7fd489526a274c189965ad69411554f583d"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "22545fb699cb9a2e01fe74b12eeb0d71636d2593347b5ff3092d1e11d7a0a9f1"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/kernel-after.txt": {
+      "bytes": 121963,
+      "sha256": "4d0f7ebe9ce859e08800df0bd9ac4634241148cc9293b5fb1056e1ce3dc56540"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/initial-snapshot.json": {
+      "bytes": 14130,
+      "sha256": "4cf2e2aff89c15f3e0c03434f8d3bc8d4465fa879eddfd61126d757a80b518c1"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/driver.log": {
+      "bytes": 678,
+      "sha256": "e4548bfbfcc1de71be3158673f814840f1177c86253c97a861464fae4db57f2c"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/logcat.txt": {
+      "bytes": 1648840,
+      "sha256": "ff24f6ed6b4e4f0862feb3024a96a99d70471c508604634aabbbb2ba1e11e89a"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/baseline-release.json": {
+      "bytes": 413,
+      "sha256": "d1a7188f31159ecf8544be572cbcc88688fdd5f737c267cb580137e6920868c3"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/recording-probe.json": {
+      "bytes": 4351,
+      "sha256": "63982598c84776a3530526d3b92847669c29d51e248c3892ade021ac5549a125"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/commands.json": {
+      "bytes": 1023,
+      "sha256": "114eb5a81aad313af8c2223ea26e43de15577d23bcfd13fb8f8201e6c716b47e"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/case.json": {
+      "bytes": 915,
+      "sha256": "853e3a16a43c04866b6d28afe3e2448988004a368f6418e21764d4c748566a8b"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay.mp4": {
+      "bytes": 761935,
+      "sha256": "2d0e5c50047f38645cc3c4a00825c76c5fd38da5f04d4c9d364c151364b9146e"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/initial-snapshot.json": {
+      "bytes": 17416,
+      "sha256": "445d7d2444cf123f623fd8b418dd6dc6878d431d39c62c58fbbc5ed0751385f1"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/driver.log": {
+      "bytes": 688,
+      "sha256": "318fb94ba60ca9059511ba01ba5e80e0c57c9799944961edea7e71a473cbd8d3"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/logcat.txt": {
+      "bytes": 592317,
+      "sha256": "4e23c2534f6fceec7a53e632a633ddd1fda2d00c3646a4ebe06b5b50da7119b7"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/baseline-release.json": {
+      "bytes": 415,
+      "sha256": "5b0fb8a53d51d0ab8bd312e00522e1cfec3eafeaaa5ded5bd162a7bd75520a88"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/recording-probe.json": {
+      "bytes": 4350,
+      "sha256": "580438cd6d9f146c81abd2fc996879f9864c28e2f61a697625b0a78817ab6082"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/commands.json": {
+      "bytes": 1027,
+      "sha256": "a34a9dcf357a418c807814e26a151ea9e3057aa5aed7174f9800648e66f75208"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/case.json": {
+      "bytes": 916,
+      "sha256": "5fc0542adff47a04f8eeb720246ec8d95f9875f23f380d837e17eca75d1f6194"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay.mp4": {
+      "bytes": 619262,
+      "sha256": "86377c3073ddbebc2a7a04161ddb1b22cd71e30556abe730eac02af5a1eb6b73"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/emulator-crash-data/emu-crash-37.3.10.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "2f01eb76a9d9c2efe3bc2a3d18cb482fc3b4b8a8d9289fe5a4baac1855b8c269"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/reconnected.png": {
+      "bytes": 103687,
+      "sha256": "99d67d162f0f5a5fcd5e77a20beeb7c618f270bac37001056cae0821de91c49b"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/gameplay.png": {
+      "bytes": 103619,
+      "sha256": "6fc4704006555f6bb3c50238a77e16fe02d551136f2837cdd08a941d6168ac8b"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/bridge-stderr.txt": {
+      "bytes": 3892,
+      "sha256": "84061f261645071fc06da0856b9262e91437e0245643355a242103eab267c6ac"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/report.json": {
+      "bytes": 407035,
+      "sha256": "f16f062251fa2816c839fa36756212ffd9e0c325f44e1f8df6e9d75ead258185"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/menu-android.png": {
+      "bytes": 105600,
+      "sha256": "2d32dd585b3b3d714372142b193e5f2caaf782debce2f85570c9858b905205e2"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/paused.png": {
+      "bytes": 102304,
+      "sha256": "a85fdd73b0d33a891fc343fae4a1039c2b841b7b59f7736b66637e636ca1fdc3"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 23813,
+      "sha256": "ec681ba847686c67ec5c7e49bd3a5459e3f5d70f3eb45e4d81657f5b3614f7b6"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8956,
+      "sha256": "58e8343087a2ffcf2f806cf39a23f42f3503715ec3995c1aff3e87f81e87e440"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/controller-release.py": {
+      "bytes": 19265,
+      "sha256": "32a2f83f12dfc6b166021cd6a2e71926446b3abb12b52ac33cbf4892f9b03fe9"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 13685,
+      "sha256": "5cd63eab1c657030c9e167b4b189918cc63a27381181379de1c68a15b570bfb3"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/super-mario/source-manifest.json": {
+      "bytes": 707,
+      "sha256": "b5663e3fd9198d53e1cacfd09435ab1149c68e6b0d6706c766561566f2765278"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/adventure-island/source-manifest.json": {
+      "bytes": 712,
+      "sha256": "9b2686d316f303157393dc7671de401577ad82e322567d3b090c5bd8dff233f4"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jewel/source-manifest.json": {
+      "bytes": 701,
+      "sha256": "c6f866b1e9d4ec43457cbfbd9f8a618d0cdde162145bc9164107e13ca557549b"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jackal/source-manifest.json": {
+      "bytes": 702,
+      "sha256": "75803233b2d5bdfabcbeb30a671893d7d38c72b64ef0fad02e9af46d25035e06"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tank/source-manifest.json": {
+      "bytes": 700,
+      "sha256": "e5b17fd3a48525d01ed9431fd8734e1f0d10c0f0b573d1eb33ca147e0404c837"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/bomb-jack/source-manifest.json": {
+      "bytes": 705,
+      "sha256": "2ee5629377563da5b75ec3cd1956166584a7161e7c64367ff099d54de0ba8131"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tetris/source-manifest.json": {
+      "bytes": 702,
+      "sha256": "f3de8c29ecbf494867edba7f5ba9e14b91de09bb227fcbe4e22e3f2ffe4cefcd"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/super-mario/resource/apps/super-mario/build.gradle": {
+      "bytes": 1458,
+      "sha256": "acd71e9edac3d72ca17e796a5fd35610955a31c45b5162240d313e98dfc18732"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/super-mario/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/super-mario/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/adventure-island/resource/apps/adventure-island/build.gradle": {
+      "bytes": 1473,
+      "sha256": "052cccd1c6796d5225a44e17ad961bb10c3b12d59ad88ec05a4ac53dbf09bd65"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/adventure-island/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/adventure-island/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jewel/resource/apps/jewel/build.gradle": {
+      "bytes": 1442,
+      "sha256": "22ac432be160b5287e89f98e035f9813cfdc48cdc2553234119b2325fe0569b7"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jewel/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jewel/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jackal/resource/apps/jackal/build.gradle": {
+      "bytes": 9357,
+      "sha256": "a894d170eabce51de70dc03f543ef9c608f95fba1f5275b40ac4dfc0f8a02e07"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jackal/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jackal/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tank/resource/apps/tank/build.gradle": {
+      "bytes": 1418,
+      "sha256": "6a6c192f5477e75564b5413d2624328f369998c6233bb90798fe3c0c35d84e4d"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tank/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tank/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/bomb-jack/resource/apps/bomb-jack/build.gradle": {
+      "bytes": 1459,
+      "sha256": "8004b1b5efb65dc182ac7501c81cd4d5c6153a34423bd5ec0dfc4d852d0b33cf"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/bomb-jack/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/bomb-jack/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tetris/resource/apps/tetris/build.gradle": {
+      "bytes": 1445,
+      "sha256": "5f0fb836d08a65e32ee0f9b86dd8f51d2f5b32820288027420e0a1173633f5bf"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tetris/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tetris/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/reconnected.png": {
+      "bytes": 101892,
+      "sha256": "8eac3546d4a0ec38e6b4ddda95cece84a354c3f1ec8a13634a0afd59b1f81e6f"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/gameplay.png": {
+      "bytes": 101903,
+      "sha256": "20151302c9ee20117b63f1e741ab2256ca211fcdade9ac0d396b37fc2fc53b6d"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/bridge-stderr.txt": {
+      "bytes": 4090,
+      "sha256": "ce47ecda920da6373399157bbdedb177a9d5d69a2a13ad2317e64e1841ae7c19"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/report.json": {
+      "bytes": 494823,
+      "sha256": "073adc365c5330540266d389e6eb59fcc0094df8149fce02df2ea96e4dcfcfed"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/menu-android.png": {
+      "bytes": 97215,
+      "sha256": "6f3c8cbb2293dcf0ddbbc8dbe2a1fd11b9f6bb900cc0de048c56499562dda0be"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/paused.png": {
+      "bytes": 103776,
+      "sha256": "4164b41222712d3205f6749a7c375d37d97b8040e73ead2eb06f02bf06f2040c"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "814a7bad9442e72e44ecbcc1d985201456c0def1b7f83a443daf37526466f494"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "8e3e6a5f77c279e5269251f119161b4cb6f5ce61444bbbe7eaa8835423b96d89"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "f22a4a777696eb3174dd363a2f7eefd232b38bc2ef5fa677d1db60b531976df5"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "31364e0623d218f6fc3023dbc710c2998bbb19d7c396e846bb53d2ee26d0620c"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/host-samples.jsonl": {
+      "bytes": 289405,
+      "sha256": "551fa33c11fa319ed0b65545299943c3d7f0fbbbe76954f80cf96170c1def1ea"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/kernel-before.txt": {
+      "bytes": 121838,
+      "sha256": "de725ad8fa289b6e5371dd1671a949bf58e959b7a13592f59524118cf9cded09"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "a6f27f534400e978497eaf13e89622597055f512c5c74d3b0b106e539ea79848"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/kernel-after.txt": {
+      "bytes": 121838,
+      "sha256": "b4d7873356b48e2870b9f05a38c50000978bd77c0fc14b4733c0c19f2a63d101"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/initial-snapshot.json": {
+      "bytes": 9669,
+      "sha256": "8c61f9f66d96948be318c80b73ae349785543e71c8f1f6b87aa2f3e40f40eb6c"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/driver.log": {
+      "bytes": 669,
+      "sha256": "441207e8ec67686f2079791f64e80dc179db957d52be5270908aac88fbec9fc8"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/logcat.txt": {
+      "bytes": 285042,
+      "sha256": "9a92dd82ea23fb8dd18b2a3690dcbe6693819679b3bc174a21deda64aa80b0a5"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/baseline-release.json": {
+      "bytes": 425,
+      "sha256": "07e5c29aa4659039adb81452b6f8991dceb87811b524c11483d8fd684e482ed3"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/recording-probe.json": {
+      "bytes": 4355,
+      "sha256": "9fa638b9d4d8252a77bf94acd482c06efbf80c04ce1e91b797e4836d75d34c2b"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/commands.json": {
+      "bytes": 1046,
+      "sha256": "1e5acf692acbe80d6edba23fe2e723d0473cd26bbf641c9a73f4117d06a94bab"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/case.json": {
+      "bytes": 1322,
+      "sha256": "28c286d219b7a8ff5cd0835175658968ffc787f215f59c3fb2d413ba1320ab04"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/failure-screen.png": {
+      "bytes": 103479,
+      "sha256": "315e18e23b3f70b3204ceefcedf8055f60dca8830cd842a161029f0594d63f66"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay.mp4": {
+      "bytes": 838084,
+      "sha256": "ab81422054524425302b2a4b5d51629deb1d8390c5a945fdc9cc7e9f5cf51d38"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/initial-snapshot.json": {
+      "bytes": 10715,
+      "sha256": "7097e30972bc07e6af41ebbe343b6d6fe67d32fff027f17e39a63a8058c6bdf1"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/driver.log": {
+      "bytes": 788,
+      "sha256": "3e37e466b4a8df05d4f3d070c54f5f5ca55606039397e8031df12ac2601abdcc"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/logcat.txt": {
+      "bytes": 358195,
+      "sha256": "7e9ca4f419e59751d9866ad6d8ad494fdc7f8142263a18a8269ba1438e1ac6f9"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/baseline-release.json": {
+      "bytes": 435,
+      "sha256": "14491665d14935dde0342d002a1009de21d2a29282f7300b3132f70f8127d4e8"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/recording-probe.json": {
+      "bytes": 4362,
+      "sha256": "ecc7e370001b38fc3faf151220306cc137d904d1e6ef1a06fd5057ad57e4f902"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/commands.json": {
+      "bytes": 1066,
+      "sha256": "3c6c277a5d4f6b59c39abf9ec0752297d40f4ceadb8554a968de9035ae1305b4"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/case.json": {
+      "bytes": 926,
+      "sha256": "7efa65655fbbd7c9bd2e9c252d62621dbeba6ee45a787bd3225a32d3e2488abf"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay.mp4": {
+      "bytes": 658791,
+      "sha256": "e9081520c9ab7b6ccb48a5e2cb46b53c82d24f8576e6aae4b7f37a30fb97f29f"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/initial-snapshot.json": {
+      "bytes": 9544,
+      "sha256": "0af59b0e076586df3ef474083cbdda222d19dca0a196a9833f7ef8bd7c6c317a"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/driver.log": {
+      "bytes": 718,
+      "sha256": "e229d4208dd94d71c0644905ef042de480b2383695f5b2217f60794ee2a1a2e2"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/logcat.txt": {
+      "bytes": 1628122,
+      "sha256": "b32d0ef24bc02abc966119cb30e75870f62a93250d311865de36809980fc79a3"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/baseline-release.json": {
+      "bytes": 420,
+      "sha256": "0e7dbe5f892b2f5ae3babef2036e6766b43a00f51e4e17ffe6917887742b3f1d"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/recording-probe.json": {
+      "bytes": 4353,
+      "sha256": "5322024226e3b3abd0d63e31aabbc95f6035c4e90362bab3bfb4641d74d38fa5"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/commands.json": {
+      "bytes": 1038,
+      "sha256": "16bf9f74c95fc6029480ebe755282d8b1c677860a2c471285584cdc0f96f5ef3"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/case.json": {
+      "bytes": 919,
+      "sha256": "1dd689ac19e78604b7c1d41f62480c139f5f08b9c1d3c7613c821a4d72119e88"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay.mp4": {
+      "bytes": 786838,
+      "sha256": "70a61ed8dc8ae66611de57f949c70fdff246016c0baa7d968a366a447fff6e59"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/emulator-crash-data/emu-crash-37.3.10.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "5af8cad0bcb86b7728aa7222521ba89f843d9aa16bddfd4efa84d659ffe53a8e"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/reconnected.png": {
+      "bytes": 99853,
+      "sha256": "62772e27d77084d57964dbfbbf1cdf49e2f936dd6d0a83c4e8435cfa4768b256"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/gameplay.png": {
+      "bytes": 99862,
+      "sha256": "1a257a53c5d92e70cce68f75d44b5d40c9735f2e23b4aad2ea68694a38883128"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/failure.png": {
+      "bytes": 107239,
+      "sha256": "66b144080e995a45e232039690c358ce1585f65905665d00eb188e1f0c57edbd"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/bridge-stderr.txt": {
+      "bytes": 3892,
+      "sha256": "e23186b24dbd8a311986556bfa03efc9d4776af00027459b7aea05f94cf44826"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/report.json": {
+      "bytes": 316084,
+      "sha256": "9ee6484209f64df8ea6758d82c1b0e3975b0458994616a65da8e45e8ca4810ca"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/menu-android.png": {
+      "bytes": 98085,
+      "sha256": "c86360b4944f86949a9a8768ece55f7c0beba4d55ef5ce500f2c03577ac38b76"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/paused.png": {
+      "bytes": 101138,
+      "sha256": "6d8543541ec38e82cea962b8b3aa6798ae912a2b569e8106865ce93fdd77c742"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/reconnected.png": {
+      "bytes": 100904,
+      "sha256": "602cd5916638a923ce857834ac98b8a4bcec276621828a5ac824b04b7e9560fc"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/gameplay.png": {
+      "bytes": 100874,
+      "sha256": "97d94964f6202012afa141462388ae07e75766072cb587f1bea43387415d6291"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/bridge-stderr.txt": {
+      "bytes": 3694,
+      "sha256": "7a3c5d1d9cc22425583d093063e339f22eb7308ba0587ae04596a4a5c72e3236"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/report.json": {
+      "bytes": 323469,
+      "sha256": "06261e19aad780f12bece08aa891aa6e44815d6a3e37153cabebb26836d12146"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/menu-android.png": {
+      "bytes": 93675,
+      "sha256": "9ba78b7ea80bbbe3be0e1916d1869b898baeec08af8db0e63368d98e8e2fc289"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/paused.png": {
+      "bytes": 101352,
+      "sha256": "76129b225afbc0f428a1f729f08627f247677d81bf7cbc95c272f5991fa6461a"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 23813,
+      "sha256": "ec681ba847686c67ec5c7e49bd3a5459e3f5d70f3eb45e4d81657f5b3614f7b6"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8956,
+      "sha256": "58e8343087a2ffcf2f806cf39a23f42f3503715ec3995c1aff3e87f81e87e440"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/controller-release.py": {
+      "bytes": 19265,
+      "sha256": "32a2f83f12dfc6b166021cd6a2e71926446b3abb12b52ac33cbf4892f9b03fe9"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 13685,
+      "sha256": "5cd63eab1c657030c9e167b4b189918cc63a27381181379de1c68a15b570bfb3"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/super-mario/source-manifest.json": {
+      "bytes": 707,
+      "sha256": "b5663e3fd9198d53e1cacfd09435ab1149c68e6b0d6706c766561566f2765278"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/adventure-island/source-manifest.json": {
+      "bytes": 712,
+      "sha256": "9b2686d316f303157393dc7671de401577ad82e322567d3b090c5bd8dff233f4"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jewel/source-manifest.json": {
+      "bytes": 701,
+      "sha256": "c6f866b1e9d4ec43457cbfbd9f8a618d0cdde162145bc9164107e13ca557549b"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jackal/source-manifest.json": {
+      "bytes": 702,
+      "sha256": "75803233b2d5bdfabcbeb30a671893d7d38c72b64ef0fad02e9af46d25035e06"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tank/source-manifest.json": {
+      "bytes": 700,
+      "sha256": "e5b17fd3a48525d01ed9431fd8734e1f0d10c0f0b573d1eb33ca147e0404c837"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/bomb-jack/source-manifest.json": {
+      "bytes": 705,
+      "sha256": "2ee5629377563da5b75ec3cd1956166584a7161e7c64367ff099d54de0ba8131"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tetris/source-manifest.json": {
+      "bytes": 702,
+      "sha256": "f3de8c29ecbf494867edba7f5ba9e14b91de09bb227fcbe4e22e3f2ffe4cefcd"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/super-mario/resource/apps/super-mario/build.gradle": {
+      "bytes": 1458,
+      "sha256": "acd71e9edac3d72ca17e796a5fd35610955a31c45b5162240d313e98dfc18732"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/super-mario/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/super-mario/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/adventure-island/resource/apps/adventure-island/build.gradle": {
+      "bytes": 1473,
+      "sha256": "052cccd1c6796d5225a44e17ad961bb10c3b12d59ad88ec05a4ac53dbf09bd65"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/adventure-island/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/adventure-island/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jewel/resource/apps/jewel/build.gradle": {
+      "bytes": 1442,
+      "sha256": "22ac432be160b5287e89f98e035f9813cfdc48cdc2553234119b2325fe0569b7"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jewel/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jewel/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jackal/resource/apps/jackal/build.gradle": {
+      "bytes": 9357,
+      "sha256": "a894d170eabce51de70dc03f543ef9c608f95fba1f5275b40ac4dfc0f8a02e07"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jackal/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jackal/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tank/resource/apps/tank/build.gradle": {
+      "bytes": 1418,
+      "sha256": "6a6c192f5477e75564b5413d2624328f369998c6233bb90798fe3c0c35d84e4d"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tank/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tank/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/bomb-jack/resource/apps/bomb-jack/build.gradle": {
+      "bytes": 1459,
+      "sha256": "8004b1b5efb65dc182ac7501c81cd4d5c6153a34423bd5ec0dfc4d852d0b33cf"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/bomb-jack/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/bomb-jack/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tetris/resource/apps/tetris/build.gradle": {
+      "bytes": 1445,
+      "sha256": "5f0fb836d08a65e32ee0f9b86dd8f51d2f5b32820288027420e0a1173633f5bf"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tetris/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tetris/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/reconnected.png": {
+      "bytes": 104702,
+      "sha256": "bfbe40556b187694a4d1b6364371d6dadf1e133e7f93fb65e12e41e1b6fdb44e"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/gameplay.png": {
+      "bytes": 104934,
+      "sha256": "4b9b7090cec0f36fce8e2351746d2c92f7e013af42bca0de671f418f5abfc1dc"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/bridge-stderr.txt": {
+      "bytes": 3892,
+      "sha256": "4e63a96456cca5a347e2ea4eace98b916e768588fb7309a96ae9ebdd3c0976f1"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/report.json": {
+      "bytes": 387931,
+      "sha256": "79a01253a3e208164c04bbcc6c4adbd881f071dea75c68ced7227e8df9944279"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/menu-android.png": {
+      "bytes": 103570,
+      "sha256": "4b670feff409352dfd3e69e0dc505fba0f3350586b2b1db0ca3e37e5158a51ef"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/paused.png": {
+      "bytes": 104451,
+      "sha256": "e90d256c4d4a75544daffd7ce1f6b7a6243ab3037f46513b25434a87814e0c0a"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "8e9d4c42a3d28e6f9dcb02a337983d6ab3c1e2ccb2009ee8b90dd619b97d957a"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "277e2440ce260759eba7115be99b8297c4ee26ca837060ee781c4d48c324e1d6"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "02c5cad21de5ddfe06c1b4ed2fab0eaea07df1babf892a1c1de808087b2b073c"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "558fdb7b4db3ad602bd9492445d3f0831f6a94c0e4094d61e77e2a9ee3948b5a"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/host-samples.jsonl": {
+      "bytes": 258854,
+      "sha256": "67c48e3b88f76ea532e0b654db07c1de3075df8f0eb594ccfa571920016e505c"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/kernel-before.txt": {
+      "bytes": 121760,
+      "sha256": "dc64f1a6d8bab72cff5ffb4fa83ce377a1a7059d8fc0f00be303ec744a970377"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "ede1d7816751cb1b956d3997bffac1013bfc940f8d20849c5336b47a26e85ec6"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/kernel-after.txt": {
+      "bytes": 121760,
+      "sha256": "dc64f1a6d8bab72cff5ffb4fa83ce377a1a7059d8fc0f00be303ec744a970377"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/initial-snapshot.json": {
+      "bytes": 10043,
+      "sha256": "dbd8f175adda3af7601fe09f29676b1fa837c529485beaf00c24905bd7ab086a"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/driver.log": {
+      "bytes": 688,
+      "sha256": "e03f009005b71e48c3097c83422efe099377bd26c5b899f1018eaeecb1d7213c"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/logcat.txt": {
+      "bytes": 432912,
+      "sha256": "167c1cdfd87d6de1967abee2e45eeb21a06d2bac11dbfa53d523f44467304ca3"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/baseline-release.json": {
+      "bytes": 418,
+      "sha256": "6d77cd0bddc86ef6959ce333f3db7e550b7fbfb7ef52ec59c6c4502beff9241a"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/recording-probe.json": {
+      "bytes": 4350,
+      "sha256": "aad04a2b86921a7831a12dbecd57ce2f9f3cb753b67a05ed1588ec24a0e9ecef"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/commands.json": {
+      "bytes": 1027,
+      "sha256": "a34be18b228a05fb17e63e50bdca5bfe96aa7044abeb15d75d1f0a53b99a7830"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/case.json": {
+      "bytes": 917,
+      "sha256": "17767dfb88a31de6529e7cd203744f60f5ef822ac7516a3a7f33f7d1b705a108"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay.mp4": {
+      "bytes": 1457684,
+      "sha256": "3ae79c0c1eb3ade3038f706f6caa588c8ae744859e79c500ce91fc76ddab90b8"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-arcade-1/tank/initial-snapshot.json": {
+      "bytes": 9249,
+      "sha256": "7cf50d52613bca3f86d85f2796875dea3520afc8f217cf32010b20287604ece1"
+    },
+    "evidence/controller-runtime-arcade-1/tank/driver.log": {
+      "bytes": 668,
+      "sha256": "2cc5021f6903c89aef022f3b79f57c829b255227aad89960ca35eb878ffc2b73"
+    },
+    "evidence/controller-runtime-arcade-1/tank/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-1/tank/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-arcade-1/tank/logcat.txt": {
+      "bytes": 1600771,
+      "sha256": "7ff97fb046062c61cc0de92f8d1689db5867544a8f96f18508ed725498b47d6c"
+    },
+    "evidence/controller-runtime-arcade-1/tank/baseline-release.json": {
+      "bytes": 413,
+      "sha256": "cdb29b0f0be935a70b5ae3f236a252095c2cb4df3334d784087ba99297a38497"
+    },
+    "evidence/controller-runtime-arcade-1/tank/recording-probe.json": {
+      "bytes": 4349,
+      "sha256": "808b6d648ec3b650b3c174a924bfe3a06a9aff8b1ef3f1db47b1f2531ad1e8a5"
+    },
+    "evidence/controller-runtime-arcade-1/tank/commands.json": {
+      "bytes": 1019,
+      "sha256": "88a108d596c5e0ba59de7f884f2c7f36fa4bba027352f6bf508d3b081e5fca07"
+    },
+    "evidence/controller-runtime-arcade-1/tank/case.json": {
+      "bytes": 914,
+      "sha256": "586f01c07befda074d8e271f598e806f01a205e36341a8dda91361cf13903c6e"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay.mp4": {
+      "bytes": 608721,
+      "sha256": "a36b21a862c042a2b897db910f82c4e4ece4bda132a7ee48fd32b6b813dc4025"
+    },
+    "evidence/controller-runtime-arcade-1/tank/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/emulator-crash-data/emu-crash-37.3.10.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "99a6a453ccb6efe4d657200863b9680d6506b2e0c1fa405b2286347fdf15b58f"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 23813,
+      "sha256": "ec681ba847686c67ec5c7e49bd3a5459e3f5d70f3eb45e4d81657f5b3614f7b6"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8956,
+      "sha256": "58e8343087a2ffcf2f806cf39a23f42f3503715ec3995c1aff3e87f81e87e440"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/controller-release.py": {
+      "bytes": 19265,
+      "sha256": "32a2f83f12dfc6b166021cd6a2e71926446b3abb12b52ac33cbf4892f9b03fe9"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 13685,
+      "sha256": "5cd63eab1c657030c9e167b4b189918cc63a27381181379de1c68a15b570bfb3"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/reconnected.png": {
+      "bytes": 121441,
+      "sha256": "f960f297b3a6271f4c5db7700c81118ffb79951eb70b371e412a70639132f33d"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/gameplay.png": {
+      "bytes": 121804,
+      "sha256": "de7fb2a18ff5c6f8018c3182fb74c07f037b2be8cc084f53bdf8c8ded88e0ccd"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/bridge-stderr.txt": {
+      "bytes": 3694,
+      "sha256": "ca2de49d40ab39b363b11a48e0e4e546e1747d995d34f58be225814f98105457"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/report.json": {
+      "bytes": 323295,
+      "sha256": "41096880805d665799fd300b7395579cee94c74a7e15b1ed2478f843aa8429e2"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/menu-android.png": {
+      "bytes": 88741,
+      "sha256": "c619a6bab0bf7720a049a7e80c1be622e07590a2c398f330a62de2e657ea02f0"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/paused.png": {
+      "bytes": 121434,
+      "sha256": "930122ade34a41ef73925fe2cad2084997c270f899b56896f5ad312db88f0d66"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/super-mario/source-manifest.json": {
+      "bytes": 707,
+      "sha256": "b5663e3fd9198d53e1cacfd09435ab1149c68e6b0d6706c766561566f2765278"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/adventure-island/source-manifest.json": {
+      "bytes": 712,
+      "sha256": "9b2686d316f303157393dc7671de401577ad82e322567d3b090c5bd8dff233f4"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jewel/source-manifest.json": {
+      "bytes": 701,
+      "sha256": "c6f866b1e9d4ec43457cbfbd9f8a618d0cdde162145bc9164107e13ca557549b"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jackal/source-manifest.json": {
+      "bytes": 702,
+      "sha256": "75803233b2d5bdfabcbeb30a671893d7d38c72b64ef0fad02e9af46d25035e06"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tank/source-manifest.json": {
+      "bytes": 700,
+      "sha256": "e5b17fd3a48525d01ed9431fd8734e1f0d10c0f0b573d1eb33ca147e0404c837"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/bomb-jack/source-manifest.json": {
+      "bytes": 705,
+      "sha256": "2ee5629377563da5b75ec3cd1956166584a7161e7c64367ff099d54de0ba8131"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tetris/source-manifest.json": {
+      "bytes": 702,
+      "sha256": "f3de8c29ecbf494867edba7f5ba9e14b91de09bb227fcbe4e22e3f2ffe4cefcd"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/super-mario/resource/apps/super-mario/build.gradle": {
+      "bytes": 1458,
+      "sha256": "acd71e9edac3d72ca17e796a5fd35610955a31c45b5162240d313e98dfc18732"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/super-mario/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/super-mario/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/adventure-island/resource/apps/adventure-island/build.gradle": {
+      "bytes": 1473,
+      "sha256": "052cccd1c6796d5225a44e17ad961bb10c3b12d59ad88ec05a4ac53dbf09bd65"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/adventure-island/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/adventure-island/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jewel/resource/apps/jewel/build.gradle": {
+      "bytes": 1442,
+      "sha256": "22ac432be160b5287e89f98e035f9813cfdc48cdc2553234119b2325fe0569b7"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jewel/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jewel/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jackal/resource/apps/jackal/build.gradle": {
+      "bytes": 9357,
+      "sha256": "a894d170eabce51de70dc03f543ef9c608f95fba1f5275b40ac4dfc0f8a02e07"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jackal/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jackal/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tank/resource/apps/tank/build.gradle": {
+      "bytes": 1418,
+      "sha256": "6a6c192f5477e75564b5413d2624328f369998c6233bb90798fe3c0c35d84e4d"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tank/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tank/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/bomb-jack/resource/apps/bomb-jack/build.gradle": {
+      "bytes": 1459,
+      "sha256": "8004b1b5efb65dc182ac7501c81cd4d5c6153a34423bd5ec0dfc4d852d0b33cf"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/bomb-jack/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/bomb-jack/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tetris/resource/apps/tetris/build.gradle": {
+      "bytes": 1445,
+      "sha256": "5f0fb836d08a65e32ee0f9b86dd8f51d2f5b32820288027420e0a1173633f5bf"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tetris/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tetris/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/reconnected.png": {
+      "bytes": 93600,
+      "sha256": "ae94c1ab3989cbe763e9ab2afb55b30df822e8e1ff234e204bae531fc608b05a"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/gameplay.png": {
+      "bytes": 93631,
+      "sha256": "572f25f632ecf8c9d438f88e38095e029d18bc1e4eac6d7ca8983b371e81792f"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/bridge-stderr.txt": {
+      "bytes": 3892,
+      "sha256": "0834f3c1c3deae9db75c0bbbfbe063d28f24b7518400104950e39bcfe8cd2fbb"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/report.json": {
+      "bytes": 320456,
+      "sha256": "7a47368104654d129a7ec37be19c9599470409f3c611ba5bcc8f540b81838e82"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/menu-android.png": {
+      "bytes": 81525,
+      "sha256": "1140c0f7dcae7b0a0fdb51ccabb89d8f2fe5a04fffbbf5af82883256de204ff8"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/paused.png": {
+      "bytes": 93593,
+      "sha256": "5285ac7517a1126ea8b61aba2c7ae441fa564ec27eff7127e615339ff5a002ed"
+    },
+    "evidence/controller-runtime-home-coast/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-home-coast/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-home-coast/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "169910e17f3896703d9514372a106fa17ab84886204a9bbba95c4257b6730a3f"
+    },
+    "evidence/controller-runtime-home-coast/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "34852fcd84ff98f14d25da802b4371fea8b240142d37619d9a1e955ed89bc72f"
+    },
+    "evidence/controller-runtime-home-coast/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "14e62f2f0ba109197d3f881dfc7367d2f68ab964593dc2499c17758550a65ca2"
+    },
+    "evidence/controller-runtime-home-coast/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "f3e19fbd9dac29b7745909d789cf8d43d6de8eedfdf7327055b600c55103301e"
+    },
+    "evidence/controller-runtime-home-coast/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-home-coast/host-diagnostics/host-samples.jsonl": {
+      "bytes": 213291,
+      "sha256": "9434eb4b6d002d05bb2103750cc1575a966853f471d389f9a5595405a17b8a93"
+    },
+    "evidence/controller-runtime-home-coast/host-diagnostics/kernel-before.txt": {
+      "bytes": 121633,
+      "sha256": "77e76ffc59780de01a623291f14be734be44b16553939032330c3fe803029b3a"
+    },
+    "evidence/controller-runtime-home-coast/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "d260db9b2a4f761bc3a1c73e4d545f06089252f19d6cfc7de73cfacf5dfdff16"
+    },
+    "evidence/controller-runtime-home-coast/host-diagnostics/kernel-after.txt": {
+      "bytes": 121633,
+      "sha256": "2bb33f6f0f69bc1873bc50fc3a1c936390b32ffb93eb70d666160fda2c3ad02c"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/initial-snapshot.json": {
+      "bytes": 10079,
+      "sha256": "d81555778dc5ecb8cdbed4be74984573dc59ea3014e575b8cfa6a594009b4b68"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/driver.log": {
+      "bytes": 728,
+      "sha256": "988b914434c41f1ff37bcfd15b44eed0beed662cbe156be5c9640ba9c667c752"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/logcat.txt": {
+      "bytes": 2137861,
+      "sha256": "d0272b01d73b0fa75726cd63ac3642ec50668e29d259ad04eb9575457a52dba7"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/baseline-release.json": {
+      "bytes": 423,
+      "sha256": "130c995ae2e03ee2b018075bfbbfbbf4fc04cbba6de2cb11710fdaa4e5239a60"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/recording-probe.json": {
+      "bytes": 4357,
+      "sha256": "4a1437dbc6f3a39cc7fddace93776aa0de9508616397e56208d22ea77e45f35c"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/commands.json": {
+      "bytes": 1042,
+      "sha256": "86592ef6f5f4326b5e65decada9e4be47cb2749579ab8d5347a530468def6ceb"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/case.json": {
+      "bytes": 921,
+      "sha256": "3d7c334e7a000c34cd233d87fc7943b56b314df17645d2ef9c352c260a7136c6"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay.mp4": {
+      "bytes": 1067481,
+      "sha256": "1e1c451bb02d409398fb34dfe4bcf3f0f5358c55c49b719163a01d42ddd0926c"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-home-coast/host-diagnostics/emulator-crash-data/emu-crash-37.3.10.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "08499913bbf08fc7dd97ffb687e905c3a9cb34f5c33906b3e639ddeafa35f13d"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/reconnected.png": {
+      "bytes": 851488,
+      "sha256": "258d970f3a1af02d59d60d2a56bdf4ac85a27ea9d5a7f0fe67e07d9ad1044d73"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/gameplay.png": {
+      "bytes": 872956,
+      "sha256": "e6fc699656c4336b60f233a3b6e04052a5d840d940e655cecbd183fe61a82f0f"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/executed-run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/bridge-stderr.txt": {
+      "bytes": 4552,
+      "sha256": "04b38f15312cd1641aa9591b0214dad788a3f1e13ea82c810f05e586b944177d"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/report.json": {
+      "bytes": 332051,
+      "sha256": "255b9fe7fbd4c453d23433ff271de33e8944cd9a091fdb8f43355c0649fb4a64"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/menu-android.png": {
+      "bytes": 1005159,
+      "sha256": "f561d6b105d962dc92fc018c159fafd02768040eef31f29a080137af45e9543a"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-home-coast/coast-kart/gameplay/paused.png": {
+      "bytes": 588201,
+      "sha256": "334d122d77c695fb0f72c4bd3fb1f2f2378dbe8c08477e7f4a4e6b840e143c93"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 23813,
+      "sha256": "ec681ba847686c67ec5c7e49bd3a5459e3f5d70f3eb45e4d81657f5b3614f7b6"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8956,
+      "sha256": "58e8343087a2ffcf2f806cf39a23f42f3503715ec3995c1aff3e87f81e87e440"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/controller-release.py": {
+      "bytes": 19265,
+      "sha256": "32a2f83f12dfc6b166021cd6a2e71926446b3abb12b52ac33cbf4892f9b03fe9"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 13685,
+      "sha256": "5cd63eab1c657030c9e167b4b189918cc63a27381181379de1c68a15b570bfb3"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-home-coast/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-home-coast/observer-source/coast-kart/source-manifest.json": {
+      "bytes": 706,
+      "sha256": "026d5ab98940f61c91e4344c8309a71496a56cc18fd70eb87fd65570edd99fa4"
+    },
+    "evidence/controller-runtime-home-coast/observer-source/used-car-racing/source-manifest.json": {
+      "bytes": 711,
+      "sha256": "7cf0d6006b06c4002644dab1b9947a7ba0aef0ba0547e8c6ee539f814756cddd"
+    },
+    "evidence/controller-runtime-home-coast/observer-source/alien-shooter/source-manifest.json": {
+      "bytes": 709,
+      "sha256": "1fcd6e80872d7c4b1799a648a24b450398179f5b31683d9a8544aa2d0b10f24b"
+    },
+    "evidence/controller-runtime-home-coast/observer-source/coast-kart/resource/apps/coast-kart/build.gradle": {
+      "bytes": 1455,
+      "sha256": "27403682dfa37fdd72b606d8d9c8a37101497bd4dcb405b7520cb9439af6202a"
+    },
+    "evidence/controller-runtime-home-coast/observer-source/coast-kart/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-home-coast/observer-source/coast-kart/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-home-coast/observer-source/used-car-racing/resource/apps/used-car-racing/build.gradle": {
+      "bytes": 1653,
+      "sha256": "f709292c26fc41001f14088d8675290fc57c4057b109dc427133b8d9665ca98f"
+    },
+    "evidence/controller-runtime-home-coast/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-home-coast/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-home-coast/observer-source/alien-shooter/resource/apps/alien-shooter/build.gradle": {
+      "bytes": 1467,
+      "sha256": "d0fea5a19b8ca3e79d080dc1700d0f73a51138d568578cf4045d32197862904b"
+    },
+    "evidence/controller-runtime-home-coast/observer-source/alien-shooter/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-home-coast/observer-source/alien-shooter/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-home-kit/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-home-kit/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-home-kit/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "fc59b629d80f1935b8a2ddd717fb1164a935841202e8440ec5ebd095d8b11b06"
+    },
+    "evidence/controller-runtime-home-kit/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "31da455de700d95041d66472dc68867063a25749a1f79b862a8cc5d19dcaf23f"
+    },
+    "evidence/controller-runtime-home-kit/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "15b5682c151f6560cf376dd9a51a1b9c0fc5493992fe1a7bd7fe237868d1181e"
+    },
+    "evidence/controller-runtime-home-kit/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "fa66c9cd2e0401f9584711f6322363dafdee0e4f02349c081f5bdbae38f80c59"
+    },
+    "evidence/controller-runtime-home-kit/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-home-kit/host-diagnostics/host-samples.jsonl": {
+      "bytes": 248619,
+      "sha256": "e6ba671b3b33bdef9bf787b348a81995010d6aa72b8515bc945b24558b9f452e"
+    },
+    "evidence/controller-runtime-home-kit/host-diagnostics/kernel-before.txt": {
+      "bytes": 122291,
+      "sha256": "35fb104395771bda2ec97cfbc7ea3333fdf537d55f95c8dc5121da5afc1730f0"
+    },
+    "evidence/controller-runtime-home-kit/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "e45d24be7bc4285fd01378b12996d1a9a5b33a7d3329fc689865b5c0a93369ba"
+    },
+    "evidence/controller-runtime-home-kit/host-diagnostics/kernel-after.txt": {
+      "bytes": 122291,
+      "sha256": "9f4b536b07587bddf6ec86a5eb1449a30d4ae6b796cb09b49f22d59887ea95c2"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/initial-snapshot.json": {
+      "bytes": 5526,
+      "sha256": "eef9df08990434216bbe898d1f28d040bae2c6594b4142ef4be8c87efdf5ee88"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/driver.log": {
+      "bytes": 665,
+      "sha256": "c09848ee81d548e81860ea7241500a6f85b73c2d3ca7eb9fb0a0cc23a60ef181"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/logcat.txt": {
+      "bytes": 185302,
+      "sha256": "9c38bedd0e697fa00da3779f687de0c63b894b2d3384c0821d8afabb2c304e87"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/baseline-release.json": {
+      "bytes": 429,
+      "sha256": "69f1d445df1f8dfc245419fe5796946fc464e15c1ecf917b24db082c2e69084d"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/recording-probe.json": {
+      "bytes": 4357,
+      "sha256": "c8936548af80468cbc6672139eebb06591dea2c6f3d363a291c94885680ab359"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/commands.json": {
+      "bytes": 1054,
+      "sha256": "4ad110d1ea50563788636d7bfc6f083b5bf239509316cfd600d447afb62a18d2"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/case.json": {
+      "bytes": 923,
+      "sha256": "1cc391f4a29c5893572d1f509f4a009f21232c1dda49293355084d35a61730c3"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay.mp4": {
+      "bytes": 663901,
+      "sha256": "99a22ce584de7fb9d69846e088d43120405599d6c40bdef3b82627434cc147ae"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/initial-snapshot.json": {
+      "bytes": 15289,
+      "sha256": "0079ff427de830961698291a625a451c32f0a31c6202b6b6c7c2eb7ac2467922"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/driver.log": {
+      "bytes": 629,
+      "sha256": "0cb3cbf411e76b5da4c6431107e5892a134b1fa3e88e0d9de1e8b566a72e11eb"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/logcat.txt": {
+      "bytes": 1929893,
+      "sha256": "d648c811274ce9f619b4a2419322af078a09d5bfd5e19ff8906b355f815b428e"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/baseline-release.json": {
+      "bytes": 421,
+      "sha256": "6d2a9bf4cc8fe8148a04a4e77e9810a9c4da4f1553c5fb41dce87e5a2480b83c"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/recording-probe.json": {
+      "bytes": 4352,
+      "sha256": "1feb97c029700320db310d0463eef0aff9b2ca643ef4e6af7969afac1339a3b8"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/commands.json": {
+      "bytes": 1038,
+      "sha256": "52b36f5e7cb6d5c1ea1da78a9fb6e9b9cd56c00f7cc0516c01e63b43b41f4161"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/case.json": {
+      "bytes": 920,
+      "sha256": "811bf1a0442aa5fb1471bb29f1cd3c7e137b4995e140abfc239b48bb1676f70d"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay.mp4": {
+      "bytes": 1563081,
+      "sha256": "8f1115270175eab39c35372196e6c40536f8401a80f5021821d9166c24a031a7"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-home-kit/host-diagnostics/emulator-crash-data/emu-crash-37.3.10.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "cb8b1b7d79b5fff559bb09364174cd9f0f0c6884e4ed34b31f7498263a6a90c7"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 23813,
+      "sha256": "ec681ba847686c67ec5c7e49bd3a5459e3f5d70f3eb45e4d81657f5b3614f7b6"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8956,
+      "sha256": "58e8343087a2ffcf2f806cf39a23f42f3503715ec3995c1aff3e87f81e87e440"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/controller-release.py": {
+      "bytes": 19265,
+      "sha256": "32a2f83f12dfc6b166021cd6a2e71926446b3abb12b52ac33cbf4892f9b03fe9"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 13685,
+      "sha256": "5cd63eab1c657030c9e167b4b189918cc63a27381181379de1c68a15b570bfb3"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-home-kit/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-home-kit/observer-source/tower-overlap/source-manifest.json": {
+      "bytes": 705,
+      "sha256": "59a6c60c1bdbb065b40f39900e353dbd8a3e568db1e36c99b702813f99e24f47"
+    },
+    "evidence/controller-runtime-home-kit/observer-source/neon-rush/source-manifest.json": {
+      "bytes": 701,
+      "sha256": "1454a12d3bae39bffabb6d25b980bb06709cb4fe694d0f33e0692262a981fb73"
+    },
+    "evidence/controller-runtime-home-kit/observer-source/tower-overlap/resource/apps/tower-overlap/game.json": {
+      "bytes": 280,
+      "sha256": "b0e0ca66f36b090efa60d38ea0c43d085146ccf4a733b1d7dd9bae921d34e27a"
+    },
+    "evidence/controller-runtime-home-kit/observer-source/tower-overlap/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-home-kit/observer-source/tower-overlap/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-home-kit/observer-source/neon-rush/resource/apps/neon-rush/game.json": {
+      "bytes": 273,
+      "sha256": "772d864e6e6d7f85b4da6d1223567e64ac6cb3a22b99a6cf4bf4dba994e07afb"
+    },
+    "evidence/controller-runtime-home-kit/observer-source/neon-rush/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-home-kit/observer-source/neon-rush/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/reconnected.png": {
+      "bytes": 323758,
+      "sha256": "bbf138548424626a70416b6fadfdd3e2597df7fe4e5c34304396ce424195f871"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/gameplay.png": {
+      "bytes": 320412,
+      "sha256": "6dd66c7a83c5026b71067dcef4f05dfe4148e9abdabb22adfb8aa53601a8c60f"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/executed-run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/bridge-stderr.txt": {
+      "bytes": 2968,
+      "sha256": "12591f4da5d60bb83b5e9fb44e1e86795e717dd6b78ec67e93e2f95485d38f51"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/report.json": {
+      "bytes": 185970,
+      "sha256": "f44774bbdda85335854c7266b45e63b46698331364587c8acce4511d8bf6a6dc"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/menu-android.png": {
+      "bytes": 285147,
+      "sha256": "58e537c6dd83dbe9d6fe25cbbda6b7434919aa9bb714a939c7f1481e432f4c19"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-home-kit/tower-overlap/gameplay/paused.png": {
+      "bytes": 261483,
+      "sha256": "9ea52c48957ed976fec405f4730a9fa8a5cb66e07440aba411859e14f4d7b34e"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/reconnected.png": {
+      "bytes": 805688,
+      "sha256": "f7a938db4067f29e16e007f33e9e741a2c78adb3aae9e3606de2d68152f4b3db"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/gameplay.png": {
+      "bytes": 880682,
+      "sha256": "6df92ce8f95890ca86d38277c04559aea3e9adc5aaf77919b57f04803d8aedc8"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/executed-run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/bridge-stderr.txt": {
+      "bytes": 4090,
+      "sha256": "b464a04fd29dfed8b2315aa87310e39fb602da4434a9f8ae927231d6409ba778"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/report.json": {
+      "bytes": 437798,
+      "sha256": "6aacd5d0426f2a123c03b3a2979a4f193ace623f17c3c2e740775906e1778b52"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/menu-android.png": {
+      "bytes": 874194,
+      "sha256": "72f7b9e877779c6741673b74b7cea2b6b16afdc4e231771e5900c51336752a1f"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-home-kit/neon-rush/gameplay/paused.png": {
+      "bytes": 663532,
+      "sha256": "c296483d63d3433e1cc06981645af4931d5dc93b00a529ff165d476d93826792"
+    },
+    "evidence/controller-runtime-worlds-2/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-worlds-2/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-worlds-2/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "66f8cdaf31bc01b2583e9e5c8cd71ed946bf21c4905f8b67f377b7e38e4cf213"
+    },
+    "evidence/controller-runtime-worlds-2/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "158d6421557102deb130fbfd7fdc9d35497d748e78378c0efe786bc737284236"
+    },
+    "evidence/controller-runtime-worlds-2/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "b5726fe3b35e339045e33a447744c9d3f8b325323d6d2136f2611f976354cb87"
+    },
+    "evidence/controller-runtime-worlds-2/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "e2f4ef9d657e95fd765ebeba982681f0a0c40f0891220dc9111451f86737a3e0"
+    },
+    "evidence/controller-runtime-worlds-2/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-worlds-2/host-diagnostics/host-samples.jsonl": {
+      "bytes": 294521,
+      "sha256": "19439601e2bc6a8363db0afbd213428543b2eb1d9b86758606af1e0f86e8b92e"
+    },
+    "evidence/controller-runtime-worlds-2/host-diagnostics/kernel-before.txt": {
+      "bytes": 122047,
+      "sha256": "5fdc15665f1a430ca41740895b2d7e9e84473d8a87426a273470a4743b39311a"
+    },
+    "evidence/controller-runtime-worlds-2/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "7e97075d771e02647aaf43d3e4c76f0ca39b1f16b9873ef7fdddae2a39533b44"
+    },
+    "evidence/controller-runtime-worlds-2/host-diagnostics/kernel-after.txt": {
+      "bytes": 122047,
+      "sha256": "5fdc15665f1a430ca41740895b2d7e9e84473d8a87426a273470a4743b39311a"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/initial-snapshot.json": {
+      "bytes": 16516,
+      "sha256": "8e0935b21c6158f593fdc83e618647ac835f6770d5b168c431de873a3d75bb42"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/driver.log": {
+      "bytes": 361,
+      "sha256": "6d3a25af1e42e6c9d89365421bc29e76279d1350558088c4798ad318c6864e19"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/logcat-error.txt": {
+      "bytes": 128,
+      "sha256": "b3a1974570bc4248a5dc4c0c3c967bc5083f2ac74666a796f5c68d5df906774c"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/baseline-release.json": {
+      "bytes": 427,
+      "sha256": "f0c567d330601ab16141d6bcd0d96abb7e616ba3d43c9b21e90f74000330de59"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/commands.json": {
+      "bytes": 1061,
+      "sha256": "d2f9a005786bf5378f99b14d0acf5dd1b64581887f13166e1f180260af6d91bd"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/case.json": {
+      "bytes": 1338,
+      "sha256": "fc1a751ee68ac3a32ef8aba197fb713748d54958c4bd18b6d0f92b3323e5f552"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/instrumentation.txt": {
+      "bytes": 115,
+      "sha256": "f62cfe5e80e6f3a1ecf3803651b968cee4c8f3099c4af3130fc0bd80e7e374a0"
+    },
+    "evidence/controller-runtime-worlds-2/alien-shooter/logcat-error.txt": {
+      "bytes": 128,
+      "sha256": "b3a1974570bc4248a5dc4c0c3c967bc5083f2ac74666a796f5c68d5df906774c"
+    },
+    "evidence/controller-runtime-worlds-2/alien-shooter/baseline-release.json": {
+      "bytes": 430,
+      "sha256": "8fa2285d889e9f8474f0054139669422ef8104788cc4e4afdea5e6059b63a213"
+    },
+    "evidence/controller-runtime-worlds-2/alien-shooter/case.json": {
+      "bytes": 618,
+      "sha256": "a6fe0d020883a630f0d29655f574cdc508b251723c7890f18f402ee5d3c5fadd"
+    },
+    "evidence/controller-runtime-worlds-2/host-diagnostics/emulator-crash-data/emu-crash-37.3.10.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "c109e6978a4450c82793661e4088de0eebad2e2dc3acddb62f34634dead77a54"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 23813,
+      "sha256": "ec681ba847686c67ec5c7e49bd3a5459e3f5d70f3eb45e4d81657f5b3614f7b6"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8956,
+      "sha256": "58e8343087a2ffcf2f806cf39a23f42f3503715ec3995c1aff3e87f81e87e440"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/controller-release.py": {
+      "bytes": 19265,
+      "sha256": "32a2f83f12dfc6b166021cd6a2e71926446b3abb12b52ac33cbf4892f9b03fe9"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 13685,
+      "sha256": "5cd63eab1c657030c9e167b4b189918cc63a27381181379de1c68a15b570bfb3"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-worlds-2/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-worlds-2/observer-source/coast-kart/source-manifest.json": {
+      "bytes": 706,
+      "sha256": "026d5ab98940f61c91e4344c8309a71496a56cc18fd70eb87fd65570edd99fa4"
+    },
+    "evidence/controller-runtime-worlds-2/observer-source/used-car-racing/source-manifest.json": {
+      "bytes": 711,
+      "sha256": "7cf0d6006b06c4002644dab1b9947a7ba0aef0ba0547e8c6ee539f814756cddd"
+    },
+    "evidence/controller-runtime-worlds-2/observer-source/alien-shooter/source-manifest.json": {
+      "bytes": 709,
+      "sha256": "1fcd6e80872d7c4b1799a648a24b450398179f5b31683d9a8544aa2d0b10f24b"
+    },
+    "evidence/controller-runtime-worlds-2/observer-source/coast-kart/resource/apps/coast-kart/build.gradle": {
+      "bytes": 1455,
+      "sha256": "27403682dfa37fdd72b606d8d9c8a37101497bd4dcb405b7520cb9439af6202a"
+    },
+    "evidence/controller-runtime-worlds-2/observer-source/coast-kart/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-worlds-2/observer-source/coast-kart/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-worlds-2/observer-source/used-car-racing/resource/apps/used-car-racing/build.gradle": {
+      "bytes": 1653,
+      "sha256": "f709292c26fc41001f14088d8675290fc57c4057b109dc427133b8d9665ca98f"
+    },
+    "evidence/controller-runtime-worlds-2/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-worlds-2/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-worlds-2/observer-source/alien-shooter/resource/apps/alien-shooter/build.gradle": {
+      "bytes": 1467,
+      "sha256": "d0fea5a19b8ca3e79d080dc1700d0f73a51138d568578cf4045d32197862904b"
+    },
+    "evidence/controller-runtime-worlds-2/observer-source/alien-shooter/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-worlds-2/observer-source/alien-shooter/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/gameplay/executed-run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/gameplay/bridge-stderr.txt": {
+      "bytes": 988,
+      "sha256": "c8e4995b0785a454358c84ef97a683431f1aa5d2d3d33b3bffdb1671785633d8"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/gameplay/report.json": {
+      "bytes": 50828,
+      "sha256": "524f1731bc09b12fc63e7cc51f1b6c35379d1e9b4e050da0191a840bd799b02c"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/gameplay/menu-android.png": {
+      "bytes": 1052450,
+      "sha256": "c1204bde722a917883ce99f660447dfa014d94768833a524a620133c8a316e57"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-worlds-2/used-car-racing/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    }
+  }
+}

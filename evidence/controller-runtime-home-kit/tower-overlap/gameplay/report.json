@@ -1,0 +1,5706 @@
+{
+  "slug": "tower-overlap",
+  "mode": "android",
+  "startedAt": "2026-11-20T15:12:32.374Z",
+  "status": "passed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9",
+    "tools/readme-controller-qa/cases.mjs": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71",
+    "tools/readme-controller-qa/client-status-dom.mjs": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e",
+    "tools/readme-controller-qa/client-status-cases.mjs": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45",
+    "tools/readme-controller-qa/sdk-peer.py": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": true,
+  "syntheticNativeBridge": false,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "START begins actual game",
+      "status": "passed"
+    },
+    {
+      "name": "direction and game-specific action affect actual model",
+      "status": "passed"
+    },
+    {
+      "name": "START pause freezes game, fresh START resumes",
+      "status": "passed"
+    },
+    {
+      "name": "disconnect clears held input, reconnect sync requires fresh START",
+      "status": "passed"
+    },
+    {
+      "name": "all nine official keys and long hold have real protocol receipts",
+      "status": "passed",
+      "result": {
+        "keys": 9,
+        "unchangedOfficialPage": true,
+        "longPressAndRelease": true
+      }
+    },
+    {
+      "name": "same-sequence ACK for every original SDK message",
+      "status": "passed",
+      "result": {
+        "messages": 59,
+        "acks": 59,
+        "connections": 2
+      }
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "id": "tower-overlap",
+        "phase": "menu",
+        "paused": false,
+        "tick": 0,
+        "elapsed": 0,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            }
+          ],
+          "floorsBuilt": 0,
+          "goal": 6,
+          "slab": {
+            "x": 0,
+            "width": 220,
+            "direction": 1,
+            "velocity": 145,
+            "cycle": 0
+          },
+          "dropElapsed": 0,
+          "drops": 0,
+          "offcuts": [],
+          "lastLanding": null,
+          "elapsed": 0,
+          "elapsedCapped": false,
+          "calls": 0,
+          "inputArmed": false,
+          "cancelEpoch": null,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "石板自动往返；看准与下层重合时按 A 落下。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "buttonX": false,
+            "buttonY": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 221,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2899.8999999999996,
+          183.30000000000018,
+          133.4000000000001,
+          866.5999999999999,
+          83.39999999999964,
+          50,
+          83.40000000000055,
+          83.30000000000018,
+          116.69999999999982,
+          133.30000000000018,
+          199.89999999999964,
+          83.39999999999964
+        ],
+        "connection": {
+          "phoneSeen": false,
+          "disconnected": false,
+          "connected": false,
+          "controllerKind": null
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 13,
+                  "top": 424,
+                  "right": 947,
+                  "bottom": 516
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:45379/?room=27dFp4C-z-LYmlIM3U-uvpylW8WypSnB",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "started",
+      "before": null,
+      "after": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": false,
+        "tick": 45,
+        "elapsed": 0.7500000000000007,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            }
+          ],
+          "floorsBuilt": 0,
+          "goal": 6,
+          "slab": {
+            "x": 108.7499999999983,
+            "width": 220,
+            "direction": 1,
+            "velocity": 145,
+            "cycle": 0.7500000000000007
+          },
+          "dropElapsed": 0,
+          "drops": 0,
+          "offcuts": [],
+          "lastLanding": null,
+          "elapsed": 0.7500000000000007,
+          "elapsedCapped": false,
+          "calls": 45,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "石板自动往返；看准与下层重合时按 A 落下。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-aab5738af3c9",
+            "session": "wifi-24ba02dd-05ac-46d8-8dba-4b09f388ad19-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 222,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2899.8999999999996,
+          183.30000000000018,
+          133.4000000000001,
+          866.5999999999999,
+          83.39999999999964,
+          50,
+          83.40000000000055,
+          83.30000000000018,
+          116.69999999999982,
+          133.30000000000018,
+          199.89999999999964,
+          83.39999999999964,
+          133.40000000000055,
+          100,
+          83.30000000000018,
+          133.29999999999927,
+          133.30000000000018,
+          83.40000000000055,
+          83.29999999999927,
+          33.400000000000546,
+          66.59999999999945,
+          100,
+          83.40000000000055,
+          49.899999999999636,
+          33.400000000000546,
+          50,
+          66.59999999999945,
+          83.40000000000055,
+          99.89999999999964,
+          83.39999999999964,
+          33.30000000000018,
+          16.699999999999818,
+          16.600000000000364,
+          333.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          83.30000000000018,
+          100.10000000000036,
+          116.70000000000073,
+          16.599999999999454,
+          16.699999999999818,
+          50,
+          66.70000000000073,
+          50,
+          66.59999999999945,
+          50.100000000000364,
+          33.19999999999982,
+          83.39999999999964,
+          16.600000000000364,
+          50.100000000000364,
+          49.899999999999636,
+          16.699999999999818
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400.21875,
+                  "bottom": 499.9375,
+                  "width": 167.21875,
+                  "height": 68.9375
+                },
+                "clip": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400,
+                  "bottom": 509
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-aab5738af3c9",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-aab5738af3c9",
+                    "idText": "ID: virtual-aab5738af3c9",
+                    "visible": true,
+                    "rect": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400.21875,
+                      "bottom": 499.9375,
+                      "width": 167.21875,
+                      "height": 68.9375
+                    },
+                    "clip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idRect": {
+                      "left": 274,
+                      "top": 458.34375,
+                      "right": 391.21875,
+                      "bottom": 491.9375,
+                      "width": 117.21875,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 274,
+                        "top": 459.34375,
+                        "right": 389.21875,
+                        "bottom": 473.34375,
+                        "width": 115.21875,
+                        "height": 14
+                      },
+                      {
+                        "left": 274,
+                        "top": 476.140625,
+                        "right": 331.609375,
+                        "bottom": 490.140625,
+                        "width": 57.609375,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 117,
+                    "idScrollWidth": 117,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 242,
+                      "top": 439,
+                      "right": 266,
+                      "bottom": 463,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:45379/?room=27dFp4C-z-LYmlIM3U-uvpylW8WypSnB",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "drop-slab",
+      "before": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": false,
+        "tick": 82,
+        "elapsed": 1.3666666666666667,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            }
+          ],
+          "floorsBuilt": 0,
+          "goal": 6,
+          "slab": {
+            "x": 198.16666666666356,
+            "width": 220,
+            "direction": 1,
+            "velocity": 145,
+            "cycle": 0.36666666666666803
+          },
+          "dropElapsed": 0,
+          "drops": 0,
+          "offcuts": [],
+          "lastLanding": null,
+          "elapsed": 1.3666666666666667,
+          "elapsedCapped": false,
+          "calls": 82,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "石板自动往返；看准与下层重合时按 A 落下。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-aab5738af3c9",
+            "session": "wifi-24ba02dd-05ac-46d8-8dba-4b09f388ad19-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 222,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2899.8999999999996,
+          183.30000000000018,
+          133.4000000000001,
+          866.5999999999999,
+          83.39999999999964,
+          50,
+          83.40000000000055,
+          83.30000000000018,
+          116.69999999999982,
+          133.30000000000018,
+          199.89999999999964,
+          83.39999999999964,
+          133.40000000000055,
+          100,
+          83.30000000000018,
+          133.29999999999927,
+          133.30000000000018,
+          83.40000000000055,
+          83.29999999999927,
+          33.400000000000546,
+          66.59999999999945,
+          100,
+          83.40000000000055,
+          49.899999999999636,
+          33.400000000000546,
+          50,
+          66.59999999999945,
+          83.40000000000055,
+          99.89999999999964,
+          83.39999999999964,
+          33.30000000000018,
+          16.699999999999818,
+          16.600000000000364,
+          333.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          83.30000000000018,
+          100.10000000000036,
+          116.70000000000073,
+          16.599999999999454,
+          16.699999999999818,
+          50,
+          66.70000000000073,
+          50,
+          66.59999999999945,
+          50.100000000000364,
+          33.19999999999982,
+          83.39999999999964,
+          16.600000000000364,
+          50.100000000000364,
+          49.899999999999636,
+          16.699999999999818,
+          16.600000000000364,
+          50.099999999999454,
+          83.30000000000109,
+          33.29999999999927,
+          100,
+          16.700000000000728,
+          66.69999999999891,
+          49.899999999999636,
+          66.80000000000109,
+          16.600000000000364,
+          50,
+          66.69999999999891
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400.21875,
+                  "bottom": 499.9375,
+                  "width": 167.21875,
+                  "height": 68.9375
+                },
+                "clip": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400,
+                  "bottom": 509
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-aab5738af3c9",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-aab5738af3c9",
+                    "idText": "ID: virtual-aab5738af3c9",
+                    "visible": true,
+                    "rect": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400.21875,
+                      "bottom": 499.9375,
+                      "width": 167.21875,
+                      "height": 68.9375
+                    },
+                    "clip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idRect": {
+                      "left": 274,
+                      "top": 458.34375,
+                      "right": 391.21875,
+                      "bottom": 491.9375,
+                      "width": 117.21875,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 274,
+                        "top": 459.34375,
+                        "right": 389.21875,
+                        "bottom": 473.34375,
+                        "width": 115.21875,
+                        "height": 14
+                      },
+                      {
+                        "left": 274,
+                        "top": 476.140625,
+                        "right": 331.609375,
+                        "bottom": 490.140625,
+                        "width": 57.609375,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 117,
+                    "idScrollWidth": 117,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 242,
+                      "top": 439,
+                      "right": 266,
+                      "bottom": 463,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:45379/?room=27dFp4C-z-LYmlIM3U-uvpylW8WypSnB",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": false,
+        "tick": 106,
+        "elapsed": 1.7666666666666653,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            },
+            {
+              "index": 1,
+              "x": 212.66666666666333,
+              "width": 197.33333333333667
+            }
+          ],
+          "floorsBuilt": 1,
+          "goal": 6,
+          "slab": {
+            "x": 402.66666666666333,
+            "width": 197.33333333333667,
+            "direction": -1,
+            "velocity": -145,
+            "cycle": 3.469446951953614e-18
+          },
+          "dropElapsed": 0,
+          "drops": 1,
+          "offcuts": [
+            {
+              "x": 410,
+              "width": 22.666666666663332,
+              "side": 1,
+              "age": 3.469446951953614e-18
+            }
+          ],
+          "lastLanding": {
+            "drop": 1,
+            "index": 1,
+            "sourceX": 212.66666666666333,
+            "sourceWidth": 220,
+            "previousX": 190,
+            "previousWidth": 220,
+            "x": 212.66666666666333,
+            "width": 197.33333333333667,
+            "leftTrim": 0,
+            "rightTrim": 22.666666666663332,
+            "accepted": true,
+            "cause": "safe"
+          },
+          "elapsed": 1.7666666666666653,
+          "elapsedCapped": false,
+          "calls": 106,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [
+            {
+              "type": "land",
+              "call": 106,
+              "index": 1,
+              "x": 212.66666666666333,
+              "width": 197.33333333333667,
+              "leftTrim": 0,
+              "rightTrim": 22.666666666663332
+            }
+          ],
+          "terminalReceipt": null,
+          "message": "完成第 1 层，台面宽 197.3；下一层从右侧驶入。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-aab5738af3c9",
+            "session": "wifi-24ba02dd-05ac-46d8-8dba-4b09f388ad19-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 218,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2899.8999999999996,
+          183.30000000000018,
+          133.4000000000001,
+          866.5999999999999,
+          83.39999999999964,
+          50,
+          83.40000000000055,
+          83.30000000000018,
+          116.69999999999982,
+          133.30000000000018,
+          199.89999999999964,
+          83.39999999999964,
+          133.40000000000055,
+          100,
+          83.30000000000018,
+          133.29999999999927,
+          133.30000000000018,
+          83.40000000000055,
+          83.29999999999927,
+          33.400000000000546,
+          66.59999999999945,
+          100,
+          83.40000000000055,
+          49.899999999999636,
+          33.400000000000546,
+          50,
+          66.59999999999945,
+          83.40000000000055,
+          99.89999999999964,
+          83.39999999999964,
+          33.30000000000018,
+          16.699999999999818,
+          16.600000000000364,
+          333.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          83.30000000000018,
+          100.10000000000036,
+          116.70000000000073,
+          16.599999999999454,
+          16.699999999999818,
+          50,
+          66.70000000000073,
+          50,
+          66.59999999999945,
+          50.100000000000364,
+          33.19999999999982,
+          83.39999999999964,
+          16.600000000000364,
+          50.100000000000364,
+          49.899999999999636,
+          16.699999999999818,
+          16.600000000000364,
+          50.099999999999454,
+          83.30000000000109,
+          33.29999999999927,
+          100,
+          16.700000000000728,
+          66.69999999999891,
+          49.899999999999636,
+          66.80000000000109,
+          16.600000000000364,
+          50,
+          66.69999999999891,
+          50,
+          33.399999999999636,
+          16.600000000000364,
+          66.70000000000073,
+          16.600000000000364,
+          33.399999999999636,
+          66.69999999999891,
+          66.60000000000036,
+          50
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400.21875,
+                  "bottom": 499.9375,
+                  "width": 167.21875,
+                  "height": 68.9375
+                },
+                "clip": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400,
+                  "bottom": 509
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-aab5738af3c9",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-aab5738af3c9",
+                    "idText": "ID: virtual-aab5738af3c9",
+                    "visible": true,
+                    "rect": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400.21875,
+                      "bottom": 499.9375,
+                      "width": 167.21875,
+                      "height": 68.9375
+                    },
+                    "clip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idRect": {
+                      "left": 274,
+                      "top": 458.34375,
+                      "right": 391.21875,
+                      "bottom": 491.9375,
+                      "width": 117.21875,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 274,
+                        "top": 459.34375,
+                        "right": 389.21875,
+                        "bottom": 473.34375,
+                        "width": 115.21875,
+                        "height": 14
+                      },
+                      {
+                        "left": 274,
+                        "top": 476.140625,
+                        "right": 331.609375,
+                        "bottom": 490.140625,
+                        "width": 57.609375,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 117,
+                    "idScrollWidth": 117,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 242,
+                      "top": 439,
+                      "right": 266,
+                      "bottom": 463,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:45379/?room=27dFp4C-z-LYmlIM3U-uvpylW8WypSnB",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "pause-freeze",
+      "before": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": true,
+        "tick": 153,
+        "elapsed": 2.549999999999996,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            },
+            {
+              "index": 1,
+              "x": 212.66666666666333,
+              "width": 197.33333333333667
+            }
+          ],
+          "floorsBuilt": 1,
+          "goal": 6,
+          "slab": {
+            "x": 289.08333333332666,
+            "width": 197.33333333333667,
+            "direction": -1,
+            "velocity": -145,
+            "cycle": 0.7833333333333341
+          },
+          "dropElapsed": 0,
+          "drops": 1,
+          "offcuts": [
+            {
+              "x": 410,
+              "width": 22.666666666663332,
+              "side": 1,
+              "age": 0.7833333333333341
+            }
+          ],
+          "lastLanding": {
+            "drop": 1,
+            "index": 1,
+            "sourceX": 212.66666666666333,
+            "sourceWidth": 220,
+            "previousX": 190,
+            "previousWidth": 220,
+            "x": 212.66666666666333,
+            "width": 197.33333333333667,
+            "leftTrim": 0,
+            "rightTrim": 22.666666666663332,
+            "accepted": true,
+            "cause": "safe"
+          },
+          "elapsed": 2.549999999999996,
+          "elapsedCapped": false,
+          "calls": 153,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "完成第 1 层，台面宽 197.3；下一层从右侧驶入。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-aab5738af3c9",
+            "session": "wifi-24ba02dd-05ac-46d8-8dba-4b09f388ad19-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 219,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2899.8999999999996,
+          183.30000000000018,
+          133.4000000000001,
+          866.5999999999999,
+          83.39999999999964,
+          50,
+          83.40000000000055,
+          83.30000000000018,
+          116.69999999999982,
+          133.30000000000018,
+          199.89999999999964,
+          83.39999999999964,
+          133.40000000000055,
+          100,
+          83.30000000000018,
+          133.29999999999927,
+          133.30000000000018,
+          83.40000000000055,
+          83.29999999999927,
+          33.400000000000546,
+          66.59999999999945,
+          100,
+          83.40000000000055,
+          49.899999999999636,
+          33.400000000000546,
+          50,
+          66.59999999999945,
+          83.40000000000055,
+          99.89999999999964,
+          83.39999999999964,
+          33.30000000000018,
+          16.699999999999818,
+          16.600000000000364,
+          333.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          83.30000000000018,
+          100.10000000000036,
+          116.70000000000073,
+          16.599999999999454,
+          16.699999999999818,
+          50,
+          66.70000000000073,
+          50,
+          66.59999999999945,
+          50.100000000000364,
+          33.19999999999982,
+          83.39999999999964,
+          16.600000000000364,
+          50.100000000000364,
+          49.899999999999636,
+          16.699999999999818,
+          16.600000000000364,
+          50.099999999999454,
+          83.30000000000109,
+          33.29999999999927,
+          100,
+          16.700000000000728,
+          66.69999999999891,
+          49.899999999999636,
+          66.80000000000109,
+          16.600000000000364,
+          50,
+          66.69999999999891,
+          50,
+          33.399999999999636,
+          16.600000000000364,
+          66.70000000000073,
+          16.600000000000364,
+          33.399999999999636,
+          66.69999999999891,
+          66.60000000000036,
+          50,
+          66.60000000000036,
+          50.100000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          66.60000000000036,
+          33.399999999999636,
+          166.70000000000073,
+          16.600000000000364,
+          50,
+          33.399999999999636,
+          66.60000000000036,
+          83.39999999999964,
+          50,
+          49.899999999999636,
+          16.700000000000728,
+          16.69999999999891,
+          50,
+          100,
+          66.70000000000073,
+          16.600000000000364,
+          16.599999999998545,
+          100,
+          100,
+          50.100000000000364,
+          83.39999999999964,
+          116.60000000000036,
+          33.399999999999636,
+          66.60000000000036,
+          66.70000000000073,
+          66.60000000000036,
+          66.59999999999854,
+          83.40000000000146,
+          83.39999999999964,
+          66.60000000000036
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400.21875,
+                  "bottom": 499.9375,
+                  "width": 167.21875,
+                  "height": 68.9375
+                },
+                "clip": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400,
+                  "bottom": 509
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-aab5738af3c9",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-aab5738af3c9",
+                    "idText": "ID: virtual-aab5738af3c9",
+                    "visible": true,
+                    "rect": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400.21875,
+                      "bottom": 499.9375,
+                      "width": 167.21875,
+                      "height": 68.9375
+                    },
+                    "clip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idRect": {
+                      "left": 274,
+                      "top": 458.34375,
+                      "right": 391.21875,
+                      "bottom": 491.9375,
+                      "width": 117.21875,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 274,
+                        "top": 459.34375,
+                        "right": 389.21875,
+                        "bottom": 473.34375,
+                        "width": 115.21875,
+                        "height": 14
+                      },
+                      {
+                        "left": 274,
+                        "top": 476.140625,
+                        "right": 331.609375,
+                        "bottom": 490.140625,
+                        "width": 57.609375,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 117,
+                    "idScrollWidth": 117,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 242,
+                      "top": 439,
+                      "right": 266,
+                      "bottom": 463,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:45379/?room=27dFp4C-z-LYmlIM3U-uvpylW8WypSnB",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": true,
+        "tick": 153,
+        "elapsed": 2.549999999999996,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            },
+            {
+              "index": 1,
+              "x": 212.66666666666333,
+              "width": 197.33333333333667
+            }
+          ],
+          "floorsBuilt": 1,
+          "goal": 6,
+          "slab": {
+            "x": 289.08333333332666,
+            "width": 197.33333333333667,
+            "direction": -1,
+            "velocity": -145,
+            "cycle": 0.7833333333333341
+          },
+          "dropElapsed": 0,
+          "drops": 1,
+          "offcuts": [
+            {
+              "x": 410,
+              "width": 22.666666666663332,
+              "side": 1,
+              "age": 0.7833333333333341
+            }
+          ],
+          "lastLanding": {
+            "drop": 1,
+            "index": 1,
+            "sourceX": 212.66666666666333,
+            "sourceWidth": 220,
+            "previousX": 190,
+            "previousWidth": 220,
+            "x": 212.66666666666333,
+            "width": 197.33333333333667,
+            "leftTrim": 0,
+            "rightTrim": 22.666666666663332,
+            "accepted": true,
+            "cause": "safe"
+          },
+          "elapsed": 2.549999999999996,
+          "elapsedCapped": false,
+          "calls": 153,
+          "inputArmed": true,
+          "cancelEpoch": 1,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "完成第 1 层，台面宽 197.3；下一层从右侧驶入。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-aab5738af3c9",
+            "session": "wifi-24ba02dd-05ac-46d8-8dba-4b09f388ad19-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 219,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2899.8999999999996,
+          183.30000000000018,
+          133.4000000000001,
+          866.5999999999999,
+          83.39999999999964,
+          50,
+          83.40000000000055,
+          83.30000000000018,
+          116.69999999999982,
+          133.30000000000018,
+          199.89999999999964,
+          83.39999999999964,
+          133.40000000000055,
+          100,
+          83.30000000000018,
+          133.29999999999927,
+          133.30000000000018,
+          83.40000000000055,
+          83.29999999999927,
+          33.400000000000546,
+          66.59999999999945,
+          100,
+          83.40000000000055,
+          49.899999999999636,
+          33.400000000000546,
+          50,
+          66.59999999999945,
+          83.40000000000055,
+          99.89999999999964,
+          83.39999999999964,
+          33.30000000000018,
+          16.699999999999818,
+          16.600000000000364,
+          333.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          83.30000000000018,
+          100.10000000000036,
+          116.70000000000073,
+          16.599999999999454,
+          16.699999999999818,
+          50,
+          66.70000000000073,
+          50,
+          66.59999999999945,
+          50.100000000000364,
+          33.19999999999982,
+          83.39999999999964,
+          16.600000000000364,
+          50.100000000000364,
+          49.899999999999636,
+          16.699999999999818,
+          16.600000000000364,
+          50.099999999999454,
+          83.30000000000109,
+          33.29999999999927,
+          100,
+          16.700000000000728,
+          66.69999999999891,
+          49.899999999999636,
+          66.80000000000109,
+          16.600000000000364,
+          50,
+          66.69999999999891,
+          50,
+          33.399999999999636,
+          16.600000000000364,
+          66.70000000000073,
+          16.600000000000364,
+          33.399999999999636,
+          66.69999999999891,
+          66.60000000000036,
+          50,
+          66.60000000000036,
+          50.100000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          66.60000000000036,
+          33.399999999999636,
+          166.70000000000073,
+          16.600000000000364,
+          50,
+          33.399999999999636,
+          66.60000000000036,
+          83.39999999999964,
+          50,
+          49.899999999999636,
+          16.700000000000728,
+          16.69999999999891,
+          50,
+          100,
+          66.70000000000073,
+          16.600000000000364,
+          16.599999999998545,
+          100,
+          100,
+          50.100000000000364,
+          83.39999999999964,
+          116.60000000000036,
+          33.399999999999636,
+          66.60000000000036,
+          66.70000000000073,
+          66.60000000000036,
+          66.59999999999854,
+          83.40000000000146,
+          83.39999999999964,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          50,
+          66.70000000000073,
+          66.60000000000036,
+          50,
+          83.39999999999964,
+          16.69999999999891,
+          49.900000000001455,
+          83.29999999999927
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400.21875,
+                  "bottom": 499.9375,
+                  "width": 167.21875,
+                  "height": 68.9375
+                },
+                "clip": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400,
+                  "bottom": 509
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-aab5738af3c9",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-aab5738af3c9",
+                    "idText": "ID: virtual-aab5738af3c9",
+                    "visible": true,
+                    "rect": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400.21875,
+                      "bottom": 499.9375,
+                      "width": 167.21875,
+                      "height": 68.9375
+                    },
+                    "clip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idRect": {
+                      "left": 274,
+                      "top": 458.34375,
+                      "right": 391.21875,
+                      "bottom": 491.9375,
+                      "width": 117.21875,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 274,
+                        "top": 459.34375,
+                        "right": 389.21875,
+                        "bottom": 473.34375,
+                        "width": 115.21875,
+                        "height": 14
+                      },
+                      {
+                        "left": 274,
+                        "top": 476.140625,
+                        "right": 331.609375,
+                        "bottom": 490.140625,
+                        "width": 57.609375,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 117,
+                    "idScrollWidth": 117,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 242,
+                      "top": 439,
+                      "right": 266,
+                      "bottom": 463,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:45379/?room=27dFp4C-z-LYmlIM3U-uvpylW8WypSnB",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "held-before-disconnect",
+      "before": null,
+      "after": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": false,
+        "tick": 217,
+        "elapsed": 3.6166666666666587,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "dropping",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            },
+            {
+              "index": 1,
+              "x": 212.66666666666333,
+              "width": 197.33333333333667
+            }
+          ],
+          "floorsBuilt": 1,
+          "goal": 6,
+          "slab": {
+            "x": 151.3333333333353,
+            "width": 197.33333333333667,
+            "direction": -1,
+            "velocity": 0,
+            "cycle": 0.7333333333333354
+          },
+          "dropElapsed": 0.11666666666666665,
+          "drops": 2,
+          "offcuts": [],
+          "lastLanding": {
+            "drop": 1,
+            "index": 1,
+            "sourceX": 212.66666666666333,
+            "sourceWidth": 220,
+            "previousX": 190,
+            "previousWidth": 220,
+            "x": 212.66666666666333,
+            "width": 197.33333333333667,
+            "leftTrim": 0,
+            "rightTrim": 22.666666666663332,
+            "accepted": true,
+            "cause": "safe"
+          },
+          "elapsed": 3.6166666666666587,
+          "elapsedCapped": false,
+          "calls": 217,
+          "inputArmed": true,
+          "cancelEpoch": 3,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": true,
+            "b": false,
+            "x": 1,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "石板正在落下；落地后按实际重合保留台面。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-aab5738af3c9",
+            "session": "wifi-24ba02dd-05ac-46d8-8dba-4b09f388ad19-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 1,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": true,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": true,
+              "START": false,
+              "A": true,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 209,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2899.8999999999996,
+          183.30000000000018,
+          133.4000000000001,
+          866.5999999999999,
+          83.39999999999964,
+          50,
+          83.40000000000055,
+          83.30000000000018,
+          116.69999999999982,
+          133.30000000000018,
+          199.89999999999964,
+          83.39999999999964,
+          133.40000000000055,
+          100,
+          83.30000000000018,
+          133.29999999999927,
+          133.30000000000018,
+          83.40000000000055,
+          83.29999999999927,
+          33.400000000000546,
+          66.59999999999945,
+          100,
+          83.40000000000055,
+          49.899999999999636,
+          33.400000000000546,
+          50,
+          66.59999999999945,
+          83.40000000000055,
+          99.89999999999964,
+          83.39999999999964,
+          33.30000000000018,
+          16.699999999999818,
+          16.600000000000364,
+          333.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          83.30000000000018,
+          100.10000000000036,
+          116.70000000000073,
+          16.599999999999454,
+          16.699999999999818,
+          50,
+          66.70000000000073,
+          50,
+          66.59999999999945,
+          50.100000000000364,
+          33.19999999999982,
+          83.39999999999964,
+          16.600000000000364,
+          50.100000000000364,
+          49.899999999999636,
+          16.699999999999818,
+          16.600000000000364,
+          50.099999999999454,
+          83.30000000000109,
+          33.29999999999927,
+          100,
+          16.700000000000728,
+          66.69999999999891,
+          49.899999999999636,
+          66.80000000000109,
+          16.600000000000364,
+          50,
+          66.69999999999891,
+          50,
+          33.399999999999636,
+          16.600000000000364,
+          66.70000000000073,
+          16.600000000000364,
+          33.399999999999636,
+          66.69999999999891,
+          66.60000000000036,
+          50,
+          66.60000000000036,
+          50.100000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          66.60000000000036,
+          33.399999999999636,
+          166.70000000000073,
+          16.600000000000364,
+          50,
+          33.399999999999636,
+          66.60000000000036,
+          83.39999999999964,
+          50,
+          49.899999999999636,
+          16.700000000000728,
+          16.69999999999891,
+          50,
+          100,
+          66.70000000000073,
+          16.600000000000364,
+          16.599999999998545,
+          100,
+          100,
+          50.100000000000364,
+          83.39999999999964,
+          116.60000000000036,
+          33.399999999999636,
+          66.60000000000036,
+          66.70000000000073,
+          66.60000000000036,
+          66.59999999999854,
+          83.40000000000146,
+          83.39999999999964,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          50,
+          66.70000000000073,
+          66.60000000000036,
+          50,
+          83.39999999999964,
+          16.69999999999891,
+          49.900000000001455,
+          83.29999999999927,
+          83.39999999999964,
+          49.899999999999636,
+          83.40000000000146,
+          83.39999999999964,
+          66.60000000000036,
+          150,
+          16.69999999999891,
+          16.600000000000364,
+          66.70000000000073,
+          83.39999999999964,
+          83.29999999999927,
+          66.70000000000073,
+          66.69999999999891,
+          83.30000000000109,
+          66.60000000000036,
+          16.69999999999891,
+          16.600000000000364,
+          83.39999999999964,
+          83.30000000000109,
+          16.69999999999891,
+          66.70000000000073,
+          16.600000000000364,
+          16.69999999999891,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          49.899999999999636,
+          33.400000000001455,
+          83.39999999999964,
+          66.60000000000036,
+          50,
+          66.69999999999891
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400.21875,
+                  "bottom": 499.9375,
+                  "width": 167.21875,
+                  "height": 68.9375
+                },
+                "clip": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400,
+                  "bottom": 509
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-aab5738af3c9",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-aab5738af3c9",
+                    "idText": "ID: virtual-aab5738af3c9",
+                    "visible": true,
+                    "rect": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400.21875,
+                      "bottom": 499.9375,
+                      "width": 167.21875,
+                      "height": 68.9375
+                    },
+                    "clip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idRect": {
+                      "left": 274,
+                      "top": 458.34375,
+                      "right": 391.21875,
+                      "bottom": 491.9375,
+                      "width": 117.21875,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 274,
+                        "top": 459.34375,
+                        "right": 389.21875,
+                        "bottom": 473.34375,
+                        "width": 115.21875,
+                        "height": 14
+                      },
+                      {
+                        "left": 274,
+                        "top": 476.140625,
+                        "right": 331.609375,
+                        "bottom": 490.140625,
+                        "width": 57.609375,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 117,
+                    "idScrollWidth": 117,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 242,
+                      "top": 439,
+                      "right": 266,
+                      "bottom": 463,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:45379/?room=27dFp4C-z-LYmlIM3U-uvpylW8WypSnB",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdXSURBVHic7d3BbuM6FkXRTuP9/y+75xk8tqFQl9Jea1qoWE65Njg4oH8+n8/nPwBB/51+AIApAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQ9c/dL/jz83P3S97q8/n865+v3v/q769c/f1OP//K7vd39fVPf/+n2/37+80JEMgSQCBLAIEsAQSyBBDIEkAgSwCBrNt3gCt374C+Nb2zu/rzr3r7ju70z9/K6c9/2o7RCRDIEkAgSwCBLAEEsgQQyBJAIEsAgazjdoAru3dE0zuq3TvB03eGV19/9+/n9PsSV97+/+dbToBAlgACWQIIZAkgkCWAQJYAAlkCCGQ9bgdYd/p9f9M/f7fpnSF/ywkQyBJAIEsAgSwBBLIEEMgSQCBLAIEsO8DDnH4f3fR9ctP3GdrxvYsTIJAlgECWAAJZAghkCSCQJYBAlgACWY/bAb59Z7V753f6jm56x7j6+dM7zKumX/80ToBAlgACWQIIZAkgkCWAQJYAAlkCCGQdtwPcfd/ctKfvxHY///Trr9Tva3wbJ0AgSwCBLAEEsgQQyBJAIEsAgSwBBLJu3wFO79zebvq+wBU7wb3vn+84AQJZAghkCSCQJYBAlgACWQIIZAkgkHX7DnD399JO//zd3ys77e3fW7zb6fcJ7nba8zsBAlkCCGQJIJAlgECWAAJZAghkCSCQ9fO5eXgzvQOa3pk9/fWvmv73Pf31p783+PSf/9ecAIEsAQSyBBDIEkAgSwCBLAEEsgQQyDpuB7jb9H180zu+p9/nd/rO7PTP90ptJ+gECGQJIJAlgECWAAJZAghkCSCQJYBA1u07wJW375Cmd2JXnb5j3O30neTK6TvXuzkBAlkCCGQJIJAlgECWAAJZAghkCSCQddwOcGV6J7gyvQN7+s5reqe5cvq/3/ROdvr5v+UECGQJIJAlgECWAAJZAghkCSCQJYBA1j93v+DVndH0Duz0HdTuHdjpO8PTd4Qrpz/fytOe3wkQyBJAIEsAgSwBBLIEEMgSQCBLAIGs23eAp99nN73zO/17g68+/9N2Yr9N34d41dN//3/NCRDIEkAgSwCBLAEEsgQQyBJAIEsAgazHfS/wyvR9fFc9fQf29h3gyvT7n/7e7KftRJ0AgSwBBLIEEMgSQCBLAIEsAQSyBBDIOm4HePp9eCtP33ldff2rpu9LPH3HNv3/Y/q+zL/mBAhkCSCQJYBAlgACWQIIZAkgkCWAQNbt3ws8vWNamZ5FXv39TP9+p39/0zvClfqO8TROgECWAAJZAghkCSCQJYBAlgACWQIIZD3uPsDTd15Pf76rnr5zm/77K0+7b++303aIToBAlgACWQIIZAkgkCWAQJYAAlkCCGTdfh/gbqfvnFZO36mdtuP6a9PPf/rOb3rH+tecAIEsAQSyBBDIEkAgSwCBLAEEsgQQyDrue4Gnd1grp+/8rpreeV19/7vv23v7fX7Tn7+7OQECWQIIZAkgkCWAQJYAAlkCCGQJIJB13H2A0zuk6R3Y7ve3+/mnd27TO83TTX/v9mk7QidAIEsAgSwBBLIEEMgSQCBLAIEsAQSyjtsBnr7DevpOcHqHuLL7PsDpz8/V55t+/qtO+/w5AQJZAghkCSCQJYBAlgACWQIIZAkgkHXcDvCq6R3bVaffB7j79a/u3E7bmf02fV9h7b6/FSdAIEsAgSwBBLIEEMgSQCBLAIEsAQSyfj43D3dOv89s+j653Tuvlen393ZP//yvnL7D/M0JEMgSQCBLAIEsAQSyBBDIEkAgSwCBrNvvAzxtB/St6Z3d03da069/1dN3krvvW3waJ0AgSwCBLAEEsgQQyBJAIEsAgSwBBLJu3wG+bUf022rHNX3f3/SO8erPn76vcdrpO8rp1/+WEyCQJYBAlgACWQIIZAkgkCWAQJYAAlm37wBXTt8RPX1n9vb77E5//en7IHd72vtzAgSyBBDIEkAgSwCBLAEEsgQQyBJAIOu4HeBKfcf29Pd/1fTObvfrT+9Md38+T/t8OQECWQIIZAkgkCWAQJYAAlkCCGQJIJD1uB3g2z19h3X68+9+/6ft3E4z/fn8zQkQyBJAIEsAgSwBBLIEEMgSQCBLAIEsO8CbXd05nX6f4G67n3/3Tm3651/1tp2jEyCQJYBAlgACWQIIZAkgkCWAQJYAAlmP2wE+fYe0+3trT7+Pb+Xp7296pzl93+PTOAECWQIIZAkgkCWAQJYAAlkCCGQJIJB13A7wbTujbz1953jV9M7v6t+ffj73AX7HCRDIEkAgSwCBLAEEsgQQyBJAIEsAgayfz9uGPQD/JydAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLL+ByEaAGzKghwwAAAAAElFTkSuQmCC",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "reconnect",
+      "before": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": true,
+        "tick": 225,
+        "elapsed": 3.7499999999999916,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "dropping",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            },
+            {
+              "index": 1,
+              "x": 212.66666666666333,
+              "width": 197.33333333333667
+            }
+          ],
+          "floorsBuilt": 1,
+          "goal": 6,
+          "slab": {
+            "x": 151.3333333333353,
+            "width": 197.33333333333667,
+            "direction": -1,
+            "velocity": 0,
+            "cycle": 0.7333333333333354
+          },
+          "dropElapsed": 0.24999999999999997,
+          "drops": 2,
+          "offcuts": [],
+          "lastLanding": {
+            "drop": 1,
+            "index": 1,
+            "sourceX": 212.66666666666333,
+            "sourceWidth": 220,
+            "previousX": 190,
+            "previousWidth": 220,
+            "x": 212.66666666666333,
+            "width": 197.33333333333667,
+            "leftTrim": 0,
+            "rightTrim": 22.666666666663332,
+            "accepted": true,
+            "cause": "safe"
+          },
+          "elapsed": 3.7499999999999916,
+          "elapsedCapped": false,
+          "calls": 225,
+          "inputArmed": true,
+          "cancelEpoch": 3,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": true,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "石板正在落下；落地后按实际重合保留台面。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "buttonX": false,
+            "buttonY": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 209,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2899.8999999999996,
+          183.30000000000018,
+          133.4000000000001,
+          866.5999999999999,
+          83.39999999999964,
+          50,
+          83.40000000000055,
+          83.30000000000018,
+          116.69999999999982,
+          133.30000000000018,
+          199.89999999999964,
+          83.39999999999964,
+          133.40000000000055,
+          100,
+          83.30000000000018,
+          133.29999999999927,
+          133.30000000000018,
+          83.40000000000055,
+          83.29999999999927,
+          33.400000000000546,
+          66.59999999999945,
+          100,
+          83.40000000000055,
+          49.899999999999636,
+          33.400000000000546,
+          50,
+          66.59999999999945,
+          83.40000000000055,
+          99.89999999999964,
+          83.39999999999964,
+          33.30000000000018,
+          16.699999999999818,
+          16.600000000000364,
+          333.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          83.30000000000018,
+          100.10000000000036,
+          116.70000000000073,
+          16.599999999999454,
+          16.699999999999818,
+          50,
+          66.70000000000073,
+          50,
+          66.59999999999945,
+          50.100000000000364,
+          33.19999999999982,
+          83.39999999999964,
+          16.600000000000364,
+          50.100000000000364,
+          49.899999999999636,
+          16.699999999999818,
+          16.600000000000364,
+          50.099999999999454,
+          83.30000000000109,
+          33.29999999999927,
+          100,
+          16.700000000000728,
+          66.69999999999891,
+          49.899999999999636,
+          66.80000000000109,
+          16.600000000000364,
+          50,
+          66.69999999999891,
+          50,
+          33.399999999999636,
+          16.600000000000364,
+          66.70000000000073,
+          16.600000000000364,
+          33.399999999999636,
+          66.69999999999891,
+          66.60000000000036,
+          50,
+          66.60000000000036,
+          50.100000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          66.60000000000036,
+          33.399999999999636,
+          166.70000000000073,
+          16.600000000000364,
+          50,
+          33.399999999999636,
+          66.60000000000036,
+          83.39999999999964,
+          50,
+          49.899999999999636,
+          16.700000000000728,
+          16.69999999999891,
+          50,
+          100,
+          66.70000000000073,
+          16.600000000000364,
+          16.599999999998545,
+          100,
+          100,
+          50.100000000000364,
+          83.39999999999964,
+          116.60000000000036,
+          33.399999999999636,
+          66.60000000000036,
+          66.70000000000073,
+          66.60000000000036,
+          66.59999999999854,
+          83.40000000000146,
+          83.39999999999964,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          50,
+          66.70000000000073,
+          66.60000000000036,
+          50,
+          83.39999999999964,
+          16.69999999999891,
+          49.900000000001455,
+          83.29999999999927,
+          83.39999999999964,
+          49.899999999999636,
+          83.40000000000146,
+          83.39999999999964,
+          66.60000000000036,
+          150,
+          16.69999999999891,
+          16.600000000000364,
+          66.70000000000073,
+          83.39999999999964,
+          83.29999999999927,
+          66.70000000000073,
+          66.69999999999891,
+          83.30000000000109,
+          66.60000000000036,
+          16.69999999999891,
+          16.600000000000364,
+          83.39999999999964,
+          83.30000000000109,
+          16.69999999999891,
+          66.70000000000073,
+          16.600000000000364,
+          16.69999999999891,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          49.899999999999636,
+          33.400000000001455,
+          83.39999999999964,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          16.600000000000364,
+          66.70000000000073,
+          33.399999999999636,
+          33.29999999999927,
+          66.60000000000036,
+          16.799999999999272,
+          16.600000000000364,
+          33.30000000000109,
+          133.29999999999927,
+          50.100000000000364,
+          66.69999999999891,
+          50,
+          83.30000000000109,
+          50,
+          66.60000000000036
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": true,
+          "connected": false,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 13,
+                  "top": 424,
+                  "right": 947,
+                  "bottom": 516
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:45379/?room=27dFp4C-z-LYmlIM3U-uvpylW8WypSnB",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": true,
+        "tick": 225,
+        "elapsed": 3.7499999999999916,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "dropping",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            },
+            {
+              "index": 1,
+              "x": 212.66666666666333,
+              "width": 197.33333333333667
+            }
+          ],
+          "floorsBuilt": 1,
+          "goal": 6,
+          "slab": {
+            "x": 151.3333333333353,
+            "width": 197.33333333333667,
+            "direction": -1,
+            "velocity": 0,
+            "cycle": 0.7333333333333354
+          },
+          "dropElapsed": 0.24999999999999997,
+          "drops": 2,
+          "offcuts": [],
+          "lastLanding": {
+            "drop": 1,
+            "index": 1,
+            "sourceX": 212.66666666666333,
+            "sourceWidth": 220,
+            "previousX": 190,
+            "previousWidth": 220,
+            "x": 212.66666666666333,
+            "width": 197.33333333333667,
+            "leftTrim": 0,
+            "rightTrim": 22.666666666663332,
+            "accepted": true,
+            "cause": "safe"
+          },
+          "elapsed": 3.7499999999999916,
+          "elapsedCapped": false,
+          "calls": 225,
+          "inputArmed": true,
+          "cancelEpoch": 3,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": true,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "石板正在落下；落地后按实际重合保留台面。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-aab5738af3c9",
+            "session": "wifi-24ba02dd-05ac-46d8-8dba-4b09f388ad19-2",
+            "connected": true,
+            "cancelSeq": 3,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 209,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2899.8999999999996,
+          183.30000000000018,
+          133.4000000000001,
+          866.5999999999999,
+          83.39999999999964,
+          50,
+          83.40000000000055,
+          83.30000000000018,
+          116.69999999999982,
+          133.30000000000018,
+          199.89999999999964,
+          83.39999999999964,
+          133.40000000000055,
+          100,
+          83.30000000000018,
+          133.29999999999927,
+          133.30000000000018,
+          83.40000000000055,
+          83.29999999999927,
+          33.400000000000546,
+          66.59999999999945,
+          100,
+          83.40000000000055,
+          49.899999999999636,
+          33.400000000000546,
+          50,
+          66.59999999999945,
+          83.40000000000055,
+          99.89999999999964,
+          83.39999999999964,
+          33.30000000000018,
+          16.699999999999818,
+          16.600000000000364,
+          333.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          83.30000000000018,
+          100.10000000000036,
+          116.70000000000073,
+          16.599999999999454,
+          16.699999999999818,
+          50,
+          66.70000000000073,
+          50,
+          66.59999999999945,
+          50.100000000000364,
+          33.19999999999982,
+          83.39999999999964,
+          16.600000000000364,
+          50.100000000000364,
+          49.899999999999636,
+          16.699999999999818,
+          16.600000000000364,
+          50.099999999999454,
+          83.30000000000109,
+          33.29999999999927,
+          100,
+          16.700000000000728,
+          66.69999999999891,
+          49.899999999999636,
+          66.80000000000109,
+          16.600000000000364,
+          50,
+          66.69999999999891,
+          50,
+          33.399999999999636,
+          16.600000000000364,
+          66.70000000000073,
+          16.600000000000364,
+          33.399999999999636,
+          66.69999999999891,
+          66.60000000000036,
+          50,
+          66.60000000000036,
+          50.100000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          66.60000000000036,
+          33.399999999999636,
+          166.70000000000073,
+          16.600000000000364,
+          50,
+          33.399999999999636,
+          66.60000000000036,
+          83.39999999999964,
+          50,
+          49.899999999999636,
+          16.700000000000728,
+          16.69999999999891,
+          50,
+          100,
+          66.70000000000073,
+          16.600000000000364,
+          16.599999999998545,
+          100,
+          100,
+          50.100000000000364,
+          83.39999999999964,
+          116.60000000000036,
+          33.399999999999636,
+          66.60000000000036,
+          66.70000000000073,
+          66.60000000000036,
+          66.59999999999854,
+          83.40000000000146,
+          83.39999999999964,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          50,
+          66.70000000000073,
+          66.60000000000036,
+          50,
+          83.39999999999964,
+          16.69999999999891,
+          49.900000000001455,
+          83.29999999999927,
+          83.39999999999964,
+          49.899999999999636,
+          83.40000000000146,
+          83.39999999999964,
+          66.60000000000036,
+          150,
+          16.69999999999891,
+          16.600000000000364,
+          66.70000000000073,
+          83.39999999999964,
+          83.29999999999927,
+          66.70000000000073,
+          66.69999999999891,
+          83.30000000000109,
+          66.60000000000036,
+          16.69999999999891,
+          16.600000000000364,
+          83.39999999999964,
+          83.30000000000109,
+          16.69999999999891,
+          66.70000000000073,
+          16.600000000000364,
+          16.69999999999891,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          49.899999999999636,
+          33.400000000001455,
+          83.39999999999964,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          16.600000000000364,
+          66.70000000000073,
+          33.399999999999636,
+          33.29999999999927,
+          66.60000000000036,
+          16.799999999999272,
+          16.600000000000364,
+          33.30000000000109,
+          133.29999999999927,
+          50.100000000000364,
+          66.69999999999891,
+          50,
+          83.30000000000109,
+          50,
+          66.60000000000036,
+          66.69999999999891,
+          66.70000000000073,
+          66.60000000000036,
+          66.69999999999891,
+          83.30000000000109,
+          66.69999999999891,
+          116.70000000000073,
+          16.69999999999891,
+          66.60000000000036,
+          83.30000000000109,
+          66.59999999999854,
+          16.700000000000728,
+          16.799999999999272,
+          33.30000000000109,
+          100,
+          83.29999999999927
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400.21875,
+                  "bottom": 499.9375,
+                  "width": 167.21875,
+                  "height": 68.9375
+                },
+                "clip": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400,
+                  "bottom": 509
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-aab5738af3c9",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-aab5738af3c9",
+                    "idText": "ID: virtual-aab5738af3c9",
+                    "visible": true,
+                    "rect": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400.21875,
+                      "bottom": 499.9375,
+                      "width": 167.21875,
+                      "height": 68.9375
+                    },
+                    "clip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idRect": {
+                      "left": 274,
+                      "top": 458.34375,
+                      "right": 391.21875,
+                      "bottom": 491.9375,
+                      "width": 117.21875,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 274,
+                        "top": 459.34375,
+                        "right": 389.21875,
+                        "bottom": 473.34375,
+                        "width": 115.21875,
+                        "height": 14
+                      },
+                      {
+                        "left": 274,
+                        "top": 476.140625,
+                        "right": 331.609375,
+                        "bottom": 490.140625,
+                        "width": 57.609375,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 117,
+                    "idScrollWidth": 117,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 242,
+                      "top": 439,
+                      "right": 266,
+                      "bottom": 463,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:45379/?room=27dFp4C-z-LYmlIM3U-uvpylW8WypSnB",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "protocol-pause-setup-before-1",
+      "before": null,
+      "after": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": false,
+        "tick": 334,
+        "elapsed": 5.566666666666652,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            },
+            {
+              "index": 1,
+              "x": 212.66666666666333,
+              "width": 197.33333333333667
+            },
+            {
+              "index": 2,
+              "x": 212.66666666666333,
+              "width": 136.00000000000864
+            }
+          ],
+          "floorsBuilt": 2,
+          "goal": 6,
+          "slab": {
+            "x": 256.16666666667015,
+            "width": 136.00000000000864,
+            "direction": 1,
+            "velocity": 145,
+            "cycle": 0.7666666666666688
+          },
+          "dropElapsed": 0,
+          "drops": 2,
+          "offcuts": [],
+          "lastLanding": {
+            "drop": 2,
+            "index": 2,
+            "sourceX": 151.3333333333353,
+            "sourceWidth": 197.33333333333667,
+            "previousX": 212.66666666666333,
+            "previousWidth": 197.33333333333667,
+            "x": 212.66666666666333,
+            "width": 136.00000000000864,
+            "leftTrim": 61.33333333332803,
+            "rightTrim": 0,
+            "accepted": true,
+            "cause": "safe"
+          },
+          "elapsed": 5.566666666666652,
+          "elapsedCapped": false,
+          "calls": 334,
+          "inputArmed": true,
+          "cancelEpoch": 6,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "完成第 2 层，台面宽 136.0；下一层从左侧驶入。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-aab5738af3c9",
+            "session": "wifi-24ba02dd-05ac-46d8-8dba-4b09f388ad19-2",
+            "connected": true,
+            "cancelSeq": 3,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 215,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2899.8999999999996,
+          183.30000000000018,
+          133.4000000000001,
+          866.5999999999999,
+          83.39999999999964,
+          50,
+          83.40000000000055,
+          83.30000000000018,
+          116.69999999999982,
+          133.30000000000018,
+          199.89999999999964,
+          83.39999999999964,
+          133.40000000000055,
+          100,
+          83.30000000000018,
+          133.29999999999927,
+          133.30000000000018,
+          83.40000000000055,
+          83.29999999999927,
+          33.400000000000546,
+          66.59999999999945,
+          100,
+          83.40000000000055,
+          49.899999999999636,
+          33.400000000000546,
+          50,
+          66.59999999999945,
+          83.40000000000055,
+          99.89999999999964,
+          83.39999999999964,
+          33.30000000000018,
+          16.699999999999818,
+          16.600000000000364,
+          333.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          83.30000000000018,
+          100.10000000000036,
+          116.70000000000073,
+          16.599999999999454,
+          16.699999999999818,
+          50,
+          66.70000000000073,
+          50,
+          66.59999999999945,
+          50.100000000000364,
+          33.19999999999982,
+          83.39999999999964,
+          16.600000000000364,
+          50.100000000000364,
+          49.899999999999636,
+          16.699999999999818,
+          16.600000000000364,
+          50.099999999999454,
+          83.30000000000109,
+          33.29999999999927,
+          100,
+          16.700000000000728,
+          66.69999999999891,
+          49.899999999999636,
+          66.80000000000109,
+          16.600000000000364,
+          50,
+          66.69999999999891,
+          50,
+          33.399999999999636,
+          16.600000000000364,
+          66.70000000000073,
+          16.600000000000364,
+          33.399999999999636,
+          66.69999999999891,
+          66.60000000000036,
+          50,
+          66.60000000000036,
+          50.100000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          66.60000000000036,
+          33.399999999999636,
+          166.70000000000073,
+          16.600000000000364,
+          50,
+          33.399999999999636,
+          66.60000000000036,
+          83.39999999999964,
+          50,
+          49.899999999999636,
+          16.700000000000728,
+          16.69999999999891,
+          50,
+          100,
+          66.70000000000073,
+          16.600000000000364,
+          16.599999999998545,
+          100,
+          100,
+          50.100000000000364,
+          83.39999999999964,
+          116.60000000000036,
+          33.399999999999636,
+          66.60000000000036,
+          66.70000000000073,
+          66.60000000000036,
+          66.59999999999854,
+          83.40000000000146,
+          83.39999999999964,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          50,
+          66.70000000000073,
+          66.60000000000036,
+          50,
+          83.39999999999964,
+          16.69999999999891,
+          49.900000000001455,
+          83.29999999999927,
+          83.39999999999964,
+          49.899999999999636,
+          83.40000000000146,
+          83.39999999999964,
+          66.60000000000036,
+          150,
+          16.69999999999891,
+          16.600000000000364,
+          66.70000000000073,
+          83.39999999999964,
+          83.29999999999927,
+          66.70000000000073,
+          66.69999999999891,
+          83.30000000000109,
+          66.60000000000036,
+          16.69999999999891,
+          16.600000000000364,
+          83.39999999999964,
+          83.30000000000109,
+          16.69999999999891,
+          66.70000000000073,
+          16.600000000000364,
+          16.69999999999891,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          49.899999999999636,
+          33.400000000001455,
+          83.39999999999964,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          16.600000000000364,
+          66.70000000000073,
+          33.399999999999636,
+          33.29999999999927,
+          66.60000000000036,
+          16.799999999999272,
+          16.600000000000364,
+          33.30000000000109,
+          133.29999999999927,
+          50.100000000000364,
+          66.69999999999891,
+          50,
+          83.30000000000109,
+          50,
+          66.60000000000036,
+          66.69999999999891,
+          66.70000000000073,
+          66.60000000000036,
+          66.69999999999891,
+          83.30000000000109,
+          66.69999999999891,
+          116.70000000000073,
+          16.69999999999891,
+          66.60000000000036,
+          83.30000000000109,
+          66.59999999999854,
+          16.700000000000728,
+          16.799999999999272,
+          33.30000000000109,
+          100,
+          83.29999999999927,
+          83.30000000000109,
+          16.69999999999891,
+          66.70000000000073,
+          83.19999999999891,
+          66.70000000000073,
+          66.70000000000073,
+          66.69999999999891,
+          66.60000000000036,
+          50.100000000000364,
+          66.69999999999891,
+          16.600000000000364,
+          50,
+          33.30000000000109,
+          83.29999999999927,
+          66.70000000000073,
+          50.099999999998545,
+          33.20000000000073,
+          50,
+          16.700000000000728,
+          50,
+          50,
+          83.39999999999782,
+          66.60000000000218,
+          83.39999999999782,
+          83.30000000000291,
+          16.69999999999709,
+          16.600000000002183,
+          66.70000000000073,
+          50,
+          83.29999999999927,
+          66.70000000000073,
+          50,
+          66.69999999999709,
+          49.900000000001455,
+          66.79999999999927
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400.21875,
+                  "bottom": 499.9375,
+                  "width": 167.21875,
+                  "height": 68.9375
+                },
+                "clip": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400,
+                  "bottom": 509
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-aab5738af3c9",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-aab5738af3c9",
+                    "idText": "ID: virtual-aab5738af3c9",
+                    "visible": true,
+                    "rect": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400.21875,
+                      "bottom": 499.9375,
+                      "width": 167.21875,
+                      "height": 68.9375
+                    },
+                    "clip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idRect": {
+                      "left": 274,
+                      "top": 458.34375,
+                      "right": 391.21875,
+                      "bottom": 491.9375,
+                      "width": 117.21875,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 274,
+                        "top": 459.34375,
+                        "right": 389.21875,
+                        "bottom": 473.34375,
+                        "width": 115.21875,
+                        "height": 14
+                      },
+                      {
+                        "left": 274,
+                        "top": 476.140625,
+                        "right": 331.609375,
+                        "bottom": 490.140625,
+                        "width": 57.609375,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 117,
+                    "idScrollWidth": 117,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 242,
+                      "top": 439,
+                      "right": 266,
+                      "bottom": 463,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:45379/?room=27dFp4C-z-LYmlIM3U-uvpylW8WypSnB",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "protocol-pause-setup-attempt-1",
+      "before": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": false,
+        "tick": 334,
+        "elapsed": 5.566666666666652,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            },
+            {
+              "index": 1,
+              "x": 212.66666666666333,
+              "width": 197.33333333333667
+            },
+            {
+              "index": 2,
+              "x": 212.66666666666333,
+              "width": 136.00000000000864
+            }
+          ],
+          "floorsBuilt": 2,
+          "goal": 6,
+          "slab": {
+            "x": 256.16666666667015,
+            "width": 136.00000000000864,
+            "direction": 1,
+            "velocity": 145,
+            "cycle": 0.7666666666666688
+          },
+          "dropElapsed": 0,
+          "drops": 2,
+          "offcuts": [],
+          "lastLanding": {
+            "drop": 2,
+            "index": 2,
+            "sourceX": 151.3333333333353,
+            "sourceWidth": 197.33333333333667,
+            "previousX": 212.66666666666333,
+            "previousWidth": 197.33333333333667,
+            "x": 212.66666666666333,
+            "width": 136.00000000000864,
+            "leftTrim": 61.33333333332803,
+            "rightTrim": 0,
+            "accepted": true,
+            "cause": "safe"
+          },
+          "elapsed": 5.566666666666652,
+          "elapsedCapped": false,
+          "calls": 334,
+          "inputArmed": true,
+          "cancelEpoch": 6,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "完成第 2 层，台面宽 136.0；下一层从左侧驶入。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-aab5738af3c9",
+            "session": "wifi-24ba02dd-05ac-46d8-8dba-4b09f388ad19-2",
+            "connected": true,
+            "cancelSeq": 3,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 215,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2899.8999999999996,
+          183.30000000000018,
+          133.4000000000001,
+          866.5999999999999,
+          83.39999999999964,
+          50,
+          83.40000000000055,
+          83.30000000000018,
+          116.69999999999982,
+          133.30000000000018,
+          199.89999999999964,
+          83.39999999999964,
+          133.40000000000055,
+          100,
+          83.30000000000018,
+          133.29999999999927,
+          133.30000000000018,
+          83.40000000000055,
+          83.29999999999927,
+          33.400000000000546,
+          66.59999999999945,
+          100,
+          83.40000000000055,
+          49.899999999999636,
+          33.400000000000546,
+          50,
+          66.59999999999945,
+          83.40000000000055,
+          99.89999999999964,
+          83.39999999999964,
+          33.30000000000018,
+          16.699999999999818,
+          16.600000000000364,
+          333.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          83.30000000000018,
+          100.10000000000036,
+          116.70000000000073,
+          16.599999999999454,
+          16.699999999999818,
+          50,
+          66.70000000000073,
+          50,
+          66.59999999999945,
+          50.100000000000364,
+          33.19999999999982,
+          83.39999999999964,
+          16.600000000000364,
+          50.100000000000364,
+          49.899999999999636,
+          16.699999999999818,
+          16.600000000000364,
+          50.099999999999454,
+          83.30000000000109,
+          33.29999999999927,
+          100,
+          16.700000000000728,
+          66.69999999999891,
+          49.899999999999636,
+          66.80000000000109,
+          16.600000000000364,
+          50,
+          66.69999999999891,
+          50,
+          33.399999999999636,
+          16.600000000000364,
+          66.70000000000073,
+          16.600000000000364,
+          33.399999999999636,
+          66.69999999999891,
+          66.60000000000036,
+          50,
+          66.60000000000036,
+          50.100000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          66.60000000000036,
+          33.399999999999636,
+          166.70000000000073,
+          16.600000000000364,
+          50,
+          33.399999999999636,
+          66.60000000000036,
+          83.39999999999964,
+          50,
+          49.899999999999636,
+          16.700000000000728,
+          16.69999999999891,
+          50,
+          100,
+          66.70000000000073,
+          16.600000000000364,
+          16.599999999998545,
+          100,
+          100,
+          50.100000000000364,
+          83.39999999999964,
+          116.60000000000036,
+          33.399999999999636,
+          66.60000000000036,
+          66.70000000000073,
+          66.60000000000036,
+          66.59999999999854,
+          83.40000000000146,
+          83.39999999999964,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          50,
+          66.70000000000073,
+          66.60000000000036,
+          50,
+          83.39999999999964,
+          16.69999999999891,
+          49.900000000001455,
+          83.29999999999927,
+          83.39999999999964,
+          49.899999999999636,
+          83.40000000000146,
+          83.39999999999964,
+          66.60000000000036,
+          150,
+          16.69999999999891,
+          16.600000000000364,
+          66.70000000000073,
+          83.39999999999964,
+          83.29999999999927,
+          66.70000000000073,
+          66.69999999999891,
+          83.30000000000109,
+          66.60000000000036,
+          16.69999999999891,
+          16.600000000000364,
+          83.39999999999964,
+          83.30000000000109,
+          16.69999999999891,
+          66.70000000000073,
+          16.600000000000364,
+          16.69999999999891,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          49.899999999999636,
+          33.400000000001455,
+          83.39999999999964,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          16.600000000000364,
+          66.70000000000073,
+          33.399999999999636,
+          33.29999999999927,
+          66.60000000000036,
+          16.799999999999272,
+          16.600000000000364,
+          33.30000000000109,
+          133.29999999999927,
+          50.100000000000364,
+          66.69999999999891,
+          50,
+          83.30000000000109,
+          50,
+          66.60000000000036,
+          66.69999999999891,
+          66.70000000000073,
+          66.60000000000036,
+          66.69999999999891,
+          83.30000000000109,
+          66.69999999999891,
+          116.70000000000073,
+          16.69999999999891,
+          66.60000000000036,
+          83.30000000000109,
+          66.59999999999854,
+          16.700000000000728,
+          16.799999999999272,
+          33.30000000000109,
+          100,
+          83.29999999999927,
+          83.30000000000109,
+          16.69999999999891,
+          66.70000000000073,
+          83.19999999999891,
+          66.70000000000073,
+          66.70000000000073,
+          66.69999999999891,
+          66.60000000000036,
+          50.100000000000364,
+          66.69999999999891,
+          16.600000000000364,
+          50,
+          33.30000000000109,
+          83.29999999999927,
+          66.70000000000073,
+          50.099999999998545,
+          33.20000000000073,
+          50,
+          16.700000000000728,
+          50,
+          50,
+          83.39999999999782,
+          66.60000000000218,
+          83.39999999999782,
+          83.30000000000291,
+          16.69999999999709,
+          16.600000000002183,
+          66.70000000000073,
+          50,
+          83.29999999999927,
+          66.70000000000073,
+          50,
+          66.69999999999709,
+          49.900000000001455,
+          66.79999999999927
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400.21875,
+                  "bottom": 499.9375,
+                  "width": 167.21875,
+                  "height": 68.9375
+                },
+                "clip": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400,
+                  "bottom": 509
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-aab5738af3c9",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-aab5738af3c9",
+                    "idText": "ID: virtual-aab5738af3c9",
+                    "visible": true,
+                    "rect": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400.21875,
+                      "bottom": 499.9375,
+                      "width": 167.21875,
+                      "height": 68.9375
+                    },
+                    "clip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idRect": {
+                      "left": 274,
+                      "top": 458.34375,
+                      "right": 391.21875,
+                      "bottom": 491.9375,
+                      "width": 117.21875,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 274,
+                        "top": 459.34375,
+                        "right": 389.21875,
+                        "bottom": 473.34375,
+                        "width": 115.21875,
+                        "height": 14
+                      },
+                      {
+                        "left": 274,
+                        "top": 476.140625,
+                        "right": 331.609375,
+                        "bottom": 490.140625,
+                        "width": 57.609375,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 117,
+                    "idScrollWidth": 117,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 242,
+                      "top": 439,
+                      "right": 266,
+                      "bottom": 463,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:45379/?room=27dFp4C-z-LYmlIM3U-uvpylW8WypSnB",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "id": "tower-overlap",
+        "phase": "playing",
+        "paused": true,
+        "tick": 344,
+        "elapsed": 5.733333333333318,
+        "level": 0,
+        "best": 0,
+        "model": {
+          "schema": 1,
+          "seed": 764,
+          "level": 0,
+          "phase": "playing",
+          "reason": "",
+          "score": 0,
+          "mode": "moving",
+          "floors": [
+            {
+              "index": 0,
+              "x": 190,
+              "width": 220
+            },
+            {
+              "index": 1,
+              "x": 212.66666666666333,
+              "width": 197.33333333333667
+            },
+            {
+              "index": 2,
+              "x": 212.66666666666333,
+              "width": 136.00000000000864
+            }
+          ],
+          "floorsBuilt": 2,
+          "goal": 6,
+          "slab": {
+            "x": 280.3333333333376,
+            "width": 136.00000000000864,
+            "direction": 1,
+            "velocity": 145,
+            "cycle": 0.933333333333336
+          },
+          "dropElapsed": 0,
+          "drops": 2,
+          "offcuts": [],
+          "lastLanding": {
+            "drop": 2,
+            "index": 2,
+            "sourceX": 151.3333333333353,
+            "sourceWidth": 197.33333333333667,
+            "previousX": 212.66666666666333,
+            "previousWidth": 197.33333333333667,
+            "x": 212.66666666666333,
+            "width": 136.00000000000864,
+            "leftTrim": 61.33333333332803,
+            "rightTrim": 0,
+            "accepted": true,
+            "cause": "safe"
+          },
+          "elapsed": 5.733333333333318,
+          "elapsedCapped": false,
+          "calls": 344,
+          "inputArmed": true,
+          "cancelEpoch": 6,
+          "cancelledLast": false,
+          "lastHeld": {
+            "a": false,
+            "b": false,
+            "x": 0,
+            "y": 0
+          },
+          "lastCommand": "none",
+          "events": [],
+          "terminalReceipt": null,
+          "message": "完成第 2 层，台面宽 136.0；下一层从左侧驶入。"
+        },
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-aab5738af3c9",
+            "session": "wifi-24ba02dd-05ac-46d8-8dba-4b09f388ad19-2",
+            "connected": true,
+            "cancelSeq": 3,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "renderer": {
+          "kind": "webgl",
+          "drawCalls": 1,
+          "quads": 215,
+          "textureCount": 1,
+          "atlasSize": 1024,
+          "contextLost": false
+        },
+        "frameTimesMs": [
+          2899.8999999999996,
+          183.30000000000018,
+          133.4000000000001,
+          866.5999999999999,
+          83.39999999999964,
+          50,
+          83.40000000000055,
+          83.30000000000018,
+          116.69999999999982,
+          133.30000000000018,
+          199.89999999999964,
+          83.39999999999964,
+          133.40000000000055,
+          100,
+          83.30000000000018,
+          133.29999999999927,
+          133.30000000000018,
+          83.40000000000055,
+          83.29999999999927,
+          33.400000000000546,
+          66.59999999999945,
+          100,
+          83.40000000000055,
+          49.899999999999636,
+          33.400000000000546,
+          50,
+          66.59999999999945,
+          83.40000000000055,
+          99.89999999999964,
+          83.39999999999964,
+          33.30000000000018,
+          16.699999999999818,
+          16.600000000000364,
+          333.39999999999964,
+          66.60000000000036,
+          66.69999999999982,
+          83.30000000000018,
+          100.10000000000036,
+          116.70000000000073,
+          16.599999999999454,
+          16.699999999999818,
+          50,
+          66.70000000000073,
+          50,
+          66.59999999999945,
+          50.100000000000364,
+          33.19999999999982,
+          83.39999999999964,
+          16.600000000000364,
+          50.100000000000364,
+          49.899999999999636,
+          16.699999999999818,
+          16.600000000000364,
+          50.099999999999454,
+          83.30000000000109,
+          33.29999999999927,
+          100,
+          16.700000000000728,
+          66.69999999999891,
+          49.899999999999636,
+          66.80000000000109,
+          16.600000000000364,
+          50,
+          66.69999999999891,
+          50,
+          33.399999999999636,
+          16.600000000000364,
+          66.70000000000073,
+          16.600000000000364,
+          33.399999999999636,
+          66.69999999999891,
+          66.60000000000036,
+          50,
+          66.60000000000036,
+          50.100000000000364,
+          16.600000000000364,
+          16.69999999999891,
+          66.60000000000036,
+          33.399999999999636,
+          166.70000000000073,
+          16.600000000000364,
+          50,
+          33.399999999999636,
+          66.60000000000036,
+          83.39999999999964,
+          50,
+          49.899999999999636,
+          16.700000000000728,
+          16.69999999999891,
+          50,
+          100,
+          66.70000000000073,
+          16.600000000000364,
+          16.599999999998545,
+          100,
+          100,
+          50.100000000000364,
+          83.39999999999964,
+          116.60000000000036,
+          33.399999999999636,
+          66.60000000000036,
+          66.70000000000073,
+          66.60000000000036,
+          66.59999999999854,
+          83.40000000000146,
+          83.39999999999964,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          50,
+          66.70000000000073,
+          66.60000000000036,
+          50,
+          83.39999999999964,
+          16.69999999999891,
+          49.900000000001455,
+          83.29999999999927,
+          83.39999999999964,
+          49.899999999999636,
+          83.40000000000146,
+          83.39999999999964,
+          66.60000000000036,
+          150,
+          16.69999999999891,
+          16.600000000000364,
+          66.70000000000073,
+          83.39999999999964,
+          83.29999999999927,
+          66.70000000000073,
+          66.69999999999891,
+          83.30000000000109,
+          66.60000000000036,
+          16.69999999999891,
+          16.600000000000364,
+          83.39999999999964,
+          83.30000000000109,
+          16.69999999999891,
+          66.70000000000073,
+          16.600000000000364,
+          16.69999999999891,
+          83.30000000000109,
+          50,
+          66.69999999999891,
+          49.899999999999636,
+          33.400000000001455,
+          83.39999999999964,
+          66.60000000000036,
+          50,
+          66.69999999999891,
+          16.600000000000364,
+          66.70000000000073,
+          33.399999999999636,
+          33.29999999999927,
+          66.60000000000036,
+          16.799999999999272,
+          16.600000000000364,
+          33.30000000000109,
+          133.29999999999927,
+          50.100000000000364,
+          66.69999999999891,
+          50,
+          83.30000000000109,
+          50,
+          66.60000000000036,
+          66.69999999999891,
+          66.70000000000073,
+          66.60000000000036,
+          66.69999999999891,
+          83.30000000000109,
+          66.69999999999891,
+          116.70000000000073,
+          16.69999999999891,
+          66.60000000000036,
+          83.30000000000109,
+          66.59999999999854,
+          16.700000000000728,
+          16.799999999999272,
+          33.30000000000109,
+          100,
+          83.29999999999927,
+          83.30000000000109,
+          16.69999999999891,
+          66.70000000000073,
+          83.19999999999891,
+          66.70000000000073,
+          66.70000000000073,
+          66.69999999999891,
+          66.60000000000036,
+          50.100000000000364,
+          66.69999999999891,
+          16.600000000000364,
+          50,
+          33.30000000000109,
+          83.29999999999927,
+          66.70000000000073,
+          50.099999999998545,
+          33.20000000000073,
+          50,
+          16.700000000000728,
+          50,
+          50,
+          83.39999999999782,
+          66.60000000000218,
+          83.39999999999782,
+          83.30000000000291,
+          16.69999999999709,
+          16.600000000002183,
+          66.70000000000073,
+          50,
+          83.29999999999927,
+          66.70000000000073,
+          50,
+          66.69999999999709,
+          49.900000000001455,
+          66.79999999999927,
+          33.29999999999927,
+          33.30000000000291,
+          100,
+          16.69999999999709,
+          33.30000000000291,
+          16.599999999998545,
+          50,
+          66.70000000000073,
+          133.29999999999927,
+          83.40000000000146,
+          83.29999999999927,
+          66.70000000000073,
+          66.59999999999854,
+          83.40000000000146
+        ],
+        "connection": {
+          "phoneSeen": true,
+          "disconnected": false,
+          "connected": true,
+          "controllerKind": "wifi"
+        },
+        "document": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": true,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400.21875,
+                  "bottom": 499.9375,
+                  "width": 167.21875,
+                  "height": 68.9375
+                },
+                "clip": {
+                  "left": 233,
+                  "top": 431,
+                  "right": 400,
+                  "bottom": 509
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-aab5738af3c9",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-aab5738af3c9",
+                    "idText": "ID: virtual-aab5738af3c9",
+                    "visible": true,
+                    "rect": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400.21875,
+                      "bottom": 499.9375,
+                      "width": 167.21875,
+                      "height": 68.9375
+                    },
+                    "clip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idRect": {
+                      "left": 274,
+                      "top": 458.34375,
+                      "right": 391.21875,
+                      "bottom": 491.9375,
+                      "width": 117.21875,
+                      "height": 33.59375
+                    },
+                    "idClip": {
+                      "left": 233,
+                      "top": 431,
+                      "right": 400,
+                      "bottom": 509
+                    },
+                    "idTextRects": [
+                      {
+                        "left": 274,
+                        "top": 459.34375,
+                        "right": 389.21875,
+                        "bottom": 473.34375,
+                        "width": 115.21875,
+                        "height": 14
+                      },
+                      {
+                        "left": 274,
+                        "top": 476.140625,
+                        "right": 331.609375,
+                        "bottom": 490.140625,
+                        "width": 57.609375,
+                        "height": 14
+                      }
+                    ],
+                    "idClientWidth": 117,
+                    "idScrollWidth": 117,
+                    "idClientHeight": 34,
+                    "idScrollHeight": 34,
+                    "iconVisible": true,
+                    "iconRect": {
+                      "left": 242,
+                      "top": 439,
+                      "right": 266,
+                      "bottom": 463,
+                      "width": 24,
+                      "height": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:45379/?room=27dFp4C-z-LYmlIM3U-uvpylW8WypSnB",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Tower Overlap",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "activityState": "resumed"
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:35.297Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-aab5738af3c9"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:35.297Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:35.297Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:35.297Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:35.297Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:35.297Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:35.297Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:35.297Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:35.297Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:35.297Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:35.355Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:35.380Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:35.380Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:35.381Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:35.408Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:35.408Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:35.408Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:35.451Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:35.452Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:35.467Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:36.115Z",
+      "message": {
+        "type": "button",
+        "seq": 11,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:36.175Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:36.335Z",
+      "message": {
+        "type": "button",
+        "seq": 12,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 224
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:36.344Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:37.625Z",
+      "message": {
+        "type": "button",
+        "seq": 13,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:37.633Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:37.712Z",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 86
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:37.721Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:38.800Z",
+      "message": {
+        "type": "ping",
+        "seq": 15,
+        "controller_id": "virtual-aab5738af3c9"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:38.809Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:38.875Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:38.882Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:39.105Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 226
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:39.160Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:41.390Z",
+      "message": {
+        "type": "button",
+        "seq": 18,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:41.408Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:41.887Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:41.914Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:41.918Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 530
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:41.932Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:42.390Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:42.396Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:42.402Z",
+      "message": {
+        "type": "button",
+        "seq": 22,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:42.405Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:42.586Z",
+      "message": {
+        "type": "button",
+        "seq": 23,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 194
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:42.596Z",
+      "message": {
+        "type": "button",
+        "seq": 24,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 179
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:42.614Z",
+      "message": {
+        "type": "ack",
+        "seq": 23
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:42.643Z",
+      "message": {
+        "type": "ack",
+        "seq": 24
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:43.928Z",
+      "message": {
+        "type": "hello",
+        "seq": 25,
+        "controller_id": "virtual-aab5738af3c9"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:43.928Z",
+      "message": {
+        "type": "button",
+        "seq": 26,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:43.928Z",
+      "message": {
+        "type": "button",
+        "seq": 27,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:43.928Z",
+      "message": {
+        "type": "button",
+        "seq": 28,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:43.928Z",
+      "message": {
+        "type": "button",
+        "seq": 29,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:43.928Z",
+      "message": {
+        "type": "button",
+        "seq": 30,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:43.928Z",
+      "message": {
+        "type": "button",
+        "seq": 31,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:43.928Z",
+      "message": {
+        "type": "button",
+        "seq": 32,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:43.928Z",
+      "message": {
+        "type": "button",
+        "seq": 33,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:43.928Z",
+      "message": {
+        "type": "button",
+        "seq": 34,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:43.964Z",
+      "message": {
+        "type": "ack",
+        "seq": 25
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:43.977Z",
+      "message": {
+        "type": "ack",
+        "seq": 26
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:43.993Z",
+      "message": {
+        "type": "ack",
+        "seq": 27
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:44.004Z",
+      "message": {
+        "type": "ack",
+        "seq": 28
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:44.014Z",
+      "message": {
+        "type": "ack",
+        "seq": 29
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:44.014Z",
+      "message": {
+        "type": "ack",
+        "seq": 30
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:44.014Z",
+      "message": {
+        "type": "ack",
+        "seq": 31
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:44.046Z",
+      "message": {
+        "type": "ack",
+        "seq": 32
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:44.048Z",
+      "message": {
+        "type": "ack",
+        "seq": 33
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:44.060Z",
+      "message": {
+        "type": "ack",
+        "seq": 34
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:44.496Z",
+      "message": {
+        "type": "button",
+        "seq": 35,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:44.504Z",
+      "message": {
+        "type": "ack",
+        "seq": 35
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:44.756Z",
+      "message": {
+        "type": "button",
+        "seq": 36,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 261
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:44.765Z",
+      "message": {
+        "type": "ack",
+        "seq": 36
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:46.455Z",
+      "message": {
+        "type": "button",
+        "seq": 37,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:46.484Z",
+      "message": {
+        "type": "ack",
+        "seq": 37
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:46.621Z",
+      "message": {
+        "type": "button",
+        "seq": 38,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 168
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:46.639Z",
+      "message": {
+        "type": "ack",
+        "seq": 38
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:47.665Z",
+      "message": {
+        "type": "button",
+        "seq": 39,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "UP",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:47.670Z",
+      "message": {
+        "type": "ack",
+        "seq": 39
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:48.024Z",
+      "message": {
+        "type": "button",
+        "seq": 40,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "UP",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 364
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:48.031Z",
+      "message": {
+        "type": "ack",
+        "seq": 40
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:48.310Z",
+      "message": {
+        "type": "button",
+        "seq": 41,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "DOWN",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:48.332Z",
+      "message": {
+        "type": "ack",
+        "seq": 41
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:48.753Z",
+      "message": {
+        "type": "button",
+        "seq": 42,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "DOWN",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 446
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:48.764Z",
+      "message": {
+        "type": "ack",
+        "seq": 42
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:48.801Z",
+      "message": {
+        "type": "ping",
+        "seq": 43,
+        "controller_id": "virtual-aab5738af3c9"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:48.821Z",
+      "message": {
+        "type": "ack",
+        "seq": 43
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:49.107Z",
+      "message": {
+        "type": "button",
+        "seq": 44,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:49.122Z",
+      "message": {
+        "type": "ack",
+        "seq": 44
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:49.608Z",
+      "message": {
+        "type": "button",
+        "seq": 45,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "LEFT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:49.624Z",
+      "message": {
+        "type": "ack",
+        "seq": 45
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:50.017Z",
+      "message": {
+        "type": "button",
+        "seq": 46,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "LEFT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 907
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:50.027Z",
+      "message": {
+        "type": "ack",
+        "seq": 46
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:50.378Z",
+      "message": {
+        "type": "button",
+        "seq": 47,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:50.387Z",
+      "message": {
+        "type": "ack",
+        "seq": 47
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:50.721Z",
+      "message": {
+        "type": "button",
+        "seq": 48,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "RIGHT",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 347
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:50.754Z",
+      "message": {
+        "type": "ack",
+        "seq": 48
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:51.094Z",
+      "message": {
+        "type": "button",
+        "seq": 49,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:51.140Z",
+      "message": {
+        "type": "ack",
+        "seq": 49
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:51.484Z",
+      "message": {
+        "type": "button",
+        "seq": 50,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "A",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 395
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:51.498Z",
+      "message": {
+        "type": "ack",
+        "seq": 50
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:51.794Z",
+      "message": {
+        "type": "button",
+        "seq": 51,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "B",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:51.824Z",
+      "message": {
+        "type": "ack",
+        "seq": 51
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:52.140Z",
+      "message": {
+        "type": "button",
+        "seq": 52,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "B",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 360
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:52.162Z",
+      "message": {
+        "type": "ack",
+        "seq": 52
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:52.492Z",
+      "message": {
+        "type": "button",
+        "seq": 53,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "X",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:52.499Z",
+      "message": {
+        "type": "ack",
+        "seq": 53
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:52.782Z",
+      "message": {
+        "type": "button",
+        "seq": 54,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "X",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 290
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:52.791Z",
+      "message": {
+        "type": "ack",
+        "seq": 54
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:53.072Z",
+      "message": {
+        "type": "button",
+        "seq": 55,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "Y",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:53.083Z",
+      "message": {
+        "type": "ack",
+        "seq": 55
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:53.423Z",
+      "message": {
+        "type": "button",
+        "seq": 56,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "Y",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 354
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:53.430Z",
+      "message": {
+        "type": "ack",
+        "seq": 56
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:53.686Z",
+      "message": {
+        "type": "button",
+        "seq": 57,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:53.726Z",
+      "message": {
+        "type": "ack",
+        "seq": 57
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:53.813Z",
+      "message": {
+        "type": "ping",
+        "seq": 58,
+        "controller_id": "virtual-aab5738af3c9"
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:53.827Z",
+      "message": {
+        "type": "ack",
+        "seq": 58
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:12:53.967Z",
+      "message": {
+        "type": "button",
+        "seq": 59,
+        "controller_id": "virtual-aab5738af3c9",
+        "key": "START",
+        "action": "tap",
+        "pressed": false,
+        "duration_ms": 280
+      }
+    },
+    {
+      "connection": 2,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:12:54.009Z",
+      "message": {
+        "type": "ack",
+        "seq": 59
+      }
+    }
+  ],
+  "transportErrors": [],
+  "connectionEvents": [
+    {
+      "connection": 1,
+      "event": "client-eof",
+      "at": "2026-11-20T15:12:42.599Z",
+      "pendingSeq": [
+        23,
+        24
+      ]
+    },
+    {
+      "connection": 1,
+      "event": "forward-fin",
+      "reason": "all-acked",
+      "at": "2026-11-20T15:12:42.643Z",
+      "waitMs": 43.48230800000056,
+      "pendingSeq": []
+    }
+  ],
+  "screenshots": [
+    "menu-android.png",
+    "gameplay.png",
+    "paused.png",
+    "reconnected.png"
+  ],
+  "limitations": [
+    "Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery."
+  ],
+  "ports": {
+    "tcpPort": 33993,
+    "observerPort": 42557
+  },
+  "scope": "complete controller acceptance",
+  "finishedAt": "2026-11-20T15:12:54.724Z"
+}
