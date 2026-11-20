@@ -162,6 +162,27 @@ jobs:
           finally:
               (Path(os.environ['RUNNER_TEMP'])/'emulator-archive-verification.json').write_text(json.dumps(receipt,indent=2)+'\n')
           PY
+      - name: Configure host Mesa OpenGL and a CPU Vulkan ICD for the Android graphics transport
+        if: matrix.batch == 'retry-used-car-mesa'
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends xvfb mesa-utils mesa-vulkan-drivers vulkan-tools
+          out="$RUNNER_TEMP/controller-host-renderer"
+          mkdir -p "$out"
+          dpkg-query -W xvfb mesa-utils mesa-vulkan-drivers vulkan-tools > "$out/packages.txt"
+          mapfile -t drivers < <(dpkg-query -L mesa-vulkan-drivers:amd64 | grep -E '/lvp_icd(\.x86_64)?\.json$')
+          test "${#drivers[@]}" -eq 1
+          Xvfb -displayfd 3 -screen 0 1280x720x24 -nolisten tcp -ac +extension GLX 3>"$out/display-number" >"$out/xvfb.log" 2>&1 &
+          for i in {1..40}; do test -s "$out/display-number" && break; sleep .25; done
+          export DISPLAY=":$(cat "$out/display-number")" LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe
+          export VK_DRIVER_FILES="${drivers[0]}" VK_ICD_FILENAMES="${drivers[0]}"
+          cat "$VK_DRIVER_FILES" > "$out/mesa-icd.json"
+          glxinfo -B > "$out/host-gl.txt"
+          grep -i 'OpenGL renderer string:.*llvmpipe' "$out/host-gl.txt"
+          vulkaninfo --summary > "$out/host-vulkan.txt"
+          grep -i 'deviceName.*llvmpipe' "$out/host-vulkan.txt"
+          env | grep -E '^(DISPLAY|LIBGL_ALWAYS_SOFTWARE|GALLIUM_DRIVER|VK_DRIVER_FILES|VK_ICD_FILENAMES)=' >> "$GITHUB_ENV"
       - name: Start read-only host diagnostics before emulator boot
         run: python3 tools/controller-runtime-diagnostics.py start --output "$RUNNER_TEMP/controller-host-diagnostics"
       - name: Upgrade and operate actual release APKs with the original pureTV SDK
@@ -170,7 +191,7 @@ jobs:
           api-level: ${{ matrix.apiLevel }}
           target: android-tv
           arch: ${{ matrix.arch }}
-          profile: tv_1080p
+          profile: ${{ matrix.batch == 'retry-used-car-mesa' && 'tv_720p' || 'tv_1080p' }}
           avd-name: ControllerGamesValidation
           force-avd-creation: true
           disable-animations: true
@@ -195,6 +216,8 @@ jobs:
           root=Path(os.environ['RUNNER_TEMP']);out=root/'controller-runtime-output';out.mkdir(exist_ok=True)
           if (root/'controller-host-diagnostics').is_dir():
               shutil.copytree(root/'controller-host-diagnostics',out/'host-diagnostics')
+          if (root/'controller-host-renderer').is_dir():
+              shutil.copytree(root/'controller-host-renderer',out/'host-renderer')
           if (root/'controller-runtime-input/observer-source').is_dir():
               shutil.copytree(root/'controller-runtime-input/observer-source',out/'observer-source')
           for name in ['bundle-manifest.json','runtime-selection.json','controller-runtime-input/input-verification.json','emulator-archive-verification.json']:
