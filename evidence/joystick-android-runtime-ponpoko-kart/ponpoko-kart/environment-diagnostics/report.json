@@ -1,0 +1,485 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-11-20T15:46:11.109435+00:00",
+  "scope": "Read-only host diagnostics; not a game acceptance result",
+  "source": {
+    "path": "executed-android-environment-diagnostics.py",
+    "bytes": 40003,
+    "sha256": "92d8b974280353a8768cf505d1b51e739f97df77d27d9720d7e7d0f2b0f3160e"
+  },
+  "sampling": {
+    "intervalSeconds": 5,
+    "maxSamples": 540,
+    "maxLogBytes": 2097152,
+    "samplesAttempted": 86
+  },
+  "emulatorExitCode": null,
+  "emulatorExitCodeReason": "EmulatorIsNotAnOwnedChild",
+  "environmentVariablesDumped": false,
+  "commandArgumentsRecorded": false,
+  "rootCauseProven": false,
+  "diagnosticErrors": [],
+  "qaSourceSha": "21cb36cb5c1f0ac8e7e53290b99cc036ac2d61c1",
+  "qaRunId": "44765518078",
+  "qaRunAttempt": "1",
+  "kernelBefore": {
+    "at": "2026-11-20T15:46:11.109769+00:00",
+    "method": "sudo -n dmesg (OOM/kill lines and numeric emulator faults only)",
+    "lines": [],
+    "emulatorFaults": [],
+    "status": "read",
+    "exitCode": 0,
+    "stderr": "",
+    "captureLimited": false,
+    "unfilteredBytesRead": 57745,
+    "matchingLinesOmitted": 0,
+    "rootCauseProven": false
+  },
+  "childPid": 4865,
+  "kernelAfter": {
+    "at": "2026-11-20T15:53:17.615972+00:00",
+    "method": "sudo -n dmesg (OOM/kill lines and numeric emulator faults only)",
+    "lines": [],
+    "emulatorFaults": [],
+    "status": "read",
+    "exitCode": 0,
+    "stderr": "",
+    "captureLimited": false,
+    "unfilteredBytesRead": 57745,
+    "matchingLinesOmitted": 0,
+    "rootCauseProven": false
+  },
+  "systemdOomdAfter": {
+    "at": "2026-11-20T15:53:17.652264+00:00",
+    "sinceEpochSeconds": 1795189531,
+    "events": [],
+    "method": "Read-only systemd-oomd journal numeric/hash summary",
+    "rawMessagesRecorded": false,
+    "rootCauseProven": false,
+    "status": "read",
+    "exitCode": 0,
+    "captureLimited": false,
+    "unfilteredBytesRead": 0,
+    "omittedEvents": 0,
+    "stderrBytesRetained": 0,
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "permissionDenied": false
+  },
+  "crashEvidence": {
+    "path": "crash-report.json",
+    "bytes": 483,
+    "sha256": "9ab118bb3e1f04aa4a555abbdcbc25cf9e3d606098cdfe655a5d0fae26b59a60",
+    "status": "sampled",
+    "rawDatabaseCopied": false,
+    "rawMemoryCopied": false
+  },
+  "childReturnCode": 1,
+  "receivedSignal": null,
+  "finishedAt": "2026-11-20T15:53:17.684336+00:00",
+  "wrapperExitCode": 1,
+  "childResultPreserved": true,
+  "log": {
+    "path": "samples.jsonl",
+    "bytes": 428854,
+    "rows": 86,
+    "rowsOmittedByBudget": 0
+  },
+  "finalEmulatorObservation": {
+    "status": "sampled",
+    "observed": [
+      {
+        "pid": 4631,
+        "executableName": "qemu-system-x86_64-headless",
+        "exitCode": null,
+        "exitCodeReason": "EmulatorIsNotAnOwnedChild",
+        "state": "S",
+        "parentPid": 1,
+        "starttimeTicks": 30127,
+        "residentPages": 1067546,
+        "startTimeEpochSeconds": 1795189531.27,
+        "memory": {
+          "VmSize": {
+            "value": 5265108,
+            "unit": "kB"
+          },
+          "VmHWM": {
+            "value": 4270588,
+            "unit": "kB"
+          },
+          "VmRSS": {
+            "value": 4270588,
+            "unit": "kB"
+          },
+          "Threads": {
+            "value": 70,
+            "unit": "count"
+          }
+        },
+        "limits": {
+          "status": "read",
+          "values": {
+            "Max cpu time": {
+              "soft": "unlimited",
+              "hard": "unlimited",
+              "unit": "seconds"
+            },
+            "Max data size": {
+              "soft": "unlimited",
+              "hard": "unlimited",
+              "unit": "bytes"
+            },
+            "Max core file size": {
+              "soft": "0",
+              "hard": "unlimited",
+              "unit": "bytes"
+            },
+            "Max resident set": {
+              "soft": "unlimited",
+              "hard": "unlimited",
+              "unit": "bytes"
+            },
+            "Max processes": {
+              "soft": "58109",
+              "hard": "58109",
+              "unit": "processes"
+            },
+            "Max open files": {
+              "soft": "65536",
+              "hard": "65536",
+              "unit": "files"
+            },
+            "Max locked memory": {
+              "soft": "8388608",
+              "hard": "8388608",
+              "unit": "bytes"
+            },
+            "Max address space": {
+              "soft": "unlimited",
+              "hard": "unlimited",
+              "unit": "bytes"
+            }
+          }
+        },
+        "cgroupAncestors": {
+          "status": "sampled",
+          "groups": [
+            {
+              "depth": 0,
+              "namespaceRoot": false,
+              "pathSha256": "11a92eff66d5176c1c789788092448599c4959670ada644b435f6efe6cbb1e2b",
+              "files": {
+                "memory.events": {
+                  "status": "read",
+                  "fields": {
+                    "low": 0,
+                    "high": 0,
+                    "max": 0,
+                    "oom": 0,
+                    "oom_kill": 0,
+                    "oom_group_kill": 0,
+                    "sock_throttled": 0
+                  }
+                },
+                "memory.events.local": {
+                  "status": "read",
+                  "fields": {
+                    "low": 0,
+                    "high": 0,
+                    "max": 0,
+                    "oom": 0,
+                    "oom_kill": 0,
+                    "oom_group_kill": 0,
+                    "sock_throttled": 0
+                  }
+                },
+                "memory.current": {
+                  "status": "read",
+                  "value": "15618428928"
+                },
+                "memory.max": {
+                  "status": "read",
+                  "value": "max"
+                },
+                "memory.peak": {
+                  "status": "read",
+                  "value": "15788249088"
+                },
+                "memory.swap.current": {
+                  "status": "read",
+                  "value": "0"
+                },
+                "memory.swap.max": {
+                  "status": "read",
+                  "value": "max"
+                },
+                "memory.high": {
+                  "status": "read",
+                  "value": "max"
+                },
+                "memory.oom.group": {
+                  "status": "read",
+                  "value": "0"
+                }
+              }
+            },
+            {
+              "depth": 1,
+              "namespaceRoot": false,
+              "pathSha256": "5efaace3d10e8fc044837ed21f7c0890fca3f2b9024a0f0612b58a4cae58ae90",
+              "files": {
+                "memory.events": {
+                  "status": "read",
+                  "fields": {
+                    "low": 0,
+                    "high": 0,
+                    "max": 0,
+                    "oom": 0,
+                    "oom_kill": 0,
+                    "oom_group_kill": 0,
+                    "sock_throttled": 0
+                  }
+                },
+                "memory.events.local": {
+                  "status": "read",
+                  "fields": {
+                    "low": 0,
+                    "high": 0,
+                    "max": 0,
+                    "oom": 0,
+                    "oom_kill": 0,
+                    "oom_group_kill": 0,
+                    "sock_throttled": 0
+                  }
+                },
+                "memory.current": {
+                  "status": "read",
+                  "value": "16065437696"
+                },
+                "memory.max": {
+                  "status": "read",
+                  "value": "max"
+                },
+                "memory.peak": {
+                  "status": "read",
+                  "value": "16235724800"
+                },
+                "memory.swap.current": {
+                  "status": "read",
+                  "value": "86016"
+                },
+                "memory.swap.max": {
+                  "status": "read",
+                  "value": "max"
+                },
+                "memory.high": {
+                  "status": "read",
+                  "value": "max"
+                },
+                "memory.oom.group": {
+                  "status": "read",
+                  "value": "0"
+                }
+              }
+            },
+            {
+              "depth": 2,
+              "namespaceRoot": true,
+              "pathSha256": "8a5edab282632443219e051e4ade2d1d5bbc671c781051bf1437897cbdfea0f1",
+              "files": {
+                "memory.events": {
+                  "status": "unavailable",
+                  "error": {
+                    "type": "FileNotFoundError",
+                    "errno": 2
+                  }
+                },
+                "memory.events.local": {
+                  "status": "unavailable",
+                  "error": {
+                    "type": "FileNotFoundError",
+                    "errno": 2
+                  }
+                },
+                "memory.current": {
+                  "status": "unavailable",
+                  "error": {
+                    "type": "FileNotFoundError",
+                    "errno": 2
+                  }
+                },
+                "memory.max": {
+                  "status": "unavailable",
+                  "error": {
+                    "type": "FileNotFoundError",
+                    "errno": 2
+                  }
+                },
+                "memory.peak": {
+                  "status": "unavailable",
+                  "error": {
+                    "type": "FileNotFoundError",
+                    "errno": 2
+                  }
+                },
+                "memory.swap.current": {
+                  "status": "unavailable",
+                  "error": {
+                    "type": "FileNotFoundError",
+                    "errno": 2
+                  }
+                },
+                "memory.swap.max": {
+                  "status": "unavailable",
+                  "error": {
+                    "type": "FileNotFoundError",
+                    "errno": 2
+                  }
+                },
+                "memory.high": {
+                  "status": "unavailable",
+                  "error": {
+                    "type": "FileNotFoundError",
+                    "errno": 2
+                  }
+                },
+                "memory.oom.group": {
+                  "status": "unavailable",
+                  "error": {
+                    "type": "FileNotFoundError",
+                    "errno": 2
+                  }
+                }
+              }
+            }
+          ],
+          "omittedMiddleAncestors": 0,
+          "pathNamesRecorded": false,
+          "maximumGroups": 8
+        }
+      }
+    ],
+    "gone": [],
+    "scanTruncated": false,
+    "exitCode": null,
+    "exitCodeReason": "EmulatorIsNotAnOwnedChild"
+  },
+  "finalMemoryObservation": {
+    "status": "read",
+    "fields": {
+      "MemTotal": {
+        "value": 16366508,
+        "unit": "kB"
+      },
+      "MemFree": {
+        "value": 300456,
+        "unit": "kB"
+      },
+      "MemAvailable": {
+        "value": 11063376,
+        "unit": "kB"
+      },
+      "Buffers": {
+        "value": 60376,
+        "unit": "kB"
+      },
+      "Cached": {
+        "value": 10724764,
+        "unit": "kB"
+      },
+      "SwapTotal": {
+        "value": 3145724,
+        "unit": "kB"
+      },
+      "SwapFree": {
+        "value": 3145640,
+        "unit": "kB"
+      },
+      "Dirty": {
+        "value": 9668,
+        "unit": "kB"
+      },
+      "Writeback": {
+        "value": 0,
+        "unit": "kB"
+      },
+      "AnonPages": {
+        "value": 4545548,
+        "unit": "kB"
+      },
+      "Mapped": {
+        "value": 447528,
+        "unit": "kB"
+      },
+      "Shmem": {
+        "value": 51820,
+        "unit": "kB"
+      },
+      "Slab": {
+        "value": 509104,
+        "unit": "kB"
+      },
+      "PageTables": {
+        "value": 16832,
+        "unit": "kB"
+      },
+      "CommitLimit": {
+        "value": 11328976,
+        "unit": "kB"
+      },
+      "Committed_AS": {
+        "value": 7711256,
+        "unit": "kB"
+      }
+    }
+  },
+  "finalCgroupObservation": {
+    "status": "sampled",
+    "version": 2,
+    "files": {
+      "memory.events": {
+        "status": "read",
+        "fields": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0,
+          "sock_throttled": 0
+        }
+      },
+      "memory.events.local": {
+        "status": "read",
+        "fields": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0,
+          "sock_throttled": 0
+        }
+      },
+      "memory.current": {
+        "status": "read",
+        "value": "15618445312"
+      },
+      "memory.max": {
+        "status": "read",
+        "value": "max"
+      },
+      "memory.peak": {
+        "status": "read",
+        "value": "15788249088"
+      },
+      "memory.swap.current": {
+        "status": "read",
+        "value": "0"
+      },
+      "memory.swap.max": {
+        "status": "read",
+        "value": "max"
+      }
+    }
+  }
+}
