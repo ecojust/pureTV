@@ -1,0 +1,47 @@
+{
+  "softwareGraphicsBackend": "lavapipe",
+  "target": "Android TV API 36, x86_64, tv_1080p",
+  "packageSource": "c5ad63e8c6a0ccfada5f763d1d26afa27f45002e",
+  "packageSha256": "81b421360bd40181470d92940d900f63e0886aa23e7ee5ed1e3b3ca3a0219b8c",
+  "originalSignedBytes": true,
+  "game": "last-track",
+  "qaRunId": 44679328549,
+  "qaSourceSha": "2cf1333faadccc1a150c0f6fcae99ffcd963cb54",
+  "qaExportCommit": "c9b211e5f97ae1d6f5dad25e10c2da639d2cc68f",
+  "verifiedInputs": "passed",
+  "runtimeAccepted": false,
+  "modes": {
+    "normal": {
+      "status": "failed",
+      "passed": 11,
+      "lastPassed": "actual SDK gameplay: Confirm original car choice",
+      "lastObserved": "timeout-plan-gameplay-Move from armor purchase to engine purchase",
+      "error": [
+        "AssertionError: plan-gameplay-Move from armor purchase to engine purchase timed out; last snapshot retained"
+      ],
+      "port": 63485,
+      "captureCount": 1,
+      "garageFocusBefore": "$1,200",
+      "garageFocusAtTimeout": "TO THE TRACK",
+      "qualityAtTimeout": "low",
+      "report": "https://github.com/ecojust/pureTV/blob/c9b211e5f97ae1d6f5dad25e10c2da639d2cc68f/evidence/joystick-android-runtime-last-track/last-track-normal/report.json"
+    },
+    "occupied": {
+      "status": "failed",
+      "passed": 11,
+      "lastPassed": "actual SDK gameplay: Confirm original car choice",
+      "lastObserved": "timeout-plan-gameplay-Move from armor purchase to engine purchase",
+      "error": [
+        "AssertionError: plan-gameplay-Move from armor purchase to engine purchase timed out; last snapshot retained"
+      ],
+      "port": 43783,
+      "captureCount": 1,
+      "garageFocusBefore": "$1,200",
+      "garageFocusAtTimeout": "TO THE TRACK",
+      "qualityAtTimeout": "low",
+      "report": "https://github.com/ecojust/pureTV/blob/c9b211e5f97ae1d6f5dad25e10c2da639d2cc68f/evidence/joystick-android-runtime-last-track/last-track-occupied/report.json"
+    }
+  },
+  "visualReview": "Sampled both original recordings at 5 seconds and three quarters of their duration. The splash menu shows the rendered car, neon showroom and controller card. The settings sheet and its quality controls are visible in both modes. These recordings do not verify racing.",
+  "garagePlanCorrection": "The three adjacent upgrade buttons share the same price label. Hold DOWN through the garage until the unique TO THE TRACK button is focused and require the following A press to open the original track selector. The route does not purchase any upgrade."
+}
