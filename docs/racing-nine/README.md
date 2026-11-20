@@ -2,7 +2,7 @@
 
 已检查扩充前 README 中的 **31 个赛车候选**，以画面与玩法各 **50 分**选出以下 **9 款**。30款有分，F1因缺少足够清晰的赛中画面暂不评分；分数是本次有范围限制的评审估计，不是外部评分或 GitHub 星标。
 
-**九款赛车均可下载 Android TV、macOS 和 Windows x64 安装文件。** 27 个游戏／平台组合中，25 个已完成对应宿主的原生手柄验收。Android TV 7/9、Mac 9/9、Windows 9/9。仍提供 Android TV 测试版的游戏有Backroad Rally、Kart Royale。[逐款下载与测试范围](../../joystick-games/README.md#九款赛车游戏下载)
+**九款赛车均可下载 Android TV、macOS 和 Windows x64 安装文件。** 27 个游戏／平台组合中，26 个已完成对应宿主的原生手柄验收。Android TV 8/9、Mac 9/9、Windows 9/9。Backroad Rally 的 Android TV 版目前为测试版。[逐款下载与测试范围](../../joystick-games/README.md#九款赛车游戏下载)
 
 Backroad Rally 新增 [Windows 安装版和便携包](https://github.com/ecojust/pureTV/releases/tag/joystick-backroad-rally-windows-v0.1.0)，两种端口模式都已验证芬兰赛段实际驾驶、暂停和存档恢复。[原生验证](https://github.com/ecojust/pureTV/actions/runs/44679344457) · [下载校验](backroad-windows-publication.json)。Night Racer、Penguintrack、Last Track、Dirt Crown 的 Windows 包均沿用已验原始构建；正常端口与占用回退模式各通过 10 项检查，安装／卸载和存档重启通过。Turbo Kart Rush 的 Windows 两模式也各通过 10 项检查；该游戏未声明存档字段，没有验证实际游戏存档恢复。
 
