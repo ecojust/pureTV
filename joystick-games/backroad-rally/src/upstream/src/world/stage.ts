@@ -268,7 +268,7 @@ export class Stage {
   }
 
   static async load(id: string, catalog: Record<string, CatalogEntry>, runtime: StageRuntimeJson,
-    rapier: typeof RAPIER, world: RAPIER.World): Promise<Stage> {
+    rapier: typeof RAPIER, world: RAPIER.World, probeLegacyGravel = false): Promise<Stage> {
     const t0 = performance.now();
     const [json, bin, stageGltf, envGltf] = await Promise.all([
       fetch(publicUrl(`data/stages/${id}.json`)).then((r) => r.json() as Promise<StageJson>),
@@ -281,7 +281,8 @@ export class Stage {
     stage.timings.fetch = t1 - t0;
     const f = runtime.features ?? {};
     const mats = {
-      tiles: terrainMaterials({ rockFade: !!f.rock_fade_zones?.[id]?.length, water: f.water?.[id] }),
+      tiles: terrainMaterials({ rockFade: !!f.rock_fade_zones?.[id]?.length, water: f.water?.[id],
+        fragmentGravel: probeLegacyGravel && id === 'finland' }),
       instances: instanceMaterials(),
     };
     stage.buildTerrain(stageGltf.scene, mats.tiles, rapier, world);

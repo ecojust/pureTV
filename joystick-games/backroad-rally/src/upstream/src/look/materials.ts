@@ -384,6 +384,7 @@ const GROUND: Record<string, [number, Tinted | null]> = {
  * DeepOpacity, Tint [r, g, b] linear).
  */
 export interface TerrainOptions {
+  fragmentGravel?: boolean;
   rockFade?: boolean;
   water?: Record<string, string | number | number[]>;
 }
@@ -392,7 +393,10 @@ export function terrainMaterials(opts: TerrainOptions = {}): Record<string, THRE
   const out: Record<string, THREE.Material> = {};
   for (const [slot, [roughness, tint]] of Object.entries(GROUND)) {
     const m = standard(slot, { roughness, flatShading: true });
-    m.colorNode = tint ? grade(vertexRgb(), U.tint[tint]) : vertexRgb();
+    // A/B only: interpolate the original attribute before the existing sRGB decode.
+    const color = opts.fragmentGravel && slot === 'Gravel'
+      ? srgbToLinear(saturate(vertexRaw().toVarying() as unknown as V3)) : vertexRgb();
+    m.colorNode = tint ? grade(color, U.tint[tint]) : color;
     // the original's weather kind from the slot: grass and rock are terrain, the road surfaces road, Flat a prop
     withWeather(m, m.colorNode as V3, roughness, slot === 'Grass' || slot === 'Rock' || slot === 'Snow' ? 0 : slot === 'Flat' ? 2 : 1);
     if (slot === 'Rock' && opts.rockFade && !OFF.has('occ')) {

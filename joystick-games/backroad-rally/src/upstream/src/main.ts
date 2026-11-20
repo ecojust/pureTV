@@ -49,7 +49,7 @@ import { Precipitation } from './fx/precip';
 import type { RoadMarks } from './fx/roadMarks';
 import { deepMerge } from './sim/tuning';
 // game flow (slice 9)
-import { FrameLimiter, buildRoadMarks, createRenderer, dofOptions, gpuName, lookOverrides, type DofJson } from './boot';
+import { FrameLimiter, buildRoadMarks, createRenderer, dofOptions, gpuName, useLegacyCanvasOutput, lookOverrides, type DofJson } from './boot';
 import { pageKind, parsePlay, putMenuState, type PlaySetup } from './menu/nav';
 import { careerRules, loadMenuData, stageMeta } from './menu/data';
 import { careerLine, loadingCard, menuHref } from './menu/menu';
@@ -237,6 +237,7 @@ async function runStage(play: PlaySetup | null) {
   const pinnedByUrl = !!qParam && qParam !== 'auto' && !!QUALITY[qParam];
   const wantAuto = () => !pinnedByUrl && (qParam === 'auto' || display.quality === 'auto');
   const { renderer, backend } = await createRenderer(params, params.has('gputime') || wantAuto());
+  const gpu = gpuName(renderer);
   document.body.classList.toggle('no-debug', !hudSettings.debug);
 
   const [camCfg, car, tuningJson, rapier, conditions, weatherJson] = await Promise.all([
@@ -274,7 +275,8 @@ async function runStage(play: PlaySetup | null) {
       info: () => 'test bench',
     };
   } else {
-    level = await buildStageLevel(stageId, reverse, rapier, world, scene, () => vehicle, () => sim, hudRoot, hudSettings, weather);
+    level = await buildStageLevel(stageId, reverse, rapier, world, scene, () => vehicle, () => sim, hudRoot, hudSettings, weather,
+      backend === 'webgl2' && useLegacyCanvasOutput(gpu));
   }
 
   const model = await loadCarModel(car);
@@ -326,7 +328,6 @@ async function runStage(play: PlaySetup | null) {
 
   // the look (slice 5): conditions, fog, shadows, post. ?cond=morning|afternoon|sunset|night|fog (or stage),
   // ?post=0 (P toggles), ?quality=auto|high|medium|low, ?scale=0.5..1 (render scale)
-  const gpu = gpuName(renderer);
   /** Render scale pinned by ?scale= (a visit) or the render resolution setting; null = auto's ladder (or 1). */
   const pinnedScale = () => (params.has('scale') ? Math.min(Math.max(Number(params.get('scale')) || 1, 0.25), 1) : display.renderScale > 0 ? display.renderScale / 100 : null);
   /** The frame-rate limit: the setting, ?fps= for a visit; headless runs (autopilot, timescale) run uncapped. */
@@ -872,13 +873,13 @@ async function runStage(play: PlaySetup | null) {
 }
 
 async function buildStageLevel(id: string, reverse: boolean, rapier: typeof RAPIER, world: RAPIER.World, scene: THREE.Scene,
-  getVehicle: () => Vehicle, getSim: () => Simulation, hudRoot: HTMLElement, hudSettings: HudSettings, weather: WeatherDef): Promise<Level> {
+  getVehicle: () => Vehicle, getSim: () => Simulation, hudRoot: HTMLElement, hudSettings: HudSettings, weather: WeatherDef, probeLegacyGravel: boolean): Promise<Level> {
   const [catalog, runtime, hudJson] = await Promise.all([
     load<Record<string, CatalogEntry>>('env_catalog.json'),
     load<StageRuntimeJson & { flow: FlowConfig }>('stage_runtime.json'),
     load<HudJson>('hud.json'),
   ]);
-  const stage = await Stage.load(id, catalog, runtime, rapier, world);
+  const stage = await Stage.load(id, catalog, runtime, rapier, world, probeLegacyGravel);
   scene.add(stage.group);
   for (const c of params.get('hide')?.split(',') ?? []) stage.hidden.add(c);
   if (params.get('occtest') === '0') stage.occluderReach = -1e9; // dev: no see-through test (measuring)
