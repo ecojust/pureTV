@@ -194,15 +194,15 @@ class SupervisorTests(unittest.TestCase):
         selection = "${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}"
         self.assertEqual(options.count(selection), 1)
         prefix = ['-port', '5554', '-avd', 'JoystickGamesValidation']
-        profile = "${{ matrix.game == 'kart-royale' && '-memory 3072 -gpu lavapipe' || '-memory 2048 -gpu swiftshader_indirect' }}"
+        profile = "${{ matrix.game == 'kart-royale' && '-memory 3072 -gpu host' || '-memory 2048 -gpu swiftshader_indirect' }}"
         self.assertEqual(options.count(profile), 1)
         pon_options = options.replace(profile, '-memory 2048 -gpu swiftshader_indirect')
         self.assertEqual(prefix + pon_options.replace(selection, '').split(), m.EXPECTED_ARGS)
         self.assertEqual(prefix + pon_options.replace(selection, ' -feature -Vulkan').split(),
                          m.EXPECTED_ARGS + ['-feature', '-Vulkan'])
-        royale_options = options.replace(profile, '-memory 3072 -gpu lavapipe')
+        royale_options = options.replace(profile, '-memory 3072 -gpu host')
         self.assertEqual(prefix + royale_options.replace(selection, '').split(),
-                         prefix + ['-no-window', '-memory', '3072', '-gpu', 'lavapipe',
+                         prefix + ['-no-window', '-memory', '3072', '-gpu', 'host',
                                    '-noaudio', '-no-boot-anim', '-no-snapshot'])
         self.assertIn("emulator-build: '16970787'", workflow); self.assertIn('api-level: 36', workflow)
         declared = workflow.split('      pon_disable_vulkan:', 1)[1].split('\n\nconcurrency:', 1)[0]

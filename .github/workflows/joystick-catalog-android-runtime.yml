@@ -282,6 +282,25 @@ jobs:
           test -e /dev/kvm
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Start software OpenGL display for Kart Royale
+        if: matrix.game == 'kart-royale'
+        run: |
+          set -euo pipefail
+          packages=()
+          command -v Xvfb >/dev/null || packages+=(xvfb)
+          command -v glxinfo >/dev/null || packages+=(mesa-utils)
+          if (( ${#packages[@]} )); then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends "${packages[@]}"
+          fi
+          out="$RUNNER_TEMP/runtime/$GAME/host-renderer"
+          mkdir -p "$out"
+          Xvfb -displayfd 3 -screen 0 1280x720x24 -nolisten tcp -ac +extension GLX 3>"$out/display-number" >"$out/xvfb.log" 2>&1 &
+          for i in {1..40}; do test -s "$out/display-number" && break; sleep .25; done
+          export DISPLAY=":$(cat "$out/display-number")" LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe
+          glxinfo -B > "$out/host-gl.txt"
+          grep -i 'OpenGL renderer string:.*llvmpipe' "$out/host-gl.txt"
+          env | grep -E '^(DISPLAY|LIBGL_ALWAYS_SOFTWARE|GALLIUM_DRIVER)=' >> "$GITHUB_ENV"
       - name: Run normal and occupied-port QA independently against unchanged signed bytes
         # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
@@ -298,11 +317,12 @@ jobs:
           disable-animations: true
           # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
           # Optional controlled Vulkan-off comparison; not an established crash cause or fix.
-          emulator-options: -no-window ${{ matrix.game == 'kart-royale' && '-memory 3072 -gpu lavapipe' || '-memory 2048 -gpu swiftshader_indirect' }} -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}
+          emulator-options: -no-window ${{ matrix.game == 'kart-royale' && '-memory 3072 -gpu host' || '-memory 2048 -gpu swiftshader_indirect' }} -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}
           pre-emulator-launch-script: >-
             python3 joystick-games/tools/android-emulator-supervisor.py prepare
             --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
           script: >-
+            { [ "$GAME" != kart-royale ] || timeout 120 bash joystick-games/qa/android/mesa-webview/probe.sh; } &&
             python3 joystick-games/tools/android-emulator-supervisor.py assert-ready
             --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor" &&
             python3 joystick-games/tools/android-environment-diagnostics.py
