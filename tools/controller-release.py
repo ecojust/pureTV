@@ -29,6 +29,7 @@ SCOPED_GAMES = {
     'home-12': HOME_GAMES,
     'arcade-7': set(GROUPS['arcade']),
     'coast-1': {'coast-kart'},
+    'used-car-1': {'used-car-racing'},
     'arcade-recovery-6': set(GROUPS['arcade']) - {'tank'},
 }
 RELEASE_SCOPES = ('all', *SCOPED_GAMES)
