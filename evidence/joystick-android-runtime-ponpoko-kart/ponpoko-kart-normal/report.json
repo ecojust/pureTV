@@ -1,0 +1,775 @@
+{
+  "game": "ponpoko-kart",
+  "targetPackage": "com.ecojust.joystick.ponpokokart",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": false,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "97911dbd81746f3837fb9fe13f9e360e7fd7c470",
+  "apk": {
+    "path": "/home/runner/work/_temp/input/packages/ponpoko-kart/ponpoko-kart-0.1.0.apk",
+    "bytes": 1602736,
+    "sha256": "a1c9a0f6de56fd5ec87e25d4a6b5be541c9a04686e76b31484d99cc890b86e22"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/input/observers/ponpoko-kart/observer-ponpoko-kart.apk",
+    "bytes": 16783,
+    "sha256": "a422410ffa96249b4cc2d56d1ff1da90e29ddab6c99f8353c64b3a12aece170a"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 62517,
+      "sha256": "5fb0fbb8b14995ea757f2b9bfd5e89fd08b51c24810657b8d5b3e368a1b8826a"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11264,
+      "sha256": "c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 12693,
+      "sha256": "3bf677cf2634fe364325e37a1439afab82a8a1f993efa77b64d56e14fe10bb8d"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 7106,
+      "sha256": "8fa99646235d8d3369e6606b94b1facaafda934dcc1df3ad693233f9bcfe6e54"
+    },
+    "joystick-games/ponpoko-kart/qa-plan.json": {
+      "bytes": 3658,
+      "sha256": "cea39515f37cd9da3f706aaf92108f48390d9b4fdb5745c3328466c465ccd512"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 7735,
+      "sha256": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d"
+    }
+  },
+  "tests": [
+    {
+      "name": "catalog scenario starts with fresh app data before launch",
+      "status": "passed",
+      "details": {
+        "mode": "fresh-install-app-data",
+        "targetPackage": "com.ecojust.joystick.ponpokokart",
+        "method": "pm clear",
+        "phase": "before-target-launch",
+        "status": "passed",
+        "stdout": "Success"
+      }
+    },
+    {
+      "name": "installed target launches initialized game menu with no controller card",
+      "status": "passed",
+      "details": null
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "initial-menu",
+      "wallTime": 1795152071.3602886,
+      "snapshot": {
+        "game": {
+          "game": "ponpoko-kart",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "frames": 1,
+          "gameplay": {
+            "screen": "title",
+            "mode": "idle",
+            "course": "",
+            "character": "",
+            "tick": 0,
+            "time": 0,
+            "countdown": 0,
+            "worldTime": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "progress": 0,
+            "lap": 0,
+            "position": 0,
+            "driftActive": false,
+            "driftLevel": 0,
+            "driftCharge": 0,
+            "boost": 0,
+            "jumpHeld": false,
+            "item": "",
+            "itemPending": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "framePolls": 1,
+            "renderCalls": 1
+          },
+          "audioState": "not_created",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:34775/?room=4TFo4ySmLoAIK19PaXpcNrJuIiGQe8QZ",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Ponpoko Kart",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 1,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:34775/?room=4TFo4ySmLoAIK19PaXpcNrJuIiGQe8QZ",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Ponpoko Kart",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1440,
+              "height": 810,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 777,
+                  "top": 258.4609375,
+                  "right": 947,
+                  "bottom": 531.4609375
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.ponpokokart"
+      }
+    },
+    {
+      "label": "timeout-single-controller",
+      "snapshot": {
+        "game": {
+          "game": "ponpoko-kart",
+          "renderer": "webgl2",
+          "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "stage": "menu",
+          "paused": false,
+          "frames": 2,
+          "gameplay": {
+            "screen": "title",
+            "mode": "idle",
+            "course": "",
+            "character": "",
+            "tick": 0,
+            "time": 0,
+            "countdown": 0,
+            "worldTime": 0,
+            "playerX": 0,
+            "playerY": 0,
+            "playerZ": 0,
+            "speed": 0,
+            "progress": 0,
+            "lap": 0,
+            "position": 0,
+            "driftActive": false,
+            "driftLevel": 0,
+            "driftCharge": 0,
+            "boost": 0,
+            "jumpHeld": false,
+            "item": "",
+            "itemPending": false,
+            "lookBack": false,
+            "helpOpen": false,
+            "framePolls": 2,
+            "renderCalls": 1
+          },
+          "audioState": "not_created",
+          "controller": {
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "pressed": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "released": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            },
+            "connected": false,
+            "cancelled": false,
+            "players": [
+              {
+                "id": 1,
+                "connected": false,
+                "x": 0,
+                "y": 0,
+                "aimX": 0,
+                "aimY": 0,
+                "a": false,
+                "b": false,
+                "start": false,
+                "select": false,
+                "cancelSeq": 0
+              }
+            ],
+            "source": "",
+            "info": {
+              "url": "http://10.0.2.15:34775/?room=4TFo4ySmLoAIK19PaXpcNrJuIiGQe8QZ",
+              "qr": "data:image/png;base64,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",
+              "addresses": [
+                "10.0.2.15"
+              ],
+              "error": "",
+              "language": "en",
+              "wifiController": {
+                "state": "available",
+                "serviceName": "Ponpoko Kart",
+                "port": 63485,
+                "serviceType": "_puretv._tcp",
+                "version": "1",
+                "error": 0
+              }
+            },
+            "pollCount": 2,
+            "native": true,
+            "inputAvailable": true
+          },
+          "errors": []
+        },
+        "info": {
+          "url": "http://10.0.2.15:34775/?room=4TFo4ySmLoAIK19PaXpcNrJuIiGQe8QZ",
+          "qr": "data:image/png;base64,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",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Ponpoko Kart",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "error": 0
+          }
+        },
+        "page": {
+          "url": "https://game-kit.invalid/tv.html",
+          "width": 960,
+          "height": 540,
+          "scrollWidth": 960,
+          "scrollHeight": 540,
+          "hidden": false,
+          "focused": true,
+          "canvases": [
+            {
+              "width": 1440,
+              "height": 810,
+              "clientWidth": 960,
+              "clientHeight": 540,
+              "visible": true
+            },
+            {
+              "width": 300,
+              "height": 150,
+              "clientWidth": 0,
+              "clientHeight": 0,
+              "visible": false
+            }
+          ],
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 777,
+                  "top": 258.4609375,
+                  "right": 947,
+                  "bottom": 531.4609375
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "windowFocused": true,
+        "activityState": "resumed",
+        "targetPackage": "com.ecojust.joystick.ponpokokart"
+      },
+      "error": "TimeoutError('timed out')"
+    }
+  ],
+  "captures": [],
+  "installationSetup": {
+    "mode": "fresh-install-app-data",
+    "targetPackage": "com.ecojust.joystick.ponpokokart",
+    "method": "pm clear",
+    "phase": "before-target-launch",
+    "status": "passed",
+    "stdout": "Success"
+  },
+  "observerTransportEvents": [
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152050.509489,
+      "endedAt": 1795152050.5356944,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152050.6561062,
+      "endedAt": 1795152050.6579075,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 1,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152050.7784886,
+      "endedAt": 1795152050.7826357,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152050.9032905,
+      "endedAt": 1795152050.9055772,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152051.0260935,
+      "endedAt": 1795152051.038411,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 2,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152051.1589558,
+      "endedAt": 1795152051.1618297,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152051.2831075,
+      "endedAt": 1795152051.293808,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152051.414384,
+      "endedAt": 1795152051.4170668,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 3,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152051.5376086,
+      "endedAt": 1795152051.5422332,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152051.6628346,
+      "endedAt": 1795152051.6654441,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152051.7901204,
+      "endedAt": 1795152051.7964318,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 4,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 3,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152051.917746,
+      "endedAt": 1795152051.926685,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": false
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152052.049153,
+      "endedAt": 1795152052.0525637,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152052.175423,
+      "endedAt": 1795152052.216205,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 5,
+      "operation": "GET /snapshot",
+      "status": "transport-recovered",
+      "attempt": 3,
+      "priorTransportFailures": 2,
+      "startedAt": 1795152052.3368597,
+      "endedAt": 1795152052.7382398,
+      "responseFromNewGet": true
+    },
+    {
+      "snapshotCall": 8,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 45,
+      "requestTimeoutSeconds": 15,
+      "startedAt": 1795152053.1535647,
+      "endedAt": 1795152063.1691637,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 8,
+      "operation": "GET /snapshot",
+      "status": "transport-recovered",
+      "attempt": 2,
+      "priorTransportFailures": 1,
+      "startedAt": 1795152063.289854,
+      "endedAt": 1795152071.3585331,
+      "responseFromNewGet": true
+    },
+    {
+      "snapshotCall": 10,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 1,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 14.913439280000034,
+      "requestTimeoutSeconds": 14.913435419000052,
+      "startedAt": 1795152076.5600843,
+      "endedAt": 1795152086.7070653,
+      "errorType": "RemoteDisconnected",
+      "error": "Remote end closed connection without response",
+      "retryScheduled": true
+    },
+    {
+      "snapshotCall": 10,
+      "operation": "GET /snapshot",
+      "status": "transport-failed",
+      "attempt": 2,
+      "maximumAttempts": 3,
+      "maximumWallSeconds": 14.913439280000034,
+      "requestTimeoutSeconds": 4.6454662900000585,
+      "startedAt": 1795152086.8280547,
+      "endedAt": 1795152091.4792788,
+      "errorType": "TimeoutError",
+      "error": "timed out",
+      "retryScheduled": false
+    }
+  ],
+  "adbForwards": {
+    "observer": 34649,
+    "controller": 37123
+  },
+  "controllerService": {
+    "state": "available",
+    "serviceName": "Ponpoko Kart",
+    "port": 63485,
+    "serviceType": "_puretv._tcp",
+    "version": "1",
+    "error": 0
+  },
+  "targetPid": "2727",
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1000, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 553, in setup\n    self.wait(lambda s: self.visible_ids(s) == [client.identity], label='single-controller')\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 333, in wait\n    raise AssertionError(label + ' timed out; last snapshot retained')\nAssertionError: single-controller timed out; last snapshot retained\n",
+  "wire": {
+    "sdkMessages": 20,
+    "acceptedSdkMessages": 20,
+    "rejectedSdkMessages": 0,
+    "hostReplies": 19,
+    "matchingAcks": 19,
+    "missingAcks": [
+      {
+        "connection": 1,
+        "seq": 20
+      }
+    ],
+    "expectedBusyIds": [],
+    "rejectedConnections": [],
+    "unexpectedReplies": [],
+    "duplicateAcks": [],
+    "keysSent": [
+      "A",
+      "B",
+      "DOWN",
+      "LEFT",
+      "RIGHT",
+      "START",
+      "UP",
+      "X",
+      "Y"
+    ],
+    "errors": []
+  },
+  "video": {
+    "path": "controller-gameplay.mp4",
+    "bytes": 1356699,
+    "sha256": "7a95c07072654c09bd12c4e63ee1923748b548e1f822b623b2d04567abc46a1f",
+    "scope": "Actual screen recording of SDK-driven acceptance; no model or clock changes"
+  },
+  "finishedAt": 1795152093.4990687
+}
