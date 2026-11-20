@@ -93,7 +93,7 @@ def installed(pkg):
 
 def device(rows):
     report={'androidApi':command('adb','shell','getprop','ro.build.version.sdk'),'image':command('adb','shell','getprop','ro.build.fingerprint'),'physicalDevice':False,'games':{}}
-    assert len(rows)==len({r['package'] for r in rows})==14
+    assert len(rows)==len({r['package'] for r in rows})==1 and rows[0]['game']=='emberbrood'
     for row in rows:
         pkg=row['package']; slug=row['game']
         item=report['games'][slug]={k:v for k,v in row.items() if k not in ['oldPath','newPath']}

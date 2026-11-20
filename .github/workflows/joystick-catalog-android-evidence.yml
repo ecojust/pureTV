@@ -23,59 +23,14 @@ jobs:
       - uses: android-actions/setup-android@v3
         with:
           packages: platform-tools build-tools;34.0.0
-      - name: Retrieve original signed artifact 14640280629
+      - name: Retrieve original signed Emberbrood 0.1.2 artifact
         uses: actions/download-artifact@v4
         with:
-          artifact-ids: 14640280629
-          run-id: 44757260595
+          artifact-ids: 14642970736
+          run-id: 44762298740
           repository: ecojust/pureTV
           github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/signed-upgrades/44757260595
-          merge-multiple: true
-      - name: Retrieve original signed artifact 14639688129
-        uses: actions/download-artifact@v4
-        with:
-          artifact-ids: 14639688129
-          run-id: 44758693480
-          repository: ecojust/pureTV
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/signed-upgrades/44758693480
-          merge-multiple: true
-      - name: Retrieve original signed artifact 14639668138
-        uses: actions/download-artifact@v4
-        with:
-          artifact-ids: 14639668138
-          run-id: 44758693540
-          repository: ecojust/pureTV
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/signed-upgrades/44758693540
-          merge-multiple: true
-      - name: Retrieve original signed artifact 14640177463
-        uses: actions/download-artifact@v4
-        with:
-          artifact-ids: 14640177463
-          run-id: 44758693772
-          repository: ecojust/pureTV
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/signed-upgrades/44758693772
-          merge-multiple: true
-      - name: Retrieve original signed artifact 14640587725
-        uses: actions/download-artifact@v4
-        with:
-          artifact-ids: 14640587725
-          run-id: 44758694102
-          repository: ecojust/pureTV
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/signed-upgrades/44758694102
-          merge-multiple: true
-      - name: Retrieve original signed artifact 14640222574
-        uses: actions/download-artifact@v4
-        with:
-          artifact-ids: 14640222574
-          run-id: 44758694225
-          repository: ecojust/pureTV
-          github-token: ${{ github.token }}
-          path: ${{ runner.temp }}/signed-upgrades/44758694225
+          path: ${{ runner.temp }}/signed-upgrades/44762298740
           merge-multiple: true
       - name: Independently verify both APKs and the original signing run
         run: python3 .github/joystick-upgrade/probe.py prepare
