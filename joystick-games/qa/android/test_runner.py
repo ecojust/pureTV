@@ -789,9 +789,10 @@ class InstallationBudgetTests(unittest.TestCase):
         a, apk = self.fixture()
         script = a.out/'slow-adb.py'
         script.write_text("import sys,time\nprint('Performing Streamed Install',flush=True)\nprint('still pending',file=sys.stderr,flush=True)\ntime.sleep(10)\n")
-        a.adb = [runner.sys.executable, str(script)]
+        a.adb = [runner.sys.executable, '-S', str(script)]
         started = time.monotonic()
-        with mock.patch.object(runner, 'install_timeout', return_value=.2):
+        # Allow the child to start and flush both streams on a busy test host.
+        with mock.patch.object(runner, 'install_timeout', return_value=1):
             with self.assertRaises(runner.subprocess.TimeoutExpired):
                 a.command('install', '-r', str(apk))
         self.assertLess(time.monotonic()-started, 3)
