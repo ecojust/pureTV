@@ -1,0 +1,135 @@
+{"originalNpmTestConfigured":true,"scope":"Configured original tests only; an absent script is recorded, not claimed as tested"}
+
+> puretv-kart-royale@0.1.4 test
+> node --test tests/*.test.mjs
+
+TAP version 13
+# Subtest: independent nine-key controls feed original steering/drift/item pipeline
+ok 1 - independent nine-key controls feed original steering/drift/item pipeline
+  ---
+  duration_ms: 1.994006
+  type: 'test'
+  ...
+# Subtest: cancellation empties drift minimum hold and item re-arm buffer
+ok 2 - cancellation empties drift minimum hold and item re-arm buffer
+  ---
+  duration_ms: 0.267067
+  type: 'test'
+  ...
+# Subtest: cancelling original Kart drift forfeits charge without paying a boost
+ok 3 - cancelling original Kart drift forfeits charge without paying a boost
+  ---
+  duration_ms: 0.200031
+  type: 'test'
+  ...
+# Subtest: throttle cannot resume a paused original race; explicit resume can
+ok 4 - throttle cannot resume a paused original race; explicit resume can
+  ---
+  duration_ms: 0.482835
+  type: 'test'
+  ...
+# Subtest: Wi-Fi seat isolates touch AUTO gas; cancellation clears touch pointer latches
+ok 5 - Wi-Fi seat isolates touch AUTO gas; cancellation clears touch pointer latches
+  ---
+  duration_ms: 0.370839
+  type: 'test'
+  ...
+# Subtest: held standard gamepad confirm/pause cannot become fresh after cancellation
+ok 6 - held standard gamepad confirm/pause cannot become fresh after cancellation
+  ---
+  duration_ms: 0.587275
+  type: 'test'
+  ...
+# Subtest: cancelled keyboard OS repeat cannot auto-confirm; fresh keydown still works
+ok 7 - cancelled keyboard OS repeat cannot auto-confirm; fresh keydown still works
+  ---
+  duration_ms: 0.259066
+  type: 'test'
+  ...
+# Subtest: desktop settings save before optional touch DOM is mounted
+ok 8 - desktop settings save before optional touch DOM is mounted
+  ---
+  duration_ms: 0.666796
+  type: 'test'
+  ...
+# Subtest: menu steps reject all twelve original stale Controls snapshots
+ok 9 - menu steps reject all twelve original stale Controls snapshots
+  ---
+  duration_ms: 34.834352
+  type: 'test'
+  ...
+# Subtest: software rendering uses the low preset and respects an explicit quality selection
+ok 10 - software rendering uses the low preset and respects an explicit quality selection
+  ---
+  duration_ms: 0.803699
+  type: 'test'
+  ...
+# Subtest: hardware keeps the original desktop and touch tiers
+ok 11 - hardware keeps the original desktop and touch tiers
+  ---
+  duration_ms: 0.31081
+  type: 'test'
+  ...
+# Subtest: only the software low tier uses direct rendering without a whole-scene prewarm
+ok 12 - only the software low tier uses direct rendering without a whole-scene prewarm
+  ---
+  duration_ms: 0.184476
+  type: 'test'
+  ...
+# Subtest: hardware builds the complete authored scene before rendering
+ok 13 - hardware builds the complete authored scene before rendering
+  ---
+  duration_ms: 2.11855
+  type: 'test'
+  ...
+# Subtest: software builds and reveals the same objects once across stops and resumes
+ok 14 - software builds and reveals the same objects once across stops and resumes
+  ---
+  duration_ms: 0.612704
+  type: 'test'
+  ...
+# Subtest: production snapshot identifies Kart Royale and reads the current renderer context
+ok 15 - production snapshot identifies Kart Royale and reads the current renderer context
+  ---
+  duration_ms: 8.702005
+  type: 'test'
+  ...
+# Subtest: renderer identity is sampled once per live context and refreshed after restore or replacement
+ok 16 - renderer identity is sampled once per live context and refreshed after restore or replacement
+  ---
+  duration_ms: 2.703995
+  type: 'test'
+  ...
+# Subtest: missing, lost or unknown contexts cannot report an available WebGL renderer
+ok 17 - missing, lost or unknown contexts cannot report an available WebGL renderer
+  ---
+  duration_ms: 17.956944
+  type: 'test'
+  ...
+# Subtest: snapshot uses peek pollCount without consuming another native frame
+ok 18 - snapshot uses peek pollCount without consuming another native frame
+  ---
+  duration_ms: 1.673126
+  type: 'test'
+  ...
+# Subtest: racing, paused and results observations do not advance or mutate the game
+ok 19 - racing, paused and results observations do not advance or mutate the game
+  ---
+  duration_ms: 4.489433
+  type: 'test'
+  ...
+# Subtest: the software surface keeps original paint, texture, geometry and later quality switches
+ok 20 - the software surface keeps original paint, texture, geometry and later quality switches
+  ---
+  duration_ms: 2.758655
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 633.882497
