@@ -80,12 +80,27 @@
     "runtimeChecks": "https://github.com/ecojust/pureTV/blob/2274f9d3876c1a5e70ef6a17c6ce90e723f0fc9b/resource/game-kit/qa/controller-browser-2026-11-20/used-car/runtime-checks.json"
   },
   "nativePhoneDialog": {
-    "status": "partial",
+    "status": "passed",
     "apkSha256": "1b0879c9ae8ac10188ea34e9694dbc9527048ee76e10d735a61aa24da53bd9e7",
-    "runtimeRun": "https://github.com/ecojust/pureTV/actions/runs/44778989692",
-    "runtimeReport": "https://github.com/ecojust/pureTV/blob/8be438acb025e421dd43e08cdafdb1e5ab36f117/phone-dialog.json",
-    "raceScreenshot": "https://github.com/ecojust/pureTV/blob/8be438acb025e421dd43e08cdafdb1e5ab36f117/original-race.png",
-    "observed": "The original mobile page joined the on-device Java room, started and drove the car. Android BACK paused the race and cleared the visible player slots.",
-    "pending": "Native dialog cancellation and subsequent race progress. The first test stopped before tapping Cancel because the WebView kept DOM focus while its Android window displayed the system dialog."
+    "environment": "Android TV API 36 emulator with a mobile Chromium browser connected to the installed game’s original Java HTTP/WebSocket room.",
+    "runtimeRun": "https://github.com/ecojust/pureTV/actions/runs/44780257743",
+    "runtimeReport": "https://github.com/ecojust/pureTV/blob/964036b6e0526beaaa8650bc0f362e5b50c6cbb4/phone-dialog.json",
+    "apkAndObserverIdentity": "https://github.com/ecojust/pureTV/blob/964036b6e0526beaaa8650bc0f362e5b50c6cbb4/identity.json",
+    "gameScreenshot": "https://github.com/ecojust/pureTV/blob/964036b6e0526beaaa8650bc0f362e5b50c6cbb4/original-race.png",
+    "activeDialogScreenshot": "https://github.com/ecojust/pureTV/blob/964036b6e0526beaaa8650bc0f362e5b50c6cbb4/active-dialog.png",
+    "resumedRaceScreenshot": "https://github.com/ecojust/pureTV/blob/964036b6e0526beaaa8650bc0f362e5b50c6cbb4/resumed-race.png",
+    "manualDialogScreenshot": "https://github.com/ecojust/pureTV/blob/964036b6e0526beaaa8650bc0f362e5b50c6cbb4/manual-dialog.png",
+    "reportSha256": "83bff2f994f3df7e8e5f73b18ff7674737c9ac2a9b9ec7aa3c5a7fe5c91d7e85",
+    "observedStates": 12,
+    "phoneInputFrames": 93,
+    "distinctPhoneStartPresses": 3,
+    "checked": [
+      "Mobile START and throttle begin the race and move the original car.",
+      "Tapping Keep playing in the native Android exit dialog returns the same phone to an active race with no extra START and an advancing race clock.",
+      "The same native Cancel leaves a manually paused race stationary until a fresh phone START."
+    ],
+    "modelWrites": false,
+    "syntheticGameFrames": false,
+    "physicalDeviceTested": false
   }
 }

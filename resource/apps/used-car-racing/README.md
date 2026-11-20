@@ -8,6 +8,8 @@
 
 手机驾车时，在电视上取消退出对话框，游戏会等到读到手机的当前连接状态后继续比赛。主动暂停的比赛会保持暂停，使用 pureTV Wi-Fi 手柄时，重新按 START 可继续。
 
+原版手机网页已在 Android TV 上实际驾车。退出窗口内选择「继续游戏」后比赛继续，原先主动暂停的比赛则保持暂停，直到玩家再次按 START。[Android 手机与退出窗口实测](https://github.com/ecojust/pureTV/blob/964036b6e0526beaaa8650bc0f362e5b50c6cbb4/phone-dialog.json)
+
 签名 APK 已在 Android TV 上从 0.1.6 覆盖安装。驾驶、暂停、重连和两个手柄席位共通过 9 项检查，107 条 SDK 消息都收到了同序号确认。[游戏截图](docs/releases/0.1.7/gameplay.png) · [玩法录像](docs/releases/0.1.7/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.1.7/verification.json)
 
 ## 历史版本 0.1.6 · 手柄与手机连接

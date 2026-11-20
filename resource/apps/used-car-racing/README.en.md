@@ -8,6 +8,8 @@
 
 Cancel the TV’s exit dialog to return to a race started with a phone. The game waits for the phone’s current room status before continuing. A race you paused manually stays paused. A pureTV Wi-Fi controller resumes with a fresh START press.
 
+The original phone page drove the car on Android TV. Selecting **Keep playing** in the TV’s exit dialog continued the race, while a race that had been paused manually stayed paused until the next START. [Android phone and dialog test](https://github.com/ecojust/pureTV/blob/964036b6e0526beaaa8650bc0f362e5b50c6cbb4/phone-dialog.json)
+
 The signed APK upgraded 0.1.6 in place on Android TV. Driving, pause, reconnect and two controller seats passed all 9 checks with 107 matching SDK acknowledgements. [Game screenshot](docs/releases/0.1.7/gameplay.png) · [Gameplay recording](docs/releases/0.1.7/gameplay.mp4?raw=1) · [Verification](docs/releases/0.1.7/verification.json)
 
 ## Earlier release 0.1.6 · Controllers and phone pairing
