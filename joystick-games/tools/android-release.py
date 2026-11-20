@@ -49,6 +49,11 @@ def identity(apk, tools, slug, signed):
     assert info['packageName'] == meta['packageName'] and info['versionName'] == meta['version'] and info['versionCode'] == meta['versionCode']
     assert 0 < info['bytes'] < build.limits(slug)['maxApkBytes']
     assert info['certificateSha256'] == (pin() if signed else None)
+    badging = subprocess.check_output([str(tools / 'aapt'), 'dump', 'badging', str(apk)], text=True)
+    minimum = re.findall(r"^sdkVersion:'(\d+)'$", badging, re.M)
+    target = re.findall(r"^targetSdkVersion:'(\d+)'$", badging, re.M)
+    assert minimum == ['26'] and target == [str(build.target_sdk(slug))], 'APK SDK levels differ from the selected build policy'
+    info.update(minSdk=26, targetSdk=int(target[0]))
     return info
 
 
@@ -68,6 +73,7 @@ def validate_unsigned(directory, slug, tools, commit):
     meta = build.metadata(slug)
     assert all(receipt[key] == meta[key] for key in ('packageName', 'version', 'versionCode'))
     assert receipt['minSdk'] == 26
+    assert receipt['targetSdk'] == build.target_sdk(slug)
     assert inputs == build.sources(slug)
     build.assert_committed(inputs, commit)
     assert receipt['sourceInputsSha256'] == build.sha(json.dumps(inputs, sort_keys=True, separators=(',', ':')).encode())
