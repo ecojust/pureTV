@@ -1,4 +1,4 @@
-name: Independently inspect the original nine racing APKs
+name: Archive eight independently verified, publicly downloadable racing APKs
 on: workflow_dispatch
 permissions:
   actions: read
@@ -81,14 +81,23 @@ jobs:
             boards.append(dict(game=slug,versionName=ver,application=application,observer=instrument,sourceInputs=len(r['sourceInputs']),originalSigningReceipt=record(sr),originalObserverSigningReceipt=record(obs)))
           out=Path('receipt-export');out.mkdir()
           report=dict(source=os.environ['SOURCE'],buildRunId=int(os.environ['RUN']),attempt=1,originalSignedArtifactId=int(os.environ['ARTIFACT']),originalSignedArtifactName='joystick-android-signed',originalSignedArchiveDigest=os.environ['ARCHIVE_DIGEST'],originalSignedArtifactURL='https://github.com/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+os.environ['RUN']+'/artifacts/'+os.environ['ARTIFACT'],verifiedGames=boards)
+          import shutil
+          for board in boards:
+              item=board['application'];apk=Path('original')/item['pathInOriginalArchive']
+              if item['bytes'] >= 100_000_000:
+                  assert board['game']=='backroad-rally'
+                  continue
+              dest=out/item['pathInOriginalArchive'];dest.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(apk,dest)
+              assert all(record(dest)[k]==item[k] for k in ('bytes','sha256'))
           (out/'signed-originals.json').write_text(json.dumps(report,indent=2)+'\n')
           print(json.dumps(report,indent=2))
           PY
-          branch="build-assets/racing-nine-signed-receipts-$RUN-$GITHUB_RUN_ID"
+          branch="build-assets/racing-nine-original-downloads-$RUN-$GITHUB_RUN_ID"
           gh auth setup-git
           git -C receipt-export init -q --initial-branch="$branch"
           git -C receipt-export config user.name 'github-actions[bot]'
           git -C receipt-export config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git -C receipt-export add signed-originals.json
+          git -C receipt-export add signed-originals.json packages
           git -C receipt-export commit -qm 'Independent receipt for original signed racing game packages'
           git -C receipt-export push "https://github.com/$GITHUB_REPOSITORY.git" "--force-with-lease=refs/heads/$branch:" "HEAD:refs/heads/$branch"
