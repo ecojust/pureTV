@@ -1,5 +1,7 @@
 # Sugarplum Drop · pureTV
 
+[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/sugarplum-drop-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+
 0.1.0 下载：[Android TV APK](sugarplum-drop-0.1.0.apk) · [macOS 通用 DMG](SugarplumDrop-0.1.0-macos-universal.dmg) · [macOS 通用 ZIP](SugarplumDrop-0.1.0-macos-universal.zip) · [Windows x64 安装 EXE](SugarplumDrop-0.1.0-windows-x64-setup.exe) · [Windows x64 便携 ZIP](SugarplumDrop-0.1.0-windows-x64.zip)。[SHA256 校验](SHA256SUMS.txt)。
 
 Android 需要 Android 8.0（API 26）及以上和可用的 WebView；游戏使用 Canvas 2D。macOS 需要 11.0 及以上，单包支持 Apple Silicon 与 Intel。Mac 包采用 ad-hoc 签名，未经过 Apple 公证；首次启动按系统安全提示允许打开，手柄联网时允许本地网络访问。

@@ -1,5 +1,7 @@
 # STARSLING · 星际弹弓
 
+[下载当前 Android TV 手柄版 0.1.2](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/starsling-0.1.2.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+
 0.1.1 含后台与断线时暂停音频的修正。
 
 每个星区给定一组小行星。先调整弹弓仰角和力度，再发射小行星拆除空间站，清除机器人以解锁后续星区。岩石加速、重铁下砸、冰块分裂和炸弹引爆沿用原作的碰撞与伤害规则。

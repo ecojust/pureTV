@@ -1,5 +1,7 @@
 # 墨绘地图集 · Atlas of Ink
 
+[下载当前 Android TV 手柄版 0.1.2](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/atlas-of-ink-0.1.2.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+
 为各类客户探索未知地形，画出一季的地图。地图、羊皮纸与页面装饰由原版 Canvas 2D 程序离线绘制。
 
 方向键移动羽毛笔。按住 A 集中感知，松开把地形绘到羊皮纸上。B 重读委托，X 打开交图确认。每个客户按自己的用途评价地图。 START 从标题开始、暂停或继续。Wi-Fi 中断或应用失焦后，按 START 继续。原版键盘及触控操作也可用。

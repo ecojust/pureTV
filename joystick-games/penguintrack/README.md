@@ -1,5 +1,7 @@
 # Penguintrack · 雪地竞速
 
+[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/penguintrack-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+
 基于 [SilverNinja71/Penguin-Track](https://github.com/SilverNinja71/Penguin-Track/tree/0369367ff5aa76902bdf0736e4644efbbd3f1d82) 的 pureTV 手柄适配。保留原作者的雪地赛车物理、画面和关卡；不是 pureTV 原创游戏。
 
 ## Android TV 下载

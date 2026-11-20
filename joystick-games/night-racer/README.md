@@ -1,5 +1,7 @@
 # Night Racer · 霓虹街区
 
+[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/night-racer-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+
 来自 [zhuqipaopao-maker/night-racer-public](https://github.com/zhuqipaopao-maker/night-racer-public) 的非官方 pureTV 手柄适配，固定上游 `3a432cd3bf059dbaaa00d700f0f83e0e5313d40b`。保留雨夜街道、山路、海岸、长安等原场景，以及竞速／计时、漂移氮气、车库改装、金币任务和本地幽灵。
 
 已提供下方 Android TV、Windows 和 macOS 安装包，各平台要求与验证范围分别列明。画面比较与来源见[赛车评审](../../docs/racing-nine/reviews/driving/comparison.json)，浏览器实际输入与画面检查见[验证记录](docs/VERIFICATION.md)。

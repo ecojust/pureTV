@@ -1,5 +1,7 @@
 # Kart Royale · 海湾卡丁车
 
+[下载当前 Android TV 手柄版 0.1.5](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/kart-royale-0.1.5.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+
 基于 [ryancampbell/kart-royale](https://github.com/ryancampbell/kart-royale/tree/036c0efb025f5ecf8fc31c405e9d818c61e03e21) 的 pureTV 手柄版。固定原源为 `036c0efb025f5ecf8fc31c405e9d818c61e03e21`，保留 Sunset Bay Circuit、八辆卡丁车、AI 对手、道具、原轮胎/悬架物理和漂移奖励规则。网上后来替换的 homie 多人版本不属于本次移植。
 
 ## Android TV

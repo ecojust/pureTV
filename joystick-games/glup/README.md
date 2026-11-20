@@ -1,5 +1,7 @@
 # GLUP · 沼泽猫鱼 · pureTV
 
+[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/glup-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+
 0.1.0 安装包：[Android TV APK](glup-0.1.0.apk) · [macOS DMG](Glup-0.1.0-macos-universal.dmg) · [macOS ZIP](Glup-0.1.0-macos-universal.zip) · [SHA256](SHA256SUMS.txt)。
 
 Android 包最低 Android 8.0（API 26），需要可正常运行现代网页的 WebView；本游戏使用 DOM/Canvas 2D，不要求 WebGL2。macOS 为 Apple Silicon / Intel 通用包，声明最低系统 11.0；使用 ad-hoc 签名，未做 Apple 公证。下载 DMG 后将 App 拖到“应用程序”；首次运行按系统提示允许本地网络，供 pureTV 手柄发现并连接。

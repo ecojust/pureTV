@@ -1,5 +1,7 @@
 # pureTV 手柄游戏
 
+[按类型浏览当前游戏与下载](../README.md#games) · [电视扫码和电脑游玩指南](../docs/guide/README.md#安装游戏与连接手柄)
+
 这里集中放置为 pureTV Wi-Fi 手柄适配的游戏、Android TV APK 和 macOS 桌面安装包。首批两款来自 [riba2534/claude-opus-5-5-demo](https://github.com/riba2534/claude-opus-5-5-demo)，固定上游提交 `54adc1fb64155f9dd7c1c90ecae7b8185ac540b8`。
 
 - [运输船 CF](cf-transport-ship/)：保留运输船地图、机器人队伍对战、枪械和换装，增加九键移动、瞄准与射击。
