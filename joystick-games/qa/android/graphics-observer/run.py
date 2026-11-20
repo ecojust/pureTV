@@ -202,7 +202,8 @@ class Diagnosis:
         self.report = {'schemaVersion': 1, 'status': 'running', 'game': 'backroad-rally', 'mode': 'normal',
                        'scope': 'Graphics diagnosis only: original SDK menu subset and read-only graphics/console',
                        'formalAcceptance': False, 'visualPass': None, 'manualPixelReviewRequired': True,
-                       'modelWrites': False, 'clockOverrides': False, 'rendererChanges': False, 'existingGlCapabilitiesReadAtCheckpoints': True, 'canvasReadbackAfterRealFrame': True,
+                       'modelWrites': False, 'clockOverrides': False, 'rendererChanges': False, 'temporarilyWrapsOriginalDrawCallsForReadOnlyGravelBindings': True,
+                       'extraDraws': 0, 'extraBufferBindings': 0, 'existingGlCapabilitiesReadAtCheckpoints': True, 'canvasReadbackAfterRealFrame': True,
                        'targetApkBuilt': False, 'targetApkChanged': False, 'originalTarget': ORIGINAL,
                        'physicalTvTested': False, 'physicalPhoneTested': False, 'steps': [], 'captures': [],
                        'notTested': ['career/save', 'driving-input acceptance', 'pause/resume', 'reconnect', 'occupied port', 'storage restart']}

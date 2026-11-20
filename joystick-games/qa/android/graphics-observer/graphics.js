@@ -49,6 +49,98 @@
       centerPoint:{x:x,y:y},centerStack:stack,
       contextRead:false,contextReason:'No existing context reference is exposed. getContext is deliberately not called.'};
   });
+  // Observe existing draws for two animation callbacks on this context only. All
+  // original methods receive the same arguments. No extra draw or GL bind is issued.
+  function observeGravelBindings(gl) {
+    var marker=Symbol.for('puretv.temporaryGravelDrawObservation');
+    if (gl[marker]) return;
+    Object.defineProperty(gl,marker,{value:true,configurable:true});
+    var original = {}, current = gl.getParameter(gl.CURRENT_PROGRAM), programs = new Set(), drawn = new Set();
+    var calls = 0, stopped = false, timer;
+    function wrap(name, action) {
+      var previous = gl[name], own = Object.getOwnPropertyDescriptor(gl, name);
+      if (typeof previous !== 'function') return;
+      original[name] = own;
+      gl[name] = function () {
+        var result = previous.apply(this, arguments);
+        try { action(arguments); } catch (error) { finish('observation-error', String(error)); }
+        return result;
+      };
+    }
+    function finish(reason, error) {
+      if (stopped) return;
+      stopped = true;
+      if (timer !== undefined) clearTimeout(timer);
+      Object.keys(original).forEach(function (name) {
+        if (original[name]) Object.defineProperty(gl, name, original[name]);
+        else delete gl[name];
+      });
+      delete gl[marker];
+      console.info('BackroadGravelBindingEnd ' + JSON.stringify({reason:reason, error:error||null, originalDraws:calls,
+        seenPrograms:programs.size, matchedPrograms:drawn.size, restored:true, extraDraws:0, extraBindings:0}));
+    }
+    function floats(buffer, offset, count) {
+      if (!buffer) return null;
+      var targets = [[gl.ARRAY_BUFFER,gl.ARRAY_BUFFER_BINDING],[gl.UNIFORM_BUFFER,gl.UNIFORM_BUFFER_BINDING],
+        [gl.COPY_READ_BUFFER,gl.COPY_READ_BUFFER_BINDING],[gl.COPY_WRITE_BUFFER,gl.COPY_WRITE_BUFFER_BINDING]];
+      for (var pair of targets) {
+        if (gl.getParameter(pair[1]) !== buffer) continue;
+        if (offset < 0 || offset + count*4 > gl.getBufferParameter(pair[0], gl.BUFFER_SIZE)) return null;
+        var value = new Float32Array(count);
+        gl.getBufferSubData(pair[0], offset, value);
+        return Array.from(value);
+      }
+      return null;
+    }
+    function observe() {
+      calls++;
+      if (calls > 1024 || programs.size >= 96) { finish('draw-limit'); return; }
+      if (!current || programs.has(current)) return;
+      programs.add(current);
+      var shaders = gl.getAttachedShaders(current) || [];
+      var gravel = shaders.some(function (shader) {
+        if (gl.getShaderParameter(shader,gl.SHADER_TYPE) !== gl.FRAGMENT_SHADER) return false;
+        return gl.getShaderSource(shader).split('\n').some(function (line) {
+          return ['12.92','0.055','1.055','2.4'].every(function (term) { return line.indexOf(term) !== -1; });
+        });
+      });
+      if (!gravel) return;
+      drawn.add(current);
+      var loc=gl.getAttribLocation(current,'color'), color=null, objectTint=null;
+      if (loc >= 0) {
+        var offset=gl.getVertexAttribOffset(loc,gl.VERTEX_ATTRIB_ARRAY_POINTER);
+        var buffer=gl.getVertexAttrib(loc,gl.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING);
+        var type=gl.getVertexAttrib(loc,gl.VERTEX_ATTRIB_ARRAY_TYPE);
+        color={location:loc,enabled:gl.getVertexAttrib(loc,gl.VERTEX_ATTRIB_ARRAY_ENABLED),
+          size:gl.getVertexAttrib(loc,gl.VERTEX_ATTRIB_ARRAY_SIZE),type:type,normalized:gl.getVertexAttrib(loc,gl.VERTEX_ATTRIB_ARRAY_NORMALIZED),
+          stride:gl.getVertexAttrib(loc,gl.VERTEX_ATTRIB_ARRAY_STRIDE),offset:offset,bufferPresent:!!buffer,
+          firstRGB:type===gl.FLOAT?floats(buffer,offset,3):null};
+      }
+      var blocks = [];
+      for(var i=0;i<Math.min(8,gl.getProgramParameter(current,gl.ACTIVE_UNIFORM_BLOCKS));i++) {
+        var name=gl.getActiveUniformBlockName(current,i);
+        var binding=gl.getActiveUniformBlockParameter(current,i,gl.UNIFORM_BLOCK_BINDING);
+        var b=gl.getIndexedParameter(gl.UNIFORM_BUFFER_BINDING,binding);
+        blocks.push({name:name,binding:binding,bufferPresent:!!b,bytes:gl.getActiveUniformBlockParameter(current,i,gl.UNIFORM_BLOCK_DATA_SIZE)});
+        if(name!=='object')continue;
+        var indices=gl.getActiveUniformBlockParameter(current,i,gl.UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES);
+        var offsets=gl.getActiveUniforms(current,indices,gl.UNIFORM_OFFSET);
+        for(var k=0;k<Math.min(128,indices.length);k++) {
+          var info=gl.getActiveUniform(current,indices[k]);
+          if(info.name!=='nodeUniform0')continue;
+          var start=gl.getIndexedParameter(gl.UNIFORM_BUFFER_START,binding) || 0;
+          objectTint={name:info.name,offset:offsets[k],type:info.type,start:start,currentBytes:floats(b,start+offsets[k],4)};
+        }
+      }
+      console.info('BackroadGravelBinding ' + JSON.stringify({originalDraw:calls,match:drawn.size,color:color,
+        activeUniformBlocks:blocks,objectTint:objectTint,source:'linked fragment sRGB transfer on the original Finnish Gravel'}));
+    }
+    wrap('useProgram',function(args) { current=args[0]; });
+    ['drawElements','drawElementsInstanced','drawArrays','drawArraysInstanced'].forEach(function(name) { wrap(name,observe); });
+    timer=setTimeout(function(){finish('wall-limit');},5000);
+    requestAnimationFrame(function(){requestAnimationFrame(function(){finish('two-animation-callbacks');});});
+  }
+
   if (typeof backroadGlObservation !== 'undefined' && backroadGlObservation) {
     var owned = document.querySelectorAll('#app > canvas');
     var previous = location.href === 'https://game-kit.invalid/tv.html'
@@ -119,6 +211,11 @@
     if (!gl) return {contextRead:false, reason:'Existing WebGL2 context unavailable', url:location.href};
     var supported = gl.getSupportedExtensions() || [];
     var debug = gl.getExtension('WEBGL_debug_renderer_info');
+    if (cached.stage === 'playing' && cached.gameplay && cached.gameplay.stageId === 'finland'
+        && cached.gameplay.carId === 'swift' && debug
+        && gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) === 'Android Emulator OpenGL ES Translator (Google SwiftShader)') {
+      observeGravelBindings(gl);
+    }
     var frameHud = document.getElementById('frame-hud');
     var formats = {};
     var renderable = ['RGBA8','DEPTH_COMPONENT24'];

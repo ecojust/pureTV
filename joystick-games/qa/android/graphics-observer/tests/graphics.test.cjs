@@ -60,3 +60,43 @@ frames++;nextCall();
 assert.equal(copyCount,1);assert.equal(logged.framebuffer.read,true);assert.deepEqual(logged.framebuffer.clearColor,[1,0.85,0.66,1]);assert.equal(logged.framebuffer.clearDepth,1);assert.equal(logged.framebuffer.clearStencil,0);assert.equal(logged.framebuffer.distinctVisibleRgb,3);assert.equal(logged.framebuffer.nonzeroRgbAtZeroAlpha,1);assert.equal(logged.framebuffer.distinctRawRgba,5);assert.deepEqual(logged.framebuffer.points[4].rgba,[65,44,2,255]);assert.equal(logged.drawnFrame,4);assert.equal(logged.initialFrame,3);
 assert.equal(logged.alphaNonzeroPixels,3);assert.equal(logged.opaquePixels,2);assert.equal(logged.distinctVisibleRgb,2);
 console.log('Stage canvas sample observes one new frame, excludes transparent colors and deduplicates visible colors');
+
+// A diagnostic forwards each draw once, skips inaccessible buffer bytes, and
+// restores previously inherited WebGL methods after at most two callbacks.
+const helperStart=source.indexOf('  function observeGravelBindings(gl)');
+const helperEnd=source.indexOf('  if (typeof backroadGlObservation',helperStart);
+assert.ok(helperStart>=0 && helperEnd>helperStart);
+const frameQueue=[], bindingMessages=[];
+let rawDraws=0, originalArgs=null, timerCleared=false, bufferReads=0;
+const program={}, shader={}, targetBuffer={};
+const originalMethods={
+  useProgram(){}, drawElements(...args){rawDraws++;originalArgs=args;return 17;},
+  drawElementsInstanced(){}, drawArrays(){}, drawArraysInstanced(){}
+};
+const api=Object.assign(Object.create(originalMethods),{
+  CURRENT_PROGRAM:1,SHADER_TYPE:2,FRAGMENT_SHADER:35632,FLOAT:5126,
+  ARRAY_BUFFER:3,ARRAY_BUFFER_BINDING:4,UNIFORM_BUFFER:5,UNIFORM_BUFFER_BINDING:6,
+  COPY_READ_BUFFER:7,COPY_READ_BUFFER_BINDING:8,COPY_WRITE_BUFFER:9,COPY_WRITE_BUFFER_BINDING:10,
+  VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:11,VERTEX_ATTRIB_ARRAY_TYPE:12,VERTEX_ATTRIB_ARRAY_SIZE:13,
+  VERTEX_ATTRIB_ARRAY_ENABLED:14,VERTEX_ATTRIB_ARRAY_NORMALIZED:15,VERTEX_ATTRIB_ARRAY_STRIDE:16,
+  getParameter(k){return k===1?program:null;}, getAttachedShaders(){return [shader]},
+  getShaderParameter(){return 35632},getShaderSource(){return 'mix(12.92, 0.055, 1.055, 2.4)'},
+  getAttribLocation(){return 0},getVertexAttribOffset(){return 0},getProgramParameter(){return 0},
+  getVertexAttrib(_i,key){return key===11?targetBuffer:key===12?5126:key===13?3:key===14;},
+  getBufferSubData(){bufferReads++;},bindBuffer(){throw Error('must not change bindings');}
+});
+const bctx={gl:api,console:{info:m=>bindingMessages.push(m)},
+  requestAnimationFrame(cb){frameQueue.push(cb);},setTimeout(){return 1;},clearTimeout(){timerCleared=true;}};
+const helper=source.slice(helperStart,helperEnd)+'\n observeGravelBindings(gl)';
+vm.runInNewContext(helper,bctx);
+vm.runInNewContext(helper,bctx);
+assert.equal(frameQueue.length,1);
+assert.equal(api.drawElements(4,120,5123,0),17);
+assert.deepEqual(originalArgs,[4,120,5123,0]);assert.equal(rawDraws,1);
+assert.equal(bufferReads,0);
+assert.equal(JSON.parse(bindingMessages[0].split(' ').slice(1).join(' ')).color.firstRGB,null);
+frameQueue.shift()();frameQueue.shift()();
+assert.equal(api.drawElements,originalMethods.drawElements);assert.equal(timerCleared,true);
+assert.equal(Object.hasOwn(api,'drawElements'),false);
+assert.equal(JSON.parse(bindingMessages.at(-1).split(' ').slice(1).join(' ')).matchedPrograms,1);
+console.log('Original Gravel draw bindings: forwarded once, zero binds, absent bytes retained, all methods restored');
