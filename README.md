@@ -22,6 +22,8 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 [下载电视端 putrtv商城 0.1.1](resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1) · 在电视上浏览、安装和检查应用更新；配合[新版启动器](resource/README.md)可选择位置添加到桌面。
 
+[按玩法浏览 43 款手柄游戏](#手柄游戏专用目录)
+
 ![当前源码的晴空主题，使用模拟设备数据](docs/previews/manager-zh.png)
 
 ## 连接与应用管理
@@ -151,22 +153,131 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 ## 手柄游戏专用目录
 
-[九款赛车游戏下载](joystick-games/README.md#九款赛车游戏下载) · [九款解谜与益智游戏下载](docs/puzzle-nine/README.md#下载安装)
+以下 **43 款**均支持 pureTV Wi-Fi 手柄。所有游戏都有 Android TV 安装包，其中 24 款也提供 macOS 版，19 款也提供 Windows x64 版。点击游戏名或截图可查看玩法和按键，点击平台名可直接下载安装包。
 
-以下 5 款较早推出的手柄游戏均提供 Android TV APK 与 macOS 通用安装包，均支持 pureTV 九键、开始／暂停及完整客户端 ID 显示。保留各自的玩法和画面，来源、操作与验证范围见[目录说明](joystick-games/README.md)。Android 要求 8.0+；运输船 CF 与 QQ 飞车还需要 WebGL2，新增三款使用 Canvas 2D 或 DOM。
+[竞速与体育（13）](#controller-racing) · [动作、角色扮演与探索（2）](#controller-action) · [平台、弹幕与街机（7）](#controller-arcade) · [策略、塔防与卡牌（1）](#controller-strategy) · [解谜与益智（18）](#controller-puzzle) · [经营、沙盒与休闲（1）](#controller-casual) · [单键街机（1）](#controller-one-button)
+
+让手柄与电视或电脑接入同一局域网，打开游戏，按手柄搜索键（GPIO 23）连接。macOS 链接下载 DMG，Windows 链接下载安装版 EXE。各款的便携包和 Intel Mac 验证情况见[赛车版本表](joystick-games/README.md#九款赛车游戏下载)和[解谜版本表](https://github.com/ecojust/pureTV/blob/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/README.md#下载安装)。
+
+<a id="controller-racing"></a>
+
+### 竞速与体育（13）
 
 <table>
 <tr>
-<td width="25%" align="center"><a href="joystick-games/cf-transport-ship/"><img src="joystick-games/cf-transport-ship/thumb.png" alt="运输船 CF" width="240" /><br />运输船 CF</a></td>
-<td width="25%" align="center"><a href="joystick-games/qq-speed/"><img src="joystick-games/qq-speed/thumb.png" alt="QQ 飞车" width="240" /><br />QQ 飞车</a></td>
-<td width="25%" align="center"><a href="joystick-games/sugarplum-drop/"><img src="joystick-games/sugarplum-drop/docs/browser-attempt-3/playing-1280.png" alt="Sugarplum Drop" width="240" /><br />Sugarplum Drop</a></td>
-<td width="25%" align="center"><a href="joystick-games/emberbrood/"><img src="joystick-games/emberbrood/thumb.png" alt="Emberbrood" width="240" /><br />Emberbrood</a></td>
+<td align="center" valign="top"><a href="joystick-games/backroad-rally/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/1e2d4ba2812a5d719e04493bcf5a39ee00e5baf1/evidence/joystick-android-runtime-backroad-rally/backroad-rally-normal/accelerating.png" width="180" alt="Backroad Rally游戏画面"><br>Backroad Rally</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-android-v0.1.2/backroad-rally-0.1.2.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-v0.1.0/BackroadRally-0.1.0-macos-universal.dmg">macOS 预览</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-windows-v0.1.0/BackroadRally-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/ponpoko-kart/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/47bfd89f8a322209807a1054cc5058e1e008bc97/reports/joystick-android-report-runtime-ponpoko-kart/ponpoko-kart-normal/driving-checkpoint.png" width="180" alt="Ponpoko Kart游戏画面"><br>Ponpoko Kart</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/3bf22a01c62439afdc7352e2f7529cc23ea575ad/joystick-games/ponpoko-kart/ponpoko-kart-0.1.5.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/ponpoko-kart/macos/PonpokoKart-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/ponpoko-kart/PonpokoKart-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/night-racer/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/night-racer/docs/android-delivery/original-export/evidence/joystick-android-runtime-night-racer/night-racer-normal/playing.png" width="180" alt="Night Racer游戏画面"><br>Night Racer</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/night-racer/night-racer-0.1.0.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/night-racer/macos/NightRacer-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/night-racer/NightRacer-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/penguintrack/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/penguintrack/docs/android-delivery/original-export/evidence/joystick-android-runtime-penguintrack/penguintrack-normal/playing.png" width="180" alt="Penguintrack游戏画面"><br>Penguintrack</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/penguintrack/penguintrack-0.1.0.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/penguintrack/macos/Penguintrack-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/penguintrack/Penguintrack-0.1.0-windows-x64-setup.exe">Windows</a></td>
 </tr>
 <tr>
-<td width="25%" align="center"><a href="joystick-games/glup/"><img src="joystick-games/glup/thumb.png" alt="GLUP · 沼泽猫鱼" width="240" /><br />GLUP · 沼泽猫鱼</a></td>
-<td width="25%"></td>
-<td width="25%"></td>
-<td width="25%"></td>
+<td align="center" valign="top"><a href="joystick-games/last-track/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/last-track/docs/android-delivery/race-normal.png" width="180" alt="Last Track游戏画面"><br>Last Track</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/last-track/last-track-0.1.0.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/last-track/macos/LastTrack-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/last-track/LastTrack-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/dirt-crown/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/dirt-crown/docs/android-runtime-44608423645/original-export/evidence/joystick-android-runtime-dirt-crown/dirt-crown-normal/playing.png" width="180" alt="Dirt Crown游戏画面"><br>Dirt Crown</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/dirt-crown/dirt-crown-0.1.0.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/dirt-crown/macos/DirtCrown-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/dirt-crown/DirtCrown-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/turbo-kart-rush/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/dee5a42698422aaf0de64c3f1c312e6a102a67c3/reports/joystick-android-report-runtime-turbo-kart-rush/turbo-kart-rush-occupied/playing.png" width="180" alt="Turbo Kart Rush游戏画面"><br>Turbo Kart Rush</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/turbo-kart-rush/turbo-kart-rush-0.1.1.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/turbo-kart-rush/macos/TurboKartRush-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/turbo-kart-rush/windows/TurboKartRush-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/kart-rush/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/624f79b3e9a439ea07ec204a564fbf6d21a7462b/joystick-games/kart-rush/docs/android-attempt-2/original/reports/joystick-android-report-runtime-kart-rush/kart-rush-normal/playing.png" width="180" alt="Kart Rush游戏画面"><br>Kart Rush</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/kart-rush/kart-rush-0.1.0.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/kart-rush/macos/KartRush-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/kart-rush/KartRush-0.1.0-windows-x64-setup.exe">Windows</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="joystick-games/kart-royale/"><img src="https://raw.githubusercontent.com/ecojust/pureTV/f42bad392bf2444cfe4573653805d83f2f8a6a90/evidence/joystick-android-runtime-kart-royale/kart-royale-occupied/driving-checkpoint.png" width="180" alt="Kart Royale游戏画面"><br>Kart Royale</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/36b91f81533f10ff5d37ec091c3701913d4a42e4/joystick-games/kart-royale/kart-royale-0.1.4.apk">APK</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/kart-royale/macos/KartRoyale-0.1.0-macos-universal.dmg">macOS</a> · <a href="https://raw.githubusercontent.com/ecojust/pureTV/515250931fa4203132ab658d81567682184651de/joystick-games/kart-royale/windows/KartRoyale-0.1.1-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/qq-speed/"><img src="joystick-games/qq-speed/thumb.png" width="180" alt="QQ 飞车游戏画面"><br>QQ 飞车</a><br><a href="joystick-games/qq-speed/qq-speed-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/qq-speed/macos/QQSpeed-0.1.0-macos-universal.dmg?raw=1">macOS</a></td>
+<td align="center" valign="top"><a href="resource/apps/neon-rush/"><img src="resource/apps/neon-rush/thumb.png" width="180" alt="霓虹飞车游戏画面"><br>霓虹飞车</a><br><a href="resource/apps/neon-rush/neon-rush-0.1.3.apk?raw=1">APK</a> · <a href="resource/apps/neon-rush/macos/NeonRush-0.1.4-macos-universal.dmg?raw=1">macOS</a></td>
+<td align="center" valign="top"><a href="resource/apps/coast-kart/"><img src="resource/apps/coast-kart/thumb.png" width="180" alt="Coast Kart TV游戏画面"><br>Coast Kart TV</a><br><a href="resource/apps/coast-kart/coast-kart-0.5.4.apk?raw=1">APK</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="resource/apps/used-car-racing/"><img src="resource/apps/used-car-racing/thumb.png" width="180" alt="极品二手车游戏画面"><br>极品二手车</a><br><a href="resource/apps/used-car-racing/used-car-racing-0.1.5.apk?raw=1">APK</a></td>
+</tr>
+</table>
+
+<a id="controller-action"></a>
+
+### 动作、角色扮演与探索（2）
+
+<table>
+<tr>
+<td align="center" valign="top"><a href="joystick-games/cf-transport-ship/"><img src="joystick-games/cf-transport-ship/thumb.png" width="180" alt="运输船 CF游戏画面"><br>运输船 CF</a><br><a href="joystick-games/cf-transport-ship/cf-transport-ship-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/cf-transport-ship/macos/CFTransportShip-0.1.0-macos-universal.dmg?raw=1">macOS</a></td>
+<td align="center" valign="top"><a href="resource/apps/alien-shooter/"><img src="resource/apps/alien-shooter/thumb.png" width="180" alt="孤胆枪手 TV游戏画面"><br>孤胆枪手 TV</a><br><a href="resource/apps/alien-shooter/alien-shooter-0.1.4.apk?raw=1">APK</a></td>
+</tr>
+</table>
+
+<a id="controller-arcade"></a>
+
+### 平台、弹幕与街机（7）
+
+<table>
+<tr>
+<td align="center" valign="top"><a href="joystick-games/glup/"><img src="joystick-games/glup/thumb.png" width="180" alt="GLUP · 沼泽猫鱼游戏画面"><br>GLUP · 沼泽猫鱼</a><br><a href="joystick-games/glup/glup-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/glup/Glup-0.1.0-macos-universal.dmg?raw=1">macOS</a></td>
+<td align="center" valign="top"><a href="resource/apps/super-mario/"><img src="resource/apps/super-mario/thumb.png" width="180" alt="Super Mario TV游戏画面"><br>Super Mario TV</a><br><a href="resource/apps/super-mario/super-mario-0.5.4.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/bomb-jack/"><img src="resource/apps/bomb-jack/thumb.png" width="180" alt="Mighty Bomb Jack TV游戏画面"><br>Mighty Bomb Jack TV</a><br><a href="resource/apps/bomb-jack/bomb-jack-0.5.4.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/adventure-island/"><img src="resource/apps/adventure-island/thumb.png" width="180" alt="Adventure Island TV游戏画面"><br>Adventure Island TV</a><br><a href="resource/apps/adventure-island/adventure-island-0.5.4.apk?raw=1">APK</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="resource/apps/jackal/"><img src="resource/apps/jackal/thumb.png" width="180" alt="Jackal TV游戏画面"><br>Jackal TV</a><br><a href="resource/apps/jackal/jackal-0.5.4.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/tank/"><img src="resource/apps/tank/thumb.png" width="180" alt="Tank TV游戏画面"><br>Tank TV</a><br><a href="resource/apps/tank/tank-0.5.4.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/conveyor-window/"><img src="resource/apps/conveyor-window/thumb.png" width="180" alt="窗口装配游戏画面"><br>窗口装配</a><br><a href="resource/apps/conveyor-window/conveyor-window-0.2.2.apk?raw=1">APK</a></td>
+</tr>
+</table>
+
+<a id="controller-strategy"></a>
+
+### 策略、塔防与卡牌（1）
+
+<table>
+<tr>
+<td align="center" valign="top"><a href="joystick-games/emberbrood/"><img src="joystick-games/emberbrood/thumb.png" width="180" alt="Emberbrood · 余烬龙裔游戏画面"><br>Emberbrood · 余烬龙裔</a><br><a href="joystick-games/emberbrood/emberbrood-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/emberbrood/Emberbrood-0.1.0-macos-universal.dmg?raw=1">macOS</a></td>
+</tr>
+</table>
+
+<a id="controller-puzzle"></a>
+
+### 解谜与益智（18）
+
+<table>
+<tr>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/alchemists-lattice"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/alchemists-lattice/playing-1280.jpg" width="180" alt="炼金方阵游戏画面"><br>炼金方阵</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-alchemists-lattice-v0.1.1/alchemists-lattice-0.1.1.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-alchemists-lattice-v0.1.1/AlchemistsLattice-0.1.1-macos-universal.dmg">macOS 预览</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-alchemists-lattice-v0.1.1/AlchemistsLattice-0.1.1-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/story-thief"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/story-thief/playing-1280.jpg" width="180" alt="灰斗篷山的故事大盗游戏画面"><br>灰斗篷山的故事大盗</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/story-thief-0.1.1.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/StoryThief-0.1.1-macos-universal.dmg">macOS</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/StoryThief-0.1.1-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/bumble-basket"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/bumble-basket/playing-1280.jpg" width="180" alt="蜜蜂果篮游戏画面"><br>蜜蜂果篮</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-bumble-basket-v0.1.2/bumble-basket-0.1.2.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-bumble-basket-v0.1.2/BumbleBasket-0.1.2-macos-universal.dmg">macOS 预览</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-bumble-basket-v0.1.2/BumbleBasket-0.1.2-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/starsling"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/starsling/playing-1280.jpg" width="180" alt="星际弹弓游戏画面"><br>星际弹弓</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-starsling-v0.1.1/starsling-0.1.1.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-starsling-v0.1.1/Starsling-0.1.1-macos-universal.dmg">macOS 预览</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-starsling-v0.1.1/Starsling-0.1.1-windows-x64-setup.exe">Windows</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/solder-and-rain"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/solder-and-rain/playing-1280.jpg" width="180" alt="雨夜维修铺游戏画面"><br>雨夜维修铺</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-solder-and-rain-v0.1.0/solder-and-rain-0.1.0.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-solder-and-rain-v0.1.0/SolderAndRain-0.1.0-macos-universal.dmg">macOS 预览</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-solder-and-rain-v0.1.0/SolderAndRain-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/oathstones"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/oathstones/playing-1280.jpg" width="180" alt="誓约宝石游戏画面"><br>誓约宝石</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-oathstones-v0.1.0/oathstones-0.1.0.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-oathstones-v0.1.0/Oathstones-0.1.0-macos-universal.dmg">macOS 预览</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-oathstones-v0.1.0/Oathstones-0.1.0-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/neon-arcana"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/neon-arcana/playing-1280.jpg" width="180" alt="霓虹秘仪游戏画面"><br>霓虹秘仪</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/neon-arcana-0.1.1.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/NeonArcana-0.1.1-macos-universal.dmg">macOS 预览</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/NeonArcana-0.1.1-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/atlas-of-ink"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/atlas-of-ink/playing-1280.jpg" width="180" alt="墨绘地图集游戏画面"><br>墨绘地图集</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-atlas-of-ink-v0.1.1/atlas-of-ink-0.1.1.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-atlas-of-ink-v0.1.1/AtlasOfInk-0.1.1-macos-universal.dmg">macOS</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-atlas-of-ink-v0.1.1/AtlasOfInk-0.1.1-windows-x64-setup.exe">Windows</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="https://github.com/ecojust/pureTV/tree/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/joystick-games/starbase-spooky"><img src="https://raw.githubusercontent.com/ecojust/pureTV/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/browser/starbase-spooky/playing-1280.jpg" width="180" alt="幽灵空间站游戏画面"><br>幽灵空间站</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/starbase-spooky-0.1.2.apk">APK</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/StarbaseSpooky-0.1.2-macos-universal.dmg">macOS</a> · <a href="https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/StarbaseSpooky-0.1.2-windows-x64-setup.exe">Windows</a></td>
+<td align="center" valign="top"><a href="joystick-games/sugarplum-drop/"><img src="joystick-games/sugarplum-drop/docs/browser-attempt-3/playing-1280.png" width="180" alt="Sugarplum Drop游戏画面"><br>Sugarplum Drop</a><br><a href="joystick-games/sugarplum-drop/sugarplum-drop-0.1.0.apk?raw=1">APK</a> · <a href="joystick-games/sugarplum-drop/SugarplumDrop-0.1.0-macos-universal.dmg?raw=1">macOS</a> · <a href="joystick-games/sugarplum-drop/SugarplumDrop-0.1.0-windows-x64-setup.exe?raw=1">Windows</a></td>
+<td align="center" valign="top"><a href="resource/apps/twenty-four/"><img src="resource/apps/twenty-four/thumb.png" width="180" alt="四则二十四游戏画面"><br>四则二十四</a><br><a href="resource/apps/twenty-four/twenty-four-0.2.2.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/torch-bridge/"><img src="resource/apps/torch-bridge/thumb.png" width="180" alt="夜桥接力游戏画面"><br>夜桥接力</a><br><a href="resource/apps/torch-bridge/torch-bridge-0.2.2.apk?raw=1">APK</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="resource/apps/packing-sculptor/"><img src="resource/apps/packing-sculptor/thumb.png" width="180" alt="异形装箱游戏画面"><br>异形装箱</a><br><a href="resource/apps/packing-sculptor/packing-sculptor-0.2.2.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/glass-fold/"><img src="resource/apps/glass-fold/thumb.png" width="180" alt="折光工坊游戏画面"><br>折光工坊</a><br><a href="resource/apps/glass-fold/glass-fold-0.2.2.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/tension-span/"><img src="resource/apps/tension-span/thumb.png" width="180" alt="拉索桥梁游戏画面"><br>拉索桥梁</a><br><a href="resource/apps/tension-span/tension-span-0.2.3.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/prism-relay/"><img src="resource/apps/prism-relay/thumb.png" width="180" alt="镜光接力游戏画面"><br>镜光接力</a><br><a href="resource/apps/prism-relay/prism-relay-0.2.3.apk?raw=1">APK</a></td>
+</tr>
+<tr>
+<td align="center" valign="top"><a href="resource/apps/tetris/"><img src="resource/apps/tetris/thumb.png" width="180" alt="Tetris TV游戏画面"><br>Tetris TV</a><br><a href="resource/apps/tetris/tetris-0.5.4.apk?raw=1">APK</a></td>
+<td align="center" valign="top"><a href="resource/apps/jewel/"><img src="resource/apps/jewel/thumb.png" width="180" alt="Magic Jewelry TV游戏画面"><br>Magic Jewelry TV</a><br><a href="resource/apps/jewel/jewel-0.5.4.apk?raw=1">APK</a></td>
+</tr>
+</table>
+
+<a id="controller-casual"></a>
+
+### 经营、沙盒与休闲（1）
+
+<table>
+<tr>
+<td align="center" valign="top"><a href="resource/apps/cozy-island/"><img src="resource/apps/cozy-island/thumb.png" width="180" alt="Cozy Island TV游戏画面"><br>Cozy Island TV</a><br><a href="resource/apps/cozy-island/cozy-island-0.5.4.apk?raw=1">APK</a></td>
+</tr>
+</table>
+
+<a id="controller-one-button"></a>
+
+### 单键街机（1）
+
+<table>
+<tr>
+<td align="center" valign="top"><a href="resource/apps/tower-overlap/"><img src="resource/apps/tower-overlap/thumb.png" width="180" alt="叠塔工匠游戏画面"><br>叠塔工匠</a><br><a href="resource/apps/tower-overlap/tower-overlap-0.2.2.apk?raw=1">APK</a></td>
 </tr>
 </table>
 
