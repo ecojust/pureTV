@@ -14,3 +14,16 @@
 炼金台支持原版键鼠和本地手柄。Wi-Fi 手柄断线或窗口失焦会取消待执行操作并暂停，重新连接后须显式继续。存档保留当前棋盘、手牌和旅程。软件图形后端使用原作 3D 棋盘的直接渲染路径；硬件支持时启用原版泛光和镜头效果。
 
 使用 Node.js 执行 `npm ci`、`npm run build`、`npm run build:check` 和 `npm test`。Android TV、macOS 和 Windows 宿主使用同一份 `dist/tv.html`。[跨平台验收计划](qa-plan.json) · [浏览器执行记录](docs/browser/report.json) · [原版文件校验](upstream.json)
+
+<!-- puzzle-downloads -->
+## 安装包 0.1.1
+
+| 平台 | 安装文件 |
+| --- | --- |
+| Android TV | [APK](https://github.com/ecojust/pureTV/releases/download/joystick-alchemists-lattice-v0.1.1/alchemists-lattice-0.1.1.apk) |
+| macOS | [DMG](https://github.com/ecojust/pureTV/releases/download/joystick-alchemists-lattice-v0.1.1/AlchemistsLattice-0.1.1-macos-universal.dmg) · [ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-alchemists-lattice-v0.1.1/AlchemistsLattice-0.1.1-macos-universal.zip) |
+| Windows x64 | [安装版 EXE](https://github.com/ecojust/pureTV/releases/download/joystick-alchemists-lattice-v0.1.1/AlchemistsLattice-0.1.1-windows-x64-setup.exe) · [便携 ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-alchemists-lattice-v0.1.1/AlchemistsLattice-0.1.1-windows-x64.zip) |
+
+Android TV 和 Windows x64 均已通过默认端口和端口占用两种手柄实玩测试。macOS 通用包为预览版，Apple Silicon 原生、Apple Silicon 端口占用以及 Rosetta 2 三种模式均已实玩通过。托管 Intel Mac 未提供可用的游戏图形加速，Intel 实体机游玩仍待验证。 macOS 包采用 ad-hoc 签名，尚未经过 Apple 公证。实体电视和 ESP32 实物手柄仍待验证。
+
+[SHA-256 校验](SHA256SUMS.txt) · [平台验收记录](packages.json)

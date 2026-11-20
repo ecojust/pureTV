@@ -29,3 +29,16 @@ python3 -m http.server 8000 --directory dist
 已安装 Chromium 和 Python Playwright 的环境可运行 `python tests/browser_sdk.py /tmp/story-thief-evidence`。此脚本通过原 Python SDK、本机 TCP 与浏览器宿主测试夹具操作游戏，生成截图并验证真实游戏状态。各平台安装版与实体手柄的验收单独记录。
 
 960×540 与 1280×720 各完成 42 步：小屋取得蜂蜜蛋糕、与祖母对话领取故事书和铜币、出门到村广场，获得 7 分。两次都实测了断线暂停、重连后显式恢复及刷新后用原存档继续。[浏览器 SDK 核验](docs/browser/sdk-verification.json) · [小屋拾物画面](docs/browser/cottage-960.png) · [村广场画面](docs/browser/green-1280.png)
+
+<!-- puzzle-downloads -->
+## 安装包 0.1.1
+
+| 平台 | 安装文件 |
+| --- | --- |
+| Android TV | [APK](https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/story-thief-0.1.1.apk) |
+| macOS | [DMG](https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/StoryThief-0.1.1-macos-universal.dmg) · [ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/StoryThief-0.1.1-macos-universal.zip) |
+| Windows x64 | [安装版 EXE](https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/StoryThief-0.1.1-windows-x64-setup.exe) · [便携 ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/StoryThief-0.1.1-windows-x64.zip) |
+
+Android TV 和 Windows x64 均已通过默认端口和端口占用两种手柄实玩测试。macOS 通用版已通过 Apple Silicon 原生、Apple Silicon 端口占用、Rosetta 2 及 Intel 原生四项实玩验收。 macOS 包采用 ad-hoc 签名，尚未经过 Apple 公证。实体电视和 ESP32 实物手柄仍待验证。
+
+[SHA-256 校验](SHA256SUMS.txt) · [平台验收记录](packages.json)

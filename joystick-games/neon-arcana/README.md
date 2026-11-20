@@ -20,3 +20,16 @@
 [音频对照记录](docs/browser/audio.json) 显示 0.1.1 在应用失焦和挂起时将 AudioContext 切到 suspended，返回后按 B 保持静音，按 START 才切回 running。真实音频上下文的暂停与恢复可用 `python docs/browser/verify-audio.py --output /tmp/neon-audio.json` 复验。三端原生验收步骤见 [qa-plan.json](qa-plan.json)。
 
 [Andrew Wooldridge 的原作与固定源版本](https://github.com/triptych/web-games-andrew/tree/a7051c34fe2e7550fd206e6272f758df171855b0/game-111) · [上游文件清单](upstream.json) · [许可证与字体归属](NOTICE.md)
+
+<!-- puzzle-downloads -->
+## 安装包 0.1.1
+
+| 平台 | 安装文件 |
+| --- | --- |
+| Android TV | [APK](https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/neon-arcana-0.1.1.apk) |
+| macOS | [DMG](https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/NeonArcana-0.1.1-macos-universal.dmg) · [ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/NeonArcana-0.1.1-macos-universal.zip) |
+| Windows x64 | [安装版 EXE](https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/NeonArcana-0.1.1-windows-x64-setup.exe) · [便携 ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/NeonArcana-0.1.1-windows-x64.zip) |
+
+Android TV 和 Windows x64 均已通过默认端口和端口占用两种手柄实玩测试。macOS 通用包为预览版，Apple Silicon 原生、Apple Silicon 端口占用以及 Rosetta 2 三种模式均已实玩通过。托管 Intel Mac 未提供可用的游戏图形加速，Intel 实体机游玩仍待验证。 macOS 包采用 ad-hoc 签名，尚未经过 Apple 公证。实体电视和 ESP32 实物手柄仍待验证。
+
+[SHA-256 校验](SHA256SUMS.txt) · [平台验收记录](packages.json)
