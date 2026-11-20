@@ -1,0 +1,1798 @@
+{
+  "game": "story-thief",
+  "version": "0.1.0",
+  "sourceCommit": "cce775d53cbd5085425451541974c2bc5fbde6d5",
+  "committedInputsVerified": true,
+  "platform": "windows",
+  "architecture": "x86_64",
+  "minimumWindows": "10 1903",
+  "webView2Runtime": "Microsoft Edge WebView2 Evergreen, must be installed",
+  "authenticodeSigned": false,
+  "physicalControllerTested": false,
+  "toolchain": {
+    "cmakeVersion": "cmake version 3.31.6",
+    "compilerId": "MSVC",
+    "compilerVersion": "19.44.35230.0",
+    "compilerPath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe",
+    "compilerSha256": "e87e78b3ef6580b75aebda843f8a22e874612d9f766344046551399f898eb226",
+    "compilerRecordSha256": "f05d516d72b76b474dae9af906483b1d3387392287b5e1ad9f8ad578422cde29",
+    "windowsSdkVersion": "10.0.26100.0",
+    "nsisVersion": "v3.10",
+    "nsisExecutableSha256": "913ac7636eec910061c737a120c067ce9a77dbc2e69fac8d8117761376f271c3"
+  },
+  "dependencies": {
+    "json.hpp": {
+      "url": "https://raw.githubusercontent.com/nlohmann/json/v3.11.3/single_include/nlohmann/json.hpp",
+      "bytes": 919975,
+      "sha256": "9bea4c8066ef4a1c206b2be5a36302f8926f7fdc6087af5d20b417d0cf103ea6"
+    },
+    "json-LICENSE.MIT": {
+      "url": "https://raw.githubusercontent.com/nlohmann/json/v3.11.3/LICENSE.MIT",
+      "bytes": 1076,
+      "sha256": "86b998c792894ccb911a1cb7994f7a9652894e7a094c0b5e45be2f553f45cf14"
+    },
+    "webview2.nupkg": {
+      "url": "https://api.nuget.org/v3-flatcontainer/microsoft.web.webview2/1.0.2903.40/microsoft.web.webview2.1.0.2903.40.nupkg",
+      "bytes": 8769233,
+      "sha256": "ef128016dd1e51c59178c827ed5b8aa3322c57afa8675d930f8109505542ad74"
+    }
+  },
+  "webAssets": {
+    "explicit": false,
+    "limits": {
+      "maxAssetBytes": 10485760,
+      "maxTotalBytes": 33554432,
+      "maxApkBytes": 10000000
+    },
+    "files": 5,
+    "nodes": 5,
+    "totalBytes": 235944,
+    "indexBytes": 537,
+    "assetFiles": {
+      "THIRD-PARTY-NOTICES.txt": {
+        "bytes": 1377,
+        "sha256": "ec691a5d53f94ab886d49478ff858458a0d0f3fe20cca064993a675a17386eaa"
+      },
+      "bootstrap.js": {
+        "bytes": 895,
+        "sha256": "b2064db9df208f80bcf5cb24c82bede7c99cbc06faa8a4573895050ad663dfc7"
+      },
+      "bridge.js": {
+        "bytes": 8739,
+        "sha256": "e4de0862673f30c254e02597f45b8fbac0382b2e2e6a5ae8aee819ad4d1f0a89"
+      },
+      "diagnostics.js": {
+        "bytes": 3184,
+        "sha256": "fcd8094568b6e48ab78bcdc1e11b7f12d320e7fa6a938e587e1cc2a716fc787e"
+      },
+      "tv.html": {
+        "bytes": 221749,
+        "sha256": "04460dd221e57ffc58bb291f4bf5c1f8e8d86b09f620b11554d035b73f77e292"
+      }
+    },
+    "resourceServing": "WebView2 virtual-host folder mapping; browser MIME detection",
+    "expectedAudioMimeTypes": {},
+    "expectedExtraMimeTypes": {}
+  },
+  "packageByteLimit": 100000000,
+  "inputFiles": {
+    ".github/workflows/joystick-catalog-windows.yml": {
+      "bytes": 7329,
+      "sha256": "20e925be2efbf47b8dafac7a8fb576cfb1d9782a7f8859c9c57e82f04c636c1a"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 9811,
+      "sha256": "d5999df4266e55efec83d9fcf6889cd801f3cfedee4c5eeff0d366754cb949e6"
+    },
+    "joystick-games/shared/crisp/browser-qa.cjs": {
+      "bytes": 13791,
+      "sha256": "c24d4a5b92ee834316977982954e61b4a8d2f269986444d5aeea823330acd7df"
+    },
+    "joystick-games/shared/crisp/browser-terminal.cjs": {
+      "bytes": 2890,
+      "sha256": "d067343e2abde73f38e9f6d4943ac290cb8006e3e4f6850459894dd6b4fa3f25"
+    },
+    "joystick-games/shared/crisp/build.mjs": {
+      "bytes": 3289,
+      "sha256": "a9cc05e6111cdd943efad1ae9e2e887bb1fec24ad9b4fce5207c1f98aa39f7de"
+    },
+    "joystick-games/shared/crisp/docs/verification.json": {
+      "bytes": 11940,
+      "sha256": "724afb00f2d7d8745792f0daee92127f2acb51aa8fee85c0504c7321782c9458"
+    },
+    "joystick-games/shared/crisp/licenses/crisp-game-lib-MIT.txt": {
+      "bytes": 1066,
+      "sha256": "52ca6d86736a899b1e235eea0b7ff064f7dff44133f1dc317169feca6ab8af0e"
+    },
+    "joystick-games/shared/crisp/licenses/earcut-ISC.txt": {
+      "bytes": 738,
+      "sha256": "cd661c432ea8243974e6fde6fc433ebee3e96525ca8b66321b9d9971674ede60"
+    },
+    "joystick-games/shared/crisp/licenses/es6-promise-polyfill-MIT.txt": {
+      "bytes": 1076,
+      "sha256": "3e51cd9d5f508dda1a608454178266a834b870daec8021644a7e167966b2a460"
+    },
+    "joystick-games/shared/crisp/licenses/eventemitter3-MIT.txt": {
+      "bytes": 1082,
+      "sha256": "3aecc12b1cb28832b5f65ab64291de96568c3f236a74d646281b4491f7bcadbf"
+    },
+    "joystick-games/shared/crisp/licenses/FXAA-BSD-3-Clause.txt": {
+      "bytes": 1686,
+      "sha256": "54e239ce73d16fb4209f7e1a56ae9f213758b48db17a4e25bab36ecfba72b5ea"
+    },
+    "joystick-games/shared/crisp/licenses/ismobilejs-MIT.txt": {
+      "bytes": 1067,
+      "sha256": "57c43c929cbc20653cb0e62620a413a8bc456888c1874ebc25d08e0122cd953e"
+    },
+    "joystick-games/shared/crisp/licenses/jsfx-MIT.txt": {
+      "bytes": 1078,
+      "sha256": "f03ca91a3e505e98f30dbf52ec71b26ef9db4da1978c6f940c88114139b65aad"
+    },
+    "joystick-games/shared/crisp/licenses/mini-signals-MIT.txt": {
+      "bytes": 1086,
+      "sha256": "07f9a37334ffe0050d63659021cc62e8745709b40048d597f7750fe7afdda3af"
+    },
+    "joystick-games/shared/crisp/licenses/mml-iterator-MIT.txt": {
+      "bytes": 1081,
+      "sha256": "3e5805420e631c74c504b7d7daaf62e9f4daea306d639dc889469753ed8ac256"
+    },
+    "joystick-games/shared/crisp/licenses/object-assign-MIT.txt": {
+      "bytes": 1119,
+      "sha256": "6fb9754611c20f6649f68805e8c990e83261f29316e29de9e6cedae607b8634c"
+    },
+    "joystick-games/shared/crisp/licenses/parse-uri-MIT.txt": {
+      "bytes": 1084,
+      "sha256": "7ace2e75c11a8479938862cc38c56701d2b82ac79dd52a150c763ff7a1a4d36b"
+    },
+    "joystick-games/shared/crisp/licenses/pixi-MIT.txt": {
+      "bytes": 1092,
+      "sha256": "536a16e090f0b6c1454a7c0b47ee8414a39a2f1724a154f10ca1edc750a2dcfd"
+    },
+    "joystick-games/shared/crisp/licenses/punycode-MIT.txt": {
+      "bytes": 1077,
+      "sha256": "483acb265f182907d1caf6cff9c16c96f31325ed23792832cc5d8b12d5f88c8a"
+    },
+    "joystick-games/shared/crisp/licenses/querystring-MIT.txt": {
+      "bytes": 1081,
+      "sha256": "cb72d9714ddc21e758d63f423be0caddf909d23ccbb10a2f5201a870818e4f57"
+    },
+    "joystick-games/shared/crisp/licenses/resource-loader-MIT.txt": {
+      "bytes": 1077,
+      "sha256": "5d22ceec333fad4dfaefed6ab7238146292aa5b254e4c068b6ca76bcff352091"
+    },
+    "joystick-games/shared/crisp/licenses/sounds-some-sounds-MIT.txt": {
+      "bytes": 1066,
+      "sha256": "52ca6d86736a899b1e235eea0b7ff064f7dff44133f1dc317169feca6ab8af0e"
+    },
+    "joystick-games/shared/crisp/licenses/tonal-MIT.txt": {
+      "bytes": 1074,
+      "sha256": "0ff1a12a0f689d1a300dc75e1efce2f4154b3fc068ef2987adbb505ad2c52123"
+    },
+    "joystick-games/shared/crisp/licenses/tslib-Apache-2.0.txt": {
+      "bytes": 9197,
+      "sha256": "a7d00bfd54525bc694b6e32f64c7ebcf5e6b7ae3657be5cc12767bce74654a47"
+    },
+    "joystick-games/shared/crisp/licenses/tslib-CopyrightNotice.txt": {
+      "bytes": 834,
+      "sha256": "19246466cb51e46c12b22e43b4d2703ac981cb4295d061d6e20609bd5845510b"
+    },
+    "joystick-games/shared/crisp/licenses/url-MIT.txt": {
+      "bytes": 1099,
+      "sha256": "97f780d3c79a42236f2b3435860f284c0ac6b958622f6bc9f1ac43fd49689b7b"
+    },
+    "joystick-games/shared/crisp/patch-engine.mjs": {
+      "bytes": 2881,
+      "sha256": "edced99ad269174d0560ba4120a8b267b4d2b5da97083d1ac3cd448c4650539e"
+    },
+    "joystick-games/shared/crisp/README.md": {
+      "bytes": 3033,
+      "sha256": "461fe96a619641cf959ef2e161cf838e6966f3169fd22037280674d32ea3358a"
+    },
+    "joystick-games/shared/crisp/tv.css": {
+      "bytes": 3035,
+      "sha256": "fa3951189742d0baecbc0d1beac9153922e5b8e08dae2d2e15e6a44abf3c6fb0"
+    },
+    "joystick-games/shared/crisp/tv.html": {
+      "bytes": 919,
+      "sha256": "1825c19270fee277869fed54d62d6afd8fa7f5cfc9622d8fc449d1b4c481025d"
+    },
+    "joystick-games/shared/crisp/tv.js": {
+      "bytes": 6666,
+      "sha256": "1e55fabb4e70e13cb9edc42b3740d24fb716bb5c82d2a235b8a1bc4f5e7c34fd"
+    },
+    "joystick-games/shared/crisp/vendor/crisp-game-lib-1.4.0.js": {
+      "bytes": 116469,
+      "sha256": "435d498516857230002c1fe2e443fa8dcddf065657e3422e228e9caa6e62938f"
+    },
+    "joystick-games/shared/crisp/vendor/pixi-5.3.0.js": {
+      "bytes": 1538767,
+      "sha256": "4d9cfcad5d7698f4373b09905e8d852fb10c878bb77ea890d4aa64940b07735a"
+    },
+    "joystick-games/shared/crisp/vendor/sounds-some-sounds-3.1.1.js": {
+      "bytes": 159783,
+      "sha256": "835c422789824b5d758da20399bc37d0039b62a5cadbd70b14d3235773d1d809"
+    },
+    "joystick-games/shared/crisp/vendor-lock.json": {
+      "bytes": 1097,
+      "sha256": "9c23e7f9b55eccbbf5c3f8aad0077ddf3fa04e3bd18e55fff04a3809d351a41c"
+    },
+    "joystick-games/shared/triptych/build.mjs": {
+      "bytes": 2172,
+      "sha256": "2c863097db3084c69f139339a31a96029d7deb529097aba58cd464e1f30fcfe1"
+    },
+    "joystick-games/shared/triptych/tests/browser.mjs": {
+      "bytes": 8549,
+      "sha256": "560e20e1e81e7b1116c4eabcb02bd3462a4914f5af14d3151c896eb6f3c77133"
+    },
+    "joystick-games/shared/triptych/tv.css": {
+      "bytes": 1033,
+      "sha256": "fb50b3d3ebc54a357a3274d6d995c22042031545e7da450064119452a30313eb"
+    },
+    "joystick-games/shared/triptych/tv.js": {
+      "bytes": 2976,
+      "sha256": "3b07573ac7491a00e58e23e16133b33471b198917ae60fd1f9803bbf4488587e"
+    },
+    "joystick-games/shared/web/controller-clients.js": {
+      "bytes": 7746,
+      "sha256": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a"
+    },
+    "joystick-games/shared/web/input.js": {
+      "bytes": 8423,
+      "sha256": "d33a301f082f0100db81c055b4773e2947cf4c166f76f68dfe06344d5a4660f6"
+    },
+    "joystick-games/shared/web/input.test.mjs": {
+      "bytes": 3842,
+      "sha256": "7f96d9616a3055a1474eb7ee78062ca04cae3c35e18309a52c447321942f102e"
+    },
+    "joystick-games/shared/web/package.json": {
+      "bytes": 33,
+      "sha256": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428"
+    },
+    "joystick-games/shared/windows/.gitattributes": {
+      "bytes": 137,
+      "sha256": "259f01c49955bd793756fc55ec8527d196510b556648986f993e7b0694750cb5"
+    },
+    "joystick-games/shared/windows/.gitignore": {
+      "bytes": 34,
+      "sha256": "0331b57b190f652a095524b47e933ebfbea5eac4d9c2be4c07a2d448620c21cb"
+    },
+    "joystick-games/shared/windows/CMakeLists.txt": {
+      "bytes": 2242,
+      "sha256": "a285a50f9e9373a21c2bf74885f5ec55b26c5351d0ac006da76f7c4f8ee8542e"
+    },
+    "joystick-games/shared/windows/dependencies.json": {
+      "bytes": 699,
+      "sha256": "95153a92be62c7cfbfb143d2920da05cf55be9d7aadf8e714d9ed2757823765f"
+    },
+    "joystick-games/shared/windows/README.md": {
+      "bytes": 10218,
+      "sha256": "879964fac6d4b167bcc99f7bfffba2391b6472281b0aa73f7e1bcd7a479a7ba9"
+    },
+    "joystick-games/shared/windows/Sources/app.manifest": {
+      "bytes": 920,
+      "sha256": "ef48f129919f09c77c8548633e0453080d15e0ae6ca70e80e3b5099a28427865"
+    },
+    "joystick-games/shared/windows/Sources/ControllerBind.hpp": {
+      "bytes": 1107,
+      "sha256": "3656034907322c28a7ba18174607190e2bf87f33b1f066beed8032142cfb8eca"
+    },
+    "joystick-games/shared/windows/Sources/ControllerProtocol.hpp": {
+      "bytes": 11856,
+      "sha256": "8bbff8302e57313ab9d7e93fe7bf4712188c50b2be94e131fbd8ecc29d4227b5"
+    },
+    "joystick-games/shared/windows/Sources/DiagnosticLog.hpp": {
+      "bytes": 1010,
+      "sha256": "e81581fdf9ac3412f84a9b1b8beed188d8f54afcf167936ccf0b39662388c86d"
+    },
+    "joystick-games/shared/windows/Sources/EntryURL.hpp": {
+      "bytes": 1351,
+      "sha256": "94b5efc011bac9d1153157d5da9d5df454e8cba6d73e409828389d03fee9cec8"
+    },
+    "joystick-games/shared/windows/Sources/main.cpp": {
+      "bytes": 35449,
+      "sha256": "6a77c9816ecd2d6671b2a4d53002d463dc8968c6aaa4c512e73d10783db4f133"
+    },
+    "joystick-games/shared/windows/Sources/Preferences.hpp": {
+      "bytes": 666,
+      "sha256": "c42b76a7a502bd33071c29f7d4f2f8603cab85f5709591e67a1f653ae699b4ae"
+    },
+    "joystick-games/shared/windows/tests/assets.test.py": {
+      "bytes": 9107,
+      "sha256": "0559b804d3fcaaef11278b97234c8f8bcf18d1c2e8e5a050cc74f8fe9cd9cfc2"
+    },
+    "joystick-games/shared/windows/tests/bootstrap.test.mjs": {
+      "bytes": 3107,
+      "sha256": "9ae4986f6e363b9f97a7813e7a3b5b410cff6d1e082b4f241ec81279de2b8aa5"
+    },
+    "joystick-games/shared/windows/tests/controller-bind.test.cpp": {
+      "bytes": 7689,
+      "sha256": "4de0677c8f91bf595d2270813c64040e811835fc116463f910a4f9cc011d79c9"
+    },
+    "joystick-games/shared/windows/tests/diagnostic-log.test.cpp": {
+      "bytes": 2165,
+      "sha256": "55e0fe7248069a01f68f718683e7063ce3ccf5c6583dae58bf7e2f6ef40ce1b7"
+    },
+    "joystick-games/shared/windows/tests/diagnostic-suspend.test.mjs": {
+      "bytes": 2412,
+      "sha256": "3daa9020c0368797e09a2f22da13b9a86873dbb1c4d41292bac6b83e75ce71af"
+    },
+    "joystick-games/shared/windows/tests/display.test.py": {
+      "bytes": 3882,
+      "sha256": "70f21d3e3feb1674bc2710de58c387f82e477f9c7e13e435fba6fe78bc926e44"
+    },
+    "joystick-games/shared/windows/tests/entry-url.test.cpp": {
+      "bytes": 1215,
+      "sha256": "dac1920734823e13ecb26ae948d073556fd3a84b51d6ad256d1c6ed320a248e8"
+    },
+    "joystick-games/shared/windows/tests/export.test.py": {
+      "bytes": 21686,
+      "sha256": "c79f5e1d53412b3a5d5b96e4b1c2475870639ce8a387f7d52e1bad96a260162b"
+    },
+    "joystick-games/shared/windows/tests/fixtures/win10-source-hashes.json": {
+      "bytes": 2455,
+      "sha256": "afd8d9277d2e75d7efddaad2c392aea34074b8c1ab60b7ced18d5ad00d18a613"
+    },
+    "joystick-games/shared/windows/tests/fixtures/windows-runtime-storage-44615299245.json": {
+      "bytes": 36584,
+      "sha256": "1eb0f2476e1a1f41fc36b81233cc853ef3f94c2d3c7944eb92265f0bade2d3d9"
+    },
+    "joystick-games/shared/windows/tests/gameplay.test.py": {
+      "bytes": 25771,
+      "sha256": "26f8288b589eb482fc82f811dfa169c0aad0580dddafbbd0345c3ef05e743887"
+    },
+    "joystick-games/shared/windows/tests/installer.test.py": {
+      "bytes": 1555,
+      "sha256": "5c4aef727ca22b3ed2ef4ede1360b6eaa36c0b8d3dd109869847aef41e0998d4"
+    },
+    "joystick-games/shared/windows/tests/navigation-observation.py": {
+      "bytes": 5557,
+      "sha256": "e366ff0260e5b517250fd5cd69ecd5f999cb1739fe7e0b910447a9c085dd8217"
+    },
+    "joystick-games/shared/windows/tests/navigation-observation.test.py": {
+      "bytes": 3122,
+      "sha256": "406733543680ffd369de0b90aa71776ae8b3f8e83e59639f335966a69e16c89c"
+    },
+    "joystick-games/shared/windows/tests/navigation-storage.test.py": {
+      "bytes": 8079,
+      "sha256": "c57f0090974cb697360d1ddad6b5baae9e810537e25ee945f34a250483f0089c"
+    },
+    "joystick-games/shared/windows/tests/observation.test.py": {
+      "bytes": 8890,
+      "sha256": "10ea7491d37721a3dc3816bbfa08f4a65427b4af81a71326c9bc4abed00820a0"
+    },
+    "joystick-games/shared/windows/tests/preferences.test.cpp": {
+      "bytes": 1482,
+      "sha256": "ac5d89184f84ba32fb99f5083e924a9187a1707be5b7b5c1c3bc213cd2fa582c"
+    },
+    "joystick-games/shared/windows/tests/protocol.test.cpp": {
+      "bytes": 20280,
+      "sha256": "b91eaaa780787cf31f34307857bc25adcef175061275091eee8c3b60939f1b12"
+    },
+    "joystick-games/shared/windows/tests/reexport.test.py": {
+      "bytes": 15562,
+      "sha256": "3125921c4e37e464297f04f47e92c3048f513e67d2c75f631e30b547397e4e6a"
+    },
+    "joystick-games/shared/windows/tests/source-inputs.test.py": {
+      "bytes": 2024,
+      "sha256": "9b7105065d2be566e13b2781474e5459411a6a32012e3a62f1c13e836d8ad0da"
+    },
+    "joystick-games/shared/windows/tests/source-scope.test.py": {
+      "bytes": 32048,
+      "sha256": "0305365bd086bc8bf57386ad38a9346712dca48a683ac5bc63760d9015633575"
+    },
+    "joystick-games/shared/windows/tests/web-bridge.test.mjs": {
+      "bytes": 14650,
+      "sha256": "cdb32152e4616328ea99d494c1e1445c118de0788c8533c4510e89e5fdbb7bec"
+    },
+    "joystick-games/shared/windows/tests/window-lifecycle.test.py": {
+      "bytes": 18804,
+      "sha256": "02472fb25a07dcd5ca6270f4e6f691529cbd829a32f7d2fc3ff11d979e4c30b0"
+    },
+    "joystick-games/shared/windows/Web/bootstrap.js": {
+      "bytes": 895,
+      "sha256": "b2064db9df208f80bcf5cb24c82bede7c99cbc06faa8a4573895050ad663dfc7"
+    },
+    "joystick-games/shared/windows/Web/bridge.js": {
+      "bytes": 8739,
+      "sha256": "e4de0862673f30c254e02597f45b8fbac0382b2e2e6a5ae8aee819ad4d1f0a89"
+    },
+    "joystick-games/shared/windows/Web/diagnostics.js": {
+      "bytes": 3184,
+      "sha256": "fcd8094568b6e48ab78bcdc1e11b7f12d320e7fa6a938e587e1cc2a716fc787e"
+    },
+    "joystick-games/story-thief/.gitattributes": {
+      "bytes": 40,
+      "sha256": "2bded3236a88f2f116fbc1f24e299971307038b91987ca991a949b024784c7b2"
+    },
+    "joystick-games/story-thief/build.mjs": {
+      "bytes": 137,
+      "sha256": "0f3ffb28326a708b7cc80778b527e5959b58bfd9cc7ab9ef839da6ad8edfd13e"
+    },
+    "joystick-games/story-thief/dist/THIRD-PARTY-NOTICES.txt": {
+      "bytes": 1377,
+      "sha256": "ec691a5d53f94ab886d49478ff858458a0d0f3fe20cca064993a675a17386eaa"
+    },
+    "joystick-games/story-thief/dist/tv.html": {
+      "bytes": 221749,
+      "sha256": "04460dd221e57ffc58bb291f4bf5c1f8e8d86b09f620b11554d035b73f77e292"
+    },
+    "joystick-games/story-thief/game.json": {
+      "bytes": 509,
+      "sha256": "9e2b12827299ff7522be5345bec4a21aa85d699858daa8a12894f03158b567cc"
+    },
+    "joystick-games/story-thief/icon.xml": {
+      "bytes": 444,
+      "sha256": "745837f93f4fb5f108bdb3fc6820556c90576154cba5fa89dc7c99aee4538b48"
+    },
+    "joystick-games/story-thief/LICENSE": {
+      "bytes": 1074,
+      "sha256": "817f65ae87dcd4fc4fa968827e9056e86682096925c62b34e6c10f10597b77db"
+    },
+    "joystick-games/story-thief/logo.svg": {
+      "bytes": 276,
+      "sha256": "313f396c858134b0451b68060e54dbb151ba89f526e20b636bcb803374e2650d"
+    },
+    "joystick-games/story-thief/NOTICE.md": {
+      "bytes": 1377,
+      "sha256": "ec691a5d53f94ab886d49478ff858458a0d0f3fe20cca064993a675a17386eaa"
+    },
+    "joystick-games/story-thief/package-lock.json": {
+      "bytes": 14467,
+      "sha256": "945009fd8c95bbb1a846fddf0605502d72f82473bd408a70a26a25733531eeb8"
+    },
+    "joystick-games/story-thief/package.json": {
+      "bytes": 280,
+      "sha256": "7c650a5507868f23e85a218ff3c2bfb7a33a76df5ec94e5fcd92e07e4ceef56e"
+    },
+    "joystick-games/story-thief/qa-plan.json": {
+      "bytes": 12922,
+      "sha256": "a2f53f5e2f635ff797919a91f84787d2abfb3d60030e7641d6ad6943a341909c"
+    },
+    "joystick-games/story-thief/README.md": {
+      "bytes": 2270,
+      "sha256": "edc6cc66cdcc2ca421d4522e97d5f1b71ff92792258b77d3e51b9e5a76d25c12"
+    },
+    "joystick-games/story-thief/src/dev/mobiletest.mjs": {
+      "bytes": 8523,
+      "sha256": "9c6e75741280fc87133fc78d0e01ef4f381d5ec749a1cdb2979101a1c76dd6b5"
+    },
+    "joystick-games/story-thief/src/dev/README.md": {
+      "bytes": 3704,
+      "sha256": "331e436ca165f6d15af4489ae8eccb42f21243cd4adfe12e84731f202b238e31"
+    },
+    "joystick-games/story-thief/src/dev/shots.mjs": {
+      "bytes": 1197,
+      "sha256": "6b6dc82a04b07e345b3f6535d5abd484a0af589999254f0705c2d82d8e0915fa"
+    },
+    "joystick-games/story-thief/src/dev/walkthrough.mjs": {
+      "bytes": 18464,
+      "sha256": "ae2a3af10d203a63f322c61d56da1997199ae16645f05834a84bab277de6dc8e"
+    },
+    "joystick-games/story-thief/src/game-plan.md": {
+      "bytes": 9756,
+      "sha256": "dadb87b993693604a3c1e924bed9ac2f4478310a1d80562412a98cd0bf597f7c"
+    },
+    "joystick-games/story-thief/src/icons/favicon-32.png": {
+      "bytes": 2292,
+      "sha256": "0fc7b3d4a4be1916cc7f50dfe4385b9bd8f2e796c3b47adabd88bfb32e4a6c70"
+    },
+    "joystick-games/story-thief/src/icons/icon-180.png": {
+      "bytes": 20638,
+      "sha256": "974cb725d47847db627b6dd9ba49a8acc2ea5a57774b7f5ee22a9a7fb3f74594"
+    },
+    "joystick-games/story-thief/src/icons/icon-192.png": {
+      "bytes": 23359,
+      "sha256": "6d75e185a1922ed9917368e5a7ccf6203a3113bf6c8826954bd4c90a81d442ef"
+    },
+    "joystick-games/story-thief/src/icons/icon-512.png": {
+      "bytes": 122262,
+      "sha256": "363fdb878a25c6db97d4492c28d1d18c3a27ea0d3cd39f37b4903f94d23e9213"
+    },
+    "joystick-games/story-thief/src/icons/icon-96.png": {
+      "bytes": 7887,
+      "sha256": "60a66ee09a957ac7e56f03e124ae9023219c31350e23c1ad59de14027b6ef307"
+    },
+    "joystick-games/story-thief/src/index.html": {
+      "bytes": 4186,
+      "sha256": "b1b7430d53c0403db3c291f6707862e83a513e06f992dc6ee0df3c56285e0079"
+    },
+    "joystick-games/story-thief/src/js/art.js": {
+      "bytes": 2663,
+      "sha256": "67802884629ec62090c9a4e6345f211f383a61c6ce4f688236e8f5b805863d92"
+    },
+    "joystick-games/story-thief/src/js/events.js": {
+      "bytes": 975,
+      "sha256": "71f06e3e5a66642a68123ecf10fee856b2f89c389038d030baeca31620dae1fc"
+    },
+    "joystick-games/story-thief/src/js/items.js": {
+      "bytes": 10171,
+      "sha256": "a2765017cc717dc6f84cb1975fd1b4a815e7f5974352bcd5403cd6250e53ccd0"
+    },
+    "joystick-games/story-thief/src/js/main.js": {
+      "bytes": 32031,
+      "sha256": "41dd220e202f78695496007b7797b535646f69d4bcbbc5ee176e1248d6bb61f7"
+    },
+    "joystick-games/story-thief/src/js/npcs.js": {
+      "bytes": 15635,
+      "sha256": "1725ff2a65c800edc6b18ce257b82e8619faaa1671833ece1530deac64ba942b"
+    },
+    "joystick-games/story-thief/src/js/paint.js": {
+      "bytes": 9832,
+      "sha256": "b3f6c06862de8ec6c6ce3207c0ccf680513a9a2d589b4c106705683b7026451f"
+    },
+    "joystick-games/story-thief/src/js/palette.js": {
+      "bytes": 4191,
+      "sha256": "7340634394d8983fdcc2a6343b554920bcf610d77b119539d2b37929b6fb14b1"
+    },
+    "joystick-games/story-thief/src/js/scenes/bridge.js": {
+      "bytes": 15104,
+      "sha256": "8559c879cb07c08aa01725df4722922fffe7efda96dd5004525d911ed99387e5"
+    },
+    "joystick-games/story-thief/src/js/scenes/cavern.js": {
+      "bytes": 11733,
+      "sha256": "fed61a14bf3831a224cca8a0e946a5d40d8fef860a7ed463a156fb5bdca1d1cf"
+    },
+    "joystick-games/story-thief/src/js/scenes/common.js": {
+      "bytes": 9172,
+      "sha256": "e4c72d2db39700c052b32bec56718f311833d828262663aea40791305f283ae9"
+    },
+    "joystick-games/story-thief/src/js/scenes/cottage.js": {
+      "bytes": 19373,
+      "sha256": "c40bc1ac348c0624c983dd5cb0b48aec82a2f710eb7567eed147fea2fc444ca8"
+    },
+    "joystick-games/story-thief/src/js/scenes/gate.js": {
+      "bytes": 15261,
+      "sha256": "8a8ce5e48853d2458c51e04e5cfd4b667fbb9eb9e6b35140227610bfbe6c5d64"
+    },
+    "joystick-games/story-thief/src/js/scenes/green.js": {
+      "bytes": 19509,
+      "sha256": "4e7ff1da557c5038df72c713b71c1efd8a08f76ad80d05991a85eb9b95212838"
+    },
+    "joystick-games/story-thief/src/js/scenes/hut.js": {
+      "bytes": 17746,
+      "sha256": "d544d854bde7597278718f5bb605c6a839fdc323d1318fbf466ee0f3ba7dfedd"
+    },
+    "joystick-games/story-thief/src/js/scenes/index.js": {
+      "bytes": 1395,
+      "sha256": "ff01f339e70b99910628ac2ae6ce58a4622697771d2977dc0696db1024b87b43"
+    },
+    "joystick-games/story-thief/src/js/scenes/library.js": {
+      "bytes": 16706,
+      "sha256": "0468fb1d42aa60336d4079be9db31cd9e6cec38993ff6234edd3bb42b99f0f26"
+    },
+    "joystick-games/story-thief/src/js/scenes/pines.js": {
+      "bytes": 14593,
+      "sha256": "4371a2623407189dde272525b82a95edff4dda3743afb1558cbe0dfe1e992704"
+    },
+    "joystick-games/story-thief/src/js/scenes/sanctum.js": {
+      "bytes": 28666,
+      "sha256": "18308d32eb1c3861192e182d9fb8cf558dc2dcfbe36ef3d4b978be91db387e20"
+    },
+    "joystick-games/story-thief/src/js/scenes/tower.js": {
+      "bytes": 14304,
+      "sha256": "3502247536489a5eb15315d71a2740f6297e83ac464ae2847ad770b8d6cdc738"
+    },
+    "joystick-games/story-thief/src/js/sounds.js": {
+      "bytes": 8673,
+      "sha256": "237cbd9cbdd3997138fd491c190c7c86ea9e7e3ac7caf0a3962b7578bec4d61a"
+    },
+    "joystick-games/story-thief/src/js/sprites.js": {
+      "bytes": 7137,
+      "sha256": "03c059a9e73067e68fe3eca282ccb297c074bbc2b9f0db350b1d46288a174a33"
+    },
+    "joystick-games/story-thief/src/js/state.js": {
+      "bytes": 5199,
+      "sha256": "5cd45533f0eef83561d5e81aec4a4efb935fff7cafd3f0895ee65a816c09fd5a"
+    },
+    "joystick-games/story-thief/src/js/tale-clock.js": {
+      "bytes": 549,
+      "sha256": "893a2cb5bd264adde9a87c111a9cd6713d6bd9b2fb6685f58db4caa5bbfd319e"
+    },
+    "joystick-games/story-thief/src/js/tv.js": {
+      "bytes": 2674,
+      "sha256": "acd0db3731a2adfc1be3df7a2131569b25555a6dd7a2776fe9fd10f866bcdde1"
+    },
+    "joystick-games/story-thief/src/js/ui.js": {
+      "bytes": 15378,
+      "sha256": "cb0478fb7be3373ac9b70fdec8a5560f6e93cb552c0cf2670dabea7573f7e54c"
+    },
+    "joystick-games/story-thief/src/js/walk.js": {
+      "bytes": 7095,
+      "sha256": "ca6f3f00d1c923549d113feb10b9b79d23bbf222d6411f2dd26962f760fcf8dc"
+    },
+    "joystick-games/story-thief/src/manifest.webmanifest": {
+      "bytes": 937,
+      "sha256": "a9555b1272e6635170b164543c592b693db7cb6aea67758f961c995c98c945f1"
+    },
+    "joystick-games/story-thief/src/package.json": {
+      "bytes": 38,
+      "sha256": "0ce00e635c7b098ef6a307e609de09d4d8a839c66ec4c06777eb830482f72320"
+    },
+    "joystick-games/story-thief/src/style.css": {
+      "bytes": 15272,
+      "sha256": "c8129ab3c75b3feb046ff62674014d6e00205d21380018c8e9bdab6907755c2a"
+    },
+    "joystick-games/story-thief/tests/browser_sdk.py": {
+      "bytes": 6724,
+      "sha256": "071a25a10bb1995f8411c139b5fc2b333f7d3de2585290981d6b79ce861cdddb"
+    },
+    "joystick-games/story-thief/tests/story.test.mjs": {
+      "bytes": 1022,
+      "sha256": "a81940c4df9b90a4cd63957a3de8adf235eacabd6f5bbff56862f70f035a273d"
+    },
+    "joystick-games/story-thief/upstream.json": {
+      "bytes": 4084,
+      "sha256": "bd646218000bacbd491c123061d1cbbf07451ba4914d8d1b9ecc457bd4fb08d4"
+    },
+    "joystick-games/tools/asset-policy.py": {
+      "bytes": 2923,
+      "sha256": "49c67cdb1b71fcc65f7bd6f89765ac6857314a1a4bfa8dc7c69e3d768a05b751"
+    },
+    "joystick-games/tools/macos-verify.py": {
+      "bytes": 57222,
+      "sha256": "6add0ec04a022ec4d716e516199aed45e9279514d2b33246d8b88113db47ae41"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 8288,
+      "sha256": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9"
+    },
+    "joystick-games/tools/windows-build.py": {
+      "bytes": 15878,
+      "sha256": "eee38e0d3510bb25bdc54475e5ffc077c57d46186a4acfbb523e4910b6f5fd71"
+    },
+    "joystick-games/tools/windows-display.py": {
+      "bytes": 7004,
+      "sha256": "3a4bca5a17fd0cf33385812678d00dfd0cdde39d59f3342d906f5fb7b7b9ced1"
+    },
+    "joystick-games/tools/windows-evidence.py": {
+      "bytes": 3191,
+      "sha256": "fe06fad07277f3d942053d5d24865d1873327b39add24cb695d171a4491d8c4d"
+    },
+    "joystick-games/tools/windows-export.py": {
+      "bytes": 22039,
+      "sha256": "ae36160f6a3c5cc64c1b5279e6c564fc405568e75b229892f6079111d87e66c8"
+    },
+    "joystick-games/tools/windows-inputs.py": {
+      "bytes": 19003,
+      "sha256": "89fb90fce7866f635c0973913495a9dc5f59c0b67730504812fd28c79ddc699a"
+    },
+    "joystick-games/tools/windows-observation.py": {
+      "bytes": 5526,
+      "sha256": "99ac7dae5eb1d37c5e8191d0a18bf00335f744e66269b340dbe94a74a6dc88a4"
+    },
+    "joystick-games/tools/windows-packages.py": {
+      "bytes": 4260,
+      "sha256": "f7047bd558e268e61fb1cd30f9645fe9f5162a5c253d62a4ea286bfe780c4046"
+    },
+    "joystick-games/tools/windows-verify.py": {
+      "bytes": 43393,
+      "sha256": "a25eab4948cd3fe9c2cece63a2fc7d78f3f5682b5589112dc90a103b0836e730"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    }
+  },
+  "inputScope": {
+    "schemaVersion": 1,
+    "files": {
+      ".github/workflows/joystick-catalog-windows.yml": {
+        "bytes": 7329,
+        "sha256": "20e925be2efbf47b8dafac7a8fb576cfb1d9782a7f8859c9c57e82f04c636c1a",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/catalog-registry.json": {
+        "bytes": 9811,
+        "sha256": "d5999df4266e55efec83d9fcf6889cd801f3cfedee4c5eeff0d366754cb949e6",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/crisp/browser-qa.cjs": {
+        "bytes": 13791,
+        "sha256": "c24d4a5b92ee834316977982954e61b4a8d2f269986444d5aeea823330acd7df",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/browser-terminal.cjs": {
+        "bytes": 2890,
+        "sha256": "d067343e2abde73f38e9f6d4943ac290cb8006e3e4f6850459894dd6b4fa3f25",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/build.mjs": {
+        "bytes": 3289,
+        "sha256": "a9cc05e6111cdd943efad1ae9e2e887bb1fec24ad9b4fce5207c1f98aa39f7de",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/docs/verification.json": {
+        "bytes": 11940,
+        "sha256": "724afb00f2d7d8745792f0daee92127f2acb51aa8fee85c0504c7321782c9458",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/crisp-game-lib-MIT.txt": {
+        "bytes": 1066,
+        "sha256": "52ca6d86736a899b1e235eea0b7ff064f7dff44133f1dc317169feca6ab8af0e",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/earcut-ISC.txt": {
+        "bytes": 738,
+        "sha256": "cd661c432ea8243974e6fde6fc433ebee3e96525ca8b66321b9d9971674ede60",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/es6-promise-polyfill-MIT.txt": {
+        "bytes": 1076,
+        "sha256": "3e51cd9d5f508dda1a608454178266a834b870daec8021644a7e167966b2a460",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/eventemitter3-MIT.txt": {
+        "bytes": 1082,
+        "sha256": "3aecc12b1cb28832b5f65ab64291de96568c3f236a74d646281b4491f7bcadbf",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/FXAA-BSD-3-Clause.txt": {
+        "bytes": 1686,
+        "sha256": "54e239ce73d16fb4209f7e1a56ae9f213758b48db17a4e25bab36ecfba72b5ea",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/ismobilejs-MIT.txt": {
+        "bytes": 1067,
+        "sha256": "57c43c929cbc20653cb0e62620a413a8bc456888c1874ebc25d08e0122cd953e",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/jsfx-MIT.txt": {
+        "bytes": 1078,
+        "sha256": "f03ca91a3e505e98f30dbf52ec71b26ef9db4da1978c6f940c88114139b65aad",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/mini-signals-MIT.txt": {
+        "bytes": 1086,
+        "sha256": "07f9a37334ffe0050d63659021cc62e8745709b40048d597f7750fe7afdda3af",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/mml-iterator-MIT.txt": {
+        "bytes": 1081,
+        "sha256": "3e5805420e631c74c504b7d7daaf62e9f4daea306d639dc889469753ed8ac256",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/object-assign-MIT.txt": {
+        "bytes": 1119,
+        "sha256": "6fb9754611c20f6649f68805e8c990e83261f29316e29de9e6cedae607b8634c",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/parse-uri-MIT.txt": {
+        "bytes": 1084,
+        "sha256": "7ace2e75c11a8479938862cc38c56701d2b82ac79dd52a150c763ff7a1a4d36b",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/pixi-MIT.txt": {
+        "bytes": 1092,
+        "sha256": "536a16e090f0b6c1454a7c0b47ee8414a39a2f1724a154f10ca1edc750a2dcfd",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/punycode-MIT.txt": {
+        "bytes": 1077,
+        "sha256": "483acb265f182907d1caf6cff9c16c96f31325ed23792832cc5d8b12d5f88c8a",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/querystring-MIT.txt": {
+        "bytes": 1081,
+        "sha256": "cb72d9714ddc21e758d63f423be0caddf909d23ccbb10a2f5201a870818e4f57",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/resource-loader-MIT.txt": {
+        "bytes": 1077,
+        "sha256": "5d22ceec333fad4dfaefed6ab7238146292aa5b254e4c068b6ca76bcff352091",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/sounds-some-sounds-MIT.txt": {
+        "bytes": 1066,
+        "sha256": "52ca6d86736a899b1e235eea0b7ff064f7dff44133f1dc317169feca6ab8af0e",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/tonal-MIT.txt": {
+        "bytes": 1074,
+        "sha256": "0ff1a12a0f689d1a300dc75e1efce2f4154b3fc068ef2987adbb505ad2c52123",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/tslib-Apache-2.0.txt": {
+        "bytes": 9197,
+        "sha256": "a7d00bfd54525bc694b6e32f64c7ebcf5e6b7ae3657be5cc12767bce74654a47",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/tslib-CopyrightNotice.txt": {
+        "bytes": 834,
+        "sha256": "19246466cb51e46c12b22e43b4d2703ac981cb4295d061d6e20609bd5845510b",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/licenses/url-MIT.txt": {
+        "bytes": 1099,
+        "sha256": "97f780d3c79a42236f2b3435860f284c0ac6b958622f6bc9f1ac43fd49689b7b",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/patch-engine.mjs": {
+        "bytes": 2881,
+        "sha256": "edced99ad269174d0560ba4120a8b267b4d2b5da97083d1ac3cd448c4650539e",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/README.md": {
+        "bytes": 3033,
+        "sha256": "461fe96a619641cf959ef2e161cf838e6966f3169fd22037280674d32ea3358a",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/tv.css": {
+        "bytes": 3035,
+        "sha256": "fa3951189742d0baecbc0d1beac9153922e5b8e08dae2d2e15e6a44abf3c6fb0",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/tv.html": {
+        "bytes": 919,
+        "sha256": "1825c19270fee277869fed54d62d6afd8fa7f5cfc9622d8fc449d1b4c481025d",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/tv.js": {
+        "bytes": 6666,
+        "sha256": "1e55fabb4e70e13cb9edc42b3740d24fb716bb5c82d2a235b8a1bc4f5e7c34fd",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/vendor/crisp-game-lib-1.4.0.js": {
+        "bytes": 116469,
+        "sha256": "435d498516857230002c1fe2e443fa8dcddf065657e3422e228e9caa6e62938f",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/vendor/pixi-5.3.0.js": {
+        "bytes": 1538767,
+        "sha256": "4d9cfcad5d7698f4373b09905e8d852fb10c878bb77ea890d4aa64940b07735a",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/vendor/sounds-some-sounds-3.1.1.js": {
+        "bytes": 159783,
+        "sha256": "835c422789824b5d758da20399bc37d0039b62a5cadbd70b14d3235773d1d809",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/crisp/vendor-lock.json": {
+        "bytes": 1097,
+        "sha256": "9c23e7f9b55eccbbf5c3f8aad0077ddf3fa04e3bd18e55fff04a3809d351a41c",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/triptych/build.mjs": {
+        "bytes": 2172,
+        "sha256": "2c863097db3084c69f139339a31a96029d7deb529097aba58cd464e1f30fcfe1",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/triptych/tests/browser.mjs": {
+        "bytes": 8549,
+        "sha256": "560e20e1e81e7b1116c4eabcb02bd3462a4914f5af14d3151c896eb6f3c77133",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/triptych/tv.css": {
+        "bytes": 1033,
+        "sha256": "fb50b3d3ebc54a357a3274d6d995c22042031545e7da450064119452a30313eb",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/triptych/tv.js": {
+        "bytes": 2976,
+        "sha256": "3b07573ac7491a00e58e23e16133b33471b198917ae60fd1f9803bbf4488587e",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/web/controller-clients.js": {
+        "bytes": 7746,
+        "sha256": "3aa03cc8f276aa3c8b7f218fb3a5cac176bb2bb01b3aaec2cc59a69596a36e2a",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/web/input.js": {
+        "bytes": 8423,
+        "sha256": "d33a301f082f0100db81c055b4773e2947cf4c166f76f68dfe06344d5a4660f6",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/web/input.test.mjs": {
+        "bytes": 3842,
+        "sha256": "7f96d9616a3055a1474eb7ee78062ca04cae3c35e18309a52c447321942f102e",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/web/package.json": {
+        "bytes": 33,
+        "sha256": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+        "roles": [
+          "shared-derivation"
+        ]
+      },
+      "joystick-games/shared/windows/.gitattributes": {
+        "bytes": 137,
+        "sha256": "259f01c49955bd793756fc55ec8527d196510b556648986f993e7b0694750cb5",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/shared/windows/.gitignore": {
+        "bytes": 34,
+        "sha256": "0331b57b190f652a095524b47e933ebfbea5eac4d9c2be4c07a2d448620c21cb",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/shared/windows/CMakeLists.txt": {
+        "bytes": 2242,
+        "sha256": "a285a50f9e9373a21c2bf74885f5ec55b26c5351d0ac006da76f7c4f8ee8542e",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/shared/windows/dependencies.json": {
+        "bytes": 699,
+        "sha256": "95153a92be62c7cfbfb143d2920da05cf55be9d7aadf8e714d9ed2757823765f",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/shared/windows/README.md": {
+        "bytes": 10218,
+        "sha256": "879964fac6d4b167bcc99f7bfffba2391b6472281b0aa73f7e1bcd7a479a7ba9",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/shared/windows/Sources/app.manifest": {
+        "bytes": 920,
+        "sha256": "ef48f129919f09c77c8548633e0453080d15e0ae6ca70e80e3b5099a28427865",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/shared/windows/Sources/ControllerBind.hpp": {
+        "bytes": 1107,
+        "sha256": "3656034907322c28a7ba18174607190e2bf87f33b1f066beed8032142cfb8eca",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/shared/windows/Sources/ControllerProtocol.hpp": {
+        "bytes": 11856,
+        "sha256": "8bbff8302e57313ab9d7e93fe7bf4712188c50b2be94e131fbd8ecc29d4227b5",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/shared/windows/Sources/DiagnosticLog.hpp": {
+        "bytes": 1010,
+        "sha256": "e81581fdf9ac3412f84a9b1b8beed188d8f54afcf167936ccf0b39662388c86d",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/shared/windows/Sources/EntryURL.hpp": {
+        "bytes": 1351,
+        "sha256": "94b5efc011bac9d1153157d5da9d5df454e8cba6d73e409828389d03fee9cec8",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/shared/windows/Sources/main.cpp": {
+        "bytes": 35449,
+        "sha256": "6a77c9816ecd2d6671b2a4d53002d463dc8968c6aaa4c512e73d10783db4f133",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/shared/windows/Sources/Preferences.hpp": {
+        "bytes": 666,
+        "sha256": "c42b76a7a502bd33071c29f7d4f2f8603cab85f5709591e67a1f653ae699b4ae",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/shared/windows/tests/assets.test.py": {
+        "bytes": 9107,
+        "sha256": "0559b804d3fcaaef11278b97234c8f8bcf18d1c2e8e5a050cc74f8fe9cd9cfc2",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/bootstrap.test.mjs": {
+        "bytes": 3107,
+        "sha256": "9ae4986f6e363b9f97a7813e7a3b5b410cff6d1e082b4f241ec81279de2b8aa5",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/controller-bind.test.cpp": {
+        "bytes": 7689,
+        "sha256": "4de0677c8f91bf595d2270813c64040e811835fc116463f910a4f9cc011d79c9",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/diagnostic-log.test.cpp": {
+        "bytes": 2165,
+        "sha256": "55e0fe7248069a01f68f718683e7063ce3ccf5c6583dae58bf7e2f6ef40ce1b7",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/diagnostic-suspend.test.mjs": {
+        "bytes": 2412,
+        "sha256": "3daa9020c0368797e09a2f22da13b9a86873dbb1c4d41292bac6b83e75ce71af",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/display.test.py": {
+        "bytes": 3882,
+        "sha256": "70f21d3e3feb1674bc2710de58c387f82e477f9c7e13e435fba6fe78bc926e44",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/entry-url.test.cpp": {
+        "bytes": 1215,
+        "sha256": "dac1920734823e13ecb26ae948d073556fd3a84b51d6ad256d1c6ed320a248e8",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/export.test.py": {
+        "bytes": 21686,
+        "sha256": "c79f5e1d53412b3a5d5b96e4b1c2475870639ce8a387f7d52e1bad96a260162b",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/fixtures/win10-source-hashes.json": {
+        "bytes": 2455,
+        "sha256": "afd8d9277d2e75d7efddaad2c392aea34074b8c1ab60b7ced18d5ad00d18a613",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/fixtures/windows-runtime-storage-44615299245.json": {
+        "bytes": 36584,
+        "sha256": "1eb0f2476e1a1f41fc36b81233cc853ef3f94c2d3c7944eb92265f0bade2d3d9",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/gameplay.test.py": {
+        "bytes": 25771,
+        "sha256": "26f8288b589eb482fc82f811dfa169c0aad0580dddafbbd0345c3ef05e743887",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/installer.test.py": {
+        "bytes": 1555,
+        "sha256": "5c4aef727ca22b3ed2ef4ede1360b6eaa36c0b8d3dd109869847aef41e0998d4",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/navigation-observation.py": {
+        "bytes": 5557,
+        "sha256": "e366ff0260e5b517250fd5cd69ecd5f999cb1739fe7e0b910447a9c085dd8217",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/navigation-observation.test.py": {
+        "bytes": 3122,
+        "sha256": "406733543680ffd369de0b90aa71776ae8b3f8e83e59639f335966a69e16c89c",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/navigation-storage.test.py": {
+        "bytes": 8079,
+        "sha256": "c57f0090974cb697360d1ddad6b5baae9e810537e25ee945f34a250483f0089c",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/observation.test.py": {
+        "bytes": 8890,
+        "sha256": "10ea7491d37721a3dc3816bbfa08f4a65427b4af81a71326c9bc4abed00820a0",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/preferences.test.cpp": {
+        "bytes": 1482,
+        "sha256": "ac5d89184f84ba32fb99f5083e924a9187a1707be5b7b5c1c3bc213cd2fa582c",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/protocol.test.cpp": {
+        "bytes": 20280,
+        "sha256": "b91eaaa780787cf31f34307857bc25adcef175061275091eee8c3b60939f1b12",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/reexport.test.py": {
+        "bytes": 15562,
+        "sha256": "3125921c4e37e464297f04f47e92c3048f513e67d2c75f631e30b547397e4e6a",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/source-inputs.test.py": {
+        "bytes": 2024,
+        "sha256": "9b7105065d2be566e13b2781474e5459411a6a32012e3a62f1c13e836d8ad0da",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/source-scope.test.py": {
+        "bytes": 32048,
+        "sha256": "0305365bd086bc8bf57386ad38a9346712dca48a683ac5bc63760d9015633575",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/web-bridge.test.mjs": {
+        "bytes": 14650,
+        "sha256": "cdb32152e4616328ea99d494c1e1445c118de0788c8533c4510e89e5fdbb7bec",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/tests/window-lifecycle.test.py": {
+        "bytes": 18804,
+        "sha256": "02472fb25a07dcd5ca6270f4e6f691529cbd829a32f7d2fc3ff11d979e4c30b0",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/shared/windows/Web/bootstrap.js": {
+        "bytes": 895,
+        "sha256": "b2064db9df208f80bcf5cb24c82bede7c99cbc06faa8a4573895050ad663dfc7",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/shared/windows/Web/bridge.js": {
+        "bytes": 8739,
+        "sha256": "e4de0862673f30c254e02597f45b8fbac0382b2e2e6a5ae8aee819ad4d1f0a89",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/shared/windows/Web/diagnostics.js": {
+        "bytes": 3184,
+        "sha256": "fcd8094568b6e48ab78bcdc1e11b7f12d320e7fa6a938e587e1cc2a716fc787e",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/story-thief/.gitattributes": {
+        "bytes": 40,
+        "sha256": "2bded3236a88f2f116fbc1f24e299971307038b91987ca991a949b024784c7b2",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/build.mjs": {
+        "bytes": 137,
+        "sha256": "0f3ffb28326a708b7cc80778b527e5959b58bfd9cc7ab9ef839da6ad8edfd13e",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/dist/THIRD-PARTY-NOTICES.txt": {
+        "bytes": 1377,
+        "sha256": "ec691a5d53f94ab886d49478ff858458a0d0f3fe20cca064993a675a17386eaa",
+        "roles": [
+          "packaged-assets"
+        ]
+      },
+      "joystick-games/story-thief/dist/tv.html": {
+        "bytes": 221749,
+        "sha256": "04460dd221e57ffc58bb291f4bf5c1f8e8d86b09f620b11554d035b73f77e292",
+        "roles": [
+          "packaged-assets"
+        ]
+      },
+      "joystick-games/story-thief/game.json": {
+        "bytes": 509,
+        "sha256": "9e2b12827299ff7522be5345bec4a21aa85d699858daa8a12894f03158b567cc",
+        "roles": [
+          "game-derivation",
+          "game-metadata"
+        ]
+      },
+      "joystick-games/story-thief/icon.xml": {
+        "bytes": 444,
+        "sha256": "745837f93f4fb5f108bdb3fc6820556c90576154cba5fa89dc7c99aee4538b48",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/LICENSE": {
+        "bytes": 1074,
+        "sha256": "817f65ae87dcd4fc4fa968827e9056e86682096925c62b34e6c10f10597b77db",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/logo.svg": {
+        "bytes": 276,
+        "sha256": "313f396c858134b0451b68060e54dbb151ba89f526e20b636bcb803374e2650d",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/NOTICE.md": {
+        "bytes": 1377,
+        "sha256": "ec691a5d53f94ab886d49478ff858458a0d0f3fe20cca064993a675a17386eaa",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/package-lock.json": {
+        "bytes": 14467,
+        "sha256": "945009fd8c95bbb1a846fddf0605502d72f82473bd408a70a26a25733531eeb8",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/package.json": {
+        "bytes": 280,
+        "sha256": "7c650a5507868f23e85a218ff3c2bfb7a33a76df5ec94e5fcd92e07e4ceef56e",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/qa-plan.json": {
+        "bytes": 12922,
+        "sha256": "a2f53f5e2f635ff797919a91f84787d2abfb3d60030e7641d6ad6943a341909c",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/README.md": {
+        "bytes": 2270,
+        "sha256": "edc6cc66cdcc2ca421d4522e97d5f1b71ff92792258b77d3e51b9e5a76d25c12",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/dev/mobiletest.mjs": {
+        "bytes": 8523,
+        "sha256": "9c6e75741280fc87133fc78d0e01ef4f381d5ec749a1cdb2979101a1c76dd6b5",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/dev/README.md": {
+        "bytes": 3704,
+        "sha256": "331e436ca165f6d15af4489ae8eccb42f21243cd4adfe12e84731f202b238e31",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/dev/shots.mjs": {
+        "bytes": 1197,
+        "sha256": "6b6dc82a04b07e345b3f6535d5abd484a0af589999254f0705c2d82d8e0915fa",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/dev/walkthrough.mjs": {
+        "bytes": 18464,
+        "sha256": "ae2a3af10d203a63f322c61d56da1997199ae16645f05834a84bab277de6dc8e",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/game-plan.md": {
+        "bytes": 9756,
+        "sha256": "dadb87b993693604a3c1e924bed9ac2f4478310a1d80562412a98cd0bf597f7c",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/icons/favicon-32.png": {
+        "bytes": 2292,
+        "sha256": "0fc7b3d4a4be1916cc7f50dfe4385b9bd8f2e796c3b47adabd88bfb32e4a6c70",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/icons/icon-180.png": {
+        "bytes": 20638,
+        "sha256": "974cb725d47847db627b6dd9ba49a8acc2ea5a57774b7f5ee22a9a7fb3f74594",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/icons/icon-192.png": {
+        "bytes": 23359,
+        "sha256": "6d75e185a1922ed9917368e5a7ccf6203a3113bf6c8826954bd4c90a81d442ef",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/icons/icon-512.png": {
+        "bytes": 122262,
+        "sha256": "363fdb878a25c6db97d4492c28d1d18c3a27ea0d3cd39f37b4903f94d23e9213",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/icons/icon-96.png": {
+        "bytes": 7887,
+        "sha256": "60a66ee09a957ac7e56f03e124ae9023219c31350e23c1ad59de14027b6ef307",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/index.html": {
+        "bytes": 4186,
+        "sha256": "b1b7430d53c0403db3c291f6707862e83a513e06f992dc6ee0df3c56285e0079",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/art.js": {
+        "bytes": 2663,
+        "sha256": "67802884629ec62090c9a4e6345f211f383a61c6ce4f688236e8f5b805863d92",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/events.js": {
+        "bytes": 975,
+        "sha256": "71f06e3e5a66642a68123ecf10fee856b2f89c389038d030baeca31620dae1fc",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/items.js": {
+        "bytes": 10171,
+        "sha256": "a2765017cc717dc6f84cb1975fd1b4a815e7f5974352bcd5403cd6250e53ccd0",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/main.js": {
+        "bytes": 32031,
+        "sha256": "41dd220e202f78695496007b7797b535646f69d4bcbbc5ee176e1248d6bb61f7",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/npcs.js": {
+        "bytes": 15635,
+        "sha256": "1725ff2a65c800edc6b18ce257b82e8619faaa1671833ece1530deac64ba942b",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/paint.js": {
+        "bytes": 9832,
+        "sha256": "b3f6c06862de8ec6c6ce3207c0ccf680513a9a2d589b4c106705683b7026451f",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/palette.js": {
+        "bytes": 4191,
+        "sha256": "7340634394d8983fdcc2a6343b554920bcf610d77b119539d2b37929b6fb14b1",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/scenes/bridge.js": {
+        "bytes": 15104,
+        "sha256": "8559c879cb07c08aa01725df4722922fffe7efda96dd5004525d911ed99387e5",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/scenes/cavern.js": {
+        "bytes": 11733,
+        "sha256": "fed61a14bf3831a224cca8a0e946a5d40d8fef860a7ed463a156fb5bdca1d1cf",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/scenes/common.js": {
+        "bytes": 9172,
+        "sha256": "e4c72d2db39700c052b32bec56718f311833d828262663aea40791305f283ae9",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/scenes/cottage.js": {
+        "bytes": 19373,
+        "sha256": "c40bc1ac348c0624c983dd5cb0b48aec82a2f710eb7567eed147fea2fc444ca8",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/scenes/gate.js": {
+        "bytes": 15261,
+        "sha256": "8a8ce5e48853d2458c51e04e5cfd4b667fbb9eb9e6b35140227610bfbe6c5d64",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/scenes/green.js": {
+        "bytes": 19509,
+        "sha256": "4e7ff1da557c5038df72c713b71c1efd8a08f76ad80d05991a85eb9b95212838",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/scenes/hut.js": {
+        "bytes": 17746,
+        "sha256": "d544d854bde7597278718f5bb605c6a839fdc323d1318fbf466ee0f3ba7dfedd",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/scenes/index.js": {
+        "bytes": 1395,
+        "sha256": "ff01f339e70b99910628ac2ae6ce58a4622697771d2977dc0696db1024b87b43",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/scenes/library.js": {
+        "bytes": 16706,
+        "sha256": "0468fb1d42aa60336d4079be9db31cd9e6cec38993ff6234edd3bb42b99f0f26",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/scenes/pines.js": {
+        "bytes": 14593,
+        "sha256": "4371a2623407189dde272525b82a95edff4dda3743afb1558cbe0dfe1e992704",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/scenes/sanctum.js": {
+        "bytes": 28666,
+        "sha256": "18308d32eb1c3861192e182d9fb8cf558dc2dcfbe36ef3d4b978be91db387e20",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/scenes/tower.js": {
+        "bytes": 14304,
+        "sha256": "3502247536489a5eb15315d71a2740f6297e83ac464ae2847ad770b8d6cdc738",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/sounds.js": {
+        "bytes": 8673,
+        "sha256": "237cbd9cbdd3997138fd491c190c7c86ea9e7e3ac7caf0a3962b7578bec4d61a",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/sprites.js": {
+        "bytes": 7137,
+        "sha256": "03c059a9e73067e68fe3eca282ccb297c074bbc2b9f0db350b1d46288a174a33",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/state.js": {
+        "bytes": 5199,
+        "sha256": "5cd45533f0eef83561d5e81aec4a4efb935fff7cafd3f0895ee65a816c09fd5a",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/tale-clock.js": {
+        "bytes": 549,
+        "sha256": "893a2cb5bd264adde9a87c111a9cd6713d6bd9b2fb6685f58db4caa5bbfd319e",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/tv.js": {
+        "bytes": 2674,
+        "sha256": "acd0db3731a2adfc1be3df7a2131569b25555a6dd7a2776fe9fd10f866bcdde1",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/ui.js": {
+        "bytes": 15378,
+        "sha256": "cb0478fb7be3373ac9b70fdec8a5560f6e93cb552c0cf2670dabea7573f7e54c",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/js/walk.js": {
+        "bytes": 7095,
+        "sha256": "ca6f3f00d1c923549d113feb10b9b79d23bbf222d6411f2dd26962f760fcf8dc",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/manifest.webmanifest": {
+        "bytes": 937,
+        "sha256": "a9555b1272e6635170b164543c592b693db7cb6aea67758f961c995c98c945f1",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/package.json": {
+        "bytes": 38,
+        "sha256": "0ce00e635c7b098ef6a307e609de09d4d8a839c66ec4c06777eb830482f72320",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/src/style.css": {
+        "bytes": 15272,
+        "sha256": "c8129ab3c75b3feb046ff62674014d6e00205d21380018c8e9bdab6907755c2a",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/tests/browser_sdk.py": {
+        "bytes": 6724,
+        "sha256": "071a25a10bb1995f8411c139b5fc2b333f7d3de2585290981d6b79ce861cdddb",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/tests/story.test.mjs": {
+        "bytes": 1022,
+        "sha256": "a81940c4df9b90a4cd63957a3de8adf235eacabd6f5bbff56862f70f035a273d",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/story-thief/upstream.json": {
+        "bytes": 4084,
+        "sha256": "bd646218000bacbd491c123061d1cbbf07451ba4914d8d1b9ecc457bd4fb08d4",
+        "roles": [
+          "game-derivation"
+        ]
+      },
+      "joystick-games/tools/asset-policy.py": {
+        "bytes": 2923,
+        "sha256": "49c67cdb1b71fcc65f7bd6f89765ac6857314a1a4bfa8dc7c69e3d768a05b751",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/tools/macos-verify.py": {
+        "bytes": 57222,
+        "sha256": "6add0ec04a022ec4d716e516199aed45e9279514d2b33246d8b88113db47ae41",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/tools/qa-plan.py": {
+        "bytes": 8288,
+        "sha256": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/tools/windows-build.py": {
+        "bytes": 15878,
+        "sha256": "eee38e0d3510bb25bdc54475e5ffc077c57d46186a4acfbb523e4910b6f5fd71",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/tools/windows-display.py": {
+        "bytes": 7004,
+        "sha256": "3a4bca5a17fd0cf33385812678d00dfd0cdde39d59f3342d906f5fb7b7b9ced1",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/tools/windows-evidence.py": {
+        "bytes": 3191,
+        "sha256": "fe06fad07277f3d942053d5d24865d1873327b39add24cb695d171a4491d8c4d",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/tools/windows-export.py": {
+        "bytes": 22039,
+        "sha256": "ae36160f6a3c5cc64c1b5279e6c564fc405568e75b229892f6079111d87e66c8",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/tools/windows-inputs.py": {
+        "bytes": 19003,
+        "sha256": "89fb90fce7866f635c0973913495a9dc5f59c0b67730504812fd28c79ddc699a",
+        "roles": [
+          "host-build"
+        ]
+      },
+      "joystick-games/tools/windows-observation.py": {
+        "bytes": 5526,
+        "sha256": "99ac7dae5eb1d37c5e8191d0a18bf00335f744e66269b340dbe94a74a6dc88a4",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/tools/windows-packages.py": {
+        "bytes": 4260,
+        "sha256": "f7047bd558e268e61fb1cd30f9645fe9f5162a5c253d62a4ea286bfe780c4046",
+        "roles": [
+          "qa"
+        ]
+      },
+      "joystick-games/tools/windows-verify.py": {
+        "bytes": 43393,
+        "sha256": "a25eab4948cd3fe9c2cece63a2fc7d78f3f5682b5589112dc90a103b0836e730",
+        "roles": [
+          "qa"
+        ]
+      },
+      "puretv-joystick/joystick_sdk.py": {
+        "bytes": 2188,
+        "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+        "roles": [
+          "qa"
+        ]
+      }
+    },
+    "excluded": {
+      "joystick-games/shared/windows/docs": "historical evidence; preserved at original source/run"
+    },
+    "game": "story-thief",
+    "localDependencyRoots": []
+  },
+  "appFiles": {
+    "game.json": {
+      "bytes": 509,
+      "sha256": "9e2b12827299ff7522be5345bec4a21aa85d699858daa8a12894f03158b567cc"
+    },
+    "Host-Licenses/LICENSE.txt": {
+      "bytes": 1487,
+      "sha256": "0af8f1b807512aae39c2ac1aa4d0cae65cabecb6fd554b8439a5162a0d6eca55"
+    },
+    "Host-Licenses/nlohmann-json-MIT.txt": {
+      "bytes": 1076,
+      "sha256": "86b998c792894ccb911a1cb7994f7a9652894e7a094c0b5e45be2f553f45cf14"
+    },
+    "Host-Licenses/NOTICE.txt": {
+      "bytes": 3894,
+      "sha256": "106423785c5b7eba0a8e61d1837f2132e9c828e20ad530f565d981c1df60dd90"
+    },
+    "LICENSE": {
+      "bytes": 1074,
+      "sha256": "817f65ae87dcd4fc4fa968827e9056e86682096925c62b34e6c10f10597b77db"
+    },
+    "NOTICE.md": {
+      "bytes": 1377,
+      "sha256": "ec691a5d53f94ab886d49478ff858458a0d0f3fe20cca064993a675a17386eaa"
+    },
+    "PureTVGame.exe": {
+      "bytes": 644096,
+      "sha256": "703a45945e59863623ffbb911035793a9546b6dfa858588c0a5a9a6680fb36b0"
+    },
+    "README.txt": {
+      "bytes": 470,
+      "sha256": "95631a3ac2cc3d06e16c4b1ae53afa2e5ae56766aee6ce1a9be396b5714e0c5c"
+    },
+    "upstream.json": {
+      "bytes": 4084,
+      "sha256": "bd646218000bacbd491c123061d1cbbf07451ba4914d8d1b9ecc457bd4fb08d4"
+    },
+    "Web/bootstrap.js": {
+      "bytes": 895,
+      "sha256": "b2064db9df208f80bcf5cb24c82bede7c99cbc06faa8a4573895050ad663dfc7"
+    },
+    "Web/bridge.js": {
+      "bytes": 8739,
+      "sha256": "e4de0862673f30c254e02597f45b8fbac0382b2e2e6a5ae8aee819ad4d1f0a89"
+    },
+    "Web/diagnostics.js": {
+      "bytes": 3184,
+      "sha256": "fcd8094568b6e48ab78bcdc1e11b7f12d320e7fa6a938e587e1cc2a716fc787e"
+    },
+    "Web/THIRD-PARTY-NOTICES.txt": {
+      "bytes": 1377,
+      "sha256": "ec691a5d53f94ab886d49478ff858458a0d0f3fe20cca064993a675a17386eaa"
+    },
+    "Web/tv.html": {
+      "bytes": 221749,
+      "sha256": "04460dd221e57ffc58bb291f4bf5c1f8e8d86b09f620b11554d035b73f77e292"
+    }
+  },
+  "packages": {
+    "StoryThief-0.1.0-windows-x64.zip": {
+      "bytes": 383547,
+      "sha256": "1f63fcb66e176cdc8e04795579441889ed96739294697a54cfbbd0cdb61a1fd5"
+    },
+    "StoryThief-0.1.0-windows-x64-setup.exe": {
+      "bytes": 466440,
+      "sha256": "00b407a9cc967d23894488641b07b68cf0cfe20ba39942c990b22c576746b01b"
+    }
+  }
+}
