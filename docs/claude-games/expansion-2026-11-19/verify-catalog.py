@@ -5,6 +5,7 @@ import hashlib
 import json
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -39,36 +40,40 @@ for result in citation['results']:
     assert result['ok'] and not result['errors']
     assert all(check['ok'] for check in result['checks'])
 
-cn = (ROOT / 'README.md').read_text()
-en = (ROOT / 'README.en.md').read_text()
-begin, end = '<!-- claude-games:start -->', '<!-- claude-games:end -->'
-block = cn.split(begin, 1)[1].split(end, 1)[0]
-table_rows = [line for line in block.splitlines() if line.startswith('| [')]
-assert len(table_rows) == 380
-assert block.count('<details') == block.count('</details>') == 8
+
+directory = HERE.parent
+for name in ['porting-baseline-93.json', 'tv-assessment.json', 'tv-assessment.md']:
+    path = directory / name
+    assert path.read_bytes() == subprocess.check_output(['git', 'show', BASE + ':' + str(path.relative_to(ROOT))], cwd=ROOT)
+subprocess.run([sys.executable, str(directory / 'render-catalog.py'), '--check'], check=True)
+cn = (directory / 'catalog.md').read_text()
+en = (directory / 'catalog.en.md').read_text()
+table_rows = [line for line in cn.splitlines() if line.startswith('| [')]
+assert len(table_rows) == len(games)
+assert cn.count('<details') == cn.count('</details>') == len(current['categoryCounts'])
 for category, count in current['categoryCounts'].items():
-    assert f'{category}（{count}）' in block
+    assert f'{category}（{count}）' in cn
 for game in games:
-    assert block.count('](' + game['sourceUrl'] + ')') == 1, game['title']
-assert '380 项 / 236 个仓库' in block and '380' in en and '236' in en
-assert '79 项' in block and '79 newly researched' in en
-for name in ['README.md', 'README.en.md']:
-    previous = subprocess.check_output(['git', 'show', BASE + ':' + name], cwd=ROOT).decode()
-    now = (ROOT / name).read_text()
-    assert previous.split(begin, 1)[0] == now.split(begin, 1)[0]
-    assert previous.split(end, 1)[1] == now.split(end, 1)[1]
-for name in ['docs/claude-games/porting-baseline-93.json', 'docs/claude-games/tv-assessment.json',
-             'docs/claude-games/tv-assessment.md', 'joystick-games/catalog-registry.json',
-             'joystick-games/porting-progress.json']:
-    assert (ROOT / name).read_bytes() == subprocess.check_output(['git', 'show', BASE + ':' + name], cwd=ROOT)
-paths = [ROOT / 'README.md', ROOT / 'README.en.md', ROOT / 'docs/claude-games/catalog.json', ROOT / 'docs/claude-games/README.md']
-paths += [p for p in HERE.rglob('*') if p.is_file() and p.name not in {'verification.json', 'publication-verification.json'}]
-result = {'checkedAt': '2026-11-19', 'ok': True, 'baselineCommit': BASE, 'count': len(games),
-          'addedCount': len(added), 'repositoryCount': current['repositoryCount'], 'categoryCounts': current['categoryCounts'],
-          'independentlyRefetchedCitations': citation['passed'],
-          'independentlyRefetchedSourceFiles': sum(c['name'].startswith('source:') for r in citation['results'] for c in r['checks']),
-          'priorReferencesPreserved': 301, 'readmeOutsideReferenceBlocksUnchanged': True,
-          'originalPortingScopeAndPublishedCountsUnchanged': True, 'newGamesPlaytested': False,
-          'files': {str(p.relative_to(ROOT)): {'bytes': p.stat().st_size, 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(paths)}}
-(HERE / 'verification.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
-print(json.dumps({k: v for k, v in result.items() if k != 'files'}, ensure_ascii=False))
+    assert cn.count('](' + game['sourceUrl'] + ')') == 1, game['title']
+assert '380 项 / 236 个仓库' in cn and '380 games from 236 GitHub repositories' in en
+assert '[full catalog](catalog.md)' in en
+for homepage, entry in [('README.md', 'catalog.md'), ('README.en.md', 'catalog.en.md')]:
+    text = (ROOT / homepage).read_text()
+    assert f'](docs/claude-games/{entry})' in text, f'{homepage} is missing its catalog link'
+    assert '| 游戏与源码 | 玩法与看点 | 运行方式 / 入口 | Claude 依据 / 许可 |' not in text
+
+for page in [directory / 'catalog.md', directory / 'catalog.en.md', directory / 'README.md', HERE / 'README.md']:
+    for url in re.findall(r'\]\(([^ )]+)\)', page.read_text()):
+        if url.startswith(('https://', 'http://', '#')):
+            continue
+        name, _, anchor = url.partition('#')
+        target = (page.parent / name).resolve()
+        if not target.exists():
+            # A sparse checkout may omit a valid destination in the repository.
+            repo_path = target.relative_to(ROOT).as_posix()
+            subprocess.run(['git', 'cat-file', '-e', f'HEAD:{repo_path}'], cwd=ROOT, check=True)
+        if target.name == 'catalog.md' and anchor:
+            assert f'id="{anchor}"' in cn, f'{page.name} links to a missing category: {anchor}'
+
+print(f"Verified {len(games)} entries, {current['repositoryCount']} repositories, "
+      f"{len(current['categoryCounts'])} categories, {len(old['games'])} original entries and {len(added)} additions.")
