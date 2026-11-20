@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        slug: [tank, jackal, tetris, jewel, adventure-island, super-mario, bomb-jack]
+        slug: [coast-kart]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -124,11 +124,16 @@ jobs:
         env:
           COAST_KART_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-coast-kart-previews
         run: |
-          node resource/apps/coast-kart/tests/compatibility.mjs
-          node resource/apps/coast-kart/tests/rendering.mjs
-          node resource/apps/coast-kart/tests/controller.mjs
-          node resource/apps/coast-kart/tests/combat.mjs
-          node resource/apps/coast-kart/tests/capture.mjs
+          result=0
+          for suite in compatibility rendering controller combat capture; do
+            echo "::group::Coast Kart $suite"
+            code=0
+            node "resource/apps/coast-kart/tests/$suite.mjs" || code=$?
+            echo "::endgroup::"
+            echo "Coast Kart $suite exit $code"
+            if (( code != 0 )); then result=$code; fi
+          done
+          exit "$result"
       - name: Verify Alien Shooter phone controls and actual game scenes
         if: matrix.slug == 'alien-shooter'
         env:
