@@ -4,11 +4,11 @@
 
 ## Android TV
 
-[下载 Kart Royale 0.1.3 签名 APK](kart-royale-0.1.3.apk)。最低系统为 Android 8（API 26），游戏需要 WebGL 2。安装后启动游戏，在同一局域网连接 pureTV 手柄，用十字键和 A 选择车手并开始比赛。
+[下载 Kart Royale 0.1.4 签名 APK](kart-royale-0.1.4.apk)。最低系统为 Android 8（API 26），游戏需要 WebGL 2。已安装 0.1.3 的玩家可使用相同包名与签名的 0.1.4 覆盖升级。安装后启动游戏，在同一局域网连接 pureTV 手柄，用十字键和 A 选择车手并开始比赛。
 
-Android TV 模拟器安装原包后，通过默认端口 63485 和占用时的回退端口 34137 分别跑完 58 项检查。两种模式都在原赛道完成真实加速、暂停与重新连接。在新建 Android TV 14 模拟器首次更新 Google 系统组件时，系统曾随字体服务退出一并终止游戏。软件 GPU 的启动时间也受设备性能影响。[系统退出记录](docs/android-tv14-first-boot-exits.json) · [Android 验证与行驶原图](docs/android-delivery/README.md) · [各版本环境与耗时](docs/android-tv-20261120.md)
+Android TV 14 软件渲染模拟器在首次启动游戏前完成 Google 系统服务更新，随后默认端口 63485 完成 58 项检查。端口占用时回退到 35045，也完成 58 项。两次都在首圈实际驾驶，随后暂停、断线并恢复。两次从建立观察端口到出现可操作菜单分别为 24.1 秒与 19.5 秒。[0.1.4 原生验收与驾驶原图](docs/android-0.1.4/README.md) · [各版本实测与首次开机记录](docs/android-tv-20261120.md)
 
-另可下载保留的 [Android 0.1.4 测试 APK](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/kart-royale-0.1.4.apk)。该版本的端口、环境与画面见[各版本实测记录](docs/android-tv-20261120.md)。
+上一正式版本 [0.1.3 签名 APK](kart-royale-0.1.3.apk) 仍可下载，该版本在默认及回退端口也各通过 58 项。[0.1.3 原生验收与驾驶原图](docs/android-delivery/README.md)
 
 ## Windows 下载
 
