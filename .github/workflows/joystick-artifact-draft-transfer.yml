@@ -1,68 +1,46 @@
-name: Copy original catalog artifact to existing draft
-on:
-  workflow_dispatch:
-    inputs:
-      source_run:
-        description: Original catalog run ID
-        required: true
-        type: string
-      source_attempt:
-        description: Original run attempt
-        required: true
-        default: '1'
-        type: string
-      source_sha:
-        description: Exact original 40-character source commit
-        required: true
-        type: string
-      artifact_id:
-        description: Original package artifact ID (ZIP bytes stay unchanged)
-        required: true
-        type: string
-      release_id:
-        description: Existing draft release ID with exact staging tag/source
-        required: true
-        type: string
+name: Publish a verified original racing APK
+on: workflow_dispatch
 permissions:
-  actions: read
   contents: write
-concurrency:
-  group: artifact-draft-transfer-${{ inputs.release_id }}
-  cancel-in-progress: false
 jobs:
-  transfer:
+  copy-original:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
     env:
       GH_TOKEN: ${{ github.token }}
-      SOURCE_RUN: ${{ inputs.source_run }}
-      SOURCE_ATTEMPT: ${{ inputs.source_attempt }}
-      SOURCE_SHA: ${{ inputs.source_sha }}
-      ARTIFACT_ID: ${{ inputs.artifact_id }}
-      RELEASE_ID: ${{ inputs.release_id }}
+      REPO: ecojust/pureTV
+      RELEASE_ID: '452406828'
+      SOURCE: a5b51e14b506995bc8da67f024f00d107962518d
+      FILE_NAME: backroad-rally-0.1.2.apk
+      APK_DIGEST: 67f61471e0e23e9ea963475425d5c43fa9d3265167f9028bd55dc319494fbe3c
+      APK_SIZE: '105024551'
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          sparse-checkout: |
-            joystick-games/tools
-            .github/workflows
-      - name: Test transfer boundaries without network or release writes
-        run: python3 joystick-games/tools/artifact-draft-transfer-test.py
-      - name: Verify original ZIP and upload once to the existing draft
+      - name: Verify the original Android release file
         run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py transfer \
-            --run "$SOURCE_RUN" --attempt "$SOURCE_ATTEMPT" --source "$SOURCE_SHA" \
-            --artifact "$ARTIFACT_ID" --release "$RELEASE_ID" \
-            --output "$RUNNER_TEMP/artifact-draft-transfer"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: artifact-draft-transfer-receipt
-          path: ${{ runner.temp }}/artifact-draft-transfer/receipts/transfer.json
-          if-no-files-found: warn
-      - name: Preserve only the small receipt on a new immutable branch
-        if: always()
+          set -euo pipefail
+          gh api "repos/$REPO/releases/$RELEASE_ID" | jq -e --arg source "$SOURCE" '.draft and .tag_name=="joystick-backroad-rally-android-v0.1.2" and .target_commitish==$source'
+          gh api "repos/$REPO/releases/assets/770746982" | jq -e --arg name "$FILE_NAME" --arg sha "sha256:$APK_DIGEST" --argjson bytes "$APK_SIZE" '.name==$name and .state=="uploaded" and .digest==$sha and .size==$bytes'
+          curl --fail --show-error --silent --location --retry 3 "https://github.com/$REPO/releases/download/joystick-racing-nine-test-20261120/$FILE_NAME" --output "$FILE_NAME"
+          test "$(stat -c %s "$FILE_NAME")" = "$APK_SIZE"
+          echo "$APK_DIGEST  $FILE_NAME" > SHA256SUMS.txt
+          sha256sum --check --strict SHA256SUMS.txt
+          SIGNER=$("$ANDROID_HOME/build-tools/34.0.0/apksigner" verify --print-certs "$FILE_NAME" | awk '/^Signer #[0-9]+ certificate SHA-256 digest:/{print $NF}')
+          test "$SIGNER" = eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23
+          "$ANDROID_HOME/build-tools/34.0.0/aapt" dump badging "$FILE_NAME" > badging.txt
+          grep -Fq "package: name='com.ecojust.joystick.backroadrally' versionCode='3' versionName='0.1.2'" badging.txt
+          grep -Fq "sdkVersion:'26'" badging.txt
+          grep -Fq "targetSdkVersion:'35'" badging.txt
+      - name: Copy the game and checksum to the versioned release
         run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py export-receipt \
-            --directory "$RUNNER_TEMP/artifact-draft-transfer/receipts"
+          set -euo pipefail
+          upload() {
+            local name=$1 type=$2 digest bytes count
+            digest="sha256:$(sha256sum "$name" | cut -d' ' -f1)"
+            bytes=$(stat -c %s "$name")
+            count=$(gh api "repos/$REPO/releases/$RELEASE_ID/assets" | jq --arg n "$name" '[.[]|select(.name==$n)]|length')
+            if [ "$count" = 0 ]; then
+              curl --fail --show-error --silent -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Content-Type: $type" --data-binary "@$name" "https://uploads.github.com/repos/$REPO/releases/$RELEASE_ID/assets?name=$name" | jq -e --arg sha "$digest" --argjson size "$bytes" '.digest==$sha and .size==$size'
+            fi
+            gh api "repos/$REPO/releases/$RELEASE_ID/assets" | jq -e --arg n "$name" --arg sha "$digest" --argjson size "$bytes" 'any(.[]; .name==$n and .state=="uploaded" and .size==$size and .digest==$sha)'
+          }
+          upload "$FILE_NAME" application/vnd.android.package-archive
+          upload SHA256SUMS.txt text/plain
