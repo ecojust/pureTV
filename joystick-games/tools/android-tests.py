@@ -107,8 +107,8 @@ class TargetSdkBoundaries(unittest.TestCase):
         meta = {'packageName': 'com.ecojust.joystick.backroadrally', 'version': '0.1.0', 'versionCode': 1}
         info = {'packageName': meta['packageName'], 'versionName': meta['version'], 'versionCode': 1,
                 'bytes': 100, 'certificateSha256': None}
-        with patch.object(release, 'apk_info', return_value=info), patch.object(build, 'metadata', return_value=meta), \
-             patch.object(build, 'limits', return_value={'maxApkBytes': 1000}):
+        with patch.object(release, 'apk_info', return_value=info), patch.object(release.build, 'metadata', return_value=meta), \
+             patch.object(release.build, 'limits', return_value={'maxApkBytes': 1000}):
             for text in ("sdkVersion:'26'\ntargetSdkVersion:'29'\n", "sdkVersion:'27'\ntargetSdkVersion:'35'\n",
                          "sdkVersion:'26'\n", "sdkVersion:'26'\ntargetSdkVersion:'35'\ntargetSdkVersion:'35'\n"):
                 with patch.object(release.subprocess, 'check_output', return_value=text), self.assertRaises(AssertionError):
