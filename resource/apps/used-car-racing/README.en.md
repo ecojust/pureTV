@@ -1,13 +1,35 @@
 # Used Car Racing TV
 
+## Android 0.1.7 · Returning to a phone-controlled race
+
+<!-- apk-resource:start -->
+[Download the signed APK](used-car-racing-0.1.7.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
+<!-- apk-resource:end -->
+
+Cancel the TV’s exit dialog to return to a race started with a phone. The game waits for the phone’s current room status before continuing. A race you paused manually stays paused. A pureTV Wi-Fi controller resumes with a fresh START press.
+
+The original phone page drove the car on Android TV. Selecting **Keep playing** in the TV’s exit dialog continued the race, while a race that had been paused manually stayed paused until the next START. [Android phone and dialog test](https://github.com/ecojust/pureTV/blob/964036b6e0526beaaa8650bc0f362e5b50c6cbb4/phone-dialog.json)
+
+The signed APK upgraded 0.1.6 in place on Android TV. Driving, pause, reconnect and two controller seats passed all 9 checks with 107 matching SDK acknowledgements. [Game screenshot](docs/releases/0.1.7/gameplay.png) · [Gameplay recording](docs/releases/0.1.7/gameplay.mp4?raw=1) · [Verification](docs/releases/0.1.7/verification.json)
+
+## Earlier release 0.1.6 · Controllers and phone pairing
+
+<!-- previous-0.1.6-apk-resource:start -->
+[Download the signed APK](used-car-racing-0.1.6.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
+<!-- previous-0.1.6-apk-resource:end -->
+
+Connect a keyboard, pair a pureTV Wi-Fi controller, or scan the TV room’s QR code with a phone on the same network. The connection indicator identifies each player while the game keeps its playing area at the same size. [Controller guide](../../../docs/guide/README.en.md#install-a-game-and-connect-a-controller)
+
+The signed APK upgraded Android 0.1.5 in place on an Android TV emulator. The original controller SDK completed 9 checks and received matching acknowledgements for 106 messages. [Gameplay screenshot](docs/releases/0.1.6/gameplay.png) · [Android gameplay recording](docs/releases/0.1.6/gameplay.mp4?raw=1) · [Verification and limitations](docs/releases/0.1.6/verification.json)
+
 [中文](README.md) · [English](README.en.md)
 
 <!-- controller-client-status:start -->
-## 0.1.5 · Connected controller identity
+## Earlier release 0.1.5 · Connected controller identity
 
-<!-- apk-resource:start -->
+<!-- previous-apk-resource:start -->
 [Download signed APK](used-car-racing-0.1.5.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and source](resource.json) · [Source](src/) · [Icon](logo.svg)
-<!-- apk-resource:end -->
+<!-- previous-apk-resource:end -->
 
 Android **0.1.5 / versionCode 6** shows a controller icon, player seat (1P/2P where supported), and the connected device's complete ID in the side area. Disconnected devices disappear. The default TCP port remains **63485**. Current controller firmware does not report RSSI, so signal strength is not displayed.
 
@@ -22,7 +44,7 @@ The previous full Android gameplay run was blocked by an emulator RenderThread c
 
 **Used Car Racing TV / 极品二手车** is an original 3D racing game. Each race starts with a randomly assigned used car and condition report. The inspection garage displays the model, power, weight, drivetrain and faults. One or two players use LAN phone controllers; AI drivers fill the remaining places in a six-car field.
 
-Current version **0.1.5 / versionCode 6** requires Android 8.0 or later. Package: `com.ecojust.usedcartv`. See [resource metadata](resource.json) for the signed APK and source.
+Current version **0.1.6 / versionCode 7** requires Android 8.0 or later. Package: `com.ecojust.usedcartv`. See [resource metadata](resource.json) for the signed APK and source.
 
 ## Historical gameplay video: 0.1.3
 

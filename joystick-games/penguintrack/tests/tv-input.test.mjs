@@ -23,6 +23,22 @@ test('pause/cancellation clears held, queued respawn and taps, without synthetic
     c.setTV(raceInput(frame({ UP: true, X: true }, { X: true }, true), true)); assert.equal(c.input().respawn, false);
     c.setTV(raceInput(frame({ UP: true }, {}), false)); assert.equal(c.input().gas, false);
 });
+test('touch-only play keeps the local pad, and a remote seat frees the race HUD', () => {
+    const settings = sanitizeSettings({});
+    const controls = new Controls(settings);
+    controls.touchSeen = true;
+    const idle = raceInput(frame(), true);
+    assert.equal(controls.touchEnabled(), true);
+    controls.setTV(idle, true);
+    assert.equal(controls.touchEnabled(), false);
+    controls.setTV(idle, false);
+    assert.equal(controls.touchEnabled(), true);
+
+    controls.setSettings({ ...settings, touchControls: 'on' });
+    controls.setTV(idle, true);
+    assert.equal(controls.touchEnabled(), true);
+});
+
 test('menu repeat has a delay and cancellation erases pending direction', () => {
     const r = makeRepeater(); assert.deepEqual(r.read(frame({ DOWN: true }, { DOWN: true }), 0), ['DOWN']);
     assert.deepEqual(r.read(frame({ DOWN: true }), 100), []); assert.deepEqual(r.read(frame({ DOWN: true }), 380), ['DOWN']);

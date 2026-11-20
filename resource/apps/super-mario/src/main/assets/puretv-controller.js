@@ -58,7 +58,7 @@
       '.ptv-client-id{display:block;min-width:0;margin-top:3px;font:12px/1.4 monospace;color:#effcff;white-space:normal;word-break:break-all;overflow-wrap:anywhere;letter-spacing:normal;text-transform:none}';
     (doc.head || doc.documentElement).appendChild(style);
   }
-  function controllerIcon(doc) {
+  function controllerIcon(doc, phone) {
     var ns = 'http://www.w3.org/2000/svg', svg = doc.createElementNS(ns, 'svg');
     svg.setAttribute('class', 'ptv-client-icon');
     svg.setAttribute('viewBox', '0 0 24 24');
@@ -69,6 +69,13 @@
     svg.setAttribute('stroke-width', '1.7');
     svg.setAttribute('stroke-linecap', 'round');
     svg.setAttribute('stroke-linejoin', 'round');
+    if (phone) {
+      var handset = doc.createElementNS(ns, 'rect');
+      handset.setAttribute('x', '6'); handset.setAttribute('y', '2');
+      handset.setAttribute('width', '12'); handset.setAttribute('height', '20');
+      handset.setAttribute('rx', '3'); svg.appendChild(handset);
+      return svg;
+    }
     var outline = doc.createElementNS(ns, 'path');
     outline.setAttribute('d', 'M7.5 7h9c2.2 0 3.4 1.2 4 3.3l1.2 4.8c.5 2.1-1.7 3.6-3.2 2.1l-2.1-2.1H7.6l-2.1 2.1c-1.5 1.5-3.7 0-3.2-2.1l1.2-4.8C4.1 8.2 5.3 7 7.5 7Z');
     svg.appendChild(outline);
@@ -88,9 +95,10 @@
     if (!container || !container.ownerDocument) return;
     var language = options && options.language === 'en' ? 'en' : 'zh';
     var rows = (Array.isArray(cachedPlayers) ? cachedPlayers : []).filter(function (p) {
-      return p && p.connected === true && p.transport === 'wifi' && Number(p.id) > 0;
+      return p && p.connected === true && Number(p.id) > 0 && (p.transport === 'wifi' ||
+        options && options.showPhones && (!p.transport || p.transport === 'phone'));
     }).map(function (p) {
-      return { seat: Number(p.id), identity: typeof p.controllerId === 'string' ? p.controllerId : '' };
+      return { seat: Number(p.id), phone: p.transport !== 'wifi', identity: typeof p.controllerId === 'string' ? p.controllerId : '' };
     }).sort(function (a, b) { return a.seat - b.seat; });
     var signature = JSON.stringify([language, rows]);
     if (clientViews.get(container) === signature) return;
@@ -101,23 +109,28 @@
     container.setAttribute('role', 'status');
     container.setAttribute('aria-live', 'polite');
     container.setAttribute('aria-atomic', 'true');
-    container.setAttribute('aria-label', language === 'en' ? 'Connected pureTV controllers' : '已连接的 pureTV 手柄');
+    container.setAttribute('aria-label', language === 'en' ? 'Connected controllers' : '已连接的手柄');
     while (container.firstChild) container.removeChild(container.firstChild);
     rows.forEach(function (row) {
       var card = doc.createElement('div'); card.className = 'ptv-client-card';
-      card.setAttribute('data-puretv-controller-id', row.identity);
+      if (row.phone) card.setAttribute('data-puretv-phone', '');
+      else card.setAttribute('data-puretv-controller-id', row.identity);
       card.setAttribute('data-player-id', String(row.seat));
-      card.appendChild(controllerIcon(doc));
+      card.appendChild(controllerIcon(doc, row.phone));
       var body = doc.createElement('div'); body.className = 'ptv-client-body';
       var heading = doc.createElement('div'); heading.className = 'ptv-client-heading';
       var seat = doc.createElement('strong'); seat.className = 'ptv-client-seat'; seat.textContent = row.seat + 'P';
       var state = doc.createElement('span'); state.className = 'ptv-client-state';
-      state.textContent = language === 'en' ? 'Connected' : '已连接';
+      state.textContent = row.phone ? (language === 'en' ? 'Phone connected' : '手机手柄已连接')
+        : (language === 'en' ? 'Connected' : '已连接');
       heading.appendChild(seat); heading.appendChild(state); body.appendChild(heading);
-      var identity = doc.createElement('span'); identity.className = 'ptv-client-id';
-      identity.setAttribute('data-puretv-controller-id-text', '');
-      identity.textContent = 'ID: ' + (row.identity || (language === 'en' ? 'not reported' : '未提供'));
-      body.appendChild(identity); card.appendChild(body); container.appendChild(card);
+      if (!row.phone) {
+        var identity = doc.createElement('span'); identity.className = 'ptv-client-id';
+        identity.setAttribute('data-puretv-controller-id-text', '');
+        identity.textContent = 'ID: ' + (row.identity || (language === 'en' ? 'not reported' : '未提供'));
+        body.appendChild(identity);
+      }
+      card.appendChild(body); container.appendChild(card);
     });
     container.hidden = rows.length === 0;
   }

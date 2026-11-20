@@ -82,8 +82,19 @@ jobs:
         timeout-minutes: 3
         run: |
           if [ -z "$(fc-list :lang=zh)" ]; then
-            sudo apt-get install -y --no-install-recommends fonts-wqy-zenhei
-            fc-cache -f
+            package_path=pool/universe/f/fonts-wqy-zenhei/fonts-wqy-zenhei_0.9.45-8build1_all.deb
+            package_sha=7b44a781b0560a49d5bcfe2e5cf9a6f90e4863a8ad12794113e962bab38f030b
+            package="$RUNNER_TEMP/preview-font.deb"
+            for mirror in https://archive.ubuntu.com/ubuntu https://mirrors.edge.kernel.org/ubuntu; do
+              if curl -fsSL --connect-timeout 8 --max-time 45 "$mirror/$package_path" -o "$package" &&
+                 echo "$package_sha  $package" | sha256sum --check; then
+                dpkg-deb --extract "$package" "$RUNNER_TEMP/preview-font"
+                fonts_dir="${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
+                install -Dm644 "$RUNNER_TEMP/preview-font/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc" "$fonts_dir/wqy-zenhei.ttc"
+                fc-cache -f "$fonts_dir"
+                break
+              fi
+            done
           fi
           test -n "$(fc-list :lang=zh)"
       - name: Install local HTTPS browser trust tools
@@ -232,7 +243,8 @@ jobs:
           python - <<'PYTHON'
           import os, pathlib, xml.etree.ElementTree as ET
           messages=[]
-          for report in pathlib.Path('resource').rglob('TEST-*.xml'):
+          modules = [pathlib.Path('resource/launcher/puretv/app'), *pathlib.Path('resource/apps').iterdir()]
+          for report in (xml for module in modules for xml in module.glob('build/test-results/*/TEST-*.xml')):
               for case in ET.parse(report).getroot().iter('testcase'):
                   for failure in case.findall('failure'):
                       messages.append(case.attrib.get('name','test')+': '+(failure.text or '')[:3000])

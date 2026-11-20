@@ -469,6 +469,7 @@ const Screen = {
     Screen.canvas = $('c'); Screen.ctx = Screen.canvas.getContext('2d');
     Screen.buf = document.createElement('canvas'); Screen.buf.width = W; Screen.buf.height = H; Screen.g = Screen.buf.getContext('2d');
     Screen.g.imageSmoothingEnabled = false;
+    if (window.ResizeObserver) new ResizeObserver(Screen.fit).observe($('shell'));
     addEventListener('resize', Screen.fit); Screen.fit();
     if (window.visualViewport) visualViewport.addEventListener('resize', Screen.fit);
   },

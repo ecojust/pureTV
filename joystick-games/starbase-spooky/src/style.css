@@ -261,6 +261,8 @@ td:first-child { color: var(--accent); white-space: nowrap; }
 
 
 #game-area { position: fixed; inset: 0 214px 0 0; transform: translateZ(0); overflow: hidden; }
+body[data-puretv-playing="true"] #game-area { right:0; }
+body[data-puretv-playing="true"] #tv-controls { display:none; }
 #puretv-controller-panel { z-index: 201 !important; }
 #tv-controls { position: fixed; right: 12px; bottom: 16px; width: 190px; color: #cadbf4; font: 14px/1.65 system-ui, sans-serif; white-space: pre-line; }
 #tv-controls strong { display: block; color: white; margin-bottom: 6px; font-size: 17px; }
@@ -268,7 +270,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 @media (max-width: 700px) {
     #game-area { right: 0; }
     #tv-controls { display: none; }
-    #puretv-controller-panel { transform: scale(.66); transform-origin: top right; }
+    body:not([data-puretv-joining="true"]) #puretv-controller-panel { transform: scale(.66); transform-origin: top right; }
 }
 
 @media (min-width: 701px) and (max-width: 1050px) {

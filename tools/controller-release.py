@@ -21,6 +21,50 @@ GROUPS = {
 SLUGS = sum(GROUPS.values(), [])
 KIT_SLUGS = ['neon-rush', 'twenty-four', 'torch-bridge', 'tower-overlap', 'packing-sculptor', 'conveyor-window', 'glass-fold', 'tension-span', 'prism-relay']
 ALL_SLUGS = SLUGS + KIT_SLUGS
+HOME_GAMES = {
+    'neon-rush', 'tower-overlap', 'coast-kart', 'used-car-racing', 'alien-shooter',
+    'tank', 'jackal', 'jewel', 'tetris', 'bomb-jack', 'adventure-island', 'super-mario',
+}
+SCOPED_GAMES = {
+    'home-12': HOME_GAMES,
+    'arcade-7': set(GROUPS['arcade']),
+    'coast-1': {'coast-kart'},
+    'used-car-1': {'used-car-racing'},
+    'arcade-recovery-6': set(GROUPS['arcade']) - {'tank'},
+}
+RELEASE_SCOPES = ('all', *SCOPED_GAMES)
+
+
+def scoped_games(slugs, scope):
+    assert scope in RELEASE_SCOPES, 'Unknown controller release scope'
+    return [slug for slug in slugs if scope == 'all' or slug in SCOPED_GAMES[scope]]
+
+
+
+def checkout_inputs(scope='home-12'):
+    """Populate scoped product sources and the matching published upgrade APKs."""
+    patterns = [
+        '/.github/workflows/controller*.yml', '/tools/', '/desktop/package*.json',
+        '/docs/controller-client-status/rollout.json', '/puretv-joystick/*.py', '/puretv-joystick/*.html',
+        '/resource/game-kit/*.py', '/resource/game-kit/android/', '/resource/game-kit/web/',
+        '/resource/game-kit/legacy-controller-native/', '/resource/game-kit/legacy-controller-web/',
+        '/resource/game-kit/qa/', '/resource/launcher/puretv/*.gradle', '/resource/launcher/puretv/gradlew',
+        '/resource/launcher/puretv/gradle/', '/resource/launcher/puretv/gradle.properties',
+        '/resource/launcher/puretv/app/build.gradle', '/resource/apps/*/build.gradle',
+        # Gradle configures every included app, even when only one app is built.
+        '/resource/apps/jackal/tools/preview-png.gradle', '/resource/apps/jackal/src/main/assets/scene-update-paths.json',
+        '/resource/apps/*/src/main/AndroidManifest.xml', '/joystick-games/tools/android-zxing.py',
+    ]
+    for slug in sorted(scoped_games(ALL_SLUGS, scope)):
+        directory = 'resource/apps/' + slug + '/'
+        metadata = json.loads(subprocess.check_output(['git', 'show', 'HEAD:' + directory + 'resource.json'], cwd=ROOT))
+        apk = metadata['apk']
+        assert re.fullmatch(r'[a-z0-9][a-z0-9.-]*\.apk', apk), (slug, apk)
+        for item in ('src/', 'tests/', 'tools/', 'licenses/', 'resource.json', 'game.json',
+                     'icon.xml', 'logo.svg', 'proguard-rules.pro', 'LICENSE', 'README.md', apk):
+            patterns.append('/' + directory + item)
+    subprocess.run(['git', 'sparse-checkout', 'add', '--stdin'], cwd=ROOT,
+                   input='\n'.join(patterns) + '\n', text=True, check=True)
 
 
 def write(path, value):
@@ -114,7 +158,7 @@ def source_inputs(slug, commit):
 
 def stage(args):
     commit = source()
-    for slug in GROUPS[args.group]:
+    for slug in scoped_games(GROUPS[args.group], args.scope):
         found = list((ROOT/'resource/apps'/slug/'build/outputs/apk/release').glob('*.apk'))
         assert len(found) == 1, slug
         value = info(found[0], args.build_tools, True)
@@ -140,8 +184,8 @@ def observer_contract(manifest, badging, target):
 
 def sign_observers(args, commit, key, temporary, pin):
     assert args.observers and args.observer_output
-    assert {p.name for p in args.observers.iterdir()} == set(ALL_SLUGS)
-    for slug in ALL_SLUGS:
+    assert {p.name for p in args.observers.iterdir()} == set(scoped_games(ALL_SLUGS, args.scope))
+    for slug in scoped_games(ALL_SLUGS, args.scope):
         folder = args.observers/slug
         receipt = json.loads((folder/'observer-build.json').read_text())
         observer = folder/('observer-'+slug+'-unsigned.apk')
@@ -182,14 +226,14 @@ def sign(args):
     assert re.fullmatch(r'[a-f0-9]{64}', pin)
     encoded = os.environ.get('PURETV_KEYSTORE_BASE64')
     assert encoded and os.environ.get('PURETV_KEYSTORE_PASSWORD'), 'Existing release signing secrets required'
-    assert {p.name for p in args.input.iterdir()} == set(SLUGS)
+    assert {p.name for p in args.input.iterdir()} == set(scoped_games(SLUGS, args.scope))
     with tempfile.TemporaryDirectory(prefix='controller-sign-', dir=os.environ['RUNNER_TEMP']) as temp:
         temp = Path(temp)
         key = temp/'release.jks'
         key.write_bytes(base64.b64decode(''.join(encoded.split()), validate=True)); key.chmod(0o600)
         cert = subprocess.check_output(['keytool', '-exportcert', '-alias', 'puretv', '-keystore', str(key), '-storepass:env', 'PURETV_KEYSTORE_PASSWORD'])
         assert sha(cert) == pin, 'Configured certificate does not match existing releases'
-        for slug in SLUGS:
+        for slug in scoped_games(SLUGS, args.scope):
             src = args.input/slug
             metadata = json.loads((src/'build-metadata.json').read_text())
             unsigned = src/'unsigned.apk'
@@ -224,8 +268,8 @@ def export(args):
     args.output.mkdir(parents=True, exist_ok=False)
     release = args.input/'release'
     if args.sign_result == 'success':
-        assert {p.name for p in release.iterdir()} == set(SLUGS)
-        for slug in SLUGS:
+        assert {p.name for p in release.iterdir()} == set(scoped_games(SLUGS, args.scope))
+        for slug in scoped_games(SLUGS, args.scope):
             receipt = json.loads((release/slug/'signing-receipt.json').read_text())
             assert receipt['sourceSha'] == commit and str(receipt['runId']) == os.environ['GITHUB_RUN_ID']
             apk = release/slug/(slug+'-'+receipt['versionName']+'.apk')
@@ -236,8 +280,8 @@ def export(args):
             assert source_inputs(slug, commit) == receipt['inputFiles']
         shutil.copytree(release, args.output/'packages')
         observers=args.input/'observers'
-        assert {p.name for p in observers.iterdir()}==set(ALL_SLUGS)
-        for slug in ALL_SLUGS:
+        assert {p.name for p in observers.iterdir()}==set(scoped_games(ALL_SLUGS, args.scope))
+        for slug in scoped_games(ALL_SLUGS, args.scope):
             receipt=json.loads((observers/slug/'observer-signing-receipt.json').read_text())
             assert receipt['signed'] is True and receipt['modelWrites'] is False and receipt['testArtifactOnly'] is True
             assert receipt['sourceSha']==commit and str(receipt['runId'])==os.environ['GITHUB_RUN_ID']
@@ -255,26 +299,31 @@ def export(args):
             records[path.relative_to(args.output).as_posix()] = {'bytes': path.stat().st_size, 'sha256': digest(path)}
     write(args.output/'export-manifest.json', {'sourceSha': commit, 'runId': os.environ['GITHUB_RUN_ID'],
         'buildResult': args.build_result, 'signResult': args.sign_result,
-        'runtimeResult': args.runtime_result, 'files': records,
+        'runtimeResult': args.runtime_result, 'scope': args.scope, 'files': records,
         'physicalTvTested': False, 'physicalEsp32Tested': False})
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command', choices=['list', 'stage', 'sign', 'export'])
+    parser.add_argument('command', choices=['list', 'checkout-home-inputs', 'stage', 'sign', 'export'])
     parser.add_argument('--group', choices=GROUPS)
     parser.add_argument('--input', type=Path)
     parser.add_argument('--observers', type=Path)
     parser.add_argument('--observer-output', type=Path)
     parser.add_argument('--all', action='store_true')
+    parser.add_argument('--scope', choices=RELEASE_SCOPES, default=os.environ.get('CONTROLLER_RELEASE_SCOPE', 'all'))
     parser.add_argument('--output', type=Path)
     parser.add_argument('--build-tools', type=Path)
     parser.add_argument('--build-result', default='unknown')
     parser.add_argument('--sign-result', default='unknown')
     parser.add_argument('--runtime-result', default='not_run')
     args = parser.parse_args()
+    if args.command == 'checkout-home-inputs':
+        checkout_inputs(args.scope if args.scope != 'all' else 'home-12')
+        return
     if args.command == 'list':
-        print(' '.join(ALL_SLUGS if args.all else GROUPS[args.group] if args.group else SLUGS)); return
+        games = ALL_SLUGS if args.all else GROUPS[args.group] if args.group else SLUGS
+        print(' '.join(scoped_games(games, args.scope))); return
     assert args.output and args.build_tools
     if args.command == 'stage': assert args.group
     else: assert args.input

@@ -76,9 +76,16 @@ def game_card(card, locale):
     # The adjacent name labels the link even if the cover fails to load.
     page = card_link(card['page'], card['covers'][locale], title, '')
     icons = []
-    for platform, url in card['downloads'].items():
-        icon, system, package = PLATFORM_ICONS[platform]
-        label = f'{title} {system} {package}'
+    release = 'https://github.com/ecojust/pureTV/releases/download/catalog-player-v1.0.1/'
+    for platform, (icon, system, package) in PLATFORM_ICONS.items():
+        url = card['downloads'].get(platform)
+        if url:
+            label = f'{title} {system} {package}'
+        else:
+            filename = 'pureTV-Games.exe' if platform == 'windows' else 'pureTV-Games-portable.zip'
+            url = release + filename
+            player = '游戏启动器' if locale == 'zh' else 'game player'
+            label = f'{title} · {system} {player}'
         content = support_icon(icon, label)
         icons.append(f'<a href="{escape(url)}" title="{escape(label)}">{content}</a>')
     if card['controller']:
@@ -111,9 +118,11 @@ def game_index(catalog, locale):
     total = sum(card['controller'] for card in cards)
     android, macos, windows = [sum(key in card['downloads'] for card in cards) for key in ('apk', 'macos', 'windows')]
     if locale == 'zh':
-        summary = f'**{total} 款手柄游戏** · Android TV {android} 款 · macOS {macos} 款 · Windows x64 {windows} 款'
+        summary = (f'**{total} 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · '
+                   f'Android TV {android} 款 · macOS 独立安装包 {macos} 款 · Windows x64 独立安装包 {windows} 款')
     else:
-        summary = f'**{total} controller games** · Android TV ({android}) · macOS ({macos}) · Windows x64 ({windows})'
+        summary = (f'**{total} controller games** · [Play every game on a computer](docs/guide/README.en.md#play-on-a-computer) · '
+                   f'Android TV ({android}) · Standalone macOS downloads ({macos}) · Standalone Windows x64 downloads ({windows})')
 
     headings = []
     sections = []

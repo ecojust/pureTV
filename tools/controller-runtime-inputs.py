@@ -32,7 +32,8 @@ def main():
     manifest=json.loads(a.manifest.read_text());source=manifest['sourceSha'];assert re.fullmatch('[a-f0-9]{40}',source)
     legacy_source=manifest.get('legacySourceSha',source);assert re.fullmatch('[a-f0-9]{40}',legacy_source)
     run=str(manifest['legacyRunId']);attempt=int(manifest.get('legacyAttempt',1));assert re.fullmatch('[1-9][0-9]*',run) and attempt>=1
-    assert set(manifest['kitRuns'])==set(release.KIT_SLUGS)
+    scope = manifest.get('scope', 'all')
+    assert set(manifest['kitRuns']) == set(release.scoped_games(release.KIT_SLUGS, scope))
     for value in manifest['kitRuns'].values():assert re.fullmatch('[1-9][0-9]*',str(value))
     original=fetch.github_read('actions/runs/'+run)
     assert original['head_sha']==legacy_source and original['conclusion']=='success' and original['status']=='completed'
@@ -48,12 +49,13 @@ def main():
     archive.unlink()
     exported_metadata=json.loads((a.output/'export-manifest.json').read_text())
     assert exported_metadata['sourceSha']==legacy_source and str(exported_metadata['runId'])==run and exported_metadata['signResult']=='success'
+    assert exported_metadata.get('scope', 'all') == scope, 'Legacy export has another signing selection'
     for name,item in exported_metadata['files'].items():
         if name.startswith(('packages/','observers/')):
             path=a.output/name
             assert path.is_file() and not path.is_symlink() and path.stat().st_size==item['bytes'] and digest(path)==item['sha256']
     pin=(ROOT/'tools/puretv-release-certificate-v2.sha256').read_text().strip()
-    groups=release.KIT_SLUGS if a.group=='kit' else release.GROUPS[a.group]
+    groups=release.scoped_games(release.KIT_SLUGS if a.group=='kit' else release.GROUPS[a.group], scope)
     if a.group=='kit':
         for slug in groups:
             bundle=fetch.fetch_bundle(fetch.github_read,run_id=str(manifest['kitRuns'][slug]),slug=slug,source_sha=source,build_tools=a.build_tools,expected_cert=pin)

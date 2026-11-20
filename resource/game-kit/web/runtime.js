@@ -112,19 +112,15 @@
     // snapshot here would consume short button pulses before the game sees them.
     if(clients&&root.PureTVControllerAdapter){
       const rush=$('rush-wifi-help');
-      if(rush){
-        // Run after platform presentation adapters have chosen whether the QR
-        // guide is open. Keep one client list visible without duplicate mounts.
-        const parent=document.body.classList.contains('rush-phone-open')?rush:document.querySelector('.workspace');
-        if(clients.parentElement!==parent)parent.append(clients);
-      }
+      // The header already shows the active input. Keep device details in the
+      // connection panel so a long identifier cannot cover the race.
+      if(rush&&clients.parentElement!==rush)rush.appendChild(clients);
       const language=rush?(document.documentElement.lang==='en'?'en':'zh'):(en?'en':'zh');
-      root.PureTVControllerAdapter.renderClients(clients,observedControllers,{language});
+      root.PureTVControllerAdapter.renderClients(clients,observedControllers,{language,showPhones:true});
       panel.classList.toggle('has-controller-client',!clients.hidden);
       if(rush)rush.classList.toggle('has-controller-client',!clients.hidden);
     }
     const wifi=info.wifiController;
-    // Neon moves the same client list to a compact side rail during a race.
     panel.hidden=!wifi||!!$('rush-wifi-help');if(panel.hidden)return;
     const aside=panel.parentElement;aside.classList.toggle('controller-strip',aside.clientWidth>aside.clientHeight*3);
     panel.querySelector('strong').textContent=text('pureTV 手柄','pureTV CONTROLLER');

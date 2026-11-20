@@ -344,11 +344,8 @@
       if (!game || destroyed) return;
       runtimeStats.uiPasses++; updateRoomPlayers(current); updateMenus(); updateHud();
       // Reuse the current input frame. The same ID card survives the QR menu closing.
-      var clients = $("controller-clients"), dock = $("controller-dock"), menuVisible = !$("menu-layer").hidden;
-      var clientParent = menuVisible ? $("room-panel") : dock;
-      if (clients.parentElement !== clientParent) clientParent.insertBefore(clients, clientParent.firstChild);
-      dock.hidden = menuVisible;
-      root.PureTVControllerAdapter.renderClients(clients, controllerAdapter.peek(), { language: english ? "en" : "zh" });
+      var clients = $("controller-clients");
+      root.PureTVControllerAdapter.renderClients(clients, controllerAdapter.peek(), { language: english ? "en" : "zh", showPhones: true });
       setText($("sound-button"), tr("声音：", "SOUND: ") + (muted ? tr("关", "OFF") : tr("开", "ON")));
       setAttribute($("sound-button"), "aria-pressed", String(!muted));
     }

@@ -33,7 +33,8 @@ export class View {
 
     resize() {
         const vv = window.visualViewport;
-        const w = Math.max(1, Math.round(vv ? vv.width : innerWidth) - 216);
+        const gutter = document.body.dataset.puretvPlaying === 'true' ? 0 : 216;
+        const w = Math.max(1, Math.round(vv ? vv.width : innerWidth) - gutter);
         const h = Math.max(1, Math.round(vv ? vv.height : innerHeight));
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
         if (w === this.w && h === this.h && dpr === this.dpr) return;

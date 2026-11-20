@@ -27,12 +27,18 @@ BATCHES = {
     'kit-3': ('kit', ['glass-fold', 'tension-span', 'prism-relay']),
 }
 DEFAULT_BATCHES = tuple(BATCHES)
+HOME_BATCHES = ('arcade-1', 'arcade-2', 'arcade-3', 'home-coast', 'worlds-2', 'home-kit')
 BATCHES.update({
     'retry-used-car': ('worlds', ['used-car-racing']),
+    'retry-used-car-mesa': ('worlds', ['used-car-racing']),
     'retry-alien': ('worlds', ['alien-shooter']),
+    'retry-super-mario': ('arcade', ['super-mario']),
+    'retry-jackal': ('arcade', ['jackal']),
     'retry-prism': ('kit', ['prism-relay']),
     'retry-arcade-visual': ('arcade', ['tank', 'jackal']),
     'retry-cozy': ('worlds', ['cozy-island']),
+    'home-coast': ('worlds', ['coast-kart']),
+    'home-kit': ('kit', ['neon-rush', 'tower-overlap']),
 })
 USED_CAR_EMULATOR = {
     'version': '35.6.11', 'build': '13610412',
@@ -71,15 +77,24 @@ def verify_driver_acceptance(report, mode):
         assert all(t['status'] == 'passed' for t in report['tests'])
     return expected
 
-def runtime_plan(requested='', acceptance_mode='complete'):
+def runtime_plan(requested='', acceptance_mode='complete', scope='all'):
     """Validate dispatch selection before it can become a matrix or shell input."""
     acceptance = acceptance_config(acceptance_mode)
-    names = json.loads(requested) if requested.strip() else list(DEFAULT_BATCHES)
+    available = release.scoped_games(release.ALL_SLUGS, scope)
+    defaults = {
+        'home-12': HOME_BATCHES,
+        'coast-1': ('home-coast',),
+        'used-car-1': ('retry-used-car-mesa',),
+        'arcade-7': ('arcade-1', 'arcade-2', 'arcade-3'),
+        'arcade-recovery-6': ('retry-jackal', 'arcade-2', 'arcade-3'),
+    }.get(scope, DEFAULT_BATCHES)
+    names = json.loads(requested) if requested.strip() else list(defaults)
     assert isinstance(names, list) and names, 'batches must be a nonempty JSON array'
     assert all(isinstance(name, str) and name in BATCHES for name in names), 'Only predefined batch names are accepted'
     assert len(names) == len(set(names)), 'Duplicate batches are not accepted'
     selected = [name for name in BATCHES if name in names]
     slugs = [slug for name in selected for slug in BATCHES[name][1]]
+    assert set(slugs) <= set(available), 'Batch requests games outside the signed selection'
     assert len(slugs) == len(set(slugs)), 'Selected batches must not repeat a game through parent and retry aliases'
     standard_options = '-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot'
     matrix = [{'group': BATCHES[name][0], 'batch': name,
@@ -91,6 +106,10 @@ def runtime_plan(requested='', acceptance_mode='complete'):
                'emulatorOptions': (standard_options.replace('-gpu swiftshader_indirect', '-gpu swiftshader') if name == 'retry-used-car' else standard_options)
                     + (' -feature -Vulkan -verbose' if name in ['worlds-2', 'retry-used-car', 'retry-arcade-visual'] else '')}
               for name in selected]
+    for row in matrix:
+        if row['batch'] == 'retry-used-car-mesa':
+            row.update(renderer='host',
+                       emulatorOptions=standard_options.replace('-gpu swiftshader_indirect', '-gpu host'))
     return {**acceptance, 'requestedBatches': names, 'selectedBatches': selected, 'plannedSlugs': slugs,
             'completeCatalogRequested': len(slugs) == len(release.ALL_SLUGS),
             'matrix': {'include': matrix},

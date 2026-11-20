@@ -1,5 +1,7 @@
 # Turbo Kart Rush
 
+[下载当前 Android TV 手柄版 0.1.2](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/turbo-kart-rush-0.1.2.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+
 [BridgeMind 原作](https://github.com/bridge-mind/turbo-kart-rush/tree/6c0456c7642447eae29e0832e7e542fec07ec07d)的独立 pureTV 适配：八位车手、四条赛道、三档难度，保留程序生成场景、道具的全部变体、漂移加速、跳跃、原版音乐与后处理。原资源无需网络即可运行；不是 pureTV 自创游戏。
 
 ## Android TV 下载
@@ -21,6 +23,10 @@
 原安装、卸载及文件完整性验证通过；默认端口和端口占用回退两种模式各通过10项原 SDK 检查，包括真实加速、转向、暂停、三次最小化恢复和断线重连。**没有验证实际游戏存档保存与恢复**：本游戏没有声明持久存档字段，原报告明确记为 `not_exercised`。未做实体手柄、其他 DPI 缩放或完整通关测试。
 
 12张原截图已逐张核对：最小菜单为960×540，其余为1280×720、96 DPI；两张赛中图显示3 km/h，原始状态和消息记录另证实按住油门后速度、位置变化。展开的帮助卡会叠到赛中小地图面板上沿，路线仍可见；暂停时右侧连接卡会遮住背景地图，但完整 ID、圈数、计时和三个暂停按钮可读。详见 [Windows 交付核验](docs/windows-delivery/independent-verification.json) 与 [原图目视记录](docs/windows-delivery/visual-review.json)。包沿用源码 `039d210cfa4cc65f59adf0859a777f3591853a70`、原流程 [44621752383](https://github.com/ecojust/pureTV/actions/runs/44621752383) 的原始字节，未重新打包；同批其他游戏失败没有改变本游戏原成功结果。
+
+## 源码版 0.1.2 的连接与操作
+
+按 Enter 依次确认车手与赛道，进入倒计时。↑ 给油，↓ 刹车，← / → 转向。 电脑也可以连接同一局域网的 pureTV 无线手柄，按手柄搜索键（GPIO 23）配对。Android TV 可用同一 Wi-Fi 下的手机扫描菜单连接卡中的二维码，打开虚拟手柄。比赛时连接卡缩小，断线后重新连接，再手动继续。
 
 ## macOS 下载
 

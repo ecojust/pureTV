@@ -1,11 +1,21 @@
 # 叠塔工匠 / Tower Overlap
 
-<!-- controller-client-status:start -->
-## 0.2.2 · 手柄连接标识
+## Android 0.2.3 · 手柄与手机连接
 
 <!-- apk-resource:start -->
-[下载签名 APK](tower-overlap-0.2.2.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
+[下载签名 APK](tower-overlap-0.2.3.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
 <!-- apk-resource:end -->
+
+可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
+
+此签名 APK 已从 0.2.2 在 Android TV 模拟器完成覆盖安装。原版手柄 SDK 通过 8 项检查，实际发出的 59 条消息全部收到同序号确认。[游戏截图](docs/releases/0.2.3/gameplay.png) · [Android 玩法录像](docs/releases/0.2.3/gameplay.mp4?raw=1) · [验证记录与测试范围](docs/releases/0.2.3/verification.json)
+
+<!-- controller-client-status:start -->
+## 历史版本 0.2.2 · 手柄连接标识
+
+<!-- previous-apk-resource:start -->
+[下载签名 APK](tower-overlap-0.2.2.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
+<!-- previous-apk-resource:end -->
 
 Android **0.2.2 / versionCode 4**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 

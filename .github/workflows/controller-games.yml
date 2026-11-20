@@ -17,6 +17,15 @@ on:
       - 'resource/apps/**/src/**'
       - 'resource/apps/**/build.gradle'
   workflow_dispatch:
+    inputs:
+      scope:
+        description: Games to build and corresponding signing observers
+        type: choice
+        options: [all, home-12, arcade-7, arcade-recovery-6, coast-1, used-car-1]
+        default: all
+
+env:
+  CONTROLLER_RELEASE_SCOPE: ${{ inputs.scope || 'all' }}
 
 permissions:
   contents: read
@@ -27,6 +36,12 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+        with: &controller_checkout
+          sparse-checkout-cone-mode: false
+          sparse-checkout: ${{ (inputs.scope != '' && inputs.scope != 'all') && '/tools/' || '' }}
+      - name: Check out the selected games and their published upgrade baselines
+        if: inputs.scope != '' && inputs.scope != 'all'
+        run: python3 tools/controller-release.py checkout-home-inputs
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -41,7 +56,19 @@ jobs:
         run: |
           set -euo pipefail
           resource/launcher/puretv/gradlew --no-daemon --project-dir resource/game-kit/android testDebugUnitTest lintDebug 2>&1 | tee "$RUNNER_TEMP/shared-host.log"
-      - name: Build read-only instrumentation observers for all twenty games
+      - name: Prepare the two unsigned Game Kit requests from this checkout
+        if: inputs.scope == 'home-12'
+        run: |
+          python3 joystick-games/tools/android-zxing.py --output "$RUNNER_TEMP/zxing.jar" --receipt "$RUNNER_TEMP/zxing-receipt.json"
+          python3 tools/controller-status-release.py requests --scope home-12 --source-sha "$GITHUB_SHA" \
+            --output "$RUNNER_TEMP/home-kit" --sdk "$ANDROID_HOME" --jdk "$JAVA_HOME" --zxing "$RUNNER_TEMP/zxing.jar"
+      - uses: actions/upload-artifact@v4
+        if: inputs.scope == 'home-12'
+        with:
+          name: controller-home-kit-requests
+          path: ${{ runner.temp }}/home-kit/requests-tree/
+          if-no-files-found: error
+      - name: Build read-only instrumentation observers for the selected games
         run: |
           set -euo pipefail
           for slug in $(python3 tools/controller-release.py list --all); do
@@ -66,11 +93,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [arcade, worlds]
+        group: ${{ fromJSON((inputs.scope == 'coast-1' || inputs.scope == 'used-car-1') && '["worlds"]' || startsWith(inputs.scope, 'arcade-') && '["arcade"]' || '["arcade","worlds"]') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
+        with: *controller_checkout
+      - name: Check out the selected games and their published upgrade baselines
+        if: inputs.scope != '' && inputs.scope != 'all'
+        run: python3 tools/controller-release.py checkout-home-inputs
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -147,6 +178,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with: *controller_checkout
+      - name: Check out the selected games and their published upgrade baselines
+        if: inputs.scope != '' && inputs.scope != 'all'
+        run: python3 tools/controller-release.py checkout-home-inputs
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -194,6 +229,10 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with: *controller_checkout
+      - name: Check out the selected games and their published upgrade baselines
+        if: inputs.scope != '' && inputs.scope != 'all'
+        run: python3 tools/controller-release.py checkout-home-inputs
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -223,6 +262,42 @@ jobs:
           --build-tools "$ANDROID_HOME/build-tools/34.0.0"
           --build-result '${{ needs.build.result }}'
           --sign-result '${{ needs.sign.result }}'
+      - uses: actions/download-artifact@v4
+        if: inputs.scope == 'home-12' && needs.shared.result == 'success'
+        with:
+          name: controller-home-kit-requests
+          path: ${{ runner.temp }}/home-kit-requests
+      - name: Export the unsigned requests for the existing Game Kit signer
+        if: inputs.scope == 'home-12' && needs.shared.result == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          branch="build-assets/game-kit-requests-home12-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          test -z "$(git ls-remote --heads origin "refs/heads/$branch")"
+          cd "$RUNNER_TEMP/home-kit-requests"
+          python3 - <<'PYCODE'
+          import hashlib, json, os
+          from pathlib import Path
+          slugs = ['neon-rush', 'tower-overlap']
+          expected = {f'requests/{slug}/{name}' for slug in slugs for name in ['request.json', 'unsigned.apk']}
+          assert {p.as_posix() for p in Path('.').rglob('*') if p.is_file()} == expected
+          for slug in slugs:
+              directory = Path('requests') / slug
+              receipt = json.loads((directory / 'request.json').read_text())
+              apk = (directory / 'unsigned.apk').read_bytes()
+              assert receipt['sourceSha'] == os.environ['GITHUB_SHA'] and receipt['slug'] == slug
+              assert 0 < len(apk) == receipt['unsignedBytes'] < 10_000_000
+              assert hashlib.sha256(apk).hexdigest() == receipt['unsignedSha256']
+          PYCODE
+          git init --initial-branch "$branch"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -- requests
+          git commit -qm "Unsigned Game Kit requests for ${GITHUB_SHA}"
+          gh auth setup-git
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          git push origin "HEAD:refs/heads/$branch"
       - name: Export to a new isolated branch
         env:
           GH_TOKEN: ${{ github.token }}

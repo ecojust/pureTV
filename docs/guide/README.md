@@ -46,9 +46,29 @@ pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电�
 
 ## 安装游戏与连接手柄
 
-1. 在首页游戏专栏按类型选择游戏。点击游戏名称下的电视、苹果或 Windows 图标，分别下载 Android TV 的 APK、Mac 的 DMG 或 Windows x64 的安装程序。手柄图标表示支持 pureTV 手柄。点击游戏名称或截图可查看按键、便携包和该版本的兼容性。[按类型浏览游戏](../../README.md#games)
+### 在电脑上玩
+
+Windows x64 用户打开游戏启动器，用方向键选择游戏，按回车开始。启动器首次下载并校验游戏，在默认浏览器中打开。之后可从本机缓存启动。键盘操作按各游戏画面的提示，也可以连接同一局域网内的 pureTV 无线手柄。游玩时请保持启动器运行。[下载 Windows 启动器](https://github.com/ecojust/pureTV/releases/download/catalog-player-v1.0.1/pureTV-Games.exe)
+
+macOS 和 Linux 用户可解压便携包，在解压目录用 Python 3.10 或更新版本运行下面的命令。若要直接打开某款游戏，可在启动命令后加游戏 ID，例如 `.venv/bin/python launcher.py tetris`。[下载便携启动器](https://github.com/ecojust/pureTV/releases/download/catalog-player-v1.0.1/pureTV-Games-portable.zip)
+
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python launcher.py
+```
+
+### 在电视上扫码加入
+
+在电视上先安装对应游戏的 APK。电视图标可下载单款，也可按文件名在合集中查找。[下载 Android TV 游戏](https://github.com/ecojust/pureTV/releases/tag/catalog-tv-controls-v1.0.1)
+
+在电视上打开游戏，让手机接入同一局域网，扫描游戏菜单中的二维码。手机浏览器会打开虚拟手柄，在手机上按方向和动作键，看电视画面游玩。电视显示已连接的玩家席位，进入菜单或暂停时可以查看连接详情。
+
+### 连接 pureTV 无线手柄
+
+1. 在首页游戏专栏按类型选择游戏。电视图标下载这款游戏的 Android TV 安装包。苹果和 Windows 图标优先下载该游戏的独立版本，其余游戏链接到相应的电脑启动器，打开后选择游戏即可。手柄图标表示支持 pureTV 手柄。点击游戏名称或截图可查看按键、便携包和该版本的兼容性。[按类型浏览游戏](../../README.md#games)
 2. 将手柄和运行游戏的电视或电脑接入同一个可互通的局域网，启动游戏。按手柄搜索键 **GPIO 23** 发现游戏。当前固件只会自动连接发现的唯一有效服务。若同时打开了其他游戏，先关闭其他服务，或在手柄配网页手动填写游戏主机的 IPv4 地址和实际端口。
-3. 游戏默认使用 TCP **63485**。如果启动时端口已被占用，以游戏显示的实际端口为准。连接后侧栏显示手柄图标、玩家席位和完整客户端 ID，断开后移除相应标识。按 **START（GPIO 27）** 开始或暂停。方向键和 A 常用于选择和确认，其他操作、双人支持与断线后如何继续请按该游戏说明。[按键与双人支持](../readme-controller-support/README.md) · [客户端标识示例](../controller-client-status/README.md)
+3. 游戏默认使用 TCP **63485**。如果启动时端口已被占用，以游戏显示的实际端口为准。连接后可在连接详情中查看玩家席位和设备 ID。断开后，游戏会更新席位状态。按 **START（GPIO 27）** 开始或暂停。方向键和 A 常用于选择和确认，其他操作、双人支持与断线后如何继续请按该游戏说明。[按键与双人支持](../readme-controller-support/README.md) · [客户端标识示例](../controller-client-status/README.md)
 
 原首页精选的 20 款电视游戏手柄版支持 Android 8.0 及以上。其他游戏也要看系统 WebView 和图形要求，部分 3D 游戏需要 WebGL2。桌面手柄版中的九款赛车要求 macOS 11+，Windows 版使用 Windows 10 1903+ x64 或 Windows 11 和 WebView2 Runtime。Universal 包提供 Apple Silicon 与 Intel 两种架构，Intel 原生游戏画面是否通过验证仍按款列出。九款解谜游戏中，Story Thief、Atlas of Ink 和 Starbase Spooky 通过 Intel 原生玩法检查，另六款在测试机上进入菜单前超时。[赛车版本表](../../joystick-games/README.md#九款赛车游戏下载) · [解谜版本与测试记录](../puzzle-nine/README.md#下载安装)
 

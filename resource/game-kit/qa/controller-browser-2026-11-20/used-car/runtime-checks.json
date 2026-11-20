@@ -1,0 +1,73 @@
+{
+  "before": [
+    {
+      "version": "0.1.5",
+      "apkSha256": "3a616e53f8880f2c14fb564bc97204c171b4c5ab21cdacf46dfafeacf5b3f00e",
+      "source": "115f95713129a2dd18acc4b00651e91f106cf988",
+      "originalTest": "resource/apps/used-car-racing/tests/integration.mjs:105",
+      "message": "page.waitForFunction: Timeout 30000ms exceeded.",
+      "phase": "paused",
+      "contextLost": false,
+      "slot2Connected": true,
+      "slot2StartSeq": 2
+    },
+    {
+      "version": "0.1.6",
+      "apkSha256": "7fba87cc802570dbea303dc5286b88c2904122e909be40a19da8db0abcd0eeaa",
+      "source": "d89960a69ad80c9ee6e55f835671c672013fa19d",
+      "originalTest": "resource/apps/used-car-racing/tests/integration.mjs:105",
+      "ciRun": "https://github.com/ecojust/pureTV/actions/runs/44772799542",
+      "steps": [
+        {
+          "action": "pre suspend",
+          "phase": "race",
+          "nativePolls": 36,
+          "tick": 788
+        },
+        {
+          "action": "during empty snapshots",
+          "phase": "paused",
+          "nativePolls": 43,
+          "tick": 818
+        },
+        {
+          "action": "after suspend(false)",
+          "phase": "paused",
+          "nativePolls": 43,
+          "tick": 818
+        },
+        {
+          "action": "after room returned",
+          "phase": "paused",
+          "nativePolls": 44,
+          "tick": 818
+        },
+        {
+          "action": "explicit resume click",
+          "phase": "race",
+          "nativePolls": 52,
+          "tick": 818
+        }
+      ]
+    }
+  ],
+  "after": {
+    "version": "0.1.7",
+    "productChange": "a19453ba3108efa5d5b8a4216e929688e838d84e",
+    "originalTest": "resource/apps/used-car-racing/tests/integration.mjs",
+    "selection": "USED_CAR_TEST_PART=input",
+    "implementation": "Chromium / software Mesa ANGLE, real bundled WebGL, original simulated Android room",
+    "stdout": [
+      "PASS 1: a lone phone in slot two controls logical 1P and receives its own telemetry; late spectators cannot change the race",
+      "PASS 2: temporary empty host snapshots preserve consumed phone counters when cancelling a native exit dialog",
+      "PASS 3: phone cancellation consumes SELECT release and START edges instead of changing camera, gear or pause",
+      "PASS 4: native menu counters preserve phone taps between TV frames; cancellation also discards delayed held heartbeats",
+      "PASS 5: keyboard repeat cannot unpause; context loss detected before its DOM event recovers without permanent graphics failure",
+      "PASS 6: remote B and playback pause work without a phone; legacy optional browser APIs are not required",
+      "PASS 7: no-WebGL devices show explicit failure and never silently run an invisible race",
+      "PASS 8: renderer false return is treated as a failed draw and suspends the simulation",
+      "8 integrated TV scenarios passed."
+    ],
+    "exitCode": 0
+  }
+}

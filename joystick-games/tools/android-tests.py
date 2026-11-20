@@ -48,7 +48,8 @@ class PayloadBoundaries(unittest.TestCase):
         actual = {p.relative_to(kit).as_posix(): build.record(p) for p in (kit / 'android/src/main').rglob('*') if p.is_file()}
         self.assertEqual(before, actual)
         self.assertEqual(payload['tv.html'], (self.dist / 'tv.html').read_bytes())
-        self.assertEqual(json.loads(payload['game-config.json']), self.meta)
+        self.assertEqual(json.loads(payload['game-config.json']), {**self.meta, 'phoneControllerButtons': 9})
+        self.assertEqual(json.loads((self.game / 'game.json').read_text()), self.meta)
         self.assertEqual(set(json.loads(payload['assets-index.json'])), set(payload) - {'assets-index.json'})
         for name in build.PHONE:
             self.assertEqual(payload[name], (build.KIT / 'web' / name).read_bytes())

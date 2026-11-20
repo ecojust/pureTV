@@ -208,7 +208,7 @@ def prepare(slug, directory):
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(path, target)
     assert (assets / 'tv.html').is_file(), 'Build the committed Web game first'
-    write(staged / 'game.json', meta)
+    write(staged / 'game.json', {**meta, 'phoneControllerButtons': 9})
     if (game / 'icon.xml').exists():
         shutil.copyfile(game / 'icon.xml', staged / 'icon.xml')
     original.KIT = kit

@@ -8,7 +8,7 @@ export function createTVAdapter(game) {
   const controller = createController({ side: 'left', width: 190, top: '220px', onSuspend: () => game.pause(true), onCancel: () => game.pause(true) });
   const help = document.createElement('div'); help.id = 'tv-help';
   help.textContent = '↑ 油门 · ↓ 刹车 · ← → 转向 · A 漂移 / 确认 · B 氮气 / 返回 · X 复位 · Y 视角 · START 暂停';
-  document.body.append(help);
+  document.getElementById('puretv-controller-panel').append(help);
   addEventListener('tv-save-warning', event => { const notice=document.createElement('div');notice.className='tv-save-warning';notice.textContent=event.detail;document.body.append(notice);setTimeout(()=>notice.remove(),10000); });
   const root = () => ['tv-keyboard', 'volume', 'garage', 'board', 'lobby', 'pause', 'results', 'title'].map(id => document.getElementById(id)).find(visible);
   function options(parent) { return parent ? [...parent.querySelectorAll('button:not(:disabled),input:not(:disabled),[tabindex="0"]')].filter(visible) : []; }

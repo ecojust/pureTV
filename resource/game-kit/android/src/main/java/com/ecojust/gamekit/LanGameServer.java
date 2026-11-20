@@ -89,6 +89,7 @@ public final class LanGameServer implements AutoCloseable {
                     list.put(new JSONObject().put("id", p.id).put("connected", live)
                             .put("x", p.x).put("y", p.y).put("aimX", p.aimX).put("aimY", p.aimY)
                             .put("a", p.a || p.pulseA).put("b", p.b || p.pulseB)
+                            .put("buttonX", p.buttonX || p.pulseX).put("buttonY", p.buttonY || p.pulseY)
                             .put("start", p.start || p.pulseStart).put("select", p.select || p.pulseSelect)
                             .put("cancelSeq", p.cancelSeq));
                     p.clearPulses();
@@ -320,6 +321,8 @@ public final class LanGameServer implements AutoCloseable {
                                 || (message.has("aimY") && !(message.opt("aimY") instanceof Number))
                                 || !Double.isFinite(aimX) || !Double.isFinite(aimY)
                                 || !(message.opt("a") instanceof Boolean) || !(message.opt("b") instanceof Boolean)
+                                || (message.has("buttonX") && !(message.opt("buttonX") instanceof Boolean))
+                                || (message.has("buttonY") && !(message.opt("buttonY") instanceof Boolean))
                                 || (message.has("start") && !(message.opt("start") instanceof Boolean))
                                 || (message.has("select") && !(message.opt("select") instanceof Boolean))) { fail("protocol_error"); break; }
                         Object cancelObject = message.opt("cancelSeq");
@@ -339,14 +342,16 @@ public final class LanGameServer implements AutoCloseable {
                             player.x = Math.max(-1, Math.min(1, x)); player.y = Math.max(-1, Math.min(1, y));
                             player.aimX = Math.max(-1, Math.min(1, aimX)); player.aimY = Math.max(-1, Math.min(1, aimY));
                             boolean a = message.getBoolean("a"), b = message.getBoolean("b");
+                            boolean buttonX = message.optBoolean("buttonX", false), buttonY = message.optBoolean("buttonY", false);
                             // Older phone controllers omit the system menu buttons.
                             boolean start = message.optBoolean("start", false), select = message.optBoolean("select", false);
                             // A quick down/up can arrive between television frames. Retain
                             // each rising edge until one snapshot consumes it; a normal
                             // release must not erase a tap, but cancellation always does.
                             player.pulseA |= a && !player.a; player.pulseB |= b && !player.b;
+                            player.pulseX |= buttonX && !player.buttonX; player.pulseY |= buttonY && !player.buttonY;
                             player.pulseStart |= start && !player.start; player.pulseSelect |= select && !player.select;
-                            player.a = a; player.b = b; player.start = start; player.select = select;
+                            player.a = a; player.b = b; player.buttonX = buttonX; player.buttonY = buttonY; player.start = start; player.select = select;
                             player.inputAt = now();
                         }
                     } else if ("ping".equals(type) && player != null) { text("{\"type\":\"pong\"}"); }
@@ -404,18 +409,18 @@ public final class LanGameServer implements AutoCloseable {
         long inputAt;
         long cancelSeq, lastClientCancelSeq;
         double x, y, aimX, aimY;
-        boolean a, b, start, select;
-        boolean pulseA, pulseB, pulseStart, pulseSelect;
+        boolean a, b, buttonX, buttonY, start, select;
+        boolean pulseA, pulseB, pulseX, pulseY, pulseStart, pulseSelect;
         Player(int id) { this.id = id; }
         void cancelInput() { cancelSeq = cancelSeq >= 9_007_199_254_740_991L ? 0 : cancelSeq + 1; }
-        void clearPulses() { pulseA = false; pulseB = false; pulseStart = false; pulseSelect = false; }
+        void clearPulses() { pulseA = false; pulseB = false; pulseX = false; pulseY = false; pulseStart = false; pulseSelect = false; }
         void clear() {
             // Server-generated cancellation also covers an expired heartbeat
             // while the socket remains connected. Client counters cannot undo it.
-            if (a || b || start || select || pulseA || pulseB || pulseStart || pulseSelect
+            if (a || b || buttonX || buttonY || start || select || pulseA || pulseB || pulseX || pulseY || pulseStart || pulseSelect
                     || x != 0 || y != 0 || aimX != 0 || aimY != 0) cancelInput();
             x = 0; y = 0; aimX = 0; aimY = 0;
-            a = false; b = false; start = false; select = false;
+            a = false; b = false; buttonX = false; buttonY = false; start = false; select = false;
             clearPulses();
         }
     }

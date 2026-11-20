@@ -28,7 +28,7 @@ export function attachTV({ stage, observe, act, suspend }) {
     return () => {
         frames++;
         const frame=host.poll();
-        host.setPlaying(stage()!=='menu');
+        host.setPlaying(stage()==='playing');
         const pad=Array.from(navigator.getGamepads?.() || []).find(value=>value?.connected);
         const identity=pad ? pad.index+':'+pad.id : null;
         if(previousPad!==null && previousPad!==identity){clear();suspend();}

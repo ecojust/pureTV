@@ -1,0 +1,220 @@
+{
+  "suite": "Used Car Racing host return, Java phone room and two TV sizes",
+  "environment": {
+    "viewer": "Chromium 156.0.8078.79 built on Debian GNU/Linux 13 (trixie)",
+    "room": "Original Java LanGameServer on a desktop JVM, real HTTP and WebSocket",
+    "androidLifecycle": "TV JavaScript entrypoints with the suspended host empty snapshot reproduced from MainActivity.HostBridge.snapshot",
+    "physicalDeviceOrAndroidActivityExercised": false,
+    "modelWrites": false,
+    "clockOverrides": false
+  },
+  "expectedGames": 1,
+  "passed": 1,
+  "games": [
+    {
+      "slug": "used-car-racing",
+      "started": "2026-11-20T17:01:54.634Z",
+      "status": "passed",
+      "host": "com.ecojust.usedcartv",
+      "signedApkSha256": "1b0879c9ae8ac10188ea34e9694dbc9527048ee76e10d735a61aa24da53bd9e7",
+      "assertions": [
+        {
+          "name": "original game ready",
+          "phase": "garage"
+        },
+        {
+          "name": "TV QR pixels decode to the original Java room URL"
+        },
+        {
+          "name": "original phone page enabled by room welcome"
+        },
+        {
+          "name": "phone occupies real first seat",
+          "card": {
+            "text": "1PPhone connected",
+            "seat": "1",
+            "privateIdentityVisible": false
+          }
+        },
+        {
+          "name": "joining preserves canvas rectangles at all measured sizes"
+        },
+        {
+          "name": "phone START enters original game",
+          "before": "garage",
+          "after": "countdown"
+        },
+        {
+          "name": "phone ordinary gameplay input",
+          "action": "throttle accelerated car",
+          "input": "a",
+          "before": 0,
+          "after": 0.3740446168421673,
+          "phase": "race"
+        },
+        {
+          "name": "returning phone driver resumes after the real room is sampled",
+          "emptySnapshots": 4,
+          "restoredSnapshots": 5,
+          "phase": "race"
+        },
+        {
+          "name": "window blur keeps the race paused until focus returns"
+        },
+        {
+          "name": "manual pause survives the same interruption until the phone sends START",
+          "emptySnapshots": 4,
+          "restoredSnapshots": 5,
+          "phase": "paused"
+        },
+        {
+          "name": "connected phone cards clear of gameplay at every measured size"
+        },
+        {
+          "name": "room disconnect clears original seat"
+        }
+      ],
+      "sourceCommit": "a19453ba3108efa5d5b8a4216e929688e838d84e",
+      "errors": [],
+      "gameplayViewport": {
+        "width": 640,
+        "height": 360
+      },
+      "deviceScaleFactor": 0.5,
+      "renderer": {
+        "version": "WebGL 1.0 (OpenGL ES 2.0 Chromium)",
+        "renderer": "ANGLE (Mesa, llvmpipe (LLVM 19.1.7 256 bits), OpenGL ES 3.2)"
+      },
+      "beforeJoin": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "road",
+            "box": [
+              0,
+              0,
+              960,
+              540
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "road",
+            "box": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "inputContact": "Chromium mobile touch pointer",
+      "connectedSamePhase": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "road",
+            "box": [
+              0,
+              0,
+              960,
+              540
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                22,
+                164,
+                330,
+                32
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "road",
+            "box": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                34,
+                194,
+                330,
+                32
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "originalCamera": {
+        "projectionElements": 16,
+        "viewElements": 16
+      },
+      "playing": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "road",
+            "box": [
+              0,
+              0,
+              960,
+              540
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "road",
+            "box": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "finished": "2026-11-20T17:03:02.848Z"
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # 运输船 CF · pureTV 手柄适配
 
+[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/cf-transport-ship-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+
 基于 [riba2534/claude-opus-5-5-demo](https://github.com/riba2534/claude-opus-5-5-demo/tree/54adc1fb64155f9dd7c1c90ecae7b8185ac540b8/cf-transport-ship) 的运输船团队竞技演示，保留地图、机器人、四种主武器、手枪、军刀、手雷和程序生成音效。是非官方演示适配，源码出处与许可状态见 [NOTICE](NOTICE.md)。
 
 ## 安装包

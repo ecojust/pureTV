@@ -1,0 +1,82 @@
+{
+  "status": "passed",
+  "scope": "complete controller acceptance",
+  "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+  "version": "0.2.3",
+  "versionCode": 5,
+  "packageName": "com.ecojust.toweroverlaptv",
+  "apk": "tower-overlap-0.2.3.apk",
+  "apkBytes": 308655,
+  "sha256": "6490b703ce2cda05387b1031a91b945f7784fd774e8bce8dcd135cc52b0419a7",
+  "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "apkAssetsMatchedSigningReceipt": 13,
+  "sourceCheckedAssets": 13,
+  "inPlaceUpgradeInstalled": true,
+  "upgradedFrom": "0.2.2",
+  "upgradedFromVersionCode": 4,
+  "fullGameplayAcceptancePerformedInThisUpdate": true,
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "userSaveMigrationTested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "evidence": {
+    "buildRun": "https://github.com/ecojust/pureTV/actions/runs/44758496717",
+    "signedExportCommit": "d1e172803cc0637421899ec7c90138e2b7328229",
+    "signedRawPackage": "https://raw.githubusercontent.com/ecojust/pureTV/d1e172803cc0637421899ec7c90138e2b7328229/tower-overlap/tower-overlap-0.2.3.apk",
+    "runtimeRun": "https://github.com/ecojust/pureTV/actions/runs/44759906140",
+    "runtimeSourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+    "runtimeExportCommit": "4523c4174af976f6a77b1ece043d8d27e218e52f",
+    "runtimeCase": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-home-kit/tower-overlap/case.json",
+    "runtimeDriverReport": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-home-kit/tower-overlap/gameplay/report.json",
+    "inputVerification": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-home-kit/input-verification.json",
+    "observationApkSha256": "44326373de17d558a76432d1b005a0f4c5ad4396ef9ddd16716920c879eb5c16",
+    "checkedNativeSourceReceipt": true,
+    "originalControllerPort": 63485,
+    "readOnlyObserver": true,
+    "androidRecording": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-home-kit/tower-overlap/gameplay.mp4",
+    "menuScreenshot": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-home-kit/tower-overlap/gameplay/menu-android.png",
+    "reconnectScreenshot": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-home-kit/tower-overlap/gameplay/reconnected.png"
+  },
+  "gameplayChecks": [
+    "menu layout and service address",
+    "official hello and nine sync messages leave menu unchanged",
+    "START begins actual game",
+    "direction and game-specific action affect actual model",
+    "START pause freezes game, fresh START resumes",
+    "disconnect clears held input, reconnect sync requires fresh START",
+    "all nine official keys and long hold have real protocol receipts",
+    "same-sequence ACK for every original SDK message"
+  ],
+  "originalSdkWire": {
+    "messages": 59,
+    "acks": 59,
+    "connections": 2
+  },
+  "gameplayVideo": {
+    "file": "gameplay.mp4",
+    "sha256": "99a22ce584de7fb9d69846e088d43120405599d6c40bdef3b82627434cc147ae",
+    "bytes": 663901,
+    "durationSeconds": 22.841156,
+    "fullDecodeVerified": true
+  },
+  "gameplayScreenshot": {
+    "file": "gameplay.png",
+    "sha256": "6dd66c7a83c5026b71067dcef4f05dfe4148e9abdabb22adfb8aa53601a8c60f"
+  },
+  "desktopBrowserPhoneRoom": {
+    "game": "tower-overlap",
+    "signedAssetsCompared": 13,
+    "gameAssetSetMatchesOriginalApk": true,
+    "assetsByGame": "resource/game-kit/qa/controller-browser-2026-11-20/signed-assets.json",
+    "reportByGame": "resource/game-kit/qa/controller-browser-2026-11-20/report.json",
+    "testEnvironment": "Desktop Chromium TV and phone browser clients with the production Java LAN game room. No physical phone or TV.",
+    "status": "passed",
+    "immutableReport": "https://github.com/ecojust/pureTV/blob/f2033608db0905117538d8685477b3acd099a3ee/resource/game-kit/qa/controller-browser-2026-11-20/report.json",
+    "immutableAssetComparison": "https://github.com/ecojust/pureTV/blob/f2033608db0905117538d8685477b3acd099a3ee/resource/game-kit/qa/controller-browser-2026-11-20/signed-assets.json"
+  }
+}

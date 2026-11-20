@@ -10,6 +10,7 @@ from http.client import RemoteDisconnected
 from collections import Counter
 import hashlib
 import json
+import os
 import math
 import re
 import shutil
@@ -107,6 +108,9 @@ BACKROAD_MENU_SOURCES = {
     'joystick-games/backroad-rally/src/upstream/src/menu/nav.ts': '4d7d57397b4dc816fb270b7bf84c59d2b6c1146f10aa879f856d89eb317391f8',
 }
 NIGHT_LOW_RELOAD_APK = '66e2589ece8a13bc03d9796259b2662aef34c56c166265db0a63d3baa2b72c91'
+NIGHT_LOW_RELOAD_DELIVERY = Path('joystick-games/night-racer/docs/android-delivery')
+NIGHT_LOW_RELOAD_INPUTS = (NIGHT_LOW_RELOAD_DELIVERY / 'original-export/evidence' /
+                           'joystick-android-runtime-night-racer/night-racer/verified-inputs/artifact-source')
 NIGHT_LOW_RELOAD_SOURCES = {
     'joystick-games/night-racer/src/src/main.js': 'ad1edb9d785799db5cd357d614005d2e044b79bed7c7635e019e693e65b49004',
     'joystick-games/night-racer/src/src/tv-adapter.js': 'e6feee4583e79cebcabf86a038699ca7062cd960d7a732386c5817ed28164d23',
@@ -426,7 +430,7 @@ class Acceptance:
         while not self.stop.wait(2):
             for client in list(self.clients):
                 with client.lock:
-                    if client.sock is not None:
+                    if not self.stop.is_set() and client.sock is not None:
                         try: client.ping()
                         except (OSError, ConnectionError): pass
 
@@ -625,6 +629,7 @@ class Acceptance:
         assert self.report['targetPid'], 'Target process is not running'
         assert self.visible_ids(initial) == []
         self.passed('installed target launches initialized game menu with no controller card')
+        self.capture('join-before-connection', [])
         self.recording_log = (self.out / 'screenrecord.log').open('wb')
         self.recorder = subprocess.Popen(self.adb + ['shell', 'screenrecord', '--time-limit', '180', '--bit-rate', '4000000', self.remote_video], stdout=self.recording_log, stderr=subprocess.STDOUT)
         self.proxy = WireProxy(('127.0.0.1', self.forwarded_port), self.out / 'wire.jsonl')
@@ -667,7 +672,7 @@ class Acceptance:
         self.wait(lambda s: self.game(s).get('stage') in playing, label='START-resume'); self.passed('START resumes gameplay')
         self.reject_second_controller()
         self.press_observed('UP', effective=True)
-        self.clients[0].disconnect()
+        self.ack_barrier(disconnect=True)
         self.wait(lambda s: not self.visible_ids(s) and not any(self.button_state(s, k) for k in KEYS), label='disconnect-cancels')
         self.capture('disconnected', []); self.passed('disconnect clears held movement and removes ID card')
         self.clients[0].connect()
@@ -761,12 +766,14 @@ class Acceptance:
         self.passed('explicit actual model observations remain stable while paused', values)
         return after
 
-    def ack_barrier(self):
+    def ack_barrier(self, *, disconnect=False):
         client = self.clients[0]
+        # Prevent a heartbeat landing between the last verified ACK and a deliberate socket close.
         with client.lock:
             client.ping()
-            sequence = client.seq
-        self.wait_sent_ack(client, sequence)
+            self.wait_sent_ack(client, client.seq)
+            if disconnect:
+                client.disconnect()
 
     def menu_player(self, snapshot):
         players = [p for p in self.game(snapshot).get('controller', {}).get('players', []) if p.get('connected') is True]
@@ -782,6 +789,34 @@ class Acceptance:
                     and snapshot.get('activityState') == 'resumed' and snapshot.get('windowFocused') is True
                     and snapshot.get('page', {}).get('hidden') is False and snapshot.get('page', {}).get('focused') is True)
 
+    def signed_reload_source(self, slug):
+        """Bind a later signed edition to its exact production APK and navigation sources."""
+        editions = {
+            'backroad-rally': ('0.1.7', 8, BACKROAD_MENU_SOURCES),
+            'night-racer': ('0.1.1', 2, {
+                'joystick-games/night-racer/src/src/main.js': 'ad1edb9d785799db5cd357d614005d2e044b79bed7c7635e019e693e65b49004',
+                'joystick-games/night-racer/src/src/tv-adapter.js': '7b271ee970ae78da66ae5bf128c2116e3107a41473b116f8c820b6b49be349ec',
+            }),
+        }
+        version, code, sources = editions[slug]
+        apk = getattr(self.args, 'apk', None)
+        if apk is None or apk.name != f'{slug}-{version}.apk':
+            return None
+        receipt = json.loads((apk.parent / 'signing-receipt.json').read_bytes())
+        identity = self.report['apk']
+        assert receipt['game'] == slug and receipt['packageName'] == PACKAGES[slug]
+        assert (receipt['versionName'], receipt['versionCode']) == (version, code)
+        assert receipt['signatureVerified'] is True
+        assert receipt['certificateSha256'] == 'eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23'
+        assert all(receipt[key] == identity[key] for key in ('bytes', 'sha256'))
+        # Production calls android-release.py verify before the emulator starts.
+        # Recheck the exact anchored navigation inputs against its signed receipt.
+        for path, digest in sources.items():
+            record = file_info(ROOT / path)
+            assert record['sha256'] == digest and receipt['sourceInputs'][path] == record
+        assert receipt['sourceSha'] == (os.environ.get('ARTIFACT_SOURCE') or self.report['sourceCommit'])
+        return {'apkSha256': identity['sha256'], 'sourceSha256': dict(sources), 'originalSourceCommit': receipt['sourceSha']}
+
     def menu_reload_basis(self, step, before):
         # Original Android observations have no document epoch or native button
         # counters. This exact APK's module-constant gfxId can change only after
@@ -792,32 +827,48 @@ class Acceptance:
         stage_expect = [{'path': 'gameplay.phase', 'op': 'eq', 'value': 'running'},
                         {'path': 'stage', 'op': 'eq', 'value': 'playing'}]
         if (self.args.game == game.get('game') == 'backroad-rally'
-                and self.report['apk'].get('sha256') == BACKROAD_ORIGINAL_APK and self.report['apk'].get('bytes') == 105024551
                 and before.get('page', {}).get('url') == BACKROAD_ENTRY and game.get('stage') == 'menu'
                 and (current.get('screen'), current.get('flow'), current.get('menuFocus')) == ('stageselect', 'quick', 'start')
                 and current.get('carIndex') == current.get('stageIndex') == 0
                 and step.get('name') == 'Start and wait for untouched warm-up/countdown'
                 and step.get('keys') == ['A'] and step.get('menuTap') is True and step.get('expect') == stage_expect):
+            current_edition = None
+            if (self.report['apk'].get('sha256'), self.report['apk'].get('bytes')) != (BACKROAD_ORIGINAL_APK, 105024551):
+                current_edition = self.signed_reload_source('backroad-rally')
+                if current_edition is None:
+                    return None
             for name, digest in BACKROAD_MENU_SOURCES.items():
                 assert file_info(ROOT / name)['sha256'] == digest, 'Original Finland location.assign source changed'
             return {'kind': 'original-finland-stage-location-assign', 'apkSha256': BACKROAD_ORIGINAL_APK,
                     'sourceSha256': dict(BACKROAD_MENU_SOURCES), 'fromUrl': BACKROAD_ENTRY, 'toUrl': BACKROAD_FINLAND,
-                    'postReloadFreshPollsRequired': 2, 'maximumBootSeconds': 720}
+                    'postReloadFreshPollsRequired': 2, 'maximumBootSeconds': 720, **(current_edition or {})}
         expected = [{'path': 'gameplay.renderPreset', 'op': 'eq', 'value': 'low'},
                     {'path': 'gameplay.menu.root', 'op': 'eq', 'value': 'title'},
                     {'path': 'gameplay.menu.focusId', 'op': 'eq', 'value': 'start'},
                     {'path': 'gameplay.ready', 'op': 'eq', 'value': True}]
         if not (self.args.game == 'night-racer' and game.get('game') == 'night-racer'
-                and self.report.get('apk', {}).get('sha256') == NIGHT_LOW_RELOAD_APK
-                and self.report.get('apk', {}).get('bytes') == 22465268
                 and step.get('keys') == ['A'] and step.get('expect') == expected
                 and game.get('gameplay', {}).get('renderPreset') == 'high'
                 and game.get('gameplay', {}).get('menu', {}).get('root') == 'volume'
                 and game.get('gameplay', {}).get('menu', {}).get('focusIndex') == 1):
             return None
+        if (self.report['apk'].get('sha256'), self.report['apk'].get('bytes')) != (NIGHT_LOW_RELOAD_APK, 22465268):
+            current_edition = self.signed_reload_source('night-racer')
+            if current_edition is None:
+                return None
+            return {'kind': 'exact-apk-module-constant-high-to-low', 'documentEpochAvailable': False,
+                    'postReloadFreshPollsRequired': 2, **current_edition}
+        # This exception belongs to one signed historical APK. Later editions can change
+        # their controller implementation without changing the proof for these bytes.
+        receipt = json.loads((ROOT / NIGHT_LOW_RELOAD_DELIVERY / 'original-package-proof/signing-receipt.json').read_bytes())
+        assert (receipt['sha256'] == NIGHT_LOW_RELOAD_APK and receipt['bytes'] == self.report['apk']['bytes']
+                and receipt['sourceSha'] == '315f8889ea677ed6a9211bf7d66c8c78dff57f01'
+                and receipt['signatureVerified'] is True), 'Night reload receipt changed'
         for name, digest in NIGHT_LOW_RELOAD_SOURCES.items():
-            assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, 'Night reload source proof changed'
+            archived = file_info(ROOT / NIGHT_LOW_RELOAD_INPUTS / name)
+            assert archived == receipt['sourceInputs'][name] and archived['sha256'] == digest, 'Night reload source proof changed'
         return {'kind': 'exact-apk-module-constant-high-to-low', 'apkSha256': NIGHT_LOW_RELOAD_APK,
+                'originalSourceCommit': receipt['sourceSha'],
                 'sourceSha256': dict(NIGHT_LOW_RELOAD_SOURCES), 'documentEpochAvailable': False,
                 'postReloadFreshPollsRequired': 2}
 
@@ -1035,8 +1086,7 @@ class Acceptance:
         self.passed('native exit dialog and focus return cancel input and never automatically resume gameplay')
         self.catalog_playing()
         self.press_observed('UP', effective=True)
-        self.ack_barrier()
-        self.clients[0].disconnect()
+        self.ack_barrier(disconnect=True)
         lost = self.wait(lambda s: self.paused(s) and not self.visible_ids(s) and not any(self.button_state(s, k) for k in KEYS), label='disconnect-pauses-clears')
         self.record('disconnect-paused', lost)
         self.capture('disconnected', [])
@@ -1057,8 +1107,9 @@ class Acceptance:
         self.release()
         self.passed('held START reconnect sync cannot resume gameplay')
         self.stop.set()
-        self.ack_barrier()
-        wire = self.proxy.summary()
+        with self.clients[0].lock:
+            self.ack_barrier()
+            wire = self.proxy.summary()
         assert wire['acceptedSdkMessages'] > 30 and not wire['missingAcks'] and not wire['errors'], wire
         assert not wire['unexpectedReplies'] and not wire['duplicateAcks'], wire
         assert len(wire['rejectedConnections']) == 1 and wire['keysSent'] == sorted(KEYS), wire

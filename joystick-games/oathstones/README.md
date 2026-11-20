@@ -1,5 +1,7 @@
 # Oathstones · 誓约宝石
 
+[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/oathstones-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+
 从营地选择战役，确认战斗简报后进入七乘七的誓约棋盘。交换相邻棋子，让颜色、形状或英雄誓约达成连锁；技能、招募、英雄升级、队伍编成、战利品和存档沿用原作规则。
 
 | 手柄 | 操作 |

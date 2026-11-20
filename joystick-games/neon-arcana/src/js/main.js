@@ -25,7 +25,7 @@ const $ = (id) => document.getElementById(id);
 /** The space the HUD and the powers bar leave free for the lattice. */
 function margins() {
     const h = window.visualViewport?.height ?? innerHeight;
-    const M = { top: 10, bottom: 10, left: 10, right: 10 + (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tv-gutter')) || 0) };
+    const M = { top: 10, bottom: 10, left: 10, right: 10 + (parseFloat(getComputedStyle(document.body).getPropertyValue('--tv-gutter')) || 0) };
     if (!$('hud').hidden) M.top = Math.round($('hud').getBoundingClientRect().bottom + 30);
     const p = $('powers');
     if (!p.hidden) {

@@ -1,0 +1,2637 @@
+{
+  "suite": "Phone QR, real room, original gameplay and two display sizes",
+  "resourceBuildSource": "6247c410e12f909451c91efc58aa199096a9dd4c",
+  "baselineAssetsCommit": "4052d352490f099d41329dfef66b4dbd22220ca9",
+  "environment": {
+    "TV": "Chromium Linux headless, original web assets with changed source overlays, native JS bridge calls relayed to the actual matching Java LanGameServer",
+    "phone": "second mobile Chromium profile, original served phone page, joins by URL decoded from TV QR pixels, original WebSocket, pointer events",
+    "qr": "ZXing MultiFormatWriter, margin 3, 320 square per Android MainActivity; used Java image encoding in place of Android Bitmap, decoded rendered pixels with QRCodeReader",
+    "androidActivityExercised": false,
+    "physicalPhoneOrEsp32Exercised": false,
+    "modelWrites": false,
+    "clockOverrides": false,
+    "releaseApkInstalledInThisSuite": false,
+    "chromium": "156.0.8078.79",
+    "playwright": "1.57.0",
+    "openJdk": "21.0.13",
+    "zxing": "3.5.3",
+    "orgJson": "20240303"
+  },
+  "sourceHashes": "source.json",
+  "signedAssetComparison": "signed-assets.json",
+  "viewports": [
+    [
+      960,
+      540
+    ],
+    [
+      1280,
+      720
+    ]
+  ],
+  "expectedGames": 12,
+  "observed": 12,
+  "passed": 12,
+  "games": [
+    {
+      "slug": "adventure-island",
+      "started": "2026-11-20T14:55:03.948Z",
+      "status": "passed",
+      "host": "com.ecojust.adventureislandtv",
+      "assertions": [
+        {
+          "name": "original game ready",
+          "phase": "title"
+        },
+        {
+          "name": "TV QR pixels decode to the original Java room URL"
+        },
+        {
+          "name": "phone occupies real first seat",
+          "card": {
+            "text": "1PPhone connected",
+            "seat": "1",
+            "privateIdentityVisible": false
+          }
+        },
+        {
+          "name": "joining keeps both canvas rectangles"
+        },
+        {
+          "name": "phone START enters original game",
+          "before": "title",
+          "after": "playing"
+        },
+        {
+          "name": "phone ordinary gameplay input",
+          "action": "player moved right",
+          "input": "right",
+          "before": 32,
+          "after": 68.49999999999999,
+          "phase": "playing"
+        },
+        {
+          "name": "active phone card clear of gameplay at both sizes"
+        },
+        {
+          "name": "room disconnect clears original seat"
+        }
+      ],
+      "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+      "errors": [],
+      "beforeJoin": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "connectedSamePhase": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                744,
+                21.4,
+                194,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1024,
+                60,
+                224,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "playing": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                744,
+                20,
+                194,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1024,
+                53,
+                224,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "finished": "2026-11-20T14:55:44.273Z",
+      "gameplayViewport": {
+        "width": 960,
+        "height": 540
+      },
+      "inputContact": "Chromium mobile viewport mouse pointer",
+      "baselineApkFile": "adventure-island-0.5.4.apk",
+      "baselineApkSha256": "e90fd9191f76ace72f6061b3c3b0f9e98af529cd44510114d98cd5911f54319d",
+      "assetSource": "baseline APK plus verified source overlays",
+      "signedApk": {
+        "file": "adventure-island-0.5.5.apk",
+        "sha256": "82866569a92907325339339c28435810d14e926fd1238b560d86e2325fd4a588",
+        "assetsMatched": 12,
+        "assetCount": 12
+      },
+      "serverSource": "resource/apps/adventure-island/src/main/java/com/ecojust/adventureislandtv/LanGameServer.java"
+    },
+    {
+      "slug": "alien-shooter",
+      "started": "2026-11-20T15:10:25.433Z",
+      "status": "passed",
+      "host": "com.ecojust.alienshootertv",
+      "assertions": [
+        {
+          "name": "original game ready",
+          "phase": "title"
+        },
+        {
+          "name": "TV QR pixels decode to the original Java room URL"
+        },
+        {
+          "name": "original phone page enabled by room welcome"
+        },
+        {
+          "name": "phone occupies real first seat",
+          "card": {
+            "text": "1PPhone connected",
+            "seat": "1",
+            "privateIdentityVisible": false
+          }
+        },
+        {
+          "name": "joining keeps both canvas rectangles"
+        },
+        {
+          "name": "phone START enters original game",
+          "before": "title",
+          "after": "playing"
+        },
+        {
+          "name": "phone ordinary gameplay input",
+          "action": "grenade consumed",
+          "input": "b",
+          "before": 3,
+          "after": 2,
+          "phase": "playing"
+        },
+        {
+          "name": "active phone card clear of gameplay at both sizes"
+        },
+        {
+          "name": "room disconnect clears original seat"
+        }
+      ],
+      "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+      "errors": [],
+      "gameplayViewport": {
+        "width": 640,
+        "height": 360
+      },
+      "renderer": {
+        "version": "WebGL 1.0 (OpenGL ES 2.0 Chromium)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+      },
+      "beforeJoin": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              0,
+              0,
+              960,
+              540
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "inputContact": "Chromium mobile touch pointer",
+      "connectedSamePhase": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              0,
+              0,
+              960,
+              540
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                702,
+                53.2,
+                192,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                962.6,
+                56.9,
+                216,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "playing": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              0,
+              0,
+              960,
+              540
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "finished": "2026-11-20T15:11:15.756Z",
+      "baselineApkFile": "alien-shooter-0.1.4.apk",
+      "baselineApkSha256": "2dae05c633afca0250822937d87fd57f9e90c643414200bf506ceba31dfbd42b",
+      "assetSource": "baseline APK plus verified source overlays",
+      "signedApk": {
+        "file": "alien-shooter-0.1.5.apk",
+        "sha256": "f8afa219ca247107f79dc4e4da7e024eaec7f56b0b312a0fd4eb140340a913eb",
+        "assetsMatched": 23,
+        "assetCount": 23
+      },
+      "serverSource": "resource/apps/alien-shooter/src/main/java/com/ecojust/alienshootertv/LanGameServer.java"
+    },
+    {
+      "slug": "bomb-jack",
+      "started": "2026-11-20T14:55:45.151Z",
+      "status": "passed",
+      "host": "com.ecojust.bombjacktv",
+      "assertions": [
+        {
+          "name": "original game ready",
+          "phase": "title"
+        },
+        {
+          "name": "TV QR pixels decode to the original Java room URL"
+        },
+        {
+          "name": "phone occupies real first seat",
+          "card": {
+            "text": "1PPhone connected",
+            "seat": "1",
+            "privateIdentityVisible": false
+          }
+        },
+        {
+          "name": "joining keeps both canvas rectangles"
+        },
+        {
+          "name": "phone START enters original game",
+          "before": "title",
+          "after": "playing"
+        },
+        {
+          "name": "phone ordinary gameplay input",
+          "action": "player moved right",
+          "input": "right",
+          "before": 24,
+          "after": 61.56799999999999,
+          "phase": "playing"
+        },
+        {
+          "name": "active phone card clear of gameplay at both sizes"
+        },
+        {
+          "name": "room disconnect clears original seat"
+        }
+      ],
+      "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+      "errors": [],
+      "beforeJoin": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              114.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              155,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "connectedSamePhase": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              114.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                752,
+                20,
+                186,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              155,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1010,
+                28,
+                238,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "playing": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              114.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                752,
+                20,
+                186,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              155,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1010,
+                28,
+                238,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "finished": "2026-11-20T14:56:29.919Z",
+      "gameplayViewport": {
+        "width": 960,
+        "height": 540
+      },
+      "inputContact": "Chromium mobile viewport mouse pointer",
+      "baselineApkFile": "bomb-jack-0.5.4.apk",
+      "baselineApkSha256": "6c2cf1defa02263639e339d3067395df50c0b88cd823b6a439a38344b91b0583",
+      "assetSource": "baseline APK plus verified source overlays",
+      "signedApk": {
+        "file": "bomb-jack-0.5.5.apk",
+        "sha256": "3d2f29293b9316be86ad45f60597d27fceebf8fd629321aa186fe37bd35154eb",
+        "assetsMatched": 13,
+        "assetCount": 13
+      },
+      "serverSource": "resource/apps/bomb-jack/src/main/java/com/ecojust/bombjacktv/LanGameServer.java"
+    },
+    {
+      "slug": "coast-kart",
+      "started": "2026-11-20T15:28:26.434Z",
+      "status": "passed",
+      "host": "com.ecojust.coastkarttv",
+      "signedApkSha256": "4f480cf8b132bdc2f91bf1905349f5a535fc6538835252933b9eb225f28ac02d",
+      "assertions": [
+        {
+          "name": "original game ready",
+          "phase": "title"
+        },
+        {
+          "name": "TV QR pixels decode to the original Java room URL"
+        },
+        {
+          "name": "original phone page enabled by room welcome"
+        },
+        {
+          "name": "phone occupies real first seat",
+          "card": {
+            "text": "1PPhone connected",
+            "seat": "1",
+            "privateIdentityVisible": false
+          }
+        },
+        {
+          "name": "joining preserves canvas rectangles at all measured sizes"
+        },
+        {
+          "name": "phone START enters original game",
+          "before": "title",
+          "after": "playing"
+        },
+        {
+          "name": "phone ordinary gameplay input",
+          "action": "held brake reversed kart",
+          "input": "reverse",
+          "before": 38.201206000000006,
+          "after": -11.035950045850937,
+          "phase": "playing"
+        },
+        {
+          "name": "connected phone cards clear of gameplay at every measured size"
+        },
+        {
+          "name": "room disconnect clears original seat"
+        }
+      ],
+      "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+      "errors": [],
+      "gameplayViewport": {
+        "width": 640,
+        "height": 360
+      },
+      "deviceScaleFactor": 0.5,
+      "renderer": {
+        "version": "WebGL 1.0 (OpenGL ES 2.0 Chromium)",
+        "renderer": "ANGLE (Mesa, llvmpipe (LLVM 19.1.7 256 bits), OpenGL ES 3.2)"
+      },
+      "beforeJoin": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              14,
+              49.9,
+              752,
+              423
+            ]
+          },
+          "phoneRows": [],
+          "sidebar": [
+            780,
+            12,
+            166,
+            498.8
+          ],
+          "qr": [
+            820,
+            83,
+            86,
+            86
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              32,
+              79.5,
+              970,
+              545
+            ]
+          },
+          "phoneRows": [],
+          "sidebar": [
+            1030,
+            24,
+            218,
+            656
+          ],
+          "qr": [
+            1065,
+            118,
+            148,
+            148
+          ]
+        }
+      ],
+      "inputContact": "Chromium mobile touch pointer",
+      "connectedSamePhase": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              14,
+              49.9,
+              752,
+              423
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                780,
+                12,
+                166,
+                48.4
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ],
+          "sidebar": [
+            780,
+            12,
+            166,
+            498.8
+          ],
+          "qr": [
+            820,
+            131.4,
+            86,
+            86
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              32,
+              79.5,
+              970,
+              545
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1030,
+                24,
+                218,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ],
+          "sidebar": [
+            1030,
+            24,
+            218,
+            656
+          ],
+          "qr": [
+            1065,
+            158,
+            148,
+            148
+          ]
+        }
+      ],
+      "countdownSamples": [
+        {
+          "at": "2026-11-20T15:29:20.231Z",
+          "phase": "playing",
+          "paused": false,
+          "countdown": 2.8,
+          "speed": 0,
+          "clock": 0,
+          "renderedPlayers": 2
+        },
+        {
+          "at": "2026-11-20T15:29:30.651Z",
+          "phase": "playing",
+          "paused": false,
+          "countdown": 0.8999999999999984,
+          "speed": 0,
+          "clock": 0,
+          "renderedPlayers": 2
+        }
+      ],
+      "originalCamera": {
+        "projectionElements": 16,
+        "viewElements": 16,
+        "renderedPlayers": 2
+      },
+      "playing": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              14,
+              49.9,
+              752,
+              423
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                780,
+                12,
+                166,
+                48.4
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ],
+          "sidebar": [
+            780,
+            12,
+            166,
+            498.8
+          ],
+          "qr": [
+            820,
+            131.4,
+            86,
+            86
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              32,
+              79.5,
+              970,
+              545
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1030,
+                24,
+                218,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ],
+          "sidebar": [
+            1030,
+            24,
+            218,
+            656
+          ],
+          "qr": [
+            1065,
+            158,
+            148,
+            148
+          ]
+        }
+      ],
+      "finished": "2026-11-20T15:29:44.650Z",
+      "baselineApkFile": "coast-kart-0.5.4.apk",
+      "assetSource": "direct final signed APK extraction",
+      "baselineApkSha256": "535fa7a82faffada213f1870236d5506d36829f6b7557382c9cdd262e3773654",
+      "signedApk": {
+        "file": "coast-kart-0.5.5.apk",
+        "sha256": "4f480cf8b132bdc2f91bf1905349f5a535fc6538835252933b9eb225f28ac02d",
+        "assetsMatched": 15,
+        "assetCount": 15
+      },
+      "serverSource": "resource/apps/coast-kart/src/main/java/com/ecojust/coastkarttv/LanGameServer.java"
+    },
+    {
+      "slug": "jackal",
+      "started": "2026-11-20T14:57:38.365Z",
+      "status": "passed",
+      "host": "com.ecojust.jackaltv",
+      "assertions": [
+        {
+          "name": "original game ready",
+          "phase": "title"
+        },
+        {
+          "name": "TV QR pixels decode to the original Java room URL"
+        },
+        {
+          "name": "phone occupies real first seat",
+          "card": {
+            "text": "1PPhone connected",
+            "seat": "1",
+            "privateIdentityVisible": false
+          }
+        },
+        {
+          "name": "joining keeps both canvas rectangles"
+        },
+        {
+          "name": "phone START enters original game",
+          "before": "title",
+          "after": "playing"
+        },
+        {
+          "name": "phone ordinary gameplay input",
+          "action": "player moved right",
+          "input": "right",
+          "before": 80,
+          "after": 104,
+          "phase": "playing"
+        },
+        {
+          "name": "active phone card clear of gameplay at both sizes"
+        },
+        {
+          "name": "room disconnect clears original seat"
+        }
+      ],
+      "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+      "errors": [],
+      "beforeJoin": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "connectedSamePhase": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                744,
+                33.4,
+                194,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1024,
+                60,
+                224,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "playing": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                744,
+                33.4,
+                194,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1024,
+                60,
+                224,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "finished": "2026-11-20T14:59:03.155Z",
+      "gameplayViewport": {
+        "width": 960,
+        "height": 540
+      },
+      "inputContact": "Chromium mobile viewport mouse pointer",
+      "baselineApkFile": "jackal-0.5.4.apk",
+      "baselineApkSha256": "64c975bea4fa6fa7b7709db56910c79778f0a21c3df27905d6f0065a50d679ba",
+      "assetSource": "baseline APK plus verified source overlays",
+      "signedApk": {
+        "file": "jackal-0.5.5.apk",
+        "sha256": "8fa859e9fe25eb2ceee50e407031dca9cecf67edcc850100c96373c86cafed63",
+        "assetsMatched": 394,
+        "assetCount": 394
+      },
+      "serverSource": "resource/apps/jackal/src/main/java/com/ecojust/jackaltv/LanGameServer.java"
+    },
+    {
+      "slug": "jewel",
+      "started": "2026-11-20T14:56:30.854Z",
+      "status": "passed",
+      "host": "com.ecojust.jeweltv",
+      "assertions": [
+        {
+          "name": "original game ready",
+          "phase": "title"
+        },
+        {
+          "name": "TV QR pixels decode to the original Java room URL"
+        },
+        {
+          "name": "phone occupies real first seat",
+          "card": {
+            "text": "1PPhone connected",
+            "seat": "1",
+            "privateIdentityVisible": false
+          }
+        },
+        {
+          "name": "joining keeps both canvas rectangles"
+        },
+        {
+          "name": "phone START enters original game",
+          "before": "title",
+          "after": "playing"
+        },
+        {
+          "name": "phone ordinary gameplay input",
+          "action": "active piece moved right",
+          "input": "right",
+          "before": 3,
+          "after": 5,
+          "phase": "playing"
+        },
+        {
+          "name": "active phone card clear of gameplay at both sizes"
+        },
+        {
+          "name": "room disconnect clears original seat"
+        }
+      ],
+      "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+      "errors": [],
+      "beforeJoin": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "connectedSamePhase": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                744,
+                20,
+                194,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1024,
+                28,
+                224,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "playing": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                744,
+                20,
+                194,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1024,
+                28,
+                224,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "finished": "2026-11-20T14:57:37.239Z",
+      "gameplayViewport": {
+        "width": 960,
+        "height": 540
+      },
+      "inputContact": "Chromium mobile viewport mouse pointer",
+      "baselineApkFile": "jewel-0.5.4.apk",
+      "baselineApkSha256": "5831dda8faf483988993ef81ac4ef287d44836f24daffceefc5a8d6af245dfd9",
+      "assetSource": "baseline APK plus verified source overlays",
+      "signedApk": {
+        "file": "jewel-0.5.5.apk",
+        "sha256": "0bf0247d19e81b512832fbedfd7291926ddaee7dd1bc60ad3e9d8f4b19258d90",
+        "assetsMatched": 12,
+        "assetCount": 12
+      },
+      "serverSource": "resource/apps/jewel/src/main/java/com/ecojust/jeweltv/LanGameServer.java"
+    },
+    {
+      "slug": "neon-rush",
+      "started": "2026-11-20T15:16:33.030Z",
+      "status": "passed",
+      "host": "com.ecojust.gamekit",
+      "assertions": [
+        {
+          "name": "original game ready",
+          "phase": "menu"
+        },
+        {
+          "name": "TV QR pixels decode to the original Java room URL"
+        },
+        {
+          "name": "original phone page enabled by room welcome"
+        },
+        {
+          "name": "phone occupies real first seat",
+          "card": {
+            "text": "1PPhone connected",
+            "seat": "1",
+            "privateIdentityVisible": false
+          }
+        },
+        {
+          "name": "joining keeps both canvas rectangles"
+        },
+        {
+          "name": "phone START enters original game",
+          "before": "menu",
+          "after": "playing"
+        },
+        {
+          "name": "phone ordinary gameplay input",
+          "action": "nitro used",
+          "input": "b",
+          "before": 0,
+          "after": 1,
+          "phase": "playing"
+        },
+        {
+          "name": "active phone card clear of gameplay at both sizes"
+        },
+        {
+          "name": "room disconnect clears original seat"
+        }
+      ],
+      "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+      "errors": [],
+      "gameplayViewport": {
+        "width": 640,
+        "height": 360
+      },
+      "renderer": {
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+      },
+      "beforeJoin": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "game",
+            "box": [
+              14,
+              59,
+              932,
+              451
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "game",
+            "box": [
+              23,
+              79,
+              1234,
+              602
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "inputContact": "Chromium mobile touch pointer",
+      "connectedSamePhase": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "game",
+            "box": [
+              14,
+              59,
+              932,
+              451
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                665,
+                252,
+                262,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "game",
+            "box": [
+              23,
+              79,
+              1234,
+              602
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                975,
+                283,
+                256,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "playing": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "game",
+            "box": [
+              14,
+              59,
+              932,
+              451
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "game",
+            "box": [
+              23,
+              79,
+              1234,
+              602
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "finished": "2026-11-20T15:18:25.570Z",
+      "baselineApkFile": "neon-rush-0.1.3.apk",
+      "baselineApkSha256": "4dc1fbefb8c6b1195e87d608b4a81f3423f4d1f17c151844a768bd16d9d60631",
+      "assetSource": "baseline APK plus verified source overlays",
+      "signedApk": {
+        "file": "neon-rush-0.1.4.apk",
+        "sha256": "b59cc65f4dea1c3176d0ceb38885fa57143bddda26eb403c0e6a85c878d9ff47",
+        "assetsMatched": 15,
+        "assetCount": 15
+      },
+      "serverSource": "resource/game-kit/android/src/main/java/com/ecojust/gamekit/LanGameServer.java"
+    },
+    {
+      "slug": "super-mario",
+      "started": "2026-11-20T14:54:19.943Z",
+      "status": "passed",
+      "host": "com.ecojust.supermariotv",
+      "assertions": [
+        {
+          "name": "original game ready",
+          "phase": "title"
+        },
+        {
+          "name": "TV QR pixels decode to the original Java room URL"
+        },
+        {
+          "name": "phone occupies real first seat",
+          "card": {
+            "text": "1PPhone connected",
+            "seat": "1",
+            "privateIdentityVisible": false
+          }
+        },
+        {
+          "name": "joining keeps both canvas rectangles"
+        },
+        {
+          "name": "phone START enters original game",
+          "before": "title",
+          "after": "playing"
+        },
+        {
+          "name": "phone ordinary gameplay input",
+          "action": "player moved right",
+          "input": "right",
+          "before": 32,
+          "after": 60.949999999999996,
+          "phase": "playing"
+        },
+        {
+          "name": "active phone card clear of gameplay at both sizes"
+        },
+        {
+          "name": "room disconnect clears original seat"
+        }
+      ],
+      "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+      "errors": [],
+      "beforeJoin": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "connectedSamePhase": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                744,
+                20,
+                194,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1024,
+                32.6,
+                224,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "playing": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                744,
+                20,
+                194,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1024,
+                32.6,
+                224,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "finished": "2026-11-20T14:55:03.354Z",
+      "gameplayViewport": {
+        "width": 960,
+        "height": 540
+      },
+      "inputContact": "Chromium mobile viewport mouse pointer",
+      "baselineApkFile": "super-mario-0.5.4.apk",
+      "baselineApkSha256": "3bcee70b5be524ab4523cbb9fd74f96fca9f4a5c3db6307253b003d9873c325b",
+      "assetSource": "baseline APK plus verified source overlays",
+      "signedApk": {
+        "file": "super-mario-0.5.5.apk",
+        "sha256": "fe4bb3e638e0b08481de84b452ac0d755cf71762d5a641c6d0a8c0c4bd19d7df",
+        "assetsMatched": 12,
+        "assetCount": 12
+      },
+      "serverSource": "resource/apps/super-mario/src/main/java/com/ecojust/supermariotv/LanGameServer.java"
+    },
+    {
+      "slug": "tank",
+      "started": "2026-11-20T14:59:03.721Z",
+      "status": "passed",
+      "host": "com.ecojust.tanktv",
+      "assertions": [
+        {
+          "name": "original game ready",
+          "phase": "title"
+        },
+        {
+          "name": "TV QR pixels decode to the original Java room URL"
+        },
+        {
+          "name": "phone occupies real first seat",
+          "card": {
+            "text": "1PPhone connected",
+            "seat": "1",
+            "privateIdentityVisible": false
+          }
+        },
+        {
+          "name": "joining keeps both canvas rectangles"
+        },
+        {
+          "name": "phone START enters original game",
+          "before": "title",
+          "after": "playing"
+        },
+        {
+          "name": "phone ordinary gameplay input",
+          "action": "player moved right",
+          "input": "right",
+          "before": 72,
+          "after": 80,
+          "phase": "playing"
+        },
+        {
+          "name": "active phone card clear of gameplay at both sizes"
+        },
+        {
+          "name": "room disconnect clears original seat"
+        }
+      ],
+      "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+      "errors": [],
+      "beforeJoin": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "connectedSamePhase": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                744,
+                33.4,
+                194,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1024,
+                60,
+                224,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "playing": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                744,
+                33.4,
+                194,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1024,
+                60,
+                224,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "finished": "2026-11-20T14:59:40.851Z",
+      "gameplayViewport": {
+        "width": 960,
+        "height": 540
+      },
+      "inputContact": "Chromium mobile viewport mouse pointer",
+      "baselineApkFile": "tank-0.5.4.apk",
+      "baselineApkSha256": "6a3e6dde98692a0447cccfd7625d7dffcd512701601b702ff0654b97464e8e95",
+      "assetSource": "baseline APK plus verified source overlays",
+      "signedApk": {
+        "file": "tank-0.5.5.apk",
+        "sha256": "7ffe2bac456c36a25d12bb9ef033ea805ad7891f9149d67bb112cf179eb66b40",
+        "assetsMatched": 25,
+        "assetCount": 25
+      },
+      "serverSource": "resource/apps/tank/src/main/java/com/ecojust/tanktv/LanGameServer.java"
+    },
+    {
+      "slug": "tetris",
+      "started": "2026-11-20T14:53:24.038Z",
+      "status": "passed",
+      "host": "com.ecojust.tetristv",
+      "assertions": [
+        {
+          "name": "original game ready",
+          "phase": "title"
+        },
+        {
+          "name": "TV QR pixels decode to the original Java room URL"
+        },
+        {
+          "name": "phone occupies real first seat",
+          "card": {
+            "text": "1PPhone connected",
+            "seat": "1",
+            "privateIdentityVisible": false
+          }
+        },
+        {
+          "name": "joining keeps both canvas rectangles"
+        },
+        {
+          "name": "phone START enters original game",
+          "before": "title",
+          "after": "playing"
+        },
+        {
+          "name": "phone ordinary gameplay input",
+          "action": "active piece moved right",
+          "input": "right",
+          "before": 3,
+          "after": 6,
+          "phase": "playing"
+        },
+        {
+          "name": "active phone card clear of gameplay at both sizes"
+        },
+        {
+          "name": "room disconnect clears original seat"
+        }
+      ],
+      "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+      "errors": [],
+      "beforeJoin": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "connectedSamePhase": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                744,
+                20,
+                194,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1024,
+                33.2,
+                224,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "playing": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              110.5,
+              16,
+              521,
+              489
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                744,
+                20,
+                194,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              162,
+              24,
+              692,
+              649
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1024,
+                33.2,
+                224,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "finished": "2026-11-20T14:54:19.136Z",
+      "gameplayViewport": {
+        "width": 960,
+        "height": 540
+      },
+      "inputContact": "Chromium mobile viewport mouse pointer",
+      "baselineApkFile": "tetris-0.5.4.apk",
+      "baselineApkSha256": "97cfe5d354146ff25820d25aefd942477936d06d50b7e26b1dab38312f3223a3",
+      "assetSource": "baseline APK plus verified source overlays",
+      "signedApk": {
+        "file": "tetris-0.5.5.apk",
+        "sha256": "6370c9b2283e5f50a1325dfe9c323b6aeeeb25ddf8dfeea0b25c25c90a5863d3",
+        "assetsMatched": 12,
+        "assetCount": 12
+      },
+      "serverSource": "resource/apps/tetris/src/main/java/com/ecojust/tetristv/LanGameServer.java"
+    },
+    {
+      "slug": "tower-overlap",
+      "started": "2026-11-20T15:09:39.338Z",
+      "status": "passed",
+      "host": "com.ecojust.gamekit",
+      "assertions": [
+        {
+          "name": "original game ready",
+          "phase": "menu"
+        },
+        {
+          "name": "TV QR pixels decode to the original Java room URL"
+        },
+        {
+          "name": "original phone page enabled by room welcome"
+        },
+        {
+          "name": "phone occupies real first seat",
+          "card": {
+            "text": "1PPhone connected",
+            "seat": "1",
+            "privateIdentityVisible": false
+          }
+        },
+        {
+          "name": "joining keeps both canvas rectangles"
+        },
+        {
+          "name": "phone START enters original game",
+          "before": "menu",
+          "after": "playing"
+        },
+        {
+          "name": "phone ordinary gameplay input",
+          "action": "slab drop",
+          "input": "a",
+          "before": 0,
+          "after": 1,
+          "phase": "playing"
+        },
+        {
+          "name": "active phone card clear of gameplay at both sizes"
+        },
+        {
+          "name": "room disconnect clears original seat"
+        }
+      ],
+      "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+      "errors": [],
+      "gameplayViewport": {
+        "width": 960,
+        "height": 540
+      },
+      "beforeJoin": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "game",
+            "box": [
+              212.4,
+              91,
+              535.1,
+              301
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "game",
+            "box": [
+              256,
+              114,
+              768,
+              432
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "inputContact": "Chromium mobile touch pointer",
+      "connectedSamePhase": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "game",
+            "box": [
+              212.4,
+              91,
+              535.1,
+              301
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                233,
+                431,
+                167.2,
+                47
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "game",
+            "box": [
+              256,
+              114,
+              768,
+              432
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                243,
+                594,
+                254.3,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "playing": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "game",
+            "box": [
+              212.4,
+              91,
+              535.1,
+              301
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                233,
+                431,
+                167.2,
+                47
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "game",
+            "box": [
+              256,
+              114,
+              768,
+              432
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                243,
+                594,
+                254.3,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "finished": "2026-11-20T15:10:20.561Z",
+      "baselineApkFile": "tower-overlap-0.2.2.apk",
+      "baselineApkSha256": "9e1749612262480b1f496334bb788669a15f31a43ab76a71a2c381457cde42e4",
+      "assetSource": "baseline APK plus verified source overlays",
+      "signedApk": {
+        "file": "tower-overlap-0.2.3.apk",
+        "sha256": "6490b703ce2cda05387b1031a91b945f7784fd774e8bce8dcd135cc52b0419a7",
+        "assetsMatched": 13,
+        "assetCount": 13
+      },
+      "serverSource": "resource/game-kit/android/src/main/java/com/ecojust/gamekit/LanGameServer.java"
+    },
+    {
+      "slug": "used-car-racing",
+      "started": "2026-11-20T15:12:39.976Z",
+      "status": "passed",
+      "host": "com.ecojust.usedcartv",
+      "assertions": [
+        {
+          "name": "original game ready",
+          "phase": "garage"
+        },
+        {
+          "name": "TV QR pixels decode to the original Java room URL"
+        },
+        {
+          "name": "original phone page enabled by room welcome"
+        },
+        {
+          "name": "phone occupies real first seat",
+          "card": {
+            "text": "1PPhone connected",
+            "seat": "1",
+            "privateIdentityVisible": false
+          }
+        },
+        {
+          "name": "joining keeps both canvas rectangles"
+        },
+        {
+          "name": "phone START enters original game",
+          "before": "garage",
+          "after": "countdown"
+        },
+        {
+          "name": "phone ordinary gameplay input",
+          "action": "throttle accelerated car",
+          "input": "a",
+          "before": 0,
+          "after": 1.72943011040571,
+          "phase": "race"
+        },
+        {
+          "name": "active phone card clear of gameplay at both sizes"
+        },
+        {
+          "name": "room disconnect clears original seat"
+        }
+      ],
+      "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+      "errors": [],
+      "gameplayViewport": {
+        "width": 640,
+        "height": 360
+      },
+      "renderer": {
+        "version": "WebGL 1.0 (OpenGL ES 2.0 Chromium)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+      },
+      "beforeJoin": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "road",
+            "box": [
+              0,
+              0,
+              960,
+              540
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "road",
+            "box": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "inputContact": "Chromium mobile touch pointer",
+      "connectedSamePhase": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "road",
+            "box": [
+              0,
+              0,
+              960,
+              540
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                22,
+                164,
+                330,
+                32
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "road",
+            "box": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                34,
+                194,
+                330,
+                32
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ]
+        }
+      ],
+      "playing": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "road",
+            "box": [
+              0,
+              0,
+              960,
+              540
+            ]
+          },
+          "phoneRows": []
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "road",
+            "box": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          },
+          "phoneRows": []
+        }
+      ],
+      "finished": "2026-11-20T15:16:32.120Z",
+      "baselineApkFile": "used-car-racing-0.1.5.apk",
+      "baselineApkSha256": "3a616e53f8880f2c14fb564bc97204c171b4c5ab21cdacf46dfafeacf5b3f00e",
+      "assetSource": "baseline APK plus verified source overlays",
+      "signedApk": {
+        "file": "used-car-racing-0.1.6.apk",
+        "sha256": "7fba87cc802570dbea303dc5286b88c2904122e909be40a19da8db0abcd0eeaa",
+        "assetsMatched": 39,
+        "assetCount": 39
+      },
+      "serverSource": "resource/apps/used-car-racing/src/main/java/com/ecojust/usedcartv/LanGameServer.java"
+    }
+  ],
+  "observerNotes": [
+    {
+      "games": [
+        "coast-kart",
+        "used-car-racing",
+        "neon-rush"
+      ],
+      "observation": "Early 960x540 runs exceeded the 60s DOMContentLoaded observation on the shared software renderer. Subsequent records wait for the original phase, use the recorded smaller gameplay viewport, and still measure both full TV layouts."
+    },
+    {
+      "games": [
+        "alien-shooter"
+      ],
+      "observation": "The first 20s seat observation ended before the TV row was observed. A following read found seat 1 in the original title. A fresh room was opened for the completed run."
+    },
+    {
+      "games": [
+        "coast-kart"
+      ],
+      "observation": "An initial comparison observed the old 640px presentation canvas before the original window resize handler ran. The signed-APK repeat waits for the actual resize event before comparing each view."
+    },
+    {
+      "games": [
+        "tower-overlap"
+      ],
+      "observation": "The first web assets had version 0.2.2/code 4 in game-config.json. This record uses the final 0.2.3/code 5 configuration and mobile touch input."
+    }
+  ]
+}

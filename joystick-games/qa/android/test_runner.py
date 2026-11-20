@@ -208,6 +208,40 @@ class MenuTapContracts(unittest.TestCase):
             {'path': 'gameplay.menu.focusId', 'op': 'eq', 'value': 'start'},
             {'path': 'gameplay.ready', 'op': 'eq', 'value': True}])
 
+    def test_final_ack_and_disconnect_exclude_a_concurrent_sdk_heartbeat(self):
+        attempted = threading.Event()
+        lock_was_held = []
+        extra_ping = []
+
+        def heartbeat():
+            immediate = self.client.lock.acquire(blocking=False)
+            lock_was_held.append(not immediate)
+            if immediate:
+                self.client.lock.release()
+            attempted.set()
+            with self.client.lock:
+                if self.client.sock is not None:
+                    self.client.ping()
+                    extra_ping.append(self.client.seq)
+
+        worker = threading.Thread(target=heartbeat, daemon=True)
+        wait_for_ack = self.acceptance.wait_sent_ack
+
+        def wait_during_heartbeat(client, sequence):
+            worker.start()
+            self.assertTrue(attempted.wait(2))
+            wait_for_ack(client, sequence)
+
+        with mock.patch.object(self.acceptance, 'wait_sent_ack', side_effect=wait_during_heartbeat):
+            self.acceptance.ack_barrier(disconnect=True)
+        worker.join(2)
+        self.assertFalse(worker.is_alive())
+        self.assertEqual(lock_was_held, [True])
+        self.assertEqual(extra_ping, [])
+        wire = self.proxy.summary()
+        self.assertEqual(wire['matchingAcks'], wire['acceptedSdkMessages'])
+        self.assertEqual(wire['missingAcks'], [])
+
     def test_real_sdk_short_pair_ack_and_two_subsequent_fresh_polls(self):
         self.use_samples([{'game': None}, self.state(101, index=2), self.state(101, index=2),
                           self.state(102, index=2), self.state(103, index=2)])
@@ -268,6 +302,35 @@ class MenuTapContracts(unittest.TestCase):
         self.acceptance.report['apk']['sha256'] = '0' * 64
         self.assertIsNone(self.acceptance.menu_reload_basis(self.step, before))
 
+    def test_new_night_reload_requires_matching_signed_bytes_and_navigation_sources(self):
+        self.reload_step()
+        with tempfile.TemporaryDirectory() as temp:
+            apk = Path(temp) / 'night-racer-0.1.1.apk'
+            apk.write_bytes(b'fixture for receipt binding')
+            self.acceptance.args.apk = apk
+            self.acceptance.report['apk'] = identity = runner.file_info(apk)
+            self.acceptance.report['sourceCommit'] = '0' * 40
+            # The fixture describes the already producer-verified signed edition.
+            # A future working tree may legitimately have a different adapter.
+            sources = {'joystick-games/night-racer/src/src/main.js': {'bytes': 98145, 'sha256': 'ad1edb9d785799db5cd357d614005d2e044b79bed7c7635e019e693e65b49004'}, 'joystick-games/night-racer/src/src/tv-adapter.js': {'bytes': 7500, 'sha256': '7b271ee970ae78da66ae5bf128c2116e3107a41473b116f8c820b6b49be349ec'}}
+            receipt = {'game': 'night-racer', 'packageName': runner.PACKAGES['night-racer'],
+                       'versionName': '0.1.1', 'versionCode': 2, 'signatureVerified': True,
+                       'certificateSha256': 'eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23',
+                       'sourceInputs': sources, 'sourceSha': '0' * 40, **identity}
+            path = apk.parent / 'signing-receipt.json'
+            path.write_text(json.dumps(receipt))
+            self.use_samples([self.state(2, low=True), self.state(3, low=True), self.state(4, low=True)])
+            def source_record(path):
+                return sources[path.relative_to(runner.ROOT).as_posix()]
+            with mock.patch.object(runner, 'file_info', side_effect=source_record), \
+                    mock.patch.dict(runner.os.environ, {'ARTIFACT_SOURCE': self.acceptance.report['sourceCommit']}):
+                self.acceptance.catalog_menu_tap(self.step, self.state(70))
+                for field, value in (('versionCode', 1), ('signatureVerified', False), ('sha256', '0' * 64),
+                                     ('certificateSha256', '0' * 64), ('sourceInputs', {})):
+                    path.write_text(json.dumps({**receipt, field: value}))
+                    with self.assertRaises((AssertionError, KeyError)):
+                        self.acceptance.signed_reload_source('night-racer')
+
     def test_exact_night_low_reload_requires_new_baseline_then_two_new_polls(self):
         self.reload_step()
         self.use_samples([self.state(2, low=True), self.state(2, low=True), self.state(3, low=True), self.state(4, low=True)])
@@ -298,6 +361,19 @@ class MenuTapContracts(unittest.TestCase):
         after = self.acceptance.catalog_menu_tap(self.step, self.state(100))
         self.assertEqual(after['game']['controller']['pollCount'], 106)
         self.assertEqual(self.reads, 6)
+
+    def test_historic_night_reload_requires_its_original_signing_receipt(self):
+        self.reload_step()
+        relative = runner.NIGHT_LOW_RELOAD_DELIVERY / 'original-package-proof/signing-receipt.json'
+        receipt = json.loads((runner.ROOT / relative).read_bytes())
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / relative).parent.mkdir(parents=True)
+            receipt['sha256'] = '0' * 64
+            (root / relative).write_text(json.dumps(receipt))
+            with mock.patch.object(runner, 'ROOT', root):
+                with self.assertRaisesRegex(AssertionError, 'Night reload receipt changed'):
+                    self.acceptance.menu_reload_basis(self.step, self.state(288))
 
     def test_reload_proof_rejects_changed_apk_source_wrong_state_and_expectation(self):
         self.reload_step(); before = self.state(288)

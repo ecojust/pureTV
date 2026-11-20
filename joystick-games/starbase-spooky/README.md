@@ -1,5 +1,7 @@
 # 幽灵空间站 · Starbase Spooky
 
+[下载当前 Android TV 手柄版 0.1.3](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/starbase-spooky-0.1.3.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+
 你是空间站的新管理员 Kit。和机器人 Orby 一起巡查八个房间、迎接五批访客，找出站里半夜发出响动的原因。找回第一条线索前，先去 Star Garden：在灯光面板里，把左右两侧相同颜色的电线接好，再调查地面发光的东西。
 
 五天的故事包含科学问答、线索笔记以及五种谜题：接线、给零食机配电池、按太阳系顺序排列行星、记忆保险丝闪烁顺序和重现旋律。答错可以重试。保留原作英文界面、字幕、角色配音、音乐和场景画面。游戏进度保存在当前安装内，重新打开后选择 **Continue**。

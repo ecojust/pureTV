@@ -192,6 +192,36 @@ try{
   });
   assert.equal(overlapState,true,'a same-event new phone press keeps the overlapping A held');
   await tv.keyboard.up('z');
+
+  // Native Wi-Fi snapshots consume a short button edge even when a different
+  // player's keyboard blur triggered the read. The next game frame still owns it.
+  await tv.evaluate(()=>{
+    const original = CoastKartHost.snapshot;
+    window.__wifiPulse = { pending:false, restore:()=>{ CoastKartHost.snapshot=original; } };
+    CoastKartHost.snapshot = ()=>{
+      const snapshot = JSON.parse(original());
+      Object.assign(snapshot.players[1], {transport:'wifi', session:'second-seat-pulse', b:window.__wifiPulse.pending});
+      window.__wifiPulse.pending=false;
+      return JSON.stringify(snapshot);
+    };
+  });
+  await tv.waitForFunction(()=>CoastKartTV.controllerSnapshot().some(p=>p.id===2&&p.session==='second-seat-pulse'));
+  const edge = await tv.evaluate(async()=>{
+    const sampledB = ()=>CoastKartTV.controllerSnapshot().find(p=>p.id===2).b;
+    try {
+      window.__wifiPulse.pending=true;
+      CoastKartTV.key('z',true);
+      window.dispatchEvent(new Event('blur'));
+      const consumedAtBlur = !window.__wifiPulse.pending;
+      await new Promise(requestAnimationFrame);
+      const firstFrame = sampledB();
+      await new Promise(requestAnimationFrame);
+      return {consumedAtBlur,firstFrame,secondFrame:sampledB()};
+    } finally {
+      window.__wifiPulse.restore();
+    }
+  });
+  assert.deepEqual(edge,{consumedAtBlur:true,firstFrame:true,secondFrame:false},'another seat receives its one-shot Wi-Fi B exactly once');
   assert.deepEqual(errors,[]);
   console.log('PASS kart combat: two actual phone pages guard, aim, throw, drift, intercept, resume, cancel without throwing and start fresh gestures');
 }finally{await browser.close();await new Promise(done=>server.close(done));}

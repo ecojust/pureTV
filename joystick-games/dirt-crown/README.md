@@ -1,5 +1,7 @@
 # Dirt Crown · 尘土王冠
 
+[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/dirt-crown-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+
 Andrew Wooldridge 的乡间赛车生涯游戏。保留原版程序美术、20 条赛道、7 个地区、26 个生涯赛事、六类升级，以及竞速、淘汰、计时、单挑和故事。
 
 ## Android TV 下载
@@ -13,6 +15,10 @@ Andrew Wooldridge 的乡间赛车生涯游戏。保留原版程序美术、20 �
 0.1.0 x64：[安装 EXE](DirtCrown-0.1.0-windows-x64-setup.exe)（1,212,925 字节）· [便携 ZIP](DirtCrown-0.1.0-windows-x64.zip)（1,138,201 字节）· [SHA256 校验](SHA256SUMS.txt)。需要 **Windows 10 1903 或更新版本／Windows 11 x64、Microsoft Edge WebView2 Runtime 和可用的 WebGL 2**；便携版请完整解压后运行 `PureTVGame.exe`。安装包未做 Authenticode 签名。
 
 原 Windows CI 的正常端口与占用回退两种模式各通过 10 项检查，包含实际游戏、原 SDK 手柄、失焦／断线取消、存档重启与窗口检查；安装／卸载／重装及无关文件保留也通过。检查覆盖 96 DPI 下 960×540、1280×720，未做其他 DPI 缩放、实体手柄或完整通关测试。同批其他四款失败仍保留，以上结论仅针对本游戏。安装文件沿用原始字节，未重新编译，详见 [Windows 交付记录](docs/windows-delivery/) 和 [版本清单](windows-release.json)。
+
+## 源码版 0.1.1 的连接与操作
+
+标题页用方向键选 Free Race，Enter 确认。赛中用方向键或 WASD 驾驶，空格漂移。 电脑也可以连接同一局域网的 pureTV 无线手柄，按手柄搜索键（GPIO 23）配对。Android TV 可用同一 Wi-Fi 下的手机扫描菜单连接卡中的二维码，打开虚拟手柄。比赛时连接卡缩小，断线后重新连接，再手动继续。
 
 ## macOS 下载
 

@@ -1,5 +1,7 @@
 # 雨夜维修铺 · Solder & Rain
 
+[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/solder-and-rain-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+
 在雨夜维修铺接待顾客，按工单拆开设备、诊断故障、修复并测试，从线索追查失踪的父亲。原版自由工作台也可从标题菜单进入。场景、工具、零件、灯光与雨景均由本地 Three.js 生成，需要 WebGL 2。
 
 方向键移动维修光标，A 按下、拖动和松开，也可以直接点击工具栏。B 轮换工具，X 在工作台通电测试、在对白中翻到下一句，Y 把光标移到当前可见提示指向的零件。商店的 A 呼叫顾客；B 打开线索板，X 查看升级。 START 从标题开始、暂停或继续。Wi-Fi 中断或应用失焦后，按 START 继续。原版键盘及触控操作也可用。

@@ -1,13 +1,23 @@
 # 钻石方块 TV
 
+## Android 0.5.7 · 手柄与手机连接
+
+<!-- apk-resource:start -->
+[下载签名 APK](jewel-0.5.7.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
+<!-- apk-resource:end -->
+
+首帧绘制失败后，手机仍可连接并看到房间状态。在 720 × 480 电视上，二维码和两个玩家席位都能完整显示。可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
+
+此签名 APK 已在 Android TV 模拟器上从 0.5.6 成功覆盖安装，验证记录可追溯至已发布的 0.5.4。原版手柄 SDK 通过 9 项检查，实际发出的 105 条消息全部收到同序号确认。[游戏截图](docs/releases/0.5.7/gameplay.png) · [Android 玩法录像](docs/releases/0.5.7/gameplay.mp4?raw=1) · [验证记录与测试范围](docs/releases/0.5.7/verification.json)
+
 [中文](README.md) · [English](README.en.md)
 
 <!-- controller-client-status:start -->
-## 0.5.4 · 手柄连接标识
+## 历史版本 0.5.4 · 手柄连接标识
 
-<!-- apk-resource:start -->
+<!-- previous-apk-resource:start -->
 [下载签名 APK](jewel-0.5.4.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
-<!-- apk-resource:end -->
+<!-- previous-apk-resource:end -->
 
 Android **0.5.4 / versionCode 6**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
@@ -20,7 +30,7 @@ Android **0.5.4 / versionCode 6**：手柄连接后，侧边显示手柄图标�
 
 独立重写经典红白机《Magic Jewelry》：三颗宝石成列下落，在 6×13 棋盘上横、竖、斜三个及以上同色连线消除，支持重力连锁和魔法列。
 
-当前版本 **0.5.4**，适用于 Android 8.0 及以上电视，包名 `com.ecojust.jeweltv`。电视显示棋盘与房间二维码，手机扫码作为手柄；不需要导入 ROM。
+当前版本 **0.5.7**，适用于 Android 8.0 及以上电视，包名 `com.ecojust.jeweltv`。电视显示棋盘与房间二维码，手机扫码作为手柄；不需要导入 ROM。
 <!-- visual-release:start -->
 ## 历史：0.5.2 视觉更新与验证
 

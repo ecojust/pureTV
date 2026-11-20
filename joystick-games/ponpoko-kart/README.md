@@ -1,5 +1,7 @@
 # ぽんぽこカート · Ponpoko Kart
 
+[下载当前 Android TV 手柄版 0.1.6](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/ponpoko-kart-0.1.6.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+
 日本乡村、樱花鸟居、夏祭花火三条原版赛道；八位动物车手、三档难度、道具、蓄力漂移、跳跃特技和和伞滑翔。保留 [たぬ的原作](https://github.com/tanuu5/ponpoko-kart/tree/88edb72d25c2f957431cc4d12547d3138d1bca48) 的完整程序生成场景、原 HUD 与日文菜单，不依赖在线模型、图片、音频或字体。
 
 ## Android TV 下载
@@ -84,6 +86,10 @@ npm run build:check
 ```
 
 `dist/` 为可离线打包的平铺文件；可用任意本地 HTTP 服务器预览 `tv.html`。Three.js **0.186.1** 与原始 lock 的 npm 完整性值一致，esbuild **0.28.2** 仅用于打包。原始 104 个文件的基线字节/散列在 [upstream.json](upstream.json)，适配差异在 [docs/source-changes.json](docs/source-changes.json)，字体与许可证固定来源在 [src/fonts/sources.json](src/fonts/sources.json)。字体的完整许可随发布分发文件保留。
+
+## 源码版 0.1.6 的连接与操作
+
+按 Enter 进入角色和赛道选择，用方向键选项、Enter 确认。↑ 给油，↓ 刹车，← / → 转向。 电脑也可以连接同一局域网的 pureTV 无线手柄，按手柄搜索键（GPIO 23）配对。Android TV 可用同一 Wi-Fi 下的手机扫描菜单连接卡中的二维码，打开虚拟手柄。比赛时连接卡缩小，断线后重新连接，再手动继续。
 
 ## 验证范围
 

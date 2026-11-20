@@ -3,12 +3,12 @@
   "name": "Magic Jewelry TV",
   "author": "ecojust / 桔子桑",
   "description": "经典三宝石连锁消除，支持手机扫码单人或双人比拼",
-  "version": "0.5.4",
+  "version": "0.5.7",
   "packageName": "com.ecojust.jeweltv",
-  "versionCode": 6,
-  "apk": "jewel-0.5.4.apk",
+  "versionCode": 9,
+  "apk": "jewel-0.5.7.apk",
   "apkBytes": 95679,
-  "sha256": "5831dda8faf483988993ef81ac4ef287d44836f24daffceefc5a8d6af245dfd9",
+  "sha256": "f854f3211fd25a735c1c36ed5e925017b4ada967adb33abd2ed99a02c1fbbfd6",
   "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
   "supportsLayoutJson": false,
   "languages": [
@@ -16,27 +16,26 @@
     "en"
   ],
   "cover": "thumb.png",
-  "coverSource": "Unmodified connected-controller screenshot of this signed APK running in an Android TV emulator.",
+  "coverSource": "Unmodified Android TV emulator gameplay screenshot of the signed 0.5.7 APK, captured during the original controller SDK checks.",
   "license": "MIT (original application code, artwork and synthesized audio)",
-  "sourceCommit": "802c48bcec9d060bdce691045330c822c4f1cf83",
-  "buildRun": "https://github.com/ecojust/pureTV/actions/runs/43844665851",
+  "sourceCommit": "aed60f3e62d1cbe4841965fd7ba32e29c7d193d4",
+  "buildRun": "https://github.com/ecojust/pureTV/actions/runs/44764579759",
   "assetNotices": [
     "docs/reference.md"
   ],
   "romIncluded": false,
   "verification": {
     "status": "passed",
-    "scope": "controller client status acceptance",
+    "scope": "complete controller acceptance",
     "signatureVerified": true,
     "sourceAssetsMatchApk": true,
     "inPlaceUpgradeInstalled": true,
-    "controllerClientStatusAcceptancePassed": true,
-    "fullGameplayAcceptancePerformedInThisUpdate": false,
+    "fullGameplayAcceptancePerformedInThisUpdate": true,
     "actualAndroidEmulator": true,
     "physicalTvTested": false,
     "physicalPhoneTested": false,
     "physicalEsp32Tested": false,
-    "verificationReport": "docs/releases/0.5.4/verification.json"
+    "verificationReport": "docs/releases/0.5.7/verification.json"
   },
   "minSdk": 26,
   "wifiController": {
@@ -140,14 +139,68 @@
         "guide": "../../../docs/readme-controller-support/README.md"
       },
       "metadata": "docs/controller-status-baseline/0.5.3/resource.json"
+    },
+    {
+      "kind": "app",
+      "name": "Magic Jewelry TV",
+      "author": "ecojust / 桔子桑",
+      "description": "经典三宝石连锁消除，支持手机扫码单人或双人比拼",
+      "version": "0.5.4",
+      "packageName": "com.ecojust.jeweltv",
+      "versionCode": 6,
+      "apk": "jewel-0.5.4.apk",
+      "apkBytes": 95679,
+      "sha256": "5831dda8faf483988993ef81ac4ef287d44836f24daffceefc5a8d6af245dfd9",
+      "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+      "supportsLayoutJson": false,
+      "languages": [
+        "zh",
+        "en"
+      ],
+      "cover": "docs/releases/0.5.4/connected.png",
+      "coverSource": "Unmodified connected-controller screenshot of this signed APK running in an Android TV emulator.",
+      "license": "MIT (original application code, artwork and synthesized audio)",
+      "sourceCommit": "802c48bcec9d060bdce691045330c822c4f1cf83",
+      "buildRun": "https://github.com/ecojust/pureTV/actions/runs/43844665851",
+      "assetNotices": [
+        "docs/reference.md"
+      ],
+      "romIncluded": false,
+      "verification": {
+        "status": "passed",
+        "scope": "controller client status acceptance",
+        "signatureVerified": true,
+        "sourceAssetsMatchApk": true,
+        "inPlaceUpgradeInstalled": true,
+        "controllerClientStatusAcceptancePassed": true,
+        "fullGameplayAcceptancePerformedInThisUpdate": false,
+        "actualAndroidEmulator": true,
+        "physicalTvTested": false,
+        "physicalPhoneTested": false,
+        "physicalEsp32Tested": false,
+        "verificationReport": "docs/releases/0.5.4/verification.json"
+      },
+      "minSdk": 26,
+      "wifiController": {
+        "protocol": "puretv-tcp-jsonl-v1",
+        "defaultPort": 63485,
+        "discovery": "_puretv._tcp",
+        "maxPlayers": 2,
+        "buttonMapping": "A/X primary, B secondary, Y SELECT",
+        "guide": "../../../docs/readme-controller-support/README.md",
+        "clientIdentityDisplay": true,
+        "signalStrength": "Unavailable: current controller protocol does not report RSSI; signal strength is not displayed."
+      },
+      "controllerStatusVideo": "docs/releases/0.5.4/controller-status.mp4",
+      "controllerStatusMetadata": "docs/releases/0.5.4/controller-status.json",
+      "historicalGameplayVideo": {
+        "version": "0.5.3",
+        "video": "docs/releases/0.5.3/gameplay.mp4",
+        "metadata": "docs/releases/0.5.3/gameplay.json",
+        "currentUiEvidence": false
+      }
     }
   ],
-  "controllerStatusVideo": "docs/releases/0.5.4/controller-status.mp4",
-  "controllerStatusMetadata": "docs/releases/0.5.4/controller-status.json",
-  "historicalGameplayVideo": {
-    "version": "0.5.3",
-    "video": "docs/releases/0.5.3/gameplay.mp4",
-    "metadata": "docs/releases/0.5.3/gameplay.json",
-    "currentUiEvidence": false
-  }
+  "gameplayVideo": "docs/releases/0.5.7/gameplay.mp4",
+  "gameplayMetadata": "docs/releases/0.5.7/verification.json"
 }

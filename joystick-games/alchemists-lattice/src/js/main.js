@@ -57,7 +57,7 @@ function margins() {
         else if (r.left > W / 2) M.right = Math.round(W - r.left + 8);
         else M.left = Math.max(M.left, Math.round(r.right + 8));
     }
-    M.right = Math.max(M.right, 216);
+    if (document.body.dataset.puretvPlaying !== 'true') M.right = Math.max(M.right, 216);
     return M;
 }
 

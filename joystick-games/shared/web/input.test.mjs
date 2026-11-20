@@ -78,3 +78,45 @@ test('disabled native input and malformed empty snapshots are neutral', () => {
   assert.equal(reducer.read({ ...sample(player({ A: true })), inputActive: false }).buttons.A, false);
   assert.equal(reducer.read(null).connected, false);
 });
+
+const phone = (values = {}) => ({
+  id: 1, connected: true, x: 0, y: 0, a: false, b: false, start: false, select: false,
+  buttonX: false, buttonY: false, cancelSeq: 1, ...values,
+});
+
+test('the phone room maps its axes and independent action buttons to the same nine keys', () => {
+  const reducer = createInputReducer();
+  for (const [key, values] of Object.entries({ UP: {y: -1}, DOWN: {y: 1}, LEFT: {x: -1},
+    RIGHT: {x: 1}, START: {start: true}, A: {a: true}, B: {b: true}, X: {buttonX: true}, Y: {buttonY: true} })) {
+    reducer.read(sample(phone()));
+    const frame = reducer.read(sample(phone(values)));
+    assert.equal(frame.transport, 'phone');
+    assert.equal(frame.connected, true);
+    assert.deepEqual(BUTTONS.filter(k => frame.pressed[k]), [key]);
+  }
+  reducer.read(sample(phone()));
+  const chord = reducer.read(sample(phone({x: -.7, y: .7, buttonX: true, buttonY: true})));
+  assert.deepEqual(BUTTONS.filter(key => chord.buttons[key]), ['DOWN', 'LEFT', 'X', 'Y']);
+});
+
+test('switching from a phone to an ESP32 cancels held inputs without synthesizing a release', () => {
+  const reducer = createInputReducer();
+  reducer.read(sample(phone({a: true})));
+  const switched = reducer.read(sample(phone({a: true}), player({B: true})));
+  assert.equal(switched.cancelled, true);
+  assert.equal(switched.transport, 'wifi');
+  assert.ok(BUTTONS.every(key => !switched.buttons[key] && !switched.released[key]));
+  assert.equal(reducer.read(sample(player({B: true}))).pressed.B, false);
+  reducer.read(sample(player()));
+  assert.equal(reducer.read(sample(player({B: true}))).pressed.B, true);
+});
+
+test('older phone screens can still use Select, and phone cancellation suppresses edges', () => {
+  const reducer = createInputReducer();
+  assert.equal(reducer.read(sample(phone({select: true}))).pressed.Y, true);
+  const cancelled = reducer.read(sample(phone({cancelSeq: 2, a: true})));
+  assert.equal(cancelled.cancelled, true);
+  assert.equal(cancelled.released.Y, false);
+  assert.equal(cancelled.pressed.A, false);
+  assert.equal(reducer.read(sample(phone({cancelSeq: 2, a: true}))).buttons.A, false);
+});

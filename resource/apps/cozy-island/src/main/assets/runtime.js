@@ -240,7 +240,10 @@
       }
     }
     var roomTimer = root.setInterval(function () {
-      if (visible && !destroyed && !suspended) updateUi(controllerInputs);
+      if (!visible || destroyed || suspended) return;
+      // A failed startup or draw leaves no animation frame to sample the room.
+      if (!game || drawFailed) inputs();
+      updateUi(controllerInputs);
     }, 200);
     updateUi(controllerInputs);
     function animate(now) {
