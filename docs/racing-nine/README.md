@@ -8,6 +8,10 @@ Backroad Rally 新增 [Windows 安装版和便携包](https://github.com/ecojust
 
 目标是 Android TV、macOS 通用包（Apple Silicon／Intel）与 Windows x64，支持 pureTV 九键手柄、默认 TCP 63485、真实连接 ID、断线／失焦取消和手动恢复。Mac 包保留 Apple Silicon 原生、端口占用及 Rosetta 通过记录；Backroad Rally 作为预发布提供，其公开 ZIP 已在 Apple Silicon 上通过手柄驾驶与存档重启复验。Intel 图形运行仍未验证，尚未 Apple 公证。Windows 未做 Authenticode 签名；检查覆盖 96 DPI，其他显示缩放与实体手柄未测试。其余原生验证继续，九款完整交付尚未完成。
 
+![九款 Android TV 签名 APK 的原生赛中画面](android-driving.jpg)
+
+[逐款赛中原图、手柄按键与开赛方法](../../joystick-games/README.md#九款赛车手柄操作)
+
 ## 入选九款
 
 | 游戏 | 画面 /50 | 玩法 /50 | 合计 /100 | 选择理由 |
