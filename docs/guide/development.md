@@ -2,6 +2,19 @@
 
 **简体中文** · [English](development.en.md) · [使用指南](README.md) · [返回首页](../../README.md)
 
+## 仓库目录
+
+| 目录 | 开发与维护内容 |
+| --- | --- |
+| [desktop/](../../desktop/README.md) | 电脑端电视管理器，包括界面、ADB 操作与 Tauri 宿主。 |
+| [resource/](../../resource/README.md) | 自研电视启动器和应用的源码、APK 与资源清单，以及 [Game Kit 游戏宿主](../../resource/game-kit/README.md)。 |
+| [joystick-games/](../../joystick-games/README.md) | pureTV Wi-Fi 手柄游戏。每款的源码、平台安装包和验收记录见对应游戏目录。 |
+| [puretv-joystick/](../../puretv-joystick/README.md) | ESP32 手柄固件、TCP 协议、Python SDK 与联调工具。 |
+| [fork/](../../fork/README.md) | 按类别保存的第三方原版 APK、上游出处和校验信息。 |
+| [tools/](../../tools/) | 资源索引、验证与发布脚本。第三方 APK 的导入与核验工具见 [tools/tvapp/](../../tools/tvapp/)。 |
+
+查阅九款 Android 电视游戏 0.5.0 至 0.5.2 的改动与验证，见[游戏发行回顾](../game-releases/README.md)。按任务查找其他改动，见[工作记录索引](../../history/INDEX.md)。
+
 ## 构建与测试
 
 | 要开发的部分 | 入口 |

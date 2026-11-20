@@ -2,6 +2,19 @@
 
 [简体中文](development.md) · **English** · [User guide](README.en.md) · [Home](../../README.en.md)
 
+## Repository map
+
+| Directory | What you’ll find there |
+| --- | --- |
+| [desktop/](../../desktop/README.md) | The desktop TV manager, including its interface, ADB operations and Tauri host. |
+| [resource/](../../resource/README.md) | Source, APKs and manifests for first-party TV launchers and apps, plus the [Game Kit host](../../resource/game-kit/README.md). |
+| [joystick-games/](../../joystick-games/README.md) | Games for the pureTV Wi-Fi controller. Each game has its own directory for source, platform packages and verification records. |
+| [puretv-joystick/](../../puretv-joystick/README.md) | ESP32 controller firmware, the TCP protocol, the Python SDK and tools for testing a connection. |
+| [fork/](../../fork/README.md) | Original third-party APKs grouped by category, with upstream sources and checksums. |
+| [tools/](../../tools/) | Scripts for catalog maintenance, verification and releases. Third-party APK import and verification tools are in [tools/tvapp/](../../tools/tvapp/). |
+
+For changes and test results across versions 0.5.0–0.5.2 of the nine Android TV games, see the [game release notes (Chinese)](../game-releases/README.md). For a record of other changes by task, see the [work log index (Chinese)](../../history/INDEX.md).
+
 ## Build and test
 
 | Component | Starting point |

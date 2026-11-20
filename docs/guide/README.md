@@ -54,6 +54,6 @@ pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电�
 
 ## 其他资源与许可
 
-- 自研电视应用与启动器按软件目录保存 APK、源码及可用的校验值和许可证。历史电视端 `android-v*` 与电脑管理器 `desktop-v*` 各自编号。原九款电视游戏的 0.5.1 规则更新沿用 0.5.0 证书，可覆盖原版本。[完整资源目录](../../resource/README.md) · [0.5.1 规则与地图复核](../game-fidelity-0.5.1.md)
+- 自研电视应用与启动器按软件目录保存 APK、源码及可用的校验值和许可证。历史电视端 `android-v*` 与电脑管理器 `desktop-v*` 各自编号。原九款电视游戏的 0.5.1 规则更新沿用 0.5.0 证书，可覆盖原版本。[完整资源目录](../../resource/README.md) · [0.5.1 规则与地图复核](../game-releases/game-fidelity-0.5.1.md)
 - 第三方电视应用另有分类目录，保留各应用的图标、封面、manifest 及上游资料。[第三方应用](../../fork/README.md) · [超限文件与复刻参考](../../fork/OVERSIZED.md)
 - pureTV 使用 MIT 许可。部分电视启动器代码参考 Gathin23 的 cleanyourtv，保留原作者的版权与许可声明。字体及其他第三方素材遵循各自许可证。[MIT](../../LICENSE) · [NOTICE](../../NOTICE.md) · [cleanyourtv](https://github.com/Gathin23/cleanyourtv) · [字体 OFL 许可](../../resource/launcher/puretv/FONT-LICENSE-OFL.txt)
