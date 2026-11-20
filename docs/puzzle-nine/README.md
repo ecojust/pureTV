@@ -16,9 +16,24 @@
 
 游戏使用 Andrew Wooldridge 的 MIT 授权源码。各游戏目录的 NOTICE 列出实际随包使用的引擎、字体及其他素材。场景、声音和运行依赖随各游戏安装包离线提供。[原作合辑与许可证](https://github.com/triptych/web-games-andrew/tree/a7051c34fe2e7550fd206e6272f758df171855b0)
 
+<!-- verified-puzzle-files -->
+## Windows 下载
+
+以下文件已在 Windows x64 上安装，通过原版 SDK 的默认端口和端口占用实玩。便携版需先完整解压，再运行 PureTVGame.exe。[下载校验](windows-downloads.json)
+
+| 游戏 | 版本 | 安装版 | 便携版 |
+| --- | --- | --- | --- |
+| 炼金方阵 | 0.1.1 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-alchemists-lattice/AlchemistsLattice-0.1.1-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-alchemists-lattice/AlchemistsLattice-0.1.1-windows-x64.zip) |
+| 星际弹弓 | 0.1.1 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-starsling/Starsling-0.1.1-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-starsling/Starsling-0.1.1-windows-x64.zip) |
+| 雨夜维修铺 | 0.1.0 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-solder-and-rain/SolderAndRain-0.1.0-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-solder-and-rain/SolderAndRain-0.1.0-windows-x64.zip) |
+| 誓约宝石 | 0.1.0 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-oathstones/Oathstones-0.1.0-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-oathstones/Oathstones-0.1.0-windows-x64.zip) |
+| 霓虹秘仪 | 0.1.1 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-neon-arcana/NeonArcana-0.1.1-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-neon-arcana/NeonArcana-0.1.1-windows-x64.zip) |
+| 墨绘地图集 | 0.1.1 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-atlas-of-ink/AtlasOfInk-0.1.1-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-atlas-of-ink/AtlasOfInk-0.1.1-windows-x64.zip) |
+<!-- /verified-puzzle-files -->
+
 ## 实际游戏画面
 
-下图来自 1280×720 的手柄实玩，点选画面可查看操作说明。每款也在 960×540 下用同一方案完成原作动作、断线暂停和显式继续。[原始实玩与截图](https://github.com/ecojust/pureTV/tree/888897d75faf073b758c0759b080a8f0ad276b3b)
+下图来自 1280×720 的手柄实玩，点选画面可查看操作说明。每款也在 960×540 下用同一方案完成原作动作、断线暂停和显式继续。[九款原始实玩与截图](https://github.com/ecojust/pureTV/tree/888897d75faf073b758c0759b080a8f0ad276b3b) · [蜜蜂果篮 0.1.2 复验](https://github.com/ecojust/pureTV/actions/runs/44716017753)
 
 <table>
 <tr>
