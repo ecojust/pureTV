@@ -1,6 +1,6 @@
 # Turbo Kart Rush
 
-[下载当前 Android TV 手柄版 0.1.2](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/turbo-kart-rush-0.1.2.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[下载当前 Android TV 手柄版 0.1.2](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/turbo-kart-rush-0.1.2.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 [BridgeMind 原作](https://github.com/bridge-mind/turbo-kart-rush/tree/6c0456c7642447eae29e0832e7e542fec07ec07d)的独立 pureTV 适配：八位车手、四条赛道、三档难度，保留程序生成场景、道具的全部变体、漂移加速、跳跃、原版音乐与后处理。原资源无需网络即可运行；不是 pureTV 自创游戏。
 

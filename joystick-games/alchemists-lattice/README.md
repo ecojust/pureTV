@@ -1,6 +1,6 @@
 # 炼金方阵 · Alchemist's Lattice
 
-[下载当前 Android TV 手柄版 0.1.2](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/alchemists-lattice-0.1.2.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[下载当前 Android TV 手柄版 0.1.2](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/alchemists-lattice-0.1.2.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 在 9 × 9 的炼金台上放置手牌。填满一行或一列即可消除方块、剥开矿藏并收获元素。通过学徒任务取得金币和经验，在地图上前往商店、技能树和坩埚。完整棋盘、战斗、对白、三章旅程与原作的 56 幅 WebP 图画均可离线运行。[原作与许可证](NOTICE.md)
 

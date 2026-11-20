@@ -1,6 +1,6 @@
 # 蜜蜂果篮 · Bumble Basket
 
-[下载当前 Android TV 手柄版 0.1.3](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/bumble-basket-0.1.3.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[下载当前 Android TV 手柄版 0.1.3](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/bumble-basket-0.1.3.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 在野餐毯上连起至少三颗相邻的水果，再让蜜蜂采摘。第一座果园要求相邻水果同类，后续果园逐步引入颜色、大小和家族。原版关卡、果酱罐、图鉴、无尽野餐、程序化 3D 场景和音效均在本地运行。[原作与许可证](NOTICE.md)
 

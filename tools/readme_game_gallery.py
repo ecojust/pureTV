@@ -76,7 +76,7 @@ def game_card(card, locale):
     # The adjacent name labels the link even if the cover fails to load.
     page = card_link(card['page'], card['covers'][locale], title, '')
     icons = []
-    release = 'https://github.com/ecojust/pureTV/releases/download/catalog-player-v1.0.0/'
+    release = 'https://github.com/ecojust/pureTV/releases/download/catalog-player-v1.0.1/'
     for platform, (icon, system, package) in PLATFORM_ICONS.items():
         url = card['downloads'].get(platform)
         if url:

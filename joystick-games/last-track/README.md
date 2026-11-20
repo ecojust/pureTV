@@ -1,6 +1,6 @@
 # Last Track · 末路战车
 
-[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/last-track-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/last-track-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 基于 [Alexander Uspenskiy / LastTrack](https://github.com/alexander-uspenskiy/LastTrack/tree/7fdf7cfb6affb84748e11980f837255b12130bb7) v0.10.6 的 pureTV 手柄适配。保留原作 PBR 车模、赛道、AI 对手、武器、商店、装甲升级和存档。
 

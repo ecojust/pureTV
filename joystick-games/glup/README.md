@@ -1,6 +1,6 @@
 # GLUP · 沼泽猫鱼 · pureTV
 
-[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/glup-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/glup-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 0.1.0 安装包：[Android TV APK](glup-0.1.0.apk) · [macOS DMG](Glup-0.1.0-macos-universal.dmg) · [macOS ZIP](Glup-0.1.0-macos-universal.zip) · [SHA256](SHA256SUMS.txt)。
 

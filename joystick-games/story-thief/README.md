@@ -1,6 +1,6 @@
 # The Story Thief of Greymantle · 灰斗篷山的故事大盗
 
-[下载当前 Android TV 手柄版 0.1.2](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/story-thief-0.1.2.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[下载当前 Android TV 手柄版 0.1.2](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/story-thief-0.1.2.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 在一年中最长的夜晚，布拉肯福德村的故事从书页上消失了。扮演 Rowan，从祖母的小屋出发，检查场景、收集和组合物品、与人物交谈，走入灰斗篷山的高塔。保留原作十个原版像素场景、四种行动、分支对话、结局、手动保存及场景切换时的自动存档。[Andrew Wooldridge 的原作](https://github.com/triptych/web-games-andrew/tree/a7051c34fe2e7550fd206e6272f758df171855b0/game-044) · [MIT 许可证](LICENSE)
 

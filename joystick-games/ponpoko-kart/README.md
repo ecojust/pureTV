@@ -1,6 +1,6 @@
 # ぽんぽこカート · Ponpoko Kart
 
-[下载当前 Android TV 手柄版 0.1.6](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/ponpoko-kart-0.1.6.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[下载当前 Android TV 手柄版 0.1.6](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/ponpoko-kart-0.1.6.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 日本乡村、樱花鸟居、夏祭花火三条原版赛道；八位动物车手、三档难度、道具、蓄力漂移、跳跃特技和和伞滑翔。保留 [たぬ的原作](https://github.com/tanuu5/ponpoko-kart/tree/88edb72d25c2f957431cc4d12547d3138d1bca48) 的完整程序生成场景、原 HUD 与日文菜单，不依赖在线模型、图片、音频或字体。
 

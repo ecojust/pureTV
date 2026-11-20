@@ -1,6 +1,6 @@
 # 霓虹秘仪 · NEON ARCANA
 
-[下载当前 Android TV 手柄版 0.1.2](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.0/neon-arcana-0.1.2.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[下载当前 Android TV 手柄版 0.1.2](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/neon-arcana-0.1.2.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 把每手三枚符块放上 8×8 格盘。填满行或列即可清除、得分并积累星光。主线「Begin the Restoration」依次点亮 22 张大阿卡纳，点亮指定卡牌后可用火花发动能力。「Free Reading」可单独挑战分数。游戏使用原作的 Three.js 着色器、卡面绘制和程序化音乐。
 
