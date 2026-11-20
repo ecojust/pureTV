@@ -1,0 +1,51 @@
+{
+  "instrumentation": [
+    "/usr/local/lib/android/sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-e",
+    "diagnosticPort",
+    "63486",
+    "com.ecojust.controllerqa.tank/com.ecojust.controllerqa.Observer"
+  ],
+  "driver": [
+    "node",
+    "/home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs",
+    "--mode",
+    "android",
+    "--slug",
+    "tank",
+    "--diagnostics",
+    "http://127.0.0.1:32809",
+    "--tcp-port",
+    "36239",
+    "--output",
+    "/home/runner/work/_temp/controller-runtime-output/tank/gameplay",
+    "--adb",
+    "/usr/local/lib/android/sdk/platform-tools/adb",
+    "--serial",
+    "emulator-5554"
+  ],
+  "video": [
+    "/usr/local/lib/android/sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "screenrecord",
+    "--size",
+    "960x540",
+    "--bit-rate",
+    "600000",
+    "--time-limit",
+    "120",
+    "/sdcard/puretv-controller-tank.mp4"
+  ],
+  "ports": [
+    32809,
+    36239
+  ]
+}

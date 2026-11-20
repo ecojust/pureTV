@@ -1,0 +1,1728 @@
+{
+  "qaSourceSha": "4225d8c8e1614a3596bad529d7e7ac0cf71c51fa",
+  "runId": "44764399888",
+  "runtimeResult": "success",
+  "runtimeResultScope": "selected batches only",
+  "selection": {
+    "acceptanceMode": "complete",
+    "acceptanceScope": "complete controller acceptance",
+    "fullGameplayAcceptance": true,
+    "driverFlags": [],
+    "requestedBatches": [
+      "arcade-1",
+      "arcade-2",
+      "arcade-3"
+    ],
+    "selectedBatches": [
+      "arcade-1",
+      "arcade-2",
+      "arcade-3"
+    ],
+    "plannedSlugs": [
+      "tank",
+      "jackal",
+      "jewel",
+      "tetris",
+      "bomb-jack",
+      "adventure-island",
+      "super-mario"
+    ],
+    "completeCatalogRequested": false,
+    "matrix": {
+      "include": [
+        {
+          "group": "arcade",
+          "batch": "arcade-1",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorBuild": "",
+          "emulatorArchive": null,
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        },
+        {
+          "group": "arcade",
+          "batch": "arcade-2",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorBuild": "",
+          "emulatorArchive": null,
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        },
+        {
+          "group": "arcade",
+          "batch": "arcade-3",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorBuild": "",
+          "emulatorArchive": null,
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        }
+      ]
+    },
+    "worlds2GraphicsExperiment": {
+      "selected": false,
+      "description": "Disable Vulkan while retaining SwiftShader and enable verbose emulator logs; the preceding AVD failure has no established root cause."
+    },
+    "usedCarStableImageComparison": {
+      "selected": false,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "channel": "stable",
+      "revisionListedByOfficialRepository": 3,
+      "rendererComparison": {
+        "previousObservedEmulatorVersion": "37.2.13",
+        "previousRenderer": "swiftshader_indirect",
+        "requestedRenderer": "swiftshader",
+        "previousRendererDeprecatedSince": "36.4.9",
+        "officialReference": "https://developer.android.com/studio/run/emulator-acceleration"
+      },
+      "hostVersionComparison": {
+        "previousObservedEmulatorVersion": "37.2.13",
+        "requested": {
+          "version": "35.6.11",
+          "build": "13610412",
+          "url": "https://dl.google.com/android/repository/emulator-linux_x64-13610412.zip",
+          "sha256": "2fe2b56fe93ce75e1d478a40162131381d911c355efeaedb54dd1e0d0897a5cf",
+          "bytes": 319086252,
+          "officialArchive": "https://developer.android.com/studio/emulator_archive"
+        },
+        "description": "Change only the host emulator version; retain API29/x86/swiftshader/disabled Vulkan and verbose options. The preceding host RenderThread segmentation fault has no established product cause."
+      },
+      "description": "Independent AVD on the official older stable TV image; installation, WebView, WebGL and controller acceptance remain mandatory."
+    },
+    "arcadeVisualStableImageComparison": {
+      "selected": false,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "description": "Recheck Tank and Jackal after transient black regions were observed in API36 recordings; preserve full controller acceptance and new visual evidence."
+    },
+    "qaSourceSha": "4225d8c8e1614a3596bad529d7e7ac0cf71c51fa"
+  },
+  "files": {
+    "evidence/controller-runtime-arcade-2/bundle-manifest.json": {
+      "bytes": 144,
+      "sha256": "f517b0631f0f6f22817810d96d541e458634aebc786cb2e503086491f936e5c4"
+    },
+    "evidence/controller-runtime-arcade-2/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-arcade-2/continuous-logcat.txt": {
+      "bytes": 4489745,
+      "sha256": "c0ef92f4cbe5d13b4f3235e1e044ca2fe32f82d83e7e2cacd3b724c1d3ea1f7f"
+    },
+    "evidence/controller-runtime-arcade-2/runtime-selection.json": {
+      "bytes": 3469,
+      "sha256": "4af8fcbd79cf0e70f8ef618511697d13d3fdc804cfd10fcbd3b979ddadba86b3"
+    },
+    "evidence/controller-runtime-arcade-2/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "6115a1016c32d60b9a59efe038bfefa00d69299516e3c26268ef97d7e0d07ef1"
+    },
+    "evidence/controller-runtime-arcade-2/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-arcade-2/report.json": {
+      "bytes": 26779,
+      "sha256": "65b22186221bdaace5c75b46ebbb9222add5920e6db77d3e824509b2baa8999f"
+    },
+    "evidence/controller-runtime-arcade-2/input-verification.json": {
+      "bytes": 5172,
+      "sha256": "e67a73a3df0f4ab76d36dc6e0c2d1b7e76379e245c6d9ed8eb02a1a262063f99"
+    },
+    "evidence/controller-runtime-arcade-2/emulator-version.json": {
+      "bytes": 727,
+      "sha256": "f3bebe07f3c32cb048481768531825909e4d72d9a85877691e03470c2c1ac29e"
+    },
+    "evidence/controller-runtime-arcade-2/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "e9c0f1c8dd9a412e56e1a7b1ee6bdd4b267f569fe571ab93b88ffcd94e9b38a0"
+    },
+    "evidence/controller-runtime-arcade-1/bundle-manifest.json": {
+      "bytes": 144,
+      "sha256": "f517b0631f0f6f22817810d96d541e458634aebc786cb2e503086491f936e5c4"
+    },
+    "evidence/controller-runtime-arcade-1/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-arcade-1/continuous-logcat.txt": {
+      "bytes": 4405919,
+      "sha256": "a40c7cd1acb3fd92c266a17356ef08f531b17977de80cfaca6c3dac534ae227f"
+    },
+    "evidence/controller-runtime-arcade-1/runtime-selection.json": {
+      "bytes": 3469,
+      "sha256": "4af8fcbd79cf0e70f8ef618511697d13d3fdc804cfd10fcbd3b979ddadba86b3"
+    },
+    "evidence/controller-runtime-arcade-1/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "f89cdee2ca0dee528088d207fb429190a78588bb1061057275d316feb2fbf8a9"
+    },
+    "evidence/controller-runtime-arcade-1/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-arcade-1/report.json": {
+      "bytes": 26784,
+      "sha256": "fe851835942db918414724b31a53282cdf9127354164cc38efe7e39119e0173f"
+    },
+    "evidence/controller-runtime-arcade-1/input-verification.json": {
+      "bytes": 5172,
+      "sha256": "e67a73a3df0f4ab76d36dc6e0c2d1b7e76379e245c6d9ed8eb02a1a262063f99"
+    },
+    "evidence/controller-runtime-arcade-1/emulator-version.json": {
+      "bytes": 727,
+      "sha256": "f3bebe07f3c32cb048481768531825909e4d72d9a85877691e03470c2c1ac29e"
+    },
+    "evidence/controller-runtime-arcade-1/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "e9c0f1c8dd9a412e56e1a7b1ee6bdd4b267f569fe571ab93b88ffcd94e9b38a0"
+    },
+    "evidence/controller-runtime-arcade-3/bundle-manifest.json": {
+      "bytes": 144,
+      "sha256": "f517b0631f0f6f22817810d96d541e458634aebc786cb2e503086491f936e5c4"
+    },
+    "evidence/controller-runtime-arcade-3/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-arcade-3/continuous-logcat.txt": {
+      "bytes": 4642839,
+      "sha256": "4346f9c7a9d3b8b4ff0d1acb2d2e448f78922d81691998d673ec77af24a15c26"
+    },
+    "evidence/controller-runtime-arcade-3/runtime-selection.json": {
+      "bytes": 3469,
+      "sha256": "4af8fcbd79cf0e70f8ef618511697d13d3fdc804cfd10fcbd3b979ddadba86b3"
+    },
+    "evidence/controller-runtime-arcade-3/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "f89cdee2ca0dee528088d207fb429190a78588bb1061057275d316feb2fbf8a9"
+    },
+    "evidence/controller-runtime-arcade-3/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-arcade-3/report.json": {
+      "bytes": 27850,
+      "sha256": "cc84c9e360aff8f25bf16bb49bcd8174e13079310c1a70e57418652b81b8468c"
+    },
+    "evidence/controller-runtime-arcade-3/input-verification.json": {
+      "bytes": 5172,
+      "sha256": "e67a73a3df0f4ab76d36dc6e0c2d1b7e76379e245c6d9ed8eb02a1a262063f99"
+    },
+    "evidence/controller-runtime-arcade-3/emulator-version.json": {
+      "bytes": 727,
+      "sha256": "f3bebe07f3c32cb048481768531825909e4d72d9a85877691e03470c2c1ac29e"
+    },
+    "evidence/controller-runtime-arcade-3/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "e9c0f1c8dd9a412e56e1a7b1ee6bdd4b267f569fe571ab93b88ffcd94e9b38a0"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/baseline-release.json": {
+      "bytes": 415,
+      "sha256": "55aec8c782437b83b20405e473bb2b7ea654a5ae57659efd23b576db793707c9"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/commands.json": {
+      "bytes": 1027,
+      "sha256": "1301eac888b16c56d0822580066dad1676e21dac6fc0aab14aef8ee2f047db42"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/initial-snapshot.json": {
+      "bytes": 17448,
+      "sha256": "7028289e2304fd23e5f259d1c33f69eaa4b97c44f632bcfc3594d7e90d231454"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/case.json": {
+      "bytes": 916,
+      "sha256": "9a2b7361b13a9b0fb5795850eb81be48270e1c25c4c58fd7ac606028a15ee5e8"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay.mp4": {
+      "bytes": 586889,
+      "sha256": "4841c7cada3e5dd04596282270c38571797a98e4ed01ebe60dafb60cc7839928"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/logcat.txt": {
+      "bytes": 435827,
+      "sha256": "9089f838bac89fb8db6cf7864aef5f977bc7c7aa99af456562e21780151d51a5"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/recording-probe.json": {
+      "bytes": 4350,
+      "sha256": "c44dad2d987976816afa426e70b4cb571d5902f490662bef267a29d6c0123ca1"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/driver.log": {
+      "bytes": 688,
+      "sha256": "318fb94ba60ca9059511ba01ba5e80e0c57c9799944961edea7e71a473cbd8d3"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/kernel-before.txt": {
+      "bytes": 58028,
+      "sha256": "824b4e413640fa7616d878ebf76f17539169a0c71d54b3250aa562247e4c8fe1"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/host-samples.jsonl": {
+      "bytes": 307700,
+      "sha256": "eb14e2f54dc36189288139c29d97dcbad0ded632c6338b2c19ee40ae6dd92204"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "2271be169dd3e6fe6f2ced9f8bf41eee359439f8f6015778fe95023235a722cc"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/kernel-after.txt": {
+      "bytes": 58152,
+      "sha256": "89f4af7d22c19f5a4e8536671571a25a97e5972fb4f85225efd36246d99fcc85"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "23eed56b885e500c937322f1226819a5c437211a6546cddd8f5e3e4618c87d1d"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "92747beaa1e4aa51d9e281aa168c6faafd1f55b4d57b4f4be982718a92cdfa11"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "54b1b98682063e87e841321330c495e8e7917a043ba672c7629a3cb0565e72e1"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "96a820d81e380f91ca0586faf5a90bd795add506f77e98a1deb0c07c8c8ef10e"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/baseline-release.json": {
+      "bytes": 413,
+      "sha256": "0a0542e76b62888af32e7c189a09e979d4352b84fe2016d34b297fe2fc8e9a53"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/commands.json": {
+      "bytes": 1023,
+      "sha256": "3f27b8c7e7b8c80e5d7e84e58c9231a7741823d4f545a433899d38eec6d1f360"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/initial-snapshot.json": {
+      "bytes": 14060,
+      "sha256": "9c2d2c63ebd3d8a3dec6f2b7a8454bc85b385b3b8fa922c06c0edd34831c5631"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/case.json": {
+      "bytes": 915,
+      "sha256": "8ce5da05e02708fa1a480f34450c5ec63c76f74fa6e29a9f5a792404d1aa9753"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay.mp4": {
+      "bytes": 740651,
+      "sha256": "3c2ce2702c733e0e3200b116dcf36028a9f73dc9d806494d20d02ad0e8fddfdd"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/logcat.txt": {
+      "bytes": 1830462,
+      "sha256": "29c27851716e343b3622f455302f8c92a58e38f046f40ebdc7064a6f0552172a"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/recording-probe.json": {
+      "bytes": 4351,
+      "sha256": "8df61133038e3da4cf214a0376b239d199fb10c596fdbea53a781d4732a574aa"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/driver.log": {
+      "bytes": 678,
+      "sha256": "e4548bfbfcc1de71be3158673f814840f1177c86253c97a861464fae4db57f2c"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/controller-release.py": {
+      "bytes": 19402,
+      "sha256": "15055a3a228dd529f90d4b882cb68c910abbc1daec69c56cab78ee31fe03b294"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8956,
+      "sha256": "58e8343087a2ffcf2f806cf39a23f42f3503715ec3995c1aff3e87f81e87e440"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 23915,
+      "sha256": "67fc1d7af1ee89754d9a7d87eea2b3910d2def1a430d0dc66551d4c1f5d29e00"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 27308,
+      "sha256": "ab57b13871d214226b4094d0eacb39b1ea27e17772ae6e92ac3868275f9c1b53"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 13904,
+      "sha256": "0fb952831721e3e963cf5859319c849f3b3741dcae7f9e2c13c8aa440e55198f"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/gameplay.png": {
+      "bytes": 102760,
+      "sha256": "fb6aafd487da552de608ddc86a74a11b72bc45f649a94aafdf7768638cab52c8"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-run.mjs": {
+      "bytes": 27308,
+      "sha256": "ab57b13871d214226b4094d0eacb39b1ea27e17772ae6e92ac3868275f9c1b53"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/menu-android.png": {
+      "bytes": 96956,
+      "sha256": "8258da91ee83ce3b669e786fdc2d648ad128676a48045896cddb8105a896e0ed"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/paused.png": {
+      "bytes": 104598,
+      "sha256": "e0b815662395bf944c2fe478bbb03f729b469513664601932cfa1a937926b5af"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/report.json": {
+      "bytes": 535798,
+      "sha256": "f289f94de9426874d7bdcf5960973863b5383c3b332f2959069721df484c2db9"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/reconnected.png": {
+      "bytes": 102742,
+      "sha256": "9b2a201123656b05ef6dc6135e45363d00b522984154e2ebeabc47d937addb90"
+    },
+    "evidence/controller-runtime-arcade-2/tetris/gameplay/bridge-stderr.txt": {
+      "bytes": 5146,
+      "sha256": "6b8fe1e2270c6c4fd9f9a05b6ebd3f2d7c8a4db184c53919abef75b12b84da6c"
+    },
+    "evidence/controller-runtime-arcade-2/host-diagnostics/emulator-crash-data/emu-crash-37.3.10.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "a43689bf4a7b7c9f7b449c0903a78bf8978bb91bb4880d1abf4fdba989671eb7"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tetris/source-manifest.json": {
+      "bytes": 702,
+      "sha256": "b3c4c9b9210ba635b34303101691d0a2240c2db9f6b2806faa6c59cbf308c45c"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/adventure-island/source-manifest.json": {
+      "bytes": 712,
+      "sha256": "908f6336682a8b59c88421f1eca310d1190f201aa5458d7eea9100e274cddbeb"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/bomb-jack/source-manifest.json": {
+      "bytes": 705,
+      "sha256": "03b025ff56428c4b7e9f26f71050ce50320f9c2ad144026a315326e6d959ba01"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tank/source-manifest.json": {
+      "bytes": 700,
+      "sha256": "43ad5264aab9092d51a4a32d589175dce77f1c1596d6a1fef5ec616a635d3bd6"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/super-mario/source-manifest.json": {
+      "bytes": 707,
+      "sha256": "03bdad04f004047a7c9fdc6559ff3e2c23b55a0e74587cef0e9c544874dd6681"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jewel/source-manifest.json": {
+      "bytes": 701,
+      "sha256": "d832a8044885593a627abab6f7a1ac6f2b636b3a25dfd17681c496f77ff7cead"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jackal/source-manifest.json": {
+      "bytes": 702,
+      "sha256": "861369c5e823a41b5ecfdfbd2bd276b6ae73267ddeaf7f169c71513945fed71d"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tetris/resource/apps/tetris/build.gradle": {
+      "bytes": 1445,
+      "sha256": "cdb7f8d4cf751dd8967d101e90b8c36493c221ff989c4b967be8ae2e67709970"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tetris/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tetris/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/adventure-island/resource/apps/adventure-island/build.gradle": {
+      "bytes": 1473,
+      "sha256": "c390b8d81d43671234a0354298c95c3e91ee94f797e9b9de030cdb775fdc1dbc"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/adventure-island/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/adventure-island/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/bomb-jack/resource/apps/bomb-jack/build.gradle": {
+      "bytes": 1459,
+      "sha256": "2b618d8ef28274db3f53b785cb47d6d40bcc34b663006cac2fee996efa2b300d"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/bomb-jack/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/bomb-jack/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tank/resource/apps/tank/build.gradle": {
+      "bytes": 1418,
+      "sha256": "ad4ac62568cb69b4b8a6d425d8b2ca01b34101e9d57caf052c743f84c548465a"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tank/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/tank/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/super-mario/resource/apps/super-mario/build.gradle": {
+      "bytes": 1458,
+      "sha256": "7a81c336513bf666d088e07e818029c87278d296b9c23d1d1fc9323118fcae6a"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/super-mario/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/super-mario/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jewel/resource/apps/jewel/build.gradle": {
+      "bytes": 1442,
+      "sha256": "dbd565d0223fa1d44932419a2136e1f163434f1b64af8b9f4af71ffe42226387"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jewel/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jewel/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jackal/resource/apps/jackal/build.gradle": {
+      "bytes": 9358,
+      "sha256": "1143712e2939c4a98cce4322f1707743d5d45033b24cae4dcca7ab0af6cf644e"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jackal/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-2/observer-source/jackal/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/gameplay.png": {
+      "bytes": 105174,
+      "sha256": "f88bd5eb77babd8354d99b8c4946b571f507f98aac3f87022b7ad3b9c51d9834"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-run.mjs": {
+      "bytes": 27308,
+      "sha256": "ab57b13871d214226b4094d0eacb39b1ea27e17772ae6e92ac3868275f9c1b53"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/menu-android.png": {
+      "bytes": 106263,
+      "sha256": "965f3531e3804dc405329559c9a09786bd9255e18428bc71ba4b31b8a5bd8794"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/paused.png": {
+      "bytes": 104087,
+      "sha256": "abdc5e282e4f059895b9c36e0ad4a6950b20b4f5ea79815e1724c067e698fb0f"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/report.json": {
+      "bytes": 435026,
+      "sha256": "85b991d86dce698096a7d4ebc6622d9139190e792f25adf1448ac6dd817628ec"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/reconnected.png": {
+      "bytes": 105317,
+      "sha256": "ee504c2cf49b74744856ff94b749afb01318065e5946da687dcd18984e6f1fa5"
+    },
+    "evidence/controller-runtime-arcade-2/jewel/gameplay/bridge-stderr.txt": {
+      "bytes": 5146,
+      "sha256": "0b241b9cbf97e04bd23820ba73afb1f0aee8a4ef330b66e9a0cced53444d7691"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/kernel-before.txt": {
+      "bytes": 121700,
+      "sha256": "085a7b4e5293bde1470319197f3c28bb8b9ee8c8fd57f9dcdd7a69946aca46d9"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/host-samples.jsonl": {
+      "bytes": 242419,
+      "sha256": "d98dc5a90f41a463a795376d5e8eff1c848bde490d24e7910a5589c3dbd8e309"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "e4f79d6ccf68e24177806b0d9dd5ab24c84e0b1691e50d394c8cd52c27316e00"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/kernel-after.txt": {
+      "bytes": 121700,
+      "sha256": "d4e7fee029a7ac84425dec6042af70d9b58ed864d42296c4974d49debed56bbc"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "f223ad97c11dd210a0d171e89d4c47a1787a792ed3d81bc40dead77af1434c2c"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "39d10ae0c381e19df050f914a401da8e5f0e2f6aba7422d6d23f8033442e6f73"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "e6a4686f55a68617791367eeb627314da0a5f22b565ee6632bafa713e143f96f"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "bb7e73db4ed17a28a89bcffb2b3808a7e97b86fcf0affab72658f225654676ca"
+    },
+    "evidence/controller-runtime-arcade-1/tank/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-arcade-1/tank/baseline-release.json": {
+      "bytes": 413,
+      "sha256": "cf8319fc5eb037244b670990d51d79beb07622eebe3e3ba2c430102ff97f9c8f"
+    },
+    "evidence/controller-runtime-arcade-1/tank/commands.json": {
+      "bytes": 1019,
+      "sha256": "42544d1ffd8f37650bc90431ea3b94f431e28a105694ccc09f0320904515ebc6"
+    },
+    "evidence/controller-runtime-arcade-1/tank/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-1/tank/initial-snapshot.json": {
+      "bytes": 9151,
+      "sha256": "cc6b5c497f0aebba4b46388f49abe2bd719b762e2fd6955ea9119ed925b50c68"
+    },
+    "evidence/controller-runtime-arcade-1/tank/case.json": {
+      "bytes": 914,
+      "sha256": "1647ab3b122a04ef7a21f691b0618d9841a48adbd175ca64dba900e423eb1f42"
+    },
+    "evidence/controller-runtime-arcade-1/tank/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay.mp4": {
+      "bytes": 660942,
+      "sha256": "d0e52ec440b17b310bd01336d963e35bc4ac31c9026537367553b5c4b88452db"
+    },
+    "evidence/controller-runtime-arcade-1/tank/logcat.txt": {
+      "bytes": 1515384,
+      "sha256": "3e16d6d4d08ab8670c0159eb7ef64350a0bb30dec77357408d3954fb4333dae8"
+    },
+    "evidence/controller-runtime-arcade-1/tank/recording-probe.json": {
+      "bytes": 4348,
+      "sha256": "bbebc5036da397f41d4655aceddc2940a894a8ceb483d4d940aa3370bf25e732"
+    },
+    "evidence/controller-runtime-arcade-1/tank/driver.log": {
+      "bytes": 668,
+      "sha256": "2cc5021f6903c89aef022f3b79f57c829b255227aad89960ca35eb878ffc2b73"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/baseline-release.json": {
+      "bytes": 418,
+      "sha256": "4d14f250a0a52d22e6bea02747cf7444309c2644d6ae233170ebcfc1ef5764a2"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/commands.json": {
+      "bytes": 1027,
+      "sha256": "531629d79ebc6aef67deb4298e671d0d3ddccc57103d90a7eeb1cd7d71bd0503"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/initial-snapshot.json": {
+      "bytes": 7193,
+      "sha256": "2ccd7d54584a86247ae80d083c429f31b907ad2f83ed4f7e0df5899f3045c3a6"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/case.json": {
+      "bytes": 917,
+      "sha256": "9c341d4c9e47feee0d67215eb8195c20909b27af367acc0e48301f42c7ca61c5"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay.mp4": {
+      "bytes": 1430036,
+      "sha256": "b382419b46429868e22f304355ece3684d709c73a05966b96e7e0df5b8a8a573"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/logcat.txt": {
+      "bytes": 441729,
+      "sha256": "b30c8aa6ba5b920b98437200c266923fa6336a99b092201c4fae28ca5db1c2a3"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/recording-probe.json": {
+      "bytes": 4353,
+      "sha256": "95c6de1a7ad3bb5a0f30f33c975a00314070143fb6790479dc6d32abe1f8ec0a"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/driver.log": {
+      "bytes": 688,
+      "sha256": "e03f009005b71e48c3097c83422efe099377bd26c5b899f1018eaeecb1d7213c"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/controller-release.py": {
+      "bytes": 19402,
+      "sha256": "15055a3a228dd529f90d4b882cb68c910abbc1daec69c56cab78ee31fe03b294"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8956,
+      "sha256": "58e8343087a2ffcf2f806cf39a23f42f3503715ec3995c1aff3e87f81e87e440"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 23915,
+      "sha256": "67fc1d7af1ee89754d9a7d87eea2b3910d2def1a430d0dc66551d4c1f5d29e00"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 27308,
+      "sha256": "ab57b13871d214226b4094d0eacb39b1ea27e17772ae6e92ac3868275f9c1b53"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 13904,
+      "sha256": "0fb952831721e3e963cf5859319c849f3b3741dcae7f9e2c13c8aa440e55198f"
+    },
+    "evidence/controller-runtime-arcade-1/host-diagnostics/emulator-crash-data/emu-crash-37.3.10.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "9cc60294def8f2b2b791641c1a45bdc85bfc65e40ed16d732d43bdb2e24103ea"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/gameplay.png": {
+      "bytes": 93583,
+      "sha256": "5ca19a97e385380fd84c535bbaf406141ccb82016b90e228c530c6f10fa63e3a"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-run.mjs": {
+      "bytes": 27308,
+      "sha256": "ab57b13871d214226b4094d0eacb39b1ea27e17772ae6e92ac3868275f9c1b53"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/menu-android.png": {
+      "bytes": 81267,
+      "sha256": "9d65a5f4e7c301d342b4fadba27c57443475f48ca2e53e6ee25cf5eb429109d3"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/paused.png": {
+      "bytes": 93130,
+      "sha256": "4570f969d600bdccc2d1de942fecc2be973adf42374ef33814405d39591a6265"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/report.json": {
+      "bytes": 332306,
+      "sha256": "05d5e35e21b76e063a2acd44ceed6b086f1e0d81dc8ec4ca53d4202b53bd1349"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/reconnected.png": {
+      "bytes": 93304,
+      "sha256": "7ed5b0cd69af655dd8e04f3831f84d5727d2ef96410c95f566745c0c9f127e63"
+    },
+    "evidence/controller-runtime-arcade-1/tank/gameplay/bridge-stderr.txt": {
+      "bytes": 4090,
+      "sha256": "8ea153ed0acbdb2d68e2863cb52e79006d15ccb96f9704b1de9cf369b2635790"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tetris/source-manifest.json": {
+      "bytes": 702,
+      "sha256": "b3c4c9b9210ba635b34303101691d0a2240c2db9f6b2806faa6c59cbf308c45c"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/adventure-island/source-manifest.json": {
+      "bytes": 712,
+      "sha256": "908f6336682a8b59c88421f1eca310d1190f201aa5458d7eea9100e274cddbeb"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/bomb-jack/source-manifest.json": {
+      "bytes": 705,
+      "sha256": "03b025ff56428c4b7e9f26f71050ce50320f9c2ad144026a315326e6d959ba01"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tank/source-manifest.json": {
+      "bytes": 700,
+      "sha256": "43ad5264aab9092d51a4a32d589175dce77f1c1596d6a1fef5ec616a635d3bd6"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/super-mario/source-manifest.json": {
+      "bytes": 707,
+      "sha256": "03bdad04f004047a7c9fdc6559ff3e2c23b55a0e74587cef0e9c544874dd6681"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jewel/source-manifest.json": {
+      "bytes": 701,
+      "sha256": "d832a8044885593a627abab6f7a1ac6f2b636b3a25dfd17681c496f77ff7cead"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jackal/source-manifest.json": {
+      "bytes": 702,
+      "sha256": "861369c5e823a41b5ecfdfbd2bd276b6ae73267ddeaf7f169c71513945fed71d"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tetris/resource/apps/tetris/build.gradle": {
+      "bytes": 1445,
+      "sha256": "cdb7f8d4cf751dd8967d101e90b8c36493c221ff989c4b967be8ae2e67709970"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tetris/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tetris/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/adventure-island/resource/apps/adventure-island/build.gradle": {
+      "bytes": 1473,
+      "sha256": "c390b8d81d43671234a0354298c95c3e91ee94f797e9b9de030cdb775fdc1dbc"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/adventure-island/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/adventure-island/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/bomb-jack/resource/apps/bomb-jack/build.gradle": {
+      "bytes": 1459,
+      "sha256": "2b618d8ef28274db3f53b785cb47d6d40bcc34b663006cac2fee996efa2b300d"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/bomb-jack/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/bomb-jack/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tank/resource/apps/tank/build.gradle": {
+      "bytes": 1418,
+      "sha256": "ad4ac62568cb69b4b8a6d425d8b2ca01b34101e9d57caf052c743f84c548465a"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tank/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/tank/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/super-mario/resource/apps/super-mario/build.gradle": {
+      "bytes": 1458,
+      "sha256": "7a81c336513bf666d088e07e818029c87278d296b9c23d1d1fc9323118fcae6a"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/super-mario/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/super-mario/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jewel/resource/apps/jewel/build.gradle": {
+      "bytes": 1442,
+      "sha256": "dbd565d0223fa1d44932419a2136e1f163434f1b64af8b9f4af71ffe42226387"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jewel/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jewel/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jackal/resource/apps/jackal/build.gradle": {
+      "bytes": 9358,
+      "sha256": "1143712e2939c4a98cce4322f1707743d5d45033b24cae4dcca7ab0af6cf644e"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jackal/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-1/observer-source/jackal/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/gameplay.png": {
+      "bytes": 121319,
+      "sha256": "35b060ef02033af45f5a1c03cd7be50e8f1cb9ddb638e3bbab19bd4594af380b"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-run.mjs": {
+      "bytes": 27308,
+      "sha256": "ab57b13871d214226b4094d0eacb39b1ea27e17772ae6e92ac3868275f9c1b53"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/menu-android.png": {
+      "bytes": 89080,
+      "sha256": "001266f308a462c4f94d3fde631446dbf807f47d9df219572a3620020ce21216"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/paused.png": {
+      "bytes": 121257,
+      "sha256": "ac9e8eed2e42450a0bf94a2c6fd6bc0e9a5f3fc57bb23c7dff1a0447da8145dc"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/report.json": {
+      "bytes": 326414,
+      "sha256": "048537f1378ac63640c73cf2db984e851c2f5b3307b7d6bc96c74566b4872f24"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/reconnected.png": {
+      "bytes": 121668,
+      "sha256": "daacd4f616a19e2acb80995c2837e3bbcf6dd8424034df25a05f210fac3843f1"
+    },
+    "evidence/controller-runtime-arcade-1/jackal/gameplay/bridge-stderr.txt": {
+      "bytes": 3694,
+      "sha256": "a1c77b000c9b970fa3c22f2a6825b1e88d534c15ecdbbea64d2ec743e4581c00"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/kernel-before.txt": {
+      "bytes": 121633,
+      "sha256": "d0aa9bf7773a38c9b711da337c63317b31a3a6f996bb2c687132a313f1cac61f"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/host-samples.jsonl": {
+      "bytes": 282418,
+      "sha256": "1fa508703e2da48efcb41a422d9c561f74c43a32b80735fb3004343486ac635f"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "921943804423d63fce1159a32f84227b1bc7be3ea06d5be1295749fac17eb0cb"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/kernel-after.txt": {
+      "bytes": 121633,
+      "sha256": "d0aa9bf7773a38c9b711da337c63317b31a3a6f996bb2c687132a313f1cac61f"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "910830a36d92e33f5ce4a95fea846f3f489ac9607355d3321aeffd04fa86a6b8"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "b9290fe1a37a38b9167c5e2cf689694d48e85ebbfd4ec4796a25a8867cd4a748"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "9bf3b57c570e5b4bc5b43f25c97a74a270e1db0354940dc5d998d409b3c41e06"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "6007536f6f233f358e8bbce31ead9a90114da5f7078c055ec279cc1dda8ed8e6"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/baseline-release.json": {
+      "bytes": 435,
+      "sha256": "8f3a93c650e204096d454dc28082901d7d93914ca546cfc691db73594ded5d2a"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/commands.json": {
+      "bytes": 1066,
+      "sha256": "6f0879495dbeadecd8db0e5bd418d97ed5cca1d79d9003e0aab7ed74d67d50dd"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/initial-snapshot.json": {
+      "bytes": 10703,
+      "sha256": "011b915f0e821142aa571b505d665499c0bb645575931e8d8dd7cde182b06ee9"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/case.json": {
+      "bytes": 926,
+      "sha256": "782382cc85650941bdc11b8400e662084ce1d1859d5e595ed39fe4bebdd35c61"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay.mp4": {
+      "bytes": 581936,
+      "sha256": "b0165aba518eb0b0340f161b2cbd1f53c19d8c35d5f7a1bb5367ac307a6343fc"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/logcat.txt": {
+      "bytes": 377926,
+      "sha256": "f2ebd788cc4d274d581d9ca1696e808dcf6ca7cb0066911a0f93992c9f4052d3"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/recording-probe.json": {
+      "bytes": 4360,
+      "sha256": "8861fdfd8b916a22bf8ba422d0359f36b95d848694d4f34492735ca97c672813"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/driver.log": {
+      "bytes": 788,
+      "sha256": "3e37e466b4a8df05d4f3d070c54f5f5ca55606039397e8031df12ac2601abdcc"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/baseline-release.json": {
+      "bytes": 420,
+      "sha256": "92ca974d4707def56b81fdc37f0cb8be7198c2c956033323ac305a8b7fd7ee7c"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/commands.json": {
+      "bytes": 1038,
+      "sha256": "c74859f6f043a485f2a57fea46dbcaef4314f10b71c63405f0a09dec4329b7da"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/initial-snapshot.json": {
+      "bytes": 8980,
+      "sha256": "237ee1500591a54bbafe7b580c69d0b9b4a4b91d9105c33f7c4fa4383d9123f3"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/case.json": {
+      "bytes": 919,
+      "sha256": "0b5020e6b27f8b1fe59f89e70ceef028c456e57563dbe963633553abcfba3ae5"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay.mp4": {
+      "bytes": 765386,
+      "sha256": "860772d54d4c91442d2dc1ba4a18ca3a25d6868cb66624e5a0f7fbef50db469e"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/logcat.txt": {
+      "bytes": 1440480,
+      "sha256": "b78a86f172e28d0dc37cf297d60442afec19a523af947dda20a66fb8400bdd8f"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/recording-probe.json": {
+      "bytes": 4355,
+      "sha256": "d3b16ef82aea69bce4dd3a09fc23892dc1d469ae16957f56362c0e11b1b8333d"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/driver.log": {
+      "bytes": 718,
+      "sha256": "e229d4208dd94d71c0644905ef042de480b2383695f5b2217f60794ee2a1a2e2"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/baseline-release.json": {
+      "bytes": 425,
+      "sha256": "bdbc98e91a4622fe2476f41d3f7892f946a36bbc3e20d68263ab5655b444d675"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/commands.json": {
+      "bytes": 1046,
+      "sha256": "cb237390b66d51a8784f3f1c8ab4ec345a80ed1c72f1304e6a9126cd6ecd863c"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/initial-snapshot.json": {
+      "bytes": 9363,
+      "sha256": "1ef0ef6fe2c79b039625f4b846ea88fb706d876ea1ea62311b61b5ecbc660cb6"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/case.json": {
+      "bytes": 921,
+      "sha256": "e01bc9460dea68f168ab932a2315ca3483e30d9cdbb588c142d2fdb8dbcf25b1"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay.mp4": {
+      "bytes": 680895,
+      "sha256": "c57fca8ce5905ff5ebe1318b8ad087defd9b63487f02f3294fcdf07bedfe3eb7"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/logcat.txt": {
+      "bytes": 211087,
+      "sha256": "a16ed9ebc34a7a8834a3c7afd6886f8c82b51e22cb2db00f1988b024a69db1f9"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/recording-probe.json": {
+      "bytes": 4356,
+      "sha256": "19268a896b025a0ae587af14c0c8bbd024850ded5db466d9adc3731c8cf1e112"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/driver.log": {
+      "bytes": 738,
+      "sha256": "0eab8f1792e004bbe77370b0243050fc267c808ad3c5f5c72772bc2c051d13b4"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/controller-release.py": {
+      "bytes": 19402,
+      "sha256": "15055a3a228dd529f90d4b882cb68c910abbc1daec69c56cab78ee31fe03b294"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8956,
+      "sha256": "58e8343087a2ffcf2f806cf39a23f42f3503715ec3995c1aff3e87f81e87e440"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 23915,
+      "sha256": "67fc1d7af1ee89754d9a7d87eea2b3910d2def1a430d0dc66551d4c1f5d29e00"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 27308,
+      "sha256": "ab57b13871d214226b4094d0eacb39b1ea27e17772ae6e92ac3868275f9c1b53"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 13904,
+      "sha256": "0fb952831721e3e963cf5859319c849f3b3741dcae7f9e2c13c8aa440e55198f"
+    },
+    "evidence/controller-runtime-arcade-3/host-diagnostics/emulator-crash-data/emu-crash-37.3.10.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "aa87113d2dae20ff2c812fe1e74c8f433826f5bf89278f81464b2e5b2b3885c9"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/gameplay.png": {
+      "bytes": 101660,
+      "sha256": "88d21c20805e6ab68a4f415ac3e090c5f6a9f486a6693fef79c1f9c811fd1d7f"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-run.mjs": {
+      "bytes": 27308,
+      "sha256": "ab57b13871d214226b4094d0eacb39b1ea27e17772ae6e92ac3868275f9c1b53"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/menu-android.png": {
+      "bytes": 94169,
+      "sha256": "d2d97ebfd883b9b32d6f4dd7d9d4ab2b4293a843c7dc6092ccfeccf75892393e"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/paused.png": {
+      "bytes": 102124,
+      "sha256": "664f133cd7643aca4cc08120b716c8074769a0821507ec569f613c1f1b0c9cf1"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/report.json": {
+      "bytes": 340918,
+      "sha256": "74152a875e261698f4f996e0ad936151c3e8f765d34dd9205da2914115aee6b8"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/reconnected.png": {
+      "bytes": 101670,
+      "sha256": "8db47b900f5249a1eb2d51924ee7962c8b9f17981c62b3abd787d63751133094"
+    },
+    "evidence/controller-runtime-arcade-3/adventure-island/gameplay/bridge-stderr.txt": {
+      "bytes": 3694,
+      "sha256": "cd9a77f0ef940e50495ecfa584bdee86837efc1f6e5dee652a3e585a35e33548"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/gameplay.png": {
+      "bytes": 104926,
+      "sha256": "c2034d09de9b263c7b69a4a76b4ba345b90673d5187ec1a1654d2350d8f8149d"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-run.mjs": {
+      "bytes": 27308,
+      "sha256": "ab57b13871d214226b4094d0eacb39b1ea27e17772ae6e92ac3868275f9c1b53"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/menu-android.png": {
+      "bytes": 103670,
+      "sha256": "dcef567e4d968dc18a9a3cf2803ff70651223d6302a23a329d66ff02342d6b42"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/paused.png": {
+      "bytes": 104493,
+      "sha256": "4156d717fbbdfebefe7da3173216fc6201cf37f9330d18618acb35e333a89bcc"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/report.json": {
+      "bytes": 404943,
+      "sha256": "66b92075f0cb07653d284543664ed36e23615d31ed55312ef5639bc7f687a894"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/reconnected.png": {
+      "bytes": 104748,
+      "sha256": "1649ce10386850c5996baae0e40223ca375bb6474fa519003948823656674d65"
+    },
+    "evidence/controller-runtime-arcade-3/bomb-jack/gameplay/bridge-stderr.txt": {
+      "bytes": 3892,
+      "sha256": "ab8f38d41fb00c8fac8ea3623f8212f9d2e64b6cf4ddd4b3470f0c3c3804dacc"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tetris/source-manifest.json": {
+      "bytes": 702,
+      "sha256": "b3c4c9b9210ba635b34303101691d0a2240c2db9f6b2806faa6c59cbf308c45c"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/adventure-island/source-manifest.json": {
+      "bytes": 712,
+      "sha256": "908f6336682a8b59c88421f1eca310d1190f201aa5458d7eea9100e274cddbeb"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/bomb-jack/source-manifest.json": {
+      "bytes": 705,
+      "sha256": "03b025ff56428c4b7e9f26f71050ce50320f9c2ad144026a315326e6d959ba01"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tank/source-manifest.json": {
+      "bytes": 700,
+      "sha256": "43ad5264aab9092d51a4a32d589175dce77f1c1596d6a1fef5ec616a635d3bd6"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/super-mario/source-manifest.json": {
+      "bytes": 707,
+      "sha256": "03bdad04f004047a7c9fdc6559ff3e2c23b55a0e74587cef0e9c544874dd6681"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jewel/source-manifest.json": {
+      "bytes": 701,
+      "sha256": "d832a8044885593a627abab6f7a1ac6f2b636b3a25dfd17681c496f77ff7cead"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jackal/source-manifest.json": {
+      "bytes": 702,
+      "sha256": "861369c5e823a41b5ecfdfbd2bd276b6ae73267ddeaf7f169c71513945fed71d"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tetris/resource/apps/tetris/build.gradle": {
+      "bytes": 1445,
+      "sha256": "cdb7f8d4cf751dd8967d101e90b8c36493c221ff989c4b967be8ae2e67709970"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tetris/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tetris/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/adventure-island/resource/apps/adventure-island/build.gradle": {
+      "bytes": 1473,
+      "sha256": "c390b8d81d43671234a0354298c95c3e91ee94f797e9b9de030cdb775fdc1dbc"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/adventure-island/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/adventure-island/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/bomb-jack/resource/apps/bomb-jack/build.gradle": {
+      "bytes": 1459,
+      "sha256": "2b618d8ef28274db3f53b785cb47d6d40bcc34b663006cac2fee996efa2b300d"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/bomb-jack/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/bomb-jack/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tank/resource/apps/tank/build.gradle": {
+      "bytes": 1418,
+      "sha256": "ad4ac62568cb69b4b8a6d425d8b2ca01b34101e9d57caf052c743f84c548465a"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tank/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/tank/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/super-mario/resource/apps/super-mario/build.gradle": {
+      "bytes": 1458,
+      "sha256": "7a81c336513bf666d088e07e818029c87278d296b9c23d1d1fc9323118fcae6a"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/super-mario/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/super-mario/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jewel/resource/apps/jewel/build.gradle": {
+      "bytes": 1442,
+      "sha256": "dbd565d0223fa1d44932419a2136e1f163434f1b64af8b9f4af71ffe42226387"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jewel/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jewel/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jackal/resource/apps/jackal/build.gradle": {
+      "bytes": 9358,
+      "sha256": "1143712e2939c4a98cce4322f1707743d5d45033b24cae4dcca7ab0af6cf644e"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jackal/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-arcade-3/observer-source/jackal/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/gameplay.png": {
+      "bytes": 100408,
+      "sha256": "a1dc9512dae0e648ed3b99e9cf933efadec00d21da86ebd5edde9d16ef624618"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-run.mjs": {
+      "bytes": 27308,
+      "sha256": "ab57b13871d214226b4094d0eacb39b1ea27e17772ae6e92ac3868275f9c1b53"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/menu-android.png": {
+      "bytes": 97820,
+      "sha256": "405b7a71ae97db3b89a22810c05266ee8badf436b7cd555b2e85c6ff7d9c9600"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/paused.png": {
+      "bytes": 101672,
+      "sha256": "155c1520c4f0eec9bbdc7840871fc6c63dab6cb5f2eae563fd5e9f7c81dc4d4b"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/report.json": {
+      "bytes": 319718,
+      "sha256": "450cef4081c0d674a6a614ff30fe8c540159ee4f834014748422b7fd93a7f4de"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/reconnected.png": {
+      "bytes": 100408,
+      "sha256": "388ce24f2addfd68e25d180d0c75ec31f2caf60d9d6f5caf40da534e8dc80d76"
+    },
+    "evidence/controller-runtime-arcade-3/super-mario/gameplay/bridge-stderr.txt": {
+      "bytes": 3694,
+      "sha256": "a1e0cead56a019eb651614c76d138dcc12a219b368f9a60f6ec2d358b29b4119"
+    }
+  }
+}
