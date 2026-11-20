@@ -13,9 +13,9 @@ from playwright.sync_api import sync_playwright
 from play_windows import MeasuredClient, RESULTS, free_port, play, sha, snapshot
 
 BASE = 'https://github.com/ecojust/pureTV/releases/download/'
-EXE_URL = BASE + 'catalog-player-v1.0.0/pureTV-Games.exe'
-APK_URL = BASE + 'catalog-tv-controls-v1.0.0/emberbrood-0.1.2.apk'
-EXE_SHA = '497c19b73c9512f69c9412e7341032c86398fdadac9c7f57dc7fb45143c8344f'
+EXE_URL = BASE + 'catalog-player-v1.0.1/pureTV-Games.exe'
+APK_URL = BASE + 'catalog-tv-controls-v1.0.1/emberbrood-0.1.2.apk'
+EXE_SHA = '1332f7b2718511ce7faaec9e80d2869390ede0e38b4ee782ddd8f215379671dd'
 APK_SHA = 'c25db32d6e6a021547a5925d5afbb2a403e49f8c90699f7327fce227ed258ed0'
 TV_SHA = '8a62186c1b00bef9a197ef7ec221e884a66f2d5ffb688ddd28d7b06f578328cd'
 
@@ -41,9 +41,16 @@ def check(out):
     exe=root/'pureTV-Games.exe'
     download(EXE_URL,exe)
     out.update(exeUrl=EXE_URL,exeBytes=exe.stat().st_size,exeSha256=sha(exe))
-    assert out['exeSha256']==EXE_SHA and out['exeBytes']==14593317
+    assert out['exeSha256']==EXE_SHA and out['exeBytes']==14592984
     # Read the actual public EXE's bundled catalogue, without modifying its contents.
-    bundled=json.loads(CArchiveReader(str(exe)).extract('catalog.json'))
+    catalog_bytes=CArchiveReader(str(exe)).extract('catalog.json')
+    out['bundledCatalogSha256']=hashlib.sha256(catalog_bytes).hexdigest()
+    assert out['bundledCatalogSha256']=='0cc16bd7813f60c2067e5b15a1e89c40037226ce6e5e41ad00e63717c1f361ef'
+    bundled=json.loads(catalog_bytes)
+    assert len(bundled)==len({row['id'] for row in bundled})==35
+    current,=[row for row in bundled if row['id']=='used-car-racing']
+    assert current['url'].endswith('/used-car-racing-0.1.7.apk') and current['sha256']=='1b0879c9ae8ac10188ea34e9694dbc9527048ee76e10d735a61aa24da53bd9e7'
+    out['currentUsedCarEntry']=current
     game,=[row for row in bundled if row['id']=='emberbrood']
     assert game['url']==APK_URL and game['sha256']==APK_SHA and game['bytes']==369719
     out.update(bundledCatalogEntry=game,bundledGameCount=len(bundled))
