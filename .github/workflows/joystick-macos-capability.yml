@@ -1,231 +1,48 @@
-name: Observe frozen macOS WebGL capability
-
-on:
-  workflow_dispatch:
-    inputs:
-      source_sha:
-        description: Exact frozen source of the existing independent WebGL probe
-        required: true
-        type: string
-
+name: Intel WKWebView pixel and frozen puzzle diagnosis
+on: workflow_dispatch
 permissions:
   contents: read
   actions: read
-
 jobs:
-  observe:
+  probe:
     strategy:
       fail-fast: false
       matrix:
-        runner: [macos-latest, macos-15-intel]
-    runs-on: ${{ matrix.runner }}
-    timeout-minutes: 30
-    env:
-      PROBE_SOURCE: ${{ inputs.source_sha }}
-      RUNNER_KIND: ${{ matrix.runner }}
+        label: [macos-15-intel, macos-26-intel]
+    runs-on: ${{ matrix.label }}
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
-          path: workflow-source
-          sparse-checkout: |
-            .github/workflows
-            joystick-games/qa/tools
-      - name: Validate the exact probe source
-        run: |
-          python3 - <<'PY'
-          import os,re
-          assert os.environ['GITHUB_REPOSITORY']=='ecojust/pureTV'
-          assert re.fullmatch('[a-f0-9]{40}',os.environ['PROBE_SOURCE'])
-          assert os.environ['PROBE_SOURCE']=='b15beb969bfc83595143aec4ddc4817220ba8119', 'This diagnostic binds the original failure QA source'
-          PY
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.source_sha }}
-          path: probe-source
-          sparse-checkout: |
-            joystick-games
-            puretv-joystick
-            .github/workflows
-      - uses: actions/checkout@v4
-        with:
-          ref: a73a1976e7d38ff27b8e457b933519ea66eaa949
-          path: artifact-source
-          sparse-checkout: |
-            joystick-games
-            puretv-joystick
-            .github/workflows
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Select the exact original four-game package artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          python3 - <<'PY'
-          import json,os,subprocess
-          from pathlib import Path
-          def api(path):return json.loads(subprocess.check_output(['gh','api','repos/ecojust/pureTV/'+path]))
-          source='a73a1976e7d38ff27b8e457b933519ea66eaa949';run=api('actions/runs/44150598155')
-          assert run['head_sha']==source and run['run_attempt']==1 and run['path']=='.github/workflows/joystick-catalog-macos.yml'
-          assert run['repository']['full_name']==run['head_repository']['full_name']=='ecojust/pureTV'
-          jobs=api('actions/runs/44150598155/attempts/1/jobs?per_page=100')['jobs']
-          selected=[job for job in jobs if job['name'].startswith('build (triptych-02,')];assert len(selected)==1
-          job=selected[0];assert job['status']=='completed' and job['conclusion']=='success'
-          artifact=api('actions/artifacts/14357594539')
-          assert artifact['name']=='joystick-catalog-macos-packages-triptych-02' and not artifact['expired']
-          assert artifact['workflow_run']['id']==44150598155 and artifact['workflow_run']['head_sha']==source
-          assert job['started_at']<=artifact['created_at']<=job['completed_at']
-          Path(os.environ['RUNNER_TEMP'],'original-package-selection.json').write_text(json.dumps({'run':run,'buildJob':job,'artifact':artifact},indent=2)+'\n')
-          PY
+          sparse-checkout: qa/puzzle-intel-render
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
           repository: ecojust/pureTV
-          run-id: 44150598155
-          artifact-ids: 14357594539
+          run-id: 44713386724
+          artifact-ids: 14617933985
           merge-multiple: true
-          path: ${{ runner.temp }}/original-packages
-      - name: Observe the independent probe without opening any game
-        run: |
-          python3 - <<'PY'
-          import difflib,hashlib,json,os,platform,plistlib,shutil,subprocess,traceback
-          from pathlib import Path
-          source=Path('probe-source').resolve();temp=Path(os.environ['RUNNER_TEMP']);out=temp/'capability';out.mkdir()
-          expected=os.environ['PROBE_SOURCE'];assert subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD'],text=True).strip()==expected
-          probe=source/'joystick-games/shared/macos/tools/webgl-probe.swift';data=probe.read_bytes()
-          assert data==subprocess.check_output(['git','-C',str(source),'show',expected+':joystick-games/shared/macos/tools/webgl-probe.swift'])
-          shutil.copy2(probe,out/'executed-webgl-probe.swift')
-          shutil.copy2('workflow-source/.github/workflows/joystick-macos-capability.yml',out/'executed-workflow.yml')
-          report={'sourceCommit':expected,'workflowSourceCommit':os.environ['GITHUB_SHA'],'runId':int(os.environ['GITHUB_RUN_ID']),'runAttempt':int(os.environ['GITHUB_RUN_ATTEMPT']),'runner':os.environ['RUNNER_KIND'],'architecture':platform.machine(),'probeSourceSha256':hashlib.sha256(data).hexdigest(),'status':'running','gamesOpened':False,'gameAssetsChanged':False,'installationPackagesIncluded':False,'observations':[]}
-          def save(): (out/'observation-report.json').write_text(json.dumps(report,indent=2)+'\n')
-          def command(args,name,timeout=180):
-            result=subprocess.run(list(map(str,args)),capture_output=True,timeout=timeout)
-            (out/(name+'.log')).write_bytes(result.stdout+result.stderr)
-            assert result.returncode==0, name+' returned '+str(result.returncode)
-            return result.stdout.decode().strip()
-          save()
-          try:
-            expected_arch='arm64' if os.environ['RUNNER_KIND']=='macos-latest' else 'x86_64'
-            assert platform.machine()==expected_arch
-            report['systemVersion']=command(['sw_vers'],'system-version')
-            report['xcodeVersion']=command(['xcodebuild','-version'],'xcode-version')
-            info=plistlib.loads(Path('/System/Library/Frameworks/WebKit.framework/Resources/Info.plist').read_bytes())
-            report['webKitFramework']={key:info.get(key) for key in ['CFBundleIdentifier','CFBundleShortVersionString','CFBundleVersion']}
-            sdk=command(['xcrun','--sdk','macosx','--show-sdk-path'],'sdk-path')
-            original=data.decode();assert original.count("canvas.getContext('webgl2')")==1 and original.count('webgl2ContextCreated')==1
-            webgl1=original.replace("canvas.getContext('webgl2')","canvas.getContext('webgl')").replace('webgl2ContextCreated','webgl1ContextCreated')
-            one=out/'executed-webgl1-probe.swift';one.write_text(webgl1)
-            (out/'webgl1-probe.patch').write_text(''.join(difflib.unified_diff(original.splitlines(True),webgl1.splitlines(True),fromfile='unchanged-b15-webgl2.swift',tofile='separate-webgl1-probe.swift')))
-            binaries={};report['probeBinaries']={}
-            for api,probe_source in [('webgl2',probe),('webgl1',one)]:
-              slices=[]
-              for arch in ['arm64','x86_64']:
-                binary=temp/(api+'-probe-'+arch);slices.append(binary)
-                command(['xcrun','swiftc','-swift-version','5','-target',arch+'-apple-macos11.0','-sdk',sdk,'-framework','AppKit','-framework','WebKit',probe_source,'-o',binary],'compile-'+api+'-'+arch)
-              binary=temp/(api+'-probe');binaries[api]=binary
-              command(['lipo','-create',*slices,'-output',binary],'combine-'+api)
-              command(['codesign','--force','--sign','-','--timestamp=none',binary],'sign-'+api)
-              report['probeBinaries'][api]={'binarySha256':hashlib.sha256(binary.read_bytes()).hexdigest(),'sourceSha256':hashlib.sha256(probe_source.read_bytes()).hexdigest(),'unchangedFrozenProbe':api=='webgl2'}
-            if expected_arch=='arm64' and subprocess.run(['/usr/bin/arch','-x86_64','/usr/bin/true'],capture_output=True).returncode:
-              command(['sudo','/usr/sbin/softwareupdate','--install-rosetta','--agree-to-license'],'rosetta-install',600)
-            for api,binary in binaries.items():
-              for mode,arch,prefix in [('native',expected_arch,[]),*([('rosetta','x86_64',['/usr/bin/arch','-x86_64'])] if expected_arch=='arm64' else [])]:
-                target=out/(api+'-'+mode+'.json');command([*prefix,binary,target],'probe-'+api+'-'+mode,60)
-                observed=json.loads(target.read_text());assert observed['processArchitecture']==arch
-                report['observations'].append({'api':api,'mode':mode,'architecture':arch,'probeStatus':observed.get('status'),'path':target.name});save()
-            report['status']='observed'
-          except Exception:
-            report.update(status='failed',error=traceback.format_exc())
-          save()
-          print(json.dumps({'status':report['status'],'runner':report['runner'],'observations':report['observations'],'gamesOpened':False}))
-          raise SystemExit(0 if report['status']=='observed' else 1)
-          PY
-      - name: Observe startup in separate rebuilt diagnostic hosts
-        if: ${{ !cancelled() }}
-        run: |
-          python3 - <<'PY'
-          import hashlib,json,os,shutil,subprocess,traceback
-          from pathlib import Path
-          temp=Path(os.environ['RUNNER_TEMP']);out=temp/'capability';out.mkdir(exist_ok=True)
-          source=Path('probe-source').resolve();original=Path('artifact-source').resolve();tools=Path('workflow-source/joystick-games/qa/tools').resolve()
-          shutil.copy2(temp/'original-package-selection.json',out/'original-package-selection.json')
-          shutil.copy2(source/'joystick-games/tools/macos-packages.py',out/'executed-macos-packages.py')
-          shutil.copy2(source/'joystick-games/tools/macos-catalog-reuse.py',out/'executed-macos-catalog-reuse.py')
-          report={'method':'Separate diagnostic rebuilt hosts; original package applications are verified but never launched or altered','sourceCommit':'a73a1976e7d38ff27b8e457b933519ea66eaa949','packageVerifierSourceCommit':os.environ['PROBE_SOURCE'],'workflowSourceCommit':os.environ['GITHUB_SHA'],'runner':os.environ['RUNNER_KIND'],'originalAppsOpened':False,'gameplayVerified':False,'games':[]}
-          def save():(out/'startup-summary.json').write_text(json.dumps(report,indent=2)+'\n')
-          save()
-          for game in ['bubble-nebula','phosphor-patrol','wyrmzone','quiverspire']:
-            row={'game':game,'status':'running'};report['games'].append(row);save()
-            try:
-              package=temp/'original-packages'/game;meta=json.loads((package/'build-manifest.json').read_text())
-              assert meta['game']==game and meta['sourceCommit']==report['sourceCommit']
-              verification=out/(game+'-original-package-verification.json')
-              env=dict(os.environ,GITHUB_SHA=os.environ['PROBE_SOURCE'],ARTIFACT_SOURCE_COMMIT=report['sourceCommit'],ARTIFACT_SOURCE_RUN='44150598155',ARTIFACT_SOURCE_ATTEMPT='1')
-              with (out/(game+'-original-package-verification.log')).open('w') as stream:
-                result=subprocess.run(['python3',str(source/'joystick-games/tools/macos-packages.py'),'--directory',str(package),'--output',str(verification),'--artifact-source-checkout',str(original)],env=env,stdout=stream,stderr=subprocess.STDOUT,timeout=300)
-              assert result.returncode==0
-              verified=json.loads(verification.read_text());assert verified['status']=='passed' and verified['originalPackageBytesReused'] is True
-              assert verified['artifactSourceCommit']==report['sourceCommit'] and verified['qaSourceCommit']==os.environ['PROBE_SOURCE']
-              row['originalPackageVerified']=True;row['originalAppOpened']=False
-              with (out/(game+'-diagnostic.log')).open('w') as stream:
-                result=subprocess.run(['python3',str(tools/'mac-startup-diagnostic.py'),'--source',str(source),'--original-app',str(package/'installed'/meta['appName']),'--manifest',str(package/'build-manifest.json'),'--output',str(out/game),'--host-cache',str(temp/'startup-diagnostic-host-cache')],stdout=stream,stderr=subprocess.STDOUT,timeout=300)
-              assert result.returncode==0
-              observed=json.loads((out/game/'report.json').read_text());assert observed['originalPackageSource']==report['sourceCommit'] and observed['workflowSourceCommit']==os.environ['GITHUB_SHA']
-              assert observed['gameAssetsChanged'] is False and observed['originalAppModified'] is False and observed['gameplayVerified'] is False
-              row['status']='observed'
-            except Exception:row.update(status='failed',error=traceback.format_exc())
-            save()
-          print(json.dumps({'games':report['games'],'gameplayVerified':False}))
-          raise SystemExit(0 if all(row['status']=='observed' for row in report['games']) else 1)
-          PY
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: joystick-macos-capability-${{ matrix.runner }}
-          path: ${{ runner.temp }}/capability/
-          if-no-files-found: warn
-          retention-days: 30
-  export:
-    if: ${{ !cancelled() }}
-    needs: observe
-    runs-on: ubuntu-24.04
-    permissions:
-      actions: read
-      contents: write
-    steps:
+          path: packages/puzzle-01
       - uses: actions/download-artifact@v4
         with:
-          pattern: joystick-macos-capability-*
-          path: ${{ runner.temp }}/capability-export
-      - name: Preserve the observations on an immutable evidence branch
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PROBE_SOURCE: ${{ inputs.source_sha }}
-        run: |
-          python3 - <<'PY'
-          import hashlib,json,os,subprocess
-          from pathlib import Path
-          out=Path(os.environ['RUNNER_TEMP'])/'capability-export';reports=[];files={}
-          for path in sorted(out.glob('*/observation-report.json')):
-            report=json.loads(path.read_text());assert report['sourceCommit']==os.environ['PROBE_SOURCE'] and report['workflowSourceCommit']==os.environ['GITHUB_SHA']
-            assert report['runId']==int(os.environ['GITHUB_RUN_ID']) and report['runAttempt']==int(os.environ['GITHUB_RUN_ATTEMPT'])
-            assert report['gamesOpened'] is False and report['gameAssetsChanged'] is False and report['installationPackagesIncluded'] is False
-            assert hashlib.sha256((path.parent/'executed-webgl-probe.swift').read_bytes()).hexdigest()==report['probeSourceSha256']
-            reports.append({'runner':report['runner'],'status':report['status']})
-          assert reports, 'No actual probe observations to export'
-          for path in sorted(out.rglob('*')):
-            assert not path.is_symlink()
-            if path.is_file():
-              assert path.suffix in {'.json','.log','.swift','.yml','.txt','.js','.py','.patch','.png'} and path.stat().st_size<10_000_000
-              data=path.read_bytes();files[path.relative_to(out).as_posix()]={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
-          branch='build-assets/joystick-macos-capability-'+os.environ['GITHUB_RUN_ID']+'-attempt-'+os.environ['GITHUB_RUN_ATTEMPT']
-          manifest={'sourceCommit':os.environ['PROBE_SOURCE'],'workflowSourceCommit':os.environ['GITHUB_SHA'],'runId':int(os.environ['GITHUB_RUN_ID']),'runAttempt':int(os.environ['GITHUB_RUN_ATTEMPT']),'reports':reports,'originalAppsOpened':False,'includesDiagnosticRebuiltHostObservations':True,'installationPackagesIncluded':False,'nativeGameplayVerified':False,'files':files}
-          (out/'export-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
-          def git(*args):subprocess.run(['git','-C',str(out),*args],check=True)
-          assert os.environ['GITHUB_REPOSITORY']=='ecojust/pureTV'
-          git('init','-b','export');git('config','user.name','github-actions[bot]');git('config','user.email','41898282+github-actions[bot]@users.noreply.github.com');git('add','.');git('commit','-m','Preserve independent macOS graphics capability observations [skip ci]')
-          subprocess.run(['gh','auth','setup-git'],check=True);remote='https://github.com/ecojust/pureTV.git';git('remote','add','origin',remote)
-          assert not subprocess.check_output(['git','ls-remote','--heads',remote,'refs/heads/'+branch],text=True).strip()
-          git('push','--force-with-lease=refs/heads/'+branch+':','origin','HEAD:refs/heads/'+branch)
-          PY
+          github-token: ${{ github.token }}
+          repository: ecojust/pureTV
+          run-id: 44714845423
+          artifact-ids: 14618858589
+          merge-multiple: true
+          path: packages/puzzle-02
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ecojust/pureTV
+          run-id: 44713647487
+          artifact-ids: 14618822058
+          merge-multiple: true
+          path: packages/puzzle-03
+      - name: Record default WK and actual unmodified signed-package pages
+        run: python3 qa/puzzle-intel-render/run.py
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-puzzle-wk-probe-${{ matrix.label }}
+          path: observations/
