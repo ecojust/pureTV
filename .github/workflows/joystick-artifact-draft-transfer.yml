@@ -1,68 +1,34 @@
-name: Copy original catalog artifact to existing draft
+name: Verify Android QR build dependency from public Maven Central and runner cache
 on:
   workflow_dispatch:
-    inputs:
-      source_run:
-        description: Original catalog run ID
-        required: true
-        type: string
-      source_attempt:
-        description: Original run attempt
-        required: true
-        default: '1'
-        type: string
-      source_sha:
-        description: Exact original 40-character source commit
-        required: true
-        type: string
-      artifact_id:
-        description: Original package artifact ID (ZIP bytes stay unchanged)
-        required: true
-        type: string
-      release_id:
-        description: Existing draft release ID with exact staging tag/source
-        required: true
-        type: string
 permissions:
-  actions: read
-  contents: write
-concurrency:
-  group: artifact-draft-transfer-${{ inputs.release_id }}
-  cancel-in-progress: false
+  contents: read
 jobs:
-  transfer:
+  dependency:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
-    env:
-      GH_TOKEN: ${{ github.token }}
-      SOURCE_RUN: ${{ inputs.source_run }}
-      SOURCE_ATTEMPT: ${{ inputs.source_attempt }}
-      SOURCE_SHA: ${{ inputs.source_sha }}
-      ARTIFACT_ID: ${{ inputs.artifact_id }}
-      RELEASE_ID: ${{ inputs.release_id }}
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          sparse-checkout-cone-mode: false
           sparse-checkout: |
-            joystick-games/tools
-            .github/workflows
-      - name: Test transfer boundaries without network or release writes
-        run: python3 joystick-games/tools/artifact-draft-transfer-test.py
-      - name: Verify original ZIP and upload once to the existing draft
+            /joystick-games/tools/android-zxing.py
+            /joystick-games/tools/android-zxing-tests.py
+      - name: Verify the actual Google mirror and replay the cache with no network
+        shell: bash
         run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py transfer \
-            --run "$SOURCE_RUN" --attempt "$SOURCE_ATTEMPT" --source "$SOURCE_SHA" \
-            --artifact "$ARTIFACT_ID" --release "$RELEASE_ID" \
-            --output "$RUNNER_TEMP/artifact-draft-transfer"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: artifact-draft-transfer-receipt
-          path: ${{ runner.temp }}/artifact-draft-transfer/receipts/transfer.json
-          if-no-files-found: warn
-      - name: Preserve only the small receipt on a new immutable branch
-        if: always()
-        run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py export-receipt \
-            --directory "$RUNNER_TEMP/artifact-draft-transfer/receipts"
+          set -euo pipefail
+          python3 -B joystick-games/tools/android-zxing-tests.py
+          python3 - <<'PY'
+          import importlib.util, pathlib, os
+          path=pathlib.Path('joystick-games/tools/android-zxing.py')
+          spec=importlib.util.spec_from_file_location('qr',path)
+          qr=importlib.util.module_from_spec(spec);spec.loader.exec_module(qr)
+          qr.URLS=qr.URLS[-1:]
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])
+          fetched=qr.download(root/'mirror.jar',root/'mirror.json')
+          cached=qr.download(root/'cached.jar',root/'cached.json',archive=root/'mirror.jar')
+          assert fetched['sha256']==cached['sha256']==qr.EXPECTED_SHA256
+          print(fetched)
+          print(cached)
+          PY
