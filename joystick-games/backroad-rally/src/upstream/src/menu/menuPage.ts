@@ -26,7 +26,7 @@ import { AUTO_DEFAULTS, AutoQuality, initialRung, rememberRung, rememberedRung }
 import { materialWeather } from '../look/materials';
 import { pickWeather, weatherDef, type WeatherJson } from '../game/weather';
 import { Precipitation } from '../fx/precip';
-import { FrameLimiter, buildRoadMarks, createRenderer, dofOptions, gpuName, lookOverrides, type DofJson } from '../boot';
+import { backdropFence, FrameLimiter, buildRoadMarks, createRenderer, dofOptions, gpuName, lookOverrides, type DofJson } from '../boot';
 import { OrbitCamera } from '../camera/orbitCamera';
 import { loadSave, unlockAll, writeSave } from '../game/save';
 import {
@@ -242,6 +242,7 @@ export async function runMenu(params: URLSearchParams): Promise<void> {
   await placeCar(carWant.car || CAR_IDS[0], carWant.livery);
 
   const gpu = gpuName(renderer);
+  const settingsFence = backdropFence(renderer, gpu);
   const pinnedScale = () => (params.has('scale') ? Math.min(Math.max(Number(params.get('scale')) || 1, 0.25), 1) : display.renderScale > 0 ? display.renderScale / 100 : null);
   const limiter = new FrameLimiter();
   const fpsLimit = () => (params.has('fps') ? Number(params.get('fps')) || 0 : display.fpsLimit);
@@ -345,6 +346,8 @@ export async function runMenu(params: URLSearchParams): Promise<void> {
   let gpuMs = 0;
   renderer.setAnimationLoop((now: number) => {
     if (!limiter.due(now)) return;
+    const overlay = menu.screen === 'settings' && curtain === 0 && !pending;
+    if (overlay && settingsFence && !settingsFence.ready()) return;
     recordPureTvFrame();
     const frameMs = now - last;
     const dt = Math.min(frameMs / 1000, 0.1);
@@ -421,6 +424,7 @@ export async function runMenu(params: URLSearchParams): Promise<void> {
     lk.update(dt, c.sim.renderPos, cv.width, cv.height);
     lk.render();
     padlock.render(orbit.camera);
+    if (overlay) settingsFence?.submitted();
     if (auto) {
       void renderer.resolveTimestampsAsync('render').then((ms) => {
         if (typeof ms === 'number' && ms > 0) gpuMs = ms;

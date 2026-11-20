@@ -9,9 +9,38 @@ import { icePatches, puddleSites, type RoadForWeather, type WeatherDef } from '.
 import { RoadMarks } from './fx/roadMarks';
 
 /** Identify software renderers by the driver name that WebGL exposes, including the Android TV emulator. */
+export function softwareRenderer(name: string): boolean {
+  return /swiftshader|llvmpipe|softpipe|lavapipe|software (?:renderer|rasterizer)|microsoft basic render driver/i.test(name);
+}
+
 export function webglOutputPolicy(name: string, halfFloat: boolean, dpr: number) {
-  const software = /swiftshader|llvmpipe|softpipe|lavapipe|software (?:renderer|rasterizer)|microsoft basic render driver/i.test(name);
+  const software = softwareRenderer(name);
   return { halfFloat: halfFloat && !software, pixelRatio: Math.min(dpr, software ? 1 : 2) };
+}
+
+/** Keep at most one software-rendered backdrop in flight while a menu is open.
+ * Both the SDK and the HTML controls keep their own animation-frame callbacks. */
+export function backdropFence(renderer: THREE.WebGPURenderer, gpu: string) {
+  const gl = (renderer.backend as { gl?: WebGL2RenderingContext }).gl;
+  if (!gl || !softwareRenderer(gpu)) return null;
+  let pending: WebGLSync | null = null;
+  let disabled = false;
+  return {
+    ready() {
+      if (!pending) return true;
+      const status = gl.clientWaitSync(pending, 0, 0);
+      if (status === gl.TIMEOUT_EXPIRED) return false;
+      gl.deleteSync(pending);
+      pending = null;
+      if (status === gl.WAIT_FAILED) disabled = true;
+      return true;
+    },
+    submitted() {
+      if (disabled) return;
+      pending = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
+      if (pending) gl.flush();
+    },
+  };
 }
 
 function webglName(gl: WebGL2RenderingContext): string {

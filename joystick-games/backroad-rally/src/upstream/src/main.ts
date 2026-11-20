@@ -49,7 +49,7 @@ import { Precipitation } from './fx/precip';
 import type { RoadMarks } from './fx/roadMarks';
 import { deepMerge } from './sim/tuning';
 // game flow (slice 9)
-import { FrameLimiter, buildRoadMarks, createRenderer, dofOptions, gpuName, lookOverrides, type DofJson } from './boot';
+import { softwareRenderer, FrameLimiter, buildRoadMarks, createRenderer, dofOptions, gpuName, lookOverrides, type DofJson } from './boot';
 import { pageKind, parsePlay, putMenuState, type PlaySetup } from './menu/nav';
 import { careerRules, loadMenuData, stageMeta } from './menu/data';
 import { careerLine, loadingCard, menuHref } from './menu/menu';
@@ -170,14 +170,17 @@ async function runStage(play: PlaySetup | null) {
   let audio: AudioHandle | null = null;
   const actions = { restart: () => {}, recover: () => {}, applyGame: () => {}, applyDisplay: () => {}, applyHud: () => {} };
   const volumes = loadVolumes();
+  let pausedBackdropDrawn = false;
   const settingsHost: SettingsHost = {
     cameraNames: [], defaultCamera: 1, presetFov: () => 40,
     game: gameSettings, display, hud: hudSettings, volumes,
     applyGame: () => {
+      pausedBackdropDrawn = false;
       saveGameSettings(gameSettings);
       actions.applyGame();
     },
     applyDisplay: () => {
+      pausedBackdropDrawn = false;
       saveDisplaySettings(display);
       actions.applyDisplay();
     },
@@ -216,6 +219,7 @@ async function runStage(play: PlaySetup | null) {
     },
     onPause: (p) => {
       paused = p;
+      pausedBackdropDrawn = false;
       level?.hud && (level.hud.panelOpen = p);
       audio?.sys.setPaused(p);
     },
@@ -327,6 +331,8 @@ async function runStage(play: PlaySetup | null) {
   // the look (slice 5): conditions, fog, shadows, post. ?cond=morning|afternoon|sunset|night|fog (or stage),
   // ?post=0 (P toggles), ?quality=auto|high|medium|low, ?scale=0.5..1 (render scale)
   const gpu = gpuName(renderer);
+  const holdPausedBackdrop = softwareRenderer(gpu);
+  renderer.domElement.addEventListener('webglcontextrestored', () => { pausedBackdropDrawn = false; });
   /** Render scale pinned by ?scale= (a visit) or the render resolution setting; null = auto's ladder (or 1). */
   const pinnedScale = () => (params.has('scale') ? Math.min(Math.max(Number(params.get('scale')) || 1, 0.25), 1) : display.renderScale > 0 ? display.renderScale / 100 : null);
   /** The frame-rate limit: the setting, ?fps= for a visit; headless runs (autopilot, timescale) run uncapped. */
@@ -665,6 +671,7 @@ async function runStage(play: PlaySetup | null) {
   });
 
   const onResize = () => {
+    pausedBackdropDrawn = false;
     renderer.setSize(innerWidth, innerHeight);
     chase.camera.aspect = innerWidth / innerHeight;
     chase.camera.updateProjectionMatrix();
@@ -768,7 +775,6 @@ async function runStage(play: PlaySetup | null) {
   const camState = { position: sim.renderPos, forward: new THREE.Vector3(), velocity: vehicle.velocity };
   renderer.setAnimationLoop((now: number) => {
     if (!limiter.due(now)) return;
-    recordPureTvFrame();
     const frameDt = now - last;
     const realDt = Math.min(frameDt / 1000, 0.1);
     last = now;
@@ -789,6 +795,9 @@ async function runStage(play: PlaySetup | null) {
     const dt = running ? realDt * timeScale : 0;
 
     const { input, actions: pressed } = controls.poll();
+    const holdBackdrop = holdPausedBackdrop && paused && ready;
+    if (holdBackdrop && pausedBackdropDrawn) return;
+    recordPureTvFrame();
     if (running) {
       if (pressed.has('camera')) chase.cycle();
       if (pressed.has('livery')) model.setLivery(car.liveries[(liveryIndex = (liveryIndex + 1) % car.liveries.length)]);
@@ -858,6 +867,7 @@ async function runStage(play: PlaySetup | null) {
       ` · u km/h or mph · i speed dial · f3 this panel · n next stage · b direction · j weather`;
     const r0 = performance.now();
     look.render();
+    pausedBackdropDrawn = holdBackdrop;
     const info = renderer.info.render as unknown as { drawCalls: number; triangles: number };
     perf.frames.push({ dt: frameDt, step: sim.lastStepMs, inst: level.instMs ?? 0, render: performance.now() - r0,
       calls: info.drawCalls, tris: info.triangles, visible: level.visible?.() ?? 0, gpu: perf.gpu });
