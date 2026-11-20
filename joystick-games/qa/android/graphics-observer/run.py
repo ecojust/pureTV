@@ -463,6 +463,30 @@ class Diagnosis:
             time.sleep(.25)
         raise TimeoutError('No fresh stage canvas sample received')
 
+    def drive(self):
+        client = self.clients[0]
+        data, _ = original_plan()
+        step = json.loads(data)['steps'][33]
+        require(step['keys'] == ['UP'] and step['holdMs'] == 3000, 'Original acceleration step changed')
+        before = self.wait(lambda state: game(state).get('stage') == 'playing', 30, 'drive-ready')
+        with client.lock:
+            client.button('UP', 'down')
+            down = client.seq
+        try:
+            original.Acceptance.wait_sent_ack(self, client, down)
+            self.wait(lambda state: owner(state, client.identity).get('buttons', {}).get('UP') is True, 30, 'drive-held')
+            time.sleep(step['holdMs'] / 1000)
+            after = self.wait(lambda state: original.plan.matches(step['expect'], game(state), game(before)), step['timeoutSeconds'], 'drive-speed')
+            self.report['acceleration'] = {'originalIndex':34, 'step':step, 'before':game(before)['gameplay'], 'after':game(after)['gameplay'], 'downSeq':down}
+        finally:
+            with client.lock:
+                client.button('UP', 'tap', duration=180)
+                up = client.seq
+            original.Acceptance.wait_sent_ack(self, client, up)
+        self.report['acceleration']['upSeq'] = up
+        self.save()
+        self.capture('original-stage-accelerated')
+
     def menu(self, index, step):
         client = self.clients[0]
         before = self.menu_graphics(time.monotonic() + original.OBSERVER_SNAPSHOT_TIMEOUT); validated(before)
@@ -516,6 +540,7 @@ class Diagnosis:
             for index, step in self.steps: self.menu(index, step)
             self.capture('original-stage-running')
             self.canvas_result()
+            self.drive()
             client = self.clients[0]
             with client.lock: client.ping(); seq = client.seq
             original.Acceptance.wait_sent_ack(self, client, seq)
