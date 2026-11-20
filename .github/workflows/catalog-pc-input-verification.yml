@@ -1,7 +1,7 @@
 name: Six signed games on Windows and macOS
 on:
   push:
-    branches: [qa/expansion-six-desktop-20261120]
+    branches: [qa/expansion-six-desktop-sdk35-20261120]
   workflow_dispatch:
 permissions:
   contents: read
@@ -23,7 +23,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@v4
         with:
-          ref: d03513ef9f6d775bf0cd9530582826dce98cd6af
+          ref: 34236b9b8e287997335e90e1546cf7397aa2f041
           path: project
           persist-credentials: false
           sparse-checkout-cone-mode: false

@@ -18,9 +18,11 @@ result.mkdir(exist_ok=True)
 scratch = Path(os.environ['RUNNER_TEMP']) / 'desktop-input'
 scratch.mkdir(exist_ok=True)
 player = scratch / 'player'
-signed_commit = 'f1e41ebba5c58d6ab78a10eca07b3720bb2c5c79'
-subject_commit = 'd03513ef9f6d775bf0cd9530582826dce98cd6af'
+kart_commit = 'f1e41ebba5c58d6ab78a10eca07b3720bb2c5c79'
+upgrade_commit = 'b9dbfd704e5d45e0a8849e72ea6da6855c3c54b0'
+subject_commit = '34236b9b8e287997335e90e1546cf7397aa2f041'
 games = ['turbo-kart-rally', 'saber-magic-tower', 'operation-ironhold', 'lumenrift', 'kart-royale', 'clawd-pop']
+apk_commits = {slug: kart_commit if slug == 'kart-royale' else upgrade_commit for slug in games}
 pkgdir = tools / 'packages'
 
 def sha(path):
@@ -59,13 +61,14 @@ rows=json.loads((player/'catalog.json').read_text(encoding='utf-8'))
 listed=subprocess.check_output([*launcher,'--list','--language','en'], encoding='utf-8', timeout=60)
 assert [line.split()[0] for line in listed.splitlines()] == [row['id'] for row in rows]
 chrome=browser_binary()
-meta={'os':platform.platform(), 'machine':platform.machine(), 'browserPath':str(chrome), 'APKCommit':signed_commit,
+meta={'os':platform.platform(), 'machine':platform.machine(), 'browserPath':str(chrome), 'apkCommits':apk_commits,
       'hostCommit':subject_commit, 'hostSha256':sha(player/'host.py'), 'bridgeSha256':sha(player/'pc-bridge.js'),
       'packages':checksums, 'launcherGameCount':len(rows),'workflowRef':os.environ['GITHUB_SHA'],'results':{}}
 save(result/'environment.json',meta)
 for slug in games:
     row=next(r for r in rows if r['id']==slug)
-    assert row['url'].startswith('https://raw.githubusercontent.com/ecojust/pureTV/'+signed_commit+'/')
+    version = '0.1.6' if slug == 'kart-royale' else '0.1.1'
+    assert row['url'] == f'https://raw.githubusercontent.com/ecojust/pureTV/{apk_commits[slug]}/joystick-games/{slug}/{slug}-{version}.apk'
     # pc.py expects a .zip name; give it an exact byte copy of the signed APK.
     target=scratch/(slug+'.zip')
     with urlopen(Request(row['url'],headers={'User-Agent':'pureTV-Desktop-QA'}),timeout=90) as stream,target.open('wb') as f:
