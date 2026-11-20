@@ -107,6 +107,9 @@ BACKROAD_MENU_SOURCES = {
     'joystick-games/backroad-rally/src/upstream/src/menu/nav.ts': '4d7d57397b4dc816fb270b7bf84c59d2b6c1146f10aa879f856d89eb317391f8',
 }
 NIGHT_LOW_RELOAD_APK = '66e2589ece8a13bc03d9796259b2662aef34c56c166265db0a63d3baa2b72c91'
+NIGHT_LOW_RELOAD_DELIVERY = Path('joystick-games/night-racer/docs/android-delivery')
+NIGHT_LOW_RELOAD_INPUTS = (NIGHT_LOW_RELOAD_DELIVERY / 'original-export/evidence' /
+                           'joystick-android-runtime-night-racer/night-racer/verified-inputs/artifact-source')
 NIGHT_LOW_RELOAD_SOURCES = {
     'joystick-games/night-racer/src/src/main.js': 'ad1edb9d785799db5cd357d614005d2e044b79bed7c7635e019e693e65b49004',
     'joystick-games/night-racer/src/src/tv-adapter.js': 'e6feee4583e79cebcabf86a038699ca7062cd960d7a732386c5817ed28164d23',
@@ -815,9 +818,17 @@ class Acceptance:
                 and game.get('gameplay', {}).get('menu', {}).get('root') == 'volume'
                 and game.get('gameplay', {}).get('menu', {}).get('focusIndex') == 1):
             return None
+        # This exception belongs to one signed historical APK. Later editions can change
+        # their controller implementation without changing the proof for these bytes.
+        receipt = json.loads((ROOT / NIGHT_LOW_RELOAD_DELIVERY / 'original-package-proof/signing-receipt.json').read_bytes())
+        assert (receipt['sha256'] == NIGHT_LOW_RELOAD_APK and receipt['bytes'] == self.report['apk']['bytes']
+                and receipt['sourceSha'] == '315f8889ea677ed6a9211bf7d66c8c78dff57f01'
+                and receipt['signatureVerified'] is True), 'Night reload receipt changed'
         for name, digest in NIGHT_LOW_RELOAD_SOURCES.items():
-            assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, 'Night reload source proof changed'
+            archived = file_info(ROOT / NIGHT_LOW_RELOAD_INPUTS / name)
+            assert archived == receipt['sourceInputs'][name] and archived['sha256'] == digest, 'Night reload source proof changed'
         return {'kind': 'exact-apk-module-constant-high-to-low', 'apkSha256': NIGHT_LOW_RELOAD_APK,
+                'originalSourceCommit': receipt['sourceSha'],
                 'sourceSha256': dict(NIGHT_LOW_RELOAD_SOURCES), 'documentEpochAvailable': False,
                 'postReloadFreshPollsRequired': 2}
 
