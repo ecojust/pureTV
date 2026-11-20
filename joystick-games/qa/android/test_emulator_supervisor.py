@@ -65,7 +65,7 @@ class SupervisorTests(unittest.TestCase):
         self.entry.parent.mkdir(parents=True); shutil.copyfile(self.binary, self.entry); self.entry.chmod(0o755)
         self.original = self.entry.read_bytes(); self.output = self.root / 'observation'
         self.env = {'SUPERVISE_PON_EMULATOR': 'true', 'PURETV_DISPOSABLE_EMULATOR': '1', 'GITHUB_ACTIONS': 'true',
-                    'PON_DISABLE_VULKAN': 'false', 'PON_CAPTURE_QEMU_STACK': 'false',
+                    'PON_DISABLE_VULKAN': 'false', 'PON_CAPTURE_QEMU_STACK': 'false', 'PON_PROFILE': 'original',
                     'GAME': 'ponpoko-kart', 'ARTIFACT_SOURCE': '8f283c73f52f857777306eafc88f710262367834',
                     'ARTIFACT_RUN': '44597115244', 'ARTIFACT_EXPORT': '4249f5c0ec3053a1dec652a7880a040e1bb143f0',
                     'ARTIFACT_ID': '', 'ARTIFACT_ATTEMPT': '', 'GITHUB_SHA': 'a' * 40, 'GITHUB_RUN_ID': '123',
@@ -191,13 +191,20 @@ class SupervisorTests(unittest.TestCase):
                     with self.assertRaises(AssertionError, msg=key): exec(guard, {'os': os})
         options = next(line.strip().removeprefix('emulator-options: ') for line in workflow.splitlines()
                        if line.strip().startswith('emulator-options: '))
-        selection = "${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}"
+        selection = "${{ (startsWith(inputs.pon_profile, 'adaptive-') || inputs.pon_disable_vulkan) && ' -feature -Vulkan' || '' }}"
+        backend = "${{ startsWith(inputs.pon_profile, 'adaptive-') && 'lavapipe' || 'swiftshader_indirect' }}"
+        self.assertEqual(options.count(backend), 1)
+        self.assertEqual(options.replace(backend, 'lavapipe').replace(selection, ' -feature -Vulkan').split(),
+                         '-no-window -memory 2048 -gpu lavapipe -noaudio -no-boot-anim -no-snapshot -feature -Vulkan'.split())
+        options = options.replace(backend, 'swiftshader_indirect')
         self.assertEqual(options.count(selection), 1)
         prefix = ['-port', '5554', '-avd', 'JoystickGamesValidation']
         self.assertEqual(prefix + options.replace(selection, '').split(), m.EXPECTED_ARGS)
         self.assertEqual(prefix + options.replace(selection, ' -feature -Vulkan').split(),
                          m.EXPECTED_ARGS + ['-feature', '-Vulkan'])
-        self.assertIn("emulator-build: '16970787'", workflow); self.assertIn('api-level: 36', workflow)
+        self.assertIn("emulator-build: '16970787'", workflow); self.assertIn("api-level: ${{ inputs.pon_profile == 'adaptive-api34-720p' && '34' || '36' }}", workflow)
+        self.assertIn("arch: ${{ inputs.pon_profile == 'adaptive-api34-720p' && 'x86' || 'x86_64' }}", workflow)
+        self.assertIn("profile: ${{ inputs.pon_profile == 'adaptive-api34-720p' && 'tv_720p' || 'tv_1080p' }}", workflow)
         declared = workflow.split('      pon_disable_vulkan:', 1)[1].split('\n\nconcurrency:', 1)[0]
         self.assertIn('default: false', declared); self.assertIn('type: boolean', declared)
 
@@ -340,7 +347,8 @@ class SupervisorTests(unittest.TestCase):
 
     def test_real_nonzero_sigkill_sigterm_and_bounded_logs(self):
         for mode, code in [('nonzero', 23), ('signal9', -9), ('signal15', -15), ('output', 27)]:
-            result = self.child_case(mode, mode)
+            # The output fixture performs 1.5M unbuffered stderr writes. Keep its byte limits exact.
+            result = self.child_case(mode, mode, seconds=15 if mode == 'output' else 2)
             self.assertEqual(result['returnCode'], code); self.assertIsNone(result['intervention'])
             self.assertTrue(result['originalExecutableUnchanged'])
             self.assertTrue(all(value <= 4096 for value in result['bytesRetained'].values()))
