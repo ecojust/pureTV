@@ -12,12 +12,17 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parents[3]
 BASE = "ec5161417eaaf4b6be0585d04da60e59fb8d060f"
 BUMBLE = "84eedab7caf4e7feb2d4292e64bf4468e8f6c6b0"
+STARBASE = "a370be712a803cb65d6b9077399c9ae718bb0b6b"
+SOURCE_DOCS = "ff66f9d3976f2a888c69b61d9ef6cf3c73221909"
 EARLIER = "18836937d8564c0e1534e1798c1dfb3096164bb0"
 UPSTREAM = "a7051c34fe2e7550fd206e6272f758df171855b0"
 UPSTREAM_TREE = "85ea19c4fae52bf13e9f7648c7d28d40a4f043e3"
 UPSTREAM_REPO = "triptych/web-games-andrew"
 BASE_EVIDENCE = (44715165610, "888897d75faf073b758c0759b080a8f0ad276b3b")
 BUMBLE_EVIDENCE = (44716017753, "0acf8ec637dc7e5551982b737f25de5f62377fb9")
+STARBASE_EVIDENCE = (44717389566, "d2f76cb6efc48667137c80c506a642abca5dbbc8")
+PRODUCTION = {"bumble-basket": BUMBLE, "starbase-spooky": STARBASE}
+EVIDENCE = {"bumble-basket": BUMBLE_EVIDENCE, "starbase-spooky": STARBASE_EVIDENCE}
 GAMES = (
     "alchemists-lattice", "story-thief", "bumble-basket", "starsling", "solder-and-rain",
     "oathstones", "neon-arcana", "atlas-of-ink", "starbase-spooky",
@@ -67,7 +72,7 @@ class FrozenGame:
     def __init__(self, slug):
         self.slug = slug
         self.prefix = f"joystick-games/{slug}"
-        self.revision = BUMBLE if slug == "bumble-basket" else BASE
+        self.revision = PRODUCTION.get(slug, BASE)
         self.files = local_tree(self.revision, self.prefix)
 
     def read(self, path):
@@ -172,11 +177,13 @@ def check_identity(source, meta, registry, claimed_keys):
 
 
 def check_readme(source):
-    folder = ROOT / source.prefix
-    readme = (folder / "README.md").read_text(encoding="utf-8")
+    # Audit player instructions at their source-document revision; downloads are separately verified.
+    revision = STARBASE if source.slug == "starbase-spooky" else SOURCE_DOCS
+    files = local_tree(revision, source.prefix)
+    readme = git("cat-file", "blob", files["README.md"]).decode().partition("<!-- puzzle-downloads -->")[0]
     links = set(re.findall(r"\]\(([^ )#]+)", readme))
     local = {path for path in links if "://" not in path}
-    missing = sorted(path for path in local if not (folder / path).exists())
+    missing = sorted(path for path in local if path not in files)
     require(not missing, f"Missing README links for {source.slug}: {missing}")
     return len(local)
 
@@ -187,7 +194,7 @@ def check_browser(source):
     exact_dist = {p.removeprefix("dist/"): digest(source.read(p)) for p in source.files if p.startswith("dist/")}
     require(recorded["dist"] == exact_dist, f"SDK run did not use the frozen {source.slug} dist")
     commit = recorded["evidenceCommit"]
-    expected = BUMBLE_EVIDENCE if source.slug == "bumble-basket" else BASE_EVIDENCE
+    expected = EVIDENCE.get(source.slug, BASE_EVIDENCE)
     require((recorded["verificationRun"], commit) == expected, "Unexpected SDK evidence identity")
     original = remote_tree("ecojust/pureTV", commit)
     # The imported report adds provenance only. Recompare with its original bytes and screenshot.
@@ -218,7 +225,8 @@ def main():
     registry = json.loads(git("show", BASE + ":joystick-games/catalog-registry.json"))["games"]
     raw = remote_tree(UPSTREAM_REPO, UPSTREAM_TREE)
     report = {"upstream": UPSTREAM, "upstreamTree": UPSTREAM_TREE, "baseProduction": BASE,
-              "bumbleBasketProduction": BUMBLE, "earlierProduction": EARLIER, "games": {}}
+              "bumbleBasketProduction": BUMBLE, "starbaseSpookyProduction": STARBASE,
+              "sourceDocumentation": SOURCE_DOCS, "earlierProduction": EARLIER, "games": {}}
     keys = set()
     for slug in GAMES:
         source = FrozenGame(slug)
@@ -228,6 +236,10 @@ def main():
              "storageKeys": sorted(meta["storageKeys"]), "production": source.revision,
              "source": check_source(source, meta, raw), "browser": check_browser(source),
              "localReadmeTargetsVerified": check_readme(source)}
+        if slug == "starbase-spooky":
+            require((meta["version"], meta["versionCode"], meta["androidTargetSdk"]) == ("0.1.2", 3, 35),
+                    "Starbase Android TV target or version differs")
+            r["androidTargetSdk"] = meta["androidTargetSdk"]
         old = local_tree(EARLIER, source.prefix)
         r["baseMatchesEarlier"] = old == local_tree(BASE, source.prefix)
         report["games"][slug] = r
