@@ -1,0 +1,2241 @@
+{"originalNpmTestConfigured":true,"scope":"Configured original tests only; an absent script is recorded, not claimed as tested"}
+
+> puretv-last-track@0.1.1 test
+> node --test "tests/**/*.test.mjs" "src/upstream/tests/**/*.test.js"
+
+TAP version 13
+# Subtest: pickFormat prefers ogg/opus when supported, else mp3
+ok 1 - pickFormat prefers ogg/opus when supported, else mp3
+  ---
+  duration_ms: 0.531024
+  type: 'test'
+  ...
+# Subtest: every track has both encodings on disk
+ok 2 - every track has both encodings on disk
+  ---
+  duration_ms: 1.162972
+  type: 'test'
+  ...
+# Subtest: scenePlan: combat layer only in race and clamped
+ok 3 - scenePlan: combat layer only in race and clamped
+  ---
+  duration_ms: 0.581294
+  type: 'test'
+  ...
+# Subtest: eventWeight scales with proximity and ignores unknown events
+ok 4 - eventWeight scales with proximity and ignores unknown events
+  ---
+  duration_ms: 0.145268
+  type: 'test'
+  ...
+# Subtest: combat model rises on explosions and decays back to silence
+ok 5 - combat model rises on explosions and decays back to silence
+  ---
+  duration_ms: 1.269274
+  type: 'test'
+  ...
+# Subtest: player is inert without AudioContext and remembers scene
+ok 6 - player is inert without AudioContext and remembers scene
+  ---
+  duration_ms: 0.373398
+  type: 'test'
+  ...
+# Subtest: player with fake context: scene crossfade and combat layer
+ok 7 - player with fake context: scene crossfade and combat layer
+  ---
+  duration_ms: 20.367876
+  type: 'test'
+  ...
+# Subtest: sanitizeParams: snake_case keys, trimmed strings, rounded numbers, booleans as 0/1, junk dropped, capped
+ok 8 - sanitizeParams: snake_case keys, trimmed strings, rounded numbers, booleans as 0/1, junk dropped, capped
+  ---
+  duration_ms: 1.905704
+  type: 'test'
+  ...
+# Subtest: analyticsEnabled: needs gtag, opt-in, no DNT, and not localhost unless ?ga=debug
+ok 9 - analyticsEnabled: needs gtag, opt-in, no DNT, and not localhost unless ?ga=debug
+  ---
+  duration_ms: 0.33672
+  type: 'test'
+  ...
+# Subtest: track: sends through gtag, dedupes within the window, honours opt-out/DNT/localhost, never throws
+ok 10 - track: sends through gtag, dedupes within the window, honours opt-out/DNT/localhost, never throws
+  ---
+  duration_ms: 1.023977
+  type: 'test'
+  ...
+# Subtest: event builders from a fake race result
+ok 11 - event builders from a fake race result
+  ---
+  duration_ms: 0.73151
+  type: 'test'
+  ...
+# Subtest: settings: analytics defaults on and normalises
+ok 12 - settings: analytics defaults on and normalises
+  ---
+  duration_ms: 0.254109
+  type: 'test'
+  ...
+# Subtest: wiring: bus events become analytics calls; shots/wrecks are aggregated; no per-shot events
+ok 13 - wiring: bus events become analytics calls; shots/wrecks are aggregated; no per-shot events
+  ---
+  duration_ms: 1.025208
+  type: 'test'
+  ...
+# Subtest: scrapyard: geometry
+ok 14 - scrapyard: geometry
+  ---
+  duration_ms: 33.366074
+  type: 'test'
+  ...
+# Subtest: scrapyard: project round-trips and signs
+ok 15 - scrapyard: project round-trips and signs
+  ---
+  duration_ms: 7.987609
+  type: 'test'
+  ...
+# Subtest: scrapyard: edges, grid, pickups
+ok 16 - scrapyard: edges, grid, pickups
+  ---
+  duration_ms: 6.070285
+  type: 'test'
+  ...
+# Subtest: strip: geometry
+ok 17 - strip: geometry
+  ---
+  duration_ms: 48.258946
+  type: 'test'
+  ...
+# Subtest: strip: project round-trips and signs
+ok 18 - strip: project round-trips and signs
+  ---
+  duration_ms: 11.97225
+  type: 'test'
+  ...
+# Subtest: strip: edges, grid, pickups
+ok 19 - strip: edges, grid, pickups
+  ---
+  duration_ms: 2.861972
+  type: 'test'
+  ...
+# Subtest: mojave: geometry
+ok 20 - mojave: geometry
+  ---
+  duration_ms: 37.954713
+  type: 'test'
+  ...
+# Subtest: mojave: project round-trips and signs
+ok 21 - mojave: project round-trips and signs
+  ---
+  duration_ms: 5.051284
+  type: 'test'
+  ...
+# Subtest: mojave: edges, grid, pickups
+ok 22 - mojave: edges, grid, pickups
+  ---
+  duration_ms: 1.45677
+  type: 'test'
+  ...
+# Subtest: bayou: geometry
+ok 23 - bayou: geometry
+  ---
+  duration_ms: 14.051373
+  type: 'test'
+  ...
+# Subtest: bayou: project round-trips and signs
+ok 24 - bayou: project round-trips and signs
+  ---
+  duration_ms: 5.066748
+  type: 'test'
+  ...
+# Subtest: bayou: edges, grid, pickups
+ok 25 - bayou: edges, grid, pickups
+  ---
+  duration_ms: 2.391757
+  type: 'test'
+  ...
+# Subtest: lakeshore: geometry
+ok 26 - lakeshore: geometry
+  ---
+  duration_ms: 32.288939
+  type: 'test'
+  ...
+# Subtest: lakeshore: project round-trips and signs
+ok 27 - lakeshore: project round-trips and signs
+  ---
+  duration_ms: 2.234969
+  type: 'test'
+  ...
+# Subtest: lakeshore: edges, grid, pickups
+ok 28 - lakeshore: edges, grid, pickups
+  ---
+  duration_ms: 0.435446
+  type: 'test'
+  ...
+# Subtest: badlands: geometry
+ok 29 - badlands: geometry
+  ---
+  duration_ms: 51.216839
+  type: 'test'
+  ...
+# Subtest: badlands: project round-trips and signs
+ok 30 - badlands: project round-trips and signs
+  ---
+  duration_ms: 2.990791
+  type: 'test'
+  ...
+# Subtest: badlands: edges, grid, pickups
+ok 31 - badlands: edges, grid, pickups
+  ---
+  duration_ms: 0.997106
+  type: 'test'
+  ...
+# Subtest: spillway: geometry
+ok 32 - spillway: geometry
+  ---
+  duration_ms: 49.435183
+  type: 'test'
+  ...
+# Subtest: spillway: project round-trips and signs
+ok 33 - spillway: project round-trips and signs
+  ---
+  duration_ms: 1.874952
+  type: 'test'
+  ...
+# Subtest: spillway: edges, grid, pickups
+ok 34 - spillway: edges, grid, pickups
+  ---
+  duration_ms: 0.646375
+  type: 'test'
+  ...
+# Subtest: rustbelt: geometry
+ok 35 - rustbelt: geometry
+  ---
+  duration_ms: 16.6957
+  type: 'test'
+  ...
+# Subtest: rustbelt: project round-trips and signs
+ok 36 - rustbelt: project round-trips and signs
+  ---
+  duration_ms: 2.029804
+  type: 'test'
+  ...
+# Subtest: rustbelt: edges, grid, pickups
+ok 37 - rustbelt: edges, grid, pickups
+  ---
+  duration_ms: 0.623194
+  type: 'test'
+  ...
+# Subtest: harbor: geometry
+ok 38 - harbor: geometry
+  ---
+  duration_ms: 48.400408
+  type: 'test'
+  ...
+# Subtest: harbor: project round-trips and signs
+ok 39 - harbor: project round-trips and signs
+  ---
+  duration_ms: 4.188614
+  type: 'test'
+  ...
+# Subtest: harbor: edges, grid, pickups
+ok 40 - harbor: edges, grid, pickups
+  ---
+  duration_ms: 5.047518
+  type: 'test'
+  ...
+# Subtest: liberty: geometry
+ok 41 - liberty: geometry
+  ---
+  duration_ms: 84.921908
+  type: 'test'
+  ...
+# Subtest: liberty: project round-trips and signs
+ok 42 - liberty: project round-trips and signs
+  ---
+  duration_ms: 2.951658
+  type: 'test'
+  ...
+# Subtest: liberty: edges, grid, pickups
+ok 43 - liberty: edges, grid, pickups
+  ---
+  duration_ms: 0.945444
+  type: 'test'
+  ...
+# Subtest: win tracks are the game tracks (the ones the track select lists)
+ok 44 - win tracks are the game tracks (the ones the track select lists)
+  ---
+  duration_ms: 1.006318
+  type: 'test'
+  ...
+# Subtest: allTracksPassed: needs every track; an empty list never counts as passed
+ok 45 - allTracksPassed: needs every track; an empty list never counts as passed
+  ---
+  duration_ms: 0.178817
+  type: 'test'
+  ...
+# Subtest: winDue: the race that adds the last missing pass wins, once per save
+ok 46 - winDue: the race that adds the last missing pass wins, once per save
+  ---
+  duration_ms: 0.14604
+  type: 'test'
+  ...
+# Subtest: winDue: an older save that already passed every track wins on its next race, once
+ok 47 - winDue: an older save that already passed every track wins on its next race, once
+  ---
+  duration_ms: 0.358728
+  type: 'test'
+  ...
+# Subtest: applyRaceResult: a top-three clean finish on the last track wins the career, through the economy
+ok 48 - applyRaceResult: a top-three clean finish on the last track wins the career, through the economy
+  ---
+  duration_ms: 0.37534
+  type: 'test'
+  ...
+# Subtest: winShown defaults to false, and only a true value counts
+ok 49 - winShown defaults to false, and only a true value counts
+  ---
+  duration_ms: 0.150791
+  type: 'test'
+  ...
+# Subtest: score: prize money + kill bonuses + contract net, and nothing else
+ok 50 - score: prize money + kill bonuses + contract net, and nothing else
+  ---
+  duration_ms: 0.108959
+  type: 'test'
+  ...
+# Subtest: score follows the economy: race prizes, kill bonuses and settled contracts add up to the earned totals
+ok 51 - score follows the economy: race prizes, kill bonuses and settled contracts add up to the earned totals
+  ---
+  duration_ms: 0.228268
+  type: 'test'
+  ...
+# Subtest: a save without earnings (an older save) starts the score at zero and keeps a negative contract net
+ok 52 - a save without earnings (an older save) starts the score at zero and keeps a negative contract net
+  ---
+  duration_ms: 0.280608
+  type: 'test'
+  ...
+# Subtest: finalStats: money, score with its parts, and the passed count
+ok 53 - finalStats: money, score with its parts, and the passed count
+  ---
+  duration_ms: 0.360941
+  type: 'test'
+  ...
+# Subtest: the board names racers from the field: one bid per patron, quota 1..3 rotating with races run
+ok 54 - the board names racers from the field: one bid per patron, quota 1..3 rotating with races run
+  ---
+  duration_ms: 2.05456
+  type: 'test'
+  ...
+# Subtest: no track, no bids: the board is empty until the chosen track has a field
+ok 55 - no track, no bids: the board is empty until the chosen track has a field
+  ---
+  duration_ms: 0.159575
+  type: 'test'
+  ...
+# Subtest: named racers are pure and never outnumber the field
+ok 56 - named racers are pure and never outnumber the field
+  ---
+  duration_ms: 0.215816
+  type: 'test'
+  ...
+# Subtest: accepting locks the bid in with its named racers; one contract at a time; unknown patrons and empty fields are refused
+ok 57 - accepting locks the bid in with its named racers; one contract at a time; unknown patrons and empty fields are refused
+  ---
+  duration_ms: 0.255193
+  type: 'test'
+  ...
+# Subtest: settling: every named racer wrecked pays the bounty and clears the contract; unnamed wrecks do not matter
+ok 58 - settling: every named racer wrecked pays the bounty and clears the contract; unnamed wrecks do not matter
+  ---
+  duration_ms: 0.255451
+  type: 'test'
+  ...
+# Subtest: settling: missing any named racer takes the small penalty, however many others were wrecked
+ok 59 - settling: missing any named racer takes the small penalty, however many others were wrecked
+  ---
+  duration_ms: 0.175003
+  type: 'test'
+  ...
+# Subtest: practice and no-contract races leave everything alone
+ok 60 - practice and no-contract races leave everything alone
+  ---
+  duration_ms: 0.105077
+  type: 'test'
+  ...
+# Subtest: HUD progress counts only the named racers the player has wrecked
+ok 61 - HUD progress counts only the named racers the player has wrecked
+  ---
+  duration_ms: 0.124223
+  type: 'test'
+  ...
+# Subtest: save: a valid contract survives a round trip; malformed ones (no named racers, legacy quota-only) are dropped
+ok 62 - save: a valid contract survives a round trip; malformed ones (no named racers, legacy quota-only) are dropped
+  ---
+  duration_ms: 1.514943
+  type: 'test'
+  ...
+# Subtest: palette
+ok 63 - palette
+  ---
+  duration_ms: 0.985103
+  type: 'test'
+  ...
+# Subtest: cars/weapons/drivers consistent
+ok 64 - cars/weapons/drivers consistent
+  ---
+  duration_ms: 1.216217
+  type: 'test'
+  ...
+# Subtest: upgrades
+ok 65 - upgrades
+  ---
+  duration_ms: 0.326006
+  type: 'test'
+  ...
+# Subtest: tracks index
+ok 66 - tracks index
+  ---
+  duration_ms: 0.265206
+  type: 'test'
+  ...
+# Subtest: track progression: prizes escalate, ids unique
+ok 67 - track progression: prizes escalate, ids unique
+  ---
+  duration_ms: 1.492193
+  type: 'test'
+  ...
+# Subtest: prizes & bills
+ok 68 - prizes & bills
+  ---
+  duration_ms: 0.970936
+  type: 'test'
+  ...
+# Subtest: balance: first upgrade affordable from start, second within ~2 races
+ok 69 - balance: first upgrade affordable from start, second within ~2 races
+  ---
+  duration_ms: 0.300112
+  type: 'test'
+  ...
+# Subtest: upgrades are immutable and bounded
+ok 70 - upgrades are immutable and bounded
+  ---
+  duration_ms: 0.26407
+  type: 'test'
+  ...
+# Subtest: weapons, slots, ammo
+ok 71 - weapons, slots, ammo
+  ---
+  duration_ms: 0.948181
+  type: 'test'
+  ...
+# Subtest: repair
+ok 72 - repair
+  ---
+  duration_ms: 0.302287
+  type: 'test'
+  ...
+# Subtest: applyRaceResult
+ok 73 - applyRaceResult
+  ---
+  duration_ms: 0.374405
+  type: 'test'
+  ...
+# Subtest: a track is passed by a top-three finish without a wreck; any other result leaves it unpassed
+ok 74 - a track is passed by a top-three finish without a wreck; any other result leaves it unpassed
+  ---
+  duration_ms: 0.374946
+  type: 'test'
+  ...
+# Subtest: every track can be raced: passing one does not unlock or lock the others
+ok 75 - every track can be raced: passing one does not unlock or lock the others
+  ---
+  duration_ms: 0.123944
+  type: 'test'
+  ...
+# Subtest: gullwing: three weapon slots, light and fast, with ram spikes fitted by default
+ok 76 - gullwing: three weapon slots, light and fast, with ram spikes fitted by default
+  ---
+  duration_ms: 1.363089
+  type: 'test'
+  ...
+# Subtest: rhino: heavy, slow, armoured, and the only car that keeps its line in the mud
+ok 77 - rhino: heavy, slow, armoured, and the only car that keeps its line in the mud
+  ---
+  duration_ms: 0.230774
+  type: 'test'
+  ...
+# Subtest: the offroad trait flows into the stats block the physics reads
+ok 78 - the offroad trait flows into the stats block the physics reads
+  ---
+  duration_ms: 0.179869
+  type: 'test'
+  ...
+# Subtest: choosing a car that comes with ram spikes fits them; the other cars start bare
+ok 79 - choosing a car that comes with ram spikes fits them; the other cars start bare
+  ---
+  duration_ms: 0.291616
+  type: 'test'
+  ...
+# Subtest: the new pilots race the new cars and the field has all five cars represented
+ok 80 - the new pilots race the new cars and the field has all five cars represented
+  ---
+  duration_ms: 0.255546
+  type: 'test'
+  ...
+# Subtest: the story: a premise and four chapters, each with text
+ok 81 - the story: a premise and four chapters, each with text
+  ---
+  duration_ms: 0.135697
+  type: 'test'
+  ...
+# Subtest: race config
+ok 82 - race config
+  ---
+  duration_ms: 3.205542
+  type: 'test'
+  ...
+# Subtest: practice
+ok 83 - practice
+  ---
+  duration_ms: 0.242506
+  type: 'test'
+  ...
+# Subtest: fieldFor: 4 distinct rivals per track, harder on later tracks, every driver races somewhere
+ok 84 - fieldFor: 4 distinct rivals per track, harder on later tracks, every driver races somewhere
+  ---
+  duration_ms: 0.67363
+  type: 'test'
+  ...
+# Subtest: default, roundtrip, reset
+ok 85 - default, roundtrip, reset
+  ---
+  duration_ms: 1.619321
+  type: 'test'
+  ...
+# Subtest: corrupt / hostile data never throws
+ok 86 - corrupt / hostile data never throws
+  ---
+  duration_ms: 0.397417
+  type: 'test'
+  ...
+# Subtest: terminator: expensive, one slot, and every car can fit it once its slot is free
+ok 87 - terminator: expensive, one slot, and every car can fit it once its slot is free
+  ---
+  duration_ms: 0.851224
+  type: 'test'
+  ...
+# Subtest: terminator: only one fits per car, and the wasp (one slot) must sell its machinegun first
+ok 88 - terminator: only one fits per car, and the wasp (one slot) must sell its machinegun first
+  ---
+  duration_ms: 0.19613
+  type: 'test'
+  ...
+# Subtest: each car has its own cockpit: the Wasp is lowest, the Bulwark highest, and no two share an eye height
+ok 89 - each car has its own cockpit: the Wasp is lowest, the Bulwark highest, and no two share an eye height
+  ---
+  duration_ms: 2.404782
+  type: 'test'
+  ...
+# Subtest: the eye sits a head below each roof over the seat: roofs 1.11 / 1.46 / 1.89 m (scaled body), less about 0.2 m
+ok 90 - the eye sits a head below each roof over the seat: roofs 1.11 / 1.46 / 1.89 m (scaled body), less about 0.2 m
+  ---
+  duration_ms: 1.178154
+  type: 'test'
+  ...
+# Subtest: the camera follows the model it is given: switching to a rival changes the cockpit, an unknown model falls back to the hammer
+ok 91 - the camera follows the model it is given: switching to a rival changes the cockpit, an unknown model falls back to the hammer
+  ---
+  duration_ms: 0.987005
+  type: 'test'
+  ...
+# Subtest: debris physics: gravity pulls, ground bounces lose energy, pieces come to rest on the ground and expire
+ok 92 - debris physics: gravity pulls, ground bounces lose energy, pieces come to rest on the ground and expire
+  ---
+  duration_ms: 3.089245
+  type: 'test'
+  ...
+# Subtest: debris pools: bounded, oldest slot is reused, burning pieces emit trail callbacks
+ok 93 - debris pools: bounded, oldest slot is reused, burning pieces emit trail callbacks
+  ---
+  duration_ms: 1.925796
+  type: 'test'
+  ...
+# Subtest: debris is deterministic for a seed and allocation-free in step()
+ok 94 - debris is deterministic for a seed and allocation-free in step()
+  ---
+  duration_ms: 13.498504
+  type: 'test'
+  ...
+# Subtest: planPart: launches away from the car, scaled by power; every sim part has a debris spec
+ok 95 - planPart: launches away from the car, scaled by power; every sim part has a debris spec
+  ---
+  duration_ms: 0.261579
+  type: 'test'
+  ...
+# Subtest: createDebris renders headlessly: spawn, update, instanced matrices move, dispose
+ok 96 - createDebris renders headlessly: spawn, update, instanced matrices move, dispose
+  ---
+  duration_ms: 7.337171
+  type: 'test'
+  ...
+# Subtest: impact feel: wrecks of the camera car slow time and shake hard, distant events barely register, nothing for no camera car
+ok 97 - impact feel: wrecks of the camera car slow time and shake hard, distant events barely register, nothing for no camera car
+  ---
+  duration_ms: 0.321149
+  type: 'test'
+  ...
+# Subtest: TimeScaler: hit-stop freezes briefly, slow-mo holds then eases back to real time, stacking takes the strongest
+ok 98 - TimeScaler: hit-stop freezes briefly, slow-mo holds then eases back to real time, stacking takes the strongest
+  ---
+  duration_ms: 3.596317
+  type: 'test'
+  ...
+# Subtest: effects: mines (blinking), oil slicks, flames and oiled cars render headlessly and dispose
+ok 99 - effects: mines (blinking), oil slicks, flames and oiled cars render headlessly and dispose
+  ---
+  duration_ms: 47.405891
+  type: 'test'
+  ...
+# Subtest: a burst has the asked number of sparks, all at the centre, moving outward at 45-100% of the speed
+ok 100 - a burst has the asked number of sparks, all at the centre, moving outward at 45-100% of the speed
+  ---
+  duration_ms: 2.206924
+  type: 'test'
+  ...
+# Subtest: a burst spreads over the sphere: sparks go up, down and sideways
+ok 101 - a burst spreads over the sphere: sparks go up, down and sideways
+  ---
+  duration_ms: 0.296146
+  type: 'test'
+  ...
+# Subtest: a spark falls under gravity and drag, and is spent after its life
+ok 102 - a spark falls under gravity and drag, and is spent after its life
+  ---
+  duration_ms: 0.281813
+  type: 'test'
+  ...
+# Subtest: a shell climbs straight up from the ground under its burst point, with no gravity, and bursts at that height
+ok 103 - a shell climbs straight up from the ground under its burst point, with no gravity, and bursts at that height
+  ---
+  duration_ms: 0.179013
+  type: 'test'
+  ...
+# Subtest: a spark that reaches the ground is spent, even before its life is over
+ok 104 - a spark that reaches the ground is spent, even before its life is over
+  ---
+  duration_ms: 0.107175
+  type: 'test'
+  ...
+# Subtest: sparks fade from full brightness to nothing over their life
+ok 105 - sparks fade from full brightness to nothing over their life
+  ---
+  duration_ms: 0.114601
+  type: 'test'
+  ...
+# Subtest: createFireworks: a launched shell bursts when it ends, and the sparks die out
+ok 106 - createFireworks: a launched shell bursts when it ends, and the sparks die out
+  ---
+  duration_ms: 4.026392
+  type: 'test'
+  ...
+# Subtest: createFireworks never holds more than its capacity
+ok 107 - createFireworks never holds more than its capacity
+  ---
+  duration_ms: 3.517247
+  type: 'test'
+  ...
+# Subtest: burstInFrame: a burst is 35-70 m out, in the upper-middle of the camera frame, and in the air
+ok 108 - burstInFrame: a burst is 35-70 m out, in the upper-middle of the camera frame, and in the air
+  ---
+  duration_ms: 3.4151
+  type: 'test'
+  ...
+# Subtest: burstInFrame: a camera looking down at the road has no air to burst in
+ok 109 - burstInFrame: a camera looking down at the road has no air to burst in
+  ---
+  duration_ms: 0.505458
+  type: 'test'
+  ...
+# Subtest: a missile is drawn between its two snapshots by the same factor as the cars
+ok 110 - a missile is drawn between its two snapshots by the same factor as the cars
+  ---
+  duration_ms: 0.92128
+  type: 'test'
+  ...
+# Subtest: alpha at the newest snapshot draws the missile where the sim has it; before it, the blend clamps to the older one
+ok 111 - alpha at the newest snapshot draws the missile where the sim has it; before it, the blend clamps to the older one
+  ---
+  duration_ms: 0.277979
+  type: 'test'
+  ...
+# Subtest: the heading blends the short way round
+ok 112 - the heading blends the short way round
+  ---
+  duration_ms: 0.202012
+  type: 'test'
+  ...
+# Subtest: a new missile, or no earlier snapshot, is drawn where it is; no projectiles stays empty
+ok 113 - a new missile, or no earlier snapshot, is drawn where it is; no projectiles stays empty
+  ---
+  duration_ms: 1.081175
+  type: 'test'
+  ...
+# Subtest: 2..8 tubes per car/weapon; visible tubes follow ammo and empty at zero
+ok 114 - 2..8 tubes per car/weapon; visible tubes follow ammo and empty at zero
+  ---
+  duration_ms: 1.006992
+  type: 'test'
+  ...
+# Subtest: hardware differs per weapon type and each slot has a muzzle point ahead of its tube
+ok 115 - hardware differs per weapon type and each slot has a muzzle point ahead of its tube
+  ---
+  duration_ms: 31.748324
+  type: 'test'
+  ...
+# Subtest: rocket box is a multi-tube grid, bigger than the guided pods and the terminator rails
+ok 116 - rocket box is a multi-tube grid, bigger than the guided pods and the terminator rails
+  ---
+  duration_ms: 0.166063
+  type: 'test'
+  ...
+# Subtest: the new pilots look the way their bios say: bob and calm, braid and grin, ponytail and a wink
+ok 117 - the new pilots look the way their bios say: bob and calm, braid and grin, ponytail and a wink
+  ---
+  duration_ms: 1.183126
+  type: 'test'
+  ...
+# Subtest: every look names a real hair style and expression; the masc look has no lipstick or eyeshadow
+ok 118 - every look names a real hair style and expression; the masc look has no lipstick or eyeshadow
+  ---
+  duration_ms: 0.896752
+  type: 'test'
+  ...
+# Subtest: the look overrides win over the seed; a driver with no look still gets a full spec
+ok 119 - the look overrides win over the seed; a driver with no look still gets a full spec
+  ---
+  duration_ms: 0.180878
+  type: 'test'
+  ...
+# Subtest: car meshes: 5 distinct silhouettes, 4 wheels, finite geometry
+ok 120 - car meshes: 5 distinct silhouettes, 4 wheels, finite geometry
+  ---
+  duration_ms: 40.368459
+  type: 'test'
+  ...
+# Subtest: MeshBuilder solids have outward-facing normals
+ok 121 - MeshBuilder solids have outward-facing normals
+  ---
+  duration_ms: 0.360189
+  type: 'test'
+  ...
+# Subtest: track geometry for every track is finite and non-empty
+ok 122 - track geometry for every track is finite and non-empty
+  ---
+  duration_ms: 492.628435
+  type: 'test'
+  ...
+# Subtest: scenery: themed, deterministic, non-trivial
+ok 123 - scenery: themed, deterministic, non-trivial
+  ---
+  duration_ms: 219.683802
+  type: 'test'
+  ...
+# Subtest: sky dome builds a smooth (unbanded) gradient with a haze colour for the fog
+ok 124 - sky dome builds a smooth (unbanded) gradient with a haze colour for the fog
+  ---
+  duration_ms: 5.673261
+  type: 'test'
+  ...
+# Subtest: modern ramp: 16 valid hex entries, distinct, and colorRGB maps every palette index through it
+ok 125 - modern ramp: 16 valid hex entries, distinct, and colorRGB maps every palette index through it
+  ---
+  duration_ms: 1.16204
+  type: 'test'
+  ...
+# Subtest: meshes get per-face variation and darker bottoms (no flat 16-colour fills)
+ok 126 - meshes get per-face variation and darker bottoms (no flat 16-colour fills)
+  ---
+  duration_ms: 0.631417
+  type: 'test'
+  ...
+# Subtest: materials are PBR (standard/physical) and shared; render host has no palette pass
+ok 127 - materials are PBR (standard/physical) and shared; render host has no palette pass
+  ---
+  duration_ms: 14.302988
+  type: 'test'
+  ...
+# Subtest: portraitSpec: pure, deterministic, distinct per driver, colours resolved via the modern ramp
+ok 128 - portraitSpec: pure, deterministic, distinct per driver, colours resolved via the modern ramp
+  ---
+  duration_ms: 2.133401
+  type: 'test'
+  ...
+# Subtest: drawPortrait paints smooth vector art in a 256 logical space at any canvas size
+ok 129 - drawPortrait paints smooth vector art in a 256 logical space at any canvas size
+  ---
+  duration_ms: 8.380788
+  type: 'test'
+  ...
+# Subtest: cameras: pose maths and rig placement
+ok 130 - cameras: pose maths and rig placement
+  ---
+  duration_ms: 1.947806
+  type: 'test'
+  ...
+# Subtest: minimap transform fits the box; draw is a no-op without a canvas
+ok 131 - minimap transform fits the box; draw is a no-op without a canvas
+  ---
+  duration_ms: 0.359595
+  type: 'test'
+  ...
+# Subtest: audio engine is inert outside the browser; pure helpers behave
+ok 132 - audio engine is inert outside the browser; pure helpers behave
+  ---
+  duration_ms: 0.683432
+  type: 'test'
+  ...
+# Subtest: effects consume a snapshot (events, projectiles, hazards) without WebGL
+ok 133 - effects consume a snapshot (events, projectiles, hazards) without WebGL
+  ---
+  duration_ms: 35.99029
+  type: 'test'
+  ...
+# Subtest: spike layout: counts per car, longer at tier 2, empty at tier 0, front spikes point forward and rear spikes back
+ok 134 - spike layout: counts per car, longer at tier 2, empty at tier 0, front spikes point forward and rear spikes back
+  ---
+  duration_ms: 1.234188
+  type: 'test'
+  ...
+# Subtest: wheel hubs: centre spike + 6 studs, longer at tier 2
+ok 135 - wheel hubs: centre spike + 6 studs, longer at tier 2
+  ---
+  duration_ms: 0.316758
+  type: 'test'
+  ...
+# Subtest: geometry: steel always, glowing tips only at tier 2, nothing at tier 0
+ok 136 - geometry: steel always, glowing tips only at tier 2, nothing at tier 0
+  ---
+  duration_ms: 21.331323
+  type: 'test'
+  ...
+# Subtest: lap speed and distance wrap: one lap of the length in LAP_SECONDS, and distances stay on the lap
+ok 137 - lap speed and distance wrap: one lap of the length in LAP_SECONDS, and distances stay on the lap
+  ---
+  duration_ms: 0.815
+  type: 'test'
+  ...
+# Subtest: a full lap of the centreline closes on the start
+ok 138 - a full lap of the centreline closes on the start
+  ---
+  duration_ms: 15.316876
+  type: 'test'
+  ...
+# Subtest: victorySnapshot: only the player car, placed on the pose, rolling at the lap speed, no race leftovers
+ok 139 - victorySnapshot: only the player car, placed on the pose, rolling at the lap speed, no race leftovers
+  ---
+  duration_ms: 1.025984
+  type: 'test'
+  ...
+# Subtest: steering stays responsive at high speed (>= 1.5 g of cornering, yaw reaches 90% within 0.15 s)
+ok 140 - steering stays responsive at high speed (>= 1.5 g of cornering, yaw reaches 90% within 0.15 s)
+  ---
+  duration_ms: 6.216652
+  type: 'test'
+  ...
+# Subtest: no spin-outs: full lock held at speed, a steering flick and a handbrake yank all stay below the slip hard cap and recover by themselves
+ok 141 - no spin-outs: full lock held at speed, a steering flick and a handbrake yank all stay below the slip hard cap and recover by themselves
+  ---
+  duration_ms: 35.899617
+  type: 'test'
+  ...
+# Subtest: drift: sustained hard lock at speed kicks the tail out, a tap does not, the AI kick switch (mods.kick=0) disables it
+ok 142 - drift: sustained hard lock at speed kicks the tail out, a tap does not, the AI kick switch (mods.kick=0) disables it
+  ---
+  duration_ms: 6.065198
+  type: 'test'
+  ...
+# Subtest: driftTarget / slideRecovery are pure, bounded and signed
+ok 143 - driftTarget / slideRecovery are pure, bounded and signed
+  ---
+  duration_ms: 0.225135
+  type: 'test'
+  ...
+# Subtest: mild auto-straighten: the steering returns to centre faster than it builds
+ok 144 - mild auto-straighten: the steering returns to centre faster than it builds
+  ---
+  duration_ms: 0.484826
+  type: 'test'
+  ...
+# Subtest: braking is capped near 1.3 g for every car (not the old ~4 g) and scales with grip
+ok 145 - braking is capped near 1.3 g for every car (not the old ~4 g) and scales with grip
+  ---
+  duration_ms: 4.408424
+  type: 'test'
+  ...
+# Subtest: straight-line boost is modest and nitro has a charge, a cooldown and a recharge
+ok 146 - straight-line boost is modest and nitro has a charge, a cooldown and a recharge
+  ---
+  duration_ms: 26.98877
+  type: 'test'
+  ...
+# Subtest: physics step is deterministic and finite
+ok 147 - physics step is deterministic and finite
+  ---
+  duration_ms: 10.574237
+  type: 'test'
+  ...
+# Subtest: wall damage has a clear threshold and scales above it
+ok 148 - wall damage has a clear threshold and scales above it
+  ---
+  duration_ms: 0.393224
+  type: 'test'
+  ...
+# Subtest: Shift drift slides through a corner and keeps its speed (no handbrake stop)
+ok 149 - Shift drift slides through a corner and keeps its speed (no handbrake stop)
+  ---
+  duration_ms: 3.38872
+  type: 'test'
+  ...
+# Subtest: glancing wall hits deflect along the wall with little speed loss and no damage
+ok 150 - glancing wall hits deflect along the wall with little speed loss and no damage
+  ---
+  duration_ms: 6.250461
+  type: 'test'
+  ...
+# Subtest: a head-on wall hit scrubs speed and does damage; no tunnelling at any speed incl. nitro
+ok 151 - a head-on wall hit scrubs speed and does damage; no tunnelling at any speed incl. nitro
+  ---
+  duration_ms: 13.821174
+  type: 'test'
+  ...
+# Subtest: soft run-off: edge push-back before the solid wall and no push in the middle of the road
+ok 152 - soft run-off: edge push-back before the solid wall and no push in the middle of the road
+  ---
+  duration_ms: 0.224179
+  type: 'test'
+  ...
+# Subtest: no getting stuck: a car driven square into a wall or a corner works itself loose
+ok 153 - no getting stuck: a car driven square into a wall or a corner works itself loose
+  ---
+  duration_ms: 19.768287
+  type: 'test'
+  ...
+# Subtest: recovery: wrong-way / wedged cars are swung round to face the track and restarted
+ok 154 - recovery: wrong-way / wedged cars are swung round to face the track and restarted
+  ---
+  duration_ms: 0.873385
+  type: 'test'
+  ...
+# Subtest: sim: a human car brushing the wall keeps its speed and armor; head-on hits hurt; nitro cannot tunnel on any track
+ok 155 - sim: a human car brushing the wall keeps its speed and armor; head-on hits hurt; nitro cannot tunnel on any track
+  ---
+  duration_ms: 1922.697231
+  type: 'test'
+  ...
+# Subtest: sim: an unattended wrong-way player car auto-recovers and emits a recover event
+ok 156 - sim: an unattended wrong-way player car auto-recovers and emits a recover event
+  ---
+  duration_ms: 10.220644
+  type: 'test'
+  ...
+# Subtest: the terminator is a fast drone: one slot, a blast on impact, and a hard hit
+ok 157 - the terminator is a fast drone: one slot, a blast on impact, and a hard hit
+  ---
+  duration_ms: 0.931594
+  type: 'test'
+  ...
+# Subtest: the drone runs ahead and rams the car in front for significant damage
+ok 158 - the drone runs ahead and rams the car in front for significant damage
+  ---
+  duration_ms: 47.024198
+  type: 'test'
+  ...
+# Subtest: the drone does not hit a car that is not in front of it
+ok 159 - the drone does not hit a car that is not in front of it
+  ---
+  duration_ms: 49.012525
+  type: 'test'
+  ...
+# Subtest: guided: priced between rocket and terminator, one slot, blast + strong homing
+ok 160 - guided: priced between rocket and terminator, one slot, blast + strong homing
+  ---
+  duration_ms: 0.895148
+  type: 'test'
+  ...
+# Subtest: lock-on: finds the best target in the cone, ignores wrecks/outside range/outside cone
+ok 161 - lock-on: finds the best target in the cone, ignores wrecks/outside range/outside cone
+  ---
+  duration_ms: 0.349436
+  type: 'test'
+  ...
+# Subtest: lock-on: progress builds over lockTime and resets when the target leaves the cone
+ok 162 - lock-on: progress builds over lockTime and resets when the target leaves the cone
+  ---
+  duration_ms: 0.360353
+  type: 'test'
+  ...
+# Subtest: launchTarget: locked target wins; otherwise nearest ahead in a wide cone
+ok 163 - launchTarget: locked target wins; otherwise nearest ahead in a wide cone
+  ---
+  duration_ms: 0.201794
+  type: 'test'
+  ...
+# Subtest: guided missile in the sim: acquires, snapshot exposes the lock, steers into a target that moves off-axis and blasts it
+ok 164 - guided missile in the sim: acquires, snapshot exposes the lock, steers into a target that moves off-axis and blasts it
+  ---
+  duration_ms: 51.375281
+  type: 'test'
+  ...
+# Subtest: guided missile is deterministic
+ok 165 - guided missile is deterministic
+  ---
+  duration_ms: 79.297693
+  type: 'test'
+  ...
+# Subtest: the hit zone is the drawn body box: inside registers, just outside does not, and it turns with the car
+ok 166 - the hit zone is the drawn body box: inside registers, just outside does not, and it turns with the car
+  ---
+  duration_ms: 0.925516
+  type: 'test'
+  ...
+# Subtest: a rocket registers on a parked car within the drawn width, and misses outside it
+ok 167 - a rocket registers on a parked car within the drawn width, and misses outside it
+  ---
+  duration_ms: 70.469393
+  type: 'test'
+  ...
+# Subtest: a moving car is hit the same way, running away or head-on
+ok 168 - a moving car is hit the same way, running away or head-on
+  ---
+  duration_ms: 81.019482
+  type: 'test'
+  ...
+# Subtest: parts: pure thresholds — nothing at full health, zone hits take the nearest panel first, everything at the end
+ok 169 - parts: pure thresholds — nothing at full health, zone hits take the nearest panel first, everything at the end
+  ---
+  duration_ms: 1.455646
+  type: 'test'
+  ...
+# Subtest: sim: progressive damage emits one partLost per part with launch data, a wreck sheds the rest, deterministically
+ok 170 - sim: progressive damage emits one partLost per part with launch data, a wreck sheds the rest, deterministically
+  ---
+  duration_ms: 144.48508
+  type: 'test'
+  ...
+# Subtest: sim: rocket explosions carry their weapon kind
+ok 171 - sim: rocket explosions carry their weapon kind
+  ---
+  duration_ms: 16.531744
+  type: 'test'
+  ...
+# Subtest: snapshot: new fields are present and the old shape is untouched
+ok 172 - snapshot: new fields are present and the old shape is untouched
+  ---
+  duration_ms: 18.079283
+  type: 'test'
+  ...
+# Subtest: director: lap counting is monotonic (no skipping, no reversing credit)
+ok 173 - director: lap counting is monotonic (no skipping, no reversing credit)
+  ---
+  duration_ms: 14.264719
+  type: 'test'
+  ...
+# Subtest: AI alone finishes 3 laps on scrapyard near the ideal time
+ok 174 - AI alone finishes 3 laps on scrapyard near the ideal time
+  ---
+  duration_ms: 264.729266
+  type: 'test'
+  ...
+# Subtest: no wall tunnelling at max speed on scrapyard
+ok 175 - no wall tunnelling at max speed on scrapyard
+  ---
+  duration_ms: 465.548069
+  type: 'test'
+  ...
+# Subtest: AI alone finishes 3 laps on strip near the ideal time
+ok 176 - AI alone finishes 3 laps on strip near the ideal time
+  ---
+  duration_ms: 147.300852
+  type: 'test'
+  ...
+# Subtest: no wall tunnelling at max speed on strip
+ok 177 - no wall tunnelling at max speed on strip
+  ---
+  duration_ms: 423.757897
+  type: 'test'
+  ...
+# Subtest: AI alone finishes 3 laps on mojave near the ideal time
+ok 178 - AI alone finishes 3 laps on mojave near the ideal time
+  ---
+  duration_ms: 83.736753
+  type: 'test'
+  ...
+# Subtest: no wall tunnelling at max speed on mojave
+ok 179 - no wall tunnelling at max speed on mojave
+  ---
+  duration_ms: 309.001145
+  type: 'test'
+  ...
+# Subtest: AI alone finishes 3 laps on bayou near the ideal time
+ok 180 - AI alone finishes 3 laps on bayou near the ideal time
+  ---
+  duration_ms: 56.24224
+  type: 'test'
+  ...
+# Subtest: no wall tunnelling at max speed on bayou
+ok 181 - no wall tunnelling at max speed on bayou
+  ---
+  duration_ms: 174.97353
+  type: 'test'
+  ...
+# Subtest: AI alone finishes 3 laps on lakeshore near the ideal time
+ok 182 - AI alone finishes 3 laps on lakeshore near the ideal time
+  ---
+  duration_ms: 108.308941
+  type: 'test'
+  ...
+# Subtest: no wall tunnelling at max speed on lakeshore
+ok 183 - no wall tunnelling at max speed on lakeshore
+  ---
+  duration_ms: 317.461469
+  type: 'test'
+  ...
+# Subtest: AI alone finishes 3 laps on badlands near the ideal time
+ok 184 - AI alone finishes 3 laps on badlands near the ideal time
+  ---
+  duration_ms: 58.213757
+  type: 'test'
+  ...
+# Subtest: no wall tunnelling at max speed on badlands
+ok 185 - no wall tunnelling at max speed on badlands
+  ---
+  duration_ms: 349.508997
+  type: 'test'
+  ...
+# Subtest: AI alone finishes 3 laps on spillway near the ideal time
+ok 186 - AI alone finishes 3 laps on spillway near the ideal time
+  ---
+  duration_ms: 68.606873
+  type: 'test'
+  ...
+# Subtest: no wall tunnelling at max speed on spillway
+ok 187 - no wall tunnelling at max speed on spillway
+  ---
+  duration_ms: 382.483243
+  type: 'test'
+  ...
+# Subtest: AI alone finishes 3 laps on rustbelt near the ideal time
+ok 188 - AI alone finishes 3 laps on rustbelt near the ideal time
+  ---
+  duration_ms: 58.603572
+  type: 'test'
+  ...
+# Subtest: no wall tunnelling at max speed on rustbelt
+ok 189 - no wall tunnelling at max speed on rustbelt
+  ---
+  duration_ms: 284.693895
+  type: 'test'
+  ...
+# Subtest: AI alone finishes 3 laps on harbor near the ideal time
+ok 190 - AI alone finishes 3 laps on harbor near the ideal time
+  ---
+  duration_ms: 89.595644
+  type: 'test'
+  ...
+# Subtest: no wall tunnelling at max speed on harbor
+ok 191 - no wall tunnelling at max speed on harbor
+  ---
+  duration_ms: 372.40743
+  type: 'test'
+  ...
+# Subtest: AI alone finishes 3 laps on liberty near the ideal time
+ok 192 - AI alone finishes 3 laps on liberty near the ideal time
+  ---
+  duration_ms: 136.704156
+  type: 'test'
+  ...
+# Subtest: no wall tunnelling at max speed on liberty
+ok 193 - no wall tunnelling at max speed on liberty
+  ---
+  duration_ms: 429.735404
+  type: 'test'
+  ...
+# Subtest: car reaches near top speed and brakes
+ok 194 - car reaches near top speed and brakes
+  ---
+  duration_ms: 23.727609
+  type: 'test'
+  ...
+# Subtest: machinegun: damage and tracer events
+ok 195 - machinegun: damage and tracer events
+  ---
+  duration_ms: 13.548926
+  type: 'test'
+  ...
+# Subtest: kill credit: shooter gets the kill and wreck event
+ok 196 - kill credit: shooter gets the kill and wreck event
+  ---
+  duration_ms: 130.086025
+  type: 'test'
+  ...
+# Subtest: rocket: projectile, explosion damage with falloff, kill credit
+ok 197 - rocket: projectile, explosion damage with falloff, kill credit
+  ---
+  duration_ms: 9.857665
+  type: 'test'
+  ...
+# Subtest: terminator homes onto a car that is not dead ahead
+ok 198 - terminator homes onto a car that is not dead ahead
+  ---
+  duration_ms: 13.670703
+  type: 'test'
+  ...
+# Subtest: caltrops: pop tyres (slow + grip loss for ~6 s) and damage
+ok 199 - caltrops: pop tyres (slow + grip loss for ~6 s) and damage
+  ---
+  duration_ms: 75.483806
+  type: 'test'
+  ...
+# Subtest: ramming damages both cars, heavier car takes less
+ok 200 - ramming damages both cars, heavier car takes less
+  ---
+  duration_ms: 13.924006
+  type: 'test'
+  ...
+# Subtest: snapshot shape matches the frozen spec
+ok 201 - snapshot shape matches the frozen spec
+  ---
+  duration_ms: 39.585061
+  type: 'test'
+  ...
+# Subtest: cars are held during the countdown
+ok 202 - cars are held during the countdown
+  ---
+  duration_ms: 23.762465
+  type: 'test'
+  ...
+# Subtest: pickups: repair restores armor, then respawns
+ok 203 - pickups: repair restores armor, then respawns
+  ---
+  duration_ms: 161.968656
+  type: 'test'
+  ...
+# Subtest: determinism: same seed and inputs give identical snapshots; different seed differs
+ok 204 - determinism: same seed and inputs give identical snapshots; different seed differs
+  ---
+  duration_ms: 540.935891
+  type: 'test'
+  ...
+# Subtest: determinism with a scripted human player
+ok 205 - determinism with a scripted human player
+  ---
+  duration_ms: 189.47391
+  type: 'test'
+  ...
+# Subtest: headless 5-car race with combat on scrapyard
+ok 206 - headless 5-car race with combat on scrapyard
+  ---
+  duration_ms: 270.269086
+  type: 'test'
+  ...
+# Subtest: headless 5-car race with combat on strip
+ok 207 - headless 5-car race with combat on strip
+  ---
+  duration_ms: 342.092789
+  type: 'test'
+  ...
+# Subtest: headless 5-car race with combat on mojave
+ok 208 - headless 5-car race with combat on mojave
+  ---
+  duration_ms: 324.411646
+  type: 'test'
+  ...
+# Subtest: headless 5-car race with combat on bayou
+ok 209 - headless 5-car race with combat on bayou
+  ---
+  duration_ms: 250.721189
+  type: 'test'
+  ...
+# Subtest: headless 5-car race with combat on lakeshore
+ok 210 - headless 5-car race with combat on lakeshore
+  ---
+  duration_ms: 404.960573
+  type: 'test'
+  ...
+# Subtest: headless 5-car race with combat on badlands
+ok 211 - headless 5-car race with combat on badlands
+  ---
+  duration_ms: 279.689549
+  type: 'test'
+  ...
+# Subtest: headless 5-car race with combat on spillway
+ok 212 - headless 5-car race with combat on spillway
+  ---
+  duration_ms: 255.837838
+  type: 'test'
+  ...
+# Subtest: headless 5-car race with combat on rustbelt
+ok 213 - headless 5-car race with combat on rustbelt
+  ---
+  duration_ms: 252.216922
+  type: 'test'
+  ...
+# Subtest: headless 5-car race with combat on harbor
+ok 214 - headless 5-car race with combat on harbor
+  ---
+  duration_ms: 291.150382
+  type: 'test'
+  ...
+# Subtest: headless 5-car race with combat on liberty
+ok 215 - headless 5-car race with combat on liberty
+  ---
+  duration_ms: 445.816447
+  type: 'test'
+  ...
+# Subtest: practice mode: solo player, ends when laps are done
+ok 216 - practice mode: solo player, ends when laps are done
+  ---
+  duration_ms: 39.192682
+  type: 'test'
+  ...
+# Subtest: spike prices: rear < front < wheels, tier 2 costs more and is stronger; all below the top weapon
+ok 217 - spike prices: rear < front < wheels, tier 2 costs more and is stronger; all below the top weapon
+  ---
+  duration_ms: 1.156644
+  type: 'test'
+  ...
+# Subtest: contact zone: front / rear / side from the owner frame
+ok 218 - contact zone: front / rear / side from the owner frame
+  ---
+  duration_ms: 0.275764
+  type: 'test'
+  ...
+# Subtest: spike damage scales with closing speed and tier, matches the side, and is zero below the threshold
+ok 219 - spike damage scales with closing speed and tier, matches the side, and is zero below the threshold
+  ---
+  duration_ms: 0.216298
+  type: 'test'
+  ...
+# Subtest: protection: 30-60% less ram damage on the matching side, never immune
+ok 220 - protection: 30-60% less ram damage on the matching side, never immune
+  ---
+  duration_ms: 0.310863
+  type: 'test'
+  ...
+# Subtest: purchase: tiers in order, cash deducted, max level, insufficient cash; unaffected otherwise
+ok 221 - purchase: tiers in order, cash deducted, max level, insufficient cash; unaffected otherwise
+  ---
+  duration_ms: 1.035475
+  type: 'test'
+  ...
+# Subtest: save migration: old saves get no spikes; junk clamps; round-trips
+ok 222 - save migration: old saves get no spikes; junk clamps; round-trips
+  ---
+  duration_ms: 0.945253
+  type: 'test'
+  ...
+# Subtest: sim: front spikes deal extra credited damage on a head-on ram, spark event fires, and protect the owner
+ok 223 - sim: front spikes deal extra credited damage on a head-on ram, spark event fires, and protect the owner
+  ---
+  duration_ms: 107.939521
+  type: 'test'
+  ...
+# Subtest: sim: spikes on the wrong side do nothing; rear spikes bite a car that ramps into the tail
+ok 224 - sim: spikes on the wrong side do nothing; rear spikes bite a car that ramps into the tail
+  ---
+  duration_ms: 31.663305
+  type: 'test'
+  ...
+# Subtest: kill feed credits spikes
+ok 225 - kill feed credits spikes
+  ---
+  duration_ms: 0.407354
+  type: 'test'
+  ...
+# Subtest: roster spike label and rivals: ram-focused drivers carry spikes, others few
+ok 226 - roster spike label and rivals: ram-focused drivers carry spikes, others few
+  ---
+  duration_ms: 3.59159
+  type: 'test'
+  ...
+# Subtest: mine: drops a hazard, arms, then blasts a car that drives over it (owner credited)
+ok 227 - mine: drops a hazard, arms, then blasts a car that drives over it (owner credited)
+  ---
+  duration_ms: 52.698706
+  type: 'test'
+  ...
+# Subtest: mine: owner is safe for a few seconds, then is not
+ok 228 - mine: owner is safe for a few seconds, then is not
+  ---
+  duration_ms: 65.804899
+  type: 'test'
+  ...
+# Subtest: oil: puddle persists, cuts grip while in/near it, and recovers
+ok 229 - oil: puddle persists, cuts grip while in/near it, and recovers
+  ---
+  duration_ms: 43.113727
+  type: 'test'
+  ...
+# Subtest: flamethrower: cone damage per tick, burns ammo fast, nothing outside cone/range
+ok 230 - flamethrower: cone damage per tick, burns ammo fast, nothing outside cone/range
+  ---
+  duration_ms: 33.43942
+  type: 'test'
+  ...
+# Subtest: flamethrower can wreck with kill credit
+ok 231 - flamethrower can wreck with kill credit
+  ---
+  duration_ms: 9.269374
+  type: 'test'
+  ...
+# Subtest: ramplate: passive (never selected or fired, no ammo use), boosts ram damage dealt and cuts damage taken
+ok 232 - ramplate: passive (never selected or fired, no ammo use), boosts ram damage dealt and cuts damage taken
+  ---
+  duration_ms: 40.360373
+  type: 'test'
+  ...
+# Subtest: AI: flamethrower brawler torches a car in front of it
+ok 233 - AI: flamethrower brawler torches a car in front of it
+  ---
+  duration_ms: 124.898015
+  type: 'test'
+  ...
+# Subtest: AI: grave lays mine when tailed, and not when alone
+ok 234 - AI: grave lays mine when tailed, and not when alone
+  ---
+  duration_ms: 155.709118
+  type: 'test'
+  ...
+# Subtest: AI: slick lays oil when tailed, and not when alone
+ok 235 - AI: slick lays oil when tailed, and not when alone
+  ---
+  duration_ms: 90.953566
+  type: 'test'
+  ...
+# Subtest: AI: the ram-plate driver rams a car placed ahead of it
+ok 236 - AI: the ram-plate driver rams a car placed ahead of it
+  ---
+  duration_ms: 88.037325
+  type: 'test'
+  ...
+# Subtest: every new rival races a full race without getting stuck
+ok 237 - every new rival races a full race without getting stuck
+  ---
+  duration_ms: 770.631957
+  type: 'test'
+  ...
+# Subtest: the race runs the field the track was chosen with, in the order drawn
+ok 238 - the race runs the field the track was chosen with, in the order drawn
+  ---
+  duration_ms: 2.340034
+  type: 'test'
+  ...
+# Subtest: a running contract keeps its named racers on the grid it settles in
+ok 239 - a running contract keeps its named racers on the grid it settles in
+  ---
+  duration_ms: 0.801947
+  type: 'test'
+  ...
+# Subtest: the grid a bid names is the grid the race runs: practice without rivals has none
+ok 240 - the grid a bid names is the grid the race runs: practice without rivals has none
+  ---
+  duration_ms: 0.472934
+  type: 'test'
+  ...
+# Subtest: a wreck the player is credited with names that racer in the result
+ok 241 - a wreck the player is credited with names that racer in the result
+  ---
+  duration_ms: 47.710882
+  type: 'test'
+  ...
+# Subtest: a running contract's racers race in practice without rivals too; without a contract that practice has nobody
+ok 242 - a running contract's racers race in practice without rivals too; without a contract that practice has nobody
+  ---
+  duration_ms: 0.80338
+  type: 'test'
+  ...
+# Subtest: daylite declares the manhattan kit, the hazy daylight sky and a low afternoon sun
+ok 243 - daylite declares the manhattan kit, the hazy daylight sky and a low afternoon sun
+  ---
+  duration_ms: 0.895081
+  type: 'test'
+  ...
+# Subtest: daylite geometry: towers on the land side, a quay, a harbour past it, the Lady on her island, dust motes
+ok 244 - daylite geometry: towers on the land side, a quay, a harbour past it, the Lady on her island, dust motes
+  ---
+  duration_ms: 162.24546
+  type: 'test'
+  ...
+# Subtest: the Statue of Liberty: a 47 m pedestal under a 46 m statue, torch tip at 93 m, built on the island
+ok 245 - the Statue of Liberty: a 47 m pedestal under a 46 m statue, torch tip at 93 m, built on the island
+  ---
+  duration_ms: 0.980789
+  type: 'test'
+  ...
+# Subtest: dust sky: a bright hazy daylight band above the skyline, a clear blue zenith, and a sun disc
+ok 246 - dust sky: a bright hazy daylight band above the skyline, a clear blue zenith, and a sun disc
+  ---
+  duration_ms: 41.766383
+  type: 'test'
+  ...
+# Subtest: dust motes drift on the wind, wrap inside their box, stay above the road and hide on low quality
+ok 247 - dust motes drift on the wind, wrap inside their box, stay above the road and hide on low quality
+  ---
+  duration_ms: 2.944627
+  type: 'test'
+  ...
+# Subtest: daylite builds and animates end to end (harbour, dust, quality, dispose) without a GL context
+ok 248 - daylite builds and animates end to end (harbour, dust, quality, dispose) without a GL context
+  ---
+  duration_ms: 244.548401
+  type: 'test'
+  ...
+# Subtest: braking decel is realistic (1.1-1.6 g), not ~4 g
+ok 249 - braking decel is realistic (1.1-1.6 g), not ~4 g
+  ---
+  duration_ms: 3.151142
+  type: 'test'
+  ...
+# Subtest: brake force is limited by grip on low-grip surfaces
+ok 250 - brake force is limited by grip on low-grip surfaces
+  ---
+  duration_ms: 0.229755
+  type: 'test'
+  ...
+# Subtest: engine: gears shift up through the range, redline respected, torque curve peaks mid-rev
+ok 251 - engine: gears shift up through the range, redline respected, torque curve peaks mid-rev
+  ---
+  duration_ms: 30.608409
+  type: 'test'
+  ...
+# Subtest: weight transfer: braking loads the nose, accelerating the tail
+ok 252 - weight transfer: braking loads the nose, accelerating the tail
+  ---
+  duration_ms: 4.222992
+  type: 'test'
+  ...
+# Subtest: tyre grip curve peaks then falls off with slip angle
+ok 253 - tyre grip curve peaks then falls off with slip angle
+  ---
+  duration_ms: 0.202147
+  type: 'test'
+  ...
+# Subtest: braking while turning gives less cornering than coasting (friction circle) and handbrake kicks the tail out
+ok 254 - braking while turning gives less cornering than coasting (friction circle) and handbrake kicks the tail out
+  ---
+  duration_ms: 3.14173
+  type: 'test'
+  ...
+# Subtest: arcade slide recovery: a car stepping out is pulled straight again by itself (no driver input)
+ok 255 - arcade slide recovery: a car stepping out is pulled straight again by itself (no driver input)
+  ---
+  duration_ms: 1.244508
+  type: 'test'
+  ...
+# Subtest: wheelspin on a standing start with traction loss on low grip
+ok 256 - wheelspin on a standing start with traction loss on low grip
+  ---
+  duration_ms: 0.764097
+  type: 'test'
+  ...
+# Subtest: kick impulse is spread over time (no single-tick velocity snap) but is fully delivered
+ok 257 - kick impulse is spread over time (no single-tick velocity snap) but is fully delivered
+  ---
+  duration_ms: 1.410732
+  type: 'test'
+  ...
+# Subtest: surfaces: scrapyard oil / puddle / dirt / kerb zones
+ok 258 - surfaces: scrapyard oil / puddle / dirt / kerb zones
+  ---
+  duration_ms: 10.314607
+  type: 'test'
+  ...
+# Subtest: damage affects handling progressively
+ok 259 - damage affects handling progressively
+  ---
+  duration_ms: 0.214185
+  type: 'test'
+  ...
+# Subtest: damage zones and stages
+ok 260 - damage zones and stages
+  ---
+  duration_ms: 0.203414
+  type: 'test'
+  ...
+# Subtest: snapshot exposes the dynamics fields and zone damage
+ok 261 - snapshot exposes the dynamics fields and zone damage
+  ---
+  duration_ms: 20.391845
+  type: 'test'
+  ...
+# Subtest: player wreck: the rest of the field keeps racing and the player is ranked behind finishers
+ok 262 - player wreck: the rest of the field keeps racing and the player is ranked behind finishers
+  ---
+  duration_ms: 572.957762
+  type: 'test'
+  ...
+# Subtest: blast kicks do not teleport speed in one tick
+ok 263 - blast kicks do not teleport speed in one tick
+  ---
+  duration_ms: 12.467862
+  type: 'test'
+  ...
+# Subtest: game tracks: Neon Loop, Foundry Run and Daylite are valid circuits with prizes and surfaces
+ok 264 - game tracks: Neon Loop, Foundry Run and Daylite are valid circuits with prizes and surfaces
+  ---
+  duration_ms: 339.98984
+  type: 'test'
+  ...
+# Subtest: economy: a top-three finish without a wreck passes the game track; saves keep game-track ids
+ok 265 - economy: a top-three finish without a wreck passes the game track; saves keep game-track ids
+  ---
+  duration_ms: 1.487965
+  type: 'test'
+  ...
+# Subtest: field picker: seeded, five distinct drivers, all three cars show up over time, distinct liveries
+ok 266 - field picker: seeded, five distinct drivers, all three cars show up over time, distinct liveries
+  ---
+  duration_ms: 1.128207
+  type: 'test'
+  ...
+# Subtest: game config: player car from the save + 5 enemies with their own cars/weapons, hunting AI, PBR flags
+ok 267 - game config: player car from the save + 5 enemies with their own cars/weapons, hunting AI, PBR flags
+  ---
+  duration_ms: 18.57302
+  type: 'test'
+  ...
+# Subtest: PBR cars: three distinct, solid, opaque builds with fixed forward weapons and damage stages
+ok 268 - PBR cars: three distinct, solid, opaque builds with fixed forward weapons and damage stages
+  ---
+  duration_ms: 417.707484
+  type: 'test'
+  ...
+# Subtest: 6-car races on both tracks: every player car can race; enemies shoot, hit and finish
+ok 269 - 6-car races on both tracks: every player car can race; enemies shoot, hit and finish
+  ---
+  duration_ms: 1283.211394
+  type: 'test'
+  ...
+# Subtest: hero car: budget, dimensions, draw calls
+ok 270 - hero car: budget, dimensions, draw calls
+  ---
+  duration_ms: 35.236677
+  type: 'test'
+  ...
+# Subtest: hero car geometry is deterministic and uses only palette colours
+ok 271 - hero car geometry is deterministic and uses only palette colours
+  ---
+  duration_ms: 15.775633
+  type: 'test'
+  ...
+# Subtest: dent displacement is pure, position-keyed (no cracks) and zoned
+ok 272 - dent displacement is pure, position-keyed (no cracks) and zoned
+  ---
+  duration_ms: 0.496967
+  type: 'test'
+  ...
+# Subtest: damage look: stages map to missing panels, fire and char
+ok 273 - damage look: stages map to missing panels, fire and char
+  ---
+  duration_ms: 0.241188
+  type: 'test'
+  ...
+# Subtest: hero car update drives suspension, wheel instances, lamps and damage state
+ok 274 - hero car update drives suspension, wheel instances, lamps and damage state
+  ---
+  duration_ms: 31.426859
+  type: 'test'
+  ...
+# Subtest: wheel geometry + pixel digits build
+ok 275 - wheel geometry + pixel digits build
+  ---
+  duration_ms: 0.545278
+  type: 'test'
+  ...
+# Subtest: procedural textures use only the 16 palette colours and tile
+ok 276 - procedural textures use only the 16 palette colours and tile
+  ---
+  duration_ms: 107.479615
+  type: 'test'
+  ...
+# Subtest: hero scrapyard geometry: chunked, deterministic, within triangle budget
+ok 277 - hero scrapyard geometry: chunked, deterministic, within triangle budget
+  ---
+  duration_ms: 321.787252
+  type: 'test'
+  ...
+# Subtest: hero track keeps clear of the racing surface
+ok 278 - hero track keeps clear of the racing surface
+  ---
+  duration_ms: 459.465784
+  type: 'test'
+  ...
+# Subtest: engine audio layers: rpm, boost, squeal, gravel, limiter
+ok 279 - engine audio layers: rpm, boost, squeal, gravel, limiter
+  ---
+  duration_ms: 1.072887
+  type: 'test'
+  ...
+# Subtest: dash helpers
+ok 280 - dash helpers
+  ---
+  duration_ms: 0.580139
+  type: 'test'
+  ...
+# Subtest: cameras: hero modes exist, order keeps wrap, shake decays
+ok 281 - cameras: hero modes exist, order keeps wrap, shake decays
+  ---
+  duration_ms: 5.510977
+  type: 'test'
+  ...
+# Subtest: paint presets: 12 distinct, modern set with PBR finishes; accents; stock paint per car
+ok 282 - paint presets: 12 distinct, modern set with PBR finishes; accents; stock paint per car
+  ---
+  duration_ms: 1.32409
+  type: 'test'
+  ...
+# Subtest: rivals: 11 fixed, distinct primary liveries (paint + accent + number + decals) with a secondary
+ok 283 - rivals: 11 fixed, distinct primary liveries (paint + accent + number + decals) with a secondary
+  ---
+  duration_ms: 0.764113
+  type: 'test'
+  ...
+# Subtest: field colour assignment: no two cars share a paint, including the player; clash -> secondary livery; then any free preset
+ok 284 - field colour assignment: no two cars share a paint, including the player; clash -> secondary livery; then any free preset
+  ---
+  duration_ms: 11.998397
+  type: 'test'
+  ...
+# Subtest: race sim carries liveries into the snapshot (player + rivals) for standings / 3D
+ok 285 - race sim carries liveries into the snapshot (player + rivals) for standings / 3D
+  ---
+  duration_ms: 8.511352
+  type: 'test'
+  ...
+# Subtest: decal catalogue: 15-20 designs, tiered prices $300-$2500, all drawable
+ok 286 - decal catalogue: 15-20 designs, tiered prices $300-$2500, all drawable
+  ---
+  duration_ms: 0.227804
+  type: 'test'
+  ...
+# Subtest: economy: purchaseDecal, placement limits, update/remove are free, cosmetics setters validate
+ok 287 - economy: purchaseDecal, placement limits, update/remove are free, cosmetics setters validate
+  ---
+  duration_ms: 0.676797
+  type: 'test'
+  ...
+# Subtest: save migration: old saves get stock livery; new fields persist; junk is dropped
+ok 288 - save migration: old saves get stock livery; new fields persist; junk is dropped
+  ---
+  duration_ms: 1.201282
+  type: 'test'
+  ...
+# Subtest: decal baking: body frames map zones into UV space; composition draws only what is placed (fake 2D context)
+ok 289 - decal baking: body frames map zones into UV space; composition draws only what is placed (fake 2D context)
+  ---
+  duration_ms: 18.528711
+  type: 'test'
+  ...
+# Subtest: Neon Loop: short closed circuit, valid for the track model, slice-only
+ok 290 - Neon Loop: short closed circuit, valid for the track model, slice-only
+  ---
+  duration_ms: 19.326394
+  type: 'test'
+  ...
+# Subtest: PBR Neon Loop geometry: chunked, deterministic, budgeted, props clear of the road
+ok 291 - PBR Neon Loop geometry: chunked, deterministic, budgeted, props clear of the road
+  ---
+  duration_ms: 121.423057
+  type: 'test'
+  ...
+# Subtest: PBR track textures: sizes, determinism
+ok 292 - PBR track textures: sizes, determinism
+  ---
+  duration_ms: 8.092677
+  type: 'test'
+  ...
+# Subtest: slice field: four Hammer enemies with distinct liveries, weapons and personalities
+ok 293 - slice field: four Hammer enemies with distinct liveries, weapons and personalities
+  ---
+  duration_ms: 7.441925
+  type: 'test'
+  ...
+# Subtest: Neon Loop race: enemies finish 3 laps, line up and shoot straight ahead, deterministic
+ok 294 - Neon Loop race: enemies finish 3 laps, line up and shoot straight ahead, deterministic
+  ---
+  duration_ms: 1582.695146
+  type: 'test'
+  ...
+# Subtest: PBR hero car: parts, materials, budget, dimensions
+ok 295 - PBR hero car: parts, materials, budget, dimensions
+  ---
+  duration_ms: 217.98751
+  type: 'test'
+  ...
+# Subtest: body surface: smooth normals point outward, arches are carved, hood is a separate panel
+ok 296 - body surface: smooth normals point outward, arches are carved, hood is a separate panel
+  ---
+  duration_ms: 22.868545
+  type: 'test'
+  ...
+# Subtest: canopy and roof panel
+ok 297 - canopy and roof panel
+  ---
+  duration_ms: 2.646646
+  type: 'test'
+  ...
+# Subtest: dents: pure, zoned, bounded; heat/wing/look models
+ok 298 - dents: pure, zoned, bounded; heat/wing/look models
+  ---
+  duration_ms: 1.617278
+  type: 'test'
+  ...
+# Subtest: PBR car update: suspension, heat glow, lights, damage stages, dents, wet/dirt uniforms
+ok 299 - PBR car update: suspension, heat glow, lights, damage stages, dents, wet/dirt uniforms
+  ---
+  duration_ms: 180.344369
+  type: 'test'
+  ...
+# Subtest: procedural PBR maps are deterministic, correctly sized, and sensible
+ok 300 - procedural PBR maps are deterministic, correctly sized, and sensible
+  ---
+  duration_ms: 28.004905
+  type: 'test'
+  ...
+# Subtest: HDR environments: finite, high dynamic range, sun + softboxes
+ok 301 - HDR environments: finite, high dynamic range, sun + softboxes
+  ---
+  duration_ms: 37.019375
+  type: 'test'
+  ...
+# Subtest: quality presets and post helpers
+ok 302 - quality presets and post helpers
+  ---
+  duration_ms: 1.807688
+  type: 'test'
+  ...
+# Subtest: geometry helpers
+ok 303 - geometry helpers
+  ---
+  duration_ms: 0.944579
+  type: 'test'
+  ...
+# Subtest: solid body: every triangle faces outward, caps closed, opaque materials, internals present
+ok 304 - solid body: every triangle faces outward, caps closed, opaque materials, internals present
+  ---
+  duration_ms: 125.133207
+  type: 'test'
+  ...
+# Subtest: foundry run declares the steelworks kit, the forge sky and a low sun
+ok 305 - foundry run declares the steelworks kit, the forge sky and a low sun
+  ---
+  duration_ms: 0.839431
+  type: 'test'
+  ...
+# Subtest: foundry run geometry: furnace stacks with smoke and sparks, a gantry, steelworks signage
+ok 306 - foundry run geometry: furnace stacks with smoke and sparks, a gantry, steelworks signage
+  ---
+  duration_ms: 122.164743
+  type: 'test'
+  ...
+# Subtest: neon loop geometry is untouched by the kit
+ok 307 - neon loop geometry is untouched by the kit
+  ---
+  duration_ms: 42.059662
+  type: 'test'
+  ...
+# Subtest: forge sky: a furnace-orange band on the horizon under a smoke-dark zenith
+ok 308 - forge sky: a furnace-orange band on the horizon under a smoke-dark zenith
+  ---
+  duration_ms: 38.471606
+  type: 'test'
+  ...
+# Subtest: key light: an elevation gives a true low sun; the default key is unchanged
+ok 309 - key light: an elevation gives a true low sun; the default key is unchanged
+  ---
+  duration_ms: 3.600683
+  type: 'test'
+  ...
+# Subtest: foundry run builds and animates end to end (update, quality, dispose) without a GL context
+ok 310 - foundry run builds and animates end to end (update, quality, dispose) without a GL context
+  ---
+  duration_ms: 224.365968
+  type: 'test'
+  ...
+# Subtest: steelworks fx: smoke and sparks update without a GL context and dispose cleanly
+ok 311 - steelworks fx: smoke and sparks update without a GL context and dispose cleanly
+  ---
+  duration_ms: 3.451359
+  type: 'test'
+  ...
+# Subtest: every transition target is a known state
+ok 312 - every transition target is a known state
+  ---
+  duration_ms: 0.982831
+  type: 'test'
+  ...
+# Subtest: happy path: new game through race and back to garage
+ok 313 - happy path: new game through race and back to garage
+  ---
+  duration_ms: 1.57104
+  type: 'test'
+  ...
+# Subtest: continue goes straight to garage; illegal transitions are refused
+ok 314 - continue goes straight to garage; illegal transitions are refused
+  ---
+  duration_ms: 0.200811
+  type: 'test'
+  ...
+# Subtest: pause menu: restart goes through loading, quit goes to garage
+ok 315 - pause menu: restart goes through loading, quit goes to garage
+  ---
+  duration_ms: 0.164197
+  type: 'test'
+  ...
+# Subtest: force bypasses the table but rejects unknown states; params carry through
+ok 316 - force bypasses the table but rejects unknown states; params carry through
+  ---
+  duration_ms: 0.96532
+  type: 'test'
+  ...
+# Subtest: listener errors do not break transitions; unsubscribe works
+ok 317 - listener errors do not break transitions; unsubscribe works
+  ---
+  duration_ms: 0.229189
+  type: 'test'
+  ...
+# Subtest: a race that completes the last track pass goes to the win screen, then final stats, then the garage
+ok 318 - a race that completes the last track pass goes to the win screen, then final stats, then the garage
+  ---
+  duration_ms: 0.256665
+  type: 'test'
+  ...
+# Subtest: final stats only leads to the garage; the win screen cannot be re-entered except from a race
+ok 319 - final stats only leads to the garage; the win screen cannot be re-entered except from a race
+  ---
+  duration_ms: 0.139156
+  type: 'test'
+  ...
+# Subtest: armor colour thresholds
+ok 320 - armor colour thresholds
+  ---
+  duration_ms: 0.937879
+  type: 'test'
+  ...
+# Subtest: kill feed lines
+ok 321 - kill feed lines
+  ---
+  duration_ms: 0.292727
+  type: 'test'
+  ...
+# Subtest: standings sorted by position without mutating the snapshot
+ok 322 - standings sorted by position without mutating the snapshot
+  ---
+  duration_ms: 0.689965
+  type: 'test'
+  ...
+# Subtest: co-racer status face: finished > wrecked > burning > low armour > ok
+ok 323 - co-racer status face: finished > wrecked > burning > low armour > ok
+  ---
+  duration_ms: 0.239374
+  type: 'test'
+  ...
+# Subtest: formatters
+ok 324 - formatters
+  ---
+  duration_ms: 270.136443
+  type: 'test'
+  ...
+# Subtest: armour colour (hex) runs lime -> amber -> red and clamps
+ok 325 - armour colour (hex) runs lime -> amber -> red and clamps
+  ---
+  duration_ms: 0.62818
+  type: 'test'
+  ...
+# Subtest: gauge fraction + position parts
+ok 326 - gauge fraction + position parts
+  ---
+  duration_ms: 0.229474
+  type: 'test'
+  ...
+# Subtest: car chips resolve for every palette slot (wraps, never undefined)
+ok 327 - car chips resolve for every palette slot (wraps, never undefined)
+  ---
+  duration_ms: 0.366866
+  type: 'test'
+  ...
+# Subtest: dash helpers (hex zone colours, 270 degree dial, gear label)
+ok 328 - dash helpers (hex zone colours, 270 degree dial, gear label)
+  ---
+  duration_ms: 0.535915
+  type: 'test'
+  ...
+# Subtest: every weapon has a non-empty icon (24x24, valid path data)
+ok 329 - every weapon has a non-empty icon (24x24, valid path data)
+  ---
+  duration_ms: 1.275089
+  type: 'test'
+  ...
+# Subtest: UI glyph names resolve
+ok 330 - UI glyph names resolve
+  ---
+  duration_ms: 0.247637
+  type: 'test'
+  ...
+# Subtest: no NaN / undefined leaks into generated path data
+ok 331 - no NaN / undefined leaks into generated path data
+  ---
+  duration_ms: 0.507722
+  type: 'test'
+  ...
+# Subtest: damageColor: pure lime -> amber -> red, clamped, monotone red channel
+ok 332 - damageColor: pure lime -> amber -> red, clamped, monotone red channel
+  ---
+  duration_ms: 1.018073
+  type: 'test'
+  ...
+# Subtest: car silhouettes: 3 cars, 4 zone paths each, fallback for unknown ids
+ok 333 - car silhouettes: 3 cars, 4 zone paths each, fallback for unknown ids
+  ---
+  duration_ms: 0.256685
+  type: 'test'
+  ...
+# Subtest: setDamageZones colours zones in front,right,rear,left order and only touches changed ones
+ok 334 - setDamageZones colours zones in front,right,rear,left order and only touches changed ones
+  ---
+  duration_ms: 0.598525
+  type: 'test'
+  ...
+# Subtest: keys map to PlayerInput
+ok 335 - keys map to PlayerInput
+  ---
+  duration_ms: 1.037489
+  type: 'test'
+  ...
+# Subtest: opposite steer keys cancel; brake maps to S/Down
+ok 336 - opposite steer keys cancel; brake maps to S/Down
+  ---
+  duration_ms: 0.127842
+  type: 'test'
+  ...
+# Subtest: actions and special keys
+ok 337 - actions and special keys
+  ---
+  duration_ms: 0.216046
+  type: 'test'
+  ...
+# Subtest: mergeInputs: strongest analog, booleans OR, selectWeapon preference
+ok 338 - mergeInputs: strongest analog, booleans OR, selectWeapon preference
+  ---
+  duration_ms: 0.179014
+  type: 'test'
+  ...
+# Subtest: touch holds map to PlayerInput
+ok 339 - touch holds map to PlayerInput
+  ---
+  duration_ms: 0.110401
+  type: 'test'
+  ...
+# Subtest: nextFocus moves spatially and stays put at the edge
+ok 340 - nextFocus moves spatially and stays put at the edge
+  ---
+  duration_ms: 1.615601
+  type: 'test'
+  ...
+# Subtest: every track has a closed outline path that fits its viewBox
+ok 341 - every track has a closed outline path that fits its viewBox
+  ---
+  duration_ms: 1.068955
+  type: 'test'
+  ...
+# Subtest: difficulty ramps 1..5 across ten tracks
+ok 342 - difficulty ramps 1..5 across ten tracks
+  ---
+  duration_ms: 0.151939
+  type: 'test'
+  ...
+# Subtest: ring geometry, counters, ratings
+ok 343 - ring geometry, counters, ratings
+  ---
+  duration_ms: 0.152368
+  type: 'test'
+  ...
+# Subtest: podium order is 2nd, 1st, 3rd
+ok 344 - podium order is 2nd, 1st, 3rd
+  ---
+  duration_ms: 0.575564
+  type: 'test'
+  ...
+# Subtest: settings normalise, persist and reload
+ok 345 - settings normalise, persist and reload
+  ---
+  duration_ms: 0.339813
+  type: 'test'
+  ...
+# Subtest: title save summary and garage damage zones
+ok 346 - title save summary and garage damage zones
+  ---
+  duration_ms: 72.144221
+  type: 'test'
+  ...
+# Subtest: menu stage camera: title orbits, showcase spins the car
+ok 347 - menu stage camera: title orbits, showcase spins the car
+  ---
+  duration_ms: 0.279354
+  type: 'test'
+  ...
+# Subtest: animateCount counts up to the target and honours cancel
+ok 348 - animateCount counts up to the target and honours cancel
+  ---
+  duration_ms: 0.692052
+  type: 'test'
+  ...
+# Subtest: version constant matches package.json and the manifest is valid
+ok 349 - version constant matches package.json and the manifest is valid
+  ---
+  duration_ms: 1.267094
+  type: 'test'
+  ...
+# Subtest: healthColor runs green -> amber -> red and clamps
+ok 350 - healthColor runs green -> amber -> red and clamps
+  ---
+  duration_ms: 1.06966
+  type: 'test'
+  ...
+# Subtest: plateLook: hidden too close / too far, fades with distance and shrinks
+ok 351 - plateLook: hidden too close / too far, fades with distance and shrinks
+  ---
+  duration_ms: 0.214728
+  type: 'test'
+  ...
+# Subtest: wreck fade and lock reticle sizing
+ok 352 - wreck fade and lock reticle sizing
+  ---
+  duration_ms: 0.155955
+  type: 'test'
+  ...
+# Subtest: nameplates setting defaults on and normalises
+ok 353 - nameplates setting defaults on and normalises
+  ---
+  duration_ms: 0.192878
+  type: 'test'
+  ...
+# Subtest: bid line: none, race with a bid naming racers on the grid, practice with a bid, and a contract already running
+ok 354 - bid line: none, race with a bid naming racers on the grid, practice with a bid, and a contract already running
+  ---
+  duration_ms: 10.37835
+  type: 'test'
+  ...
+# Subtest: a bid names only racers on this race's grid: practice without rivals has none, so it names no one
+ok 355 - a bid names only racers on this race's grid: practice without rivals has none, so it names no one
+  ---
+  duration_ms: 0.349515
+  type: 'test'
+  ...
+# Subtest: a contract running in practice: its racers race here, and only a race settles it
+ok 356 - a contract running in practice: its racers race here, and only a race settles it
+  ---
+  duration_ms: 0.162827
+  type: 'test'
+  ...
+# Subtest: no track, no bid: a bid is never taken before the chosen track has racers
+ok 357 - no track, no bid: a bid is never taken before the chosen track has racers
+  ---
+  duration_ms: 0.129155
+  type: 'test'
+  ...
+# Subtest: the named racers read as a list, by their driver names
+ok 358 - the named racers read as a list, by their driver names
+  ---
+  duration_ms: 0.164957
+  type: 'test'
+  ...
+# Subtest: the wizard sits between track select and the race: track, then settings, then loading
+ok 359 - the wizard sits between track select and the race: track, then settings, then loading
+  ---
+  duration_ms: 0.190911
+  type: 'test'
+  ...
+# Subtest: rival status: armour fraction, with FIN and OUT labels
+ok 360 - rival status: armour fraction, with FIN and OUT labels
+  ---
+  duration_ms: 1.254871
+  type: 'test'
+  ...
+# Subtest: armory describes every weapon with slot count
+ok 361 - armory describes every weapon with slot count
+  ---
+  duration_ms: 0.595896
+  type: 'test'
+  ...
+# Subtest: a rocket aimed at the player from ahead is a threat, dead ahead
+ok 362 - a rocket aimed at the player from ahead is a threat, dead ahead
+  ---
+  duration_ms: 1.008653
+  type: 'test'
+  ...
+# Subtest: the bearing says which side the threat comes from: right is positive, left negative
+ok 363 - the bearing says which side the threat comes from: right is positive, left negative
+  ---
+  duration_ms: 0.213059
+  type: 'test'
+  ...
+# Subtest: a drone runs ahead: a terminator aimed back at the player from in front is named as one
+ok 364 - a drone runs ahead: a terminator aimed back at the player from in front is named as one
+  ---
+  duration_ms: 1.30998
+  type: 'test'
+  ...
+# Subtest: no warning for the player's own shots, shots pointed elsewhere, or distant aimed shots
+ok 365 - no warning for the player's own shots, shots pointed elsewhere, or distant aimed shots
+  ---
+  duration_ms: 0.895818
+  type: 'test'
+  ...
+# Subtest: a missile already locked on the player warns even when it is not pointed at the car, and comes first
+ok 366 - a missile already locked on the player warns even when it is not pointed at the car, and comes first
+  ---
+  duration_ms: 0.269854
+  type: 'test'
+  ...
+# Subtest: no threats once the player is wrecked, or with no player in the snapshot
+ok 367 - no threats once the player is wrecked, or with no player in the snapshot
+  ---
+  duration_ms: 0.181053
+  type: 'test'
+  ...
+# Subtest: short independent fire, cycle and nitro presses survive until the next physics read, then consume once
+ok 368 - short independent fire, cycle and nitro presses survive until the next physics read, then consume once
+  ---
+  duration_ms: 1.13665
+  type: 'test'
+  ...
+# Subtest: clear, blur and background discard pending action edges and held drift without firing on resume
+ok 369 - clear, blur and background discard pending action edges and held drift without firing on resume
+  ---
+  duration_ms: 0.672234
+  type: 'test'
+  ...
+# Subtest: holding fire remains held across physics steps and does not replace simultaneous steering/drift
+ok 370 - holding fire remains held across physics steps and does not replace simultaneous steering/drift
+  ---
+  duration_ms: 0.282755
+  type: 'test'
+  ...
+# Subtest: Original five car visual springs: ordinary frames unchanged; slow frames remain bounded
+ok 371 - Original five car visual springs: ordinary frames unchanged; slow frames remain bounded
+  ---
+  duration_ms: 696.034284
+  type: 'test'
+  ...
+1..371
+# tests 371
+# suites 0
+# pass 371
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10668.354979

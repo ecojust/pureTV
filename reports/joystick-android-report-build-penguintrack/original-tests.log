@@ -1,0 +1,63 @@
+{"originalNpmTestConfigured":true,"scope":"Configured original tests only; an absent script is recorded, not claimed as tested"}
+
+> puretv-penguintrack@0.1.1 test
+> node --test tests/*.test.mjs
+
+TAP version 13
+# Subtest: production snapshot identifies Penguintrack and reads the current renderer context
+ok 1 - production snapshot identifies Penguintrack and reads the current renderer context
+  ---
+  duration_ms: 3.401769
+  type: 'test'
+  ...
+# Subtest: snapshot uses peek pollCount without consuming another native frame
+ok 2 - snapshot uses peek pollCount without consuming another native frame
+  ---
+  duration_ms: 1.040699
+  type: 'test'
+  ...
+# Subtest: racing, paused and finished observations do not advance or mutate the game
+ok 3 - racing, paused and finished observations do not advance or mutate the game
+  ---
+  duration_ms: 2.297101
+  type: 'test'
+  ...
+# Subtest: nine independent buttons feed the original driving controls, not a model shortcut
+ok 4 - nine independent buttons feed the original driving controls, not a model shortcut
+  ---
+  duration_ms: 3.143656
+  type: 'test'
+  ...
+# Subtest: pause/cancellation clears held, queued respawn and taps, without synthetic release
+ok 5 - pause/cancellation clears held, queued respawn and taps, without synthetic release
+  ---
+  duration_ms: 1.012826
+  type: 'test'
+  ...
+# Subtest: touch-only play keeps the local pad, and a remote seat frees the race HUD
+ok 6 - touch-only play keeps the local pad, and a remote seat frees the race HUD
+  ---
+  duration_ms: 1.286399
+  type: 'test'
+  ...
+# Subtest: menu repeat has a delay and cancellation erases pending direction
+ok 7 - menu repeat has a delay and cancellation erases pending direction
+  ---
+  duration_ms: 0.334667
+  type: 'test'
+  ...
+# Subtest: native localhost cannot activate upstream development Pro bypass
+ok 8 - native localhost cannot activate upstream development Pro bypass
+  ---
+  duration_ms: 0.242925
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 171.671531
