@@ -1,0 +1,1103 @@
+Lcom/stub/StubApp;
+METHOD <clinit>()V
+const/4 v2, 0
+const/4 v1, 0
+sput-object v1, Lcom/stub/StubApp;->a Landroid/app/Application;
+const-string v0, "entryRunApplication"
+sput-object v0, Lcom/stub/StubApp;->strEntryApplication Ljava/lang/String;
+sput-object v1, Lcom/stub/StubApp;->b Landroid/app/Application;
+const-string v0, "libjiagu"
+sput-object v0, Lcom/stub/StubApp;->c Ljava/lang/String;
+const/4 v2, 0
+sput-boolean v2, Lcom/stub/StubApp;->loadFromLib Z
+const/4 v2, 0
+sput-boolean v2, Lcom/stub/StubApp;->needX86Bridge Z
+const/4 v0, 1
+const/4 v0, 1
+sput-boolean v0, Lcom/stub/StubApp;->returnIntern Z
+sput-object v1, Lcom/stub/StubApp;->e Ljava/lang/String;
+sput-object v1, Lcom/stub/StubApp;->f Ljava/lang/String;
+sput-object v1, Lcom/stub/StubApp;->g Ljava/lang/String;
+sput-object v1, Lcom/stub/StubApp;->h Ljava/lang/String;
+sput-object v1, Lcom/stub/StubApp;->i Ljava/lang/String;
+new-instance v0, Ljava/util/concurrent/ConcurrentHashMap;
+invoke-direct v0, Ljava/util/concurrent/ConcurrentHashMap;-><init>()V
+sput-object v0, Lcom/stub/StubApp;->j Ljava/util/Map;
+new-instance v0, Ljava/util/concurrent/ConcurrentHashMap;
+invoke-direct v0, Ljava/util/concurrent/ConcurrentHashMap;-><init>()V
+sput-object v0, Lcom/stub/StubApp;->perm Ljava/util/Map;
+return-void
+METHOD <init>()V
+invoke-direct v0, Landroid/app/Application;-><init>()V
+return-void
+METHOD ChangeTopApplication()V
+sget-object v0, Lcom/stub/StubApp;->a Landroid/app/Application;
+invoke-virtual v0, Landroid/app/Application;->getBaseContext()Landroid/content/Context;
+move-result-object v0
+sget-object v1, Lcom/stub/StubApp;->b Landroid/app/Application;
+invoke-static v1, v0, Lcom/stub/StubApp;->interface7(Landroid/app/Application; Landroid/content/Context;)Z
+return-void
+move-exception v0
+goto -2h
+METHOD a(Landroid/content/Context;)Landroid/app/Application;
+sget-object v0, Lcom/stub/StubApp;->b Landroid/app/Application;
+if-nez v0, +018h
+invoke-virtual v2, Landroid/content/Context;->getClassLoader()Ljava/lang/ClassLoader;
+move-result-object v0
+if-eqz v0, +012h
+sget-object v1, Lcom/stub/StubApp;->strEntryApplication Ljava/lang/String;
+invoke-virtual v0, v1, Ljava/lang/ClassLoader;->loadClass(Ljava/lang/String;)Ljava/lang/Class;
+move-result-object v0
+if-eqz v0, +00ah
+invoke-virtual v0, Ljava/lang/Class;->newInstance()Ljava/lang/Object;
+move-result-object v0
+check-cast v0, Landroid/app/Application;
+sput-object v0, Lcom/stub/StubApp;->b Landroid/app/Application;
+sget-object v0, Lcom/stub/StubApp;->b Landroid/app/Application;
+return-object v0
+move-exception v0
+goto -4h
+METHOD a(Ljava/lang/String; Z Z)Ljava/lang/String;
+sget-object v0, Lcom/stub/StubApp;->c Ljava/lang/String;
+sget v1, Landroid/os/Build$VERSION;->SDK_INT I
+const/16 v2, 23
+if-ge v1, v2, +017h
+invoke-virtual v3, Ljava/lang/String;->hashCode()I
+move-result v1
+new-instance v2, Ljava/lang/StringBuilder;
+invoke-direct v2, Ljava/lang/StringBuilder;-><init>()V
+invoke-virtual v2, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+move-result-object v0
+invoke-virtual v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v0
+if-eqz v4, +018h
+if-nez v5, +016h
+new-instance v1, Ljava/lang/StringBuilder;
+invoke-direct v1, Ljava/lang/StringBuilder;-><init>()V
+invoke-virtual v1, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+const-string v1, "_64.so"
+invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+invoke-virtual v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v0
+return-object v0
+new-instance v1, Ljava/lang/StringBuilder;
+invoke-direct v1, Ljava/lang/StringBuilder;-><init>()V
+invoke-virtual v1, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+const-string v1, ".so"
+invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+invoke-virtual v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v0
+goto -14h
+METHOD fcmark()V
+METHOD getAppContext()Landroid/content/Context;
+sget-object v0, Lcom/stub/StubApp;->d Landroid/content/Context;
+return-object v0
+METHOD getDir()Ljava/lang/String;
+sget-object v0, Lcom/stub/StubApp;->h Ljava/lang/String;
+return-object v0
+METHOD getOrigApplicationContext(Landroid/content/Context;)Landroid/content/Context;
+sget-object v0, Lcom/stub/StubApp;->a Landroid/app/Application;
+if-ne v1, v0, +004h
+sget-object v1, Lcom/stub/StubApp;->b Landroid/app/Application;
+return-object v1
+METHOD getSoPath1()Ljava/lang/String;
+sget-object v0, Lcom/stub/StubApp;->f Ljava/lang/String;
+return-object v0
+METHOD getSoPath2()Ljava/lang/String;
+sget-object v0, Lcom/stub/StubApp;->g Ljava/lang/String;
+return-object v0
+METHOD getString2(I)Ljava/lang/String;
+sget-object v0, Lcom/stub/StubApp;->j Ljava/util/Map;
+invoke-static v3, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+move-result-object v1
+invoke-interface v0, v1, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+move-result-object v0
+check-cast v0, Ljava/lang/String;
+if-nez v0, +00fh
+invoke-static v3, Lcom/stub/StubApp;->interface14(I)Ljava/lang/String;
+move-result-object v0
+sget-object v1, Lcom/stub/StubApp;->j Ljava/util/Map;
+invoke-static v3, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+move-result-object v2
+invoke-interface v1, v2, v0, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+if-eqz v0, +00ah
+sget-boolean v1, Lcom/stub/StubApp;->returnIntern Z
+if-eqz v1, +006h
+invoke-virtual v0, Ljava/lang/String;->intern()Ljava/lang/String;
+move-result-object v0
+return-object v0
+METHOD getString2(Ljava/lang/String;)Ljava/lang/String;
+invoke-static v1, Ljava/lang/Integer;->parseInt(Ljava/lang/String;)I
+move-result v0
+invoke-static v0, Lcom/stub/StubApp;->getString2(I)Ljava/lang/String;
+move-result-object v0
+return-object v0
+move-exception v0
+invoke-virtual v0, Ljava/lang/NumberFormatException;->printStackTrace()V
+const/4 v0, 0
+goto -6h
+METHOD interface11(I)V
+METHOD interface12(Ldalvik/system/DexFile;)Ljava/util/Enumeration;
+METHOD interface13(I J J J I I J)J
+METHOD interface14(I)Ljava/lang/String;
+METHOD interface17(Landroid/content/res/AssetManager; Ljava/lang/String;)Landroid/content/res/AssetFileDescriptor;
+METHOD interface18(Ljava/lang/Class; Ljava/lang/String;)Ljava/io/InputStream;
+METHOD interface19(Ljava/lang/ClassLoader; Ljava/lang/String;)Ljava/io/InputStream;
+METHOD interface199(Landroid/content/res/AssetManager; Ljava/lang/String;)Ljava/io/InputStream;
+METHOD interface20()V
+METHOD interface21(Landroid/app/Application;)V
+METHOD interface22(I [Ljava/lang/String; [I)V
+METHOD interface24(Landroid/app/Activity; [Ljava/lang/String; I)V
+METHOD interface30(Ljava/util/zip/ZipFile; Ljava/lang/String;)Ljava/util/zip/ZipEntry;
+METHOD interface5(Landroid/app/Application;)V
+METHOD interface51(Landroid/content/res/Resources; I)Ljava/io/InputStream;
+METHOD interface52(Landroid/content/res/Resources; I Landroid/util/TypedValue;)Ljava/io/InputStream;
+METHOD interface53(Landroid/content/res/Resources; I)Landroid/content/res/AssetFileDescriptor;
+METHOD interface54(Landroid/content/Context; I)Landroid/media/MediaPlayer;
+METHOD interface55(Landroid/content/Context; I Landroid/media/AudioAttributes; I)Landroid/media/MediaPlayer;
+METHOD interface56(Landroid/media/SoundPool; Landroid/content/Context; I I)I
+METHOD interface6(Ljava/lang/String;)Ljava/lang/String;
+METHOD interface7(Landroid/app/Application; Landroid/content/Context;)Z
+METHOD interface8(Landroid/app/Application; Landroid/content/Context;)Z
+METHOD isX86Arch()Z
+invoke-static Lcom/tianyu/util/a;->a()Z
+move-result v0
+return v0
+METHOD mark(Landroid/location/LocationManager; Ljava/lang/String;)Landroid/location/Location;
+METHOD mark()V
+METHOD mark(Landroid/location/Location;)V
+METHOD n0110()V
+METHOD n0111()I
+METHOD n011122(I J)J
+METHOD n01120(J)V
+METHOD n01121(J)I
+METHOD n011210(J F)V
+METHOD n0112130(J I Ljava/lang/Object;)V
+METHOD n01122(J)J
+METHOD n01123(J)Ljava/lang/Object;
+METHOD n011232(J Ljava/lang/Object;)J
+METHOD n0112331(J Ljava/lang/Object; Ljava/lang/Object;)I
+METHOD n0113()Ljava/lang/Object;
+METHOD n01130(Ljava/lang/Object;)V
+METHOD n01131(Ljava/lang/Object;)Z
+METHOD n011311(Ljava/lang/Object; Z)I
+METHOD n0113130(Ljava/lang/Object; I Ljava/lang/Object;)V
+METHOD n01131313111111111(Ljava/lang/Object; I Ljava/lang/Object; I Ljava/lang/Object; I I I I I I I I)I
+METHOD n01131313111331111111(Ljava/lang/Object; I Ljava/lang/Object; I Ljava/lang/Object; I I I Ljava/lang/Object; Ljava/lang/Object; I I I I I I)I
+METHOD n01131313113113113113331111(Ljava/lang/Object; I Ljava/lang/Object; I Ljava/lang/Object; I I Ljava/lang/Object; I I Ljava/lang/Object; I I Ljava/lang/Object; I I Ljava/lang/Object; Ljava/lang/Object; Ljava/lang/Object; I I I)I
+METHOD n0113133(Ljava/lang/Object; I Ljava/lang/Object;)Ljava/lang/Object;
+METHOD n01132(Ljava/lang/Object;)J
+METHOD n01133(Ljava/lang/Object;)Ljava/lang/Object;
+METHOD n011331(Ljava/lang/Object; Ljava/lang/Object;)I
+METHOD n01133111111(Ljava/lang/Object; Ljava/lang/Object; I I I I Z)I
+METHOD n011333(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+METHOD n0113333(Ljava/lang/Object; Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+METHOD pmark(Landroid/content/Context;)V
+METHOD put(Ljava/lang/Object; [Ljava/lang/String;)V
+invoke-virtual v3, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+move-result-object v0
+invoke-virtual v0, Ljava/lang/Class;->getCanonicalName()Ljava/lang/String;
+move-result-object v1
+sget-object v0, Lcom/stub/StubApp;->perm Ljava/util/Map;
+invoke-interface v0, v1, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+move-result-object v0
+check-cast v0, Ljava/util/Set;
+if-eqz v0, +00ah
+invoke-static v4, Ljava/util/Arrays;->asList([Ljava/lang/Object;)Ljava/util/List;
+move-result-object v1
+invoke-interface v0, v1, Ljava/util/Set;->addAll(Ljava/util/Collection;)Z
+return-void
+new-instance v0, Ljava/util/concurrent/ConcurrentHashMap;
+invoke-direct v0, Ljava/util/concurrent/ConcurrentHashMap;-><init>()V
+invoke-static v0, Ljava/util/Collections;->newSetFromMap(Ljava/util/Map;)Ljava/util/Set;
+move-result-object v0
+invoke-static v0, v4, Ljava/util/Collections;->addAll(Ljava/util/Collection; [Ljava/lang/Object;)Z
+sget-object v2, Lcom/stub/StubApp;->perm Ljava/util/Map;
+invoke-interface v2, v1, v0, Ljava/util/Map;->put(Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+move-result-object v0
+check-cast v0, Ljava/util/Set;
+if-eqz v0, -015h
+invoke-static v4, Ljava/util/Arrays;->asList([Ljava/lang/Object;)Ljava/util/List;
+move-result-object v1
+invoke-interface v0, v1, Ljava/util/Set;->addAll(Ljava/util/Collection;)Z
+goto -1eh
+METHOD rmark()V
+METHOD attachBaseContext(Landroid/content/Context;)V
+const/4 v7, 1
+const/4 v6, 0
+invoke-static Ljava/lang/System;->currentTimeMillis()J
+invoke-super v8, v9, Landroid/app/Application;->attachBaseContext(Landroid/content/Context;)V
+invoke-static Lcom/tianyu/util/a;->b()V
+sput-object v9, Lcom/stub/StubApp;->d Landroid/content/Context;
+sget-object v0, Lcom/stub/StubApp;->a Landroid/app/Application;
+if-nez v0, +004h
+sput-object v8, Lcom/stub/StubApp;->a Landroid/app/Application;
+sget-object v0, Lcom/stub/StubApp;->b Landroid/app/Application;
+if-nez v0, +064h
+invoke-static Lcom/tianyu/util/a;->a()Z
+move-result v0
+invoke-static v0, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+move-result-object v3
+invoke-static v6, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+move-result-object v0
+invoke-static v6, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+move-result-object v1
+sget-object v2, Landroid/os/Build;->CPU_ABI Ljava/lang/String;
+const-string v4, "64"
+invoke-virtual v2, v4, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+move-result v2
+if-nez v2, +00ch
+sget-object v2, Landroid/os/Build;->CPU_ABI2 Ljava/lang/String;
+const-string v4, "64"
+invoke-virtual v2, v4, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+move-result v2
+if-eqz v2, +006h
+invoke-static v7, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+move-result-object v0
+sget-object v2, Landroid/os/Build;->CPU_ABI Ljava/lang/String;
+const-string v4, "mips"
+invoke-virtual v2, v4, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+move-result v2
+if-nez v2, +00ch
+sget-object v2, Landroid/os/Build;->CPU_ABI2 Ljava/lang/String;
+const-string v4, "mips"
+invoke-virtual v2, v4, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+move-result v2
+if-eqz v2, +006h
+invoke-static v7, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+move-result-object v1
+invoke-virtual v3, Ljava/lang/Boolean;->booleanValue()Z
+move-result v2
+if-eqz v2, +00bh
+sget-boolean v2, Lcom/stub/StubApp;->needX86Bridge Z
+if-eqz v2, +007h
+const-string v2, "X86Bridge"
+invoke-static v2, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
+sget-boolean v2, Lcom/stub/StubApp;->loadFromLib Z
+if-eqz v2, +054h
+invoke-virtual v3, Ljava/lang/Boolean;->booleanValue()Z
+move-result v0
+if-eqz v0, +048h
+sget-boolean v0, Lcom/stub/StubApp;->needX86Bridge Z
+if-nez v0, +044h
+const-string v0, "jiagu_x86"
+invoke-static v0, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
+invoke-static Lcom/tianyu/util/DtcLoader;->init()V
+sget-object v0, Lcom/stub/StubApp;->a Landroid/app/Application;
+invoke-static v0, Lcom/stub/StubApp;->interface5(Landroid/app/Application;)V
+sget-object v0, Lcom/stub/StubApp;->b Landroid/app/Application;
+if-nez v0, +032h
+invoke-static v9, Lcom/stub/StubApp;->a(Landroid/content/Context;)Landroid/app/Application;
+move-result-object v0
+sput-object v0, Lcom/stub/StubApp;->b Landroid/app/Application;
+sget-object v0, Lcom/stub/StubApp;->b Landroid/app/Application;
+if-eqz v0, +1b9h
+const-class v0, Landroid/app/Application;
+const-string v1, "attach"
+const/4 v2, 1
+new-array v2, v2, [Ljava/lang/Class;
+const/4 v3, 0
+const-class v4, Landroid/content/Context;
+aput-object v4, v2, v3
+invoke-virtual v0, v1, v2, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String; [Ljava/lang/Class;)Ljava/lang/reflect/Method;
+move-result-object v0
+if-eqz v0, +011h
+const/4 v1, 1
+invoke-virtual v0, v1, Ljava/lang/reflect/Method;->setAccessible(Z)V
+sget-object v1, Lcom/stub/StubApp;->b Landroid/app/Application;
+const/4 v2, 1
+new-array v2, v2, [Ljava/lang/Object;
+const/4 v3, 0
+aput-object v9, v2, v3
+invoke-virtual v0, v1, v2, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object; [Ljava/lang/Object;)Ljava/lang/Object;
+sget-object v0, Lcom/stub/StubApp;->b Landroid/app/Application;
+invoke-static v0, v9, Lcom/stub/StubApp;->interface8(Landroid/app/Application; Landroid/content/Context;)Z
+return-void
+const-string v0, "jiagu"
+invoke-static v0, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
+goto -42h
+invoke-virtual v9, Landroid/content/Context;->getFilesDir()Ljava/io/File;
+move-result-object v2
+invoke-virtual v2, Ljava/io/File;->getParentFile()Ljava/io/File;
+move-result-object v2
+invoke-virtual v2, Ljava/io/File;->getAbsolutePath()Ljava/lang/String;
+move-result-object v2
+invoke-virtual v9, Landroid/content/Context;->getFilesDir()Ljava/io/File;
+move-result-object v4
+invoke-virtual v4, Ljava/io/File;->getParentFile()Ljava/io/File;
+move-result-object v4
+invoke-virtual v4, Ljava/io/File;->getCanonicalPath()Ljava/lang/String;
+move-result-object v2
+new-instance v4, Ljava/lang/StringBuilder;
+invoke-direct v4, Ljava/lang/StringBuilder;-><init>()V
+invoke-virtual v4, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v2
+const-string v4, "/.jiagu"
+invoke-virtual v2, v4, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v2
+invoke-virtual v2, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v2
+invoke-virtual v0, Ljava/lang/Boolean;->booleanValue()Z
+move-result v4
+invoke-virtual v1, Ljava/lang/Boolean;->booleanValue()Z
+move-result v5
+invoke-static v2, v4, v5, Lcom/stub/StubApp;->a(Ljava/lang/String; Z Z)Ljava/lang/String;
+move-result-object v4
+sput-object v4, Lcom/stub/StubApp;->i Ljava/lang/String;
+invoke-static v2, v6, v6, Lcom/stub/StubApp;->a(Ljava/lang/String; Z Z)Ljava/lang/String;
+move-result-object v4
+sput-object v4, Lcom/stub/StubApp;->e Ljava/lang/String;
+new-instance v4, Ljava/lang/StringBuilder;
+invoke-direct v4, Ljava/lang/StringBuilder;-><init>()V
+invoke-virtual v4, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v4
+sget-object v5, Ljava/io/File;->separator Ljava/lang/String;
+invoke-virtual v4, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v4
+sget-object v5, Lcom/stub/StubApp;->e Ljava/lang/String;
+invoke-virtual v4, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v4
+invoke-virtual v4, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v4
+sput-object v4, Lcom/stub/StubApp;->f Ljava/lang/String;
+new-instance v4, Ljava/lang/StringBuilder;
+invoke-direct v4, Ljava/lang/StringBuilder;-><init>()V
+invoke-virtual v4, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v4
+sget-object v5, Ljava/io/File;->separator Ljava/lang/String;
+invoke-virtual v4, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v4
+sget-object v5, Lcom/stub/StubApp;->i Ljava/lang/String;
+invoke-virtual v4, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v4
+invoke-virtual v4, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v4
+sput-object v4, Lcom/stub/StubApp;->g Ljava/lang/String;
+sput-object v2, Lcom/stub/StubApp;->h Ljava/lang/String;
+invoke-virtual v1, Ljava/lang/Boolean;->booleanValue()Z
+move-result v4
+if-eqz v4, +06dh
+new-instance v4, Ljava/lang/StringBuilder;
+invoke-direct v4, Ljava/lang/StringBuilder;-><init>()V
+sget-object v5, Lcom/stub/StubApp;->c Ljava/lang/String;
+invoke-virtual v4, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v4
+const-string v5, "_mips.so"
+invoke-virtual v4, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v4
+invoke-virtual v4, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v4
+sget-object v5, Lcom/stub/StubApp;->e Ljava/lang/String;
+invoke-static v9, v4, v2, v5, Lcom/tianyu/util/a;->a(Landroid/content/Context; Ljava/lang/String; Ljava/lang/String; Ljava/lang/String;)Z
+invoke-virtual v0, Ljava/lang/Boolean;->booleanValue()Z
+move-result v0
+if-eqz v0, +0c8h
+invoke-virtual v1, Ljava/lang/Boolean;->booleanValue()Z
+move-result v0
+if-nez v0, +0c2h
+invoke-virtual v3, Ljava/lang/Boolean;->booleanValue()Z
+move-result v0
+if-eqz v0, +082h
+sget-boolean v0, Lcom/stub/StubApp;->needX86Bridge Z
+if-nez v0, +07eh
+new-instance v0, Ljava/lang/StringBuilder;
+invoke-direct v0, Ljava/lang/StringBuilder;-><init>()V
+sget-object v1, Lcom/stub/StubApp;->c Ljava/lang/String;
+invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+const-string v1, "_x64.so"
+invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+invoke-virtual v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v0
+sget-object v1, Lcom/stub/StubApp;->i Ljava/lang/String;
+invoke-static v9, v0, v2, v1, Lcom/tianyu/util/a;->a(Landroid/content/Context; Ljava/lang/String; Ljava/lang/String; Ljava/lang/String;)Z
+move-result v0
+if-eqz v0, +07dh
+new-instance v0, Ljava/lang/StringBuilder;
+invoke-direct v0, Ljava/lang/StringBuilder;-><init>()V
+invoke-virtual v0, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+const-string v1, "/"
+invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+sget-object v1, Lcom/stub/StubApp;->i Ljava/lang/String;
+invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+invoke-virtual v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v0
+invoke-static v0, Ljava/lang/System;->load(Ljava/lang/String;)V
+goto/16 -129h
+invoke-virtual v3, Ljava/lang/Boolean;->booleanValue()Z
+move-result v4
+if-eqz v4, +021h
+sget-boolean v4, Lcom/stub/StubApp;->needX86Bridge Z
+if-nez v4, +01dh
+new-instance v4, Ljava/lang/StringBuilder;
+invoke-direct v4, Ljava/lang/StringBuilder;-><init>()V
+sget-object v5, Lcom/stub/StubApp;->c Ljava/lang/String;
+invoke-virtual v4, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v4
+const-string v5, "_x86.so"
+invoke-virtual v4, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v4
+invoke-virtual v4, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v4
+sget-object v5, Lcom/stub/StubApp;->e Ljava/lang/String;
+invoke-static v9, v4, v2, v5, Lcom/tianyu/util/a;->a(Landroid/content/Context; Ljava/lang/String; Ljava/lang/String; Ljava/lang/String;)Z
+goto -75h
+new-instance v4, Ljava/lang/StringBuilder;
+invoke-direct v4, Ljava/lang/StringBuilder;-><init>()V
+sget-object v5, Lcom/stub/StubApp;->c Ljava/lang/String;
+invoke-virtual v4, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v4
+const-string v5, ".so"
+invoke-virtual v4, v5, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v4
+invoke-virtual v4, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v4
+sget-object v5, Lcom/stub/StubApp;->e Ljava/lang/String;
+invoke-static v9, v4, v2, v5, Lcom/tianyu/util/a;->a(Landroid/content/Context; Ljava/lang/String; Ljava/lang/String; Ljava/lang/String;)Z
+goto/16 -090h
+new-instance v0, Ljava/lang/StringBuilder;
+invoke-direct v0, Ljava/lang/StringBuilder;-><init>()V
+sget-object v1, Lcom/stub/StubApp;->c Ljava/lang/String;
+invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+const-string v1, "_a64.so"
+invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+invoke-virtual v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v0
+sget-object v1, Lcom/stub/StubApp;->i Ljava/lang/String;
+invoke-static v9, v0, v2, v1, Lcom/tianyu/util/a;->a(Landroid/content/Context; Ljava/lang/String; Ljava/lang/String; Ljava/lang/String;)Z
+move-result v0
+goto -7ch
+new-instance v0, Ljava/lang/StringBuilder;
+invoke-direct v0, Ljava/lang/StringBuilder;-><init>()V
+invoke-virtual v0, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+const-string v1, "/"
+invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+sget-object v1, Lcom/stub/StubApp;->e Ljava/lang/String;
+invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+invoke-virtual v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v0
+invoke-static v0, Ljava/lang/System;->load(Ljava/lang/String;)V
+goto/16 -1a4h
+new-instance v0, Ljava/lang/StringBuilder;
+invoke-direct v0, Ljava/lang/StringBuilder;-><init>()V
+invoke-virtual v0, v2, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+const-string v1, "/"
+invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+sget-object v1, Lcom/stub/StubApp;->e Ljava/lang/String;
+invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+invoke-virtual v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v0
+invoke-static v0, Ljava/lang/System;->load(Ljava/lang/String;)V
+goto/16 -1c2h
+move-exception v0
+new-instance v1, Ljava/lang/RuntimeException;
+const-string v2, "Failed to call attachBaseContext."
+invoke-direct v1, v2, v0, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String; Ljava/lang/Throwable;)V
+throw v1
+invoke-static v7, Ljava/lang/System;->exit(I)V
+goto/16 -194h
+move-exception v4
+goto/16 -178h
+METHOD n11030(Ljava/lang/Object;)V
+METHOD n1110()V
+METHOD n1111()Z
+METHOD n11110(I)V
+METHOD n11111(Z)Z
+METHOD n111130(I Ljava/lang/Object;)V
+METHOD n11113311(I Ljava/lang/Object; Ljava/lang/Object; I)Z
+METHOD n1113()Ljava/lang/Object;
+METHOD n11130(Ljava/lang/Object;)V
+METHOD n11131(Ljava/lang/Object;)Z
+METHOD n111310(Ljava/lang/Object; I)V
+METHOD n11133(Ljava/lang/Object;)Ljava/lang/Object;
+METHOD n111330(Ljava/lang/Object; Ljava/lang/Object;)V
+METHOD n11133110(Ljava/lang/Object; Ljava/lang/Object; Z I)V
+METHOD n11133310(Ljava/lang/Object; Ljava/lang/Object; Ljava/lang/Object; I)V
+METHOD n1113333(Ljava/lang/Object; Ljava/lang/Object; Ljava/lang/Object;)Ljava/lang/Object;
+METHOD onCreate()V
+invoke-static Ljava/lang/System;->currentTimeMillis()J
+invoke-super v5, Landroid/app/Application;->onCreate()V
+invoke-static Lcom/stub/StubApp;->ChangeTopApplication()V
+sget-object v0, Lcom/stub/StubApp;->b Landroid/app/Application;
+if-eqz v0, +007h
+sget-object v0, Lcom/stub/StubApp;->b Landroid/app/Application;
+invoke-virtual v0, Landroid/app/Application;->onCreate()V
+sget-object v0, Lcom/stub/StubApp;->b Landroid/app/Application;
+invoke-static v0, Lcom/stub/StubApp;->interface21(Landroid/app/Application;)V
+sget-object v0, Lcom/stub/StubApp;->b Landroid/app/Application;
+if-eqz v0, +004h
+sget-object v5, Lcom/stub/StubApp;->b Landroid/app/Application;
+sget-object v0, Lcom/stub/StubApp;->d Landroid/content/Context;
+if-eqz v5, +00ah
+if-eqz v0, +008h
+invoke-static v0, Lcom/tianyu/util/a;->a(Landroid/content/Context;)Z
+move-result v0
+if-nez v0, +003h
+return-void
+const-string v0, "s}>zw>rx>Bu`bdcDy}u"
+invoke-static v0, Lcom/tianyu/util/a;->a(Ljava/lang/String;)Ljava/lang/String;
+move-result-object v0
+invoke-static v0, Ljava/lang/Class;->forName(Ljava/lang/String;)Ljava/lang/Class;
+move-result-object v0
+const-string v1, "BuwycdubQsdyfydiSq||Rqs{c"
+invoke-static v1, Lcom/tianyu/util/a;->a(Ljava/lang/String;)Ljava/lang/String;
+move-result-object v1
+const/4 v2, 1
+new-array v2, v2, [Ljava/lang/Class;
+const/4 v3, 0
+const-class v4, Landroid/app/Application;
+aput-object v4, v2, v3
+invoke-virtual v0, v1, v2, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String; [Ljava/lang/Class;)Ljava/lang/reflect/Method;
+move-result-object v0
+const/4 v1, 1
+invoke-virtual v0, v1, Ljava/lang/reflect/Method;->setAccessible(Z)V
+const/4 v1, 0
+const/4 v2, 1
+new-array v2, v2, [Ljava/lang/Object;
+const/4 v3, 0
+aput-object v5, v2, v3
+invoke-virtual v0, v1, v2, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object; [Ljava/lang/Object;)Ljava/lang/Object;
+goto -2bh
+move-exception v0
+goto -2dh
+Lcom/tianyu/util/Configuration;
+METHOD <clinit>()V
+const/4 v0, 0
+sput-boolean v0, Lcom/tianyu/util/Configuration;->ENABLE_CRASH_REPORT Z
+sput-boolean v0, Lcom/tianyu/util/Configuration;->ENABLE_PT Z
+return-void
+METHOD <init>()V
+invoke-direct v0, Ljava/lang/Object;-><init>()V
+return-void
+Lcom/tianyu/util/DtcLoader;
+METHOD <clinit>()V
+const-string v0, "jgdtc"
+invoke-static v0, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
+return-void
+move-exception v0
+invoke-static Lcom/tianyu/util/DtcLoader;->a()Ljava/lang/String;
+move-result-object v0
+invoke-static v0, Ljava/lang/System;->load(Ljava/lang/String;)V
+goto -9h
+move-exception v0
+goto -bh
+METHOD <init>()V
+invoke-direct v0, Ljava/lang/Object;-><init>()V
+return-void
+METHOD a()Ljava/lang/String;
+const-string v0, "q~tbyt>q``>QsdyfydiDxbuqt"
+invoke-static v0, Lcom/tianyu/util/a;->a(Ljava/lang/String;)Ljava/lang/String;
+move-result-object v0
+invoke-static v0, Ljava/lang/Class;->forName(Ljava/lang/String;)Ljava/lang/Class;
+move-result-object v0
+const-string v1, "sebbu~dQsdyfydiDxbuqt"
+invoke-static v1, Lcom/tianyu/util/a;->a(Ljava/lang/String;)Ljava/lang/String;
+move-result-object v1
+const/4 v2, 0
+invoke-virtual v0, v1, v2, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String; [Ljava/lang/Class;)Ljava/lang/reflect/Method;
+move-result-object v1
+const/4 v2, 0
+const/4 v3, 0
+new-array v3, v3, [Ljava/lang/Object;
+invoke-virtual v1, v2, v3, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object; [Ljava/lang/Object;)Ljava/lang/Object;
+move-result-object v1
+const-string v2, "wudCicdu}S~duhd"
+invoke-static v2, Lcom/tianyu/util/a;->a(Ljava/lang/String;)Ljava/lang/String;
+move-result-object v2
+const/4 v3, 0
+invoke-virtual v0, v2, v3, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String; [Ljava/lang/Class;)Ljava/lang/reflect/Method;
+move-result-object v0
+const/4 v2, 0
+new-array v2, v2, [Ljava/lang/Object;
+invoke-virtual v0, v1, v2, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object; [Ljava/lang/Object;)Ljava/lang/Object;
+move-result-object v0
+check-cast v0, Landroid/content/Context;
+invoke-virtual v0, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
+move-result-object v0
+const-string v1, "com.wn31.cuteSpark"
+const/4 v2, 0
+invoke-virtual v0, v1, v2, Landroid/content/pm/PackageManager;->getApplicationInfo(Ljava/lang/String; I)Landroid/content/pm/ApplicationInfo;
+move-result-object v0
+new-instance v1, Ljava/lang/StringBuilder;
+invoke-direct v1, Ljava/lang/StringBuilder;-><init>()V
+iget-object v0, v0, Landroid/content/pm/ApplicationInfo;->nativeLibraryDir Ljava/lang/String;
+invoke-virtual v1, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+const-string v1, "/libjgdtc.so"
+invoke-virtual v0, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v0
+invoke-virtual v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v0
+return-object v0
+move-exception v0
+const-string v0, "/data/data/com.wn31.cuteSpark/lib/libjgdtc.so"
+goto -4h
+METHOD init()V
+return-void
+Lcom/tianyu/util/a;
+METHOD a(Ljava/lang/String;)Ljava/lang/String;
+invoke-static v3, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+move-result v0
+if-eqz v0, +005h
+const-string v0, ""
+return-object v0
+invoke-virtual v3, Ljava/lang/String;->toCharArray()[C
+move-result-object v1
+const/4 v0, 0
+array-length v2, v1
+if-ge v0, v2, +00ch
+aget-char v2, v1, v0
+xor-int/lit8 v2, v2, 16
+int-to-char v2, v2
+aput-char v2, v1, v0
+add-int/lit8 v0, v0, 1
+goto -ch
+invoke-static v1, Ljava/lang/String;->valueOf([C)Ljava/lang/String;
+move-result-object v0
+goto -17h
+METHOD a(Ljava/io/Closeable;)V
+if-eqz v1, +005h
+invoke-interface v1, Ljava/io/Closeable;->close()V
+return-void
+move-exception v0
+goto -2h
+METHOD a()Z
+const/4 v8, 3
+const/4 v3, 0
+const/4 v1, 0
+const/4 v0, 1
+sget-object v4, Landroid/os/Build;->SUPPORTED_32_BIT_ABIS [Ljava/lang/String;
+array-length v5, v4
+move v2, v1
+if-ge v2, v5, +010h
+aget-object v6, v4, v2
+const-string v7, "x86"
+invoke-virtual v6, v7, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+move-result v6
+if-eqz v6, +003h
+return v0
+add-int/lit8 v2, v2, 1
+goto -fh
+sget-object v2, Landroid/os/Build;->CPU_ABI Ljava/lang/String;
+const-string v4, "x86"
+invoke-virtual v2, v4, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+move-result v2
+if-nez v2, -00ch
+sget-object v2, Landroid/os/Build;->CPU_ABI2 Ljava/lang/String;
+const-string v4, "x86"
+invoke-virtual v2, v4, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+move-result v2
+if-nez v2, -016h
+new-instance v2, Ljava/io/RandomAccessFile;
+const-string v4, "/system/build.prop"
+const-string v5, "r"
+invoke-direct v2, v4, v5, Ljava/io/RandomAccessFile;-><init>(Ljava/lang/String; Ljava/lang/String;)V
+invoke-virtual v2, Ljava/io/RandomAccessFile;->readLine()Ljava/lang/String;
+move-result-object v4
+if-eqz v4, +01dh
+const-string v5, "ro.product.cpu.abi"
+invoke-virtual v4, v5, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+move-result v5
+if-eqz v5, +010h
+const-string v5, "x86"
+invoke-virtual v4, v5, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+move-result v4
+if-eqz v4, +008h
+invoke-virtual v2, Ljava/io/RandomAccessFile;->close()V
+goto -3ah
+move-exception v1
+goto -3ch
+invoke-virtual v2, Ljava/io/RandomAccessFile;->readLine()Ljava/lang/String;
+move-result-object v4
+goto -1ch
+invoke-virtual v2, Ljava/io/RandomAccessFile;->close()V
+new-instance v2, Ljava/io/FileInputStream;
+const-string v4, "/system/bin/ls"
+invoke-direct v2, v4, Ljava/io/FileInputStream;-><init>(Ljava/lang/String;)V
+const/16 v3, 20
+new-array v3, v3, [B
+invoke-virtual v2, v3, Ljava/io/FileInputStream;->read([B)I
+move-result v4
+const/16 v5, 20
+if-ne v4, v5, +0bch
+const/4 v4, 0
+aget-byte v4, v3, v4
+const/16 v5, 127
+if-ne v4, v5, +0b5h
+const/4 v4, 1
+aget-byte v4, v3, v4
+const/16 v5, 69
+if-ne v4, v5, +0aeh
+const/4 v4, 2
+aget-byte v4, v3, v4
+const/16 v5, 76
+if-ne v4, v5, +0a7h
+const/4 v4, 3
+aget-byte v4, v3, v4
+const/16 v5, 70
+if-ne v4, v5, +0a0h
+const/16 v4, 18
+aget-byte v4, v3, v4
+if-eq v4, v8, +00ah
+const/16 v4, 18
+aget-byte v3, v3, v4
+const/16 v4, 62
+if-ne v3, v4, +092h
+if-eqz v2, -082h
+invoke-virtual v2, Ljava/io/FileInputStream;->close()V
+goto/16 -087h
+move-exception v1
+goto/16 -08ah
+move-exception v2
+move-object v2, v3
+if-eqz v2, -049h
+invoke-virtual v2, Ljava/io/RandomAccessFile;->close()V
+goto -4eh
+move-exception v2
+goto -50h
+move-exception v2
+move-object v2, v3
+if-eqz v2, -053h
+invoke-virtual v2, Ljava/io/RandomAccessFile;->close()V
+goto -58h
+move-exception v2
+goto -5ah
+move-exception v2
+move-object v4, v2
+move-object v5, v3
+if-eqz v5, +005h
+invoke-virtual v5, Ljava/io/RandomAccessFile;->close()V
+throw v4
+move-exception v2
+sget-object v2, Landroid/os/Build;->CPU_ABI Ljava/lang/String;
+const-string v4, "x86"
+invoke-virtual v2, v4, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+move-result v2
+if-nez v2, -0b2h
+sget-object v2, Landroid/os/Build;->CPU_ABI2 Ljava/lang/String;
+const-string v4, "x86"
+invoke-virtual v2, v4, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+move-result v2
+if-nez v2, -0bch
+new-instance v2, Ljava/io/RandomAccessFile;
+const-string v4, "/system/build.prop"
+const-string v5, "r"
+invoke-direct v2, v4, v5, Ljava/io/RandomAccessFile;-><init>(Ljava/lang/String; Ljava/lang/String;)V
+invoke-virtual v2, Ljava/io/RandomAccessFile;->readLine()Ljava/lang/String;
+move-result-object v4
+if-eqz v4, +01fh
+const-string v5, "ro.product.cpu.abi"
+invoke-virtual v4, v5, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+move-result v5
+if-eqz v5, +012h
+const-string v5, "x86"
+invoke-virtual v4, v5, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+move-result v4
+if-eqz v4, +00ah
+invoke-virtual v2, Ljava/io/RandomAccessFile;->close()V
+goto/16 -0e0h
+move-exception v1
+goto/16 -0e3h
+invoke-virtual v2, Ljava/io/RandomAccessFile;->readLine()Ljava/lang/String;
+move-result-object v4
+goto -1eh
+invoke-virtual v2, Ljava/io/RandomAccessFile;->close()V
+goto/16 -0a8h
+move-exception v2
+goto/16 -0abh
+move-exception v2
+move-object v2, v3
+if-eqz v2, -0afh
+invoke-virtual v2, Ljava/io/RandomAccessFile;->close()V
+goto/16 -0b4h
+move-exception v2
+goto/16 -0b7h
+move-exception v2
+move-object v2, v3
+if-eqz v2, -0bbh
+invoke-virtual v2, Ljava/io/RandomAccessFile;->close()V
+goto/16 -0c0h
+move-exception v2
+goto/16 -0c3h
+move-exception v0
+move-object v2, v3
+if-eqz v2, +005h
+invoke-virtual v2, Ljava/io/RandomAccessFile;->close()V
+throw v0
+if-eqz v2, +005h
+invoke-virtual v2, Ljava/io/FileInputStream;->close()V
+move v0, v1
+goto/16 -118h
+move-exception v0
+if-eqz v3, -004h
+invoke-virtual v3, Ljava/io/FileInputStream;->close()V
+goto -9h
+move-exception v0
+goto -bh
+move-exception v0
+move-object v2, v3
+if-eqz v2, +005h
+invoke-virtual v2, Ljava/io/FileInputStream;->close()V
+throw v0
+move-exception v2
+goto/16 -0e7h
+move-exception v2
+goto/16 -087h
+move-exception v1
+goto -21h
+move-exception v0
+goto -1dh
+move-exception v1
+goto -ch
+move-exception v0
+goto -13h
+move-exception v0
+move-object v3, v2
+goto -20h
+move-exception v0
+goto -31h
+move-exception v4
+goto -3fh
+move-exception v4
+goto -4dh
+move-exception v4
+move-object v5, v2
+goto/16 -0a1h
+move-exception v4
+goto/16 -0afh
+move-exception v4
+goto/16 -0bch
+METHOD a(Landroid/content/Context;)Z
+const/4 v1, 1
+const-string v0, "q~tbyt>q``>QsdyfydiDxbuqt"
+invoke-static v0, Lcom/tianyu/util/a;->a(Ljava/lang/String;)Ljava/lang/String;
+move-result-object v0
+invoke-static v0, Ljava/lang/Class;->forName(Ljava/lang/String;)Ljava/lang/Class;
+move-result-object v0
+const-string v2, "sebbu~dQsdyfydiDxbuqt"
+invoke-static v2, Lcom/tianyu/util/a;->a(Ljava/lang/String;)Ljava/lang/String;
+move-result-object v2
+const/4 v3, 0
+new-array v3, v3, [Ljava/lang/Class;
+invoke-virtual v0, v2, v3, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String; [Ljava/lang/Class;)Ljava/lang/reflect/Method;
+move-result-object v2
+const/4 v3, 1
+invoke-virtual v2, v3, Ljava/lang/reflect/Method;->setAccessible(Z)V
+const/4 v3, 0
+const/4 v4, 0
+new-array v4, v4, [Ljava/lang/Object;
+invoke-virtual v2, v3, v4, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object; [Ljava/lang/Object;)Ljava/lang/Object;
+move-result-object v2
+const-string v3, "wud@bsucc^q}u"
+invoke-static v3, Lcom/tianyu/util/a;->a(Ljava/lang/String;)Ljava/lang/String;
+move-result-object v3
+const/4 v4, 0
+new-array v4, v4, [Ljava/lang/Class;
+invoke-virtual v0, v3, v4, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String; [Ljava/lang/Class;)Ljava/lang/reflect/Method;
+move-result-object v0
+const/4 v3, 1
+invoke-virtual v0, v3, Ljava/lang/reflect/Method;->setAccessible(Z)V
+const/4 v3, 0
+new-array v3, v3, [Ljava/lang/Object;
+invoke-virtual v0, v2, v3, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object; [Ljava/lang/Object;)Ljava/lang/Object;
+move-result-object v0
+check-cast v0, Ljava/lang/String;
+invoke-virtual v5, Landroid/content/Context;->getPackageName()Ljava/lang/String;
+move-result-object v2
+invoke-virtual v2, v0, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+move-result v0
+return v0
+move-exception v0
+move v0, v1
+goto -3h
+METHOD a(Landroid/content/Context; Ljava/lang/String; Ljava/lang/String; Ljava/lang/String;)Z
+const/4 v0, 1
+const/4 v1, 0
+const/4 v2, 0
+new-instance v3, Ljava/lang/StringBuilder;
+invoke-direct v3, Ljava/lang/StringBuilder;-><init>()V
+invoke-virtual v3, v11, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v3
+const-string v4, "/"
+invoke-virtual v3, v4, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v3
+invoke-virtual v3, v12, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+move-result-object v3
+invoke-virtual v3, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+move-result-object v5
+new-instance v3, Ljava/io/File;
+invoke-direct v3, v11, Ljava/io/File;-><init>(Ljava/lang/String;)V
+invoke-virtual v3, Ljava/io/File;->exists()Z
+move-result v4
+if-nez v4, +005h
+invoke-virtual v3, Ljava/io/File;->mkdir()Z
+new-instance v3, Ljava/io/File;
+invoke-direct v3, v5, Ljava/io/File;-><init>(Ljava/lang/String;)V
+invoke-virtual v3, Ljava/io/File;->exists()Z
+move-result v4
+if-eqz v4, +039h
+invoke-virtual v9, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
+move-result-object v4
+invoke-virtual v4, Landroid/content/res/Resources;->getAssets()Landroid/content/res/AssetManager;
+move-result-object v4
+invoke-virtual v4, v10, Landroid/content/res/AssetManager;->open(Ljava/lang/String;)Ljava/io/InputStream;
+move-result-object v4
+new-instance v6, Ljava/io/FileInputStream;
+invoke-direct v6, v3, Ljava/io/FileInputStream;-><init>(Ljava/io/File;)V
+new-instance v7, Ljava/io/BufferedInputStream;
+invoke-direct v7, v4, Ljava/io/BufferedInputStream;-><init>(Ljava/io/InputStream;)V
+new-instance v8, Ljava/io/BufferedInputStream;
+invoke-direct v8, v6, Ljava/io/BufferedInputStream;-><init>(Ljava/io/InputStream;)V
+invoke-static v7, v8, Lcom/tianyu/util/a;->a(Ljava/io/BufferedInputStream; Ljava/io/BufferedInputStream;)Z
+move-result v3
+if-eqz v3, +062h
+move v3, v0
+invoke-virtual v4, Ljava/io/InputStream;->close()V
+invoke-virtual v6, Ljava/io/InputStream;->close()V
+invoke-virtual v7, Ljava/io/BufferedInputStream;->close()V
+invoke-virtual v8, Ljava/io/BufferedInputStream;->close()V
+if-eqz v3, +009h
+invoke-static v2, Lcom/tianyu/util/a;->a(Ljava/io/Closeable;)V
+invoke-static v2, Lcom/tianyu/util/a;->a(Ljava/io/Closeable;)V
+return v0
+invoke-virtual v9, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
+move-result-object v3
+invoke-virtual v3, Landroid/content/res/Resources;->getAssets()Landroid/content/res/AssetManager;
+move-result-object v3
+invoke-virtual v3, v10, Landroid/content/res/AssetManager;->open(Ljava/lang/String;)Ljava/io/InputStream;
+move-result-object v4
+new-instance v3, Ljava/io/FileOutputStream;
+invoke-direct v3, v5, Ljava/io/FileOutputStream;-><init>(Ljava/lang/String;)V
+const/16 v2, 7168
+new-array v2, v2, [B
+invoke-virtual v4, v2, Ljava/io/InputStream;->read([B)I
+move-result v5
+if-lez v5, +011h
+const/4 v6, 0
+invoke-virtual v3, v2, v6, v5, Ljava/io/FileOutputStream;->write([B I I)V
+goto -ah
+move-exception v0
+move-object v0, v3
+invoke-static v0, Lcom/tianyu/util/a;->a(Ljava/io/Closeable;)V
+invoke-static v4, Lcom/tianyu/util/a;->a(Ljava/io/Closeable;)V
+move v0, v1
+goto -2ah
+invoke-virtual v3, Ljava/io/FileOutputStream;->flush()V
+invoke-static v3, Lcom/tianyu/util/a;->a(Ljava/io/Closeable;)V
+invoke-static v4, Lcom/tianyu/util/a;->a(Ljava/io/Closeable;)V
+goto -34h
+move-exception v0
+move-object v3, v2
+move-object v4, v2
+invoke-static v3, Lcom/tianyu/util/a;->a(Ljava/io/Closeable;)V
+invoke-static v4, Lcom/tianyu/util/a;->a(Ljava/io/Closeable;)V
+throw v0
+move-exception v0
+move-object v3, v2
+goto -9h
+move-exception v0
+goto -bh
+move-exception v0
+move-object v0, v2
+move-object v4, v2
+goto -24h
+move-exception v0
+move-object v0, v2
+goto -27h
+move v3, v1
+goto -60h
+METHOD a(Ljava/io/BufferedInputStream; Ljava/io/BufferedInputStream;)Z
+const/4 v0, 0
+invoke-virtual v7, Ljava/io/BufferedInputStream;->available()I
+move-result v2
+invoke-virtual v8, Ljava/io/BufferedInputStream;->available()I
+move-result v1
+if-ne v2, v1, +015h
+new-array v3, v2, [B
+new-array v4, v1, [B
+invoke-virtual v7, v3, Ljava/io/BufferedInputStream;->read([B)I
+invoke-virtual v8, v4, Ljava/io/BufferedInputStream;->read([B)I
+move v1, v0
+if-ge v1, v2, +00ch
+aget-byte v5, v3, v1
+aget-byte v6, v4, v1
+if-eq v5, v6, +003h
+return v0
+add-int/lit8 v1, v1, 1
+goto -bh
+const/4 v0, 1
+goto -5h
+move-exception v1
+goto -7h
+move-exception v1
+goto -9h
+METHOD b()V
+sget v0, Landroid/os/Build$VERSION;->SDK_INT I
+const/16 v1, 28
+if-eq v0, v1, +003h
+return-void
+const-string v0, "q~tbyt>s~du~d>`}>@qs{qwu@qbcub4@qs{qwu"
+invoke-static v0, Lcom/tianyu/util/a;->a(Ljava/lang/String;)Ljava/lang/String;
+move-result-object v0
+invoke-static v0, Ljava/lang/Class;->forName(Ljava/lang/String;)Ljava/lang/Class;
+move-result-object v0
+const/4 v1, 1
+new-array v1, v1, [Ljava/lang/Class;
+const/4 v2, 0
+const-class v3, Ljava/lang/String;
+aput-object v3, v1, v2
+invoke-virtual v0, v1, Ljava/lang/Class;->getDeclaredConstructor([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;
+move-result-object v0
+const/4 v1, 1
+invoke-virtual v0, v1, Ljava/lang/reflect/Constructor;->setAccessible(Z)V
+const-string v0, "q~tbyt>q``>QsdyfydiDxbuqt"
+invoke-static v0, Lcom/tianyu/util/a;->a(Ljava/lang/String;)Ljava/lang/String;
+move-result-object v0
+invoke-static v0, Ljava/lang/Class;->forName(Ljava/lang/String;)Ljava/lang/Class;
+move-result-object v0
+const-string v1, "sebbu~dQsdyfydiDxbuqt"
+invoke-static v1, Lcom/tianyu/util/a;->a(Ljava/lang/String;)Ljava/lang/String;
+move-result-object v1
+const/4 v2, 0
+new-array v2, v2, [Ljava/lang/Class;
+invoke-virtual v0, v1, v2, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String; [Ljava/lang/Class;)Ljava/lang/reflect/Method;
+move-result-object v1
+const/4 v2, 1
+invoke-virtual v1, v2, Ljava/lang/reflect/Method;->setAccessible(Z)V
+const/4 v2, 0
+const/4 v3, 0
+new-array v3, v3, [Ljava/lang/Object;
+invoke-virtual v1, v2, v3, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object; [Ljava/lang/Object;)Ljava/lang/Object;
+move-result-object v1
+const-string v2, "}Xyttu~Q`yGqb~y~wCxg~"
+invoke-static v2, Lcom/tianyu/util/a;->a(Ljava/lang/String;)Ljava/lang/String;
+move-result-object v2
+invoke-virtual v0, v2, Ljava/lang/Class;->getDeclaredField(Ljava/lang/String;)Ljava/lang/reflect/Field;
+move-result-object v0
+const/4 v2, 1
+invoke-virtual v0, v2, Ljava/lang/reflect/Field;->setAccessible(Z)V
+const/4 v2, 1
+invoke-virtual v0, v1, v2, Ljava/lang/reflect/Field;->setBoolean(Ljava/lang/Object; Z)V
+goto -50h
+move-exception v0
+goto -52h
+move-exception v0
+goto -39h
