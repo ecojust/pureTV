@@ -39,6 +39,51 @@ class Server(socketserver.ThreadingTCPServer):
     allow_reuse_address = True
     daemon_threads = True
 
+class HeldInputObservation(unittest.TestCase):
+    def setUp(self):
+        self.acceptance = runner.Acceptance.__new__(runner.Acceptance)
+        self.acceptance.clients = [SimpleNamespace(identity='player')]
+        self.acceptance.report = {}
+        self.acceptance.snapshots = []
+        self.acceptance.release = mock.Mock()
+        self.step = {'name': 'Start selected original three-lap course', 'keys': ['START'],
+                     'timeoutSeconds': 60, 'expect': [{'path': 'stage', 'op': 'eq', 'value': 'playing'}]}
+
+    @staticmethod
+    def state(count, stage, pressed):
+        return {'game': {'stage': stage, 'controller': {'pollCount': count, 'players': [
+            {'controllerId': 'player', 'connected': True, 'buttons': {'START': pressed}}]}}}
+
+    def finish(self):
+        return self.acceptance.finish_catalog_hold(self.step, self.state(40, 'menu', False),
+                                                    self.state(41, 'menu', True))
+
+    def test_dropped_gets_use_remaining_time_and_require_new_released_matching_frame(self):
+        self.acceptance.snapshot = mock.Mock(side_effect=runner.RemoteDisconnected())
+        states = [self.state(50, 'playing', True), self.state(51, 'menu', False), self.state(52, 'playing', False)]
+        def check(held, predicate, timeout, label):
+            self.assertEqual(timeout, 27)
+            self.assertEqual(held['game']['controller']['pollCount'], 41)
+            self.assertEqual([predicate(state) for state in states], [False, False, True])
+            self.assertIn('released', label)
+            return states[-1]
+        self.acceptance.wait_fresh = check
+        with mock.patch.object(runner.time, 'monotonic', side_effect=[90, 123]):
+            self.assertEqual(self.finish(), states[-1])
+        self.acceptance.release.assert_called_once_with()
+
+    def test_http_error_and_exhausted_budget_do_not_pass(self):
+        self.acceptance.wait_fresh = mock.Mock()
+        self.acceptance.snapshot = mock.Mock(side_effect=runner.HTTPError('http://localhost/', 500, 'error', {}, None))
+        with self.assertRaises(runner.HTTPError):
+            self.finish()
+        self.acceptance.snapshot.side_effect = runner.RemoteDisconnected()
+        with mock.patch.object(runner.time, 'monotonic', side_effect=[10, 71]), self.assertRaises(TimeoutError):
+            self.finish()
+        self.acceptance.wait_fresh.assert_not_called()
+        self.assertEqual(self.acceptance.release.call_count, 2)
+
+
 class MenuTapContracts(unittest.TestCase):
     """Actual SDK/TCP frames against an ACK fixture; observations are synthetic."""
     def setUp(self):
