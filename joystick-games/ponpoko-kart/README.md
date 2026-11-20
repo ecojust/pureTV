@@ -2,6 +2,8 @@
 
 日本乡村、樱花鸟居、夏祭花火三条原版赛道；八位动物车手、三档难度、道具、蓄力漂移、跳跃特技和和伞滑翔。保留 [たぬ的原作](https://github.com/tanuu5/ponpoko-kart/tree/88edb72d25c2f957431cc4d12547d3138d1bca48) 的完整程序生成场景、原 HUD 与日文菜单，不依赖在线模型、图片、音频或字体。
 
+Android TV 0.1.1 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/ponpoko-kart-0.1.1.apk)。原生手柄验收进展见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
+
 ## Android TV 适配
 
 0.1.1（versionCode 2）根据 WebGL 2 设备支持的颜色缓冲和多重采样格式选择渲染路径。支持 HDR 的设备保留泛光效果；其余设备以 RGBA8 绘制赛道、角色和水面倒影。八位车手的头像和九张道具图使用原版模型预先渲染，进入菜单时只需创建游戏画布。Android TV 安装包正在验证中。

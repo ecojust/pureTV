@@ -2,8 +2,12 @@
 
 [BridgeMind 原作](https://github.com/bridge-mind/turbo-kart-rush/tree/6c0456c7642447eae29e0832e7e542fec07ec07d)的独立 pureTV 适配：八位车手、四条赛道、三档难度，保留程序生成场景、道具的全部变体、漂移加速、跳跃、原版音乐与后处理。原资源无需网络即可运行；不是 pureTV 自创游戏。
 
+Android TV 0.1.1 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/turbo-kart-rush-0.1.1.apk)。原生手柄验收进展见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
+
 
 0.1.1 的渲染器会在不支持半浮点渲染目标的 WebGL 2 设备和已识别的软件 GPU 上直接绘制赛道与赛车，跳过辉光、环境反射和阴影，并将 3D 画面限制在 960×540 以内。菜单与 HUD 保持原显示尺寸。下方 0.1.0 的下载及其验证范围按各平台列出。
+
+在 Chromium 的 Mesa 软件 GPU 上，960×540 与 1280×720 两种布局都已用键盘选车、选赛道、起跑并加速。起跑后的原始截图分别显示 13 km/h 与 14 km/h，可见车身、其他车手、跑道与比赛 HUD。[960×540](docs/software-renderer-0.1.1/driving-960x540.png) · [1280×720](docs/software-renderer-0.1.1/driving-1280x720.png) · [逐步观测与执行脚本](docs/software-renderer-0.1.1/)
 
 ## Windows 下载
 
