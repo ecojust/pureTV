@@ -97,6 +97,13 @@ def backroad_finland_violet_scene(capture, sample):
 OBSERVER_REQUEST_TIMEOUT = 15
 OBSERVER_SNAPSHOT_TIMEOUT = 45
 OBSERVER_SNAPSHOT_ATTEMPTS = 3
+BACKROAD_ORIGINAL_APK = '67f61471e0e23e9ea963475425d5c43fa9d3265167f9028bd55dc319494fbe3c'
+BACKROAD_ENTRY = 'https://game-kit.invalid/tv.html'
+BACKROAD_FINLAND = BACKROAD_ENTRY + '?mode=quick&stage=finland&car=swift&cond=stage&weather=stage'
+BACKROAD_MENU_SOURCES = {
+    'joystick-games/backroad-rally/src/upstream/src/menu/menu.ts': 'd2c5b5f6d665957cd27ddf46477e8d5f8ed6f5fd7470050f91fb3f86e5372885',
+    'joystick-games/backroad-rally/src/upstream/src/menu/nav.ts': '4d7d57397b4dc816fb270b7bf84c59d2b6c1146f10aa879f856d89eb317391f8',
+}
 NIGHT_LOW_RELOAD_APK = '66e2589ece8a13bc03d9796259b2662aef34c56c166265db0a63d3baa2b72c91'
 NIGHT_LOW_RELOAD_SOURCES = {
     'joystick-games/night-racer/src/src/main.js': 'ad1edb9d785799db5cd357d614005d2e044b79bed7c7635e019e693e65b49004',
@@ -775,6 +782,21 @@ class Acceptance:
         # the normal Low preference handler reloads the document. Do not infer
         # a reload from a decreasing poll counter or an arbitrary changed field.
         game = self.game(before)
+        current = game.get('gameplay', {})
+        stage_expect = [{'path': 'gameplay.phase', 'op': 'eq', 'value': 'running'},
+                        {'path': 'stage', 'op': 'eq', 'value': 'playing'}]
+        if (self.args.game == game.get('game') == 'backroad-rally'
+                and self.report['apk'].get('sha256') == BACKROAD_ORIGINAL_APK and self.report['apk'].get('bytes') == 105024551
+                and before.get('page', {}).get('url') == BACKROAD_ENTRY and game.get('stage') == 'menu'
+                and (current.get('screen'), current.get('flow'), current.get('menuFocus')) == ('stageselect', 'quick', 'start')
+                and current.get('carIndex') == current.get('stageIndex') == 0
+                and step.get('name') == 'Start and wait for untouched warm-up/countdown'
+                and step.get('keys') == ['A'] and step.get('menuTap') is True and step.get('expect') == stage_expect):
+            for name, digest in BACKROAD_MENU_SOURCES.items():
+                assert file_info(ROOT / name)['sha256'] == digest, 'Original Finland location.assign source changed'
+            return {'kind': 'original-finland-stage-location-assign', 'apkSha256': BACKROAD_ORIGINAL_APK,
+                    'sourceSha256': dict(BACKROAD_MENU_SOURCES), 'fromUrl': BACKROAD_ENTRY, 'toUrl': BACKROAD_FINLAND,
+                    'postReloadFreshPollsRequired': 2, 'maximumBootSeconds': 720}
         expected = [{'path': 'gameplay.renderPreset', 'op': 'eq', 'value': 'low'},
                     {'path': 'gameplay.menu.root', 'op': 'eq', 'value': 'title'},
                     {'path': 'gameplay.menu.focusId', 'op': 'eq', 'value': 'start'},
@@ -823,7 +845,9 @@ class Acceptance:
                   'declaredHoldMs': step['holdMs'], 'beforePollCount': self.game(before)['controller']['pollCount'],
                   'reloadBasis': basis, 'samples': [], 'sampleCount': 0, 'samplesTruncated': False}
         self.report.setdefault('menuTapObservations', []).append(record)
-        started = time.monotonic(); transition_deadline = started + step.get('timeoutSeconds', 15)
+        finland_boot = basis is not None and basis['kind'] == 'original-finland-stage-location-assign'
+        transition_seconds = basis['maximumBootSeconds'] if finland_boot else step.get('timeoutSeconds', 15)
+        started = time.monotonic(); transition_deadline = started + transition_seconds
         deadline = transition_deadline
         vulkan_observer = (self.args.game == 'backroad-rally'
                            and self.report.get('apk', {}).get('sha256') == '67f61471e0e23e9ea963475425d5c43fa9d3265167f9028bd55dc319494fbe3c'
@@ -844,7 +868,16 @@ class Acceptance:
                 self.wait_sent_ack(client, sequence, timeout=min(10, remaining))
             record['wire'] = self.menu_wire_pair(key, down_seq, release_seq)
             while time.monotonic() < deadline:
-                state = self.snapshot(timeout=min(OBSERVER_SNAPSHOT_TIMEOUT, max(.001, deadline - time.monotonic())))
+                try:
+                    state = self.snapshot(timeout=min(OBSERVER_SNAPSHOT_TIMEOUT, max(.001, deadline - time.monotonic())))
+                except (RemoteDisconnected, ConnectionResetError, ConnectionAbortedError, ConnectionRefusedError, TimeoutError, URLError) as error:
+                    if (not finland_boot or self.instrument.poll() is not None or isinstance(error, HTTPError)
+                            or isinstance(error, URLError) and not isinstance(error.reason, (ConnectionError, TimeoutError))):
+                        raise
+                    # Only a new GET may provide a state. A missing response breaks the stable sequence.
+                    record['unavailableStageReads'] = record.get('unavailableStageReads', 0) + 1
+                    candidate = None; stable = 0
+                    continue
                 game = self.game(state); count = game.get('controller', {}).get('pollCount')
                 assert not game.get('error') and not game.get('errors'), 'Game error during menu tap'
                 release_seen = self.menu_released(state, before)
@@ -852,6 +885,13 @@ class Acceptance:
                 # In the one source-proven reload, the first new Low document
                 # snapshot is only a baseline, never itself a successful frame.
                 fresh = self.frame_advanced(state, before) or (basis is not None and type(count) is int and count > 0)
+                if finland_boot:
+                    play = game.get('gameplay', {})
+                    fresh = (state.get('page', {}).get('url') == basis['toUrl'] and type(count) is int and count > 0
+                             and game.get('game') == 'backroad-rally' and game.get('renderer') == 'webgl2'
+                             and type(game.get('frames')) is int and game['frames'] > 0
+                             and play.get('stageId') == 'finland' and play.get('carId') == 'swift'
+                             and game.get('controller', {}).get('inputAvailable') is True)
                 qualified = fresh and release_seen and expected
                 observed_at = time.monotonic()
                 if vulkan_observer:
@@ -864,13 +904,15 @@ class Acceptance:
                         assert observed_at <= transition_deadline, 'Backroad menu transition was observed too late'
                         # The two later GETs must corroborate this already timely qualified response.
                         # Slow software GPU frames can delay independent Activity/WebView observations.
-                        deadline = max(transition_deadline, observed_at + 2 * OBSERVER_SNAPSHOT_TIMEOUT)
+                        deadline = transition_deadline if finland_boot else max(transition_deadline, observed_at + 2 * OBSERVER_SNAPSHOT_TIMEOUT)
                         record.update(qualifiedAtSeconds=observed_at-started,
                                       transitionBudgetSeconds=transition_deadline-started,
                                       confirmationBudgetSeconds=2 * OBSERVER_SNAPSHOT_TIMEOUT)
                 record['sampleCount'] += 1
                 record['samples'].append({'pollCount': count, 'released': release_seen, 'expectationMatches': expected,
                                           'qualified': qualified, 'elapsedSeconds': time.monotonic() - started})
+                if finland_boot:
+                    record['samples'][-1].update(url=state.get('page', {}).get('url'), phase=game.get('gameplay', {}).get('phase'))
                 if len(record['samples']) > 64:
                     del record['samples'][16]; record['samplesTruncated'] = True
                 if qualified:
