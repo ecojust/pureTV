@@ -211,8 +211,9 @@ button { font: inherit; color: inherit; }
 .opt {
   display: grid; grid-template-columns: 70px 28px 1fr 28px; align-items: center; gap: 4px;
   padding: 10px 12px; border-radius: 14px; background: var(--panel); border: 3px solid rgba(255,255,255,0.18);
-  cursor: pointer; transition: all 0.15s;
+  cursor: pointer; transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
 }
+.select-screen.active .opt { visibility: visible; }
 .opt.focus { border-color: var(--gold); background: rgba(60,50,20,0.8); box-shadow: 0 0 20px rgba(255,210,63,0.35); }
 .opt-lbl { font-family: var(--display); font-size: 16px; opacity: 0.8; }
 .opt-val { font-family: var(--display); font-size: 21px; text-align: center; white-space: nowrap; }

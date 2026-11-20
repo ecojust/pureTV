@@ -32,3 +32,5 @@ python tests/browser.py --output /tmp/turbo-kart-rally-qa
 ```
 
 浏览器脚本使用 Python Playwright 和支持 WebGL 2 的 Chromium，覆盖键盘比赛与 pureTV 原生桥接协议模拟。原生验证方案见 [qa-plan.json](qa-plan.json)。上游源码使用 MIT，字体使用 OFL 1.1。[许可证](LICENSE) · [第三方说明](NOTICE.md)
+
+浏览器实测包含两种尺寸的实际加速画面、断线恢复，以及 960×540 的难度和圈数选项。[赛中截图与验收记录](docs/browser/README.md)
