@@ -1,0 +1,763 @@
+/* ==========================================================================
+ * Kart Rush sound: everything is synthesised with WebAudio (no asset files).
+ *   sound.unlock()            call from a user gesture (Start button); creates/resumes the context
+ *   sound.update(dt, mix)     every frame: engines, drift screech
+ *   sound.<sfx>()             one-shots: beep, go, bump, boost, charged, lap, finalLap, finish, ...
+ *   sound.music(mode, track)  'race' (that track's song) / 'menu' music loop, or false to stop
+ *   sound.musicTempo(rate)    the band speeds up (last lap)
+ *   sound.setMuted(bool)      remembered in localStorage
+ *   sound.setVolume(bus, v)   'music' | 'sfx' (effects, engines, drift squeal), 0..1 (Settings; the game remembers it)
+ * ========================================================================== */
+
+const MUTE_KEY = 'kart-rush-muted';
+const VOL = { master: 0.8, engine: 0.16, rivals: 0.09, drift: 0.07, sfx: 0.5, music: 0.11 };
+
+let ctx = null;
+let out, sfxBus, musicBus, musicLP, engineBus, noiseBuf;
+let duckAmt = 0; // 0..1: how far the music is pushed down and muffled (gore sequence)
+let player, rivals = [], drift;
+let muted = readMuted();
+const level = { music: 1, sfx: 1 };
+
+function readMuted() {
+  try { return localStorage.getItem(MUTE_KEY) === '1'; } catch { return false; }
+}
+
+/** Creates the audio graph on first call. Must run inside a user gesture on iOS. */
+function unlock() {
+  if (!ctx) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    // iOS: play through the ringer/silent switch like a game, not like a notification
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch { /* older iOS */ }
+    ctx = new AC();
+    out = gainNode(muted ? 0 : VOL.master, ctx.destination);
+    const comp = ctx.createDynamicsCompressor();
+    comp.connect(out);
+    sfxBus = gainNode(VOL.sfx * level.sfx, comp);
+    musicLP = ctx.createBiquadFilter(); musicLP.type = 'lowpass'; musicLP.frequency.value = 20000; musicLP.connect(comp);
+    musicBus = gainNode(VOL.music * level.music * (1 - 0.9 * duckAmt), musicLP);
+    engineBus = gainNode(1, comp);
+    noiseBuf = makeNoise();
+    player = makeEngine(VOL.engine, 0);
+    drift = makeDrift();
+    if (musicMode) music(musicMode); // e.g. the title music, asked for before the first tap
+  }
+  if (ctx.state !== 'running') ctx.resume().catch(() => {});
+}
+
+function gainNode(value, dest) {
+  const g = ctx.createGain();
+  g.gain.value = value;
+  if (dest) g.connect(dest);
+  return g;
+}
+
+function makeNoise() {
+  const buf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  return buf;
+}
+
+function noiseSource(loop = false) {
+  const src = ctx.createBufferSource();
+  src.buffer = noiseBuf;
+  src.loop = loop;
+  return src;
+}
+
+/**
+ * Kart engine: a soft hum (harmonics rolling off as 1/k^2, between a sawtooth's 1/k, which grated at a steady
+ * pitch, and a sine) plus a sub an octave down, through a lowpass, with a gentle "putt" tremolo. Pitch
+ * follows revs, not speed: see engineRevs. Build 29 made it softer again (user: annoying after the items
+ * came in): 1/k^1.5 -> 1/k^2, square tremolo -> sine and shallower, lowpass ~35% lower.
+ */
+let engineWave = null;
+function makeEngine(level, detune) {
+  if (!engineWave) {
+    const n = 16, real = new Float32Array(n), imag = new Float32Array(n);
+    for (let k = 1; k < n; k++) imag[k] = 1 / k ** 2;
+    engineWave = ctx.createPeriodicWave(real, imag);
+  }
+  const pan = ctx.createStereoPanner();
+  pan.connect(engineBus);
+  const gain = gainNode(0, pan);
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.Q.value = 0.7;
+  filter.connect(gain);
+  const trem = gainNode(1, filter);
+  const a = ctx.createOscillator(), b = ctx.createOscillator();
+  a.setPeriodicWave(engineWave);
+  b.type = 'triangle';
+  b.detune.value = 7 + detune;
+  a.detune.value = detune;
+  const bLevel = gainNode(0.5, trem);
+  a.connect(trem);
+  b.connect(bLevel);
+  // Tremolo LFO: modulates trem.gain around 1
+  const lfo = ctx.createOscillator();
+  lfo.type = 'sine';
+  const lfoDepth = gainNode(0.3, trem.gain);
+  lfo.connect(lfoDepth);
+  [a, b, lfo].forEach((o) => o.start());
+  return { a, b, lfo, lfoDepth, filter, gain, pan, level,
+    rpm: 0.3, gear: 0, shift: 0, change: 0, phase: Math.random() * 10 };
+}
+
+// Speed ratio at which each virtual gear tops out. Upshifts drop the revs: accelerating sounds like
+// "rrrRRR-rrRRR" instead of one long slide up to a fixed note.
+const GEARS = [0, 0.3, 0.55, 0.78, 1];
+
+/**
+ * Revs 0..~1.1 from speed through the gears; free-revving when the wheels are off the ground, sagging
+ * when off the gas. Also tracks how much the revs are changing (`change`), which sets how present the
+ * engine is: a steady drone at top speed fades back after a couple of seconds.
+ */
+function engineRevs(e, ratio, throttle, air, dt) {
+  let g = e.gear;
+  while (g < GEARS.length - 2 && ratio > GEARS[g + 1] + 0.02) g++;
+  while (g > 0 && ratio < GEARS[g] - 0.05) g--;
+  if (g > e.gear) e.shift = 0.14; // the lift while the next gear goes in
+  e.gear = g;
+  const within = Math.min(1.15, Math.max(0, (ratio - GEARS[g]) / (GEARS[g + 1] - GEARS[g])));
+  let target = 0.32 + 0.6 * within;
+  if (!throttle) target -= 0.08;
+  if (air) target = Math.min(1.12, target + 0.22); // wheels spinning free over a jump
+  if (e.shift > 0) { e.shift -= dt; target -= 0.06; }
+  const before = e.rpm;
+  e.rpm += (target - e.rpm) * (1 - Math.exp(-dt * (air ? 10 : 7)));
+  const rate = Math.abs(e.rpm - before) / Math.max(dt, 1e-3);
+  e.change += (Math.min(1, rate * 3 + (e.shift > 0 ? 1 : 0)) - e.change) * (1 - Math.exp(-dt * (rate > 0.05 ? 6 : 0.8)));
+}
+
+function setEngine(e, { ratio, throttle, air = false, vol, pan = 0 }, dt) {
+  const t = ctx.currentTime, k = 0.06; // smoothing time constant
+  engineRevs(e, Math.min(ratio, 1.3), throttle, air, dt);
+  // a little unsteadiness, so even a held top speed isn't one fixed note
+  const wobble = 1 + 0.012 * Math.sin(t * 2.3 + e.phase) + 0.008 * Math.sin(t * 5.7 + e.phase * 2);
+  const f = (40 + e.rpm * 92) * wobble;
+  e.a.frequency.setTargetAtTime(f, t, k);
+  e.b.frequency.setTargetAtTime(f * 0.5, t, k);
+  e.lfo.frequency.setTargetAtTime(f / 4, t, k);
+  e.lfoDepth.gain.setTargetAtTime(0.06 + 0.14 * Math.max(0, 1 - e.rpm), t, k);
+  e.filter.frequency.setTargetAtTime(260 + e.rpm * 320 + throttle * 100, t, k);
+  // present when the revs move (pulling away, shifts, corners, jumps), ~60% at a steady cruise
+  const presence = 0.6 + 0.4 * e.change;
+  const shiftDip = e.shift > 0 ? 0.6 : 1;
+  e.gain.gain.setTargetAtTime(e.level * vol * (0.6 + 0.4 * throttle) * presence * shiftDip, t, k);
+  e.pan.pan.setTargetAtTime(pan, t, k);
+}
+
+/** Looping tyre squeal (band-passed noise), faded in while drifting. */
+function makeDrift() {
+  const src = noiseSource(true);
+  const bp = ctx.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.value = 1800;
+  bp.Q.value = 6;
+  const gain = gainNode(0, engineBus);
+  src.connect(bp).connect(gain);
+  src.start();
+  return { bp, gain };
+}
+
+/**
+ * Per-frame mix.
+ * mix = { live, duck, player: {ratio, throttle, air}, drift: 0..1, charged, rivals: [{ratio, throttle, air, dist, pan}] }
+ */
+function update(dt, mix) {
+  if (!ctx || ctx.state !== 'running') return;
+  const t = ctx.currentTime;
+  setEngine(player, { ...mix.player, vol: mix.live ? 1 : 0.6 }, dt);
+  engineBus.gain.setTargetAtTime(level.sfx * (mix.duck ? 0.12 : 1), t, mix.duck ? 0.5 : 0.15); // engines fade behind menus
+
+  while (rivals.length < mix.rivals.length) rivals.push(makeEngine(VOL.rivals, (rivals.length + 1) * 23));
+  mix.rivals.forEach((r, i) => {
+    const near = Math.max(0, 1 - r.dist / 45);
+    setEngine(rivals[i], { ratio: r.ratio, throttle: r.throttle, air: r.air, vol: near * near, pan: r.pan }, dt);
+  });
+
+  drift.gain.gain.setTargetAtTime(VOL.drift * mix.drift, t, 0.05);
+  drift.bp.frequency.setTargetAtTime(mix.charged ? 2600 : 1800, t, 0.05);
+}
+
+// ---------- One-shot helpers ----------
+function tone(freq, start, dur, { type = 'square', vol = 0.3, slide = 0, bus = sfxBus } = {}) {
+  const o = ctx.createOscillator();
+  o.type = type;
+  o.frequency.setValueAtTime(freq, start);
+  if (slide) o.frequency.exponentialRampToValueAtTime(freq * slide, start + dur);
+  const g = gainNode(0, bus);
+  g.gain.setValueAtTime(0, start);
+  g.gain.linearRampToValueAtTime(vol, start + 0.005);
+  g.gain.exponentialRampToValueAtTime(0.001, start + dur);
+  o.connect(g);
+  o.start(start);
+  o.stop(start + dur + 0.02);
+}
+
+function noiseHit(start, dur, { freq = 800, type = 'lowpass', vol = 0.4, sweepTo = 0, q = 1, bus = sfxBus } = {}) {
+  const src = noiseSource();
+  const f = ctx.createBiquadFilter();
+  f.type = type;
+  f.Q.value = q;
+  f.frequency.setValueAtTime(freq, start);
+  if (sweepTo) f.frequency.exponentialRampToValueAtTime(sweepTo, start + dur);
+  const g = gainNode(0, bus);
+  g.gain.setValueAtTime(vol, start);
+  g.gain.exponentialRampToValueAtTime(0.001, start + dur);
+  src.connect(f).connect(g);
+  src.start(start, Math.random() * 0.5);
+  src.stop(start + dur + 0.02);
+}
+
+/** Band-passed noise that swells (a rush building up): f0 -> f1 over `dur`, loudest at the end. */
+function noiseRise(start, dur, { f0 = 300, f1 = 2400, vol = 0.3, q = 2 } = {}) {
+  const src = noiseSource(), f = ctx.createBiquadFilter();
+  f.type = 'bandpass'; f.Q.value = q;
+  f.frequency.setValueAtTime(f0, start); f.frequency.exponentialRampToValueAtTime(f1, start + dur);
+  const g = gainNode(0.001, sfxBus);
+  g.gain.setValueAtTime(0.001, start); g.gain.exponentialRampToValueAtTime(vol, start + dur); g.gain.linearRampToValueAtTime(0, start + dur + 0.04);
+  src.connect(f).connect(g);
+  src.start(start, Math.random() * 0.5); src.stop(start + dur + 0.06);
+}
+
+/** A wet splat at `t`: a slap, a low thud and a handful of rising bubbles. v 0..1.4 */
+function splatAt(t, v = 1) {
+  noiseHit(t, 0.16, { freq: 1800, sweepTo: 260, type: 'bandpass', q: 1.1, vol: 0.7 * v });
+  noiseHit(t, 0.07, { freq: 3500, type: 'highpass', vol: 0.25 * v });
+  tone(150, t, 0.2, { type: 'sine', vol: 0.55 * v, slide: 0.35 });
+  const n = 4 + Math.round(4 * v);
+  for (let i = 0; i < n; i++) tone(220 + Math.random() * 520, t + 0.06 + i * 0.045 + Math.random() * 0.05, 0.07 + Math.random() * 0.08, { type: 'sine', vol: 0.13 * v, slide: 1.8 + Math.random() });
+}
+
+/** Bone: a burst of tiny dry clicks (cracks) over a dull knock. `n` clicks within ~`span` s. */
+function bonesAt(t, v = 1, n = 6, span = 0.18) {
+  tone(140, t, 0.12, { type: 'sine', vol: 0.35 * v, slide: 0.5 });
+  for (let i = 0; i < n; i++) noiseHit(t + Math.random() * span, 0.016, { freq: 1800 + Math.random() * 3200, type: 'highpass', vol: 0.4 * v * (1 - (i / n) * 0.5) });
+}
+
+const ready = () => ctx && ctx.state === 'running';
+const now = () => ctx.currentTime + 0.01;
+const notes = (list, step, opts) => { const t = now(); list.forEach((f, i) => f && tone(f, t + i * step, step * 1.6, opts)); };
+
+let lastBump = 0;
+let starTimer = 0;
+let starBus = null; // the star theme's own gain, so it can be cut when the star ends
+const sfx = {
+  beep() { if (ready()) tone(440, now(), 0.18, { vol: 0.25 }); },
+  go() { if (ready()) tone(880, now(), 0.5, { vol: 0.3 }); },
+  stall() { if (ready()) notes([98, 0, 82, 0, 73], 0.07, { type: 'square', vol: 0.2, slide: 0.7 }); },
+  bump(strength = 1) {
+    if (!ready() || ctx.currentTime - lastBump < 0.12) return;
+    lastBump = ctx.currentTime;
+    const s = Math.min(1, strength);
+    tone(90, now(), 0.18, { type: 'sine', vol: 0.5 * s, slide: 0.5 });
+    noiseHit(now(), 0.15, { freq: 900, vol: 0.35 * s });
+  },
+  boost() {
+    if (!ready()) return;
+    noiseHit(now(), 0.7, { freq: 400, sweepTo: 4000, type: 'bandpass', q: 1.5, vol: 0.5 });
+    tone(220, now(), 0.5, { type: 'sawtooth', vol: 0.12, slide: 2 });
+  },
+  charged() { if (ready()) notes([1318, 1760], 0.06, { type: 'triangle', vol: 0.18 }); },
+  lap() { if (ready()) notes([784, 1047], 0.09, { type: 'triangle', vol: 0.25 }); },
+  finalLap() { if (ready()) notes([523, 659, 784, 1047, 0, 1047], 0.08, { vol: 0.15 }); },
+  finish(win) {
+    if (!ready()) return;
+    const tune = win ? [523, 659, 784, 1047, 0, 784, 1047, 1319] : [392, 523, 659, 0, 523, 659];
+    notes(tune, 0.11, { vol: 0.18 });
+    notes(tune.map((f) => f / 2), 0.11, { type: 'triangle', vol: 0.18 });
+  },
+  overtake() { if (ready()) tone(1200, now(), 0.08, { type: 'triangle', vol: 0.12, slide: 1.3 }); },
+  click() { if (ready()) tone(660, now(), 0.05, { type: 'triangle', vol: 0.15 }); },
+  /** Box smash, then roulette ticks for `roll` seconds and a "got it" ding. */
+  itemBox(roll) {
+    if (!ready()) return;
+    const t = now();
+    noiseHit(t, 0.12, { freq: 3000, type: 'highpass', vol: 0.3 });
+    for (let s = 0.05; s < roll; s += 0.07) tone(900 + ((s * 100) % 3) * 200, t + s, 0.04, { type: 'square', vol: 0.06 });
+    tone(1568, t + roll, 0.25, { type: 'triangle', vol: 0.2 });
+  },
+  /** An item box popped (anyone's): a boom, a glassy shatter and a quick sparkle run. `v` 0..1 = loudness. */
+  boxPop(v = 1) {
+    if (!ready() || v <= 0.02) return;
+    const t = now();
+    tone(160, t, 0.22, { type: 'sine', vol: 0.4 * v, slide: 0.4 });
+    noiseHit(t, 0.3, { freq: 2500, sweepTo: 6000, type: 'bandpass', q: 1, vol: 0.4 * v });
+    [1047, 1319, 1568, 2093].forEach((f, i) => tone(f, t + 0.04 + i * 0.045, 0.14, { type: 'triangle', vol: 0.14 * v }));
+  },
+  /** A green shell blowing up. `v` 0..1 = loudness. */
+  shellBang(v = 1) {
+    if (!ready()) return;
+    const t = now();
+    tone(130, t, 0.3, { type: 'sine', vol: 0.5 * v, slide: 0.3 });
+    noiseHit(t, 0.35, { freq: 1800, sweepTo: 300, type: 'lowpass', vol: 0.5 * v });
+  },
+  drop() { if (ready()) tone(300, now(), 0.15, { type: 'triangle', vol: 0.2, slide: 0.6 }); },
+  throwShell() {
+    if (!ready()) return;
+    noiseHit(now(), 0.25, { freq: 2000, sweepTo: 600, type: 'bandpass', q: 2, vol: 0.35 });
+  },
+  spin() {
+    if (!ready()) return;
+    tone(700, now(), 0.7, { type: 'square', vol: 0.15, slide: 0.25 });
+    noiseHit(now(), 0.2, { freq: 1200, vol: 0.4 });
+  },
+  /** What a hit sounds like per item (`what` from spinOut), `v` 0..1 loudness: a squish, a thud, a boom, a bonk. */
+  crate(v = 1) { // a wooden crate breaking
+    if (!ready()) return;
+    const t = now();
+    noiseHit(t, 0.1, { freq: 1500, type: 'bandpass', vol: 0.5 * v, q: 1.5 });
+    tone(170, t, 0.09, { type: 'square', vol: 0.18 * v, slide: 0.5 });
+    for (let i = 1; i < 4; i++) noiseHit(t + i * 0.035, 0.05, { freq: 2400 - i * 400, type: 'bandpass', vol: 0.2 * v, q: 4 });
+  },
+  hit(what, v = 1) {
+    if (!ready()) return;
+    const t = now();
+    if (what === 'banana') {
+      tone(260, t, 0.3, { type: 'sine', vol: 0.35 * v, slide: 3 });
+      tone(900, t + 0.05, 0.25, { type: 'triangle', vol: 0.15 * v, slide: 0.3 });
+      noiseHit(t, 0.12, { freq: 700, type: 'lowpass', vol: 0.3 * v });
+    } else if (what === 'green' || what === 'red') {
+      tone(110, t, 0.35, { type: 'sine', vol: 0.55 * v, slide: 0.3 });
+      noiseHit(t, 0.4, { freq: 2200, sweepTo: 250, type: 'lowpass', vol: 0.55 * v });
+      tone(520, t + 0.1, 0.5, { type: 'square', vol: 0.1 * v, slide: 0.3 });
+    } else if (what === 'bomb') { // the blast itself is sound.explosion: only a dull slap here
+      noiseHit(t, 0.15, { freq: 800, vol: 0.2 * v });
+    } else if (what === 'blue') {
+      tone(70, t, 0.8, { type: 'sine', vol: 0.6 * v, slide: 0.4 });
+      noiseHit(t, 0.7, { freq: 1500, sweepTo: 120, type: 'lowpass', vol: 0.6 * v });
+    } else if (what === 'star' || what === 'bullet') {
+      tone(200, t, 0.25, { type: 'square', vol: 0.3 * v, slide: 0.25 });
+      noiseHit(t, 0.2, { freq: 1000, vol: 0.45 * v });
+      tone(1200, t + 0.12, 0.4, { type: 'triangle', vol: 0.15 * v, slide: 0.4 });
+    } else {
+      tone(700, t, 0.7, { type: 'square', vol: 0.15 * v, slide: 0.25 });
+      noiseHit(t, 0.2, { freq: 1200, vol: 0.4 * v });
+    }
+  },
+  /** A kart slammed into a wall: a heavy thump and a crunch. `v` ~0.5..1.4 = how hard. */
+  crash(v = 1) {
+    if (!ready()) return;
+    const t = now(), w = Math.min(v, 1);
+    tone(80, t, 0.35, { type: 'sine', vol: 0.6 * w, slide: 0.35 });
+    noiseHit(t, 0.3, { freq: 900, sweepTo: 200, type: 'lowpass', vol: 0.55 * w });
+    noiseHit(t + 0.02, 0.12, { freq: 3500, type: 'bandpass', q: 1, vol: 0.3 * w });
+  },
+  /** A red shell leaving the kart: a higher, buzzier whoosh than the green one. */
+  throwRed() {
+    if (!ready()) return;
+    noiseHit(now(), 0.3, { freq: 1200, sweepTo: 3500, type: 'bandpass', q: 3, vol: 0.35 });
+    tone(500, now(), 0.3, { type: 'sawtooth', vol: 0.08, slide: 2 });
+  },
+  hitOther() { if (ready()) notes([880, 1175], 0.07, { type: 'square', vol: 0.12 }); },
+  warn() { if (ready()) tone(1400, now(), 0.12, { type: 'square', vol: 0.12 }); },
+  shieldUp() {
+    if (!ready()) return;
+    tone(400, now(), 0.35, { type: 'sine', vol: 0.25, slide: 2.5 });
+    notes([0, 0, 1568, 2093], 0.05, { type: 'triangle', vol: 0.1 });
+  },
+  shieldPop() {
+    if (!ready()) return;
+    noiseHit(now(), 0.18, { freq: 5000, type: 'highpass', vol: 0.4 });
+    tone(1800, now(), 0.25, { type: 'sine', vol: 0.2, slide: 0.4 });
+  },
+  /** Star: a rising whoosh, then its own bouncy sparkling theme for as long as it lasts (dur s). Was a short
+   * jingle that sounded like the lap / final-lap ones (user: "play a different sound"). */
+  star(dur = 6) {
+    if (!ready()) return;
+    const t = now();
+    starBus?.disconnect();
+    starBus = gainNode(1, sfxBus);
+    noiseHit(t, 0.6, { freq: 600, sweepTo: 7000, type: 'bandpass', q: 2, vol: 0.35, bus: starBus });
+    tone(262, t, 0.5, { type: 'sawtooth', vol: 0.1, slide: 4, bus: starBus });
+    const riff = [523, 784, 1047, 784, 587, 880, 1175, 880, 659, 988, 1319, 988, 698, 1047, 1397, 1047];
+    // Scheduled ~0.5 s ahead from a timer, not all ~170 notes at once (that made iPhones hitch when the star started)
+    clearInterval(starTimer);
+    let s = 0.4, i = 0;
+    const bus = starBus;
+    const feed = () => {
+      if (bus !== starBus || !ctx || ctx.currentTime > t + dur) { clearInterval(starTimer); return; }
+      while (s < dur - 0.15 && t + s < ctx.currentTime + 0.5) {
+        const f = riff[i % riff.length];
+        tone(f, t + s, 0.08, { type: 'square', vol: 0.06, bus });
+        if (i % 2 === 0) tone(f / 4, t + s, 0.16, { type: 'triangle', vol: 0.12, bus });
+        if (i % 4 === 1) tone(f * 2, t + s, 0.06, { type: 'sine', vol: 0.05, bus }); // sparkle
+        s += 0.09; i++;
+      }
+      if (s >= dur - 0.15) clearInterval(starTimer);
+    };
+    feed();
+    starTimer = setInterval(feed, 200);
+  },
+  starEnd() {
+    if (!ready()) return;
+    clearInterval(starTimer);
+    starBus?.gain.setTargetAtTime(0, ctx.currentTime, 0.03); // cut whatever of the theme is left
+    notes([1047, 784, 523], 0.07, { type: 'triangle', vol: 0.12 });
+  },
+  bullet() {
+    if (!ready()) return;
+    noiseHit(now(), 0.4, { freq: 300, vol: 0.6 });
+    noiseHit(now(), 1.2, { freq: 600, sweepTo: 3000, type: 'bandpass', q: 1, vol: 0.4 });
+    tone(110, now(), 1.0, { type: 'sawtooth', vol: 0.12, slide: 2 });
+  },
+  blueLaunch() {
+    if (!ready()) return;
+    noiseHit(now(), 0.8, { freq: 3000, sweepTo: 500, type: 'bandpass', q: 3, vol: 0.35 });
+    notes([1760, 0, 1760, 0, 1760], 0.06, { type: 'sine', vol: 0.1 });
+  },
+  /** A bomb going off: chest thump + sub, a sharp crack, a roaring body, a rumbling tail and debris falling after. `ring`: the player's own hit (ears ringing). */
+  explosion(strength = 1, ring = false) {
+    if (!ready()) return;
+    const t = now(), s = strength;
+    tone(95, t, 0.9, { type: 'sine', vol: 0.8 * s, slide: 0.3 });
+    tone(48, t + 0.02, 1.4, { type: 'sine', vol: 0.6 * s, slide: 0.6 });
+    noiseHit(t, 0.05, { freq: 5000, type: 'highpass', vol: 0.6 * s });
+    noiseHit(t, 1.6, { freq: 2600, sweepTo: 70, vol: 0.7 * s, q: 0.7 });
+    noiseHit(t + 0.1, 2.6, { freq: 380, sweepTo: 50, vol: 0.45 * s });
+    for (let i = 0; i < 9; i++) noiseHit(t + 0.5 + Math.random() * 1.6, 0.05, { freq: 1400 + Math.random() * 2200, type: 'bandpass', q: 2, vol: 0.18 * s });
+    if (ring) tone(3150, t + 0.05, 2.4, { type: 'sine', vol: 0.05, slide: 0.97 });
+  },
+  /** The rider torn apart: a ripping wet burst and a handful of staggered splats as the chunks fly. */
+  gibs() {
+    if (!ready()) return;
+    const t = now();
+    noiseHit(t, 0.5, { freq: 900, sweepTo: 300, type: 'bandpass', q: 0.8, vol: 0.35 });
+    for (let i = 0; i < 7; i++) splatAt(t + 0.05 + i * 0.07 + Math.random() * 0.06, 0.45 + Math.random() * 0.3);
+  },
+  /** Wet splat (blood / flesh hitting something). */
+  splat(v = 1) { if (ready()) splatAt(now(), v); },
+  /** Bones cracking / rattling: `n` clicks over `span` s. */
+  bones(v = 1, n = 6, span = 0.18) { if (ready()) bonesAt(now(), v, n, span); },
+  /** The eyeball tearing out of the skull: a plop and a wet rising squelch. */
+  eyePop() {
+    if (!ready()) return;
+    const t = now();
+    tone(600, t, 0.11, { type: 'sine', vol: 0.55, slide: 0.2 });
+    noiseHit(t, 0.012, { freq: 3000, type: 'highpass', vol: 0.4 });
+    noiseHit(t + 0.02, 0.3, { freq: 300, sweepTo: 1400, type: 'bandpass', q: 4, vol: 0.3 });
+    for (let i = 0; i < 3; i++) tone(300 + Math.random() * 300, t + 0.08 + i * 0.06, 0.08, { type: 'sine', vol: 0.12, slide: 2 });
+  },
+  /** A rush that builds for `dur` s: something flying at you. */
+  whoosh(dur = 1) { if (ready()) noiseRise(now(), dur, { f0: 250, f1: 2600, vol: 0.32 }); },
+  /** The eyeball hitting the lens: a big wet splat, a thud, a slow smear, then drips. */
+  eyeSplat() {
+    if (!ready()) return;
+    const t = now();
+    splatAt(t, 1.35);
+    tone(65, t, 0.5, { type: 'sine', vol: 0.6, slide: 0.5 });
+    noiseHit(t + 0.1, 1.2, { freq: 700, sweepTo: 180, type: 'bandpass', q: 1.5, vol: 0.14 });
+    for (let i = 0; i < 5; i++) tone(350 + Math.random() * 300, t + 0.5 + i * 0.28 + Math.random() * 0.15, 0.06, { type: 'sine', vol: 0.1, slide: 0.5 });
+  },
+  /** The skeleton hitting the road: a heavy thud, a splat, bones cracking, then a rattle. */
+  landing() {
+    if (!ready()) return;
+    const t = now();
+    tone(80, t, 0.45, { type: 'sine', vol: 0.85, slide: 0.35 });
+    noiseHit(t, 0.3, { freq: 420, type: 'lowpass', vol: 0.5 });
+    splatAt(t + 0.02, 0.95);
+    bonesAt(t + 0.03, 1.1, 10, 0.25);
+    for (let i = 0; i < 8; i++) bonesAt(t + 0.35 + i * 0.09 + Math.random() * 0.08, 0.3 * (1 - i / 10), 2, 0.04);
+  },
+  /** The rider dropping back into the seat. */
+  pop() {
+    if (!ready()) return;
+    const t = now();
+    tone(380, t, 0.08, { type: 'sine', vol: 0.3, slide: 0.4 });
+    noiseHit(t, 0.15, { freq: 1200, sweepTo: 300, vol: 0.2 });
+  },
+  /** Blood drops hitting the road: `n` tiny wet ticks within ~80 ms. */
+  patter(n = 1) {
+    if (!ready()) return;
+    const t = now();
+    for (let i = 0; i < Math.min(n, 5); i++) noiseHit(t + Math.random() * 0.08, 0.02, { freq: 1200 + Math.random() * 1500, type: 'bandpass', q: 3, vol: 0.07 });
+  },
+  /** 0..1: push the music down and muffle it (the gore sequence); smooth both ways. */
+  setDuck(d) {
+    if (d === duckAmt) return;
+    duckAmt = d;
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    musicBus.gain.setTargetAtTime(VOL.music * level.music * (1 - 0.9 * d), t, d ? 0.05 : 0.5);
+    musicLP.frequency.setTargetAtTime(d ? 450 : 20000, t, d ? 0.08 : 0.4);
+  },
+};
+
+// ---------- Music: little step-sequenced chiptune loops ----------
+// 16 steps per bar. 'menu': slower and softer, for the title and results screens. Race music: one song per track (72.2), so a place sounds like itself.
+// A song: `bpm`, `chords` [root, third, fifth per bar, MIDI], `lead` (a list per bar: semitones above the bar's root + 12, -1 = rest), optional `leadTwin` (a second guitar, this many semitones off), and its `voice(s, t, STEP, chord, opt, bar)`:
+// the band under the lead (bass, stabs, drums). Bars loop; lead and chords may have different lengths, so an A part and a B part just extend the lists.
+const CHORDS = [[48, 52, 55], [43, 47, 50], [45, 48, 52], [41, 45, 48]]; // MIDI roots + triads: C - G - Am - F
+const LEAD = [ // scale degrees in semitones above the chord root (+12), -1 = rest
+  [12, -1, 16, -1, 19, -1, 16, 19, 24, -1, 19, -1, 16, -1, 19, -1],
+  [12, -1, 16, -1, 19, -1, 24, -1, 23, -1, 19, -1, 16, -1, 14, -1],
+  [12, -1, 15, -1, 19, -1, 15, 19, 24, -1, 22, -1, 19, -1, 15, -1],
+  [12, -1, 16, -1, 19, 21, 19, -1, 16, -1, 14, -1, 12, -1, 11, -1],
+];
+const MENU_ARP = [0, 12, 7, 12, 4, 12, 7, 12]; // offsets from the chord root, eighth notes
+const MENU_BPM = 96;
+const midi = (n) => 440 * 2 ** ((n - 69) / 12);
+const _ = -1;
+const kick = (t, opt, vol = 0.8, f = 150) => tone(f, t, 0.12, { ...opt, type: 'sine', vol, slide: 0.3 });
+const snare = (t, opt, vol = 0.5, freq = 1800) => noiseHit(t, 0.12, { ...opt, freq, type: 'bandpass', vol });
+const hat = (t, opt, vol = 0.2, dur = 0.03) => noiseHit(t, dur, { ...opt, freq: 7000, type: 'highpass', vol });
+
+const SONGS = {
+  // Green Valley: the game's original tune, bright major pop
+  meadow: {
+    bpm: 148, chords: CHORDS, lead: LEAD, leadType: 'triangle', leadVol: 0.45,
+    voice(s, t, STEP, [root, third, fifth], opt) {
+      if (s % 2 === 0) tone(midi(root - 12 + (s % 4 === 2 ? 12 : 0)), t, STEP * 1.8, { ...opt, type: 'square', vol: 0.35 }); // driving eighths, octave jump on the off-beat
+      if (s % 4 === 2) [third, fifth].forEach((n) => tone(midi(n + 12), t, STEP * 0.9, { ...opt, type: 'square', vol: 0.08 })); // chord stabs
+      if (s % 4 === 0) kick(t, opt);
+      if (s % 8 === 4) snare(t, opt);
+      if (s % 2 === 0) hat(t, opt);
+    },
+  },
+  // Canyon Run: a Texas boogie in A major, nothing like the other six. Two guitars an octave apart on a hook that calls and answers, the shuffle riff under it, cowbell, claps; a 12-bar blues, then a big F - G - A climb and a stop with a pick-up run back into the top.
+  canyon: {
+    bpm: 160, leadType: 'sawtooth', leadVol: 0.15, leadLen: 1.7, leadTwin: -12,
+    chords: [[45, 49, 52], [45, 49, 52], [45, 49, 52], [45, 49, 52], [38, 42, 45], [38, 42, 45], [45, 49, 52], [45, 49, 52], [40, 44, 47], [38, 42, 45], [45, 49, 52], [40, 44, 47], [41, 45, 48], [43, 47, 50], [45, 49, 52], [45, 49, 52]], // A A A A D D A A E D A E F G A A
+    lead: [
+      [12, _, 12, _, 15, 16, 19, _, _, _, 19, _, 16, _, 12, _],
+      [_, _, _, _, 19, _, 17, _, 16, _, 14, _, 12, _, _, _],
+      [12, _, 12, _, 15, 16, 19, _, _, _, 19, _, 16, _, 12, _],
+      [24, _, 24, _, 22, _, 19, _, 17, _, 16, _, 15, 16, _, _],
+      [24, _, 24, _, 27, 28, 31, _, _, _, 31, _, 28, _, 24, _],
+      [_, _, _, _, 31, _, 29, _, 28, _, 26, _, 24, _, _, _],
+      [12, _, 12, _, 15, 16, 19, _, _, _, 19, _, 16, _, 12, _],
+      [_, _, _, _, 19, _, 17, _, 16, _, 14, _, 12, _, _, _],
+      [24, _, 24, _, 27, 28, 31, _, _, _, 31, _, 28, _, 24, _],
+      [31, _, 31, _, 28, _, 24, _, _, _, 24, _, 28, _, 31, _],
+      [24, _, 19, _, 16, _, 12, _, 15, 16, _, 19, _, _, _, _],
+      [19, _, _, 19, _, 19, 22, _, 24, _, _, 24, 28, _, 31, _],
+      [24, _, _, 24, _, 28, 31, _, 31, _, 31, _, 28, _, 24, _],
+      [24, _, _, 24, _, 28, 31, _, 31, _, 31, _, 28, _, 24, _],
+      [31, _, 28, _, 24, _, 19, _, 24, _, 28, _, 31, _, _, _],
+      [24, _, _, _, _, _, _, _, 12, 14, 15, 16, 19, _, _, _],
+    ],
+    voice(s, t, STEP, [root], opt, bar) {
+      if (bar % 16 === 15 && s > 0) { // the stop: the band drops out, only a tom run under the guitars' pick-up
+        if (s >= 8 && s % 2 === 0) tone(190 - (s - 8) * 9, t, 0.14, { ...opt, type: 'sine', vol: 0.65, slide: 0.55 });
+        return;
+      }
+      if (s % 2 === 0) tone(midi(root + [0, 0, 7, 7, 9, 9, 10, 9][s >> 1]), t, STEP * 1.7, { ...opt, type: 'sawtooth', vol: 0.26 }); // the boogie
+      if (s % 8 === 0) tone(midi(root - 12), t, STEP * 3, { ...opt, type: 'triangle', vol: 0.4 });
+      if ([0, 6, 8, 10].includes(s)) kick(t, opt, 0.8, 135);
+      if (s % 8 === 4) { snare(t, opt, 0.5, 2000); noiseHit(t, 0.07, { ...opt, freq: 1200, type: 'bandpass', vol: 0.3, q: 1.5 }); } // snare + claps
+      if (s % 4 === 0) [800, 540].forEach((f) => tone(f, t, 0.07, { ...opt, type: 'square', vol: 0.035 })); // the cowbell
+      if (s % 2 === 0) hat(t, opt, 0.12, s % 4 === 2 ? 0.07 : 0.03);
+    },
+  },
+  // Frost Peak: glassy bells in D major over a soft bass, sleigh bells instead of a hi-hat. Quick but light on its feet.
+  frost: {
+    bpm: 142, leadType: 'sine', leadVol: 0.42, leadLen: 3,
+    chords: [[50, 54, 57], [47, 50, 54], [43, 47, 50], [45, 49, 52], [50, 54, 57], [47, 50, 54], [43, 47, 50], [45, 49, 52]], // D Bm G A, twice
+    lead: [
+      [12, _, 16, _, 19, _, 24, _, 19, _, 16, _, 19, _, 24, _],
+      [15, _, 19, _, 22, _, 24, _, 27, _, 24, _, 22, _, 19, _],
+      [12, _, 16, _, 19, _, 24, _, 28, _, 26, _, 24, _, 21, _],
+      [12, _, 16, _, 19, _, 21, _, 19, _, 16, _, 14, _, 12, _],
+      [24, _, 19, _, 16, _, 19, _, 24, _, 28, _, 24, _, 19, _],
+      [27, _, 24, _, 22, _, 19, _, 15, _, 19, _, 22, _, 24, _],
+      [28, _, 26, _, 24, _, 21, _, 19, _, 21, _, 24, _, 26, _],
+      [28, _, 24, _, 19, _, 16, _, 12, _, _, _, _, _, _, _],
+    ],
+    voice(s, t, STEP, [root, third, fifth], opt) {
+      if (s % 4 === 0) tone(midi(root - 12), t, STEP * 3, { ...opt, type: 'triangle', vol: 0.42 });
+      if (s % 2 === 1) tone(midi(s % 4 === 1 ? third + 24 : fifth + 24), t, STEP * 1.2, { ...opt, type: 'sine', vol: 0.07 }); // shimmer on the off-steps
+      if (s % 8 === 0) kick(t, opt, 0.45, 120);
+      if (s % 8 === 4) noiseHit(t, 0.1, { ...opt, freq: 3200, type: 'bandpass', vol: 0.22 });
+      noiseHit(t, 0.025, { ...opt, freq: 9000, type: 'highpass', vol: s % 4 === 0 ? 0.16 : 0.08 }); // sleigh bells on every step
+    },
+  },
+  // Harbour Run: calypso in F. A steel-drum lead (a short plucked triangle), an off-beat skank, a rolling bass.
+  tech: {
+    bpm: 156, leadType: 'triangle', leadVol: 0.42, leadLen: 1.5,
+    chords: [[53, 57, 60], [46, 50, 53], [48, 52, 55], [53, 57, 60], [53, 57, 60], [50, 53, 57], [46, 50, 53], [48, 52, 55]], // F Bb C F F Dm Bb C
+    lead: [
+      [12, _, 16, 19, _, 16, 19, _, 24, _, 19, _, 16, _, 12, _],
+      [12, _, 16, 19, _, 16, 19, _, 21, _, 19, _, 16, _, 14, _],
+      [19, _, 17, 16, _, 14, 12, _, 14, _, 16, _, 19, _, _, _],
+      [24, _, 19, 16, _, 19, 24, _, 12, _, _, _, _, _, _, _],
+      [24, _, 24, 21, _, 19, 21, _, 24, _, 21, _, 19, _, 16, _],
+      [12, _, 15, 19, _, 15, 19, _, 24, _, 22, _, 19, _, 15, _],
+      [12, _, 14, 16, _, 19, 21, _, 19, _, 16, _, 14, _, 12, _],
+      [19, _, 16, 19, _, 22, 24, _, 22, _, 19, _, 16, _, 14, _],
+    ],
+    voice(s, t, STEP, [root, third, fifth], opt) {
+      if ([0, 3, 6, 10, 12].includes(s)) tone(midi(root - 12 + (s === 6 || s === 12 ? 7 : 0)), t, STEP * 1.6, { ...opt, type: 'triangle', vol: 0.5 });
+      if (s % 4 === 2) [third, fifth].forEach((n) => tone(midi(n + 12), t, STEP * 0.8, { ...opt, type: 'square', vol: 0.07 })); // the skank
+      if (s % 8 === 0) kick(t, opt, 0.6);
+      if ([3, 6, 11, 14].includes(s)) noiseHit(t, 0.05, { ...opt, freq: 2400, type: 'bandpass', vol: 0.26, q: 3 }); // a clave-like tick
+      if (s % 2 === 0) hat(t, opt, 0.12);
+    },
+  },
+  // Temple Run: hand drums and a wooden marimba in G pentatonic minor, circling, not resolving.
+  jungle: {
+    bpm: 138, leadType: 'triangle', leadVol: 0.4, leadLen: 1.3,
+    chords: [[43, 46, 50], [43, 46, 50], [41, 45, 48], [43, 46, 50], [46, 50, 53], [41, 45, 48], [43, 46, 50], [38, 41, 45]], // Gm Gm F Gm Bb F Gm Dm
+    lead: [
+      [12, _, 15, _, 17, 19, _, 17, 15, _, 12, _, 10, _, 12, _],
+      [12, _, 15, _, 17, 19, _, 22, 24, _, 22, _, 19, _, 17, _],
+      [14, _, 17, _, 19, 21, _, 19, 17, _, 14, _, 12, _, 14, _],
+      [24, _, 22, _, 19, 17, _, 19, 15, _, 17, _, 12, _, _, _],
+      [12, _, 16, _, 19, _, 24, 21, 19, _, 16, _, 14, _, 12, _],
+      [14, _, 17, _, 19, 21, _, 24, 21, _, 19, _, 17, _, 14, _],
+      [12, _, 15, 17, 19, _, 22, _, 19, 17, 15, _, 12, _, 10, _],
+      [17, _, 15, _, 12, _, 10, _, 12, _, 15, _, 17, _, 22, _],
+    ],
+    voice(s, t, STEP, [root, third, fifth], opt) {
+      if ([0, 3, 8, 11].includes(s)) tone(midi(root - 12), t, STEP * 2, { ...opt, type: 'sine', vol: 0.55 });
+      if (s % 8 === 6) [third, fifth].forEach((n) => tone(midi(n + 12), t, STEP * 1.2, { ...opt, type: 'triangle', vol: 0.09 }));
+      if ([0, 6, 10].includes(s)) tone(95, t, 0.16, { ...opt, type: 'sine', vol: 0.7, slide: 0.55 }); // low drum
+      if ([3, 7, 12, 14, 15].includes(s)) tone(s === 15 ? 330 : 240, t, 0.08, { ...opt, type: 'sine', vol: 0.34, slide: 0.7 }); // high hand drums
+      if (s % 2 === 1) noiseHit(t, 0.03, { ...opt, freq: 5000, type: 'highpass', vol: 0.09 }); // a shaker
+    },
+  },
+  // Deep Shaft: a runaway mine cart, as dark bluegrass in A minor (77.1; the user didn't like the first one, a marching work song). A banjo rolling non-stop, a fiddle on the tune, the bass on the beat and a train-beat snare.
+  mine: {
+    bpm: 152, leadType: 'sawtooth', leadVol: 0.13, leadLen: 1.7,
+    chords: [[45, 48, 52], [45, 48, 52], [43, 47, 50], [45, 48, 52], [48, 52, 55], [43, 47, 50], [45, 48, 52], [40, 44, 47]], // Am Am G Am C G Am E
+    lead: [
+      [12, _, 15, _, 19, _, 17, 15, 12, _, 19, _, 17, 15, 12, _],
+      [12, _, 15, _, 19, _, 22, _, 24, _, 22, 19, 17, _, 15, _],
+      [16, _, 19, _, 24, _, 21, 19, 16, _, 19, _, 21, 19, 16, _],
+      [15, _, 12, _, 19, _, 17, 15, 12, _, 10, _, 12, _, _, _],
+      [16, _, 19, _, 24, _, 21, 19, 16, _, 19, _, 21, 19, 16, _],
+      [19, _, 24, _, 28, _, 24, 21, 19, _, 16, _, 19, 21, 24, _],
+      [24, _, 22, 19, 17, _, 15, _, 12, _, 15, _, 19, _, 24, _],
+      [28, _, 24, _, 22, _, 19, _, 16, _, 19, _, 22, _, 24, _],
+    ],
+    voice(s, t, STEP, [root, third, fifth], opt) {
+      const roll = [root + 24, third + 24, fifth + 24, root + 36, fifth + 24, third + 24, root + 36, fifth + 24][s % 8]; // the banjo's forward roll
+      tone(midi(roll), t, STEP * 0.9, { ...opt, type: 'triangle', vol: s % 4 === 0 ? 0.2 : 0.13, slide: 0.995 });
+      if (s === 0 || s === 8) tone(midi(root - 12), t, STEP * 2.5, { ...opt, type: 'triangle', vol: 0.6 }); // upright bass: root...
+      if (s === 4 || s === 12) tone(midi(fifth - 24), t, STEP * 2.5, { ...opt, type: 'triangle', vol: 0.5 }); // ...and fifth
+      if (s % 8 === 0) kick(t, opt, 0.6, 110);
+      if (s % 4 === 2) noiseHit(t, 0.04, { ...opt, freq: 2600, type: 'bandpass', vol: 0.16, q: 2 }); // the train beat's brushes
+      if (s === 4 || s === 12) snare(t, opt, 0.42, 2000);
+    },
+  },
+  // Moon Base: an 80s sci-fi chase in F# minor. A sequencer bass running in octaves, a glassy arpeggio, a four-on-the-floor kick, a long gliding lead.
+  moon: {
+    bpm: 144, leadType: 'sine', leadVol: 0.5, leadLen: 2.6,
+    chords: [[42, 45, 49], [42, 45, 49], [38, 42, 45], [40, 44, 47], [42, 45, 49], [45, 49, 52], [38, 42, 45], [37, 41, 44]], // F#m F#m D E F#m A D C#
+    lead: [
+      [12, _, _, _, 15, _, _, 12, 10, _, _, _, 7, _, _, _],
+      [12, _, _, _, 15, _, 17, _, 19, _, _, _, 17, _, 15, _],
+      [19, _, _, _, 16, _, _, 12, 19, _, 21, _, 19, _, 16, _],
+      [12, _, _, _, 16, _, _, 19, 24, _, _, _, 19, _, 16, _],
+      [19, _, _, 17, 15, _, _, 12, 15, _, _, 12, 7, _, _, _],
+      [12, _, _, 16, 19, _, _, 16, 24, _, _, _, 19, _, 16, _],
+      [24, _, _, 23, 19, _, 16, _, 12, _, 16, _, 19, _, 24, _],
+      [24, _, _, _, 28, _, _, _, 31, _, _, 28, 24, _, _, _],
+    ],
+    voice(s, t, STEP, [root, third, fifth], opt) {
+      tone(midi(root - (s % 2 ? 0 : 12)), t, STEP * 0.8, { ...opt, type: 'sawtooth', vol: s % 4 === 0 ? 0.3 : 0.22 }); // the sequencer
+      const arp = [root + 24, fifth + 24, third + 24, root + 36, fifth + 24, third + 36, root + 36, fifth + 36][s % 8];
+      tone(midi(arp), t, STEP * 0.6, { ...opt, type: 'square', vol: 0.045 });
+      if (s % 4 === 0) kick(t, opt, 0.85, 130);
+      if (s === 4 || s === 12) snare(t, opt, 0.45, 2600);
+      if (s % 4 === 2) hat(t, opt, 0.14);
+    },
+  },
+  // Spiral Run (the volcano): fast and heavy in E minor. Chugging low saw, power chords, double kick, a screaming square lead on the second half.
+  spiral: {
+    bpm: 172, leadType: 'square', leadVol: 0.16, leadLen: 1.8,
+    chords: [[40, 43, 47], [40, 43, 47], [36, 40, 43], [38, 42, 45], [40, 43, 47], [40, 43, 47], [45, 48, 52], [35, 39, 42]], // Em Em C D Em Em Am B
+    lead: [
+      [12, _, _, 12, 15, _, 12, _, 19, _, 17, _, 15, _, 14, _],
+      [12, _, _, 12, 15, _, 19, _, 22, _, 24, _, 22, _, 19, _],
+      [12, _, 16, _, 19, _, 24, _, 23, _, 19, _, 16, _, 19, _],
+      [12, _, 16, _, 19, _, 24, _, 26, _, 24, _, 21, _, 19, _],
+      [24, _, 22, _, 19, _, 22, _, 24, _, 27, _, 24, _, 22, _],
+      [19, _, 15, _, 12, _, 15, _, 19, _, 22, _, 24, _, 27, _],
+      [24, _, _, 24, 27, _, 24, _, 22, _, 19, _, 15, _, 19, _],
+      [24, _, _, _, 23, _, _, _, 19, _, 16, _, 15, _, 12, _],
+    ],
+    voice(s, t, STEP, [root, , fifth], opt) {
+      if (s % 2 === 0 && s !== 6 && s !== 14) tone(midi(root), t, STEP * 1.1, { ...opt, type: 'sawtooth', vol: 0.3 }); // the chug
+      if (s === 0 || s === 6 || s === 12) [root + 12, fifth + 12].forEach((n) => tone(midi(n), t, STEP * 2.4, { ...opt, type: 'sawtooth', vol: 0.09 })); // power chord
+      if (s % 4 === 0 || s % 8 === 7) kick(t, opt, 0.75, 130);
+      if (s % 8 === 4) snare(t, opt, 0.55, 2200);
+      if (s % 2 === 0) hat(t, opt, 0.14);
+    },
+  },
+};
+let musicTimer = 0, musicStep = 0, musicNext = 0, musicMode = null, musicRate = 1;
+
+/** music('race' | 'menu' | false). Before the first tap (no audio yet) the wish is kept for unlock(). `track` picks the race song (an id in SONGS; anything else plays Green Valley's). */
+function music(mode, track = null) {
+  musicMode = mode === 'race' ? SONGS[track] || SONGS.meadow : mode || null;
+  musicRate = 1;
+  if (!ctx) return;
+  clearInterval(musicTimer);
+  musicTimer = 0;
+  if (!musicMode) return;
+  musicStep = 0;
+  musicNext = ctx.currentTime + 0.1;
+  musicTimer = setInterval(scheduleMusic, 25);
+}
+
+function scheduleMusic() {
+  if (ctx.state !== 'running') { musicNext = ctx.currentTime + 0.1; return; }
+  const song = musicMode === 'menu' ? null : musicMode;
+  const STEP = 60 / (song ? song.bpm * musicRate : MENU_BPM) / 4;
+  while (musicNext < ctx.currentTime + 0.12) {
+    const bar = (musicStep >> 4), s = musicStep % 16, t = musicNext;
+    const opt = { bus: musicBus };
+    if (song) {
+      const chord = song.chords[bar % song.chords.length];
+      song.voice(s, t, STEP, chord, opt, bar);
+      const l = song.lead[bar % song.lead.length][s];
+      if (l >= 0) {
+        tone(midi(chord[0] + l + 12), t, STEP * (song.leadLen ?? 1.9), { ...opt, type: song.leadType, vol: song.leadVol });
+        if (song.leadTwin) tone(midi(chord[0] + l + 12 + song.leadTwin), t, STEP * (song.leadLen ?? 1.9), { ...opt, type: song.leadType, vol: song.leadVol * 0.7 });
+      }
+    } else {
+      // Arpeggio on eighths, a soft bass note per half bar, the lead every other bar, a gentle kick
+      const [root, third, fifth] = CHORDS[bar % 4];
+      if (s % 2 === 0) tone(midi(root + 12 + MENU_ARP[(s >> 1) % 8]), t, STEP * 1.6, { ...opt, type: 'triangle', vol: 0.22 });
+      if (s % 8 === 0) tone(midi(root - 12), t, STEP * 7, { ...opt, type: 'triangle', vol: 0.4 });
+      const l = LEAD[bar % 4][s];
+      if ((musicStep >> 6) % 2 === 1 && l >= 0 && s % 4 === 0) tone(midi(root + l + 12), t, STEP * 3.5, { ...opt, type: 'square', vol: 0.06 });
+      if (s % 8 === 0) tone(120, t, 0.1, { ...opt, type: 'sine', vol: 0.35, slide: 0.4 });
+      if (s % 8 === 4) [third, fifth].forEach((n) => tone(midi(n), t, STEP * 3, { ...opt, type: 'sine', vol: 0.12 }));
+    }
+    musicNext += STEP;
+    musicStep++;
+  }
+}
+
+/** The last lap: the band plays a little faster until the song is stopped (rate 1 = the song's own tempo). */
+function musicTempo(rate) { musicRate = rate; }
+
+function setVolume(bus, v) {
+  level[bus] = v;
+  if (!ctx) return;
+  if (bus === 'music') musicBus.gain.setTargetAtTime(VOL.music * v * (1 - 0.9 * duckAmt), ctx.currentTime, 0.03);
+  else sfxBus.gain.setTargetAtTime(VOL.sfx * v, ctx.currentTime, 0.03); // engines: update() reads level.sfx
+}
+
+function setMuted(m) {
+  muted = m;
+  try { localStorage.setItem(MUTE_KEY, m ? '1' : '0'); } catch { /* private mode */ }
+  if (ctx) out.gain.setTargetAtTime(m ? 0 : VOL.master, ctx.currentTime, 0.03);
+}
+
+// Pause audio when the app is backgrounded.
+document.addEventListener('visibilitychange', () => {
+  if (!ctx) return;
+  // Only suspend here: the game resumes audio itself (it stays off while the race is paused)
+  if (document.hidden) ctx.suspend().catch(() => {});
+});
+
+/** Pause: freeze all audio (unlock() resumes it). */
+function suspend() { if (ctx && ctx.state === 'running') ctx.suspend().catch(() => {}); }
+
+export const sound = { unlock, suspend, update, music, musicTempo, setMuted, setVolume, get muted() { return muted; }, get context() { return ctx; }, ...sfx };
