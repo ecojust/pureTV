@@ -244,8 +244,7 @@
     function updateUi(current) {
       // Display the last native identities without consuming short button pulses.
       const clients = $("wifi-clients");
-      root.PureTVControllerAdapter.renderClients(clients, controllerInput.peek(), { language: english ? "en" : "zh" });
-      document.body.classList.toggle("has-wifi-clients", !clients.hidden);
+      root.PureTVControllerAdapter.renderClients(clients, controllerInput.peek(), { language: english ? "en" : "zh", showPhones: true });
       if ($("music-button") && game)
         $("music-button").textContent =
           tr("音乐：", "MUSIC: ") +
