@@ -10,6 +10,8 @@ Android TV 0.1.2 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/
 
 以 0.1.2 正式 Web 资源启动 Chromium，关闭可选浮点缓冲后，手柄桥输入从选人、选赛道、起跑阵列和倒数进入实际驾驶。两张赛道路面贴图均从本地分发成功读取，抓图显示首圈第 6 名和 42 km/h。[驾驶原图](docs/browser-0.1.2-rgba8/driving.png) · [逐阶段帧数、速度与资源响应](docs/browser-0.1.2-rgba8/report.json)
 
+0.1.2 已使用发布证书签名。Android TV API 36 / 1080p 的两种端口均通过安装、连接、选人和选赛道，赛道加载期间的 WebView 观察超时。[原生运行记录与 APK 校验](docs/android-0.1.2/api36.json)
+
 0.1.1（versionCode 2）根据 WebGL 2 设备支持的颜色缓冲和多重采样格式选择渲染路径。支持 HDR 的设备保留泛光效果；其余设备以 RGBA8 绘制赛道、角色和水面倒影。八位车手的头像和九张道具图使用原版模型预先渲染，进入菜单时只需创建游戏画布。
 
 Android TV 0.1.1 已签名。API 36 / 1080p 模拟器的默认端口与占用回退均通过安装启动、连接、手柄 ID 显示、选人和选赛道。进入所选赛道时，两种模式的画面观察请求均超时。两份录像止于赛道选择，Android 驾驶和后续项目仍待验证。[原始运行](https://github.com/ecojust/pureTV/actions/runs/44680918757) · [逐项结果、原图及录像](docs/android-0.1.1/api36.json)
