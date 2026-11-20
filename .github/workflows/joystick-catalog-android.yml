@@ -214,7 +214,7 @@ jobs:
   runtime:
     needs: [select, sign]
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -257,10 +257,10 @@ jobs:
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
           emulator-build: '16970787'
-          api-level: 36
+          api-level: 34
           target: android-tv
-          arch: x86_64
-          profile: tv_1080p
+          arch: x86
+          profile: tv_720p
           avd-name: JoystickGamesValidation
           force-avd-creation: true
           disable-animations: true

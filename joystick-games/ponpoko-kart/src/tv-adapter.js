@@ -55,6 +55,8 @@ export function createTVAdapter() {
         boost: kart?.boostT || 0, jumpHeld: !!kart?._jumpHeld,
         item: kart?.item || '', itemPending: !!game?.race?._itemLatch,
         lookBack: !!game?.rig?.lookBack, helpOpen,
+        courseQuality: game?.world?.quality || null,
+        shadowMapSize: game?.world?.env?.sun?.shadow?.mapSize.x || null,
         framePolls: frames, renderCalls: game?.renderer?.renderer?.info.render.calls || 0,
       },
       audioState: audio?.ctx?.state || 'not_created',

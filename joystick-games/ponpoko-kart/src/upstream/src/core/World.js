@@ -17,7 +17,7 @@ export class World {
     this.track = new Track(stageDef.track);
     this.terrain = new Terrain(this.track, stageDef.terrain);
     this.ground = new Ground(this.track, this.terrain, stageDef);
-    this.env = buildEnvironment(scene, renderer.renderer, stageDef.env);
+    this.env = buildEnvironment(scene, renderer.renderer, stageDef.env, opts.shadowSize);
     this.updaters = [];
 
     const terrainMesh = this.terrain.buildMesh(stageDef.terrainMesh || {});

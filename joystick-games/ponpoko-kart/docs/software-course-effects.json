@@ -1,0 +1,110 @@
+{
+  "source": "2ff18c0:joystick-games/ponpoko-kart",
+  "course": "inaka",
+  "viewport": [
+    480,
+    270
+  ],
+  "renderer": "SwiftShader Vulkan with half-float render-target extensions masked",
+  "input": "original SDK adapter and menu flow; separate controlled render-only sampling at one fixed camera and scene per process",
+  "bakedTextures": "Two pixel-identical original Inaka PNGs used for both studies",
+  "readback": "One RGBA pixel synchronously read after every measured frame to ensure the framebuffer completed; the standalone submit timings also include gl.finish() but did not reliably wait for GPU rasterization.",
+  "scope": "Same camera, loaded Inaka scene and simulation state, three calls per setting. Each measurement finished a real GL frame with gl.finish() and a final center pixel readback. This shared Linux host showed substantial timing variation; draw counts and pixel values are reported alongside wall time.",
+  "series": [
+    {
+      "reflections": true,
+      "shadowSize": 2048,
+      "drawCalls": 929,
+      "triangleEquivalents": 1919929,
+      "frameMilliseconds": [
+        3677.1,
+        5236.2,
+        4053.4
+      ],
+      "medianFrameMilliseconds": 4053.4,
+      "centerRgba": [
+        240,
+        187,
+        175,
+        255
+      ],
+      "contextLost": false
+    },
+    {
+      "reflections": false,
+      "shadowSize": 2048,
+      "drawCalls": 634,
+      "triangleEquivalents": 1335983,
+      "frameMilliseconds": [
+        3276.8,
+        4726.6,
+        4167
+      ],
+      "medianFrameMilliseconds": 4167,
+      "centerRgba": [
+        240,
+        187,
+        175,
+        255
+      ],
+      "contextLost": false
+    },
+    {
+      "reflections": false,
+      "shadowSize": 512,
+      "drawCalls": 634,
+      "triangleEquivalents": 1335983,
+      "frameMilliseconds": [
+        3027.9,
+        2983.4,
+        3110.8
+      ],
+      "medianFrameMilliseconds": 3027.9,
+      "centerRgba": [
+        240,
+        187,
+        175,
+        255
+      ],
+      "contextLost": false
+    },
+    {
+      "reflections": false,
+      "shadowSize": 0,
+      "drawCalls": 335,
+      "triangleEquivalents": 713187,
+      "frameMilliseconds": [
+        3884.5,
+        2100,
+        2274.9
+      ],
+      "medianFrameMilliseconds": 2274.9,
+      "centerRgba": [
+        240,
+        187,
+        175,
+        255
+      ],
+      "contextLost": false
+    },
+    {
+      "reflections": true,
+      "shadowSize": 2048,
+      "drawCalls": 929,
+      "triangleEquivalents": 1919929,
+      "frameMilliseconds": [
+        9522.2,
+        11016.1,
+        10858.8
+      ],
+      "medianFrameMilliseconds": 10858.8,
+      "centerRgba": [
+        240,
+        187,
+        175,
+        255
+      ],
+      "contextLost": false
+    }
+  ]
+}

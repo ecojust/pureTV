@@ -1,14 +1,14 @@
 {
   "upstreamCommit": "88edb72d25c2f957431cc4d12547d3138d1bca48",
   "baselineFileCount": 104,
-  "unchangedFileCount": 94,
+  "unchangedFileCount": 93,
   "changes": [
     {
       "path": "src/upstream/src/core/Game.js",
       "originalSha256": "036768a706bf319d6d74de195608a4149e19ad4a6fda29d3a3d94731971f5290",
-      "adaptedSha256": "4c87f61658a1887259d53ab32ce2864917dfe16654a7384ef4d1203f2e56b220",
-      "adaptedBytes": 21613,
-      "reason": "One native poll per original animation frame, read-only completion count, explicit pause/resume hooks and standard-gamepad disconnection cancellation; physics/rendering preserved. Before constructing the selected world, wait for its optional local road textures to decode."
+      "adaptedSha256": "3996929cbc1dd6cc0a174c7fde3c2e36b1683f7fdc6dce73842655b91c1a2a41",
+      "adaptedBytes": 21648,
+      "reason": "One native poll per original animation frame, read-only completion count, explicit pause/resume hooks and standard-gamepad disconnection cancellation; physics/rendering preserved. Before constructing the selected world, wait for its optional local road textures to decode. Pass the optional television shadow resolution to the selected world."
     },
     {
       "path": "src/upstream/src/core/Input.js",
@@ -48,9 +48,9 @@
     {
       "path": "src/upstream/src/world/Environment.js",
       "originalSha256": "41579de0803488d30d5e2d64e2eb0243d966fe10b904bea85369c1f5406f9549",
-      "adaptedSha256": "ab78581557e0d9578a0da0e5a3d7d983af33436a75aa19cbcdc5b74af2c2967e",
-      "adaptedBytes": 1811,
-      "reason": "Dispose the optional sky reflection map only when created."
+      "adaptedSha256": "2801f1ffe97386e76f260890756fbfcf8869dcd6983e76f4f6deda4dc7b95195",
+      "adaptedBytes": 1842,
+      "reason": "Dispose the optional sky reflection map only when created.Allow the TV entry to request 512px shadows on a named software renderer; the default remains 2048px."
     },
     {
       "path": "src/upstream/src/world/Sky.js",
@@ -72,6 +72,13 @@
       "reason": "Populate the original per-course texture cache from offline albedo and normal maps using the original sampling settings.",
       "adaptedBytes": 12183,
       "adaptedSha256": "723ecfed5fc827432946b476550b2e4e5c2cef096f74b84c56b7e0998fe8a02f"
+    },
+    {
+      "path": "src/upstream/src/core/World.js",
+      "originalSha256": "9380def4f13db0854bcbf73e81944e091aff11ba15802fd2bea7499166623edf",
+      "reason": "Pass the optional course shadow resolution to the environment.",
+      "adaptedBytes": 1697,
+      "adaptedSha256": "7952287c0b93eabcc44cab1f5322f83fb5aa81deac1077f3aca079103daf7782"
     }
   ],
   "entry": "src/main.js supplies original Game/UI/menus/audio composition without upstream developer/autopilot hooks.",
