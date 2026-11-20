@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "compatibleRenderers": ["webgl2", "webgl1"],
+  "storageRestartRequired": false,
+  "pauseStablePaths": ["gameplay.time", "gameplay.position", "gameplay.shots", "gameplay.hp"],
+  "steps": [
+    {"name": "Enter the yard", "keys": ["START"], "holdMs": 180, "expect": [{"path":"stage","op":"eq","value":"playing"}]},
+    {"name": "Advance from deployment", "keys": ["UP"], "holdMs": 700, "expect": [{"path":"gameplay.position","op":"changed"}]},
+    {"name": "Turn right", "keys": ["RIGHT"], "holdMs": 600, "expect": [{"path":"gameplay.yaw","op":"changed"}]},
+    {"name": "Fire a round", "keys": ["A"], "holdMs": 280, "expect": [{"path":"gameplay.shots","op":"increased"}]},
+    {"name": "Change loadout", "keys": ["Y"], "holdMs": 180, "expect": [{"path":"gameplay.weapon","op":"changed"}]}
+  ]
+}

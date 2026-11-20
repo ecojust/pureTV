@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": ["gameplay.time", "gameplay.shots", "gameplay.position"],
+  "steps": [
+    {"name":"Enter the laboratory","keys":["START"],"holdMs":150,"timeoutSeconds":60,
+     "expect":[{"path":"stage","op":"eq","value":"playing"},{"path":"gameplay.time","op":"gt","value":1.5}]},
+    {"name":"Walk in the airlock","keys":["UP"],"holdMs":750,
+     "expect":[{"path":"gameplay.position","op":"changed"}]},
+    {"name":"Fire the cannon","keys":["A"],"holdMs":800,
+     "expect":[{"path":"gameplay.shots","op":"increased"}]}
+  ]
+}
