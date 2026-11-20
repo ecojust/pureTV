@@ -1,0 +1,501 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "18836937d8564c0e1534e1798c1dfb3096164bb0",
+  "artifactSourceCommit": "18836937d8564c0e1534e1798c1dfb3096164bb0",
+  "artifactRunId": "44714845423",
+  "startedAt": "2026-11-20T10:09:28.494636+00:00",
+  "game": "solder-and-rain",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "6add0ec04a022ec4d716e516199aed45e9279514d2b33246d8b88113db47ae41",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "47d65e9e50b0630dab7e6c0957293be5b0a511b8db11b290a6a0ff3d08dc9d6f",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/solder-and-rain/qa-plan.json": "e940f8dbf35d404cd2f59c84883bf2518136e396430af91d25a58d3b32a77296",
+    "joystick-games/tools/qa-plan.py": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9",
+    "joystick-games/tools/macos-build.py": "4fa65936293a5d6c5e728577780edc30429a500627e8799c1c83a5095470b853",
+    "joystick-games/catalog-registry.json": "d5999df4266e55efec83d9fcf6889cd801f3cfedee4c5eeff0d366754cb949e6",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaRunId": 44714845423,
+  "qaRunAttempt": 1,
+  "runnerKind": "macos-15-intel",
+  "runnerName": "GitHub Actions 1000011815",
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "webgl2",
+    "pauseStablePaths": [
+      "gameplay.tick",
+      "gameplay.tool",
+      "gameplay.turns",
+      "gameplay.tests",
+      "gameplay.phase"
+    ],
+    "steps": [
+      {
+        "name": "Open or continue the campaign",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "gameplay.phase",
+            "op": "eq",
+            "value": "dialogue"
+          }
+        ]
+      },
+      {
+        "name": "Read intro dialogue line 1",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.line",
+            "op": "eq",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "name": "Read intro dialogue line 2",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.line",
+            "op": "eq",
+            "value": 2
+          }
+        ]
+      },
+      {
+        "name": "Read intro dialogue line 3",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.line",
+            "op": "eq",
+            "value": 3
+          }
+        ]
+      },
+      {
+        "name": "Read intro dialogue line 4",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.scene",
+            "op": "eq",
+            "value": "d1_open"
+          }
+        ]
+      },
+      {
+        "name": "Read d1_open dialogue line 1",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.line",
+            "op": "eq",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "name": "Read d1_open dialogue line 2",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.line",
+            "op": "eq",
+            "value": 2
+          }
+        ]
+      },
+      {
+        "name": "Read d1_open dialogue line 3",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.line",
+            "op": "eq",
+            "value": 3
+          }
+        ]
+      },
+      {
+        "name": "Read d1_open dialogue line 4",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.line",
+            "op": "eq",
+            "value": 4
+          }
+        ]
+      },
+      {
+        "name": "Read d1_open dialogue line 5",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.line",
+            "op": "eq",
+            "value": 5
+          }
+        ]
+      },
+      {
+        "name": "Read d1_open dialogue line 6",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.phase",
+            "op": "eq",
+            "value": "shop"
+          }
+        ]
+      },
+      {
+        "name": "Ring the shop bell for the first customer",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.scene",
+            "op": "eq",
+            "value": "mama_pre"
+          }
+        ]
+      },
+      {
+        "name": "Read mama_pre dialogue line 1",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.line",
+            "op": "eq",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "name": "Read mama_pre dialogue line 2",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.line",
+            "op": "eq",
+            "value": 2
+          }
+        ]
+      },
+      {
+        "name": "Read mama_pre dialogue line 3",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.line",
+            "op": "eq",
+            "value": 3
+          }
+        ]
+      },
+      {
+        "name": "Read mama_pre dialogue line 4",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.line",
+            "op": "eq",
+            "value": 4
+          }
+        ]
+      },
+      {
+        "name": "Read mama_pre dialogue line 5",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.phase",
+            "op": "eq",
+            "value": "brief"
+          }
+        ]
+      },
+      {
+        "name": "Accept the noodle-bot work order",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.phase",
+            "op": "eq",
+            "value": "bench"
+          }
+        ]
+      },
+      {
+        "name": "Move the repair cursor",
+        "keys": [
+          "RIGHT"
+        ],
+        "holdMs": 440,
+        "expect": [
+          {
+            "path": "gameplay.cursorX",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Choose the next repair tool",
+        "keys": [
+          "B"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.tool",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Run the original electrical test",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "gameplay.tests",
+            "op": "increased"
+          }
+        ]
+      },
+      {
+        "name": "Pause using the controller",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "paused"
+          }
+        ]
+      },
+      {
+        "name": "Resume using START",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 210,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      }
+    ],
+    "storageRestartRequired": true
+  },
+  "acceptedRenderers": [
+    "webgl2"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "cd6e8d904a0a341df375b765a705264b5d0ef236647b842141021033407af206",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.solder-and-rain.5e8c244b45f245028c868daa5d1d1e56",
+    "reusedAcrossRestartOnly": true
+  },
+  "nativeProcessArchitecture": "x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 478, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 202, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": true, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"Solder & Rain\", \"url\": \"http://127.0.0.1:49747/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.ecojust.joystick.solderandrain\", \"name\": \"雨夜维修铺\"}, \"game\": null, \"input\": {\"connections\": 0, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 4, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 4}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"solder-and-rain.v1\", \"solder-and-rain.v1.settings\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.2\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"雨夜维修铺\", \"state\": \"available\"}}, \"storage\": {\"current\": {\"solder-and-rain.v1\": null, \"solder-and-rain.v1.settings\": null}, \"initial\": {\"solder-and-rain.v1\": null, \"solder-and-rain.v1.settings\": null}, \"origin\": \"http://127.0.0.1:49747\"}, \"timestamp\": 1795169458.364413}\n",
+  "lastState": {
+    "active": true,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "en",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "Solder & Rain",
+      "url": "http://127.0.0.1:49747/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystick.solderandrain",
+      "name": "雨夜维修铺"
+    },
+    "game": null,
+    "input": {
+      "connections": 0,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 4,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 4
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "solder-and-rain.v1",
+        "solder-and-rain.v1.settings"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.2"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "雨夜维修铺",
+        "state": "available"
+      }
+    },
+    "storage": {
+      "current": {
+        "solder-and-rain.v1": null,
+        "solder-and-rain.v1.settings": null
+      },
+      "initial": {
+        "solder-and-rain.v1": null,
+        "solder-and-rain.v1.settings": null
+      },
+      "origin": "http://127.0.0.1:49747"
+    },
+    "timestamp": 1795169458.364413
+  },
+  "failurePhase": "initialization",
+  "nativeProcessAlive": true,
+  "lastStateFresh": true,
+  "phase": "initialization",
+  "finishedAt": "2026-11-20T10:10:58.963366+00:00"
+}

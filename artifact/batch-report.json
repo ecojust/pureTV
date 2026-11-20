@@ -1,0 +1,117 @@
+{
+  "sourceCommit": "18836937d8564c0e1534e1798c1dfb3096164bb0",
+  "batch": "puzzle-02",
+  "runner": "macos-15-intel",
+  "expectedArchitecture": "x86_64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "starsling",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/starsling",
+            "--output",
+            "/Users/runner/work/_temp/qa/starsling/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "starsling/package-verification.log",
+          "startedAt": "2026-11-20T10:05:11.661798+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "starsling",
+            "--app",
+            "/Users/runner/work/_temp/packages/starsling/installed/Starsling.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/starsling/native"
+          ],
+          "status": "failed",
+          "log": "starsling/native.log",
+          "startedAt": "2026-11-20T10:06:36.961966+00:00",
+          "returncode": 1
+        }
+      ]
+    },
+    {
+      "game": "solder-and-rain",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/solder-and-rain",
+            "--output",
+            "/Users/runner/work/_temp/qa/solder-and-rain/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "solder-and-rain/package-verification.log",
+          "startedAt": "2026-11-20T10:08:07.409373+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "solder-and-rain",
+            "--app",
+            "/Users/runner/work/_temp/packages/solder-and-rain/installed/Solder and Rain.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/solder-and-rain/native"
+          ],
+          "status": "failed",
+          "log": "solder-and-rain/native.log",
+          "startedAt": "2026-11-20T10:09:28.197664+00:00",
+          "returncode": 1
+        }
+      ]
+    },
+    {
+      "game": "oathstones",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/oathstones",
+            "--output",
+            "/Users/runner/work/_temp/qa/oathstones/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "oathstones/package-verification.log",
+          "startedAt": "2026-11-20T10:10:59.600426+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "oathstones",
+            "--app",
+            "/Users/runner/work/_temp/packages/oathstones/installed/Oathstones.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/oathstones/native"
+          ],
+          "status": "failed",
+          "log": "oathstones/native.log",
+          "startedAt": "2026-11-20T10:12:06.771015+00:00",
+          "returncode": 1
+        }
+      ]
+    }
+  ]
+}
