@@ -198,14 +198,14 @@ class MenuTapContracts(unittest.TestCase):
         self.assertEqual(self.reads, 4)
 
     def test_counter_reset_without_exact_reload_proof_never_passes(self):
-        self.step['timeoutSeconds'] = .2
+        self.step['timeoutSeconds'] = 1
         self.use_samples([self.state(2, index=2), self.state(3, index=2), self.state(4, index=2)])
         with self.assertRaisesRegex(AssertionError, 'two subsequent fresh polls'):
             self.acceptance.catalog_menu_tap(self.step, self.state(288))
         self.assertEqual(self.acceptance.report['menuTapObservations'][0]['status'], 'failed')
 
     def test_constant_post_reload_counter_does_not_count_as_fresh_frames(self):
-        self.reload_step(); self.step['timeoutSeconds'] = .2
+        self.reload_step(); self.step['timeoutSeconds'] = 1
         self.use_samples([self.state(3, low=True)])
         with self.assertRaisesRegex(AssertionError, 'two subsequent fresh polls'):
             self.acceptance.catalog_menu_tap(self.step, self.state(288))
