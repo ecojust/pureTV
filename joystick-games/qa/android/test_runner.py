@@ -848,10 +848,12 @@ class ObserverTransportTests(unittest.TestCase):
         self.assertTrue(all(x['snapshotCall'] == 2 for x in events))
 
     def test_real_socket_timeout_is_recorded_and_recovers_with_fresh_get(self):
-        server = self.serve([('slow', .1), ('json', self.value(44))])
+        # The second, healthy HTTP handler needs a scheduling interval of its
+        # own when this fixture runs alongside software-rendered game tests.
+        server = self.serve([('slow', 2), ('json', self.value(44))])
         acceptance = self.acceptance(server)
-        with mock.patch.object(runner, 'OBSERVER_REQUEST_TIMEOUT', .03):
-            self.assertEqual(acceptance.snapshot(timeout=.8), self.value(44))
+        with mock.patch.object(runner, 'OBSERVER_REQUEST_TIMEOUT', .5):
+            self.assertEqual(acceptance.snapshot(timeout=3), self.value(44))
         events = acceptance.report['observerTransportEvents']
         self.assertIn(events[0]['errorType'], ('TimeoutError', 'URLError'))
         self.assertEqual(events[1]['status'], 'transport-recovered')
