@@ -163,8 +163,14 @@
           "path": "gameplay.screen",
           "op": "eq",
           "value": "trackSelect"
+        },
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "SELECT"
         }
-      ]
+      ],
+      "androidDomMenu": true
     },
     {
       "name": "Select first unlocked track",
@@ -178,8 +184,14 @@
           "path": "gameplay.screen",
           "op": "eq",
           "value": "raceSettings"
+        },
+        {
+          "path": "gameplay.menuFocus",
+          "op": "eq",
+          "value": "NEXT: SETUP"
         }
-      ]
+      ],
+      "androidDomMenu": true
     },
     {
       "name": "Next original setup screen",
@@ -190,11 +202,17 @@
       "timeoutSeconds": 30,
       "expect": [
         {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "raceSettings"
+        },
+        {
           "path": "gameplay.menuFocus",
           "op": "eq",
           "value": "START RACE"
         }
-      ]
+      ],
+      "androidDomMenu": true
     },
     {
       "name": "Start race and wait for original countdown",

@@ -590,7 +590,7 @@ class Acceptance:
         assert self.command('shell', 'pidof', self.package).decode().strip() == self.report['targetPid'], 'Game process restarted during the purported same-session check'
         self.passed('controller service keeps the same port throughout live session and reconnection', self.service_port)
 
-    def validate_catalog_snapshot(self, snapshot):
+    def validate_catalog_snapshot(self, snapshot, dom_menu_step=None):
         game = self.game(snapshot)
         assert game.get('game') == self.args.game, 'Snapshot game identity mismatch'
         assert game.get('renderer') in plan.accepted_renderers(self.plan), 'Actual renderer differs from QA plan'
@@ -608,7 +608,19 @@ class Acceptance:
         assert type(game.get('paused')) is bool and type(game.get('frames')) is int
         assert isinstance(game.get('gameplay'), dict) and game['gameplay'], 'Missing actual gameplay observations'
         assert not game.get('error') and not game.get('errors'), 'Game initialization or runtime error'
-        if self.plan['renderer'] != 'dom':
+        if dom_menu_step is not None:
+            assert game['stage'] == 'menu' and not game['paused']
+            assert snapshot.get('activityState') == 'resumed' and snapshot.get('windowFocused') is True
+            page = snapshot['page']
+            assert page.get('hidden') is False and page.get('focused') is True
+            assert page.get('width', 0) > 0 and page.get('height', 0) > 0
+            # These HTML/SVG menus hide the WebGL canvas using CSS visibility.
+            # Its laid-out backing surface remains underneath the focused menu.
+            assert any(c.get('width', 0) > 0 and c.get('height', 0) > 0 and
+                       c.get('clientWidth') == page['width'] and c.get('clientHeight') == page['height']
+                       for c in page.get('canvases', [])), 'Missing retained full-screen game canvas'
+            assert plan.matches(dom_menu_step['expect'], game, game), 'Unexpected focused game menu'
+        elif self.plan['renderer'] != 'dom':
             assert any(c.get('width', 0) > 0 and c.get('height', 0) > 0 and c.get('visible')
                        for c in snapshot.get('page', {}).get('canvases', [])), 'No visible initialized rendering canvas'
         if game['stage'] in ('playing', 'paused'):
@@ -662,7 +674,9 @@ class Acceptance:
             after = observed if plan.matches(step['expect'], self.game(observed), self.game(before)) else self.wait_fresh(
                 held, lambda s: plan.matches(step['expect'], self.game(s), self.game(before)),
                 timeout=step.get('timeoutSeconds', 15), label='plan-gameplay-' + step['name'])
-            self.validate_catalog_snapshot(after)
+            self.validate_catalog_snapshot(after, step if step.get('androidDomMenu') else None)
+            if step.get('androidDomMenu'):
+                self.capture('dom-menu-' + str(self.plan['steps'].index(step)), [self.clients[0].identity])
             self.record('after-plan-' + step['name'], after)
             self.passed('actual SDK gameplay: ' + step['name'], {'expect': step['expect'], 'holdMs': step['holdMs']})
         self.capture('playing', [self.clients[0].identity])
