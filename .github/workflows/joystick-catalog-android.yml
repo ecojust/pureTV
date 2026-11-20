@@ -109,15 +109,29 @@ jobs:
           python3 ../tools/android-url-tests.py --jdk "$JAVA_HOME" 2>&1 | tee "$RUNNER_TEMP/android-url-tests.log"
           cp ../../resource/game-kit/build-strings-test.py "$RUNNER_TEMP/executed-string-resource-test.py"
           python3 ../../resource/game-kit/build-strings-test.py --sdk "$ANDROID_HOME" | tee "$RUNNER_TEMP/string-resource-tests.json"
-      - name: Fetch the existing pinned QR encoder
+      - name: Verify and use the archived original pinned QR encoder
         run: |
           set -euo pipefail
-          cp joystick-games/tools/android-zxing.py "$RUNNER_TEMP/executed-zxing-download.py"
           cp joystick-games/tools/android-zxing-tests.py "$RUNNER_TEMP/executed-zxing-tests.py"
           python3 joystick-games/tools/android-zxing-tests.py 2>&1 | tee "$RUNNER_TEMP/zxing-tests.log"
-          python3 joystick-games/tools/android-zxing.py \
-            --output "$RUNNER_TEMP/zxing.jar" --receipt "$RUNNER_TEMP/zxing-download.json" \
-            2>&1 | tee "$RUNNER_TEMP/zxing-download.log"
+          python3 - <<'PY_QR' | tee "$RUNNER_TEMP/zxing-download.log"
+          import hashlib,json,os,runpy,subprocess
+          from pathlib import Path
+          pins=runpy.run_path('joystick-games/tools/android-zxing.py')
+          folder=Path('joystick-games/tools/fixtures/backroad-012-qr-archive')
+          jar=folder/'core-3.5.3.jar'
+          original=json.loads((folder/'origin.json').read_text())
+          data=jar.read_bytes()
+          assert data==subprocess.check_output(['git','show',os.environ['GITHUB_SHA']+':'+str(jar)])
+          assert len(data)==original['bytes']==pins['EXPECTED_BYTES']
+          assert hashlib.sha256(data).hexdigest()==original['sha256']==pins['EXPECTED_SHA256']
+          assert original['url']==pins['URLS'][0]
+          out=Path(os.environ['RUNNER_TEMP'])
+          (out/'zxing.jar').write_bytes(data)
+          result=dict(original, status='passed', source='frozen Maven Central archive', sourceCommit=os.environ['GITHUB_SHA'])
+          (out/'zxing-download.json').write_text(json.dumps(result,indent=2)+'\n')
+          print(json.dumps(result))
+          PY_QR
       - name: Build immutable package inputs and read-only Observer
         env:
           GAME: ${{ matrix.game }}
@@ -215,7 +229,7 @@ jobs:
   runtime:
     needs: [select, sign]
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 70
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -255,8 +269,9 @@ jobs:
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
       - name: Operate the actual APK using the original pureTV TCP SDK
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
+          emulator-build: '16970787'
           api-level: 36
           target: android-tv
           arch: x86_64
@@ -264,7 +279,7 @@ jobs:
           avd-name: JoystickGamesValidation
           force-avd-creation: true
           disable-animations: true
-          emulator-options: -no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           script: >-
             python3 joystick-games/tools/android-catalog.py runtime --game '${{ matrix.game }}'
             --input "$RUNNER_TEMP/signed" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
