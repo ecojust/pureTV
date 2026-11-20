@@ -79,6 +79,14 @@ class BatchIsolation(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, 'Unknown controller release scope'):
             batch.runtime_plan(scope='unknown')
 
+    def test_compact_tv_scope_signs_and_runs_only_the_seven_arcade_games(self):
+        plan = batch.runtime_plan(scope='arcade-7')
+        self.assertEqual(plan['selectedBatches'], ['arcade-1', 'arcade-2', 'arcade-3'])
+        self.assertEqual(set(plan['plannedSlugs']), set(batch.release.GROUPS['arcade']))
+        self.assertEqual(batch.release.scoped_games(batch.release.KIT_SLUGS, 'arcade-7'), [])
+        with self.assertRaises(AssertionError):
+            batch.runtime_plan('["retry-alien"]', scope='arcade-7')
+
     def test_only_exact_requested_retry_aliases_exist(self):
         aliases = set(batch.BATCHES) - set(batch.DEFAULT_BATCHES) - set(batch.HOME_BATCHES)
         self.assertEqual(aliases, {'retry-used-car', 'retry-alien', 'retry-prism', 'retry-arcade-visual', 'retry-cozy', 'retry-super-mario'})
