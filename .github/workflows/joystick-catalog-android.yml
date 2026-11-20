@@ -108,16 +108,25 @@ jobs:
           python3 ../tools/android-tests.py 2>&1 | tee "$RUNNER_TEMP/android-contract-tests.log"
           cp ../../resource/game-kit/build-strings-test.py "$RUNNER_TEMP/executed-string-resource-test.py"
           python3 ../../resource/game-kit/build-strings-test.py --sdk "$ANDROID_HOME" | tee "$RUNNER_TEMP/string-resource-tests.json"
-      - name: Verify the archived Maven Central QR encoder
+      - name: Restore the pinned QR encoder cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/puretv/zxing-core-3.5.3.jar
+          key: zxing-core-3.5.3-8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82
+      - name: Verify the Maven Central QR encoder
         run: |
           set -euo pipefail
           cp joystick-games/tools/android-zxing.py "$RUNNER_TEMP/executed-zxing-download.py"
           cp joystick-games/tools/android-zxing-tests.py "$RUNNER_TEMP/executed-zxing-tests.py"
           python3 joystick-games/tools/android-zxing-tests.py 2>&1 | tee "$RUNNER_TEMP/zxing-tests.log"
-          python3 joystick-games/tools/android-zxing.py \
-            --archive joystick-games/shared/android/vendor/zxing-core-3.5.3/core-3.5.3.jar \
-            --output "$RUNNER_TEMP/zxing.jar" --receipt "$RUNNER_TEMP/zxing-download.json" \
-            2>&1 | tee "$RUNNER_TEMP/zxing-download.log"
+          cache_file="$HOME/.cache/puretv/zxing-core-3.5.3.jar"
+          verify=(python3 joystick-games/tools/android-zxing.py --output "$RUNNER_TEMP/zxing.jar")
+          if [[ -f "$cache_file" ]] && "${verify[@]}" --archive "$cache_file" --receipt "$RUNNER_TEMP/zxing-cache.json"; then
+            cp "$RUNNER_TEMP/zxing-cache.json" "$RUNNER_TEMP/zxing-download.json"
+          else
+            "${verify[@]}" --receipt "$RUNNER_TEMP/zxing-download.json"
+            install -Dm644 "$RUNNER_TEMP/zxing.jar" "$cache_file"
+          fi 2>&1 | tee "$RUNNER_TEMP/zxing-download.log"
       - name: Build immutable package inputs and read-only Observer
         env:
           GAME: ${{ matrix.game }}

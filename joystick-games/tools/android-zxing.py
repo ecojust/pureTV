@@ -12,13 +12,14 @@ import tempfile
 URLS = (
     'https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar',
     'https://repo1.maven.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar',
+    'https://maven-central.storage-download.googleapis.com/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar',
 )
 EXPECTED_BYTES = 607650
 EXPECTED_SHA256 = '8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82'
 
 
 def download(output, receipt, run=None, archive=None):
-    """At most two requests; reject HTTP errors, truncation, excess bytes and wrong content."""
+    """Use one verified archive or fixed Maven mirrors and reject HTTP errors, truncation, excess bytes and wrong content."""
     run = run or subprocess.run
     output, receipt = Path(output), Path(receipt)
     if output.resolve() == receipt.resolve():
