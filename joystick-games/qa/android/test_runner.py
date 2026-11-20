@@ -687,6 +687,44 @@ class InitialMenuReadiness(unittest.TestCase):
         self.assertIs(a.snapshots[-1]['snapshot'], state)
         self.assertIn('ConnectionRefusedError', a.snapshots[-1]['error'])
 
+    def test_royale_progress_requires_actual_software_context_and_live_service(self):
+        state = self.state(frames=0, poll=0)
+        state['game'].update(game='kart-royale', quality=0, webglRenderer='ANGLE (Mesa llvmpipe)',
+                             boot='rolling out the grid')
+        phase = runner.royale_software_progress(state)
+        self.assertGreater(phase, 0)
+        self.assertFalse(self.acceptance().initial_menu_ready(state))
+        for change in ({'quality': False}, {'quality': 1}, {'game': 'another-game'},
+                       {'webglRenderer': 'Adreno'}, {'renderer': 'loading'}, {'boot': 'unknown'},
+                       {'errors': ['context lost']}):
+            with self.subTest(change=change):
+                sample = copy.deepcopy(state); sample['game'].update(change)
+                self.assertIsNone(runner.royale_software_progress(sample))
+        state['game'].update(stage='playing', frames=14, gameplay={'phase':'countdown'})
+        self.assertEqual(runner.royale_software_progress(state, countdown=True), 14)
+        state['info']['wifiController']['port'] = 0
+        self.assertIsNone(runner.royale_software_progress(state, countdown=True))
+
+    def test_royale_progress_neither_passes_a_stalled_game_nor_extends_forever(self):
+        def observe(values):
+            a = self.acceptance()
+            clock = [0]
+            def sample(**kwargs):
+                clock[0] += min(10, kwargs['timeout'])
+                return values.pop(0) if values else 0
+            a.snapshot = sample
+            with mock.patch.object(runner.time, 'monotonic', side_effect=lambda: clock[0]), \
+                    mock.patch.object(runner.time, 'sleep'):
+                with self.assertRaisesRegex(AssertionError, 'condition timed out'):
+                    a.wait(lambda s: False, timeout=150, progress=lambda s:s)
+            return clock[0], a.report['softwareRenderProgress']
+        stalled, rows = observe([2, 2, 1, 2])
+        self.assertEqual(stalled, 150)
+        self.assertEqual([r['value'] for r in rows], [2])
+        advancing, rows = observe(list(range(50)))
+        self.assertEqual(advancing, 300)
+        self.assertEqual(rows[-1]['deadlineSeconds'], 300)
+
     def test_legacy_startup_gate_does_not_gain_catalog_renderer_requirements(self):
         a = self.acceptance(); a.plan = None
         state = self.state('legacy-value', 0, 1)
