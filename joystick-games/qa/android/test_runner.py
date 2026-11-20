@@ -20,6 +20,27 @@ HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location('android_acceptance', HERE/'run.py')
 runner = importlib.util.module_from_spec(spec); spec.loader.exec_module(runner)
 
+class BackroadPlayingFrame(unittest.TestCase):
+    def test_hud_on_blank_background_and_dim_world_detail(self):
+        # Use decoded RGB samples at the capture reader's fixed dimensions.
+        width, height = 160, 90
+        frame = bytearray((27, 25, 22) * width * height)
+        def pixel(x, y, rgb):
+            start = (y * width + x) * 3
+            frame[start:start + 3] = bytes(rgb)
+        for x, y in ((152, 4), (4, 45), (80, 44), (153, 47), (80, 84)):
+            pixel(x, y, (255, 255, 255))
+        with mock.patch.object(runner.subprocess, 'check_output', return_value=frame):
+            self.assertEqual(runner.backroad_scene_colors('playing.png'), 1)
+            pixel(87, 65, (28, 25, 22))
+            self.assertEqual(runner.backroad_scene_colors('playing.png'), 2)
+
+    def test_truncated_decode_cannot_pass(self):
+        with mock.patch.object(runner.subprocess, 'check_output', return_value=b''):
+            with self.assertRaisesRegex(ValueError, 'Incomplete'):
+                runner.backroad_scene_colors('playing.png')
+
+
 class AckFixture(socketserver.StreamRequestHandler):
     def handle(self):
         for line in self.rfile:

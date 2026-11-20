@@ -43,6 +43,26 @@ def file_info(path):
     return {'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
 
 
+def backroad_scene_colors(path):
+    """Count sampled colors in two world regions outside the racing HUD and controller card."""
+    width, height = 160, 90
+    image = subprocess.check_output(
+        ['ffmpeg', '-nostdin', '-v', 'error', '-i', str(path), '-frames:v', '1',
+         '-vf', f'scale={width}:{height}:flags=neighbor', '-pix_fmt', 'rgb24',
+         '-f', 'rawvideo', '-threads', '1', 'pipe:1'], timeout=20)
+    if len(image) != width * height * 3:
+        raise ValueError('Incomplete gameplay screenshot')
+    colors = set()
+    # In 16:9 gameplay the stage card/countdown sits in the middle, the HUD around the edges.
+    # Sample both the upper-left scenery and the lower driving area. The empty canvas and
+    # black GPU output are uniformly colored even while the timer and controller ID change.
+    for top, bottom in ((22, 32), (59, 72)):
+        for y in range(top, bottom):
+            row = image[(y * width + 20) * 3:(y * width + 115) * 3]
+            colors.update(zip(row[0::3], row[1::3], row[2::3]))
+    return len(colors)
+
+
 OBSERVER_REQUEST_TIMEOUT = 15
 OBSERVER_SNAPSHOT_TIMEOUT = 45
 OBSERVER_SNAPSHOT_ATTEMPTS = 3
@@ -1010,7 +1030,14 @@ def main():
     assert not a.confirm_backroad_install or a.game == 'backroad-rally', 'Per-app confirmation is Backroad-only'
     acceptance = Acceptance(a)
     try:
-        acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'
+        acceptance.setup()
+        acceptance.scenarios()
+        if a.game == 'backroad-rally':
+            colors = backroad_scene_colors(acceptance.out / 'playing.png')
+            acceptance.report['playingSceneColors'] = colors
+            if colors <= 1:
+                raise AssertionError('Backroad gameplay screenshot has a uniform world behind the HUD')
+        acceptance.report['status'] = 'passed'
     except Exception:
         acceptance.report['status'] = 'failed'; acceptance.report['error'] = traceback.format_exc()
         acceptance.save(); raise
