@@ -1,0 +1,7 @@
+# Backroad Rally 0.1.4 的 Android TV 图形对照
+
+0.1.4 只在 WebGL2 明确报告 `Android Emulator OpenGL ES Translator (Google SwiftShader)` 时绕过 Three.js 的最终输出目标与全屏色调转换，直接向默认帧缓冲绘制原场景。此驱动沿用 0.1.3 的单采样设置。签名 APK 的版本号为 5、大小为 105,024,551 字节、SHA-256 为 `018a06cdb4dc3a2fa2c716a8cb07c5ee19bfd23172e748762579c1923161f328`。[生产源码](https://github.com/ecojust/pureTV/commit/7eba342f8fcc2a2efe84123b6cc27a9fafd22a1e) · [原签名包复核](https://github.com/ecojust/pureTV/actions/runs/44693873853)
+
+API 36 模拟器采用 `swiftshader_indirect`。原手柄 SDK 打开芬兰赛段、按住上方向键，114 条消息均获确认。游戏速度从接近零增至 13.05 km/h，车辆位置从 54.00 米变为 55.40 米，稍后的系统截图可见 17 km/h。实测绘制缓冲区为 528 × 297，抗锯齿关闭，HUD 约 3 fps。加速原图中的道路与地面是蓝色，车身仍是黑色，未通过该赛段画面检查。[加速原图](https://github.com/ecojust/pureTV/blob/6f376f3c591919727625fdd1e57a2711e86ed86e/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/original-stage-accelerated.png) · [设备与游戏帧数据](https://github.com/ecojust/pureTV/blob/6f376f3c591919727625fdd1e57a2711e86ed86e/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/original-stage-accelerated-capabilities.json)
+
+第 316 至 317 帧间直接读取默认帧缓冲中央 96 × 54 区域。5,184 个像素均不透明，共 33 种颜色。九个抽样点中，八个是 RGBA(0, 0, 255, 255)，一个是 RGBA(1, 0, 255, 255)。原画布的 160 × 90 缩采样共见 1,168 种颜色。蓝色已经出现在默认帧缓冲，绕过末端的色调转换未能恢复正确赛道。相同赛段的另一次 0.1.2 ANGLE/Vulkan 实测可见原土路、绿色植被和白色车身。[原始读数及操作记录](https://github.com/ecojust/pureTV/blob/6f376f3c591919727625fdd1e57a2711e86ed86e/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/report.json) · [正常芬兰赛道原图](../android-0.1.2/)
