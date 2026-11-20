@@ -11,15 +11,16 @@
   let session = ''; try { session = sessionStorage.getItem(storageKey) || ''; } catch (_) {}
   let ws, connected = false, terminal = false, leaving = false, reconnect = 0, helloTimer = 0, attempts = 0, seq = 0, lastSent = '', lastTime = 0;
   let stickPointer = null, originX = 0, originY = 0, radius = 65, stickX = 0, stickY = 0;
+  const buttons = ['a','b','buttonX','buttonY','start','select'];
   const touches = new Map(), keys = new Set(), input = {x:0,y:0,aimX:0,aimY:0,a:false,b:false,start:false,select:false,cancelSeq:0};
   const visible = () => !document.hidden && !leaving;
   function status(text, error = false) { $('status').textContent = text; ui.classList.toggle('error', error); ui.classList.toggle('offline', !connected); }
   function update() {
     input.x = stickPointer === null ? Number(keys.has('ArrowRight')) - Number(keys.has('ArrowLeft')) : stickX;
     input.y = stickPointer === null ? Number(keys.has('ArrowDown')) - Number(keys.has('ArrowUp')) : stickY;
-    for (const name of ['a','b','start','select']) input[name] = [...touches.values()].includes(name) || keys.has(name);
+    for (const name of buttons) input[name] = [...touches.values()].includes(name) || keys.has(name);
     $('thumb').style.transform = `translate(${input.x * 38}px,${input.y * 38}px)`;
-    for (const name of ['a','b','start','select']) $(name).classList.toggle('pressed', input[name]);
+    for (const name of buttons) $(name).classList.toggle('pressed', input[name]);
   }
   function send(force = false) {
     if (!connected || !ws || ws.readyState !== WebSocket.OPEN) return;
@@ -71,7 +72,7 @@
     if(event.pointerId!==stickPointer)return;event.preventDefault();let x=(event.clientX-originX)/radius,y=(event.clientY-originY)/radius,n=Math.hypot(x,y);
     if(n<.12)x=y=0;else if(n>1){x/=n;y/=n;}stickX=Math.round(x*1000)/1000;stickY=Math.round(y*1000)/1000;update();send();
   },{passive:false});
-  for(const name of ['a','b','start','select']) $(name).addEventListener('pointerdown',event => {
+  for(const name of buttons) $(name).addEventListener('pointerdown',event => {
     if(!connected||event.button>0)return;event.preventDefault();touches.set(event.pointerId,name);try{event.currentTarget.setPointerCapture(event.pointerId);}catch(_){}update();send(true);
   });
   function endPointer(event) {
@@ -79,8 +80,8 @@
     if(changed){if(event.type!=='pointerup')input.cancelSeq++;update();send(true);}
   }
   for(const event of ['pointerup','pointercancel','lostpointercapture'])window.addEventListener(event,endPointer,true);
-  const keyFor=event => ({' ':'a',z:'a',x:'b',b:'b',Enter:'start',p:'start',r:'select',Shift:'select'}[event.key.length===1?event.key.toLowerCase():event.key]||event.key);
-  document.addEventListener('keydown',event => {const key=keyFor(event);if(!connected||!['a','b','start','select','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key))return;if(event.target.closest('#retry,#fullscreen'))return;event.preventDefault();keys.add(key);update();send(true);});
+  const keyFor=event => ui.dataset.actions==='4' && ['c','v'].includes(event.key.toLowerCase()) ? (event.key.toLowerCase()==='c'?'buttonX':'buttonY') : ({' ':'a',z:'a',x:'b',b:'b',Enter:'start',p:'start',r:'select',Shift:'select'}[event.key.length===1?event.key.toLowerCase():event.key]||event.key);
+  document.addEventListener('keydown',event => {const key=keyFor(event);if(!connected||!buttons.concat(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight']).includes(key)||buttons.includes(key)&&$(key).hidden)return;if(event.target.closest('#retry,#fullscreen'))return;event.preventDefault();keys.add(key);update();send(true);});
   document.addEventListener('keyup',event => {const key=keyFor(event);if(!keys.delete(key))return;event.preventDefault();update();send(true);});
   for(const event of ['contextmenu','selectstart','dragstart','gesturestart'])document.addEventListener(event,e=>e.preventDefault());
   document.addEventListener('touchstart',event=>{if(!event.target.closest('#retry,#fullscreen'))event.preventDefault();},{passive:false});
@@ -95,7 +96,10 @@
   setInterval(()=>{if(visible())send();},33);
   fetch('game-config.json',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('config');return response.json();}).then(config=>{
     const title=english?config.nameEn:config.name;if(typeof title==='string'){$('game-name').textContent=title;document.title=title;}
-    ui.dataset.actions=config.actions===1||Array.isArray(config.actions)&&config.actions.length===1?'1':'2';
+    const nineKeys=config.phoneControllerButtons===9;
+    $('buttonX').hidden=$('buttonY').hidden=!nineKeys;
+    $('select').hidden=nineKeys;
+    ui.dataset.actions=nineKeys?'4':config.actions===1||Array.isArray(config.actions)&&config.actions.length===1?'1':'2';
     for(const [index,name] of ['a','b'].entries()) {const label=config['action'+name.toUpperCase()+(english?'En':'')]||config['action'+name.toUpperCase()]||(Array.isArray(config.actions)?config.actions[index]:null);if(typeof label==='string')$('action-'+name).textContent=label;}
     connect();
   }).catch(()=>{terminal=true;status(words.error,true);$('retry').hidden=false;});

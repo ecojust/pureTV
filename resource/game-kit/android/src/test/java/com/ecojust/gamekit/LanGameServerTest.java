@@ -276,50 +276,52 @@ public class LanGameServerTest {
 
     @Test public void tapsBetweenFramesAreConsumedExactlyOnceAndHoldsStayHeld() throws Exception {
         Socket socket = websocket(); send(socket, "{\"type\":\"hello\"}"); message(socket, "welcome");
-        String held = new JSONObject(input(1, 0, 0, true, true)).put("start", true).put("select", true).toString();
+        String held = new JSONObject(input(1, 0, 0, true, true)).put("start", true).put("select", true)
+                .put("buttonX", true).put("buttonY", true).toString();
         send(socket, held); send(socket, input(2, 0, 0, false, false));
         send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
         org.json.JSONArray tap = new JSONObject(server.snapshot()).getJSONArray("players");
-        for (String key : new String[] {"a", "b", "start", "select"}) {
+        for (String key : new String[] {"a", "b", "buttonX", "buttonY", "start", "select"}) {
             assertTrue("A short tap must reach the next TV frame: " + key, tap.getJSONObject(0).getBoolean(key));
             assertEquals("Taps can never create a second player", 1, tap.length());
         }
         JSONObject consumed = player();
-        for (String key : new String[] {"a", "b", "start", "select"}) assertFalse("Tap consumed once: " + key, consumed.getBoolean(key));
+        for (String key : new String[] {"a", "b", "buttonX", "buttonY", "start", "select"}) assertFalse("Tap consumed once: " + key, consumed.getBoolean(key));
         send(socket, new JSONObject(held).put("seq", 3).toString());
         send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
         for (int frame = 0; frame < 3; frame++) {
             JSONObject holding = player();
-            for (String key : new String[] {"a", "b", "start", "select"}) assertTrue("A hold is a continuous level: " + key, holding.getBoolean(key));
+            for (String key : new String[] {"a", "b", "buttonX", "buttonY", "start", "select"}) assertTrue("A hold is a continuous level: " + key, holding.getBoolean(key));
         }
         send(socket, input(4, 0, 0, false, false));
         send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
         JSONObject released = player();
-        for (String key : new String[] {"a", "b", "start", "select"}) assertFalse("No extra pulse on release: " + key, released.getBoolean(key));
+        for (String key : new String[] {"a", "b", "buttonX", "buttonY", "start", "select"}) assertFalse("No extra pulse on release: " + key, released.getBoolean(key));
     }
 
     @Test public void cancelledAndExpiredUnconsumedTapsNeverFireLater() throws Exception {
         Socket socket = websocket(); send(socket, "{\"type\":\"hello\"}"); message(socket, "welcome");
-        String held = new JSONObject(input(1, 0, 0, true, true)).put("start", true).put("select", true).toString();
+        String held = new JSONObject(input(1, 0, 0, true, true)).put("start", true).put("select", true)
+                .put("buttonX", true).put("buttonY", true).toString();
         send(socket, held);
         send(socket, new JSONObject(input(2, 0, 0, false, false)).put("cancelSeq", 1).toString());
         send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
         JSONObject cancelled = player();
-        for (String key : new String[] {"a", "b", "start", "select"}) assertFalse("Gesture cancellation erases pending " + key, cancelled.getBoolean(key));
+        for (String key : new String[] {"a", "b", "buttonX", "buttonY", "start", "select"}) assertFalse("Gesture cancellation erases pending " + key, cancelled.getBoolean(key));
         assertEquals(1, cancelled.getLong("cancelSeq"));
         send(socket, new JSONObject(held).put("seq", 3).put("cancelSeq", 1).toString());
         send(socket, new JSONObject(input(4, 0, 0, false, false)).put("cancelSeq", 1).toString());
         send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
         server.releaseInputs();
         JSONObject cleared = player();
-        for (String key : new String[] {"a", "b", "start", "select"}) assertFalse("Native suspension clears pending " + key, cleared.getBoolean(key));
+        for (String key : new String[] {"a", "b", "buttonX", "buttonY", "start", "select"}) assertFalse("Native suspension clears pending " + key, cleared.getBoolean(key));
         assertEquals(2, cleared.getLong("cancelSeq"));
         send(socket, new JSONObject(held).put("seq", 5).put("cancelSeq", 1).toString());
         send(socket, new JSONObject(input(6, 0, 0, false, false)).put("cancelSeq", 1).toString());
         send(socket, "{\"type\":\"ping\"}"); message(socket, "pong");
         Thread.sleep(800);
         JSONObject expired = player();
-        for (String key : new String[] {"a", "b", "start", "select"}) assertFalse("Expired queued taps cannot resurrect " + key, expired.getBoolean(key));
+        for (String key : new String[] {"a", "b", "buttonX", "buttonY", "start", "select"}) assertFalse("Expired queued taps cannot resurrect " + key, expired.getBoolean(key));
         assertEquals(3, expired.getLong("cancelSeq"));
     }
 
@@ -337,9 +339,9 @@ public class LanGameServerTest {
         }
     }
 
-    @Test public void optionalMenuButtonsRejectNonBooleanValues() throws Exception {
+    @Test public void optionalButtonsRejectNonBooleanValues() throws Exception {
         String session = null;
-        for (String key : new String[] {"start", "select"}) {
+        for (String key : new String[] {"start", "select", "buttonX", "buttonY"}) {
             for (Object invalid : new Object[] {"true", 1, JSONObject.NULL}) {
                 Socket socket = websocket();
                 JSONObject hello = new JSONObject().put("type", "hello");

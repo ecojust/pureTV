@@ -4,10 +4,10 @@ import http from 'node:http';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 const require=createRequire(new URL('../../desktop/package.json',import.meta.url)),{chromium}=require('playwright');
-let actionCount=2;
+let actionCount=2, phoneControllerButtons;
 const server=http.createServer(async(req,res)=>{
   const name=new URL(req.url,'http://local').pathname.slice(1)||'controller.html';
-  if(name==='game-config.json'){res.setHeader('content-type','application/json');res.end(JSON.stringify({name:'控制器回归',nameEn:'Controller regression',actions:actionCount,actionA:'交付',actionB:'减速'}));return;}
+  if(name==='game-config.json'){res.setHeader('content-type','application/json');res.end(JSON.stringify({name:'控制器回归',nameEn:'Controller regression',actions:actionCount,phoneControllerButtons,actionA:'交付',actionB:'减速'}));return;}
   if(!['controller.html','controller.css','controller.js'].includes(name)){res.writeHead(404).end();return;}
   res.setHeader('content-type',name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':'text/html');res.end(await readFile(new URL('web/'+name,import.meta.url)));
 });
@@ -50,6 +50,21 @@ try{
   actionCount=1;await page.reload();await waitFor(()=>hellos.length>joins+1,'Single-action controller rejoined');await page.waitForFunction(()=>document.querySelector('#controller').dataset.actions==='1');
   assert.equal(await page.locator('#b').isVisible(),false);await touch('touchStart',[point(5,843,389)]);await waitFor(()=>last().a&&!last().b,'Single-action bottom edge maps to A');await touch('touchEnd',[]);checks.push('One action owns the entire right third');
   await page.setViewportSize({width:390,height:844});const bounds=await page.locator('#a').boundingBox();assert.ok(bounds&&bounds.x>=259&&bounds.y===0&&bounds.height===844);checks.push('Portrait controller preserves the complete action surface');
+  assert.equal(await page.locator('#buttonX').isVisible(),false);
+  assert.equal(await page.locator('#buttonY').isVisible(),false);
+  phoneControllerButtons=9;
+  await page.reload();
+  await page.waitForFunction(()=>document.querySelector('#controller').dataset.actions==='4' && !document.querySelector('#controller').classList.contains('offline'));
+  assert.equal(await page.locator('#select').isVisible(),false);
+  for (const name of ['a','b','buttonX','buttonY','start']) {
+    const bounds=await page.locator('#'+name).boundingBox();
+    assert.ok(bounds && bounds.width>=36 && bounds.height>=36,name+' has a usable touch target');
+    await touch('touchStart',[point(6,bounds.x+bounds.width/2,bounds.y+bounds.height/2)]);
+    await waitFor(()=>last()[name] && ['a','b','buttonX','buttonY','start','select'].filter(key=>last()[key]).length===1,'Independent '+name+' down');
+    await touch('touchEnd',[]);
+    await waitFor(()=>!last()[name],'Independent '+name+' up');
+  }
+  checks.push('Nine-key phone transmits independent A/B/X/Y/START without the legacy Restart button');
   assert.deepEqual(errors,[]);
   const output=process.env.GAME_KIT_TEST_OUTPUT||'/workspace/scratch/hundred-games/controller-regression';await mkdir(output,{recursive:true});
   await page.screenshot({path:output+'/portrait.png'});await page.setViewportSize({width:960,height:540});await page.screenshot({path:output+'/landscape.png'});
