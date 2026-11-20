@@ -8,6 +8,8 @@
 
 Coast Kart 0.5.6、《坦克大战》0.5.6 和六款 0.5.7 的签名 APK 已用同一套电脑端输入测试复验。八款均可分别用键盘和 TCP SDK 开局，两席独立响应，松开方向键和断开连接均生效。《孤胆枪手》《霓虹飞车》《叠塔》和《极品二手车》的最终 APK 与首轮实测文件的 SHA-256 相同。收据列出每款实际测试或沿用的版本、哈希和原件下载地址。[最终 12 款覆盖记录](resource-inputs-final-2026-11-20.json)
 
+1.0.1 便携包从空缓存下载《极品二手车》0.1.7 的签名 APK，键盘和无线 SDK 分别从车库开始一局。双席独立、方向键松开和断连均通过检查。其余 34 款沿用 1.0.0 的原始签名文件。[签名 APK 与便携包实测](https://github.com/ecojust/pureTV/blob/60f222984ca980507b2970fa0eeec0c1a4571311/evidence/desktop-player/catalog-player-v1.0.1/used-car-inputs.json) · [Windows 启动器构建与实玩](https://github.com/ecojust/pureTV/actions/runs/44779082883)
+
 ## 复验
 
 从仓库根目录运行下列命令。把同一轮签名 APK 放到一个目录，文件名使用 `游戏ID.apk`，或者在 `游戏ID/` 子目录下保留原 APK 文件名。也可使用 `游戏ID.zip` 格式的电脑发行包。同一个游戏在测试目录里只放一份。
