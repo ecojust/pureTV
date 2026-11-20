@@ -19,6 +19,10 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 已有 20 款支持手柄的游戏仍在原目录，入口见[原游戏接入说明](../docs/controller-client-status/README.md)。
 
 
+## 解谜与益智手柄游戏
+
+这批有九款独立游戏。从水果连线、炼金方阵和引力弹射，到修理电器、绘制地图和探索空间站，每款都提供 Android TV、macOS 和 Windows x64 下载。目录内含实际游戏画面、手柄操作和逐款 Intel Mac 实测状态。[九款解谜游戏和 45 个安装文件](../docs/puzzle-nine/README.md#下载安装)
+
 ## 赛车手柄版与其他候选游戏
 
 按画面和玩法比较 31 个赛车候选后，选出 Backroad Rally、Ponpoko Kart、Night Racer、Penguintrack、Last Track、Dirt Crown、Turbo Kart Rush、Kart Rush 和 Kart Royale。九款均已提供 Android TV、macOS 通用版与 Windows x64 安装文件。[候选评分与画面对比](../docs/racing-nine/README.md)

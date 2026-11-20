@@ -1,5 +1,6 @@
 """Independent game releases cannot widen collection scopes or skip upgrade rules."""
 import importlib.util
+import json
 import sys
 import unittest
 from pathlib import Path
@@ -41,12 +42,20 @@ class GamePublicationPolicyTest(unittest.TestCase):
         self.assertEqual(len(packages), 9)
         self.assertIn('com.ecojust.coastkarttv', packages)
         self.assertNotIn('com.ecojust.usedcartv', packages)
+        self.assertNotIn('com.ecojust.alienshootertv', packages)
+
+    def test_all_scope_matches_published_apps_and_launchers(self):
         _, all_packages = publish.release_scope('android-v0.6.0', 'all')
         self.assertIn('com.ecojust.usedcartv', all_packages)
         self.assertNotIn('com.ecojust.music', all_packages)
         self.assertIn('com.ecojust.alienshootertv', all_packages)
-        self.assertNotIn('com.ecojust.alienshootertv', packages)
-        self.assertEqual(len(all_packages), 25)
+        resources = TOOLS.parent / 'resource'
+        published_packages = {
+            json.loads(metadata.read_text())['packageName']
+            for kind in ('apps', 'launcher')
+            for metadata in (resources / kind).glob('*/resource.json')
+        }
+        self.assertSetEqual(all_packages, published_packages)
 
     def test_only_registered_first_release_can_have_no_previous_metadata(self):
         identity = {'packageName': 'com.ecojust.usedcartv', 'versionCode': 1, 'version': '0.1.0'}
