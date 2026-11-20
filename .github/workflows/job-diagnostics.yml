@@ -1,45 +1,31 @@
-name: Read failed job diagnostics
-on:
-  workflow_dispatch:
-    inputs:
-      job_id:
-        description: Failed GitHub Actions job ID
-        required: true
+name: Read original Intel WebGL probe artifacts
+on: workflow_dispatch
 permissions:
+  contents: read
   actions: read
 jobs:
-  diagnostics:
+  export:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
-      - name: Report verification log tail
-        env:
-          GH_TOKEN: ${{ github.token }}
-          JOB_ID: ${{ inputs.job_id }}
-          REPOSITORY: ${{ github.repository }}
+      - uses: actions/download-artifact@v4
+        with:
+          repository: ecojust/pureTV
+          github-token: ${{ github.token }}
+          run-id: 44716323532
+          pattern: original-puzzle-wk-probe-*
+          path: original
+      - name: Expose unchanged report bytes and SHA256 as check evidence
         run: |
-          python - <<'PY'
-          import os, re, subprocess
-          job = os.environ['JOB_ID']
-          assert job.isdigit()
-          result = subprocess.run(['gh', 'api', '--allow-escape-sequences', f"repos/{os.environ['REPOSITORY']}/actions/jobs/{job}/logs"], capture_output=True, text=True)
-          log = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', result.stdout + result.stderr)
-          # Diagnostics need error context, never credential-bearing download URLs.
-          log = re.sub(r"https?://[^\s<>\"']+", '[URL omitted]', log)
-          log = re.sub(r'\b(?:gh[pousr]_[A-Za-z0-9_]+|github_pat_[A-Za-z0-9_]+)\b', '[token omitted]', log)
-          log = re.sub(r'(?im)((?:authorization|(?:gh|github)[_-]token)\s*[:=]\s*)(?:bearer\s+|basic\s+)?[^\s]+', r'\1[token omitted]', log)
-          log = re.sub(r'(?im)^.*androidboot\.qemu\.adb\.pubkey=.*$', '[emulator public key omitted]', log)
-          lines = log.splitlines()
-          primary = [i for i, line in enumerate(lines) if re.search(r'FAILURE: Build failed|\* What went wrong:', line) and '##[error]' not in line]
-          fallback = [i for i, line in enumerate(lines) if re.search(r'(?:error:|Error:|TimeoutError|ui\.mjs:|> Task .+ FAILED|Execution failed for task|failed with exit code|emulator: ERROR)', line)]
-          # Boot polling can log transient adb failures before the fatal step.
-          fatal = [i for i in fallback if '##[error]' in lines[i]]
-          matches = primary or fatal or fallback
-          if matches:
-              before = '\n'.join(lines[max(0, matches[0] - 50):matches[0]])[-3500:]
-              print('::notice title=Failure preceding context::' + before.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
-              start = max(0, matches[0] - 2)
-              selected = '\n'.join(lines[start:start + 65])[:3500]
-          else:
-              selected = log[-3500:]
-          print('::notice title=Failed job log::' + selected.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,base64,hashlib,gzip
+          for root in sorted(Path('original').iterdir()):
+              data={}
+              for p in sorted(root.iterdir()):
+                  if p.suffix=='.json' or p.name in ('arch.txt','sw-vers.txt'):
+                      b=p.read_bytes(); data[p.name]={'sha256':hashlib.sha256(b).hexdigest(),'bytes':base64.b64encode(b).decode()}
+              assert all(n in data for n in ('raw.json','packages.json','display.json','alchemists-lattice.json','bumble-basket.json','neon-arcana.json','oathstones.json','solder-and-rain.json','starsling.json','story-thief.json'))
+              payload=base64.b64encode(gzip.compress(json.dumps(data,sort_keys=True,separators=(',',':')).encode(),mtime=0)).decode()
+              print('::notice title='+root.name+'::'+payload)
           PY
