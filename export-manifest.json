@@ -1,0 +1,394 @@
+{
+  "qaSourceSha": "5414b47b1614d2816e581be3b7d1ecdd1355d28a",
+  "runId": "44779041262",
+  "runtimeResult": "success",
+  "runtimeResultScope": "selected batches only",
+  "selection": {
+    "acceptanceMode": "complete",
+    "acceptanceScope": "complete controller acceptance",
+    "fullGameplayAcceptance": true,
+    "driverFlags": [],
+    "requestedBatches": [
+      "retry-used-car-mesa"
+    ],
+    "selectedBatches": [
+      "retry-used-car-mesa"
+    ],
+    "plannedSlugs": [
+      "used-car-racing"
+    ],
+    "completeCatalogRequested": false,
+    "matrix": {
+      "include": [
+        {
+          "group": "worlds",
+          "batch": "retry-used-car-mesa",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "host",
+          "emulatorBuild": "",
+          "emulatorArchive": null,
+          "emulatorOptions": "-no-window -memory 3072 -gpu host -noaudio -no-boot-anim -no-snapshot"
+        }
+      ]
+    },
+    "worlds2GraphicsExperiment": {
+      "selected": false,
+      "description": "Disable Vulkan while retaining SwiftShader and enable verbose emulator logs; the preceding AVD failure has no established root cause."
+    },
+    "usedCarStableImageComparison": {
+      "selected": false,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "channel": "stable",
+      "revisionListedByOfficialRepository": 3,
+      "rendererComparison": {
+        "previousObservedEmulatorVersion": "37.2.13",
+        "previousRenderer": "swiftshader_indirect",
+        "requestedRenderer": "swiftshader",
+        "previousRendererDeprecatedSince": "36.4.9",
+        "officialReference": "https://developer.android.com/studio/run/emulator-acceleration"
+      },
+      "hostVersionComparison": {
+        "previousObservedEmulatorVersion": "37.2.13",
+        "requested": {
+          "version": "35.6.11",
+          "build": "13610412",
+          "url": "https://dl.google.com/android/repository/emulator-linux_x64-13610412.zip",
+          "sha256": "2fe2b56fe93ce75e1d478a40162131381d911c355efeaedb54dd1e0d0897a5cf",
+          "bytes": 319086252,
+          "officialArchive": "https://developer.android.com/studio/emulator_archive"
+        },
+        "description": "Change only the host emulator version; retain API29/x86/swiftshader/disabled Vulkan and verbose options. The preceding host RenderThread segmentation fault has no established product cause."
+      },
+      "description": "Independent AVD on the official older stable TV image; installation, WebView, WebGL and controller acceptance remain mandatory."
+    },
+    "arcadeVisualStableImageComparison": {
+      "selected": false,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "description": "Recheck Tank and Jackal after transient black regions were observed in API36 recordings; preserve full controller acceptance and new visual evidence."
+    },
+    "qaSourceSha": "5414b47b1614d2816e581be3b7d1ecdd1355d28a"
+  },
+  "files": {
+    "evidence/controller-runtime-retry-used-car-mesa/bundle-manifest.json": {
+      "bytes": 146,
+      "sha256": "8d575c95056bacfb3d9fe748bf57148503102e20719aec31e378cc605b94f397"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/continuous-logcat.txt": {
+      "bytes": 3827717,
+      "sha256": "282a66031e59f102b163f2784edc73b1c8a70e4f2f69d8666f5d5382cfe7acc3"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/runtime-selection.json": {
+      "bytes": 2628,
+      "sha256": "cf5e17ae100de491721a853a526ffc0dfb3914387865aa1d9b51ea425a8772ce"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "facb8377276c343c4ae779d5691dc8e4b34a142775d61b6e4f97c0c577349cc5"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/report.json": {
+      "bytes": 25789,
+      "sha256": "215b7a515f06a71fc58d0f0500972f9f7d9c888d3bf7b9ade377efd27ecdab42"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/input-verification.json": {
+      "bytes": 967,
+      "sha256": "82cb33db5946de1ad75cb399c30298b51074eb429c7d9a916d9bf071abe50b30"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/emulator-version.json": {
+      "bytes": 727,
+      "sha256": "f3bebe07f3c32cb048481768531825909e4d72d9a85877691e03470c2c1ac29e"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "e9c0f1c8dd9a412e56e1a7b1ee6bdd4b267f569fe571ab93b88ffcd94e9b38a0"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-renderer/mesa-icd.json": {
+      "bytes": 135,
+      "sha256": "70d49f7fd41a7593a4e283543ed4855c139c700e5c1b31792f56e9576ede2398"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-renderer/packages.txt": {
+      "bytes": 126,
+      "sha256": "a157e738ef06e669fc314f1e7edba181b618af5a7c6309427190d39c25b184d8"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-renderer/host-gl.txt": {
+      "bytes": 1722,
+      "sha256": "3da6be833353c79902d1f3ece3242cbd1a3cf02f80ce1f06bc792abc82a2dd3e"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-renderer/host-vulkan.txt": {
+      "bytes": 2069,
+      "sha256": "f306f5602bdf7bd71615fa8fa129d5e03d544e4d615bd6c5b111ebb57e4002d2"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-renderer/display-number": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-renderer/xvfb.log": {
+      "bytes": 12914,
+      "sha256": "94b277b248f39621dd02badbbd9a351f23973240a57450cc8269c601fea238b9"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/kernel-before.txt": {
+      "bytes": 121791,
+      "sha256": "b108f752ca848d49ac05073e0c97a466972fb7b63e27f5e5debbfdaa0191f2b8"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/host-samples.jsonl": {
+      "bytes": 204237,
+      "sha256": "d19f79b25fb0769f989da0587c3f8f14b91e0374dfccb59876b6167dd104e2e6"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "8076d37ccc5d56dcf96a5bf80fe2b2d49aa7ea917e4d838a19fd7314145e81b3"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/kernel-after.txt": {
+      "bytes": 121791,
+      "sha256": "b108f752ca848d49ac05073e0c97a466972fb7b63e27f5e5debbfdaa0191f2b8"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "05d35c24bc7ac614b4d813b5dfbfb1701780a3450d72a161a4b7b2d91156c3d9"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "f5735d5fd5a043a52d410b0e6ccf28ca253d02feb5dc067d9a85deee749c4d9b"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "c9a57e1abf9783b420bd469928e8f57074c6f22454e87e82d58125c02d0428df"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "67123b44e10157d001ac7b8ffee48dc3cd22389c21ec556eb221bdbec7d3124d"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/baseline-release.json": {
+      "bytes": 427,
+      "sha256": "4634a80638dcab56d04161f3607de20fe985abd2c63dec93f599279010163e9c"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/commands.json": {
+      "bytes": 1061,
+      "sha256": "beac5d5e8cac631104a9cea0e3f75d9c79acb922cb7695338583c19c65282856"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/initial-snapshot.json": {
+      "bytes": 16380,
+      "sha256": "18517aa4f9d2b6fe078b29607fae57d1dc921b0c6c96ee08d8fb68771fcbe949"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/case.json": {
+      "bytes": 926,
+      "sha256": "34fab45393fc6c87af18b01663fbe6c3ffb2f56ab24c48c9d7c6c33d23d86319"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay.mp4": {
+      "bytes": 1027970,
+      "sha256": "6b89d75c4238d550312eba1e831fea69bbee2e60f63cd26eee33349dee0437a4"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/logcat.txt": {
+      "bytes": 2000282,
+      "sha256": "59bdaefa474bc8fc6284c3e81dcd7ddf07d1c99333ee68cde70aa23511ae0671"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/recording-probe.json": {
+      "bytes": 4358,
+      "sha256": "4ce1c0200b4c5bb24f41dd7f14159df9841dd316c0ca30349b5388bde1744473"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/driver.log": {
+      "bytes": 778,
+      "sha256": "f2c74304ee57bdf7e8d3976c5c9a4b079efb9aa8718452fa815387bd6416b2e0"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/controller-release.py": {
+      "bytes": 19784,
+      "sha256": "d6275c183a2a9e586e5ebab64a4c2e75c927af5d3cd2318026486d3dcf50d757"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8956,
+      "sha256": "58e8343087a2ffcf2f806cf39a23f42f3503715ec3995c1aff3e87f81e87e440"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 24417,
+      "sha256": "0c4584b94e2c509899365d3639f7e6a57c5d32d094278c5c4b4a4d72a74be414"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 27308,
+      "sha256": "ab57b13871d214226b4094d0eacb39b1ea27e17772ae6e92ac3868275f9c1b53"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11964,
+      "sha256": "95f57a1e668b15b8e3456d57fe5ff6f08ffbf2c626fe1d6a648f46cea67fe1ef"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 15601,
+      "sha256": "ddcfcd77c7229d514351e08239dad9fd9dd78888eb5de8797542a30b59ceb712"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/host-diagnostics/emulator-crash-data/emu-crash-37.3.10.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "9def652d94931cf0be4154c6231fce33809eccf454b63b8deb0472b0f0d10ddc"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/observer-source/used-car-racing/source-manifest.json": {
+      "bytes": 711,
+      "sha256": "ba6072453037f796daa4c509685c35c3be008450c8209f60c1969f37937a84da"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/observer-source/used-car-racing/resource/apps/used-car-racing/build.gradle": {
+      "bytes": 1653,
+      "sha256": "6145d8ea4ceb087f48c7a86ae466fd10d445abdf94841db745252ca59b9f0a68"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/gameplay.png": {
+      "bytes": 937063,
+      "sha256": "84fee1d0095bde755833fde057513622ac0f78206592cee90c0de9f589186550"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-run.mjs": {
+      "bytes": 27308,
+      "sha256": "ab57b13871d214226b4094d0eacb39b1ea27e17772ae6e92ac3868275f9c1b53"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/menu-android.png": {
+      "bytes": 635026,
+      "sha256": "d5790c74b26214e77432037ba4093a2a8a5e3701b39a87cf4d29040c93447841"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/paused.png": {
+      "bytes": 480924,
+      "sha256": "1891a039ae1c992ecea5988a2ca9a11e99441aa3001ef74e332277ee1723ac08"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/report.json": {
+      "bytes": 465360,
+      "sha256": "6b99981675230b5fa900dcb5b8c9b7e76caf418efb4d7ab70159b38f3b6cb45f"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-cases.mjs": {
+      "bytes": 11964,
+      "sha256": "95f57a1e668b15b8e3456d57fe5ff6f08ffbf2c626fe1d6a648f46cea67fe1ef"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/reconnected.png": {
+      "bytes": 872583,
+      "sha256": "ce10b16effaa5eabe01120c8be1a302a333c60b75642d498e667c4ed857d0cb1"
+    },
+    "evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/bridge-stderr.txt": {
+      "bytes": 4420,
+      "sha256": "fa1a4c833dd3889eff0decc5cba6a172432c75fa5011cd5e8f115833b9210e21"
+    }
+  }
+}
