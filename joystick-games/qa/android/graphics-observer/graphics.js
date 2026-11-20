@@ -65,7 +65,9 @@
     var debug = gl.getExtension('WEBGL_debug_renderer_info');
     var frameHud = document.getElementById('frame-hud');
     var formats = {};
-    ['RGBA8','RGBA16F','DEPTH_COMPONENT24'].forEach(function(name) {
+    var renderable = ['RGBA8','DEPTH_COMPONENT24'];
+    if (supported.indexOf('EXT_color_buffer_float') !== -1 || supported.indexOf('EXT_color_buffer_half_float') !== -1) renderable.push('RGBA16F');
+    renderable.forEach(function(name) {
       var samples = gl.getInternalformatParameter(gl.RENDERBUFFER, gl[name], gl.SAMPLES);
       formats[name] = samples ? Array.from(samples) : null;
     });
