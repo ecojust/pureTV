@@ -97,7 +97,7 @@ def backroad_finland_violet_scene(capture, sample):
 OBSERVER_REQUEST_TIMEOUT = 15
 OBSERVER_SNAPSHOT_TIMEOUT = 45
 OBSERVER_SNAPSHOT_ATTEMPTS = 3
-BACKROAD_ORIGINAL_APK = '67f61471e0e23e9ea963475425d5c43fa9d3265167f9028bd55dc319494fbe3c'
+BACKROAD_ORIGINAL_APK = '018a06cdb4dc3a2fa2c716a8cb07c5ee19bfd23172e748762579c1923161f328'
 BACKROAD_ENTRY = 'https://game-kit.invalid/tv.html'
 BACKROAD_FINLAND = BACKROAD_ENTRY + '?mode=quick&stage=finland&car=swift&cond=stage&weather=stage'
 BACKROAD_MENU_SOURCES = {
