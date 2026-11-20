@@ -380,7 +380,7 @@ export class TexLib {
   private cache = new Map<string, MatMaps>();
   readonly aniso: number;
 
-  constructor(renderer: THREE.WebGLRenderer) {
+  constructor(renderer: THREE.WebGLRenderer, private readonly sponsorDetail = 1024) {
     this.aniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   }
 
@@ -1065,7 +1065,7 @@ export class TexLib {
       //
       // The fields are also raised 512 -> 1024 so the glyph mask can be sampled
       // without turning the type into mush before it ever reaches the map.
-      const ns = 1024;
+      const ns = this.sponsorDetail;
       const [mc, mg] = cv(ns);
       const mw = ns / 2,
         mh = ns / 4;
@@ -3962,8 +3962,8 @@ export class MatLib {
   flowerMat!: THREE.MeshStandardMaterial;
   netMat!: THREE.MeshStandardMaterial;
 
-  constructor(renderer: THREE.WebGLRenderer, readonly u: Shared) {
-    this.tex = new TexLib(renderer);
+  constructor(renderer: THREE.WebGLRenderer, readonly u: Shared, softwareLow = false) {
+    this.tex = new TexLib(renderer, softwareLow ? 256 : 1024);
     this.build();
   }
 
