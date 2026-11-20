@@ -70,6 +70,8 @@ python3 -m venv .venv
 
 原首页精选的 20 款电视游戏手柄版支持 Android 8.0 及以上。其他游戏也要看系统 WebView 和图形要求，部分 3D 游戏需要 WebGL2。桌面手柄版中的九款赛车要求 macOS 11+，Windows 版使用 Windows 10 1903+ x64 或 Windows 11 和 WebView2 Runtime。Universal 包提供 Apple Silicon 与 Intel 两种架构，Intel 原生游戏画面是否通过验证仍按款列出。九款解谜游戏中，Story Thief、Atlas of Ink 和 Starbase Spooky 通过 Intel 原生玩法检查，另六款在测试机上进入菜单前超时。[赛车版本表](../../joystick-games/README.md#九款赛车游戏下载) · [解谜版本与测试记录](../puzzle-nine/README.md#下载安装)
 
+Backroad Rally、炼金方阵、蜜蜂果篮、星际弹弓、雨夜维修铺、誓约宝石和霓虹秘仪的 macOS 独立安装包为预览版。
+
 ## 其他资源与许可
 
 - 自研电视应用与启动器按软件目录保存 APK、源码及可用的校验值和许可证。历史电视端 `android-v*` 与电脑管理器 `desktop-v*` 各自编号。原九款电视游戏的 0.5.1 规则更新沿用 0.5.0 证书，可覆盖原版本。[完整资源目录](../../resource/README.md) · [0.5.1 规则与地图复核](../game-releases/game-fidelity-0.5.1.md)
