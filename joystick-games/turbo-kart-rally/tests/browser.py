@@ -36,8 +36,12 @@ def verify(browser, url, width, height, out):
     page = browser.new_page(viewport=dict(width=width, height=height))
     page.set_default_timeout(180000)
     errors, requests = [], []
-    page.on('pageerror', lambda error: errors.append(str(error)))
-    page.on('console', lambda message: errors.append(message.text) if message.type == 'error' else None)
+    def error(exc):
+        errors.append(str(exc))
+        print(str(exc)[:600], flush=True)
+
+    page.on('pageerror', error)
+    page.on('console', lambda message: error(message.text) if message.type == 'error' else None)
     page.on('request', lambda req: requests.append(req.url))
     bridge = width == 1280
     if bridge:
@@ -48,7 +52,8 @@ def verify(browser, url, width, height, out):
             snapshot: () => JSON.stringify({ players: [window.fixture] })
           };
         """)
-    page.goto(url, wait_until='domcontentloaded')
+    print(f"{width}×{height}: loading the offline bundle", flush=True)
+    page.goto(url, wait_until='commit')
     def mode(value):
         page.wait_for_function(f'window.JoystickGameQA && {SNAP}.gameplay.mode === "{value}"', timeout=240000)
         print(f"{width}×{height}: {value}", flush=True)

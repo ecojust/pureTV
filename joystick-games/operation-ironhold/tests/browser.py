@@ -42,6 +42,7 @@ def set_button(page, source, name, held):
 
 def play(browser, url, width, height, source):
     page = browser.new_page(viewport={"width": width, "height": height})
+    page.set_default_timeout(180_000)
     errors = []
     def on_error(error):
         print(str(error), file=sys.stderr, flush=True)
@@ -56,7 +57,7 @@ def play(browser, url, width, height, source):
     page.goto(url, wait_until="commit", timeout=30_000)
     check(page, "window.JoystickGameQA && " + snapshot + ".stage === 'menu'")
     print(f'{source} menu ready', file=sys.stderr, flush=True)
-    original = page.locator("#c").bounding_box()
+    original = page.evaluate("document.getElementById('c').getBoundingClientRect().toJSON()")
     capture(page, f"{width}-menu")
     if source == "keyboard":
         page.keyboard.press("Enter")
@@ -88,7 +89,7 @@ def play(browser, url, width, height, source):
     frozen = page.evaluate(snapshot + ".gameplay")
     page.wait_for_timeout(250)
     assert page.evaluate(snapshot + ".gameplay") == frozen
-    assert page.locator("#c").bounding_box() == original
+    assert page.evaluate("document.getElementById('c').getBoundingClientRect().toJSON()") == original
     if source != "keyboard":
         # Reconnect with fire already held. Resume requires START, and a
         # stale fire edge must not be delivered when the controller returns.

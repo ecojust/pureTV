@@ -15,7 +15,7 @@ files.set('tv.html', await readFile(join(root, 'src/index.html')));
 files.set('NOTICE.txt', Buffer.concat(await Promise.all(['NOTICE.md', 'LICENSE'].map(name => readFile(join(root, name))))));
 if (process.argv.includes('--check')) {
   assert.deepEqual((await readdir(dist)).sort(), [...files.keys()].sort());
-  for (const [name, data] of files) assert.deepEqual(await readFile(join(dist, name)), data, name);
+  for (const [name, data] of files) assert.ok((await readFile(join(dist, name))).equals(data), "Stale build output: " + name);
 } else {
   await mkdir(dist, { recursive: true });
   for (const [name, data] of files) await writeFile(join(dist, name), data);

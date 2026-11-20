@@ -332,7 +332,9 @@ export class Menu {
     };
     const prev = this._pad.prev;
     const inMenu = this.screen === 'title' || this.screen === 'select' || this.screen === 'pause' || gameState === 'results';
-    const fire = (code) => window.dispatchEvent(new KeyboardEvent('keydown', { code, key: code, bubbles: true }));
+    const fire = (code) => {
+      for (const type of ['keydown', 'keyup']) window.dispatchEvent(new KeyboardEvent(type, { code, key: code, bubbles: true }));
+    };
     if (inMenu) {
       const dirs = [['up', 'ArrowUp'], ['down', 'ArrowDown'], ['left', 'ArrowLeft'], ['right', 'ArrowRight']];
       let held = null;

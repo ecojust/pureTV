@@ -711,6 +711,7 @@ const SFX = (function(){
 const canvas   = document.getElementById('c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias:false, powerPreference:'high-performance', stencil:false });
 const gl = renderer.getContext();
+const webglVersion = gl.getParameter(gl.VERSION);
 const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
 const softwareGL = debugInfo && /swiftshader|llvmpipe|software rasterizer/i.test(gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL));
 const DPR = Math.min(window.devicePixelRatio || 1, softwareGL ? 1 : 1.5);
@@ -6538,11 +6539,10 @@ window.attachIronhold({
     trigger();
   },
   observe() {
-    const gl = renderer.getContext();
     return {
       stage: G.over ? 'ended' : G.paused ? 'paused' : G.running ? 'playing' : 'menu',
       paused: G.paused, renderer: isGL2 ? 'webgl2' : 'webgl1',
-      webglVersion: gl.getParameter(gl.VERSION),
+      webglVersion,
       gameplay: { shots: G.shots, kills: G.kills, hp: player.hp, time: G.time,
         position: player.pos.toArray(), yaw: player.yaw, pitch: player.pitch,
         weapon: player.weapon, aiming: player.ads, ammo: WEAPONS[player.weapon].mag },

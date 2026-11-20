@@ -25,6 +25,7 @@
 
 ```sh
 npm ci
+npm test
 npm run build
 npm run build:check
 python tests/browser.py --output /tmp/turbo-kart-rally-qa

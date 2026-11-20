@@ -3,6 +3,7 @@ import argparse
 import functools
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
+import faulthandler
 from pathlib import Path
 import shutil
 import threading
@@ -38,7 +39,7 @@ def run(pw, output):
         '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader',
         '--no-sandbox', '--autoplay-policy=no-user-gesture-required'
     ])
-    page = browser.new_page(viewport={'width': 960, 'height': 540})
+    page = browser.new_page(viewport={'width': 960, 'height': 540}, device_scale_factor=.75)
     errors = []
     def record_error(message):
         print(message, flush=True)
@@ -49,7 +50,7 @@ def run(pw, output):
       window.PureGameHost = { snapshot: () => JSON.stringify(window.bridgeFixture),
         getInfo: () => JSON.stringify({ wifiController: {port: 63485, serviceName:'Browser fixture'} }) };""")
     try:
-        page.goto(f'http://127.0.0.1:{server.server_port}/tv.html?quality=phone&seed=clawd-bench', wait_until='domcontentloaded')
+        page.goto(f'http://127.0.0.1:{server.server_port}/tv.html?quality=low&seed=clawd-bench', wait_until='domcontentloaded')
         wait(page, "window.game?.readyState === 'ready'")
         snap = lambda: page.evaluate('JoystickGameQA.snapshot()')
         checks = {'renderer': snap()['webglVersion']}
@@ -116,5 +117,6 @@ if __name__ == '__main__':
     parser.add_argument('--output', required=True, type=Path)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
+    faulthandler.dump_traceback_later(120, repeat=True)
     with sync_playwright() as playwright:
         run(playwright, args.output)

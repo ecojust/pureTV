@@ -9,12 +9,14 @@ parser = argparse.ArgumentParser()
 parser.add_argument('url')
 parser.add_argument('output', type=Path)
 parser.add_argument('--chromium',default='/usr/bin/chromium')
+parser.add_argument('--width',type=int,choices=[720,960,1280],action='append')
 args=parser.parse_args()
 args.output.mkdir(exist_ok=True,parents=True)
 result=[]
 with sync_playwright() as pw:
     browser=pw.chromium.launch(executable_path=args.chromium, args=['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader'])
     for width,height in [(960,540),(1280,720),(720,480)]:
+        if args.width and width not in args.width: continue
         page=browser.new_page(viewport={'width':width,'height':height}, device_scale_factor=1)
         errors=[]; page.on('pageerror',lambda e: errors.append(str(e)))
         page.goto(args.url)

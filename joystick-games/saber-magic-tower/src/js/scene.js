@@ -133,9 +133,13 @@ export class TowerScene {
       brick(x,-.11,z,.985,.24,.985,tone);
       if (symbol==='#') {
         const outer=x===0||z===0||x===10||z===10;
-        const height=outer?.42:.31;
+        const height=outer?.53:.46;
         brick(x,height/2,z,.97,height,.97,palette[0]);
-        brick(x,height+.035,z,.99,.07,.99,tone);
+        // Inset capstones catch the light; the dark joints distinguish walls from walkable paving.
+        const cap = new T.Color(palette[0]).multiplyScalar(.58+hash*.023);
+        for (const offset of [-.245,.245]) {
+          brick(x+offset,height+.045,z,.46,.09,.94,cap);
+        }
         if (outer && x%3===0 && z%3===0) {
           brick(x,.48,z,.55,.51,.55,palette[0]);
           brick(x,.76,z,.64,.07,.64,'#af9b7b');
@@ -143,6 +147,7 @@ export class TowerScene {
           flame.rotation.z=.15;
         }
       } else {
+        brick(x-.43,.017,z,.018,.009,.77,'#889387');
         if (hash < 3) brick(x-.15,.017,z+.22,.27,.01,.022,'#87958c');
         if (symbol!=='.') {
           const object=prop(symbol,floorIndex);
@@ -164,7 +169,7 @@ export class TowerScene {
     if (!w || !h) return;
     if (w!==this.width || h!==this.height) {
       this.width=w; this.height=h; this.renderer.setSize(w,h,false);
-      const v=Math.max(4.95,7.0*h/w);
+      const v=Math.max(5.75,7.2*h/w);
       this.camera.top=v; this.camera.bottom=-v; this.camera.left=-v*w/h; this.camera.right=v*w/h;
       this.camera.updateProjectionMatrix();
     }
