@@ -199,6 +199,18 @@ try {
   await command({command:'button',key:'RIGHT',action:'down'});
   state=await until(s=>controllers(s).find(p=>p.id===2)?.x===1&&controllers(s).find(p=>p.id===2)?.session!==second.session,'fresh post-sync frame');second=controllers(state).find(p=>p.id===2);assert.equal(second.controllerId,peer.identity);assert.equal(second.b,false);assert.ok(state.paused||state.phase==='paused');trace('held-sync-suppressed-after-ack',null,state);
   await command({command:'button',key:'RIGHT',action:'tap',duration:100});await command({command:'button',key:'B',action:'sync'});await command({command:'disconnect'});secondary.stdin.end();await once(secondary,'exit');secondary=null;
+  // TCP close and SDK process exit can precede the next WebView input frame.
+  // A START issued before that frame is correctly cancelled when the peer leaves.
+  const first = controllers(state).find(player => player.id === 1);
+  const neutralFrame = await until(snapshot => {
+    const players = controllers(snapshot);
+    const primary = players.find(player => player.id === 1);
+    const departed = players.find(player => player.id === 2);
+    return (snapshot.paused || snapshot.phase === 'paused') && !departed?.connected &&
+      primary?.connected && primary.controllerId === first.controllerId &&
+      primary.session === first.session && keys.every(key => primary.buttons?.[key] === false);
+  }, 'first controller neutral after observed second-seat disconnect');
+  trace('primary-neutral-after-peer-disconnect', null, neutralFrame);
   await tap('START');await until(s=>!s.paused&&s.phase!=='paused','first controller fresh resume');return {seats:2,reconnectedIdentity:peer.identity,modelTwoPlayerCampaignTested:false};
  });
  await test('same-sequence ACK for every original SDK message',async()=>{await release();await delay(180);const sent=report.wire.filter(x=>x.direction==='sdk-to-game');await waitFor(()=>sent.every(m=>report.wire.some(a=>a.direction==='game-to-sdk'&&a.connection===m.connection&&a.message.type==='ack'&&a.message.seq===m.message.seq)),'ACK for every sent original SDK message');return {messages:sent.length,acks:report.wire.filter(x=>x.direction==='game-to-sdk'&&x.message.type==='ack').length,connections:connection};});
