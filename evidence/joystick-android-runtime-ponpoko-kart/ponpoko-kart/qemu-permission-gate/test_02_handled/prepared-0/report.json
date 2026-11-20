@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "status": "observed-exec",
+  "sudoUsed": false,
+  "globalSettingsChanged": false,
+  "PR_SET_PTRACER_ANYUsed": false,
+  "grantScope": "One named GDB PID; Linux Yama also permits its descendants",
+  "actualTracerMustBeExactGdbPid": true,
+  "startedAtEpoch": 1795134292.6494427,
+  "grant": {
+    "status": "granted",
+    "errno": 0,
+    "debuggerPid": 3935,
+    "debuggerStarttimeTicks": 31617,
+    "ownedChildPid": 3942,
+    "singleThreadPrecondition": true,
+    "ownedChildStarttimeTicks": 31624,
+    "debuggerKeptUnreaped": true
+  },
+  "errors": [],
+  "yamaMode": 1,
+  "debuggerIdentity": {
+    "pid": 3935,
+    "starttimeTicks": 31617,
+    "parentPid": 3909,
+    "state": "S",
+    "tracerPid": 0,
+    "uid": 1001,
+    "executablePath": "/usr/bin/gdb",
+    "executableSha256": "3832cc070ae1716e322105d3b39fb398695e5f031c9d39224cf227a8c2b889f6"
+  },
+  "observedExecIdentity": {
+    "pid": 3942,
+    "starttimeTicks": 31624,
+    "parentPid": 3909,
+    "state": "S",
+    "tracerPid": 0,
+    "uid": 1001,
+    "executablePath": "/tmp/qemu-permission-elf-wdd_rd59/fixture",
+    "executableSha256": "ecbdd36b0ac8bfb27acf5768cb0166c41d90c5eb71dec13f99405f89fb5bb42d"
+  },
+  "mi": {
+    "commands": [
+      {
+        "sequence": 1,
+        "command": "-gdb-set pagination off",
+        "startedAtEpoch": 1795134292.6500254,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795134292.6990836
+      },
+      {
+        "sequence": 2,
+        "command": "-gdb-set confirm off",
+        "startedAtEpoch": 1795134292.6990886,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795134292.699128
+      },
+      {
+        "sequence": 3,
+        "command": "-gdb-set auto-load off",
+        "startedAtEpoch": 1795134292.6991296,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795134292.6991591
+      },
+      {
+        "sequence": 4,
+        "command": "-gdb-set debuginfod enabled off",
+        "startedAtEpoch": 1795134292.6991608,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795134292.69919
+      },
+      {
+        "sequence": 5,
+        "command": "-gdb-set print frame-arguments none",
+        "startedAtEpoch": 1795134292.6991913,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795134292.699223
+      },
+      {
+        "sequence": 6,
+        "command": "-gdb-set print entry-values no",
+        "startedAtEpoch": 1795134292.6992245,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795134292.6992536
+      },
+      {
+        "sequence": 7,
+        "command": "-gdb-set print thread-events off",
+        "startedAtEpoch": 1795134292.6992548,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795134292.6992815
+      },
+      {
+        "sequence": 8,
+        "command": "-gdb-set mi-async on",
+        "startedAtEpoch": 1795134292.6992824,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795134292.6993039
+      },
+      {
+        "sequence": 9,
+        "command": "-interpreter-exec console \"handle all nostop noprint pass\"",
+        "startedAtEpoch": 1795134292.699306,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795134292.6999865
+      },
+      {
+        "sequence": 10,
+        "command": "-interpreter-exec console \"handle SIGINT stop print pass\"",
+        "startedAtEpoch": 1795134292.6999884,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795134292.700034
+      },
+      {
+        "sequence": 11,
+        "command": "-interpreter-exec console \"handle SIGTRAP stop print pass\"",
+        "startedAtEpoch": 1795134292.7000353,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795134292.700075
+      },
+      {
+        "sequence": 12,
+        "command": "-interpreter-exec console \"handle SIGSEGV stop print pass\"",
+        "startedAtEpoch": 1795134292.7000766,
+        "cleanup": false,
+        "resultClass": "done",
+        "finishedAtEpoch": 1795134292.7001152
+      }
+    ],
+    "rawBytesRead": 8774,
+    "rawStreamSha256": "1b7845560d7d6ddec349884a0b1a286a182679b9cdeab538cd9f9d5865642571",
+    "rawStreamsRetained": false,
+    "protocolErrors": [],
+    "cleanupBytesRead": 0
+  }
+}

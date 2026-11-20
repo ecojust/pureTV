@@ -1,0 +1,69 @@
+{
+  "game": "ponpoko-kart",
+  "targetPackage": "com.ecojust.joystick.ponpokokart",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": true,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "a576714fc63c688228e5d0cb9f46ae2e3f37556c",
+  "apk": {
+    "path": "/home/runner/work/_temp/input/packages/ponpoko-kart/ponpoko-kart-0.1.0.apk",
+    "bytes": 1602736,
+    "sha256": "a1c9a0f6de56fd5ec87e25d4a6b5be541c9a04686e76b31484d99cc890b86e22"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/input/observers/ponpoko-kart/observer-ponpoko-kart.apk",
+    "bytes": 16783,
+    "sha256": "a422410ffa96249b4cc2d56d1ff1da90e29ddab6c99f8353c64b3a12aece170a"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 62517,
+      "sha256": "5fb0fbb8b14995ea757f2b9bfd5e89fd08b51c24810657b8d5b3e368a1b8826a"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11264,
+      "sha256": "c3c3389d80a713c86c294453fdf70ab65042fda1fe65b5fd44f68218a0492305"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 12693,
+      "sha256": "3bf677cf2634fe364325e37a1439afab82a8a1f993efa77b64d56e14fe10bb8d"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 7106,
+      "sha256": "8fa99646235d8d3369e6606b94b1facaafda934dcc1df3ad693233f9bcfe6e54"
+    },
+    "joystick-games/ponpoko-kart/qa-plan.json": {
+      "bytes": 3658,
+      "sha256": "cea39515f37cd9da3f706aaf92108f48390d9b4fdb5745c3328466c465ccd512"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 7735,
+      "sha256": "eae4cd09a6fe75c0c95eb8526365168e3934e681becb0ba356f89d4298da9c6d"
+    }
+  },
+  "tests": [],
+  "snapshots": [],
+  "captures": [],
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1000, in main\n    acceptance.setup(); acceptance.scenarios(); acceptance.report['status'] = 'passed'\n    ^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 500, in setup\n    self.command('wait-for-device')\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 277, in command\n    result = subprocess.run(record['command'], capture_output=True, check=False, timeout=timeout)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 550, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 1209, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 2116, in _communicate\n    self._check_timeout(endtime, orig_timeout, stdout, stderr)\n  File \"/usr/lib/python3.12/subprocess.py\", line 1253, in _check_timeout\n    raise TimeoutExpired(\nsubprocess.TimeoutExpired: Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'wait-for-device']' timed out after 45 seconds\n"
+}
