@@ -7,6 +7,8 @@ Android TV 0.1.2 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/
 
 ## Windows 下载
 
+Windows 0.1.0、0.1.1 与 0.1.2 均在默认端口和占用回退模式通过原生手柄实测。下方提供正式发布的 0.1.1。[三个版本的原始运行记录](docs/windows-delivery/version-runs.md)
+
 Windows x64 0.1.1 支持 Windows 10 1903 或更新版本，需要 Microsoft Edge WebView2 Runtime 和 WebGL 2。可运行安装程序，也可将便携版完整解压后运行 `PureTVGame.exe`。该版本未做 Authenticode 签名。
 
 [下载 EXE 安装程序](windows/KartRoyale-0.1.1-windows-x64-setup.exe) · [下载 ZIP 便携版](windows/KartRoyale-0.1.1-windows-x64.zip) · [SHA-256 校验](SHA256SUMS.txt)
