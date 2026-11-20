@@ -41,6 +41,25 @@ class BackroadPlayingFrame(unittest.TestCase):
             pixel(87, 65, (28, 25, 22))
             self.assertEqual(runner.backroad_scene_colors('playing.png'), 2)
 
+    def test_exact_finland_run_rejects_the_original_violet_screen_and_accepts_the_visible_rally(self):
+        fixtures = Path(__file__).parent / 'fixtures/backroad-finland-color'
+        url = 'https://game-kit.invalid/tv.html?mode=quick&stage=finland&car=swift&cond=stage&weather=stage'
+        snapshot = {'page': {'url': url}, 'game': {'stage': 'playing', 'gameplay': {'stageId': 'finland', 'carId': 'swift'}}}
+        capture = {'before': snapshot, 'after': snapshot}
+        for name, expected, violet in [('vulkan-stage', False, 0), ('legacy-driving', True, 1427)]:
+            rgb = zlib.decompress((fixtures / (name + '.rgb.zlib')).read_bytes())
+            with mock.patch.object(runner.subprocess, 'check_output', return_value=rgb):
+                sample = runner.backroad_scene_sample('playing.png')
+            self.assertEqual(sample['sampledPixels'], 1705)
+            self.assertGreater(sample['colors'], 500)
+            self.assertEqual(sample['saturatedVioletPixels'], violet)
+            self.assertEqual(runner.backroad_finland_violet_scene(capture, sample), expected)
+        snapshot['page']['url'] = url.replace('cond=stage', 'cond=night')
+        self.assertFalse(runner.backroad_finland_violet_scene(capture, sample))
+        snapshot['page']['url'] = url
+        snapshot['game']['gameplay']['stageId'] = 'japan'
+        self.assertFalse(runner.backroad_finland_violet_scene(capture, sample))
+
     def test_truncated_decode_cannot_pass(self):
         with mock.patch.object(runner.subprocess, 'check_output', return_value=b''):
             with self.assertRaisesRegex(ValueError, 'Incomplete'):

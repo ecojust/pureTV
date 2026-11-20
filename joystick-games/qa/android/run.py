@@ -43,8 +43,8 @@ def file_info(path):
     return {'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
 
 
-def backroad_scene_colors(path, ghost_labels=()):
-    """Count sampled colors in two world regions outside the racing HUD and controller card."""
+def backroad_scene_sample(path, ghost_labels=()):
+    """Sample world pixels outside the racing HUD, controller card and projected names."""
     width, height = 160, 90
     image = subprocess.check_output(
         ['ffmpeg', '-nostdin', '-v', 'error', '-i', str(path), '-frames:v', '1',
@@ -53,6 +53,7 @@ def backroad_scene_colors(path, ghost_labels=()):
     if len(image) != width * height * 3:
         raise ValueError('Incomplete gameplay screenshot')
     colors = set()
+    sampled = violet = 0
     # The upstream draws projected rival names in the DOM, even above a uniformly blank canvas.
     # Leave the horizon centre out and mask the observed bounds on either side of the screenshot.
     rectangles = [(left * width - 2, top * height - 2, right * width + 2, bottom * height + 2)
@@ -63,8 +64,33 @@ def backroad_scene_colors(path, ghost_labels=()):
                 if any(a <= x <= c and b <= y <= d for a, b, c, d in rectangles):
                     continue
                 offset = (y * width + x) * 3
-                colors.add(bytes(image[offset:offset + 3]))
-    return len(colors)
+                rgb = bytes(image[offset:offset + 3])
+                colors.add(rgb)
+                red, green, blue = rgb
+                sampled += 1
+                if blue >= 150 and blue - green >= 100 and blue - red >= 55:
+                    violet += 1
+    return {'colors': len(colors), 'sampledPixels': sampled, 'saturatedVioletPixels': violet}
+
+
+def backroad_scene_colors(path, ghost_labels=()):
+    return backroad_scene_sample(path, ghost_labels)['colors']
+
+
+def backroad_finland_violet_scene(capture, sample):
+    # Only this unchanged Finnish quick-stage, stage-default weather and Swift Mk1
+    # has a native reference. Its dirt/grass never fills the picture with saturated violet.
+    url = 'https://game-kit.invalid/tv.html?mode=quick&stage=finland&car=swift&cond=stage&weather=stage'
+    for moment in ('before', 'after'):
+        state = capture[moment]
+        game = state.get('game', {})
+        if state.get('page', {}).get('url') != url or game.get('stage') != 'playing':
+            return False
+        gameplay = game.get('gameplay', {})
+        if gameplay.get('stageId') != 'finland' or gameplay.get('carId') != 'swift':
+            return False
+    return sample['saturatedVioletPixels'] * 2 > sample['sampledPixels']
+
 
 
 OBSERVER_REQUEST_TIMEOUT = 15
@@ -1113,10 +1139,13 @@ def main():
         if a.game == 'backroad-rally':
             playing = next(c for c in acceptance.captures if c['path'] == 'playing.png')
             labels = [rect for moment in ('before', 'after') for rect in playing[moment]['page'].get('backroadGhostLabels', [])]
-            colors = backroad_scene_colors(acceptance.out / 'playing.png', labels)
-            acceptance.report['playingSceneColors'] = colors
-            if colors <= 1:
+            sample = backroad_scene_sample(acceptance.out / 'playing.png', labels)
+            acceptance.report['playingSceneColors'] = sample['colors']
+            acceptance.report['playingSceneSample'] = sample
+            if sample['colors'] <= 1:
                 raise AssertionError('Backroad gameplay screenshot has a uniform world behind the HUD')
+            if backroad_finland_violet_scene(playing, sample):
+                raise AssertionError('Finland quick-stage dirt and grass are missing beneath a predominantly violet world')
         acceptance.report['status'] = 'passed'
     except Exception:
         acceptance.report['status'] = 'failed'; acceptance.report['error'] = traceback.format_exc()
