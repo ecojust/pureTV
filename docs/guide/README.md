@@ -48,7 +48,7 @@ pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电�
 
 ### 在电脑上玩
 
-Windows x64 用户打开游戏启动器，用方向键选择游戏，按回车开始。启动器首次下载并校验游戏，在默认浏览器中打开；之后可从本机缓存启动。键盘操作按各游戏画面的提示，也可以连接同一局域网内的 pureTV 无线手柄。游玩时请保持启动器运行。[下载 Windows 启动器](https://github.com/ecojust/pureTV/releases/download/catalog-player-v1.0.0/pureTV-Games.exe)
+Windows x64 用户打开游戏启动器，用方向键选择游戏，按回车开始。启动器首次下载并校验游戏，在默认浏览器中打开。之后可从本机缓存启动。键盘操作按各游戏画面的提示，也可以连接同一局域网内的 pureTV 无线手柄。游玩时请保持启动器运行。[下载 Windows 启动器](https://github.com/ecojust/pureTV/releases/download/catalog-player-v1.0.0/pureTV-Games.exe)
 
 macOS 和 Linux 用户可解压便携包，在解压目录用 Python 3.10 或更新版本运行下面的命令。若要直接打开某款游戏，可在启动命令后加游戏 ID，例如 `.venv/bin/python launcher.py tetris`。[下载便携启动器](https://github.com/ecojust/pureTV/releases/download/catalog-player-v1.0.0/pureTV-Games-portable.zip)
 
@@ -59,6 +59,8 @@ python3 -m venv .venv
 ```
 
 ### 在电视上扫码加入
+
+在电视上先安装对应游戏的 APK。电视图标可下载单款，也可按文件名在合集中查找。[下载 Android TV 游戏](https://github.com/ecojust/pureTV/releases/tag/catalog-tv-controls-v1.0.0)
 
 在电视上打开游戏，让手机接入同一局域网，扫描游戏菜单中的二维码。手机浏览器会打开虚拟手柄，在手机上按方向和动作键，看电视画面游玩。电视显示已连接的玩家席位，进入菜单或暂停时可以查看连接详情。
 

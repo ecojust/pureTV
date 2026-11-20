@@ -60,6 +60,8 @@ python3 -m venv .venv
 
 ### Join a TV game from a phone
 
+Install the game’s APK on the television. Use its TV icon on the homepage or find the game by filename in the Android TV collection. [Download Android TV games](https://github.com/ecojust/pureTV/releases/tag/catalog-tv-controls-v1.0.0)
+
 Open the game on the TV. Connect your phone to the same LAN and scan the QR code on the game's menu. The page on the phone becomes a virtual controller. Use its direction pad and action buttons while watching the TV. The connection display shows the occupied seat. Open the menu or pause screen to view connection details.
 
 ### Connect a pureTV Wi-Fi controller
