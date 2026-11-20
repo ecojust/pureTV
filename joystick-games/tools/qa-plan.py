@@ -47,6 +47,10 @@ def validate_plan(plan):
     assert isinstance(plan, dict) and plan.get('schemaVersion') == 1
     accepted_renderers(plan)
     if 'storageRestartRequired' in plan:assert type(plan['storageRestartRequired']) is bool
+    if 'windowsPauseWait' in plan:
+        pause = plan['windowsPauseWait']
+        assert isinstance(pause, dict) and set(pause) == {'timeoutSeconds'}
+        assert type(pause['timeoutSeconds']) is int and 30 < pause['timeoutSeconds'] <= 60
     stable = plan.get('pauseStablePaths')
     assert isinstance(stable, list) and stable and len(set(stable)) == len(stable), 'Explicit pauseStablePaths required'
     assert all(isinstance(path, str) and PATH.fullmatch(path) and path.startswith('gameplay.') for path in stable)
@@ -88,6 +92,11 @@ def validate_plan(plan):
                 assert isinstance(speed, dict) and isinstance(motion, dict)
                 assert speed.get('path') == 'gameplay.speed' and speed.get('op') == 'gt' and numeric(speed.get('value')) and speed['value'] > 0
                 assert motion in [{'path': path, 'op': 'changed'} for path in ('gameplay.progress', 'gameplay.position')], 'Held throttle must observe original speed and course motion'
+        if 'windowsReleaseWait' in step:
+            release = step['windowsReleaseWait']
+            assert isinstance(release, dict) and set(release) == {'timeoutSeconds'}
+            assert type(release['timeoutSeconds']) is int and 0 < release['timeoutSeconds'] <= 60
+            assert step.get('windowsHoldUntilExpect') is True, 'Release observation requires bounded held throttle'
         for item in expectations:
             assert isinstance(item, dict) and isinstance(item.get('path'), str) and PATH.fullmatch(item['path'])
             assert item.get('op') in OPERATORS

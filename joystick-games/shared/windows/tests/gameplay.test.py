@@ -92,6 +92,37 @@ class PlanBoundaries(unittest.TestCase):
             plan = copy.deepcopy(original); plan['steps'][12].update(update)
             with self.subTest(update=update), self.assertRaises(AssertionError): plan_api.validate_plan(plan)
 
+    def test_release_observation_is_explicit_bounded_and_only_after_held_throttle(self):
+        original = self.plan('kart-royale')
+        self.assertEqual(original['steps'][12]['windowsReleaseWait'], {'timeoutSeconds': 45})
+        plan_api.validate_plan(original)
+        for value in [None, True, {}, {'timeoutSeconds': True}, {'timeoutSeconds': 0},
+                      {'timeoutSeconds': 61}, {'timeoutSeconds': 45.0}, {'timeoutSeconds': float('nan')},
+                      {'timeoutSeconds': 45, 'skipRelease': True}]:
+            plan = copy.deepcopy(original); plan['steps'][12]['windowsReleaseWait'] = value
+            with self.subTest(value=value), self.assertRaises(AssertionError): plan_api.validate_plan(plan)
+        for index in [0, 11, 13, 17]:
+            plan = copy.deepcopy(original); plan['steps'][index]['windowsReleaseWait'] = {'timeoutSeconds': 45}
+            with self.subTest(index=index), self.assertRaises(AssertionError): plan_api.validate_plan(plan)
+        for value in [None, False, 1]:
+            plan = copy.deepcopy(original); plan['steps'][12]['windowsHoldUntilExpect'] = value
+            with self.subTest(held=value), self.assertRaises(AssertionError): plan_api.validate_plan(plan)
+
+    def test_pause_observation_opt_in_keeps_a_separate_finite_cap(self):
+        original = self.plan('kart-royale')
+        self.assertEqual(original['windowsPauseWait'], {'timeoutSeconds': 45})
+        for value in [None, True, {}, {'timeoutSeconds': True}, {'timeoutSeconds': 30},
+                      {'timeoutSeconds': 61}, {'timeoutSeconds': 45.0}, {'timeoutSeconds': float('inf')},
+                      {'timeoutSeconds': 45, 'skipModel': True}]:
+            plan = copy.deepcopy(original); plan['windowsPauseWait'] = value
+            with self.subTest(value=value), self.assertRaises(AssertionError): plan_api.validate_plan(plan)
+        plan = copy.deepcopy(original); plan['pauseStablePaths'] = []
+        with self.assertRaises(AssertionError): plan_api.validate_plan(plan)
+        for game in ['backroad-rally', 'turbo-kart-rush']:
+            plan = self.plan(game)
+            self.assertNotIn('windowsPauseWait', plan)
+            self.assertTrue(all('windowsReleaseWait' not in step for step in plan['steps']))
+
 
 class BoundedObservation(unittest.TestCase):
     def fixture(self, startup=False, *, interval=.3, semantic=True, target=True, frozen=False,
@@ -305,6 +336,124 @@ class BoundedObservation(unittest.TestCase):
             self.assertLess(time.monotonic() - started, .3)
         finally:
             gate.set()
+
+    def royale_cadence(self, *, opt_in=True, never_release_semantics=False):
+        """Synthetic timing schedule; the final66.1s frame was NOT in original CI."""
+        f = self.fixture(target=False)
+        if opt_in: f.step['windowsReleaseWait'] = {'timeoutSeconds': 45}
+        f.step['expect'][0]['value'] = 1
+        f.step['expect'][1] = {'path': 'gameplay.position', 'op': 'changed'}
+        f.before['game']['gameplay']['position'] = [0, 0, 0]
+        schedule = iter([7.391, 14.484, 21.688, 29.297, 36.406, 43.547, 51.25, 58.656, 66.1])
+        original = f.subject.read
+        def read():
+            f.clock[0] = max(f.clock[0], next(schedule, f.clock[0] + 7.5))
+            state = original(); game = state['game']
+            game['controller']['buttons']['UP'] = f.clock[0] >= 21.688 and (never_release_semantics or f.clock[0] < 51.25)
+            game['gameplay'].update(position=[.2, 0, 0] if f.clock[0] >= 29.297 else [0, 0, 0],
+                                    speed=1.488 if f.clock[0] >= 29.297 else .744 if f.clock[0] >= 21.688 else 0)
+            return state
+        f.subject.read = read
+        return f
+
+    def test_original_slow_schedule_only_completes_after_extra_synthetic_release_frame(self):
+        old = self.royale_cadence(opt_in=False)
+        with self.assertRaisesRegex(AssertionError, 'deadline'): old.run()
+        self.assertEqual(old.releases, [29.297])
+        f = self.royale_cadence(); result = f.run()
+        record = f.subject.report['boundedGameplayObservations'][0]
+        self.assertEqual(f.releases, [29.297])
+        self.assertEqual(record['actionTimeoutSeconds'], 60)
+        self.assertAlmostEqual(record['releaseDeadlineAtSeconds'], 74.297)
+        self.assertAlmostEqual(record['elapsedSeconds'], 66.1)
+        self.assertEqual(record['phase'], 'complete')
+        self.assertEqual(result['releasedFreshFrames'], 2)
+        self.assertEqual(record['sdkMessagesThroughRelease'], record['matchingAcksThroughRelease'])
+
+    def test_release_opt_in_does_not_extend_unmatched_or_unconsumed_action(self):
+        for update in [{'target': False}, {'semantic': False}, {'frozen': True}]:
+            f = self.fixture(**update); f.step['windowsReleaseWait'] = {'timeoutSeconds': 45}
+            with self.subTest(update=update), self.assertRaises(AssertionError): f.run()
+            self.assertLessEqual(f.clock[0], 60.001)
+            self.assertEqual(len(f.releases), 1)
+            self.assertFalse(f.subject.held)
+            self.assertEqual(f.subject.report['boundedGameplayObservations'][0]['phase'], 'action')
+            self.assertNotIn('releaseDeadlineAtSeconds', f.subject.report['boundedGameplayObservations'][0])
+
+    def test_late_action_snapshot_and_late_sdk_release_cannot_open_new_budget(self):
+        f = self.royale_cadence(); original = f.subject.read
+        def late_read():
+            state = original(); f.clock[0] = 60
+            state['game']['gameplay'].update(speed=3,position=[.2,0,0])
+            state['game']['controller']['buttons']['UP']=True
+            return state
+        f.subject.read = late_read
+        with self.assertRaisesRegex(AssertionError, 'deadline'): f.run()
+        self.assertNotIn('firstMatchingHeldState', f.subject.report['boundedGameplayObservations'][0])
+        f = self.royale_cadence(); button = f.subject.client.button
+        def late_release(key, action, duration=None):
+            button(key, action, duration)
+            if action == 'tap': f.clock[0] = 60
+        f.subject.client.button = late_release
+        with self.assertRaisesRegex(AssertionError, 'Release completed after action deadline'): f.run()
+        self.assertEqual(f.subject.report['boundedGameplayObservations'][0]['phase'], 'action')
+        self.assertNotIn('releaseDeadlineAtSeconds', f.subject.report['boundedGameplayObservations'][0])
+        self.assertFalse(f.subject.held)
+
+    def test_release_failure_does_not_start_observation_or_certify(self):
+        f = self.royale_cadence(); button = f.subject.client.button; attempts = []
+        def fail_once(key, action, duration=None):
+            if action == 'tap':
+                attempts.append(action)
+                if len(attempts) == 1: raise OSError('synthetic SDK release failure')
+            button(key, action, duration)
+        f.subject.client.button = fail_once
+        with self.assertRaisesRegex(OSError, 'SDK release failure'): f.run()
+        self.assertEqual(len(attempts), 2)  # Original finally cleanup retries the failed release.
+        self.assertFalse(f.subject.held)
+        self.assertEqual(f.subject.report['boundedGameplayObservations'][0]['phase'], 'action')
+
+    def test_release_deadline_never_accepts_stale_or_still_held_semantic_input(self):
+        f = self.royale_cadence(never_release_semantics=True)
+        with self.assertRaisesRegex(AssertionError, 'deadline'): f.run()
+        record = f.subject.report['boundedGameplayObservations'][0]
+        self.assertEqual(f.releases, [29.297])
+        self.assertEqual(record['releasedFreshFrames'], 0)
+        f = self.royale_cadence(); original = f.subject.read; last = []
+        def stale_after_one_followup():
+            if f.clock[0] >= 58.656 and last:
+                f.clock[0] += 1
+                return copy.deepcopy(last[0])
+            state = original(); last[:] = [state]; return state
+        f.subject.read = stale_after_one_followup
+        with self.assertRaisesRegex(AssertionError, 'deadline'): f.run()
+        self.assertEqual(f.subject.report['boundedGameplayObservations'][0]['releasedFreshFrames'], 1)
+        self.assertFalse(f.subject.held)
+
+    def test_release_phase_keeps_identity_counter_input_and_ack_guards(self):
+        mutations = [
+            lambda s: s['input']['players'][0].update(session='other'),
+            lambda s: s['input']['players'][0].update(cancelSeq=9),
+            lambda s: s['input']['players'][0]['buttonCounters'].update(UP=2),
+            lambda s: s.update(documentEpoch=2),
+            lambda s: s.update(active=False),
+            lambda s: s['game'].update(paused=True),
+            lambda s: s['input']['players'][0]['buttons'].update(LEFT=True),
+            lambda s: s['game']['controller']['buttons'].update(LEFT=True),
+        ]
+        for mutate in mutations:
+            f = self.royale_cadence(); original = f.subject.read
+            def read():
+                state = original()
+                if f.releases: mutate(state)
+                return state
+            f.subject.read = read
+            with self.subTest(mutate=mutate), self.assertRaises(AssertionError): f.run()
+            self.assertFalse(f.subject.held)
+        for update in [{'missing_ack': True}, {'duplicate_ack': True}, {'wrong_ack_connection': True}]:
+            f = self.fixture(**update); f.step['windowsReleaseWait'] = {'timeoutSeconds': 1}
+            with self.subTest(update=update), self.assertRaises(AssertionError): f.run()
+            self.assertFalse(f.subject.held)
 
 
 if __name__ == '__main__':

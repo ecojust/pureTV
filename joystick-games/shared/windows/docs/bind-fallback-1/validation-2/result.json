@@ -1,0 +1,60 @@
+{
+  "status": "passed",
+  "scope": "Linux optimized NDEBUG build and seven synthetic binder-policy cases; require() checks remain active in Release. Does not compile or run the _WIN32 native branch or production WebView host. CMake unavailable; first attempt preserved.",
+  "nativeWindowsValidated": false,
+  "cmakeIntegrationValidated": false,
+  "createdAt": "2026-11-20T00:18:46.233815+00:00",
+  "sourceFiles": [
+    {
+      "path": "joystick-games/shared/windows/Sources/main.cpp",
+      "bytes": 35243,
+      "sha256": "7038855f074d633ba3c99631e606554174ac56ff372867be1c6a00c6b68ca98b"
+    },
+    {
+      "path": "joystick-games/shared/windows/Sources/ControllerBind.hpp",
+      "bytes": 1107,
+      "sha256": "3656034907322c28a7ba18174607190e2bf87f33b1f066beed8032142cfb8eca"
+    },
+    {
+      "path": "joystick-games/shared/windows/tests/controller-bind.test.cpp",
+      "bytes": 6248,
+      "sha256": "a203e997684b9d04270ee16b13a046b9b7734428ebc52561e6226c6166be7c98"
+    },
+    {
+      "path": "joystick-games/shared/windows/CMakeLists.txt",
+      "bytes": 2242,
+      "sha256": "a285a50f9e9373a21c2bf74885f5ec55b26c5351d0ac006da76f7c4f8ee8542e"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "g++",
+        "-std=c++17",
+        "-O2",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "/dev/shm/puretv-submit/joystick-games/shared/windows/Sources",
+        "/dev/shm/puretv-submit/joystick-games/shared/windows/tests/controller-bind.test.cpp",
+        "-o",
+        "/dev/shm/windows-host-tmp/bind-fallback-validation-2/controller-bind-test"
+      ],
+      "returncode": 0,
+      "log": "1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/dev/shm/windows-host-tmp/bind-fallback-validation-2/controller-bind-test"
+      ],
+      "returncode": 0,
+      "log": "2.log",
+      "bytes": 162,
+      "sha256": "5a5bbdd25729eb6f3661a39080d63dd29f324456c5339c7541af2a5d49fe0d3a"
+    }
+  ]
+}

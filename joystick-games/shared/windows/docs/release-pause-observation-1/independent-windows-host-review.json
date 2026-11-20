@@ -1,0 +1,69 @@
+{
+  "status": "passed-independent-static-review",
+  "reviewer": "racing_windows_host",
+  "createdAt": "2026-11-20T00:26:50.770747+00:00",
+  "inventorySha256": "5a1afb4080d8819a14f9e31c78498635b7b8078eb0484fe9cfd37f9a24f77fe7",
+  "frozenEvidenceFilesVerified": 35,
+  "candidateSourceFiles": {
+    "joystick-games/kart-royale/qa-plan.json": {
+      "bytes": 7776,
+      "sha256": "94c9b1127e746d081e375b470ab497a02f868de269b48c7220481efc181eaa4d"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 7777,
+      "sha256": "940fb5fd860f47a52f5b5de4d82d6aa5d3bcd98be83bed769346e1dd25d1309e"
+    },
+    "joystick-games/tools/windows-verify.py": {
+      "bytes": 43393,
+      "sha256": "a25eab4948cd3fe9c2cece63a2fc7d78f3f5682b5589112dc90a103b0836e730"
+    },
+    "joystick-games/shared/windows/tests/gameplay.test.py": {
+      "bytes": 25771,
+      "sha256": "26f8288b589eb482fc82f811dfa169c0aad0580dddafbbd0345c3ef05e743887"
+    },
+    "joystick-games/shared/windows/tests/window-lifecycle.test.py": {
+      "bytes": 18804,
+      "sha256": "02472fb25a07dcd5ca6270f4e6f691529cbd829a32f7d2fc3ff11d979e4c30b0"
+    }
+  },
+  "independentlyChecked": {
+    "onlyPlanChanges": "Exactly step12 windowsReleaseWait45 and game windowsPauseWait45; all20 original steps otherwise identical to d750, action60 and six pause paths unchanged.",
+    "oldTestMethodAndFixtureAstsUnchanged": 42,
+    "unchangedWindowsMethods": [
+      "__init__",
+      "read",
+      "deadline_snapshot",
+      "gameplay",
+      "fresh",
+      "connect",
+      "screenshot",
+      "hwnd",
+      "launch",
+      "window_bounds",
+      "discovery",
+      "focus",
+      "quit",
+      "restart_storage",
+      "run"
+    ],
+    "defaultPauseAstUnchangedAfterOnlyOptInDispatch": true,
+    "originalMacosAndroidAndWindowsWorkflowBytesMatch": true,
+    "finalLog": "Original author log53/53,0skipped inspected and hash-bound; not rerun."
+  },
+  "behaviorReview": [
+    "Held throttle still requires same document/controller/session/cancel/counters, real raw and semantic UP and original speed+position expectation. Only then release is sent once and must complete before the original60-second action deadline. Late or unmet action cannot open the release budget.",
+    "Only the new explicit option starts45 seconds from successful release. It still requires a fully released baseline plus two subsequent fresh native/game frames, same identity, exact counters, all nine raw and semantic keys released and exact original wire/ACK checks. No model/clock mutation.",
+    "Pause option45 includes baseline acquisition and final foreground poll check within one deadline. Minimum0.5 seconds starts at actual baseline, at least four new native timestamps and all six original model fields remain mandatory. Background input-off/raw-clear rules remain; foreground polling is still required.",
+    "Invalid boolean/float/nonfinite/extra-key options rejected; release option requires the existing held-throttle contract. Only Royale currently opts in; original default branch and other platform runtime files unchanged.",
+    "Synthetic66.1s release frame and30.4s fourth pause sample are explicitly invented unit fixtures. Original native normal/occupied reports remain failed, not reclassified as passing."
+  ],
+  "validationLimits": {
+    "nativeRerun": false,
+    "syntheticTestsRerunByReviewer": false,
+    "sourceEditedByReviewer": false,
+    "productionDispatch": false,
+    "jobBudgetChanged": false,
+    "jobBudgetNote": "55-minute job cap remains unchanged by explicit scope. Prior d750 static nominal step allowances and actual progress are separately archived; this review does not guarantee the next complete run fits that cap or passes."
+  },
+  "blockers": []
+}

@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "racing_review_rally",
+  "status": "no-static-blocker-after-deadline-correction",
+  "parent": "0415846f3b3e3fc11f79e08d25050affdf750435",
+  "sourceFiles": {
+    "joystick-games/qa/android/graphics-observer/run.py": {
+      "bytes": 32804,
+      "sha256": "cd6fa2249163d3a3e55b6658479a1744ca952d048ec195b46f0086ee164c2b6f"
+    },
+    "joystick-games/qa/android/graphics-observer/tests/test_driver.py": {
+      "bytes": 22823,
+      "sha256": "5241c1a6368d4fe4bf8e74b694347a5c73802dcf6017762be1e6ecb64f5b1e5b"
+    }
+  },
+  "finalFreeze": {
+    "bytes": 4573,
+    "sha256": "7fc9034906f2f8041b7a79e80f818b1bb84b8c22732d6309424b02aef55e16db"
+  },
+  "verifiedEvidenceFiles": 28,
+  "isolatedInputsVerified": 13,
+  "unchangedParentInputsVerified": 11,
+  "allFrozenAndExecutedCopiesMatch": true,
+  "staticAssertions": {
+    "oldTopLevelFunctionsUnchanged": [
+      "fresh",
+      "game",
+      "initial_menu_ready",
+      "initialized",
+      "main",
+      "menu_qualified",
+      "module",
+      "original_plan",
+      "owner",
+      "record",
+      "released",
+      "require",
+      "validate_binding",
+      "validated",
+      "write"
+    ],
+    "existingDiagnosisMethodsUnchanged": [
+      "__init__",
+      "save",
+      "command",
+      "wait",
+      "provenance",
+      "installed_hash",
+      "setup",
+      "heartbeat",
+      "capture",
+      "run"
+    ],
+    "menuASTEqualAfterReplacingOnlyReadCall": true,
+    "existing12TestsAndSetupASTUnchanged": true,
+    "onlyTwoSourceOverlay": true
+  },
+  "reviewFindings": [
+    {
+      "area": "First draft actual failure",
+      "result": "Preserved reviewer-deadline-counterexample with exact fafb driver/HTTP trace:25ms budget overran to142ms and last changed. Original15-test success remains historical, not accepted proof of hard deadline."
+    },
+    {
+      "area": "Absolute read deadline",
+      "result": "Explicit deadline path arms one-shot ITIMER_REAL only on Linux main thread and only when no other timer exists. Alarm covers HTTP headers/body, JSON parse and SHA; finally cancels it and restores previous handler. Post-read monotonic guard precedes last publication. No background reader or late write path was introduced."
+    },
+    {
+      "area": "Retry scope",
+      "result": "At most3 fresh GETs, each capped15s, shared read budget45s, all further bounded by existing step absolute deadline. Only enumerated connection/timeout errors or URL errors wrapping them retry. HTTP errors, malformed/oversized/non-object responses and real Observer/game errors remain hard failures."
+    },
+    {
+      "area": "Original input and success rules",
+      "result": "menu AST differs only at GET call. SDK press/release/ACK pair,16ms tap, original240s step limit, exact predicates, original query-only document reset, same-ID/session release checks and two subsequent fresh polls remain unchanged. No game/Java/common runner/signing/export or APK changes."
+    },
+    {
+      "area": "Evidence and tests",
+      "result": "Read original18-test successful log and actual test code, without rerunning suite. Six new tests use real local dropped/slow HTTP plus explicit ownership/parse fixtures; slow header/body checks include no expired last publication, no late worker write, restored timer/handler and immediate failure semantics. This is Linux-side transport validation, not Android or graphics acceptance."
+    }
+  ],
+  "remainingLimitations": [
+    "No new Android/graphics execution in this review; original v2 diagnostic remains failed and its93 evidence files unchanged.",
+    "SIGALRM transport path is intentionally Linux main-thread-only; foreign active timer or non-main-thread call fails closed.",
+    "Timing tests allow ordinary scheduler overhead; no claim that CI graphics root cause or original black-frame issue is fixed."
+  ],
+  "reviewScriptAttemptNote": "First reviewer inventory reader expected sourceFiles in final freeze and stopped with KeyError before inspecting sources. Actual final freeze has doc-relative files; corrected reader uses result.sourceFiles and freeze.files. No candidate changes or tests followed from that reviewer parsing error.",
+  "testsRerunByReviewer": false,
+  "newNativeRun": false,
+  "postPerformed": false
+}

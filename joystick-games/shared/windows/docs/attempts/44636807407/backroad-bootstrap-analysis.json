@@ -1,0 +1,116 @@
+{
+  "status": "actual-original-startup-failure-identified",
+  "sourceCommit": "d750c0c68c430503be06d18fe5b76af825c72e58",
+  "sourceRunId": 44636807407,
+  "sourceRunAttempt": 1,
+  "immutableExportCommit": "09167e91d63bfea2a069dbb62ba6127db238a9f7",
+  "fixtureStatus": "failed",
+  "elapsedSeconds": 60.031999999999925,
+  "processId": 2564,
+  "ownedProcessDialogText": [
+    "无法启动游戏 / Cannot open game\n\nCannot bind controller TCP port: 10013"
+  ],
+  "nativeEvents": [
+    {
+      "detail": {},
+      "documentEpoch": 0,
+      "event": "initialize",
+      "foreground": true,
+      "minimized": false,
+      "processId": 2564,
+      "ready": false,
+      "timestamp": 548.937
+    },
+    {
+      "detail": {},
+      "documentEpoch": 0,
+      "event": "server_start_requested",
+      "foreground": true,
+      "minimized": false,
+      "processId": 2564,
+      "ready": false,
+      "timestamp": 548.937
+    },
+    {
+      "detail": {},
+      "documentEpoch": 0,
+      "event": "fatal_error_before_dialog",
+      "foreground": true,
+      "minimized": false,
+      "processId": 2564,
+      "ready": false,
+      "timestamp": 548.937
+    },
+    {
+      "detail": {
+        "cause": "window_activate",
+        "nextInputEnabled": false,
+        "previousInputEnabled": false,
+        "suspendRequested": false
+      },
+      "documentEpoch": 0,
+      "event": "foreground_update",
+      "foreground": true,
+      "minimized": false,
+      "processId": 2564,
+      "ready": false,
+      "timestamp": 549.328
+    }
+  ],
+  "nativeStateProduced": false,
+  "gameRuntimeExecuted": false,
+  "actualError": {
+    "api": "Winsock bind",
+    "code": 10013,
+    "name": "WSAEACCES",
+    "knownScope": "Default controller port unavailable before WebView startup",
+    "specificDenialCauseProven": false
+  },
+  "sourceExplanation": "The frozen startServer only falls back for WSAEADDRINUSE or WSAEACCES with listening(63485). listening uses GetExtendedTcpTable(... TCP_TABLE_OWNER_PID_LISTENER), returning false on no matching listener or table query failure. The observed fatal message establishes the WSAEACCES branch was rejected; it does not distinguish reserved range, bound-but-not-listening socket or query failure.",
+  "fourDocumentAssertionsExecuted": false,
+  "storageOrGameRegressionProven": false,
+  "originalJsDiagnosticsNotReached": true,
+  "fixtureSourceInputsVerifiedAgainstOriginalGit": [
+    {
+      "path": "joystick-games/shared/windows/tests/navigation-storage.test.py",
+      "bytes": 8079,
+      "sha256": "c57f0090974cb697360d1ddad6b5baae9e810537e25ee945f34a250483f0089c"
+    },
+    {
+      "path": "joystick-games/shared/windows/tests/navigation-observation.py",
+      "bytes": 5557,
+      "sha256": "e366ff0260e5b517250fd5cd69ecd5f999cb1739fe7e0b910447a9c085dd8217"
+    },
+    {
+      "path": "joystick-games/shared/windows/Sources/main.cpp",
+      "bytes": 34903,
+      "sha256": "53ab3af86bdd9d203fc2fe604fcc60ebe44bbc619825cfb7f8725d51e5ce20bf"
+    },
+    {
+      "path": "joystick-games/shared/windows/Sources/EntryURL.hpp",
+      "bytes": 1351,
+      "sha256": "94b5efc011bac9d1153157d5da9d5df454e8cba6d73e409828389d03fee9cec8"
+    },
+    {
+      "path": "joystick-games/shared/windows/Sources/DiagnosticLog.hpp",
+      "bytes": 1010,
+      "sha256": "e81581fdf9ac3412f84a9b1b8beed188d8f54afcf167936ccf0b39662388c86d"
+    },
+    {
+      "path": "joystick-games/shared/windows/Web/bridge.js",
+      "bytes": 8739,
+      "sha256": "e4de0862673f30c254e02597f45b8fbac0382b2e2e6a5ae8aee819ad4d1f0a89"
+    },
+    {
+      "path": "joystick-games/shared/windows/Web/bootstrap.js",
+      "bytes": 895,
+      "sha256": "b2064db9df208f80bcf5cb24c82bede7c99cbc06faa8a4573895050ad663dfc7"
+    },
+    {
+      "path": "joystick-games/shared/windows/Web/diagnostics.js",
+      "bytes": 3184,
+      "sha256": "fcd8094568b6e48ab78bcdc1e11b7f12d320e7fa6a938e587e1cc2a716fc787e"
+    }
+  ],
+  "fixScopeAuthorizedByRoot": "Attempt exactly one OS-assigned port0 fallback also for first WSAEACCES; keep default63485 first, other errors fatal, actual error/reason and stable endpoint, no system permission/reservation changes. Add actual Windows exclusive bound-not-listening fixture."
+}

@@ -39,7 +39,7 @@ jobs:
   verify:
     needs: plan
     runs-on: windows-2022
-    timeout-minutes: 55
+    timeout-minutes: ${{ matrix.game == 'kart-royale' && 180 || 55 }}
     strategy:
       fail-fast: false
       matrix:

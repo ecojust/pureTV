@@ -12,7 +12,7 @@ for mode in ['runtime-normal','runtime-occupied','runtime-bootstrap']:
         if path.is_file() and not {'profile','fixture-app'}.intersection(relative.parts) and path.suffix in {'.json','.jsonl','.log','.txt','.png','.py'}:
             target=out/mode/relative;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(path,target)
     if (temp/mode/'profile/preferences.json').is_file():shutil.copy2(temp/mode/'profile/preferences.json',out/mode/'native-preferences-after-run.json')
-for source,name in [('packages/build-manifest.json','build-manifest.json'),('install-verification/package-verification.json','package-verification.json')]:
+for source,name in [('packages/build-manifest.json','build-manifest.json'),('install-verification/package-verification.json','package-verification.json'),('packages/build/Testing/Temporary/LastTest.log','ctest-last-test.log')]:
     if (temp/source).is_file():shutil.copy2(temp/source,out/name)
 scope_spec=importlib.util.spec_from_file_location('windows_inputs',Path(__file__).with_name('windows-inputs.py'));source_scope=importlib.util.module_from_spec(scope_spec);scope_spec.loader.exec_module(source_scope)
 complete=False

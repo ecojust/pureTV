@@ -1,0 +1,173 @@
+diff --git a/joystick-games/qa/android/graphics-observer/run.py b/joystick-games/qa/android/graphics-observer/run.py
+index 26fa9cf..7836c5f 100644
+--- a/joystick-games/qa/android/graphics-observer/run.py
++++ b/joystick-games/qa/android/graphics-observer/run.py
+@@ -240,6 +240,53 @@ class Diagnosis:
+         self.report['timeout'] = {'label': label, 'seconds': timeout, 'lastTransportError': last_error}
+         raise AssertionError(label + ' timed out; final actual observation retained')
+ 
++    def menu_graphics(self, deadline):
++        """Same 45s/three-new-GET transport policy as the original QA reader.
++
++        Keep this driver's bounded body reader and raw HTTP log. The original
++        menu deadline also caps the read; no input or cached result is replayed.
++        """
++        until = min(deadline, time.monotonic() + original.OBSERVER_SNAPSHOT_TIMEOUT)
++        call = getattr(self, '_menu_graphics_calls', 0) + 1
++        self._menu_graphics_calls = call
++        transport = (RemoteDisconnected, ConnectionResetError, ConnectionAbortedError,
++                     ConnectionRefusedError, TimeoutError)
++        failures = 0
++        for attempt in range(1, original.OBSERVER_SNAPSHOT_ATTEMPTS + 1):
++            remaining = until - time.monotonic()
++            if remaining <= 0:
++                raise TimeoutError('Read-only menu observation deadline expired')
++            request_timeout = min(original.OBSERVER_REQUEST_TIMEOUT, remaining)
++            started = time.time()
++            try:
++                value = self.get('graphics', request_timeout)
++                if time.monotonic() > until:
++                    raise TimeoutError('Read-only menu observation deadline expired')
++            except transport + (URLError,) as error:
++                if isinstance(error, HTTPError) or (isinstance(error, URLError) and not isinstance(error.reason, transport)):
++                    raise
++                failures += 1
++                remaining = until - time.monotonic()
++                retry = attempt < original.OBSERVER_SNAPSHOT_ATTEMPTS and remaining > 0
++                self.report.setdefault('observerTransportEvents', []).append({
++                    'operation': 'GET /graphics', 'menuReadCall': call, 'status': 'transport-failed',
++                    'attempt': attempt, 'maximumAttempts': original.OBSERVER_SNAPSHOT_ATTEMPTS,
++                    'maximumWallSeconds': original.OBSERVER_SNAPSHOT_TIMEOUT,
++                    'requestTimeoutSeconds': request_timeout, 'startedAt': started, 'endedAt': time.time(),
++                    'errorType': type(error).__name__, 'retryScheduled': retry,
++                    'remainingStepSeconds': max(0, deadline-time.monotonic())})
++                if not retry:
++                    raise
++                time.sleep(min(.12, remaining / 2))
++                continue
++            if failures:
++                self.report.setdefault('observerTransportEvents', []).append({
++                    'operation': 'GET /graphics', 'menuReadCall': call, 'status': 'transport-recovered',
++                    'attempt': attempt, 'priorTransportFailures': failures, 'startedAt': started,
++                    'endedAt': time.time(), 'responseFromNewGet': True})
++            return value
++        raise AssertionError('Unreachable menu observation retry state')
++
+     def provenance(self):
+         receipt = signer.verify(self.args.observer_input, self.args.build_tools)
+         source = receipt['sourceSha']
+@@ -368,7 +415,7 @@ class Diagnosis:
+         candidate = None
+         stable = 0
+         while time.monotonic() < deadline:
+-            state = self.get('graphics', min(15, max(.001, deadline-time.monotonic())))
++            state = self.menu_graphics(deadline)
+             require(not state.get('error') and not game(state).get('errors'), 'Actual Observer/game error during menu')
+             expected = original.plan.matches(step['expect'], game(state), game(before))
+             # Only the source-proven original Start action may navigate to this
+diff --git a/joystick-games/qa/android/graphics-observer/tests/test_driver.py b/joystick-games/qa/android/graphics-observer/tests/test_driver.py
+index f76cc42..a93397a 100644
+--- a/joystick-games/qa/android/graphics-observer/tests/test_driver.py
++++ b/joystick-games/qa/android/graphics-observer/tests/test_driver.py
+@@ -9,6 +9,11 @@ from pathlib import Path
+ import unittest
+ import tempfile
+ from types import SimpleNamespace
++from contextlib import contextmanager
++from http.server import BaseHTTPRequestHandler, HTTPServer
++import socket
++import threading
++import time
+ from unittest.mock import patch
+ 
+ HERE = Path(__file__).resolve().parent
+@@ -31,6 +36,30 @@ def state():
+             'activityState': 'resumed', 'windowFocused': True, 'hidden': False, 'focused': True}
+ 
+ 
++@contextmanager
++def loopback_observer(responses):
++    """Real local HTTP transport only; no Android/game model is executed."""
++    calls = []
++    class Handler(BaseHTTPRequestHandler):
++        def log_message(self, *args): pass
++        def do_GET(self):
++            calls.append(self.path)
++            kind, body = responses[min(len(calls)-1, len(responses)-1)]
++            if kind == 'drop':
++                self.connection.shutdown(socket.SHUT_RDWR); self.connection.close(); return
++            if kind == 'late': time.sleep(.08)
++            data = body if isinstance(body, bytes) else json.dumps(body).encode()
++            try:
++                self.send_response(500 if kind == 'http-error' else 200)
++                self.send_header('Content-Length', str(len(data))); self.end_headers(); self.wfile.write(data)
++            except (BrokenPipeError, ConnectionResetError): pass
++    server = HTTPServer(('127.0.0.1', 0), Handler)
++    worker = threading.Thread(target=lambda: server.serve_forever(poll_interval=.01), daemon=True)
++    worker.start()
++    try: yield server.server_port, calls
++    finally: server.shutdown(); server.server_close(); worker.join(2)
++
++
+ class DriverBoundaries(unittest.TestCase):
+     def setUp(self):
+         self.state = state()
+@@ -188,6 +217,58 @@ class DriverBoundaries(unittest.TestCase):
+                 with self.assertRaises(AssertionError):
+                     instance.wait(driver.initial_menu_ready, 150, 'initial', allow_initial_blank=True)
+ 
++    def test_real_dropped_menu_get_recovers_only_from_a_new_json_response(self):
++        newer = copy.deepcopy(self.state); newer['cachedGame']['pollCount'] += 25
++        with tempfile.TemporaryDirectory() as directory, loopback_observer([('drop', b''), ('json', newer)]) as (port, calls):
++            instance = driver.Diagnosis(SimpleNamespace(output=Path(directory)/'out', adb='must-not-run'))
++            instance.port = port; instance.last = copy.deepcopy(self.state)
++            self.assertEqual(instance.menu_graphics(time.monotonic()+2), newer)
++            self.assertEqual(instance.last, newer)
++            self.assertEqual(calls, ['/graphics', '/graphics'])
++            events = instance.report['observerTransportEvents']
++            self.assertEqual([r['status'] for r in events], ['transport-failed', 'transport-recovered'])
++            self.assertTrue(events[0]['retryScheduled']); self.assertTrue(events[1]['responseFromNewGet'])
++            rows = [json.loads(line) for line in (instance.out/'observer-http.jsonl').read_text().splitlines()]
++            self.assertEqual([r['status'] for r in rows], ['failed', 'completed'])
++            self.assertEqual(rows[0]['errorType'], 'RemoteDisconnected')
++            self.assertEqual(instance.clients, [])  # read recovery has no SDK client or button side effect
++
++    def test_menu_get_attempt_and_original_step_deadline_are_bounded(self):
++        with tempfile.TemporaryDirectory() as directory, loopback_observer([('drop', b'')]) as (port, calls):
++            instance = driver.Diagnosis(SimpleNamespace(output=Path(directory)/'out', adb='must-not-run'))
++            instance.port = port; instance.last = copy.deepcopy(self.state)
++            with self.assertRaises(driver.RemoteDisconnected): instance.menu_graphics(time.monotonic()+240)
++            self.assertEqual(len(calls), 3)
++            self.assertEqual([r['retryScheduled'] for r in instance.report['observerTransportEvents']], [True, True, False])
++            self.assertTrue(all(r['maximumWallSeconds'] == 45 and r['requestTimeoutSeconds'] <= 15 for r in instance.report['observerTransportEvents']))
++            self.assertEqual(instance.last, self.state)
++            with patch.object(instance, 'get') as read:
++                with self.assertRaises(TimeoutError): instance.menu_graphics(time.monotonic()-1)
++                read.assert_not_called()
++        with tempfile.TemporaryDirectory() as directory, loopback_observer([('late', self.state)]) as (port, calls):
++            instance = driver.Diagnosis(SimpleNamespace(output=Path(directory)/'out', adb='must-not-run'))
++            instance.port = port; instance.last = None
++            with self.assertRaises(TimeoutError): instance.menu_graphics(time.monotonic()+.025)
++            self.assertLessEqual(len(calls), 1)
++            self.assertIsNone(instance.last)
++            self.assertFalse(instance.report['observerTransportEvents'][-1]['retryScheduled'])
++            self.assertLessEqual(instance.report['observerTransportEvents'][0]['requestTimeoutSeconds'], .025)
++
++    def test_menu_get_does_not_retry_http_json_budget_or_game_errors(self):
++        for kind, body, error in [('http-error', b'actual HTTP failure', driver.HTTPError),
++                                  ('json', b'not JSON', json.JSONDecodeError),
++                                  ('json', b'x'*(512*1024+1), AssertionError)]:
++            with self.subTest(kind=kind, error=error), tempfile.TemporaryDirectory() as directory, loopback_observer([(kind, body)]) as (port, calls):
++                instance = driver.Diagnosis(SimpleNamespace(output=Path(directory)/'out', adb='must-not-run')); instance.port=port
++                with self.assertRaises(error): instance.menu_graphics(time.monotonic()+2)
++                self.assertEqual(calls, ['/graphics']); self.assertNotIn('observerTransportEvents', instance.report)
++        bad = copy.deepcopy(self.state); bad['cachedGame']['errors'] = ['actual game error']
++        with tempfile.TemporaryDirectory() as directory, loopback_observer([('json', bad)]) as (port, calls):
++            instance = driver.Diagnosis(SimpleNamespace(output=Path(directory)/'out', adb='must-not-run')); instance.port=port
++            result = instance.menu_graphics(time.monotonic()+2)
++            with self.assertRaises(AssertionError): driver.validated(result)
++            self.assertEqual(calls, ['/graphics']); self.assertNotIn('observerTransportEvents', instance.report)
++
+ 
+ if __name__ == '__main__':
+     unittest.main()

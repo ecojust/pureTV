@@ -55,6 +55,10 @@ class WindowsCheck(base.CatalogCheck):
     def bounded_gameplay_step(self,step,before):
         startup=step.get('windowsStartupWait');held_mode=step.get('windowsHoldUntilExpect') is True
         assert bool(startup)!=held_mode,'Exactly one explicit Windows observation mode required'
+        release_wait=step.get('windowsReleaseWait')
+        if 'windowsReleaseWait' in step:
+            assert held_mode and isinstance(release_wait,dict) and set(release_wait)=={'timeoutSeconds'}
+            assert type(release_wait['timeoutSeconds']) is int and 0<release_wait['timeoutSeconds']<=60
         key=step['keys'][0];assert len(step['keys'])==1 and key in (['A','START'] if startup else ['UP'])
         game=before.get('game',{});owner=self.player(before);controller=game.get('controller',{})
         assert game.get('stage')==('menu' if startup else 'playing') and game.get('paused') is False,'Unexpected initial gameplay stage'
@@ -68,16 +72,24 @@ class WindowsCheck(base.CatalogCheck):
         seconds=startup['timeoutSeconds'] if startup else step.get('timeoutSeconds',15)
         assert 0<seconds<=(600 if startup else 60)
         started=time.monotonic();deadline=started+seconds;previous=before;progress_at=started
+        action_deadline=deadline
         record={'name':step['name'],'mode':'startup-released' if startup else 'held-until-expect','status':'running','timeoutSeconds':seconds,
                 'declaredHoldMs':step['holdMs'],'originalExpect':step['expect'],'before':game,'beforeOwner':{k:owner[k] for k in ('controllerId','session','cancelSeq','buttonCounters')},
                 'documentEpoch':epoch,'samples':[],'snapshotReads':0,'semanticHeldObserved':False,'releasedFreshFrames':0}
         self.report.setdefault('boundedGameplayObservations',[]).append(record)
+        if release_wait is not None:
+            record.update(phase='action',actionTimeoutSeconds=seconds,releaseTimeoutSeconds=release_wait['timeoutSeconds'])
         release_seq=None;first_match=None;release_baseline=None;released_frames=0;consumed=None;counter_seen=False
         def release():
-            nonlocal release_seq
+            nonlocal release_seq,deadline
             if release_seq is None:
                 with self.client.lock:self.release(key);release_seq=self.client.seq
-                record['sdkReleaseSequence']=release_seq;record['releasedAtSeconds']=time.monotonic()-started
+                released_at=time.monotonic()
+                record['sdkReleaseSequence']=release_seq;record['releasedAtSeconds']=released_at-started
+                if release_wait is not None:
+                    assert first_match is not None and released_at<action_deadline,'Release completed after action deadline'
+                    deadline=released_at+release_wait['timeoutSeconds']
+                    record.update(phase='release-observation',actionElapsedSeconds=released_at-started,releaseDeadlineAtSeconds=deadline-started)
         def wire_complete():
             if release_seq is None:return False
             rows=[r for r in self.report['wire'] if r['direction']=='sdk-to-game' and r['message'].get('seq') in (record['sdkDownSequence'],release_seq)]
@@ -133,9 +145,11 @@ class WindowsCheck(base.CatalogCheck):
                         else:released_frames+=1;release_baseline=state
                         if startup and first_match is None:first_match=state;record['firstMatchingReleasedState']=g;record['firstMatchedAtSeconds']=time.monotonic()-started
                     else:release_baseline=None;released_frames=0
+                    if release_wait is not None:record['releasedFreshFrames']=released_frames
                 if released_frames>=2 and wire_complete():
                     assert time.monotonic()<deadline,'Gameplay completion exceeded hard deadline'
                     record.update(status='passed',elapsedSeconds=time.monotonic()-started,releasedFreshFrames=released_frames,after=state['game'])
+                    if release_wait is not None:record.update(phase='complete',releaseElapsedSeconds=time.monotonic()-started-record['releasedAtSeconds'])
                     self.report['snapshots'].append({'label':step['name']+' bounded released observation','at':base.now(),'state':state})
                     return {'name':step['name'],'keys':step['keys'],'holdMs':step['holdMs'],'windowsMode':record['mode'],'before':game,'inputObserved':consumed['game'] if consumed else None,'firstExpected':first_match['game'],'after':state['game'],'releasedFreshFrames':released_frames}
                 assert time.monotonic()-progress_at<min(60,seconds),'No fresh game frame and input poll within progress bound'
@@ -247,6 +261,7 @@ class WindowsCheck(base.CatalogCheck):
         data=observation_api.read_png(path,record,alive=alive)
         self.report['screenshots'].append({'path':'diagnostics/'+name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()})
     def pause_stability(self,background=False):
+        if 'windowsPauseWait' in self.plan:return self.bounded_pause_stability(background)
         before=self.until(self.paused,'Paused before model stability observation');values={path:plan_api.read_path(before['game'],path) for path in self.plan['pauseStablePaths']}
         assert any(plan_api.numeric(value) for value in values.values()),'Pause observations require a finite model counter or coordinate'
         def stable(state):
@@ -275,6 +290,43 @@ class WindowsCheck(base.CatalogCheck):
         stable(after)
         observation.update(status='passed',elapsedSeconds=time.monotonic()-started,uniqueNativeSnapshots=len(samples),finalTimestamp=after['timestamp'],finalPollCount=after['game']['controller']['pollCount'])
         return {'paths':values,'samples':len(samples),'freshSnapshotTimestamps':samples,'realSeconds':time.monotonic()-started,'background':background,'controllerPollingRequired':not background,'controllerFramesAdvanced':after['game']['controller']['pollCount']-before['game']['controller']['pollCount']}
+    def bounded_pause_stability(self,background=False):
+        option=self.plan['windowsPauseWait']
+        assert isinstance(option,dict) and set(option)=={'timeoutSeconds'}
+        seconds=option['timeoutSeconds'];assert type(seconds) is int and 30<seconds<=60
+        started=time.monotonic();deadline=started+seconds;before=None;previous=None;values=None;samples=[];baseline_at=None
+        observation={'background':background,'timeoutSeconds':seconds,'phase':'baseline','samples':[],'status':'observing'}
+        self.report.setdefault('pauseObservations',[]).append(observation)
+        try:
+            while time.monotonic()<deadline:
+                state=self.deadline_snapshot(deadline);elapsed=time.monotonic()-started
+                if before is None:
+                    if not isinstance(state,dict) or not self.paused(state):
+                        time.sleep(min(.04,max(0,deadline-time.monotonic())));continue
+                    before=previous=state;baseline_at=time.monotonic();values={path:plan_api.read_path(state['game'],path) for path in self.plan['pauseStablePaths']}
+                    assert any(plan_api.numeric(value) for value in values.values()),'Pause observations require a finite model counter or coordinate'
+                    observation.update(phase='observing',baselineElapsedSeconds=baseline_at-started,baselineTimestamp=before['timestamp'],baselinePollCount=before['game']['controller']['pollCount'],expectedPaths=values)
+                assert self.paused(state),'Pause ended without fresh START'
+                if background:
+                    assert state['active'] is False and state['server']['wifiController']['inputEnabled'] is False,'Background observation unexpectedly regained input'
+                    assert not any(self.player(state).get('buttons',{}).values()),'Native inputs remained held in background'
+                else:
+                    assert state['active'] is True and state['server']['wifiController']['inputEnabled'] is True,'Foreground pause lost active input'
+                observed={path:plan_api.read_path(state['game'],path) for path in values}
+                assert observed==values,'Gameplay progressed while paused'
+                fresh=self.fresh(state,previous)
+                observation['samples'].append({'elapsedSeconds':elapsed,'nativeTimestamp':state.get('timestamp'),'pollCount':state.get('game',{}).get('controller',{}).get('pollCount'),'freshNativeSnapshot':fresh,'paused':self.paused(state),'active':state.get('active'),'inputEnabled':state.get('server',{}).get('wifiController',{}).get('inputEnabled'),'paths':observed})
+                if fresh:samples.append(state['timestamp']);previous=state
+                # Keep the final foreground poll-growth check inside this same
+                # deadline; no extra until() budget follows the fourth sample.
+                if time.monotonic()-baseline_at>=.5 and len(samples)>=4 and self.fresh(state,before,not background):
+                    assert time.monotonic()<deadline,'Pause snapshot arrived after observation deadline'
+                    observation.update(status='passed',phase='complete',elapsedSeconds=time.monotonic()-started,uniqueNativeSnapshots=len(samples),finalTimestamp=state['timestamp'],finalPollCount=state['game']['controller']['pollCount'])
+                    return {'paths':values,'samples':len(samples),'freshSnapshotTimestamps':samples,'realSeconds':time.monotonic()-started,'background':background,'controllerPollingRequired':not background,'controllerFramesAdvanced':state['game']['controller']['pollCount']-before['game']['controller']['pollCount']}
+                time.sleep(min(.04,max(0,deadline-time.monotonic())))
+            raise AssertionError('Insufficient fresh real snapshots or foreground polling during bounded pause')
+        except Exception as error:
+            observation.update(status='failed',elapsedSeconds=time.monotonic()-started,error=type(error).__name__+': '+str(error));raise
     def hwnd(self):
         title=json.loads((self.args.app/'game.json').read_text(encoding='utf-8'))['name'];window=self.user.FindWindowW('PureTVGameWindow',title)
         assert window,'Actual game window missing';pid=ctypes.c_ulong();self.user.GetWindowThreadProcessId(window,ctypes.byref(pid));assert pid.value==self.app.pid,'Wrong game window process';return window

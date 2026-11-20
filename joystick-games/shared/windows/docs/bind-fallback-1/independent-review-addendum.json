@@ -1,0 +1,16 @@
+{
+  "status": "no-blocker-in-read-only-source-review",
+  "priorReviewSha256": "cc5ca63c2359de25eea7010c5774fdc02d25b59f56365fb7511188dfbfafae65",
+  "additionalSource": {
+    "path": "joystick-games/tools/windows-evidence.py",
+    "bytes": 3191,
+    "sha256": "fe06fad07277f3d942053d5d24865d1873327b39add24cb695d171a4491d8c4d"
+  },
+  "findings": [
+    "Only fixed packages/build/Testing/Temporary/LastTest.log maps to ctest-last-test.log, matching windows-build.py CTest --test-dir packages/build.",
+    "The existing evidence file enumeration includes the copied complete original test output in the size/SHA manifest. No builder, test invocation, runtime success predicate or original report is changed.",
+    "This preserves successful CTest stdout that --output-on-failure alone omits from build.log; native actual10013/fallback/three-connection details still require real Windows CI."
+  ],
+  "sourceChangesByReviewer": false,
+  "testExecutionByReviewer": false
+}

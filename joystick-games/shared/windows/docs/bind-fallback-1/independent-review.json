@@ -1,0 +1,36 @@
+{
+  "status": "no-blocker-in-read-only-source-review",
+  "sourceFiles": {
+    "joystick-games/shared/windows/Sources/main.cpp": {
+      "bytes": 35243,
+      "sha256": "7038855f074d633ba3c99631e606554174ac56ff372867be1c6a00c6b68ca98b"
+    },
+    "joystick-games/shared/windows/Sources/ControllerBind.hpp": {
+      "bytes": 1107,
+      "sha256": "3656034907322c28a7ba18174607190e2bf87f33b1f066beed8032142cfb8eca"
+    },
+    "joystick-games/shared/windows/tests/controller-bind.test.cpp": {
+      "bytes": 6248,
+      "sha256": "a203e997684b9d04270ee16b13a046b9b7734428ebc52561e6226c6166be7c98"
+    },
+    "joystick-games/shared/windows/CMakeLists.txt": {
+      "bytes": 2242,
+      "sha256": "a285a50f9e9373a21c2bf74885f5ec55b26c5351d0ac006da76f7c4f8ee8542e"
+    }
+  },
+  "findings": [
+    "Default production call has no alternate argument and starts at 63485 exactly once during initialize/startServer.",
+    "Only immediate Winsock 10013/10048 enters one system-selected port-zero retry; all other errors remain fatal, and both errors are retained.",
+    "getsockname errors, unexpected length/family and zero endpoint now fail before registration/listening; the chosen port is held for the listener lifetime.",
+    "Old listening-table observation is no longer used as a gate; readonly info and bounded diagnostic trace report default-port-unavailable without claiming a specific occupied/reserved cause.",
+    "Windows fixture uses exclusive bound dynamic endpoint in both nonlistening and listening states, asserts real WSAEACCES, invokes the exact production binder helper, and checks three connections leave the selected listener port unchanged.",
+    "Actual invalid-socket WSAENOTSOCK case requires no retry. Seven synthetic cases exercise default, allowed and fatal error paths; require throws remain enabled under NDEBUG.",
+    "CMake default build includes the test; Windows explicitly links ws2_32 and adds a bounded 20-second CTest. No static ABI/type/RAII issue found in the new native fixture."
+  ],
+  "limits": [
+    "No source changes or tests/CI executed by this review.",
+    "Existing Linux seven-policy result is not actual Winsock validation.",
+    "The actual Windows exclusive socket cases and application build remain required in the next fixed native CI.",
+    "Original Back error10013 does not establish whether the original default port was reserved, occupied, or denied for another OS reason."
+  ]
+}

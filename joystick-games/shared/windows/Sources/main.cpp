@@ -21,6 +21,7 @@
 #include "Preferences.hpp"
 #include "EntryURL.hpp"
 #include "DiagnosticLog.hpp"
+#include "ControllerBind.hpp"
 using Microsoft::WRL::Callback;
 using Microsoft::WRL::ComPtr;
 using puretv::Json;
@@ -71,8 +72,6 @@ void write(const fs::path& p,const std::string& data) {
 double now(){return GetTickCount64()/1000.0;}
 UINT windowDpi(HWND window){UINT dpi=window?GetDpiForWindow(window):GetDpiForSystem();return dpi?dpi:96;}
 RECT clientSizeForDpi(int width,int height,DWORD style,DWORD extended,UINT dpi){RECT rect={0,0,MulDiv(width,int(dpi),96),MulDiv(height,int(dpi),96)};if(!AdjustWindowRectExForDpi(&rect,style,FALSE,extended,dpi))throw std::runtime_error("Cannot calculate DPI-aware window size");return rect;}
-bool listening(unsigned short port){ULONG size=0;GetExtendedTcpTable(nullptr,&size,FALSE,AF_INET,TCP_TABLE_OWNER_PID_LISTENER,0);std::vector<unsigned char> data(size);if(GetExtendedTcpTable(data.data(),&size,FALSE,AF_INET,TCP_TABLE_OWNER_PID_LISTENER,0)!=NO_ERROR)return false;auto table=reinterpret_cast<PMIB_TCPTABLE_OWNER_PID>(data.data());for(DWORD i=0;i<table->dwNumEntries;i++)if(ntohs(static_cast<u_short>(table->table[i].dwLocalPort))==port)return true;return false;}
-
 Json addresses(){ULONG size=16000;std::vector<unsigned char>b(size);auto a=reinterpret_cast<IP_ADAPTER_ADDRESSES*>(b.data());auto result=GetAdaptersAddresses(AF_INET,GAA_FLAG_SKIP_ANYCAST|GAA_FLAG_SKIP_MULTICAST|GAA_FLAG_SKIP_DNS_SERVER,nullptr,a,&size);if(result==ERROR_BUFFER_OVERFLOW){b.resize(size);a=reinterpret_cast<IP_ADAPTER_ADDRESSES*>(b.data());result=GetAdaptersAddresses(AF_INET,GAA_FLAG_SKIP_ANYCAST|GAA_FLAG_SKIP_MULTICAST|GAA_FLAG_SKIP_DNS_SERVER,nullptr,a,&size);}Json values=Json::array();if(result==NO_ERROR)for(auto x=a;x;x=x->Next)if(x->OperStatus==IfOperStatusUp&&x->IfType!=IF_TYPE_SOFTWARE_LOOPBACK)for(auto u=x->FirstUnicastAddress;u;u=u->Next){char text[INET_ADDRSTRLEN]={};inet_ntop(AF_INET,&reinterpret_cast<sockaddr_in*>(u->Address.lpSockaddr)->sin_addr,text,sizeof(text));if(*text)values.push_back(text);}return values;}
 void WINAPI discoveryComplete(DWORD status,PVOID,PDNS_SERVICE_INSTANCE instance){if(discoveryEvent)SetEvent(discoveryEvent);if(instance&&instance!=registrationInstance)DnsServiceFreeInstance(instance);if(mainWindow)PostMessageW(mainWindow,DiscoveryMessage,status,0);}
 class Application {
@@ -81,7 +80,7 @@ public:
  ComPtr<ICoreWebView2Environment> environment;ComPtr<ICoreWebView2Controller> controller;ComPtr<ICoreWebView2> browser;
  ComPtr<BootstrapSnapshot> bootstrapHost;uint64_t documentEpoch=0,bootstrappedEpoch=0,navigationId=0;std::wstring documentURL;
  SOCKET listener=INVALID_SOCKET;unsigned short port=0;bool ready=false,pushing=false,diagnosing=false,capturing=false,closed=false,fullscreen=false;
- int64_t pushedRevision=-1;double pushedAt=0;std::string lastError,discoveryState="registering";std::wstring serviceName;DNS_SERVICE_REGISTER_REQUEST dnsRequest={};DNS_SERVICE_CANCEL dnsCancel={};bool dnsStarted=false;
+ int64_t pushedRevision=-1;double pushedAt=0;int defaultPortError=0;std::string lastError,discoveryState="registering";std::wstring serviceName;DNS_SERVICE_REGISTER_REQUEST dnsRequest={};DNS_SERVICE_CANCEL dnsCancel={};bool dnsStarted=false;
  struct Peer {std::string incoming,outgoing;double partialSince=0,writeSince=0,closeSince=0;bool closing=false,sendShutdown=false,receivedEOF=false;};std::map<SOCKET,Peer> peers;
  WINDOWPLACEMENT placement={sizeof(placement)};
  puretv::DiagnosticLog diagnosticLog;bool firstDiagnosticCompleted=false;unsigned diagnosticFailures=0;
@@ -101,9 +100,14 @@ public:
  void fail(const std::string& reason){lastError=reason;ready=false;protocol.setInputEnabled(false);trace("fatal_error_before_dialog");MessageBoxW(window,wide("无法启动游戏 / Cannot open game\n\n"+reason).c_str(),L"pureTV",MB_OK|MB_ICONERROR);DestroyWindow(window);}
  void startServer(){
   listener=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);if(listener==INVALID_SOCKET)throw std::runtime_error("Cannot create controller socket");BOOL exclusive=TRUE;setsockopt(listener,SOL_SOCKET,SO_EXCLUSIVEADDRUSE,reinterpret_cast<const char*>(&exclusive),sizeof(exclusive));
-  sockaddr_in address={};address.sin_family=AF_INET;address.sin_addr.s_addr=htonl(INADDR_ANY);address.sin_port=htons(63485);
-  if(bind(listener,reinterpret_cast<sockaddr*>(&address),sizeof(address))==SOCKET_ERROR){int error=WSAGetLastError();if(error!=WSAEADDRINUSE&&!(error==WSAEACCES&&listening(63485)))throw std::runtime_error("Cannot bind controller TCP port: "+std::to_string(error));address.sin_port=0;if(bind(listener,reinterpret_cast<sockaddr*>(&address),sizeof(address))==SOCKET_ERROR)throw std::runtime_error("Cannot bind fallback TCP port");}
-  int length=sizeof(address);getsockname(listener,reinterpret_cast<sockaddr*>(&address),&length);port=ntohs(address.sin_port);if(listen(listener,4)==SOCKET_ERROR||WSAAsyncSelect(listener,window,SocketMessage,FD_ACCEPT)==SOCKET_ERROR)throw std::runtime_error("Cannot listen for controller");
+  sockaddr_in address={};address.sin_family=AF_INET;address.sin_addr.s_addr=htonl(INADDR_ANY);
+  const auto binding=puretv::bindControllerPort([&](std::uint16_t requested){address.sin_port=htons(requested);return bind(listener,reinterpret_cast<sockaddr*>(&address),sizeof(address))==SOCKET_ERROR?WSAGetLastError():0;});
+  defaultPortError=binding.defaultError;
+  if(defaultPortError)trace("controller_default_port_unavailable",{{"reason","default-port-unavailable"},{"defaultPort",puretv::DefaultControllerPort},{"winsockError",defaultPortError},{"fallbackAttempted",binding.fallbackAttempted},{"fallbackError",binding.fallbackError}});
+  if(!binding.succeeded)throw std::runtime_error("Cannot bind controller TCP port: "+std::to_string(defaultPortError)+(binding.fallbackAttempted?"; fallback TCP port: "+std::to_string(binding.fallbackError):""));
+  int length=sizeof(address);if(getsockname(listener,reinterpret_cast<sockaddr*>(&address),&length)==SOCKET_ERROR)throw std::runtime_error("Cannot read controller TCP port: "+std::to_string(WSAGetLastError()));
+  if(length!=sizeof(address)||address.sin_family!=AF_INET||!address.sin_port)throw std::runtime_error("Invalid bound controller TCP endpoint");
+  port=ntohs(address.sin_port);if(listen(listener,4)==SOCKET_ERROR||WSAAsyncSelect(listener,window,SocketMessage,FD_ACCEPT)==SOCKET_ERROR)throw std::runtime_error("Cannot listen for controller");
   wchar_t host[256];DWORD chars=256;if(!GetComputerNameExW(ComputerNameDnsHostname,host,&chars))throw std::runtime_error("Cannot read computer hostname");std::wstring hostName=std::wstring(host)+L".local";
   serviceName=wide(metadata.at("name").get<std::string>());for(auto& c:serviceName)if(c==L'.'||c==L'\\')c=L'-';if(serviceName.size()>40)serviceName.resize(40);serviceName+=L"-"+std::to_wstring(GetCurrentProcessId());auto fullName=serviceName+L"._puretv._tcp.local";
   PCWSTR key=L"version",value=L"1";registrationInstance=DnsServiceConstructInstance(fullName.c_str(),hostName.c_str(),nullptr,nullptr,port,0,0,1,&key,&value);if(!registrationInstance){discoveryState="unavailable";lastError="DNS-SD instance unavailable";return;}
@@ -130,7 +134,7 @@ public:
   if(WSAGETSELECTEVENT(event)==FD_CLOSE){beginClose(s);peers[s].receivedEOF=true;flush(s);}
  }
  void watchdog(){for(auto id:protocol.expired(now()))disconnect(SOCKET(id));std::vector<SOCKET> dead;for(auto& [s,p]:peers)if((p.partialSince&&now()-p.partialSince>5)||(p.writeSince&&now()-p.writeSince>5)||(p.closing&&now()-p.closeSince>2))dead.push_back(s);for(auto s:dead)disconnect(s);}
- Json info(){Json result={{"platform","windows"},{"language","zh"},{"appVersion",metadata.at("version")},{"url",""},{"qr",""},{"storageKeys",metadata.at("storageKeys")},{"storageMaxBytes",puretv::PreferenceValueByteLimit},{"storageMaxTotalBytes",puretv::PreferencesByteLimit},{"preferences",preferences},{"wifiController",{{"state",discoveryState},{"serviceName",utf8(serviceName)},{"port",port},{"addresses",addresses()},{"inputEnabled",protocol.inputEnabled}}}};if(!lastError.empty())result["wifiController"]["error"]=lastError;return result;}
+ Json info(){Json result={{"platform","windows"},{"language","zh"},{"appVersion",metadata.at("version")},{"url",""},{"qr",""},{"storageKeys",metadata.at("storageKeys")},{"storageMaxBytes",puretv::PreferenceValueByteLimit},{"storageMaxTotalBytes",puretv::PreferencesByteLimit},{"preferences",preferences},{"wifiController",{{"state",discoveryState},{"serviceName",utf8(serviceName)},{"port",port},{"addresses",addresses()},{"inputEnabled",protocol.inputEnabled}}}};if(defaultPortError)result["wifiController"]["portSelection"]={{"reason","default-port-unavailable"},{"defaultPort",puretv::DefaultControllerPort},{"defaultBindError",defaultPortError},{"fallbackPort",port}};if(!lastError.empty())result["wifiController"]["error"]=lastError;return result;}
  void requestSuspend(const char* cause){
   if(!browser)return;
   if(diagnostics.empty()){browser->ExecuteScript(L"window.JoystickDesktop?.suspend();",nullptr);return;}

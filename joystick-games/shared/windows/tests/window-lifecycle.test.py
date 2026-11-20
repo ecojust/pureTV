@@ -53,6 +53,103 @@ class PauseTiming(unittest.TestCase):
         self.assertGreater(result['controllerFramesAdvanced'],0)
     def test_late_read_cannot_pass_after_the_thirty_second_deadline(self):
         with self.assertRaisesRegex(AssertionError,'Pause snapshot arrived after observation deadline'):self.observe(False,read_delay=31)
+
+class BoundedPauseTiming(unittest.TestCase):
+    def fixture(self, *, opt_in=True, background=False, polling=True, schedule=None, mutate=None):
+        subject=object.__new__(verify.WindowsCheck)
+        values={'time':1.8,'position':[1,2,3],'speed':1.49,'lap':0,'driftCharge':0,'boostTime':0}
+        subject.plan={'pauseStablePaths':['gameplay.'+key for key in values]};subject.report={}
+        if opt_in:subject.plan['windowsPauseWait']={'timeoutSeconds':45}
+        # Only the first three fresh times are measured in original CI. 30.4
+        # is an explicit synthetic fourth frame, never an original pass claim.
+        times=list([0,7.672,15.672,22.86,30.4] if schedule is None else schedule)
+        clock=[0.0];reads=[0];latest=[0]
+        def read():
+            if reads[0]<len(times):
+                latest[0]=reads[0];clock[0]=max(clock[0],times[reads[0]])
+            else:clock[0]+=1
+            reads[0]+=1;count=latest[0]
+            state={'timestamp':100+count,'documentEpoch':1,'document':{'epoch':1},'ready':True,
+                   'active':not background,'server':{'wifiController':{'inputEnabled':not background}},
+                   'input':{'players':[{'connected':True,'buttons':{k:False for k in verify.base.KEYS}}]},
+                   'game':{'stage':'paused','paused':True,'renderer':'webgl2','frames':100+count,
+                           'controller':{'pollCount':100+count if polling else 100},'gameplay':copy.deepcopy(values)}}
+            if mutate and count:mutate(state)
+            subject.last=state;return state
+        def until(predicate,label):
+            for _ in range(100):
+                state=read()
+                if predicate(state):return state
+            raise AssertionError(label+' timed out in synthetic fixture')
+        subject.read=read;subject.until=until
+        def run():
+            with patch.object(verify.time,'monotonic',side_effect=lambda:clock[0]),patch.object(verify.time,'sleep',side_effect=lambda n:clock.__setitem__(0,clock[0]+n)):
+                return subject.pause_stability(background)
+        return subject,clock,run
+
+    def test_fourth_synthetic_frame_after_thirty_requires_explicit_opt_in(self):
+        subject,clock,run=self.fixture(opt_in=False)
+        with self.assertRaisesRegex(AssertionError,'deadline'):run()
+        subject,clock,run=self.fixture();result=run()
+        self.assertEqual(result['samples'],4);self.assertAlmostEqual(result['realSeconds'],30.4)
+        observation=subject.report['pauseObservations'][0]
+        self.assertEqual(observation['timeoutSeconds'],45);self.assertEqual(observation['status'],'passed')
+        self.assertEqual(sum(row['freshNativeSnapshot'] for row in observation['samples']),4)
+        self.assertEqual(len(result['paths']),6);self.assertEqual(result['controllerFramesAdvanced'],4)
+
+    def test_three_fresh_or_late_fourth_never_satisfies_bounded_pause(self):
+        for schedule in [[0,7.672,15.672,22.86],[0,7.672,15.672,22.86,45]]:
+            subject,clock,run=self.fixture(schedule=schedule)
+            with self.subTest(schedule=schedule),self.assertRaisesRegex(AssertionError,'deadline|Insufficient fresh'):run()
+            observation=subject.report['pauseObservations'][0]
+            self.assertEqual(observation['status'],'failed')
+            self.assertEqual(sum(row['freshNativeSnapshot'] for row in observation['samples']),3)
+
+    def test_each_original_pause_model_field_must_stay_frozen(self):
+        for name in ['time','position','speed','lap','driftCharge','boostTime']:
+            def mutate(state):state['game']['gameplay'][name]=[8,9,10] if name=='position' else 99
+            subject,clock,run=self.fixture(mutate=mutate)
+            with self.subTest(field=name),self.assertRaisesRegex(AssertionError,'Gameplay progressed'):run()
+            self.assertEqual(subject.report['pauseObservations'][0]['status'],'failed')
+
+    def test_final_foreground_poll_requirement_cannot_take_an_extra_until_budget(self):
+        subject,clock,run=self.fixture(polling=False)
+        with self.assertRaisesRegex(AssertionError,'deadline|Insufficient fresh'):run()
+        self.assertLess(clock[0],46.1)
+        self.assertEqual(subject.report['pauseObservations'][0]['status'],'failed')
+        subject,clock,run=self.fixture(background=True,polling=False);result=run()
+        self.assertEqual(result['samples'],4);self.assertFalse(result['controllerPollingRequired'])
+
+    def test_pause_foreground_background_and_manual_resume_guards_remain(self):
+        for mutate in [lambda s:s.update(active=False),
+                       lambda s:s['server']['wifiController'].update(inputEnabled=False),
+                       lambda s:s['game'].update(stage='playing',paused=False)]:
+            subject,clock,run=self.fixture(mutate=mutate)
+            with self.subTest(mutate=mutate),self.assertRaises(AssertionError):run()
+        for mutate in [lambda s:s.update(active=True),
+                       lambda s:s['server']['wifiController'].update(inputEnabled=True),
+                       lambda s:s['input']['players'][0]['buttons'].update(UP=True)]:
+            subject,clock,run=self.fixture(background=True,mutate=mutate)
+            with self.subTest(mutate=mutate),self.assertRaises(AssertionError):run()
+
+    def test_baseline_read_is_inside_the_same_hard_pause_budget(self):
+        subject,clock,run=self.fixture(schedule=[45])
+        with self.assertRaisesRegex(AssertionError,'deadline'):run()
+        self.assertEqual(subject.report['pauseObservations'][0]['phase'],'baseline')
+
+    def test_four_rapid_snapshots_do_not_remove_minimum_pause_observation(self):
+        subject,clock,run=self.fixture(schedule=[0,.1,.2,.3,.4]);result=run()
+        self.assertEqual(result['samples'],4)
+        self.assertGreaterEqual(result['realSeconds'],.5)
+
+    def test_late_baseline_does_not_count_as_half_second_of_frozen_observation(self):
+        subject,clock,run=self.fixture(schedule=[44.6,44.7,44.8,44.9,44.95])
+        with self.assertRaisesRegex(AssertionError,'deadline|Insufficient fresh'):run()
+        observation=subject.report['pauseObservations'][0]
+        self.assertEqual(observation['status'],'failed')
+        self.assertEqual(sum(row['freshNativeSnapshot'] for row in observation['samples']),4)
+        self.assertAlmostEqual(observation['baselineElapsedSeconds'],44.6)
+
 class DocumentFreshness(unittest.TestCase):
     def setUp(self):
         self.subject=object.__new__(verify.WindowsCheck);self.subject.renderers=['webgl2']
