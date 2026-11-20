@@ -72,16 +72,13 @@ def card_link(page, cover, title, alt):
 
 
 def game_card(card, locale):
-    title = re.sub(r'\s+TV$', '', card['titles'][locale], flags=re.IGNORECASE)
-    alt = title + ('游戏画面' if locale == 'zh' else ' gameplay')
-    page = card_link(card['page'], card['covers'][locale], title, alt)
+    title = re.sub(r'\s*TV$', '', card['titles'][locale].strip(), flags=re.IGNORECASE).rstrip()
+    # The adjacent name labels the link even if the cover fails to load.
+    page = card_link(card['page'], card['covers'][locale], title, '')
     icons = []
     for platform, url in card['downloads'].items():
         icon, system, package = PLATFORM_ICONS[platform]
-        preview = ''
-        if platform == 'macos' and card['macosPreview']:
-            preview = '预览' if locale == 'zh' else 'Preview'
-        label = ' '.join(filter(None, (title, system, package, preview)))
+        label = f'{title} {system} {package}'
         content = support_icon(icon, label)
         icons.append(f'<a href="{escape(url)}" title="{escape(label)}">{content}</a>')
     if card['controller']:

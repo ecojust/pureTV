@@ -52,6 +52,8 @@ The TV store works with updated launchers to let you choose the position of an a
 
 The controller-enabled APKs for the 20 featured TV games in the original catalog require Android 8.0 or later. Check each game's WebView and graphics requirements. Some 3D games require WebGL2. The nine desktop racers require macOS 11+ on Mac, or Windows 10 1903+ x64 or Windows 11 with the WebView2 Runtime on Windows. Universal Mac packages contain Apple Silicon and Intel binaries. Consult per-game results for tested gameplay. Among the nine puzzle games, Story Thief, Atlas of Ink and Starbase Spooky passed native Intel gameplay checks. The remaining six timed out before displaying the menu on the test machine. [Racing downloads](../../joystick-games/README.md#九款赛车游戏下载) · [Puzzle downloads and test records](../puzzle-nine/README.md#下载安装)
 
+The standalone macOS downloads for Backroad Rally, Alchemist’s Lattice, Bumble Basket, STARSLING, Solder & Rain, Oathstones and NEON ARCANA are preview builds.
+
 ## Resources, license and acknowledgments
 
 - Each first-party TV app or launcher has a resource folder with its APK, source and available checksums and licenses. Historical TV releases use `android-v*` tags. Desktop manager versions use `desktop-v*`. The nine TV games covered by the 0.5.1 rules update retain their 0.5.0 certificate and support in-place upgrades from that version. [Resource catalog](../../resource/README.md) · [Game fidelity review (Chinese)](../game-releases/game-fidelity-0.5.1.md)
