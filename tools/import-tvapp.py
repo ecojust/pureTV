@@ -237,7 +237,8 @@ def compatibility_notes(apps, output, compatibility, prefix=''):
         for package in manifest['packages']:
             result = compatibility.get(package['sha256'])
             if result:
-                notes.append(f"- [{app['name']} {package['versionName']}]({prefix}{app['path']}/)：{result['summary']} [检查记录]({prefix}{result['report']})")
+                label = f"（`{package['file']}`）" if len(manifest['packages']) > 1 else ''
+                notes.append(f"- [{app['name']} {package['versionName']}]({prefix}{app['path']}/){label}：{result['summary']} [检查记录]({prefix}{result['report']})")
     return '\n'.join(notes) + '\n\n' if notes else ''
 
 
@@ -249,15 +250,17 @@ def finalize(output):
         folder = output / app['path']
         manifest = read(folder / 'manifest.json')
         manifest['assets'] = read(folder / 'assets.json')
-        results = [compatibility[p['sha256']] for p in manifest['packages'] if p['sha256'] in compatibility]
-        if results:
-            manifest['apkExecuted'] = any(result['apkExecuted'] for result in results)
+        checked = [(p, compatibility[p['sha256']]) for p in manifest['packages'] if p['sha256'] in compatibility]
+        manifest['apkExecuted'] = any(result['apkExecuted'] for _, result in checked)
         write(folder / 'manifest.json', manifest)
         rows = []
         for p in manifest['packages']:
             rows.append(f"| [{p['file']}]({quote(p['file'])}?raw=1) | {p['versionName']} / {p['versionCode']} | {p['bytes']:,} | {p['minSdk']} |")
         notes = '\n'.join('- ' + n for n in manifest['notes'])
-        compatibility_text = ''.join(f"> **兼容性**：{result['summary']} [检查记录](../../{result['report']})\n\n" for result in results)
+        compatibility_text = ''
+        for package, result in checked:
+            label = f"（`{package['file']}`）" if len(manifest['packages']) > 1 else ''
+            compatibility_text += f"> **兼容性**{label}：{result['summary']} [检查记录](../../{result['report']})\n\n"
         body = f'''# {app['name']}
 
 {manifest['description']}
