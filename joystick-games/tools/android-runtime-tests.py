@@ -123,6 +123,12 @@ class ExportBoundaries(unittest.TestCase):
         with self.assertRaises(AssertionError):
             runtime.check_production_bytes(p, original, b'changed committed production')
 
+    def test_replayed_assets_match_the_revision_joystick_composer(self):
+        slug = 'qq-speed'
+        source = {name: (runtime.ROOT / name).read_bytes() for name in runtime.build.sources(slug)}
+        expected = runtime.build.payload(slug)
+        self.assertEqual(runtime.frozen_payload(source, slug), expected)
+
     def test_actual_signed_content_is_bound_by_receipt(self):
         apk = ARTIFACT / 'packages/qq-speed/qq-speed-0.1.0.apk'
         self.assertEqual(runtime.archive_content(apk), self.receipt['contentSha256'])
