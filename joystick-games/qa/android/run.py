@@ -808,7 +808,7 @@ class Acceptance:
         budget = step.get('timeoutSeconds', 15)
         deadline = time.monotonic() + budget
         try:
-            observed = self.snapshot(timeout=min(OBSERVER_SNAPSHOT_TIMEOUT, budget))
+            observed = self.snapshot()
         except OBSERVER_READ_ERRORS as error:
             if not dropped_observer_transport(error):
                 raise
