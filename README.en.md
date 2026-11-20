@@ -1,63 +1,19 @@
-[简体中文](README.md) | **English**
+# pureTV app catalog
 
-<div align="center">
-  <img src="docs/branding/puretv-logo.png" width="112" alt="pureTV Chinese zodiac dragon logo">
-</div>
+[简体中文](README.md) · **English** · [User guide](docs/guide/README.en.md) · [Development and MCP](docs/guide/development.en.md)
 
-pureTV is a desktop system manager for Android TV and Google TV. Connect to your TV over ADB to view system information, install and uninstall apps, enable or disable them, choose a launcher, and customize supported home screens with a visual canvas. Agents can also control the open manager through MCP.
+[Management apps](#management-apps) · [Launchers and TV apps](#launcher-and-tv-app-resources) · [Controller games](#controller-games-by-genre) · [Third-party TV apps](fork/README.md) · [Game reference catalog](docs/claude-games/catalog.en.md)
 
-[![Release](https://img.shields.io/github/v/release/ecojust/pureTV?style=flat-square&label=release&color=0f766e&sort=date)](https://github.com/ecojust/pureTV/releases/latest)
-[![GitHub Release total downloads](https://img.shields.io/github/downloads/ecojust/pureTV/total?style=flat-square&label=downloads&color=16a34a)](https://github.com/ecojust/pureTV/releases)
-[![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-2563eb?style=flat-square)](desktop/README.md)
-[![Launcher count](https://img.shields.io/badge/launchers-10-7c3aed?style=flat-square)](resource/launcher/)
-[![App count](https://img.shields.io/badge/apps-119-f97316?style=flat-square)](resource/apps/)
-[![MCP](https://img.shields.io/badge/MCP-34%20tools-5c4ee5?style=flat-square)](desktop/docs/mcp.md)
-[![Layout](https://img.shields.io/badge/layout-v5-0891b2?style=flat-square)](resource/README-development.md#layoutjson-协议规范与画面对照)
-[![Android TV](https://img.shields.io/badge/Android%20TV-ADB-3ddc84?style=flat-square&logo=android&logoColor=white)](#connection-and-app-management)
-[![License](https://img.shields.io/badge/license-MIT-f4c430?style=flat-square)](LICENSE)
+## Management apps
 
-[Download pureTV Manager 0.5.9](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.9) · Windows / macOS / Linux · New server for APK Market and manager updates
-
-If you are using 0.5.7 or earlier, manually install 0.5.9 from the release page above first. Older clients do not switch download sources automatically. The new version uses the app directories and `client/` update directory on `apps.b14f.com`.
-
-[Download putrtv Store 0.1.1 for TV](resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1) · Browse, install and check updates on your TV; use an [updated launcher](resource/README.md) to choose where to add an app.
-
-[Browse 43 controller games by genre](#controller-games-by-genre)
-
-![Current source preview in the Sky theme using simulated device data](docs/previews/manager-en.png)
-
-## Connection and app management
-
-1. Connect your computer and TV to networks that can reach each other, then enable ADB or network debugging in the TV's developer options.
-2. Enter the TV's IP address or hostname and debugging port on the home page, then authorize the computer on the TV. Port 5555 is common; use the port configured on your TV.
-3. If ADB is missing, read and accept the Android SDK license, then click “Download and configure ADB.” The manager tries Google first and uses the Tencent mirror if that fails. You can also select an existing ADB installation.
-
-Once connected, the home page displays the model, Android version, SDK version, security patch level, CPU, memory, `/data` storage capacity, resolution, and uptime. Other pages show the current connection status at the top.
-
-- **App management:** search and filter apps, enable or disable them in batches, uninstall them for the current user, and restore system apps whose APKs are still present.
-- **Package information:** click the circled **i** in an app row to look up its purpose, uninstall risk, source and retrieval time. Unknown packages stay unassessed, and protection for core components and the current launcher takes precedence.
-- **Manager updates:** check the server's [client/](https://apps.b14f.com/client/) directory at startup or manually, matching the current platform. **Download and install** verifies the package, installs it and restarts the manager. See [client updates](desktop/docs/client-updates.md) for platform behavior and the first upgrade from an older version.
-- **Pending installations:** import local APKs, install one from its row, or select several for batch installation. Successful items leave the queue; failed and unprocessed items remain.
-- **Launchers:** import and install launcher APKs directly from this page, choose a default home screen, or restore the previous default. The active launcher shows “Adjust layout” when it supports the interface.
-- **Market:** browse apps and launchers dynamically from the `launcher/`, `media/` and `game/` directories on [apps.b14f.com](https://apps.b14f.com/launcher/), search and preview them, download them to the pending installation queue, or install them on a connected TV. Versions of the same app or launcher share one card, with a dropdown for the latest five versions and the newest selected by default. Refresh to discover APKs newly uploaded to the server. Downloads also cache a sibling `logo.svg`; adding an app block or changing its app in the layout editor automatically uses the saved icon.
-- App and launcher sizes include the main APK and split APKs. Private data, caches, and optimized files are excluded. Unreadable sizes are explicitly shown as unknown.
-- Lists scroll within their own tables, with fixed headers and batch actions above them. Core system components and the current default launcher are protected.
-
-Uninstalling a system app affects only the current Android user, preserves its data, and leaves the APK on the system partition. Newly installed user apps with a launchable activity can be added to the launcher layout.
-
-Actions such as connecting, refreshing, managing apps, switching launchers, and applying layouts show a loading state followed by a result dialog. Batch results distinguish successful, failed, and unprocessed items. Automatic background reads do not interrupt you with dialogs.
+| App | Purpose | Platform | Download |
+| --- | --- | --- | --- |
+| pureTV Manager | Manage TV apps and launchers from a computer | Windows, macOS, Linux | [0.5.9](https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.9) |
+| putrtv Store | Browse, install and update apps on a TV | Android TV | [0.1.1 APK](resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1) |
 
 ## Launcher and TV app resources
 
-The public [resource/](resource/) directory contains [launcher/](resource/launcher/) and [apps/](resource/apps/). Launcher and app sources previously stored at the repository root have moved into these directories. Launcher and TV app APKs are available in their software folders and separate `android-v*` releases; the desktop manager keeps its own `desktop-v*` versions and latest-release entry. Each software folder contains at least one actual APK and may also include matching source code, cover images, author details, licenses, and SHA256 checksums. Click a software name to open its folder. Every TV app directory provides a 64×64 `logo.svg` for launcher layouts; see the [resource convention](resource/README-development.md#应用资源与-logosvg-约定) for new apps.
-
-The [0.5.1 game fidelity review](docs/game-fidelity-0.5.1.md) records rule and interaction improvements across the nine games, together with remaining map and content differences. The games retain the shared 0.5.0 certificate and support in-place updates from 0.5.0.
-
-The launchers and first-party TV apps support English. Select English in the TV system settings to use it. User-provided app names, playlists, and media titles keep their original text. Native previews below use English test content; they are not physical TV captures.
-
-Launcher layout customization uses this manager's **layout.json version 5 users/system interface**. Cards for launchers that support the layout protocol automatically display the Home background color and image, including inactive launchers, and update after layout changes are applied. The list has no choose-cover or remove-cover actions; edit the home-screen background in “Adjust layout.” Pending APKs use their embedded Home background when available, falling back to a sibling `thumb.png` or `APK-name.thumb.png` only when no layout background can be read.
-
-This page currently features eight games from the new hundred-game collection alongside the earlier games. Browse every title in the [complete resource catalog](resource/README.md).
+[Browse all launchers and TV apps](resource/README.md)
 
 <!-- resource-index:start -->
 
@@ -149,17 +105,11 @@ This page currently features eight games from the new hundred-game collection al
 
 <!-- resource-index:end -->
 
-The **20 games shown above** have updated APKs with **pureTV Wi-Fi controller** support, requiring Android 8.0 or newer and using TCP port **63485** by default. Install the latest APK from each game directory, connect the TV and controller to the same LAN, press GPIO 23 to discover the game, and use START to begin or pause. A side indicator shows the controller icon, player seat (1P/2P), and complete connection ID, and disappears on disconnect. See the [identity-display update](docs/controller-client-status/README.md) for downloads and verification scope, and the [controller guide](docs/readme-controller-support/README.md) for button mappings and two-player support (in Chinese).
-
-The [fork/ catalog](fork/README.md) contains 14 apps and 23 APKs under 10 MB from TVAPP, plus five explicitly requested apps, Erge Duoduo TV, Baby Fun Learning, Jasmine Music, Taozhi Classroom TV and Qixing Opera: 19 apps and 28 APKs in total, with icons, catalog covers and manifests. The [oversized-app inventory and implementation notes](fork/OVERSIZED.md) retain all 205 oversized files, including five archived APKs and 200 still excluded files.
-
 ## Controller games by genre
 
-All **43 games** support the pureTV Wi-Fi controller on Android TV. Downloads are also available for 24 games on macOS and 19 on Windows x64. Select a title or screenshot for controls and gameplay. Select a platform to download its installer.
+**43 controller games** · Android TV (43) · macOS (24) · Windows x64 (19)
 
 [Racing and sports (13)](#controller-racing) · [Action, RPGs and exploration (2)](#controller-action) · [Platformers, bullet hell and arcade (7)](#controller-arcade) · [Strategy, tower defense and card games (1)](#controller-strategy) · [Puzzles and brainteasers (18)](#controller-puzzle) · [Management, sandbox and casual games (1)](#controller-casual) · [One-button arcade (1)](#controller-one-button)
-
-Connect the controller and game device to the same local network, open the game and press the controller’s search button (GPIO 23). The macOS links download a DMG and the Windows links download a setup EXE. Portable packages and Intel Mac compatibility are listed in the [racing downloads](joystick-games/README.md#九款赛车游戏下载) and [puzzle downloads](https://github.com/ecojust/pureTV/blob/a837c7dcb09a0ce01f90a17409212af69c4fc4d6/docs/puzzle-nine/README.md#下载安装).
 
 <a id="controller-racing"></a>
 
@@ -282,39 +232,3 @@ Connect the controller and game device to the same local network, open the game 
 <td align="center" valign="top"><a href="resource/apps/tower-overlap/"><img src="resource/apps/tower-overlap/thumb.png" width="180" alt="Tower Overlap gameplay"><br>Tower Overlap</a><br><a href="resource/apps/tower-overlap/tower-overlap-0.2.2.apk?raw=1">APK</a></td>
 </tr>
 </table>
-
-<!-- claude-games:start -->
-## Claude-assisted game references
-
-The [Chinese README lists 380 references from 236 GitHub repositories](README.md#claude-游戏参考清单), including **79 newly researched entries**. Expand its eight categories for source code, gameplay, demo or build instructions, Claude attribution, and license details.
-
-New highlights include **Voxel Musou, Inkline Town, Fall Line, Hollow Crown, Demolition Derby, Spirit Call, Solder & Rain, and Rainglass**. Entries were screened through original source, author statements or Claude-signed commits affecting game code, and available visual material. This is not a tested quality ranking: HTTP availability does not establish working gameplay or pureTV compatibility. Stars are dated snapshots: 2026-11-19 for this expansion and 2026-11-17 for the preceding 301 entries.
-
-The [nine-racer project](docs/racing-nine/README.md) continues against its previously frozen 31 candidates. The original 93-entry bulk porting task remains paused; expanding this reference list does not add porting commitments or published games. See the [source and review records](docs/claude-games/README.md) and the [delivered controller games](joystick-games/README.md).
-<!-- claude-games:end -->
-
-## MCP / Agent
-
-Open “Device connection → MCP · Agent debugging,” copy the configuration into your client, and keep the manager window open. Its 34 tools cover system information, connections, app management, APK installation, launcher switching and layouts, market browsing/downloads/installation, background images, ADB configuration, language and theme settings, cancellation, and logs. The Agent and the interface share the same state.
-
-See the [complete MCP setup and parameter guide](desktop/docs/mcp.md), currently available in Chinese.
-
-## Development documentation
-
-Build and test instructions are in the [resource development README](resource/README-development.md). The detailed development and protocol guides are currently available in Chinese.
-
-<a id="layoutjson-规范与画面对照"></a>
-
-<a id="layoutjson-协议规范与画面对照"></a>
-
-### Custom launcher layouts
-
-`layout.json` is the protocol connecting the launcher and the manager's visual editor. The TV and computer use the same layout, allowing the manager to reproduce the home screen and edit app tiles. Home and Apps support independent backgrounds, layouts, and page navigation. User app components are editable; system components are read-only.
-
-Choose “Adjust layout” on the launcher page to add installed user apps, drag tiles, select multiple items, and align or distribute them. Confirm the changes to apply them to the TV. Update both the manager and the corresponding launcher to use a newer layout version.
-
-For field definitions, JSON examples, and comparisons with the rendered screen, see the [layout.json protocol specification](resource/README-development.md#layoutjson-协议规范与画面对照), currently in Chinese.
-
-## License and acknowledgments
-
-pureTV is licensed under [MIT](LICENSE). Some TV launcher code is based on [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv); the original authors' copyright and license notices are retained in [NOTICE.md](NOTICE.md). See the [OFL license](resource/launcher/puretv/FONT-LICENSE-OFL.txt) for the font. Third-party code, fonts, and other assets used by the apps retain their respective copyright and license notices.
