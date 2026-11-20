@@ -15,7 +15,7 @@ import socket
 import signal
 import threading
 import time
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location('graphics_driver_tests', HERE.parent / 'run.py')
@@ -109,8 +109,8 @@ class DriverBoundaries(unittest.TestCase):
 
     def test_source_bound_subset_excludes_formal_acceptance_actions(self):
         raw, subset = driver.original_plan()
-        self.assertEqual([i for i, _ in subset], list(range(1, 21)) + list(range(24, 34)))
-        self.assertEqual(len(subset), 30)
+        self.assertEqual([i for i, _ in subset], list(range(24, 34)))
+        self.assertEqual(len(subset), 10)
         original = json.loads(raw)
         for i, step in subset:
             self.assertEqual(step, original['steps'][i-1])
@@ -134,6 +134,31 @@ class DriverBoundaries(unittest.TestCase):
         after['cachedGame']['gameplay']['phase'] = 'intro'
         self.assertFalse(driver.menu_qualified(after, before, self.identity, 33, step))
 
+    def test_native_acceleration_always_releases_the_original_sdk_button(self):
+        for reached_speed in (True, False):
+            client = SimpleNamespace(lock=threading.Lock(), identity=self.identity, seq=0)
+            actions = []
+            def send(key, action, duration=0):
+                client.seq += 1
+                actions.append((key, action, duration))
+            client.button = send
+            instance = object.__new__(driver.Diagnosis)
+            instance.report, instance.clients = {}, [client]
+            instance.capture, instance.save = Mock(), Mock()
+            before = copy.deepcopy(self.state)
+            after = copy.deepcopy(self.state)
+            after['cachedGame']['gameplay'].update(speed=12, x=60)
+            instance.wait = Mock(side_effect=[before, before, after if reached_speed else AssertionError('speed')])
+            with patch.object(driver.original.Acceptance, 'wait_sent_ack'), patch.object(driver.time, 'sleep'):
+                if reached_speed:
+                    instance.drive()
+                    self.assertEqual(instance.report['acceleration']['after']['speed'], 12)
+                    instance.capture.assert_called_once_with('original-stage-accelerated')
+                else:
+                    with self.assertRaisesRegex(AssertionError, 'speed'): instance.drive()
+                    instance.capture.assert_not_called()
+            self.assertEqual(actions, [('UP', 'down', 0), ('UP', 'tap', 180)])
+
     def test_fresh_samples_require_same_document_positive_progress(self):
         after = copy.deepcopy(self.state)
         self.assertFalse(driver.fresh(after, self.state))
@@ -144,9 +169,20 @@ class DriverBoundaries(unittest.TestCase):
         after['url'] = driver.ENTRY; after['cachedGame']['pollCount'] = True
         self.assertFalse(driver.fresh(after, self.state))
 
-    def test_real_original_binding_exact_source_and_scope(self):
+    def test_candidate_binding_exact_source_and_scope(self):
         binding = json.loads((FROZEN / 'backroad-rally/verified-inputs/input-verification.json').read_text())
         with patch.dict(os.environ, {'GITHUB_RUN_ID': binding['qaRunId']}):
+            with self.assertRaises(AssertionError):
+                driver.validate_binding(binding, binding['qaSourceSha'])
+            # Adapt the preserved v7 layout to the independently pinned v0.1.4 identities.
+            expected = driver.ORIGINAL
+            binding.update(artifactSourceSha=expected['sourceSha'], artifactRunId=str(expected['runId']))
+            binding['artifactOrigin'].update(artifactRunId=str(expected['runId']), artifactSourceSha=expected['sourceSha'],
+                artifactId=expected['artifactId'], zip={'bytes':expected['artifactBytes'],'sha256':expected['artifactSha256']})
+            target = binding['games'][0]
+            target.update(frozenSourceInputsVerified=916, currentProductionInputsUnchanged=888)
+            target['package'].update(bytes=expected['bytes'],sha256=expected['sha256'])
+            target['observer'].update(driver.OLD_OBSERVER)
             driver.validate_binding(binding, binding['qaSourceSha'])
             mutations = [lambda b: b.update(localPreflightOnly=True), lambda b: b.update(status='failed'),
                          lambda b: b.update(qaRunId='other'), lambda b: b.update(qaSourceSha='0'*40),

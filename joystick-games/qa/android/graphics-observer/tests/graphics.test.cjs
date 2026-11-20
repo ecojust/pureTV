@@ -21,3 +21,42 @@ sandbox.location={origin:'null',pathname:'blank',href:'about:blank'};const qa=sa
 const initial=vm.runInNewContext(source,sandbox);assert.equal(initial.pendingInitialDocument,true);assert.equal(initial.url,'about:blank');assert.equal(initial.graphicsRead,false);assert.equal(snapshotCalls,1);
 sandbox.window.JoystickGameQA=qa;assert.equal(vm.runInNewContext(source,sandbox).error,'Unexpected target document');assert.equal(snapshotCalls,1);assert.equal(contextCalls,0);
 console.log('Graphics read-only boundary fixture: passed (no GL context calls, no native polls; bounded resources; original state unchanged)');
+
+sandbox.location={origin:'https://game-kit.invalid',pathname:'/tv.html',href:'https://game-kit.invalid/tv.html'};
+sandbox.backroadGlObservation=true;
+sandbox.document.getElementById=()=>null;
+canvas.getContext=(kind)=>{
+  assert.equal(kind,'webgl2');contextCalls++;
+  return {getSupportedExtensions:()=>['EXT_color_buffer_half_float'],getExtension:()=>null,
+    drawingBufferWidth:480,drawingBufferHeight:270,READ_FRAMEBUFFER_BINDING:1,PIXEL_PACK_BUFFER_BINDING:2,PACK_ROW_LENGTH:3,PACK_SKIP_ROWS:4,PACK_SKIP_PIXELS:5,
+    readPixels(x,y,w,h,format,kind,data){assert.deepEqual([x,y,w,h],[192,108,96,54]);data.set([7,8,9,255,9,8,7,255,42,12,3,0]);data.set([65,44,2,255],(96*27+48)*4);},
+    isContextLost:()=>false,getInternalformatParameter:()=>[],checkFramebufferStatus:()=>0x8cd5,getParameter:p=>p===1||p===2?null:0,getContextAttributes:()=>({alpha:true})};
+};
+const caps=vm.runInNewContext(source,sandbox);
+assert.equal(caps.contextRead,true);assert.equal(contextCalls,1);assert.equal(caps.extColorBufferFloat,false);
+assert.equal(caps.extColorBufferHalfFloat,true);assert.equal(caps.unmaskedRenderer,null);
+sandbox.document.querySelectorAll=()=>[canvas,canvas];
+assert.equal(vm.runInNewContext(source,sandbox).contextRead,false);assert.equal(contextCalls,1);
+
+sandbox.document.querySelectorAll=()=>[canvas];
+let frames=3;
+sandbox.window.JoystickGameQA.snapshot=()=>({...game,stage:'playing',frames});
+let nextCall=null,copyCount=0,logged=null;
+sandbox.requestAnimationFrame=fn=>{nextCall=fn;};
+sandbox.console={info(message){logged=JSON.parse(message.substring('BackroadCanvasProbe '.length));}};
+canvas.isConnected=true;
+const pixels=new Uint8ClampedArray(160*90*4);
+pixels.set([17,18,19,255,17,18,19,255,3,4,5,120,255,255,255,0]);
+sandbox.document.createElement=(tag)=>{
+  assert.equal(tag,'canvas');
+  return {getContext(kind){assert.equal(kind,'2d');return {
+    drawImage(src,left,top,w,h){assert.equal(src,canvas);assert.deepEqual([left,top,w,h],[0,0,160,90]);copyCount++;},
+    getImageData(){return {data:pixels};}
+  };}};
+};
+assert.equal(vm.runInNewContext(source,sandbox).contextRead,true);
+assert.equal(copyCount,0);nextCall();assert.equal(copyCount,0);
+frames++;nextCall();
+assert.equal(copyCount,1);assert.equal(logged.framebuffer.read,true);assert.equal(logged.framebuffer.distinctVisibleRgb,3);assert.equal(logged.framebuffer.nonzeroRgbAtZeroAlpha,1);assert.equal(logged.framebuffer.distinctRawRgba,5);assert.deepEqual(logged.framebuffer.points[4].rgba,[65,44,2,255]);assert.equal(logged.drawnFrame,4);assert.equal(logged.initialFrame,3);
+assert.equal(logged.alphaNonzeroPixels,3);assert.equal(logged.opaquePixels,2);assert.equal(logged.distinctVisibleRgb,2);
+console.log('Stage canvas sample observes one new frame, excludes transparent colors and deduplicates visible colors');
