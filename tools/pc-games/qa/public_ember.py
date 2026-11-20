@@ -45,8 +45,12 @@ def check(out):
     # Read the actual public EXE's bundled catalogue, without modifying its contents.
     catalog_bytes=CArchiveReader(str(exe)).extract('catalog.json')
     out['bundledCatalogSha256']=hashlib.sha256(catalog_bytes).hexdigest()
-    assert out['bundledCatalogSha256']=='0cc16bd7813f60c2067e5b15a1e89c40037226ce6e5e41ad00e63717c1f361ef'
+    out['catalogNormalizedSha256']=hashlib.sha256(catalog_bytes.replace(b'\r\n',b'\n')).hexdigest()
+    assert out['catalogNormalizedSha256']=='0cc16bd7813f60c2067e5b15a1e89c40037226ce6e5e41ad00e63717c1f361ef'
     bundled=json.loads(catalog_bytes)
+    canonical=json.dumps(bundled,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')
+    out['catalogSemanticSha256']=hashlib.sha256(canonical).hexdigest()
+    assert out['catalogSemanticSha256']=='928a7e69cdaa3eb0cd5fa974d07ff44a8f6f915f125a541fe22e84bb555fcac4'
     assert len(bundled)==len({row['id'] for row in bundled})==35
     current,=[row for row in bundled if row['id']=='used-car-racing']
     assert current['url'].endswith('/used-car-racing-0.1.7.apk') and current['sha256']=='1b0879c9ae8ac10188ea34e9694dbc9527048ee76e10d735a61aa24da53bd9e7'
