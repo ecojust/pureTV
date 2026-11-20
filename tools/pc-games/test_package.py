@@ -1,3 +1,4 @@
+import json
 import tempfile
 import unittest
 import zipfile
@@ -7,6 +8,21 @@ import package
 
 
 class PortablePackageTests(unittest.TestCase):
+    def test_stale_port_download_is_rejected_even_when_game_id_matches(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            pc = root / 'tools' / 'pc-games'
+            pc.mkdir(parents=True)
+            (pc / 'catalog.json').write_text(json.dumps([{
+                'id': 'example', 'url': 'https://example.com/old.apk',
+                'bytes': 1, 'sha256': '0' * 64,
+            }]))
+            (pc.parent / 'readme-app-games.json').write_text(json.dumps([{
+                'games': [{'page': 'joystick-games/example/', 'apk': 'https://example.com/new.apk'}]
+            }]))
+            with self.assertRaisesRegex(ValueError, 'Desktop and TV download URLs differ for example'):
+                package.build(root / 'out', root)
+
     def test_windows_and_unix_text_checkouts_produce_the_same_archive(self):
         source = Path(__file__).resolve().parents[2]
         names = ('launcher.py', 'host.py', 'pc-bridge.js', 'requirements.txt', 'catalog.json')

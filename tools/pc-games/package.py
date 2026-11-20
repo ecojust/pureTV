@@ -11,11 +11,13 @@ def build(output, root=Path(__file__).resolve().parents[2]):
     src = root / 'tools' / 'pc-games'
     games = json.loads((src / 'catalog.json').read_text(encoding='utf-8'))
     genres = json.loads((root / 'tools' / 'readme-app-games.json').read_text(encoding='utf-8'))
-    featured = [entry.get('page', entry.get('resource')).strip('/').rsplit('/', 1)[-1]
-                for genre in genres for entry in genre['games']]
+    entries = [entry for genre in genres for entry in genre['games']]
+    featured = [entry.get('page', entry.get('resource')).strip('/').rsplit('/', 1)[-1] for entry in entries]
     if [row['id'] for row in games] != featured or len(set(featured)) != len(featured):
         raise ValueError('Desktop release and featured catalog differ')
-    for game in games:
+    for entry, game in zip(entries, games):
+        if 'page' in entry and entry['apk'] != game['url']:
+            raise ValueError(f'Desktop and TV download URLs differ for {game["id"]}')
         if not re.fullmatch(r'[0-9a-f]{64}', game['sha256']) or game['bytes'] <= 0:
             raise ValueError(f'Incomplete download identity for {game["id"]}')
     output.mkdir(parents=True, exist_ok=True)
