@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: backroad-original-apk-014-framebuffer-diagnostic
+  group: backroad-original-apk-014-vulkan-native-drive
   cancel-in-progress: false
 
 permissions:
@@ -187,7 +187,7 @@ jobs:
           avd-name: JoystickGamesValidation
           force-avd-creation: true
           disable-animations: true
-          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          emulator-options: -no-window -memory 2048 -gpu lavapipe -noaudio -no-boot-anim -no-snapshot
           script: >-
             python3 joystick-games/qa/android/graphics-observer/run.py
             --input "$RUNNER_TEMP/original-input" --observer-input "$RUNNER_TEMP/observer-signed"
