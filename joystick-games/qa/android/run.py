@@ -119,7 +119,7 @@ def install_timeout(apk_bytes):
     return min(240, max(45, 30 + 2 * math.ceil(apk_bytes / 1_000_000)))
 
 
-def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None, request_window=OBSERVER_REQUEST_TIMEOUT):
+def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None, request_window=None):
     """Retry only failed read-only transports; never reuse a previous snapshot.
 
     The original Observer closes its HTTP request after a 10-second WebView
@@ -127,6 +127,8 @@ def read_observer_snapshot(url, timeout=OBSERVER_SNAPSHOT_TIMEOUT, event=None, r
     therefore come from a new GET; HTTP/JSON/model errors are not retried here.
     """
     assert 0 < timeout <= OBSERVER_SNAPSHOT_TIMEOUT
+    if request_window is None:
+        request_window = OBSERVER_REQUEST_TIMEOUT
     assert 0 < request_window <= OBSERVER_SNAPSHOT_TIMEOUT
     deadline = time.monotonic() + timeout
     failures = 0
