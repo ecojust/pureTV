@@ -33,6 +33,31 @@ def scoped_games(slugs, scope):
     return [slug for slug in slugs if scope == 'all' or slug in HOME_GAMES]
 
 
+
+def checkout_inputs():
+    """Populate the production and QA inputs for the twelve-game workflow."""
+    patterns = [
+        '/.github/workflows/controller*.yml', '/tools/', '/desktop/package*.json',
+        '/docs/controller-client-status/rollout.json', '/puretv-joystick/*.py', '/puretv-joystick/*.html',
+        '/resource/game-kit/*.py', '/resource/game-kit/android/', '/resource/game-kit/web/',
+        '/resource/game-kit/legacy-controller-native/', '/resource/game-kit/legacy-controller-web/',
+        '/resource/game-kit/qa/', '/resource/launcher/puretv/*.gradle', '/resource/launcher/puretv/gradlew',
+        '/resource/launcher/puretv/gradle/', '/resource/launcher/puretv/gradle.properties',
+        '/resource/launcher/puretv/app/build.gradle', '/resource/apps/*/build.gradle',
+        '/resource/apps/*/src/main/AndroidManifest.xml', '/joystick-games/tools/android-zxing.py',
+    ]
+    for slug in sorted(HOME_GAMES):
+        directory = 'resource/apps/' + slug + '/'
+        metadata = json.loads(subprocess.check_output(['git', 'show', 'HEAD:' + directory + 'resource.json'], cwd=ROOT))
+        apk = metadata['apk']
+        assert re.fullmatch(r'[a-z0-9][a-z0-9.-]*\.apk', apk), (slug, apk)
+        for item in ('src/', 'tests/', 'tools/', 'licenses/', 'resource.json', 'game.json',
+                     'icon.xml', 'logo.svg', 'proguard-rules.pro', 'LICENSE', 'README.md', apk):
+            patterns.append('/' + directory + item)
+    subprocess.run(['git', 'sparse-checkout', 'add', '--stdin'], cwd=ROOT,
+                   input='\n'.join(patterns) + '\n', text=True, check=True)
+
+
 def write(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
@@ -271,7 +296,7 @@ def export(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command', choices=['list', 'stage', 'sign', 'export'])
+    parser.add_argument('command', choices=['list', 'checkout-home-inputs', 'stage', 'sign', 'export'])
     parser.add_argument('--group', choices=GROUPS)
     parser.add_argument('--input', type=Path)
     parser.add_argument('--observers', type=Path)
@@ -284,6 +309,9 @@ def main():
     parser.add_argument('--sign-result', default='unknown')
     parser.add_argument('--runtime-result', default='not_run')
     args = parser.parse_args()
+    if args.command == 'checkout-home-inputs':
+        checkout_inputs()
+        return
     if args.command == 'list':
         games = ALL_SLUGS if args.all else GROUPS[args.group] if args.group else SLUGS
         print(' '.join(scoped_games(games, args.scope))); return

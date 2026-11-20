@@ -1,6 +1,35 @@
 # README 游戏手柄更新构建与验收
 
-当前范围为根 README 的 20 款游戏。`controller-games.yml` 专门构建 11 款旧 Gradle 游戏，9 款 Game Kit 继续使用现有 `sign-game-kit.yml` 固定证书签名流程。
+默认流程保留原 README 精选的 20 款游戏。`controller-games.yml` 专门构建 11 款旧 Gradle 游戏，9 款 Game Kit 继续使用现有 `sign-game-kit.yml` 固定证书签名流程。
+
+## 首页的 12 款 Android 游戏
+
+对同时包含游戏输入改动和版本号的冻结源码分支运行下面的命令。把 `SOURCE_REF` 设为冻结分支名，将 `SOURCE_SHA` 设为该分支的完整 Git 提交号。
+
+```sh
+gh workflow run controller-games.yml --repo ecojust/pureTV \
+  --ref "$SOURCE_REF" -f scope=home-12
+```
+
+该流程为十款旧宿主游戏构建、签名并核对原证书，同时生成十二份对应的测试观察器。无密钥的共享构建任务会为霓虹飞车和叠塔工匠生成未签名 APK 与请求。等待流程成功后，把 `LEGACY_RUN` 和 `ATTEMPT` 分别设为此次运行号和尝试号，将生成的请求交给原 Game Kit 签名工作流。它会独立重建候选游戏并校验请求，再使用原证书签名。
+
+```sh
+REQUEST_REF="build-assets/game-kit-requests-home12-${LEGACY_RUN}-${ATTEMPT}"
+for slug in neon-rush tower-overlap; do
+  gh workflow run sign-game-kit.yml --repo ecojust/pureTV --ref "$SOURCE_REF" \
+    -f source_sha="$SOURCE_SHA" -f slug="$slug" -f request_branch="$REQUEST_REF"
+done
+```
+
+两次签名成功后，把 `NEON_RUN` 和 `TOWER_RUN` 设为对应的 Game Kit 签名运行号。原生验证默认运行六批，使用真实 APK、原版 SDK 和 Android TV 模拟器检查安装升级、手柄输入、游戏画面以及端口占用。手机网页扫码连接须另作实测。
+
+```sh
+BUNDLE=$(jq -cn --arg sha "$SOURCE_SHA" --arg legacy "$LEGACY_RUN" \
+  --argjson attempt "$ATTEMPT" --arg neon "$NEON_RUN" --arg tower "$TOWER_RUN" \
+  '{scope:"home-12",sourceSha:$sha,legacyRunId:$legacy,legacyAttempt:$attempt,kitRuns:{"neon-rush":$neon,"tower-overlap":$tower}}')
+gh workflow run controller-games-runtime.yml --repo ecojust/pureTV \
+  --ref "$SOURCE_REF" -f acceptance_mode=complete -f bundle_manifest="$BUNDLE"
+```
 
 ## 第一阶段：固定源码构建、签名及暂存
 

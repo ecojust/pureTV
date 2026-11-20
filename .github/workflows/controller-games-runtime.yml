@@ -78,6 +78,12 @@ jobs:
       RUNTIME_SELECTION: ${{ needs.plan.outputs.selection }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: ${{ fromJSON(inputs.bundle_manifest).scope == 'home-12' && '/tools/' || '' }}
+      - name: Check out selected runtime sources and original upgrade APKs
+        if: fromJSON(inputs.bundle_manifest).scope == 'home-12'
+        run: python3 tools/controller-release.py checkout-home-inputs
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
