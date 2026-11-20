@@ -29,3 +29,9 @@ python tools/pc-games/verify_resource_inputs.py /path/to/packages \
   --browser-arg=--disable-background-timer-throttling --browser-arg=--disable-renderer-backgrounding \
   --browser-arg=--disable-backgrounding-occluded-windows
 ```
+
+## macOS 便携播放器
+
+macOS 15.8.2 的 Apple Silicon runner 使用 Google Chrome 158.0.8127.37 复验了《俄罗斯方块》0.5.5 和 Coast Kart 0.5.5。两款均从解包后的便携启动器打开，分别用键盘和 TCP 手柄进入游戏，两个无线席位独立响应，松开和断开都能被游戏识别。《俄罗斯方块》还核对了落块坐标。键盘在第一局让落块左移，刷新后用 TCP 手柄在新一局让落块右移。[逐项结果](macos-portable-2026-11-20.json) · [macOS 通过记录](https://github.com/ecojust/pureTV/actions/runs/44762238258)
+
+这次运行从指定的签名构建取得两个 APK，将测试目录内的两条下载地址指向对应原件，再通过便携启动器的正常下载、缓存和 SHA-256 检查启动。记录包含启动器、主机和输入桥的文件哈希。最初两轮定位到 macOS 在启动前等待本机 DNS 查询，修复后直接使用已经绑定的回环地址和系统网卡提供的局域网地址。[签名构建](https://github.com/ecojust/pureTV/actions/runs/44756990162) · [故障调用栈](https://github.com/ecojust/pureTV/actions/runs/44761752766) · [复验脚本](https://github.com/ecojust/pureTV/blob/38519fadf3140b482084d559f4b3b8f3dfb3422e/tools/pc-games/qa/macos_portable_probe.py)
