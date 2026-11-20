@@ -13,7 +13,10 @@ function rand(seed) {
 }
 
 function toTexture(canvas, srgb, aniso = 8) {
-  const t = new THREE.CanvasTexture(canvas);
+  return configureSurface(new THREE.CanvasTexture(canvas), srgb, aniso);
+}
+
+function configureSurface(t, srgb, aniso = 8) {
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace;
   t.anisotropy = aniso;
@@ -52,6 +55,15 @@ function normalFromHeight(hc, strength = 2.0) {
 }
 
 const cache = new Map();
+
+/** Decode the shipped albedo and normal images into the same procedural cache. */
+export async function preloadRoadTextures(style, mapURL, normalURL) {
+  const key = style.road + ':' + JSON.stringify(style.roadOpts || {});
+  if (cache.has(key)) return;
+  const loader = new THREE.TextureLoader();
+  const [map, normalMap] = await Promise.all([loader.loadAsync(mapURL), loader.loadAsync(normalURL)]);
+  cache.set(key, { map: configureSurface(map, true), normalMap: configureSurface(normalMap, false) });
+}
 
 /**
  * Asphalt road texture. u (x) = across the road (0..1), v (y) = along (one repeat = `lengthM` meters).
