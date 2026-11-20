@@ -2,7 +2,12 @@
 
 [BridgeMind 原作](https://github.com/bridge-mind/turbo-kart-rush/tree/6c0456c7642447eae29e0832e7e542fec07ec07d)的独立 pureTV 适配：八位车手、四条赛道、三档难度，保留程序生成场景、道具的全部变体、漂移加速、跳跃、原版音乐与后处理。原资源无需网络即可运行；不是 pureTV 自创游戏。
 
-Android TV 0.1.1 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/turbo-kart-rush-0.1.1.apk)。原生手柄验收进展见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
+## Android TV 下载
+
+[下载 0.1.1 签名 APK](turbo-kart-rush-0.1.1.apk)（545,968 字节）。需要 Android 8.0（API 26）或更新版本，以及支持 WebGL 2 的系统 WebView。 [SHA256 校验](SHA256SUMS.txt)
+
+在 1920×1080 的 Android TV 16 模拟器中，默认端口和默认端口占用两种模式各通过 48 项检查。原版 pureTV SDK 完成了选车、选赛道、油门、转向、漂移键、暂停及断线重连。赛中帮助卡展开时会覆盖右下小地图的一部分。测试使用虚拟手柄，未测试实体电视或完整通关。 [赛中截图](https://github.com/ecojust/pureTV/blob/dee5a42698422aaf0de64c3f1c312e6a102a67c3/reports/joystick-android-report-runtime-turbo-kart-rush/turbo-kart-rush-occupied/playing.png) · [原始报告与录像](https://github.com/ecojust/pureTV/tree/dee5a42698422aaf0de64c3f1c312e6a102a67c3/reports/joystick-android-report-runtime-turbo-kart-rush) · [签名和核验记录](docs/android-delivery/verification.json)
+
 
 
 0.1.1 的渲染器会在不支持半浮点渲染目标的 WebGL 2 设备和已识别的软件 GPU 上直接绘制赛道与赛车，跳过辉光、环境反射和阴影，并将 3D 画面限制在 960×540 以内。菜单与 HUD 保持原显示尺寸。下方 0.1.0 的下载及其验证范围按各平台列出。
@@ -23,7 +28,7 @@ Android TV 0.1.1 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/
 
 Apple Silicon 原生、默认端口占用回退及 Rosetta 三种模式各通过 9 项原 SDK 和实际游戏检查。**Intel Mac 图形运行仍未验证**；Intel 原失败和初始化分类结果保留，独立探针的 context-loss 不能证明游戏失败原因。本游戏没有声明持久存档字段；原测试只验证无存档状态下重启与换本地地址后的恢复一致，没有宣称实际存档保存已验。 未做实体手柄或完整通关测试。
 
-已知界面限制：原三种模式的赛中帮助卡遮住右下小地图上部，暂停展开卡也会盖住背景地图；圈数、计时、完整手柄 ID 和三个暂停按钮仍可见。三张赛中截图均显示 0 km/h，实际驾驶依据原运行记录，不能由静态图推断。 本次 Mac 原截图为 1024×642／1024×645，浏览器的 960×540／1280×720 布局检查是另一组证据。详情见 [Mac 交付核验](docs/macos-delivery/) 与 [逐张目视记录](docs/macos-ci-44615880581-visual-review.json)。安装文件沿用源码 `6c7cb4fdb99dce236b634c842326bae6aed5f232`、原流程 [44615880581](https://github.com/ecojust/pureTV/actions/runs/44615880581) 的原始字节，未重新打包；Android 仍待验收；Windows 验证范围见上方。
+已知界面限制：原三种模式的赛中帮助卡遮住右下小地图上部，暂停展开卡也会盖住背景地图；圈数、计时、完整手柄 ID 和三个暂停按钮仍可见。三张赛中截图均显示 0 km/h，实际驾驶依据原运行记录，不能由静态图推断。 本次 Mac 原截图为 1024×642／1024×645，浏览器的 960×540／1280×720 布局检查是另一组证据。详情见 [Mac 交付核验](docs/macos-delivery/) 与 [逐张目视记录](docs/macos-ci-44615880581-visual-review.json)。安装文件沿用源码 `6c7cb4fdb99dce236b634c842326bae6aed5f232`、原流程 [44615880581](https://github.com/ecojust/pureTV/actions/runs/44615880581) 的原始字节，未重新打包。Android 与 Windows 验证范围见各自下载说明。
 
 | pureTV 键 | 比赛 | 菜单 |
 | --- | --- | --- |
