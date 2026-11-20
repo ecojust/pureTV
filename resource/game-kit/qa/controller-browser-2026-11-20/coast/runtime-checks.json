@@ -1,0 +1,84 @@
+{
+  "game": "coast-kart",
+  "source": "1b6b026dca870f534ed4370b4a480a1c19d7d471",
+  "baselineRun": "https://github.com/ecojust/pureTV/actions/runs/44766044199",
+  "precedingReleaseRun": "https://github.com/ecojust/pureTV/actions/runs/44764974326",
+  "checks": [
+    {
+      "check": "compat",
+      "entrypoint": "compatibility.mjs",
+      "testSource": "6247c410e12f909451c91efc58aa199096a9dd4c",
+      "exit": 0,
+      "stdout": [
+        "PASS coast-kart syntax: 10 JavaScript files support Chrome 61; TV dependencies support ES2017",
+        "PASS coast-kart compatibility zh-CN: visible canvas/error, independent players, cleanup",
+        "PASS coast-kart compatibility en-US: visible canvas/error, independent players, cleanup",
+        "PASS coast-kart compatibility syntax: visible canvas/error, independent players, cleanup",
+        "PASS coast-kart compatibility draw: visible canvas/error, independent players, cleanup",
+        "4 coast-kart compatibility scenarios passed against packaged assets"
+      ]
+    },
+    {
+      "check": "combat",
+      "entrypoint": "combat.mjs",
+      "testSource": "6247c410e12f909451c91efc58aa199096a9dd4c",
+      "exit": 0,
+      "stdout": [
+        "PASS kart combat: two actual phone pages guard, aim, throw, drift, intercept, resume, cancel without throwing and start fresh gestures"
+      ]
+    },
+    {
+      "check": "combat-with-pulse",
+      "entrypoint": "combat.mjs",
+      "testSource": "e4b1152714e8e1985a6c9ccd1d6ac2cc1fe13a95",
+      "exit": 0,
+      "stdout": [
+        "PASS kart combat: two actual phone pages guard, aim, throw, drift, intercept, resume, cancel without throwing and start fresh gestures"
+      ]
+    },
+    {
+      "check": "pulse",
+      "entrypoint": "isolated extra assertion",
+      "testSource": "e4b1152714e8e1985a6c9ccd1d6ac2cc1fe13a95",
+      "exit": 0,
+      "stdout": [
+        "PASS isolated original runtime second-seat Wi-Fi pulse: {\"consumedAtBlur\":true,\"firstFrame\":true,\"secondFrame\":false}"
+      ]
+    }
+  ],
+  "fixedRun": "https://github.com/ecojust/pureTV/actions/runs/44767145719",
+  "fiveBrowserScripts": {
+    "runId": 44767145719,
+    "jobId": 136394699409,
+    "head": "0a60dc6122e23629997adccada594091632fff92",
+    "jobUrl": "https://github.com/ecojust/pureTV/actions/runs/44767145719/job/136394699409",
+    "conclusion": "success",
+    "scripts": [
+      {
+        "path": "resource/apps/coast-kart/tests/compatibility.mjs",
+        "exit": 0,
+        "finishedUtc": "2026-11-20T15:52:54Z"
+      },
+      {
+        "path": "resource/apps/coast-kart/tests/rendering.mjs",
+        "exit": 0,
+        "finishedUtc": "2026-11-20T15:53:23Z"
+      },
+      {
+        "path": "resource/apps/coast-kart/tests/controller.mjs",
+        "exit": 0,
+        "finishedUtc": "2026-11-20T15:53:32Z"
+      },
+      {
+        "path": "resource/apps/coast-kart/tests/combat.mjs",
+        "exit": 0,
+        "finishedUtc": "2026-11-20T15:53:36Z"
+      },
+      {
+        "path": "resource/apps/coast-kart/tests/capture.mjs",
+        "exit": 0,
+        "finishedUtc": "2026-11-20T15:55:32Z"
+      }
+    ]
+  }
+}

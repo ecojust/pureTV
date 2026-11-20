@@ -13,7 +13,11 @@ repo = Path(os.environ["QA_REPO"])
 apk_dir = Path(os.environ["QA_SIGNED_APKS"])
 work = Path(os.environ["QA_WORKDIR"])
 games = json.loads((here / "source.json").read_text())
-receipt_dir = here / "compact" if os.environ.get("QA_COMPACT") else here
+receipt_dir = here
+if os.environ.get("QA_COMPACT"):
+    receipt_dir = here / "compact"
+elif os.environ.get("QA_COAST_FIX"):
+    receipt_dir = here / "coast"
 signed = json.loads((receipt_dir / "signed-assets.json").read_text())
 
 for slug, receipt in signed.items():

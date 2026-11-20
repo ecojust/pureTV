@@ -1,0 +1,311 @@
+{
+  "suite": "Revised Coast Kart Android TV phone bridge and two TV layouts",
+  "expectedGames": 1,
+  "passed": 1,
+  "assetEntries": 15,
+  "environment": {
+    "viewer": "Linux Chromium 156.0.8078.79",
+    "phone": "mobile Chromium, actual Java LanGameServer, real WebSocket input",
+    "physicalDeviceOrAndroidActivityExercised": false,
+    "modelWrites": false,
+    "clockOverrides": false
+  },
+  "games": [
+    {
+      "slug": "coast-kart",
+      "started": "2026-11-20T15:47:44.244Z",
+      "status": "passed",
+      "host": "com.ecojust.coastkarttv",
+      "signedApkSha256": "6354689d6c220f58a8bbe24c380ecf346491c4e1f3edf26c51eb18394fd9601b",
+      "assertions": [
+        {
+          "name": "original game ready",
+          "phase": "title"
+        },
+        {
+          "name": "TV QR pixels decode to the original Java room URL"
+        },
+        {
+          "name": "original phone page enabled by room welcome"
+        },
+        {
+          "name": "phone occupies real first seat",
+          "card": {
+            "text": "1PPhone connected",
+            "seat": "1",
+            "privateIdentityVisible": false
+          }
+        },
+        {
+          "name": "joining preserves canvas rectangles at all measured sizes"
+        },
+        {
+          "name": "phone START enters original game",
+          "before": "title",
+          "after": "playing"
+        },
+        {
+          "name": "phone ordinary gameplay input",
+          "action": "held brake reversed kart",
+          "input": "reverse",
+          "before": 38.201206000000006,
+          "after": -5.210159083886392,
+          "phase": "playing"
+        },
+        {
+          "name": "connected phone cards clear of gameplay at every measured size"
+        },
+        {
+          "name": "room disconnect clears original seat"
+        }
+      ],
+      "sourceCommit": "1b6b026dca870f534ed4370b4a480a1c19d7d471",
+      "errors": [],
+      "gameplayViewport": {
+        "width": 640,
+        "height": 360
+      },
+      "deviceScaleFactor": 0.5,
+      "renderer": {
+        "version": "WebGL 1.0 (OpenGL ES 2.0 Chromium)",
+        "renderer": "ANGLE (Mesa, llvmpipe (LLVM 19.1.7 256 bits), OpenGL ES 3.2)"
+      },
+      "beforeJoin": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              14,
+              49.9,
+              752,
+              423
+            ]
+          },
+          "phoneRows": [],
+          "sidebar": [
+            780,
+            12,
+            166,
+            498.8
+          ],
+          "qr": [
+            820,
+            83,
+            86,
+            86
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              32,
+              79.5,
+              970,
+              545
+            ]
+          },
+          "phoneRows": [],
+          "sidebar": [
+            1030,
+            24,
+            218,
+            656
+          ],
+          "qr": [
+            1065,
+            118,
+            148,
+            148
+          ]
+        }
+      ],
+      "inputContact": "Chromium mobile touch pointer",
+      "connectedSamePhase": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              14,
+              49.9,
+              752,
+              423
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                780,
+                12,
+                166,
+                48.4
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ],
+          "sidebar": [
+            780,
+            12,
+            166,
+            498.8
+          ],
+          "qr": [
+            820,
+            131.4,
+            86,
+            86
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              32,
+              79.5,
+              970,
+              545
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1030,
+                24,
+                218,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ],
+          "sidebar": [
+            1030,
+            24,
+            218,
+            656
+          ],
+          "qr": [
+            1065,
+            158,
+            148,
+            148
+          ]
+        }
+      ],
+      "countdownSamples": [
+        {
+          "at": "2026-11-20T15:48:14.541Z",
+          "phase": "playing",
+          "paused": false,
+          "countdown": 2.9,
+          "speed": 0,
+          "clock": 0,
+          "renderedPlayers": 2
+        }
+      ],
+      "originalCamera": {
+        "projectionElements": 16,
+        "viewElements": 16,
+        "renderedPlayers": 2
+      },
+      "playing": [
+        {
+          "viewport": {
+            "width": 960,
+            "height": 540
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              14,
+              49.9,
+              752,
+              423
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                780,
+                12,
+                166,
+                48.4
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ],
+          "sidebar": [
+            780,
+            12,
+            166,
+            498.8
+          ],
+          "qr": [
+            820,
+            131.4,
+            86,
+            86
+          ]
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "canvas": {
+            "name": "battlefield",
+            "box": [
+              32,
+              79.5,
+              970,
+              545
+            ]
+          },
+          "phoneRows": [
+            {
+              "box": [
+                1030,
+                24,
+                218,
+                40
+              ],
+              "seat": "1",
+              "text": "1P\nPhone connected"
+            }
+          ],
+          "sidebar": [
+            1030,
+            24,
+            218,
+            656
+          ],
+          "qr": [
+            1065,
+            158,
+            148,
+            148
+          ]
+        }
+      ],
+      "finished": "2026-11-20T15:48:29.155Z"
+    }
+  ]
+}

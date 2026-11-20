@@ -96,6 +96,9 @@ async function play(browser, slug) {
       ? "940490d703ee8b55c1df8dc3e6bb8796aeb262a3"
       : "89527853fc9c81b344b797e957c73dbe35fde67c";
     record.signedApkSha256 = receipt.apkSha256;
+  } else if (process.env.QA_COAST_FIX) {
+    record.sourceCommit = "1b6b026dca870f534ed4370b4a480a1c19d7d471";
+    record.signedApkSha256 = require("./coast/signed-assets.json")[slug].apkSha256;
   }
   const file = path.join(results, slug + ".json");
   const flush = () =>
