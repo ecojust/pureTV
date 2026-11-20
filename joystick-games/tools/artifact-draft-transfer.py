@@ -91,8 +91,6 @@ def source_identity(run, artifact, jobs, request, now=None, registry_source=None
     require(run['repository']['full_name'] == REPO and run['head_repository']['full_name'] == REPO, 'wrong_repository')
     require(run['repository']['id'] == run['head_repository']['id'], 'fork_repository')
     require(run['path'] in WORKFLOWS and run['event'] == 'workflow_dispatch', 'workflow_not_allowed')
-    # The run may still be testing. Only the producing job/upload must be complete.
-    require(run['status'] in ('in_progress', 'completed'), 'run_not_started')
     require(artifact['id'] == request['artifact'] and artifact['expired'] is False, 'wrong_or_expired_artifact')
     require(stamp(artifact['expires_at']) > now, 'artifact_expired')
     size = artifact['size_in_bytes']
@@ -127,6 +125,11 @@ def source_identity(run, artifact, jobs, request, now=None, registry_source=None
         positive(number)
     require(job['run_id'] == request['run'] and job['run_attempt'] == request['attempt'] and job['head_sha'] == request['source'], 'producer_identity_mismatch')
     require(job['status'] == 'completed', 'producer_not_completed')
+    # GitHub can report the Android run as queued while runtime matrix jobs wait for runners.
+    signed_android_ready = (run['status'] == 'queued' and
+                            run['path'] == '.github/workflows/joystick-catalog-android.yml' and
+                            artifact['name'] == 'joystick-android-signed' and job.get('conclusion') == 'success')
+    require(run['status'] in ('in_progress', 'completed') or signed_android_ready, 'run_not_started')
     created = stamp(artifact['created_at'])
     require(stamp(job['started_at']) <= created <= stamp(job['completed_at']), 'artifact_outside_attempt_job')
     # Exact whitelisted workflow layout: Android package then report; Mac/Windows report then package.
