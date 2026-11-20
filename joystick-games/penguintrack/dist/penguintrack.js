@@ -43678,7 +43678,45 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
   var BUTTONS = Object.freeze(["UP", "DOWN", "LEFT", "RIGHT", "START", "A", "B", "X", "Y"]);
   var empty = () => Object.fromEntries(BUTTONS.map((key2) => [key2, false]));
   var copy = (value) => JSON.parse(JSON.stringify(value));
-  var nativeKeys = { ArrowUp: "UP", ArrowDown: "DOWN", ArrowLeft: "LEFT", ArrowRight: "RIGHT", Enter: "A", Start: "START", p: "START", b: "B", Select: "Y" };
+  var nativeKeys = { ArrowUp: "UP", ArrowDown: "DOWN", ArrowLeft: "LEFT", ArrowRight: "RIGHT", Enter: "A", Start: "START", p: "START", b: "B", A: "A", B: "B", X: "X", Y: "Y", Select: "Y" };
+  var keypad = {
+    Numpad8: "UP",
+    Numpad2: "DOWN",
+    Numpad4: "LEFT",
+    Numpad6: "RIGHT",
+    Numpad5: "START",
+    Numpad1: "A",
+    Numpad3: "B",
+    Numpad7: "X",
+    Numpad9: "Y"
+  };
+  var keyboard = {
+    ArrowUp: "UP",
+    ArrowDown: "DOWN",
+    ArrowLeft: "LEFT",
+    ArrowRight: "RIGHT",
+    KeyP: "START",
+    KeyZ: "A",
+    KeyX: "B",
+    KeyC: "X",
+    KeyV: "Y"
+  };
+  function controllerPlayer(player) {
+    if (player.transport === "wifi") return player;
+    if (player.transport !== "phone" && (player.transport || typeof player.x !== "number" || typeof player.y !== "number")) return player;
+    const buttons = {
+      UP: player.y < -0.35,
+      DOWN: player.y > 0.35,
+      LEFT: player.x < -0.35,
+      RIGHT: player.x > 0.35,
+      START: player.start === true,
+      A: player.a === true,
+      B: player.b === true,
+      X: player.buttonX === true,
+      Y: player.buttonY === true || player.select === true
+    };
+    return { ...player, transport: "phone", buttons };
+  }
   function createInputReducer() {
     let previous = empty(), source = "", epoch = null, hasSeenController = false;
     let blocked = empty(), resetPending = false;
@@ -43688,9 +43726,10 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
       },
       read(snapshot3 = {}, local = {}) {
         if (!snapshot3 || typeof snapshot3 !== "object") snapshot3 = {};
-        const players = Array.isArray(snapshot3.players) ? snapshot3.players.filter((p2) => p2 && Number(p2.id) > 0) : [];
-        const player = players.filter((p2) => p2.connected === true && p2.transport === "wifi").sort((a2, b2) => Number(a2.id) - Number(b2.id))[0];
-        const nextSource = player ? JSON.stringify([player.id, player.controllerId, player.session]) : "";
+        const players = Array.isArray(snapshot3.players) ? snapshot3.players.filter((p2) => p2 && Number(p2.id) > 0).map(controllerPlayer) : [];
+        const online = players.filter((p2) => p2.connected === true).sort((a2, b2) => Number(a2.id) - Number(b2.id));
+        const player = online.find((p2) => p2.transport === "wifi") || online.find((p2) => p2.transport === "phone");
+        const nextSource = !player ? "" : player.transport === "phone" ? JSON.stringify(["phone", player.id]) : JSON.stringify([player.id, player.controllerId, player.session]);
         const nextEpoch = player?.cancelSeq ?? null;
         const changed = source !== nextSource || !!source && epoch !== nextEpoch;
         const cancelled = resetPending || changed && !!source;
@@ -43711,7 +43750,7 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
         epoch = nextEpoch;
         resetPending = false;
         if (player) hasSeenController = true;
-        return { buttons, pressed, released, connected: !!player, cancelled, players: copy(players), source };
+        return { buttons, pressed, released, connected: !!player, transport: player?.transport || null, cancelled, players: copy(players), source };
       }
     };
   }
@@ -43723,7 +43762,16 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
     #puretv-controller-panel strong{font-weight:650}
     #puretv-controller-panel .ptv-host-title{display:block;font-size:13px;color:#a8ddff;margin-bottom:5px}
     #puretv-controller-panel .ptv-host-info{white-space:pre-line;margin:6px 0 0;color:#c4d5e7;font-size:12px}
-    #puretv-controller-panel[data-playing=true]{background:transparent;border:0;padding:0;box-shadow:none}
+    #puretv-controller-panel .ptv-phone{margin:4px 0}
+    #puretv-controller-panel .ptv-phone img{display:block;width:min(108px,20vh);height:auto;background:white;image-rendering:pixelated}
+    #puretv-controller-panel .ptv-phone small{display:block;color:#c4d5e7}
+    #puretv-controller-panel .ptv-phone [hidden],#puretv-controller-panel .ptv-phone[hidden]{display:none}
+    #puretv-controller-panel[data-playing=true]{background:transparent;border:0;padding:0;box-shadow:none;pointer-events:none}
+    #puretv-controller-panel[data-playing=true] .ptv-client-card{padding:3px 6px;align-items:center}
+    #puretv-controller-panel[data-playing=true] .ptv-client-icon{width:17px;height:17px;flex-basis:17px;margin-right:5px}
+    #puretv-controller-panel[data-playing=true] .ptv-client-heading,#puretv-controller-panel[data-playing=true] .ptv-client-id{line-height:1.2;margin-top:0}
+    #puretv-controller-panel .ptv-status{display:inline-block;border-radius:4px;padding:2px 5px;background:#0c192bee;color:#eef6ff;font:11px/1.25 system-ui,sans-serif}
+    #puretv-controller-panel .ptv-status[hidden]{display:none}
     #puretv-controller-panel[data-playing=true] .ptv-host-title,#puretv-controller-panel[data-playing=true] .ptv-host-info{display:none}
     #puretv-controller-panel .ptv-client-card{background:rgba(12,25,43,.94)}
     #puretv-controller-panel .ptv-client-id{font-size:11px}
@@ -43744,31 +43792,61 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
     clients.hidden = true;
     const info = document2.createElement("p");
     info.className = "ptv-host-info";
-    element.append(title, clients, info);
+    const phone = document2.createElement("div");
+    phone.className = "ptv-phone";
+    phone.hidden = true;
+    const qr3 = document2.createElement("img");
+    qr3.alt = "\u624B\u673A\u624B\u67C4\u623F\u95F4\u4E8C\u7EF4\u7801";
+    qr3.hidden = true;
+    const join = document2.createElement("small");
+    phone.append(qr3, join);
+    const status = document2.createElement("span");
+    status.className = "ptv-status";
+    status.hidden = true;
+    element.append(title, clients, phone, status, info);
     document2.body.appendChild(element);
-    return { element, clients, info };
+    return { element, clients, info, phone, qr: qr3, join, status, style };
   }
   function createController(options = {}) {
     const root = window, document2 = root.document;
     const view = panel(document2, options), reducer = createInputReducer();
-    let localHeld = empty(), localPulse = empty(), info = {}, infoAt = -Infinity, playing = false;
+    const heldKeys = /* @__PURE__ */ new Map();
+    let localPulse = empty(), info = {}, infoAt = -Infinity, playing = false;
     let frame = { buttons: empty(), pressed: empty(), released: empty(), connected: false, cancelled: false, players: [], source: "", pollCount: 0, info: {} };
     const previousHost = root.PureGame;
     function acceptInfo(value) {
       if (value && typeof value === "object") info = copy(value);
     }
     function suspend() {
-      localHeld = empty();
+      heldKeys.clear();
       localPulse = empty();
       reducer.cancel();
       options.onSuspend?.();
+    }
+    function setKey(code, action, down) {
+      if (!down) {
+        heldKeys.delete(code);
+        return;
+      }
+      if (!heldKeys.has(code)) localPulse[action] = true;
+      heldKeys.set(code, action);
+    }
+    function onKey(event) {
+      const action = keypad[event.code] || options.keyboard === true && keyboard[event.code];
+      if (!action || !event.isTrusted) return;
+      const code = "dom:" + event.code;
+      if (event.type === "keyup") {
+        if (!heldKeys.has(code)) return;
+      } else if (event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.target?.closest?.("input, textarea, select, [contenteditable]:not([contenteditable=false])")) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (!event.repeat) setKey(code, action, event.type === "keydown");
     }
     const hooks = {
       key(key2, down) {
         const action = nativeKeys[key2];
         if (!action) return;
-        if (down && !localHeld[action]) localPulse[action] = true;
-        localHeld[action] = !!down;
+        setKey("native:" + key2, action, down);
       },
       focus(focused) {
         if (!focused) suspend();
@@ -43788,26 +43866,47 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
     const onVisibility = () => {
       if (document2.hidden) suspend();
     };
+    root.addEventListener("keydown", onKey, true);
+    root.addEventListener("keyup", onKey, true);
     root.addEventListener("blur", suspend);
     document2.addEventListener("visibilitychange", onVisibility);
     function render() {
       root.PureTVControllerAdapter.renderClients(view.clients, frame.players, { language: "zh" });
-      view.element.dataset.playing = String(playing);
-      view.element.hidden = playing && !frame.connected;
+      const stage = String(playing);
+      if (view.element.dataset.playing !== stage) {
+        view.element.dataset.playing = stage;
+        document2.body.dataset.puretvPlaying = stage;
+      }
+      const phoneSeat = frame.players.find((p2) => p2.connected && p2.transport === "phone");
+      view.status.hidden = !playing || frame.transport === "wifi";
+      const label = frame.transport === "phone" ? `${phoneSeat.id}P \u624B\u673A\u624B\u67C4\u5DF2\u8FDE\u63A5` : "\u624B\u67C4\u672A\u8FDE\u63A5";
+      if (view.status.textContent !== label) view.status.textContent = label;
+      const room = typeof info.url === "string" && /^https?:\/\//.test(info.url) ? info.url : "";
+      view.phone.hidden = playing || frame.connected || !room;
+      const joining = String(!view.phone.hidden);
+      if (document2.body.dataset.puretvJoining !== joining) document2.body.dataset.puretvJoining = joining;
+      if (!view.phone.hidden) {
+        const qr3 = typeof info.qr === "string" && info.qr.startsWith("data:image/png;base64,") ? info.qr : "";
+        view.qr.hidden = !qr3;
+        if (qr3 && view.qr.getAttribute("src") !== qr3) view.qr.src = qr3;
+        const joinText = qr3 ? "\u540C\u4E00 Wi-Fi \u4E0B\u7528\u624B\u673A\u626B\u7801" : "\u624B\u673A\u6253\u5F00 " + room;
+        if (view.join.textContent !== joinText) view.join.textContent = joinText;
+      }
       const wifi = info.wifiController || {};
       const addresses = Array.isArray(wifi.addresses) ? wifi.addresses : Array.isArray(info.addresses) ? info.addresses : [];
       const address = addresses.filter((value) => typeof value === "string").join(" / ");
       const name = typeof wifi.serviceName === "string" ? wifi.serviceName : "";
       const port = Number.isInteger(wifi.port) && wifi.port > 0 ? wifi.port : 63485;
-      const activeSeat = frame.players.filter((p2) => p2.connected === true && p2.transport === "wifi").map((p2) => Number(p2.id)).sort((a2, b2) => a2 - b2)[0];
-      let status = frame.connected ? `\u5355\u4EBA\u6E38\u620F \xB7 ${activeSeat}P \u624B\u67C4\u64CD\u4F5C` : "\u624B\u67C4\u6309 GPIO 23 \u641C\u7D22\u8FDE\u63A5";
+      const activeSeat = frame.players.filter((p2) => p2.connected === true && p2.transport === frame.transport).map((p2) => Number(p2.id)).sort((a2, b2) => a2 - b2)[0];
+      let status = frame.connected ? `\u5355\u4EBA\u6E38\u620F \xB7 ${activeSeat}P ${frame.transport === "phone" ? "\u624B\u673A\u624B\u67C4" : "\u65E0\u7EBF\u624B\u67C4"}\u64CD\u4F5C` : "\u65E0\u7EBF\u624B\u67C4\u6309 GPIO 23 \u641C\u7D22\u8FDE\u63A5";
       if (!root.PureGameHost) status = "\u6D4F\u89C8\u5668\u9884\u89C8 \xB7 \u952E\u9F20\u53EF\u73A9\nWi-Fi \u624B\u67C4\u9700\u542F\u52A8\u5B89\u88C5\u7248";
+      if (!info.url) status += "\n\u5C0F\u952E\u76D8 8/2/4/6 \u65B9\u5411 \xB7 5 START \xB7 1/3/7/9 A/B/X/Y";
       if (name) status += "\n" + name;
       if (address) status += "\n" + address;
       if (root.PureGameHost) status += "\nTCP " + port;
       if (typeof wifi.error === "string" && wifi.error) status += "\n" + wifi.error;
       if (wifi.state === "failed" || wifi.state === "unavailable") status += "\n\u624B\u67C4\u670D\u52A1\u6682\u4E0D\u53EF\u7528";
-      view.info.textContent = status;
+      if (view.info.textContent !== status) view.info.textContent = status;
     }
     return {
       poll() {
@@ -43822,8 +43921,8 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
         } catch (_2) {
           sample = { players: [] };
         }
-        const local = empty();
-        for (const key2 of BUTTONS) local[key2] = localHeld[key2] || localPulse[key2];
+        const local = localPulse;
+        for (const action of heldKeys.values()) local[action] = true;
         localPulse = empty();
         frame = { ...reducer.read(sample, local), info: copy(info), pollCount: frame.pollCount + 1, native: !!root.PureGameHost, inputAvailable: !!root.PureGameHost };
         render();
@@ -43834,15 +43933,24 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
         return copy(frame);
       },
       setPlaying(value) {
-        playing = !!value;
-        render();
+        if (playing !== !!value) {
+          playing = !!value;
+          render();
+        }
       },
       cancel: suspend,
       destroy() {
+        root.removeEventListener("keydown", onKey, true);
+        root.removeEventListener("keyup", onKey, true);
         root.removeEventListener("blur", suspend);
         document2.removeEventListener("visibilitychange", onVisibility);
-        if (root.PureGame === hooks) root.PureGame = previousHost;
+        if (root.PureGame === hooks) {
+          root.PureGame = previousHost;
+          delete document2.body.dataset.puretvPlaying;
+          delete document2.body.dataset.puretvJoining;
+        }
         view.element.remove();
+        view.style.remove();
       }
     };
   }
@@ -43923,7 +44031,7 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
       el2.dispatchEvent(new Event("change", { bubbles: true }));
       return true;
     }
-    async function keyboard(target) {
+    async function keyboard2(target) {
       let value = target.value || "";
       const result = await app2.modal((close) => {
         const display = h("output.tv-keyboard-value", value || " ");
@@ -43949,7 +44057,7 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
     function accept() {
       const el2 = document.activeElement;
       if (!el2 || !root().contains(el2)) return focusFirst();
-      if (isTypingTarget(el2) && el2.tagName !== "SELECT") return keyboard(el2);
+      if (isTypingTarget(el2) && el2.tagName !== "SELECT") return keyboard2(el2);
       if (el2.tagName === "SELECT") return adjust(el2, 1);
       if (el2.type === "file") return app2.toast("File import uses the system file picker. Shared track codes can be entered with the controller keyboard.", { ms: 5e3 });
       el2.click();
@@ -44013,7 +44121,7 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
         app2.controls.clearTV();
         lastContext = context;
       }
-      app2.controls.setTV(raceInput(frame, driving));
+      app2.controls.setTV(raceInput(frame, driving), frame.connected);
       if (lastPlaying !== driving) {
         controller.setPlaying(driving);
         lastPlaying = driving;
@@ -44192,6 +44300,7 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
       this.active = false;
       this.lastDevice = "keyboard";
       this.touchSeen = false;
+      this.remoteConnected = false;
       this.touchEl = null;
       this.onDevice = null;
       this._onKeyDown = this._onKeyDown.bind(this);
@@ -44292,7 +44401,11 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
       this._clearTaps();
       return out;
     }
-    setTV(input) {
+    setTV(input, remoteConnected = false) {
+      if (remoteConnected !== this.remoteConnected) {
+        this.remoteConnected = remoteConnected;
+        this._updateTouchVisibility();
+      }
       Object.assign(this.tv, input.held);
       for (const action of input.edges) this.edges.add(action);
     }
@@ -44431,7 +44544,7 @@ node tools/train.mjs --init models/demo-S01.json --track A01   # fine-tune a sav
     touchEnabled() {
       const mode = this.settings.touchControls;
       if (mode === "on") return true;
-      if (mode === "off") return false;
+      if (mode === "off" || this.remoteConnected) return false;
       let coarse = false;
       try {
         coarse = window.matchMedia("(pointer: coarse)").matches;

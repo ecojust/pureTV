@@ -43,6 +43,7 @@ export class Controls {
         this.active = false;
         this.lastDevice = 'keyboard';
         this.touchSeen = false;
+        this.remoteConnected = false;
         this.touchEl = null;
         this.onDevice = null;             // (device) => void, when the input device changes
         this._onKeyDown = this._onKeyDown.bind(this);
@@ -156,7 +157,11 @@ export class Controls {
         return out;
     }
 
-    setTV(input) {
+    setTV(input, remoteConnected = false) {
+        if (remoteConnected !== this.remoteConnected) {
+            this.remoteConnected = remoteConnected;
+            this._updateTouchVisibility();
+        }
         Object.assign(this.tv, input.held);
         for (const action of input.edges) this.edges.add(action);
     }
@@ -301,7 +306,7 @@ export class Controls {
     touchEnabled() {
         const mode = this.settings.touchControls;
         if (mode === 'on') return true;
-        if (mode === 'off') return false;
+        if (mode === 'off' || this.remoteConnected) return false;
         let coarse = false;
         try {
             coarse = window.matchMedia('(pointer: coarse)').matches;

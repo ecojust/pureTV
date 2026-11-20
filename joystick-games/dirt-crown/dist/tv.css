@@ -11,3 +11,8 @@
 #modal-panel .actions{gap:10px!important}#modal-panel .actions .btn{flex:initial!important;min-height:42px}
 #hub-panel{padding-bottom:68px!important}#story .dlg{bottom:65px}
 @media(max-width:1000px){#puretv-controller-panel{width:150px!important;right:6px!important}#tv-help{font-size:11px}#title .logo{font-size:clamp(44px,8vw,94px)}#title>.hint{display:none}}
+
+/* Keep both join methods visible next to the menu on small TVs. */
+@media(max-height:600px){
+  body[data-puretv-joining=true] #puretv-controller-panel{max-height:min(230px,50vh)!important}
+}
