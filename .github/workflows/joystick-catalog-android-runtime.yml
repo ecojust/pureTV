@@ -112,6 +112,8 @@ jobs:
               assert re.fullmatch('[a-f0-9]{40}',os.environ['ARTIFACT_EXPORT']) and not os.environ['ARTIFACT_ATTEMPT']
           else:
               for key in ['ARTIFACT_ID','ARTIFACT_ATTEMPT']:assert re.fullmatch('[1-9][0-9]*',os.environ[key])
+          assert os.environ['GAMES']=='kart-royale' and os.environ['ARTIFACT_SOURCE']=='5636ee87703fc764d72ce8389dda965a538588fe'
+          assert os.environ['ARTIFACT_RUN']=='44689811645' and os.environ['ARTIFACT_ID']=='14608601581'
           assert os.environ['REQUESTED_QA']==os.environ['GITHUB_SHA']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
           assert os.environ['CONFIRM_BACKROAD_INSTALL'] in ('true','false')
           if os.environ['CONFIRM_BACKROAD_INSTALL']=='true':
@@ -189,7 +191,7 @@ jobs:
   runtime:
     needs: select
     runs-on: ubuntu-24.04
-    timeout-minutes: ${{ matrix.game == 'kart-royale' && 90 || 45 }}
+    timeout-minutes: 65
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -235,6 +237,7 @@ jobs:
           python3 joystick-games/qa/android/test_runner.py 2>&1 | tee "$RUNNER_TEMP/qa-contracts.log"
           python3 joystick-games/tools/android-tests.py 2>&1 | tee "$RUNNER_TEMP/artifact-contracts.log"
           python3 joystick-games/tools/android-runtime-artifact-tests.py 2>&1 | tee "$RUNNER_TEMP/reuse-contracts.log"
+          python3 -B joystick-games/qa/android/test_boot_services.py
           python3 -B joystick-games/qa/android/test_environment_diagnostics.py 2>&1 | tee "$RUNNER_TEMP/environment-diagnostics-tests.log"
           python3 -B joystick-games/qa/android/test_install_confirmation.py 2>&1 | tee "$RUNNER_TEMP/install-confirmation-tests.log"
           python3 -B joystick-games/qa/android/test_emulator_supervisor.py 2>&1 | tee "$RUNNER_TEMP/emulator-supervisor-tests.log"
@@ -282,7 +285,7 @@ jobs:
           test -e /dev/kvm
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
-      - name: Run normal and occupied-port QA independently against unchanged signed bytes
+      - name: Run only the complete normal-port scenario on the untouched signed APK and fresh AVD
         # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
@@ -307,9 +310,14 @@ jobs:
             --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor" &&
             python3 joystick-games/tools/android-environment-diagnostics.py
             --output "$RUNNER_TEMP/runtime/$GAME/environment-diagnostics" --
-            python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
-            --input "$RUNNER_TEMP/input" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
-            --confirm-backroad-install "$CONFIRM_BACKROAD_INSTALL"
+            python3 joystick-games/qa/android/observe_guest_lifecycle.py
+            --adb "$ANDROID_HOME/platform-tools/adb" --output "$RUNNER_TEMP/runtime/kart-royale/guest-lifecycle" --
+            bash -e -o pipefail -c 'python3 joystick-games/qa/android/observe_boot_services.py
+            --adb "$ANDROID_HOME/platform-tools/adb" --output "$RUNNER_TEMP/runtime/kart-royale/boot-services.json" &&
+            python3 joystick-games/qa/android/run.py --game "$GAME"
+            --apk "$RUNNER_TEMP/input/packages/kart-royale/kart-royale-0.1.4.apk"
+            --observer "$RUNNER_TEMP/input/observers/kart-royale/observer-kart-royale.apk"
+            --output "$RUNNER_TEMP/runtime/kart-royale-normal" --adb "$ANDROID_HOME/platform-tools/adb"'
       - name: Restore the exact disposable SDK launcher after optional supervision
         if: always() && inputs.supervise_pon_emulator
         run: >-
@@ -323,6 +331,14 @@ jobs:
           from pathlib import Path
           scratch=Path(os.environ['RUNNER_TEMP']);out=scratch/'runtime'/os.environ['GAME'];out.mkdir(parents=True,exist_ok=True)
           inputs=scratch/'input'
+          report=scratch/'runtime/kart-royale-normal/report.json'
+          if report.is_file():
+              single=json.loads(report.read_text())
+              assert single['defaultPortOccupiedFixture'] is False and single['modelWrites'] is False and single['clockOverrides'] is False
+              assert single['sourceCommit']==os.environ['GITHUB_SHA'] and single['apk']['sha256']=='4783d3117050c20e6f56c7117c358f7ed2dba8049c7642aa8660dc7df950fb70'
+              verified=single['status']=='passed' and len(single['tests'])==58 and all(t['status']=='passed' for t in single['tests'])
+              (out/'single-mode-verification.json').write_text(json.dumps({'requestedMode':'normal','dualPortAcceptedByThisRun':False,'modePassed':verified,'reportSha256':hashlib.sha256(report.read_bytes()).hexdigest(),'retainedOccupiedEvidence':'f42bad392bf2444cfe4573653805d83f2f8a6a90'},indent=2)+'\n')
+              (scratch/'runtime/kart-royale-outcomes.json').write_text(json.dumps([{'mode':'normal','exitCode':0 if verified else 1}])+'\n')
           original_origin=scratch/'original-signed/artifact/actions-artifact-origin.json'
           if original_origin.is_file():shutil.copyfile(original_origin,out/'original-actions-artifact-origin.json')
           if inputs.is_dir():
