@@ -72,7 +72,7 @@ def card_link(page, cover, title, alt):
 
 
 def game_card(card, locale):
-    title = card['titles'][locale]
+    title = re.sub(r'\s+TV$', '', card['titles'][locale], flags=re.IGNORECASE)
     alt = title + ('游戏画面' if locale == 'zh' else ' gameplay')
     page = card_link(card['page'], card['covers'][locale], title, alt)
     icons = []
@@ -83,8 +83,6 @@ def game_card(card, locale):
             preview = '预览' if locale == 'zh' else 'Preview'
         label = ' '.join(filter(None, (title, system, package, preview)))
         content = support_icon(icon, label)
-        if preview:
-            content += '&nbsp;' + preview
         icons.append(f'<a href="{escape(url)}" title="{escape(label)}">{content}</a>')
     if card['controller']:
         if locale == 'zh':
