@@ -2,11 +2,13 @@
 
 基于 [jason-c-dev/backroad-rally](https://github.com/jason-c-dev/backroad-rally/tree/e5542f96b9a9a2912fdaa160396054e81f022f23) 的 pureTV 手柄适配。保留原作五辆车、六个地区、天气、正反赛段、幽灵车、生涯、存档和 Rapier 物理；不是重新实现或换皮。
 
-## 0.1.1 的 WebGL2 兼容性
+## WebGL2 兼容性
 
 不提供浮点颜色缓冲区扩展的设备使用 RGBA8，直接绘制原作场景。在 Chromium 中屏蔽两项扩展后，芬兰赛段的第 219 帧就绪采样可见起跑线、赛车和道路。独立 Chrome 复验在起跑后按下 W，Swift Mk1 驶出 23.4 米，驾驶截图显示 51 km/h。[起跑截图](docs/browser-rgba8-0.1.1/finland.png) · [驾驶截图](docs/browser-rgba8-0.1.1/driving.png) · [环境、脚本与日志](docs/browser-rgba8-0.1.1/README.md)
 
 0.1.1 Android TV 模拟器在两种端口模式中各通过 77 项手柄与生命周期检查，驾驶截图均只有 HUD 和暗底。0.1.2 为使用 SwiftShader 等软件渲染器的设备调整了输出格式和绘制分辨率。[Android 原始截图与同包后处理对照](docs/android-0.1.1/README.md)
+
+0.1.2 的 Chrome 复验保留了 SwiftShader 提供的两项浮点扩展。设备像素比为 2，逻辑窗口为 960 × 540，游戏按 50% 分辨率绘制，实际缓冲区为 480 × 270。芬兰赛段使用原作的直接渲染路径，按 W 后车辆从 x=54.00 米驶至 67.44 米，随后截图仪表盘显示 45 km/h。[驾驶截图](https://github.com/ecojust/pureTV/blob/18f32db4c550ca50ee864b9ff4b14998ed4146ae/driving.png) · [原始输入、扩展与画面记录](https://github.com/ecojust/pureTV/blob/18f32db4c550ca50ee864b9ff4b14998ed4146ae/driving.log) · [当次脚本](https://github.com/ecojust/pureTV/blob/18f32db4c550ca50ee864b9ff4b14998ed4146ae/drive.cjs)
 
 ## macOS 下载
 
