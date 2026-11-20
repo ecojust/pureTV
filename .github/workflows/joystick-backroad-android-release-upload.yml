@@ -1,43 +1,29 @@
-name: Upload fixed original Backroad Android APK after fixed native QA
+name: Upload approved puzzle-game originals into their draft
 on:
   workflow_dispatch:
+    inputs:
+      game:
+        description: Reviewed game slug
+        required: true
+        type: choice
+        options: [alchemists-lattice, atlas-of-ink, bumble-basket, neon-arcana, oathstones, solder-and-rain, starbase-spooky, starsling, story-thief]
 permissions:
-  actions: read
   contents: write
 concurrency:
-  group: backroad-android-release-451969286
+  group: verified-puzzle-transfer-${{ inputs.game }}
   cancel-in-progress: false
 jobs:
   transfer:
-    if: github.repository == 'ecojust/pureTV'
+    if: github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/qa/puzzle-nine-verified-upload-20261120'
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
-    env:
-      GH_TOKEN: ${{ github.token }}
-      PYTHONDONTWRITEBYTECODE: '1'
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-          sparse-checkout: |
-            joystick-games/tools
-            .github/workflows
-      - name: Test fixed QA gate, original APK and preserved Release boundaries
-        run: |
-          python3 joystick-games/tools/artifact-draft-transfer-test.py
-          python3 joystick-games/tools/backroad-android-release-upload-test.py
-      - name: Require fixed native QA success and copy only the original signed APK
-        run: |
-          python3 joystick-games/tools/backroad-android-release-upload.py transfer \
-            --output "$RUNNER_TEMP/backroad-android-release-upload"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: backroad-android-release-upload-receipt
-          path: ${{ runner.temp }}/backroad-android-release-upload/receipts/transfer.json
-          if-no-files-found: warn
-      - name: Preserve only the small receipt on a new immutable branch
-        if: always()
-        run: |
-          python3 joystick-games/tools/backroad-android-release-upload.py export-receipt \
-            --directory "$RUNNER_TEMP/backroad-android-release-upload/receipts"
+          sparse-checkout: .github/puzzle-transfer-approved
+      - name: Verify and transfer the approved original assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GAME: ${{ inputs.game }}
+        run: python3 .github/puzzle-transfer-approved/upload.py "$GAME"
