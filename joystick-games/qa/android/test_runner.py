@@ -45,14 +45,14 @@ class HeldInputObservation(unittest.TestCase):
         self.acceptance.clients = [SimpleNamespace(identity='player')]
         self.acceptance.report = {}
         self.acceptance.snapshots = []
-        self.acceptance.release = mock.Mock()
+        self.acceptance.button = mock.Mock()
         self.step = {'name': 'Start selected original three-lap course', 'keys': ['START'],
                      'timeoutSeconds': 60, 'expect': [{'path': 'stage', 'op': 'eq', 'value': 'playing'}]}
 
     @staticmethod
     def state(count, stage, pressed):
         return {'game': {'stage': stage, 'controller': {'pollCount': count, 'players': [
-            {'controllerId': 'player', 'connected': True, 'buttons': {'START': pressed}}]}}}
+            {'controllerId': 'player', 'connected': True, 'buttons': {key: (pressed if key == 'START' else False) for key in runner.KEYS}}]}}}
 
     def finish(self):
         return self.acceptance.finish_catalog_hold(self.step, self.state(40, 'menu', False),
@@ -70,7 +70,8 @@ class HeldInputObservation(unittest.TestCase):
         self.acceptance.wait_fresh = check
         with mock.patch.object(runner.time, 'monotonic', side_effect=[90, 123]):
             self.assertEqual(self.finish(), states[-1])
-        self.acceptance.release.assert_called_once_with()
+        self.acceptance.snapshot.assert_called_once_with()
+        self.assertEqual(self.acceptance.button.call_args_list, [mock.call(key, False) for key in runner.KEYS])
 
     def test_successful_first_read_keeps_ordinary_hold_semantics(self):
         self.step['timeoutSeconds'] = 15
@@ -79,8 +80,9 @@ class HeldInputObservation(unittest.TestCase):
         self.acceptance.wait_fresh = mock.Mock()
         self.assertEqual(self.finish(), playing)
         self.acceptance.snapshot.assert_called_once_with()
-        self.acceptance.wait_fresh.assert_not_called()
-        self.acceptance.release.assert_called_once_with()
+        self.assertEqual(self.acceptance.wait_fresh.call_args.args[0], playing)
+        self.assertEqual(self.acceptance.wait_fresh.call_args.kwargs['label'], 'all-released')
+        self.assertEqual(self.acceptance.button.call_args_list, [mock.call(key, False) for key in runner.KEYS])
 
     def test_http_error_and_exhausted_budget_do_not_pass(self):
         self.acceptance.wait_fresh = mock.Mock()
@@ -91,7 +93,7 @@ class HeldInputObservation(unittest.TestCase):
         with mock.patch.object(runner.time, 'monotonic', side_effect=[10, 71]), self.assertRaises(TimeoutError):
             self.finish()
         self.acceptance.wait_fresh.assert_not_called()
-        self.assertEqual(self.acceptance.release.call_count, 2)
+        self.assertEqual(self.acceptance.button.call_args_list, 2 * [mock.call(key, False) for key in runner.KEYS])
 
 
 class MenuTapContracts(unittest.TestCase):

@@ -392,10 +392,14 @@ class Acceptance:
         self.release_observed(key)
         return observed
 
-    def release(self):
-        before = self.snapshot()
+    def send_releases(self):
         for key in KEYS:
             self.button(key, False)
+
+    def release(self, before=None):
+        if before is None:
+            before = self.snapshot()
+        self.send_releases()
         return self.wait_fresh(before, lambda s: not any(self.native_buttons(s).get(k) for k in KEYS), label='all-released')
 
     def wait_sent_ack(self, client, sequence, timeout=10):
@@ -809,13 +813,15 @@ class Acceptance:
         deadline = time.monotonic() + budget
         try:
             observed = self.snapshot()
-        except OBSERVER_READ_ERRORS as error:
+        except Exception as error:
+            # An unresponsive WebView cannot supply another pre-release snapshot.
+            # The real down has already been seen in held, so send the SDK releases now.
+            self.send_releases()
             if not dropped_observer_transport(error):
                 raise
             observed = None
-        finally:
-            # The declared hold already elapsed after the game observed the real SDK down.
-            self.release()
+        else:
+            self.release(before=observed)
 
         def expected(state):
             return plan.matches(step['expect'], self.game(state), self.game(before))
@@ -832,7 +838,7 @@ class Acceptance:
         # with new observations of a released, advancing game that meets all predicates.
         def released_and_expected(state):
             buttons = self.native_buttons(state)
-            return all(buttons.get(key) is False for key in step['keys']) and expected(state)
+            return all(buttons.get(key) is False for key in KEYS) and expected(state)
 
         return self.wait_fresh(held, released_and_expected, timeout=remaining,
                                label='plan-gameplay-released-' + step['name'])
