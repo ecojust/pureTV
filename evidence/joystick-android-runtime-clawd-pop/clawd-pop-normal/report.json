@@ -1,0 +1,79 @@
+{
+  "game": "clawd-pop",
+  "targetPackage": "com.ecojust.joystick.clawdpop",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": false,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "dba10fb9360984401f4bb36aee090cb843ea63dc",
+  "apk": {
+    "path": "/home/runner/work/_temp/input/packages/clawd-pop/clawd-pop-0.1.0.apk",
+    "bytes": 1053874,
+    "sha256": "e8f67acef230e1ed097846341a6e36f9dad654cf934a01434b04ee5519f28fef"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/input/observers/clawd-pop/observer-clawd-pop.apk",
+    "bytes": 16783,
+    "sha256": "ffc4b50656e16dbe25a06a4c30baf651c4082a958c893c0c6fb03c08e391491e"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 77625,
+      "sha256": "85ad71f8c9f47f8a5731f05f1d70df8a34bee5976acae050697f7375d03af5a9"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11491,
+      "sha256": "9c10a920e18a094c2650ab86924192cc9745daf8b0a792a732639295fa52ff0e"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 13196,
+      "sha256": "08fd35de2a0e64ea20a57e2ea7b2da41fa80df8ab167a072d86fa3f06eec8bd4"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 8288,
+      "sha256": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9"
+    },
+    "joystick-games/clawd-pop/qa-plan.json": {
+      "bytes": 584,
+      "sha256": "a095b2365855f1532c178e36c7d092da6a0b68d690e0aa594919ad67c47e190b"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 10903,
+      "sha256": "fdf40f6d67eafd45ce9914ba1ae508ed2befc966b8bd4861f98a4cc9cd7c05f0"
+    }
+  },
+  "tests": [],
+  "snapshots": [],
+  "captures": [],
+  "installFailureEvidence": {
+    "path": "install-failure/report.json",
+    "bytes": 4548,
+    "sha256": "0766acd1cf6e396c311eb58618a756a93f576934abaea2bb84a61a816842aec1",
+    "elapsedSeconds": 2.445972612999981,
+    "originalFailurePreserved": true,
+    "uiActionsSent": false,
+    "settingsChanged": false
+  },
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1230, in main\n    acceptance.setup()\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 587, in setup\n    self.command('install', '-r', str(self.args.apk))\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 344, in command\n    result = subprocess.run(record['command'], capture_output=True, check=False, timeout=timeout)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 550, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 1209, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 2116, in _communicate\n    self._check_timeout(endtime, orig_timeout, stdout, stderr)\n  File \"/usr/lib/python3.12/subprocess.py\", line 1253, in _check_timeout\n    raise TimeoutExpired(\nsubprocess.TimeoutExpired: Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'install', '-r', '/home/runner/work/_temp/input/packages/clawd-pop/clawd-pop-0.1.0.apk']' timed out after 45 seconds\n",
+  "finishedAt": 1795211732.5257683
+}
