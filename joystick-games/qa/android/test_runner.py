@@ -148,6 +148,37 @@ class MenuTapContracts(unittest.TestCase):
         self.assertEqual(self.reads, 5)
         self.assertTrue(all(0 < value <= self.step['timeoutSeconds'] for value in self.budgets))
 
+    def test_timely_backroad_transition_needs_two_real_polls_even_after_the_original_window(self):
+        self.acceptance.args.game = 'backroad-rally'
+        self.acceptance.report['apk']['sha256'] = '67f61471e0e23e9ea963475425d5c43fa9d3265167f9028bd55dc319494fbe3c'
+        self.step['timeoutSeconds'] = .35
+        self.use_samples([self.state(101, index=2), self.state(102, index=2), self.state(103, index=2)])
+        read = self.acceptance.snapshot
+        def slow_confirmation(timeout):
+            if self.reads == 1: time.sleep(.4)
+            state = read(timeout=timeout)
+            state['game']['game'] = 'backroad-rally'
+            return state
+        self.acceptance.snapshot = slow_confirmation
+        with mock.patch.dict(runner.os.environ, {'BACKROAD_VULKAN_OBSERVATION': 'true'}):
+            self.acceptance.catalog_menu_tap(self.step, self.state(100))
+        record = self.acceptance.report['menuTapObservations'][-1]
+        self.assertLess(record['qualifiedAtSeconds'], .35)
+        self.assertGreater(record['elapsedSeconds'], .35)
+        self.assertEqual(record['stableFreshSamples'], 2)
+        self.assertEqual(self.reads, 3)
+
+    def test_late_first_backroad_transition_is_rejected_despite_qualifying(self):
+        self.acceptance.args.game = 'backroad-rally'
+        self.acceptance.report['apk']['sha256'] = '67f61471e0e23e9ea963475425d5c43fa9d3265167f9028bd55dc319494fbe3c'
+        self.step['timeoutSeconds'] = .4
+        def late(timeout):
+            time.sleep(.5)
+            return self.state(101, index=2)
+        self.acceptance.snapshot = late
+        with mock.patch.dict(runner.os.environ, {'BACKROAD_VULKAN_OBSERVATION': 'true'}), self.assertRaisesRegex(AssertionError, 'deadline'):
+            self.acceptance.catalog_menu_tap(self.step, self.state(100))
+
     def test_exact_night_low_reload_requires_new_baseline_then_two_new_polls(self):
         self.reload_step()
         self.use_samples([self.state(2, low=True), self.state(2, low=True), self.state(3, low=True), self.state(4, low=True)])
