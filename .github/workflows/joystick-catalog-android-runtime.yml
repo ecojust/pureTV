@@ -3,6 +3,14 @@ name: Joystick catalog Android QA with frozen packages
 on:
   workflow_dispatch:
     inputs:
+      port_mode:
+        description: Port fixture on this fresh Android TV
+        required: true
+        default: normal
+        type: choice
+        options:
+          - normal
+          - occupied
       qa_source_sha:
         description: Frozen QA commit (40 characters, matching the selected workflow ref)
         required: true
@@ -58,7 +66,7 @@ on:
         type: boolean
 
 concurrency:
-  group: joystick-catalog-android-runtime-${{ github.ref }}-${{ inputs.batch }}
+  group: joystick-catalog-android-runtime-${{ github.ref }}-${{ inputs.batch }}-${{ inputs.port_mode }}
   cancel-in-progress: false
 
 permissions:
@@ -68,6 +76,7 @@ permissions:
 env:
   PYTHONUNBUFFERED: '1'
   PYTHONDONTWRITEBYTECODE: '1'
+  PLAYER_PORT_MODE: ${{ inputs.port_mode }}
   ARTIFACT_SOURCE: ${{ inputs.artifact_source }}
   ARTIFACT_EXPORT: ${{ inputs.artifact_export }}
   ARTIFACT_RUN: ${{ inputs.artifact_run }}
@@ -112,6 +121,7 @@ jobs:
               assert re.fullmatch('[a-f0-9]{40}',os.environ['ARTIFACT_EXPORT']) and not os.environ['ARTIFACT_ATTEMPT']
           else:
               for key in ['ARTIFACT_ID','ARTIFACT_ATTEMPT']:assert re.fullmatch('[1-9][0-9]*',os.environ[key])
+          assert os.environ['PLAYER_PORT_MODE'] in ('normal','occupied')
           assert os.environ['GAMES']=='backroad-rally' and os.environ['BATCH']=='racing-01'
           assert (os.environ['ARTIFACT_SOURCE'],os.environ['ARTIFACT_RUN'],os.environ['ARTIFACT_ID'],os.environ['ARTIFACT_ATTEMPT'])==('a5b51e14b506995bc8da67f024f00d107962518d','44687697371','14607123434','1')
           assert os.environ['REQUESTED_QA']==os.environ['GITHUB_SHA']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
@@ -270,7 +280,7 @@ jobs:
           test -e /dev/kvm
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
-      - name: Run the original Finland player route on a cold TV with its default port occupied
+      - name: Run the original Finland player route on the selected cold Android TV
         env:
           BACKROAD_FINLAND_PLAYER_ROUTE: 'true'
         # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
@@ -299,7 +309,7 @@ jobs:
             --output "$RUNNER_TEMP/runtime/$GAME/environment-diagnostics" --
             python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
             --input "$RUNNER_TEMP/input" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
-            --confirm-backroad-install "$CONFIRM_BACKROAD_INSTALL" --port-mode occupied
+            --confirm-backroad-install "$CONFIRM_BACKROAD_INSTALL" --port-mode "$PLAYER_PORT_MODE"
       - name: Restore the exact disposable SDK launcher after optional supervision
         if: always() && inputs.supervise_pon_emulator
         run: >-
@@ -410,9 +420,9 @@ jobs:
                   if os.environ['ARTIFACT_ID']:
                       origin=binding['artifactOrigin'];assert origin['kind']=='github-actions-signed-artifact' and origin['artifactId']==int(os.environ['ARTIFACT_ID']) and origin['artifactRunAttempt']==int(os.environ['ARTIFACT_ATTEMPT']) and binding['artifactExportCommit'] is None
                   else:assert binding['artifactExportCommit']==os.environ['ARTIFACT_EXPORT']
-                  outcomes=json.loads((evidence/(game+'-outcomes.json')).read_text());assert [item['mode'] for item in outcomes]==['occupied'] and all(item['exitCode']==0 for item in outcomes)
+                  outcomes=json.loads((evidence/(game+'-outcomes.json')).read_text());assert [item['mode'] for item in outcomes]==[os.environ['PLAYER_PORT_MODE']] and all(item['exitCode']==0 for item in outcomes)
                   receipt=json.loads((inputs/'packages'/game/'signing-receipt.json').read_text());observer=json.loads((inputs/'observers'/game/'observer-signing-receipt.json').read_text())
-                  for mode in ['occupied']:
+                  for mode in [os.environ['PLAYER_PORT_MODE']]:
                       folder=evidence/(game+'-'+mode);report=json.loads((folder/'report.json').read_text())
                       assert report['playerRoute']['originalStepNumbers']==list(range(24,40)) and not report['playerRoute']['extendedCatalogPlanExecuted']
                       required_captures={'accelerating.png','playing.png','paused.png','disconnected.png','reconnected.png','resumed-after-reconnect.png'}
@@ -438,7 +448,7 @@ jobs:
               if path.is_file():
                   assert path.stat().st_size<100_000_000
                   files[path.relative_to(out).as_posix()]=record(path)
-          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'qaRunAttempt':os.environ['GITHUB_RUN_ATTEMPT'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'games':games,'runtimeResult':os.environ['RUNTIME_RESULT'],'runtimeAccepted':accepted,'runtimeScope':'occupied-only fresh TV, original Finland player route with explicit manual resume after reconnect','extendedCatalogPlanExecuted':False,'diagnosticIntervened':diagnostic,'nativeAcceptanceAllowed':not diagnostic,'files':files,'reusedSignedPackagesAndObservers':True,'physicalTvTested':False,'physicalEsp32Tested':False},indent=2)+'\n')
+          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'qaRunAttempt':os.environ['GITHUB_RUN_ATTEMPT'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'games':games,'runtimeResult':os.environ['RUNTIME_RESULT'],'runtimeAccepted':accepted,'portMode':os.environ['PLAYER_PORT_MODE'],'runtimeScope':'fresh TV, original Finland player route with explicit manual resume after reconnect','extendedCatalogPlanExecuted':False,'diagnosticIntervened':diagnostic,'nativeAcceptanceAllowed':not diagnostic,'files':files,'reusedSignedPackagesAndObservers':True,'physicalTvTested':False,'physicalEsp32Tested':False},indent=2)+'\n')
           PY
           export_branch="build-assets/joystick-catalog-android-runtime-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
           test -z "$(git ls-remote --heads origin "refs/heads/$export_branch")"
