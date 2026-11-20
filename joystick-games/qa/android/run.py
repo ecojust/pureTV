@@ -610,7 +610,7 @@ class Acceptance:
         component = 'com.ecojust.joystickqa.' + self.args.game.replace('-', '') + '/com.ecojust.controllerqa.Observer'
         self.instrument = subprocess.Popen(self.adb + ['shell', 'am', 'instrument', '-w', '-r', '-e', 'diagnosticPort', '63486',
                                                         '-e', 'occupyDefaultPort', str(self.args.occupy_default_port).lower(), component], stdout=self.instrument_log, stderr=subprocess.STDOUT)
-        initial = self.wait(self.initial_menu_ready, timeout=150, label='initial-menu')
+        initial = self.wait(self.initial_menu_ready, timeout=300 if self.args.game == 'ponpoko-kart' else 150, label='initial-menu')
         # Keep the actual observation even when the renderer/port assertions below fail.
         self.record('initial-menu', initial)
         self.save()
@@ -988,7 +988,15 @@ class Acceptance:
                 raise
             observed = None
         else:
-            self.release(before=observed)
+            if self.args.game == 'ponpoko-kart' and step['name'] == 'Start selected original three-lap course':
+                # Play's original Inaka transition loads the scene and shader programs on
+                # Android TV's CPU graphics path. Acknowledge every original SDK release
+                # immediately, then require a later live frame proving all nine keys up.
+                self.send_releases()
+                self.wait_fresh(observed, lambda s: not any(self.native_buttons(s).get(k) for k in KEYS),
+                                timeout=budget, label='all-released-after-pon-course-start')
+            else:
+                self.release(before=observed)
 
         def expected(state):
             return plan.matches(step['expect'], self.game(state), self.game(before))

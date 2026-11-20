@@ -328,7 +328,7 @@ jobs:
           disable-animations: true
           # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
           # Optional controlled Vulkan-off comparison; not an established crash cause or fix.
-          emulator-options: -no-window -memory 3072 -gpu ${{ (matrix.game == 'ponpoko-kart' || matrix.game == 'kart-royale' || matrix.game == 'last-track' || matrix.game == 'turbo-kart-rush') && 'lavapipe' || 'swiftshader_indirect' }} -noaudio -no-boot-anim -no-snapshot${{ (matrix.game == 'ponpoko-kart' || matrix.game == 'kart-royale') && ' -feature -Vulkan' || '' }}
+          emulator-options: -no-window -memory 2048 -gpu ${{ (matrix.game == 'ponpoko-kart' || matrix.game == 'kart-royale' || matrix.game == 'last-track' || matrix.game == 'turbo-kart-rush') && 'lavapipe' || 'swiftshader_indirect' }} -noaudio -no-boot-anim -no-snapshot${{ (matrix.game == 'ponpoko-kart' || matrix.game == 'kart-royale') && ' -feature -Vulkan' || '' }}
           pre-emulator-launch-script: >-
             python3 joystick-games/tools/android-emulator-supervisor.py prepare
             --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
