@@ -31,6 +31,10 @@ def runtime(args):
     assert not confirm_install or args.game == 'backroad-rally', 'Installation confirmation is Backroad-only'
     outcomes = []
     modes = ('occupied',) if getattr(args, 'occupied_only', False) else ('normal', 'occupied')
+    if getattr(args, 'occupied_only', False):
+        subprocess.run([sys.executable, str(build.ROOT / 'joystick-games/qa/android/observe_boot_services.py'),
+                        '--adb', args.adb, '--output', str(args.output / args.game / 'boot-services.json')],
+                       check=True)
     for mode in modes:
         cmd = [sys.executable, str(build.ROOT / 'joystick-games/qa/android/run.py'), '--game', args.game,
                '--apk', str(args.input / 'packages' / args.game / (args.game + '-' + meta['version'] + '.apk')),
