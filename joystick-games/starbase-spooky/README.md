@@ -25,6 +25,6 @@ Kit 会自动走向选中的热点。连接中断时游戏暂停，重新连接�
 
 在本目录运行 `npm ci`、`npm test`、`npm run build` 和 `npm run build:check`。构建将原作脚本和 pureTV 控制器整合到 `dist/tv.html`，画面、音效和音乐均随包提供。可在本目录运行 `python3 -m http.server --directory dist 8080`，浏览器访问 `http://127.0.0.1:8080/tv.html`。
 
-原作模拟的 333 项检查通过，包含五天流程、谜题、线索、问答和存档。浏览器检查通过仓库的 Python SDK 发送 TCP 按键，在 960×540 和 1280×720 画面完成第一天的接线、取线索和存档续玩。主机层在这项浏览器检查中由本地测试服务提供。两次浏览器巡查都检查脚本异常和外部网络请求。安装 Python Playwright 和 Chromium 后可用 `python3 tests/browser-sdk.py` 重现。三端原生宿主另按本目录的验收计划测试。[浏览器记录](docs/browser/report.json) · [维修画面](docs/browser/wires-960.png) · [线索画面](docs/browser/clue-1280.png) · [原生验收计划](qa-plan.json)
+原作模拟的 333 项检查通过，包含五天流程、谜题、线索、问答和存档。浏览器检查通过仓库的 Python SDK 发送 TCP 按键，在 960×540 和 1280×720 画面完成第一天的接线、取线索和存档续玩。主机层在这项浏览器检查中由本地测试服务提供。两种分辨率均在断线时停钟，重新连接后手动继续。重开后保留花园维修和发光线索，记录到的脚本异常和外部网络请求均为零。安装 Python Playwright 和 Chromium 后可用 `python3 tests/browser-sdk.py` 重现。三端原生宿主另按本目录的验收计划测试。[浏览器记录](docs/browser/report.json) · [维修画面](docs/browser/wires-960.png) · [线索画面](docs/browser/clue-1280.png) · [原生验收计划](qa-plan.json)
 
 原始作者为 Andrew Wooldridge。基于 MIT 许可版本 `a7051c34fe2e7550fd206e6272f758df171855b0` 的 `game-130`。本地改动包括 Wi‑Fi 手柄、断线处理、电视布局与离线打包。[原作](https://github.com/triptych/web-games-andrew/tree/a7051c34fe2e7550fd206e6272f758df171855b0/game-130) · [许可](LICENSE) · [素材说明](NOTICE.md) · [原始文件校验](upstream.json)

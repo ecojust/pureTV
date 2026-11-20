@@ -3,7 +3,6 @@
 //
 // Read-only TV observations report the same simulation used to drive the view.
 
-import '../lib/page-audio.js';
 import '../lib/a11y.js';
 import { createTV, menuInput } from '../../../shared/triptych/tv.js';
 import { STEP, MAX_FRAME, W, H } from './config.js';
@@ -113,7 +112,7 @@ $('pause-menu').addEventListener('click', (e) => {
     if (!b) return;
     audio.ui('click');
     const a = b.dataset.act;
-    if (a === 'resume') ui.closeScreen('pause');
+    if (a === 'resume') resumeGame();
     else if (a === 'quit') { saveGame(G); toTitle(); }
     else ui.openScreen(a);
 });
@@ -128,6 +127,7 @@ $('end-again').addEventListener('click', () => { audio.ui('click'); startGame(ne
 $('end-title').addEventListener('click', () => { audio.ui('click'); toTitle(); });
 
 function startGame(g) {
+    audio.resume();
     G = g;
     for (const id of [...ui.stack]) ui.closeScreen(id);
     document.activeElement?.blur?.();
@@ -145,6 +145,7 @@ function startGame(g) {
 }
 
 function toTitle() {
+    audio.resume();
     for (const id of [...ui.stack]) ui.closeScreen(id);
     audio.stopVoice();
     mode = 'title';
@@ -158,13 +159,19 @@ function toTitle() {
 }
 
 function pause() {
+    audio.pause();
+    padNeedsRelease = true;
     if (mode !== 'play' || ui.top() === 'end' || ui.stack.includes('pause')) return;
     keys.length = 0;
     clearTimeout(autoT);
-    audio.stopVoice();
-    audio.ui('open');
     saveGame(G);
     ui.openScreen('pause');
+}
+
+function resumeGame() {
+    if (document.hidden || !ui.stack.includes('pause')) return;
+    while (ui.stack.includes('pause')) ui.closeTop();
+    audio.resume();
 }
 
 function openNotebook(tab) {
@@ -268,10 +275,19 @@ window.addEventListener('keydown', (e) => {
     keys.push({ key: e.code, tag });
 });
 const padPrev = [];
+let lastPad = null, padNeedsRelease = false;
 function pollPad() {
     const pads = navigator.getGamepads ? [...navigator.getGamepads()] : [];
     const gp = pads.find((p) => p && p.connected);
+    const id = gp ? gp.index + ':' + gp.id : null;
+    if (lastPad !== null && lastPad !== id) pause();
+    lastPad = id;
     if (!gp) { padPrev.length = 0; return; }
+    if (padNeedsRelease) {
+        if (gp.buttons.some(button => button.pressed)) return;
+        padPrev.length = 0;
+        padNeedsRelease = false;
+    }
     const MAP = { 0: 'Enter', 1: 'Escape', 9: 'KeyP', 12: 'ArrowUp', 13: 'ArrowDown', 14: 'ArrowLeft', 15: 'ArrowRight', 2: 'KeyH', 3: 'KeyM', 4: 'KeyQ', 5: 'KeyE', 8: 'KeyB' };
     for (const i in MAP) {
         const on = !!gp.buttons[i]?.pressed;
@@ -301,7 +317,7 @@ function handleKeys() {
         const top = ui.top();
         if (key === 'ArrowDown' || key === 'ArrowRight') ui.moveFocus(1);
         else if (key === 'ArrowUp' || key === 'ArrowLeft') ui.moveFocus(-1);
-        else if (key === 'Escape' && !['title', 'night', 'end'].includes(top)) { audio.ui('close'); ui.closeTop(); }
+        else if (key === 'Escape' && !['title', 'night', 'end', 'pause'].includes(top)) { audio.ui('close'); ui.closeTop(); }
         else if (key === 'Enter' && k.pad) document.activeElement?.click?.();
         return;
     }
@@ -403,7 +419,7 @@ function togglePause() {
     if (ui.top() === 'title') { ui.buttons('title')[0]?.click(); return; }
     if (mode !== 'play' || ['end', 'night'].includes(ui.top())) return;
     if (ui.stack.includes('pause')) {
-        while (ui.stack.includes('pause')) ui.closeTop();
+        resumeGame();
     } else if (ui.top() === 'notebook') ui.closeTop();
     else pause();
 }
@@ -420,7 +436,8 @@ function pollTV() {
             if (pressed.DOWN || pressed.RIGHT) ui.moveFocus(1);
             if (pressed.A) document.activeElement?.click();
         } else {
-            menuInput(ui, pressed);
+            const menuKeys = ui.top() === 'pause' ? {...pressed, B:false, Y:false} : pressed;
+            menuInput(ui, menuKeys);
         }
         return;
     }

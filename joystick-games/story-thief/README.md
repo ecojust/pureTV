@@ -27,3 +27,5 @@ python3 -m http.server 8000 --directory dist
 在浏览器打开 http://localhost:8000/tv.html 。分发页在本地生成全部场景、像素画和声音。原作固定提交为 `a7051c34fe2e7550fd206e6272f758df171855b0`。[固定源文件及校验值](upstream.json) · [控制器测试步骤](qa-plan.json)
 
 已安装 Chromium 和 Python Playwright 的环境可运行 `python tests/browser_sdk.py /tmp/story-thief-evidence`。此脚本通过原 Python SDK、本机 TCP 与浏览器宿主测试夹具操作游戏，生成截图并验证真实游戏状态。各平台安装版与实体手柄的验收单独记录。
+
+960×540 与 1280×720 各完成 42 步：小屋取得蜂蜜蛋糕、与祖母对话领取故事书和铜币、出门到村广场，获得 7 分。两次都实测了断线暂停、重连后显式恢复及刷新后用原存档继续。[浏览器 SDK 核验](docs/browser/sdk-verification.json) · [小屋拾物画面](docs/browser/cottage-960.png) · [村广场画面](docs/browser/green-1280.png)

@@ -22,7 +22,7 @@ import { ITEMS, itemIcon, verbIcon, cursorFor } from './items.js';
 import { state, readSave, latestSave, recordEnding, ENDINGS, ENDING_SCORE, MAX_SCORE, endingsFound } from './state.js';
 import { events } from './events.js';
 import * as ui from './ui.js';
-import { initAudio, sfx, ambience, setSound, playLullaby, stopLullaby } from './sounds.js';
+import { initAudio, setAudioPaused, sfx, ambience, setSound, playLullaby, stopLullaby } from './sounds.js';
 import { SCENES } from './scenes/index.js';
 import { COMBOS, SELF, ITEM_LOOK, genericFail } from './scenes/common.js';
 import { paintTitle, tombstone } from './art.js';
@@ -649,9 +649,9 @@ function boot() {
 
     document.getElementById('b-book').addEventListener('click', () => { if (!E.busy) { sfx.click(); ui.openBook(); } });
     document.getElementById('b-menu').addEventListener('click', () => { sfx.click(); openMenu(); });
-    document.getElementById('t-new').addEventListener('click', () => { initAudio(); sfx.click(); newGame(); });
-    document.getElementById('t-continue').addEventListener('click', () => { initAudio(); sfx.click(); loadGame(latestSave()); });
-    document.getElementById('t-howto').addEventListener('click', () => { initAudio(); sfx.click(); howTo(); });
+    document.getElementById('t-new').addEventListener('click', () => { setAudioPaused(false); initAudio(); sfx.click(); newGame(); });
+    document.getElementById('t-continue').addEventListener('click', () => { setAudioPaused(false); initAudio(); sfx.click(); loadGame(latestSave()); });
+    document.getElementById('t-howto').addEventListener('click', () => { setAudioPaused(false); initAudio(); sfx.click(); howTo(); });
 
     window.addEventListener('resize', fitScreen);
     window.addEventListener('orientationchange', () => setTimeout(fitScreen, 150));
@@ -696,6 +696,7 @@ function surface() {
 }
 function stage() { return paused ? 'paused' : shown('title') ? 'menu' : 'playing'; }
 function pauseTale() {
+    setAudioPaused(true);
     if (paused || stage() !== 'playing') return;
     paused = true;
     pauseFocus = document.activeElement;
@@ -703,6 +704,8 @@ function pauseTale() {
     byId('tv-resume').focus();
 }
 function resumeTale() {
+    if (!paused || document.hidden) return;
+    setAudioPaused(false);
     paused = false;
     byId('tv-pause').hidden = true;
     if (pauseFocus?.isConnected) pauseFocus.focus({preventScroll:true});

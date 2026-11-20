@@ -1,6 +1,5 @@
 // Starbase Spooky — sound. Music, effects and every voice line were generated with ElevenLabs (audio/*.mp3, see
-// dev/audio/README.md). Music plays through <audio> elements routed into a gain node (so ../lib/page-audio.js still
-// silences a hidden tab) with a crossfade between themes; effects and voices are decoded into AudioBuffers, voices
+// dev/audio/README.md). Music plays through <audio> elements routed into a gain node with a crossfade between themes; effects and voices are decoded into AudioBuffers, voices
 // on demand. Anything that fails to load falls back to a small Web Audio synth, so the game is never silent and
 // never breaks. The context is made on the first gesture.
 
@@ -15,6 +14,7 @@ const SONG_NOTES = [392, 440, 523.25, 587.33, 659.25];
 export class Audio {
     constructor() {
         this.ctx = null;
+        this.paused = false;
         this.vol = { sfx: 0.8, music: 0.5, voice: 1 };
         this.buffers = {};
         this.loading = {};
@@ -28,13 +28,16 @@ export class Audio {
     }
 
     init() {
-        if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+        if (this.paused) return;
+        if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume().catch(() => {}); return; }
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return;
         const ctx = this.ctx = new AC();
         const comp = ctx.createDynamicsCompressor();
         comp.threshold.value = -14; comp.ratio.value = 3;
-        comp.connect(ctx.destination);
+        this.output = ctx.createGain();
+        comp.connect(this.output);
+        this.output.connect(ctx.destination);
         this.sfx = ctx.createGain(); this.sfx.connect(comp);
         this.music = ctx.createGain(); this.music.connect(comp);
         this.voice = ctx.createGain(); this.voice.connect(comp);
@@ -43,7 +46,33 @@ export class Audio {
         if (this.want) { const w = this.want; this.want = null; this.play(w); }
     }
 
-    get ok() { return !!this.ctx && this.ctx.state === 'running'; }
+    get ok() { return !this.paused && !!this.ctx && this.ctx.state === 'running'; }
+
+    pause() {
+        if (this.paused) return;
+        this.paused = true;
+        this.stopVoice();
+        if (!this.ctx) return;
+        this.output.gain.setValueAtTime(0, this.ctx.currentTime);
+        for (const track of Object.values(this.tracks)) track.el.pause();
+        this.ctx.suspend().catch(() => {});
+    }
+
+    resume() {
+        if (!this.paused) return;
+        this.paused = false;
+        if (!this.ctx) return;
+        this.output.gain.setValueAtTime(1, this.ctx.currentTime);
+        this.ctx.resume().catch(() => {});
+        const track = this.tracks[this.theme];
+        if (track) this.startTrack(track);
+    }
+
+    startTrack(track) {
+        track.el.play().then(() => { track.failed = false; }).catch(error => {
+            if (error.name !== 'AbortError') track.failed = true;
+        });
+    }
 
     setVolumes(v) { Object.assign(this.vol, v); this.applyVolumes(); }
     applyVolumes() {
@@ -79,6 +108,7 @@ export class Audio {
     // ------------------------------------------------------------------ voices
     /** Speak a line; calls back when it ends (or right away if the clip can't play). */
     say(id, onEnd) {
+        if (this.paused) return;
         this.stopVoice();
         this.voiceId = id;
         this.onVoiceEnd = onEnd || null;
@@ -116,11 +146,12 @@ export class Audio {
 
     // ------------------------------------------------------------------ music
     play(theme) {
+        if (this.paused) return;
         if (!this.ctx) { this.want = theme; return; }
         if (this.theme === theme) return;
         const old = this.tracks[this.theme];
         this.theme = theme;
-        if (old) this.fade(old, 0, 1.2, () => old.el.pause());
+        if (old) this.fade(old, 0, 1.2, () => { if (old !== this.tracks[this.theme]) old.el.pause(); });
         if (!theme) return;
         let tr = this.tracks[theme];
         if (!tr) {
@@ -135,7 +166,7 @@ export class Audio {
             el.addEventListener('error', () => { tr.failed = true; });
         }
         tr.el.currentTime = 0;
-        tr.el.play().catch(() => { tr.failed = true; });
+        this.startTrack(tr);
         this.fade(tr, 1, 1.2);
     }
     fade(tr, to, sec, then) {

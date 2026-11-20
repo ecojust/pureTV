@@ -6,9 +6,22 @@
 
 let ctx = null, master = null, ambGain = null, amb = null, musicGain = null;
 let enabled = true;
+let paused = false;
+
+// Keep the user's sound preference separate from a controller or window pause.
+export function setAudioPaused(value) {
+    if (paused === value) return;
+    paused = value;
+    if (!ctx) return;
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.setValueAtTime(enabled && !paused ? 0.5 : 0, ctx.currentTime);
+    if (paused) ctx.suspend().catch(() => {});
+    else ctx.resume().catch(() => {});
+}
 
 export function initAudio() {
-    if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return; }
+    if (paused) return;
+    if (ctx) { if (ctx.state === 'suspended') ctx.resume().catch(() => {}); return; }
     try {
         ctx = new (window.AudioContext || window.webkitAudioContext)();
     } catch { return; }
@@ -25,12 +38,12 @@ export function initAudio() {
 
 export function setSound(on) {
     enabled = on;
-    if (master) master.gain.setTargetAtTime(on ? 0.5 : 0, ctx.currentTime, 0.05);
+    if (master) master.gain.setTargetAtTime(on && !paused ? 0.5 : 0, ctx.currentTime, 0.05);
 }
 export function soundOn() { return enabled; }
 
 function tone(type, freq, dur, vol = 0.2, delay = 0, dest = master, attack = 0.005) {
-    if (!ctx || !enabled) return;
+    if (!ctx || !enabled || paused) return;
     const o = ctx.createOscillator(), g = ctx.createGain();
     const t = ctx.currentTime + delay;
     o.type = type;
@@ -43,7 +56,7 @@ function tone(type, freq, dur, vol = 0.2, delay = 0, dest = master, attack = 0.0
 }
 
 function sweep(type, f0, f1, dur, vol = 0.2, delay = 0) {
-    if (!ctx || !enabled) return;
+    if (!ctx || !enabled || paused) return;
     const o = ctx.createOscillator(), g = ctx.createGain();
     const t = ctx.currentTime + delay;
     o.type = type;
@@ -56,7 +69,7 @@ function sweep(type, f0, f1, dur, vol = 0.2, delay = 0) {
 }
 
 function noise(dur, vol = 0.1, freq = 1200, type = 'lowpass', delay = 0) {
-    if (!ctx || !enabled) return;
+    if (!ctx || !enabled || paused) return;
     const n = Math.floor(ctx.sampleRate * dur);
     const buf = ctx.createBuffer(1, n, ctx.sampleRate);
     const d = buf.getChannelData(0);
@@ -114,7 +127,7 @@ let lullabyTimer = null;
 
 /** Plays the lullaby once. Returns its duration in seconds. */
 export function playLullaby(tempo = 0.36, loop = false) {
-    if (!ctx || !enabled) return 0;
+    if (!ctx || !enabled || paused) return 0;
     stopLullaby();
     let t = 0;
     for (const [m, beats] of LULLABY) {
