@@ -25,17 +25,18 @@ HOME_GAMES = {
     'neon-rush', 'tower-overlap', 'coast-kart', 'used-car-racing', 'alien-shooter',
     'tank', 'jackal', 'jewel', 'tetris', 'bomb-jack', 'adventure-island', 'super-mario',
 }
-RELEASE_SCOPES = ('all', 'home-12')
+SCOPED_GAMES = {'home-12': HOME_GAMES, 'arcade-7': set(GROUPS['arcade'])}
+RELEASE_SCOPES = ('all', *SCOPED_GAMES)
 
 
 def scoped_games(slugs, scope):
     assert scope in RELEASE_SCOPES, 'Unknown controller release scope'
-    return [slug for slug in slugs if scope == 'all' or slug in HOME_GAMES]
+    return [slug for slug in slugs if scope == 'all' or slug in SCOPED_GAMES[scope]]
 
 
 
-def checkout_inputs():
-    """Populate the production and QA inputs for the twelve-game workflow."""
+def checkout_inputs(scope='home-12'):
+    """Populate scoped product sources and the matching published upgrade APKs."""
     patterns = [
         '/.github/workflows/controller*.yml', '/tools/', '/desktop/package*.json',
         '/docs/controller-client-status/rollout.json', '/puretv-joystick/*.py', '/puretv-joystick/*.html',
@@ -46,7 +47,7 @@ def checkout_inputs():
         '/resource/launcher/puretv/app/build.gradle', '/resource/apps/*/build.gradle',
         '/resource/apps/*/src/main/AndroidManifest.xml', '/joystick-games/tools/android-zxing.py',
     ]
-    for slug in sorted(HOME_GAMES):
+    for slug in sorted(scoped_games(ALL_SLUGS, scope)):
         directory = 'resource/apps/' + slug + '/'
         metadata = json.loads(subprocess.check_output(['git', 'show', 'HEAD:' + directory + 'resource.json'], cwd=ROOT))
         apk = metadata['apk']
@@ -310,7 +311,7 @@ def main():
     parser.add_argument('--runtime-result', default='not_run')
     args = parser.parse_args()
     if args.command == 'checkout-home-inputs':
-        checkout_inputs()
+        checkout_inputs(args.scope)
         return
     if args.command == 'list':
         games = ALL_SLUGS if args.all else GROUPS[args.group] if args.group else SLUGS
