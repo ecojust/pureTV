@@ -73,7 +73,7 @@ jobs:
     timeout-minutes: 25
     strategy:
       fail-fast: false
-      max-parallel: 2
+      max-parallel: ${{ inputs.batch == 'expansion-01' && 5 || 2 }}
       matrix: ${{ fromJSON(needs.select.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v4
@@ -228,9 +228,10 @@ jobs:
     timeout-minutes: 40
     strategy:
       fail-fast: false
-      max-parallel: 2
+      max-parallel: ${{ inputs.batch == 'expansion-01' && 5 || 2 }}
       matrix: ${{ fromJSON(needs.select.outputs.matrix) }}
     env:
+      GAME: ${{ matrix.game }}
       PURETV_DISPOSABLE_EMULATOR: '1'
       GAMES: ${{ needs.select.outputs.games }}
     steps:
@@ -265,6 +266,7 @@ jobs:
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
       - name: Operate the actual APK using the original pureTV TCP SDK
+        if: matrix.game != 'turbo-kart-rally' && matrix.game != 'clawd-pop'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 36
@@ -276,7 +278,48 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           script: >-
-            python3 joystick-games/tools/android-catalog.py runtime --game '${{ matrix.game }}'
+            python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
+            --input "$RUNNER_TEMP/signed" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
+      - name: Prepare read-only Android TV 14 first-boot observations
+        if: matrix.game == 'turbo-kart-rally' || matrix.game == 'clawd-pop'
+        run: |
+          mkdir -p "$RUNNER_TEMP/runtime/$GAME"
+          cat > "$RUNNER_TEMP/runtime/$GAME/observe-boot.sh" <<'BOOT'
+          set -u
+          adb="$ANDROID_HOME/platform-tools/adb"
+          seen=''
+          unchanged=0
+          while (( SECONDS < 180 )); do
+            # After BOOT_COMPLETED the Play Store may still be replacing GMS packages.
+            state=$(timeout 8 "$adb" -s emulator-5554 shell 'getprop sys.boot_completed; pm path com.android.vending | head -n 1; pm path com.google.android.gms | head -n 1; pidof com.google.android.gms.persistent')
+            if [[ "$state" != "$seen" ]]; then unchanged=$SECONDS; seen=$state; fi
+            printf '%ss\n%s\n' "$SECONDS" "$state"
+            mapfile -t services <<< "$state"
+            if (( SECONDS >= 75 && SECONDS - unchanged >= 30 && ${#services[@]} == 4 )); then
+              if [[ ${services[0]} == 1 && ${services[1]} == package:/* &&
+                    ${services[2]} == package:/* && ${services[3]} =~ ^[0-9]+$ ]]; then break; fi
+            fi
+            sleep 5
+          done
+          BOOT
+      - name: Operate the signed APK on the Android TV 14 software graphics profile
+        if: matrix.game == 'turbo-kart-rally' || matrix.game == 'clawd-pop'
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          emulator-build: '16970787'
+          api-level: 34
+          target: android-tv
+          arch: x86
+          profile: tv_720p
+          avd-name: JoystickGamesValidation
+          force-avd-creation: true
+          disable-animations: true
+          emulator-options: -no-window -memory 3072 -gpu lavapipe -noaudio -no-boot-anim -no-snapshot -feature -Vulkan
+          script: >-
+            bash "$RUNNER_TEMP/runtime/$GAME/observe-boot.sh" > "$RUNNER_TEMP/runtime/$GAME/boot-services.txt" &&
+            python3 joystick-games/tools/android-environment-diagnostics.py
+            --output "$RUNNER_TEMP/runtime/$GAME/environment-diagnostics" --
+            python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
             --input "$RUNNER_TEMP/signed" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
       - name: Preserve exact executed QA scripts and emulator description
         if: always()
@@ -304,6 +347,155 @@ jobs:
           path: ${{ runner.temp }}/runtime/
           include-hidden-files: true
           if-no-files-found: error
+
+  tv16-install:
+    name: Android TV 16 signed-package installation
+    if: inputs.batch == 'expansion-01' && needs.select.outputs.games != 'kart-royale'
+    needs: [select, sign]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      GAMES: ${{ needs.select.outputs.games }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          ref: ${{ github.sha }}
+          sparse-checkout: |
+            .github/workflows
+            joystick-games
+            resource/game-kit
+            tools
+            puretv-joystick
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools build-tools;34.0.0
+      - uses: actions/download-artifact@v4
+        with:
+          name: joystick-android-signed
+          path: ${{ runner.temp }}/signed
+      - name: Verify signed package inputs against this run
+        run: >-
+          python3 joystick-games/tools/android-release.py verify --games "$GAMES"
+          --input "$RUNNER_TEMP/signed" --build-tools "$ANDROID_HOME/build-tools/34.0.0"
+      - name: Prepare the package-manager checks
+        run: |
+          test -e /dev/kvm
+          sudo chmod a+rw /dev/kvm
+          mkdir -p "$RUNNER_TEMP/tv16-install"
+          cat > "$RUNNER_TEMP/tv16-install/check-install.py" <<'PY'
+          import hashlib
+          import json
+          import os
+          import re
+          import subprocess
+          from pathlib import Path
+
+          output = Path(__file__).resolve().parent
+          supported = {'turbo-kart-rally', 'clawd-pop', 'saber-magic-tower', 'operation-ironhold', 'lumenrift'}
+          games = [g for g in os.environ['GAMES'].split(',') if g in supported]
+          assert games
+          report = {'sourceSha': os.environ['GITHUB_SHA'], 'runId': os.environ['GITHUB_RUN_ID'],
+                    'runAttempt': os.environ['GITHUB_RUN_ATTEMPT'], 'scope': 'installation', 'games': {}}
+
+          def adb(*args):
+              command = [str(Path(os.environ['ANDROID_HOME']) / 'platform-tools/adb'), '-s', 'emulator-5554', *args]
+              result = subprocess.run(command, capture_output=True, text=True, timeout=120)
+              if result.returncode:
+                  raise RuntimeError(f'{args[0]} exited {result.returncode}: {result.stdout} {result.stderr}')
+              return result.stdout.strip()
+
+          def verifier_settings():
+              return {key: adb('shell', 'settings', 'get', 'global', key)
+                      for key in ('package_verifier_enable', 'verifier_verify_adb_installs')}
+
+          def package_present(package):
+              return 'package:' + package in adb('shell', 'pm', 'list', 'packages', package).splitlines()
+
+          def check_game(game, row):
+              folder = Path(os.environ['RUNNER_TEMP']) / 'signed' / 'packages' / game
+              receipt = json.loads((folder / 'signing-receipt.json').read_text())
+              package = receipt['packageName']
+              apk = folder / (game + '-' + receipt['versionName'] + '.apk')
+              row.update(packageName=package, apkSha256=hashlib.sha256(apk.read_bytes()).hexdigest(),
+                         signingCertificateSha256=receipt['certificateSha256'])
+              assert row['apkSha256'] == receipt['sha256'], 'APK hash differs from the verified receipt'
+              assert not package_present(package), 'Package already present on clean AVD'
+              try:
+                  row['install'] = adb('install', str(apk))
+                  assert 'Success' in row['install'].splitlines(), row['install']
+                  dump = adb('shell', 'dumpsys', 'package', package)
+                  (output / (game + '-dumpsys.txt')).write_text(dump + '\n')
+                  assert re.search(r'^\s*Package \[' + re.escape(package) + r'\] \(', dump, re.M), 'Wrong package'
+                  name = re.search(r'^\s*versionName=(\S+)\s*$', dump, re.M)
+                  code = re.search(r'^\s*versionCode=(\d+)\b', dump, re.M)
+                  target = re.search(r'\btargetSdk=(\d+)\b', dump)
+                  assert name and code and target, 'Installed package metadata missing'
+                  row.update(versionName=name[1], versionCode=int(code[1]), targetSdk=int(target[1]))
+                  assert all(row[k] == receipt[k] for k in ('versionName', 'versionCode', 'targetSdk')), 'Installed metadata mismatch'
+                  assert (row['versionName'], row['targetSdk']) == ('0.1.1', 35), 'Unexpected expansion package revision'
+              finally:
+                  if package_present(package):
+                      row['uninstall'] = adb('uninstall', package)
+                      assert row['uninstall'] == 'Success' and not package_present(package), 'Uninstall incomplete'
+              assert row.get('uninstall') == 'Success'
+
+          try:
+              report['device'] = {key: adb('shell', 'getprop', key) for key in
+                                  ('sys.boot_completed', 'ro.build.version.sdk', 'ro.build.fingerprint', 'ro.product.cpu.abi')}
+              assert report['device']['sys.boot_completed'] == '1' and report['device']['ro.build.version.sdk'] == '36'
+              assert 'feature:android.software.leanback' in adb('shell', 'pm', 'list', 'features').splitlines()
+              report['verifierBefore'] = verifier_settings()
+              assert all(value in ('1', 'null') for value in report['verifierBefore'].values()), 'Unexpected verifier setting'
+              for game in games:
+                  row = report['games'][game] = {'passed': False}
+                  try:
+                      check_game(game, row)
+                      row['passed'] = True
+                  except Exception as exc:
+                      row['error'] = str(exc)
+              report['verifierAfter'] = verifier_settings()
+              assert report['verifierBefore'] == report['verifierAfter'], 'Verifier settings changed'
+              assert all(row['passed'] for row in report['games'].values()), 'Package installation checks failed'
+              report['status'] = 'passed'
+          except Exception as exc:
+              report.update(status='failed', error=str(exc))
+          finally:
+              (output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
+              with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+                  print('### Android TV 16 signed-package installation\n', file=summary)
+                  print('| Game | Result | Version | Code | Target SDK |\n| --- | --- | --- | --- | --- |', file=summary)
+                  for game in games:
+                      row = report['games'].get(game, {})
+                      status = 'Passed' if row.get('passed') else 'Failed' if row else 'Unverified'
+                      print('|', game, '|', status, '|', row.get('versionName', ''), '|',
+                            row.get('versionCode', ''), '|', row.get('targetSdk', ''), '|', file=summary)
+          print(json.dumps(report, indent=2))
+          raise SystemExit(report['status'] != 'passed')
+          PY
+      - name: Install, inspect and uninstall each signed APK on Android TV 16
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: 36
+          target: android-tv
+          arch: x86_64
+          profile: tv_1080p
+          avd-name: ExpansionPackageInstall
+          emulator-port: 5554
+          force-avd-creation: true
+          disable-animations: false
+          emulator-options: -no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          script: python3 "$RUNNER_TEMP/tv16-install/check-install.py"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joystick-android-report-tv16-install
+          path: ${{ runner.temp }}/tv16-install/
+          if-no-files-found: warn
 
   export:
     if: always()
