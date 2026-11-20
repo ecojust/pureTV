@@ -31,6 +31,7 @@
 | 誓约宝石 | 0.1.0 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-oathstones/Oathstones-0.1.0-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-oathstones/Oathstones-0.1.0-windows-x64.zip) |
 | 霓虹秘仪 | 0.1.1 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-neon-arcana/NeonArcana-0.1.1-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-neon-arcana/NeonArcana-0.1.1-windows-x64.zip) |
 | 墨绘地图集 | 0.1.1 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-atlas-of-ink/AtlasOfInk-0.1.1-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-atlas-of-ink/AtlasOfInk-0.1.1-windows-x64.zip) |
+| 幽灵空间站 | 0.1.2 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/5f381ccd9203a96e724e088c18b9a1918f87f422/joystick-windows-packages-starbase-spooky/StarbaseSpooky-0.1.2-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/5f381ccd9203a96e724e088c18b9a1918f87f422/joystick-windows-packages-starbase-spooky/StarbaseSpooky-0.1.2-windows-x64.zip) |
 <!-- /verified-puzzle-files -->
 
 ## 实际游戏画面
