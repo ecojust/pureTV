@@ -50,6 +50,8 @@ def checkout_inputs(scope='home-12'):
         '/resource/game-kit/qa/', '/resource/launcher/puretv/*.gradle', '/resource/launcher/puretv/gradlew',
         '/resource/launcher/puretv/gradle/', '/resource/launcher/puretv/gradle.properties',
         '/resource/launcher/puretv/app/build.gradle', '/resource/apps/*/build.gradle',
+        # Gradle configures every included app, even when only one app is built.
+        '/resource/apps/jackal/tools/preview-png.gradle',
         '/resource/apps/*/src/main/AndroidManifest.xml', '/joystick-games/tools/android-zxing.py',
     ]
     for slug in sorted(scoped_games(ALL_SLUGS, scope)):
