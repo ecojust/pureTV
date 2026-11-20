@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "steps": [
+    {
+      "name": "Open the garden map",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "map"
+        }
+      ]
+    },
+    {
+      "name": "Choose the first orchard",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.screen",
+          "op": "eq",
+          "value": "intro"
+        }
+      ]
+    },
+    {
+      "name": "Start picking",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Move the bee cursor",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.cursorCol",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Show an available trail",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.hinted",
+          "op": "gte",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "name": "Anchor the first fruit",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.trail",
+          "op": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Point to the next linked fruit",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.trail",
+          "op": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Confirm the second fruit",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.trail",
+          "op": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Point to another matching fruit",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.trail",
+          "op": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Confirm the third fruit",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.trail",
+          "op": "eq",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "name": "Harvest the three-fruit chain",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "gameplay.chains",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Pause the board",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Resume explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "timeoutSeconds": 60,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ],
+  "pauseStablePaths": [
+    "gameplay.movesUsed",
+    "gameplay.score",
+    "gameplay.chains"
+  ],
+  "storageRestartRequired": true
+}
