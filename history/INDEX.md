@@ -7,7 +7,7 @@
 | 记录 | 状态 | 用户目标 | 当前结果与下一步 |
 | --- | --- | --- | --- |
 | [2026-11-19-003](2026-11-19-003.md) | completed | 继续GitHub搜索Claude优质游戏，越多越好，列入README | 0173a70已公开新增79项，合计380项/236仓；79出处、172源码与55份公开完整GET核验通过；最终master README再次完整GET一致；九款赛车任务继续。 |
-| [2026-11-19-002](2026-11-19-002.md) | in_progress | 对比README全部赛车，挑9款实现手柄版并打包Android/macOS/Windows | Kart Rush、Dirt Crown、Night Racer、Penguintrack、Turbo Kart Rush 与 Last Track 三平台均通过手柄验收。27 个游戏／平台组合均有安装包；原生验收为 6 款 Android、9 款 Mac、9 款 Windows。Backroad Windows 首次公开安装版与便携版，首个芬兰赛段手柄实驾通过；Mac 预发布包的存档重启已通过。Kart Royale 0.1.1 补齐第 9 款 Windows；余下 3 款 Android 提供测试版，共 45 个公开安装文件已全部核对，见 A57–A66。 |
+| [2026-11-19-002](2026-11-19-002.md) | in_progress | 对比README全部赛车，挑9款实现手柄版并打包Android/macOS/Windows | Kart Rush、Dirt Crown、Night Racer、Penguintrack、Turbo Kart Rush 与 Last Track 三平台均通过手柄验收。27 个游戏／平台组合均有安装包；原生验收为 6 款 Android、9 款 Mac、9 款 Windows。Backroad Windows 首次公开安装版与便携版，首个芬兰赛段手柄实驾通过；Mac 预发布包的存档重启已通过。Kart Royale 0.1.1 补齐第 9 款 Windows；余下 3 款 Android 提供测试版，共 45 个公开安装文件已全部核对，见 A57–A67。 |
 | [2026-11-19-001](2026-11-19-001.md) | completed | 将做好的游戏全部提交，然后等指令 | e37ac19已推送Sugarplum Drop、Emberbrood、GLUP共9安装文件；413份公开文件完整校验通过。20款源码保留，四款未提交版本丢失未交付，后续开发暂停等指令。 |
 | [2026-11-17-004](2026-11-17-004.md) | completed | 继续搜索更多Claude优质游戏，扩充README | 949aad3已公开新增208项，合计301项/178仓/8类；208引文/源码核验和35份公开完整GET通过。原93项适配继续，新增参考不计发布游戏。 |
 | [2026-11-17-003](2026-11-17-003.md) | cancelled | 评估93项并为可行游戏制作手柄Android TV与macOS版本 | 93项评估、20款源码已提交；用户U2要求提交已完成成果后等待，后续批量适配暂停。3款现有包恢复交付及草稿丢失范围见2026-11-19-001。 |
