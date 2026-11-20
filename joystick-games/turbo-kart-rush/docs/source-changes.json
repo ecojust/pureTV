@@ -13,9 +13,9 @@
     {
       "path": "src/upstream/src/game/Game.ts",
       "originalSha256": "3ecce3b525f3674b8b2d4d9e3341574c84883b3ecf0ca0d360161ce334a33bff",
-      "adaptedSha256": "089144c886294e876653b24922db13a8c24630d7c5f5b26fb9992cade3eb9bc3",
-      "adaptedBytes": 34641,
-      "reason": "One bridge poll per animation frame; original gameplay and rendering preserved; read-only observations; neutral pause/manual resume including loading; original audio suspension."
+      "adaptedSha256": "7162e8bae4dddb9abf0040260e9d014d926fe9bc7720b485b78230bd0372fd5c",
+      "adaptedBytes": 34903,
+      "reason": "One controller poll per animation frame, read-only gameplay observations, input and audio cancellation, manual resume, and direct scene rendering on software or limited WebGL 2 devices."
     },
     {
       "path": "src/upstream/src/game/RaceManager.ts",
@@ -46,5 +46,6 @@
     "integrity": "sha512-5aojFCXKwnjBRZvUnt3WFfEcvUJgkN5LlijRFN95hMy8WVkG4I0QNcJE+OuWvuJ0bOdStrbfXn0pkd6/QyiAlg==",
     "license": "MIT"
   },
-  "upstreamDependencyEntriesPreserved": true
+  "upstreamDependencyEntriesPreserved": true,
+  "adapterGraphicsPolicy": "src/upstream/src/game/renderSettings.ts"
 }
