@@ -25,12 +25,12 @@
 | --- | --- | --- | --- |
 | 炼金方阵 | 0.1.1 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-alchemists-lattice/AlchemistsLattice-0.1.1-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-alchemists-lattice/AlchemistsLattice-0.1.1-windows-x64.zip) |
 | 灰斗篷山的故事大盗 | 0.1.1 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/9581b8d8661fd08b49398f3211e43934d3a2be48/joystick-windows-packages-story-thief/StoryThief-0.1.1-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/9581b8d8661fd08b49398f3211e43934d3a2be48/joystick-windows-packages-story-thief/StoryThief-0.1.1-windows-x64.zip) |
+| 蜜蜂果篮 | 0.1.2 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/a78f3a08cd680ff0252f92fcdcd5dfa92f6cea9c/joystick-windows-packages-bumble-basket/BumbleBasket-0.1.2-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/a78f3a08cd680ff0252f92fcdcd5dfa92f6cea9c/joystick-windows-packages-bumble-basket/BumbleBasket-0.1.2-windows-x64.zip) |
 | 星际弹弓 | 0.1.1 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-starsling/Starsling-0.1.1-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-starsling/Starsling-0.1.1-windows-x64.zip) |
 | 雨夜维修铺 | 0.1.0 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-solder-and-rain/SolderAndRain-0.1.0-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-solder-and-rain/SolderAndRain-0.1.0-windows-x64.zip) |
 | 誓约宝石 | 0.1.0 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-oathstones/Oathstones-0.1.0-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-oathstones/Oathstones-0.1.0-windows-x64.zip) |
 | 霓虹秘仪 | 0.1.1 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-neon-arcana/NeonArcana-0.1.1-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-neon-arcana/NeonArcana-0.1.1-windows-x64.zip) |
 | 墨绘地图集 | 0.1.1 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-atlas-of-ink/AtlasOfInk-0.1.1-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/87b633a64a861bcc05fecabd415194f2ac0a0959/joystick-windows-packages-atlas-of-ink/AtlasOfInk-0.1.1-windows-x64.zip) |
-| 幽灵空间站 | 0.1.1 | [EXE](https://raw.githubusercontent.com/ecojust/pureTV/9581b8d8661fd08b49398f3211e43934d3a2be48/joystick-windows-packages-starbase-spooky/StarbaseSpooky-0.1.1-windows-x64-setup.exe) | [ZIP](https://raw.githubusercontent.com/ecojust/pureTV/9581b8d8661fd08b49398f3211e43934d3a2be48/joystick-windows-packages-starbase-spooky/StarbaseSpooky-0.1.1-windows-x64.zip) |
 <!-- /verified-puzzle-files -->
 
 ## 实际游戏画面
@@ -60,3 +60,5 @@
 Android TV 需要 Android 8.0 或以上版本。macOS 通用包包含 Apple Silicon 和 Intel 两种架构。Windows 支持 Windows 10 1903 起及 Windows 11 的 x64 电脑，需要 Microsoft Edge WebView2 Runtime。[Windows 宿主说明](../../joystick-games/shared/windows/README.md)
 
 《灰斗篷山的故事大盗》《墨绘地图集》《幽灵空间站》使用 Canvas 2D。其余六款需要系统 WebView 和图形驱动支持 WebGL 2。运行游戏后让手柄在同一局域网搜索，屏幕右侧会显示已连接的手柄 ID。游戏默认使用 TCP 63485，端口被占用时会广播实际使用的端口。[手柄连接与协议](../../puretv-joystick/README.md)
+
+六款 WebGL 2 游戏在两种托管 Intel Mac 系统上均遇到图形上下文丢失。各游戏的下载与原生验证按实际芯片分别记录。[Intel Mac 图形诊断](intel-macos/README.md)
