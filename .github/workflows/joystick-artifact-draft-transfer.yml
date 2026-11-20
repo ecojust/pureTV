@@ -1,68 +1,113 @@
-name: Copy original catalog artifact to existing draft
-on:
-  workflow_dispatch:
-    inputs:
-      source_run:
-        description: Original catalog run ID
-        required: true
-        type: string
-      source_attempt:
-        description: Original run attempt
-        required: true
-        default: '1'
-        type: string
-      source_sha:
-        description: Exact original 40-character source commit
-        required: true
-        type: string
-      artifact_id:
-        description: Original package artifact ID (ZIP bytes stay unchanged)
-        required: true
-        type: string
-      release_id:
-        description: Existing draft release ID with exact staging tag/source
-        required: true
-        type: string
+name: Transfer signed TV racing test packages
+on: workflow_dispatch
 permissions:
   actions: read
   contents: write
-concurrency:
-  group: artifact-draft-transfer-${{ inputs.release_id }}
-  cancel-in-progress: false
 jobs:
-  transfer:
+  packages:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
     env:
       GH_TOKEN: ${{ github.token }}
-      SOURCE_RUN: ${{ inputs.source_run }}
-      SOURCE_ATTEMPT: ${{ inputs.source_attempt }}
-      SOURCE_SHA: ${{ inputs.source_sha }}
-      ARTIFACT_ID: ${{ inputs.artifact_id }}
-      RELEASE_ID: ${{ inputs.release_id }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Fetch original signed backroad-rally artifact
+        uses: actions/download-artifact@v4
         with:
-          persist-credentials: false
-          sparse-checkout: |
-            joystick-games/tools
-            .github/workflows
-      - name: Test transfer boundaries without network or release writes
-        run: python3 joystick-games/tools/artifact-draft-transfer-test.py
-      - name: Verify original ZIP and upload once to the existing draft
-        run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py transfer \
-            --run "$SOURCE_RUN" --attempt "$SOURCE_ATTEMPT" --source "$SOURCE_SHA" \
-            --artifact "$ARTIFACT_ID" --release "$RELEASE_ID" \
-            --output "$RUNNER_TEMP/artifact-draft-transfer"
-      - uses: actions/upload-artifact@v4
-        if: always()
+          artifact-ids: '14604367849'
+          run-id: '44681226359'
+          github-token: ${{ github.token }}
+          merge-multiple: true
+          path: original/backroad-rally
+      - name: Fetch original signed ponpoko-kart artifact
+        uses: actions/download-artifact@v4
         with:
-          name: artifact-draft-transfer-receipt
-          path: ${{ runner.temp }}/artifact-draft-transfer/receipts/transfer.json
-          if-no-files-found: warn
-      - name: Preserve only the small receipt on a new immutable branch
-        if: always()
+          artifact-ids: '14605255165'
+          run-id: '44680918757'
+          github-token: ${{ github.token }}
+          merge-multiple: true
+          path: original/ponpoko-kart
+      - name: Fetch original signed last-track artifact
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '14571395160'
+          run-id: '44606071748'
+          github-token: ${{ github.token }}
+          merge-multiple: true
+          path: original/last-track
+      - name: Fetch original signed turbo-kart-rush artifact
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '14604680786'
+          run-id: '44680802564'
+          github-token: ${{ github.token }}
+          merge-multiple: true
+          path: original/turbo-kart-rush
+      - name: Fetch original signed kart-royale artifact
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '14603964333'
+          run-id: '44680268953'
+          github-token: ${{ github.token }}
+          merge-multiple: true
+          path: original/kart-royale
+      - name: Recheck individual APK signatures and upload original files
         run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py export-receipt \
-            --directory "$RUNNER_TEMP/artifact-draft-transfer/receipts"
+          set -euo pipefail
+          BUILD_TOOLS="$ANDROID_HOME/build-tools/34.0.0"
+          export BUILD_TOOLS
+          python - <<'PYTHON'
+          import hashlib, json, os, pathlib, re, subprocess
+          from urllib.parse import quote
+          release_id=452313702
+          repo='ecojust/pureTV'
+          pin='eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23'
+          games=[
+           ('backroad-rally','65a782561c91b45beae64d9b1a7874a27adf2830','44681226359','14604367849','8ae777830cfbbdc341663ab7c45145dcd40e75408a6df363d250482d13991c34'),
+           ('ponpoko-kart','88be72b403edb6dc79f5ca7282d7a2d31fec9882','44680918757','14605255165','6352fb9fbebf5cea2c5a7247e6f02e83967511cc1368bc7ec106473fb5ac282f'),
+           ('last-track','c5ad63e8c6a0ccfada5f763d1d26afa27f45002e','44606071748','14571395160','11022b215aeb02228551c73dd8c0171cd5f8738c4bd740c0c88923d29854c298'),
+           ('turbo-kart-rush','a6923d5e965f8337ace1052f3626de25fcb4e130','44680802564','14604680786','fbdf31bf5bce933962765ccae38478f52b2c78115e89ba78156f57536ed539e4'),
+           ('kart-royale','9dff011992528e61506607b918776a1c99de49d6','44680268953','14603964333','f54ccb59411fc33cc4c6dd64bb61bdfbb06292cfa062163572d3bde14849b9ac')]
+          def api(path):
+           return json.loads(subprocess.check_output(['gh','api','repos/'+repo+'/'+path]))
+          def upload(path,content_type):
+           name=path.name
+           size=path.stat().st_size
+           sha=hashlib.file_digest(path.open('rb'),'sha256').hexdigest()
+           assets=api(f'releases/{release_id}/assets')
+           matches=[item for item in assets if item['name']==name]
+           if not matches:
+            response=subprocess.check_output(['curl','--silent','--show-error','--fail','-X','POST','-H','Authorization: Bearer '+os.environ['GH_TOKEN'],'-H','Content-Type: '+content_type,'--data-binary','@'+str(path),'https://uploads.github.com/repos/'+repo+'/releases/'+str(release_id)+'/assets?name='+quote(name)])
+            matches=[json.loads(response)]
+           assert len(matches)==1 and (matches[0]['state'],matches[0]['size'],matches[0]['digest'])==('uploaded',size,'sha256:'+sha),name
+           print(name,size,sha,flush=True)
+           return sha
+          release=api('releases/'+str(release_id))
+          assert release['draft'] and release['prerelease'] and release['tag_name']=='joystick-racing-nine-test-20261120' and release['target_commitish']=='1446d344a0fcdbbb8b4936f97b4f5c7804018ec5'
+          checksums=[]
+          build_tools=pathlib.Path(os.environ['BUILD_TOOLS'])
+          for game,source,run_id,artifact_id,archive_digest in games:
+           run=api('actions/runs/'+run_id)
+           jobs=api('actions/runs/'+run_id+'/jobs')['jobs']
+           assert run['head_sha']==source and run['run_attempt']==1 and run['path']=='.github/workflows/joystick-catalog-android.yml'
+           for job in ['build ('+game+')','sign']:
+            assert [j['conclusion'] for j in jobs if j['name']==job]==['success']
+           artifact=api('actions/artifacts/'+artifact_id)
+           assert artifact['name']=='joystick-android-signed' and artifact['workflow_run']['id']==int(run_id) and artifact['digest']=='sha256:'+archive_digest
+           folder=pathlib.Path('original')/game/'packages'/game
+           info=json.loads((folder/'signing-receipt.json').read_text())
+           version='0.1.0' if game=='last-track' else '0.1.1'
+           package='com.ecojust.joystick.'+game.replace('-','')
+           code=1 if game=='last-track' else 2
+           assert (info['game'],info['sourceSha'],str(info['runId']),info['signatureVerified'],info['certificateSha256'],info['packageName'],info['versionName'],info['versionCode'])==(game,source,run_id,True,pin,package,version,code)
+           apk=folder/(game+'-'+version+'.apk')
+           digest=hashlib.file_digest(apk.open('rb'),'sha256').hexdigest()
+           assert info['bytes']==apk.stat().st_size and info['sha256']==digest
+           signer=subprocess.check_output([str(build_tools/'apksigner'),'verify','--print-certs',str(apk)],text=True)
+           assert re.findall(r'Signer #\d+ certificate SHA-256 digest: ([0-9a-f]{64})',signer)==[pin], signer
+           badging=subprocess.check_output([str(build_tools/'aapt'),'dump','badging',str(apk)],text=True)
+           assert f"package: name='{package}' versionCode='{code}' versionName='{version}'" in badging
+           assert upload(apk,'application/vnd.android.package-archive')==digest
+           checksums.append(digest+'  '+apk.name+'\n')
+          path=pathlib.Path('SHA256SUMS-Android.txt')
+          path.write_text(''.join(checksums))
+          upload(path,'text/plain')
+          PYTHON
