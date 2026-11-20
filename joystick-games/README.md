@@ -21,23 +21,25 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 
 ## 新候选适配进度
 
-另有正在进行的[九款赛车三平台适配](../docs/racing-nine/README.md)：从 31 个赛车候选中比较画面与玩法，选出 Backroad Rally、Ponpoko Kart、Night Racer、Penguintrack、Last Track、Dirt Crown、Turbo Kart Rush、Kart Rush 和 Kart Royale。九款源码已提交，Android TV、macOS 通用包及 Windows x64 正在实际构建和运行验证，暂不计入下面已交付的安装包数量。
+另有正在进行的[九款赛车三平台适配](../docs/racing-nine/README.md)：从 31 个赛车候选中比较画面与玩法，选出 Backroad Rally、Ponpoko Kart、Night Racer、Penguintrack、Last Track、Dirt Crown、Turbo Kart Rush、Kart Rush 和 Kart Royale。九款均已提供 Android TV、macOS 通用版与 Windows x64 安装文件。
 
-赛车已有以下可下载包，均为 **0.1.0**；九款三平台完整交付仍在进行。
+### 九款赛车游戏下载
+
+标为 **测试版** 的安装包仍在做原生手柄验收。Android 测试 APK 沿用固定发布证书，每款的已知问题和测试范围见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
 
 | 游戏 | Android TV | macOS | Windows x64 |
 | --- | --- | --- | --- |
-| [Backroad Rally](backroad-rally/) | 验证中 | [DMG／ZIP 预发布](backroad-rally/macos/) | [安装版 EXE／便携 ZIP](https://github.com/ecojust/pureTV/releases/tag/joystick-backroad-rally-windows-v0.1.0) |
-| [Ponpoko Kart](ponpoko-kart/) | 验证中 | [DMG](ponpoko-kart/macos/PonpokoKart-0.1.0-macos-universal.dmg) · [ZIP](ponpoko-kart/macos/PonpokoKart-0.1.0-macos-universal.zip) | [EXE](ponpoko-kart/PonpokoKart-0.1.0-windows-x64-setup.exe) · [ZIP](ponpoko-kart/PonpokoKart-0.1.0-windows-x64.zip) |
+| [Backroad Rally](backroad-rally/) | [APK 测试版 0.1.1](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/backroad-rally-0.1.1.apk) | [DMG／ZIP 预发布](backroad-rally/macos/) | [安装版 EXE／便携 ZIP](https://github.com/ecojust/pureTV/releases/tag/joystick-backroad-rally-windows-v0.1.0) |
+| [Ponpoko Kart](ponpoko-kart/) | [APK 测试版 0.1.1](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/ponpoko-kart-0.1.1.apk) | [DMG](ponpoko-kart/macos/PonpokoKart-0.1.0-macos-universal.dmg) · [ZIP](ponpoko-kart/macos/PonpokoKart-0.1.0-macos-universal.zip) | [EXE](ponpoko-kart/PonpokoKart-0.1.0-windows-x64-setup.exe) · [ZIP](ponpoko-kart/PonpokoKart-0.1.0-windows-x64.zip) |
 | [Night Racer](night-racer/) | [APK](night-racer/night-racer-0.1.0.apk) | [DMG](night-racer/macos/NightRacer-0.1.0-macos-universal.dmg) · [ZIP](night-racer/macos/NightRacer-0.1.0-macos-universal.zip) | [EXE](night-racer/NightRacer-0.1.0-windows-x64-setup.exe) · [ZIP](night-racer/NightRacer-0.1.0-windows-x64.zip) |
 | [Penguintrack](penguintrack/) | [APK](penguintrack/penguintrack-0.1.0.apk) | [DMG](penguintrack/macos/Penguintrack-0.1.0-macos-universal.dmg) · [ZIP](penguintrack/macos/Penguintrack-0.1.0-macos-universal.zip) | [EXE](penguintrack/Penguintrack-0.1.0-windows-x64-setup.exe) · [ZIP](penguintrack/Penguintrack-0.1.0-windows-x64.zip) |
-| [Last Track](last-track/) | 验证中 | [DMG](last-track/macos/LastTrack-0.1.0-macos-universal.dmg) · [ZIP](last-track/macos/LastTrack-0.1.0-macos-universal.zip) | [EXE](last-track/LastTrack-0.1.0-windows-x64-setup.exe) · [ZIP](last-track/LastTrack-0.1.0-windows-x64.zip) |
+| [Last Track](last-track/) | [APK 测试版 0.1.0](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/last-track-0.1.0.apk) | [DMG](last-track/macos/LastTrack-0.1.0-macos-universal.dmg) · [ZIP](last-track/macos/LastTrack-0.1.0-macos-universal.zip) | [EXE](last-track/LastTrack-0.1.0-windows-x64-setup.exe) · [ZIP](last-track/LastTrack-0.1.0-windows-x64.zip) |
 | [Dirt Crown](dirt-crown/) | [APK](dirt-crown/dirt-crown-0.1.0.apk) | [DMG](dirt-crown/macos/DirtCrown-0.1.0-macos-universal.dmg) · [ZIP](dirt-crown/macos/DirtCrown-0.1.0-macos-universal.zip) | [EXE](dirt-crown/DirtCrown-0.1.0-windows-x64-setup.exe) · [ZIP](dirt-crown/DirtCrown-0.1.0-windows-x64.zip) |
-| [Turbo Kart Rush](turbo-kart-rush/) | 验证中 | [DMG](turbo-kart-rush/macos/TurboKartRush-0.1.0-macos-universal.dmg) · [ZIP](turbo-kart-rush/macos/TurboKartRush-0.1.0-macos-universal.zip) | [EXE](turbo-kart-rush/windows/TurboKartRush-0.1.0-windows-x64-setup.exe) · [ZIP](turbo-kart-rush/windows/TurboKartRush-0.1.0-windows-x64.zip) |
+| [Turbo Kart Rush](turbo-kart-rush/) | [APK 测试版 0.1.1](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/turbo-kart-rush-0.1.1.apk) | [DMG](turbo-kart-rush/macos/TurboKartRush-0.1.0-macos-universal.dmg) · [ZIP](turbo-kart-rush/macos/TurboKartRush-0.1.0-macos-universal.zip) | [EXE](turbo-kart-rush/windows/TurboKartRush-0.1.0-windows-x64-setup.exe) · [ZIP](turbo-kart-rush/windows/TurboKartRush-0.1.0-windows-x64.zip) |
 | [Kart Rush](kart-rush/) | [APK](kart-rush/kart-rush-0.1.0.apk) | [DMG](kart-rush/macos/KartRush-0.1.0-macos-universal.dmg) · [ZIP](kart-rush/macos/KartRush-0.1.0-macos-universal.zip) | [EXE](kart-rush/KartRush-0.1.0-windows-x64-setup.exe) · [ZIP](kart-rush/KartRush-0.1.0-windows-x64.zip) |
-| [Kart Royale](kart-royale/) | 验证中 | [DMG](kart-royale/macos/KartRoyale-0.1.0-macos-universal.dmg) · [ZIP](kart-royale/macos/KartRoyale-0.1.0-macos-universal.zip) | 验证中 |
+| [Kart Royale](kart-royale/) | [APK 测试版 0.1.1](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/kart-royale-0.1.1.apk) | [DMG](kart-royale/macos/KartRoyale-0.1.0-macos-universal.dmg) · [ZIP](kart-royale/macos/KartRoyale-0.1.0-macos-universal.zip) | [测试版 EXE](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/KartRoyale-0.1.0-windows-x64-setup.exe) · [ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/KartRoyale-0.1.0-windows-x64.zip) |
 
-目前 Kart Rush、Dirt Crown、Night Racer、Penguintrack 已具备三个平台的下载文件；共有 4 款 Android、9 款 Mac 与 8 款 Windows 赛车包。表内 38 个安装文件均已从公开地址完整下载并与原始包哈希核对。[下载地址与 SHA-256](../docs/racing-nine/download-verification-20261120.json)
+**已通过原生手柄验收的覆盖为 Android TV 4/9、Mac 9/9、Windows 8/9。** Kart Rush、Dirt Crown、Night Racer、Penguintrack 三个平台均已验证到实际游玩，Mac 的实测架构见下方。其余 6 个游戏／平台组合提供测试版。共 45 个安装文件均已从公开地址完整下载并核对 SHA-256。[已验证包校验记录](../docs/racing-nine/download-verification-20261120.json) · [测试包校验记录](../docs/racing-nine/test-downloads-20261120.json)
 
 以上 Mac 赛车需要 macOS 11+ 与 WebGL2；Apple Silicon 原生、端口占用及 Rosetta 均有通过记录，**Intel 图形运行仍未验证**。Backroad Rally 的预发布 ZIP 已通过 Apple Silicon 原生存档重启复验；包采用 ad-hoc 签名，未经过 Apple 公证。Windows 需要 Windows 10 1903+ x64／Windows 11、WebView2 Runtime 和相应 WebGL 支持；未做 Authenticode 签名，原生检查覆盖 96 DPI，其他显示缩放和实体手柄未测试。各游戏目录列出原包哈希、实际测试范围和保留的失败记录。
 
