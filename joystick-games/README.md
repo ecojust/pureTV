@@ -11,14 +11,14 @@
 
 ## 本批新增与更新的游戏
 
-| 游戏 | 玩法 |
-| --- | --- |
-| [Kart Royale](kart-royale/) | 在原有 Sunset Bay 之外，新增高低落差较大的 Cape Crown 和连续转弯的 Marina Esses。 |
-| [Turbo Kart Rally](turbo-kart-rally/) | 在 Palm Cove 与七位 AI 车手竞速。 |
-| [Clawd Pop 3D](clawd-pop/) | 在随机生成的实验室中使用黑洞炮，迎战新增怪物和 Codex 主题敌人。 |
-| [光刃魔塔 · Saber Magic Tower](saber-magic-tower/) | 在 21 层立体迷宫中规划钥匙和属性，用连击、重斩和适时格挡迎战守卫。 |
-| [Operation Ironhold](operation-ironhold/) | 在三分钟内清除集装箱堆场的十名对手。 |
-| [Lumenrift · 光隙守望](lumenrift/) | 建塔、升级并守住敌人进攻的路线。 |
+| 游戏 | 玩法 | Android TV |
+| --- | --- | --- |
+| [Kart Royale](kart-royale/) | 在原有 Sunset Bay 之外，新增高低落差较大的 Cape Crown 和连续转弯的 Marina Esses。 | [APK 0.1.6](https://raw.githubusercontent.com/ecojust/pureTV/f1e41ebba5c58d6ab78a10eca07b3720bb2c5c79/joystick-games/kart-royale/kart-royale-0.1.6.apk) |
+| [Turbo Kart Rally](turbo-kart-rally/) | 在 Palm Cove 与七位 AI 车手竞速。 | [APK 0.1.0](https://raw.githubusercontent.com/ecojust/pureTV/f1e41ebba5c58d6ab78a10eca07b3720bb2c5c79/joystick-games/turbo-kart-rally/turbo-kart-rally-0.1.0.apk) |
+| [Clawd Pop 3D](clawd-pop/) | 在随机生成的实验室中使用黑洞炮，迎战新增怪物和 Codex 主题敌人。 | [APK 0.1.0](https://raw.githubusercontent.com/ecojust/pureTV/f1e41ebba5c58d6ab78a10eca07b3720bb2c5c79/joystick-games/clawd-pop/clawd-pop-0.1.0.apk) |
+| [光刃魔塔 · Saber Magic Tower](saber-magic-tower/) | 在 21 层立体迷宫中规划钥匙和属性，用连击、重斩和适时格挡迎战守卫。 | [APK 0.1.0](https://raw.githubusercontent.com/ecojust/pureTV/f1e41ebba5c58d6ab78a10eca07b3720bb2c5c79/joystick-games/saber-magic-tower/saber-magic-tower-0.1.0.apk) |
+| [Operation Ironhold](operation-ironhold/) | 在三分钟内清除集装箱堆场的十名对手。 | [APK 0.1.0](https://raw.githubusercontent.com/ecojust/pureTV/f1e41ebba5c58d6ab78a10eca07b3720bb2c5c79/joystick-games/operation-ironhold/operation-ironhold-0.1.0.apk) |
+| [Lumenrift · 光隙守望](lumenrift/) | 建塔、升级并守住敌人进攻的路线。 | [APK 0.1.0](https://raw.githubusercontent.com/ecojust/pureTV/f1e41ebba5c58d6ab78a10eca07b3720bb2c5c79/joystick-games/lumenrift/lumenrift-0.1.0.apk) |
 
 在仓库根目录运行 `python3 -m http.server 8000 --bind 127.0.0.1`，然后打开 `http://127.0.0.1:8000/joystick-games/<游戏目录>/dist/tv.html` 即可用键盘试玩。每行链接指向对应的游戏目录，内含具体键位。
 
