@@ -16,7 +16,9 @@
 
 原包首次复验中，Apple Silicon 原生、端口占用及 Rosetta 模式各9项检查通过。后续同包复验的占用与 Rosetta 模式仍各9项通过；原生模式前8项通过，最后存档重启检查在系统通知占据前台时超时。实际观察到新本地地址及四个存档值一致，但后续断言未完成，这份失败记录保留。**Intel Mac 图形运行未验证**，未做实体手柄或完整通关测试。具体源、原报告和画面范围见 [Mac 交付核验](docs/macos-delivery/verification.json)。
 
-Android TV 与 Windows 继续验证，未完成的平台没有列出下载包。
+## Android TV 测试下载
+
+0.1.2 APK 支持 Android 8.0 及以上，包名为 `com.ecojust.joystick.backroadrally`，版本号为 3。公开文件与构建签名收据的 SHA-256 一致。包内 333 份网页构建文件与上面 Chrome 驾驶复验使用的文件逐份相同。Android TV 的双模式画面验收单独记录。[APK](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/backroad-rally-0.1.2.apk) · [SHA-256](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/SHA256SUMS-Backroad-0.1.2.txt) · [原签名包复核](https://github.com/ecojust/pureTV/actions/runs/44688535161/job/136128536372)
 
 | 按键 | 比赛中 | 菜单中 |
 | --- | --- | --- |
