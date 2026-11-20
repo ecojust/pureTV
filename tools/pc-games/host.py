@@ -220,8 +220,16 @@ class Pads(socketserver.ThreadingTCPServer):
 
 def addresses():
     hosts = set()
-    with contextlib.suppress(OSError):
-        hosts.update(socket.gethostbyname_ex(socket.gethostname())[2])
+    # Enumerate configured interfaces without looking up the computer's DNS name.
+    with contextlib.suppress(ImportError, OSError):
+        from ifaddr import get_adapters
+
+        hosts.update(
+            address.ip
+            for adapter in get_adapters()
+            for address in adapter.ips
+            if address.is_IPv4
+        )
     with contextlib.suppress(OSError), socket.socket(
         socket.AF_INET, socket.SOCK_DGRAM
     ) as probe:
@@ -269,6 +277,13 @@ def discovery(slug, addresses, port):
                     client.unregister_service(service)
             finally:
                 client.close()
+
+
+class LoopbackHTTPServer(http.server.ThreadingHTTPServer):
+    def server_bind(self):
+        # HTTPServer normally reverse-resolves this known numeric loopback address.
+        socketserver.TCPServer.server_bind(self)
+        self.server_name, self.server_port = self.server_address[:2]
 
 
 class GamePage(http.server.BaseHTTPRequestHandler):
@@ -421,7 +436,7 @@ def main(argv=None):
             )
             web = stack.enter_context(
                 listen(
-                    lambda addr: http.server.ThreadingHTTPServer(addr, GamePage),
+                    lambda addr: LoopbackHTTPServer(addr, GamePage),
                     "127.0.0.1",
                     http_port,
                     args.http_port is None,
