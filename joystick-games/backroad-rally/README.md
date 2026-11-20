@@ -8,7 +8,11 @@
 
 原包首次复验中，Apple Silicon 原生、端口占用及 Rosetta 模式各9项检查通过。后续同包复验的占用与 Rosetta 模式仍各9项通过；原生模式前8项通过，最后存档重启检查在系统通知占据前台时超时。2026-11-20 在 Apple Silicon 上从 Release 下载相同 ZIP 再次验证，9 项全部通过，包括实际手柄驾驶，以及退出后从新本地地址重启并恢复原存档。[原生复验记录](https://github.com/ecojust/pureTV/actions/runs/44679547282)。**Intel Mac 图形运行未验证**，未做实体手柄或完整通关测试。具体源、原报告和画面范围见 [Mac 交付核验](docs/macos-delivery/verification.json)。
 
-Android TV 与 Windows 继续验证，未完成的平台没有列出下载包。
+## Windows 下载
+
+0.1.0 支持 Windows 10 1903 及以上 x64 系统，需要 WebView2 Evergreen Runtime 与 WebGL2。原生安装、卸载、手柄驾驶及存档重启已通过验证。 [安装器](https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-windows-v0.1.0/BackroadRally-0.1.0-windows-x64-setup.exe) · [便携 ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-windows-v0.1.0/BackroadRally-0.1.0-windows-x64.zip) · [SHA256](windows/SHA256SUMS.txt) · [原生测试记录](docs/windows-delivery/verification.json)
+
+Android TV 继续验证。
 
 | 按键 | 比赛中 | 菜单中 |
 | --- | --- | --- |
@@ -32,4 +36,4 @@ npm run build:check
 
 上游代码声明 MIT；README 说明美术原创，音乐/部分音效由 ElevenLabs 生成，其他音效合成。Three.js 为 MIT、Rapier 为 Apache-2.0、Inter 字体为 OFL-1.1，许可证随包保留。上游音乐仅有 Ogg Opus：不支持此格式的旧 WKWebView 没有背景音乐，音效仍可使用原有 M4A 备选。
 
-源码与资源核验见 `docs/source-changes.json`、`docs/asset-closure.json`。浏览器合成手柄、真实 SDK TCP、安装包和实体设备验证分别记录；macOS 原包及限定范围见上方；Android、Windows 与实体电视验收尚未完成。
+源码与资源核验见 `docs/source-changes.json`、`docs/asset-closure.json`。浏览器合成手柄、真实 SDK TCP、安装包和实体设备验证分别记录；macOS 原包及限定范围见上方；Windows 原包及实测范围见上方。
