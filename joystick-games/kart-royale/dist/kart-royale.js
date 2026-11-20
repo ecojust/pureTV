@@ -30579,15 +30579,29 @@ void main() {
       }
     }
     let sampledContext = null;
+    let webglVersion = null;
     let webglRenderer = null;
+    function clearRendererInfo() {
+      webglVersion = null;
+      webglRenderer = null;
+    }
     window.JoystickGameQA = { snapshot() {
       const p = ctx.race.player, panel2 = document.getElementById("puretv-controller-panel"), rect = panel2?.getBoundingClientRect();
-      const frame = controller.peek(), gl = ctx.renderer?.getContext();
-      const webglVersion = gl?.getParameter(gl.VERSION) ?? null;
-      if (gl && gl !== sampledContext && webglVersion) {
-        const debug = gl.getExtension("WEBGL_debug_renderer_info");
-        webglRenderer = debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : null;
+      const frame = controller.peek(), gl = ctx.renderer?.getContext() ?? null;
+      if (gl !== sampledContext) {
+        sampledContext?.canvas.removeEventListener("webglcontextrestored", clearRendererInfo);
         sampledContext = gl;
+        gl?.canvas.addEventListener("webglcontextrestored", clearRendererInfo);
+        clearRendererInfo();
+      }
+      if (gl?.isContextLost()) {
+        clearRendererInfo();
+      } else if (gl && webglVersion === null) {
+        webglVersion = gl.getParameter(gl.VERSION) ?? null;
+        if (webglVersion) {
+          const debug = gl.getExtension("WEBGL_debug_renderer_info");
+          webglRenderer = debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : null;
+        }
       }
       const renderer = typeof webglVersion !== "string" ? null : /^WebGL 2(?:\.|\s)/.test(webglVersion) ? "webgl2" : /^WebGL 1(?:\.|\s)/.test(webglVersion) ? "webgl1" : null;
       let savedControls = false;
@@ -50809,7 +50823,8 @@ vec3 triWeights() {
       };
       pick = (rng, arr) => arr[rng() * arr.length | 0];
       TexLib = class {
-        constructor(renderer) {
+        constructor(renderer, sponsorDetail = 1024) {
+          __publicField(this, "sponsorDetail", sponsorDetail);
           __publicField(this, "cache", /* @__PURE__ */ new Map());
           __publicField(this, "aniso");
           __publicField(this, "alphaCache", /* @__PURE__ */ new Map());
@@ -51369,7 +51384,7 @@ vec3 triWeights() {
               g.strokeRect(cx + h0 * 0.055, cy + h0 * 0.055, w - h0 * 0.11, h0 - h0 * 0.11);
               g.restore();
             }
-            const ns = 1024;
+            const ns = this.sponsorDetail;
             const [mc, mg] = cv(ns);
             const mw = ns / 2, mh = ns / 4;
             mg.fillStyle = "#000";
@@ -51998,7 +52013,7 @@ vec3 triWeights() {
       DEPTH_PATCH_KEY = /^(lod|wind\d|bob|crowd|cloth|bird)/;
       SAP = new Color(10146922).convertSRGBToLinear();
       MatLib = class {
-        constructor(renderer, u) {
+        constructor(renderer, u, softwareLow = false) {
           __publicField(this, "u", u);
           __publicField(this, "tex");
           __publicField(this, "env", null);
@@ -52037,7 +52052,7 @@ vec3 triWeights() {
            */
           __publicField(this, "sharedDown", false);
           __publicField(this, "variantSeq", 0);
-          this.tex = new TexLib(renderer);
+          this.tex = new TexLib(renderer, softwareLow ? 256 : 1024);
           this.build();
         }
         shared(name, key2, tweak) {
@@ -62005,6 +62020,8 @@ void main() {
           __publicField(this, "cheer", 0);
           __publicField(this, "cheerTarget", 0);
           __publicField(this, "busOff", null);
+          __publicField(this, "pendingDecor", null);
+          __publicField(this, "pendingDraws", []);
           // instance sets, kept only during construction
           __publicField(this, "sets", {});
           __publicField(this, "acc", {});
@@ -62064,35 +62081,10 @@ void main() {
           this.ctx = ctx;
           this.rng = mulberry322(12241662);
           this.group.name = "scenery";
-          this.mats = new MatLib(ctx.renderer, this.u);
-          this.mats.setEnv(ctx.envMap);
-          this.surveyWorld();
-          this.foliage = new Foliage(this.mats, this.u, this.rng);
-          this.water = new Water(this.u);
-          this.water.build(ctx, this.seaLevel, this.bakeSeaField());
-          this.group.add(this.water.group);
-          this.makeSets();
-          this.dressStartStraight();
-          this.dressHarbour();
-          this.dressVillage();
-          this.dressCliff();
-          this.dressBeach();
-          this.dressBankedCurve();
-          this.dressBridgeAndHeadland();
-          this.dressOpenWater();
-          this.dressLandBands();
-          this.dressMidground();
-          this.buildBackdrop();
-          this.dressFarSails();
-          this.dressOpposingMidground();
-          this.dressOutsideShoulder();
-          this.dressShoulders();
-          this.dressBankCrest();
-          this.dressGrassBand();
-          this.dressVergeTransition();
-          this.dressNearFrame();
-          this.dressGulls();
-          this.emit();
+          const stages = this.buildScenery(ctx);
+          if (this.softwareLow()) this.pendingDecor = stages;
+          else while (!stages.next().done) {
+          }
           ctx.scene.add(this.group);
           this.busOff = ctx.bus.on((e) => {
             if (e.type === "lap" || e.type === "finish") this.cheerTarget = 1;
@@ -62100,7 +62092,84 @@ void main() {
             else if (e.type === "boost" && e.kart.isPlayer) this.cheerTarget = Math.max(this.cheerTarget, 0.45);
           });
         }
+        *buildScenery(ctx) {
+          this.mats = new MatLib(ctx.renderer, this.u, this.softwareLow());
+          this.mats.setEnv(ctx.envMap);
+          yield;
+          this.surveyWorld();
+          this.foliage = new Foliage(this.mats, this.u, this.rng);
+          yield;
+          this.water = new Water(this.u);
+          this.water.build(ctx, this.seaLevel, this.bakeSeaField());
+          this.group.add(this.water.group);
+          yield;
+          this.makeSets();
+          yield;
+          this.dressStartStraight();
+          yield;
+          this.dressHarbour();
+          yield;
+          this.dressVillage();
+          yield;
+          this.dressCliff();
+          yield;
+          this.dressBeach();
+          yield;
+          this.dressBankedCurve();
+          yield;
+          this.dressBridgeAndHeadland();
+          yield;
+          this.dressOpenWater();
+          yield;
+          this.dressLandBands();
+          yield;
+          this.dressMidground();
+          yield;
+          this.buildBackdrop();
+          yield;
+          this.dressFarSails();
+          yield;
+          this.dressOpposingMidground();
+          yield;
+          this.dressOutsideShoulder();
+          yield;
+          this.dressShoulders();
+          yield;
+          this.dressBankCrest();
+          yield;
+          this.dressGrassBand();
+          yield;
+          this.dressVergeTransition();
+          yield;
+          this.dressNearFrame();
+          yield;
+          this.dressGulls();
+          yield;
+          this.emit();
+        }
+        // The circuit, cars, items and physics have their own systems. Build decorative
+        // meshes in their original seeded order after the first interactive grid. Only
+        // expose a small batch per tick so newly discovered shaders do not all link in
+        // the same WebView task.
+        advanceScenery(ctx) {
+          if (ctx.frame < 9) return;
+          if (this.pendingDecor) {
+            const previous = this.group.children.length;
+            const finished = this.pendingDecor.next().done;
+            for (const object of this.group.children.slice(previous)) {
+              if (object.visible) {
+                object.visible = false;
+                this.pendingDraws.push(object);
+              }
+            }
+            if (finished) this.pendingDecor = null;
+          }
+          for (let i = 0; i < 3 && this.pendingDraws.length; i++) {
+            this.pendingDraws.shift().visible = true;
+          }
+        }
         update(ctx, dt) {
+          if (this.pendingDecor || this.pendingDraws.length) this.advanceScenery(ctx);
           const u = this.u;
           u.uTime.value = ctx.time;
           u.uCam.value.copy(ctx.camera.position);
@@ -62114,13 +62183,15 @@ void main() {
           this.cheer += (want - this.cheer) * Math.min(1, dt * 3.2);
           u.uCheer.value = this.cheer;
           if (this.rotor) this.rotor.rotation.z -= dt * (0.42 + u.uWindAmp.value * 0.3);
-          this.water.update(ctx);
-          if (ctx.envMap) this.mats.setEnv(ctx.envMap);
+          this.water?.update(ctx);
+          if (ctx.envMap) this.mats?.setEnv(ctx.envMap);
         }
         dispose() {
           this.busOff?.();
-          this.water.dispose();
-          this.mats.dispose();
+          this.pendingDecor = null;
+          this.pendingDraws = [];
+          this.water?.dispose();
+          this.mats?.dispose();
           this.group.traverse((o) => {
             const m = o;
             if (m.geometry) m.geometry.dispose();
@@ -66034,7 +66105,8 @@ void main() {
           ].filter((k) => this.sets[k] !== void 0);
           const { merged, kept } = mergeStaticSets(
             batchable.map((k) => this.sets[k]),
-            (name) => !noCast.has(name)
+            (name) => !noCast.has(name),
+            this.softwareLow() ? 100 : void 0
           );
           for (const mesh of merged) this.group.add(mesh);
           for (const k of batchable) delete this.sets[k];

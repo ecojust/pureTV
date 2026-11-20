@@ -305,6 +305,8 @@ export class Scenery implements System {
   private cheer = 0;
   private cheerTarget = 0;
   private busOff: (() => void) | null = null;
+  private pendingDecor: Generator<void> | null = null;
+  private pendingDraws: THREE.Object3D[] = [];
 
   // instance sets, kept only during construction
   private sets: Record<string, InstSet> = {};
@@ -318,44 +320,9 @@ export class Scenery implements System {
     this.ctx = ctx;
     this.rng = mulberry32(0xbacafe);
     this.group.name = 'scenery';
-    this.mats = new MatLib(ctx.renderer, this.u);
-    this.mats.setEnv(ctx.envMap);
-
-    this.surveyWorld();
-    this.foliage = new Foliage(this.mats, this.u, this.rng);
-
-    this.water = new Water(this.u);
-    this.water.build(ctx, this.seaLevel, this.bakeSeaField());
-    this.group.add(this.water.group);
-
-    this.makeSets();
-    this.dressStartStraight();
-    this.dressHarbour();
-    this.dressVillage();
-    this.dressCliff();
-    this.dressBeach();
-    this.dressBankedCurve();
-    this.dressBridgeAndHeadland();
-    this.dressOpenWater();
-    this.dressLandBands();
-    // Before the backdrop, so the coverage assertion and the balance pass both
-    // see what the midground has already put in the frame.
-    this.dressMidground();
-    // Backdrop before the balance pass: the balance pass asks "is this side of
-    // the frame empty?", and a landmark on the horizon is one of the answers.
-    this.buildBackdrop();
-    this.dressFarSails();
-    this.dressOpposingMidground();
-    // After the midground and the backdrop (so it can see what is already in
-    // the frame), before the grass: the 8-40 m outside-shoulder guarantee.
-    this.dressOutsideShoulder();
-    this.dressShoulders();
-    this.dressBankCrest();
-    this.dressGrassBand();
-    this.dressVergeTransition();
-    this.dressNearFrame();
-    this.dressGulls();
-    this.emit();
+    const stages = this.buildScenery(ctx);
+    if (this.softwareLow()) this.pendingDecor = stages;
+    else while (!stages.next().done) { /* build the original full scene before the first draw */ }
 
     ctx.scene.add(this.group);
 
@@ -367,7 +334,95 @@ export class Scenery implements System {
     });
   }
 
+  private *buildScenery(ctx: Ctx): Generator<void> {
+    this.mats = new MatLib(ctx.renderer, this.u, this.softwareLow());
+    this.mats.setEnv(ctx.envMap);
+    yield;
+
+    this.surveyWorld();
+    this.foliage = new Foliage(this.mats, this.u, this.rng);
+    yield;
+
+    this.water = new Water(this.u);
+    this.water.build(ctx, this.seaLevel, this.bakeSeaField());
+    this.group.add(this.water.group);
+    yield;
+
+    this.makeSets();
+    yield;
+    this.dressStartStraight();
+    yield;
+    this.dressHarbour();
+    yield;
+    this.dressVillage();
+    yield;
+    this.dressCliff();
+    yield;
+    this.dressBeach();
+    yield;
+    this.dressBankedCurve();
+    yield;
+    this.dressBridgeAndHeadland();
+    yield;
+    this.dressOpenWater();
+    yield;
+    this.dressLandBands();
+    yield;
+    // Before the backdrop, so the coverage assertion and the balance pass both
+    // see what the midground has already put in the frame.
+    this.dressMidground();
+    yield;
+    // Backdrop before the balance pass: the balance pass asks "is this side of
+    // the frame empty?", and a landmark on the horizon is one of the answers.
+    this.buildBackdrop();
+    yield;
+    this.dressFarSails();
+    yield;
+    this.dressOpposingMidground();
+    yield;
+    // After the midground and the backdrop (so it can see what is already in
+    // the frame), before the grass: the 8-40 m outside-shoulder guarantee.
+    this.dressOutsideShoulder();
+    yield;
+    this.dressShoulders();
+    yield;
+    this.dressBankCrest();
+    yield;
+    this.dressGrassBand();
+    yield;
+    this.dressVergeTransition();
+    yield;
+    this.dressNearFrame();
+    yield;
+    this.dressGulls();
+    yield;
+    this.emit();
+  }
+
+  // The circuit, cars, items and physics have their own systems. Build decorative
+  // meshes in their original seeded order after the first interactive grid. Only
+  // expose a small batch per tick so newly discovered shaders do not all link in
+  // the same WebView task.
+  private advanceScenery(ctx: Ctx) {
+    if (ctx.frame < 9) return;
+    if (this.pendingDecor) {
+      const previous = this.group.children.length;
+      const finished = this.pendingDecor.next().done;
+      for (const object of this.group.children.slice(previous)) {
+        if (object.visible) {
+          object.visible = false;
+          this.pendingDraws.push(object);
+        }
+      }
+      if (finished) this.pendingDecor = null;
+    }
+    for (let i = 0; i < 3 && this.pendingDraws.length; i++) {
+      this.pendingDraws.shift()!.visible = true;
+    }
+  }
+
   update(ctx: Ctx, dt: number) {
+    if (this.pendingDecor || this.pendingDraws.length) this.advanceScenery(ctx);
     const u = this.u;
     u.uTime.value = ctx.time;
     u.uCam.value.copy(ctx.camera.position);
@@ -388,14 +443,16 @@ export class Scenery implements System {
     u.uCheer.value = this.cheer;
 
     if (this.rotor) this.rotor.rotation.z -= dt * (0.42 + u.uWindAmp.value * 0.3);
-    this.water.update(ctx);
-    if (ctx.envMap) this.mats.setEnv(ctx.envMap);
+    this.water?.update(ctx);
+    if (ctx.envMap) this.mats?.setEnv(ctx.envMap);
   }
 
   dispose() {
     this.busOff?.();
-    this.water.dispose();
-    this.mats.dispose();
+    this.pendingDecor = null;
+    this.pendingDraws = [];
+    this.water?.dispose();
+    this.mats?.dispose();
     this.group.traverse((o) => {
       const m = o as THREE.Mesh;
       if (m.geometry) m.geometry.dispose();
@@ -5177,6 +5234,7 @@ export class Scenery implements System {
     const { merged, kept } = mergeStaticSets(
       batchable.map((k) => this.sets[k]),
       (name) => !noCast.has(name),
+      this.softwareLow() ? 100 : undefined,
     );
     for (const mesh of merged) this.group.add(mesh);
     for (const k of batchable) delete this.sets[k];
