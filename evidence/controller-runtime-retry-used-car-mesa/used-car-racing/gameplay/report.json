@@ -1,0 +1,3023 @@
+{
+  "slug": "used-car-racing",
+  "mode": "android",
+  "startedAt": "2026-11-20T15:29:15.777Z",
+  "status": "failed",
+  "sourceHashes": {
+    "tools/readme-controller-qa/run.mjs": "ab57b13871d214226b4094d0eacb39b1ea27e17772ae6e92ac3868275f9c1b53",
+    "tools/readme-controller-qa/cases.mjs": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71",
+    "tools/readme-controller-qa/client-status-dom.mjs": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e",
+    "tools/readme-controller-qa/client-status-cases.mjs": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45",
+    "tools/readme-controller-qa/sdk-peer.py": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0",
+    "tools/readme-controller-qa/WifiWireHarness.java": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5",
+    "resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9",
+    "puretv-joystick/bridge.py": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "puretv-joystick/virtual.html": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+  },
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "androidAppTested": true,
+  "syntheticNativeBridge": false,
+  "browserVideoRequested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "tests": [
+    {
+      "name": "menu layout and service address",
+      "status": "passed"
+    },
+    {
+      "name": "official hello and nine sync messages leave menu unchanged",
+      "status": "passed",
+      "result": {
+        "keys": 9
+      }
+    },
+    {
+      "name": "START begins actual game",
+      "status": "passed"
+    },
+    {
+      "name": "direction and game-specific action affect actual model",
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: RIGHT actual camera heading projection\n    at file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/cases.mjs:98:16\n    at async hold (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:41:218)\n    at async gameplay (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/cases.mjs:86:5)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:160:80\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:37:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:160:2"
+    }
+  ],
+  "observations": [
+    {
+      "label": "menu",
+      "before": null,
+      "after": {
+        "phase": "garage",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0,
+            "startSeq": 0,
+            "selectSeq": 0,
+            "selectMs": 0,
+            "aimY": 0,
+            "aimX": 0
+          },
+          {
+            "id": 2,
+            "connected": false,
+            "x": 0,
+            "y": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "cancelSeq": 0,
+            "startSeq": 0,
+            "selectSeq": 0,
+            "selectMs": 0,
+            "aimY": 0,
+            "aimX": 0
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:40029/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "qr": "data:image/png;base64,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",
+          "secureUrl": "https://10.0.2.15:44401/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "secureQr": "data:image/png;base64,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",
+          "certificateFingerprint": "09368abf023fd95beeafe4bd194a055df33c8b500e8ccf9b2db9e48d522ebd06",
+          "certificateName": "pureTV LAN 582B13C987C7",
+          "secureError": "",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Used Car Racing TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": false,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "garage",
+          "players": [
+            {
+              "id": 1,
+              "x": -183.51615322199467,
+              "y": 4.977638305141652,
+              "z": -241.5257390169149,
+              "yaw": 2.548125820692355,
+              "speed": 0,
+              "lateral": -2.15,
+              "s": 1743.5092048810245,
+              "u": 0,
+              "v": 0,
+              "steerAngle": 0,
+              "lap": 1,
+              "rank": 1,
+              "telemetry": {
+                "speedKmh": 0,
+                "rpm": 850,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 0,
+                "absActive": false,
+                "brakeTemp": 28,
+                "grip": 0.9232454472713174,
+                "slipAngle": 0,
+                "engineTemp": 74,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 0,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 1
+              }
+            }
+          ],
+          "raceTime": 0,
+          "countdown": 3,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 0,
+          "events": []
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -183.51615322199467,
+            "y": 4.977638305141652,
+            "z": -241.5257390169149,
+            "yaw": 2.548125820692355,
+            "speed": 0,
+            "lateral": -2.15,
+            "s": 1743.5092048810245,
+            "u": 0,
+            "v": 0,
+            "steerAngle": 0,
+            "lap": 1,
+            "rank": 1,
+            "telemetry": {
+              "speedKmh": 0,
+              "rpm": 850,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 0,
+              "absActive": false,
+              "brakeTemp": 28,
+              "grip": 0.9232454472713174,
+              "slipAngle": 0,
+              "engineTemp": 74,
+              "damage": 0,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 0,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 1
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.3933631505704642,
+            0,
+            0,
+            0,
+            0,
+            2.475086853416296,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.7846347458142114,
+            -0.1939372826281128,
+            0.5888434818081042,
+            0,
+            2.7755575615628914e-17,
+            0.9498114066947605,
+            0.31282309971055533,
+            0,
+            -0.6199583176803645,
+            -0.2454518733262053,
+            0.7452550316633821,
+            0,
+            -1.609823385706477e-15,
+            0.28494342200842704,
+            -10.774915649147985,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://used-car-racing.invalid/tv.html",
+          "width": 961,
+          "height": 541,
+          "scrollWidth": 961,
+          "scrollHeight": 541,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": true,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 961,
+                  "bottom": 541
+                },
+                "rows": []
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:40029/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "qr": "data:image/png;base64,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",
+          "secureUrl": "https://10.0.2.15:44401/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "secureQr": "data:image/png;base64,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",
+          "certificateFingerprint": "09368abf023fd95beeafe4bd194a055df33c8b500e8ccf9b2db9e48d522ebd06",
+          "certificateName": "pureTV LAN 582B13C987C7",
+          "secureError": "",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Used Car Racing TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": false,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "started",
+      "before": null,
+      "after": {
+        "phase": "race",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-0b37d20fea81",
+            "session": "wifi-47c53262-b81f-4c3a-89c6-9da998ec8c07-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:40029/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "qr": "data:image/png;base64,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",
+          "secureUrl": "https://10.0.2.15:44401/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "secureQr": "data:image/png;base64,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",
+          "certificateFingerprint": "09368abf023fd95beeafe4bd194a055df33c8b500e8ccf9b2db9e48d522ebd06",
+          "certificateName": "pureTV LAN 582B13C987C7",
+          "secureError": "",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Used Car Racing TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "race",
+          "players": [
+            {
+              "id": 1,
+              "x": -183.51615322199467,
+              "y": 4.97761111217354,
+              "z": -241.5257390169149,
+              "yaw": 2.548125820692355,
+              "speed": 0,
+              "lateral": -2.149952145515637,
+              "s": 1743.4989797971305,
+              "u": 0,
+              "v": 0,
+              "steerAngle": 0,
+              "lap": 1,
+              "rank": 2,
+              "telemetry": {
+                "speedKmh": 0,
+                "rpm": 850,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 0,
+                "absActive": false,
+                "brakeTemp": 27.9932570828952,
+                "grip": 0.8678507204350383,
+                "slipAngle": 0,
+                "engineTemp": 73.70519354922617,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 0,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 2,
+                "misfire": false
+              }
+            }
+          ],
+          "raceTime": 0.12499999999999999,
+          "countdown": 0,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 2,
+          "events": [
+            {
+              "id": 1,
+              "kind": "countdown",
+              "type": "countdown",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "准备起步",
+                "READY TO RACE"
+              ],
+              "time": 0
+            },
+            {
+              "id": 2,
+              "kind": "go",
+              "type": "go",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "绿灯！",
+                "GREEN LIGHT!"
+              ],
+              "time": 2.999999999999992
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -183.51615322199467,
+            "y": 4.97761111217354,
+            "z": -241.5257390169149,
+            "yaw": 2.548125820692355,
+            "speed": 0,
+            "lateral": -2.149952145515637,
+            "s": 1743.4989797971305,
+            "u": 0,
+            "v": 0,
+            "steerAngle": 0,
+            "lap": 1,
+            "rank": 2,
+            "telemetry": {
+              "speedKmh": 0,
+              "rpm": 850,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 0,
+              "absActive": false,
+              "brakeTemp": 27.9932570828952,
+              "grip": 0.8678507204350383,
+              "slipAngle": 0,
+              "engineTemp": 73.70519354922617,
+              "damage": 0,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 0,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 2,
+              "misfire": false
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.0368345986931329,
+            0,
+            0,
+            0,
+            0,
+            1.8417708860334578,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.8290068787627144,
+            0.08461231564246785,
+            -0.5528004621974566,
+            0,
+            -1.3877787807814457e-17,
+            0.9884880152601505,
+            0.15129918600920672,
+            0,
+            0.559238406195517,
+            -0.12542806595283182,
+            0.8194633642251677,
+            0,
+            287.2066227281198,
+            -21.882555017993234,
+            87.59479518773736,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://used-car-racing.invalid/tv.html",
+          "width": 961,
+          "height": 541,
+          "scrollWidth": 961,
+          "scrollHeight": 541,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 961,
+                  "bottom": 541
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-0b37d20fea81",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-0b37d20fea81",
+                    "idText": "ID: virtual-0b37d20fea81",
+                    "visible": false,
+                    "rect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "clip": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 961,
+                      "bottom": 541
+                    },
+                    "idRect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "idClip": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 961,
+                      "bottom": 541
+                    },
+                    "idTextRects": [],
+                    "idClientWidth": 0,
+                    "idScrollWidth": 0,
+                    "idClientHeight": 0,
+                    "idScrollHeight": 0,
+                    "iconVisible": false,
+                    "iconRect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:40029/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "qr": "data:image/png;base64,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",
+          "secureUrl": "https://10.0.2.15:44401/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "secureQr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdnSURBVHic7d3BbsNIEgXB1WL//5c15/FhCYNqVdEZcbdkU3KCh4fm6/1+v/8DEPTf6V8AYIoAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGT979tv+Hq9vv2WX/V+v2/9/NX1ufv6p939fE//faev7/TrP923v9/uAIEsAQSyBBDIEkAgSwCBLAEEsgQQyPr6DvDKX9+5nd5xnX79u5/P9M5u+v1Pm37/K9t2jO4AgSwBBLIEEMgSQCBLAIEsAQSyBBDIWrcDvLJ953b39a/+vunz9rbtuD7t9M5zeqf39P+fT3MHCGQJIJAlgECWAAJZAghkCSCQJYBA1uN2gE93ese3fcd2+jy/+vXld9wBAlkCCGQJIJAlgECWAAJZAghkCSCQZQf4ZdM7uukd29P//ruvb+e3iztAIEsAgSwBBLIEEMgSQCBLAIEsAQSyHrcDfPqOanondvr1tz83uL4TfPr/z6e5AwSyBBDIEkAgSwCBLAEEsgQQyBJAIGvdDnD7juzpTp+nN/3zV6bf/7Ttv9827gCBLAEEsgQQyBJAIEsAgSwBBLIEEMh6vR0QljJ9Ht1f3+Hd5d/xu9wBAlkCCGQJIJAlgECWAAJZAghkCSCQ9fXzALfvuJ6+Q9u+45t+bu70DvLK9vMWpz+/T3MHCGQJIJAlgECWAAJZAghkCSCQJYBA1rrnAp92d4e0fWd3ZXrHNf1c37vu/v7T1+/K9ucyf5o7QCBLAIEsAQSyBBDIEkAgSwCBLAEEstbtALefV7b9PMDTO7Wn79CmX//0z1/9/tPXz3mAAEsIIJAlgECWAAJZAghkCSCQJYBA1rod4Pad3vTOcPtO7a/vJO++/unvz/T3c9vO74o7QCBLAIEsAQSyBBDIEkAgSwCBLAEEsr6+Azy9E3r6zu7u62/f4U2fl7fd9HOD/9rO74o7QCBLAIEsAQSyBBDIEkAgSwCBLAEEstadBzhteuc0fZ7blenz6E7b/lzeu05f3+072p/cAQJZAghkCSCQJYBAlgACWQIIZAkgkPV6Tw+vPuyv76xOm36u8pXp59qe3jFu33le2b7z/MkdIJAlgECWAAJZAghkCSCQJYBAlgACWY87D3D7zq++E7t7Ht7d8wbv2r4TvGv6+7eNO0AgSwCBLAEEsgQQyBJAIEsAgSwBBLLW7QCnz6M7/VzX6R3jlafv3O7avjO8cvrz+2vfD3eAQJYAAlkCCGQJIJAlgECWAAJZAghkff25wNt3cFemd1BP21n99PTP/+mmn5t85dvfX3eAQJYAAlkCCGQJIJAlgECWAAJZAghkrTsP8LTp59pOn8d25fRO8e7713eWTz+Pcvr6/eQOEMgSQCBLAIEsAQSyBBDIEkAgSwCBrK/vAKd3QNM7uWnbd36nf/70jm56xzh93t/T/j/cAQJZAghkCSCQJYBAlgACWQIIZAkgkLXuucDbd0jTO7grT78+V6a/H9PX98r093P79fnJHSCQJYBAlgACWQIIZAkgkCWAQJYAAlm55wKffi7v3fe/Mv3c4Cunr8/pHeld08/dvWJH+W/uAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHrcDnD6PLHTO77pnd70c3OnP9+7Tl/f6e/PXds+X3eAQJYAAlkCCGQJIJAlgECWAAJZAghkPW4HOP3c0207pt+a3qFNnzd31+nPf/r7NX1e4Le5AwSyBBDIEkAgSwCBLAEEsgQQyBJAIOtxO8DtO7Er25+ruv08u+md2dN3jNM72m2frztAIEsAgSwBBLIEEMgSQCBLAIEsAQSyXu/pYVXM3R3Uth3Vb02f17d9x3f685v+/m37/roDBLIEEMgSQCBLAIEsAQSyBBDIEkAg6+vnAU6fx3fa9A5veoe2/fOd/nzu2r5j3Lbzu+IOEMgSQCBLAIEsAQSyBBDIEkAgSwCBrHXPBd62E/ppemc3fd7a9vP8ps+rm36u8l3OAwSIEEAgSwCBLAEEsgQQyBJAIEsAgax1O8Ar0zu0u7bvwO6+//RO7OnXd/o8xenr/23uAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHrcDpD/b/tO6/R5cNN//+nf/67azu+KO0AgSwCBLAEEsgQQyBJAIEsAgSwBBLLsAJd5+nNrr5x+LvH25+Ze2X79p1//09wBAlkCCGQJIJAlgECWAAJZAghkCSCQ9bgd4NN2Rr91euc2/dzc7X/f6deffi7y9I5yG3eAQJYAAlkCCGQJIJAlgECWAAJZAghkrdsB/rXnjv7W6Z3Y6fe/a3onOL3T2/75Tf99n+YOEMgSQCBLAIEsAQSyBBDIEkAgSwCBrNd72zAH4EvcAQJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQ9Q8WdCeHTQKItAAAAABJRU5ErkJggg==",
+          "certificateFingerprint": "09368abf023fd95beeafe4bd194a055df33c8b500e8ccf9b2db9e48d522ebd06",
+          "certificateName": "pureTV LAN 582B13C987C7",
+          "secureError": "",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Used Car Racing TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "LEFT-rendered-direction",
+      "before": {
+        "phase": "race",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-0b37d20fea81",
+            "session": "wifi-47c53262-b81f-4c3a-89c6-9da998ec8c07-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": true,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": true,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:40029/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "qr": "data:image/png;base64,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",
+          "secureUrl": "https://10.0.2.15:44401/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "secureQr": "data:image/png;base64,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",
+          "certificateFingerprint": "09368abf023fd95beeafe4bd194a055df33c8b500e8ccf9b2db9e48d522ebd06",
+          "certificateName": "pureTV LAN 582B13C987C7",
+          "secureError": "",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Used Car Racing TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "race",
+          "players": [
+            {
+              "id": 1,
+              "x": -182.5989361886566,
+              "y": 4.982013330103126,
+              "z": -242.8847193950594,
+              "yaw": 2.5481260072202865,
+              "speed": 3.882453193463257,
+              "lateral": -2.139757002420794,
+              "s": 1745.1841200434267,
+              "u": 3.8824521321738414,
+              "v": -0.002870681423111761,
+              "steerAngle": 0,
+              "lap": 1,
+              "rank": 2,
+              "telemetry": {
+                "speedKmh": 13.976831496467724,
+                "rpm": 1577.9889323933912,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 1,
+                "absActive": false,
+                "brakeTemp": 27.911640959980282,
+                "grip": 0.867446866908853,
+                "slipAngle": -0.0007393989165193563,
+                "engineTemp": 87.44518840171787,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 0,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 2,
+                "misfire": false
+              }
+            }
+          ],
+          "raceTime": 1.4999999999999971,
+          "countdown": 0,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 2,
+          "events": [
+            {
+              "id": 1,
+              "kind": "countdown",
+              "type": "countdown",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "准备起步",
+                "READY TO RACE"
+              ],
+              "time": 0
+            },
+            {
+              "id": 2,
+              "kind": "go",
+              "type": "go",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "绿灯！",
+                "GREEN LIGHT!"
+              ],
+              "time": 2.999999999999992
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -182.5989361886566,
+            "y": 4.982013330103126,
+            "z": -242.8847193950594,
+            "yaw": 2.5481260072202865,
+            "speed": 3.882453193463257,
+            "lateral": -2.139757002420794,
+            "s": 1745.1841200434267,
+            "u": 3.8824521321738414,
+            "v": -0.002870681423111761,
+            "steerAngle": 0,
+            "lap": 1,
+            "rank": 2,
+            "telemetry": {
+              "speedKmh": 13.976831496467724,
+              "rpm": 1577.9889323933912,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 1,
+              "absActive": false,
+              "brakeTemp": 27.911640959980282,
+              "grip": 0.867446866908853,
+              "slipAngle": -0.0007393989165193563,
+              "engineTemp": 87.44518840171787,
+              "damage": 0,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 0,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 2,
+              "misfire": false
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.028509263646716,
+            0,
+            0,
+            0,
+            0,
+            1.8269822594537781,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.8290069483212318,
+            0.08237223133314281,
+            -0.5531385858356999,
+            0,
+            -1.3877787807814457e-17,
+            0.9890928121095379,
+            0.1472936150457527,
+            0,
+            0.5592383030829688,
+            -0.1221074303162817,
+            0.8199648137733934,
+            0,
+            287.2063686102649,
+            -21.70526483885469,
+            88.8531142446464,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://used-car-racing.invalid/tv.html",
+          "width": 961,
+          "height": 541,
+          "scrollWidth": 961,
+          "scrollHeight": 541,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 961,
+                  "bottom": 541
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-0b37d20fea81",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-0b37d20fea81",
+                    "idText": "ID: virtual-0b37d20fea81",
+                    "visible": false,
+                    "rect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "clip": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 961,
+                      "bottom": 541
+                    },
+                    "idRect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "idClip": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 961,
+                      "bottom": 541
+                    },
+                    "idTextRects": [],
+                    "idClientWidth": 0,
+                    "idScrollWidth": 0,
+                    "idClientHeight": 0,
+                    "idScrollHeight": 0,
+                    "iconVisible": false,
+                    "iconRect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:40029/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "qr": "data:image/png;base64,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",
+          "secureUrl": "https://10.0.2.15:44401/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "secureQr": "data:image/png;base64,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",
+          "certificateFingerprint": "09368abf023fd95beeafe4bd194a055df33c8b500e8ccf9b2db9e48d522ebd06",
+          "certificateName": "pureTV LAN 582B13C987C7",
+          "secureError": "",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Used Car Racing TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "phase": "race",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-0b37d20fea81",
+            "session": "wifi-47c53262-b81f-4c3a-89c6-9da998ec8c07-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": -1,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": true,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": true,
+              "RIGHT": false,
+              "START": false,
+              "A": true,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:40029/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdmSURBVHic7d3BTsNaFkXBptX//8u88WPQFjLX5zirah5iQljyYOv66/v7+/s/AEH/nb4AgCkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJD1v6ff8Ovr6+m3fNT39/et1199Pqd//pWr95/++dOfz5Xt1zft7ufzW+4AgSwBBLIEEMgSQCBLAIEsAQSyBBDIenwHeOXpHdBvTe/EPn0HdmV6J3jX6eub/v2ubPv+ugMEsgQQyBJAIEsAgSwBBLIEEMgSQCBr3Q7wyvQO767p67+7Q5vecZ2+/u3nOd41/f3bxh0gkCWAQJYAAlkCCGQJIJAlgECWAAJZr9sBvt3pnd32nd/bd5ZX3raDq3MHCGQJIJAlgECWAAJZAghkCSCQJYBAlh3gMtPn2d11+jy96fd/+9+Hf3MHCGQJIJAlgECWAAJZAghkCSCQJYBA1ut2gJ++o3r7juz09U/v8KbPa7xr+/fnae4AgSwBBLIEEMgSQCBLAIEsAQSyBBDIWrcDnH6u62nT5815/e7X3/Xp/z9/zR0gkCWAQJYAAlkCCGQJIJAlgECWAAJZj+8AnUf2/03vuLbv5KZfP83/z99yBwhkCSCQJYBAlgACWQIIZAkgkCWAQNbjO8DTO6tP33ldXf/25+Jemd65TX8+d19/+vObfq7xX3MHCGQJIJAlgECWAAJZAghkCSCQJYBA1tf3y4Y723dSV6bPq5v+/a9M7zS37+hO//2nf/7T3093gECWAAJZAghkCSCQJYBAlgACWQIIZD1+HuBpbz8PcHonNf3+08/9nf79T38/p3+/bdwBAlkCCGQJIJAlgECWAAJZAghkCSCQte65wFc7pOmd3/bzzk5/vndt32GeNv35Tu8st+0M3QECWQIIZAkgkCWAQJYAAlkCCGQJIJC17rnA0zui6R3haac/37c/t3j79W+/vivT/98/uQMEsgQQyBJAIEsAgSwBBLIEEMgSQCBr3XmAp19/d2d0+rmzp9//ytvPa9x+3uC2Hdxvvf36f3IHCGQJIJAlgECWAAJZAghkCSCQJYBA1rrzAK9s33ndNb2j2/7c1+nn1k7//qed/nyuOA8Q4CECCGQJIJAlgECWAAJZAghkCSCQ9fh5gFemn1s7/fOnr2/6vMa7tl//9h3nadt2ku4AgSwBBLIEEMgSQCBLAIEsAQSyBBDIWvdc4Omd3JXpHdX0eWuffl7c9u/n9s/vyvT/70/uAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHp8B3h353N6Z3Z6B3Z6xzW9U7xreid39+d/+s5uegf619wBAlkCCGQJIJAlgECWAAJZAghkCSCQ9brzAO/69B3U9O83bfv1XZk+72/79/uvuQMEsgQQyBJAIEsAgSwBBLIEEMgSQCBr3XmAb99BXdn+XNvp8/i278imP5/p5xLfNf3+P7kDBLIEEMgSQCBLAIEsAQSyBBDIEkAg6+POA7Szevf1X9l+fdPfv+22ff/cAQJZAghkCSCQJYBAlgACWQIIZAkgkLXuPMDtpndap9//9HmC0zuwt5/3uN30/8dvuQMEsgQQyBJAIEsAgSwBBLIEEMgSQCDr484DvLtDmn4u8bTTO763Pxf69PvfNb2jfBt3gECWAAJZAghkCSCQJYBAlgACWQIIZK07D3D7Dmv7zmp6B7l953nX6Z2k52Y/yx0gkCWAQJYAAlkCCGQJIJAlgECWAAJZH3ce4JXTO6rp65/ekW3bef210zvJ068/7W1/f3eAQJYAAlkCCGQJIJAlgECWAAJZAghkrTsPcLvpHd32Hdhp23//6Z3mldOf3/bzPH9yBwhkCSCQJYBAlgACWQIIZAkgkCWAQNa68wDfbnrnOL1TPP3zt+/opnd2b3/u8tPcAQJZAghkCSCQJYBAlgACWQIIZAkgkPX4DvDK9I7uyvQO6vRO7vTO7+7rp69v2vTOcfv/52+5AwSyBBDIEkAgSwCBLAEEsgQQyBJAIGvdDvDK6R3X23dO0+fpTZ8nt/28wenzBK9Mn/f4NHeAQJYAAlkCCGQJIJAlgECWAAJZAghkvW4H+Hbbz7PbvuM6fd7g6dffZWf5t9wBAlkCCGQJIJAlgECWAAJZAghkCSCQZQf4sG07qN++/+nnDk+fx3dl+v2vnN4JTn8//5o7QCBLAIEsAQSyBBDIEkAgSwCBLAEEsl63A/y0HdJvbX8u7fR5eVfu7uS27zinz+vb/vn85A4QyBJAIEsAgSwBBLIEEMgSQCBLAIGsdTvA7Tuy07bvsN5+fVemd2rTO73Ttu0E3QECWQIIZAkgkCWAQJYAAlkCCGQJIJD19T09fAIY4g4QyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgax/AEdT+Mg1tVxvAAAAAElFTkSuQmCC",
+          "secureUrl": "https://10.0.2.15:44401/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "secureQr": "data:image/png;base64,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",
+          "certificateFingerprint": "09368abf023fd95beeafe4bd194a055df33c8b500e8ccf9b2db9e48d522ebd06",
+          "certificateName": "pureTV LAN 582B13C987C7",
+          "secureError": "",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Used Car Racing TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "race",
+          "players": [
+            {
+              "id": 1,
+              "x": -180.9606004348136,
+              "y": 4.99000469558476,
+              "z": -245.5395623576942,
+              "yaw": 2.6142471043072706,
+              "speed": 6.6146223969804625,
+              "lateral": -1.9323525216531872,
+              "s": 1748.3435981822288,
+              "u": 6.606139703208686,
+              "v": 0.33488457164433955,
+              "steerAngle": 0.1418586259887223,
+              "lap": 1,
+              "rank": 2,
+              "telemetry": {
+                "speedKmh": 23.812640629129664,
+                "rpm": 2697.120912733341,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 1,
+                "absActive": false,
+                "brakeTemp": 27.8647717777835,
+                "grip": 0.8566385001263789,
+                "slipAngle": 0.050649572828790186,
+                "engineTemp": 96.52208146360103,
+                "damage": 0,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 0.1418586259887223,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 2,
+                "misfire": false
+              }
+            }
+          ],
+          "raceTime": 2.091666666666662,
+          "countdown": 0,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 2,
+          "events": [
+            {
+              "id": 1,
+              "kind": "countdown",
+              "type": "countdown",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "准备起步",
+                "READY TO RACE"
+              ],
+              "time": 0
+            },
+            {
+              "id": 2,
+              "kind": "go",
+              "type": "go",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "绿灯！",
+                "GREEN LIGHT!"
+              ],
+              "time": 2.999999999999992
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -180.9606004348136,
+            "y": 4.99000469558476,
+            "z": -245.5395623576942,
+            "yaw": 2.6142471043072706,
+            "speed": 6.6146223969804625,
+            "lateral": -1.9323525216531872,
+            "s": 1748.3435981822288,
+            "u": 6.606139703208686,
+            "v": 0.33488457164433955,
+            "steerAngle": 0.1418586259887223,
+            "lap": 1,
+            "rank": 2,
+            "telemetry": {
+              "speedKmh": 23.812640629129664,
+              "rpm": 2697.120912733341,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 1,
+              "absActive": false,
+              "brakeTemp": 27.8647717777835,
+              "grip": 0.8566385001263789,
+              "slipAngle": 0.050649572828790186,
+              "engineTemp": 96.52208146360103,
+              "damage": 0,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 0.1418586259887223,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 2,
+              "misfire": false
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.0227120684251543,
+            0,
+            0,
+            0,
+            0,
+            1.8166844690509671,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.8531958147151684,
+            0.07518183568615454,
+            -0.5161439657066431,
+            0,
+            0,
+            0.9895573761435925,
+            0.14413951338827455,
+            0,
+            0.5215907416284536,
+            -0.1229792295579568,
+            0.8442862117462366,
+            0,
+            282.4557974088817,
+            -23.657231369965782,
+            104.21845302711864,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://used-car-racing.invalid/tv.html",
+          "width": 961,
+          "height": 541,
+          "scrollWidth": 961,
+          "scrollHeight": 541,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 961,
+                  "bottom": 541
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-0b37d20fea81",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-0b37d20fea81",
+                    "idText": "ID: virtual-0b37d20fea81",
+                    "visible": false,
+                    "rect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "clip": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 961,
+                      "bottom": 541
+                    },
+                    "idRect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "idClip": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 961,
+                      "bottom": 541
+                    },
+                    "idTextRects": [],
+                    "idClientWidth": 0,
+                    "idScrollWidth": 0,
+                    "idClientHeight": 0,
+                    "idScrollHeight": 0,
+                    "iconVisible": false,
+                    "iconRect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:40029/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "qr": "data:image/png;base64,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",
+          "secureUrl": "https://10.0.2.15:44401/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "secureQr": "data:image/png;base64,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",
+          "certificateFingerprint": "09368abf023fd95beeafe4bd194a055df33c8b500e8ccf9b2db9e48d522ebd06",
+          "certificateName": "pureTV LAN 582B13C987C7",
+          "secureError": "",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Used Car Racing TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "LEFT-direction-projection",
+      "before": null,
+      "after": {
+        "origin": {
+          "x": -182.5989361886566,
+          "y": 4.982013330103126,
+          "z": -242.8847193950594
+        },
+        "rayLength": 3,
+        "centerDelta": -0.01117289967168913,
+        "headingDelta": -0.017684336967047843
+      }
+    },
+    {
+      "label": "RIGHT-rendered-direction",
+      "before": {
+        "phase": "race",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-0b37d20fea81",
+            "session": "wifi-47c53262-b81f-4c3a-89c6-9da998ec8c07-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": true,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": true,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:40029/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "qr": "data:image/png;base64,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",
+          "secureUrl": "https://10.0.2.15:44401/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "secureQr": "data:image/png;base64,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",
+          "certificateFingerprint": "09368abf023fd95beeafe4bd194a055df33c8b500e8ccf9b2db9e48d522ebd06",
+          "certificateName": "pureTV LAN 582B13C987C7",
+          "secureError": "",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Used Car Racing TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "race",
+          "players": [
+            {
+              "id": 1,
+              "x": -179.26794217046336,
+              "y": 5.000496730294412,
+              "z": -249.703361462906,
+              "yaw": 2.8893100650911663,
+              "speed": 8.122459335321206,
+              "lateral": -0.7529405597509033,
+              "s": 0.23244434645357614,
+              "u": 7.793001143137873,
+              "v": -2.2898643708740494,
+              "steerAngle": 0.030076454664110876,
+              "lap": 1,
+              "rank": 2,
+              "telemetry": {
+                "speedKmh": 29.240853607156343,
+                "rpm": 3190.802856932157,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 1,
+                "absActive": false,
+                "brakeTemp": 27.812090032848833,
+                "grip": 0.8258511257470903,
+                "slipAngle": -0.2857922093021032,
+                "engineTemp": 103.6225713618233,
+                "damage": 0.007169402829730112,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": 0.030076454664110876,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 2,
+                "misfire": false
+              }
+            }
+          ],
+          "raceTime": 2.674999999999993,
+          "countdown": 0,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 3,
+          "events": [
+            {
+              "id": 1,
+              "kind": "countdown",
+              "type": "countdown",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "准备起步",
+                "READY TO RACE"
+              ],
+              "time": 0
+            },
+            {
+              "id": 2,
+              "kind": "go",
+              "type": "go",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "绿灯！",
+                "GREEN LIGHT!"
+              ],
+              "time": 2.999999999999992
+            },
+            {
+              "id": 3,
+              "kind": "collision",
+              "type": "collision",
+              "racerId": 1,
+              "playerIndex": 0,
+              "text": [
+                "车辆碰撞",
+                "CAR CONTACT"
+              ],
+              "time": 5.6500000000000705
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -179.26794217046336,
+            "y": 5.000496730294412,
+            "z": -249.703361462906,
+            "yaw": 2.8893100650911663,
+            "speed": 8.122459335321206,
+            "lateral": -0.7529405597509033,
+            "s": 0.23244434645357614,
+            "u": 7.793001143137873,
+            "v": -2.2898643708740494,
+            "steerAngle": 0.030076454664110876,
+            "lap": 1,
+            "rank": 2,
+            "telemetry": {
+              "speedKmh": 29.240853607156343,
+              "rpm": 3190.802856932157,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 1,
+              "absActive": false,
+              "brakeTemp": 27.812090032848833,
+              "grip": 0.8258511257470903,
+              "slipAngle": -0.2857922093021032,
+              "engineTemp": 103.6225713618233,
+              "damage": 0.007169402829730112,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": 0.030076454664110876,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 2,
+              "misfire": false
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.019534155482594,
+            0,
+            0,
+            0,
+            0,
+            1.8110394148221312,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.9522020095258648,
+            0.04353180968607252,
+            -0.302351309903497,
+            0,
+            -1.3877787807814457e-17,
+            0.9897936369601275,
+            0.14250809181672236,
+            0,
+            0.30546903780073176,
+            -0.13569649140157947,
+            0.9424834901293476,
+            0,
+            247.04328142962723,
+            -33.12427977938645,
+            171.13473969810684,
+            0.9999999999999999
+          ]
+        },
+        "document": {
+          "url": "https://used-car-racing.invalid/tv.html",
+          "width": 961,
+          "height": 541,
+          "scrollWidth": 961,
+          "scrollHeight": 541,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 961,
+                  "bottom": 541
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-0b37d20fea81",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-0b37d20fea81",
+                    "idText": "ID: virtual-0b37d20fea81",
+                    "visible": false,
+                    "rect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "clip": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 961,
+                      "bottom": 541
+                    },
+                    "idRect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "idClip": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 961,
+                      "bottom": 541
+                    },
+                    "idTextRects": [],
+                    "idClientWidth": 0,
+                    "idScrollWidth": 0,
+                    "idClientHeight": 0,
+                    "idScrollHeight": 0,
+                    "iconVisible": false,
+                    "iconRect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:40029/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "qr": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAdmSURBVHic7d3BTsNaFkXBptX//8u88WPQFjLX5zirah5iQljyYOv66/v7+/s/AEH/nb4AgCkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJAlgECWAAJZAghkCSCQJYBAlgACWQIIZAkgkCWAQJYAAlkCCGQJIJD1v6ff8Ovr6+m3fNT39/et1199Pqd//pWr95/++dOfz5Xt1zft7ufzW+4AgSwBBLIEEMgSQCBLAIEsAQSyBBDIenwHeOXpHdBvTe/EPn0HdmV6J3jX6eub/v2ubPv+ugMEsgQQyBJAIEsAgSwBBLIEEMgSQCBr3Q7wyvQO767p67+7Q5vecZ2+/u3nOd41/f3bxh0gkCWAQJYAAlkCCGQJIJAlgECWAAJZr9sBvt3pnd32nd/bd5ZX3raDq3MHCGQJIJAlgECWAAJZAghkCSCQJYBAlh3gMtPn2d11+jy96fd/+9+Hf3MHCGQJIJAlgECWAAJZAghkCSCQJYBA1ut2gJ++o3r7juz09U/v8KbPa7xr+/fnae4AgSwBBLIEEMgSQCBLAIEsAQSyBBDIWrcDnH6u62nT5815/e7X3/Xp/z9/zR0gkCWAQJYAAlkCCGQJIJAlgECWAAJZj+8AnUf2/03vuLbv5KZfP83/z99yBwhkCSCQJYBAlgACWQIIZAkgkCWAQNbjO8DTO6tP33ldXf/25+Jemd65TX8+d19/+vObfq7xX3MHCGQJIJAlgECWAAJZAghkCSCQJYBA1tf3y4Y723dSV6bPq5v+/a9M7zS37+hO//2nf/7T3093gECWAAJZAghkCSCQJYBAlgACWQIIZD1+HuBpbz8PcHonNf3+08/9nf79T38/p3+/bdwBAlkCCGQJIJAlgECWAAJZAghkCSCQte65wFc7pOmd3/bzzk5/vndt32GeNv35Tu8st+0M3QECWQIIZAkgkCWAQJYAAlkCCGQJIJC17rnA0zui6R3haac/37c/t3j79W+/vivT/98/uQMEsgQQyBJAIEsAgSwBBLIEEMgSQCBr3XmAp19/d2d0+rmzp9//ytvPa9x+3uC2Hdxvvf36f3IHCGQJIJAlgECWAAJZAghkCSCQJYBA1rrzAK9s33ndNb2j2/7c1+nn1k7//qed/nyuOA8Q4CECCGQJIJAlgECWAAJZAghkCSCQ9fh5gFemn1s7/fOnr2/6vMa7tl//9h3nadt2ku4AgSwBBLIEEMgSQCBLAIEsAQSyBBDIWvdc4Omd3JXpHdX0eWuffl7c9u/n9s/vyvT/70/uAIEsAQSyBBDIEkAgSwCBLAEEsgQQyHp8B3h353N6Z3Z6B3Z6xzW9U7xreid39+d/+s5uegf619wBAlkCCGQJIJAlgECWAAJZAghkCSCQ9brzAO/69B3U9O83bfv1XZk+72/79/uvuQMEsgQQyBJAIEsAgSwBBLIEEMgSQCBr3XmAb99BXdn+XNvp8/i278imP5/p5xLfNf3+P7kDBLIEEMgSQCBLAIEsAQSyBBDIEkAg6+POA7Szevf1X9l+fdPfv+22ff/cAQJZAghkCSCQJYBAlgACWQIIZAkgkLXuPMDtpndap9//9HmC0zuwt5/3uN30/8dvuQMEsgQQyBJAIEsAgSwBBLIEEMgSQCDr484DvLtDmn4u8bTTO763Pxf69PvfNb2jfBt3gECWAAJZAghkCSCQJYBAlgACWQIIZK07D3D7Dmv7zmp6B7l953nX6Z2k52Y/yx0gkCWAQJYAAlkCCGQJIJAlgECWAAJZH3ce4JXTO6rp65/ekW3bef210zvJ068/7W1/f3eAQJYAAlkCCGQJIJAlgECWAAJZAghkrTsPcLvpHd32Hdhp23//6Z3mldOf3/bzPH9yBwhkCSCQJYBAlgACWQIIZAkgkCWAQNa68wDfbnrnOL1TPP3zt+/opnd2b3/u8tPcAQJZAghkCSCQJYBAlgACWQIIZAkgkPX4DvDK9I7uyvQO6vRO7vTO7+7rp69v2vTOcfv/52+5AwSyBBDIEkAgSwCBLAEEsgQQyBJAIGvdDvDK6R3X23dO0+fpTZ8nt/28wenzBK9Mn/f4NHeAQJYAAlkCCGQJIJAlgECWAAJZAghkvW4H+Hbbz7PbvuM6fd7g6dffZWf5t9wBAlkCCGQJIJAlgECWAAJZAghkCSCQZQf4sG07qN++/+nnDk+fx3dl+v2vnN4JTn8//5o7QCBLAIEsAQSyBBDIEkAgSwCBLAEEsl63A/y0HdJvbX8u7fR5eVfu7uS27zinz+vb/vn85A4QyBJAIEsAgSwBBLIEEMgSQCBLAIGsdTvA7Tuy07bvsN5+fVemd2rTO73Ttu0E3QECWQIIZAkgkCWAQJYAAlkCCGQJIJD19T09fAIY4g4QyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgSwBBLIEEMgSQCBLAIEsAQSyBBDIEkAgSwCBLAEEsgQQyBJAIEsAgax/AEdT+Mg1tVxvAAAAAElFTkSuQmCC",
+          "secureUrl": "https://10.0.2.15:44401/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "secureQr": "data:image/png;base64,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",
+          "certificateFingerprint": "09368abf023fd95beeafe4bd194a055df33c8b500e8ccf9b2db9e48d522ebd06",
+          "certificateName": "pureTV LAN 582B13C987C7",
+          "secureError": "",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Used Car Racing TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      },
+      "after": {
+        "phase": "race",
+        "paused": false,
+        "controllerPaused": false,
+        "controllers": [
+          {
+            "id": 1,
+            "transport": "wifi",
+            "controllerId": "virtual-0b37d20fea81",
+            "session": "wifi-47c53262-b81f-4c3a-89c6-9da998ec8c07-1",
+            "connected": true,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 1,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": true,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": true,
+              "START": false,
+              "A": true,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          },
+          {
+            "id": 2,
+            "transport": "wifi",
+            "controllerId": "",
+            "session": "",
+            "connected": false,
+            "cancelSeq": 1,
+            "inputActive": true,
+            "x": 0,
+            "y": 0,
+            "aimX": 0,
+            "aimY": 0,
+            "a": false,
+            "b": false,
+            "start": false,
+            "select": false,
+            "buttons": {
+              "UP": false,
+              "DOWN": false,
+              "LEFT": false,
+              "RIGHT": false,
+              "START": false,
+              "A": false,
+              "B": false,
+              "X": false,
+              "Y": false
+            }
+          }
+        ],
+        "info": {
+          "url": "http://10.0.2.15:40029/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "qr": "data:image/png;base64,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",
+          "secureUrl": "https://10.0.2.15:44401/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "secureQr": "data:image/png;base64,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",
+          "certificateFingerprint": "09368abf023fd95beeafe4bd194a055df33c8b500e8ccf9b2db9e48d522ebd06",
+          "certificateName": "pureTV LAN 582B13C987C7",
+          "secureError": "",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Used Car Racing TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "model": {
+          "phase": "race",
+          "players": [
+            {
+              "id": 1,
+              "x": -176.95079246232615,
+              "y": 5.010500028308178,
+              "z": -254.37879096711652,
+              "yaw": 3.1040653934193783,
+              "speed": 6.240087185522888,
+              "lateral": 0.46592428512417583,
+              "s": 5.310038281743118,
+              "u": 6.2246973378266155,
+              "v": -0.4379853141158944,
+              "steerAngle": -0.15646423893345868,
+              "lap": 1,
+              "rank": 2,
+              "telemetry": {
+                "speedKmh": 22.464313867882396,
+                "rpm": 2541.7648716646095,
+                "gear": 1,
+                "pedalForceN": 0,
+                "brakeForce": 0,
+                "brake": 0,
+                "throttle": 1,
+                "absActive": false,
+                "brakeTemp": 27.75049664973917,
+                "grip": 0.8601655225657804,
+                "slipAngle": -0.07024673254402551,
+                "engineTemp": 110.79940569486797,
+                "damage": 0.022210930446389103,
+                "offRoad": false,
+                "locked": false,
+                "steerAngle": -0.15646423893345868,
+                "brakeBroken": false,
+                "lap": 1,
+                "rank": 2,
+                "misfire": false
+              }
+            }
+          ],
+          "raceTime": 3.3999999999999906,
+          "countdown": 0,
+          "trackId": "harbor",
+          "playerCount": 1,
+          "eventSerial": 3,
+          "events": [
+            {
+              "id": 1,
+              "kind": "countdown",
+              "type": "countdown",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "准备起步",
+                "READY TO RACE"
+              ],
+              "time": 0
+            },
+            {
+              "id": 2,
+              "kind": "go",
+              "type": "go",
+              "racerId": null,
+              "playerIndex": null,
+              "text": [
+                "绿灯！",
+                "GREEN LIGHT!"
+              ],
+              "time": 2.999999999999992
+            },
+            {
+              "id": 3,
+              "kind": "collision",
+              "type": "collision",
+              "racerId": 1,
+              "playerIndex": 0,
+              "text": [
+                "车辆碰撞",
+                "CAR CONTACT"
+              ],
+              "time": 5.6500000000000705
+            }
+          ]
+        },
+        "players": [
+          {
+            "id": 1,
+            "x": -176.95079246232615,
+            "y": 5.010500028308178,
+            "z": -254.37879096711652,
+            "yaw": 3.1040653934193783,
+            "speed": 6.240087185522888,
+            "lateral": 0.46592428512417583,
+            "s": 5.310038281743118,
+            "u": 6.2246973378266155,
+            "v": -0.4379853141158944,
+            "steerAngle": -0.15646423893345868,
+            "lap": 1,
+            "rank": 2,
+            "telemetry": {
+              "speedKmh": 22.464313867882396,
+              "rpm": 2541.7648716646095,
+              "gear": 1,
+              "pedalForceN": 0,
+              "brakeForce": 0,
+              "brake": 0,
+              "throttle": 1,
+              "absActive": false,
+              "brakeTemp": 27.75049664973917,
+              "grip": 0.8601655225657804,
+              "slipAngle": -0.07024673254402551,
+              "engineTemp": 110.79940569486797,
+              "damage": 0.022210930446389103,
+              "offRoad": false,
+              "locked": false,
+              "steerAngle": -0.15646423893345868,
+              "brakeBroken": false,
+              "lap": 1,
+              "rank": 2,
+              "misfire": false
+            }
+          }
+        ],
+        "camera": {
+          "projection": [
+            1.0235037944284502,
+            0,
+            0,
+            0,
+            0,
+            1.818090843707469,
+            0,
+            0,
+            0,
+            0,
+            -1.00010000500025,
+            -1,
+            0,
+            0,
+            -0.1800090004500225,
+            0
+          ],
+          "view": [
+            0.9991530598966617,
+            0.0059213483981715555,
+            -0.040719780602129454,
+            0,
+            8.673617379884035e-19,
+            0.989591730745376,
+            0.14390346222510134,
+            0,
+            0.041148060697171224,
+            -0.14378158461193366,
+            0.9887536058226758,
+            0,
+            187.43339117504817,
+            -42.61892627960217,
+            234.64387329410272,
+            1
+          ]
+        },
+        "document": {
+          "url": "https://used-car-racing.invalid/tv.html",
+          "width": 961,
+          "height": 541,
+          "scrollWidth": 961,
+          "scrollHeight": 541,
+          "hidden": false,
+          "focused": true,
+          "controllerClients": {
+            "containers": [
+              {
+                "visible": false,
+                "hiddenAttribute": false,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 961,
+                  "bottom": 541
+                },
+                "rows": [
+                  {
+                    "controllerId": "virtual-0b37d20fea81",
+                    "playerId": 1,
+                    "text": "1PConnectedID: virtual-0b37d20fea81",
+                    "idText": "ID: virtual-0b37d20fea81",
+                    "visible": false,
+                    "rect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "clip": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 961,
+                      "bottom": 541
+                    },
+                    "idRect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "idClip": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 961,
+                      "bottom": 541
+                    },
+                    "idTextRects": [],
+                    "idClientWidth": 0,
+                    "idScrollWidth": 0,
+                    "idClientHeight": 0,
+                    "idScrollHeight": 0,
+                    "iconVisible": false,
+                    "iconRect": {
+                      "left": 0,
+                      "top": 0,
+                      "right": 0,
+                      "bottom": 0,
+                      "width": 0,
+                      "height": 0
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "nativeInfo": {
+          "url": "http://10.0.2.15:40029/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "qr": "data:image/png;base64,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",
+          "secureUrl": "https://10.0.2.15:44401/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+          "secureQr": "data:image/png;base64,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",
+          "certificateFingerprint": "09368abf023fd95beeafe4bd194a055df33c8b500e8ccf9b2db9e48d522ebd06",
+          "certificateName": "pureTV LAN 582B13C987C7",
+          "secureError": "",
+          "addresses": [
+            "10.0.2.15"
+          ],
+          "error": "",
+          "language": "en",
+          "wifiController": {
+            "state": "available",
+            "serviceName": "Used Car Racing TV",
+            "port": 63485,
+            "serviceType": "_puretv._tcp",
+            "version": "1",
+            "addresses": [
+              "10.0.2.15"
+            ],
+            "error": 0,
+            "connected": true,
+            "inputActive": true
+          }
+        },
+        "activityState": "resumed"
+      }
+    },
+    {
+      "label": "RIGHT-direction-projection",
+      "before": null,
+      "after": {
+        "origin": {
+          "x": -179.26794217046336,
+          "y": 5.000496730294412,
+          "z": -249.703361462906
+        },
+        "rayLength": 3,
+        "centerDelta": 0.0524855279971558,
+        "headingDelta": -0.05329056969344437
+      }
+    }
+  ],
+  "wire": [
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:23.350Z",
+      "message": {
+        "type": "hello",
+        "seq": 1,
+        "controller_id": "virtual-0b37d20fea81"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:23.350Z",
+      "message": {
+        "type": "button",
+        "seq": 2,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "UP",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:23.350Z",
+      "message": {
+        "type": "button",
+        "seq": 3,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "DOWN",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:23.350Z",
+      "message": {
+        "type": "button",
+        "seq": 4,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "LEFT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:23.350Z",
+      "message": {
+        "type": "button",
+        "seq": 5,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "RIGHT",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:23.350Z",
+      "message": {
+        "type": "button",
+        "seq": 6,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "START",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:23.350Z",
+      "message": {
+        "type": "button",
+        "seq": 7,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "A",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:23.350Z",
+      "message": {
+        "type": "button",
+        "seq": 8,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "B",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:23.350Z",
+      "message": {
+        "type": "button",
+        "seq": 9,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "X",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:23.350Z",
+      "message": {
+        "type": "button",
+        "seq": 10,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "Y",
+        "action": "sync",
+        "pressed": false,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:23.474Z",
+      "message": {
+        "type": "ack",
+        "seq": 1
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:23.474Z",
+      "message": {
+        "type": "ack",
+        "seq": 2
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:23.474Z",
+      "message": {
+        "type": "ack",
+        "seq": 3
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:23.474Z",
+      "message": {
+        "type": "ack",
+        "seq": 4
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:23.474Z",
+      "message": {
+        "type": "ack",
+        "seq": 5
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:23.474Z",
+      "message": {
+        "type": "ack",
+        "seq": 6
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:23.474Z",
+      "message": {
+        "type": "ack",
+        "seq": 7
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:23.474Z",
+      "message": {
+        "type": "ack",
+        "seq": 8
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:23.474Z",
+      "message": {
+        "type": "ack",
+        "seq": 9
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:23.474Z",
+      "message": {
+        "type": "ack",
+        "seq": 10
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:23.866Z",
+      "message": {
+        "type": "button",
+        "seq": 11,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "START",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:23.890Z",
+      "message": {
+        "type": "ack",
+        "seq": 11
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:24.362Z",
+      "message": {
+        "type": "button",
+        "seq": 12,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "START",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:24.380Z",
+      "message": {
+        "type": "ack",
+        "seq": 12
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:26.536Z",
+      "message": {
+        "type": "ping",
+        "seq": 13,
+        "controller_id": "virtual-0b37d20fea81"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:26.537Z",
+      "message": {
+        "type": "ack",
+        "seq": 13
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:26.548Z",
+      "message": {
+        "type": "button",
+        "seq": 14,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "START",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 2686
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:26.556Z",
+      "message": {
+        "type": "ack",
+        "seq": 14
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:29.958Z",
+      "message": {
+        "type": "button",
+        "seq": 15,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "A",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:30.060Z",
+      "message": {
+        "type": "ack",
+        "seq": 15
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:30.457Z",
+      "message": {
+        "type": "button",
+        "seq": 16,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "A",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:30.464Z",
+      "message": {
+        "type": "ack",
+        "seq": 16
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:31.120Z",
+      "message": {
+        "type": "button",
+        "seq": 17,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "LEFT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:31.134Z",
+      "message": {
+        "type": "ack",
+        "seq": 17
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:31.538Z",
+      "message": {
+        "type": "ping",
+        "seq": 18,
+        "controller_id": "virtual-0b37d20fea81"
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:31.620Z",
+      "message": {
+        "type": "button",
+        "seq": 19,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "LEFT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 500
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:31.652Z",
+      "message": {
+        "type": "ack",
+        "seq": 18
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:31.654Z",
+      "message": {
+        "type": "ack",
+        "seq": 19
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:31.824Z",
+      "message": {
+        "type": "button",
+        "seq": 20,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "LEFT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 701
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:31.869Z",
+      "message": {
+        "type": "ack",
+        "seq": 20
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:32.536Z",
+      "message": {
+        "type": "button",
+        "seq": 21,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "RIGHT",
+        "action": "down",
+        "pressed": true,
+        "duration_ms": 0
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:32.545Z",
+      "message": {
+        "type": "ack",
+        "seq": 21
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:33.037Z",
+      "message": {
+        "type": "button",
+        "seq": 22,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "RIGHT",
+        "action": "long_press",
+        "pressed": true,
+        "duration_ms": 502
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:33.090Z",
+      "message": {
+        "type": "ack",
+        "seq": 22
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "sdk-to-game",
+      "at": "2026-11-20T15:29:33.260Z",
+      "message": {
+        "type": "button",
+        "seq": 23,
+        "controller_id": "virtual-0b37d20fea81",
+        "key": "RIGHT",
+        "action": "long_release",
+        "pressed": false,
+        "duration_ms": 727
+      }
+    },
+    {
+      "connection": 1,
+      "direction": "game-to-sdk",
+      "at": "2026-11-20T15:29:33.282Z",
+      "message": {
+        "type": "ack",
+        "seq": 23
+      }
+    }
+  ],
+  "transportErrors": [],
+  "connectionEvents": [],
+  "screenshots": [
+    "menu-android.png",
+    "failure.png"
+  ],
+  "limitations": [
+    "Android TV emulator, not physical TV or ESP32; NSD registration is observed via host diagnostics, not ESP32 discovery."
+  ],
+  "ports": {
+    "tcpPort": 40507,
+    "observerPort": 35255
+  },
+  "error": "AssertionError [ERR_ASSERTION]: RIGHT actual camera heading projection\n    at file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/cases.mjs:98:16\n    at async hold (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:41:218)\n    at async gameplay (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/cases.mjs:86:5)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:160:80\n    at async test (file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:37:96)\n    at async file:///home/runner/work/pureTV/pureTV/tools/readme-controller-qa/run.mjs:160:2",
+  "lastSnapshot": {
+    "phase": "race",
+    "paused": false,
+    "controllerPaused": false,
+    "controllers": [
+      {
+        "id": 1,
+        "transport": "wifi",
+        "controllerId": "virtual-0b37d20fea81",
+        "session": "wifi-47c53262-b81f-4c3a-89c6-9da998ec8c07-1",
+        "connected": true,
+        "cancelSeq": 1,
+        "inputActive": true,
+        "x": 0,
+        "y": 0,
+        "aimX": 0,
+        "aimY": 0,
+        "a": true,
+        "b": false,
+        "start": false,
+        "select": false,
+        "buttons": {
+          "UP": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "A": true,
+          "B": false,
+          "X": false,
+          "Y": false
+        }
+      },
+      {
+        "id": 2,
+        "transport": "wifi",
+        "controllerId": "",
+        "session": "",
+        "connected": false,
+        "cancelSeq": 1,
+        "inputActive": true,
+        "x": 0,
+        "y": 0,
+        "aimX": 0,
+        "aimY": 0,
+        "a": false,
+        "b": false,
+        "start": false,
+        "select": false,
+        "buttons": {
+          "UP": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "A": false,
+          "B": false,
+          "X": false,
+          "Y": false
+        }
+      }
+    ],
+    "info": {
+      "url": "http://10.0.2.15:40029/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+      "qr": "data:image/png;base64,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",
+      "secureUrl": "https://10.0.2.15:44401/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+      "secureQr": "data:image/png;base64,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",
+      "certificateFingerprint": "09368abf023fd95beeafe4bd194a055df33c8b500e8ccf9b2db9e48d522ebd06",
+      "certificateName": "pureTV LAN 582B13C987C7",
+      "secureError": "",
+      "addresses": [
+        "10.0.2.15"
+      ],
+      "error": "",
+      "language": "en",
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Used Car Racing TV",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "addresses": [
+          "10.0.2.15"
+        ],
+        "error": 0,
+        "connected": true,
+        "inputActive": true
+      }
+    },
+    "model": {
+      "phase": "race",
+      "players": [
+        {
+          "id": 1,
+          "x": -175.6362906940794,
+          "y": 5.016868052823656,
+          "z": -259.54629509204113,
+          "yaw": 2.807998258066282,
+          "speed": 5.927565429724065,
+          "lateral": 2.989197297391021,
+          "s": 9.942795641858083,
+          "u": 5.927507765982645,
+          "v": 0.026145895954644876,
+          "steerAngle": -0.011021163905718459,
+          "lap": 1,
+          "rank": 2,
+          "telemetry": {
+            "speedKmh": 21.339235547006634,
+            "rpm": 3294.9834700411425,
+            "gear": 1,
+            "pedalForceN": 0,
+            "brakeForce": 0,
+            "brake": 0,
+            "throttle": 1,
+            "absActive": false,
+            "brakeTemp": 27.689740845219042,
+            "grip": 0.8596163512221796,
+            "slipAngle": 0.004410913898454116,
+            "engineTemp": 116.16097677814972,
+            "damage": 0.03231229786951952,
+            "offRoad": false,
+            "locked": false,
+            "steerAngle": -0.011021163905718459,
+            "brakeBroken": false,
+            "lap": 1,
+            "rank": 2,
+            "misfire": false
+          }
+        }
+      ],
+      "raceTime": 4.108333333333327,
+      "countdown": 0,
+      "trackId": "harbor",
+      "playerCount": 1,
+      "eventSerial": 4,
+      "events": [
+        {
+          "id": 1,
+          "kind": "countdown",
+          "type": "countdown",
+          "racerId": null,
+          "playerIndex": null,
+          "text": [
+            "准备起步",
+            "READY TO RACE"
+          ],
+          "time": 0
+        },
+        {
+          "id": 2,
+          "kind": "go",
+          "type": "go",
+          "racerId": null,
+          "playerIndex": null,
+          "text": [
+            "绿灯！",
+            "GREEN LIGHT!"
+          ],
+          "time": 2.999999999999992
+        },
+        {
+          "id": 3,
+          "kind": "collision",
+          "type": "collision",
+          "racerId": 1,
+          "playerIndex": 0,
+          "text": [
+            "车辆碰撞",
+            "CAR CONTACT"
+          ],
+          "time": 5.6500000000000705
+        },
+        {
+          "id": 4,
+          "kind": "collision",
+          "type": "collision",
+          "racerId": 1,
+          "playerIndex": 0,
+          "text": [
+            "车辆碰撞",
+            "CAR CONTACT"
+          ],
+          "time": 7.083333333333475
+        }
+      ]
+    },
+    "players": [
+      {
+        "id": 1,
+        "x": -175.6362906940794,
+        "y": 5.016868052823656,
+        "z": -259.54629509204113,
+        "yaw": 2.807998258066282,
+        "speed": 5.927565429724065,
+        "lateral": 2.989197297391021,
+        "s": 9.942795641858083,
+        "u": 5.927507765982645,
+        "v": 0.026145895954644876,
+        "steerAngle": -0.011021163905718459,
+        "lap": 1,
+        "rank": 2,
+        "telemetry": {
+          "speedKmh": 21.339235547006634,
+          "rpm": 3294.9834700411425,
+          "gear": 1,
+          "pedalForceN": 0,
+          "brakeForce": 0,
+          "brake": 0,
+          "throttle": 1,
+          "absActive": false,
+          "brakeTemp": 27.689740845219042,
+          "grip": 0.8596163512221796,
+          "slipAngle": 0.004410913898454116,
+          "engineTemp": 116.16097677814972,
+          "damage": 0.03231229786951952,
+          "offRoad": false,
+          "locked": false,
+          "steerAngle": -0.011021163905718459,
+          "brakeBroken": false,
+          "lap": 1,
+          "rank": 2,
+          "misfire": false
+        }
+      }
+    ],
+    "camera": {
+      "projection": [
+        1.0241651513390884,
+        0,
+        0,
+        0,
+        0,
+        1.81926563851546,
+        0,
+        0,
+        0,
+        0,
+        -1.00010000500025,
+        -1,
+        0,
+        0,
+        -0.1800090004500225,
+        0
+      ],
+      "view": [
+        0.9567350006645248,
+        0.04177798240164153,
+        -0.2879457217773864,
+        0,
+        6.938893903907228e-18,
+        0.9896377947985779,
+        0.14358633328491885,
+        0,
+        0.2909607164265512,
+        -0.1373740706707635,
+        0.9468211162642561,
+        0,
+        243.55229870728292,
+        -35.383509082861586,
+        185.26170052921498,
+        1
+      ]
+    },
+    "document": {
+      "url": "https://used-car-racing.invalid/tv.html",
+      "width": 961,
+      "height": 541,
+      "scrollWidth": 961,
+      "scrollHeight": 541,
+      "hidden": false,
+      "focused": true,
+      "controllerClients": {
+        "containers": [
+          {
+            "visible": false,
+            "hiddenAttribute": false,
+            "rect": {
+              "left": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "width": 0,
+              "height": 0
+            },
+            "clip": {
+              "left": 0,
+              "top": 0,
+              "right": 961,
+              "bottom": 541
+            },
+            "rows": [
+              {
+                "controllerId": "virtual-0b37d20fea81",
+                "playerId": 1,
+                "text": "1PConnectedID: virtual-0b37d20fea81",
+                "idText": "ID: virtual-0b37d20fea81",
+                "visible": false,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "clip": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 961,
+                  "bottom": 541
+                },
+                "idRect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "idClip": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 961,
+                  "bottom": 541
+                },
+                "idTextRects": [],
+                "idClientWidth": 0,
+                "idScrollWidth": 0,
+                "idClientHeight": 0,
+                "idScrollHeight": 0,
+                "iconVisible": false,
+                "iconRect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "nativeInfo": {
+      "url": "http://10.0.2.15:40029/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+      "qr": "data:image/png;base64,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",
+      "secureUrl": "https://10.0.2.15:44401/?room=N1tJ1wJ_LuTVXPBhQImjpvEd1leo8C8L",
+      "secureQr": "data:image/png;base64,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",
+      "certificateFingerprint": "09368abf023fd95beeafe4bd194a055df33c8b500e8ccf9b2db9e48d522ebd06",
+      "certificateName": "pureTV LAN 582B13C987C7",
+      "secureError": "",
+      "addresses": [
+        "10.0.2.15"
+      ],
+      "error": "",
+      "language": "en",
+      "wifiController": {
+        "state": "available",
+        "serviceName": "Used Car Racing TV",
+        "port": 63485,
+        "serviceType": "_puretv._tcp",
+        "version": "1",
+        "addresses": [
+          "10.0.2.15"
+        ],
+        "error": 0,
+        "connected": true,
+        "inputActive": true
+      }
+    },
+    "activityState": "resumed"
+  },
+  "finishedAt": "2026-11-20T15:29:35.447Z"
+}
