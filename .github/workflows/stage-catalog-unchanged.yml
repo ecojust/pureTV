@@ -1,0 +1,25 @@
+name: Stage unchanged original Android catalogue APKs in v1.0.1
+on:
+  push:
+    branches: [build/catalog-v101-unchanged-apks]
+permissions:
+  contents: write
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /tools/qa-catalog-v101/
+      - name: Read the original release anonymously and upload matched bytes to the new draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 tools/qa-catalog-v101/stage.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unchanged-signed-apk-receipts
+          path: ${{ runner.temp }}/receipts/copied-originals.json
+          if-no-files-found: error
