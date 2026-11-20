@@ -1,0 +1,734 @@
+{
+  "qaSourceSha": "6247c410e12f909451c91efc58aa199096a9dd4c",
+  "runId": "44761212797",
+  "runtimeResult": "failure",
+  "runtimeResultScope": "selected batches only",
+  "selection": {
+    "acceptanceMode": "complete",
+    "acceptanceScope": "complete controller acceptance",
+    "fullGameplayAcceptance": true,
+    "driverFlags": [],
+    "requestedBatches": [
+      "retry-used-car",
+      "retry-alien"
+    ],
+    "selectedBatches": [
+      "retry-used-car",
+      "retry-alien"
+    ],
+    "plannedSlugs": [
+      "used-car-racing",
+      "alien-shooter"
+    ],
+    "completeCatalogRequested": false,
+    "matrix": {
+      "include": [
+        {
+          "group": "worlds",
+          "batch": "retry-used-car",
+          "apiLevel": 29,
+          "arch": "x86",
+          "renderer": "swiftshader",
+          "emulatorBuild": "13610412",
+          "emulatorArchive": {
+            "version": "35.6.11",
+            "build": "13610412",
+            "url": "https://dl.google.com/android/repository/emulator-linux_x64-13610412.zip",
+            "sha256": "2fe2b56fe93ce75e1d478a40162131381d911c355efeaedb54dd1e0d0897a5cf",
+            "bytes": 319086252,
+            "officialArchive": "https://developer.android.com/studio/emulator_archive"
+          },
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader -noaudio -no-boot-anim -no-snapshot -feature -Vulkan -verbose"
+        },
+        {
+          "group": "worlds",
+          "batch": "retry-alien",
+          "apiLevel": 36,
+          "arch": "x86_64",
+          "renderer": "swiftshader_indirect",
+          "emulatorBuild": "",
+          "emulatorArchive": null,
+          "emulatorOptions": "-no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot"
+        }
+      ]
+    },
+    "worlds2GraphicsExperiment": {
+      "selected": true,
+      "description": "Disable Vulkan while retaining SwiftShader and enable verbose emulator logs; the preceding AVD failure has no established root cause."
+    },
+    "usedCarStableImageComparison": {
+      "selected": true,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "channel": "stable",
+      "revisionListedByOfficialRepository": 3,
+      "rendererComparison": {
+        "previousObservedEmulatorVersion": "37.2.13",
+        "previousRenderer": "swiftshader_indirect",
+        "requestedRenderer": "swiftshader",
+        "previousRendererDeprecatedSince": "36.4.9",
+        "officialReference": "https://developer.android.com/studio/run/emulator-acceleration"
+      },
+      "hostVersionComparison": {
+        "previousObservedEmulatorVersion": "37.2.13",
+        "requested": {
+          "version": "35.6.11",
+          "build": "13610412",
+          "url": "https://dl.google.com/android/repository/emulator-linux_x64-13610412.zip",
+          "sha256": "2fe2b56fe93ce75e1d478a40162131381d911c355efeaedb54dd1e0d0897a5cf",
+          "bytes": 319086252,
+          "officialArchive": "https://developer.android.com/studio/emulator_archive"
+        },
+        "description": "Change only the host emulator version; retain API29/x86/swiftshader/disabled Vulkan and verbose options. The preceding host RenderThread segmentation fault has no established product cause."
+      },
+      "description": "Independent AVD on the official older stable TV image; installation, WebView, WebGL and controller acceptance remain mandatory."
+    },
+    "arcadeVisualStableImageComparison": {
+      "selected": false,
+      "systemImage": "system-images;android-29;android-tv;x86",
+      "description": "Recheck Tank and Jackal after transient black regions were observed in API36 recordings; preserve full controller acceptance and new visual evidence."
+    },
+    "qaSourceSha": "6247c410e12f909451c91efc58aa199096a9dd4c"
+  },
+  "files": {
+    "evidence/controller-runtime-retry-alien/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "e9c0f1c8dd9a412e56e1a7b1ee6bdd4b267f569fe571ab93b88ffcd94e9b38a0"
+    },
+    "evidence/controller-runtime-retry-alien/bundle-manifest.json": {
+      "bytes": 201,
+      "sha256": "7076f63fe20dbf43e445905d6eb9bffa799288b2879332f5ef779268a8f19bc3"
+    },
+    "evidence/controller-runtime-retry-alien/runtime-selection.json": {
+      "bytes": 3428,
+      "sha256": "d6ec81ace493dcc337e2129c09ccbf9ad16aacb9673d4ca919e66e372081a828"
+    },
+    "evidence/controller-runtime-retry-alien/continuous-logcat.txt": {
+      "bytes": 4131467,
+      "sha256": "d53398749c36e3229f1bd1bb66fe16e95faec574ccac88959498a09da8fe679b"
+    },
+    "evidence/controller-runtime-retry-alien/emulator-configuration.json": {
+      "bytes": 1131,
+      "sha256": "636f7d5a6606d4a46d06c36ee256f27ea86b94fd717d418c8115fa62812548c6"
+    },
+    "evidence/controller-runtime-retry-alien/input-verification.json": {
+      "bytes": 2384,
+      "sha256": "98e276804fdfb7268ed52357d6479b492b35943b5fbd5175e3337c2190328e41"
+    },
+    "evidence/controller-runtime-retry-alien/emulator-version.json": {
+      "bytes": 727,
+      "sha256": "f3bebe07f3c32cb048481768531825909e4d72d9a85877691e03470c2c1ac29e"
+    },
+    "evidence/controller-runtime-retry-alien/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "928eae75a65525cce369b98248613c327b764f49c29b1033ef637df266a27cdd"
+    },
+    "evidence/controller-runtime-retry-alien/report.json": {
+      "bytes": 25777,
+      "sha256": "d893c01d3d462b4c55de21e1100d5cf14d9a33b0eac7953d68e7f4fa5d6d2121"
+    },
+    "evidence/controller-runtime-retry-alien/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "765111524eb6cf73411a691a68017156f45e577b7495d40bd0cea16944eddd0a"
+    },
+    "evidence/controller-runtime-retry-used-car/emulator-archive-verification.json": {
+      "bytes": 744,
+      "sha256": "7b72a88fc9d1ee55da1cbc70c5357d878d48875c3e1178a347c51c7dc81d3679"
+    },
+    "evidence/controller-runtime-retry-used-car/emulator-version-raw.json": {
+      "bytes": 807,
+      "sha256": "47ecdbae93af998bd251fc838406be5d49cdb218182bbfdf55977496f618e6aa"
+    },
+    "evidence/controller-runtime-retry-used-car/bundle-manifest.json": {
+      "bytes": 201,
+      "sha256": "7076f63fe20dbf43e445905d6eb9bffa799288b2879332f5ef779268a8f19bc3"
+    },
+    "evidence/controller-runtime-retry-used-car/runtime-selection.json": {
+      "bytes": 3428,
+      "sha256": "d6ec81ace493dcc337e2129c09ccbf9ad16aacb9673d4ca919e66e372081a828"
+    },
+    "evidence/controller-runtime-retry-used-car/continuous-logcat.txt": {
+      "bytes": 1790293,
+      "sha256": "362a37b90ca86148b3bd86781724b1ebc1c3033ea6ac3eb454f4b501ab6d4157"
+    },
+    "evidence/controller-runtime-retry-used-car/emulator-configuration.json": {
+      "bytes": 1124,
+      "sha256": "090f05d79deab2dc85c71b05a690abd07cbc45f0ad56e0a678a8b295bd1e8d72"
+    },
+    "evidence/controller-runtime-retry-used-car/input-verification.json": {
+      "bytes": 2384,
+      "sha256": "98e276804fdfb7268ed52357d6479b492b35943b5fbd5175e3337c2190328e41"
+    },
+    "evidence/controller-runtime-retry-used-car/emulator-version.json": {
+      "bytes": 1130,
+      "sha256": "d0312005ba3e0b03b626768b97a98efad9345d605ffb4af9f7ba983fc811d049"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-source-manifest.json": {
+      "bytes": 3336,
+      "sha256": "6ab94f12a97c96513661bd5a4e961af2232d16db92c4cf41977d6ee03415d7eb"
+    },
+    "evidence/controller-runtime-retry-used-car/report.json": {
+      "bytes": 15379,
+      "sha256": "13e644f8fac6d5325c21a887788e960deacfee5cc91062457152322e642c526d"
+    },
+    "evidence/controller-runtime-retry-used-car/continuous-logcat-status.json": {
+      "bytes": 247,
+      "sha256": "ae6654841fdd8af74d83eafb70e589f75f486fea08ead1ca35e9be4040d5380f"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "b21253e5e826a215e7be95e8b9964c154d8f4dbae87be60a2bb92824efbea25a"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "f55769c80d1e94c338704144684366f5134f867902e242bc7a5d5dd2a493cb90"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "7f599ecdd7e4a6ed07b47a9033cddaa0b3bd2083e2e0296d601bd702284a23ac"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "2a7812673e29d15780f7d1a2b806b934d4c72e31c1a148e85561e044439fa2bc"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/host-samples.jsonl": {
+      "bytes": 229482,
+      "sha256": "31fe2c6c767e9d2bd056be882eee9767e4c9185114150ab18dc5e985534b5420"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/kernel-before.txt": {
+      "bytes": 58685,
+      "sha256": "7ae01bf04453edc723bc8cb3a7b6c84cfc44153204a2ad3c1420b54cbf657312"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "ee80f3b83cd8798205d5b457bf5846ac34839618380e38dfc56cec83420fd67b"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/kernel-after.txt": {
+      "bytes": 58809,
+      "sha256": "8a436d8e86991d254675981e16972b74e2cf9eb6e68fcc512f70d6564156bc35"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/initial-snapshot.json": {
+      "bytes": 8798,
+      "sha256": "056079368038673bd00bc573bfc3e3c7d6cee4585a2c2c72e980e74ddf91705c"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/driver.log": {
+      "bytes": 665,
+      "sha256": "0c118df5426ed5a3f08935a44789eab45b31a53f68588432c654f4141e26d3df"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/logcat.txt": {
+      "bytes": 2191264,
+      "sha256": "345869668a548faa9475b8b8ecd0be844ecbf24a5d29834a3bb0c267f68cd984"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/baseline-release.json": {
+      "bytes": 430,
+      "sha256": "8fa2285d889e9f8474f0054139669422ef8104788cc4e4afdea5e6059b63a213"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/recording-probe.json": {
+      "bytes": 4359,
+      "sha256": "02025d3052db5b19fb219c5bde7bc2e914c119ba57bee89208938d0f2b9d3055"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/commands.json": {
+      "bytes": 1054,
+      "sha256": "2f38742c0f1e37f25130c76cab600a597d7345b2835562ee060876bf9487818a"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/case.json": {
+      "bytes": 923,
+      "sha256": "08fda5ae71e35d27ae8059a32af061017e01ccbce68e0ca606388ab4adb269a2"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay.mp4": {
+      "bytes": 639402,
+      "sha256": "ea3dbe200572b946feda31f10b6f29af7d48a28cd33814d9a33ecc975083a488"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/instrumentation.txt": {
+      "bytes": 189,
+      "sha256": "313c0502d19866b91ed78f629224441fc32c0a8b6d601d1b155db849cc080c79"
+    },
+    "evidence/controller-runtime-retry-alien/host-diagnostics/emulator-crash-data/emu-crash-37.3.10.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "8a5fad7eb9bc4d70fcb2b9d984df7d530ef4534e73dfad622a035349e8891ae0"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 23813,
+      "sha256": "ec681ba847686c67ec5c7e49bd3a5459e3f5d70f3eb45e4d81657f5b3614f7b6"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8956,
+      "sha256": "58e8343087a2ffcf2f806cf39a23f42f3503715ec3995c1aff3e87f81e87e440"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/controller-release.py": {
+      "bytes": 19265,
+      "sha256": "32a2f83f12dfc6b166021cd6a2e71926446b3abb12b52ac33cbf4892f9b03fe9"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 13685,
+      "sha256": "5cd63eab1c657030c9e167b4b189918cc63a27381181379de1c68a15b570bfb3"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-retry-alien/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/coast-kart/source-manifest.json": {
+      "bytes": 706,
+      "sha256": "026d5ab98940f61c91e4344c8309a71496a56cc18fd70eb87fd65570edd99fa4"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/used-car-racing/source-manifest.json": {
+      "bytes": 711,
+      "sha256": "7cf0d6006b06c4002644dab1b9947a7ba0aef0ba0547e8c6ee539f814756cddd"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/alien-shooter/source-manifest.json": {
+      "bytes": 709,
+      "sha256": "1fcd6e80872d7c4b1799a648a24b450398179f5b31683d9a8544aa2d0b10f24b"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/coast-kart/resource/apps/coast-kart/build.gradle": {
+      "bytes": 1455,
+      "sha256": "27403682dfa37fdd72b606d8d9c8a37101497bd4dcb405b7520cb9439af6202a"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/coast-kart/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/coast-kart/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/used-car-racing/resource/apps/used-car-racing/build.gradle": {
+      "bytes": 1653,
+      "sha256": "f709292c26fc41001f14088d8675290fc57c4057b109dc427133b8d9665ca98f"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/alien-shooter/resource/apps/alien-shooter/build.gradle": {
+      "bytes": 1467,
+      "sha256": "d0fea5a19b8ca3e79d080dc1700d0f73a51138d568578cf4045d32197862904b"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/alien-shooter/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-alien/observer-source/alien-shooter/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/reconnected.png": {
+      "bytes": 1126222,
+      "sha256": "8b79345a6416c115adb6eeb05e35fd466142a8489d254e5bd586312aa7ca2578"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/gameplay.png": {
+      "bytes": 1113614,
+      "sha256": "9ac9cbf2a29a7df461056d2fa394eab336845764bf1bba103a0f7590f4449333"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/bridge-stderr.txt": {
+      "bytes": 3826,
+      "sha256": "c751228422102936122d17547e4b428c4d8e8a2123b3a1ff101a16d589002144"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/report.json": {
+      "bytes": 263643,
+      "sha256": "aff04fd61be771d34d0e9d83a6fc3a8125f2a2623d3b94cc9cc73034fd76dc43"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/menu-android.png": {
+      "bytes": 1246033,
+      "sha256": "56b89d4d20eff0ab52ed92f338093d65f08e9b5e7bb7f9acdc0314164178f51f"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    },
+    "evidence/controller-runtime-retry-alien/alien-shooter/gameplay/paused.png": {
+      "bytes": 1123451,
+      "sha256": "9d9482cad66600b7434fd3bbd6411efa363381cc21541a0a15e2c834d4603d67"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/kernel-before-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/kernel-after-status.json": {
+      "bytes": 122,
+      "sha256": "e13b10078156d5f5420259c0bec2b14d36d189bab53dc83b36b1c459679d5b88"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/finished.json": {
+      "bytes": 104,
+      "sha256": "9f9d1c22ffcf86e07e4bdd2dde8e5b1e8d5dbc2f7822359bc35a883145c46f53"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/stop-status.json": {
+      "bytes": 76,
+      "sha256": "26554128c1e3e3156c7f3ec1888f3d5e0e075e469600e386ac1d144b403ed890"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/start.json": {
+      "bytes": 71,
+      "sha256": "4230f55e2d2968d92a20829315f250a03cce588829387576b77f54ccc9085b47"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/collector.json": {
+      "bytes": 157,
+      "sha256": "8e6e454f5b529059a28fc26235f3f60055e9556c04fba00512cdae0adc08a542"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/collector-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/host-samples.jsonl": {
+      "bytes": 232699,
+      "sha256": "4b7986d85f2fa75cad9d8afe2167ddd7a9f5b6550b6a4d514c6f49d7228c0363"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/kernel-before.txt": {
+      "bytes": 122288,
+      "sha256": "6fb96faa04b9fe7c73c40337c0f022c8e43fd59d1787f5cc0f5997164bb19ef4"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/stop-requested": {
+      "bytes": 33,
+      "sha256": "50cd46362baceed4ca44309f350cafb423848b13b718d4e62d87daf2b995e214"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/kernel-after.txt": {
+      "bytes": 122812,
+      "sha256": "4b5bedaf9acf749492ce508bd336f71d1605c431b9c1dceebf28f459a8c91514"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/initial-snapshot.json": {
+      "bytes": 16457,
+      "sha256": "841042b7d9e91fcb9aa789976f12a1a4bfacdaea8df80d41823d83eaf52c529f"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/driver.log": {
+      "bytes": 282,
+      "sha256": "7b3af81037a7247a7fc1c39768d547c2c80946c2f8a43231c9f0b5fa0fe6ac54"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/logcat-error.txt": {
+      "bytes": 128,
+      "sha256": "b3a1974570bc4248a5dc4c0c3c967bc5083f2ac74666a796f5c68d5df906774c"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/screenrecord.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/install.txt": {
+      "bytes": 110,
+      "sha256": "b06f264ef2a4d8577d8c1a94169b56443e2e0f2100ee884c3074925d88553c2e"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/baseline-release.json": {
+      "bytes": 427,
+      "sha256": "f0c567d330601ab16141d6bcd0d96abb7e616ba3d43c9b21e90f74000330de59"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/commands.json": {
+      "bytes": 1061,
+      "sha256": "8e7093519ef9f8147d0d9cfa690da62cbf02c0898c7d6795a93e4edb86cb9e41"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/case.json": {
+      "bytes": 1338,
+      "sha256": "d026bd586e17c9e20473902886439d5709c9f595e35012edb31aec58f1e8e2c1"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/instrumentation.txt": {
+      "bytes": 115,
+      "sha256": "f62cfe5e80e6f3a1ecf3803651b968cee4c8f3099c4af3130fc0bd80e7e374a0"
+    },
+    "evidence/controller-runtime-retry-used-car/host-diagnostics/emulator-crash-data/emu-crash-35.6.11.db/settings.dat": {
+      "bytes": 40,
+      "sha256": "7e960370004a871cb59abbbd2f1cf74fe36c135052ca63c39c715bb2e3788e2d"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/controller-emulator-batch.py": {
+      "bytes": 23813,
+      "sha256": "ec681ba847686c67ec5c7e49bd3a5459e3f5d70f3eb45e4d81657f5b3614f7b6"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/controller-runtime-inputs.py": {
+      "bytes": 8956,
+      "sha256": "58e8343087a2ffcf2f806cf39a23f42f3503715ec3995c1aff3e87f81e87e440"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/controller-release.py": {
+      "bytes": 19265,
+      "sha256": "32a2f83f12dfc6b166021cd6a2e71926446b3abb12b52ac33cbf4892f9b03fe9"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/controller-runtime-diagnostics.py": {
+      "bytes": 5409,
+      "sha256": "f4cfb0fec803eaaa46d196e38d326c9404364f748fb3de99b27226110c5f29a8"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/resource_catalog.py": {
+      "bytes": 13007,
+      "sha256": "7d08972bc4048f013b17cbc7c15239b19f7f5f1641eb4e922d5092e6b8a408f8"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/.github/workflows/controller-games-runtime.yml": {
+      "bytes": 13685,
+      "sha256": "5cd63eab1c657030c9e167b4b189918cc63a27381181379de1c68a15b570bfb3"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/resource/game-kit/fetch-signed.py": {
+      "bytes": 12218,
+      "sha256": "a5494873100433939b15ac5c056d2fd65c757341473a40cbea073d153664330a"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/resource/game-kit/qa/common.mjs": {
+      "bytes": 8378,
+      "sha256": "36259ed3d8119e0848a217891280af8375f5db6e142279bd6a53a0fb587dd2f1"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/status-peer-heartbeat-test.mjs": {
+      "bytes": 6703,
+      "sha256": "b45e712ad84d69c91b172d6501694739c0e047a8aec862e146ece5b73248472e"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/client-status-test.mjs": {
+      "bytes": 9786,
+      "sha256": "9d0ca6295d1e44fbd9c0e23385ffb20b4deace642158a11b8b33ca2d9473ce78"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/prepare-assets.py": {
+      "bytes": 1340,
+      "sha256": "a22414b39c45241b75afad1e71efc72cde5b7f9a0309a62dc86baad43febe191"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/proxy-close-test.mjs": {
+      "bytes": 5801,
+      "sha256": "90aa49b0a547e71e33560c826e362120c9ab85698822de94e6ebefd662068eb4"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/baseline-inventory.json": {
+      "bytes": 22865,
+      "sha256": "df77264fee159c48953c36b44e98680922eb2d5a8f9cf25881e4f9a936fbb759"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/freeze-projection-test.mjs": {
+      "bytes": 4530,
+      "sha256": "383ea626c4adf793bfb71f91eeacd833b56f059c9a58ee783eca61ebfa4a08c1"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-retry-used-car/executed-sources/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-used-car/observer-source/coast-kart/source-manifest.json": {
+      "bytes": 706,
+      "sha256": "026d5ab98940f61c91e4344c8309a71496a56cc18fd70eb87fd65570edd99fa4"
+    },
+    "evidence/controller-runtime-retry-used-car/observer-source/used-car-racing/source-manifest.json": {
+      "bytes": 711,
+      "sha256": "7cf0d6006b06c4002644dab1b9947a7ba0aef0ba0547e8c6ee539f814756cddd"
+    },
+    "evidence/controller-runtime-retry-used-car/observer-source/alien-shooter/source-manifest.json": {
+      "bytes": 709,
+      "sha256": "1fcd6e80872d7c4b1799a648a24b450398179f5b31683d9a8544aa2d0b10f24b"
+    },
+    "evidence/controller-runtime-retry-used-car/observer-source/coast-kart/resource/apps/coast-kart/build.gradle": {
+      "bytes": 1455,
+      "sha256": "27403682dfa37fdd72b606d8d9c8a37101497bd4dcb405b7520cb9439af6202a"
+    },
+    "evidence/controller-runtime-retry-used-car/observer-source/coast-kart/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-used-car/observer-source/coast-kart/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-used-car/observer-source/used-car-racing/resource/apps/used-car-racing/build.gradle": {
+      "bytes": 1653,
+      "sha256": "f709292c26fc41001f14088d8675290fc57c4057b109dc427133b8d9665ca98f"
+    },
+    "evidence/controller-runtime-retry-used-car/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-used-car/observer-source/used-car-racing/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-used-car/observer-source/alien-shooter/resource/apps/alien-shooter/build.gradle": {
+      "bytes": 1467,
+      "sha256": "d0fea5a19b8ca3e79d080dc1700d0f73a51138d568578cf4045d32197862904b"
+    },
+    "evidence/controller-runtime-retry-used-car/observer-source/alien-shooter/tools/readme-controller-qa/android-observer/build.py": {
+      "bytes": 3069,
+      "sha256": "1d09b0a693582e8bc553d36911157a6eb02a272e034f063fb892a6f568e41c4f"
+    },
+    "evidence/controller-runtime-retry-used-car/observer-source/alien-shooter/tools/readme-controller-qa/android-observer/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 10390,
+      "sha256": "2ac60f5bb281f7800eb5c05bbf6c078360a80795cbf05aaa678cc91a54b9a94f"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/java-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-virtual.html": {
+      "bytes": 5277,
+      "sha256": "0567661a2bc14d8cd1014a6487ac2503259d9cb43a29c4f9bb5d3b16e1b5fd41"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-client-status-cases.mjs": {
+      "bytes": 8624,
+      "sha256": "c371a90d7202f1f67971ef5cd5b15b8f3532571bf72f0bad82dc85788704bd45"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-cases.mjs": {
+      "bytes": 11235,
+      "sha256": "c3a5fb776df193fbe3af9dc731a8b66ebd24839ffdb064b18c12dd723c1b7c71"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-client-status-dom.mjs": {
+      "bytes": 2804,
+      "sha256": "c457decfa837448cb8899df6e64ed27a140c4f277e240146bbe1facdef80632e"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-run.mjs": {
+      "bytes": 26464,
+      "sha256": "808ece78cfe75301ea1ae4b861702528724099b57d2281d8b0b71193428a3eb9"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-sdk-peer.py": {
+      "bytes": 1449,
+      "sha256": "ef159ad31415d858497e17443ca05799e56a469c980fb9db684596845b6a18f0"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-bridge.py": {
+      "bytes": 3208,
+      "sha256": "fad32c41fea2e621dc113dfa7fcc578dd3eb36e0528088d705354e316c8fad1f"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/bridge-stderr.txt": {
+      "bytes": 790,
+      "sha256": "d331f242e26e4aee82015b0f264775e3f75ff53b0aa51b8f60725147379218c4"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/report.json": {
+      "bytes": 29030,
+      "sha256": "f78ed075fb3a3ce78245c4d1816ed568ae4c5a5e98617950a9d076a188a84949"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/menu-android.png": {
+      "bytes": 1050635,
+      "sha256": "cebcaa892ad469fc8ff55d621ae8a131682285af9336720e6b65c80f83af8a66"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-WifiControllerServer.java": {
+      "bytes": 19824,
+      "sha256": "3c76c6cc80a4465c5911b8833fb7542aca059bcd2dd7f028b342fedfb9481dd9"
+    },
+    "evidence/controller-runtime-retry-used-car/used-car-racing/gameplay/executed-WifiWireHarness.java": {
+      "bytes": 2790,
+      "sha256": "1291adff898ca43ebb6937286979288e1ef5f7647419e7b33060ba6a3c4765e5"
+    }
+  }
+}
