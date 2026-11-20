@@ -4,7 +4,7 @@
 
 **九款三平台适配进行中：Kart Rush、Dirt Crown、Night Racer、Penguintrack 已有 Android TV、macOS 与 Windows 三平台下载。** 当前提供 4 款 Android、9 款 Mac 与 7 款 Windows 赛车包，逐款下载见[手柄游戏目录](../../joystick-games/README.md)。Night Racer、Penguintrack、Last Track、Dirt Crown 的新 Windows 包均沿用已验原始构建；正常端口与占用回退模式各通过 10 项检查，安装／卸载和存档重启通过。Turbo Kart Rush 的 Windows 两模式也各通过 10 项检查；该游戏未声明存档字段，没有验证实际游戏存档恢复。
 
-目标是 Android TV、macOS 通用包（Apple Silicon／Intel）与 Windows x64，支持 pureTV 九键手柄、默认 TCP 63485、真实连接 ID、断线／失焦取消和手动恢复。Mac 包保留 Apple Silicon 原生、端口占用及 Rosetta 通过记录；Backroad Rally 作为预发布，另注明后续原生重启前台检查未完成的范围。Intel 图形运行仍未验证，尚未 Apple 公证。Windows 未做 Authenticode 签名；检查覆盖 96 DPI，其他显示缩放与实体手柄未测试。其余原生验证继续，九款完整交付尚未完成。
+目标是 Android TV、macOS 通用包（Apple Silicon／Intel）与 Windows x64，支持 pureTV 九键手柄、默认 TCP 63485、真实连接 ID、断线／失焦取消和手动恢复。Mac 包保留 Apple Silicon 原生、端口占用及 Rosetta 通过记录；Backroad Rally 作为预发布提供，其公开 ZIP 已在 Apple Silicon 上通过手柄驾驶与存档重启复验。Intel 图形运行仍未验证，尚未 Apple 公证。Windows 未做 Authenticode 签名；检查覆盖 96 DPI，其他显示缩放与实体手柄未测试。其余原生验证继续，九款完整交付尚未完成。
 
 ## 入选九款
 
