@@ -11,6 +11,16 @@ sys.path.insert(0, str(ROOT / 'puretv-joystick'))
 from joystick_sdk import JoystickClient
 
 
+def wait_for(page, predicate, timeout):
+    """Poll a read-only CDP expression without compiling a predicate in the game page."""
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if page.evaluate(predicate):
+            return
+        page.wait_for_timeout(150)
+    raise TimeoutError(f'Game did not satisfy {predicate} within {timeout}s')
+
+
 class MeasuredClient(JoystickClient):
     def __init__(self, port):
         super().__init__('127.0.0.1', port)

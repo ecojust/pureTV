@@ -9,7 +9,7 @@ import sys
 import time
 
 from playwright.sync_api import sync_playwright
-from sdk import MeasuredClient, ROOT
+from sdk import MeasuredClient, ROOT, wait_for
 
 SNAPSHOT = "window.JoystickGameQA?.snapshot?.()"
 FLAGS = ['--disable-dev-shm-usage', '--disable-background-timer-throttling', '--enable-unsafe-swiftshader']
@@ -35,7 +35,7 @@ def verify(browser, host_path, slug, archive, timeout, editable_text=None):
         phase = 'game startup'
         print(slug, phase, flush=True)
         page.goto(url, wait_until='commit')
-        page.wait_for_function(f"() => {{const s={SNAPSHOT}; return s?.stage === 'error' || s?.webglError || s?.controller?.pollCount > 2;}}")
+        wait_for(page, f"() => {{const s={SNAPSHOT}; return s?.stage === 'error' || s?.webglError || s?.controller?.pollCount > 2;}}", timeout)
         state = page.evaluate(f"() => {{const s={SNAPSHOT}; return {{stage:s.stage, error:s.webglError, messages:s.errors}};}}")
         assert state.get('stage') != 'error' and not state.get('error'), state
         result['initial'] = page.evaluate(f"() => {{const s={SNAPSHOT}; return {{stage:s.stage, renderer:s.renderer ?? s.render?.type ?? null, polls:s.controller.pollCount}};}}")
@@ -44,16 +44,16 @@ def verify(browser, host_path, slug, archive, timeout, editable_text=None):
         print(slug, phase, result['startupSeconds'], flush=True)
         client = MeasuredClient(int(port))
         client.connect()
-        page.wait_for_function(f"{SNAPSHOT}?.controller?.connected === true")
+        wait_for(page, f"{SNAPSHOT}?.controller?.connected === true", timeout)
         identity = page.locator('[data-puretv-controller-id-text]').first
         assert client.identity in identity.inner_text() and identity.is_visible()
         for key, down, action in [('DOWN', True, 'down'), ('DOWN', False, 'tap')]:
             client.button(key, action, 0 if down else 100)
-            page.wait_for_function(f"{SNAPSHOT}?.controller?.buttons?.{key} === {str(down).lower()}")
+            wait_for(page, f"{SNAPSHOT}?.controller?.buttons?.{key} === {str(down).lower()}", timeout)
         result.update(tcpIdentity=client.identity, acknowledged=client.acknowledged())
         client.disconnect()
         phase = 'keyboard after disconnect'
-        page.wait_for_function(f"{SNAPSHOT}?.controller?.connected === false")
+        wait_for(page, f"{SNAPSHOT}?.controller?.connected === false", timeout)
         # A directional input may land on an editable game field (e.g. Emberbrood's world seed).
         # Let the browser leave it with Tab before testing gameplay shortcuts.
         editable = "input, textarea, select, [contenteditable]:not([contenteditable=false])"
@@ -73,9 +73,9 @@ def verify(browser, host_path, slug, archive, timeout, editable_text=None):
             tab_count += 1
         result['tabsToLeaveEditable'] = tab_count
         page.keyboard.down('Numpad8')
-        page.wait_for_function(f"{SNAPSHOT}?.controller?.buttons?.UP === true")
+        wait_for(page, f"{SNAPSHOT}?.controller?.buttons?.UP === true", timeout)
         page.keyboard.up('Numpad8')
-        page.wait_for_function(f"{SNAPSHOT}?.controller?.buttons?.UP === false")
+        wait_for(page, f"{SNAPSHOT}?.controller?.buttons?.UP === false", timeout)
         result['passed'] = True
     except Exception as error:
         result.update(passed=False, phase=phase, error=str(error).splitlines()[0], pageErrors=errors[-3:])

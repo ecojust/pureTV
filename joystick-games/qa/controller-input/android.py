@@ -9,7 +9,7 @@ import tempfile
 from zipfile import ZipFile
 
 from playwright.sync_api import sync_playwright
-from sdk import MeasuredClient, ROOT
+from sdk import MeasuredClient, ROOT, wait_for
 
 # Match the two synchronous calls used by Game Kit's Android WebView. This
 # fixture forwards each call to the live Java objects, without generating input.
@@ -34,11 +34,11 @@ def digest(path):
         return hashlib.file_digest(f, 'sha256').hexdigest()
 
 
-def held(tv, key, down):
-    tv.wait_for_function(f'{SNAP}?.controller?.buttons?.{key} === {str(down).lower()}')
+def held(tv, key, down, timeout=75):
+    wait_for(tv, f'{SNAP}?.controller?.buttons?.{key} === {str(down).lower()}', timeout)
 
 
-def touch(phone, cdp, key, tv):
+def touch(phone, cdp, key, tv, timeout=75):
     axes = {'UP': (0, -50), 'DOWN': (0, 50), 'LEFT': (-50, 0), 'RIGHT': (50, 0)}
     control = 'stick-zone' if key in axes else {'A':'a', 'B':'b', 'X':'buttonX', 'Y':'buttonY', 'START':'start'}[key]
     rect = phone.locator('#' + control).bounding_box()
@@ -48,9 +48,9 @@ def touch(phone, cdp, key, tv):
     send('touchStart', [{'x':x, 'y':y}])
     if key in axes:
         dx,dy=axes[key];send('touchMove', [{'x':x+dx, 'y':y+dy}])
-    held(tv, key, True)
+    held(tv, key, True, timeout)
     send('touchEnd', [])
-    held(tv, key, False)
+    held(tv, key, False, timeout)
 
 
 def verify(args, assets, java, report):

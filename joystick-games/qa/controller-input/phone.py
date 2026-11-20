@@ -11,7 +11,7 @@ from zipfile import ZipFile
 
 from playwright.sync_api import sync_playwright
 from android import BRIDGE, SNAP, digest, touch
-from sdk import ROOT
+from sdk import ROOT, wait_for
 
 
 def copy_assets(archive, target):
@@ -51,7 +51,7 @@ def verify(browser, mobile_browser, java, slug, packed, output, timeout):
             tv.set_default_timeout(timeout * 1000)
             tv.add_init_script(BRIDGE)
             tv.goto(info['tv'], wait_until='commit')
-            tv.wait_for_function(f"() => {{const s={SNAP};return s?.controller?.pollCount > 2 && !s.webglError && !['loading','boot','error'].includes(s.stage);}}")
+            wait_for(tv, f"() => {{const s={SNAP};return s?.controller?.pollCount > 2 && !s.webglError && !['loading','boot','error'].includes(s.stage);}}", timeout)
             qr = tv.locator('.ptv-phone img')
             qr.wait_for(state='visible')
             shot = output / (slug + '-menu.png')
@@ -81,13 +81,13 @@ def verify(browser, mobile_browser, java, slug, packed, output, timeout):
             phone.set_default_timeout(timeout*1000)
             phone.goto(room,wait_until='commit')
             phone.get_by_text('已连接 · 看着电视玩',exact=True).wait_for()
-            tv.wait_for_function(f"{SNAP}?.controller?.transport === 'phone'")
+            wait_for(tv, f"{SNAP}?.controller?.transport === 'phone'", timeout)
             phase = 'touch and release'
             cdp = phone.context.new_cdp_session(phone)
-            touch(phone, cdp, 'DOWN', tv)
+            touch(phone, cdp, 'DOWN', tv, timeout)
             report.update(touch='DOWN', afterTouch=summary(tv))
             phone.close();phone=None
-            tv.wait_for_function(f"{SNAP}?.controller?.connected === false && {SNAP}?.controller?.buttons?.DOWN === false")
+            wait_for(tv, f"{SNAP}?.controller?.connected === false && {SNAP}?.controller?.buttons?.DOWN === false", timeout)
             report.update(disconnectReleased=True, passed=True)
         except Exception as error:
             report.update(passed=False, phase=phase, error=str(error).splitlines()[0])
