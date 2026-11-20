@@ -270,6 +270,34 @@ jobs:
           test -e /dev/kvm
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Load the existing signed read-only observer for actual game GL identification after gameplay
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: '44691241941'
+          artifact-ids: '14608891538'
+          merge-multiple: true
+          path: ${{ runner.temp }}/backroad-frozen-graphics-observer
+      - name: Configure host Mesa OpenGL and a CPU Vulkan ICD for the Android graphics transport
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends xvfb mesa-utils mesa-vulkan-drivers vulkan-tools
+          out="$RUNNER_TEMP/runtime/$GAME/host-renderer"
+          mkdir -p "$out"
+          dpkg-query -W xvfb mesa-utils mesa-vulkan-drivers vulkan-tools > "$out/packages.txt"
+          mapfile -t drivers < <(dpkg-query -L mesa-vulkan-drivers:amd64 | grep -E '/lvp_icd(\.x86_64)?\.json$')
+          test "${#drivers[@]}" -eq 1
+          Xvfb -displayfd 3 -screen 0 1280x720x24 -nolisten tcp -ac +extension GLX 3>"$out/display-number" >"$out/xvfb.log" 2>&1 &
+          for i in {1..40}; do test -s "$out/display-number" && break; sleep .25; done
+          export DISPLAY=":$(cat "$out/display-number")" LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe
+          export VK_DRIVER_FILES="${drivers[0]}" VK_ICD_FILENAMES="${drivers[0]}"
+          cat "$VK_DRIVER_FILES" > "$out/mesa-icd.json"
+          glxinfo -B > "$out/host-gl.txt"
+          grep -i 'OpenGL renderer string:.*llvmpipe' "$out/host-gl.txt"
+          vulkaninfo --summary > "$out/host-vulkan.txt"
+          grep -i 'deviceName.*llvmpipe' "$out/host-vulkan.txt"
+          env | grep -E '^(DISPLAY|LIBGL_ALWAYS_SOFTWARE|GALLIUM_DRIVER|VK_DRIVER_FILES|VK_ICD_FILENAMES)=' >> "$GITHUB_ENV"
       - name: Run the original Finland player route in normal and occupied modes
         env:
           BACKROAD_FINLAND_PLAYER_ROUTE: 'true'
@@ -288,8 +316,11 @@ jobs:
           disable-animations: true
           # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
           # Optional controlled Vulkan-off comparison; not an established crash cause or fix.
-          emulator-options: -no-window -memory 2048 -gpu ${{ matrix.game == 'backroad-rally' && 'lavapipe' || 'swiftshader_indirect' }} -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}
+          emulator-options: -no-window -memory 2048 -gpu ${{ matrix.game == 'backroad-rally' && 'host' || 'swiftshader_indirect' }} -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}
           pre-emulator-launch-script: >-
+            LD_LIBRARY_PATH="$ANDROID_HOME/emulator/lib64/vulkan${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+            vulkaninfo --summary > "$RUNNER_TEMP/runtime/$GAME/host-renderer/sdk-loader-vulkan.txt" &&
+            grep -i 'deviceName.*llvmpipe' "$RUNNER_TEMP/runtime/$GAME/host-renderer/sdk-loader-vulkan.txt" &&
             python3 joystick-games/tools/android-emulator-supervisor.py prepare
             --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
           script: >-
@@ -299,7 +330,8 @@ jobs:
             --output "$RUNNER_TEMP/runtime/$GAME/environment-diagnostics" --
             python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
             --input "$RUNNER_TEMP/input" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
-            --confirm-backroad-install "$CONFIRM_BACKROAD_INSTALL"
+            --confirm-backroad-install "$CONFIRM_BACKROAD_INSTALL"; route_status=$?;
+            bash joystick-games/qa/android/backroad_host_driver.sh "$route_status"
       - name: Restore the exact disposable SDK launcher after optional supervision
         if: always() && inputs.supervise_pon_emulator
         run: >-

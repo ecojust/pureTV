@@ -194,11 +194,11 @@ class SupervisorTests(unittest.TestCase):
         selection = "${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}"
         self.assertEqual(options.count(selection), 1)
         prefix = ['-port', '5554', '-avd', 'JoystickGamesValidation']
-        backroad_driver = "${{ matrix.game == 'backroad-rally' && 'lavapipe' || 'swiftshader_indirect' }}"
+        backroad_driver = "${{ matrix.game == 'backroad-rally' && 'host' || 'swiftshader_indirect' }}"
         self.assertEqual(options.count(backroad_driver), 1)
-        rally_args = prefix + options.replace(backroad_driver, 'lavapipe').replace(selection, '').split()
+        rally_args = prefix + options.replace(backroad_driver, 'host').replace(selection, '').split()
         expected_rally = list(m.EXPECTED_ARGS)
-        expected_rally[expected_rally.index('-gpu') + 1] = 'lavapipe'
+        expected_rally[expected_rally.index('-gpu') + 1] = 'host'
         self.assertEqual(rally_args, expected_rally)
         options = options.replace(backroad_driver, 'swiftshader_indirect')
         self.assertEqual(prefix + options.replace(selection, '').split(), m.EXPECTED_ARGS)
