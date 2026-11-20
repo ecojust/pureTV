@@ -47,6 +47,10 @@ def validate_plan(plan):
     assert isinstance(plan, dict) and plan.get('schemaVersion') == 1
     accepted_renderers(plan)
     if 'storageRestartRequired' in plan:assert type(plan['storageRestartRequired']) is bool
+    if 'windowsPauseWait' in plan:
+        pause = plan['windowsPauseWait']
+        assert isinstance(pause, dict) and set(pause) == {'timeoutSeconds'}
+        assert type(pause['timeoutSeconds']) is int and 30 < pause['timeoutSeconds'] <= 60
     stable = plan.get('pauseStablePaths')
     assert isinstance(stable, list) and stable and len(set(stable)) == len(stable), 'Explicit pauseStablePaths required'
     assert all(isinstance(path, str) and PATH.fullmatch(path) and path.startswith('gameplay.') for path in stable)
@@ -58,9 +62,43 @@ def validate_plan(plan):
         keys = step.get('keys')
         assert isinstance(keys, list) and keys and len(keys) == len(set(keys)) and set(keys) <= KEYS
         assert type(step.get('holdMs')) is int and 16 <= step['holdMs'] <= 10000
-        assert numeric(step.get('timeoutSeconds', 15)) and 0 < step.get('timeoutSeconds', 15) <= 60
+        assert 'windowsMenuTap' not in step, 'Use the shared menuTap contract'
+        if 'menuTap' in step:
+            assert type(step['menuTap']) is bool, 'menuTap must be boolean'
+            if step['menuTap']:assert len(keys)==1, 'menuTap requires exactly one actual SDK key'
+        assert numeric(step.get('timeoutSeconds', 15)) and 0 < step.get('timeoutSeconds', 15) <= 240
         expectations = step.get('expect')
         assert isinstance(expectations, list) and expectations
+        # These opt-ins are consumed only by the Windows verifier. Keep the
+        # ordinary/platform-shared budget unchanged; long startup observation
+        # is not a blanket extension for arbitrary actions or held buttons.
+        startup = step.get('windowsStartupWait')
+        if 'windowsStartupWait' in step:
+            assert isinstance(startup, dict) and set(startup) == {'timeoutSeconds'}
+            assert type(startup['timeoutSeconds']) is int and 240 < startup['timeoutSeconds'] <= 600
+            assert keys in [['A'], ['START']] and step['holdMs'] <= 1000
+            assert not step.get('menuTap') and not step.get('windowsHoldUntilExpect')
+            assert len(expectations) == 1 and expectations[0] in [
+                {'path': path, 'op': 'eq', 'value': phase}
+                for path in ['gameplay.phase', 'gameplay.mode'] for phase in ['racing', 'running']
+            ], 'Extended startup must observe the original running phase'
+        for hold_option in ('windowsHoldUntilExpect', 'androidHoldUntilExpect'):
+            if hold_option not in step:
+                continue
+            assert type(step[hold_option]) is bool
+            if step[hold_option]:
+                assert keys == ['UP'] and not step.get('menuTap') and startup is None
+                assert step.get('timeoutSeconds', 15) <= 60
+                assert len(expectations) == 2
+                speed, motion = expectations
+                assert isinstance(speed, dict) and isinstance(motion, dict)
+                assert speed.get('path') == 'gameplay.speed' and speed.get('op') == 'gt' and numeric(speed.get('value')) and speed['value'] > 0
+                assert motion in [{'path': path, 'op': 'changed'} for path in ('gameplay.progress', 'gameplay.position')], 'Held throttle must observe original speed and course motion'
+        if 'windowsReleaseWait' in step:
+            release = step['windowsReleaseWait']
+            assert isinstance(release, dict) and set(release) == {'timeoutSeconds'}
+            assert type(release['timeoutSeconds']) is int and 0 < release['timeoutSeconds'] <= 60
+            assert step.get('windowsHoldUntilExpect') is True, 'Release observation requires bounded held throttle'
         for item in expectations:
             assert isinstance(item, dict) and isinstance(item.get('path'), str) and PATH.fullmatch(item['path'])
             assert item.get('op') in OPERATORS
