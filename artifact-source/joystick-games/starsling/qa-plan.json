@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": [
+    "gameplay.shots",
+    "gameplay.angle",
+    "gameplay.power",
+    "gameplay.tick"
+  ],
+  "steps": [
+    {
+      "name": "Start the first sector",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 350,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Raise the actual sling angle",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 750,
+      "expect": [
+        {
+          "path": "gameplay.angle",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Lower sling power",
+      "keys": [
+        "LEFT"
+      ],
+      "holdMs": 450,
+      "expect": [
+        {
+          "path": "gameplay.power",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Launch a projectile",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 350,
+      "expect": [
+        {
+          "path": "gameplay.shots",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Pause the game",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 350,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Resume explicitly",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 350,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    }
+  ],
+  "storageRestartRequired": true
+}
