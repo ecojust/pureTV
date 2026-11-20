@@ -43,7 +43,7 @@ def file_info(path):
     return {'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
 
 
-def backroad_scene_colors(path):
+def backroad_scene_colors(path, ghost_labels=()):
     """Count sampled colors in two world regions outside the racing HUD and controller card."""
     width, height = 160, 90
     image = subprocess.check_output(
@@ -53,13 +53,17 @@ def backroad_scene_colors(path):
     if len(image) != width * height * 3:
         raise ValueError('Incomplete gameplay screenshot')
     colors = set()
-    # In 16:9 gameplay the stage card/countdown sits in the middle, the HUD around the edges.
-    # Sample both the upper-left scenery and the lower driving area. The empty canvas and
-    # black GPU output are uniformly colored even while the timer and controller ID change.
-    for top, bottom in ((22, 32), (59, 72)):
+    # The upstream draws projected rival names in the DOM, even above a uniformly blank canvas.
+    # Leave the horizon centre out and mask the observed bounds on either side of the screenshot.
+    rectangles = [(left * width - 2, top * height - 2, right * width + 2, bottom * height + 2)
+                  for left, top, right, bottom in ghost_labels if left < right and top < bottom]
+    for left, top, right, bottom in ((20, 22, 54, 32), (102, 22, 115, 32), (20, 59, 115, 72)):
         for y in range(top, bottom):
-            row = image[(y * width + 20) * 3:(y * width + 115) * 3]
-            colors.update(zip(row[0::3], row[1::3], row[2::3]))
+            for x in range(left, right):
+                if any(a <= x <= c and b <= y <= d for a, b, c, d in rectangles):
+                    continue
+                offset = (y * width + x) * 3
+                colors.add(bytes(image[offset:offset + 3]))
     return len(colors)
 
 
@@ -1033,7 +1037,9 @@ def main():
         acceptance.setup()
         acceptance.scenarios()
         if a.game == 'backroad-rally':
-            colors = backroad_scene_colors(acceptance.out / 'playing.png')
+            playing = next(c for c in acceptance.captures if c['path'] == 'playing.png')
+            labels = [rect for moment in ('before', 'after') for rect in playing[moment]['page']['backroadGhostLabels']]
+            colors = backroad_scene_colors(acceptance.out / 'playing.png', labels)
             acceptance.report['playingSceneColors'] = colors
             if colors <= 1:
                 raise AssertionError('Backroad gameplay screenshot has a uniform world behind the HUD')

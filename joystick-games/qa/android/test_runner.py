@@ -32,6 +32,12 @@ class BackroadPlayingFrame(unittest.TestCase):
             pixel(x, y, (255, 255, 255))
         with mock.patch.object(runner.subprocess, 'check_output', return_value=frame):
             self.assertEqual(runner.backroad_scene_colors('playing.png'), 1)
+            pixel(81, 24, (220, 180, 75))  # rival name at the horizon
+            self.assertEqual(runner.backroad_scene_colors('playing.png'), 1)
+            pixel(32, 65, (180, 180, 180))  # a projected rival name over the lower part of the screen
+            mask = [(30 / 160, 63 / 90, 34 / 160, 67 / 90)]
+            self.assertEqual(runner.backroad_scene_colors('playing.png', mask), 1)
+            pixel(32, 65, (27, 25, 22))
             pixel(87, 65, (28, 25, 22))
             self.assertEqual(runner.backroad_scene_colors('playing.png'), 2)
 

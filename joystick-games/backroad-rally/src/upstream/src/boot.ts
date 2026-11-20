@@ -8,6 +8,17 @@ import type { StageFeatures } from './world/features';
 import { icePatches, puddleSites, type RoadForWeather, type WeatherDef } from './game/weather';
 import { RoadMarks } from './fx/roadMarks';
 
+/** Identify software renderers by the driver name that WebGL exposes, including the Android TV emulator. */
+export function webglOutputPolicy(name: string, halfFloat: boolean, dpr: number) {
+  const software = /swiftshader|llvmpipe|softpipe|lavapipe|software (?:renderer|rasterizer)|microsoft basic render driver/i.test(name);
+  return { halfFloat: halfFloat && !software, pixelRatio: Math.min(dpr, software ? 1 : 2) };
+}
+
+function webglName(gl: WebGL2RenderingContext): string {
+  const info = gl.getExtension('WEBGL_debug_renderer_info');
+  return info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : 'webgl2';
+}
+
 /**
  * WebGPU with its built-in WebGL2 fallback; ?webgl forces the fallback for testing. Both ask for the fast GPU:
  * WebGPU through the adapter request, WebGL2 through a context made here (three's fallback doesn't pass
@@ -35,11 +46,14 @@ export async function createRenderer(params: URLSearchParams, trackTimestamp: bo
   // and even its direct tone-mapping pass otherwise allocate half-float buffers.
   const halfFloatOutput = !context || context.getExtension('EXT_color_buffer_float')
     || context.getExtension('EXT_color_buffer_half_float');
+  // The Android TV SwiftShader translator advertises float targets but presents a uniform stage.
+  // Reuse the RGBA8 direct renderer and avoid multiplying software raster work by the TV's density.
+  const output = webglOutputPolicy(context ? webglName(context) : '', !!halfFloatOutput, devicePixelRatio);
   const renderer = new THREE.WebGPURenderer({
     canvas, context, antialias: true, forceWebGL, powerPreference: 'high-performance', trackTimestamp,
-    outputBufferType: halfFloatOutput ? THREE.HalfFloatType : THREE.UnsignedByteType,
+    outputBufferType: output.halfFloat ? THREE.HalfFloatType : THREE.UnsignedByteType,
   });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setPixelRatio(output.pixelRatio);
   renderer.setSize(innerWidth, innerHeight);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap; // PCFSoft is gone from WebGPURenderer (it warns and falls back)
@@ -54,10 +68,7 @@ export async function createRenderer(params: URLSearchParams, trackTimestamp: bo
 export function gpuName(renderer: THREE.WebGPURenderer): string {
   type Info = { vendor?: string; architecture?: string; device?: string; description?: string };
   const b = renderer.backend as { gl?: WebGL2RenderingContext; adapter?: { info?: Info }; device?: { adapterInfo?: Info } };
-  if (b.gl) {
-    const ext = b.gl.getExtension('WEBGL_debug_renderer_info');
-    return ext ? String(b.gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : 'webgl2';
-  }
+  if (b.gl) return webglName(b.gl);
   // three keeps no adapter; the device has its info (Chrome: "nvidia blackwell", "google swiftshader")
   const i = b.adapter?.info ?? b.device?.adapterInfo;
   const name = i ? [i.vendor, i.architecture, i.device, i.description].filter(Boolean).join(' ') : '';
