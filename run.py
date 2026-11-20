@@ -47,6 +47,7 @@ assert subprocess.check_output(['git','-C',str(project),'rev-parse','HEAD'], tex
 checksums={}
 for line in (pkgdir/'SHA256SUMS.txt').read_text().splitlines():
     digest, name=line.split()
+    name=name.removeprefix("*")
     assert sha(pkgdir/name)==digest
     checksums[name]=digest
 with ZipFile(pkgdir/'pureTV-Games-portable.zip') as z:
