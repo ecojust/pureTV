@@ -220,8 +220,16 @@ class Pads(socketserver.ThreadingTCPServer):
 
 def addresses():
     hosts = set()
-    with contextlib.suppress(OSError):
-        hosts.update(socket.gethostbyname_ex(socket.gethostname())[2])
+    # Enumerate configured interfaces without looking up the computer's DNS name.
+    with contextlib.suppress(ImportError, OSError):
+        from ifaddr import get_adapters
+
+        hosts.update(
+            address.ip
+            for adapter in get_adapters()
+            for address in adapter.ips
+            if address.is_IPv4
+        )
     with contextlib.suppress(OSError), socket.socket(
         socket.AF_INET, socket.SOCK_DGRAM
     ) as probe:
@@ -261,7 +269,7 @@ def discovery(slug, addresses, port):
                 "mDNS discovery unavailable: " + str(exc), file=sys.stderr, flush=True
             )
             service = None
-        yield service_name
+        yield service_name, service is not None
     finally:
         if client:
             try:
@@ -269,6 +277,13 @@ def discovery(slug, addresses, port):
                     client.unregister_service(service)
             finally:
                 client.close()
+
+
+class LoopbackHTTPServer(http.server.ThreadingHTTPServer):
+    def server_bind(self):
+        # HTTPServer normally reverse-resolves this known numeric loopback address.
+        socketserver.TCPServer.server_bind(self)
+        self.server_name, self.server_port = self.server_address[:2]
 
 
 class GamePage(http.server.BaseHTTPRequestHandler):
@@ -329,11 +344,14 @@ class GamePage(http.server.BaseHTTPRequestHandler):
 
     def events(self):
         self.send_response(200)
-        self.send_header("Content-Type", "text/event-stream")
+        self.send_header("Content-Type", "text/event-stream; charset=utf-8")
+        self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
         rev = -1
         try:
+            self.wfile.write(b": pureTV controller stream\n\n")
+            self.wfile.flush()
             while not self.server.stopped.is_set():
                 room = self.server.room
                 with room.condition:
@@ -418,7 +436,7 @@ def main(argv=None):
             )
             web = stack.enter_context(
                 listen(
-                    lambda addr: http.server.ThreadingHTTPServer(addr, GamePage),
+                    lambda addr: LoopbackHTTPServer(addr, GamePage),
                     "127.0.0.1",
                     http_port,
                     args.http_port is None,
@@ -426,7 +444,7 @@ def main(argv=None):
             )
             web.authority = f"127.0.0.1:{web.server_port}"
             ips = addresses()
-            name = stack.enter_context(
+            name, advertised = stack.enter_context(
                 discovery(args.game, ips, pads.server_address[1])
             )
             info = dict(
@@ -436,14 +454,20 @@ def main(argv=None):
                 qr="",
                 addresses=ips,
                 wifiController=dict(
-                    state="available",
+                    state="available" if advertised else "unavailable",
+                    version="1",
+                    serviceType="_puretv._tcp",
                     serviceName=name,
                     addresses=ips,
                     port=pads.server_address[1],
                     inputEnabled=True,
                 ),
             )
-            config = dict(info=info, alias=ALIASES.get(args.game), game=args.game)
+            config = dict(
+                info=info,
+                alias=ALIASES.get(args.game),
+                gameKit=args.game in {"neon-rush", "tower-overlap"},
+            )
             web.bridge = (
                 "const pureTVPCConfig=" + json.dumps(config, ensure_ascii=True) + ";\n"
             ).encode() + Path(__file__).with_name("pc-bridge.js").read_bytes()
