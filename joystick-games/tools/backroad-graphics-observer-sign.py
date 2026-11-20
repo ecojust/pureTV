@@ -37,12 +37,12 @@ SIGNER_NAMES = {SELF, WORKFLOW, PIN_PATH, 'joystick-games/tools/android-runtime-
 CONTENTS = {'AndroidManifest.xml', 'resources.arsc', 'classes.dex', 'assets/graphics.js'}
 SIGNATURES = {'META-INF/MANIFEST.MF', 'META-INF/PURETV.SF', 'META-INF/PURETV.RSA'}
 ORIGINAL = {
-    'repository': REPO, 'sourceSha': '4b6cf0b8cba288eae66bcae2ef2784acc279a695',
-    'runId': 44625676430, 'runAttempt': 1, 'artifactId': 14579726223,
-    'artifactName': 'joystick-android-signed', 'artifactBytes': 104996375,
-    'artifactSha256': 'b6690049690175943c906ddd4277705c46c5e235770aa5c1ffbd6da1ab4c94fc',
-    'file': 'backroad-rally-0.1.0.apk', 'bytes': 105024551,
-    'sha256': '2cd35f145f5362264a720708325c22e283a3828d21899058f17422ba87103c08',
+    'repository': REPO, 'sourceSha': 'e59dd4e39fcf5c9e5b82719904438e783cd43255',
+    'runId': 44690088277, 'runAttempt': 1, 'artifactId': 14609030184,
+    'artifactName': 'joystick-android-signed', 'artifactBytes': 104996920,
+    'artifactSha256': '8e10827b6a09fc122f149d9c77b97b26fe319e51989504797f4fa66cc88d7c44',
+    'file': 'backroad-rally-0.1.3.apk', 'bytes': 105024551,
+    'sha256': '5faf718f1307f8000ee74a9672c515130e0d7b335b369f804a3b4741873aed1c',
     'packageName': TARGET, 'certificateSha256': PIN}
 
 
@@ -177,8 +177,8 @@ def validate_build(directory, tools, identity, apk_required=True):
                 'sourceCommit': identity['sourceSha'], 'committedInputsVerified': True,
                 'minSdk': 26, 'targetSdk': 35, 'testOnly': True, 'signed': False,
                 'targetApkBuilt': False, 'targetApkChanged': False, 'modelWrites': False,
-                'clockOverrides': False, 'nativeInputPolls': False, 'glContextCalls': False,
-                'readonlyEndpoints': ['/status', '/console', '/graphics'], 'apk': UNSIGNED}
+                'clockOverrides': False, 'nativeInputPolls': False, 'glContextCalls': True,
+                'readonlyEndpoints': ['/status', '/console', '/graphics', '/capabilities'], 'apk': UNSIGNED}
     for key, value in expected.items():
         require(type(receipt.get(key)) is type(value) and receipt[key] == value, 'build_' + key)
     require(receipt['sourceFiles'] == source_records(SOURCE_NAMES, identity['sourceSha']), 'build_source_inventory')

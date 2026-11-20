@@ -37,10 +37,10 @@ RUNTIME_FILES = {'original-input-verification.log', 'original-input/input-verifi
                  *{'observer-signed/' + n for n in (signer.BUILD, signer.RECEIPT, signer.ORIGIN)},
                  *{'original-public-receipts/' + n for n in ('target-signing.json', 'target-build.json', 'old-observer-signing.json', 'old-observer-build.json')}}
 DIAGNOSTIC_FILES = {'report.json', 'adb-commands.jsonl', 'observer-http.jsonl', 'instrumentation.log', 'wire.jsonl',
-                    'original-qa-plan.json', 'final-status.json', 'final-console.json', 'final-graphics.json',
+                    'original-qa-plan.json', 'final-status.json', 'final-console.json', 'final-graphics.json', 'final-capabilities.json',
                     'final-system-screen.png', 'final-logcat.txt', 'final-window.txt', 'final-gfxinfo.txt'}
-DIAGNOSTIC_FILES |= {label + suffix for label in ('initial-menu', 'original-low-settings', 'original-stage-running')
-                    for suffix in ('.png', '-graphics-before.json', '-graphics-after.json', '-console.json', '-status.json')}
+DIAGNOSTIC_FILES |= {label + suffix for label in ('initial-menu', 'original-low-settings', 'original-stage-running', 'original-stage-accelerated')
+                    for suffix in ('.png', '-graphics-before.json', '-graphics-after.json', '-console.json', '-status.json', '-capabilities.json')}
 DIAGNOSTIC_FILES |= {'install-failure/' + n for n in ('foreground.txt', 'windows.txt', 'installer-sessions.txt',
                     'screen.png', 'ui-dump-command.txt', 'ui.xml', 'executed-install_failure.py', 'report.json')}
 SOURCE_FILES = {
