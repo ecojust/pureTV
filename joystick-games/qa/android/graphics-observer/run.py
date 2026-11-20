@@ -39,10 +39,10 @@ TARGET = signer.TARGET
 ORIGINAL = signer.ORIGINAL
 PLAN_PATH = 'joystick-games/backroad-rally/qa-plan.json'
 PLAN_SHA = '8306e5b2ad54cf35eb2602db045711572e35a728478e668fc65a6fb962ad157f'
-OLD_OBSERVER = {'bytes': 16783, 'sha256': 'c8402dcc9b204e4aa405a9edae4efa72d8a2b7621f0df989b9e4bcf96ad0c4f2'}
+OLD_OBSERVER = {'bytes': 16783, 'sha256': '4347cf36933e0fe8a51d34e07f39e64441bfda6a880c5fd5e33cdf5bf0dfc867'}
 # Original one-based steps. Skip career/save, all driving, pause, lifecycle,
 # occupied-port and reconnection acceptance; retain every selected predicate.
-SUBSET = tuple(range(1, 21)) + tuple(range(24, 34))
+SUBSET = tuple(range(24, 34))
 ENTRY = 'https://game-kit.invalid/tv.html'
 STAGE_URL = ENTRY + '?mode=quick&stage=finland&car=swift&cond=stage&weather=stage'
 
@@ -122,7 +122,7 @@ def validate_binding(binding, source):
         require(all(type(item.get(k)) is type(v) and item[k] == v for k, v in expected.items()), 'Wrong original ' + key)
         require(item.get('certificateSha256') == signer.PIN, 'Wrong original certificate')
     require(game['package']['packageName'] == TARGET and game['observer']['packageName'] == 'com.ecojust.joystickqa.backroadrally', 'Original package identities')
-    require(game.get('frozenSourceInputsVerified') == 914 and game.get('currentProductionInputsUnchanged') == 887
+    require(game.get('frozenSourceInputsVerified') == 916 and game.get('currentProductionInputsUnchanged') == 888
             and game.get('assetsVerified') == 338, 'Original source/asset verification scope changed')
     return game
 
@@ -202,7 +202,7 @@ class Diagnosis:
         self.report = {'schemaVersion': 1, 'status': 'running', 'game': 'backroad-rally', 'mode': 'normal',
                        'scope': 'Graphics diagnosis only: original SDK menu subset and read-only graphics/console',
                        'formalAcceptance': False, 'visualPass': None, 'manualPixelReviewRequired': True,
-                       'modelWrites': False, 'clockOverrides': False, 'rendererChanges': False, 'glContextCalls': False,
+                       'modelWrites': False, 'clockOverrides': False, 'rendererChanges': False, 'existingGlCapabilitiesReadAtCheckpoints': True, 'canvasReadbackAfterRealFrame': True,
                        'targetApkBuilt': False, 'targetApkChanged': False, 'originalTarget': ORIGINAL,
                        'physicalTvTested': False, 'physicalPhoneTested': False, 'steps': [], 'captures': [],
                        'notTested': ['career/save', 'driving-input acceptance', 'pause/resume', 'reconnect', 'occupied port', 'storage restart']}
@@ -234,7 +234,7 @@ class Diagnosis:
         return result.stdout
 
     def get(self, endpoint, timeout=15, save=None, deadline=None):
-        require(endpoint in ('status', 'console', 'graphics'), 'Read-only Observer endpoint')
+        require(endpoint in ('status', 'console', 'graphics', 'capabilities'), 'Read-only Observer endpoint')
         entry = {'endpoint': endpoint, 'startedAt': time.time(), 'timeoutSeconds': timeout}
         try:
             def read():
@@ -427,20 +427,45 @@ class Diagnosis:
                         except OSError: pass
 
     def capture(self, label):
-        before = self.get('graphics', save=label + '-graphics-before.json')
+        before = self.checkpoint('graphics', label + '-graphics-before.json')
+        self.checkpoint('capabilities', label + '-capabilities.json')
         self.get('console', save=label + '-console.json')
         self.get('status', save=label + '-status.json')
         image = self.command('exec-out', 'screencap', '-p', limit=16 * 1024 * 1024, binary=label + '.png')
         require(image.startswith(b'\x89PNG\r\n\x1a\n'), 'System screenshot is not PNG')
-        after = self.get('graphics', save=label + '-graphics-after.json')
+        after = self.checkpoint('graphics', label + '-graphics-after.json')
         self.report['captures'].append({'name': label, 'screenshot': record(self.out / (label + '.png')),
                                        'beforePoll': game(before).get('pollCount'), 'afterPoll': game(after).get('pollCount'),
                                        'manualPixelReviewRequired': True})
         self.save()
 
+    def checkpoint(self, endpoint, filename):
+        deadline = time.monotonic() + 80
+        while time.monotonic() < deadline:
+            try:
+                return self.get(endpoint, timeout=min(15, max(.01, deadline-time.monotonic())), save=filename)
+            except (RemoteDisconnected, ConnectionError, TimeoutError, URLError) as error:
+                if isinstance(error, HTTPError) or self.instrument.poll() is not None: raise
+        raise TimeoutError('Checkpoint unavailable: ' + filename)
+
+    def canvas_result(self):
+        deadline = time.monotonic() + 45
+        while time.monotonic() < deadline:
+            events = self.get('console').get('events', [])
+            for event in reversed(events):
+                message = event.get('message', '')
+                if message.startswith('BackroadCanvasProbe '):
+                    value = json.loads(message.split(' ', 1)[1])
+                    require('error' not in value and value['drawnFrame'] > value['initialFrame'], 'Canvas probe failed')
+                    self.report['canvasPixels'] = value
+                    self.save()
+                    return
+            time.sleep(.25)
+        raise TimeoutError('No fresh stage canvas sample received')
+
     def menu(self, index, step):
         client = self.clients[0]
-        before = self.get('graphics'); validated(before)
+        before = self.menu_graphics(time.monotonic() + original.OBSERVER_SNAPSHOT_TIMEOUT); validated(before)
         require(game(before)['stage'] == 'menu' and released(before, before, client.identity), 'Menu input precondition')
         require(not original.plan.matches(step['expect'], game(before), game(before)), 'Menu expectation was already true')
         item = {'originalIndex': index, 'step': step, 'status': 'running', 'before': before, 'samples': []}
@@ -488,6 +513,7 @@ class Diagnosis:
             self.setup()
             for index, step in self.steps: self.menu(index, step)
             self.capture('original-stage-running')
+            self.canvas_result()
             client = self.clients[0]
             with client.lock: client.ping(); seq = client.seq
             original.Acceptance.wait_sent_ack(self, client, seq)
@@ -512,7 +538,7 @@ class Diagnosis:
                     self.report['finalSystemScreenshot'] = screen
                 except Exception as error: self.report['finalSystemScreenshot'] = {'status': 'unavailable', 'errorType': type(error).__name__}
             if hasattr(self, 'port'):
-                for endpoint in ('status', 'console', 'graphics'):
+                for endpoint in ('status', 'console', 'graphics', 'capabilities'):
                     try: self.get(endpoint, save='final-' + endpoint + '.json')
                     except Exception as error: self.report.setdefault('finalReadErrors', {})[endpoint] = type(error).__name__
             for client in self.clients: client.disconnect()

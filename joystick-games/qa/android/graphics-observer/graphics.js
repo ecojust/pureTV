@@ -1,7 +1,7 @@
 (function () {
   'use strict';
-  // Test-only observation. Do not call getContext: it can create a new context.
-  // No framebuffer reads, renderer setters, clock changes, native input polls,
+  // Only the capabilities endpoint reads the one canvas that the initialized game owns.
+  // The fixed stage capability probe can copy the existing canvas once after a real frame. No renderer setters, clock changes, native input polls,
   // event hooks, storage writes or resource fetches are performed here.
   // The frozen host posts loadUrl only after its asynchronous room startup.
   // This exact empty initial document is pending, never a rendered game.
@@ -49,6 +49,75 @@
       centerPoint:{x:x,y:y},centerStack:stack,
       contextRead:false,contextReason:'No existing context reference is exposed. getContext is deliberately not called.'};
   });
+  if (typeof backroadGlObservation !== 'undefined' && backroadGlObservation) {
+    var owned = document.querySelectorAll('#app > canvas');
+    var previous = location.href === 'https://game-kit.invalid/tv.html'
+      || location.href === 'https://game-kit.invalid/tv.html?mode=quick&stage=finland&car=swift&cond=stage&weather=stage';
+    if (!previous || !cached || cached.game !== 'backroad-rally' || cached.renderer !== 'webgl2'
+        || cached.webglVersion !== 2 || !(cached.frames > 0) || owned.length !== 1) {
+      return {contextRead:false, reason:'No initialized Backroad WebGL2 canvas at this checkpoint', url:location.href};
+    }
+    // createRenderer appends this canvas only after successful initialization.
+    // Calling getContext with the same type returns its existing context.
+    if (cached.stage === 'playing') {
+      var startFrame = cached.frames, attempts = 0, source = owned[0];
+      var sample = function () {
+        var next = window.JoystickGameQA.snapshot();
+        if (!source.isConnected || next.stage !== 'playing') return;
+        if (next.frames <= startFrame) {
+          if (++attempts < 120) requestAnimationFrame(sample);
+          return;
+        }
+        // The game has drawn a new frame in this animation cycle. Copy its existing canvas,
+        // without DOM overlays, before Chromium presents and may discard the drawing buffer.
+        try {
+          var copy = document.createElement('canvas');
+          copy.width = 160; copy.height = 90;
+          var context = copy.getContext('2d', {willReadFrequently:true});
+          context.imageSmoothingEnabled = false;
+          context.drawImage(source, 0, 0, copy.width, copy.height);
+          var pixels = context.getImageData(0, 0, copy.width, copy.height).data;
+          var rgb = new Set(), visible = 0, opaque = 0;
+          for (var i = 0; i < pixels.length; i += 4) {
+            if (pixels[i + 3] === 255) opaque++;
+            if (pixels[i + 3] === 0) continue;
+            visible++;
+            rgb.add((pixels[i] << 16) | (pixels[i + 1] << 8) | pixels[i + 2]);
+          }
+          console.info('BackroadCanvasProbe ' + JSON.stringify({initialFrame:startFrame,drawnFrame:next.frames,
+            width:copy.width,height:copy.height,alphaNonzeroPixels:visible,opaquePixels:opaque,
+            distinctVisibleRgb:rgb.size,sourceWidth:source.width,sourceHeight:source.height}));
+        } catch (error) {
+          console.info('BackroadCanvasProbe ' + JSON.stringify({error:String(error),initialFrame:startFrame,drawnFrame:next.frames}));
+        }
+      };
+      requestAnimationFrame(sample);
+    }
+    var gl = owned[0].getContext('webgl2');
+    if (!gl) return {contextRead:false, reason:'Existing WebGL2 context unavailable', url:location.href};
+    var supported = gl.getSupportedExtensions() || [];
+    var debug = gl.getExtension('WEBGL_debug_renderer_info');
+    var frameHud = document.getElementById('frame-hud');
+    var formats = {};
+    var renderable = ['RGBA8','DEPTH_COMPONENT24'];
+    if (supported.indexOf('EXT_color_buffer_float') !== -1 || supported.indexOf('EXT_color_buffer_half_float') !== -1) renderable.push('RGBA16F');
+    renderable.forEach(function(name) {
+      var samples = gl.getInternalformatParameter(gl.RENDERBUFFER, gl[name], gl.SAMPLES);
+      formats[name] = samples ? Array.from(samples) : null;
+    });
+    return {contextRead:true, url:location.href, stage:cached.stage, frames:cached.frames,
+      currentFramebufferStatus:gl.checkFramebufferStatus(gl.FRAMEBUFFER),
+      defaultFramebufferBound:gl.getParameter(gl.FRAMEBUFFER_BINDING) === null,
+      samplesPerRenderbufferFormat:formats,
+      contextLost:gl.isContextLost(), drawingBuffer:[gl.drawingBufferWidth,gl.drawingBufferHeight],
+      extColorBufferFloat:supported.indexOf('EXT_color_buffer_float') !== -1,
+      extColorBufferHalfFloat:supported.indexOf('EXT_color_buffer_half_float') !== -1,
+      vendor:gl.getParameter(gl.VENDOR), renderer:gl.getParameter(gl.RENDERER),
+      unmaskedVendor:debug ? gl.getParameter(debug.UNMASKED_VENDOR_WEBGL) : null,
+      unmaskedRenderer:debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : null,
+      version:gl.getParameter(gl.VERSION), contextAttributes:gl.getContextAttributes(),
+      frameHud:frameHud ? limit(frameHud.textContent,2048) : null};
+  }
   var resources = performance.getEntriesByType('resource');
   var selected = resources.slice(-96).map(function(r){
     return {name:limit(r.name,1024),initiatorType:r.initiatorType,duration:r.duration,

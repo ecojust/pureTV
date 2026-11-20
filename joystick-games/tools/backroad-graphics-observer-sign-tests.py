@@ -49,8 +49,8 @@ class SigningBoundaries(unittest.TestCase):
                         'component': m.PACKAGE + '/' + m.RUNNER, 'sourceCommit': SHA,
                         'committedInputsVerified': True, 'minSdk': 26, 'targetSdk': 35,
                         'testOnly': True, 'signed': False, 'targetApkBuilt': False, 'targetApkChanged': False,
-                        'modelWrites': False, 'clockOverrides': False, 'nativeInputPolls': False, 'glContextCalls': False,
-                        'readonlyEndpoints': ['/status', '/console', '/graphics'], 'apk': m.UNSIGNED,
+                        'modelWrites': False, 'clockOverrides': False, 'nativeInputPolls': False, 'glContextCalls': True,
+                        'readonlyEndpoints': ['/status', '/console', '/graphics', '/capabilities'], 'apk': m.UNSIGNED,
                         'apkIdentity': m.record(self.input / m.UNSIGNED),
                         'content': {name: m.record_bytes(value) for name, value in self.entries.items()},
                         'sourceFiles': {name: m.record(self.root / name) for name in m.SOURCE_NAMES}}
@@ -111,7 +111,7 @@ class SigningBoundaries(unittest.TestCase):
         changes = {'committedInputsVerified': False, 'sourceCommit': 'b' * 40, 'testOnly': 1,
                    'signed': True, 'targetPackage': 'other', 'packageName': m.TARGET,
                    'modelWrites': True, 'clockOverrides': True, 'nativeInputPolls': True,
-                   'glContextCalls': True, 'apk': '../target.apk', 'targetSdk': 36,
+                   'glContextCalls': False, 'apk': '../target.apk', 'targetSdk': 36,
                    'readonlyEndpoints': ['/status', '/snapshot']}
         old = copy.deepcopy(self.receipt)
         for name, value in changes.items():
