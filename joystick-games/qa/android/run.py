@@ -904,7 +904,9 @@ class Acceptance:
                                    timeout=max(60, step.get('timeoutSeconds', 60)), label='plan-held-' + step['name'])
             time.sleep(step['holdMs'] / 1000)
             # Capture gameplay while input is still held; release-only changes can also satisfy the plan below.
-            if self.args.game == 'ponpoko-kart' and step['name'] == 'Start selected original three-lap course':
+            if (self.args.game == 'ponpoko-kart' and self.args.occupy_default_port
+                    and self.report['apk']['sha256'] == '6c5254c2e63b9006b0561bbef6f4ea04bc57acb3ba33b20d773c8ab42e1ab9f8'
+                    and step['name'] == 'Start selected original three-lap course'):
                 after = self.wait_for_selected_course(step, before, held)
             else:
                 after = self.finish_catalog_hold(step, before, held)
