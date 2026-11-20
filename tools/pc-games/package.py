@@ -25,9 +25,10 @@ def build(output, root=Path(__file__).resolve().parents[2]):
     with zipfile.ZipFile(archive, 'w') as package:
         for path in files:
             entry = zipfile.ZipInfo(path.name)
-            entry.compress_type = zipfile.ZIP_DEFLATED
+            # These six small UTF-8 files produce the same ZIP on Windows, Mac and Linux.
+            entry.create_system = 3
             entry.external_attr = 0o100644 << 16
-            package.writestr(entry, path.read_bytes())
+            package.writestr(entry, path.read_text(encoding='utf-8').encode('utf-8'))
     print(archive.name, hashlib.sha256(archive.read_bytes()).hexdigest())
     return archive
 
