@@ -1,0 +1,25 @@
+/* Menus reserve a column for pairing and instructions. Gameplay uses the full viewport. */
+:root { --tv-gutter: 216px; }
+#puretv-controller-panel { z-index: 200 !important; }
+.screen { right: var(--tv-gutter) !important; padding-top: 16px !important; }
+#hud { right: calc(var(--tv-gutter) + 12px) !important; }
+#btn-pause, #b-pause { right: calc(var(--tv-gutter) + 12px) !important; }
+#back, #back-link { display: none !important; }
+#tv-controls { position: fixed; z-index: 20; right: 12px; bottom: 16px; width: 192px;
+  color: #c5d6e7; font: 14px/1.65 system-ui, sans-serif; white-space: pre-line; }
+#tv-controls strong { display: block; color: #fff; font-size: 17px; margin-bottom: 8px; }
+button:focus, select:focus, input:focus { outline: 3px solid #f6c65d !important; outline-offset: 2px; }
+.sheet { max-height: calc(100vh - 32px); }
+@media (max-height: 560px) {
+  .sheet { padding: 12px; }
+  .logo { font-size: 42px; }
+  .menu { gap: 7px; }
+  .btn { min-height: 38px; padding: 7px 14px; }
+  #tv-controls { font-size: 12px; }
+}
+
+body[data-puretv-playing="true"] { --tv-gutter: 0px; }
+body[data-puretv-playing="true"] #tv-controls { display: none; }
+body[data-puretv-playing="true"] #puretv-controller-panel[data-playing=true] {
+  top: auto !important; bottom: 6px; right: 6px;
+}
