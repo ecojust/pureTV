@@ -204,7 +204,9 @@ class SupervisorTests(unittest.TestCase):
         self.assertEqual(prefix + royale_options.replace(selection, '').split(),
                          prefix + ['-no-window', '-memory', '3072', '-gpu', 'lavapipe',
                                    '-noaudio', '-no-boot-anim', '-no-snapshot'])
-        self.assertIn("emulator-build: '16970787'", workflow); self.assertIn('api-level: 36', workflow)
+        self.assertIn("emulator-build: '16970787'", workflow); self.assertIn("api-level: ${{ matrix.game == 'kart-royale' && '34' || '36' }}", workflow)
+        self.assertIn("arch: ${{ matrix.game == 'kart-royale' && 'x86' || 'x86_64' }}", workflow)
+        self.assertIn("profile: ${{ matrix.game == 'kart-royale' && 'tv_720p' || 'tv_1080p' }}", workflow)
         declared = workflow.split('      pon_disable_vulkan:', 1)[1].split('\n\nconcurrency:', 1)[0]
         self.assertIn('default: false', declared); self.assertIn('type: boolean', declared)
 
