@@ -13,6 +13,8 @@ permissions:
 
 jobs:
   windows:
+    permissions:
+      contents: write
     runs-on: windows-2022
     timeout-minutes: 18
     steps:
@@ -56,3 +58,23 @@ jobs:
             tools/pc-games/dist/pureTV-Games.exe
             tools/pc-games/dist/pureTV-Games-portable.zip
           if-no-files-found: error
+
+      - name: Preserve the tested player packages for the game expansion PR
+        if: success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/build-inputs/expanded-desktop-player'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          export_dir="$RUNNER_TEMP/expanded-player"
+          ref="build-assets/expanded-player-$GITHUB_RUN_ID-attempt-$GITHUB_RUN_ATTEMPT"
+          git init -q --initial-branch "$ref" "$export_dir"
+          cp tools/pc-games/dist/pureTV-Games.exe tools/pc-games/dist/pureTV-Games-portable.zip "$export_dir/"
+          cd "$export_dir"
+          sha256sum pureTV-Games.exe pureTV-Games-portable.zip > SHA256SUMS.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -qm "Verified game player packages from $GITHUB_SHA"
+          gh auth setup-git
+          git push "https://github.com/$GITHUB_REPOSITORY.git" "HEAD:refs/heads/$ref"
