@@ -1,6 +1,6 @@
 # STARSLING — licenses and attribution
 
-Andrew Wooldridge created the original game, its simulation, procedural graphics and sound. The pureTV port adds Wi-Fi controller input, TV layout, offline packaging and read-only observations. The original simulation modules are retained.
+Andrew Wooldridge created the original game, its simulation, procedural graphics and sound. The pureTV port adds Wi-Fi controller input, TV layout, offline packaging and read-only observations. The original simulation modules are retained. The game suspends its audio context when focus or controller ownership is lost.
 
 https://github.com/triptych/web-games-andrew/tree/a7051c34fe2e7550fd206e6272f758df171855b0/game-102
 

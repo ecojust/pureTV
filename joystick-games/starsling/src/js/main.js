@@ -1,4 +1,3 @@
-import '../vendor/page-audio.js';
 import '../vendor/a11y.js';
 import {createTV, menuInput} from '../../../shared/triptych/tv.js';
 // STARSLING — entry point. Boots the view, runs the fixed-step simulation, routes input and
@@ -77,7 +76,7 @@ document.getElementById('pause-menu').addEventListener('click', (e) => {
     if (!b) return;
     audio.ui('click');
     const act = b.dataset.act;
-    if (act === 'resume') ui.closeScreen('pause');
+    if (act === 'resume') resumePlay();
     else if (act === 'retry') startGame(newGame(newSeed(), G.level));
     else if (act === 'quit') { saveGame(G); toTitle(); }
     else ui.openScreen(act);
@@ -93,6 +92,7 @@ function startGame(g) {
     // a focused button would swallow Space and Enter for the whole game
     document.activeElement?.blur?.();
     mode = 'play';
+    audio.resumeForPlay();
     acc = 0;
     input.flush();
     ui.showHud(true);
@@ -109,11 +109,17 @@ function toTitle() {
     ui.openScreen('title');
 }
 
+function resumePlay() {
+    ui.closeScreen('pause');
+    audio.resumeForPlay();
+}
+
 function pause() {
     if (mode !== 'play' || ui.anyScreen()) return;
     audio.ui('open');
     saveGame(G);
     ui.openScreen('pause');
+    audio.suspendForHost();
 }
 
 function updateTouch() {
@@ -131,7 +137,7 @@ function handlePresses() {
     if (ui.anyScreen()) {
         if (key === 'ArrowDown') ui.moveFocus(1);
         else if (key === 'ArrowUp') ui.moveFocus(-1);
-        else if ((key === 'Escape' || key === 'KeyP') && ui.top() !== 'title' && ui.top() !== 'over') { audio.ui('close'); ui.closeTop(); }
+        else if ((key === 'Escape' || key === 'KeyP') && ui.top() !== 'title' && ui.top() !== 'over') { audio.ui('close'); if (ui.top() === 'pause') resumePlay(); else ui.closeTop(); }
         else if (key === 'Enter' && press.pad) document.activeElement?.click?.();
         return;
     }
@@ -199,10 +205,11 @@ const gl = view.renderer.getContext();
 const tv = createTV({
     game: 'starsling', title: 'STARSLING',
     controls: '↑↓ 仰角 · ←→ 力度\nA 发射 · 飞行中 A/B 发动能力',
-    suspend() { input.clear(); pause(); },
+    suspend() { audio.suspendForHost(); input.clear(); pause(); },
     observe() {
         return {
             renderer: gl instanceof WebGL2RenderingContext ? 'webgl2' : 'webgl1',
+            audioState: audio.ctx?.state || 'uninitialized',
             webglVersion: gl instanceof WebGL2RenderingContext ? 2 : 1,
             stage: mode === 'over' ? 'ended' : mode === 'title' ? 'menu' : ui.anyScreen() ? 'paused' : 'playing',
             paused: mode === 'play' && ui.anyScreen(),
@@ -220,7 +227,7 @@ function pollTV() {
     if (pressed.START) {
         input.flush();
         if (ui.top() === 'title') document.querySelector('#title-menu button:not([hidden])')?.click();
-        else if (ui.top() === 'pause') ui.closeScreen('pause');
+        else if (ui.top() === 'pause') resumePlay();
         else if (!ui.anyScreen()) pause();
         else if (mode === 'over') document.querySelector('#over .primary:not([hidden])')?.click();
         return;

@@ -279,7 +279,15 @@ function pause() {
     ui.openScreen('pause');
 }
 
-const unlock = () => audio.init();
+let hostSuspended = false;
+function updateSound() {
+    audio.setPaused(document.hidden || hostSuspended || ui.is('pause'));
+}
+const unlock = () => {
+    if (!document.hidden) hostSuspended = false;
+    updateSound();
+    audio.init();
+};
 for (const ev of ['pointerdown', 'keydown']) window.addEventListener(ev, unlock, { capture: true });
 
 // ------------------------------------------------------------------ input routing
@@ -363,6 +371,7 @@ function frame(now) {
     pollTV();
     if (!ui.is('pause')) time += dt;
     handlePresses();
+    updateSound();
     const running = mode === 'level' && !ui.anyScreen();
     if (running && !wasRunning) input.flush();
     wasRunning = running;
@@ -381,7 +390,13 @@ function frame(now) {
     if (L && !ui.is('pause')) view.frame(L, dt, time, vs);
 }
 
-document.addEventListener('visibilitychange', () => { if (document.hidden && mode === 'level') pause(); });
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        hostSuspended = true;
+        if (mode === 'level' && !ui.anyScreen()) pause();
+    }
+    updateSound();
+});
 window.addEventListener('pagehide', () => { if (G) saveGame(G); });
 window.addEventListener('resize', () => { if (mode === 'map') renderMap(); });
 
@@ -403,6 +418,8 @@ const tv = createTV({
     game: 'alchemists-lattice', title: "Alchemist's Lattice",
     controls: '十字键 移动 · A 放置\nX 换手牌 · Y 转动（习得后）\nB 工具栏 / 地图操作 / 跳过对白',
     suspend() {
+        hostSuspended = true;
+        updateSound();
         input.flush();
         toolMode = false;
         mapControls = false;

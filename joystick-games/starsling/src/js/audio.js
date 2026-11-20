@@ -1,6 +1,6 @@
 // Procedural sound, all Web Audio, no files. Effects answer simulation events.
 // The context is made on the first user gesture (browsers block audio before one), and
-// ../lib/page-audio.js suspends it while the tab is hidden.
+// The TV lifecycle suspends this context on loss of focus or controller.
 //
 // The music is a slow synthwave loop: a saw bass and a triangle arpeggio in A minor, scheduled a
 // little ahead of the clock so a slow frame never makes it stutter.
@@ -12,6 +12,7 @@ const SEQ = [0, 0, 1, 2];                               // which chord each bar 
 export class Audio {
     constructor() {
         this.ctx = null;
+        this.hostSuspended = false;
         this.sfxVol = 0.8;
         this.musicVol = 0.6;
         this.noise = null;
@@ -21,7 +22,21 @@ export class Audio {
         this.timer = 0;
     }
 
+    suspendForHost() {
+        this.hostSuspended = true;
+        if (this.ctx && this.ctx.state !== 'closed') this.ctx.suspend().catch(() => {});
+    }
+
+    resumeForPlay() {
+        if (document.hidden) return;
+        const wasSuspended = this.hostSuspended;
+        this.hostSuspended = false;
+        if (wasSuspended && this.ctx && this.ctx.state !== 'closed') this.ctx.resume().catch(() => {});
+        else this.init();
+    }
+
     init() {
+        if (this.hostSuspended || document.hidden) return;
         if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return;
@@ -48,7 +63,7 @@ export class Audio {
         this.music.gain.setTargetAtTime(music * 0.5, this.ctx.currentTime, 0.02);
     }
 
-    get live() { return this.ctx && this.ctx.state === 'running'; }
+    get live() { return !this.hostSuspended && this.ctx && this.ctx.state === 'running'; }
 
     /** One enveloped oscillator: a blip, a sweep or a thud. */
     tone({ freq = 440, to = freq, dur = 0.12, type = 'square', vol = 0.2, delay = 0, bus = this.sfx, filter = 0 } = {}) {

@@ -2,8 +2,7 @@
 // sim events; the music is a look-ahead sequencer in D dorian (i – VII – IV – i), a soft lute-like
 // arpeggio over a warm pad, whose filter opens and whose arpeggio thickens as the chapters pass and
 // the streak grows.
-// The context is made on the first user gesture, and ../lib/page-audio.js suspends it while the tab
-// is hidden.
+// The game suspends this context and its scheduler together when paused or backgrounded.
 
 const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
 const SCALE = [0, 2, 3, 5, 7, 9, 10];                 // D dorian, from D
@@ -14,6 +13,8 @@ const BPM = 76;
 export class Audio {
     constructor() {
         this.ctx = null;
+        this.paused = false;
+        this.timer = null;
         this.sfxVol = 0.8;
         this.musicVol = 0.55;
         this.restore = 0;          // 0..1, how far through the story
@@ -23,6 +24,7 @@ export class Audio {
     }
 
     init() {
+        if (this.paused || document.hidden) return;
         if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return;
@@ -50,6 +52,20 @@ export class Audio {
         this.step = 0;
         this.nextT = ctx.currentTime + 0.1;
         this.timer = setInterval(() => this.schedule(), 25);
+    }
+
+    setPaused(value) {
+        if (this.paused === value) return;
+        this.paused = value;
+        if (!this.ctx) return;
+        if (value) {
+            clearInterval(this.timer);
+            this.timer = null;
+            this.ctx.suspend().catch(() => {});
+        } else {
+            this.ctx.resume().catch(() => {});
+            this.timer = setInterval(() => this.schedule(), 25);
+        }
     }
 
     impulse(sec) {

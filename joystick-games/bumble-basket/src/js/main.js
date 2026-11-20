@@ -77,6 +77,15 @@ A.setMusic(save.settings.music);
 UI.setVersion();
 
 let mode = 'title';
+let hostSuspended = false;
+function updateSound() {
+    A.setPaused(document.hidden || hostSuspended || mode === 'pause');
+}
+function unlockSound() {
+    if (!document.hidden) hostSuspended = false;
+    updateSound();
+    A.initAudio();
+}
 let game = null;
 let levelIndex = -1;       // -1 = picnic / demo
 let busy = false;
@@ -136,7 +145,8 @@ window.addEventListener('orientationchange', () => setTimeout(onResize, 200));
 // Mobile URL bars slide in and out without always firing window resize.
 window.visualViewport?.addEventListener('resize', onResize);
 document.addEventListener('visibilitychange', () => {
-    A.setHidden(document.hidden);
+    if (document.hidden) hostSuspended = true;
+    updateSound();
     if (document.hidden && mode === 'play') pause();
 });
 
@@ -146,6 +156,7 @@ document.addEventListener('visibilitychange', () => {
 
 function setMode(m) {
     mode = m;
+    updateSound();
     UI.setHud(m === 'play' || m === 'pause' || m === 'win' || m === 'lose');
     requestAnimationFrame(layout);
 }
@@ -483,7 +494,7 @@ function tryCell(r, c, d) {
 
 function onDown(e) {
     if (mode !== 'play' || busy || !game || game.status !== 'playing') return;
-    A.initAudio();
+    unlockSound();
     if (remoteChain) endDrag(false);
     idleT = 0;
     board.setHint(null);
@@ -629,6 +640,7 @@ function pause() {
     UI.showScreen('pause-screen');
 }
 function resume() {
+    if (!document.hidden) hostSuspended = false;
     UI.hideScreens();
     setMode('play');
 }
@@ -640,7 +652,7 @@ function restart() {
     startPlay();
 }
 
-const click = (id, fn) => $(id).addEventListener('click', (e) => { A.initAudio(); A.sfxClick(); fn(e); });
+const click = (id, fn) => $(id).addEventListener('click', (e) => { unlockSound(); A.sfxClick(); fn(e); });
 
 click('play-btn', toMap);
 click('picnic-btn', startPicnic);
@@ -858,6 +870,8 @@ const tv = createTV({
     game: 'bumble-basket', title: 'Bumble Basket',
     controls: '十字键 选果 · A 加入连线\nB 采摘 · X 指向提示果\nY 选道具罐 · A 使用',
     suspend() {
+        hostSuspended = true;
+        updateSound();
         endDrag(false);
         jarIndex = -1;
         if (armed >= 0) { armed = -1; UI.powerHint(null); UI.updateJars(game, armed); }
@@ -872,10 +886,10 @@ const tv = createTV({
 });
 function pollTV() {
     const { pressed } = tv.poll(mode === 'play');
+    if (Object.values(pressed).some(Boolean)) unlockSound();
     if (mode !== 'play') { tvMenu(pressed); return; }
     menuScreen = '';
     if (!Object.values(pressed).some(Boolean)) return;
-    A.initAudio();
     if (pressed.START) { pause(); return; }
     if (busy) return;
     idleT = 0;

@@ -6,9 +6,11 @@
 let ctx = null, master = null, sfxBus = null, musicBus = null, verb = null;
 let soundOn = true, musicOn = true;
 let buzz = null;
+let paused = false;
 let musicTimer = null, nextBar = 0, bar = 0;
 
 export function initAudio() {
+    if (paused || document.hidden) return;
     if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return; }
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return;
@@ -38,10 +40,18 @@ export function initAudio() {
     startMusic();
 }
 
-/** Pause all audio while the tab is hidden. */
-export function setHidden(hidden) {
+export function setPaused(value) {
+    if (paused === value) return;
+    paused = value;
     if (!ctx) return;
-    if (hidden) ctx.suspend(); else ctx.resume();
+    if (paused) {
+        clearInterval(musicTimer);
+        musicTimer = null;
+        ctx.suspend().catch(() => {});
+    } else {
+        ctx.resume().catch(() => {});
+        startMusic();
+    }
 }
 
 export function setSound(on) {
@@ -255,7 +265,7 @@ function scheduleBar(t0) {
 
 function startMusic() {
     if (!ctx || musicTimer) return;
-    nextBar = ctx.currentTime + 0.3;
+    nextBar = Math.max(nextBar, ctx.currentTime + 0.3);
     musicTimer = setInterval(() => {
         if (!ctx || ctx.state !== 'running') return;
         if (!musicOn) { nextBar = ctx.currentTime + 0.2; return; }

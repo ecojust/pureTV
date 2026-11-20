@@ -16,7 +16,7 @@ const url='http://127.0.0.1:'+server.address().port;
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM || '/usr/bin/chromium',args:['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const report={game,browser:browser.version(),transport:'browser fixture for the native snapshot interface',modelWrites:false,clockOverrides:false,physicalTvTested:false,physicalPhoneTested:false,results:[]};
 try {
- for(const [width,height] of [[960,540],[1280,720]]){
+ for(const [width,height] of (process.env.QA_WIDTH ? [[Number(process.env.QA_WIDTH), Number(process.env.QA_WIDTH)*9/16]] : [[960,540],[1280,720]])){
   const ctx=await browser.newContext({viewport:{width,height}});
   const p=await ctx.newPage();p.setDefaultTimeout(90000);
   const errors=[],external=[];
@@ -31,6 +31,7 @@ try {
   const waitFrame=async(n=2)=>{const f=(await snap()).frames;await p.waitForFunction(([f,n])=>JoystickGameQA.snapshot().frames>=f+n,[f,n]);};
   const press=async(k,hold=0)=>{await p.evaluate(k=>{buttonFixture.player.buttons[k]=true;},k);await waitFrame();if(hold)await p.waitForTimeout(hold);await p.evaluate(k=>{buttonFixture.player.buttons[k]=false;},k);await waitFrame();};
   await p.waitForFunction(()=>window.JoystickGameQA?.snapshot().frames>2);const menu=await snap();
+  await p.locator('#tv-controls strong').click();
   assert.equal(menu.stage,'menu');assert.equal(menu.webglVersion,2);
   await p.screenshot({path:path.join(dir,'menu-'+width+'.png')});
   const stepResults=[];
@@ -57,20 +58,24 @@ try {
    stepResults.push({name:'Complete a genuine hinted match',start,end,before:model,after});
   }
   await p.screenshot({path:path.join(dir,'playing-'+width+'.png')});
+  await p.waitForFunction(()=>JoystickGameQA.snapshot().audioState==='running');
   await p.evaluate(()=>PureGame.focus(false));await waitFrame();
+  await p.waitForFunction(()=>JoystickGameQA.snapshot().audioState==='suspended');
   assert.equal((await snap()).stage,'paused');const paused=(await snap()).gameplay;
   await p.evaluate(()=>PureGame.focus(true));await waitFrame(4);
-  const resumedFocus=await snap();assert.equal(resumedFocus.stage,'paused');
+  const resumedFocus=await snap();assert.equal(resumedFocus.stage,'paused');assert.equal(resumedFocus.audioState,'suspended');
   for(const k of plan.pauseStablePaths){const key=k.split('.')[1];assert.deepEqual(paused[key],resumedFocus.gameplay[key]);}
   await press('START');assert.equal((await snap()).stage,'playing');
+  await p.waitForFunction(()=>JoystickGameQA.snapshot().audioState==='running');
   await p.evaluate(()=>{buttonFixture.player.connected=false;});await waitFrame();assert.equal((await snap()).stage,'paused');
   await p.evaluate(()=>{buttonFixture.player.connected=true;buttonFixture.player.session='session-two';buttonFixture.player.buttons.START=true;});await waitFrame();
-  assert.equal((await snap()).stage,'paused');
+  assert.equal((await snap()).stage,'paused');await p.waitForFunction(()=>JoystickGameQA.snapshot().audioState==='suspended');
   await p.evaluate(()=>{buttonFixture.player.buttons.START=false;});await waitFrame();await press('START');assert.equal((await snap()).stage,'playing');
   const layout=await p.evaluate(()=>{const rect=id=>{const e=document.getElementById(id),r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height,scrollHeight:e.scrollHeight,clientHeight:e.clientHeight};};return {view:rect('view'),panel:rect('puretv-controller-panel'),controls:rect('tv-controls'),scrollWidth:document.documentElement.scrollWidth};});
   assert.ok(layout.view.right<=layout.controls.left);assert.ok(layout.controls.bottom<=height);assert.equal(layout.scrollWidth,width);
+  await p.waitForFunction(()=>JoystickGameQA.snapshot().audioState==='running');
   const final=await snap();assert.deepEqual(errors,[]);assert.deepEqual(final.errors,[]);assert.deepEqual(external,[]);
-  report.results.push({width,height,menu,steps:stepResults,layout,external,errors,focusLossPauses:true,reconnectRequiresNewStart:true});
+  report.results.push({width,height,menu,steps:stepResults,layout,external,errors,focusLossPauses:true,reconnectRequiresNewStart:true,realAudioStates:['running','suspended-on-blur','suspended-on-focus-return','running-after-START','suspended-after-reconnect','running-after-new-START']});
   await ctx.close();fs.writeFileSync(path.join(dir,'report.json'),JSON.stringify(report,null,2)+'\n');
  }
 } catch(e){report.error=e.stack;fs.writeFileSync(path.join(dir,'report.json'),JSON.stringify(report,null,2)+'\n');throw e;}
