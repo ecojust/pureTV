@@ -1,0 +1,252 @@
+name: Backroad original APK graphics observation only
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: backroad-original-apk-015-gravel-native-bindings
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  PYTHONUNBUFFERED: '1'
+  PYTHONDONTWRITEBYTECODE: '1'
+  ORIGINAL_SOURCE: 8bac3f6518ea9324445b417b12ecbb496c041bbf
+  ORIGINAL_RUN: '44695544972'
+  ORIGINAL_ATTEMPT: '1'
+  ORIGINAL_ARTIFACT: '14610139029'
+
+jobs:
+  observer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          filter: blob:none
+          sparse-checkout: |
+            .github/workflows
+            joystick-games
+            resource/game-kit
+            tools
+            puretv-joystick
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platforms;android-35 build-tools;34.0.0
+      - name: Verify fixed original producer and run diagnostic boundaries before signing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = ecojust/pureTV
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git fetch --no-tags --depth=1 origin "$ORIGINAL_SOURCE"
+          python3 joystick-games/tools/android-runtime-artifact.py --metadata-only \
+            --run "$ORIGINAL_RUN" --attempt "$ORIGINAL_ATTEMPT" --source "$ORIGINAL_SOURCE" \
+            --artifact "$ORIGINAL_ARTIFACT" --games backroad-rally --output "$RUNNER_TEMP/original-producer"
+          python3 joystick-games/tools/backroad-graphics-observer-sign-tests.py 2>&1 | tee "$RUNNER_TEMP/sign-boundaries.log"
+          python3 joystick-games/tools/backroad-graphics-diagnostic-export-tests.py 2>&1 | tee "$RUNNER_TEMP/export-boundaries.log"
+          node joystick-games/qa/android/graphics-observer/tests/graphics.test.cjs 2>&1 | tee "$RUNNER_TEMP/graphics-boundaries.log"
+      - name: Build only the separate unsigned test Observer
+        run: |
+          set -euo pipefail
+          python3 joystick-games/qa/android/graphics-observer/build.py \
+            --sdk "$ANDROID_HOME" --jdk "$JAVA_HOME" --output "$RUNNER_TEMP/observer-unsigned" \
+            --require-committed 2>&1 | tee "$RUNNER_TEMP/observer-build.log"
+          mkdir -p "$RUNNER_TEMP/java-tests/events" "$RUNNER_TEMP/java-tests/header"
+          javac -d "$RUNNER_TEMP/java-tests/events" \
+            joystick-games/qa/android/graphics-observer/src/com/ecojust/graphicsqa/BoundedEvents.java \
+            joystick-games/qa/android/graphics-observer/tests/BoundedEventsTest.java
+          java -cp "$RUNNER_TEMP/java-tests/events" com.ecojust.graphicsqa.BoundedEventsTest \
+            2>&1 | tee "$RUNNER_TEMP/java-events.log"
+          javac -cp "$RUNNER_TEMP/observer-unsigned/classes:$ANDROID_HOME/platforms/android-35/android.jar" \
+            -d "$RUNNER_TEMP/java-tests/header" joystick-games/qa/android/graphics-observer/tests/HeaderBudgetTest.java
+          java -cp "$RUNNER_TEMP/java-tests/header:$RUNNER_TEMP/observer-unsigned/classes:$ANDROID_HOME/platforms/android-35/android.jar" \
+            com.ecojust.graphicsqa.HeaderBudgetTest 2>&1 | tee "$RUNNER_TEMP/java-headers.log"
+          python3 -B joystick-games/qa/android/graphics-observer/tests/test_driver.py \
+            2>&1 | tee "$RUNNER_TEMP/driver-boundaries.log"
+      - name: Sign only the test Observer with the existing pinned certificate
+        env:
+          PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
+          PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          python3 joystick-games/tools/backroad-graphics-observer-sign.py sign \
+            --input "$RUNNER_TEMP/observer-unsigned" --output "$RUNNER_TEMP/observer-signed" \
+            --original-origin "$RUNNER_TEMP/original-producer/actions-artifact-origin.json" \
+            --build-tools "$ANDROID_HOME/build-tools/34.0.0" 2>&1 | tee "$RUNNER_TEMP/observer-sign.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backroad-graphics-test-observer
+          path: ${{ runner.temp }}/observer-signed/
+          if-no-files-found: error
+      - name: Preserve test Observer build evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backroad-graphics-test-observer-build-evidence
+          path: |
+            ${{ runner.temp }}/original-producer/
+            ${{ runner.temp }}/sign-boundaries.log
+            ${{ runner.temp }}/export-boundaries.log
+            ${{ runner.temp }}/graphics-boundaries.log
+            ${{ runner.temp }}/observer-build.log
+            ${{ runner.temp }}/observer-sign.log
+            ${{ runner.temp }}/java-events.log
+            ${{ runner.temp }}/java-headers.log
+            ${{ runner.temp }}/driver-boundaries.log
+            ${{ runner.temp }}/observer-unsigned/observer-build.json
+          if-no-files-found: warn
+
+  diagnostic:
+    needs: observer
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      PURETV_DISPOSABLE_EMULATOR: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          filter: blob:none
+          sparse-checkout: |
+            .github/workflows
+            joystick-games
+            resource/game-kit
+            tools
+            puretv-joystick
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platforms;android-35 build-tools;34.0.0
+      - uses: actions/download-artifact@v4
+        with:
+          name: backroad-graphics-test-observer
+          path: ${{ runner.temp }}/observer-signed
+      - name: Verify the original APK and the separate signed test Observer independently
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = ecojust/pureTV
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git fetch --no-tags --depth=1 origin "$ORIGINAL_SOURCE"
+          python3 joystick-games/tools/android-runtime-artifact.py \
+            --run "$ORIGINAL_RUN" --attempt "$ORIGINAL_ATTEMPT" --source "$ORIGINAL_SOURCE" \
+            --artifact "$ORIGINAL_ARTIFACT" --games backroad-rally --output "$RUNNER_TEMP/original-signed"
+          python3 joystick-games/tools/android-runtime-inputs.py --games backroad-rally \
+            --artifact-source "$ORIGINAL_SOURCE" --artifact-run-id "$ORIGINAL_RUN" \
+            --actions-artifact-id "$ORIGINAL_ARTIFACT" --artifact-attempt "$ORIGINAL_ATTEMPT" \
+            --artifact "$RUNNER_TEMP/original-signed/artifact" --output "$RUNNER_TEMP/original-input" \
+            --build-tools "$ANDROID_HOME/build-tools/34.0.0" 2>&1 | tee "$RUNNER_TEMP/original-input-verification.log"
+          python3 joystick-games/tools/backroad-graphics-observer-sign.py verify \
+            --input "$RUNNER_TEMP/observer-signed" --build-tools "$ANDROID_HOME/build-tools/34.0.0" \
+            2>&1 | tee "$RUNNER_TEMP/observer-verification.log"
+      - name: Enable disposable emulator acceleration
+        run: |
+          test -e /dev/kvm
+          sudo chmod a+rw /dev/kvm
+      - name: Preserve only the original public signing receipts
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import os,shutil
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP']); out=root/'original-public-receipts'; out.mkdir()
+          names={
+            'packages/backroad-rally/signing-receipt.json':'target-signing.json',
+            'packages/backroad-rally/build-receipt.json':'target-build.json',
+            'observers/backroad-rally/observer-signing-receipt.json':'old-observer-signing.json',
+            'observers/backroad-rally/observer-build.json':'old-observer-build.json'}
+          for source,name in names.items():
+              path=root/'original-signed/artifact'/source
+              if path.is_file():
+                  assert not path.is_symlink() and path.stat().st_size<1000000
+                  shutil.copyfile(path,out/name)
+          PY
+      - name: Observe one normal-port SDK reproduction with the unchanged original APK
+        # Match the original SwiftShader API 36 image and 1080p TV profile for the legacy direct-output comparison.
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          emulator-build: '16970787'
+          api-level: 36
+          target: android-tv
+          arch: x86_64
+          profile: tv_1080p
+          avd-name: JoystickGamesValidation
+          force-avd-creation: true
+          disable-animations: true
+          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          script: >-
+            python3 joystick-games/qa/android/graphics-observer/run.py
+            --input "$RUNNER_TEMP/original-input" --observer-input "$RUNNER_TEMP/observer-signed"
+            --output "$RUNNER_TEMP/graphics-diagnostic" --adb "$ANDROID_HOME/platform-tools/adb"
+            --build-tools "$ANDROID_HOME/build-tools/34.0.0"
+      - name: Preserve one diagnostic attempt evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backroad-original-apk-graphics-diagnostic
+          include-hidden-files: true
+          path: |
+            ${{ runner.temp }}/graphics-diagnostic/
+            ${{ runner.temp }}/original-input-verification.log
+            ${{ runner.temp }}/original-input/input-verification.json
+            ${{ runner.temp }}/original-signed/artifact/actions-artifact-origin.json
+            ${{ runner.temp }}/observer-verification.log
+            ${{ runner.temp }}/observer-signed/observer-build.json
+            ${{ runner.temp }}/observer-signed/graphics-observer-signing-receipt.json
+            ${{ runner.temp }}/observer-signed/original-actions-artifact-origin.json
+            ${{ runner.temp }}/original-public-receipts/
+          if-no-files-found: warn
+
+  export:
+    if: always()
+    needs: [observer, diagnostic]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          filter: blob:none
+          sparse-checkout: |
+            .github/workflows
+            joystick-games/tools
+      - name: Archive only same-run small diagnostic evidence on a new immutable branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          branch="build-assets/backroad-graphics-diagnostic-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
+          test -z "$(git ls-remote --heads origin "refs/heads/$branch")"
+          python3 joystick-games/tools/backroad-graphics-diagnostic-export.py --output "$RUNNER_TEMP/graphics-export" \
+            2>&1 | tee "$RUNNER_TEMP/export.log"
+          git -C "$RUNNER_TEMP/graphics-export" init -q --initial-branch="$branch"
+          git -C "$RUNNER_TEMP/graphics-export" config user.name github-actions
+          git -C "$RUNNER_TEMP/graphics-export" config user.email github-actions@users.noreply.github.com
+          git -C "$RUNNER_TEMP/graphics-export" add .
+          git -C "$RUNNER_TEMP/graphics-export" commit -q -m "Backroad graphics diagnostic evidence ${GITHUB_RUN_ID} attempt ${GITHUB_RUN_ATTEMPT}; not acceptance"
+          commit="$(git -C "$RUNNER_TEMP/graphics-export" rev-parse HEAD)"
+          git fetch --no-tags "$RUNNER_TEMP/graphics-export" "$commit"
+          git push --force-with-lease="refs/heads/$branch:" origin "$commit:refs/heads/$branch"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backroad-graphics-export-log
+          path: ${{ runner.temp }}/export.log
+          if-no-files-found: warn
