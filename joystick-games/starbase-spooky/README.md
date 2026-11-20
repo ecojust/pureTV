@@ -32,3 +32,16 @@ Kit 会自动走向选中的热点。连接中断时游戏暂停，重新连接�
 ### Android 安装版本
 
 0.1.2（versionCode 3）面向 Android API 35 构建，最低支持 API 26。此前 0.1.1 的签名包含 target 29。在 Android TV 16 模拟器上，两次安装均出现 Google Play Protect 的旧版目标警告，54 秒后超时，游戏尚未启动。[原签名包及构建记录](https://github.com/ecojust/pureTV/tree/aa38c2dde1fe0269f7a20d5c3503865dba3ad0d5/packages/starbase-spooky) · [默认端口系统画面](docs/android-0.1.1-install/normal-screen.png) · [占用回退系统画面](docs/android-0.1.1-install/occupied-screen.png)
+
+<!-- puzzle-downloads -->
+## 安装包 0.1.2
+
+| 平台 | 安装文件 |
+| --- | --- |
+| Android TV | [APK](https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/starbase-spooky-0.1.2.apk) |
+| macOS | [DMG](https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/StarbaseSpooky-0.1.2-macos-universal.dmg) · [ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/StarbaseSpooky-0.1.2-macos-universal.zip) |
+| Windows x64 | [安装版 EXE](https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/StarbaseSpooky-0.1.2-windows-x64-setup.exe) · [便携 ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-starbase-spooky-v0.1.2/StarbaseSpooky-0.1.2-windows-x64.zip) |
+
+Android TV 和 Windows x64 均已通过默认端口和端口占用两种手柄实玩测试。macOS 通用版已通过 Apple Silicon 原生、Apple Silicon 端口占用、Rosetta 2 及 Intel 原生四项实玩验收。 macOS 包采用 ad-hoc 签名，尚未经过 Apple 公证。实体电视和 ESP32 实物手柄仍待验证。
+
+[SHA-256 校验](SHA256SUMS.txt) · [平台验收记录](packages.json)

@@ -151,7 +151,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 ## 手柄游戏专用目录
 
-[九款赛车游戏下载](joystick-games/README.md#九款赛车游戏下载) · [九款解谜与益智手柄游戏](docs/puzzle-nine/README.md)
+[九款赛车游戏下载](joystick-games/README.md#九款赛车游戏下载) · [九款解谜与益智游戏下载](docs/puzzle-nine/README.md#下载安装)
 
 以下 5 款较早推出的手柄游戏均提供 Android TV APK 与 macOS 通用安装包，均支持 pureTV 九键、开始／暂停及完整客户端 ID 显示。保留各自的玩法和画面，来源、操作与验证范围见[目录说明](joystick-games/README.md)。Android 要求 8.0+；运输船 CF 与 QQ 飞车还需要 WebGL2，新增三款使用 Canvas 2D 或 DOM。
 
