@@ -111,9 +111,9 @@ public final class GraphicsObserver extends Instrumentation {
     private JSONObject status() throws Exception {
         return new JSONObject().put("readonly",true).put("targetPackage",TARGET).put("activityState",activityState)
             .put("consoleAttachedBeforeLoad",consoleAttached).put("diagnosticPort",port)
-            .put("targetApkChanged",false).put("modelWrites",false).put("nativeInputPolls",false).put("glContextCalls",false);
+            .put("targetApkChanged",false).put("modelWrites",false).put("nativeInputPolls",false).put("glCapabilitiesEndpoint",true);
     }
-    private String graphics() throws Exception {
+    private String graphics(final boolean capabilities) throws Exception {
         final AtomicReference<String> result=new AtomicReference<String>();final CountDownLatch done=new CountDownLatch(1);
         final AtomicBoolean expired=new AtomicBoolean(false);final Handler main=new Handler(Looper.getMainLooper());
         final Runnable observation=new Runnable(){public void run(){
@@ -121,7 +121,7 @@ public final class GraphicsObserver extends Instrumentation {
             try{
             Activity a=activity;WebView web=a==null?null:find(a.getWindow().getDecorView());
             if(web==null){result.set("{\"error\":\"No target WebView\"}");done.countDown();return;}
-            web.evaluateJavascript(graphicsScript,new android.webkit.ValueCallback<String>(){public void onReceiveValue(String encoded){
+            web.evaluateJavascript("(function(backroadGlObservation){return "+graphicsScript+";})("+capabilities+")",new android.webkit.ValueCallback<String>(){public void onReceiveValue(String encoded){
                 try{Object value=new JSONTokener(encoded).nextValue();if(!(value instanceof String)||((String)value).length()>262144)throw new IllegalStateException("Invalid/big graphics snapshot");
                     JSONObject data=new JSONObject((String)value);data.put("activityState",activityState);data.put("windowFocused",activity!=null&&activity.hasWindowFocus());data.put("consoleAttachedBeforeLoad",consoleAttached);result.set(data.toString());
                 }catch(Exception error){result.set("{\"error\":\"Graphics snapshot decode failed\"}");}
@@ -146,7 +146,8 @@ public final class GraphicsObserver extends Instrumentation {
         String body,code="200 OK";
         if("GET /status HTTP/1.1".equals(request)||"GET /status HTTP/1.0".equals(request))body=status().toString();
         else if("GET /console HTTP/1.1".equals(request)||"GET /console HTTP/1.0".equals(request))body=console();
-        else if("GET /graphics HTTP/1.1".equals(request)||"GET /graphics HTTP/1.0".equals(request))body=graphics();
+        else if("GET /graphics HTTP/1.1".equals(request)||"GET /graphics HTTP/1.0".equals(request))body=graphics(false);
+        else if("GET /capabilities HTTP/1.1".equals(request)||"GET /capabilities HTTP/1.0".equals(request))body=graphics(true);
         else{body="{\"error\":\"Read-only route not found\"}";code="404 Not Found";}
         byte[] data=body.getBytes(StandardCharsets.UTF_8);OutputStream output=socket.getOutputStream();
         output.write(("HTTP/1.1 "+code+"\r\nContent-Type: application/json; charset=utf-8\r\nCache-Control: no-store\r\nConnection: close\r\nContent-Length: "+data.length+"\r\n\r\n").getBytes(StandardCharsets.US_ASCII));output.write(data);output.flush();

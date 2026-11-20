@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: backroad-original-apk-graphics-diagnostic
+  group: backroad-original-apk-015-gravel-diagnostic
   cancel-in-progress: false
 
 permissions:
@@ -14,10 +14,10 @@ permissions:
 env:
   PYTHONUNBUFFERED: '1'
   PYTHONDONTWRITEBYTECODE: '1'
-  ORIGINAL_SOURCE: 4b6cf0b8cba288eae66bcae2ef2784acc279a695
-  ORIGINAL_RUN: '44625676430'
+  ORIGINAL_SOURCE: 8bac3f6518ea9324445b417b12ecbb496c041bbf
+  ORIGINAL_RUN: '44695544972'
   ORIGINAL_ATTEMPT: '1'
-  ORIGINAL_ARTIFACT: '14579726223'
+  ORIGINAL_ARTIFACT: '14610139029'
 
 jobs:
   observer:
@@ -176,7 +176,7 @@ jobs:
                   shutil.copyfile(path,out/name)
           PY
       - name: Observe one normal-port SDK reproduction with the unchanged original APK
-        # Same emulator/API/RAM/GPU as the original 382de comparison; no Vulkan switch.
+        # Match the original SwiftShader API 36 image and 1080p TV profile for the legacy direct-output comparison.
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
           emulator-build: '16970787'
