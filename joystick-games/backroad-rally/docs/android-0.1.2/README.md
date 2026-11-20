@@ -1,0 +1,9 @@
+# Backroad Rally 0.1.2 Android TV 画面验证
+
+使用公开的 0.1.2 签名 APK，SHA-256 为 `67f61471e0e23e9ea963475425d5c43fa9d3265167f9028bd55dc319494fbe3c`。在 API 36 的 1080p Android TV 模拟器中，通过原 pureTV TCP SDK 操作十个菜单步骤进入芬兰快速赛段。原始记录包含 116 条已接收并确认的 SDK 消息，赛段进入 running，赛车位于 x=54 米。[签名包](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/backroad-rally-0.1.2.apk) · [输入和状态记录](https://github.com/ecojust/pureTV/blob/8c7377e6737fe9ce62d5707e324ef2508f6d7851/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/report.json)
+
+WebGL2 报告设备为 Android Emulator OpenGL ES Translator (Google SwiftShader)。原游戏 HUD 报告 post off、low 55%，绘制缓冲区降为 528 × 297。默认 framebuffer 状态完整，上下文仍在运行，抗锯齿已开启。[原设备与实际画质记录](https://github.com/ecojust/pureTV/blob/8c7377e6737fe9ce62d5707e324ef2508f6d7851/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/original-stage-running-capabilities.json)
+
+在渲染帧从 326 前进到 327 时，独立测试程序将游戏 canvas 缩采样至 160 × 90。14,400 个样本的 alpha 全为零。在 1920 × 1080 的 Android 系统截图中，中央 960 × 540 的 518,400 个像素全部是画布 CSS 底色 RGB(27,25,22)，屏幕边缘可见计时、速度和手柄连接界面。此次未通过赛道与车辆的画面检查。[系统截图](https://github.com/ecojust/pureTV/blob/8c7377e6737fe9ce62d5707e324ef2508f6d7851/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/original-stage-running.png) · [画布日志](https://github.com/ecojust/pureTV/blob/8c7377e6737fe9ce62d5707e324ef2508f6d7851/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/final-console.json) · [采样脚本](https://github.com/ecojust/pureTV/blob/81d5fddba2c69744847e9cf72be5a4bf501786a8/joystick-games/qa/android/graphics-observer/graphics.js)
+
+另一次双端口完整复验在模拟器启动后首次 ADB 解锁按键时退出，未进入游戏安装步骤。[运行记录](https://github.com/ecojust/pureTV/actions/runs/44687697371/job/136128292001) · [该次留存的原始工件](https://github.com/ecojust/pureTV/tree/222326071f9563a5674423be20db73a5760efd6a/artifact/backroad-rally)
