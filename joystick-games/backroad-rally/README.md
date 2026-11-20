@@ -2,6 +2,10 @@
 
 基于 [jason-c-dev/backroad-rally](https://github.com/jason-c-dev/backroad-rally/tree/e5542f96b9a9a2912fdaa160396054e81f022f23) 的 pureTV 手柄适配。保留原作五辆车、六个地区、天气、正反赛段、幽灵车、生涯、存档和 Rapier 物理；不是重新实现或换皮。
 
+## 0.1.1 的 WebGL2 兼容性
+
+不提供浮点颜色缓冲区扩展的设备使用 RGBA8，直接绘制原作场景。在 Chromium 中屏蔽两项扩展后，芬兰赛段到达准备状态，起跑线、赛车、道路和两侧树木均可见。当次就绪采样为第 219 帧，尚处于赛前介绍。[实际截图](docs/browser-rgba8-0.1.1/finland.png) · [环境、原始日志与复现方法](docs/browser-rgba8-0.1.1/README.md)
+
 ## macOS 下载
 
 0.1.0 Universal 预发布：[DMG](https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-v0.1.0/BackroadRally-0.1.0-macos-universal.dmg) · [ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-v0.1.0/BackroadRally-0.1.0-macos-universal.zip) · [SHA256](macos/SHA256SUMS.txt)。两个原包超过 GitHub 单文件 100 MiB 限制，存放在 Release；源码和记录仍在本目录。要求 **macOS 11+、WebGL2**，包含 arm64 与 x86_64，ad-hoc 签名，尚未 Apple 公证。
