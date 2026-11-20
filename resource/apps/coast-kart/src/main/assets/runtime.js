@@ -12,7 +12,7 @@
       pulse = { a: 0, b: 0, start: 0, select: 0 },
       keyboardActive = false,
       phoneControllerSeen = false,
-      phoneHoldingA = false,
+      pendingNativeFrames = [],
       info = { language: "zh", url: "", qr: "" },
       game = null,
       renderer = null,
@@ -149,12 +149,18 @@
     }
     function release() {
       var activeA = !!keys.a || pulse.a > performance.now();
-      // Refresh the native source in this event, not the preceding animation
-      // frame: a phone press/release can race a local window blur.
-      if (activeA) phoneHoldingA = controllerAdapter.peek().some(function(p){return p.id === 1 && p.connected && p.a;});
-      // Cancel only a local A release; direction/B cleanup and a continuing
-      // phone A must not retract another input source's held item.
-      if (activeA && !phoneHoldingA && game && game.players[0]) game.cancelItem(game.players[0]);
+      if (activeA && game && game.players[0]) {
+        // A phone can press or release A between two animation frames. A Wi-Fi
+        // snapshot also consumes short edges, so deliver this sample to the model.
+        var nativeFrame = sampleNative();
+        if (visible && !suspended && !destroyed && !renderFailed) {
+          pendingNativeFrames.push(nativeFrame);
+        }
+        var remoteHoldingA = nativeFrame.some(function (player) {
+          return Number(player.id) === 1 && player.connected && player.a;
+        });
+        if (!remoteHoldingA) game.cancelItem(game.players[0]);
+      }
       keys = {};
       mapping = {};
       Object.keys(pulse).forEach(function (k) {
@@ -175,12 +181,15 @@
     }};
     var controllerInputs = [], controllerAdapter = root.PureTVControllerAdapter.create({onCancel: function (event) { if (game && event.id > game.selectedPlayers) return false; if (!game || ["playing", "paused"].indexOf(game.phase) < 0) return false;
         game.pause("manual"); game.pauseReason = "manual"; return true; }});
-    function inputs() {
-      var list = [];
+    function sampleNative() {
       try {
-        if (bridge) list = JSON.parse(bridge.snapshot()).players || [];
+        if (bridge) return JSON.parse(bridge.snapshot()).players || [];
       } catch (_) {}
-      list = controllerAdapter.read(list); controllerInputs = list;
+      return [];
+    }
+    function inputs() {
+      var nativeFrame = pendingNativeFrames.length ? pendingNativeFrames.shift() : sampleNative();
+      var list = controllerAdapter.read(nativeFrame); controllerInputs = list;
       list = list
         .filter(function (p) {
           return p && (Number(p.id) === 1 || Number(p.id) === 2);
@@ -202,7 +211,6 @@
         return p.id === 1;
       })[0];
       if (player && player.connected) phoneControllerSeen = true;
-      phoneHoldingA = !!(player && player.connected && player.a);
       // Remote-only play is available until a real P1 phone joins. After that,
       // local menu keys must never hide that participating phone disconnecting.
       if (
@@ -291,13 +299,15 @@
     // Keep QR/controller state and publication functioning even after draw/setup failure.
     var roomTimer = root.setInterval(function () {
       if (destroyed) return;
-      var current = controllerInputs;
-      updateUi(current);
+      // A failed setup or renderer has no simulation callback to sample the room.
+      if (!game || renderFailed) inputs();
+      updateUi(controllerInputs);
       publish();
     }, 200);
     updateUi(controllerInputs);
     function suspend(value) {
       suspended = !!value;
+      if (suspended) pendingNativeFrames.length = 0;
       release();
       last = 0;
       if (game) {
@@ -360,6 +370,7 @@
     root.addEventListener("blur", release);
     document.addEventListener("visibilitychange", function () {
       visible = !document.hidden;
+      if (!visible) pendingNativeFrames.length = 0;
       release();
       last = 0;
       root.cancelAnimationFrame(frame);
