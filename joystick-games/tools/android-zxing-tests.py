@@ -43,6 +43,22 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(m.EXPECTED_SHA256, '8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82')
         self.assertEqual(m.URLS, ('https://repo.maven.apache.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar', 'https://repo1.maven.org/maven2/com/google/zxing/core/3.5.3/core-3.5.3.jar'))
 
+    def test_vendored_archive_is_the_exact_maven_jar_and_needs_no_network(self):
+        archive = Path(__file__).resolve().parents[1] / 'shared/android/vendor/zxing-core-3.5.3/core-3.5.3.jar'
+        result = m.download(self.output, self.receipt, self.fake([]), archive=archive)
+        self.assertEqual(result['selectedArchive'], str(archive))
+        self.assertEqual(result['sha256'], m.EXPECTED_SHA256)
+        self.assertEqual(self.output.read_bytes(), archive.read_bytes())
+        self.assertEqual(self.calls, [])
+
+    def test_local_archive_with_wrong_content_cannot_be_used(self):
+        archive = self.root / 'wrong.jar'
+        archive.write_bytes(b'x' * m.EXPECTED_BYTES)
+        with self.assertRaises(RuntimeError):
+            m.download(self.output, self.receipt, self.fake([]), archive=archive)
+        self.assertFalse(self.output.exists())
+        self.assertEqual(json.loads(self.receipt.read_text())['attempts'][0]['error'], 'SHA-256 mismatch')
+
     def test_primary_exact_content_stops_without_requesting_mirror(self):
         result = self.invoke([(0, '200', b'abc')])
         self.assertEqual(self.output.read_bytes(), b'abc'); self.assertEqual(len(self.calls), 1)
