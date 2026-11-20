@@ -430,7 +430,7 @@ class Acceptance:
         while not self.stop.wait(2):
             for client in list(self.clients):
                 with client.lock:
-                    if client.sock is not None:
+                    if not self.stop.is_set() and client.sock is not None:
                         try: client.ping()
                         except (OSError, ConnectionError): pass
 
@@ -672,7 +672,7 @@ class Acceptance:
         self.wait(lambda s: self.game(s).get('stage') in playing, label='START-resume'); self.passed('START resumes gameplay')
         self.reject_second_controller()
         self.press_observed('UP', effective=True)
-        self.clients[0].disconnect()
+        self.ack_barrier(disconnect=True)
         self.wait(lambda s: not self.visible_ids(s) and not any(self.button_state(s, k) for k in KEYS), label='disconnect-cancels')
         self.capture('disconnected', []); self.passed('disconnect clears held movement and removes ID card')
         self.clients[0].connect()
@@ -766,12 +766,14 @@ class Acceptance:
         self.passed('explicit actual model observations remain stable while paused', values)
         return after
 
-    def ack_barrier(self):
+    def ack_barrier(self, *, disconnect=False):
         client = self.clients[0]
+        # Prevent a heartbeat landing between the last verified ACK and a deliberate socket close.
         with client.lock:
             client.ping()
-            sequence = client.seq
-        self.wait_sent_ack(client, sequence)
+            self.wait_sent_ack(client, client.seq)
+            if disconnect:
+                client.disconnect()
 
     def menu_player(self, snapshot):
         players = [p for p in self.game(snapshot).get('controller', {}).get('players', []) if p.get('connected') is True]
@@ -1084,8 +1086,7 @@ class Acceptance:
         self.passed('native exit dialog and focus return cancel input and never automatically resume gameplay')
         self.catalog_playing()
         self.press_observed('UP', effective=True)
-        self.ack_barrier()
-        self.clients[0].disconnect()
+        self.ack_barrier(disconnect=True)
         lost = self.wait(lambda s: self.paused(s) and not self.visible_ids(s) and not any(self.button_state(s, k) for k in KEYS), label='disconnect-pauses-clears')
         self.record('disconnect-paused', lost)
         self.capture('disconnected', [])
@@ -1106,8 +1107,9 @@ class Acceptance:
         self.release()
         self.passed('held START reconnect sync cannot resume gameplay')
         self.stop.set()
-        self.ack_barrier()
-        wire = self.proxy.summary()
+        with self.clients[0].lock:
+            self.ack_barrier()
+            wire = self.proxy.summary()
         assert wire['acceptedSdkMessages'] > 30 and not wire['missingAcks'] and not wire['errors'], wire
         assert not wire['unexpectedReplies'] and not wire['duplicateAcks'], wire
         assert len(wire['rejectedConnections']) == 1 and wire['keysSent'] == sorted(KEYS), wire
