@@ -1,5 +1,7 @@
 # Portable PC host controller checks
 
+All six signed games also passed the desktop input check on Windows Server 2022 x64 and macOS 15 ARM64. [Native OS reports and reproduction steps](native/README.md)
+
 Each report comes from the repository's Linux PC host loading the game's actual offline payload at 960×540 in Chromium. The official SDK opens a TCP session, verifies the displayed identity, exercises DOWN and release, and counts the acknowledgements. After disconnection, a real keyboard press/release of Numpad8 is observed through the game's cached input frame. These checks cover the host input path; campaign completion and normal game actions are covered by the individual game tests.
 
 Generate the assets-only packages with the same bytes used by Android's payload composer. The hashes in the reports identify the ZIPs. From the repository root:
