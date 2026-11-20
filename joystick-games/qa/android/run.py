@@ -306,6 +306,22 @@ class Acceptance:
                        'physicalEsp32Tested': False, 'sourceCommit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
                        'apk': {'path': str(args.apk), **file_info(args.apk)}, 'observer': {'path': str(args.observer), **file_info(args.observer)},
                        'sourceFiles': {}, 'tests': self.tests, 'snapshots': self.snapshots, 'captures': self.captures}
+        self.player_route = os.environ.get('BACKROAD_FINLAND_PLAYER_ROUTE') == 'true'
+        if self.player_route:
+            assert args.game == 'backroad-rally'
+            assert self.report['apk']['sha256'] == '67f61471e0e23e9ea963475425d5c43fa9d3265167f9028bd55dc319494fbe3c'
+            assert self.report['observer']['sha256'] == '4347cf36933e0fe8a51d34e07f39e64441bfda6a880c5fd5e33cdf5bf0dfc867'
+            assert file_info(self.plan_path)['sha256'] == '8306e5b2ad54cf35eb2602db045711572e35a728478e668fc65a6fb962ad157f'
+            original_steps = self.plan['steps']
+            assert len(original_steps) == 39
+            self.report['playerRoute'] = {
+                'name': 'Finland quick stage from fresh install using original automatic graphics',
+                'extendedCatalogPlanExecuted': False,
+                'originalStepNumbers': list(range(24, 40)),
+                'omittedOptionalSteps': [step['name'] for step in original_steps[:23]],
+                'storageRestartTested': False,
+            }
+            self.plan = dict(self.plan, steps=original_steps[23:])
         provenance = self.out / 'source'; provenance.mkdir()
         source_paths = [Path(__file__), HERE / 'install_failure.py', HERE / 'install_confirmation.py', HERE / 'build-observer.py', HERE / 'src/com/ecojust/controllerqa/Observer.java', ROOT / 'puretv-joystick/joystick_sdk.py', ROOT / 'joystick-games/tools/android-build.py', ROOT / 'joystick-games/tools/qa-plan.py']
         if self.plan: source_paths += [self.plan_path, ROOT / build.REGISTRY]
@@ -881,6 +897,23 @@ class Acceptance:
                 try: self.button(key, False)
                 except Exception: pass
 
+    def capture_finland_player(self, name):
+        self.capture(name, [self.clients[0].identity])
+        capture = self.captures[-1]
+        labels = []
+        for moment in ('before', 'after'):
+            state = capture[moment]
+            game = self.game(state)
+            assert state['page']['url'] == 'https://game-kit.invalid/tv.html?mode=quick&stage=finland&car=swift&cond=stage&weather=stage'
+            assert game['stage'] == 'playing' and game['gameplay']['phase'] == 'running'
+            assert game['gameplay']['stageId'] == 'finland' and game['gameplay']['carId'] == 'swift'
+            labels.extend(state['page'].get('backroadGhostLabels', []))
+        sample = backroad_scene_sample(self.out / capture['path'], labels)
+        capture['finlandWorldSample'] = sample
+        self.save()
+        assert sample['colors'] > 1 and not backroad_finland_violet_scene(capture, sample), sample
+        self.passed('visible Finnish quick stage and original controller ID at ' + name, sample)
+
     def catalog_scenarios(self):
         # The per-game plan owns startup/menu navigation as well as gameplay inputs.
         assert self.game(self.snapshot()).get('stage') == 'menu'
@@ -898,6 +931,11 @@ class Acceptance:
             time.sleep(step['holdMs'] / 1000)
             # Capture gameplay while input is still held; release-only changes can also satisfy the plan below.
             observed = self.snapshot()
+            if self.player_route and step['name'] == 'Accelerate original Rapier car':
+                if not plan.matches(step['expect'], self.game(observed), self.game(before)):
+                    observed = self.wait_fresh(held, lambda s: plan.matches(step['expect'], self.game(s), self.game(before)),
+                                               timeout=step['timeoutSeconds'], label='finland-throttle-while-held')
+                self.capture_finland_player('accelerating')
             self.release()
             after = observed if plan.matches(step['expect'], self.game(observed), self.game(before)) else self.wait_fresh(
                 held, lambda s: plan.matches(step['expect'], self.game(s), self.game(before)),
@@ -960,6 +998,15 @@ class Acceptance:
         client.button('START', 'sync')
         self.release()
         self.passed('held START reconnect sync cannot resume gameplay')
+        if self.player_route:
+            cleared = self.record('reconnected-held-sync-cleared')
+            assert self.paused(cleared) and self.visible_ids(cleared) == [client.identity]
+            assert not any(self.native_buttons(cleared).get(key) or self.button_state(cleared, key) for key in KEYS)
+            self.tap('START')
+            resumed = self.wait_fresh(cleared, lambda s: self.game(s).get('stage') == 'playing'
+                                      and not self.game(s).get('paused'), label='manual-resume-after-reconnect')
+            self.record('reconnected-player-resumed-manually', resumed)
+            self.capture_finland_player('resumed-after-reconnect')
         self.stop.set()
         self.ack_barrier()
         wire = self.proxy.summary()

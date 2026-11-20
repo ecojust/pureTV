@@ -112,6 +112,8 @@ jobs:
               assert re.fullmatch('[a-f0-9]{40}',os.environ['ARTIFACT_EXPORT']) and not os.environ['ARTIFACT_ATTEMPT']
           else:
               for key in ['ARTIFACT_ID','ARTIFACT_ATTEMPT']:assert re.fullmatch('[1-9][0-9]*',os.environ[key])
+          assert os.environ['GAMES']=='backroad-rally' and os.environ['BATCH']=='racing-01'
+          assert (os.environ['ARTIFACT_SOURCE'],os.environ['ARTIFACT_RUN'],os.environ['ARTIFACT_ID'],os.environ['ARTIFACT_ATTEMPT'])==('a5b51e14b506995bc8da67f024f00d107962518d','44687697371','14607123434','1')
           assert os.environ['REQUESTED_QA']==os.environ['GITHUB_SHA']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
           assert os.environ['CONFIRM_BACKROAD_INSTALL'] in ('true','false')
           if os.environ['CONFIRM_BACKROAD_INSTALL']=='true':
@@ -268,7 +270,9 @@ jobs:
           test -e /dev/kvm
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
-      - name: Run normal and occupied-port QA independently against unchanged signed bytes
+      - name: Run the original Finland player route in normal and occupied modes
+        env:
+          BACKROAD_FINLAND_PLAYER_ROUTE: 'true'
         # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
@@ -410,6 +414,9 @@ jobs:
                   receipt=json.loads((inputs/'packages'/game/'signing-receipt.json').read_text());observer=json.loads((inputs/'observers'/game/'observer-signing-receipt.json').read_text())
                   for mode in ['normal','occupied']:
                       folder=evidence/(game+'-'+mode);report=json.loads((folder/'report.json').read_text())
+                      assert report['playerRoute']['originalStepNumbers']==list(range(24,40)) and not report['playerRoute']['extendedCatalogPlanExecuted']
+                      required_captures={'accelerating.png','playing.png','paused.png','disconnected.png','reconnected.png','resumed-after-reconnect.png'}
+                      assert required_captures <= {capture['path'] for capture in report['captures']}
                       assert report['status']=='passed' and report['game']==game and report['sourceCommit']==os.environ['GITHUB_SHA']
                       assert report['defaultPortOccupiedFixture'] is (mode=='occupied') and report['modelWrites'] is False and report['clockOverrides'] is False
                       assert all(report['apk'][key]==receipt[key] for key in ['bytes','sha256']) and all(report['observer'][key]==observer['apkIdentity'][key] for key in ['bytes','sha256'])
@@ -431,7 +438,7 @@ jobs:
               if path.is_file():
                   assert path.stat().st_size<100_000_000
                   files[path.relative_to(out).as_posix()]=record(path)
-          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'qaRunAttempt':os.environ['GITHUB_RUN_ATTEMPT'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'games':games,'runtimeResult':os.environ['RUNTIME_RESULT'],'runtimeAccepted':accepted,'diagnosticIntervened':diagnostic,'nativeAcceptanceAllowed':not diagnostic,'files':files,'reusedSignedPackagesAndObservers':True,'physicalTvTested':False,'physicalEsp32Tested':False},indent=2)+'\n')
+          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'qaRunAttempt':os.environ['GITHUB_RUN_ATTEMPT'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'games':games,'runtimeResult':os.environ['RUNTIME_RESULT'],'runtimeAccepted':accepted,'runtimeScope':'original Finland player route, explicit reconnect/manual resume and generic controller lifecycle','extendedCatalogPlanExecuted':False,'diagnosticIntervened':diagnostic,'nativeAcceptanceAllowed':not diagnostic,'files':files,'reusedSignedPackagesAndObservers':True,'physicalTvTested':False,'physicalEsp32Tested':False},indent=2)+'\n')
           PY
           export_branch="build-assets/joystick-catalog-android-runtime-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
           test -z "$(git ls-remote --heads origin "refs/heads/$export_branch")"
