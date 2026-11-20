@@ -157,6 +157,8 @@ body.portrait.in-play #rotate-hint { display: none; position: absolute; left: 14
 @media (prefers-reduced-motion: reduce) { #touch-buttons button, #stick { transition: none; animation: none !important; } }
 
 #shell { right:216px !important; }
+body[data-puretv-playing="true"] #shell { right:0 !important; }
+body[data-puretv-playing="true"] #tv-controls { display:none; }
 #puretv-controller-panel { z-index:100!important; }
 #hint { display:none!important; }
 #tv-controls { position:fixed; right:12px; bottom:20px; width:192px; color:#c4d8dc; font:14px/1.7 system-ui,sans-serif; }
@@ -366,7 +368,45 @@ body.portrait.in-play #rotate-hint { display: none; position: absolute; left: 14
   var BUTTONS = Object.freeze(["UP", "DOWN", "LEFT", "RIGHT", "START", "A", "B", "X", "Y"]);
   var empty = () => Object.fromEntries(BUTTONS.map((key) => [key, false]));
   var copy = (value) => JSON.parse(JSON.stringify(value));
-  var nativeKeys = { ArrowUp: "UP", ArrowDown: "DOWN", ArrowLeft: "LEFT", ArrowRight: "RIGHT", Enter: "A", Start: "START", p: "START", b: "B", Select: "Y" };
+  var nativeKeys = { ArrowUp: "UP", ArrowDown: "DOWN", ArrowLeft: "LEFT", ArrowRight: "RIGHT", Enter: "A", Start: "START", p: "START", b: "B", A: "A", B: "B", X: "X", Y: "Y", Select: "Y" };
+  var keypad = {
+    Numpad8: "UP",
+    Numpad2: "DOWN",
+    Numpad4: "LEFT",
+    Numpad6: "RIGHT",
+    Numpad5: "START",
+    Numpad1: "A",
+    Numpad3: "B",
+    Numpad7: "X",
+    Numpad9: "Y"
+  };
+  var keyboard = {
+    ArrowUp: "UP",
+    ArrowDown: "DOWN",
+    ArrowLeft: "LEFT",
+    ArrowRight: "RIGHT",
+    KeyP: "START",
+    KeyZ: "A",
+    KeyX: "B",
+    KeyC: "X",
+    KeyV: "Y"
+  };
+  function controllerPlayer(player) {
+    if (player.transport === "wifi") return player;
+    if (player.transport !== "phone" && (player.transport || typeof player.x !== "number" || typeof player.y !== "number")) return player;
+    const buttons = {
+      UP: player.y < -0.35,
+      DOWN: player.y > 0.35,
+      LEFT: player.x < -0.35,
+      RIGHT: player.x > 0.35,
+      START: player.start === true,
+      A: player.a === true,
+      B: player.b === true,
+      X: player.buttonX === true,
+      Y: player.buttonY === true || player.select === true
+    };
+    return { ...player, transport: "phone", buttons };
+  }
   function createInputReducer() {
     let previous = empty(), source = "", epoch = null, hasSeenController = false;
     let blocked = empty(), resetPending = false;
@@ -376,9 +416,10 @@ body.portrait.in-play #rotate-hint { display: none; position: absolute; left: 14
       },
       read(snapshot = {}, local = {}) {
         if (!snapshot || typeof snapshot !== "object") snapshot = {};
-        const players = Array.isArray(snapshot.players) ? snapshot.players.filter((p) => p && Number(p.id) > 0) : [];
-        const player = players.filter((p) => p.connected === true && p.transport === "wifi").sort((a, b) => Number(a.id) - Number(b.id))[0];
-        const nextSource = player ? JSON.stringify([player.id, player.controllerId, player.session]) : "";
+        const players = Array.isArray(snapshot.players) ? snapshot.players.filter((p) => p && Number(p.id) > 0).map(controllerPlayer) : [];
+        const online = players.filter((p) => p.connected === true).sort((a, b) => Number(a.id) - Number(b.id));
+        const player = online.find((p) => p.transport === "wifi") || online.find((p) => p.transport === "phone");
+        const nextSource = !player ? "" : player.transport === "phone" ? JSON.stringify(["phone", player.id]) : JSON.stringify([player.id, player.controllerId, player.session]);
         const nextEpoch = player?.cancelSeq ?? null;
         const changed = source !== nextSource || !!source && epoch !== nextEpoch;
         const cancelled = resetPending || changed && !!source;
@@ -399,7 +440,7 @@ body.portrait.in-play #rotate-hint { display: none; position: absolute; left: 14
         epoch = nextEpoch;
         resetPending = false;
         if (player) hasSeenController = true;
-        return { buttons, pressed, released, connected: !!player, cancelled, players: copy(players), source };
+        return { buttons, pressed, released, connected: !!player, transport: player?.transport || null, cancelled, players: copy(players), source };
       }
     };
   }
@@ -411,7 +452,16 @@ body.portrait.in-play #rotate-hint { display: none; position: absolute; left: 14
     #puretv-controller-panel strong{font-weight:650}
     #puretv-controller-panel .ptv-host-title{display:block;font-size:13px;color:#a8ddff;margin-bottom:5px}
     #puretv-controller-panel .ptv-host-info{white-space:pre-line;margin:6px 0 0;color:#c4d5e7;font-size:12px}
-    #puretv-controller-panel[data-playing=true]{background:transparent;border:0;padding:0;box-shadow:none}
+    #puretv-controller-panel .ptv-phone{margin:4px 0}
+    #puretv-controller-panel .ptv-phone img{display:block;width:min(108px,20vh);height:auto;background:white;image-rendering:pixelated}
+    #puretv-controller-panel .ptv-phone small{display:block;color:#c4d5e7}
+    #puretv-controller-panel .ptv-phone [hidden],#puretv-controller-panel .ptv-phone[hidden]{display:none}
+    #puretv-controller-panel[data-playing=true]{background:transparent;border:0;padding:0;box-shadow:none;pointer-events:none}
+    #puretv-controller-panel[data-playing=true] .ptv-client-card{padding:3px 6px;align-items:center}
+    #puretv-controller-panel[data-playing=true] .ptv-client-icon{width:17px;height:17px;flex-basis:17px;margin-right:5px}
+    #puretv-controller-panel[data-playing=true] .ptv-client-heading,#puretv-controller-panel[data-playing=true] .ptv-client-id{line-height:1.2;margin-top:0}
+    #puretv-controller-panel .ptv-status{display:inline-block;border-radius:4px;padding:2px 5px;background:#0c192bee;color:#eef6ff;font:11px/1.25 system-ui,sans-serif}
+    #puretv-controller-panel .ptv-status[hidden]{display:none}
     #puretv-controller-panel[data-playing=true] .ptv-host-title,#puretv-controller-panel[data-playing=true] .ptv-host-info{display:none}
     #puretv-controller-panel .ptv-client-card{background:rgba(12,25,43,.94)}
     #puretv-controller-panel .ptv-client-id{font-size:11px}
@@ -432,31 +482,61 @@ body.portrait.in-play #rotate-hint { display: none; position: absolute; left: 14
     clients.hidden = true;
     const info = document.createElement("p");
     info.className = "ptv-host-info";
-    element.append(title, clients, info);
+    const phone = document.createElement("div");
+    phone.className = "ptv-phone";
+    phone.hidden = true;
+    const qr = document.createElement("img");
+    qr.alt = "\u624B\u673A\u624B\u67C4\u623F\u95F4\u4E8C\u7EF4\u7801";
+    qr.hidden = true;
+    const join = document.createElement("small");
+    phone.append(qr, join);
+    const status = document.createElement("span");
+    status.className = "ptv-status";
+    status.hidden = true;
+    element.append(title, clients, phone, status, info);
     document.body.appendChild(element);
-    return { element, clients, info };
+    return { element, clients, info, phone, qr, join, status, style };
   }
   function createController(options = {}) {
     const root = window, document = root.document;
     const view = panel(document, options), reducer = createInputReducer();
-    let localHeld = empty(), localPulse = empty(), info = {}, infoAt = -Infinity, playing = false;
+    const heldKeys = /* @__PURE__ */ new Map();
+    let localPulse = empty(), info = {}, infoAt = -Infinity, playing = false;
     let frame = { buttons: empty(), pressed: empty(), released: empty(), connected: false, cancelled: false, players: [], source: "", pollCount: 0, info: {} };
     const previousHost = root.PureGame;
     function acceptInfo(value) {
       if (value && typeof value === "object") info = copy(value);
     }
     function suspend() {
-      localHeld = empty();
+      heldKeys.clear();
       localPulse = empty();
       reducer.cancel();
       options.onSuspend?.();
+    }
+    function setKey(code, action, down) {
+      if (!down) {
+        heldKeys.delete(code);
+        return;
+      }
+      if (!heldKeys.has(code)) localPulse[action] = true;
+      heldKeys.set(code, action);
+    }
+    function onKey(event) {
+      const action = keypad[event.code] || options.keyboard === true && keyboard[event.code];
+      if (!action || !event.isTrusted) return;
+      const code = "dom:" + event.code;
+      if (event.type === "keyup") {
+        if (!heldKeys.has(code)) return;
+      } else if (event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.target?.closest?.("input, textarea, select, [contenteditable]:not([contenteditable=false])")) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (!event.repeat) setKey(code, action, event.type === "keydown");
     }
     const hooks = {
       key(key, down) {
         const action = nativeKeys[key];
         if (!action) return;
-        if (down && !localHeld[action]) localPulse[action] = true;
-        localHeld[action] = !!down;
+        setKey("native:" + key, action, down);
       },
       focus(focused) {
         if (!focused) suspend();
@@ -476,26 +556,47 @@ body.portrait.in-play #rotate-hint { display: none; position: absolute; left: 14
     const onVisibility = () => {
       if (document.hidden) suspend();
     };
+    root.addEventListener("keydown", onKey, true);
+    root.addEventListener("keyup", onKey, true);
     root.addEventListener("blur", suspend);
     document.addEventListener("visibilitychange", onVisibility);
     function render() {
       root.PureTVControllerAdapter.renderClients(view.clients, frame.players, { language: "zh" });
-      view.element.dataset.playing = String(playing);
-      view.element.hidden = playing && !frame.connected;
+      const stage = String(playing);
+      if (view.element.dataset.playing !== stage) {
+        view.element.dataset.playing = stage;
+        document.body.dataset.puretvPlaying = stage;
+      }
+      const phoneSeat = frame.players.find((p) => p.connected && p.transport === "phone");
+      view.status.hidden = !playing || frame.transport === "wifi";
+      const label = frame.transport === "phone" ? `${phoneSeat.id}P \u624B\u673A\u624B\u67C4\u5DF2\u8FDE\u63A5` : "\u624B\u67C4\u672A\u8FDE\u63A5";
+      if (view.status.textContent !== label) view.status.textContent = label;
+      const room = typeof info.url === "string" && /^https?:\/\//.test(info.url) ? info.url : "";
+      view.phone.hidden = playing || frame.connected || !room;
+      const joining = String(!view.phone.hidden);
+      if (document.body.dataset.puretvJoining !== joining) document.body.dataset.puretvJoining = joining;
+      if (!view.phone.hidden) {
+        const qr = typeof info.qr === "string" && info.qr.startsWith("data:image/png;base64,") ? info.qr : "";
+        view.qr.hidden = !qr;
+        if (qr && view.qr.getAttribute("src") !== qr) view.qr.src = qr;
+        const joinText = qr ? "\u540C\u4E00 Wi-Fi \u4E0B\u7528\u624B\u673A\u626B\u7801" : "\u624B\u673A\u6253\u5F00 " + room;
+        if (view.join.textContent !== joinText) view.join.textContent = joinText;
+      }
       const wifi = info.wifiController || {};
       const addresses = Array.isArray(wifi.addresses) ? wifi.addresses : Array.isArray(info.addresses) ? info.addresses : [];
       const address = addresses.filter((value) => typeof value === "string").join(" / ");
       const name = typeof wifi.serviceName === "string" ? wifi.serviceName : "";
       const port = Number.isInteger(wifi.port) && wifi.port > 0 ? wifi.port : 63485;
-      const activeSeat = frame.players.filter((p) => p.connected === true && p.transport === "wifi").map((p) => Number(p.id)).sort((a, b) => a - b)[0];
-      let status = frame.connected ? `\u5355\u4EBA\u6E38\u620F \xB7 ${activeSeat}P \u624B\u67C4\u64CD\u4F5C` : "\u624B\u67C4\u6309 GPIO 23 \u641C\u7D22\u8FDE\u63A5";
+      const activeSeat = frame.players.filter((p) => p.connected === true && p.transport === frame.transport).map((p) => Number(p.id)).sort((a, b) => a - b)[0];
+      let status = frame.connected ? `\u5355\u4EBA\u6E38\u620F \xB7 ${activeSeat}P ${frame.transport === "phone" ? "\u624B\u673A\u624B\u67C4" : "\u65E0\u7EBF\u624B\u67C4"}\u64CD\u4F5C` : "\u65E0\u7EBF\u624B\u67C4\u6309 GPIO 23 \u641C\u7D22\u8FDE\u63A5";
       if (!root.PureGameHost) status = "\u6D4F\u89C8\u5668\u9884\u89C8 \xB7 \u952E\u9F20\u53EF\u73A9\nWi-Fi \u624B\u67C4\u9700\u542F\u52A8\u5B89\u88C5\u7248";
+      if (!info.url) status += "\n\u5C0F\u952E\u76D8 8/2/4/6 \u65B9\u5411 \xB7 5 START \xB7 1/3/7/9 A/B/X/Y";
       if (name) status += "\n" + name;
       if (address) status += "\n" + address;
       if (root.PureGameHost) status += "\nTCP " + port;
       if (typeof wifi.error === "string" && wifi.error) status += "\n" + wifi.error;
       if (wifi.state === "failed" || wifi.state === "unavailable") status += "\n\u624B\u67C4\u670D\u52A1\u6682\u4E0D\u53EF\u7528";
-      view.info.textContent = status;
+      if (view.info.textContent !== status) view.info.textContent = status;
     }
     return {
       poll() {
@@ -510,8 +611,8 @@ body.portrait.in-play #rotate-hint { display: none; position: absolute; left: 14
         } catch (_) {
           sample = { players: [] };
         }
-        const local = empty();
-        for (const key of BUTTONS) local[key] = localHeld[key] || localPulse[key];
+        const local = localPulse;
+        for (const action of heldKeys.values()) local[action] = true;
         localPulse = empty();
         frame = { ...reducer.read(sample, local), info: copy(info), pollCount: frame.pollCount + 1, native: !!root.PureGameHost, inputAvailable: !!root.PureGameHost };
         render();
@@ -522,15 +623,24 @@ body.portrait.in-play #rotate-hint { display: none; position: absolute; left: 14
         return copy(frame);
       },
       setPlaying(value) {
-        playing = !!value;
-        render();
+        if (playing !== !!value) {
+          playing = !!value;
+          render();
+        }
       },
       cancel: suspend,
       destroy() {
+        root.removeEventListener("keydown", onKey, true);
+        root.removeEventListener("keyup", onKey, true);
         root.removeEventListener("blur", suspend);
         document.removeEventListener("visibilitychange", onVisibility);
-        if (root.PureGame === hooks) root.PureGame = previousHost;
+        if (root.PureGame === hooks) {
+          root.PureGame = previousHost;
+          delete document.body.dataset.puretvPlaying;
+          delete document.body.dataset.puretvJoining;
+        }
         view.element.remove();
+        view.style.remove();
       }
     };
   }
@@ -15905,6 +16015,7 @@ const Screen = {
     Screen.canvas = $('c'); Screen.ctx = Screen.canvas.getContext('2d');
     Screen.buf = document.createElement('canvas'); Screen.buf.width = W; Screen.buf.height = H; Screen.g = Screen.buf.getContext('2d');
     Screen.g.imageSmoothingEnabled = false;
+    if (window.ResizeObserver) new ResizeObserver(Screen.fit).observe($('shell'));
     addEventListener('resize', Screen.fit); Screen.fit();
     if (window.visualViewport) visualViewport.addEventListener('resize', Screen.fit);
   },
@@ -18313,7 +18424,7 @@ const PureTVGLUP = (() => {
       controller.setPlaying(Game.state === 'play' && !Game.paused);
       const frame = controller.poll();
       if (frame.cancelled) return;
-      if (frame.connected || frame.native) Input.mode = 'puretv';
+      if (frame.connected && Object.values(frame.pressed).some(Boolean)) Input.mode = 'puretv';
       if (!Game.paused && Object.values(frame.pressed).some(Boolean)) Sound.suspend(false);
       const map = { LEFT:'left', RIGHT:'right', UP:'up', DOWN:'down', A:'jump', B:'fish', X:'puff',
         START:Game.state === 'play' ? 'pause' : 'confirm', Y:Game.state === 'play' && !Game.paused ? 'mute' : 'pause' };
