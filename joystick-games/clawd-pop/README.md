@@ -30,3 +30,7 @@ python3 -m http.server --directory dist 8000
 浏览器打开 `http://localhost:8000/tv.html`。离线资源都在 `dist/`。默认使用 WebGL 2；支持 WebGPU 的浏览器可在原作显示选项中切换或以 `?renderer=webgpu` 启动。菜单和二维码不占用场景尺寸。
 
 [原仓库](https://github.com/VibezZzCoder/clawd-pop/tree/d79750b5e2afec99b42680471b2dd5ff7d2f5f79) 的发行代码存于 `src/upstream/`。两套渲染器由构建入口接入同一组 `src/specimens.js` 定义、波次、外观和分值。许可、署名见 [LICENSE](LICENSE) 和 [NOTICE.md](NOTICE.md)。
+
+## 实测
+
+在 Chromium / Mesa WebGL 2 上，固定种子 `clawd-bench` 的遭遇表包含两种新增怪。键盘可开局、移动、射击，浏览器宿主的 Wi-Fi / 手机输入样本均可射击。两次断开均暂停模拟并保持画布边界，手机重新接入需要按 START 继续。截图和具体测试范围见 [浏览器记录](docs/browser/verification.json)，复跑脚本为 [tests/browser.py](tests/browser.py)。本次未在实体电视和手机上验收，也未完成全程通关。

@@ -27,7 +27,7 @@ const template = read('src/upstream/index.html')
 const hashes = [...template.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)]
   .map(([, script]) => "'sha256-" + createHash('sha256').update(script).digest('base64') + "'");
 const html = template.replace(/script-src 'self' '[^']+'; style-src '[^']+'/,
-  "script-src 'self' " + hashes.join(' ') + "; style-src 'unsafe-inline'");
+  "script-src 'self' " + hashes.join(' ') + "; style-src 'unsafe-inline'; connect-src 'self'");
 const files = {
   'tv.html': html, 'webgl.js': adaptRenderer(read('src/upstream/webgl.js')), 'webgpu.js': adaptRenderer(read('src/upstream/webgpu.js')),
   'THIRD-PARTY-NOTICES.txt': read('NOTICE.md') + '\n' + read('LICENSE')

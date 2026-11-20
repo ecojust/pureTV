@@ -4,7 +4,6 @@ import functools
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 import os
-import faulthandler
 from pathlib import Path
 import shutil
 import threading
@@ -118,6 +117,5 @@ if __name__ == '__main__':
     parser.add_argument('--output', required=True, type=Path)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
-    faulthandler.dump_traceback_later(120, repeat=True)
     with sync_playwright() as playwright:
         run(playwright, args.output)
