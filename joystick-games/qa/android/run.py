@@ -234,6 +234,34 @@ class WireProxy:
         self.log.close()
 
 
+# Ordered text from the signed game's boot progress readout.
+ROYALE_BOOT_STEPS = (
+    'starting renderer', 'reading controls', 'raising the sun', 'mixing materials',
+    'laying the circuit', 'dressing the bay', 'rolling out the grid', 'loading item boxes',
+    'lighting the effects', 'mounting the camera', 'drawing the hud', 'tuning the engines',
+    'balancing the frame', 'compiling shaders', 'ready',
+)
+
+
+def royale_software_progress(snapshot, countdown=False):
+    game = snapshot.get('game') or {}
+    service = (snapshot.get('info') or {}).get('wifiController') or {}
+    if (game.get('game') != 'kart-royale' or game.get('renderer') != 'webgl2'
+            or type(game.get('quality')) is not int or game['quality'] != 0 or game.get('error') or game.get('errors')
+            or not re.search(r'SwiftShader|llvmpipe|Software|Microsoft Basic|Mesa OffScreen',
+                             game.get('webglRenderer') or '', re.I)
+            or type(service.get('port')) is not int or service['port'] <= 0):
+        return None
+    if countdown:
+        frames = game.get('frames')
+        if (game.get('stage') == 'playing' and game.get('gameplay', {}).get('phase') == 'countdown'
+                and type(frames) is int and frames > 0):
+            return frames
+    elif game.get('stage') == 'menu' and game.get('boot') in ROYALE_BOOT_STEPS:
+        return ROYALE_BOOT_STEPS.index(game['boot'])
+    return None
+
+
 class Acceptance:
     def __init__(self, args):
         self.args = args
@@ -320,12 +348,26 @@ class Acceptance:
             raise AssertionError('Live game changed controller TCP port within the same process/session')
         return value
 
-    def wait(self, predicate, timeout=20, label='condition'):
-        until = time.monotonic() + timeout; last = None; error = None
+    def wait(self, predicate, timeout=20, label='condition', progress=None):
+        start = time.monotonic()
+        until = start + timeout; last = None; error = None
+        highest = None
         while time.monotonic() < until:
             try:
                 last = self.snapshot(timeout=min(OBSERVER_SNAPSHOT_TIMEOUT, max(0.001, until - time.monotonic())))
                 if predicate(last): return last
+                if progress:
+                    value = progress(last)
+                    if value is not None and (highest is None or value > highest):
+                        elapsed = time.monotonic() - start
+                        # One sample is a baseline. Only measured forward progress
+                        # renews the idle window, up to a fixed 300 s wall budget.
+                        if highest is not None:
+                            until = min(start + 300, start + elapsed + timeout)
+                        self.report.setdefault('softwareRenderProgress', []).append({
+                            'label': label, 'value': value, 'elapsedSeconds': elapsed,
+                            'deadlineSeconds': until - start})
+                        highest = value
             except Exception as caught:
                 error = repr(caught)
             time.sleep(min(0.12, max(0, until - time.monotonic())))
@@ -338,12 +380,12 @@ class Acceptance:
         b = cls.game(before).get('controller', {}).get('pollCount')
         return type(a) is int and type(b) is int and a >= b + frames
 
-    def wait_fresh(self, before, predicate=lambda s: True, timeout=60, label='fresh-frame', frames=1):
+    def wait_fresh(self, before, predicate=lambda s: True, timeout=60, label='fresh-frame', frames=1, progress=None):
         started = time.time()
-        after = self.wait(lambda s: self.frame_advanced(s, before, frames) and predicate(s), timeout=timeout, label=label)
+        after = self.wait(lambda s: self.frame_advanced(s, before, frames) and predicate(s), timeout=timeout, label=label, progress=progress)
         self.report.setdefault('freshnessChecks', []).append({'label': label, 'startedAt': started, 'endedAt': time.time(),
             'beforePollCount': self.game(before)['controller']['pollCount'], 'afterPollCount': self.game(after)['controller']['pollCount'],
-            'minimumFrames': frames, 'maximumWallSeconds': timeout})
+            'minimumFrames': frames, 'maximumWallSeconds': 300 if progress else timeout})
         return after
 
     def record(self, label, snapshot=None):
@@ -539,7 +581,8 @@ class Acceptance:
         component = 'com.ecojust.joystickqa.' + self.args.game.replace('-', '') + '/com.ecojust.controllerqa.Observer'
         self.instrument = subprocess.Popen(self.adb + ['shell', 'am', 'instrument', '-w', '-r', '-e', 'diagnosticPort', '63486',
                                                         '-e', 'occupyDefaultPort', str(self.args.occupy_default_port).lower(), component], stdout=self.instrument_log, stderr=subprocess.STDOUT)
-        initial = self.wait(self.initial_menu_ready, timeout=150, label='initial-menu')
+        progress = royale_software_progress if self.args.game == 'kart-royale' else None
+        initial = self.wait(self.initial_menu_ready, timeout=150, label='initial-menu', progress=progress)
         # Keep the actual observation even when the renderer/port assertions below fail.
         self.record('initial-menu', initial)
         self.save()
@@ -829,9 +872,13 @@ class Acceptance:
             # Capture gameplay while input is still held; release-only changes can also satisfy the plan below.
             observed = self.snapshot()
             self.release()
+            progress = None
+            if (self.args.game == 'kart-royale' and step['keys'] == ['A']
+                    and step['expect'] == [{'path': 'gameplay.phase', 'op': 'eq', 'value': 'racing'}]):
+                progress = lambda state: royale_software_progress(state, countdown=True)
             after = observed if plan.matches(step['expect'], self.game(observed), self.game(before)) else self.wait_fresh(
                 held, lambda s: plan.matches(step['expect'], self.game(s), self.game(before)),
-                timeout=step.get('timeoutSeconds', 15), label='plan-gameplay-' + step['name'])
+                timeout=step.get('timeoutSeconds', 15), label='plan-gameplay-' + step['name'], progress=progress)
             self.validate_catalog_snapshot(after)
             self.record('after-plan-' + step['name'], after)
             self.passed('actual SDK gameplay: ' + step['name'], {'expect': step['expect'], 'holdMs': step['holdMs']})
