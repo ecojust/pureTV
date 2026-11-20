@@ -93,6 +93,27 @@ class TransferTests(unittest.TestCase):
         self.assertEqual(record['asset']['sha256'], DIGEST)
         self.assertFalse(record['packageSignatureOrGameplayVerified'])
         self.assertFalse(record['zip']['repacked'])
+    def test_queued_android_runtime_with_successful_signing_job(self):
+        fake = Fake()
+        fake.run['status'] = 'queued'
+        passed, record = self.execute(fake)
+        self.assertTrue(passed)
+        self.assertEqual(record['asset']['sha256'], DIGEST)
+
+    def test_queued_run_requires_completed_successful_signing_and_upload(self):
+        for mutation in (
+            lambda f: f.jobs[0].update(status='in_progress'),
+            lambda f: f.jobs[0].update(conclusion='failure'),
+            lambda f: f.jobs[0]['steps'][0].update(conclusion='failure'),
+            lambda f: f.jobs[0]['steps'][0].update(status='in_progress'),
+            lambda f: f.jobs[0].update(head_sha='b' * 40),
+        ):
+            fake = Fake()
+            fake.run['status'] = 'queued'
+            mutation(fake)
+            self.assertFalse(self.execute(fake)[0])
+            self.assertFalse(fake.uploads)
+
     def test_identity_rejections_never_upload(self):
         mutations = [
             lambda f: f.run.update(head_sha='b'*40),
