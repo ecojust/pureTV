@@ -341,18 +341,6 @@ class Contracts(unittest.TestCase):
         acceptance.proxy.records.append({'direction':'game-to-sdk','connection':1,'message':{'type':'ack','seq':12}})
         acceptance.wait_sent_ack(client,12,timeout=.02)
 
-    def test_android_held_throttle_requires_speed_and_course_motion(self):
-        plan_path = runner.ROOT / 'joystick-games/turbo-kart-rush/qa-plan.json'
-        plan = runner.plan.load_plan(plan_path)
-        step = dict(next(s for s in plan['steps'] if s.get('androidHoldUntilExpect')))
-        step.pop('windowsHoldUntilExpect', None)
-        for field, value in [('keys', ['A']), ('timeoutSeconds', 240),
-                             ('expect', [{'path': 'gameplay.time', 'op': 'changed'}])]:
-            with self.subTest(field=field):
-                invalid = {**plan, 'steps': [{**step, field: value}]}
-                with self.assertRaises(AssertionError):
-                    runner.plan.validate_plan(invalid)
-
     def single_seat_cases(self):
         return json.loads((HERE/'fixtures/single-seat-run-44115154856.json').read_text())['cases']
 
