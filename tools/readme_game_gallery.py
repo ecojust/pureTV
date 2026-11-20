@@ -1,4 +1,4 @@
-"""Read and render the shared controller-game catalog for both homepages."""
+"""Render README card tables and the bilingual controller-game catalog."""
 from html import escape
 from pathlib import Path
 import re
@@ -66,11 +66,15 @@ def support_icon(name, alt=''):
     return f'<img src="docs/branding/platforms/{name}.png" width="22" height="22" alt="{escape(alt)}">'
 
 
+def card_link(page, cover, title, alt):
+    image = f'<img src="{escape(cover)}" width="180" alt="{escape(alt)}">' if cover else '—'
+    return f'<a href="{escape(page)}">{image}<br>{escape(title)}</a>'
+
+
 def game_card(card, locale):
     title = card['titles'][locale]
     alt = title + ('游戏画面' if locale == 'zh' else ' gameplay')
-    image = f'<img src="{escape(card["covers"][locale])}" width="180" alt="{escape(alt)}">'
-    page = f'<a href="{escape(card["page"])}">{image}<br>{escape(title)}</a>'
+    page = card_link(card['page'], card['covers'][locale], title, alt)
     icons = []
     for platform, url in card['downloads'].items():
         icon, system, package = PLATFORM_ICONS[platform]
@@ -90,15 +94,21 @@ def game_card(card, locale):
             guide = 'docs/guide/README.en.md#install-a-game-and-connect-a-controller'
             label = 'Controller supported. View setup guide'
         icons.append(f'<a href="{guide}" title="{label}">{support_icon("controller", label)}</a>')
-    return f'    <td align="center" valign="top" width="25%">{page}<br>{" ".join(icons)}</td>'
+    return f'{page}<br>{" ".join(icons)}'
 
 
-def table_rows(cells):
-    """Keep four equally sized columns, including the last row."""
-    for start in range(0, len(cells), 4):
-        row = cells[start:start + 4]
-        row += ['    <td width="25%"></td>'] * (4 - len(row))
-        yield from ['  <tr>', *row, '  </tr>']
+def card_table(cards):
+    """Give GitHub's shrink-to-fit tables the same width even with one card."""
+    lines = ['<table>']
+    for start in range(0, len(cards), 4):
+        row = cards[start:start + 4]
+        lines.append('  <tr>')
+        # 180px cover plus GitHub's cell padding and border.
+        for content in row + [''] * (4 - len(row)):
+            lines.append(f'    <td align="center" valign="top" width="207">{content}</td>')
+        lines.append('  </tr>')
+    lines.append('</table>')
+    return '\n'.join(lines)
 
 
 def game_index(catalog, locale):
@@ -118,10 +128,8 @@ def game_index(catalog, locale):
         heading = genre[locale] + suffix
         anchor = 'controller-' + genre['id']
         headings.append(f'[{heading}](#{anchor})')
-        sections.extend([f'<a id="{anchor}"></a>', '', '### ' + heading, '', '<table>'])
-        cells = [game_card(card, locale) for card in genre['cards']]
-        sections.extend(table_rows(cells))
-        sections.extend(['</table>', ''])
+        genre_cards = [game_card(card, locale) for card in genre['cards']]
+        sections.extend([f'<a id="{anchor}"></a>', '', '### ' + heading, '', card_table(genre_cards), ''])
     legend = [f'{support_icon(icon)} {system}' for icon, system, _ in PLATFORM_ICONS.values()]
     controller_label = '支持手柄' if locale == 'zh' else 'Controller supported'
     legend.append(f'{support_icon("controller")} {controller_label}')

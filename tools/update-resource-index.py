@@ -5,7 +5,7 @@ from collections import Counter
 from html import escape
 from pathlib import Path
 from resource_catalog import catalog_directories
-from readme_game_gallery import game_catalog, game_index, table_rows
+from readme_game_gallery import card_link, card_table, game_catalog, game_index
 root=Path(__file__).resolve().parents[1]
 entries=[(folder.relative_to(root/'resource').as_posix(),json.loads((folder/'resource.json').read_text())) for folder in catalog_directories(root)]
 counts={kind:sum(info['kind']==kind for _,info in entries) for kind in ('launcher','app')}
@@ -55,6 +55,45 @@ def validate_english():
         assert translated['cover']==expected,f'{key}: use its dedicated English preview'
         assert (root/expected).is_file(),f'{key}: missing English preview {expected}'
 
+def resource_card(key, info, prefix, locale, show_download=False):
+    directory = prefix + key + '/'
+    translated = ENGLISH[key] if locale == 'en' else info
+    name = translated['name']
+    cover = translated.get('cover')
+    if cover and locale == 'zh':
+        cover = directory + cover
+    apk = info['apk']
+    assert (root / 'resource' / key / apk).stat().st_size == info['apkBytes']
+    content = card_link(directory, cover, name, LOCALES[locale]['alt'].format(name=name))
+    if show_download:
+        link = escape(directory + apk + '?raw=1')
+        download = '下载' if locale == 'zh' else 'Download'
+        content += (f'<br>{escape(translated["description"])}<br>Android TV'
+                    f'<br><a href="{link}">{download} {escape(info["version"])} APK</a>')
+    return content
+
+
+def management_table(tool_apps, locale):
+    version = '0.5.9'
+    release = f'https://github.com/ecojust/pureTV/releases/tag/desktop-v{version}'
+    if locale == 'zh':
+        description = '在电脑上管理电视应用和启动器'
+        platforms = 'Windows、macOS、Linux'
+        guide = 'docs/guide/README.md#安装与升级电脑管理器'
+        download = '下载'
+    else:
+        description = 'Manage TV apps and launchers from a computer'
+        platforms = 'Windows, macOS, Linux'
+        guide = 'docs/guide/README.en.md#install-or-upgrade-the-desktop-manager'
+        download = 'Download'
+    manager = card_link(guide, f'docs/previews/manager-{locale}.png', 'pureTV Manager',
+                        LOCALES[locale]['alt'].format(name='pureTV Manager'))
+    manager += f'<br>{description}<br>{platforms}<br><a href="{release}">{download} {version}</a>'
+    cards = [manager]
+    cards.extend(resource_card(key, info, 'resource/', locale, show_download=True) for key, info in tool_apps)
+    return card_table(cards)
+
+
 def tables(prefix,groups,locale='zh'):
     labels=LOCALES[locale]
     output=[]
@@ -62,21 +101,8 @@ def tables(prefix,groups,locale='zh'):
         count=len(groups[group])
         suffix=f'（{count}）' if locale=='zh' else f' ({count})'
         output+=['### '+labels[group]+suffix,'']
-        output+=['<table>']
-        cells=[]
-        for key,info in groups[group]:
-            directory=prefix+key+'/'
-            translated=ENGLISH[key] if locale=='en' else info
-            name=translated['name']
-            cover=translated['cover'] if locale=='en' else directory+info['cover'] if info.get('cover') else None
-            alt=labels['alt'].format(name=name)
-            image=f'<img src="{escape(cover,quote=True)}" width="180" alt="{escape(alt,quote=True)}">' if cover else '—'
-            size=(root/'resource'/key/info['apk']).stat().st_size
-            assert size==info['apkBytes']
-            link=escape(directory,quote=True)
-            cells.append(f'    <td align="center" valign="top" width="25%"><a href="{link}">{image}<br>{escape(name)}</a></td>')
-        output.extend(table_rows(cells))
-        output+=['</table>','']
+        cards = [resource_card(key, info, prefix, locale) for key, info in groups[group]]
+        output += [card_table(cards), '']
     return '\n'.join(output).rstrip()
 
 def replace_index(text, name, markup):
@@ -91,7 +117,7 @@ def replace_index(text, name, markup):
 def main():
     validate_english()
     groups = ordered_groups()
-    home_resources = {key: groups[key] for key in ('tools', 'launcher', 'media')}
+    home_resources = {key: groups[key] for key in ('launcher', 'media')}
     genres = json.loads((root/'tools/readme-app-games.json').read_text())
     catalog = game_catalog(genres, dict(groups['game']), ENGLISH, root)
     rendered = {}
@@ -100,6 +126,7 @@ def main():
         for kind,label in [('launcher','launchers'),('app','apps')]:
             text,replaced=re.subn(r'(https://img\.shields\.io/badge/'+label+r'-)\d+(?=-)',lambda match:match[1]+str(counts[kind]),text)
             assert replaced<=1,f'{filename}: duplicate {label} count badge'
+        text = replace_index(text, 'management-index', management_table(groups['tools'], locale))
         text = replace_index(text, 'resource-index', tables('resource/', home_resources, locale))
         text = replace_index(text, 'game-index', game_index(catalog, locale))
         page_cards = Counter(re.findall(r'<a\s+href="([^"]+)">\s*<img\b', text))
