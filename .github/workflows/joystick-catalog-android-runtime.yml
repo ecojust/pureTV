@@ -272,6 +272,7 @@ jobs:
       - name: Check generic input and read-only observation contracts
         run: |
           set -euo pipefail
+          python3 -B joystick-games/qa/android/test_boot_services.py
           python3 joystick-games/qa/android/test_runner.py 2>&1 | tee "$RUNNER_TEMP/qa-contracts.log"
           python3 joystick-games/tools/android-tests.py 2>&1 | tee "$RUNNER_TEMP/artifact-contracts.log"
           python3 joystick-games/tools/android-runtime-artifact-tests.py 2>&1 | tee "$RUNNER_TEMP/reuse-contracts.log"
