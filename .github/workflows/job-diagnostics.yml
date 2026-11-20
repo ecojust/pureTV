@@ -1,45 +1,82 @@
-name: Read failed job diagnostics
+name: Read individual frozen racing APK replay outcomes
 on:
   workflow_dispatch:
     inputs:
-      job_id:
-        description: Failed GitHub Actions job ID
+      cases:
+        description: JSON array of finished game, original run and artifact ID tuples
         required: true
+        type: string
 permissions:
   actions: read
+  contents: write
 jobs:
-  diagnostics:
-    runs-on: ubuntu-latest
+  read:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(inputs.cases) }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RUN: ${{ matrix.run }}
+      GAME: ${{ matrix.game }}
+      AID: ${{ matrix.id }}
+      SOURCE: e4d4c11e0b8e6a73994491e5d3b3d7b0395f6ad1
     steps:
-      - name: Report verification log tail
-        env:
-          GH_TOKEN: ${{ github.token }}
-          JOB_ID: ${{ inputs.job_id }}
-          REPOSITORY: ${{ github.repository }}
+      - name: Verify original runtime job, QA source and archived artifact
         run: |
           python - <<'PY'
-          import os, re, subprocess
-          job = os.environ['JOB_ID']
-          assert job.isdigit()
-          result = subprocess.run(['gh', 'api', '--allow-escape-sequences', f"repos/{os.environ['REPOSITORY']}/actions/jobs/{job}/logs"], capture_output=True, text=True)
-          log = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', result.stdout + result.stderr)
-          # Diagnostics need error context, never credential-bearing download URLs.
-          log = re.sub(r"https?://[^\s<>\"']+", '[URL omitted]', log)
-          log = re.sub(r'\b(?:gh[pousr]_[A-Za-z0-9_]+|github_pat_[A-Za-z0-9_]+)\b', '[token omitted]', log)
-          log = re.sub(r'(?im)((?:authorization|(?:gh|github)[_-]token)\s*[:=]\s*)(?:bearer\s+|basic\s+)?[^\s]+', r'\1[token omitted]', log)
-          log = re.sub(r'(?im)^.*androidboot\.qemu\.adb\.pubkey=.*$', '[emulator public key omitted]', log)
-          lines = log.splitlines()
-          primary = [i for i, line in enumerate(lines) if re.search(r'FAILURE: Build failed|\* What went wrong:', line) and '##[error]' not in line]
-          fallback = [i for i, line in enumerate(lines) if re.search(r'(?:error:|Error:|TimeoutError|ui\.mjs:|> Task .+ FAILED|Execution failed for task|failed with exit code|emulator: ERROR)', line)]
-          # Boot polling can log transient adb failures before the fatal step.
-          fatal = [i for i in fallback if '##[error]' in lines[i]]
-          matches = primary or fatal or fallback
-          if matches:
-              before = '\n'.join(lines[max(0, matches[0] - 50):matches[0]])[-3500:]
-              print('::notice title=Failure preceding context::' + before.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
-              start = max(0, matches[0] - 2)
-              selected = '\n'.join(lines[start:start + 65])[:3500]
-          else:
-              selected = log[-3500:]
-          print('::notice title=Failed job log::' + selected.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
+          import json,os,subprocess
+          repo=os.environ['GITHUB_REPOSITORY'];run=os.environ['RUN'];game=os.environ['GAME']
+          groups={'44764241200':['ponpoko-kart'],'44764249297':['penguintrack','last-track'],'44764307246':['turbo-kart-rush'],'44765518078':['ponpoko-kart'],'44765522284':['kart-royale']}
+          assert game in groups[run]
+          def api(p):return json.loads(subprocess.check_output(['gh','api','repos/'+repo+'/'+p]))
+          flow=api('actions/runs/'+run);assert flow['head_sha'] in ('290f6e8e337427714ca7e556d1b6209c0e3132cd','21cb36cb5c1f0ac8e7e53290b99cc036ac2d61c1') and flow['path']=='.github/workflows/joystick-catalog-android-runtime.yml' and flow['run_attempt']==1
+          a=api('actions/artifacts/'+os.environ['AID'])
+          assert a['workflow_run']['id']==int(run) and not a['expired'] and a['name']=='joystick-android-runtime-'+game
+          job=[j for j in api('actions/runs/'+run+'/jobs?per_page=100')['jobs'] if j['name']=='runtime ('+game+')']
+          assert len(job)==1 and job[0]['status']=='completed'
+          with open(os.environ['RUNNER_TEMP']+'/original-record.json','w') as f:json.dump({'game':game,'run':run,'artifact':a,'job':job[0]},f)
           PY
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ matrix.id }}
+          run-id: ${{ matrix.run }}
+          github-token: ${{ github.token }}
+          merge-multiple: true
+          path: original
+      - name: Preserve exact reports and original screenshots on an isolated evidence branch
+        run: |
+          python - <<'PY'
+          import os,json,shutil,hashlib
+          from pathlib import Path
+          src=Path('original');out=Path('evidence');out.mkdir();g=os.environ['GAME']
+          assert not any(p.is_symlink() for p in src.rglob('*'))
+          source=Path(os.environ['RUNNER_TEMP'])/'original-record.json';shutil.copyfile(source,out/'original-record.json')
+          manifest={}
+          for p in src.rglob('*'):
+              if not p.is_file():continue
+              k=p.relative_to(src);size=p.stat().st_size
+              # Full original artifact stays linked. Current report + transport and
+              # diagnostic evidence is exported independently of slow sibling games.
+              if k.parts[0] not in (g+'-normal',g+'-occupied',g+'-outcomes.json'):continue
+              if 'source' in k.parts:continue
+              if p.suffix not in ('.log','.txt','.png','.json','.jsonl','.xml','.jpg') or size>=45_000_000:continue
+              q=out/k;q.parent.mkdir(exist_ok=True,parents=True);shutil.copyfile(p,q)
+              with q.open('rb') as f:manifest[k.as_posix()]={'bytes':size,'sha256':hashlib.file_digest(f,'sha256').hexdigest()}
+          (out/'files.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          print('files',list(manifest))
+          for mode in ('normal','occupied'):
+              p=out/(g+'-'+mode)/'report.json'
+              if p.exists():
+                  r=json.loads(p.read_bytes());print(mode,r.get('status'),str(r.get('error'))[:900],len(r.get('tests',[])),flush=True)
+          PY
+          branch="build-assets/racing-nine-runtime-replay-$GAME-$RUN-$GITHUB_RUN_ID"
+          gh auth setup-git
+          git -C evidence init -q --initial-branch="$branch"
+          git -C evidence config user.name 'github-actions[bot]'
+          git -C evidence config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C evidence add .
+          git -C evidence commit -qm 'Preserve original racing Android installation and gameplay evidence'
+          git -C evidence push "https://github.com/$GITHUB_REPOSITORY.git" "--force-with-lease=refs/heads/$branch:" "HEAD:refs/heads/$branch"
