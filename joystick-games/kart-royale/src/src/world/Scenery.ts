@@ -16,6 +16,7 @@
  * ============================================================================
  */
 import * as THREE from 'three';
+import { activeCircuit } from './Circuits';
 import type { Ctx, System, TrackSample } from '../types';
 import { Surface } from '../types';
 import { Water, type SeaField } from './Water';
@@ -318,7 +319,7 @@ export class Scenery implements System {
 
   init(ctx: Ctx) {
     this.ctx = ctx;
-    this.rng = mulberry32(0xbacafe);
+    this.rng = mulberry32(activeCircuit.seed);
     this.group.name = 'scenery';
     const stages = this.buildScenery(ctx);
     if (this.softwareLow()) this.pendingDecor = stages;

@@ -1,3 +1,4 @@
+import { activeCircuit, circuits } from '../world/Circuits';
 /**
  * Menus — title, character select, pause and results.
  *
@@ -147,6 +148,8 @@ export class Menus {
   private localTitle = false;
 
   private selected = 0;
+  private circuitIndex = circuits.indexOf(activeCircuit);
+  private circuitLabel!: HTMLElement;
   private cards: HTMLDivElement[] = [];
   private buttons: { pause: HTMLDivElement[]; results: HTMLDivElement[] } = { pause: [], results: [] };
   private btnIndex = 0;
@@ -337,11 +340,36 @@ export class Menus {
     else document.documentElement.dataset.menu = want;
   }
 
-  private selecting = false;
+  private selecting = location.hash === '#choose-racer';
+
+  private changeCircuit(dir: number) {
+    this.circuitIndex = (this.circuitIndex + dir + circuits.length) % circuits.length;
+    this.circuitLabel.textContent = circuits[this.circuitIndex].name;
+    this.ui('move');
+  }
+
+  private chooseRacer() {
+    const circuit = circuits[this.circuitIndex];
+    if (circuit !== activeCircuit) {
+      // The terrain, meshes, AI line and spatial index are baked once per boot.
+      // Drop this WebGL context together with the page before loading the new world.
+      const url = new URL(location.href);
+      url.searchParams.set('track', circuit.id);
+      url.hash = 'choose-racer';
+      location.replace(url.href);
+      return;
+    }
+    this.selecting = true;
+    this.ui('confirm');
+  }
 
   // ------------------------------------------------------------------ input
 
   private nav(dir: number) {
+    if (this.screen === 'title') {
+      this.changeCircuit(dir);
+      return;
+    }
     if (this.screen === 'select') {
       this.selected = (this.selected + dir + this.cards.length) % this.cards.length;
       this.syncCards();
@@ -362,8 +390,7 @@ export class Menus {
   private onConfirm(ctx: Ctx, inRace: boolean) {
     switch (this.screen) {
       case 'title':
-        this.selecting = true;
-        this.ui('confirm');
+        this.chooseRacer();
         return;
       case 'select':
         this.startRace(ctx);
@@ -416,7 +443,16 @@ export class Menus {
     wrap.style.flexDirection = 'column';
     wrap.style.alignItems = 'center';
     wrap.innerHTML = LOGO_SVG.replace('RAYS', buildRays());
-    el('div', 'kr-sub', wrap, 'Sunset Bay Circuit');
+    const row = el('div', 'kr-circuits', wrap);
+    const arrow = (dir: number, label: string) => {
+      const btn = el('div', 'kr-btn kr-circuit-arrow', row, dir < 0 ? '‹' : '›');
+      btn.setAttribute('aria-label', label);
+      btn.onclick = e => { e.stopPropagation(); this.changeCircuit(dir); };
+    };
+    arrow(-1, 'Previous circuit');
+    this.circuitLabel = el('div', 'kr-sub', row, activeCircuit.name);
+    this.circuitLabel.setAttribute('aria-live', 'polite');
+    arrow(1, 'Next circuit');
     // Built empty; `syncTouchCopy` fills it from `ctx.input.touch` every time
     // that flips. This used to run its OWN `matchMedia('(pointer: coarse)')`
     // probe once, in the constructor — which is exactly the check that fails on
@@ -429,7 +465,7 @@ export class Menus {
     this.titleGlyphs = el('div', 'kr-glyphs', wrap);
     this.titleHint = el('div', 'kr-hint', wrap);
     const start = el('div', 'kr-btn puretv-start', wrap, 'Start');
-    start.onclick = (e) => { e.stopPropagation(); this.selecting = true; this.ui('confirm'); };
+    start.onclick = (e) => { e.stopPropagation(); this.chooseRacer(); };
     const cbtn = el('div', 'kr-btn kr-btn-controls', wrap, 'Controls');
     cbtn.onclick = (e) => { e.stopPropagation(); this.controls.show(); };
     this.syncTouchCopy(false);

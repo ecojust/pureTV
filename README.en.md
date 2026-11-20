@@ -78,6 +78,8 @@
 
 ## Game catalog
 
+[Six new or updated controller games · browser builds and controls](joystick-games/README.md#game-expansion)
+
 <!-- game-index:start -->
 
 **35 controller games** · [Play every game on a computer](docs/guide/README.en.md#play-on-a-computer) · Android TV (35) · Standalone macOS downloads (24) · Standalone Windows x64 downloads (19)

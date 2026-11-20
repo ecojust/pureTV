@@ -78,6 +78,8 @@
 
 ## 游戏专栏
 
+[新增与更新的六款手柄游戏 · 浏览器试玩及操作说明](joystick-games/README.md#game-expansion)
+
 <!-- game-index:start -->
 
 **35 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · Android TV 35 款 · macOS 独立安装包 24 款 · Windows x64 独立安装包 19 款

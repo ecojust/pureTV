@@ -21,6 +21,7 @@
  */
 import * as THREE from 'three';
 import { Surface } from '../types';
+import { activeCircuit, type BoostStrip } from './Circuits';
 import { createNoise2D } from 'simplex-noise';
 
 // --- world constants shared with the geometry builder ---------------------
@@ -195,8 +196,9 @@ const LEGS: [number, number][] = [
   [84, 11.22],    // 0.897 bridge span
   [80, 24.47],    // 0.950 return to the line
 ];
-const PLAN_LENGTH = 1600;
-const START_HEADING = 45 * THREE.MathUtils.DEG2RAD;
+const routeLegs = activeCircuit.legs ?? LEGS;
+const PLAN_LENGTH = routeLegs.reduce((sum, [length]) => sum + length, 0);
+const START_HEADING = activeCircuit.heading * THREE.MathUtils.DEG2RAD;
 
 // ---------------------------------------------------------------------------
 // Keyframed channels.  All cyclic Catmull-Rom in t so the seam at the start
@@ -391,7 +393,7 @@ export const ZONES: ZoneDef[] = [
  * doing. Retuned so every strip stays inside `halfWidth − 1.0` at its narrowest
  * station, which is the edge line.
  */
-export const BOOST_PADS: { t0: number; t1: number; lat: number; hw: number }[] = [
+export const BOOST_PADS: BoostStrip[] = activeCircuit.boosts ?? [
   { t0: 0.5380, t1: 0.5555, lat: -2.9, hw: 1.9 },
   { t0: 0.5380, t1: 0.5555, lat: 2.9, hw: 1.9 },
   { t0: 0.5720, t1: 0.5895, lat: 0.0, hw: 2.6 },
@@ -672,7 +674,7 @@ export function buildCenterline(): Centerline {
   const raw = new Float64Array(N0);
   {
     let s = 0;
-    for (const [len, turn] of LEGS) {
+    for (const [len, turn] of routeLegs) {
       const k = (turn * THREE.MathUtils.DEG2RAD) / len;
       const i0 = Math.round(s / DS0), i1 = Math.round((s + len) / DS0);
       for (let i = i0; i < i1; i++) raw[i] = k;
@@ -705,7 +707,7 @@ export function buildCenterline(): Centerline {
   for (let i = 0; i <= N0; i++) {
     const u = (i / N0) % 1;
     // macro profile + two periodic octaves so nothing is flat for long
-    Y[i] = cyclic(ELEVATION, u)
+    Y[i] = cyclic(activeCircuit.elevation ?? ELEVATION, u)
       + 0.74 * Math.sin(u * Math.PI * 2 * 7 + 0.9)
       + 0.33 * Math.sin(u * Math.PI * 2 * 13 + 2.4);
   }
@@ -800,8 +802,8 @@ export function buildCenterline(): Centerline {
   // ---- widths, banking, banked frame, curvature --------------------------
   for (let i = 0; i < count; i++) {
     const t = i / count;
-    cl.half[i] = cyclicMonotone(HALF_WIDTH, t);
-    const b = cyclic(BANK, t) * THREE.MathUtils.DEG2RAD;
+    cl.half[i] = cyclicMonotone(activeCircuit.halfWidth ?? HALF_WIDTH, t);
+    const b = cyclic(activeCircuit.bank ?? BANK, t) * THREE.MathUtils.DEG2RAD;
     cl.bank[i] = b;
 
     // Unbanked frame. The horizontal-reference right vector is the correct
