@@ -12,6 +12,7 @@ import * as itemModels from './upstream/src/items/itemModels.js';
 import { UI } from './upstream/src/ui/UI.js';
 import { GameAudio } from './upstream/src/audio/Audio.js';
 import { createTVAdapter } from './tv-adapter.js';
+import { usesSoftwareRenderer } from './software-renderer.js';
 
 // Keep original menu -> racer -> course -> race flow. Upstream developer URL
 // switches and writable __game/autopilot hooks are not exposed by this entry.
@@ -31,6 +32,10 @@ try {
       }
     },
   });
+  if (usesSoftwareRenderer(game.renderer.renderer.getContext())) {
+    game.quality = 'low';
+    game.courseShadowSize = 512;
+  }
   adapter.attach(game, ui, audio);
   game.tv = adapter;
   const unlock = () => { if (!game.paused) audio.unlock(); };

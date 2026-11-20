@@ -13,7 +13,7 @@ import { FogState } from '../core/fog.js';
  *   envIntensity, look: {...Renderer.setLook params}
  * }
  */
-export function buildEnvironment(scene, renderer, env) {
+export function buildEnvironment(scene, renderer, env, shadowSize = 2048) {
   const sky = new Sky(env.sky);
   scene.add(sky.group);
 
@@ -21,7 +21,7 @@ export function buildEnvironment(scene, renderer, env) {
   const sun = new SunLight(new THREE.Color(env.sun.color), env.sun.intensity);
   sun.position.copy(sunDir); // SunLight shines from its position toward the origin
   sun.castShadow = env.sun.shadows !== false;
-  sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.mapSize.set(shadowSize, shadowSize);
   sun.shadow.camera.far = env.sun.shadowFar ?? 220;
   sun.shadow.camera.near = 0.5;
   sun.shadow.bias = env.sun.bias ?? -0.00025;

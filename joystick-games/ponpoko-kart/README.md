@@ -6,6 +6,8 @@ Android TV 0.1.2 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/
 
 ## Android TV 适配
 
+0.1.3（versionCode 4）在 WebGL 明确识别出 SwiftShader、llvmpipe 等软件渲染器时，沿用原作的低画质水面，并把赛道动态阴影调为 512 × 512。硬件 GPU 和未能识别的设备沿用原画质。对 Inaka 同一机位做实际 GPU 像素回读，软件渲染的绘制调用由 929 次降为 634 次，赛道水面、太阳直射光、车辆阴影和八名车手都保留。[画质对照、原始计时及像素值](docs/software-course-effects.json)
+
 0.1.2（versionCode 3）随包提供三条赛道的路面颜色和法线贴图，选定赛道后才解码。六张 PNG 的逐像素 RGBA 校验都与原作程序生成结果一致。Linux 软件渲染 Chromium 的一次冷启动测量中，第一条赛道的路面材质生成耗时 91.7 秒，直接读取两张本地贴图约 0.76 秒。这个数字只覆盖路面材质。[每条赛道的原始参数、像素校验和计时](docs/course-textures.json)
 
 以 0.1.2 正式 Web 资源启动 Chromium，关闭可选浮点缓冲后，手柄桥输入从选人、选赛道、起跑阵列和倒数进入实际驾驶。两张赛道路面贴图均从本地分发成功读取，抓图显示首圈第 6 名和 42 km/h。[驾驶原图](docs/browser-0.1.2-rgba8/driving.png) · [逐阶段帧数、速度与资源响应](docs/browser-0.1.2-rgba8/report.json)

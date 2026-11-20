@@ -69,7 +69,7 @@ export class Game {
     this.def = def;
     await new Promise((r) => setTimeout(r, 30)); // let the loading screen paint
     if (this.prepareCourse) await this.prepareCourse(def);
-    const world = new World(this.renderer, def, { quality: this.quality });
+    const world = new World(this.renderer, def, { quality: this.quality, shadowSize: this.courseShadowSize });
     await world.decorate({ fx: null, audio: this.audio });
     this.world = world;
     this.fx = new FX(world.scene);

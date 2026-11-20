@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { supportsHalfFloatTargets, halfFloatSamples } from '../src/upstream/src/core/renderTargets.js';
+import { usesSoftwareRenderer } from '../src/software-renderer.js';
 import { Sky } from '../src/upstream/src/world/Sky.js';
 
 test('WebGL 2 without renderable half-float textures skips sky prefiltering', () => {
@@ -21,5 +22,22 @@ test('either color-buffer extension enables HDR with a supported sample count', 
       },
     };
     assert.equal(halfFloatSamples({ getContext: () => gl }), expected);
+  }
+});
+
+test('only explicitly identified software renderers select the low course effects', () => {
+  for (const [name, software] of [
+    ['Android Emulator OpenGL ES Translator (ANGLE (Google, SwiftShader Device (Subzero)))', true],
+    ['llvmpipe (LLVM 19.1, 256 bits)', true], ['Mesa lavapipe', true],
+    ['ANGLE (Microsoft, Microsoft Basic Render Driver Direct3D11)', true],
+    ['Mali-G52', false], ['Adreno (TM) 740', false], ['WebKit WebGL', false], ['', false],
+  ]) {
+    for (const haveDetails of [true, false]) {
+      const gl = { RENDERER: 7937,
+        getExtension: () => haveDetails ? { UNMASKED_RENDERER_WEBGL: 37446 } : null,
+        getParameter: key => key === 37446 || !haveDetails ? name : 'WebKit WebGL',
+      };
+      assert.equal(usesSoftwareRenderer(gl), software);
+    }
   }
 });
