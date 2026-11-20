@@ -276,8 +276,9 @@ class MenuTapContracts(unittest.TestCase):
             self.acceptance.args.apk = apk
             self.acceptance.report['apk'] = identity = runner.file_info(apk)
             self.acceptance.report['sourceCommit'] = '0' * 40
-            proof = runner.NIGHT_LOW_RELOAD_SOURCES
-            sources = {name: runner.file_info(runner.ROOT / name) for name in proof}
+            # The fixture describes the already producer-verified signed edition.
+            # A future working tree may legitimately have a different adapter.
+            sources = {'joystick-games/night-racer/src/src/main.js': {'bytes': 98145, 'sha256': 'ad1edb9d785799db5cd357d614005d2e044b79bed7c7635e019e693e65b49004'}, 'joystick-games/night-racer/src/src/tv-adapter.js': {'bytes': 7500, 'sha256': '7b271ee970ae78da66ae5bf128c2116e3107a41473b116f8c820b6b49be349ec'}}
             receipt = {'game': 'night-racer', 'packageName': runner.PACKAGES['night-racer'],
                        'versionName': '0.1.1', 'versionCode': 2, 'signatureVerified': True,
                        'certificateSha256': 'eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23',
@@ -285,12 +286,16 @@ class MenuTapContracts(unittest.TestCase):
             path = apk.parent / 'signing-receipt.json'
             path.write_text(json.dumps(receipt))
             self.use_samples([self.state(2, low=True), self.state(3, low=True), self.state(4, low=True)])
-            self.acceptance.catalog_menu_tap(self.step, self.state(70))
-            for field, value in (('versionCode', 1), ('signatureVerified', False), ('sha256', '0' * 64),
-                                 ('certificateSha256', '0' * 64), ('sourceInputs', {})):
-                path.write_text(json.dumps({**receipt, field: value}))
-                with self.assertRaises((AssertionError, KeyError)):
-                    self.acceptance.signed_reload_source('night-racer')
+            def source_record(path):
+                return sources[path.relative_to(runner.ROOT).as_posix()]
+            with mock.patch.object(runner, 'file_info', side_effect=source_record), \
+                    mock.patch.dict(runner.os.environ, {'ARTIFACT_SOURCE': self.acceptance.report['sourceCommit']}):
+                self.acceptance.catalog_menu_tap(self.step, self.state(70))
+                for field, value in (('versionCode', 1), ('signatureVerified', False), ('sha256', '0' * 64),
+                                     ('certificateSha256', '0' * 64), ('sourceInputs', {})):
+                    path.write_text(json.dumps({**receipt, field: value}))
+                    with self.assertRaises((AssertionError, KeyError)):
+                        self.acceptance.signed_reload_source('night-racer')
 
     def test_exact_night_low_reload_requires_new_baseline_then_two_new_polls(self):
         self.reload_step()

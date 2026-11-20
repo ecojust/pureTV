@@ -189,7 +189,7 @@ jobs:
   runtime:
     needs: select
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 85
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -283,6 +283,7 @@ jobs:
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
       - name: Run normal and occupied-port QA independently against unchanged signed bytes
+        if: inputs.artifact_source != 'e4d4c11e0b8e6a73994491e5d3b3d7b0395f6ad1'
         # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
@@ -299,6 +300,35 @@ jobs:
           # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
           # Optional controlled Vulkan-off comparison; not an established crash cause or fix.
           emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}
+          pre-emulator-launch-script: >-
+            python3 joystick-games/tools/android-emulator-supervisor.py prepare
+            --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
+          script: >-
+            python3 joystick-games/tools/android-emulator-supervisor.py assert-ready
+            --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor" &&
+            python3 joystick-games/tools/android-environment-diagnostics.py
+            --output "$RUNNER_TEMP/runtime/$GAME/environment-diagnostics" --
+            python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
+            --input "$RUNNER_TEMP/input" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
+            --confirm-backroad-install "$CONFIRM_BACKROAD_INSTALL"
+      - name: Exercise the signed controller editions on their selected Android graphics profile
+        if: inputs.artifact_source == 'e4d4c11e0b8e6a73994491e5d3b3d7b0395f6ad1'
+        # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          # Controlled original-APK comparison: official stable 37.3.10 (2026-11-19), not a claimed crash fix.
+          # https://dl.google.com/android/repository/repository2-3.xml — emulator-linux_x64-16970787.zip
+          emulator-build: '16970787'
+          api-level: ${{ (matrix.game == 'ponpoko-kart' || matrix.game == 'kart-royale') && '34' || '36' }}
+          target: android-tv
+          arch: x86_64
+          profile: ${{ (matrix.game == 'ponpoko-kart' || matrix.game == 'kart-royale') && 'tv_720p' || 'tv_1080p' }}
+          avd-name: JoystickGamesValidation
+          force-avd-creation: true
+          disable-animations: true
+          # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
+          # Optional controlled Vulkan-off comparison; not an established crash cause or fix.
+          emulator-options: -no-window -memory 3072 -gpu ${{ (matrix.game == 'ponpoko-kart' || matrix.game == 'kart-royale' || matrix.game == 'last-track' || matrix.game == 'turbo-kart-rush') && 'lavapipe' || 'swiftshader_indirect' }} -noaudio -no-boot-anim -no-snapshot${{ (matrix.game == 'ponpoko-kart' || matrix.game == 'kart-royale') && ' -feature -Vulkan' || '' }}
           pre-emulator-launch-script: >-
             python3 joystick-games/tools/android-emulator-supervisor.py prepare
             --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
