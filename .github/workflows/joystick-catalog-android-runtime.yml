@@ -321,7 +321,7 @@ jobs:
           emulator-build: '16970787'
           api-level: ${{ (matrix.game == 'ponpoko-kart' || matrix.game == 'kart-royale') && '34' || '36' }}
           target: android-tv
-          arch: x86_64
+          arch: ${{ (matrix.game == 'ponpoko-kart' || matrix.game == 'kart-royale') && 'x86' || 'x86_64' }}
           profile: ${{ (matrix.game == 'ponpoko-kart' || matrix.game == 'kart-royale') && 'tv_720p' || 'tv_1080p' }}
           avd-name: JoystickGamesValidation
           force-avd-creation: true
