@@ -1,0 +1,79 @@
+{
+  "game": "starbase-spooky",
+  "targetPackage": "com.ecojust.joystick.starbasespooky",
+  "status": "failed",
+  "scope": "Actual Android installed game controlled through the unchanged Python SDK and observed read-only",
+  "modelWrites": false,
+  "clockOverrides": false,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "defaultPortOccupiedFixture": true,
+  "physicalEsp32Tested": false,
+  "sourceCommit": "ec5161417eaaf4b6be0585d04da60e59fb8d060f",
+  "apk": {
+    "path": "/home/runner/work/_temp/signed/packages/starbase-spooky/starbase-spooky-0.1.1.apk",
+    "bytes": 11251431,
+    "sha256": "76e58e49cc095b5be56f370413d551d0c2662fc4e124e1a3445eaa8b038d9fd1"
+  },
+  "observer": {
+    "path": "/home/runner/work/_temp/signed/observers/starbase-spooky/observer-starbase-spooky.apk",
+    "bytes": 16783,
+    "sha256": "d096c7432f49894a9aa13ebebb57be2fc3221f7cb4327f919d5ef2802597acb7"
+  },
+  "sourceFiles": {
+    "joystick-games/qa/android/run.py": {
+      "bytes": 73967,
+      "sha256": "3eaaa01af7ebb2948fd6c087f254c4708c2c750daf8682a0635dd24795bfaa0f"
+    },
+    "joystick-games/qa/android/install_failure.py": {
+      "bytes": 8042,
+      "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+    },
+    "joystick-games/qa/android/install_confirmation.py": {
+      "bytes": 13439,
+      "sha256": "22c0b48fa13d0f3dc072b0049f5dc07efeef70d02d3bb8b2fa2de743aef09ac4"
+    },
+    "joystick-games/qa/android/build-observer.py": {
+      "bytes": 3661,
+      "sha256": "7010b023cfd691d7a2179c45e91a25639d97a1af31622886e90954a3e0b7e4df"
+    },
+    "joystick-games/qa/android/src/com/ecojust/controllerqa/Observer.java": {
+      "bytes": 11491,
+      "sha256": "9c10a920e18a094c2650ab86924192cc9745daf8b0a792a732639295fa52ff0e"
+    },
+    "puretv-joystick/joystick_sdk.py": {
+      "bytes": 2188,
+      "sha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+    },
+    "joystick-games/tools/android-build.py": {
+      "bytes": 13144,
+      "sha256": "07c5931bafb1307b5cc0926b4ad0257a8a3a910089e1c2da0eb3d4ce7da29527"
+    },
+    "joystick-games/tools/qa-plan.py": {
+      "bytes": 8288,
+      "sha256": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9"
+    },
+    "joystick-games/starbase-spooky/qa-plan.json": {
+      "bytes": 5267,
+      "sha256": "6ebce36a5677726d3d80d3748a3b869b6cf8a55a3326b532aa98dceaa6154e77"
+    },
+    "joystick-games/catalog-registry.json": {
+      "bytes": 9811,
+      "sha256": "d5999df4266e55efec83d9fcf6889cd801f3cfedee4c5eeff0d366754cb949e6"
+    }
+  },
+  "tests": [],
+  "snapshots": [],
+  "captures": [],
+  "installFailureEvidence": {
+    "path": "install-failure/report.json",
+    "bytes": 4569,
+    "sha256": "79d8ea30508f94c1ee0590fe5b3e18381b01e6f5918d7ebcbffa012367d81fca",
+    "elapsedSeconds": 2.529451475000087,
+    "originalFailurePreserved": true,
+    "uiActionsSent": false,
+    "settingsChanged": false
+  },
+  "error": "Traceback (most recent call last):\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 1179, in main\n    acceptance.setup()\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 583, in setup\n    self.command('install', '-r', str(self.args.apk))\n  File \"/home/runner/work/pureTV/pureTV/joystick-games/qa/android/run.py\", line 340, in command\n    result = subprocess.run(record['command'], capture_output=True, check=False, timeout=timeout)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 550, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 1209, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 2116, in _communicate\n    self._check_timeout(endtime, orig_timeout, stdout, stderr)\n  File \"/usr/lib/python3.12/subprocess.py\", line 1253, in _check_timeout\n    raise TimeoutExpired(\nsubprocess.TimeoutExpired: Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'install', '-r', '/home/runner/work/_temp/signed/packages/starbase-spooky/starbase-spooky-0.1.1.apk']' timed out after 54 seconds\n",
+  "finishedAt": 1795169317.9097202
+}

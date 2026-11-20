@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "targetPackage": "com.ecojust.joystick.starbasespooky",
+  "apk": {
+    "bytes": 11251431,
+    "sha256": "76e58e49cc095b5be56f370413d551d0c2662fc4e124e1a3445eaa8b038d9fd1"
+  },
+  "originalFailedInstallCommand": {
+    "command": [
+      "/usr/local/lib/android/sdk/platform-tools/adb",
+      "install",
+      "-r",
+      "/home/runner/work/_temp/signed/packages/starbase-spooky/starbase-spooky-0.1.1.apk"
+    ],
+    "startedAt": 1795169202.9117808,
+    "apkBytes": 11251431,
+    "timeoutSeconds": 54,
+    "status": "timed-out",
+    "endedAt": 1795169256.9681337
+  },
+  "scope": "Post-timeout installation UI observations; not a successful installation or game test",
+  "maximumWallSeconds": 60,
+  "uiActionsSent": false,
+  "settingsChanged": false,
+  "installRetried": false,
+  "originalFailurePreserved": true,
+  "commands": [
+    {
+      "command": [
+        "/usr/local/lib/android/sdk/platform-tools/adb",
+        "shell",
+        "dumpsys",
+        "activity",
+        "activities"
+      ],
+      "startedAt": 1795169256.9763682,
+      "outputPath": "foreground.txt",
+      "maximumStdoutBytes": 1048576,
+      "maximumStderrBytes": 8192,
+      "status": "completed",
+      "exitCode": 0,
+      "endedAt": 1795169256.995982,
+      "stderr": "",
+      "output": {
+        "bytes": 26524,
+        "sha256": "0238a3bc128d416066bce3cccc289f488ba56c0e1026be81c65b5d9feee3bec3"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/lib/android/sdk/platform-tools/adb",
+        "shell",
+        "dumpsys",
+        "window",
+        "windows"
+      ],
+      "startedAt": 1795169256.9961095,
+      "outputPath": "windows.txt",
+      "maximumStdoutBytes": 1048576,
+      "maximumStderrBytes": 8192,
+      "status": "completed",
+      "exitCode": 0,
+      "endedAt": 1795169257.014822,
+      "stderr": "",
+      "output": {
+        "bytes": 21959,
+        "sha256": "9816bd653e61b329f3b66c1885b0d101130e137dc5c3afb3b74b170f5e2e3d8f"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/lib/android/sdk/platform-tools/adb",
+        "shell",
+        "dumpsys",
+        "package",
+        "installs"
+      ],
+      "startedAt": 1795169257.014904,
+      "outputPath": "installer-sessions.txt",
+      "maximumStdoutBytes": 2097152,
+      "maximumStderrBytes": 8192,
+      "status": "completed",
+      "exitCode": 0,
+      "endedAt": 1795169257.027564,
+      "stderr": "",
+      "output": {
+        "bytes": 1854,
+        "sha256": "30b0cf0d4718109dcb7f0b148417d93b417524d52e6098edb0e81bb4bd2b3cd0"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/lib/android/sdk/platform-tools/adb",
+        "exec-out",
+        "screencap",
+        "-p"
+      ],
+      "startedAt": 1795169257.0276322,
+      "outputPath": "screen.png",
+      "maximumStdoutBytes": 12582912,
+      "maximumStderrBytes": 8192,
+      "status": "completed",
+      "exitCode": 0,
+      "endedAt": 1795169257.2427683,
+      "stderr": "",
+      "output": {
+        "bytes": 116174,
+        "sha256": "7bd7394ef7cc3024204b9ef3a22551d82a82e83290d1efeac7d2f63ce1874178"
+      },
+      "completePng": true
+    },
+    {
+      "command": [
+        "/usr/local/lib/android/sdk/platform-tools/adb",
+        "shell",
+        "uiautomator",
+        "dump",
+        "/sdcard/puretv-install-diagnostic-485905273826.xml"
+      ],
+      "startedAt": 1795169257.2431052,
+      "outputPath": "ui-dump-command.txt",
+      "maximumStdoutBytes": 65536,
+      "maximumStderrBytes": 8192,
+      "status": "completed",
+      "exitCode": 0,
+      "endedAt": 1795169259.6692877,
+      "stderr": "",
+      "output": {
+        "bytes": 75,
+        "sha256": "a876672bd56e8162ab75ccdf4d9910e01832ec6095703749e9c032b20703d6ec"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/lib/android/sdk/platform-tools/adb",
+        "exec-out",
+        "cat",
+        "/sdcard/puretv-install-diagnostic-485905273826.xml"
+      ],
+      "startedAt": 1795169259.6694138,
+      "outputPath": "ui.xml",
+      "maximumStdoutBytes": 1048576,
+      "maximumStderrBytes": 8192,
+      "status": "completed",
+      "exitCode": 0,
+      "endedAt": 1795169259.7697787,
+      "stderr": "",
+      "output": {
+        "bytes": 9048,
+        "sha256": "8d73bbbfdeca65c8ef5bddf13e2786d66fcec2e03c310520682ffebd5a005640"
+      },
+      "validHierarchyXml": true
+    }
+  ],
+  "temporaryUiDumpPath": "/sdcard/puretv-install-diagnostic-485905273826.xml",
+  "elapsedSeconds": 2.8024828519999687,
+  "executedSource": {
+    "bytes": 8042,
+    "sha256": "25e8d63885664620b6be47c2bceb340189057e62b3f99391f0c1f0cf9307f712"
+  }
+}
