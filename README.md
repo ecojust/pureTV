@@ -180,7 +180,7 @@ pureTV 是电脑端的 Android TV / Google TV 系统管理器。通过 ADB 连�
 
 镜像、迁址、重命名和同一游戏的多个版本不重复计数；合集中的独立玩法可分列，相近模式按一项合并。许可证和运行条件分别标明，清单包含网页、原生引擎与特殊宿主项目，不代表均能直接安装到电视。核查与筛选记录见[来源说明](docs/claude-games/README.md)。
 
-已对比扩充前登记的 **31 个赛车候选**并选出9款，九款均有 Android TV、macOS 通用版和 Windows x64 手柄客户端可下载，其中 3 款 Android TV 游戏提供测试版。见[九款逐平台下载](joystick-games/README.md#九款赛车游戏下载)和[评分与画面对比](docs/racing-nine/README.md)。原93项已完成[逐项评估](docs/claude-games/tv-assessment.md)，其余批量适配按用户要求暂停；新增参考不会自动加入适配任务。已交付安装包见[手柄游戏目录](joystick-games/README.md)，参考条目数不等于已发布游戏数。
+已对比扩充前登记的 **31 个赛车候选**并选出9款，九款均有 Android TV、macOS 通用版和 Windows x64 手柄客户端可下载，已有 25 个游戏／平台组合通过原生手柄实测。见[九款逐平台下载](joystick-games/README.md#九款赛车游戏下载)和[评分与画面对比](docs/racing-nine/README.md)。原93项已完成[逐项评估](docs/claude-games/tv-assessment.md)，其余批量适配按用户要求暂停；新增参考不会自动加入适配任务。已交付安装包见[手柄游戏目录](joystick-games/README.md)，参考条目数不等于已发布游戏数。
 
 <details open>
 <summary><strong>竞速与体育（46）</strong></summary>
