@@ -10,7 +10,7 @@
 
 0.1.2 的 Chrome 复验保留了 SwiftShader 提供的两项浮点扩展。设备像素比为 2，逻辑窗口为 960 × 540，游戏按 50% 分辨率绘制，实际缓冲区为 480 × 270。芬兰赛段使用原作的直接渲染路径，按 W 后车辆从 x=54.00 米驶至 67.44 米，随后截图仪表盘显示 45 km/h。[驾驶截图](https://github.com/ecojust/pureTV/blob/18f32db4c550ca50ee864b9ff4b14998ed4146ae/driving.png) · [原始输入、扩展与画面记录](https://github.com/ecojust/pureTV/blob/18f32db4c550ca50ee864b9ff4b14998ed4146ae/driving.log) · [当次脚本](https://github.com/ecojust/pureTV/blob/18f32db4c550ca50ee864b9ff4b14998ed4146ae/drive.cjs)
 
-0.1.2 的 Android TV 原包在 ANGLE/Vulkan 后端可见芬兰赛段的赛车、起跑门和道路。相同 APK 在 swiftshader_indirect 后端只显示 HUD，新渲染帧的 14,400 个画布样本全部透明。[Android TV 原包报告与截图](docs/android-0.1.2/README.md)
+0.1.2 的 Android TV 原包已在 ANGLE/Vulkan 后端用手柄 SDK 驶出芬兰起点，系统截图显示 9 km/h，赛车、起跑门和道路均可见。相同 APK 在 swiftshader_indirect 后端只显示 HUD，新渲染帧的 14,400 个画布样本全部透明。[Android TV 原包报告与截图](docs/android-0.1.2/README.md)
 
 0.1.3 在上述旧版 GLES 软件驱动上恢复了可见像素和驾驶操作，芬兰赛段仍有大片紫色地面和黑色车身。[Android 原生驾驶截图与 RGBA 记录](docs/android-0.1.3/README.md)
 
