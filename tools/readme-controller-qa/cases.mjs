@@ -87,12 +87,24 @@ export async function gameplay(slug,{read,tap,hold,until,record}){
       await until(s=>player(s).speed>3&&!player(s).telemetry.offRoad,'ordinary throttle reaches a movable road position',60000);
       for(const [key,sign] of [['LEFT',-1],['RIGHT',1]]){
         before=await read();assert.ok(player(before).speed>1&&!player(before).telemetry.offRoad,'steering starts on the road while moving');
-        await hold(key,0,async()=>{after=await read();});record(key+'-rendered-direction',before,after);
         const p=before.camera?.projection,v=before.camera?.view;assert.ok(p&&v,'actual camera required');
         const project=c=>{const q=[c.x,c.y,c.z,1],e=[0,0,0,0].map((_,r)=>q.reduce((n,x,i)=>n+v[4*i+r]*x,0)),f=[0,0,0,0].map((_,r)=>e.reduce((n,x,i)=>n+p[4*i+r]*x,0));return f[0]/f[3];};
         // Countersteering changes heading before existing momentum reverses.
         // Compare both real yaw values at one origin through the same camera.
         const origin=player(before),heading=c=>project({...origin,x:origin.x+3*Math.sin(c.yaw),z:origin.z+3*Math.cos(c.yaw)});
+        // Steering changes the wheel before tire forces and yaw inertia turn the body.
+        // Compare real moving, on-road frames during the same continuous key hold.
+        await hold(key,0,async()=>{
+          after=await until(snapshot=>{
+            const car=player(snapshot);
+            const turn=heading(car)-heading(origin);
+            const yawTravel=Math.atan2(Math.sin(car.yaw-origin.yaw),Math.cos(car.yaw-origin.yaw));
+            return car.speed>1 && !car.telemetry.offRoad && car.steerAngle*sign<0 &&
+              Math.abs(yawTravel)<1 && turn*sign>0.0001 &&
+              snapshot.controllers.some(controller=>controller.connected&&controller.x===sign);
+          },key+' changes the actual on-road heading through the fixed camera',6000);
+        });
+        record(key+'-rendered-direction',before,after);
         const centerDelta=project(player(after))-project(origin),headingDelta=heading(player(after))-heading(origin);
         record(key+'-direction-projection',null,{origin:{x:origin.x,y:origin.y,z:origin.z},rayLength:3,centerDelta,headingDelta});
         assert.ok(headingDelta*sign>0,key+' actual camera heading projection');
