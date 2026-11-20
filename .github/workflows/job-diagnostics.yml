@@ -1,45 +1,183 @@
-name: Read failed job diagnostics
-on:
-  workflow_dispatch:
-    inputs:
-      job_id:
-        description: Failed GitHub Actions job ID
-        required: true
+name: Android original Gradle and platform verification with the corrected Used Car
+  focus
+'on':
+  workflow_dispatch: {}
 permissions:
-  actions: read
+  contents: read
 jobs:
-  diagnostics:
+  native-gradle:
     runs-on: ubuntu-latest
     steps:
-      - name: Report verification log tail
-        env:
-          GH_TOKEN: ${{ github.token }}
-          JOB_ID: ${{ inputs.job_id }}
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          python - <<'PY'
-          import os, re, subprocess
-          job = os.environ['JOB_ID']
-          assert job.isdigit()
-          result = subprocess.run(['gh', 'api', '--allow-escape-sequences', f"repos/{os.environ['REPOSITORY']}/actions/jobs/{job}/logs"], capture_output=True, text=True)
-          log = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', result.stdout + result.stderr)
-          # Diagnostics need error context, never credential-bearing download URLs.
-          log = re.sub(r"https?://[^\s<>\"']+", '[URL omitted]', log)
-          log = re.sub(r'\b(?:gh[pousr]_[A-Za-z0-9_]+|github_pat_[A-Za-z0-9_]+)\b', '[token omitted]', log)
-          log = re.sub(r'(?im)((?:authorization|(?:gh|github)[_-]token)\s*[:=]\s*)(?:bearer\s+|basic\s+)?[^\s]+', r'\1[token omitted]', log)
-          log = re.sub(r'(?im)^.*androidboot\.qemu\.adb\.pubkey=.*$', '[emulator public key omitted]', log)
-          lines = log.splitlines()
-          primary = [i for i, line in enumerate(lines) if re.search(r'FAILURE: Build failed|\* What went wrong:', line) and '##[error]' not in line]
-          fallback = [i for i, line in enumerate(lines) if re.search(r'(?:error:|Error:|TimeoutError|ui\.mjs:|> Task .+ FAILED|Execution failed for task|failed with exit code|emulator: ERROR)', line)]
-          # Boot polling can log transient adb failures before the fatal step.
-          fatal = [i for i in fallback if '##[error]' in lines[i]]
-          matches = primary or fatal or fallback
-          if matches:
-              before = '\n'.join(lines[max(0, matches[0] - 50):matches[0]])[-3500:]
-              print('::notice title=Failure preceding context::' + before.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
-              start = max(0, matches[0] - 2)
-              selected = '\n'.join(lines[start:start + 65])[:3500]
-          else:
-              selected = log[-3500:]
-          print('::notice title=Failed job log::' + selected.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
-          PY
+    - uses: actions/checkout@v4
+      with:
+        ref: 128014c23441989c5400a3732fb6d7bbd4e2d2af
+        persist-credentials: false
+    - name: Verify the source revision
+      run: 'test "$(git rev-parse HEAD)" = 128014c23441989c5400a3732fb6d7bbd4e2d2af
+
+        test "$(git rev-parse HEAD:resource/apps/used-car-racing/src/main/assets/game.js)"
+        = 39bceae1b8255165a68b72f573670aa140f072e8'
+    - uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '17'
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Verify release certificate and game publication policies
+      run: 'python -m unittest discover -s tools/tests -p ''test_release_certificates.py''
+
+        python -m unittest discover -s tools/tests -p ''test_game_publication_policy.py''
+
+        '
+    - name: Prepare verified Jackal preview artwork
+      run: 'python resource/apps/jackal/tools/extract-artwork.py --output "$RUNNER_TEMP/puretv-jackal-art"
+
+        echo "JACKAL_ART_DIR=$RUNNER_TEMP/puretv-jackal-art" >> "$GITHUB_ENV"
+
+        '
+    - name: Install game browser test tools
+      timeout-minutes: 5
+      working-directory: desktop
+      run: npm ci --prefer-offline --no-audit --no-fund
+    - name: Select game test browser
+      timeout-minutes: 5
+      working-directory: desktop
+      run: "tank_chrome_path=\"$(command -v google-chrome || command -v chromium ||\
+        \ command -v chromium-browser || true)\"\nif [ -n \"$tank_chrome_path\" ];\
+        \ then\n  echo \"CHROMIUM_PATH=$tank_chrome_path\" >> \"$GITHUB_ENV\"\nelse\n\
+        \  npx playwright install --with-deps chromium\nfi\n"
+    - name: Install Chinese font for game previews
+      timeout-minutes: 3
+      run: "if [ -z \"$(fc-list :lang=zh)\" ]; then\n  package_path=pool/universe/f/fonts-wqy-zenhei/fonts-wqy-zenhei_0.9.45-8build1_all.deb\n\
+        \  package_sha=7b44a781b0560a49d5bcfe2e5cf9a6f90e4863a8ad12794113e962bab38f030b\n\
+        \  package=\"$RUNNER_TEMP/preview-font.deb\"\n  for mirror in https://archive.ubuntu.com/ubuntu\
+        \ https://mirrors.edge.kernel.org/ubuntu; do\n    if curl -fsSL --connect-timeout\
+        \ 8 --max-time 45 \"$mirror/$package_path\" -o \"$package\" &&\n       echo\
+        \ \"$package_sha  $package\" | sha256sum --check; then\n      dpkg-deb --extract\
+        \ \"$package\" \"$RUNNER_TEMP/preview-font\"\n      fonts_dir=\"${XDG_DATA_HOME:-$HOME/.local/share}/fonts\"\
+        \n      install -Dm644 \"$RUNNER_TEMP/preview-font/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc\"\
+        \ \"$fonts_dir/wqy-zenhei.ttc\"\n      fc-cache -f \"$fonts_dir\"\n      break\n\
+        \    fi\n  done\nfi\ntest -n \"$(fc-list :lang=zh)\"\n"
+    - name: Install local HTTPS browser trust tools
+      timeout-minutes: 3
+      run: "command -v openssl\nif ! command -v certutil >/dev/null; then\n  sudo\
+        \ apt-get update\n  sudo apt-get install -y --no-install-recommends libnss3-tools\n\
+        fi\ncommand -v certutil\n"
+    - uses: android-actions/setup-android@v3
+      with:
+        packages: platform-tools
+    - uses: gradle/actions/setup-gradle@v4
+    - name: Install SDK
+      run: sdkmanager "platforms;android-35" "build-tools;34.0.0"
+    - name: Prepare release signing
+      if: ${{ github.event_name != 'workflow_dispatch' || !inputs.stage_resources
+        }}
+      env:
+        PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
+      run: "if [ -n \"$PURETV_KEYSTORE_BASE64\" ]; then\n  python3 - <<'PYTHON'\n\
+        import base64, os\nfrom pathlib import Path\nkey = Path(os.environ['RUNNER_TEMP'])\
+        \ / 'pureTV.jks'\nkey.write_bytes(base64.b64decode(os.environ['PURETV_KEYSTORE_BASE64']))\n\
+        key.chmod(0o600)\nwith open(os.environ['GITHUB_ENV'], 'a') as env:\n    env.write(f'PURETV_KEYSTORE_PATH={key}\\\
+        n')\nPYTHON\nfi\n"
+    - name: Build and lint
+      env:
+        PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
+        CLEAN_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-tv-previews
+        HIFINI_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-hifini-previews
+        SHORTVIDEO_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-shortvideo-previews
+        WEBTV_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-webtv-previews
+        CCTV_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-cctv-previews
+      working-directory: resource/launcher/puretv
+      run: 'set -o pipefail
+
+        ./gradlew --no-daemon --continue "-PjackalArtworkDir=$JACKAL_ART_DIR" assembleDebug
+        assembleRelease lintDebug testDebugUnitTest :hifini:verifyReleaseSize :hifini:lintDebug
+        :hifini:testDebugUnitTest :shortvideo:verifyReleaseSize :shortvideo:lintDebug
+        :shortvideo:testDebugUnitTest :webtv:verifyReleaseSize :webtv:lintDebug :webtv:testDebugUnitTest
+        :cctv:verifyReleaseSize :cctv:lintDebug :cctv:testDebugUnitTest :tank:verifyReleaseSize
+        :tank:lintDebug :tank:testDebugUnitTest :jackal:verifyReleaseSize :jackal:lintDebug
+        :jackal:testDebugUnitTest :jewel:verifyReleaseSize :tetris:verifyReleaseSize
+        :bomb-jack:verifyReleaseSize :adventure-island:verifyReleaseSize :super-mario:verifyReleaseSize
+        :coast-kart:verifyReleaseSize :cozy-island:verifyReleaseSize :used-car-racing:verifyReleaseSize
+        :used-car-racing:lintDebug :used-car-racing:testDebugUnitTest :used-car-racing:assembleDebugAndroidTest
+        :alien-shooter:verifyReleaseSize :alien-shooter:lintDebug :alien-shooter:testDebugUnitTest
+        2>&1 | tee "$RUNNER_TEMP/android-build.log"
+
+        '
+    - name: Report Android build or test failures
+      if: failure()
+      run: "python - <<'PYTHON'\nimport os, pathlib, xml.etree.ElementTree as ET\n\
+        messages=[]\nfor report in pathlib.Path('resource').rglob('TEST-*.xml'):\n\
+        \    for case in ET.parse(report).getroot().iter('testcase'):\n        for\
+        \ failure in case.findall('failure'):\n            messages.append(case.attrib.get('name','test')+':\
+        \ '+(failure.text or '')[:3000])\nlog=pathlib.Path(os.environ['RUNNER_TEMP'])/'android-build.log'\n\
+        if log.exists(): messages.append(log.read_text(errors='replace')[-3500:])\n\
+        for message in messages:\n    print('::error::'+message.replace('%','%25').replace('\\\
+        r','%0D').replace('\\n','%0A'))\nPYTHON\n"
+    - name: Verify launcher identity and signing status
+      env:
+        PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
+      run: python tools/verify-release-apks.py
+    - uses: actions/upload-artifact@v4
+      with:
+        name: pureTV-release-metadata
+        path: resource/launcher/puretv/release-metadata.json
+    - uses: actions/upload-artifact@v4
+      with:
+        name: used-car-racing-tv
+        path: resource/apps/used-car-racing/build/outputs/apk/**/*.apk
+        if-no-files-found: error
+    - name: Retain the complete original Gradle log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: full-android-gradle-log
+        path: ${{ runner.temp }}/android-build.log
+        if-no-files-found: warn
+  lan-tls-platform:
+    name: Local HTTPS with Android ${{ matrix.api }} Keystore
+    needs: native-gradle
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        api:
+        - 26
+        - 35
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: 128014c23441989c5400a3732fb6d7bbd4e2d2af
+        persist-credentials: false
+    - uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '17'
+    - uses: actions/download-artifact@v4
+      with:
+        name: used-car-racing-tv
+        path: platform-apks
+    - name: Enable Android emulator acceleration
+      run: 'test -e /dev/kvm
+
+        sudo chmod 666 /dev/kvm
+
+        '
+    - name: Verify actual Android Keystore and trusted local TLS
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: ${{ matrix.api }}
+        target: google_apis
+        arch: x86_64
+        disable-animations: true
+        emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          -camera-back none
+        script: bash tools/verify-used-car-lan-tls-platform.sh platform-apks
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: used-car-lan-tls-platform-${{ matrix.api }}
+        path: ${{ runner.temp }}/usedcar-lan-tls-platform.log
+        if-no-files-found: warn
