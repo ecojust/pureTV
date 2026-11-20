@@ -253,7 +253,7 @@ jobs:
             2>&1 | tee "$RUNNER_TEMP/input-verification.log"
       - name: Install GDB only for the owned QEMU diagnostic
         if: inputs.pon_capture_qemu_stack
-        timeout-minutes: 5
+        timeout-minutes: 10
         run: |
           set -euxo pipefail
           {
