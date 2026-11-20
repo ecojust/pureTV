@@ -1,45 +1,51 @@
-name: Read failed job diagnostics
-on:
-  workflow_dispatch:
-    inputs:
-      job_id:
-        description: Failed GitHub Actions job ID
-        required: true
+name: Run Backroad 0.1.3 software WebGL2 keyboard driving
+on: workflow_dispatch
 permissions:
-  actions: read
+  contents: write
 jobs:
-  diagnostics:
-    runs-on: ubuntu-latest
+  drive:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
     steps:
-      - name: Report verification log tail
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          filter: blob:none
+          sparse-checkout: |
+            joystick-games/backroad-rally/dist
+            joystick-games/backroad-rally/docs/browser-software-0.1.3
+      - name: Verify unchanged shipping payload and record browser
+        run: |
+          set -euo pipefail
+          mkdir "$RUNNER_TEMP/proof"
+          git fetch --no-tags --filter=blob:none --depth=1 origin e59dd4e39fcf5c9e5b82719904438e783cd43255
+          tree=joystick-games/backroad-rally/dist
+          test "$(git rev-parse HEAD:"$tree")" = "$(git rev-parse FETCH_HEAD:"$tree")"
+          git rev-parse HEAD:"$tree" > "$RUNNER_TEMP/proof/dist-tree.txt"
+          echo "e59dd4e39fcf5c9e5b82719904438e783cd43255" > "$RUNNER_TEMP/proof/candidate-commit.txt"
+          google-chrome --version > "$RUNNER_TEMP/proof/chrome-version.txt"
+          npm install --prefix "$RUNNER_TEMP/browser-deps" --no-audit --no-fund --ignore-scripts playwright-core@1.57.0
+      - name: Drive the actual rally after the starting signal
+        run: |
+          set -euo pipefail
+          python3 -m http.server 17427 --directory joystick-games/backroad-rally/dist > "$RUNNER_TEMP/server.log" 2>&1 &
+          server=$!
+          trap 'kill "$server" || true' EXIT
+          export CHROMIUM_BIN="$(command -v google-chrome)" PLAYWRIGHT_CORE_MODULE="$RUNNER_TEMP/browser-deps/node_modules/playwright-core" BACKROAD_SCREENSHOT="$RUNNER_TEMP/proof/driving.png"
+          node joystick-games/backroad-rally/docs/browser-software-0.1.3/drive.cjs > "$RUNNER_TEMP/proof/driving.log" 2>&1
+      - name: Preserve original software rendering observations
+        if: always()
         env:
           GH_TOKEN: ${{ github.token }}
-          JOB_ID: ${{ inputs.job_id }}
-          REPOSITORY: ${{ github.repository }}
         run: |
-          python - <<'PY'
-          import os, re, subprocess
-          job = os.environ['JOB_ID']
-          assert job.isdigit()
-          result = subprocess.run(['gh', 'api', '--allow-escape-sequences', f"repos/{os.environ['REPOSITORY']}/actions/jobs/{job}/logs"], capture_output=True, text=True)
-          log = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', result.stdout + result.stderr)
-          # Diagnostics need error context, never credential-bearing download URLs.
-          log = re.sub(r"https?://[^\s<>\"']+", '[URL omitted]', log)
-          log = re.sub(r'\b(?:gh[pousr]_[A-Za-z0-9_]+|github_pat_[A-Za-z0-9_]+)\b', '[token omitted]', log)
-          log = re.sub(r'(?im)((?:authorization|(?:gh|github)[_-]token)\s*[:=]\s*)(?:bearer\s+|basic\s+)?[^\s]+', r'\1[token omitted]', log)
-          log = re.sub(r'(?im)^.*androidboot\.qemu\.adb\.pubkey=.*$', '[emulator public key omitted]', log)
-          lines = log.splitlines()
-          primary = [i for i, line in enumerate(lines) if re.search(r'FAILURE: Build failed|\* What went wrong:', line) and '##[error]' not in line]
-          fallback = [i for i, line in enumerate(lines) if re.search(r'(?:error:|Error:|TimeoutError|ui\.mjs:|> Task .+ FAILED|Execution failed for task|failed with exit code|emulator: ERROR)', line)]
-          # Boot polling can log transient adb failures before the fatal step.
-          fatal = [i for i in fallback if '##[error]' in lines[i]]
-          matches = primary or fatal or fallback
-          if matches:
-              before = '\n'.join(lines[max(0, matches[0] - 50):matches[0]])[-3500:]
-              print('::notice title=Failure preceding context::' + before.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
-              start = max(0, matches[0] - 2)
-              selected = '\n'.join(lines[start:start + 65])[:3500]
-          else:
-              selected = log[-3500:]
-          print('::notice title=Failed job log::' + selected.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
-          PY
+          set -euo pipefail
+          cp joystick-games/backroad-rally/docs/browser-software-0.1.3/drive.cjs "$RUNNER_TEMP/proof/"
+          cd "$RUNNER_TEMP/proof"
+          branch="build-assets/backroad-013-browser-driving-$GITHUB_RUN_ID-attempt-$GITHUB_RUN_ATTEMPT"
+          gh auth setup-git
+          git init --initial-branch "$branch"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .
+          git commit -qm "Backroad Rally software WebGL2 driving from $GITHUB_SHA"
+          git push "--force-with-lease=refs/heads/$branch:" "https://github.com/$GITHUB_REPOSITORY.git" "HEAD:refs/heads/$branch"
