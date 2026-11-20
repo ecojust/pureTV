@@ -1,0 +1,107 @@
+{
+  "status": "passed",
+  "scope": "complete controller acceptance",
+  "sourceCommit": "4225d8c8e1614a3596bad529d7e7ac0cf71c51fa",
+  "version": "0.5.6",
+  "versionCode": 13,
+  "packageName": "com.ecojust.tanktv",
+  "apk": "tank-0.5.6.apk",
+  "apkBytes": 276852,
+  "sha256": "547e1565bf7ad09903861293eb342ac1e106f292f8bde042efc12f200bc44667",
+  "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "apkAssetsMatchedSigningReceipt": 25,
+  "sourceCheckedAssets": 25,
+  "inPlaceUpgradeInstalled": true,
+  "upgradedFrom": "0.5.5",
+  "upgradedFromVersionCode": 12,
+  "fullGameplayAcceptancePerformedInThisUpdate": true,
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "userSaveMigrationTested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "evidence": {
+    "buildRun": "https://github.com/ecojust/pureTV/actions/runs/44763360849",
+    "signedExportCommit": "96dcc7863130e6bdb2461e170ecc5e258f999865",
+    "signedRawPackage": "https://raw.githubusercontent.com/ecojust/pureTV/96dcc7863130e6bdb2461e170ecc5e258f999865/packages/tank/tank-0.5.6.apk",
+    "runtimeRun": "https://github.com/ecojust/pureTV/actions/runs/44764399888",
+    "runtimeSourceCommit": "4225d8c8e1614a3596bad529d7e7ac0cf71c51fa",
+    "runtimeExportCommit": "4c9e50865d1489906272aeb5ec17a74c8cf81155",
+    "runtimeCase": "https://github.com/ecojust/pureTV/blob/4c9e50865d1489906272aeb5ec17a74c8cf81155/evidence/controller-runtime-arcade-1/tank/case.json",
+    "runtimeDriverReport": "https://github.com/ecojust/pureTV/blob/4c9e50865d1489906272aeb5ec17a74c8cf81155/evidence/controller-runtime-arcade-1/tank/gameplay/report.json",
+    "inputVerification": "https://github.com/ecojust/pureTV/blob/4c9e50865d1489906272aeb5ec17a74c8cf81155/evidence/controller-runtime-arcade-1/input-verification.json",
+    "observationApkSha256": "d7fc742a1d2eba30bc66ac88255fe2f827d714b9e53de0a0cfb002fb8a1d8940",
+    "checkedNativeSourceReceipt": true,
+    "originalControllerPort": 63485,
+    "readOnlyObserver": true,
+    "androidRecording": "https://github.com/ecojust/pureTV/blob/4c9e50865d1489906272aeb5ec17a74c8cf81155/evidence/controller-runtime-arcade-1/tank/gameplay.mp4",
+    "menuScreenshot": "https://github.com/ecojust/pureTV/blob/4c9e50865d1489906272aeb5ec17a74c8cf81155/evidence/controller-runtime-arcade-1/tank/gameplay/menu-android.png",
+    "reconnectScreenshot": "https://github.com/ecojust/pureTV/blob/4c9e50865d1489906272aeb5ec17a74c8cf81155/evidence/controller-runtime-arcade-1/tank/gameplay/reconnected.png"
+  },
+  "gameplayChecks": [
+    "menu layout and service address",
+    "official hello and nine sync messages leave menu unchanged",
+    "START begins actual game",
+    "direction and game-specific action affect actual model",
+    "START pause freezes game, fresh START resumes",
+    "disconnect clears held input, reconnect sync requires fresh START",
+    "all nine official keys and long hold have real protocol receipts",
+    "two official SDK identities retain separate seats and held-sync safety",
+    "same-sequence ACK for every original SDK message"
+  ],
+  "originalSdkWire": {
+    "messages": 102,
+    "acks": 102,
+    "connections": 4
+  },
+  "gameplayVideo": {
+    "file": "gameplay.mp4",
+    "sha256": "d0e52ec440b17b310bd01336d963e35bc4ac31c9026537367553b5c4b88452db",
+    "bytes": 660942,
+    "durationSeconds": 32.153833,
+    "fullDecodeVerified": true
+  },
+  "gameplayScreenshot": {
+    "file": "gameplay.png",
+    "sha256": "5ca19a97e385380fd84c535bbaf406141ccb82016b90e228c530c6f10fa63e3a"
+  },
+  "publishedUpgradeBaseline": {
+    "version": "0.5.4",
+    "versionCode": 11,
+    "sameCertificate": true
+  },
+  "verifiedUpgradePath": [
+    {
+      "from": "0.5.4",
+      "to": "0.5.5",
+      "intermediateBuild": true,
+      "apkSha256": "7ffe2bac456c36a25d12bb9ef033ea805ad7891f9149d67bb112cf179eb66b40",
+      "nativeCase": "https://github.com/ecojust/pureTV/blob/4523c4174af976f6a77b1ece043d8d27e218e52f/evidence/controller-runtime-arcade-1/tank/case.json"
+    },
+    {
+      "from": "0.5.5",
+      "to": "0.5.6",
+      "nativeCase": "https://github.com/ecojust/pureTV/blob/4c9e50865d1489906272aeb5ec17a74c8cf81155/evidence/controller-runtime-arcade-1/tank/case.json"
+    }
+  ],
+  "desktopBrowserPhoneRoom": {
+    "game": "tank",
+    "signedAssetsCompared": 25,
+    "gameAssetSetMatchesOriginalApk": true,
+    "assetsByGame": "resource/game-kit/qa/controller-browser-2026-11-20/compact/signed-assets.json",
+    "reportByGame": "resource/game-kit/qa/controller-browser-2026-11-20/compact/report.json",
+    "testEnvironment": "Desktop Chromium TV and phone browser clients with the production Java LAN game room. No physical phone or TV.",
+    "status": "passed",
+    "immutableReport": "https://github.com/ecojust/pureTV/blob/17fc9ce2b1ff4c3131e1919414c436de8d63a568/resource/game-kit/qa/controller-browser-2026-11-20/compact/report.json",
+    "immutableAssetComparison": "https://github.com/ecojust/pureTV/blob/17fc9ce2b1ff4c3131e1919414c436de8d63a568/resource/game-kit/qa/controller-browser-2026-11-20/compact/signed-assets.json",
+    "smallTvViewport": {
+      "width": 720,
+      "height": 480,
+      "twoPhoneSeatsAndQrVerified": true
+    }
+  }
+}

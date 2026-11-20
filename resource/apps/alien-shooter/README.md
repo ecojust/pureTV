@@ -1,13 +1,23 @@
 # 孤胆枪手 TV
 
+## Android 0.1.5 · 手柄与手机连接
+
+<!-- apk-resource:start -->
+[下载签名 APK](alien-shooter-0.1.5.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
+<!-- apk-resource:end -->
+
+可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
+
+此签名 APK 已从 0.1.4 在 Android TV 模拟器完成覆盖安装。原版手柄 SDK 通过 8 项检查，实际发出的 72 条消息全部收到同序号确认。[游戏截图](docs/releases/0.1.5/gameplay.png) · [Android 玩法录像](docs/releases/0.1.5/gameplay.mp4?raw=1) · [验证记录与测试范围](docs/releases/0.1.5/verification.json)
+
 [中文](README.md) · [English](README.en.md)
 
 <!-- controller-client-status:start -->
-## 0.1.4 · 手柄连接标识
+## 历史版本 0.1.4 · 手柄连接标识
 
-<!-- apk-resource:start -->
+<!-- previous-apk-resource:start -->
 [下载签名 APK](alien-shooter-0.1.4.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
-<!-- apk-resource:end -->
+<!-- previous-apk-resource:end -->
 
 Android **0.1.4 / versionCode 5**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
@@ -20,7 +30,7 @@ Android **0.1.4 / versionCode 5**：手柄连接后，侧边显示手柄图标�
 
 一款独立制作的斜俯视基地射击游戏。进入被异形占据的货运站、实验室和反应堆，恢复控制台、守住怪潮、购买补给，击败母巢守卫后撤离。专为单人游玩设计，支持电视大屏与一部手机扫码操作。
 
-当前版本 **0.1.4** · 包名 `com.ecojust.alienshootertv` · Android 8.0 及以上。
+当前版本 **0.1.5** · 包名 `com.ecojust.alienshootertv` · Android 8.0 及以上。
 
 ## 开始游玩
 

@@ -1,13 +1,23 @@
 # Used Car Racing TV
 
+## Android 0.1.6 · Controllers and phone pairing
+
+<!-- apk-resource:start -->
+[Download the signed APK](used-car-racing-0.1.6.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
+<!-- apk-resource:end -->
+
+Connect a keyboard, pair a pureTV Wi-Fi controller, or scan the TV room’s QR code with a phone on the same network. The connection indicator identifies each player while the game keeps its playing area at the same size. [Controller guide](../../../docs/guide/README.en.md#install-a-game-and-connect-a-controller)
+
+The signed APK upgraded Android 0.1.5 in place on an Android TV emulator. The original controller SDK completed 9 checks and received matching acknowledgements for 106 messages. [Gameplay screenshot](docs/releases/0.1.6/gameplay.png) · [Android gameplay recording](docs/releases/0.1.6/gameplay.mp4?raw=1) · [Verification and limitations](docs/releases/0.1.6/verification.json)
+
 [中文](README.md) · [English](README.en.md)
 
 <!-- controller-client-status:start -->
-## 0.1.5 · Connected controller identity
+## Earlier release 0.1.5 · Connected controller identity
 
-<!-- apk-resource:start -->
+<!-- previous-apk-resource:start -->
 [Download signed APK](used-car-racing-0.1.5.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and source](resource.json) · [Source](src/) · [Icon](logo.svg)
-<!-- apk-resource:end -->
+<!-- previous-apk-resource:end -->
 
 Android **0.1.5 / versionCode 6** shows a controller icon, player seat (1P/2P where supported), and the connected device's complete ID in the side area. Disconnected devices disappear. The default TCP port remains **63485**. Current controller firmware does not report RSSI, so signal strength is not displayed.
 
@@ -22,7 +32,7 @@ The previous full Android gameplay run was blocked by an emulator RenderThread c
 
 **Used Car Racing TV / 极品二手车** is an original 3D racing game. Each race starts with a randomly assigned used car and condition report. The inspection garage displays the model, power, weight, drivetrain and faults. One or two players use LAN phone controllers; AI drivers fill the remaining places in a six-car field.
 
-Current version **0.1.5 / versionCode 6** requires Android 8.0 or later. Package: `com.ecojust.usedcartv`. See [resource metadata](resource.json) for the signed APK and source.
+Current version **0.1.6 / versionCode 7** requires Android 8.0 or later. Package: `com.ecojust.usedcartv`. See [resource metadata](resource.json) for the signed APK and source.
 
 ## Historical gameplay video: 0.1.3
 

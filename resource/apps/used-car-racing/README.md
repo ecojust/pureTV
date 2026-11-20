@@ -1,13 +1,23 @@
 # 极品二手车
 
+## Android 0.1.6 · 手柄与手机连接
+
+<!-- apk-resource:start -->
+[下载签名 APK](used-car-racing-0.1.6.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
+<!-- apk-resource:end -->
+
+可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
+
+此签名 APK 已从 0.1.5 在 Android TV 模拟器完成覆盖安装。原版手柄 SDK 通过 9 项检查，实际发出的 106 条消息全部收到同序号确认。[游戏截图](docs/releases/0.1.6/gameplay.png) · [Android 玩法录像](docs/releases/0.1.6/gameplay.mp4?raw=1) · [验证记录与测试范围](docs/releases/0.1.6/verification.json)
+
 [中文](README.md) · [English](README.en.md)
 
 <!-- controller-client-status:start -->
-## 0.1.5 · 手柄连接标识
+## 历史版本 0.1.5 · 手柄连接标识
 
-<!-- apk-resource:start -->
+<!-- previous-apk-resource:start -->
 [下载签名 APK](used-car-racing-0.1.5.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
-<!-- apk-resource:end -->
+<!-- previous-apk-resource:end -->
 
 Android **0.1.5 / versionCode 6**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
@@ -22,7 +32,7 @@ Android **0.1.5 / versionCode 6**：手柄连接后，侧边显示手柄图标�
 
 **极品二手车 / Used Car Racing TV** 是一款原创三维赛车游戏。开局随机获得车辆和车况，检车台展示车型、动力、重量、驱动形式以及故障说明；比赛支持一人或两人手机操控，其余车位由 AI 补齐，总计六车同场。
 
-当前版本为 **0.1.5 / versionCode 6**，包名 `com.ecojust.usedcartv`，适用于 Android 8.0 及以上电视。签名安装包与来源见 [resource.json](resource.json)。
+当前版本为 **0.1.6 / versionCode 7**，包名 `com.ecojust.usedcartv`，适用于 Android 8.0 及以上电视。签名安装包与来源见 [resource.json](resource.json)。
 
 ## 历史录像：0.1.3
 

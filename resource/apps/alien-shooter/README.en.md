@@ -1,13 +1,23 @@
 # Alien Shooter TV
 
+## Android 0.1.5 · Controllers and phone pairing
+
+<!-- apk-resource:start -->
+[Download the signed APK](alien-shooter-0.1.5.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
+<!-- apk-resource:end -->
+
+Connect a keyboard, pair a pureTV Wi-Fi controller, or scan the TV room’s QR code with a phone on the same network. The connection indicator identifies each player while the game keeps its playing area at the same size. [Controller guide](../../../docs/guide/README.en.md#install-a-game-and-connect-a-controller)
+
+The signed APK upgraded Android 0.1.4 in place on an Android TV emulator. The original controller SDK completed 8 checks and received matching acknowledgements for 72 messages. [Gameplay screenshot](docs/releases/0.1.5/gameplay.png) · [Android gameplay recording](docs/releases/0.1.5/gameplay.mp4?raw=1) · [Verification and limitations](docs/releases/0.1.5/verification.json)
+
 [中文](README.md) · [English](README.en.md)
 
 <!-- controller-client-status:start -->
-## 0.1.4 · Connected controller identity
+## Earlier release 0.1.4 · Connected controller identity
 
-<!-- apk-resource:start -->
+<!-- previous-apk-resource:start -->
 [Download signed APK](alien-shooter-0.1.4.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and source](resource.json) · [Source](src/) · [Icon](logo.svg)
-<!-- apk-resource:end -->
+<!-- previous-apk-resource:end -->
 
 Android **0.1.4 / versionCode 5** shows a controller icon, player seat (1P/2P where supported), and the connected device's complete ID in the side area. Disconnected devices disappear. The default TCP port remains **63485**. Current controller firmware does not report RSSI, so signal strength is not displayed.
 
@@ -20,7 +30,7 @@ The APK uses the existing release certificate. This update verifies connection i
 
 An independently built overhead shooter for Android TV. Fight through a quarantined freight depot, a biotech laboratory and a hive reactor. Restore consoles, survive incoming hostiles, buy supplies and defeat the guardian before extracting. Designed for a single player, using one phone as the controller.
 
-Current version **0.1.4** · Package `com.ecojust.alienshootertv` · Android 8.0 or newer.
+Current version **0.1.5** · Package `com.ecojust.alienshootertv` · Android 8.0 or newer.
 
 ## Play
 

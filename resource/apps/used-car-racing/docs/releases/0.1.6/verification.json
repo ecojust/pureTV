@@ -1,0 +1,83 @@
+{
+  "status": "passed",
+  "scope": "complete controller acceptance",
+  "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+  "version": "0.1.6",
+  "versionCode": 7,
+  "packageName": "com.ecojust.usedcartv",
+  "apk": "used-car-racing-0.1.6.apk",
+  "apkBytes": 1752553,
+  "sha256": "7fba87cc802570dbea303dc5286b88c2904122e909be40a19da8db0abcd0eeaa",
+  "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "apkAssetsMatchedSigningReceipt": 39,
+  "sourceCheckedAssets": 39,
+  "inPlaceUpgradeInstalled": true,
+  "upgradedFrom": "0.1.5",
+  "upgradedFromVersionCode": 6,
+  "fullGameplayAcceptancePerformedInThisUpdate": true,
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "userSaveMigrationTested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "evidence": {
+    "buildRun": "https://github.com/ecojust/pureTV/actions/runs/44756990162",
+    "signedExportCommit": "4dd73170c16f48bcb57ca2b6ccd1152829255cee",
+    "signedRawPackage": "https://raw.githubusercontent.com/ecojust/pureTV/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/used-car-racing/used-car-racing-0.1.6.apk",
+    "runtimeRun": "https://github.com/ecojust/pureTV/actions/runs/44764130249",
+    "runtimeSourceCommit": "1bc72334ada4d853bf7a28e21fef499b8b01750c",
+    "runtimeExportCommit": "5d2ea28badb692c0644856f3ef41965811aa7569",
+    "runtimeCase": "https://github.com/ecojust/pureTV/blob/5d2ea28badb692c0644856f3ef41965811aa7569/evidence/controller-runtime-retry-used-car-mesa/used-car-racing/case.json",
+    "runtimeDriverReport": "https://github.com/ecojust/pureTV/blob/5d2ea28badb692c0644856f3ef41965811aa7569/evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/report.json",
+    "inputVerification": "https://github.com/ecojust/pureTV/blob/5d2ea28badb692c0644856f3ef41965811aa7569/evidence/controller-runtime-retry-used-car-mesa/input-verification.json",
+    "observationApkSha256": "5c5b02c83bd18f6569c44abee0985e441a0b3c5a56b75a7615be02fd2bc618d3",
+    "checkedNativeSourceReceipt": true,
+    "originalControllerPort": 63485,
+    "readOnlyObserver": true,
+    "androidRecording": "https://github.com/ecojust/pureTV/blob/5d2ea28badb692c0644856f3ef41965811aa7569/evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay.mp4",
+    "menuScreenshot": "https://github.com/ecojust/pureTV/blob/5d2ea28badb692c0644856f3ef41965811aa7569/evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/menu-android.png",
+    "reconnectScreenshot": "https://github.com/ecojust/pureTV/blob/5d2ea28badb692c0644856f3ef41965811aa7569/evidence/controller-runtime-retry-used-car-mesa/used-car-racing/gameplay/reconnected.png"
+  },
+  "gameplayChecks": [
+    "menu layout and service address",
+    "official hello and nine sync messages leave menu unchanged",
+    "START begins actual game",
+    "direction and game-specific action affect actual model",
+    "START pause freezes game, fresh START resumes",
+    "disconnect clears held input, reconnect sync requires fresh START",
+    "all nine official keys and long hold have real protocol receipts",
+    "two official SDK identities retain separate seats and held-sync safety",
+    "same-sequence ACK for every original SDK message"
+  ],
+  "originalSdkWire": {
+    "messages": 106,
+    "acks": 106,
+    "connections": 4
+  },
+  "gameplayVideo": {
+    "file": "gameplay.mp4",
+    "sha256": "1964b1316672326f1d72565ded4e845cb13ce719dff5e4ef19161be807eec05b",
+    "bytes": 1015316,
+    "durationSeconds": 41.192811,
+    "fullDecodeVerified": true
+  },
+  "gameplayScreenshot": {
+    "file": "gameplay.png",
+    "sha256": "fa54f3d99cf70f80a6a8b6e7e67b4ed1e4baf87c8b2de9183feb9164bedc3f70"
+  },
+  "desktopBrowserPhoneRoom": {
+    "game": "used-car-racing",
+    "signedAssetsCompared": 39,
+    "gameAssetSetMatchesOriginalApk": true,
+    "assetsByGame": "resource/game-kit/qa/controller-browser-2026-11-20/signed-assets.json",
+    "reportByGame": "resource/game-kit/qa/controller-browser-2026-11-20/report.json",
+    "testEnvironment": "Desktop Chromium TV and phone browser clients with the production Java LAN game room. No physical phone or TV.",
+    "status": "passed",
+    "immutableReport": "https://github.com/ecojust/pureTV/blob/f2033608db0905117538d8685477b3acd099a3ee/resource/game-kit/qa/controller-browser-2026-11-20/report.json",
+    "immutableAssetComparison": "https://github.com/ecojust/pureTV/blob/f2033608db0905117538d8685477b3acd099a3ee/resource/game-kit/qa/controller-browser-2026-11-20/signed-assets.json"
+  }
+}

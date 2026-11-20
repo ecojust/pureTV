@@ -1,13 +1,23 @@
 # Coast Kart TV
 
+## Android 0.5.6 · Controllers and phone pairing
+
+<!-- apk-resource:start -->
+[Download the signed APK](coast-kart-0.5.6.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
+<!-- apk-resource:end -->
+
+The phone room keeps updating if a drawing error interrupts the game. Keyboard focus changes respect current phone input and preserve short Wi-Fi button presses. Connect a keyboard, pair a pureTV Wi-Fi controller, or scan the TV room’s QR code with a phone on the same network. The connection indicator identifies each player while the game keeps its playing area at the same size. [Controller guide](../../../docs/guide/README.en.md#install-a-game-and-connect-a-controller)
+
+The signed APK upgraded Android 0.5.5 in place on an Android TV emulator. The original controller SDK completed 9 checks and received matching acknowledgements for 106 messages. [Gameplay screenshot](docs/releases/0.5.6/gameplay.png) · [Android gameplay recording](docs/releases/0.5.6/gameplay.mp4?raw=1) · [Verification and limitations](docs/releases/0.5.6/verification.json)
+
 [中文](README.md) · [English](README.en.md)
 
 <!-- controller-client-status:start -->
-## 0.5.4 · Connected controller identity
+## Earlier release 0.5.4 · Connected controller identity
 
-<!-- apk-resource:start -->
+<!-- previous-apk-resource:start -->
 [Download signed APK](coast-kart-0.5.4.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and source](resource.json) · [Source](src/) · [Icon](logo.svg)
-<!-- apk-resource:end -->
+<!-- previous-apk-resource:end -->
 
 Android **0.5.4 / versionCode 6** shows a controller icon, player seat (1P/2P where supported), and the connected device's complete ID in the side area. Disconnected devices disappear. The default TCP port remains **63485**. Current controller firmware does not report RSSI, so signal strength is not displayed.
 
@@ -20,7 +30,7 @@ The APK uses the existing release certificate. This update verifies connection i
 
 An independently made TV kart racer with actual WebGL 1 3D scenes and a following camera, four original tracks, drift boosts, items, computer opponents and split-screen play using LAN phone controllers.
 
-Current version **0.5.4** requires Android 8.0 or later. Package: `com.ecojust.coastkarttv`.
+Current version **0.5.6** requires Android 8.0 or later. Package: `com.ecojust.coastkarttv`.
 
 <!-- visual-release:start -->
 ## Historical: 0.5.2 visual update and verification

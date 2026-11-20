@@ -1,0 +1,82 @@
+{
+  "status": "passed",
+  "scope": "complete controller acceptance",
+  "sourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+  "version": "0.1.5",
+  "versionCode": 6,
+  "packageName": "com.ecojust.alienshootertv",
+  "apk": "alien-shooter-0.1.5.apk",
+  "apkBytes": 1775787,
+  "sha256": "f8afa219ca247107f79dc4e4da7e024eaec7f56b0b312a0fd4eb140340a913eb",
+  "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+  "signatureVerified": true,
+  "sourceAssetsMatchApk": true,
+  "apkAssetsMatchedSigningReceipt": 23,
+  "sourceCheckedAssets": 23,
+  "inPlaceUpgradeInstalled": true,
+  "upgradedFrom": "0.1.4",
+  "upgradedFromVersionCode": 5,
+  "fullGameplayAcceptancePerformedInThisUpdate": true,
+  "actualAndroidEmulator": true,
+  "physicalTvTested": false,
+  "physicalPhoneTested": false,
+  "physicalEsp32Tested": false,
+  "userSaveMigrationTested": false,
+  "modelWrites": false,
+  "clockOverrides": false,
+  "evidence": {
+    "buildRun": "https://github.com/ecojust/pureTV/actions/runs/44756990162",
+    "signedExportCommit": "4dd73170c16f48bcb57ca2b6ccd1152829255cee",
+    "signedRawPackage": "https://raw.githubusercontent.com/ecojust/pureTV/4dd73170c16f48bcb57ca2b6ccd1152829255cee/packages/alien-shooter/alien-shooter-0.1.5.apk",
+    "runtimeRun": "https://github.com/ecojust/pureTV/actions/runs/44761212797",
+    "runtimeSourceCommit": "6247c410e12f909451c91efc58aa199096a9dd4c",
+    "runtimeExportCommit": "dff7acc2414b92654a271b83f4fbe5a4eff7ad53",
+    "runtimeCase": "https://github.com/ecojust/pureTV/blob/dff7acc2414b92654a271b83f4fbe5a4eff7ad53/evidence/controller-runtime-retry-alien/alien-shooter/case.json",
+    "runtimeDriverReport": "https://github.com/ecojust/pureTV/blob/dff7acc2414b92654a271b83f4fbe5a4eff7ad53/evidence/controller-runtime-retry-alien/alien-shooter/gameplay/report.json",
+    "inputVerification": "https://github.com/ecojust/pureTV/blob/dff7acc2414b92654a271b83f4fbe5a4eff7ad53/evidence/controller-runtime-retry-alien/input-verification.json",
+    "observationApkSha256": "c70b4967c0f9b62941bbc89e3a9dc7a8ce4fe8fd4ebc42019470ba1c98389cca",
+    "checkedNativeSourceReceipt": true,
+    "originalControllerPort": 63485,
+    "readOnlyObserver": true,
+    "androidRecording": "https://github.com/ecojust/pureTV/blob/dff7acc2414b92654a271b83f4fbe5a4eff7ad53/evidence/controller-runtime-retry-alien/alien-shooter/gameplay.mp4",
+    "menuScreenshot": "https://github.com/ecojust/pureTV/blob/dff7acc2414b92654a271b83f4fbe5a4eff7ad53/evidence/controller-runtime-retry-alien/alien-shooter/gameplay/menu-android.png",
+    "reconnectScreenshot": "https://github.com/ecojust/pureTV/blob/dff7acc2414b92654a271b83f4fbe5a4eff7ad53/evidence/controller-runtime-retry-alien/alien-shooter/gameplay/reconnected.png"
+  },
+  "gameplayChecks": [
+    "menu layout and service address",
+    "official hello and nine sync messages leave menu unchanged",
+    "START begins actual game",
+    "direction and game-specific action affect actual model",
+    "START pause freezes game, fresh START resumes",
+    "disconnect clears held input, reconnect sync requires fresh START",
+    "all nine official keys and long hold have real protocol receipts",
+    "same-sequence ACK for every original SDK message"
+  ],
+  "originalSdkWire": {
+    "messages": 72,
+    "acks": 72,
+    "connections": 2
+  },
+  "gameplayVideo": {
+    "file": "gameplay.mp4",
+    "sha256": "ea3dbe200572b946feda31f10b6f29af7d48a28cd33814d9a33ecc975083a488",
+    "bytes": 639402,
+    "durationSeconds": 43.835589,
+    "fullDecodeVerified": true
+  },
+  "gameplayScreenshot": {
+    "file": "gameplay.png",
+    "sha256": "9ac9cbf2a29a7df461056d2fa394eab336845764bf1bba103a0f7590f4449333"
+  },
+  "desktopBrowserPhoneRoom": {
+    "game": "alien-shooter",
+    "signedAssetsCompared": 23,
+    "gameAssetSetMatchesOriginalApk": true,
+    "assetsByGame": "resource/game-kit/qa/controller-browser-2026-11-20/signed-assets.json",
+    "reportByGame": "resource/game-kit/qa/controller-browser-2026-11-20/report.json",
+    "testEnvironment": "Desktop Chromium TV and phone browser clients with the production Java LAN game room. No physical phone or TV.",
+    "status": "passed",
+    "immutableReport": "https://github.com/ecojust/pureTV/blob/f2033608db0905117538d8685477b3acd099a3ee/resource/game-kit/qa/controller-browser-2026-11-20/report.json",
+    "immutableAssetComparison": "https://github.com/ecojust/pureTV/blob/f2033608db0905117538d8685477b3acd099a3ee/resource/game-kit/qa/controller-browser-2026-11-20/signed-assets.json"
+  }
+}
