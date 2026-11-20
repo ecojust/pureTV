@@ -1,37 +1,18 @@
-name: Retain the original Alien Shooter rendering-performance report
+name: Read the original Alien Shooter rendering report
 'on':
   workflow_dispatch: {}
 permissions:
+  actions: read
   contents: read
 jobs:
-  retain-original-rendering-performance:
+  retain:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/download-artifact@v4
       with:
-        ref: d89960a69ad80c9ee6e55f835671c672013fa19d
-        persist-credentials: false
-    - name: Verify the source revision
-      run: test "$(git rev-parse HEAD)" = d89960a69ad80c9ee6e55f835671c672013fa19d
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '22'
-    - name: Install game browser test tools
-      timeout-minutes: 5
-      working-directory: desktop
-      run: npm ci --prefer-offline --no-audit --no-fund
-    - name: Select game test browser
-      timeout-minutes: 5
-      working-directory: desktop
-      run: "tank_chrome_path=\"$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)\"\nif [ -n \"$tank_chrome_path\" ]; then\n  echo \"CHROMIUM_PATH=$tank_chrome_path\" >> \"$GITHUB_ENV\"\nelse\n  npx playwright install --with-deps chromium\nfi\n"
-    - name: performance.mjs
-      if: ${{ !cancelled() }}
-      env:
-        ALIEN_SHOOTER_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-alien-shooter-previews
-      run: node resource/apps/alien-shooter/tests/performance.mjs --samples 6 --warmup 1 --regressions --output "$RUNNER_TEMP/puretv-alien-shooter-performance"
-    - uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: alien-shooter-rendering-performance
-        path: ${{ runner.temp }}/puretv-alien-shooter-performance/
-        if-no-files-found: warn
+        artifact-ids: '14651496179'
+        run-id: '44778860361'
+        github-token: ${{ github.token }}
+        path: original
+    - name: Read original performance JSON
+      run: "python - <<'PYTHON'\nfrom pathlib import Path\nimport base64, hashlib, zlib\nfiles=list(Path('original').rglob('performance.json'))\nassert len(files)==1, files\nraw=files[0].read_bytes()\nprint('RETAINED_PERFORMANCE_SHA256='+hashlib.sha256(raw).hexdigest())\ncompressed=base64.b64encode(zlib.compress(raw)).decode()\nfor offset in range(0,len(compressed),1800):\n    print('RETAINED_PERFORMANCE_DATA='+compressed[offset:offset+1800])\nPYTHON"
