@@ -17,6 +17,8 @@
 
 首轮使用仓库提交 `7b55f152bb7df074948c1367e6fb7d77af9b7e5f` 中的扫码脚本。Clawd Pop 的二维码已可读取，脚本随后在查询连接状态时触发其脚本执行策略。使用当前目录对应的测试代码从 Python 轮询只读快照后，同一游戏素材包通过全部步骤。
 
+五款新增游戏升级到 Android 0.1.1 后，已按新配置生成全部素材包，逐款重新执行扫码、触摸和断线检查。Kart Royale 仍使用 0.1.6。先前通过的 0.1.0 测试和截图可从[历史提交](https://github.com/ecojust/pureTV/tree/da8a9d9/joystick-games/docs/expansion/phone)复查。
+
 ## 复现
 
 从仓库根目录运行。Python Playwright、Chromium、JDK 及两个 JAR 的版本与校验值见 [测试环境说明](../../../qa/controller-input/README.md)。
