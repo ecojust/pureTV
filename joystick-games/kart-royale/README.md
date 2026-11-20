@@ -4,9 +4,9 @@
 
 Android TV 0.1.3 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/kart-royale-0.1.3.apk)。原生手柄验收进展见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
 
-Android TV 另有 0.1.4 测试包，可在软件 GPU 上优先绘制赛车与赛道。Android TV 14 的回退端口已通过 58 项，默认端口的首次启动正在复验。[下载 0.1.4 测试 APK](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/kart-royale-0.1.4.apk) · [两种端口和原始画面](docs/android-tv-20261120.md)
+Android TV 另有 0.1.4 测试包，可在软件 GPU 上优先绘制赛车与赛道。Android TV 14 的回退端口已通过 58 项，默认端口在新建模拟器上遇到 Google 系统组件更新，Android 在游戏启动后 24.7 秒终止了依赖字体服务的游戏进程。系统服务稳定后的启动正在复测。[下载 0.1.4 测试 APK](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/kart-royale-0.1.4.apk) · [两种端口和原始画面](docs/android-tv-20261120.md)
 
-0.1.3 最低支持 Android 8，目标 SDK 为 35。在软件 GPU 上，它用轻量着色器绘制原车、原纹理和赛道，并降低部分背景装饰的几何复杂度。Linux llvmpipe 的真实输入已从标题页进入比赛并驱动车辆，冷启动在这台共享双核主机上用时数分钟。Android TV 14 的端口占用模式已通过 58 项，游戏截图显示首圈第四名。默认端口首次冷启动以及标准 Android TV 16 的启动验收仍有失败记录。[Android 原生赛中图](https://raw.githubusercontent.com/ecojust/pureTV/e26766b346009537383d785463ee2c0b44f193ed/evidence/joystick-android-runtime-kart-royale/kart-royale-occupied/driving-checkpoint.png) [Android TV 14](https://github.com/ecojust/pureTV/actions/runs/44690586603) · [Android TV 16](https://github.com/ecojust/pureTV/actions/runs/44689811645)
+0.1.3 最低支持 Android 8，目标 SDK 为 35。在软件 GPU 上，它用轻量着色器绘制原车、原纹理和赛道，并降低部分背景装饰的几何复杂度。Linux llvmpipe 的真实输入已从标题页进入比赛并驱动车辆，冷启动在这台共享双核主机上用时数分钟。Android TV 14 的端口占用模式已通过 58 项，游戏截图显示首圈第四名。该轮默认端口也在 Google 字体服务退出时被 Android 终止。标准 Android TV 16 的启动验收仍有失败记录。[三份系统日志与时间](docs/android-tv14-first-boot-exits.json)[Android 原生赛中图](https://raw.githubusercontent.com/ecojust/pureTV/e26766b346009537383d785463ee2c0b44f193ed/evidence/joystick-android-runtime-kart-royale/kart-royale-occupied/driving-checkpoint.png) [Android TV 14](https://github.com/ecojust/pureTV/actions/runs/44690586603) · [Android TV 16](https://github.com/ecojust/pureTV/actions/runs/44689811645)
 
 
 ## Windows 下载
