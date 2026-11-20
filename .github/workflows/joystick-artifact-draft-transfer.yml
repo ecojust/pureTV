@@ -1,68 +1,45 @@
-name: Copy original catalog artifact to existing draft
-on:
-  workflow_dispatch:
-    inputs:
-      source_run:
-        description: Original catalog run ID
-        required: true
-        type: string
-      source_attempt:
-        description: Original run attempt
-        required: true
-        default: '1'
-        type: string
-      source_sha:
-        description: Exact original 40-character source commit
-        required: true
-        type: string
-      artifact_id:
-        description: Original package artifact ID (ZIP bytes stay unchanged)
-        required: true
-        type: string
-      release_id:
-        description: Existing draft release ID with exact staging tag/source
-        required: true
-        type: string
+name: Stage original Backroad Windows packages
+on: workflow_dispatch
 permissions:
   actions: read
   contents: write
-concurrency:
-  group: artifact-draft-transfer-${{ inputs.release_id }}
-  cancel-in-progress: false
 jobs:
   transfer:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
     env:
       GH_TOKEN: ${{ github.token }}
-      SOURCE_RUN: ${{ inputs.source_run }}
-      SOURCE_ATTEMPT: ${{ inputs.source_attempt }}
-      SOURCE_SHA: ${{ inputs.source_sha }}
-      ARTIFACT_ID: ${{ inputs.artifact_id }}
-      RELEASE_ID: ${{ inputs.release_id }}
+      REPO: ecojust/pureTV
+      RUN_ID: '44679344457'
+      RELEASE_ID: '452306466'
+      SOURCE: 1762bcfa93af0833adb46a58e1d907acaad9f098
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          sparse-checkout: |
-            joystick-games/tools
-            .github/workflows
-      - name: Test transfer boundaries without network or release writes
-        run: python3 joystick-games/tools/artifact-draft-transfer-test.py
-      - name: Verify original ZIP and upload once to the existing draft
+      - name: Verify original native run and destination
         run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py transfer \
-            --run "$SOURCE_RUN" --attempt "$SOURCE_ATTEMPT" --source "$SOURCE_SHA" \
-            --artifact "$ARTIFACT_ID" --release "$RELEASE_ID" \
-            --output "$RUNNER_TEMP/artifact-draft-transfer"
-      - uses: actions/upload-artifact@v4
-        if: always()
+          set -euo pipefail
+          gh api "repos/$REPO/actions/runs/$RUN_ID" | jq -e --arg source "$SOURCE" '.head_sha==$source and .conclusion=="success"'
+          gh api "repos/$REPO/releases/$RELEASE_ID" | jq -e --arg source "$SOURCE" '.target_commitish==$source and .draft and .tag_name=="joystick-backroad-rally-windows-v0.1.0"'
+          gh api "repos/$REPO/actions/artifacts/14604800955" | jq -e '.digest=="sha256:5bb2ac85ce58fbf3d55ed10351722a29e9b0f13c121f172d7d22ab84eec0bdf1"'
+      - uses: actions/download-artifact@v4
         with:
-          name: artifact-draft-transfer-receipt
-          path: ${{ runner.temp }}/artifact-draft-transfer/receipts/transfer.json
-          if-no-files-found: warn
-      - name: Preserve only the small receipt on a new immutable branch
-        if: always()
+          artifact-ids: '14604800955'
+          run-id: '44679344457'
+          github-token: ${{ github.token }}
+          merge-multiple: true
+          path: original
+      - name: Upload verified user downloads
         run: |
-          python3 joystick-games/tools/artifact-draft-transfer.py export-receipt \
-            --directory "$RUNNER_TEMP/artifact-draft-transfer/receipts"
+          set -euo pipefail
+          cd original
+          upload() {
+            local name="$1" sha="$2" bytes="$3" type="$4" file existing
+            file=$(find . -type f -name "$name")
+            test -f "$file" && test "$(stat -c %s "$file")" = "$bytes"
+            echo "$sha  $file" | sha256sum --check --strict
+            existing=$(gh api "repos/$REPO/releases/$RELEASE_ID/assets" | jq --arg name "$name" '[.[]|select(.name==$name)]|length')
+            if [[ "$existing" == "0" ]]; then
+              curl --silent --show-error --fail -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Content-Type: $type" --data-binary "@$file" "https://uploads.github.com/repos/$REPO/releases/$RELEASE_ID/assets?name=$name" | jq -e --arg digest "sha256:$sha" --argjson size "$bytes" '.digest==$digest and .size==$size'
+            fi
+            gh api "repos/$REPO/releases/$RELEASE_ID/assets" | jq -e --arg name "$name" --arg digest "sha256:$sha" --argjson size "$bytes" 'any(.[]; .name==$name and .digest==$digest and .size==$size and .state=="uploaded")'
+          }
+          upload BackroadRally-0.1.0-windows-x64.zip 8aa7abe98c33db2ae8951662a8abdb88e2de3db74cd07fb27483dcb60722495d 104924107 application/zip
+          upload BackroadRally-0.1.0-windows-x64-setup.exe c707ac3df7297c8afaec4489bac93d5f668a934731911089e751f3e8da01d8bf 104934842 application/octet-stream
