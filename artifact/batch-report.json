@@ -1,0 +1,117 @@
+{
+  "sourceCommit": "6c07ac02191b640ab51ee5d393ca7d263cadf333",
+  "batch": "puzzle-01",
+  "runner": "macos-15-intel",
+  "expectedArchitecture": "x86_64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "alchemists-lattice",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/alchemists-lattice",
+            "--output",
+            "/Users/runner/work/_temp/qa/alchemists-lattice/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "alchemists-lattice/package-verification.log",
+          "startedAt": "2026-11-20T09:51:39.255433+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "alchemists-lattice",
+            "--app",
+            "/Users/runner/work/_temp/packages/alchemists-lattice/installed/Alchemists Lattice.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/alchemists-lattice/native"
+          ],
+          "status": "failed",
+          "log": "alchemists-lattice/native.log",
+          "startedAt": "2026-11-20T09:53:08.593334+00:00",
+          "returncode": 1
+        }
+      ]
+    },
+    {
+      "game": "story-thief",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/story-thief",
+            "--output",
+            "/Users/runner/work/_temp/qa/story-thief/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "story-thief/package-verification.log",
+          "startedAt": "2026-11-20T09:54:40.040546+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "story-thief",
+            "--app",
+            "/Users/runner/work/_temp/packages/story-thief/installed/The Story Thief of Greymantle.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/story-thief/native"
+          ],
+          "status": "passed",
+          "log": "story-thief/native.log",
+          "startedAt": "2026-11-20T09:55:54.755239+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "bumble-basket",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/bumble-basket",
+            "--output",
+            "/Users/runner/work/_temp/qa/bumble-basket/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "bumble-basket/package-verification.log",
+          "startedAt": "2026-11-20T09:57:01.120562+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "bumble-basket",
+            "--app",
+            "/Users/runner/work/_temp/packages/bumble-basket/installed/Bumble Basket.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/bumble-basket/native"
+          ],
+          "status": "failed",
+          "log": "bumble-basket/native.log",
+          "startedAt": "2026-11-20T09:58:19.873923+00:00",
+          "returncode": 1
+        }
+      ]
+    }
+  ]
+}
