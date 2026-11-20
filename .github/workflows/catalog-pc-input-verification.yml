@@ -1,0 +1,50 @@
+name: Frozen catalogue PC input
+on:
+  push:
+    branches:
+      - qa/catalog-pc-input-20261120
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
+          - shard: backroad
+            games: backroad-rally last-track sugarplum-drop story-thief glup
+          - shard: royale
+            games: kart-royale kart-rush emberbrood atlas-of-ink starsling
+          - shard: ponpoko
+            games: ponpoko-kart penguintrack cf-transport-ship starbase-spooky bumble-basket oathstones
+          - shard: night
+            games: night-racer dirt-crown turbo-kart-rush qq-speed alchemists-lattice solder-and-rain neon-arcana
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /joystick-games/qa/controller-input/
+            /joystick-games/*/dist/
+            /joystick-games/*/game.json
+            /resource/game-kit/web/controller.*
+            /tools/pc-games/
+            /puretv-joystick/joystick_sdk.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare candidate web payloads and run the portable PC host
+        env:
+          GAMES: ${{ matrix.games }}
+        run: |
+          python -m pip install 'playwright==1.62.0' -r tools/pc-games/requirements.txt
+          python joystick-games/qa/controller-input/payloads.py --output "$RUNNER_TEMP/games" $GAMES
+          python joystick-games/qa/controller-input/pc.py --chromium "$(command -v google-chrome)" --payloads "$RUNNER_TEMP/games" --output "$RUNNER_TEMP/result" --timeout 300 $GAMES
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frozen-pc-${{ matrix.shard }}
+          path: ${{ runner.temp }}/result/*.json
