@@ -51,6 +51,11 @@ on:
         required: false
         default: false
         type: boolean
+      pon_lavapipe:
+        description: Test the exact original Pon APK on the Mesa software graphics backend
+        required: false
+        default: false
+        type: boolean
       pon_capture_qemu_stack:
         description: Diagnostic only; exact original supervised Vulkan-off Pon, bounded same-user GDB stacks, never native acceptance
         required: false
@@ -76,6 +81,7 @@ env:
   CONFIRM_BACKROAD_INSTALL: ${{ inputs.confirm_backroad_install && 'true' || 'false' }}
   SUPERVISE_PON_EMULATOR: ${{ inputs.supervise_pon_emulator && 'true' || 'false' }}
   PON_DISABLE_VULKAN: ${{ inputs.pon_disable_vulkan && 'true' || 'false' }}
+  PON_LAVAPIPE: ${{ inputs.pon_lavapipe && 'true' || 'false' }}
   PON_CAPTURE_QEMU_STACK: ${{ inputs.pon_capture_qemu_stack && 'true' || 'false' }}
 
 jobs:
@@ -122,6 +128,8 @@ jobs:
           assert os.environ['SUPERVISE_PON_EMULATOR'] in ('true','false')
           assert os.environ['PON_DISABLE_VULKAN'] in ('true','false')
           assert os.environ['PON_CAPTURE_QEMU_STACK'] in ('true','false')
+          if os.environ['PON_LAVAPIPE']=='true':
+              assert os.environ['SUPERVISE_PON_EMULATOR']=='true' and os.environ['PON_CAPTURE_QEMU_STACK']=='false'
           if os.environ['PON_CAPTURE_QEMU_STACK']=='true':
               assert os.environ['SUPERVISE_PON_EMULATOR']=='true' and os.environ['PON_DISABLE_VULKAN']=='true', 'Stack diagnostic requires the unchanged v8 Pon comparison'
           if os.environ['PON_DISABLE_VULKAN']=='true':
@@ -133,7 +141,7 @@ jobs:
               assert not os.environ['ARTIFACT_ID'] and not os.environ['ARTIFACT_ATTEMPT']
               assert os.environ['CONFIRM_BACKROAD_INSTALL']=='false'
           out=Path(os.environ['RUNNER_TEMP'])/'provenance';out.mkdir()
-          (out/'requested-inputs.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'batch':os.environ['BATCH'],'games':os.environ['GAMES'],'confirmBackroadInstall':os.environ['CONFIRM_BACKROAD_INSTALL']=='true','supervisePonEmulator':os.environ['SUPERVISE_PON_EMULATOR']=='true','ponDisableVulkan':os.environ['PON_DISABLE_VULKAN']=='true','ponCaptureQemuStack':os.environ['PON_CAPTURE_QEMU_STACK']=='true','nativeAcceptanceAllowed':os.environ['PON_CAPTURE_QEMU_STACK']!='true'},indent=2)+'\n')
+          (out/'requested-inputs.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'batch':os.environ['BATCH'],'games':os.environ['GAMES'],'confirmBackroadInstall':os.environ['CONFIRM_BACKROAD_INSTALL']=='true','supervisePonEmulator':os.environ['SUPERVISE_PON_EMULATOR']=='true','ponDisableVulkan':os.environ['PON_DISABLE_VULKAN']=='true','ponLavapipe':os.environ['PON_LAVAPIPE']=='true','ponCaptureQemuStack':os.environ['PON_CAPTURE_QEMU_STACK']=='true','nativeAcceptanceAllowed':os.environ['PON_CAPTURE_QEMU_STACK']!='true'},indent=2)+'\n')
           PY
           python3 joystick-games/tools/android-catalog.py select --batch "$BATCH" --games "$GAMES" | tee "$RUNNER_TEMP/provenance/selection.json"
       - uses: actions/checkout@v4
@@ -298,7 +306,7 @@ jobs:
           disable-animations: true
           # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
           # Optional controlled Vulkan-off comparison; not an established crash cause or fix.
-          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}
+          emulator-options: -no-window -memory 2048 -gpu ${{ inputs.pon_lavapipe && 'lavapipe' || 'swiftshader_indirect' }} -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}
           pre-emulator-launch-script: >-
             python3 joystick-games/tools/android-emulator-supervisor.py prepare
             --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"

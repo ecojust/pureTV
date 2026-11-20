@@ -65,7 +65,7 @@ class SupervisorTests(unittest.TestCase):
         self.entry.parent.mkdir(parents=True); shutil.copyfile(self.binary, self.entry); self.entry.chmod(0o755)
         self.original = self.entry.read_bytes(); self.output = self.root / 'observation'
         self.env = {'SUPERVISE_PON_EMULATOR': 'true', 'PURETV_DISPOSABLE_EMULATOR': '1', 'GITHUB_ACTIONS': 'true',
-                    'PON_DISABLE_VULKAN': 'false', 'PON_CAPTURE_QEMU_STACK': 'false',
+                    'PON_LAVAPIPE': 'false', 'PON_DISABLE_VULKAN': 'false', 'PON_CAPTURE_QEMU_STACK': 'false',
                     'GAME': 'ponpoko-kart', 'ARTIFACT_SOURCE': '8f283c73f52f857777306eafc88f710262367834',
                     'ARTIFACT_RUN': '44597115244', 'ARTIFACT_EXPORT': '4249f5c0ec3053a1dec652a7880a040e1bb143f0',
                     'ARTIFACT_ID': '', 'ARTIFACT_ATTEMPT': '', 'GITHUB_SHA': 'a' * 40, 'GITHUB_RUN_ID': '123',
@@ -193,7 +193,16 @@ class SupervisorTests(unittest.TestCase):
                        if line.strip().startswith('emulator-options: '))
         selection = "${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}"
         self.assertEqual(options.count(selection), 1)
+        backend = "${{ inputs.pon_lavapipe && 'lavapipe' || 'swiftshader_indirect' }}"
+        self.assertEqual(options.count(backend), 1)
         prefix = ['-port', '5554', '-avd', 'JoystickGamesValidation']
+        mesa_args = prefix + options.replace(backend, 'lavapipe').replace(selection, ' -feature -Vulkan').split()
+        environment = dict(self.env, PON_LAVAPIPE='true', PON_DISABLE_VULKAN='true')
+        self.assertEqual(m.expected_arguments(environment), mesa_args)
+        for key, value in [('GAME', 'dirt-crown'), ('PON_CAPTURE_QEMU_STACK', 'true'), ('SUPERVISE_PON_EMULATOR', 'false')]:
+            with self.assertRaises(AssertionError, msg=key):
+                m.expected_arguments(dict(environment, **{key: value}))
+        options = options.replace(backend, 'swiftshader_indirect')
         self.assertEqual(prefix + options.replace(selection, '').split(), m.EXPECTED_ARGS)
         self.assertEqual(prefix + options.replace(selection, ' -feature -Vulkan').split(),
                          m.EXPECTED_ARGS + ['-feature', '-Vulkan'])

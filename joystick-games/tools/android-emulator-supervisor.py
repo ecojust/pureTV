@@ -90,10 +90,14 @@ def enabled(environment=os.environ):
 
 
 def expected_arguments(environment=os.environ):
+    args = list(EXPECTED_ARGS)
+    if environment.get('PON_LAVAPIPE') == 'true':
+        assert enabled(environment) and not capture_stack(environment), 'Mesa requires supervised original Pon without GDB'
+        args[args.index('-gpu') + 1] = 'lavapipe'
     if disable_vulkan(environment):
         assert enabled(environment), 'Vulkan comparison requires exact Pon supervision'
-        return [*EXPECTED_ARGS, '-feature', '-Vulkan']
-    return list(EXPECTED_ARGS)
+        args.extend(['-feature', '-Vulkan'])
+    return args
 
 
 def process_identity(pid):
