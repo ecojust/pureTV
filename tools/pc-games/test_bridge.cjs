@@ -15,7 +15,7 @@ function desktop(family) {
       gameKit: family === 'kit',
       info: { language: 'en', wifiController: {} }
     },
-    document: { hidden: false, addEventListener() {} },
+    document: { hidden: false, hasFocus: () => true, addEventListener() {} },
     addEventListener(name, fn) { listeners[name] = fn; },
     EventSource: class {
       constructor() { stream = this; }
@@ -82,4 +82,8 @@ test('reloading an existing room baselines previous counts and closes the old ev
   assert.equal(previous.closed, true);
   pc.listeners.pageshow();
   assert.notEqual(pc.stream(), previous);
+  assert.equal(pc.snapshot().inputEnabled, true);
+  pc.event(0, []);
+  assert.equal(pc.snapshot().connections, 0);
+  assert.equal(pc.info().wifiController.connected, false);
 });

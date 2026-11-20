@@ -42,6 +42,13 @@
       seat.counts = { ...next.buttonCounters };
       seats.set(next.id, seat);
     }
+    const present = new Set(state.players.map(player => player.id));
+    for (const [id, seat] of seats) {
+      if (!present.has(id) && seat.player.connected) {
+        cancel(seat);
+        seat.player = { ...seat.player, connected: false, buttons: neutral() };
+      }
+    }
     revision = state.revision;
     info.wifiController.connected = state.players.some(player => player.connected);
   }
@@ -112,7 +119,10 @@
     stream = null;
     focus(false);
   });
-  addEventListener('pageshow', openStream);
+  addEventListener('pageshow', () => {
+    openStream();
+    focus(!document.hidden && document.hasFocus());
+  });
   addEventListener('blur', () => focus(false));
   addEventListener('focus', () => focus(!document.hidden));
   document.addEventListener('visibilitychange', () => focus(!document.hidden && document.hasFocus()));
