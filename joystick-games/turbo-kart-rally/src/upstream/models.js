@@ -31,6 +31,15 @@ function cssShift(hex, lightMul, satMul = 1, lightAdd = 0) { return css(hexShift
 let _envTex = null;
 let reflectionsEnabled = true;
 export function configureReflections(enabled) { reflectionsEnabled = enabled; }
+// Keep original geometry and paint colours with a vertex-lit material on software renderers.
+function kartMaterial(FullMaterial, options) {
+  if (reflectionsEnabled) return new FullMaterial(options);
+  const diffuse = new THREE.MeshLambertMaterial();
+  for (const [key, value] of Object.entries(options)) {
+    if (key in diffuse && key !== 'envMap') diffuse.setValues({ [key]: value });
+  }
+  return diffuse;
+}
 function envMap() {
   if (!reflectionsEnabled) return null;
   if (_envTex) return _envTex;
@@ -74,12 +83,12 @@ function cached(key, make) {
   return m;
 }
 function stdMat(color, rough = 0.55, metal = 0, extra = null, tag = '') {
-  return cached(`std:${color}:${rough}:${metal}:${tag}`, () => new THREE.MeshStandardMaterial({
+  return cached(`std:${color}:${rough}:${metal}:${tag}`, () => kartMaterial(THREE.MeshStandardMaterial, {
     color, roughness: rough, metalness: metal, envMap: envMap(), envMapIntensity: 0.8, ...(extra || {}),
   }));
 }
 function glossMat(color, tag = '') {
-  return cached(`gloss:${color}:${tag}`, () => new THREE.MeshPhysicalMaterial({
+  return cached(`gloss:${color}:${tag}`, () => kartMaterial(THREE.MeshPhysicalMaterial, {
     color, roughness: 0.3, metalness: 0.05, clearcoat: 1, clearcoatRoughness: 0.08, envMap: envMap(), envMapIntensity: 0.6,
   }));
 }
@@ -230,7 +239,7 @@ function emblemTex(letter, color) {
 }
 
 function decalMat(tex) {
-  return cached(`decal:${tex.uuid}`, () => new THREE.MeshStandardMaterial({
+  return cached(`decal:${tex.uuid}`, () => kartMaterial(THREE.MeshStandardMaterial, {
     map: tex, alphaTest: 0.5, roughness: 0.3, metalness: 0, envMap: envMap(), envMapIntensity: 0.6,
     polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2,
   }));
@@ -389,7 +398,7 @@ function tireGeometry(R, W) {
 function tireMat() {
   return cached('tire', () => {
     const t = tireTexture();
-    return new THREE.MeshStandardMaterial({ color: 0x3a3a3e, map: t, bumpMap: t, bumpScale: 3, roughness: 0.88, metalness: 0, envMap: envMap(), envMapIntensity: 0.4 });
+    return kartMaterial(THREE.MeshStandardMaterial, { color: 0x3a3a3e, map: t, bumpMap: t, bumpScale: 3, roughness: 0.88, metalness: 0, envMap: envMap(), envMapIntensity: 0.4 });
   });
 }
 
@@ -581,7 +590,7 @@ function buildTorso(ch, st) {
   }
   // turtle shell on back
   if (ch.hat === 'shell') {
-    const shellMat = cached(`shellback:${ch.color}`, () => new THREE.MeshPhysicalMaterial({ color: ch.color, map: hexTexture(), roughness: 0.35, clearcoat: 1, clearcoatRoughness: 0.1, envMap: envMap(), envMapIntensity: 0.9 }));
+    const shellMat = cached(`shellback:${ch.color}`, () => kartMaterial(THREE.MeshPhysicalMaterial, { color: ch.color, map: hexTexture(), roughness: 0.35, clearcoat: 1, clearcoatRoughness: 0.1, envMap: envMap(), envMapIntensity: 0.9 }));
     b.add(sphere(0.33, 28, 14, 0, TAU, 0, PI / 2), shellMat, M([0, 0.32, -0.16], [-PI / 2, 0, 0], [1.02, 0.62, 1.12]));
     b.add(new THREE.TorusGeometry(0.335, 0.05, 10, 32), stdMat(ch.accent, 0.5), M([0, 0.32, -0.16], [0, 0, 0], [1.02, 1.12, 1]));
   }
@@ -785,7 +794,7 @@ function buildHead(ch, st) {
       b.add(new THREE.ConeGeometry(0.075 - i * 0.006, 0.2, 10), spikeMat, MQ(d.clone().multiplyScalar(R * 0.95), qFromTo(Y_UP, d)));
     }
   } else if (hat === 'shell') {
-    const helm = cached(`helm:${ch.color}`, () => new THREE.MeshPhysicalMaterial({ color: ch.color, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.08, envMap: envMap(), envMapIntensity: 0.9 }));
+    const helm = cached(`helm:${ch.color}`, () => kartMaterial(THREE.MeshPhysicalMaterial, { color: ch.color, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.08, envMap: envMap(), envMapIntensity: 0.9 }));
     b.add(sphere(R * 1.09, 32, 16, 0, TAU, 0, PI * 0.46), helm, M([0, 0.03, -0.02], [-0.18, 0, 0]));
     b.add(new THREE.TorusGeometry(R * 1.07, 0.03, 8, 32), stdMat(ch.accent, 0.5), M([0, 0.07, -0.01], [PI / 2 - 0.18, 0, 0]));
     // goggles on helmet
@@ -848,11 +857,11 @@ export function createKartModel(character) {
   const st = tpl.st;
 
   // per-kart materials (so star mode emissive does not leak to other karts)
-  const paint = new THREE.MeshPhysicalMaterial({
+  const paint = kartMaterial(THREE.MeshPhysicalMaterial, {
     color: ch.color, roughness: 0.32, metalness: 0.12, clearcoat: 1, clearcoatRoughness: 0.06,
     envMap: envMap(), envMapIntensity: 0.55, emissive: 0x000000, side: THREE.DoubleSide,
   });
-  const accent = new THREE.MeshPhysicalMaterial({
+  const accent = kartMaterial(THREE.MeshPhysicalMaterial, {
     color: ch.accent, roughness: 0.35, metalness: 0.1, clearcoat: 0.8, clearcoatRoughness: 0.1,
     envMap: envMap(), envMapIntensity: 0.55, emissive: 0x000000,
   });
@@ -1173,7 +1182,7 @@ function itemBoxFaceTex() {
 function buildItemBox() {
   const size = 1.5;
   const tex = itemBoxFaceTex();
-  const shell = cached('itembox:shell', () => new THREE.MeshPhysicalMaterial({
+  const shell = cached('itembox:shell', () => kartMaterial(THREE.MeshPhysicalMaterial, {
     color: 0xffffff, map: tex, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.22,
     transparent: true, opacity: 1, roughness: 0.08, metalness: 0.0, clearcoat: 1, clearcoatRoughness: 0.05,
     iridescence: 1, iridescenceIOR: 1.8, iridescenceThicknessRange: [200, 900],
@@ -1211,7 +1220,7 @@ function buildItemBox() {
 function buildShellParts(color, spiky) {
   const b = new Builder();
   const R = 0.46;
-  const dome = cached(`shell:${color}`, () => new THREE.MeshPhysicalMaterial({
+  const dome = cached(`shell:${color}`, () => kartMaterial(THREE.MeshPhysicalMaterial, {
     color, map: hexTexture(), roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.05, envMap: envMap(), envMapIntensity: 1.0,
   }));
   const base = 0.17;
@@ -1282,7 +1291,7 @@ function buildShell(type) {
 
 function buildBananaParts() {
   const b = new Builder();
-  const peel = cached('banana:peel', () => new THREE.MeshPhysicalMaterial({ color: 0xffc400, roughness: 0.45, clearcoat: 0.6, clearcoatRoughness: 0.2, envMap: envMap(), envMapIntensity: 0.7, side: THREE.DoubleSide }));
+  const peel = cached('banana:peel', () => kartMaterial(THREE.MeshPhysicalMaterial, { color: 0xffc400, roughness: 0.45, clearcoat: 0.6, clearcoatRoughness: 0.2, envMap: envMap(), envMapIntensity: 0.7, side: THREE.DoubleSide }));
   const brown = stdMat(0x6b4a1e, 0.7);
   const inner = stdMat(0xfff6c8, 0.6);
   const top = V3(0, 0.62, 0);
@@ -1360,7 +1369,7 @@ function starShape(outer, inner, rnd) {
 
 function buildStarParts() {
   const b = new Builder();
-  const mat = cached('star', () => new THREE.MeshPhysicalMaterial({ color: 0xffc107, emissive: 0xff8f00, emissiveIntensity: 0.22, roughness: 0.2, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.05, envMap: envMap(), envMapIntensity: 1.1 }));
+  const mat = cached('star', () => kartMaterial(THREE.MeshPhysicalMaterial, { color: 0xffc107, emissive: 0xff8f00, emissiveIntensity: 0.22, roughness: 0.2, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.05, envMap: envMap(), envMapIntensity: 1.1 }));
   const depth = 0.16, bev = 0.1;
   const g = new THREE.ExtrudeGeometry(starShape(0.55, 0.26, 0.06), { depth, bevelEnabled: true, bevelThickness: bev, bevelSize: 0.06, bevelSegments: 5, curveSegments: 6 });
   g.translate(0, 0, -depth / 2);
@@ -1376,7 +1385,7 @@ function buildStarParts() {
 
 function buildLightningParts() {
   const b = new Builder();
-  const mat = cached('bolt', () => new THREE.MeshPhysicalMaterial({ color: 0xffd000, emissive: 0xffa000, emissiveIntensity: 0.4, roughness: 0.25, clearcoat: 1, envMap: envMap(), envMapIntensity: 0.9 }));
+  const mat = cached('bolt', () => kartMaterial(THREE.MeshPhysicalMaterial, { color: 0xffd000, emissive: 0xffa000, emissiveIntensity: 0.4, roughness: 0.25, clearcoat: 1, envMap: envMap(), envMapIntensity: 0.9 }));
   const s = roundedShape([[-0.05, 0.62], [0.32, 0.62], [0.1, 0.16], [0.32, 0.16], [-0.22, -0.62], [-0.02, -0.06], [-0.24, -0.06]], 0.025);
   const g = new THREE.ExtrudeGeometry(s, { depth: 0.1, bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.04, bevelSegments: 4, curveSegments: 4 });
   g.translate(0, 0, -0.05);

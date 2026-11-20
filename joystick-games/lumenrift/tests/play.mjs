@@ -70,7 +70,10 @@ try {
     await press('Y');
     assert.equal((await snap()).gameplay.wave, 1);
     await page.waitForFunction(() => JoystickGameQA.snapshot().gameplay.time > 1);
-    if (output) await page.screenshot({ path: output + '/' + source + '-play.jpg', quality: 75 });
+    if (output) {
+      await page.waitForFunction(() => JoystickGameQA.snapshot().gameplay.time > 7);
+      await page.screenshot({ path: output + '/' + source + '-play.jpg', quality: 78 });
+    }
     await press('START');
     assert.equal((await snap()).stage, 'paused');
     const paused = (await snap()).gameplay.time;

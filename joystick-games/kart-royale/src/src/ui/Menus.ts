@@ -340,7 +340,7 @@ export class Menus {
     else document.documentElement.dataset.menu = want;
   }
 
-  private selecting = location.hash === '#choose-racer';
+  private selecting = new URLSearchParams(location.search).get('chooseRacer') === '1';
 
   private changeCircuit(dir: number) {
     this.circuitIndex = (this.circuitIndex + dir + circuits.length) % circuits.length;
@@ -355,7 +355,7 @@ export class Menus {
       // Drop this WebGL context together with the page before loading the new world.
       const url = new URL(location.href);
       url.searchParams.set('track', circuit.id);
-      url.hash = 'choose-racer';
+      url.searchParams.set('chooseRacer', '1');
       location.replace(url.href);
       return;
     }

@@ -174,7 +174,7 @@ export function createEnvironment(scene, renderer, root, L) {
     return c.w > 0 ? lerp(n, c.y - 0.6, c.w) : n;
   }
 
-  const T_SIZE = 1900, T_SEG = 280;
+  const T_SIZE = 1900, T_SEG = renderer ? 280 : 128;
   const tGeo = keep(new THREE.PlaneGeometry(T_SIZE, T_SIZE, T_SEG, T_SEG).rotateX(-Math.PI / 2));
   tGeo.translate(cx, 0, cz);
   const tPos = tGeo.attributes.position;
@@ -504,6 +504,12 @@ export function createEnvironment(scene, renderer, root, L) {
       #endif`;
     const bodyMat = keep(withTime(new THREE.MeshLambertMaterial(), bounce));
     const headMat = keep(withTime(new THREE.MeshLambertMaterial(), bounce));
+    // Sample the full grandstand evenly on software GPUs.
+    if (!renderer) {
+      const visibleCrowd = crowd.filter((_, index) => index % 4 === 0);
+      crowd.length = 0;
+      crowd.push(...visibleCrowd);
+    }
     const bodies = new THREE.InstancedMesh(bodyGeo, bodyMat, crowd.length);
     const heads = new THREE.InstancedMesh(headGeo, headMat, crowd.length);
     const shirt = [0xe53935, 0x43a047, 0x1e88e5, 0xfdd835, 0x8e24aa, 0xff7043, 0x00acc1, 0xf06292, 0xffffff];
@@ -571,6 +577,7 @@ export function createEnvironment(scene, renderer, root, L) {
   const tmpM = new THREE.Matrix4(), tmpQ = new THREE.Quaternion(), tmpS = new THREE.Vector3(), tmpP = new THREE.Vector3();
   const upAxis = new THREE.Vector3(0, 1, 0);
   function instanced(geo, material, list, { cast = true, colors = null } = {}) {
+    if (!renderer) list = list.filter((_, index) => index % 4 === 0);
     const im = new THREE.InstancedMesh(geo, material, Math.max(1, list.length));
     list.forEach((it, k) => {
       tmpQ.setFromAxisAngle(upAxis, it.r);

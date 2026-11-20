@@ -15,13 +15,13 @@ snapshot = "window.JoystickGameQA.snapshot()"
 
 
 def check(page, expression):
-    page.wait_for_function("() => " + expression, polling=150, timeout=90_000)
+    page.wait_for_function("() => " + expression, polling=150, timeout=180_000)
 
 
 def capture(page, name):
     if SCREENSHOTS:
         SCREENSHOTS.mkdir(parents=True, exist_ok=True)
-        page.screenshot(path=str(SCREENSHOTS / (name + ".jpg")), type="jpeg")
+        page.screenshot(path=str(SCREENSHOTS / (name + ".jpg")), type="jpeg", timeout=120_000)
 
 
 def native_button(page, source, name, condition):
@@ -53,7 +53,7 @@ def play(browser, url, width, height, source):
             snapshot: () => JSON.stringify({players: window.testSeat ? [window.testSeat] : []}),
             getInfo: () => JSON.stringify({url:'http://127.0.0.1/test', wifiController:{port:63485}}),
         }""")
-    page.goto(url, timeout=120_000)
+    page.goto(url, wait_until="commit", timeout=30_000)
     check(page, "window.JoystickGameQA && " + snapshot + ".stage === 'menu'")
     print(f'{source} menu ready', file=sys.stderr, flush=True)
     original = page.locator("#c").bounding_box()
@@ -115,7 +115,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(SimpleHTTPRequestHandler, dir
     Thread(target=server.serve_forever, daemon=True).start()
     url = f"http://127.0.0.1:{server.server_port}/tv.html"
     browser = playwright.chromium.launch(executable_path=shutil.which("chromium"), headless=True,
-        args=["--no-sandbox", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"])
+        args=["--no-sandbox", "--disable-accelerated-2d-canvas", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"])
     try:
         for case in [(960, 540, "keyboard"), (960, 540, "phone"), (1280, 720, "wifi")]:
             play(browser, url, *case)

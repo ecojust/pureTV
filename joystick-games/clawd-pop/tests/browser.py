@@ -13,15 +13,17 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def wait(page, expression, timeout=120):
+def wait(page, expression, timeout=180):
     # CDP evaluate avoids Playwright's injected predicate compiler on this
     # page, whose upstream content policy intentionally disallows unsafe-eval.
     until = time.monotonic() + timeout
     while time.monotonic() < until:
         if page.evaluate(expression):
+            print("Confirmed", expression, flush=True)
             return
         page.wait_for_timeout(180)
-    raise AssertionError(expression)
+    last = page.evaluate("window.JoystickGameQA?.snapshot() || {title: document.title}")
+    raise AssertionError((expression, last))
 
 
 def canvas(page):
@@ -38,8 +40,11 @@ def run(pw, output):
     ])
     page = browser.new_page(viewport={'width': 960, 'height': 540})
     errors = []
-    page.on('pageerror', lambda exc: errors.append(str(exc)))
-    page.on('console', lambda msg: errors.append(msg.text) if msg.type == 'error' else None)
+    def record_error(message):
+        print(message, flush=True)
+        errors.append(message)
+    page.on('pageerror', lambda exc: record_error(str(exc)))
+    page.on('console', lambda msg: record_error(msg.text) if msg.type == 'error' else None)
     page.add_init_script("""window.bridgeFixture = {players: []};
       window.PureGameHost = { snapshot: () => JSON.stringify(window.bridgeFixture),
         getInfo: () => JSON.stringify({ wifiController: {port: 63485, serviceName:'Browser fixture'} }) };""")
@@ -100,6 +105,8 @@ def run(pw, output):
         (output / 'summary.json').write_text(json.dumps(checks, indent=2) + '\n')
         print(checks, flush=True)
     finally:
+        if errors:
+            print('Browser errors:', errors, flush=True)
         browser.close()
         server.shutdown()
 

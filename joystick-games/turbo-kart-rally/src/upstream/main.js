@@ -46,10 +46,17 @@ try {
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
 } catch (error) {
   document.getElementById('boot-message').textContent = 'Turbo Kart Rally 需要支持 WebGL 2 的浏览器或 Android TV WebView。';
+  const panel = createController();
+  function refreshPanel() {
+    panel.poll();
+    requestAnimationFrame(refreshPanel);
+  }
+  refreshPanel();
   throw error;
 }
 document.getElementById('boot-message').remove();
 const gl = renderer.getContext();
+const webglVersion = gl.getParameter(gl.VERSION);
 const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
 const gpuName = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : '';
 const reducedEffects = /swiftshader|llvmpipe|lavapipe|software rasterizer/i.test(gpuName)
@@ -574,7 +581,12 @@ function frame() {
   const w = world;
   if (w) {
     const running = state !== 'paused' && state !== 'loading' && state !== 'boot';
-    if (running) simulate(w, dt);
+    if (running) {
+      // Keep countdown and physics close to wall time when software rendering takes several ticks.
+      const elapsed = Math.min(rawDt, 0.25);
+      const steps = Math.max(1, Math.ceil(elapsed * 30));
+      for (let i = 0; i < steps; i++) simulate(w, elapsed / steps);
+    }
 
     if (w.mode === 'race' && w.player) {
       if (state !== 'paused') {
@@ -624,7 +636,7 @@ Object.defineProperty(window, 'JoystickGameQA', { value: Object.freeze({ snapsho
     ['boot', 'loading'].includes(state) ? 'loading' : RACE_STATES.has(state) ? 'playing' : 'menu';
   return {
     game: 'turbo-kart-rally', frames, stage, paused: state === 'paused', renderer: 'webgl2',
-    webglVersion: gl.getParameter(gl.VERSION), audioState: audio.ctx?.state || 'locked',
+    webglVersion, audioState: audio.ctx?.state || 'locked',
     controller: controller.peek(), errors: [...seenErrors],
     gameplay: {
       mode: state, characterIndex: menu.charIndex, menuZone: menu.zone, option: menu.optIndex,

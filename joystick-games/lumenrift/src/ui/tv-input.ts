@@ -159,6 +159,12 @@ export class TvInput {
         if (direction === 'RIGHT') this.x = Math.min(MAP_W - 1, this.x + 1);
         if (direction === 'UP') this.y = Math.max(0, this.y - 1);
         if (direction === 'DOWN') this.y = Math.min(MAP_H - 1, this.y + 1);
+        const cam = this.app.renderer.cam;
+        const left = cam.toScreenX(this.x);
+        const top = cam.toScreenY(this.y);
+        const dx = Math.max(cam.insetLeft - left, 0) + Math.min(cam.viewW - left - cam.scale, 0);
+        const dy = Math.max(cam.insetTop - top, 0) + Math.min(cam.viewH - cam.insetBottom - top - cam.scale, 0);
+        if (dx || dy) cam.pan(dx, dy);
         this.hoverTile(this.x, this.y);
         if (pressed.A) this.clickTile(this.x, this.y);
       }

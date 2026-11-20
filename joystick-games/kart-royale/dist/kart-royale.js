@@ -80584,7 +80584,7 @@ html[data-kc-open] .kr-screens { opacity: 0; }
           __publicField(this, "pauseOrderKey", "");
           __publicField(this, "lapsEl");
           __publicField(this, "resultTitle");
-          __publicField(this, "selecting", location.hash === "#choose-racer");
+          __publicField(this, "selecting", new URLSearchParams(location.search).get("chooseRacer") === "1");
           this.root = el("div", "kr-screens", parent);
           this.controls = new ControlsMenu(parent);
           this.screens = {
@@ -80688,7 +80688,7 @@ html[data-kc-open] .kr-screens { opacity: 0; }
           if (circuit !== activeCircuit) {
             const url = new URL(location.href);
             url.searchParams.set("track", circuit.id);
-            url.hash = "choose-racer";
+            url.searchParams.set("chooseRacer", "1");
             location.replace(url.href);
             return;
           }

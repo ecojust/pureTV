@@ -50,6 +50,7 @@ export class InputController {
     this.target = target;
     this.keys = new Set();
     this.tvFrame = null;
+    this.tvItemPoll = -1;
     this.latch = Object.create(null);      // action -> pending press for consumePressed
     this.itemEdge = false;                  // pending press for getInput().item
     this.gpHeld = Object.create(null);      // action -> bool
@@ -201,7 +202,8 @@ export class InputController {
     st.brake = Math.max(this._keyHeld('brake') ? 1 : 0, this.gpBrake, this.tvFrame?.buttons.DOWN ? 1 : 0);
     st.steer = Math.max(-1, Math.min(1, this.steer));
     st.drift = this._keyHeld('drift') || !!this.gpHeld.drift || !!this.tvFrame?.buttons.A;
-    st.item = this.itemEdge || !!this.tvFrame?.pressed.B;
+    st.item = this.itemEdge || (!!this.tvFrame?.pressed.B && this.tvFrame.pollCount !== this.tvItemPoll);
+    if (this.tvFrame) this.tvItemPoll = this.tvFrame.pollCount;
     this.itemEdge = false;
     st.lookBack = this._keyHeld('lookBack') || !!this.gpHeld.lookBack || !!this.tvFrame?.buttons.X;
     // Return a fresh copy so callers can store/mutate it safely.
@@ -211,6 +213,7 @@ export class InputController {
   /** Clear all held/latched state (e.g. when pausing or switching screens). */
   reset() {
     this.tvFrame = null;
+    this.tvItemPoll = -1;
     this.keys.clear();
     for (const k in this.latch) this.latch[k] = false;
     this.itemEdge = false;

@@ -1,6 +1,7 @@
 """Run with Python Playwright and Chromium. The URL must serve dist/tv.html."""
 import argparse
 import json
+import sys
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
@@ -18,8 +19,16 @@ with sync_playwright() as pw:
         errors=[]; page.on('pageerror',lambda e: errors.append(str(e)))
         page.goto(args.url)
         snap='window.JoystickGameQA.snapshot()'
-        def wait(condition): page.wait_for_function(snap+condition,timeout=45000)
-        def press(key): page.keyboard.press(key,delay=100)
+        def wait(condition):
+            print(width,condition,file=sys.stderr,flush=True)
+            try: page.wait_for_function(snap+condition,timeout=60000)
+            except Exception:
+                print(page.evaluate(snap),file=sys.stderr,flush=True)
+                raise
+        def press(key):
+            old=page.evaluate(snap)['frames']
+            page.keyboard.press(key,delay=55)
+            page.wait_for_function(f'{snap}.frames>{old+1} && Object.values({snap}.controller.buttons).every(v=>!v)', timeout=45000)
         wait('.ready');wait('.frames>2')
         canvas=page.locator('canvas')
         bounds=canvas.bounding_box(); page.screenshot(path=args.output/f'{width}-title.png')
