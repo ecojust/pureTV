@@ -118,7 +118,8 @@ function useGarden(g, mask) {
 // ============================================================
 
 function layout() {
-    const W = window.innerWidth - 216, H = window.innerHeight;
+    const gutter = parseFloat(getComputedStyle(document.body).getPropertyValue('--tv-gutter')) || 0;
+    const W = window.innerWidth - gutter, H = window.innerHeight;
     setBasketSide(W > H * 1.15);
     let rect;
     if (mode === 'play' || mode === 'pause' || mode === 'win' || mode === 'lose') {
@@ -140,6 +141,7 @@ function onResize() {
     resizeScene();
     layout();
 }
+if (window.ResizeObserver) new ResizeObserver(layout).observe(document.getElementById('topbar'));
 window.addEventListener('resize', onResize);
 window.addEventListener('orientationchange', () => setTimeout(onResize, 200));
 // Mobile URL bars slide in and out without always firing window resize.

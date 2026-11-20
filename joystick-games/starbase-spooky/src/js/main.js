@@ -87,6 +87,7 @@ function layout() {
     r.setProperty('--bary', bary + 'px'); r.setProperty('--stripy', stripy + 'px');
 }
 layout();
+if (window.ResizeObserver) new ResizeObserver(layout).observe($('game-area'));
 window.addEventListener('resize', layout);
 window.visualViewport?.addEventListener('resize', layout);
 

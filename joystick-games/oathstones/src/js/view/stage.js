@@ -408,7 +408,8 @@ export class Stage {
 
     resize(force = false) {
         const vv = window.visualViewport;
-        const w = Math.max(1, Math.round(vv ? vv.width : innerWidth) - 216);
+        const gutter = document.body.dataset.puretvPlaying === 'true' ? 0 : 216;
+        const w = Math.max(1, Math.round(vv ? vv.width : innerWidth) - gutter);
         const h = Math.max(1, Math.round(vv ? vv.height : innerHeight));
         if (!force && w === this.w && h === this.h) return;
         this.w = w; this.h = h;

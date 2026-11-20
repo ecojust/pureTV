@@ -23,7 +23,7 @@ const PureTVGLUP = (() => {
       controller.setPlaying(Game.state === 'play' && !Game.paused);
       const frame = controller.poll();
       if (frame.cancelled) return;
-      if (frame.connected || frame.native) Input.mode = 'puretv';
+      if (frame.connected && Object.values(frame.pressed).some(Boolean)) Input.mode = 'puretv';
       if (!Game.paused && Object.values(frame.pressed).some(Boolean)) Sound.suspend(false);
       const map = { LEFT:'left', RIGHT:'right', UP:'up', DOWN:'down', A:'jump', B:'fish', X:'puff',
         START:Game.state === 'play' ? 'pause' : 'confirm', Y:Game.state === 'play' && !Game.paused ? 'mute' : 'pause' };

@@ -608,7 +608,7 @@ function fitScreen() {
     for (let pass = 0; pass < 2; pass++) {
         const top = parseFloat(getComputedStyle(app).paddingTop) || 0;
         const availW = side ? window.innerWidth - bar.offsetWidth - 16 : Math.min(window.innerWidth, 1280);
-        const availH = window.innerHeight - 24 - (side ? 8 : bar.offsetHeight + top + 4);
+        const availH = app.clientHeight - (side ? 8 : bar.offsetHeight + top + 4);
         let sc = Math.min(availW / W, availH / H);
         if (sc >= 2) sc = Math.floor(sc * 2) / 2;          // prefer clean half-steps
         vp.style.width = Math.floor(W * sc) + 'px';
@@ -653,6 +653,7 @@ function boot() {
     document.getElementById('t-continue').addEventListener('click', () => { setAudioPaused(false); initAudio(); sfx.click(); loadGame(latestSave()); });
     document.getElementById('t-howto').addEventListener('click', () => { setAudioPaused(false); initAudio(); sfx.click(); howTo(); });
 
+    if (window.ResizeObserver) new ResizeObserver(fitScreen).observe(document.getElementById('app'));
     window.addEventListener('resize', fitScreen);
     window.addEventListener('orientationchange', () => setTimeout(fitScreen, 150));
     fitScreen();

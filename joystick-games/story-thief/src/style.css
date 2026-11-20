@@ -493,7 +493,9 @@ button { font-family: inherit; cursor: pointer; }
 #tv-pause section {text-align:center;background:#302639;border:2px solid #b39a72;padding:1rem 3rem}
 #tv-pause p {font:700 26px Georgia,serif}
 #tv-pause button {font-size:18px;padding:8px 16px}
-#puretv-controller-panel {top:6px!important;right:6px!important}
+body[data-puretv-joining="true"] #tv-pause { right:min(236px,35vw); }
 #hover.tv-target {background:#241b2b;border:1px solid #f2cd76;max-width:90%;white-space:normal}
 #bar button.tv-selected {outline:3px solid #f6ce6f;outline-offset:1px}
 #app {height:calc(100% - 24px)}
+body[data-puretv-playing="true"] #tv-guide {display:none}
+body[data-puretv-playing="true"] #app {height:100%}
