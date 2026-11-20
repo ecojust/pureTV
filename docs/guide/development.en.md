@@ -36,7 +36,11 @@ The TV launcher and the manager's visual editor use the same `layout.json`. The 
 
 A third-party launcher can include a default layout and Home background in `assets/layout.json`. To enable live editing, implement the Android ContentProvider with the authority `<packageName>.layout`. The manager calls `status` over ADB and shows **Adjust layout** when the active launcher's response passes protocol validation. The `apply` method accepts a Base64-encoded layout. The `reset` method restores the default. The MCP tools `get_launcher_layout` and `apply_launcher_layout` use the same protocol and read-only protections. [Fields, ContentProvider examples and rendered layouts (Chinese)](../../resource/README-development.md#layoutjson-协议规范与画面对照)
 
+<a id="controller-protocol"></a>
+
 ## Game client compatibility with the controller
+
+For every new game, verify keyboard and Wi-Fi controller play on PC, phone pairing and Wi-Fi controller play on Android TV, and a stable playfield as players join, disconnect or return. [Game input, connection display and acceptance checklist (Chinese)](game-controls.md)
 
 The game acts as the TCP server. The ESP32 controller initiates the connection. An Android game can reuse the Game Kit host's listener, service advertisement and input forwarding. An independent host implements the same discovery and input interfaces. [Game Kit controller support (Chinese)](../../resource/game-kit/README.md#puretv-wi-fi-实体手柄)
 

@@ -39,7 +39,11 @@ Agent 和界面共用当前设备、Android 用户、ADB 配置、操作锁与�
 
 第三方启动器在 APK 的 `assets/layout.json` 中可提供默认布局和 Home 预览背景。要让管理器编辑正在使用的桌面，还需实现 authority 为 `<packageName>.layout` 的 Android ContentProvider。管理器通过 ADB 调用 `status` 探测当前启动器，返回结果通过协议校验后才显示「调整布局」。`apply` 接受 Base64 编码的布局，`reset` 恢复默认布局。MCP 的 `get_launcher_layout` 和 `apply_launcher_layout` 使用相同协议与只读保护。[字段、ContentProvider 示例与画面对照](../../resource/README-development.md#layoutjson-协议规范与画面对照)
 
+<a id="controller-protocol"></a>
+
 ## 游戏客户端开发兼容手柄的要求
+
+新游戏从四种游玩方式开始设计，并在发布前逐款检查玩家连接时的画面、席位和暂停行为。[游戏输入与连接显示规范及验收清单](game-controls.md)
 
 游戏是 TCP 服务端，ESP32 手柄主动连接。Android 游戏可复用 Game Kit 原生宿主提供的监听、服务发布和输入转发。独立宿主也需提供同样的发现与输入接口。[Game Kit 实体手柄接入](../../resource/game-kit/README.md#puretv-wi-fi-实体手柄)
 
