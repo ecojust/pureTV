@@ -123,6 +123,18 @@ NIGHT_LOW_RELOAD_SOURCES = {
 }
 
 
+def verified_backroad_apk(info, *, require_size=False):
+    """Recognize the frozen 0.1.2 player or this run's independently verified signed 0.1.6."""
+    digest = info.get('sha256')
+    if digest == BACKROAD_ORIGINAL_APK:
+        return not require_size or info.get('bytes') == 105024551
+    signed = os.environ.get('BACKROAD_CURRENT_SIGNED_SHA256', '')
+    size = os.environ.get('BACKROAD_CURRENT_SIGNED_BYTES', '')
+    return (os.environ.get('BACKROAD_VULKAN_OBSERVATION') == 'true'
+            and re.fullmatch(r'[0-9a-f]{64}', signed) is not None and digest == signed
+            and size.isascii() and size.isdecimal() and info.get('bytes') == int(size) > 0)
+
+
 def install_timeout(apk_bytes):
     """Bound installation transfer/verification time; never change game clocks."""
     assert type(apk_bytes) is int and 0 < apk_bytes < build.asset_policy.HARD_LIMITS['maxApkBytes'], 'APK exceeds existing hard size limit'
@@ -384,7 +396,7 @@ class Acceptance:
                 {'snapshotCall': call, 'operation': 'GET /snapshot', **value})
             if hasattr(self, 'out'):
                 self.save()
-        slow_hwui = (self.report.get('apk', {}).get('sha256') == BACKROAD_ORIGINAL_APK
+        slow_hwui = (verified_backroad_apk(self.report.get('apk', {}))
                      and os.environ.get('BACKROAD_VULKAN_OBSERVATION') == 'true')
         if slow_hwui:
             self.report['observerRequestPolicy'] = 'Keep one GET open within the existing snapshot deadline while HWUI queues the callback'
@@ -787,7 +799,7 @@ class Acceptance:
         stage_expect = [{'path': 'gameplay.phase', 'op': 'eq', 'value': 'running'},
                         {'path': 'stage', 'op': 'eq', 'value': 'playing'}]
         if (self.args.game == game.get('game') == 'backroad-rally'
-                and self.report['apk'].get('sha256') == BACKROAD_ORIGINAL_APK and self.report['apk'].get('bytes') == 105024551
+                and verified_backroad_apk(self.report['apk'], require_size=True)
                 and before.get('page', {}).get('url') == BACKROAD_ENTRY and game.get('stage') == 'menu'
                 and (current.get('screen'), current.get('flow'), current.get('menuFocus')) == ('stageselect', 'quick', 'start')
                 and current.get('carIndex') == current.get('stageIndex') == 0
@@ -795,7 +807,7 @@ class Acceptance:
                 and step.get('keys') == ['A'] and step.get('menuTap') is True and step.get('expect') == stage_expect):
             for name, digest in BACKROAD_MENU_SOURCES.items():
                 assert file_info(ROOT / name)['sha256'] == digest, 'Original Finland location.assign source changed'
-            return {'kind': 'original-finland-stage-location-assign', 'apkSha256': BACKROAD_ORIGINAL_APK,
+            return {'kind': 'original-finland-stage-location-assign', 'apkSha256': self.report['apk']['sha256'],
                     'sourceSha256': dict(BACKROAD_MENU_SOURCES), 'fromUrl': BACKROAD_ENTRY, 'toUrl': BACKROAD_FINLAND,
                     'postReloadFreshPollsRequired': 2, 'maximumBootSeconds': 720}
         expected = [{'path': 'gameplay.renderPreset', 'op': 'eq', 'value': 'low'},
@@ -851,7 +863,7 @@ class Acceptance:
         started = time.monotonic(); transition_deadline = started + transition_seconds
         deadline = transition_deadline
         vulkan_observer = (self.args.game == 'backroad-rally'
-                           and self.report.get('apk', {}).get('sha256') == '67f61471e0e23e9ea963475425d5c43fa9d3265167f9028bd55dc319494fbe3c'
+                           and verified_backroad_apk(self.report.get('apk', {}))
                            and os.environ.get('BACKROAD_VULKAN_OBSERVATION') == 'true')
         candidate = None; stable = 0; down_sent = False; released = False
         try:

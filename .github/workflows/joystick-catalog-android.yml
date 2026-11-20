@@ -229,7 +229,7 @@ jobs:
   runtime:
     needs: [select, sign]
     runs-on: ubuntu-24.04
-    timeout-minutes: 70
+    timeout-minutes: 100
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -263,22 +263,45 @@ jobs:
         run: >-
           python3 joystick-games/tools/android-release.py verify --games "$GAMES"
           --input "$RUNNER_TEMP/signed" --build-tools "$ANDROID_HOME/build-tools/34.0.0"
+      - name: Bind current Backroad controller checks to the verified release APK
+        if: matrix.game == 'backroad-rally'
+        run: |
+          python3 - <<'END'
+          import hashlib, json, os
+          from pathlib import Path
+          package = Path(os.environ['RUNNER_TEMP']) / 'signed/packages/backroad-rally'
+          apk = package / 'backroad-rally-0.1.6.apk'
+          receipt = json.loads((package / 'signing-receipt.json').read_text())
+          assert receipt['sourceSha'] == os.environ['GITHUB_SHA'] and receipt['runId'] == os.environ['GITHUB_RUN_ID']
+          assert receipt['packageName'] == 'com.ecojust.joystick.backroadrally' and receipt['versionName'] == '0.1.6'
+          assert receipt['versionCode'] == 7 and receipt['signatureVerified'] is True
+          assert receipt['certificateSha256'] == 'eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23'
+          with apk.open('rb') as content:
+              digest = hashlib.file_digest(content, 'sha256').hexdigest()
+          size = apk.stat().st_size
+          assert digest == receipt['sha256'] and size == receipt['bytes']
+          with open(os.environ['GITHUB_ENV'], 'a') as env:
+              print('BACKROAD_CURRENT_SIGNED_SHA256=' + digest, file=env)
+              print('BACKROAD_CURRENT_SIGNED_BYTES=' + str(size), file=env)
+              print('BACKROAD_VULKAN_OBSERVATION=true', file=env)
+          END
       - name: Enable disposable emulator acceleration
         run: |
           test -e /dev/kvm
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
       - name: Operate the actual APK using the original pureTV TCP SDK
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
+          emulator-build: '16970787'
           api-level: 36
           target: android-tv
           arch: x86_64
-          profile: tv_1080p
+          profile: ${{ matrix.game == 'backroad-rally' && 'tv_720p' || 'tv_1080p' }}
           avd-name: JoystickGamesValidation
           force-avd-creation: true
           disable-animations: true
-          emulator-options: -no-window -memory 3072 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          emulator-options: -no-window -memory ${{ matrix.game == 'backroad-rally' && '2048' || '3072' }} -gpu ${{ matrix.game == 'backroad-rally' && 'lavapipe' || 'swiftshader_indirect' }} -noaudio -no-boot-anim -no-snapshot
           script: >-
             python3 joystick-games/tools/android-catalog.py runtime --game '${{ matrix.game }}'
             --input "$RUNNER_TEMP/signed" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"

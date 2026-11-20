@@ -195,6 +195,18 @@ class MenuTapContracts(unittest.TestCase):
                      'keys': ['A'], 'holdMs': 100, 'timeoutSeconds': 240, 'expect':
                      [{'path': 'gameplay.phase', 'op': 'eq', 'value': 'running'}, {'path': 'stage', 'op': 'eq', 'value': 'playing'}]}
 
+    def test_signed_current_rally_needs_verified_digest_size_and_graphics_profile(self):
+        self.finland_setup()
+        digest = 'd' * 64
+        self.acceptance.report['apk'] = {'sha256': digest, 'bytes': 98123}
+        with mock.patch.dict(runner.os.environ, {'BACKROAD_CURRENT_SIGNED_SHA256': digest,
+                'BACKROAD_CURRENT_SIGNED_BYTES': '98123', 'BACKROAD_VULKAN_OBSERVATION': 'true'}):
+            self.assertTrue(runner.verified_backroad_apk(self.acceptance.report['apk'], require_size=True))
+            self.assertFalse(runner.verified_backroad_apk({'sha256': digest, 'bytes': 98124}))
+            self.assertFalse(runner.verified_backroad_apk({'sha256': 'a' * 64, 'bytes': 98123}))
+            with mock.patch.dict(runner.os.environ, {'BACKROAD_VULKAN_OBSERVATION': 'false'}):
+                self.assertFalse(runner.verified_backroad_apk(self.acceptance.report['apk']))
+
     def test_finland_real_navigation_needs_two_later_new_document_polls(self):
         self.finland_setup()
         before = self.finland_stage(579)
