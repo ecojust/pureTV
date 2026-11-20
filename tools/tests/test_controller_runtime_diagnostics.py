@@ -96,6 +96,15 @@ class BatchIsolation(unittest.TestCase):
         with self.assertRaises(AssertionError):
             batch.runtime_plan('["arcade-1"]', scope='arcade-recovery-6')
 
+    def test_used_car_only_signs_and_runs_on_its_supported_tv_profile(self):
+        plan = batch.runtime_plan(scope='used-car-1')
+        self.assertEqual(plan['plannedSlugs'], ['used-car-racing'])
+        self.assertEqual([r['batch'] for r in plan['matrix']['include']], ['retry-used-car-mesa'])
+        self.assertEqual(batch.release.scoped_games(batch.release.SLUGS, 'used-car-1'), ['used-car-racing'])
+        self.assertEqual(batch.release.scoped_games(batch.release.KIT_SLUGS, 'used-car-1'), [])
+        with self.assertRaises(AssertionError):
+            batch.runtime_plan('["home-coast"]', scope='used-car-1')
+
     def test_coast_scope_builds_and_runs_a_single_signed_world_game(self):
         plan=batch.runtime_plan(scope='coast-1')
         self.assertEqual(plan['plannedSlugs'], ['coast-kart'])

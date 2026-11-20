@@ -21,7 +21,7 @@ on:
       scope:
         description: Games to build and corresponding signing observers
         type: choice
-        options: [all, home-12, arcade-7, arcade-recovery-6, coast-1]
+        options: [all, home-12, arcade-7, arcade-recovery-6, coast-1, used-car-1]
         default: all
 
 env:
@@ -93,7 +93,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: ${{ fromJSON(inputs.scope == 'coast-1' && '["worlds"]' || startsWith(inputs.scope, 'arcade-') && '["arcade"]' || '["arcade","worlds"]') }}
+        group: ${{ fromJSON((inputs.scope == 'coast-1' || inputs.scope == 'used-car-1') && '["worlds"]' || startsWith(inputs.scope, 'arcade-') && '["arcade"]' || '["arcade","worlds"]') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:

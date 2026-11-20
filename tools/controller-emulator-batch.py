@@ -84,6 +84,7 @@ def runtime_plan(requested='', acceptance_mode='complete', scope='all'):
     defaults = {
         'home-12': HOME_BATCHES,
         'coast-1': ('home-coast',),
+        'used-car-1': ('retry-used-car-mesa',),
         'arcade-7': ('arcade-1', 'arcade-2', 'arcade-3'),
         'arcade-recovery-6': ('retry-jackal', 'arcade-2', 'arcade-3'),
     }.get(scope, DEFAULT_BATCHES)
