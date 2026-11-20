@@ -4,6 +4,8 @@
 
 Android TV 0.1.4 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/ponpoko-kart-0.1.4.apk)。原生手柄验收进展见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
 
+另可下载已在 Android TV 14 默认端口通过 49 项检查的 0.1.3 原包。该版目标 SDK 为 29，部分系统可能显示旧目标版本安装警告；0.1.4 已提高到目标 SDK 35。[下载已实驾的 0.1.3](https://raw.githubusercontent.com/ecojust/pureTV/dbb43456edd22d2b5f349c43b1f9852ef330dd02/packages/ponpoko-kart/ponpoko-kart-0.1.3.apk)
+
 ## Android TV 适配
 
 0.1.5（versionCode 6）在软件 GPU 上暂停时保留赛道画面，继续逐帧读取手柄；窗口尺寸变化或 WebGL 上下文恢复时重绘。恢复比赛仍需重新按下 START。Mesa 软件渲染的浏览器测试中，暂停后 0.49 秒内读取了 9 次手柄，原赛道背景的 21,600 个像素均保持一致。调整窗口后重绘一帧，断线重连后仍需主动恢复。Android 最低 API 26，目标 API 35。[暂停与恢复的原始读数和截图清单](docs/browser-0.1.5-software-pause/verification.json) · [恢复驾驶原图](docs/browser-0.1.5-software-pause/resumed.png)

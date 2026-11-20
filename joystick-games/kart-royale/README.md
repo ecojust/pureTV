@@ -4,7 +4,7 @@
 
 Android TV 0.1.3 提供[签名 APK 测试版](https://github.com/ecojust/pureTV/releases/download/joystick-racing-nine-test-20261120/kart-royale-0.1.3.apk)。原生手柄验收进展见[测试版说明](https://github.com/ecojust/pureTV/releases/tag/joystick-racing-nine-test-20261120)。
 
-0.1.3 最低支持 Android 8，目标 SDK 为 35。在软件 GPU 上，它用轻量着色器绘制原车、原纹理和赛道，并降低部分背景装饰的几何复杂度。Linux llvmpipe 的真实输入已从标题页进入比赛并驱动车辆，冷启动在这台共享双核主机上用时数分钟。Android TV 14 与 16 的独立验证仍在进行。[Android TV 14](https://github.com/ecojust/pureTV/actions/runs/44690586603) · [Android TV 16](https://github.com/ecojust/pureTV/actions/runs/44689811645)
+0.1.3 最低支持 Android 8，目标 SDK 为 35。在软件 GPU 上，它用轻量着色器绘制原车、原纹理和赛道，并降低部分背景装饰的几何复杂度。Linux llvmpipe 的真实输入已从标题页进入比赛并驱动车辆，冷启动在这台共享双核主机上用时数分钟。Android TV 14 的端口占用模式已通过 58 项，游戏截图显示首圈第四名。默认端口首次冷启动以及标准 Android TV 16 的启动验收仍有失败记录。[Android 原生赛中图](https://raw.githubusercontent.com/ecojust/pureTV/e26766b346009537383d785463ee2c0b44f193ed/evidence/joystick-android-runtime-kart-royale/kart-royale-occupied/driving-checkpoint.png) [Android TV 14](https://github.com/ecojust/pureTV/actions/runs/44690586603) · [Android TV 16](https://github.com/ecojust/pureTV/actions/runs/44689811645)
 
 
 ## Windows 下载

@@ -41,6 +41,8 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 
 **已通过原生手柄验收的覆盖为 Android TV 6/9、Mac 9/9、Windows 9/9。** Kart Rush、Dirt Crown、Night Racer、Penguintrack、Turbo Kart Rush、Last Track 三个平台均已验证到实际游玩，Mac 的实测架构见下方。其余 3 款 Android TV 游戏提供测试版。共 45 个安装文件均已从公开地址完整下载并核对 SHA-256。[当前 45 个文件的下载校验](../docs/racing-nine/download-verification-20261120.json) · [0.1.2 三个签名测试包](../docs/racing-nine/test-download-updates-20261120.json) · [首批测试包校验](../docs/racing-nine/test-downloads-20261120.json)
 
+九款赛车的签名 Android APK 均已在电视模拟器上实际进入赛道。三款测试版的原生记录各有不同的覆盖范围：Backroad Rally 0.1.2 在可用图形后端上用手柄驶过芬兰起跑线，Ponpoko Kart 0.1.3 在默认端口通过 49 项，Kart Royale 0.1.3 在端口占用回退下通过 58 项。[Backroad 驾驶原图](https://raw.githubusercontent.com/ecojust/pureTV/2bd09dd52f3f5346d7c4d8ce155c7a6c8a6f10fb/evidence/backroad-original-apk-graphics-diagnostic/graphics-diagnostic/original-stage-accelerated.png) · [Ponpoko 手柄及赛中记录](ponpoko-kart/README.md) · [Kart Royale 驾驶原图](https://raw.githubusercontent.com/ecojust/pureTV/e26766b346009537383d785463ee2c0b44f193ed/evidence/joystick-android-runtime-kart-royale/kart-royale-occupied/driving-checkpoint.png)
+
 以上 Mac 赛车需要 macOS 11+ 与 WebGL2；Apple Silicon 原生、端口占用及 Rosetta 均有通过记录，**Intel 图形运行仍未验证**。Backroad Rally 的预发布 ZIP 已通过 Apple Silicon 原生存档重启复验；包采用 ad-hoc 签名，未经过 Apple 公证。Windows 需要 Windows 10 1903+ x64／Windows 11、WebView2 Runtime 和相应 WebGL 支持；未做 Authenticode 签名，原生检查覆盖 96 DPI，其他显示缩放和实体手柄未测试。各游戏目录列出原包哈希、实际测试范围和保留的失败记录。
 
 原清单的 **93 款**已完成逐项[电视适配评估](../docs/claude-games/tv-assessment.md)：51 款可继续使用现有 Web 宿主，42 款需补齐许可、素材或其他引擎运行方案。后续新增的 GitHub 参考清单与这 93 款适配范围分开记录。
