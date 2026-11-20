@@ -1,10 +1,20 @@
 # 极品二手车
 
-## Android 0.1.6 · 手柄与手机连接
+## Android 0.1.7 · 手机驾车时取消退出
 
 <!-- apk-resource:start -->
-[下载签名 APK](used-car-racing-0.1.6.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
+[下载签名 APK](used-car-racing-0.1.7.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
 <!-- apk-resource:end -->
+
+手机驾车时，在电视上取消退出对话框，游戏会等到读到手机的当前连接状态后继续比赛。主动暂停的比赛会保持暂停，使用 pureTV Wi-Fi 手柄时，重新按 START 可继续。
+
+签名 APK 已在 Android TV 上从 0.1.6 覆盖安装。驾驶、暂停、重连和两个手柄席位共通过 9 项检查，107 条 SDK 消息都收到了同序号确认。[游戏截图](docs/releases/0.1.7/gameplay.png) · [玩法录像](docs/releases/0.1.7/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.1.7/verification.json)
+
+## 历史版本 0.1.6 · 手柄与手机连接
+
+<!-- previous-0.1.6-apk-resource:start -->
+[下载签名 APK](used-car-racing-0.1.6.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
+<!-- previous-0.1.6-apk-resource:end -->
 
 可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
 

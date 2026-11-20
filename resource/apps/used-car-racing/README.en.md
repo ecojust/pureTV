@@ -1,10 +1,20 @@
 # Used Car Racing TV
 
-## Android 0.1.6 · Controllers and phone pairing
+## Android 0.1.7 · Returning to a phone-controlled race
 
 <!-- apk-resource:start -->
-[Download the signed APK](used-car-racing-0.1.6.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
+[Download the signed APK](used-car-racing-0.1.7.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
 <!-- apk-resource:end -->
+
+Cancel the TV’s exit dialog to return to a race started with a phone. The game waits for the phone’s current room status before continuing. A race you paused manually stays paused. A pureTV Wi-Fi controller resumes with a fresh START press.
+
+The signed APK upgraded 0.1.6 in place on Android TV. Driving, pause, reconnect and two controller seats passed all 9 checks with 107 matching SDK acknowledgements. [Game screenshot](docs/releases/0.1.7/gameplay.png) · [Gameplay recording](docs/releases/0.1.7/gameplay.mp4?raw=1) · [Verification](docs/releases/0.1.7/verification.json)
+
+## Earlier release 0.1.6 · Controllers and phone pairing
+
+<!-- previous-0.1.6-apk-resource:start -->
+[Download the signed APK](used-car-racing-0.1.6.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
+<!-- previous-0.1.6-apk-resource:end -->
 
 Connect a keyboard, pair a pureTV Wi-Fi controller, or scan the TV room’s QR code with a phone on the same network. The connection indicator identifies each player while the game keeps its playing area at the same size. [Controller guide](../../../docs/guide/README.en.md#install-a-game-and-connect-a-controller)
 
