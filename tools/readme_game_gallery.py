@@ -55,11 +55,6 @@ def game_catalog(genres, resources, english, root):
     return catalog
 
 
-PLAYER_DOWNLOADS = (
-    'https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/'
-    'tools/pc-games/packages/'
-)
-
 PLATFORM_ICONS = {
     'apk': ('android-tv', 'Android TV', 'APK'),
     'macos': ('macos', 'macOS', 'DMG'),
@@ -83,13 +78,9 @@ def game_card(card, locale):
     icons = []
     for platform, (icon, system, package) in PLATFORM_ICONS.items():
         url = card['downloads'].get(platform)
-        if url:
-            label = f'{title} {system} {package}'
-        else:
-            filename = 'pureTV-Games.exe' if platform == 'windows' else 'pureTV-Games-portable.zip'
-            url = PLAYER_DOWNLOADS + filename
-            player = '游戏启动器' if locale == 'zh' else 'game player'
-            label = f'{title} · {system} {player}'
+        if not url:
+            continue
+        label = f'{title} {system} {package}'
         content = support_icon(icon, label)
         icons.append(f'<a href="{escape(url)}" title="{escape(label)}">{content}</a>')
     if card['controller']:
