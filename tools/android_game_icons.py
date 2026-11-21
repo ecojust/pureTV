@@ -277,8 +277,11 @@ def foreground(adb, package, component):
         activities = adb_call(adb, 'shell', 'dumpsys', 'activity', 'activities', timeout=20)
         resumed = [line for line in activities.splitlines() if re.search(r'(?:topResumedActivity|mResumedActivity|ResumedActivity|mFocusedApp)', line)]
         if any(package + '/' in line for line in resumed):
-            assert adb_call(adb, 'shell', 'pidof', package).strip()
-            return
+            # The OS may assign the resumed ActivityRecord before zygote has
+            # created the process. Wait for both signals within the same deadline.
+            processes = adb_call(adb, 'shell', 'ps', '-A', '-o', 'PID,NAME', timeout=20)
+            if any(line.split()[-1:] == [package] for line in processes.splitlines()):
+                return
         if time.monotonic() >= deadline:
             raise RuntimeError(f'{package}: activity did not become foreground: {resumed}')
         time.sleep(1)
