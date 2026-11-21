@@ -60,9 +60,9 @@ final class GameWindow: NSObject, NSApplicationDelegate, WKNavigationDelegate {
             return
         }
         // The host chooses another loopback port when its preferred one is in use.
+        let read = output.fileHandleForReading
         DispatchQueue.global().async {
             var buffer = Data()
-            let read = self.output.fileHandleForReading
             while true {
                 let next = read.availableData
                 if next.isEmpty { break }

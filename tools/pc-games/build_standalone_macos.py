@@ -38,12 +38,14 @@ def build_players(work):
         parts.append(part)
     run("lipo", "-create", *parts, "-output", work / "Game")
     for binary in (work / "Game", work / "player"):
-        run("lipo", "-verify_arch", *ARCHS, binary)
+        run("lipo", binary, "-verify_arch", *ARCHS)
 
 
-def licenses(resources, apk):
+def licenses(resources, apk, game_licenses):
     directory = resources / "Licenses"
     directory.mkdir()
+    if game_licenses.is_dir():
+        shutil.copytree(game_licenses, directory / "Game")
     shutil.copyfile(SOURCE.parents[1] / "LICENSE", directory / "pureTV.txt")
     shutil.copyfile(Path(sysconfig.get_path("stdlib")) / "LICENSE.txt", directory / "Python.txt")
     for name in ("zeroconf", "ifaddr", "PyInstaller"):
@@ -77,7 +79,7 @@ def build_game(source, game, players, output):
         apk = resources / "game.apk"
         shutil.copyfile(source / "game.apk", apk)
         shutil.copyfile(source / "game.json", resources / "game.json")
-        licenses(resources, apk)
+        licenses(resources, apk, source / "licenses")
         info = {
             "CFBundleExecutable": "Game", "CFBundleName": name, "CFBundleDisplayName": name,
             "CFBundleIdentifier": "com.ecojust.puretv.games." + slug,

@@ -54,6 +54,13 @@ def main(argv=None):
 
         system_language = locale.getlocale()[0] or ''
         language = args.language or ('zh' if system_language.lower().startswith(('zh', 'chinese')) else 'en')
+        if sys.platform == 'win32' and not args.no_browser and sys.stdout and sys.stdout.isatty():
+            import ctypes
+
+            ctypes.windll.kernel32.SetConsoleTitleW(game[language])
+            print('浏览器未打开时，请手动打开下方 Game 网址。按 Ctrl+C 或关闭此窗口可退出游戏。')
+            print('If the browser stays closed, open the Game URL below. '
+                  'Press Ctrl+C or close this window to quit.', flush=True)
         options = ['--apk', str(apk), '--game', game['id'], '--language', language,
                    '--controller-port', str(args.controller_port)]
         if args.no_browser:

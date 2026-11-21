@@ -20,6 +20,8 @@ jobs:
             os: windows-2022
     runs-on: ${{ matrix.os }}
     timeout-minutes: 90
+    env:
+      PYTHONUTF8: '1'
     steps:
       - name: Determine requested platform
         id: select
@@ -48,6 +50,7 @@ jobs:
           sudo installer -pkg "$RUNNER_TEMP/python.pkg" -target /
           /Library/Frameworks/Python.framework/Versions/3.12/bin/python3 -m venv "$RUNNER_TEMP/game-venv"
           echo "$RUNNER_TEMP/game-venv/bin" >> "$GITHUB_PATH"
+          echo "SSL_CERT_FILE=/etc/ssl/cert.pem" >> "$GITHUB_ENV"
           SKIP_CYTHON=1 "$RUNNER_TEMP/game-venv/bin/python" -m pip install --no-binary=zeroconf -r tools/pc-games/requirements.txt pyinstaller==6.16.0
       - name: Install Windows packaging dependencies
         if: steps.select.outputs.build && runner.os == 'Windows'

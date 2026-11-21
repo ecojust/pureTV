@@ -1,5 +1,6 @@
 """Build and verify individual, offline Windows x64 game installers on Windows."""
 import argparse
+import importlib.metadata
 import json
 import os
 import platform
@@ -27,6 +28,22 @@ def inno_compiler():
     raise SystemExit('Install Inno Setup 6 or add ISCC.exe to PATH.')
 
 
+def include_runtime_licenses(runtime):
+    notices = runtime / 'licenses' / 'runtime'
+    notices.mkdir(parents=True)
+    # The CPython Windows distribution includes third-party notices in LICENSE.txt.
+    shutil.copyfile(Path(sys.base_prefix) / 'LICENSE.txt', notices / 'Python-LICENSE.txt')
+    shutil.copyfile(SOURCE.parents[1] / 'LICENSE', notices / 'pureTV-LICENSE.txt')
+    for name in ('zeroconf', 'ifaddr', 'PyInstaller'):
+        dist = importlib.metadata.distribution(name)
+        files = [item for item in dist.files or ()
+                 if item.name.lower().startswith(('copying', 'license', 'notice'))]
+        if not files:
+            raise ValueError(f'Missing license files for {name}')
+        for item in files:
+            shutil.copyfile(dist.locate_file(item), notices / f'{name}-{item.name}')
+
+
 def build_runtime(work):
     subprocess.run([
         sys.executable, '-m', 'PyInstaller', '--noconfirm', '--clean', '--onedir',
@@ -42,6 +59,7 @@ def build_runtime(work):
         exe.seek(struct.unpack('<I', exe.read(4))[0])
         if exe.read(6) != b'PE\x00\x00\x64\x86':
             raise ValueError('The bundled application requires a Windows AMD64 executable')
+    include_runtime_licenses(runtime)
     return runtime
 
 
@@ -57,6 +75,8 @@ def build_game(compiler, runtime, source, output, work):
     if not title or any(c in title for c in '\r\n"{}\\/:*?<>|'):
         raise ValueError(f'Invalid Windows shortcut title for {slug}: {title!r}')
     app_id = uuid.uuid5(uuid.NAMESPACE_URL, f'https://github.com/ecojust/pureTV/games/{slug}')
+    if not any(p.is_file() for p in (source / 'licenses').iterdir()):
+        raise ValueError(f'Missing game notices for {slug}')
     script = work / (slug + '.iss')
     script.write_text(f"""[Setup]
 AppId={{{{{app_id}}}
@@ -78,6 +98,7 @@ WizardStyle=modern
 [Files]
 Source: "{runtime}\\*"; Excludes: "puretv-runtime.exe"; DestDir: "{{app}}"; Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "{runtime}\\puretv-runtime.exe"; DestDir: "{{app}}"; DestName: "{slug}.exe"; Flags: ignoreversion
+Source: "{source}\\licenses\\*"; DestDir: "{{app}}\\licenses\\game"; Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "{source}\\game.json"; DestDir: "{{app}}"; Flags: ignoreversion
 Source: "{source}\\game.apk"; DestDir: "{{app}}"; Flags: ignoreversion
 

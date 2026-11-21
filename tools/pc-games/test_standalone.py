@@ -32,6 +32,18 @@ class StandaloneTests(unittest.TestCase):
                                       '--language', 'en', '--controller-port', '63485',
                                       '--no-browser', '--http-port', '0'])
 
+    def test_interactive_windows_console_names_game_and_shows_exit_action(self):
+        with (
+            patch.object(standalone.sys, 'platform', 'win32'),
+            patch('ctypes.windll', create=True) as win32,
+            patch.object(standalone.host, 'main', return_value=0),
+            patch.object(standalone.sys, 'stdout') as console,
+        ):
+            console.isatty.return_value = True
+            self.assertEqual(standalone.main(['--language', 'zh']), 0)
+            self.assertTrue(any('Ctrl+C' in line.args[0] for line in console.write.call_args_list))
+        win32.kernel32.SetConsoleTitleW.assert_called_once_with(self.game['zh'])
+
     def test_macos_app_reads_resources_outside_frozen_helper(self):
         resources = self.root / 'Contents' / 'Resources'
         resources.mkdir(parents=True)
