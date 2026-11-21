@@ -205,4 +205,4 @@
 
 <!-- game-index:end -->
 
-KINDLE 需要 WebGL 2。macOS 安装包已通过 Apple Silicon 原生和 Rosetta 验证，Intel Mac 测试机未能完成初始化。
+KINDLE 需要 WebGL 2。macOS 安装包已通过 Apple Silicon 原生和 Rosetta 验证，Intel Mac 测试机未能完成初始化。 KINDLE 的 Android TV 0.1.1 已签名，模拟器未通过完整的原生手柄验证。

@@ -205,4 +205,4 @@
 
 <!-- game-index:end -->
 
-KINDLE requires WebGL 2. Its macOS package passed native Apple Silicon and Rosetta testing. The game did not finish initializing on the Intel Mac test runner.
+KINDLE requires WebGL 2. Its macOS package passed native Apple Silicon and Rosetta testing. The game did not finish initializing on the Intel Mac test runner. The signed Android TV build has only partial emulator verification.

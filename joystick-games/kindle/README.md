@@ -27,3 +27,5 @@ python3 joystick-games/qa/controller-input/pc.py --payloads .local-games --outpu
 macOS 需要 WebGL 2。Apple Silicon 原生及 Rosetta 运行验证通过，Intel Mac 测试机未完成初始化。
 
 Android TV 0.1.1 使用适合电视的地形网格和阴影分辨率。桌面版为 0.1.0。
+
+KINDLE 的 Android TV 0.1.1 已签名，模拟器未通过完整的原生手柄验证。 [Android TV 测试记录](docs/releases/0.1.1/android.json)
