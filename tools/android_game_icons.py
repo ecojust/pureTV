@@ -264,10 +264,10 @@ def device(args):
 
 def upload(args):
     # The fixed draft is shared with desktop builders. A retry may reuse only an identical asset.
-    release = json.loads(command('gh', 'api', 'repos/ecojust/pureTV/releases/tags/' + RELEASE))
-    assert release['draft'] and release['tag_name'] == RELEASE
+    release = json.loads(command('gh', 'release', 'view', RELEASE, '--repo', 'ecojust/pureTV', '--json', 'apiUrl,isDraft,tagName'))
+    assert release['isDraft'] and release['tagName'] == RELEASE
     pages = json.loads(command('gh', 'api', '--paginate', '--slurp',
-                               f"repos/ecojust/pureTV/releases/{release['id']}/assets?per_page=100"))
+                               release['apiUrl'] + '/assets?per_page=100'))
     existing = {asset['name']: asset.get('digest') for page in pages for asset in page}
     games = json.loads(args.report.read_text())['games']
     for game in games:

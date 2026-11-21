@@ -82,11 +82,11 @@ jobs:
           tag = 'gameplay-icons-2026.11.21'
           def gh(*args):
               return subprocess.check_output(['gh', *args], text=True)
-          release = json.loads(gh('release', 'view', tag, '--json', 'databaseId,isDraft,tagName'))
+          release = json.loads(gh('release', 'view', tag, '--json', 'apiUrl,isDraft,tagName'))
           if not release['isDraft'] or release['tagName'] != tag:
               raise ValueError('Expected the artwork staging draft')
           pages = json.loads(gh('api', '--paginate', '--slurp',
-                                f"repos/{os.environ['GITHUB_REPOSITORY']}/releases/{release['databaseId']}/assets?per_page=100"))
+                                release['apiUrl'] + '/assets?per_page=100'))
           existing = {item['name']: item for page in pages for item in page}
           for name, identity in artifacts.items():
               previous = existing.get(name)
