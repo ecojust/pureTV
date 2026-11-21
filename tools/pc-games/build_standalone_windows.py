@@ -30,7 +30,7 @@ def inno_compiler():
 
 def include_runtime_licenses(runtime):
     notices = runtime / 'licenses' / 'runtime'
-    notices.mkdir(parents=True)
+    notices.mkdir(parents=True, exist_ok=True)
     # The CPython Windows distribution includes third-party notices in LICENSE.txt.
     shutil.copyfile(Path(sys.base_prefix) / 'LICENSE.txt', notices / 'Python-LICENSE.txt')
     shutil.copyfile(SOURCE.parents[1] / 'LICENSE', notices / 'pureTV-LICENSE.txt')
@@ -44,9 +44,9 @@ def include_runtime_licenses(runtime):
             shutil.copyfile(dist.locate_file(item), notices / f'{name}-{item.name}')
 
 
-def build_runtime(work):
+def build_runtime(work, icon):
     subprocess.run([
-        sys.executable, '-m', 'PyInstaller', '--noconfirm', '--clean', '--onedir',
+        sys.executable, '-m', 'PyInstaller', '--noconfirm', '--onedir', '--icon', str(icon),
         '--contents-directory', '.', '--name', 'puretv-runtime',
         '--add-data', f'{SOURCE / "pc-bridge.js"}{os.pathsep}.',
         '--collect-all', 'zeroconf', '--recursive-copy-metadata', 'zeroconf',
@@ -63,7 +63,7 @@ def build_runtime(work):
     return runtime
 
 
-def build_game(compiler, runtime, source, output, work):
+def build_game(compiler, runtime, source, output, work, icon):
     game = json.loads((source / 'game.json').read_text(encoding='utf-8'))
     slug = game['id']
     version = game['version']
@@ -88,6 +88,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=lowest
 DefaultDirName={{localappdata}}\\Programs\\pureTV\\{slug}
 DisableProgramGroupPage=yes
+SetupIconFile={icon}
 UninstallDisplayIcon={{app}}\\{slug}.exe
 OutputDir={output}
 OutputBaseFilename={slug}-windows-x64-setup
@@ -99,6 +100,7 @@ WizardStyle=modern
 Source: "{runtime}\\*"; Excludes: "puretv-runtime.exe"; DestDir: "{{app}}"; Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "{runtime}\\puretv-runtime.exe"; DestDir: "{{app}}"; DestName: "{slug}.exe"; Flags: ignoreversion
 Source: "{source}\\licenses\\*"; DestDir: "{{app}}\\licenses\\game"; Flags: recursesubdirs createallsubdirs ignoreversion
+Source: "{icon}"; DestDir: "{{app}}"; DestName: "game.ico"; Flags: ignoreversion
 Source: "{source}\\game.json"; DestDir: "{{app}}"; Flags: ignoreversion
 Source: "{source}\\game.apk"; DestDir: "{{app}}"; Flags: ignoreversion
 
@@ -148,9 +150,14 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as temporary:
         work = Path(temporary)
-        runtime = build_runtime(work)
+        sys.path.insert(0, str(SOURCE.parent))
+        from game_icons import catalog_game_dir, save_ico
         for game in games:
-            installer = build_game(compiler, runtime, game, output, work)
+            page = catalog_game_dir(SOURCE.parents[1], game.name)
+            icon = work / (game.name + '.ico')
+            save_ico(page, icon)
+            runtime = build_runtime(work, icon)
+            installer = build_game(compiler, runtime, game, output, work, icon)
             verify_install(installer, game, work)
 
 

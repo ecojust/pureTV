@@ -1,6 +1,8 @@
 # Lumenrift · 光隙守望
 
-[Android TV 0.1.1 签名 APK](lumenrift-0.1.1.apk?raw=true) · [扫码连接手机](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上游玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.2 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/lumenrift-0.1.2.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/lumenrift-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/lumenrift-windows-x64-setup.exe)
+
+[扫码连接手机](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上游玩](../../docs/guide/README.md#在电脑上玩)
 
 在夜色、日光或四季战役中守住中央的光源。用围墙改变敌人的路线，在路边架设炮塔、在矿脉上建造采集站。每个战役都有自己的建筑、敌人和音乐。撑过第 30 波后可以继续挑战无尽模式。
 

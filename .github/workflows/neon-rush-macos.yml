@@ -30,6 +30,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: |
+            tools/pc-games/qa
             resource/apps/neon-rush
             resource/game-kit
             puretv-joystick
@@ -37,6 +38,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install the gameplay icon renderer
+        run: python3 -m pip install Pillow==11.3.0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

@@ -17,3 +17,23 @@ tasks.withType(JavaCompile).configureEach { dependsOn(prepareController) }
 tasks.configureEach {
     if (name == 'preBuild' || name.startsWith('lint') || name.contains('Lint')) dependsOn(prepareController)
 }
+
+// Generate the two images that the Android launcher and Android TV display.
+def repoRoot = projectDir.toPath().getParent().getParent().getParent().toFile()
+def iconTool = new File(repoRoot, 'tools/game_icons.py')
+def captureMap = new File(repoRoot, 'tools/game-icon-sources.json')
+def crops = new File(repoRoot, 'tools/game-icon-crops.json')
+def gamePath = 'resource/apps/' + projectDir.name
+def capture = new groovy.json.JsonSlurper().parse(captureMap)[gamePath] ?: gamePath + '/thumb.png'
+def generatedArt = layout.buildDirectory.dir('generated/res/gameplay')
+def launcherArt = tasks.register('generateGameplayLauncherArt') {
+    inputs.files(iconTool, captureMap, crops, new File(repoRoot, capture))
+    outputs.dir(generatedArt)
+    doLast {
+        def images = new File(generatedArt.get().asFile, 'drawable-nodpi')
+        project.exec { commandLine 'python3', iconTool, projectDir, new File(images, 'gameplay_icon.png'), '--size', '192' }
+        project.exec { commandLine 'python3', iconTool, projectDir, new File(images, 'gameplay_banner.png'), '--banner' }
+    }
+}
+android.sourceSets.main.res.srcDir(generatedArt)
+tasks.named('preBuild').configure { dependsOn(launcherArt) }

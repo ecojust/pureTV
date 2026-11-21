@@ -1,14 +1,18 @@
 # 灯塔节拍 / Lantern Rhythm
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](lantern-rhythm-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 观察灯号的方向、长短和顺序，再按节拍传回信号，依次点亮沿岸三座灯塔。示范只展示当前灯号；复现阶段给出拍点和计时，不显示待答的方向或长短。
 
 - 作者：ecojust / 桔子桑
 - 包名：`com.ecojust.lanternrhythmtv`
-- 版本：`0.1.0`
+- 版本：`0.1.1`
 - 电视系统：Android 8.0 / API 26 及以上
 - 图标：[logo.svg](logo.svg)
 
-发布产物：[APK](lantern-rhythm-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
+0.1.0 版本：[APK](lantern-rhythm-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
 
 ![实际游戏画面](thumb.png)
 

@@ -131,9 +131,7 @@ def main():
         require(not file.is_symlink(), 'Native source must not contain symlinks')
         if file.is_file():
             native_source[file.relative_to(source).as_posix()] = digest(file.read_bytes())
-    icon = builder.game_icon(game)
-    if icon is not None:
-        native_source[(game / 'icon.xml').relative_to(source).as_posix()] = digest(icon)
+    native_source.update(builder.launcher_source_hashes(game))
     require(native_source, 'Missing native host source')
     validation = {'schema': 1, 'slug': args.slug, 'sourceSha': args.source_sha, 'requestCommit': request_commit,
                   **expected, 'requestedUnsignedSha256': digest(raw), 'requestedUnsignedBytes': len(raw),

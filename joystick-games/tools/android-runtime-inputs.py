@@ -69,7 +69,12 @@ def expected_inputs(root, commit, slug):
     required = tree(root, commit, 'resource/game-kit/android/src/main', game + 'src', game + 'dist', 'joystick-games/shared/web')
     required |= {n for n in tree(root, commit, 'joystick-games/tools') if fnmatch.fnmatch(n, 'joystick-games/tools/android-*.py')}
     required |= tree(root, commit, 'joystick-games/tools/fixtures/audio')
-    required |= tree(root, commit, game + 'icon.xml')
+    if tree(root, commit, 'tools/game_icons.py'):
+        mapping = json.loads(frozen(root, commit, 'tools/game-icon-sources.json'))
+        image = safe_name(mapping.get(game.rstrip('/'), game + 'thumb.png'))
+        exact |= {*build.ARTWORK_TOOLS, image}
+    else:
+        required |= tree(root, commit, game + 'icon.xml')
     if slug not in GAMES:
         registry = build.registry_data(frozen(root, commit, build.REGISTRY))
         assert slug in build.registered_packages(root, registry), 'Game absent from frozen catalog registry'
@@ -85,7 +90,8 @@ def expected_inputs(root, commit, slug):
 
 def production_path(name, slug):
     game = 'joystick-games/' + slug + '/'
-    return (name in (build.REGISTRY, build.POLICY_PATH) or name.startswith(('joystick-games/shared/crisp/', 'joystick-games/shared/triptych/')) or
+    return (name in build.ARTWORK_TOOLS or Path(name).suffix.lower() in {'.jpg', '.jpeg', '.webp', '.png'} or
+            name in (build.REGISTRY, build.POLICY_PATH) or name.startswith(('joystick-games/shared/crisp/', 'joystick-games/shared/triptych/')) or
             name.startswith('resource/game-kit/android/src/main/') or name in PHONE or
             (name.startswith('joystick-games/shared/web/') and '.test.' not in name) or
             name.startswith(game + 'src/') or name.startswith(game + 'dist/') or

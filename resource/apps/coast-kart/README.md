@@ -1,10 +1,12 @@
 # 海岸卡丁车 TV
 
-## Android 0.5.6 · 手柄与手机连接
-
 <!-- apk-resource:start -->
-[下载签名 APK](coast-kart-0.5.6.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
+[Android 0.5.7 APK](coast-kart-0.5.7.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/coast-kart-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/coast-kart-macos.dmg) · [图标与安装验证](docs/releases/0.5.7/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.5.6 实玩录像](docs/releases/0.5.6/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
+
+## 历史 Android 版本 0.5.6 · 手柄与手机连接
+
+[下载签名 APK](coast-kart-0.5.6.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
 
 绘制出错后，手机房间仍会更新。键盘失焦时会读取手机的即时输入，短按 Wi-Fi 手柄也会在下一帧生效。可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
 
@@ -30,7 +32,7 @@ Android **0.5.4 / versionCode 6**：手柄连接后，侧边显示手柄图标�
 
 一款参考现代卡丁车竞速玩法、独立制作的电视游戏。采用实际 WebGL 1 三维场景与跟随镜头，包含四条原创赛道、三级漂移加速、尾流超车、道具、电脑对手和手机扫码双人分屏。
 
-当前版本 **0.5.6**，适用于 Android 8.0 及以上电视，包名 `com.ecojust.coastkarttv`。
+当前版本 **0.5.7**，适用于 Android 8.0 及以上电视，包名 `com.ecojust.coastkarttv`。
 <!-- visual-release:start -->
 ## 历史：0.5.2 视觉更新与验证
 

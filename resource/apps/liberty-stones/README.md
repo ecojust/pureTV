@@ -1,5 +1,9 @@
 # 围子夺星 / Liberty Stones
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](liberty-stones-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 在 5×5、6×6、7×7 的公开合法中盘上执黑，进行一场小棋盘提子竞赛。黑白双方都从零提子开始，谁先提满四枚对方棋子，谁就获胜；黑方最多分别有 10、12、14 手。这里按提子目标判定，不进行围棋数目或地域计分。
 
 ## 操作与气

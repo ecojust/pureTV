@@ -1,5 +1,9 @@
 # 六角连线 · Hex Connection
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](hex-connection-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 原创界面的六角棋残局游戏。你执金色、带横向刻线的棋子，目标是连通棋盘左边和右边；蓝色、带竖向刻线的对手连接上边和下边。任意一条同色相邻棋链到达目标两岸就获胜，棋子数量不决定胜负。
 
 每格与 `(x±1,y)`、`(x,y±1)`、`(x+1,y−1)`、`(x−1,y+1)` 相邻，共六个方向；`(x+1,y+1)` 和 `(x−1,y−1)` 不相邻。界面按此关系排列为真实六角格。边缘彩线标记目标，棋子刻线和侧栏文字同时提供颜色之外的辨认方式。

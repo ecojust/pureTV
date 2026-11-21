@@ -1,10 +1,12 @@
 # QQ 飞车 · pureTV 手柄版
 
-[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/qq-speed-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.2 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/qq-speed-0.1.2.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/qq-speed-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/qq-speed-windows-x64-setup.exe)
+
+[用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 基于 riba2534 的 [qq-speed](https://github.com/riba2534/claude-opus-5-5-demo/tree/54adc1fb64155f9dd7c1c90ecae7b8185ac540b8/qq-speed) 适配。保留 11 城、情迷爱琴海、法老金字塔、雪地大冒险四张赛道，以及竞速／道具两种模式。上游的车辆、场景、漂移集气、氮气、小喷、双喷、跳台和六车比赛沿用上游实现。
 
-## 安装包
+## 0.1.0 版安装包与验证记录
 
 **0.1.0** 安装包与验证记录已随本目录提供。
 

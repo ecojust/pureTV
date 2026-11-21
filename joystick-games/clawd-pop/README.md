@@ -1,6 +1,8 @@
 # 爆裂实验室 · Clawd Pop 3D
 
-[Android TV 0.1.1 签名 APK](clawd-pop-0.1.1.apk?raw=true) · [扫码连接手机](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上游玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.2 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/clawd-pop-0.1.2.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/clawd-pop-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/clawd-pop-windows-x64-setup.exe)
+
+[扫码连接手机](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上游玩](../../docs/guide/README.md#在电脑上玩)
 
 穿过按种子生成的实验室，清除每个隔离区的样本，打破机组的能源单元，再到核心室挑战最终首领。主菜单可选随机实验室或每日挑战。单人游玩，保留了原作的程序生成场景、音效、计分和结果评级。
 

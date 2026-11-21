@@ -1,14 +1,18 @@
 # 引力快递 / Gravity Courier
 
+<!-- apk-resource:start -->
+[Android 0.1.2 APK](gravity-courier-0.1.2.apk?raw=1) · [图标与安装验证](docs/releases/0.1.2/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.1 实玩录像](docs/gameplay-0.1.1.mp4?raw=1)
+<!-- apk-resource:end -->
+
 驾驶一艘有惯性的小艇，把三份包裹送到星海中的收件站。用推力规划航线，提前减速避开星体；燃料耗尽后仍会滑行，也可以靠近补给站重新补充。星体引力、低速交付和有限燃料构成这款游戏的核心规则。
 
 - 作者：ecojust / 桔子桑
 - 包名：`com.ecojust.gravitycouriertv`
-- 版本：`0.1.1`
+- 版本：`0.1.2`
 - 电视系统：Android 8.0 / API 26 及以上
 - 图标：[logo.svg](logo.svg)
 
-[下载安装包](gravity-courier-0.1.1.apk) · [查看实际游玩视频](docs/gameplay-0.1.1.mp4) · [验证记录](docs/verification.json)
+0.1.1 版本：[APK](gravity-courier-0.1.1.apk) · [查看实际游玩视频](docs/gameplay-0.1.1.mp4) · [验证记录](docs/verification.json)
 
 ![实际游戏画面](thumb.png)
 

@@ -63,6 +63,21 @@ def main(argv=None):
                   'Press Ctrl+C or close this window to quit.', flush=True)
         options = ['--apk', str(apk), '--game', game['id'], '--language', language,
                    '--controller-port', str(args.controller_port)]
+        icon = root / 'game.ico'
+        if sys.platform == 'win32' and icon.is_file():
+            import ctypes
+            # The Windows console host has its own window, separate from the EXE.
+            shell = ctypes.windll.shell32
+            shell.SetCurrentProcessExplicitAppUserModelID('ecojust.pureTV.game.' + game['id'])
+            user = ctypes.windll.user32
+            large, small = ctypes.c_void_p(), ctypes.c_void_p()
+            if shell.ExtractIconExW(sys.executable, 0, ctypes.byref(large), ctypes.byref(small), 1):
+                ctypes.windll.kernel32.GetConsoleWindow.restype = ctypes.c_void_p
+                window = ctypes.windll.kernel32.GetConsoleWindow()
+                if window:
+                    for size, handle in ((1, large), (0, small)):
+                        user.SendMessageW(ctypes.c_void_p(window), 0x0080, size, handle)
+            options.extend(['--icon', str(icon)])
         if args.no_browser:
             options.append('--no-browser')
         if args.http_port is not None:

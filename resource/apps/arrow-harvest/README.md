@@ -1,14 +1,18 @@
 # 箭田收获 / Arrow Harvest
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](arrow-harvest-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 转动田格里的箭头，再一次播种，让多颗种子同步走遍目标田块。每格只能覆盖一次；种子不能进入禁地，也不能在同一拍撞到一起。固定箭头不能调整，播种之后也不能临时改路。
 
 - 作者：ecojust / 桔子桑
 - 包名：`com.ecojust.arrowharvesttv`
-- 版本：`0.1.0`
+- 版本：`0.1.1`
 - 电视系统：Android 8.0 / API 26 及以上
 - 图标：[logo.svg](logo.svg)
 
-发布产物：[APK](arrow-harvest-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
+0.1.0 版本：[APK](arrow-harvest-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
 
 ![实际游戏画面](thumb.png)
 

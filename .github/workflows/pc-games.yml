@@ -6,8 +6,20 @@ on:
       target:
         description: Desktop package to build
         type: choice
-        options: [catalog, standalone, standalone-macos, standalone-windows]
+        options: [catalog, standalone, standalone-macos, standalone-windows, icons-android, icons-macos, icons-windows]
         default: catalog
+      android_shards:
+        description: Android icon build batches (JSON array, 0–7)
+        type: string
+        default: '[0,1,2,3,4,5,6,7]'
+      android_pilot:
+        description: Check the first three Android games in each selected batch without publishing
+        type: boolean
+        default: false
+      android_verified_run:
+        description: Restore verified Android packages from a run whose release upload failed
+        type: string
+        required: false
   push:
     branches: [master, 'feat/catalog-game-controls-*']
     paths:
@@ -18,6 +30,30 @@ permissions:
   contents: read
 
 jobs:
+  android-icons:
+    if: inputs.target == 'icons-android'
+    permissions:
+      actions: read
+      contents: write
+    uses: ./.github/workflows/game-icons-android.yml
+    with:
+      shards: ${{ inputs.android_shards || '[0,1,2,3,4,5,6,7]' }}
+      pilot: ${{ inputs.android_pilot || false }}
+      verified_run: ${{ inputs.android_verified_run || '' }}
+    secrets: inherit
+
+  macos-icons:
+    if: inputs.target == 'icons-macos'
+    permissions:
+      contents: write
+    uses: ./.github/workflows/game-icons-macos.yml
+
+  windows-icons:
+    if: inputs.target == 'icons-windows'
+    permissions:
+      contents: write
+    uses: ./.github/workflows/game-icons-windows.yml
+
   games:
     if: startsWith(inputs.target, 'standalone')
     uses: ./.github/workflows/standalone-games.yml
@@ -25,7 +61,7 @@ jobs:
       target: ${{ inputs.target }}
 
   windows:
-    if: ${{ !startsWith(inputs.target, 'standalone') }}
+    if: ${{ !startsWith(inputs.target, 'standalone') && !startsWith(inputs.target, 'icons-') }}
     runs-on: windows-2022
     timeout-minutes: 18
     steps:

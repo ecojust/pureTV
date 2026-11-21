@@ -1,12 +1,14 @@
 # Night Racer · 霓虹街区
 
-[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/night-racer-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.2 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/night-racer-0.1.2.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/night-racer-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/night-racer-windows-x64-setup.exe)
+
+[用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 来自 [zhuqipaopao-maker/night-racer-public](https://github.com/zhuqipaopao-maker/night-racer-public) 的非官方 pureTV 手柄适配，固定上游 `3a432cd3bf059dbaaa00d700f0f83e0e5313d40b`。保留雨夜街道、山路、海岸、长安等原场景，以及竞速／计时、漂移氮气、车库改装、金币任务和本地幽灵。
 
-已提供下方 Android TV、Windows 和 macOS 安装包，各平台要求与验证范围分别列明。画面比较与来源见[赛车评审](../../docs/racing-nine/reviews/driving/comparison.json)，浏览器实际输入与画面检查见[验证记录](docs/VERIFICATION.md)。
+下文按平台记录旧版安装包的系统要求和实测范围。画面比较与来源见[赛车评审](../../docs/racing-nine/reviews/driving/comparison.json)，浏览器实际输入与画面检查见[验证记录](docs/VERIFICATION.md)。
 
-## Android TV 下载
+## Android TV 0.1.0 版交付记录
 
 [Night Racer 0.1.0 APK](night-racer-0.1.0.apk)（22,465,268 字节）· [SHA256 校验](SHA256SUMS.txt) · [原包与运行核验](docs/android-delivery/README.md)
 
@@ -14,7 +16,7 @@
 
 已逐张检查 14 张原截图，逻辑视口为 960×540、截图为 1920×1080。菜单底部部分键盘提示被固定手柄提示条遮住，实际九键说明与可操作按钮仍可读。原视频仅录制最初约 180 秒，涵盖菜单、倒计时和初始比赛，不作为完整驾驶录像。原首次 reload 验证失败记录保留；本次未做专项持久存档、完整职业或实体电视／ESP32 手柄测试。
 
-## Windows 下载
+## Windows 0.1.0 版交付记录
 
 0.1.0 x64：[安装 EXE](NightRacer-0.1.0-windows-x64-setup.exe)（21,423,109 字节）· [便携 ZIP](NightRacer-0.1.0-windows-x64.zip)（21,323,745 字节）· [SHA256 校验](SHA256SUMS.txt)。需要 **Windows 10 1903 或更新版本／Windows 11 x64、Microsoft Edge WebView2 Runtime 和可用的 WebGL 2**；便携版请完整解压后运行 `PureTVGame.exe`。安装包未做 Authenticode 签名。
 
@@ -24,7 +26,7 @@
 
 标题页按 P 开赛。W / S 给油和刹车，A / D 转向，Shift 漂移，空格释放氮气。 电脑也可以连接同一局域网的 pureTV 无线手柄，按手柄搜索键（GPIO 23）配对。Android TV 可用同一 Wi-Fi 下的手机扫描菜单连接卡中的二维码，打开虚拟手柄。比赛时连接卡缩小，断线后重新连接，再手动继续。
 
-## macOS 下载
+## macOS 0.1.0 版交付记录
 
 0.1.0 Universal：[DMG](macos/NightRacer-0.1.0-macos-universal.dmg) · [ZIP](macos/NightRacer-0.1.0-macos-universal.zip) · [SHA256](SHA256SUMS.txt)。要求 **macOS 11+、WebGL2**，包含 arm64 与 x86_64。Apple Silicon 原生、端口占用及 Rosetta 模式各通过9项实际检查，包括原 SDK 控制、暂停／断线取消和真实存档重启。**Intel Mac 图形运行仍未验证**；ad-hoc 签名，未经过 Apple 公证，未做实体手柄或完整通关测试。
 

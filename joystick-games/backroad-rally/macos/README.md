@@ -1,5 +1,9 @@
 # Backroad Rally macOS
 
+[下载macOS 安装包（DMG）](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/backroad-rally-macos.dmg)
+
+## 0.1.0 版安装包与验证记录
+
 两个原包均超过 GitHub 单文件 100 MiB 限制，存放在 [Release](https://github.com/ecojust/pureTV/releases/tag/joystick-backroad-rally-v0.1.0)。
 
 - [BackroadRally-0.1.0-macos-universal.zip](https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-v0.1.0/BackroadRally-0.1.0-macos-universal.zip)（105275042 字节）

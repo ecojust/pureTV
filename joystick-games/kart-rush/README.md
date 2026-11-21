@@ -1,12 +1,14 @@
 # Kart Rush · pureTV 手柄适配
 
-[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/kart-rush-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.2 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-rush-0.1.2.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-rush-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-rush-windows-x64-setup.exe)
+
+[用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 固定源为 [stevkazt/kart-rush](https://github.com/stevkazt/kart-rush/tree/4b0cf276d84e76171feb765d87b5e8a6159cc421)。保留原始程序化 3D 美术、8 条正式赛道、7 场大奖赛、8 名车手、车辆与涂装选择、道具、自动漂移、三圈规则、原创合成音效及存档。每场仍为玩家和 5 名 AI。
 
-已提供 [Android TV 0.1.0 APK](kart-rush-0.1.0.apk)（948,563 字节，Android 8.0+），使用固定发布证书。原生模拟器正常端口与端口占用两种模式各通过52项实际手柄检查，详见[签名、源码及运行核验](docs/android-attempt-2/)。macOS、Windows 下载及各自验证范围见下方。未在实体电视或手机上测试。
+此前发布的 [Android TV 0.1.0 APK](kart-rush-0.1.0.apk)（948,563 字节，Android 8.0+），使用固定发布证书。原生模拟器正常端口与端口占用两种模式各通过52项实际手柄检查，详见[签名、源码及运行核验](docs/android-attempt-2/)。macOS、Windows 旧版安装包的验证范围见下方。未在实体电视或手机上测试。
 
-## Windows 下载
+## Windows 0.1.0 版交付记录
 
 0.1.0 x64：[安装 EXE](KartRush-0.1.0-windows-x64-setup.exe)（1,037,069 字节）· [便携 ZIP](KartRush-0.1.0-windows-x64.zip)（957,533 字节）· [SHA256 校验](SHA256SUMS.txt)。需要 Windows 10 1903 或更新版本、Windows 11 x64 和已安装的 Microsoft Edge WebView2 Runtime；便携版请完整解压后运行 `PureTVGame.exe`。安装包未做 Authenticode 签名。
 
@@ -16,7 +18,7 @@
 
 首次用方向键移动姓名键盘，Enter 选字、Y 完成。按 P 开始单场比赛，用方向键或 WASD 驾驶。 电脑也可以连接同一局域网的 pureTV 无线手柄，按手柄搜索键（GPIO 23）配对。Android TV 可用同一 Wi-Fi 下的手机扫描菜单连接卡中的二维码，打开虚拟手柄。比赛时连接卡缩小，断线后重新连接，再手动继续。
 
-## macOS 下载
+## macOS 0.1.0 版交付记录
 
 Intel 原生的补充复验覆盖 macOS 26。已发布原包成功进入前台，同机 WebGL 1 和 2 的六次像素回读均丢失上下文。[Intel 实测记录](docs/macos-intel-26/)
 

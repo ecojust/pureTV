@@ -1,5 +1,9 @@
 # 脉冲储库 · Pulse Vault
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](pulse-vault-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 按住接收周期能量，选择放电档位，依次开启四道门锁，最后留下足够的储备。储库最多容纳 72 EU；溢出的能量会漏失并升温，热量达到 100 HU 则失败。
 
 **A / 空格 / 遥控确认键按住收能，松开停止；B 放电。** 左右每拨一次选择一档，回中后可以再拨，五档分别为 12、24、36、48、60 EU。P 或手机 START 暂停／继续，R 重试。开始或恢复后，先松开旧按键再操作。
@@ -16,7 +20,7 @@
 
 菜单展示完整门序、脉冲和储备要求。画面分别显示实际储能、热量、放电档位和门锁状态；暂停时整局冻结，重试恢复本关初始状态。
 
-版本 `0.1.0`，包名 `com.ecojust.pulsevaulttv`，作者 ecojust / 桔子桑。采用 [MIT 许可证](LICENSE)。
+版本 `0.1.1`，包名 `com.ecojust.pulsevaulttv`，作者 ecojust / 桔子桑。采用 [MIT 许可证](LICENSE)。
 
 实现采用固定 60 Hz 的整数能量与热量规则，详见[模型合同](docs/model-contract.md)和[公开接口](docs/public-interface.md)。从仓库根目录执行规则测试：
 

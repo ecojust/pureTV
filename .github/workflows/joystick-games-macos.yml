@@ -17,6 +17,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: |
+            tools/pc-games/qa
             joystick-games
             puretv-joystick
             .github/workflows
@@ -26,6 +27,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install the gameplay icon renderer
+        run: python3 -m pip install Pillow==11.3.0
       - name: Reproduce committed web assets and run game/bridge regressions
         env:
           GAME: ${{ matrix.game }}

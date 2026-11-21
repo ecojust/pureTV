@@ -1,5 +1,9 @@
 # 量杯转运 / Measure Pour
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](measure-pour-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 三只不同容量的量杯，只有一份固定总量的水。通过在量杯之间倒水，使三杯水量同时符合公开目标。每次必须倒到来源杯空或接收杯满，不能中途停止，也没有外部加水或排水。
 
 ## 操作

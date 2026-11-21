@@ -1,5 +1,9 @@
 # 环塔迁移 / Ring Towers
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](ring-towers-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 把左柱上的整座环塔迁到右侧目标柱。一次只能搬动一枚顶环，而且大环不能压在小环上。利用中间柱暂存，安排大小环的移动次序。
 
 | 操作 | 作用 |

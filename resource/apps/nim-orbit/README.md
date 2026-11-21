@@ -1,5 +1,9 @@
 # 取石回合 / Nim Orbit
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](nim-orbit-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 每回合从**一堆**取走至少一颗石子，可取到该堆全空。你行动后，对手按公开、确定的最优规则立即回应。
 
 | 关卡 | 初始石堆 | 最后一颗规则 |

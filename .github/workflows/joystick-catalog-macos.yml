@@ -94,6 +94,7 @@ jobs:
         with:
           ref: ${{ github.sha }}
           sparse-checkout: |
+            tools/pc-games/qa
             joystick-games
             puretv-joystick
             .github/workflows
@@ -103,6 +104,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install the gameplay icon renderer
+        run: python3 -m pip install Pillow==11.3.0
       - name: Preserve every game's regressions and build independent universal packages
         run: |
           python3 - <<'PY'

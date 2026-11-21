@@ -50,7 +50,7 @@ The TV store works with updated launchers to let you choose the position of an a
 
 Find your game on the homepage and select its Apple or Windows icon. On macOS, open the DMG and drag the game to Applications. On Windows, run the installer and open the game from the Start menu. [Browse installers by game](../../README.en.md#games)
 
-The 37 added installers include the game assets and support offline play. The macOS games open in their own windows and quit with Command-Q. The Windows games open in your default browser and quit when you close the game's console. Some 3D games require WebGL 2. [Downloads and SHA-256 checksums](https://github.com/ecojust/pureTV/releases/tag/standalone-games-2026.11.21)
+The original batch of 37 standalone installers includes the game assets for offline play. The macOS games open in their own windows and quit with Command-Q. The Windows games open in your default browser and quit when you close the game's console. Some 3D games require WebGL 2. [Current downloads and SHA-256 checksums](../releases/gameplay-icons-2026.11.21/clients.json) · [Original 37-installer release](https://github.com/ecojust/pureTV/releases/tag/standalone-games-2026.11.21)
 
 #### Use the multi-game player
 

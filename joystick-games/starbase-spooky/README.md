@@ -1,6 +1,8 @@
 # 幽灵空间站 · Starbase Spooky
 
-[下载当前 Android TV 手柄版 0.1.3](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/starbase-spooky-0.1.3.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.4 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/starbase-spooky-0.1.4.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/starbase-spooky-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/starbase-spooky-windows-x64-setup.exe)
+
+[用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 你是空间站的新管理员 Kit。和机器人 Orby 一起巡查八个房间、迎接五批访客，找出站里半夜发出响动的原因。找回第一条线索前，先去 Star Garden：在灯光面板里，把左右两侧相同颜色的电线接好，再调查地面发光的东西。
 
@@ -36,7 +38,7 @@ Kit 会自动走向选中的热点。连接中断时游戏暂停，重新连接�
 0.1.2（versionCode 3）面向 Android API 35 构建，最低支持 API 26。此前 0.1.1 的签名包含 target 29。在 Android TV 16 模拟器上，两次安装均出现 Google Play Protect 的旧版目标警告，54 秒后超时，游戏尚未启动。[原签名包及构建记录](https://github.com/ecojust/pureTV/tree/aa38c2dde1fe0269f7a20d5c3503865dba3ad0d5/packages/starbase-spooky) · [默认端口系统画面](docs/android-0.1.1-install/normal-screen.png) · [占用回退系统画面](docs/android-0.1.1-install/occupied-screen.png)
 
 <!-- puzzle-downloads -->
-## 安装包 0.1.2
+## 0.1.2 版安装包与验证记录
 
 | 平台 | 安装文件 |
 | --- | --- |

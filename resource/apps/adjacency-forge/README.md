@@ -1,14 +1,18 @@
 # 邻接铸造 / Adjacency Forge
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](adjacency-forge-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 在七格六边形工坊中交换铜、铁、银块，让每块金属的局部配方满足要求，再让炉源的热路实际抵达铸模。材料总数正确还不够：同样的邻居数量也可能导向堵塞或循环。
 
 - 作者：ecojust / 桔子桑
 - 包名：`com.ecojust.adjacencyforgetv`
-- 版本：`0.1.0`
+- 版本：`0.1.1`
 - 电视系统：Android 8.0 / API 26 及以上
 - 图标：[logo.svg](logo.svg)
 
-发布产物：[APK](adjacency-forge-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
+0.1.0 版本：[APK](adjacency-forge-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
 
 ![实际游戏画面](thumb.png)
 

@@ -1,10 +1,12 @@
 # Tank TV · 经典坦克大战
 
-## Android 0.5.6 · 手柄与手机连接
-
 <!-- apk-resource:start -->
-[下载签名 APK](tank-0.5.6.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
+[Android 0.5.7 APK](tank-0.5.7.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tank-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tank-macos.dmg) · [图标与安装验证](docs/releases/0.5.7/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.5.6 实玩录像](docs/releases/0.5.6/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
+
+## 历史 Android 版本 0.5.6 · 手柄与手机连接
+
+[下载签名 APK](tank-0.5.6.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
 
 在 720 × 480 电视上，二维码和两个玩家席位都能完整显示。可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
 
@@ -28,7 +30,7 @@ Android **0.5.4 / versionCode 11**：手柄连接后，侧边显示手柄图标�
 ![Android 0.5.4 手柄已连接及完整 ID](docs/releases/0.5.4/connected.png)
 <!-- controller-client-status:end -->
 
-当前版本为 **0.5.6**，独立重写 1985 年红白机《Battle City》的玩法、35 关地图与表现。安装后即可游玩，无须导入 ROM；包名保持不变。尚未完成电视实机和逐帧对照验证。
+当前版本为 **0.5.7**，独立重写 1985 年红白机《Battle City》的玩法、35 关地图与表现。安装后即可游玩，无须导入 ROM；包名保持不变。尚未完成电视实机和逐帧对照验证。
 
 新版保留电视二维码与手机局域网双人手柄，使用 256×240 原生画面和 208×208 战场。游戏规则独立编写，不加载或运行 ROM。35 关地图、每关 20 辆敌人的顺序、四种敌军、六种道具、星级升级、双人统计与 Construction 均有来源对照；AI、部分碰撞和动画时序仍需进一步逐帧核对。详细依据与局限见[规则和关卡](docs/reference.md)、[图像与声音](docs/reference-art-audio.md)。
 

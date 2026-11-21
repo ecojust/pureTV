@@ -1,5 +1,9 @@
 # 旋环锁匠 · Rotor Locksmith
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](rotor-locksmith-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 拨转黄铜锁环，让探头穿过三层缺口，进入核心取钥匙，再把整把钥匙带回出口。三个圆环按不同的正反齿轮比同步转动；拿到钥匙后，探头占用的空间变大，回程也需要逐环对齐。
 
 **左右拨环，A 推进，B 退回。** 手机左侧摇杆控制转向，右侧上半区为 A、下半区为 B，两块区域均可按住。松开方向会停住圆环；同时按 A+B 只停止探头进退，仍可拨环。在环间空隙停车对齐，再继续穿环。
@@ -16,6 +20,6 @@
 
 暂停会冻结位置、角度和计时；取消输入只停止操作，本局时钟仍继续。首次开始、取消输入或切换手柄后，先松开全部按键并让摇杆回中。重试才会恢复初始锁芯、耐久、阻力、钥匙状态和时间。
 
-版本 `0.1.0`，包名 `com.ecojust.rotorlocksmithtv`，作者 ecojust / 桔子桑，采用 [MIT 许可证](LICENSE)。完整布局见[公开玩法](docs/public-design.md)，连续碰撞与结算规则见[模型合同](docs/model-contract.md)，可观察状态见[公开接口](docs/public-interface.md)。
+版本 `0.1.1`，包名 `com.ecojust.rotorlocksmithtv`，作者 ecojust / 桔子桑，采用 [MIT 许可证](LICENSE)。完整布局见[公开玩法](docs/public-design.md)，连续碰撞与结算规则见[模型合同](docs/model-contract.md)，可观察状态见[公开接口](docs/public-interface.md)。
 
 实际测试范围、安装包和录像结果以随版本发布的验证报告为准。浏览器与模拟桥接验证不代表实体电视或手机已测试。

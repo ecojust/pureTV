@@ -1,5 +1,9 @@
 # 四季蓄水
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](reservoir-seasons-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 根据四季公开预报，为居民、农田和生态河流分配水库储水。春汛可能溢流，旱季需要留水；三类年度满足率分别计算，不能靠另一类的富余抵消缺水。
 
 左右方向键或手机摇杆选择居民、农田、河流、提交四栏。**A 配水 / 提交**在用水方增加 5 单位计划量，在提交栏锁定本季计划。**B 撤销配水**按后进先出撤销本季最近一次成功增加；提交后不可撤销。手机右侧上下大触控区分别对应 A／B。
@@ -12,4 +16,4 @@
 
 原创水库、坝体、住区、梯田和河道采用图集合批绘制。计量使用固定 60 Hz 的整数水量规则；精确的入季顺序、逐类取整、输入边界与水量守恒见[模型合同](docs/model-contract.md)。软件浏览器验证与实体电视、手机测试分别记录。
 
-版本 0.1.0 · 包名 `com.ecojust.reservoirseasonstv` · 作者 ecojust / 桔子桑 · MIT。
+版本 0.1.1 · 包名 `com.ecojust.reservoirseasonstv` · 作者 ecojust / 桔子桑 · MIT。

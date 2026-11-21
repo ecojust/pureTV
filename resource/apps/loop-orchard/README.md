@@ -1,14 +1,18 @@
 # 环线果园 / Loop Orchard
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](loop-orchard-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 在果园的格点之间铺设一条闭合管线，经过全部需要灌溉的树，避开禁水花坛，并满足区域的管段数提示。两个各自闭合的小环仍不是一条完整灌溉环线。
 
 - 作者：ecojust / 桔子桑
 - 包名：`com.ecojust.looporchardtv`
-- 版本：`0.1.0`
+- 版本：`0.1.1`
 - 电视系统：Android 8.0 / API 26 及以上
 - 图标：[logo.svg](logo.svg)
 
-发布产物：[APK](loop-orchard-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
+0.1.0 版本：[APK](loop-orchard-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
 
 ![实际游戏画面](thumb.png)
 

@@ -1,10 +1,12 @@
 # Coast Kart TV
 
-## Android 0.5.6 · Controllers and phone pairing
-
 <!-- apk-resource:start -->
-[Download the signed APK](coast-kart-0.5.6.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
+[Android 0.5.7 APK](coast-kart-0.5.7.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/coast-kart-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/coast-kart-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.5.7/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.5.6 gameplay video](docs/releases/0.5.6/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
+
+## Earlier Android release 0.5.6 · Controllers and phone pairing
+
+[Download the signed APK](coast-kart-0.5.6.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
 
 The phone room keeps updating if a drawing error interrupts the game. Keyboard focus changes respect current phone input and preserve short Wi-Fi button presses. Connect a keyboard, pair a pureTV Wi-Fi controller, or scan the TV room’s QR code with a phone on the same network. The connection indicator identifies each player while the game keeps its playing area at the same size. [Controller guide](../../../docs/guide/README.en.md#install-a-game-and-connect-a-controller)
 
@@ -30,7 +32,7 @@ The APK uses the existing release certificate. This update verifies connection i
 
 An independently made TV kart racer with actual WebGL 1 3D scenes and a following camera, four original tracks, drift boosts, items, computer opponents and split-screen play using LAN phone controllers.
 
-Current version **0.5.6** requires Android 8.0 or later. Package: `com.ecojust.coastkarttv`.
+Current version **0.5.7** requires Android 8.0 or later. Package: `com.ecojust.coastkarttv`.
 
 <!-- visual-release:start -->
 ## Historical: 0.5.2 visual update and verification

@@ -1,5 +1,9 @@
 # Backroad Rally · Windows x64
 
+[下载Windows x64 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/backroad-rally-windows-x64-setup.exe)
+
+## 0.1.0 版安装包与验证记录
+
 适用于 Windows 10 1903 或更高版本，需要 Microsoft Edge WebView2 Evergreen Runtime 和 WebGL2。0.1.0 安装器及便携包均未使用 Authenticode 签名。
 
 - [下载安装器](https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-windows-v0.1.0/BackroadRally-0.1.0-windows-x64-setup.exe)

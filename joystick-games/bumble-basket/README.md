@@ -1,6 +1,8 @@
 # 蜜蜂果篮 · Bumble Basket
 
-[下载当前 Android TV 手柄版 0.1.3](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/bumble-basket-0.1.3.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.4 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/bumble-basket-0.1.4.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/bumble-basket-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/bumble-basket-windows-x64-setup.exe)
+
+[用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 在野餐毯上连起至少三颗相邻的水果，再让蜜蜂采摘。第一座果园要求相邻水果同类，后续果园逐步引入颜色、大小和家族。原版关卡、果酱罐、图鉴、无尽野餐、程序化 3D 场景和音效均在本地运行。[原作与许可证](NOTICE.md)
 
@@ -18,7 +20,7 @@
 使用 Node.js 执行 `npm ci`、`npm run build`、`npm run build:check` 和 `npm test`。Android TV、macOS 和 Windows 宿主使用同一份 `dist/tv.html`。浏览器验收在两个电视分辨率按真实按钮逻辑逐颗选果，核对采摘、积分、暂停和重连。[跨平台验收计划](qa-plan.json) · [浏览器执行记录](docs/browser/report.json) · [原版文件校验](upstream.json)
 
 <!-- puzzle-downloads -->
-## 安装包 0.1.2
+## 0.1.2 版安装包与验证记录
 
 | 平台 | 安装文件 |
 | --- | --- |

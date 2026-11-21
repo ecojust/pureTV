@@ -1,13 +1,15 @@
 # Cozy Island TV
 
+<!-- apk-resource:start -->
+[Android 0.5.5 APK](cozy-island-0.5.5.apk?raw=1) · [Launcher artwork and installation checks](docs/releases/0.5.5/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.5.3 gameplay video](docs/releases/0.5.3/gameplay.mp4?raw=1)
+<!-- apk-resource:end -->
+
 [中文](README.md) · [English](README.en.md)
 
 <!-- controller-client-status:start -->
-## 0.5.4 · Connected controller identity
+## Earlier release 0.5.4 · Connected controller identity
 
-<!-- apk-resource:start -->
 [Download signed APK](cozy-island-0.5.4.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and source](resource.json) · [Source](src/) · [Icon](logo.svg)
-<!-- apk-resource:end -->
 
 Android **0.5.4 / versionCode 6** shows a controller icon, player seat (1P/2P where supported), and the connected device's complete ID in the side area. Disconnected devices disappear. The default TCP port remains **63485**. Current controller firmware does not report RSSI, so signal strength is not displayed.
 
@@ -20,7 +22,7 @@ The APK uses the existing release certificate. This update verifies connection i
 
 An independently made island-life TV game with actual WebGL 1 3D scenes and a following camera. Gather materials, fish, help original residents, craft and place furniture, and upgrade your home on an original island.
 
-Current version **0.5.4** requires Android 8.0 or later. Package: `com.ecojust.cozyislandtv`.
+Current version **0.5.5** requires Android 8.0 or later. Package: `com.ecojust.cozyislandtv`.
 
 <!-- visual-release:start -->
 ## Historical: 0.5.2 visual update and verification

@@ -1,14 +1,18 @@
 # 双岛联结 / Island Dominoes
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](island-dominoes-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 为岛屿选择合适的双端桥片：数字规定直线桥长，颜色规定目标岛。把所有桥片用完，让每座岛接入同一个网络，同时避开交叉、重叠和途中的其他岛。
 
 - 作者：ecojust / 桔子桑
 - 包名：`com.ecojust.islanddominoestv`
-- 版本：`0.1.0`
+- 版本：`0.1.1`
 - 电视系统：Android 8.0 / API 26 及以上
 - 图标：[logo.svg](logo.svg)
 
-发布产物：[APK](island-dominoes-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
+0.1.0 版本：[APK](island-dominoes-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
 
 ![实际游戏画面](thumb.png)
 

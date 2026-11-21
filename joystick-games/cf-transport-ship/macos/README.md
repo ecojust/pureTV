@@ -1,4 +1,8 @@
-# 运输船 CF macOS 0.1.0
+# 运输船 CF macOS
+
+[下载macOS 安装包（DMG）](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/cf-transport-ship-macos.dmg)
+
+## 0.1.0 版安装包与验证记录
 
 - [下载 DMG](CFTransportShip-0.1.0-macos-universal.dmg)：打开后把应用拖入 Applications。
 - [下载 ZIP](CFTransportShip-0.1.0-macos-universal.zip)：解压后打开 `.app`。

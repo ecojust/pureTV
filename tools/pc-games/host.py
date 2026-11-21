@@ -309,6 +309,9 @@ class GamePage(http.server.BaseHTTPRequestHandler):
             self.send_error(403)
             return
         path = unquote(urlsplit(self.path).path)
+        if path in ("/favicon.ico", "/__puretv/game.ico") and self.server.game_icon:
+            self.reply(self.server.game_icon, "image/x-icon")
+            return
         if path == "/__puretv/bridge.js":
             self.reply(self.server.bridge, "application/javascript")
             return
@@ -388,6 +391,7 @@ def listen(factory, address, preferred, fallback):
 
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument("--icon", type=Path)
     p.add_argument("--apk", type=Path, required=True)
     p.add_argument("--game", required=True)
     p.add_argument("--no-browser", action="store_true")
@@ -463,6 +467,9 @@ def main(argv=None):
                     inputEnabled=True,
                 ),
             )
+            web.game_icon = args.icon.read_bytes() if args.icon else None
+            if web.game_icon:
+                info['gameIcon'] = '/__puretv/game.ico'
             config = dict(
                 info=info,
                 alias=ALIASES.get(args.game),

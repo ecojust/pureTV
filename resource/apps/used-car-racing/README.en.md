@@ -1,10 +1,12 @@
 # Used Car Racing TV
 
-## Android 0.1.7 · Returning to a phone-controlled race
-
 <!-- apk-resource:start -->
-[Download the signed APK](used-car-racing-0.1.7.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
+[Android 0.1.8 APK](used-car-racing-0.1.8.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.1.8/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.1.7 gameplay video](docs/releases/0.1.7/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
+
+## Earlier Android release 0.1.7 · Returning to a phone-controlled race
+
+[Download the signed APK](used-car-racing-0.1.7.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
 
 Cancel the TV’s exit dialog to return to a race started with a phone. The game waits for the phone’s current room status before continuing. A race you paused manually stays paused. A pureTV Wi-Fi controller resumes with a fresh START press.
 

@@ -1,5 +1,9 @@
 # 压力封装 / Pressure Seal
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](pressure-seal-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 操控带有余热的封装机，让压力依次稳定在三种材料要求的范围内。加热、松手、泄压都需要把握时机：松开加压后，余热仍可能让压力继续上升。
 
 这是 pureTV 百款游戏计划的第 40 款设计，包名 `com.ecojust.pressuresealtv`，版本 `0.1.0`。一人游玩，支持电视遥控器、键盘和局域网手机手柄。只有完成验证并推送的版本才计入计划完成数量。
@@ -50,7 +54,7 @@ python3 resource/game-kit/build.py \
 
 `game-config.json` 和 `assets-index.json` 由构建工具生成。`game.json` 的 `actions: 2` 让手机右侧两片触控区分别控制 A/B。
 
-发布产物使用 `pressure-seal-0.1.0.apk` 和 `docs/gameplay-0.1.0.mp4`。每个文件须小于 10,000,000 字节；源码、签名、验证、录像和画面审阅结论分别记录在对应的 `docs/verification.json`、`docs/signing-receipt.json`、`docs/gameplay-0.1.0.json`、`docs/art-review.json` 中。
+0.1.0 的签名 APK 为 `pressure-seal-0.1.0.apk` 和 `docs/gameplay-0.1.0.mp4`。每个文件须小于 10,000,000 字节；源码、签名、验证、录像和画面审阅结论分别记录在对应的 `docs/verification.json`、`docs/signing-receipt.json`、`docs/gameplay-0.1.0.json`、`docs/art-review.json` 中。
 
 完整模型调用记录与浏览器证据分开记录：前者保存每次真实调用的前后状态，后者验证实际界面、键盘和手柄页面。稀疏截图与录像不用于补造漏掉的物理步骤。浏览器软件渲染结果不代表实体电视或手机性能；未使用实体硬件时，报告明确注明未做硬件验证。
 

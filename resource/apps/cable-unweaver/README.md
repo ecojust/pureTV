@@ -1,5 +1,9 @@
 # 解线工
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](cable-unweaver-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 沿轨道移动接线端子，让工作台上的直线电缆消除所有非法交叉。带金属夹的端子保持相对位置，移动其中一个会带动整组；某个成员先到轨道尽头，整组就会停止。
 
 **A 下一端**、**B 上一端**，按 a、b、c 顺序循环选择。方向键或手机摇杆沿所选端子的轨道移动一步；垂直于轨道的方向无效。每次实际移动消耗一次调整，选择和被边界挡住的移动不扣次数。长按不会重复；同时新按 A、B 时优先 B，同时新按选择键与方向时只选择。
@@ -10,4 +14,4 @@
 
 使用现有电视游戏壳选择关卡并开始。**P** 暂停或继续，**R** 重试；手机 START 暂停或继续。手机整个右侧三分之一区域分为上方 A、下方 B。开始、恢复或重连后先松开按键，再重新操作。重试恢复该关的完整初始状态。
 
-版本 0.1.0，包名 `com.ecojust.cableunweavertv`，作者 ecojust / 桔子桑，MIT。详细规则见[公开设计](docs/public-design.md)、[模型合同](docs/model-contract.md)与[界面及证据要求](docs/public-interface.md)。发布文件：[APK](cable-unweaver-0.1.0.apk) · [实玩录像](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)。
+版本 0.1.1，包名 `com.ecojust.cableunweavertv`，作者 ecojust / 桔子桑，MIT。详细规则见[公开设计](docs/public-design.md)、[模型合同](docs/model-contract.md)与[界面及证据要求](docs/public-interface.md)。发布文件：[APK](cable-unweaver-0.1.0.apk) · [实玩录像](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)。

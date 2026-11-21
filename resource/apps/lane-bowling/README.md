@@ -1,5 +1,9 @@
 # 球道击柱 / Lane Bowling
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](lane-bowling-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 俯视简化保龄击柱。三种公开的 6／8／10 瓶布阵，分别限 2／3／3 球；清空全部瓶获胜。没有预设命中角度或按选项直接奖励，倒瓶必须来自实际碰撞速度或位移。
 
 左右每次调 3°，范围 −24°～24°；上下调四档力度，A 发球。投球中只能等待；停稳后继续瞄准。掉沟照样消耗一球，最后一球清空仍获胜。虚线只显示初始方向，不预测答案路线。

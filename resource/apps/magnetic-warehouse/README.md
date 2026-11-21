@@ -1,14 +1,18 @@
 # 磁极仓库 / Magnetic Warehouse
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](magnetic-warehouse-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 驾驶磁力搬运器，把每个编号的货箱送到对应货位。切换自身磁极后发出脉冲：异极相吸，同极相斥。一次脉冲会同时作用于同行、同列且未被墙体遮挡的箱子，每个箱子最多移动一格。
 
 - 作者：ecojust / 桔子桑
 - 包名：`com.ecojust.magneticwarehousetv`
-- 版本：`0.1.0`
+- 版本：`0.1.1`
 - 电视系统：Android 8.0 / API 26 及以上
 - 图标：[logo.svg](logo.svg)
 
-发布产物：[APK](magnetic-warehouse-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
+0.1.0 版本：[APK](magnetic-warehouse-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
 
 ![实际游戏画面](thumb.png)
 

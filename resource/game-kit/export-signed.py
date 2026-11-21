@@ -64,7 +64,6 @@ def verify_artifact(*, source, source_sha, workflow_sha, slug, run_id, artifact,
     game = builder.checked_directory(source / 'resource/apps' / slug, 'game source')
     meta = builder.metadata(game)
     require(meta['id'] == slug, 'Source game id mismatch')
-    icon = builder.game_icon(game)
     apk_name = slug + '-' + meta['version'] + '.apk'
     artifact = builder.checked_directory(artifact, 'downloaded artifact')
     require({path.name for path in artifact.iterdir()} == {apk_name, 'signing-receipt.json'}, 'Artifact must contain exactly the expected APK and receipt')
@@ -102,8 +101,7 @@ def verify_artifact(*, source, source_sha, workflow_sha, slug, run_id, artifact,
     for file in sorted((builder.KIT / 'android/src/main').rglob('*')):
         if file.is_file():
             native_hashes[file.relative_to(source).as_posix()] = digest(file.read_bytes())
-    if icon is not None:
-        native_hashes[(game / 'icon.xml').relative_to(source).as_posix()] = digest(icon)
+    native_hashes.update(builder.launcher_source_hashes(game))
     require(receipt.get('nativeSourceSha256') == native_hashes, 'Receipt native/icon hashes differ from source')
     verified = command([build_tools / 'apksigner', 'verify', '--verbose', '--print-certs', apk]).decode()
     certificates = re.findall(r'Signer #\d+ certificate SHA-256 digest: ([a-fA-F0-9]+)', verified)

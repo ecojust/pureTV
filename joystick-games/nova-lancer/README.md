@@ -2,11 +2,11 @@
 
 这是 たぬ 制作的单人 3D 轨道射击游戏。战机会自动前进，玩家负责驾驶、瞄准和调速。第一关 Azure Coast 从海上编队飞行开始，穿过峡谷和要塞城，最后迎战机械海龙。第二关 Violet Sargasso 将战场移到太空。游戏保留原版日语界面。网页试玩直接打开作者的版本。[原版试玩](https://tanuu5.github.io/nova-lancer/) · [上游源码与 MIT 许可](https://github.com/tanuu5/nova-lancer/tree/63b63953299994baa05ac27c15c6b836fff0179b)
 
-## 下载 0.1.0
+## 下载
 
-[Android TV · APK](https://github.com/ecojust/pureTV/releases/download/joystick-nova-lancer-v0.1.0/nova-lancer-0.1.0.apk) · [macOS · 通用 DMG](https://github.com/ecojust/pureTV/releases/download/joystick-nova-lancer-v0.1.0/NovaLancer-0.1.0-macos-universal.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/joystick-nova-lancer-v0.1.0/NovaLancer-0.1.0-windows-x64-setup.exe)
+[Android TV 0.1.1 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/nova-lancer-0.1.1.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/nova-lancer-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/nova-lancer-windows-x64-setup.exe)
 
-Windows 客户端需要 Microsoft Edge WebView2 Runtime。macOS 安装包包含 arm64 和 x86_64，采用临时签名，未经 Apple 公证。Apple Silicon 原生运行和 Rosetta 模式均已通过实玩；Intel 测试机未能初始化 WebGL 2，原生 Intel 游戏兼容性尚未验证。
+Windows 客户端需要 Microsoft Edge WebView2 Runtime。macOS 安装包包含 arm64 和 x86_64，采用临时签名，未经 Apple 公证。0.1.0 的 Apple Silicon 原生运行和 Rosetta 测试均通过实玩；Intel 测试机未能初始化 WebGL 2，原生 Intel 游戏兼容性尚未验证。
 
 ## 操作
 
@@ -23,7 +23,7 @@ Windows 客户端需要 Microsoft Edge WebView2 Runtime。macOS 安装包包含 
 
 要从剧情开始，选「ストーリー / STORY」→「はじめから / NEW GAME」。任务简报会给出十位口令，可从「ストーリー / STORY」→「パスワード / PASSWORD」恢复该关和装备。
 
-## 验证记录
+## 0.1.0 验证记录
 
 [Android TV 安装版实玩](docs/releases/0.1.0/android-runtime.json) · [Android TV 包签名与内容](docs/releases/0.1.0/android-package.json) · [手机扫码与重连](docs/browser/phone/README.md) · [macOS 架构与实玩结果](docs/releases/0.1.0/macos.json) · [Windows 安装和手柄测试](docs/releases/0.1.0/windows.json)
 

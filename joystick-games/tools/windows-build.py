@@ -54,6 +54,8 @@ def installer_text(meta,identity,folder,installer,app_files):
     lines.append('RMDir "$INSTDIR"')
     removal='\n'.join(lines)
     return '''Unicode true
+!define MUI_ICON "'''+quote(Path(folder)/'game.ico')+'''"
+!define MUI_UNICON "'''+quote(Path(folder)/'game.ico')+'''"
 !include "MUI2.nsh"
 Name "'''+quote(meta['name'])+'''"
 OutFile "'''+quote(installer)+'''"
@@ -72,6 +74,7 @@ SetOutPath "$INSTDIR"
 File /r "'''+quote(folder)+'''\\*"
 CreateShortcut "$DESKTOP\\'''+quote(identity['appName'])+'''.lnk" "$INSTDIR\\PureTVGame.exe"
 WriteUninstaller "$INSTDIR\\Uninstall.exe"
+WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\'''+meta['packageName']+'''" "DisplayIcon" "$INSTDIR\\PureTVGame.exe,0"
 WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\'''+meta['packageName']+'''" "DisplayName" "'''+quote(meta['name'])+'''"
 WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\'''+meta['packageName']+'''" "UninstallString" '"$INSTDIR\\Uninstall.exe"'
 SectionEnd
@@ -156,6 +159,11 @@ def storage_keys(meta,identity):
     assert len(set(keys))==len(keys),'Duplicate storage key'
     return keys
 
+def icon_resource(icon_path):
+    rc = icon_path.with_suffix('.rc')
+    rc.write_text('101 ICON "' + icon_path.resolve().as_posix().replace('"', '\\"') + '"\n', encoding='utf-8')
+    return rc
+
 def build(args):
     assert sys.platform=='win32' and platform.machine().lower() in ('amd64','x86_64'),'Requires Windows x64 with MSVC'
     registry=json.loads((ROOT/'joystick-games/catalog-registry.json').read_text(encoding='utf-8'));assert args.game in registry['games']
@@ -173,9 +181,13 @@ def build(args):
         assert raw==committed_bytes(source_blobs,name),'Uncommitted build input: '+name
         source_files[name]={'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}
     out=args.output.resolve();assert not out.exists() or not any(out.iterdir()),'Output must be new/empty';out.mkdir(parents=True,exist_ok=True)
+    sys.path.insert(0,str(ROOT/'tools'))
+    from game_icons import save_ico
+    icon=out/'game.ico';save_ico(game,icon);rc=icon_resource(icon)
     deps=args.dependencies.resolve();lock=dependencies(deps)
-    work=out/'build';run('cmake','-S',SHARED,'-B',work,'-A','x64','-DPURETV_DEPS='+str(deps));run('cmake','--build',work,'--config','Release');run('ctest','--test-dir',work,'-C','Release','--output-on-failure')
+    work=out/'build';run('cmake','-S',SHARED,'-B',work,'-A','x64','-DPURETV_DEPS='+str(deps),'-DPURETV_GAME_ICON_RC='+str(rc));run('cmake','--build',work,'--config','Release');run('ctest','--test-dir',work,'-C','Release','--output-on-failure')
     folder=out/(identity['executable']+'-'+meta['version']+'-windows-x64');folder.mkdir();shutil.copy2(work/'Release/PureTVGame.exe',folder/'PureTVGame.exe');shutil.copy2(game/'game.json',folder/'game.json');copy_web_assets(game/'dist',folder/'Web',meta,identity)
+    shutil.copyfile(icon,folder/'game.ico')
     for p in (SHARED/'Web').iterdir():
         assert not (folder/'Web'/p.name).exists();shutil.copy2(p,folder/'Web'/p.name)
     web_policy=verify_web_assets(folder/'Web',meta,identity,with_host=True)

@@ -1,5 +1,9 @@
 # 叠牌花园 · Tile Garden
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](tile-garden-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 全部牌面公开可见的空间配对谜题。每张花牌以数字和独立图形共同标识家族，只有可用的同族两张牌才能移除。上下层分开展示，坐标严格对齐；覆盖关系影响能否取牌，但不会隐藏牌面。
 
 一张牌可用须同时满足：同一坐标的所有更高层都没有剩牌；本层紧邻的左边或右边至少一侧没有牌。边界外视为空侧，隔着空格的远牌不会堵住这一侧。上下相邻行的牌不形成侧面阻挡。

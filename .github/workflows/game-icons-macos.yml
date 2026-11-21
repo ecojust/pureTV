@@ -1,0 +1,98 @@
+name: Install gameplay artwork in the published macOS games
+on: workflow_call
+
+jobs:
+  refresh:
+    runs-on: macos-15
+    timeout-minutes: 50
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            tools/pc-games/qa
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install Pillow==11.3.0
+      - name: Re-sign applications, mount disk images and verify packaged content
+        run: python tools/update_macos_game_icons.py --shards 4 --shard ${{ matrix.shard }} --output packages
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-game-icons-${{ matrix.shard }}
+          path: packages/
+          if-no-files-found: error
+          compression-level: 0
+  stage:
+    needs: refresh
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            tools/pc-games/qa
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: macos-game-icons-*
+          path: packages/
+          merge-multiple: true
+      - name: Match every package to its receipt and stage the verified files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import hashlib, json, os, subprocess
+          from pathlib import Path
+
+          packages = Path('packages')
+          inputs = json.loads(Path('tools/game-client-icon-inputs.json').read_text())
+          expected = {r['id'] for r in inputs if r.get('macos')}
+          rows = []
+          for shard in sorted(packages.glob('macos-shard-*.json')):
+              rows.extend(json.loads(shard.read_text()))
+          if len(rows) != len(expected) or {r['id'] for r in rows} != expected:
+              raise ValueError('macOS verification receipts differ from the source inventory')
+          artifacts = {}
+          for row in rows:
+              if not row['adHocSignatureVerified'] or row['id'] + '-macos.dmg' not in row['files']:
+                  raise ValueError('Incomplete macOS app verification')
+              for name, identity in row['files'].items():
+                  if name in artifacts or Path(name).name != name:
+                      raise ValueError('Duplicate or invalid package name')
+                  path = packages / name
+                  if path.stat().st_size != identity['bytes'] or hashlib.sha256(path.read_bytes()).hexdigest() != identity['sha256']:
+                      raise ValueError('Package does not match the macOS runner receipt: ' + name)
+                  artifacts[name] = identity
+          receipt = packages / 'macos-game-icons.json'
+          report = {'sourceCommit': os.environ['GITHUB_SHA'], 'workflowRun': os.environ['GITHUB_RUN_ID'],
+                    'games': sorted(rows, key=lambda r: r['id'])}
+          receipt.write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n')
+          artifacts[receipt.name] = {'bytes': receipt.stat().st_size, 'sha256': hashlib.sha256(receipt.read_bytes()).hexdigest()}
+
+          tag = 'gameplay-icons-2026.11.21'
+          def gh(*args):
+              return subprocess.check_output(['gh', *args], text=True)
+          release = json.loads(gh('release', 'view', tag, '--json', 'apiUrl,isDraft,tagName'))
+          if not release['isDraft'] or release['tagName'] != tag:
+              raise ValueError('Expected the artwork staging draft')
+          pages = json.loads(gh('api', '--paginate', '--slurp',
+                                release['apiUrl'] + '/assets?per_page=100'))
+          existing = {item['name']: item for page in pages for item in page}
+          for name, identity in artifacts.items():
+              previous = existing.get(name)
+              if previous:
+                  if previous['size'] != identity['bytes'] or previous['digest'] != 'sha256:' + identity['sha256']:
+                      raise ValueError('Draft already has different bytes for ' + name)
+              else:
+                  gh('release', 'upload', tag, str(packages / name))
+          PY

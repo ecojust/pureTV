@@ -1,5 +1,9 @@
 # 温室旋钮 / Greenhouse Dials
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](greenhouse-dials-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 调节通风、遮阳与滴灌，让同一座温室中的叶菜、豆苗和香草全部成熟。三种作物各有温度、空气湿度和土壤水分适宜区；操作需要等待执行，水箱也不会自动补满。
 
 - 方向键或手机摇杆选择通风、遮阳、滴灌。
@@ -24,7 +28,7 @@
 
 获胜要求三种作物在同一局中分别成熟，不要求耗完水。结算先检查作物死亡，再检查全部成熟，随后检查缺水停长和超时；因此截止时刻刚好完成最后一格进度可以获胜，同时达到致命损伤则失败。分数来自各自成熟比例，胜利另加 1000 和剩余整升水量；反复调节旋钮不加分。
 
-发布产物：[APK](greenhouse-dials-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
+0.1.0 版本：[APK](greenhouse-dials-0.1.0.apk) · [实际游玩视频](docs/gameplay-0.1.0.mp4) · [验证记录](docs/verification.json)
 
 ![实际游戏画面](thumb.png)
 

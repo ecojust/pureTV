@@ -1,10 +1,12 @@
 # Neon Rush TV · 霓虹飞车
 
-## Android 0.1.4 · Controllers and phone pairing
-
 <!-- apk-resource:start -->
-[Download the signed APK](neon-rush-0.1.4.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
+[Android 0.1.5 APK](neon-rush-0.1.5.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.1.5/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.1.4 gameplay video](docs/releases/0.1.4/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
+
+## Earlier Android release 0.1.4 · Controllers and phone pairing
+
+[Download the signed APK](neon-rush-0.1.4.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
 
 Connect a keyboard, pair a pureTV Wi-Fi controller, or scan the TV room’s QR code with a phone on the same network. The connection indicator identifies each player while the game keeps its playing area at the same size. [Controller guide](../../../docs/guide/README.en.md#install-a-game-and-connect-a-controller)
 
@@ -27,7 +29,7 @@ The APK uses the existing release certificate. This update verifies connection i
 
 ![Android 0.1.3: connected controller ID](docs/releases/0.1.3/connected.png)
 
-**macOS 0.1.4:** [Universal DMG](macos/NeonRush-0.1.4-macos-universal.dmg?raw=1) · [Universal ZIP](macos/NeonRush-0.1.4-macos-universal.zip?raw=1) · [Installation and controller guide](macos/README.md). Requires macOS 11+ and WebGL. The controller ID stays visible during races and when the menu/pause controller panel is closed.
+See the [Mac installation and controller guide](macos/README.md).
 <!-- controller-client-status:end -->
 
 Six racers, three original circuits, and a two-lap finish. Drift to charge nitro, release a clean drift for a mini turbo, and use the straights and canyon ramp to gain ground. Auto throttle keeps the car moving; you control the racing line, steering, and brakes.

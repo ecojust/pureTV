@@ -1,10 +1,12 @@
 # Penguintrack · 雪地竞速
 
-[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/penguintrack-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.2 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/penguintrack-0.1.2.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/penguintrack-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/penguintrack-windows-x64-setup.exe)
+
+[用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 基于 [SilverNinja71/Penguin-Track](https://github.com/SilverNinja71/Penguin-Track/tree/0369367ff5aa76902bdf0736e4644efbbd3f1d82) 的 pureTV 手柄适配。保留原作者的雪地赛车物理、画面和关卡；不是 pureTV 原创游戏。
 
-## Android TV 下载
+## Android TV 0.1.0 版交付记录
 
 0.1.0：[签名 APK](penguintrack-0.1.0.apk)（2,342,332 字节）· [SHA256 校验](SHA256SUMS.txt) · [包与验收记录](android-release.json)。需要 **Android 8.0 / API 26 或更新版本，以及支持 WebGL 2 的系统 WebView**；不支持 Android 4.4/6 的旧 WebView。
 
@@ -12,7 +14,7 @@
 
 原生检查在模拟器完成，未验证实体电视／ESP32、完整通关或退出应用后的存档恢复。原版触屏 Brake 按钮会遮住部分速度表；手柄操控和中央赛道画面可见。
 
-## Windows 下载
+## Windows 0.1.0 版交付记录
 
 0.1.0 x64：[安装 EXE](Penguintrack-0.1.0-windows-x64-setup.exe)（2,424,280 字节）· [便携 ZIP](Penguintrack-0.1.0-windows-x64.zip)（2,360,273 字节）· [SHA256 校验](SHA256SUMS.txt)。需要 **Windows 10 1903 或更新版本／Windows 11 x64、Microsoft Edge WebView2 Runtime 和可用的 WebGL 2**；便携版请完整解压后运行 `PureTVGame.exe`。安装包未做 Authenticode 签名。
 
@@ -22,7 +24,7 @@
 
 选择 Play 进入战役，再选赛道。↑ 给油，↓ 刹车，← / → 转向。连接手柄后自动收起本机触控按钮，方便看清速度表。 电脑也可以连接同一局域网的 pureTV 无线手柄，按手柄搜索键（GPIO 23）配对。Android TV 可用同一 Wi-Fi 下的手机扫描菜单连接卡中的二维码，打开虚拟手柄。比赛时连接卡缩小，断线后重新连接，再手动继续。
 
-## macOS 下载
+## macOS 0.1.0 版交付记录
 
 0.1.0 Universal：[DMG](macos/Penguintrack-0.1.0-macos-universal.dmg) · [ZIP](macos/Penguintrack-0.1.0-macos-universal.zip) · [SHA256 校验](macos/SHA256SUMS.txt) · [包来源与验证范围](packages.json)。DMG 内的应用可拖入 Applications；ZIP 解压后也可运行同一个应用。
 

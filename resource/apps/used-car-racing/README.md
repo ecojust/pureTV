@@ -1,10 +1,12 @@
 # 极品二手车
 
-## Android 0.1.7 · 手机驾车时取消退出
-
 <!-- apk-resource:start -->
-[下载签名 APK](used-car-racing-0.1.7.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
+[Android 0.1.8 APK](used-car-racing-0.1.8.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-macos.dmg) · [图标与安装验证](docs/releases/0.1.8/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.7 实玩录像](docs/releases/0.1.7/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
+
+## 历史 Android 版本 0.1.7 · 手机驾车时取消退出
+
+[下载签名 APK](used-car-racing-0.1.7.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
 
 手机驾车时，在电视上取消退出对话框，游戏会等到读到手机的当前连接状态后继续比赛。主动暂停的比赛会保持暂停，使用 pureTV Wi-Fi 手柄时，重新按 START 可继续。
 

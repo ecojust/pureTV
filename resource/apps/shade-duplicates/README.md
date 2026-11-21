@@ -1,5 +1,9 @@
 # 去重留白 / Shade Duplicates
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](shade-duplicates-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 一款采用标准 Hitori 规则的数字涂黑谜题。三张数字盘为 4×4、5×5、6×6；只需决定哪些格子涂黑，所有原始数字始终可见。
 
 一张完成的棋盘需要同时满足：

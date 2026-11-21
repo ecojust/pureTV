@@ -1,5 +1,9 @@
 # 三角跳珠 / Triangle Pegs
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](triangle-pegs-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 在十五孔三角棋盘上，把棋珠沿直线跳过相邻的一颗棋珠，落入两格外的空孔，并移除被跨过的棋珠。水平和两条斜线共六个方向均可跳跃；最终只剩一颗棋珠即可获胜，最后一颗可以停在任何孔。
 
 三个开局分别空出 **1 号、5 号、8 号孔**，其余十四孔都有棋珠。目标与规则完全公开，没有隐藏目标孔，也没有倒计时。

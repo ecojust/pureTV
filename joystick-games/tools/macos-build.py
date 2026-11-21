@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Build registered upstream games as standalone universal macOS clients."""
-import argparse, hashlib, importlib.util, json, platform, plistlib, re, shutil, subprocess, tempfile
+import argparse, hashlib, importlib.util, json, platform, plistlib, re, shutil, subprocess, sys, tempfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'tools'))
+
 SHARED=ROOT/'joystick-games/shared/macos'
 LEGACY_GAMES={'cf-transport-ship':('CF Transport Ship','CFTransportShip','CF'), 'qq-speed':('QQ Speed','QQSpeed','QQ')}
 REGISTRY=ROOT/'joystick-games/catalog-registry.json'
@@ -194,37 +196,13 @@ def compile_host(work,sdk,cache_root=None):
         validate_cached_host(cache,expected)
     return universal,dict(manifest,cacheKey=key,reused=False)
 
-def make_icon(work,resources,initials):
-    source=work/'icon.swift'
-    source.write_text('''import AppKit
-let image=NSImage(size:NSSize(width:1024,height:1024))
-image.lockFocus()
-NSColor(calibratedRed:0.06,green:0.12,blue:0.20,alpha:1).setFill()
-NSBezierPath(roundedRect:NSRect(x:70,y:70,width:884,height:884),xRadius:190,yRadius:190).fill()
-let symbol=NSImage(systemSymbolName:"gamecontroller.fill",accessibilityDescription:nil)!
-let tinted=NSImage(size:symbol.size)
-tinted.lockFocus();NSColor(calibratedRed:0.45,green:0.89,blue:0.84,alpha:1).setFill()
-NSRect(origin:.zero,size:symbol.size).fill();symbol.draw(at:.zero,from:.zero,operation:.destinationIn,fraction:1);tinted.unlockFocus()
-tinted.draw(in:NSRect(x:220,y:400,width:584,height:420))
-let label="'''+initials+'''" as NSString
-label.draw(at:NSPoint(x:355,y:180),withAttributes:[.font:NSFont.boldSystemFont(ofSize:160),.foregroundColor:NSColor.white])
-image.unlockFocus()
-let bitmap=NSBitmapImageRep(data:image.tiffRepresentation!)!
-try bitmap.representation(using:.png,properties:[:])!.write(to:URL(fileURLWithPath:CommandLine.arguments[1]))
-''')
-    renderer=work/'icon';run('xcrun','swiftc','-swift-version','5',source,'-o',renderer)
-    png=work/'icon.png';run(renderer,png)
-    iconset=work/'Game.iconset';iconset.mkdir()
-    for points in [16,32,128,256,512]:
-        for scale in [1,2]:
-            name=f'icon_{points}x{points}'+('@2x' if scale==2 else '')+'.png'
-            run('sips','-z',points*scale,points*scale,png,'--out',iconset/name,stdout=subprocess.DEVNULL)
-    run('iconutil','-c','icns',iconset,'-o',resources/'Game.icns')
 def main():
+    from macos_game_icons import committed_inputs, write_icns
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--game',choices=GAMES,required=True);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--host-cache',type=Path);args=parser.parse_args()
     if platform.system()!='Darwin':parser.error('Requires macOS with Xcode Command Line Tools')
-    game=ROOT/'joystick-games'/args.game;meta=registry_data((game/'game.json').read_text());name,executable,initials=game_identity(args.game,meta);persistent_keys=storage_keys(args.game,meta)
+    game=ROOT/'joystick-games'/args.game;meta=registry_data((game/'game.json').read_text());name,executable,_=game_identity(args.game,meta);persistent_keys=storage_keys(args.game,meta)
     source_commit=capture('git','-C',ROOT,'rev-parse','HEAD');source_inputs=inputs(game);verify_committed(ROOT,source_inputs,source_commit)
+    frozen_icon=committed_inputs(game,ROOT,source_commit)
     assert meta['id']==args.game and re.fullmatch(r'\d+\.\d+\.\d+',meta['version'])
     assert meta['players']==1 and isinstance(meta['versionCode'],int) and meta['versionCode']>0
     out=args.output.resolve();assert not out.is_relative_to(ROOT),'Use an output outside the repository'
@@ -243,7 +221,7 @@ def main():
     (contents/'Info.plist').write_bytes(plistlib.dumps(info));(contents/'PkgInfo').write_bytes(b'APPL????')
     sdk=Path(capture('xcrun','--sdk','macosx','--show-sdk-path')).resolve()
     with tempfile.TemporaryDirectory(dir=out,prefix='build-') as temporary:
-        work=Path(temporary);make_icon(work,resources,initials)
+        work=Path(temporary);icon=write_icns(game,resources/'Game.icns')
         host,host_manifest=compile_host(work,sdk,args.host_cache);shutil.copy2(host,binary/executable)
     assert set(capture('lipo','-archs',binary/executable).split())=={'arm64','x86_64'}
     run('codesign','--force','--sign','-','--timestamp=none',app);run('codesign','--verify','--deep','--strict',app);run('plutil','-lint',contents/'Info.plist')
@@ -258,7 +236,9 @@ def main():
     packages={p.name:{'bytes':p.stat().st_size,'sha256':digest(p)} for p in [zipfile,dmg]}
     assert capture('git','-C',ROOT,'rev-parse','HEAD')==source_commit, 'HEAD changed during build'
     assert inputs(game)==source_inputs, 'Source files or input set changed during build'
-    manifest={'game':args.game,'version':meta['version'],'buildVersion':str(meta['versionCode']),'appName':app.name,'bundleIdentifier':meta['packageName'],'sourceCommit':source_commit,'committedInputsVerified':True,'architectures':['arm64','x86_64'],'minimumMacOS':'11.0','signature':'ad-hoc','appleNotarized':False,'physicalControllerTested':False,'sdkVersion':capture('xcrun','--sdk','macosx','--show-sdk-version'),'swiftVersion':capture('xcrun','swiftc','--version'),'hostBuild':host_manifest,'inputFiles':source_inputs,'appFiles':files(app),'webFiles':files(web),'packages':packages}
+    assert committed_inputs(game,ROOT,source_commit)==frozen_icon, 'Gameplay icon source changed during build'
+    source_inputs.update(frozen_icon)
+    manifest={'game':args.game,'version':meta['version'],'buildVersion':str(meta['versionCode']),'appName':app.name,'bundleIdentifier':meta['packageName'],'sourceCommit':source_commit,'committedInputsVerified':True,'architectures':['arm64','x86_64'],'minimumMacOS':'11.0','signature':'ad-hoc','appleNotarized':False,'physicalControllerTested':False,'sdkVersion':capture('xcrun','--sdk','macosx','--show-sdk-version'),'swiftVersion':capture('xcrun','swiftc','--version'),'hostBuild':host_manifest,'inputFiles':source_inputs,'appFiles':files(app),'webFiles':files(web),'icon':icon,'packages':packages}
     (out/'build-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n');(out/'SHA256SUMS.txt').write_text(''.join(v['sha256']+'  '+k+'\n' for k,v in sorted(packages.items())))
     print(json.dumps({'app':str(app),'packages':packages},indent=2))
 if __name__=='__main__':main()
