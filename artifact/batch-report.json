@@ -1,0 +1,80 @@
+{
+  "sourceCommit": "fe2b6428f0ecfed33d6d1c903a6c7d4d50914aba",
+  "batch": "shooter-01",
+  "runner": "macos-latest",
+  "expectedArchitecture": "arm64",
+  "status": "passed",
+  "games": [
+    {
+      "game": "nova-lancer",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/nova-lancer",
+            "--output",
+            "/Users/runner/work/_temp/qa/nova-lancer/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "nova-lancer/package-verification.log",
+          "startedAt": "2026-11-21T04:55:37.836547+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "nova-lancer",
+            "--app",
+            "/Users/runner/work/_temp/packages/nova-lancer/installed/Nova Lancer.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/nova-lancer/native"
+          ],
+          "status": "passed",
+          "log": "nova-lancer/native.log",
+          "startedAt": "2026-11-21T04:56:32.676532+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "nova-lancer",
+            "--app",
+            "/Users/runner/work/_temp/packages/nova-lancer/installed/Nova Lancer.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/nova-lancer/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "nova-lancer/occupied-port.log",
+          "startedAt": "2026-11-21T04:57:36.107933+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "nova-lancer",
+            "--app",
+            "/Users/runner/work/_temp/packages/nova-lancer/installed/Nova Lancer.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/nova-lancer/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "nova-lancer/rosetta.log",
+          "startedAt": "2026-11-21T04:58:27.224417+00:00",
+          "returncode": 0
+        }
+      ]
+    }
+  ]
+}
