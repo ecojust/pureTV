@@ -1,6 +1,6 @@
 # Nova Lancer · 新星枪骑兵
 
-这是 たぬ 制作的单人 3D 轨道射击游戏。战机会自动前进，玩家负责驾驶、瞄准和调速。第一关 Azure Coast 从海上编队飞行开始，穿过峡谷和要塞城，最后迎战机械海龙。游戏保留原版日语界面和战役。网页试玩直接打开作者的版本。[原版试玩](https://tanuu5.github.io/nova-lancer/) · [上游源码与 MIT 许可](https://github.com/tanuu5/nova-lancer/tree/63b63953299994baa05ac27c15c6b836fff0179b)
+这是 たぬ 制作的单人 3D 轨道射击游戏。战机会自动前进，玩家负责驾驶、瞄准和调速。第一关 Azure Coast 从海上编队飞行开始，穿过峡谷和要塞城，最后迎战机械海龙。第二关 Violet Sargasso 将战场移到太空。游戏保留原版日语界面。网页试玩直接打开作者的版本。[原版试玩](https://tanuu5.github.io/nova-lancer/) · [上游源码与 MIT 许可](https://github.com/tanuu5/nova-lancer/tree/63b63953299994baa05ac27c15c6b836fff0179b)
 
 ## 操作
 
