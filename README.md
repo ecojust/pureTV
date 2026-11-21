@@ -84,9 +84,9 @@
 
 <!-- game-index:start -->
 
-**36 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · Android TV 36 款 · macOS 独立安装包 36 款 · Windows x64 独立安装包 36 款
+**37 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · Android TV 37 款 · macOS 独立安装包 37 款 · Windows x64 独立安装包 37 款
 
-[竞速与体育（13）](#controller-racing) · [动作、角色扮演与探索（5）](#controller-action) · [平台、弹幕与街机（4）](#controller-arcade) · [策略、塔防与卡牌（2）](#controller-strategy) · [解谜与益智（12）](#controller-puzzle)
+[竞速与体育（13）](#controller-racing) · [动作、角色扮演与探索（5）](#controller-action) · [平台、弹幕与街机（5）](#controller-arcade) · [策略、塔防与卡牌（2）](#controller-strategy) · [解谜与益智（12）](#controller-puzzle)
 
 <a id="controller-racing"></a>
 
@@ -140,14 +140,20 @@
 
 <a id="controller-arcade"></a>
 
-### 平台、弹幕与街机（4）
+### 平台、弹幕与街机（5）
 
 <table>
   <tr>
+    <td align="center" valign="top" width="207"><a href="joystick-games/nova-lancer/"><img src="joystick-games/nova-lancer/thumb.png" width="180" alt=""><br>Nova Lancer · 新星枪骑兵</a><br><a href="https://github.com/ecojust/pureTV/releases/download/joystick-nova-lancer-v0.1.0/nova-lancer-0.1.0.apk" title="Nova Lancer · 新星枪骑兵 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Nova Lancer · 新星枪骑兵 Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/joystick-nova-lancer-v0.1.0/NovaLancer-0.1.0-macos-universal.dmg" title="Nova Lancer · 新星枪骑兵 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Nova Lancer · 新星枪骑兵 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/joystick-nova-lancer-v0.1.0/NovaLancer-0.1.0-windows-x64-setup.exe" title="Nova Lancer · 新星枪骑兵 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Nova Lancer · 新星枪骑兵 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a></td>
     <td align="center" valign="top" width="207"><a href="resource/apps/super-mario/"><img src="resource/apps/super-mario/thumb.png" width="180" alt=""><br>Super Mario</a><br><a href="resource/apps/super-mario/super-mario-0.5.7.apk?raw=1" title="Super Mario Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Super Mario Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/standalone-games-2026.11.21/super-mario-macos.dmg" title="Super Mario macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Super Mario macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/standalone-games-2026.11.21/super-mario-windows-x64-setup.exe" title="Super Mario Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Super Mario Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a></td>
     <td align="center" valign="top" width="207"><a href="resource/apps/jackal/"><img src="resource/apps/jackal/thumb.png" width="180" alt=""><br>Jackal</a><br><a href="resource/apps/jackal/jackal-0.5.7.apk?raw=1" title="Jackal Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Jackal Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/standalone-games-2026.11.21/jackal-macos.dmg" title="Jackal macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Jackal macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/standalone-games-2026.11.21/jackal-windows-x64-setup.exe" title="Jackal Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Jackal Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a></td>
     <td align="center" valign="top" width="207"><a href="resource/apps/tank/"><img src="resource/apps/tank/thumb.png" width="180" alt=""><br>Tank</a><br><a href="resource/apps/tank/tank-0.5.6.apk?raw=1" title="Tank Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Tank Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/standalone-games-2026.11.21/tank-macos.dmg" title="Tank macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Tank macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/standalone-games-2026.11.21/tank-windows-x64-setup.exe" title="Tank Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Tank Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a></td>
+  </tr>
+  <tr>
     <td align="center" valign="top" width="207"><a href="joystick-games/glup/"><img src="joystick-games/glup/thumb.png" width="180" alt=""><br>GLUP · 沼泽猫鱼</a><br><a href="https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/glup-0.1.1.apk" title="GLUP · 沼泽猫鱼 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="GLUP · 沼泽猫鱼 Android TV APK"></a> <a href="joystick-games/glup/Glup-0.1.0-macos-universal.dmg?raw=1" title="GLUP · 沼泽猫鱼 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="GLUP · 沼泽猫鱼 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/standalone-games-2026.11.21/glup-windows-x64-setup.exe" title="GLUP · 沼泽猫鱼 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="GLUP · 沼泽猫鱼 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
   </tr>
 </table>
 
