@@ -2862,8 +2862,11 @@ void main() {
 
   const { v3, clamp, mix, sat, smoothstep } = K;
 
+  // Android WebView can advertise a 2x backing scale even on a 1080p TV.
+  // Keep the same lighting passes and reserve the higher mesh density for desktops.
+  K.androidGraphics = /Android/i.test(navigator.userAgent);
   const R = 88;                 // sea level radius
-  const LEVEL = 7;              // icosphere subdivisions -> 163,842 vertices
+  const LEVEL = K.androidGraphics ? 6 : 7;
   const SEA_FLOOR = -8.5;
   const PEAK = 21;
 
@@ -5141,7 +5144,7 @@ void main() {
     return _m;
   }
 
-  const SHADOW_SIZE = 2048;
+  const SHADOW_SIZE = K.androidGraphics ? 1024 : 2048;
   const SHADOW_EXTENT = 62;      // half-width of the box, world units
   const HEAL_R = 36;             // how far a fully caught fire heals
 
@@ -5195,7 +5198,7 @@ void main() {
 
     const R = {
       gl, canvas, programs: P,
-      w: 1, h: 1, scale: 1, dpr: 1,
+      w: 1, h: 1, scale: K.androidGraphics ? 0.72 : 1, dpr: 1,
       hdrOK: !!gl.__hdr,
       exposure: 1.0,
       bloom: 1.0,
@@ -6095,7 +6098,7 @@ void main() {
     let lockScale = false;
 
     function resize() {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, K.androidGraphics ? 1 : 2);
       R.resize(dpr);
     }
     addEventListener('resize', resize);
