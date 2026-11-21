@@ -12,6 +12,10 @@ on:
         description: Android icon build batches (JSON array, 0–7)
         type: string
         default: '[0,1,2,3,4,5,6,7]'
+      android_pilot:
+        description: Check the first three Android games in each selected batch without publishing
+        type: boolean
+        default: false
   push:
     branches: [master, 'feat/catalog-game-controls-*']
     paths:
@@ -29,6 +33,7 @@ jobs:
     uses: ./.github/workflows/game-icons-android.yml
     with:
       shards: ${{ inputs.android_shards || '[0,1,2,3,4,5,6,7]' }}
+      pilot: ${{ inputs.android_pilot || false }}
     secrets: inherit
 
   macos-icons:

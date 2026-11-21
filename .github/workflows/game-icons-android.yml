@@ -7,6 +7,11 @@ on:
         required: false
         type: string
         default: '[0,1,2,3,4,5,6,7]'
+      pilot:
+        description: Verify three packages per selected shard without staging any release assets
+        required: false
+        type: boolean
+        default: false
     secrets:
       PURETV_KEYSTORE_BASE64:
         required: true
@@ -27,6 +32,8 @@ jobs:
     env:
       SHARD: ${{ matrix.shard }}
       PYTHONUNBUFFERED: '1'
+      PURETV_DISPOSABLE_EMULATOR: '1'
+      ARTWORK_PILOT: ${{ inputs.pilot }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -53,7 +60,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           python -m pip install Pillow==11.3.0
-          complete=$(python tools/android_game_icons.py cached --shard "$SHARD" --shards 8)
+          complete=false
+          if [[ "$ARTWORK_PILOT" != true ]]; then
+            complete=$(python tools/android_game_icons.py cached --shard "$SHARD" --shards 8)
+          fi
           echo "complete=$complete" >> "$GITHUB_OUTPUT"
       - name: Install artwork and APK tooling
         if: steps.cached.outputs.complete == 'false'
@@ -67,7 +77,7 @@ jobs:
           PURETV_KEYSTORE_BASE64: ${{ secrets.PURETV_KEYSTORE_BASE64 }}
           PURETV_KEYSTORE_PASSWORD: ${{ secrets.PURETV_KEYSTORE_PASSWORD }}
         run: |
-          python tools/android_game_icons.py prepare --shard "$SHARD" --shards 8 --apktool "$RUNNER_TEMP/apktool.jar" \
+          python tools/android_game_icons.py prepare --sample-size "${{ inputs.pilot && 3 || 0 }}" --shard "$SHARD" --shards 8 --apktool "$RUNNER_TEMP/apktool.jar" \
             --tools "$ANDROID_HOME/build-tools/34.0.0" --originals "$RUNNER_TEMP/originals" \
             --output "$RUNNER_TEMP/signed" --report "$RUNNER_TEMP/android-icons-$SHARD.json"
       - name: Enable KVM for Android TV
@@ -91,7 +101,7 @@ jobs:
             --probe "$RUNNER_TEMP/probe/probe.apk" --originals "$RUNNER_TEMP/originals"
             --output "$RUNNER_TEMP/signed" --report "$RUNNER_TEMP/android-icons-$SHARD.json"
       - name: Stage only verified updates in the client artwork draft
-        if: steps.cached.outputs.complete == 'false'
+        if: steps.cached.outputs.complete == 'false' && !inputs.pilot
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

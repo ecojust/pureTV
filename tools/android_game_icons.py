@@ -3,6 +3,7 @@
 import argparse
 import base64
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -218,6 +219,8 @@ def dataset():
 def prepare(args):
     assert digest(args.apktool) == APKTOOL_SHA, 'APK resource compiler checksum mismatch'
     rows = dataset()[args.shard::args.shards]
+    if args.sample_size:
+        rows = rows[:args.sample_size]
     assert rows
     args.output.mkdir(parents=True, exist_ok=True)
     args.originals.mkdir(parents=True, exist_ok=True)
@@ -240,7 +243,7 @@ def prepare(args):
             receipts.append(receipt)
     args.report.write_text(json.dumps({'sourceSha': os.environ['GITHUB_SHA'],
                                       'buildRun': 'https://github.com/ecojust/pureTV/actions/runs/' + os.environ['GITHUB_RUN_ID'],
-                                      'games': receipts}, indent=2) + '\n')
+                                      'pilot': bool(args.sample_size), 'games': receipts}, indent=2) + '\n')
 
 
 def adb_call(adb, *args, timeout=45):
@@ -258,6 +261,23 @@ def adb_call(adb, *args, timeout=45):
         except subprocess.TimeoutExpired:
             message = f'timed out after {timeout}s'
         print('ADB transport:', message, flush=True)
+        if args[:3] == ('shell', 'pm', 'install'):
+            try:
+                window = subprocess.run([str(adb), 'shell', 'dumpsys', 'window'],
+                                        capture_output=True, text=True, timeout=8)
+                print('Window during install:', [line.strip() for line in window.stdout.splitlines()
+                                                 if 'mCurrentFocus' in line or 'mFocusedApp' in line], flush=True)
+                ui_path = '/data/local/tmp/puretv-artwork-install-window.xml'
+                subprocess.run([str(adb), 'shell', 'uiautomator', 'dump', ui_path],
+                               capture_output=True, text=True, timeout=10)
+                ui = subprocess.run([str(adb), 'shell', 'cat', ui_path], capture_output=True, text=True, timeout=5)
+                if ui.stdout.startswith('<?xml') or '<hierarchy' in ui.stdout:
+                    labels = [n.get('text') or n.get('content-desc') for n in ET.fromstring(ui.stdout).iter('node')]
+                    print('Install window text:', [label for label in labels if label][:25], flush=True)
+                if 'PlayProtectDialogsActivity' in window.stdout:
+                    raise RuntimeError('PackageManager is waiting for the emulator Play Protect confirmation')
+            except subprocess.TimeoutExpired:
+                print('Window inspection timed out', flush=True)
         if attempt < 2:
             try:
                 subprocess.run([str(adb), 'wait-for-device'], check=False, timeout=30)
@@ -287,17 +307,39 @@ def foreground(adb, package, component):
         time.sleep(1)
 
 
+def install_to_emulator(adb, apk, *, test_only=False):
+    # Hand PackageManager a fully transferred local file. The instrumentation
+    # probe also ships a v4 sidecar, which otherwise starts ADB's incremental loader.
+    remote = '/data/local/tmp/puretv-launcher-artwork-input.apk'
+    adb_call(adb, 'push', apk, remote, timeout=150)
+    options = ['-r', '-t'] if test_only else ['-r']
+    result = adb_call(adb, 'shell', 'pm', 'install', *options, remote, timeout=75)
+    assert 'Success' in result, result
+    adb_call(adb, 'shell', 'rm', '-f', remote)
+
+
 def device(args):
     data = json.loads(args.report.read_text())
     adb = args.adb
+    # Use the same opt-in, emulator-serial and QEMU checks as the catalogue
+    # upgrade tests. Persist the exact verifier settings and build fingerprint.
+    serial = adb_call(adb, 'get-serialno').strip()
+    spec = importlib.util.spec_from_file_location('controller_emulator_batch', ROOT / 'tools/controller-emulator-batch.py')
+    fixture = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(fixture)
+    data['emulatorConfiguration'] = fixture.configure_disposable_emulator(
+        lambda cmd: adb_call(adb, *cmd[1:]), [str(adb), '-s', serial], serial, os.environ,
+        args.report.with_suffix('.emulator.json'))
+    os.environ['ANDROID_SERIAL'] = serial
+    args.report.write_text(json.dumps(data, indent=2) + '\n')
     assert 'package:' in adb_call(adb, 'shell', 'pm', 'path', 'android')
-    assert 'Success' in adb_call(adb, 'install', '-r', '-t', args.probe, timeout=90)
+    install_to_emulator(adb, args.probe, test_only=True)
     api = adb_call(adb, 'shell', 'getprop', 'ro.build.version.sdk').strip()
     for game in data['games']:
         print('Checking installed Android TV update for', game['id'], flush=True)
         package = game['updated']['packageName']
-        assert 'Success' in adb_call(adb, 'install', '-r', args.originals / (game['id'] + '.apk'), timeout=150)
-        assert 'Success' in adb_call(adb, 'install', '-r', args.output / game['filename'], timeout=150)
+        install_to_emulator(adb, args.originals / (game['id'] + '.apk'))
+        install_to_emulator(adb, args.output / game['filename'])
         probe = adb_call(adb, 'shell', 'am', 'instrument', '-w', '-e', 'game', package, '-e', 'icon', game['icon']['sha256'],
                          '-e', 'banner', game['banner']['sha256'], 'com.ecojust.iconprobe/.Probe', timeout=60)
         assert 'INSTRUMENTATION_CODE: -1' in probe and 'PASS' in probe, probe
@@ -367,7 +409,9 @@ def cached(args):
 def upload(args):
     # The fixed draft is shared with desktop builders. A retry may reuse only an identical asset.
     existing = draft_assets()
-    games = json.loads(args.report.read_text())['games']
+    report = json.loads(args.report.read_text())
+    assert not report.get('pilot'), 'A diagnostic sample cannot be staged'
+    games = report['games']
     for game in games:
         assert game['installed']['installedApkSha256'] == game['updated']['sha256']
     files = [args.output / game['filename'] for game in games] + [args.report]
@@ -387,6 +431,7 @@ def main():
     build_cli.add_argument('--tools', required=True, type=Path)
     build_cli.add_argument('--shard', required=True, type=int)
     build_cli.add_argument('--shards', required=True, type=int)
+    build_cli.add_argument('--sample-size', choices=(0, 3), type=int, default=0)
     qa = commands.add_parser('device')
     qa.set_defaults(run=device)
     qa.add_argument('--probe', required=True, type=Path)
