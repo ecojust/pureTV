@@ -6,7 +6,7 @@
 
 | 记录 | 状态 | 用户目标 | 当前结果与下一步 |
 | --- | --- | --- | --- |
-| [2026-11-21-011](2026-11-21-011.md) | in_progress | 放大游戏清单中的截图 | [全量目录](../joystick-games/catalog/README.md)已给 4,383 款编号，1,514 款有缩略图，2,869 款待补；[工作簿](../joystick-games/game-audit.xlsx)可离线看图。合并状态见 [PR #60](https://github.com/ecojust/pureTV/pull/60)。 |
+| [2026-11-21-011](2026-11-21-011.md) | completed | 放大游戏清单中的截图 | [全量目录](../joystick-games/catalog/README.md)按序号列出 4,383 款，1,514 张截图已放大，2,869 款待补截图。[工作簿](../joystick-games/game-audit.xlsx)支持离线看大图。 |
 | [2026-11-21-010](2026-11-21-010.md) | completed | 筛选高画质开源手柄游戏 | [九款候选及试玩入口](../joystick-games/todo.md)已整理，等待用户勾选。 |
 | [2026-11-21-009](2026-11-21-009.md) | completed | 新增开源手柄游戏 | 两款 MIT 游戏、三端安装包及手柄验证记录，详见平台限制。 |
 | [2026-11-21-008](2026-11-21-008.md) | completed | 首页游戏来源与客户端实机图标 | [PR #55](https://github.com/ecojust/pureTV/pull/55) 已发布 141 个 Android TV、41 个 macOS 和 41 个 Windows 独立客户端；公开下载 278 个文件并核对 SHA-256。 |
