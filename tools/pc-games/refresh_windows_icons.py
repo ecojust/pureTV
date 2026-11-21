@@ -131,7 +131,10 @@ def verify_shortcut(folder, relative, executable):
 def smoke_native(app, work):
     diag = work / 'diagnostic'
     user = ctypes.windll.user32
-    proc = subprocess.Popen([str(app), '--diagnostics', str(diag), '--profile', str(work / 'profile')])
+    # WebView2 can keep BrowserMetrics memory-mapped briefly after WM_CLOSE.
+    # Keep those disposable profiles separate from the verified app and package.
+    profile = work.parent / 'profiles' / work.name
+    proc = subprocess.Popen([str(app), '--diagnostics', str(diag), '--profile', str(profile)])
     handle = None
     try:
         deadline = time.monotonic() + 150
@@ -285,7 +288,7 @@ def main():
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     rows = [row for row in json.loads((ROOT / 'tools/game-client-icon-inputs.json').read_text(encoding='utf-8')) if row.get('windows')]
-    with tempfile.TemporaryDirectory() as temp:
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as temp:
         root = Path(temp)
         runtime_work = root / 'pyinstaller'
         runtime_work.mkdir()
