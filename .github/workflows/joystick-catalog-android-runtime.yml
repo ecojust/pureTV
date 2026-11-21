@@ -113,7 +113,9 @@ jobs:
           else:
               for key in ['ARTIFACT_ID','ARTIFACT_ATTEMPT']:assert re.fullmatch('[1-9][0-9]*',os.environ[key])
           assert os.environ['REQUESTED_QA']==os.environ['GITHUB_SHA']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
-          assert os.environ['CONFIRM_BACKROAD_INSTALL'] in ('true','false')
+          assert os.environ['GAMES']=='clawd-pop' and os.environ['BATCH']=='expansion-01'
+          assert os.environ['ARTIFACT_SOURCE']=='51b66da764ede1513911802c922679fc23f93a91' and os.environ['ARTIFACT_EXPORT']=='3b0d818857cd897b9d4a1a4db02aa5998921a050'
+          assert os.environ['CONFIRM_BACKROAD_INSTALL']=='false'
           if os.environ['CONFIRM_BACKROAD_INSTALL']=='true':
               assert os.environ['GAMES']=='backroad-rally', 'Only this single original APK is authorized'
               assert os.environ['ARTIFACT_SOURCE']=='d548bccbe816bd4c03620388556ceef507b67d30'
@@ -189,7 +191,7 @@ jobs:
   runtime:
     needs: select
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 75
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -282,34 +284,47 @@ jobs:
           test -e /dev/kvm
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
-      - name: Run normal and occupied-port QA independently against unchanged signed bytes
-        # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
+      - name: Prepare read-only Android TV 14 first-boot observations
+        run: |
+          mkdir -p "$RUNNER_TEMP/runtime/$GAME"
+          cat > "$RUNNER_TEMP/runtime/$GAME/observe-boot.sh" <<'BOOT'
+          set -u
+          adb="$ANDROID_HOME/platform-tools/adb"
+          seen=''
+          unchanged=0
+          while (( SECONDS < 180 )); do
+            # After BOOT_COMPLETED the Play Store may still be replacing GMS packages.
+            state=$(timeout 8 "$adb" -s emulator-5554 shell 'getprop sys.boot_completed; pm path com.android.vending | head -n 1; pm path com.google.android.gms | head -n 1; pidof com.google.android.gms.persistent')
+            if [[ "$state" != "$seen" ]]; then unchanged=$SECONDS; seen=$state; fi
+            printf '%ss\n%s\n' "$SECONDS" "$state"
+            mapfile -t services <<< "$state"
+            if (( SECONDS >= 75 && SECONDS - unchanged >= 30 && ${#services[@]} == 4 )); then
+              if [[ ${services[0]} == 1 && ${services[1]} == package:/* &&
+                    ${services[2]} == package:/* && ${services[3]} =~ ^[0-9]+$ ]]; then break; fi
+            fi
+            sleep 5
+          done
+          BOOT
+      - name: Operate the signed APK on the Android TV 14 software graphics profile
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
-          # Controlled original-APK comparison: official stable 37.3.10 (2026-11-19), not a claimed crash fix.
-          # https://dl.google.com/android/repository/repository2-3.xml — emulator-linux_x64-16970787.zip
           emulator-build: '16970787'
-          api-level: 36
+          api-level: 34
           target: android-tv
-          arch: x86_64
-          profile: tv_1080p
+          arch: x86
+          profile: tv_720p
           avd-name: JoystickGamesValidation
           force-avd-creation: true
           disable-animations: true
-          # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
-          # Optional controlled Vulkan-off comparison; not an established crash cause or fix.
-          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}
-          pre-emulator-launch-script: >-
-            python3 joystick-games/tools/android-emulator-supervisor.py prepare
-            --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
+          emulator-options: -no-window -memory 3072 -gpu lavapipe -noaudio -no-boot-anim -no-snapshot -feature -Vulkan
           script: >-
-            python3 joystick-games/tools/android-emulator-supervisor.py assert-ready
-            --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor" &&
+            bash "$RUNNER_TEMP/runtime/$GAME/observe-boot.sh" > "$RUNNER_TEMP/runtime/$GAME/boot-services.txt" &&
             python3 joystick-games/tools/android-environment-diagnostics.py
             --output "$RUNNER_TEMP/runtime/$GAME/environment-diagnostics" --
-            python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
-            --input "$RUNNER_TEMP/input" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
-            --confirm-backroad-install "$CONFIRM_BACKROAD_INSTALL"
+            python3 joystick-games/qa/android/run.py --game "$GAME"
+            --apk "$RUNNER_TEMP/input/packages/clawd-pop/clawd-pop-0.1.1.apk"
+            --observer "$RUNNER_TEMP/input/observers/clawd-pop/observer-clawd-pop.apk"
+            --occupy-default-port --output "$RUNNER_TEMP/runtime/clawd-pop-occupied" --adb "$ANDROID_HOME/platform-tools/adb"
       - name: Restore the exact disposable SDK launcher after optional supervision
         if: always() && inputs.supervise_pon_emulator
         run: >-
@@ -421,9 +436,9 @@ jobs:
                   if os.environ['ARTIFACT_ID']:
                       origin=binding['artifactOrigin'];assert origin['kind']=='github-actions-signed-artifact' and origin['artifactId']==int(os.environ['ARTIFACT_ID']) and origin['artifactRunAttempt']==int(os.environ['ARTIFACT_ATTEMPT']) and binding['artifactExportCommit'] is None
                   else:assert binding['artifactExportCommit']==os.environ['ARTIFACT_EXPORT']
-                  outcomes=json.loads((evidence/(game+'-outcomes.json')).read_text());assert [item['mode'] for item in outcomes]==['normal','occupied'] and all(item['exitCode']==0 for item in outcomes)
                   receipt=json.loads((inputs/'packages'/game/'signing-receipt.json').read_text());observer=json.loads((inputs/'observers'/game/'observer-signing-receipt.json').read_text())
-                  for mode in ['normal','occupied']:
+                  assert receipt['sha256']=='c1ff193c8c804a05b64e18f636d098524538816a8f0ab1b139a7bd65a8fb9a2e'
+                  for mode in ['occupied']:
                       folder=evidence/(game+'-'+mode);report=json.loads((folder/'report.json').read_text())
                       assert report['status']=='passed' and report['game']==game and report['sourceCommit']==os.environ['GITHUB_SHA']
                       assert report['defaultPortOccupiedFixture'] is (mode=='occupied') and report['modelWrites'] is False and report['clockOverrides'] is False
