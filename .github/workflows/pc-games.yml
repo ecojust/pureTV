@@ -16,6 +16,10 @@ on:
         description: Check the first three Android games in each selected batch without publishing
         type: boolean
         default: false
+      android_verified_run:
+        description: Restore verified Android packages from a run whose release upload failed
+        type: string
+        required: false
   push:
     branches: [master, 'feat/catalog-game-controls-*']
     paths:
@@ -29,11 +33,13 @@ jobs:
   android-icons:
     if: inputs.target == 'icons-android'
     permissions:
+      actions: read
       contents: write
     uses: ./.github/workflows/game-icons-android.yml
     with:
       shards: ${{ inputs.android_shards || '[0,1,2,3,4,5,6,7]' }}
       pilot: ${{ inputs.android_pilot || false }}
+      verified_run: ${{ inputs.android_verified_run || '' }}
     secrets: inherit
 
   macos-icons:

@@ -12,6 +12,11 @@ on:
         required: false
         type: boolean
         default: false
+      verified_run:
+        description: Prior workflow run whose identical APKs already passed installed launcher checks
+        required: false
+        type: string
+        default: ''
     secrets:
       PURETV_KEYSTORE_BASE64:
         required: true
@@ -20,6 +25,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   android:
@@ -81,13 +87,13 @@ jobs:
             --tools "$ANDROID_HOME/build-tools/34.0.0" --originals "$RUNNER_TEMP/originals" \
             --output "$RUNNER_TEMP/signed" --report "$RUNNER_TEMP/android-icons-$SHARD.json"
       - name: Enable KVM for Android TV
-        if: steps.cached.outputs.complete == 'false'
+        if: steps.cached.outputs.complete == 'false' && inputs.verified_run == ''
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: Upgrade each installed game and render its actual launcher resources
-        if: steps.cached.outputs.complete == 'false'
+        if: steps.cached.outputs.complete == 'false' && inputs.verified_run == ''
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 36
@@ -100,6 +106,22 @@ jobs:
             python tools/android_game_icons.py device --adb "$ANDROID_HOME/platform-tools/adb"
             --probe "$RUNNER_TEMP/probe/probe.apk" --originals "$RUNNER_TEMP/originals"
             --output "$RUNNER_TEMP/signed" --report "$RUNNER_TEMP/android-icons-$SHARD.json"
+      - name: Retrieve the original completed Android TV proof
+        if: steps.cached.outputs.complete == 'false' && inputs.verified_run != '' && !inputs.pilot
+        uses: actions/download-artifact@v4
+        with:
+          name: android-icons-${{ matrix.shard }}
+          path: ${{ runner.temp }}/original-native-proof
+          run-id: ${{ inputs.verified_run }}
+          github-token: ${{ github.token }}
+      - name: Bind the signed bytes to the original installed result
+        if: steps.cached.outputs.complete == 'false' && inputs.verified_run != '' && !inputs.pilot
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRIOR_RUN: ${{ inputs.verified_run }}
+        run: |
+          python tools/android_game_icons.py replay --prior-run "$PRIOR_RUN" --shard "$SHARD" --output "$RUNNER_TEMP/signed" \
+            --original-report "$RUNNER_TEMP/original-native-proof/android-icons-$SHARD.json" --report "$RUNNER_TEMP/android-icons-$SHARD.json"
       - name: Stage only verified updates in the client artwork draft
         if: steps.cached.outputs.complete == 'false' && !inputs.pilot
         env:

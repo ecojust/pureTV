@@ -364,8 +364,11 @@ def draft_assets():
     while True:
         assets = json.loads(command('gh', 'api', release['apiUrl'] + f'/assets?per_page=100&page={page}'))
         for asset in assets:
-            assert asset['name'] not in entries
-            entries[asset['name']] = asset
+            if asset['state'] != 'uploaded' or not asset.get('digest'):
+                continue
+            # Concurrent uploads move page boundaries in the GitHub asset list.
+            prior = entries.setdefault(asset['name'], asset)
+            assert all(prior[k] == asset[k] for k in ('id', 'size', 'digest')), asset['name']
         if len(assets) < 100:
             return entries
         page += 1
@@ -406,6 +409,32 @@ def cached(args):
     print('true')
 
 
+def replay(args):
+    """Reuse completed device results only for byte-identical newly signed APKs."""
+    origin = f'repos/ecojust/pureTV/actions/runs/{args.prior_run}'
+    run = json.loads(command('gh', 'api', origin))
+    old_bytes = args.original_report.read_bytes()
+    old = json.loads(old_bytes)
+    fresh = json.loads(args.report.read_text())
+    assert run['repository']['full_name'] == 'ecojust/pureTV' and run['status'] == 'completed'
+    assert run['path'] == '.github/workflows/pc-games.yml' and run['head_sha'] == old['sourceSha']
+    assert old['buildRun'] == run['html_url'] and old['pilot'] is fresh['pilot'] is False
+    assert old['emulatorConfiguration']['status'] == 'configured' and old['emulatorConfiguration']['kernelQemu'] == '1'
+    jobs = json.loads(command('gh', 'api', origin + '/jobs?per_page=100'))['jobs']
+    matched = [j for j in jobs if j['name'] == f'android-icons / android ({args.shard})']
+    assert len(matched) == 1
+    native_steps = [s for s in matched[0]['steps'] if s['name'] == 'Upgrade each installed game and render its actual launcher resources']
+    assert len(native_steps) == 1 and native_steps[0]['conclusion'] == 'success'
+    assert len(old['games']) == len(fresh['games']) and fresh['games']
+    for original, rebuilt in zip(old['games'], fresh['games']):
+        assert {k: v for k, v in original.items() if k != 'installed'} == rebuilt, 'Changed signed input or bytes: ' + rebuilt['id']
+        installed = original['installed']
+        assert all(installed[k] == 'passed' for k in ('upgrade', 'leanbackLaunch', 'launcherArtwork'))
+        apk = args.output / rebuilt['filename']
+        assert installed['installedApkSha256'] == rebuilt['updated']['sha256'] == digest(apk)
+    args.report.write_bytes(old_bytes)
+
+
 def upload(args):
     # The fixed draft is shared with desktop builders. A retry may reuse only an identical asset.
     existing = draft_assets()
@@ -416,10 +445,22 @@ def upload(args):
         assert game['installed']['installedApkSha256'] == game['updated']['sha256']
     files = [args.output / game['filename'] for game in games] + [args.report]
     for path in files:
-        if path.name in existing:
-            assert existing[path.name]['digest'] == 'sha256:' + digest(path), 'Conflicting release asset: ' + path.name
+        for attempt in range(3):
+            if path.name in existing:
+                item = existing[path.name]
+                assert item['size'] == path.stat().st_size and item['digest'] == 'sha256:' + digest(path), 'Conflicting release asset: ' + path.name
+                break
+            try:
+                command('gh', 'release', 'upload', RELEASE, path, '--repo', 'ecojust/pureTV')
+                break
+            except subprocess.CalledProcessError:
+                existing = draft_assets()
+                if path.name not in existing and attempt == 2:
+                    raise
+                time.sleep(1 + attempt)
         else:
-            command('gh', 'release', 'upload', RELEASE, path, '--repo', 'ecojust/pureTV')
+            item = existing[path.name]
+            assert item['size'] == path.stat().st_size and item['digest'] == 'sha256:' + digest(path)
 
 
 def main():
@@ -440,11 +481,16 @@ def main():
     check.set_defaults(run=cached)
     check.add_argument('--shard', required=True, type=int)
     check.add_argument('--shards', required=True, type=int)
+    reuse = commands.add_parser('replay')
+    reuse.set_defaults(run=replay)
+    reuse.add_argument('--original-report', required=True, type=Path)
+    reuse.add_argument('--prior-run', required=True, type=int)
+    reuse.add_argument('--shard', required=True, type=int)
     pub = commands.add_parser('upload')
     pub.set_defaults(run=upload)
     for c in (build_cli, qa):
         c.add_argument('--originals', required=True, type=Path)
-    for c in (build_cli, qa, pub):
+    for c in (build_cli, qa, pub, reuse):
         c.add_argument('--output', required=True, type=Path)
         c.add_argument('--report', required=True, type=Path)
     args = cli.parse_args()
