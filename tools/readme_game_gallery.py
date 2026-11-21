@@ -26,11 +26,18 @@ def game_catalog(genres, resources, english, root):
                 covers = {'zh': page + info['cover'], 'en': english[key]['cover'], **item.get('cover', {})}
                 downloads = {'apk': page + info['apk'] + '?raw=1'}
                 controller = bool(info.get('wifiController'))
-                if 'macos' in item:
-                    dmg = Path(item['macos'])
-                    assert not dmg.is_absolute() and '..' not in dmg.parts and dmg.suffix == '.dmg', f'{key}: invalid DMG path'
-                    assert (root / page / dmg).is_file(), f'{key}: missing game download {dmg}'
-                    downloads['macos'] = page + dmg.as_posix() + '?raw=1'
+                for platform, extension in (('macos', '.dmg'), ('windows', '.exe')):
+                    if platform not in item:
+                        continue
+                    target = item[platform]
+                    if target.startswith('https://github.com/ecojust/pureTV/releases/download/'):
+                        assert target.endswith(extension), f'{key}: invalid {platform} release file'
+                        downloads[platform] = target
+                    else:
+                        path = Path(target)
+                        assert not path.is_absolute() and '..' not in path.parts and path.suffix == extension, f'{key}: invalid {platform} path'
+                        assert (root / page / path).is_file(), f'{key}: missing game download {path}'
+                        downloads[platform] = page + path.as_posix() + '?raw=1'
             else:
                 page = item['page']
                 assert re.fullmatch(r'joystick-games/[a-z0-9-]+/', page), f'Invalid game page: {page}'

@@ -48,6 +48,12 @@ The TV store works with updated launchers to let you choose the position of an a
 
 ### Play on a computer
 
+Find your game on the homepage and select its Apple or Windows icon. On macOS, open the DMG and drag the game to Applications. On Windows, run the installer and open the game from the Start menu. [Browse installers by game](../../README.en.md#games)
+
+The 37 added installers include the game assets and support offline play. The macOS games open in their own windows and quit with Command-Q. The Windows games open in your default browser and quit when you close the game's console. Some 3D games require WebGL 2. [Downloads and SHA-256 checksums](https://github.com/ecojust/pureTV/releases/tag/standalone-games-2026.11.21)
+
+#### Use the multi-game player
+
 Open the Windows x64 player, choose a game with the arrow keys and press Enter. The player downloads the game on first launch, verifies it and opens it in your default browser. Subsequent launches use the local copy. Follow the game's own keyboard prompts, or use a pureTV Wi-Fi controller on the same LAN. Keep the player running while you play. [Download the Windows player](https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/tools/pc-games/packages/pureTV-Games.exe)
 
 On macOS or Linux, extract the portable ZIP, open a terminal in the extracted folder and run the following commands with Python 3.10 or later. Pass a game ID to start it directly, for example `.venv/bin/python launcher.py tetris`. [Download the portable player](https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/tools/pc-games/packages/pureTV-Games-portable.zip)
