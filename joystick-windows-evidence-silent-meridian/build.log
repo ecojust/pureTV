@@ -1,0 +1,30 @@
+-- Building for: Visual Studio 17 2022
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.20348.
+-- The CXX compiler identification is MSVC 19.44.35230.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+CMake Error at CMakeLists.txt:29 (add_executable):
+  Syntax error in cmake code when parsing string
+
+    D:\a\_temp\packages\game.rc
+
+  Invalid character escape '\a'.
+
+
+-- Configuring incomplete, errors occurred!
+Traceback (most recent call last):
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-build.py", line 213, in <module>
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--game',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--dependencies',type=Path,required=True);build(p.parse_args())
+                                                                                                                                                                                                      ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-build.py", line 188, in build
+    work=out/'build';run('cmake','-S',SHARED,'-B',work,'-A','x64','-DPURETV_DEPS='+str(deps),'-DPURETV_GAME_ICON_RC='+str(rc));run('cmake','--build',work,'--config','Release');run('ctest','--test-dir',work,'-C','Release','--output-on-failure')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\a\pureTV\pureTV\joystick-games\tools\windows-build.py", line 12, in run
+    def run(*cmd):subprocess.run([str(x) for x in cmd],check=True)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['cmake', '-S', 'D:\\a\\pureTV\\pureTV\\joystick-games\\shared\\windows', '-B', 'D:\\a\\_temp\\packages\\build', '-A', 'x64', '-DPURETV_DEPS=D:\\a\\_temp\\windows-dependencies', '-DPURETV_GAME_ICON_RC=D:\\a\\_temp\\packages\\game.rc']' returned non-zero exit status 1.
