@@ -6,7 +6,7 @@
 
 | 记录 | 状态 | 用户目标 | 当前结果与下一步 |
 | --- | --- | --- | --- |
-| [2026-11-21-003](2026-11-21-003.md) | completed | 游戏按钮直达对应客户端 | 21 款游戏补齐 37 个独立包并公开发布，双语各 120 个直达链接。[发布页](https://github.com/ecojust/pureTV/releases/tag/standalone-games-2026.11.21) · [PR #51](https://github.com/ecojust/pureTV/pull/51) |
+| [2026-11-21-003](2026-11-21-003.md) | completed | 游戏按钮直达对应客户端 | 21 款游戏补齐 37 个独立包并公开发布，双语各 120 个直达链接，已获合并授权。[发布页](https://github.com/ecojust/pureTV/releases/tag/standalone-games-2026.11.21) · [PR #51](https://github.com/ecojust/pureTV/pull/51) |
 | [2026-11-21-002](2026-11-21-002.md) | completed | 审查并修复 PR #50 后提交 | 已合并。六款 18 次实玩通过，Clawd 默认和备用端口各通过 41 项。[PR #50](https://github.com/ecojust/pureTV/pull/50) |
 | [2026-11-21-001](2026-11-21-001.md) | completed | 收到用户 prompt 后先提交任务记录 | 本条请求已先行推送，根目录协作规范已明确登记、推送与开工顺序。 |
 | [2026-11-20-007](2026-11-20-007.md) | completed | Kart Royale 新赛道与五款手柄游戏 | 新增两条赛道与五款游戏，共 40 款。六份原签名 APK 与新版桌面启动器已交付；扫码、键盘和 TCP 手柄已验证。[逐款电视验收](../joystick-games/docs/expansion/android.md) · [PR #50](https://github.com/ecojust/pureTV/pull/50) |
