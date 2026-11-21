@@ -15,7 +15,37 @@ SNAPSHOT = "window.JoystickGameQA?.snapshot?.()"
 FLAGS = ['--disable-dev-shm-usage', '--disable-background-timer-throttling', '--enable-unsafe-swiftshader']
 
 
-def verify(browser, host_path, slug, archive, timeout, editable_text=None):
+KEYPAD = {
+    'UP': 'Numpad8', 'DOWN': 'Numpad2', 'LEFT': 'Numpad4', 'RIGHT': 'Numpad6',
+    'START': 'Numpad5', 'A': 'Numpad1', 'B': 'Numpad3', 'X': 'Numpad7', 'Y': 'Numpad9',
+}
+
+
+def verify_gameplay(page, slug, client, timeout):
+    from expansion_gameplay import run_gameplay
+
+    def press(key, hold_ms=0, while_held=None):
+        button = f'{SNAPSHOT}?.controller?.buttons?.{key}'
+        if client:
+            client.button(key, 'down')
+        else:
+            page.keyboard.down(KEYPAD[key])
+        try:
+            wait_for(page, f'{button} === true', timeout)
+            page.wait_for_timeout(hold_ms)
+            if while_held:
+                while_held()
+        finally:
+            if client:
+                client.button(key, 'tap', hold_ms)
+            else:
+                page.keyboard.up(KEYPAD[key])
+        wait_for(page, f'{button} === false', timeout)
+
+    return run_gameplay(slug, page, press, lambda: page.evaluate(SNAPSHOT))
+
+
+def verify(browser, host_path, slug, archive, timeout, editable_text=None, gameplay=None):
     with archive.open('rb') as packed:
         result = {'game': slug, 'payloadSha256': hashlib.file_digest(packed, 'sha256').hexdigest()}
     proc = subprocess.Popen([sys.executable, str(host_path), '--game', slug, '--apk', str(archive),
@@ -40,6 +70,23 @@ def verify(browser, host_path, slug, archive, timeout, editable_text=None):
         assert state.get('stage') != 'error' and not state.get('error'), state
         result['initial'] = page.evaluate(f"() => {{const s={SNAPSHOT}; return {{stage:s.stage, renderer:s.renderer ?? s.render?.type ?? null, polls:s.controller.pollCount}};}}")
         result['startupSeconds'] = round(time.monotonic() - start, 1)
+        if gameplay:
+            phase = f'{gameplay} gameplay'
+            wait_for(page, f"""() => {{const s={SNAPSHOT}; return s?.stage &&
+                !['boot', 'loading', 'error'].includes(s.stage);}}""", timeout)
+            result['entryStage'] = page.evaluate(f'{SNAPSHOT}.stage')
+            if gameplay == 'sdk':
+                client = MeasuredClient(int(port))
+                client.connect()
+                wait_for(page, f"{SNAPSHOT}?.controller?.connected === true", timeout)
+                identity = page.locator('[data-puretv-controller-id-text]').first
+                assert identity.is_visible() and client.identity in identity.inner_text()
+                result['tcpIdentity'] = client.identity
+            result['gameplay'] = verify_gameplay(page, slug, client, timeout)
+            if client:
+                result['acknowledged'] = client.acknowledged()
+            result.update(passed=True, input=gameplay, seconds=round(time.monotonic() - start, 1))
+            return result
         phase = 'SDK connection and input'
         print(slug, phase, result['startupSeconds'], flush=True)
         client = MeasuredClient(int(port))
@@ -96,6 +143,7 @@ def main():
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--chromium', default='/usr/bin/chromium')
     p.add_argument('--timeout', type=int, default=300)
+    p.add_argument('--gameplay', choices=['keyboard', 'sdk'], help='Start a fresh session and verify gameplay using only this input')
     p.add_argument('--editable-text', help='Type this value when the tested game focuses its text input')
     p.add_argument('--angle', choices=['auto', 'swiftshader', 'gl-egl'], default='auto')
     p.add_argument('games', nargs='+')
@@ -109,7 +157,7 @@ def main():
         try:
             ok = True
             for slug in args.games:
-                report = verify(browser, args.host, slug, args.payloads / (slug + '.zip'), args.timeout, args.editable_text)
+                report = verify(browser, args.host, slug, args.payloads / (slug + '.zip'), args.timeout, args.editable_text, args.gameplay)
                 report.update(browser=browser.version, angle=args.angle)
                 (args.output / (slug + '.json')).write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
                 print(slug, report.get('passed'), report.get('error', ''), flush=True)
