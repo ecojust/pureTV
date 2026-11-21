@@ -1,5 +1,7 @@
 # 静默子午线 · Silent Meridian
 
+[Android TV APK](silent-meridian-0.1.0.apk?raw=1) · [macOS DMG](macos/SilentMeridian-0.1.0-macos-universal.dmg?raw=1) · [Windows x64 安装程序](windows/SilentMeridian-0.1.0-windows-x64-setup.exe?raw=1) · [SHA-256](SHA256SUMS.txt)
+
 探索七个场景，在现在与回声中解开十三道谜题。方向键切换焦点，A 操作，B 关闭，X 切换时间，Y 打开日志，START 开始或暂停。
 
 电脑小键盘 8/2/4/6 对应方向，5 对应 START，1/3/7/9 对应 A/B/X/Y。运行 `npm ci && npm run build` 后打开 `dist/tv.html`。

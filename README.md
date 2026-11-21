@@ -82,13 +82,11 @@
 
 [新增与更新的六款手柄游戏 · 浏览器试玩及操作说明](joystick-games/README.md#game-expansion)
 
-适配中的游戏（浏览器试玩与操作说明） · [KINDLE](joystick-games/kindle/) · [Silent Meridian](joystick-games/silent-meridian/)
-
 <!-- game-index:start -->
 
-**37 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · Android TV 37 款 · macOS 独立安装包 37 款 · Windows x64 独立安装包 37 款
+**39 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · Android TV 39 款 · macOS 独立安装包 39 款 · Windows x64 独立安装包 39 款
 
-[竞速与体育（13）](#controller-racing) · [动作、角色扮演与探索（5）](#controller-action) · [平台、弹幕与街机（5）](#controller-arcade) · [策略、塔防与卡牌（2）](#controller-strategy) · [解谜与益智（12）](#controller-puzzle)
+[竞速与体育（13）](#controller-racing) · [动作、角色扮演与探索（6）](#controller-action) · [平台、弹幕与街机（5）](#controller-arcade) · [策略、塔防与卡牌（2）](#controller-strategy) · [解谜与益智（13）](#controller-puzzle)
 
 <a id="controller-racing"></a>
 
@@ -123,7 +121,7 @@
 
 <a id="controller-action"></a>
 
-### 动作、角色扮演与探索（5）
+### 动作、角色扮演与探索（6）
 
 <table>
   <tr>
@@ -134,7 +132,7 @@
   </tr>
   <tr>
     <td align="center" valign="top" width="207"><a href="joystick-games/operation-ironhold/"><img src="joystick-games/operation-ironhold/thumb.png" width="180" alt=""><br>铁垒行动</a><br><a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/operation-ironhold-0.1.2.apk" title="铁垒行动 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="铁垒行动 Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/operation-ironhold-macos.dmg" title="铁垒行动 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="铁垒行动 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/operation-ironhold-windows-x64-setup.exe" title="铁垒行动 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="铁垒行动 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/StarKnightt/operation-ironhold" title="铁垒行动 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="铁垒行动 · 原作仓库"></a></td>
-    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/kindle/"><img src="joystick-games/kindle/thumb.png" width="180" alt=""><br>星球点灯人</a><br><a href="joystick-games/kindle/kindle-0.1.0.apk?raw=1" title="星球点灯人 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="星球点灯人 Android TV APK"></a> <a href="joystick-games/kindle/macos/Kindle-0.1.0-macos-universal.dmg?raw=1" title="星球点灯人 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="星球点灯人 macOS DMG"></a> <a href="joystick-games/kindle/windows/Kindle-0.1.0-windows-x64-setup.exe?raw=1" title="星球点灯人 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="星球点灯人 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/TonyDowney/kindle" title="星球点灯人 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="星球点灯人 · 原作仓库"></a></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
@@ -174,7 +172,7 @@
 
 <a id="controller-puzzle"></a>
 
-### 解谜与益智（12）
+### 解谜与益智（13）
 
 <table>
   <tr>
@@ -194,6 +192,12 @@
     <td align="center" valign="top" width="207"><a href="joystick-games/atlas-of-ink/"><img src="docs/puzzle-nine/browser/atlas-of-ink/playing-1280.jpg" width="180" alt=""><br>墨绘地图集</a><br><a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/atlas-of-ink-0.1.3.apk" title="墨绘地图集 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="墨绘地图集 Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/atlas-of-ink-macos.dmg" title="墨绘地图集 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="墨绘地图集 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/atlas-of-ink-windows-x64-setup.exe" title="墨绘地图集 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="墨绘地图集 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/triptych/web-games-andrew" title="墨绘地图集 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="墨绘地图集 · 原作仓库"></a></td>
     <td align="center" valign="top" width="207"><a href="joystick-games/starbase-spooky/"><img src="docs/puzzle-nine/browser/starbase-spooky/playing-1280.jpg" width="180" alt=""><br>幽灵空间站</a><br><a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/starbase-spooky-0.1.4.apk" title="幽灵空间站 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="幽灵空间站 Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/starbase-spooky-macos.dmg" title="幽灵空间站 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="幽灵空间站 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/starbase-spooky-windows-x64-setup.exe" title="幽灵空间站 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="幽灵空间站 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/triptych/web-games-andrew" title="幽灵空间站 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="幽灵空间站 · 原作仓库"></a></td>
     <td align="center" valign="top" width="207"><a href="joystick-games/sugarplum-drop/"><img src="joystick-games/sugarplum-drop/docs/browser-attempt-3/playing-1280.png" width="180" alt=""><br>Sugarplum Drop</a><br><a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/sugarplum-drop-0.1.2.apk" title="Sugarplum Drop Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Sugarplum Drop Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/sugarplum-drop-macos.dmg" title="Sugarplum Drop macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Sugarplum Drop macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/sugarplum-drop-windows-x64-setup.exe" title="Sugarplum Drop Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Sugarplum Drop Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/triptych/web-games-andrew" title="Sugarplum Drop · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Sugarplum Drop · 原作仓库"></a></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="207"><a href="joystick-games/silent-meridian/"><img src="joystick-games/silent-meridian/thumb.png" width="180" alt=""><br>静默子午线</a><br><a href="joystick-games/silent-meridian/silent-meridian-0.1.0.apk?raw=1" title="静默子午线 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="静默子午线 Android TV APK"></a> <a href="joystick-games/silent-meridian/macos/SilentMeridian-0.1.0-macos-universal.dmg?raw=1" title="静默子午线 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="静默子午线 macOS DMG"></a> <a href="joystick-games/silent-meridian/windows/SilentMeridian-0.1.0-windows-x64-setup.exe?raw=1" title="静默子午线 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="静默子午线 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/stackloomdev/silent-meridian" title="静默子午线 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="静默子午线 · 原作仓库"></a></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
   </tr>
 </table>
 
