@@ -1,5 +1,9 @@
 # pureTV 应用目录
 
+<div align="center">
+  <img src="docs/branding/puretv-logo.png" width="112" alt="pureTV 生肖龙 Logo">
+</div>
+
 **简体中文** · [English](README.en.md) · [使用说明](docs/guide/README.md) · [开发与 MCP 文档](docs/guide/development.md)
 
 [管理工具与应用工具](#管理工具与应用工具) · [启动器与电视应用](#启动器与电视应用资源) · [游戏专栏](#games) · [第三方电视应用](fork/README.md) · [游戏参考清单](docs/claude-games/catalog.md)
