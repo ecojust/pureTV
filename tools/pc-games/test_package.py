@@ -8,6 +8,24 @@ import package
 
 
 class PortablePackageTests(unittest.TestCase):
+    def test_hidden_desktop_rows_still_require_unique_ids_and_valid_downloads(self):
+        game = {'id': 'hidden', 'bytes': 1, 'sha256': '0' * 64}
+        cases = [
+            ([game, game], 'Duplicate desktop game ID'),
+            ([dict(game, bytes=0)], 'Incomplete download identity for hidden'),
+            ([dict(game, sha256='invalid')], 'Incomplete download identity for hidden'),
+        ]
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            pc = root / 'tools' / 'pc-games'
+            pc.mkdir(parents=True)
+            (pc.parent / 'readme-app-games.json').write_text('[]')
+            for rows, message in cases:
+                with self.subTest(rows=rows):
+                    (pc / 'catalog.json').write_text(json.dumps(rows))
+                    with self.assertRaisesRegex(ValueError, message):
+                        package.build(root / 'out', root)
+
     def test_stale_port_download_is_rejected_even_when_game_id_matches(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

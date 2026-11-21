@@ -6,7 +6,7 @@
 
 | 记录 | 状态 | 用户目标 | 当前结果与下一步 |
 | --- | --- | --- | --- |
-| [2026-11-21-005](2026-11-21-005.md) | completed | 隐藏首页四款游戏 | 双语首页各展示 36 款，五个分类、108 个平台下载链接已核对。[PR #53](https://github.com/ecojust/pureTV/pull/53) |
+| [2026-11-21-005](2026-11-21-005.md) | completed | 隐藏首页四款游戏 | 双语首页各展示 36 款，108 个平台下载链接已核对；四款独立客户端构建输入均通过校验。[PR #53](https://github.com/ecojust/pureTV/pull/53) |
 | [2026-11-21-004](2026-11-21-004.md) | completed | 恢复首页龙标 | 双语首页已恢复原版 112 像素龙标，已移除龙标上方标题。 |
 | [2026-11-21-003](2026-11-21-003.md) | completed | 游戏按钮直达对应客户端 | 21 款游戏补齐 37 个独立包并公开发布，双语各 120 个直达链接，已获合并授权。[发布页](https://github.com/ecojust/pureTV/releases/tag/standalone-games-2026.11.21) · [PR #51](https://github.com/ecojust/pureTV/pull/51) |
 | [2026-11-21-002](2026-11-21-002.md) | completed | 审查并修复 PR #50 后提交 | 已合并。六款 18 次实玩通过，Clawd 默认和备用端口各通过 41 项。[PR #50](https://github.com/ecojust/pureTV/pull/50) |

@@ -66,7 +66,7 @@ python3 -m venv .venv
 
 ### 在电视上扫码加入
 
-在首页选择游戏，点击电视图标下载该款签名 APK，然后将它安装到电视。[全部 40 款游戏下载](../../README.md#games) · [本批六款 APK](../../joystick-games/README.md#game-expansion)
+在首页选择游戏，点击电视图标下载该款签名 APK，然后将它安装到电视。[浏览首页游戏目录](../../README.md#games) · [本批六款 APK](../../joystick-games/README.md#game-expansion)
 
 在电视上打开游戏，让手机接入同一局域网，扫描游戏菜单中的二维码。手机浏览器会打开虚拟手柄，在手机上按方向和动作键，看电视画面游玩。电视显示已连接的玩家席位，进入菜单或暂停时可以查看连接详情。
 
