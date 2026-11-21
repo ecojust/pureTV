@@ -70,5 +70,29 @@ jobs:
                   assert existing[name]['digest']=='sha256:'+hashlib.sha256(p.read_bytes()).hexdigest()
               else:
                   gh('release','upload',tag,str(p))
+          if system=='windows':
+              # Check the draft payload digests against both native verification reports.
+              gh('release','download',tag,'-p','verification-macos.json','-D','summary')
+              mac_rows=json.loads(Path('summary/verification-macos.json').read_text())
+              assert len(mac_rows)==16
+              all_rows={r['installer']:r['installerSha256'] for r in rows+mac_rows}
+              assert len(all_rows)==37
+              draft=json.loads(gh('release','view',tag,'--json','isDraft,assets'))
+              assert draft['isDraft']
+              assets={a['name']:a for a in draft['assets']}
+              assert all(assets[n]['digest']=='sha256:'+d for n,d in all_rows.items())
+              sums=Path('SHA256SUMS.txt')
+              sums.write_text(''.join(f'{all_rows[n]}  {n}\n' for n in sorted(all_rows)))
+              evidence=Path('keyboard-gameplay.json')
+              import base64
+              record=api('contents/tools/pc-games/qa/standalone-keyboard-2026-11-21.json?ref=c6b55e565a60e9f5ec6773f3ce80b4ff0bf2015b')
+              evidence.write_bytes(base64.b64decode(record['content']))
+              played=json.loads(evidence.read_bytes())
+              assert len(played['results'])==21 and all(r['ok'] for r in played['results'])
+              for p in [sums,evidence]:
+                  if p.name not in assets:
+                      gh('release','upload',tag,str(p))
+                  else:
+                      assert assets[p.name]['digest']=='sha256:'+hashlib.sha256(p.read_bytes()).hexdigest()
           print(f'Staged {len(rows)} verified {system} packages and their report.')
           PY
