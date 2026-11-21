@@ -1,6 +1,7 @@
 """Upload the six agreed files to one existing draft without replacing release assets."""
 from pathlib import Path
 from urllib.parse import quote
+from urllib.request import Request, urlopen
 import hashlib
 import json
 import os
@@ -76,7 +77,14 @@ def main():
             verify(existing[name], path, values[name])
             continue
         endpoint = 'https://uploads.github.com/' + RELEASE + '/assets?name=' + quote(name, safe='')
-        created = api('-X', 'POST', endpoint, '-H', 'Content-Type: application/octet-stream', '--input', str(path))
+        request = Request(endpoint, data=path.read_bytes(), method='POST', headers={
+            'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
+            'Content-Type': 'application/octet-stream',
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+        })
+        with urlopen(request, timeout=90) as response:
+            created = json.load(response)
         verify(created, path, values[name])
     completed = assets()
     assert set(completed) == set(values)
