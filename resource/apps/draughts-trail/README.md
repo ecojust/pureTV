@@ -1,5 +1,9 @@
 # 跳吃棋径 / Draughts Trail
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](draughts-trail-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 在 6×6 棋盘上执浅色棋子，与公开规则的深色对手对弈。吃光对手或让对手无合法行动即可获胜；己方被吃光或无路可走则失败。
 
 普通子沿斜线向前走一格，跳过相邻敌子并落到空格即可吃掉它。**普通子走与吃都只能向前**：浅色向上，深色向下。王棋带皇冠，可向前或向后走一格／短跳，不能远距离飞跳。

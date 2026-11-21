@@ -1,5 +1,9 @@
 # 双线节律 · Beat Braid
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](beat-braid-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 一条线持续按住，另一条线点拍三次，再按段序交换职责，把双色线织成完整编带。左右两键独立工作，保持一侧时可以反复点按另一侧。
 
 **A 控制左线，B 控制右线。** 手机沿用右侧上下两个大操作区：上区 A、下区 B；键盘空格或 Z 为 A，B 或 X 为 B，遥控确认键可按住 A。左右方向在菜单选择关卡，Enter／手机 START 开始；P／START 暂停或继续，R／手机重试重新开始。
@@ -18,7 +22,7 @@
 
 首次开始或取消后，先松开旧按键，再进入 1 秒准备倒计时；期间可以重新按住经线。暂停、隔离和恢复准备都冻结节奏，随后从原拍点继续，已有命中与缺口保持不变。有效节奏时长不包括这些准备和暂停时间。
 
-版本 `0.1.0`，包名 `com.ecojust.beatbraidtv`，作者 ecojust / 桔子桑，采用 [MIT 许可证](LICENSE)。规则和输入边界见[模型合同](docs/model-contract.md)及[公开接口](docs/public-interface.md)。从仓库根目录执行规则测试：
+版本 `0.1.1`，包名 `com.ecojust.beatbraidtv`，作者 ecojust / 桔子桑，采用 [MIT 许可证](LICENSE)。规则和输入边界见[模型合同](docs/model-contract.md)及[公开接口](docs/public-interface.md)。从仓库根目录执行规则测试：
 
 ```sh
 node --test resource/apps/beat-braid/tests/game-model.test.cjs

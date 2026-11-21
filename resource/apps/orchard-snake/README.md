@@ -1,5 +1,9 @@
 # 果园游蛇 / Orchard Snake
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](orchard-snake-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 带着不断增长的身体穿过果园，收集果实，避开石墙、边界和自己的身体。蛇会自动向前移动，方向键为下一拍预排转弯。
 
 | 操作 | 作用 |

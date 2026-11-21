@@ -1,16 +1,18 @@
 # Last Track · 末路战车
 
-[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/last-track-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.2 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/last-track-0.1.2.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/last-track-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/last-track-windows-x64-setup.exe)
+
+[用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 基于 [Alexander Uspenskiy / LastTrack](https://github.com/alexander-uspenskiy/LastTrack/tree/7fdf7cfb6affb84748e11980f837255b12130bb7) v0.10.6 的 pureTV 手柄适配。保留原作 PBR 车模、赛道、AI 对手、武器、商店、装甲升级和存档。
 
-## Android TV 下载
+## Android TV 0.1.0 版交付记录
 
 [Last Track 0.1.0 APK](last-track-0.1.0.apk)（8,900,372 字节） · [SHA256 校验](SHA256SUMS.txt)。需要 Android 8.0 或更新版本以及支持 WebGL 2 的 WebView。
 
 Android TV 16 模拟器中，默认 TCP 63485 与端口占用回退各通过 57 项原生检查。实际手柄输入完成选车、选赛道、低画质驾驶、射击、漂移、氮气和暂停恢复。实体电视及 ESP32 手柄尚未实测。[赛中截图及验证范围](docs/android-delivery/)
 
-## Windows 下载
+## Windows 0.1.0 版交付记录
 
 0.1.0 x64：[安装 EXE](LastTrack-0.1.0-windows-x64-setup.exe)（8,934,793 字节）· [便携 ZIP](LastTrack-0.1.0-windows-x64.zip)（8,881,237 字节）· [SHA256 校验](SHA256SUMS.txt)。需要 **Windows 10 1903 或更新版本／Windows 11 x64、Microsoft Edge WebView2 Runtime 和可用的 WebGL 2**；便携版请完整解压后运行 `PureTVGame.exe`。安装包未做 Authenticode 签名。
 
@@ -20,7 +22,7 @@ Android TV 16 模拟器中，默认 TCP 63485 与端口占用回退各通过 57 
 
 在 New Game 用方向键选择，Enter 确认。赛中 W / S 或 ↑ / ↓ 给油和刹车，A / D 或 ← / → 转向。 电脑也可以连接同一局域网的 pureTV 无线手柄，按手柄搜索键（GPIO 23）配对。Android TV 可用同一 Wi-Fi 下的手机扫描菜单连接卡中的二维码，打开虚拟手柄。比赛时连接卡缩小，断线后重新连接，再手动继续。
 
-## macOS 下载
+## macOS 0.1.0 版交付记录
 
 0.1.0 Universal：[DMG](macos/LastTrack-0.1.0-macos-universal.dmg) · [ZIP](macos/LastTrack-0.1.0-macos-universal.zip) · [SHA256 校验](macos/SHA256SUMS.txt) · [包来源与验证范围](packages.json)。DMG 内的应用可拖入 Applications；ZIP 解压后也可运行同一个应用。
 

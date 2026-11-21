@@ -1,5 +1,9 @@
 # 气闸值守
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](airlock-budget-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 在三舱救援站安排三组人员撤离。用有限储氧和一台共享泵，在省氧的回收与快速排气之间选择，赶上每组各自的安全期限，并封堵漏气支路。
 
 - **抢修撤离**：留意工程队的紧迫期限与最终储备。

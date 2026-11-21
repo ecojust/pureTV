@@ -1,5 +1,9 @@
 # 港口配重
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](harbor-counterweight-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 六件货物依次抵港，四个船上货位各能叠放两件。安排装船位置，再按公开清单卸下四件货物，让剩余两件出口货随船安全离港。上层货物会挡住下层货物，选位置时也要考虑后面的卸货顺序。
 
 左右方向键或手机摇杆选择货位，**A 吊机搬运**请求当前任务。吊机实际经历提升、水平运输、下降和空钩返程；只有完整搬运结束后才能接下一项任务。选错货物、货位已满或吊机忙碌时会说明原因，不会自动整理货物。
@@ -12,4 +16,4 @@
 
 三关为「日班靠港」「交错转运」「夜航重载」，货物质量、装卸顺序和时间预算不同，操控规则相同。质量使用吨，距离使用米，滚转按固定 60 Hz 积分。这是简化的装卸与小角度横摇游戏，不含风浪、纵摇或流体模拟。完整规则和公开状态见[模型合同](docs/model-contract.md)。模型边界、正常操作、独立核算与浏览器画面分别验证；浏览器验证不代表实体电视或手机测试。
 
-版本 0.1.0 · 包名 `com.ecojust.harborcounterweighttv` · 作者 ecojust / 桔子桑 · MIT。
+版本 0.1.1 · 包名 `com.ecojust.harborcounterweighttv` · 作者 ecojust / 桔子桑 · MIT。

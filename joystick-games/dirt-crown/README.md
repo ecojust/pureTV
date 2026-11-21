@@ -1,16 +1,18 @@
 # Dirt Crown · 尘土王冠
 
-[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/dirt-crown-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.2 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/dirt-crown-0.1.2.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/dirt-crown-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/dirt-crown-windows-x64-setup.exe)
+
+[用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 Andrew Wooldridge 的乡间赛车生涯游戏。保留原版程序美术、20 条赛道、7 个地区、26 个生涯赛事、六类升级，以及竞速、淘汰、计时、单挑和故事。
 
-## Android TV 下载
+## Android TV 0.1.0 版交付记录
 
 [Dirt Crown 0.1.0 APK](dirt-crown-0.1.0.apk) · [SHA256 校验](SHA256SUMS.txt) · [原包与运行验证](docs/android-runtime-44608423645/README.md)
 
 需要 **Android 8.0 / API 26 或更新版本，以及支持 WebGL 2 的系统 WebView**。APK 为 1,124,106 字节，沿用 `06f1ab2b77e4` 构建的固定证书原签名包，未重新打包或签名。正常端口和占用回退两种模式各 62 项原生检查通过，覆盖原菜单、新建生涯、实际驾驶、九键、暂停恢复、断线和客户端 ID；未做实体电视或 ESP32 手柄验证，也未完成全部赛事。初次运行失败和本次原包复验的完整证据均保留。
 
-## Windows 下载
+## Windows 0.1.0 版交付记录
 
 0.1.0 x64：[安装 EXE](DirtCrown-0.1.0-windows-x64-setup.exe)（1,212,925 字节）· [便携 ZIP](DirtCrown-0.1.0-windows-x64.zip)（1,138,201 字节）· [SHA256 校验](SHA256SUMS.txt)。需要 **Windows 10 1903 或更新版本／Windows 11 x64、Microsoft Edge WebView2 Runtime 和可用的 WebGL 2**；便携版请完整解压后运行 `PureTVGame.exe`。安装包未做 Authenticode 签名。
 
@@ -20,7 +22,7 @@ Andrew Wooldridge 的乡间赛车生涯游戏。保留原版程序美术、20 �
 
 标题页用方向键选 Free Race，Enter 确认。赛中用方向键或 WASD 驾驶，空格漂移。 电脑也可以连接同一局域网的 pureTV 无线手柄，按手柄搜索键（GPIO 23）配对。Android TV 可用同一 Wi-Fi 下的手机扫描菜单连接卡中的二维码，打开虚拟手柄。比赛时连接卡缩小，断线后重新连接，再手动继续。
 
-## macOS 下载
+## macOS 0.1.0 版交付记录
 
 0.1.0 Universal：[DMG](macos/DirtCrown-0.1.0-macos-universal.dmg) · [ZIP](macos/DirtCrown-0.1.0-macos-universal.zip) · [SHA256 校验](macos/SHA256SUMS.txt) · [包来源与验证范围](packages.json)。DMG 内的应用可拖入 Applications；ZIP 解压后也可运行同一个应用。
 

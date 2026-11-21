@@ -1,6 +1,8 @@
 # Kart Royale · 海湾卡丁车
 
-[Android TV 0.1.6 签名 APK](kart-royale-0.1.6.apk?raw=true) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.7 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-royale-0.1.7.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-royale-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-royale-windows-x64-setup.exe)
+
+[用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 基于 [ryancampbell/kart-royale](https://github.com/ryancampbell/kart-royale/tree/036c0efb025f5ecf8fc31c405e9d818c61e03e21) 的 pureTV 手柄版。固定原源为 `036c0efb025f5ecf8fc31c405e9d818c61e03e21`，保留 Sunset Bay Circuit、八辆卡丁车、AI 对手、道具、原轮胎/悬架物理和漂移奖励规则。网上后来替换的 homie 多人版本不属于本次移植。
 
@@ -24,7 +26,7 @@ Android TV 14 软件渲染模拟器在首次启动游戏前完成 Google 系统�
 
 上一正式版本 [0.1.3 签名 APK](kart-royale-0.1.3.apk) 仍可下载，该版本在默认及回退端口也各通过 58 项。[0.1.3 原生验收与驾驶原图](docs/android-delivery/README.md)
 
-## Windows 下载
+## Windows 0.1.0 版交付记录
 
 Windows 0.1.0、0.1.1 与 0.1.2 均在默认端口和占用回退模式通过原生手柄实测。下方提供正式发布的 0.1.1。[三个版本的原始运行记录](docs/windows-delivery/version-runs.md)
 
@@ -38,7 +40,7 @@ Windows x64 0.1.1 支持 Windows 10 1903 或更新版本，需要 Microsoft Edge
 
 标题页按 Enter 选车，确认开赛后用方向键驾驶。 电脑也可以连接同一局域网的 pureTV 无线手柄，按手柄搜索键（GPIO 23）配对。Android TV 可用同一 Wi-Fi 下的手机扫描菜单连接卡中的二维码，打开虚拟手柄。比赛时连接卡缩小，断线后重新连接，再手动继续。
 
-## macOS 下载
+## macOS 0.1.0 版交付记录
 
 0.1.0 Universal：[DMG](macos/KartRoyale-0.1.0-macos-universal.dmg)（2,046,696 字节）· [ZIP](macos/KartRoyale-0.1.0-macos-universal.zip)（1,540,639 字节）· [SHA256 校验](SHA256SUMS.txt)。DMG 内应用可拖入 Applications；ZIP 解压后提供相同应用。需要 **macOS 11 或更新版本及 WebGL 2**，包包含 arm64 / x86_64，采用 ad-hoc 签名，未经过 Apple 公证。
 

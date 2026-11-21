@@ -1,5 +1,9 @@
 # 弹板清砖 / Brick Paddle
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](brick-paddle-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 控制弹板接住小球，利用反弹清空所有砖块。三组原创砖阵分别有 6、8、10 块砖；后两关加入需要两次命中的耐久砖，砖上的数字直接表示剩余命中次数。
 
 | 操作 | 动作 |

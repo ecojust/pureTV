@@ -14,6 +14,6 @@ python3 tools/game_icons.py joystick-games/kart-royale /tmp/kart-royale-banner.p
 python3 tools/game_icons.py joystick-games/kart-royale /tmp/kart-royale.ico
 ```
 
-更换截图时，先在游戏详情或验收记录中找到可识别的游玩场景，并核对游戏、关卡和画面来源。更新截图路径后重新确定方形裁切范围，缩小到启动器尺寸检查主体是否仍然清楚。
+首发游戏可以先在浏览器中实际游玩并截取一帧，再构建各平台安装包。更换截图时，先在游戏详情或验收记录中找到可识别的游玩场景，并核对游戏、关卡和画面来源。更新截图路径后重新确定方形裁切范围，缩小到启动器尺寸检查主体是否仍然清楚。
 
 电视商城的“添加到首页”使用有大小限制的 SVG 快捷方式图标。运行 `python3 tools/update-game-store-logos.py` 可从同一取景更新这些图标，添加 `--check` 可核对结果。

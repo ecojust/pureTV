@@ -1,5 +1,9 @@
 # 纹码破译 / Codebreaker
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](codebreaker-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 推理四格密纹。每格从本关的符号集中选择，**同一符号可以重复出现**。你只能看到自己的猜测，以及每次提交后的两项总数：
 
 - **E（全对）**：符号正确，位置也正确的数量。

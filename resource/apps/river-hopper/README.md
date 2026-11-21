@@ -1,5 +1,9 @@
 # 渡河跃步 / River Hopper
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](river-hopper-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 Frogger 式实时过路渡河。三档需要抵达 **2／3／4 个不同家位**，各有三条生命和 **45／60／80 秒活动时间**。四个家位均公开，任意未完成家位都可作为下一目标。
 
 方向键一次跳一格：左右从当前连续横坐标加减 60，上下换一行并保留横坐标。乘木后不吸附回整数格。A、B 均不使用。绿色起点与中间河岸安全，可以观察等待。

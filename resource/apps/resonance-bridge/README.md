@@ -1,5 +1,9 @@
 # 共振浮桥
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](resonance-bridge-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 调节三块悬浮桥板的频率和相位，让行人安全穿过海峡。桥板始终连续运动；调频不会瞬移位置，调相会在十个实际模拟间隔内平滑完成。
 
 左右方向键或手机摇杆选择三块桥板与派遣项。**A 调频 / 派遣**循环切换 0.10、0.15、0.20 Hz，选中派遣项时放出本关队列。**B 相位 +15°**为选中的桥板施加短时相位调整，未完成时不能叠加。手机右侧上下大触控区分别对应 A／B。
@@ -10,4 +14,4 @@
 
 这是原创节奏与振子游戏，不是经过工程标定的桥梁模拟。规则采用固定 60 Hz 的正弦端点和端点间连续线性移动；共振量为振幅包络计数，不表示焦耳。精确区间顺序、接触判定和公开证据字段见[模型合同](docs/model-contract.md)。验证报告区分软件浏览器与实体电视、手机。
 
-版本 0.1.0 · 包名 `com.ecojust.resonancebridgetv` · 作者 ecojust / 桔子桑 · MIT。
+版本 0.1.1 · 包名 `com.ecojust.resonancebridgetv` · 作者 ecojust / 桔子桑 · MIT。

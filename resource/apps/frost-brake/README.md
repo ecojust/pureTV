@@ -1,5 +1,9 @@
 # 冰面刹停 / Frost Brake
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](frost-brake-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 沿低摩擦冰道推动货橇，把整辆货橇依次停进三个越来越窄的交付区。松开方向仍会滑行；冰爪只有接触结霜带才会刹车。
 
 这是 pureTV 百款游戏计划中的第 39 款，核心玩法为惯性与刹车时机。包名为 `com.ecojust.frostbraketv`，版本 `0.1.0`。三条冰道“晨霜直道”“回程冰湾”“窄岸货线”使用相同物理规则，各自有不同起点、结霜带和交付顺序。
@@ -51,7 +55,7 @@ python3 resource/game-kit/build.py \
 
 浏览器控制首轮通过 7 项检查，覆盖菜单、实际手柄页与 WebSocket 传输、惯性与霜带刹车、输入取消、断连暂停、暂停继续和重试。画面证据分别记录 960×540 与 1280×720 完整用户视口，并保留普通交付、边缘失败和高速冰爪货损失败的真实观察。截图中的画布尺寸、物理图形映射、弹窗模糊与完整文字需要结合各自原图和审阅范围判断。
 
-本版本的签名 APK 使用 `frost-brake-0.1.0.apk`，正常运行录像使用 `docs/gameplay-0.1.0.mp4`；验证范围与产物哈希记录在 `docs/verification.json`，签名记录在 `docs/signing-receipt.json`，画面审阅记录在 `docs/art-review.json`，录像说明在 `docs/gameplay-0.1.0.json`。实际签名、大小、源码身份、图像审阅和录制结论以对应报告为准。开发证据保留首次失败与实际观测，不以计划或旧游戏结果代替验证。
+0.1.0 的签名 APK 为 `frost-brake-0.1.0.apk`，正常运行录像使用 `docs/gameplay-0.1.0.mp4`；验证范围与产物哈希记录在 `docs/verification.json`，签名记录在 `docs/signing-receipt.json`，画面审阅记录在 `docs/art-review.json`，录像说明在 `docs/gameplay-0.1.0.json`。实际签名、大小、源码身份、图像审阅和录制结论以对应报告为准。开发证据保留首次失败与实际观测，不以计划或旧游戏结果代替验证。
 
 上述普通六局保留了每一次实际调用的完整前后状态、原始输入和回执；它们没有无时长调用或终局后空操作，不把这些规则夹具的覆盖算作普通流程。浏览器截图、录像与稀疏快照不能冒充完整逐段记录，也不能用重放补造遗漏步骤。浏览器软件渲染结果不代表实体电视或实体手机性能；本候选没有硬件验证结论。
 

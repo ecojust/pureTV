@@ -1,5 +1,9 @@
 # 装配厨房
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](assembly-kitchen-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 在关门前，把三份订单依次煮熟、冷却、装盒并正确交付。煮锅、冷却台和装盒机可以同时工作，但每个工位只能放一份食物；完成后仍会占位，直到你亲手取走。
 
 - **午间三味**：蒸蛋、番茄汤与温果羹，熟悉流水线和不同交付温区。

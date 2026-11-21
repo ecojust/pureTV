@@ -1,10 +1,12 @@
 # Alien Shooter TV
 
-## Android 0.1.5 · Controllers and phone pairing
-
 <!-- apk-resource:start -->
-[Download the signed APK](alien-shooter-0.1.5.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
+[Android 0.1.6 APK](alien-shooter-0.1.6.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.1.6/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.1.5 gameplay video](docs/releases/0.1.5/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
+
+## Earlier Android release 0.1.5 · Controllers and phone pairing
+
+[Download the signed APK](alien-shooter-0.1.5.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
 
 Connect a keyboard, pair a pureTV Wi-Fi controller, or scan the TV room’s QR code with a phone on the same network. The connection indicator identifies each player while the game keeps its playing area at the same size. [Controller guide](../../../docs/guide/README.en.md#install-a-game-and-connect-a-controller)
 
@@ -30,7 +32,7 @@ The APK uses the existing release certificate. This update verifies connection i
 
 An independently built overhead shooter for Android TV. Fight through a quarantined freight depot, a biotech laboratory and a hive reactor. Restore consoles, survive incoming hostiles, buy supplies and defeat the guardian before extracting. Designed for a single player, using one phone as the controller.
 
-Current version **0.1.5** · Package `com.ecojust.alienshootertv` · Android 8.0 or newer.
+Current version **0.1.6** · Package `com.ecojust.alienshootertv` · Android 8.0 or newer.
 
 ## Play
 

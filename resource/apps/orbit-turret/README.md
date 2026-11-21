@@ -1,5 +1,9 @@
 # 环轨炮台 / Orbit Turret
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](orbit-turret-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 炮台固定在中央，面对来自整圈的目标。用持续旋转和有飞行时间的弹丸提前拦截；需要时启用短时近身护盾。三档警戒分别有 **8、12、16** 个公开目标，分成 **2、3、4** 波，每波四个。
 
 ## 操作

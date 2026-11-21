@@ -1,5 +1,9 @@
 # 节拍闸道 · Metronome Gates
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](metronome-gates-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 先排方向，再随节拍过门。蓝色玻璃球每 1.2 秒只走一格，收齐所有标记后进入出口即可过关。二拍门与三拍门共用同一拍号，观察门牌的当前、下一拍状态和未来预览，安排移动与等待。
 
 **方向排队，A 等待，B 撤尾。** 手机摇杆或方向键直接把方向加入最多 6 项的队列；摇杆必须先回中、方向键必须先松开，再次拨动或按下才会加入下一项，长按不会连发。A 在队尾加入一拍等待，B 撤销尚未执行的最后一项；手机沿用上区 A、下区 B 两个大操作区。满队拒绝新项，B 不能撤销已经走过的格子。
@@ -20,6 +24,6 @@
 
 **输入取消与暂停不同。** 首次开始、输入取消、切换手柄或重新连接后，先松开全部操作并让摇杆回中，才能接收新的方向和按键。取消不会清掉已排队的命令，也不会停止拍钟；只有真正进入暂停才停止推进。
 
-版本 `0.1.0`，包名 `com.ecojust.metronomegatestv`，作者 ecojust / 桔子桑，采用 [MIT 许可证](LICENSE)。完整地图、门表及视觉规则见[公开玩法](docs/public-design.md)，输入与结算边界见[模型合同](docs/model-contract.md)，状态、队列和永久收据字段见[公开接口](docs/public-interface.md)。
+版本 `0.1.1`，包名 `com.ecojust.metronomegatestv`，作者 ecojust / 桔子桑，采用 [MIT 许可证](LICENSE)。完整地图、门表及视觉规则见[公开玩法](docs/public-design.md)，输入与结算边界见[模型合同](docs/model-contract.md)，状态、队列和永久收据字段见[公开接口](docs/public-interface.md)。
 
 验证范围与结果请查看随版本发布的实际报告。浏览器控制器和模拟桥接验证不能代替实体手机、电视或真实扫码测试，导出视频帧率也不等于设备实测帧率。

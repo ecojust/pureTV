@@ -1,6 +1,8 @@
 # STARSLING · 星际弹弓
 
-[下载当前 Android TV 手柄版 0.1.2](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/starsling-0.1.2.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.3 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/starsling-0.1.3.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/starsling-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/starsling-windows-x64-setup.exe)
+
+[用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 0.1.1 含后台与断线时暂停音频的修正。
 
@@ -31,7 +33,7 @@
 Chromium 156 在 960 × 540 及 1280 × 720 检查了实际游戏操作、失焦、持 START 重连，以及游戏自身音频上下文的挂起和显式恢复。另有同一音频源码的独立验证，静音期间音频时钟保持不变。[游戏运行记录](docs/browser/report.json) · [音频观测](docs/audio-lifecycle.json) · [构建、源码及图像校验](docs/verification.json)
 
 <!-- puzzle-downloads -->
-## 安装包 0.1.1
+## 0.1.1 版安装包与验证记录
 
 | 平台 | 安装文件 |
 | --- | --- |

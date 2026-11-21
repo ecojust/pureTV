@@ -1,5 +1,9 @@
 # 石箱归位 / Stone Bay
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](stone-bay-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 在石墙庭院里绕到箱子后面，把每个石箱推上圆形石座。石箱只能推，不能拉，也不能连推两个箱子。任何石箱都能放上任何石座；全部落座即可过关。箱上编号只用于辨认货箱，不对应特定石座。
 
 | 操作 | 作用 |

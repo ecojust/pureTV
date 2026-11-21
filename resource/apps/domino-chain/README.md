@@ -1,5 +1,9 @@
 # 骨牌接龙 / Domino Chain
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](domino-chain-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 双方手牌、牌链和摸牌顺序全部公开的双端骨牌残局。每张牌有两个 0 至 6 的数字，数字与圆点双重显示；同一无序牌面只有一张。
 
 三局双方起始手牌分别为 5、6、7 张，摸牌堆分别有 3、4、5 张，桌面已有一张起始牌。未用于当前牌局的其余双六骨牌不会进入游戏。

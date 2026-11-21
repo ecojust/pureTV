@@ -1,5 +1,9 @@
 # 染色连疆 / Color Frontier
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](color-frontier-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 从地图左上角的一片颜色开始，选择染料让整片疆域改色，连接相邻同色地块，直到整幅地图连成一体。只有上下左右相邻才能连入，斜角相碰不算相连。地图上的圆点表示已拥有的区域；每格同时显示颜色编号，避免只靠颜色区分。
 
 | 操作 | 作用 |

@@ -1,5 +1,9 @@
 # 马步巡游 / Knight Circuit
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](knight-circuit-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 用国际象棋中“马”的走法，访问棋盘上的每个可走格子，**每格恰好一次**。起点已经访问过，无需跳回起点。三个棋庭分别是完整 5×5、中心留白的 5×5 和完整 6×5；起点和留白格全部公开。
 
 马一次横走两格、竖走一格，或横一竖二，共八种方向。它直接跳到落点，中间跨越的格子不算访问，也不会阻挡跳跃。

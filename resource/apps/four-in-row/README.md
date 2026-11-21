@@ -1,5 +1,9 @@
 # 四子列阵 / Four in Row
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](four-in-row-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 从三张公开的残局开始，在7列、6行的棋盘上与对手轮流落子。你使用金色圆环，对手使用青色叉形。棋子会落到该列最低的空位；先把自己的棋子横、竖或斜向连成四子即可获胜。
 
 | 残局 | 开始时的空格 | 已有双方棋子 |

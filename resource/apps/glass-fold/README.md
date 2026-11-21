@@ -1,11 +1,13 @@
 # 折光工坊 / Glass Fold
 
-<!-- controller-client-status:start -->
-## 0.2.2 · 手柄连接标识
-
 <!-- apk-resource:start -->
-[下载签名 APK](glass-fold-0.2.2.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
+[Android 0.2.3 APK](glass-fold-0.2.3.apk?raw=1) · [图标与安装验证](docs/releases/0.2.3/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.2.1 实玩录像](docs/releases/0.2.1/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
+
+<!-- controller-client-status:start -->
+## 历史版本 0.2.2 · 手柄连接标识
+
+[下载签名 APK](glass-fold-0.2.2.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
 
 Android **0.2.2 / versionCode 4**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 

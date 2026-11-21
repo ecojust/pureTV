@@ -1,5 +1,9 @@
 # 齿轮同刻
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](clockwork-align-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 在钟表工坊中操纵独立离合器，让不同齿数的齿轮指针同时停进目标带，并在预约时间窗内共同保持。相邻啮合轮转向相反，齿数越多转得越慢；制动和重新接合都保留当前角度。
 
 方向键或手机摇杆选择一列。**A 切换离合**，让该列接合或制动；**B 全部制动**，同时停止仍在转动的列。手机右侧上、下大触控区分别对应 A、B。每改变一个离合器消耗一次调节，额度不足时全部制动会整次拒绝，同时新按下 A 和 B 也不会执行。
@@ -10,4 +14,4 @@
 
 这是使用理想离合器与制动器的原创机械益智游戏，制动直接停止整列，不模拟惯性。规则使用固定 60 Hz 和整数角度，检查每个完整运动区间。精确规则和公开状态字段见[模型合同](docs/model-contract.md)。验证报告区分软件浏览器与实体电视、手机。
 
-版本 0.1.0 · 包名 `com.ecojust.clockworkaligntv` · 作者 ecojust / 桔子桑 · MIT。
+版本 0.1.1 · 包名 `com.ecojust.clockworkaligntv` · 作者 ecojust / 桔子桑 · MIT。

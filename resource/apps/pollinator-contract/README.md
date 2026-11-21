@@ -1,5 +1,9 @@
 # 传粉契约
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](pollinator-contract-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 两支蜂群在花园里完成授粉契约。按花期和前置关系调配蜂群，照看它们的耐力，让全部花田完成授粉，并让两群实际回到蜂巢。
 
 左右方向键或手机摇杆选择花田，上下选择蜂群。**A 派遣改航**让选中的蜂群飞向该花田；途中改派从当前位置继续飞行。**B 召回蜂巢**让选中的蜂群返回。手机右侧上下大触控区分别对应 A／B。
@@ -12,4 +16,4 @@
 
 植物图鉴风格的原创花田、蜂巢和蜂群使用烘焙图集合批绘制。空间移动、授粉和耐力按固定 60 Hz 规则更新，完整几何、花期、输入与结算规则见[模型合同](docs/model-contract.md)。软件浏览器检查与实体电视、手机测试分别记录。
 
-版本 0.1.0 · 包名 `com.ecojust.pollinatorcontracttv` · 作者 ecojust / 桔子桑 · MIT。
+版本 0.1.1 · 包名 `com.ecojust.pollinatorcontracttv` · 作者 ecojust / 桔子桑 · MIT。

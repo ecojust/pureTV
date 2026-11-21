@@ -1,5 +1,9 @@
 # 视差天际 / Parallax Skyline
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](parallax-skyline-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 沿着两条深度不同的轨道移动建筑板，让两个观察点都出现指定的天际线。近层移动一个世界单位，投影移动两格；远层只移动一格。正面看似严丝合缝的建筑，换个角度可能暴露错误。
 
 这是 pureTV 百款游戏计划的第 41 款设计，包名 `com.ecojust.parallaxskylinetv`，版本 `0.1.0`。单人游玩，支持电视遥控器、键盘和局域网手机手柄。完成验证并推送后才计入完成数量。
@@ -45,7 +49,7 @@
 
 在仓库根目录运行 `python3 resource/game-kit/build.py --game resource/apps/parallax-skyline --output /tmp/parallax-skyline-build`。构建工具生成 `game-config.json` 和 `assets-index.json`，`game.json` 中的 `actions: 2` 配置手机 A/B 上下触控区。
 
-发布产物为 `parallax-skyline-0.1.0.apk` 和 `docs/gameplay-0.1.0.mp4`，每个文件均须小于 10,000,000 字节。发布验证、签名、录制和画面审阅分别记录在 `docs/verification.json`、`docs/signing-receipt.json`、`docs/gameplay-0.1.0.json` 与 `docs/art-review.json`。
+0.1.0 的签名 APK 为 `parallax-skyline-0.1.0.apk` 和 `docs/gameplay-0.1.0.mp4`，每个文件均须小于 10,000,000 字节。发布验证、签名、录制和画面审阅分别记录在 `docs/verification.json`、`docs/signing-receipt.json`、`docs/gameplay-0.1.0.json` 与 `docs/art-review.json`。
 
 模型边界测试与普通游玩分开，录像使用正常输入，不注入成功状态。浏览器截图和录像是稀疏观察，不能补造未记录的操作；浏览器软件渲染也不代表电视或手机真机性能。未做实体硬件测试时，报告会明确注明。
 

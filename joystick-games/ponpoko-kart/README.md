@@ -1,10 +1,12 @@
 # ぽんぽこカート · Ponpoko Kart
 
-[下载当前 Android TV 手柄版 0.1.6](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/ponpoko-kart-0.1.6.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.7 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/ponpoko-kart-0.1.7.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/ponpoko-kart-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/ponpoko-kart-windows-x64-setup.exe)
+
+[用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 日本乡村、樱花鸟居、夏祭花火三条原版赛道；八位动物车手、三档难度、道具、蓄力漂移、跳跃特技和和伞滑翔。保留 [たぬ的原作](https://github.com/tanuu5/ponpoko-kart/tree/88edb72d25c2f957431cc4d12547d3138d1bca48) 的完整程序生成场景、原 HUD 与日文菜单，不依赖在线模型、图片、音频或字体。
 
-## Android TV 下载
+## Android TV 0.1.5 版交付记录
 
 [下载 Ponpoko Kart 0.1.5 签名 APK](ponpoko-kart-0.1.5.apk) · [SHA256 校验](SHA256SUMS.txt) · [原生验证及驾驶画面](docs/android-delivery/README.md)
 
@@ -42,7 +44,7 @@ Android TV 0.1.1 已签名。API 36 / 1080p 模拟器的默认端口与占用回
 
 在 Chromium 中关闭可选浮点扩展后，浏览器合成手柄输入完成了选人、选赛道、倒数和起跑加速。RGBA8 路径的驾驶截图显示首圈第 7 名、赛道、对手和小地图。实测环境为 480 × 270 的软件渲染浏览器。另附 HDR 与 RGBA8 渲染回读值和原生验收范围。[驾驶截图](docs/browser-0.1.1-rgba8/driving.png) · [浏览器验证记录](docs/browser-0.1.1-rgba8/report.json)
 
-## Windows 下载
+## Windows 0.1.0 版交付记录
 
 0.1.0 x64：[安装程序](PonpokoKart-0.1.0-windows-x64-setup.exe) · [便携 ZIP](PonpokoKart-0.1.0-windows-x64.zip) · [SHA256 校验](SHA256SUMS.txt)。需要 **Windows 10 1903 或更新版本、Microsoft Edge WebView2 Runtime 和 WebGL 2**；缺少 WebView2 时程序会提示前往微软页面安装。游戏资源随包离线提供，安装程序没有捆绑 WebView2 运行时，也未作 Authenticode 签名。
 
@@ -50,7 +52,7 @@ Android TV 0.1.1 已签名。API 36 / 1080p 模拟器的默认端口与占用回
 
 此前 Windows bootstrap 超时原件保持，新一轮通过不等于已经证明旧失败原因；同批 Backroad / Royale 的失败也没有改成通过。
 
-## macOS 下载
+## macOS 0.1.0 版交付记录
 
 0.1.0 Universal：[DMG](macos/PonpokoKart-0.1.0-macos-universal.dmg) · [ZIP](macos/PonpokoKart-0.1.0-macos-universal.zip) · [SHA256 校验](macos/SHA256SUMS.txt) · [包来源与验证范围](packages.json)。DMG 内的应用可拖入 Applications；ZIP 解压后也可运行同一个应用。
 

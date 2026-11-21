@@ -1,5 +1,9 @@
 # 播子棋盘 / Seed Mancala
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](seed-mancala-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 一块两排种穴、两端种仓的 Kalah 棋盘。你控制下排 P1–P6 和右仓；对手控制上排 E1–E6 和左仓。每局共 24 颗籽，收盘时己仓比对仓多即获胜，同籽按失败处理。
 
 | 操作 | 作用 |

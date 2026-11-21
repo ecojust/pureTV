@@ -1,10 +1,12 @@
 # Turbo Kart Rush
 
-[下载当前 Android TV 手柄版 0.1.2](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/turbo-kart-rush-0.1.2.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.3 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/turbo-kart-rush-0.1.3.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/turbo-kart-rush-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/turbo-kart-rush-windows-x64-setup.exe)
+
+[用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 [BridgeMind 原作](https://github.com/bridge-mind/turbo-kart-rush/tree/6c0456c7642447eae29e0832e7e542fec07ec07d)的独立 pureTV 适配：八位车手、四条赛道、三档难度，保留程序生成场景、道具的全部变体、漂移加速、跳跃、原版音乐与后处理。原资源无需网络即可运行；不是 pureTV 自创游戏。
 
-## Android TV 下载
+## Android TV 0.1.1 版交付记录
 
 [下载 0.1.1 签名 APK](turbo-kart-rush-0.1.1.apk)（545,968 字节）。需要 Android 8.0（API 26）或更新版本，以及支持 WebGL 2 的系统 WebView。 [SHA256 校验](SHA256SUMS.txt)
 
@@ -16,7 +18,7 @@
 
 在 Chromium 的 Mesa 软件 GPU 上，960×540 与 1280×720 两种布局都已用键盘选车、选赛道、起跑并加速。起跑后的原始截图分别显示 13 km/h 与 14 km/h，可见车身、其他车手、跑道与比赛 HUD。[960×540](docs/software-renderer-0.1.1/driving-960x540.png) · [1280×720](docs/software-renderer-0.1.1/driving-1280x720.png) · [逐步观测与执行脚本](docs/software-renderer-0.1.1/)
 
-## Windows 下载
+## Windows 0.1.0 版交付记录
 
 0.1.0 x64：[安装版 EXE](windows/TurboKartRush-0.1.0-windows-x64-setup.exe)（646,837 字节）· [便携 ZIP](windows/TurboKartRush-0.1.0-windows-x64.zip)（563,888 字节）· [SHA256 校验](SHA256SUMS.txt)。需要 **Windows 10 1903 或更新版本、已安装 Microsoft Edge WebView2 Evergreen 和 WebGL 2**。安装包未作 Authenticode 签名。
 
@@ -28,7 +30,7 @@
 
 按 Enter 依次确认车手与赛道，进入倒计时。↑ 给油，↓ 刹车，← / → 转向。 电脑也可以连接同一局域网的 pureTV 无线手柄，按手柄搜索键（GPIO 23）配对。Android TV 可用同一 Wi-Fi 下的手机扫描菜单连接卡中的二维码，打开虚拟手柄。比赛时连接卡缩小，断线后重新连接，再手动继续。
 
-## macOS 下载
+## macOS 0.1.0 版交付记录
 
 0.1.0 Universal：[DMG](macos/TurboKartRush-0.1.0-macos-universal.dmg)（1,199,951 字节）· [ZIP](macos/TurboKartRush-0.1.0-macos-universal.zip)（850,314 字节）· [SHA256 校验](SHA256SUMS.txt)。DMG 内应用可拖入 Applications；ZIP 解压后提供相同应用。需要 **macOS 11 或更新版本及 WebGL 2**，包包含 arm64 / x86_64，采用 ad-hoc 签名，未经过 Apple 公证。
 

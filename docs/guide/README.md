@@ -50,7 +50,7 @@ pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电�
 
 在首页找到游戏，点击苹果或 Windows 图标下载这款游戏的独立客户端。macOS 打开 DMG，将游戏拖入“应用程序”。Windows 运行安装程序后，从开始菜单打开游戏。[按游戏选择安装包](../../README.md#games)
 
-本批补齐的 37 个安装包都已内置游戏资源，可以离线启动。macOS 在独立窗口中运行，按 ⌘Q 退出。Windows 在默认浏览器中运行，关闭游戏控制台即可退出。部分 3D 游戏需要支持 WebGL 2 的图形环境。[本批安装包与 SHA-256 校验值](https://github.com/ecojust/pureTV/releases/tag/standalone-games-2026.11.21)
+37 个独立客户端的首发安装包都已内置游戏资源，可以离线启动。macOS 在独立窗口中运行，按 ⌘Q 退出。Windows 在默认浏览器中运行，关闭游戏控制台即可退出。部分 3D 游戏需要支持 WebGL 2 的图形环境。[当前客户端与 SHA-256 校验值](../releases/gameplay-icons-2026.11.21/clients.json) · [首批 37 个安装包的发布记录](https://github.com/ecojust/pureTV/releases/tag/standalone-games-2026.11.21)
 
 #### 使用多游戏启动器
 

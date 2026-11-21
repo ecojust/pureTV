@@ -1,6 +1,8 @@
 # Oathstones · 誓约宝石
 
-[下载当前 Android TV 手柄版 0.1.1](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/oathstones-0.1.1.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.2 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/oathstones-0.1.2.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/oathstones-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/oathstones-windows-x64-setup.exe)
+
+[用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 从营地选择战役，确认战斗简报后进入七乘七的誓约棋盘。交换相邻棋子，让颜色、形状或英雄誓约达成连锁；技能、招募、英雄升级、队伍编成、战利品和存档沿用原作规则。
 
@@ -27,7 +29,7 @@
 Chromium 156 在 960 × 540 及 1280 × 720 检查了实际游戏操作、失焦、持 START 重连，以及游戏自身音频上下文的挂起和显式恢复。另有同一音频源码的独立验证，静音期间音频时钟保持不变。两种尺寸均通过提示和方向输入，完成了消除与实际战斗回合。原作的 150 项模型检查通过。[游戏运行记录](docs/browser/report.json) · [音频观测](docs/audio-lifecycle.json) · [构建、源码及图像校验](docs/verification.json)
 
 <!-- puzzle-downloads -->
-## 安装包 0.1.0
+## 0.1.0 版安装包与验证记录
 
 | 平台 | 安装文件 |
 | --- | --- |

@@ -1,5 +1,9 @@
 # 分流沙漏
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](sandglass-split-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 两股落沙，三只量杯，中央杯接收两路汇流。左右挡片各自选择外侧杯或中央杯，把有限料斗中的沙分到目标重量范围内。
 
 左右方向键或手机摇杆选择挡片，**A 旋转挡片**立即切换它的角度。沙束真正碰到挡片时才决定方向；已经离开挡片的沙仍沿原导槽前进。每束为 1 克，杯中重量只在沙束实际抵达时增加。
@@ -12,4 +16,4 @@
 
 原创玻璃实验台采用烘焙图集批量绘制。模型使用整数克和十分之一像素坐标，按固定 60 Hz 沿透明导槽定速移动，不模拟未声明的重力、颗粒碰撞或随机抖动。完整规则、几何和公开状态见[模型合同](docs/model-contract.md)。模型边界、正常操作、独立核算和浏览器画面分别验证；软件浏览器结果不代表实体电视或手机测试。
 
-版本 0.1.0 · 包名 `com.ecojust.sandglasssplittv` · 作者 ecojust / 桔子桑 · MIT。
+版本 0.1.1 · 包名 `com.ecojust.sandglasssplittv` · 作者 ecojust / 桔子桑 · MIT。

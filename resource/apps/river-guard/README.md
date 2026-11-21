@@ -1,5 +1,9 @@
 # 渡河守则 / River Guard
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](river-guard-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 船工驾驶小船，把全部物品从左岸送到右岸。每关列出若干**无向冲突对**：只有船工不在场时，同一岸上的冲突对才会造成失败；有船工照看时可以共处。规则以编号图例为准，不要求玩家了解动物或食物关系。
 
 | 渡口 | 物品与冲突 | 货位 / 次数上限 |

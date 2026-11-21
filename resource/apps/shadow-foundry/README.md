@@ -1,5 +1,9 @@
 # 影形铸坊 / Shadow Foundry
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](shadow-foundry-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 转动高低不同的金属工件和侧向灯光，让真实高度投出的地面阴影覆盖青色目标格，同时避开琥珀色禁区。改变灯向，阴影会向相反方向伸展；重叠阴影只计算一次。
 
 这是 pureTV 百款游戏计划的第 42 款设计，包名 `com.ecojust.shadowfoundrytv`，版本 `0.1.0`。单人游玩，支持电视遥控器、键盘和局域网手机手柄。完成验证并推送后才计入完成数量。
@@ -44,7 +48,7 @@
 
 在仓库根目录运行 `python3 resource/game-kit/build.py --game resource/apps/shadow-foundry --output /tmp/shadow-foundry-build`。构建工具生成 `game-config.json` 和 `assets-index.json`；`game.json` 的 `actions: 2` 配置手机 A/B 上下触控区。
 
-发布产物为 `shadow-foundry-0.1.0.apk` 和 `docs/gameplay-0.1.0.mp4`，每个文件都必须严格小于 10,000,000 字节。发布验证、签名、录制和画面审阅分别记录在 `docs/verification.json`、`docs/signing-receipt.json`、`docs/gameplay-0.1.0.json` 与 `docs/art-review.json`。
+0.1.0 的签名 APK 为 `shadow-foundry-0.1.0.apk` 和 `docs/gameplay-0.1.0.mp4`，每个文件都必须严格小于 10,000,000 字节。发布验证、签名、录制和画面审阅分别记录在 `docs/verification.json`、`docs/signing-receipt.json`、`docs/gameplay-0.1.0.json` 与 `docs/art-review.json`。
 
 普通游玩记录需要三个任务各一次实际胜利与一次自然耗尽次数的失败，均使用正常输入。数学边界夹具必须单独标注，不能冒充可到达的游戏状态。浏览器截图和录像是稀疏观察，不能补造未记录的操作；软件渲染也不代表电视或手机真机性能。未做实体硬件测试时，报告须明确注明。
 

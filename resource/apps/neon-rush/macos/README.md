@@ -4,11 +4,11 @@
 
 ## 下载与安装
 
-- **[下载 DMG（897 KB）](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.4-macos-universal.dmg)**：打开后将 `Neon Rush.app` 拖入 Applications。
-- [下载 ZIP（562 KB）](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.4-macos-universal.zip)：解压后将应用移入“应用程序”。
-- [SHA256 校验清单](SHA256SUMS.txt) · [构建与验证记录](docs/verification-0.1.4/README.md)
+- [下载 macOS 通用 DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-macos.dmg)，打开后将 `Neon Rush.app` 拖入“应用程序”。
+- [下载 macOS 通用 ZIP](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-macos.zip)，解压后将游戏移入“应用程序”。
+- [本次图标更新的文件校验与签名记录](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/macos-game-icons.json) · [0.1.4 玩法验证记录](docs/verification-0.1.4/README.md)
 
-首次打开时，允许 Neon Rush 访问本地网络，以便 pureTV 手柄发现并连接游戏。若曾拒绝，可在系统设置的“隐私与安全性 → 本地网络”中重新允许。安装包直接随仓库存放。
+首次打开时，允许 Neon Rush 访问本地网络，以便 pureTV 手柄发现并连接游戏。若曾拒绝，可在系统设置的“隐私与安全性 → 本地网络”中重新允许。
 
 ![macOS 0.1.4 竞速中的手柄图标与完整客户端 ID](docs/verification-0.1.4/evidence/neon-rush-macos-qa-macos-arm64/native/diagnostics/controller-playing.png)
 

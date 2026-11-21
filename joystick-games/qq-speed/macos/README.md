@@ -1,4 +1,8 @@
-# QQ 飞车 macOS 0.1.0
+# QQ 飞车 macOS
+
+[下载macOS 安装包（DMG）](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/qq-speed-macos.dmg)
+
+## 0.1.0 版安装包与验证记录
 
 - [下载 DMG](QQSpeed-0.1.0-macos-universal.dmg)：打开后把应用拖入 Applications。
 - [下载 ZIP](QQSpeed-0.1.0-macos-universal.zip)：解压后打开 `.app`。

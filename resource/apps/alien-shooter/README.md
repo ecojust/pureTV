@@ -1,10 +1,12 @@
 # 孤胆枪手 TV
 
-## Android 0.1.5 · 手柄与手机连接
-
 <!-- apk-resource:start -->
-[下载签名 APK](alien-shooter-0.1.5.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
+[Android 0.1.6 APK](alien-shooter-0.1.6.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-macos.dmg) · [图标与安装验证](docs/releases/0.1.6/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.5 实玩录像](docs/releases/0.1.5/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
+
+## 历史 Android 版本 0.1.5 · 手柄与手机连接
+
+[下载签名 APK](alien-shooter-0.1.5.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
 
 可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
 
@@ -30,7 +32,7 @@ Android **0.1.4 / versionCode 5**：手柄连接后，侧边显示手柄图标�
 
 一款独立制作的斜俯视基地射击游戏。进入被异形占据的货运站、实验室和反应堆，恢复控制台、守住怪潮、购买补给，击败母巢守卫后撤离。专为单人游玩设计，支持电视大屏与一部手机扫码操作。
 
-当前版本 **0.1.5** · 包名 `com.ecojust.alienshootertv` · Android 8.0 及以上。
+当前版本 **0.1.6** · 包名 `com.ecojust.alienshootertv` · Android 8.0 及以上。
 
 ## 开始游玩
 

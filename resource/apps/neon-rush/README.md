@@ -1,10 +1,12 @@
 # 霓虹飞车 · Neon Rush TV
 
-## Android 0.1.4 · 手柄与手机连接
-
 <!-- apk-resource:start -->
-[下载签名 APK](neon-rush-0.1.4.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
+[Android 0.1.5 APK](neon-rush-0.1.5.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-macos.dmg) · [图标与安装验证](docs/releases/0.1.5/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.4 实玩录像](docs/releases/0.1.4/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
+
+## 历史 Android 版本 0.1.4 · 手柄与手机连接
+
+[下载签名 APK](neon-rush-0.1.4.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
 
 可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
 
@@ -27,7 +29,7 @@ Android **0.1.3 / versionCode 4**：手柄连接后，侧边显示手柄图标�
 
 ![Android 0.1.3 手柄已连接及完整 ID](docs/releases/0.1.3/connected.png)
 
-**macOS 0.1.4：** [通用 DMG](macos/NeonRush-0.1.4-macos-universal.dmg?raw=1) · [通用 ZIP](macos/NeonRush-0.1.4-macos-universal.zip?raw=1) · [安装与手柄说明](macos/README.md)。需要 macOS 11+ 和 WebGL；比赛中以及菜单／暂停时收起操作栏后，仍显示连接手柄的 ID。
+Mac 安装和手柄设置见 [macOS 指南](macos/README.md)。
 <!-- controller-client-status:end -->
 
 六辆赛车、三条原创赛道、两圈决胜。用漂移积攒氮气，出弯松手获得小喷，在直道冲刺、在山谷跳台腾空。车辆自动加油，你负责选择路线、转向和刹车。

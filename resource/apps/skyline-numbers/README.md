@@ -1,5 +1,9 @@
 # 数塔天际 / Skyline Numbers
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](skyline-numbers-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 在方形城市里安排楼高，每行、每列都恰好使用一次 `1…N`。棋盘四边的数字不是楼高，而是从该方向看进去能看见的楼数：高楼挡住后面的矮楼，只有比之前所有楼都高的楼才会再次出现。
 
 例如从左看 `1、4、2、3`，只能看见 1 和 4，共 **2 栋**；从右看同一排，能看见 3 和 4，也有 2 栋。边缘小圆点表示该方向没有提供线索。

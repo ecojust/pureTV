@@ -3,12 +3,12 @@
   "name": "窗口装配",
   "author": "ecojust / 桔子桑",
   "description": "在工厂操作台抓取、旋转并投送零件，趁快门开放完成连续装配；六张工单包含反向传送、窄窗快装与夜班错相协同。",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "packageName": "com.ecojust.conveyorwindowtv",
-  "versionCode": 4,
-  "apk": "conveyor-window-0.2.2.apk",
-  "apkBytes": 320943,
-  "sha256": "b5e7f4cb2f79427aa2966a8b334ea11e25b4f2eb0e341cec4b35af32ec3d2eb7",
+  "versionCode": 5,
+  "apk": "conveyor-window-0.2.3.apk",
+  "apkBytes": 390575,
+  "sha256": "02127f869e006f2b8c445d472f047a0595bf0dc8ed66b7ed0b5fefaa2f742424",
   "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
   "supportsLayoutJson": false,
   "languages": [
@@ -19,24 +19,36 @@
     "en"
   ],
   "cover": "thumb.png",
-  "coverSource": "Unmodified connected-controller screenshot of this signed APK running in an Android TV emulator.",
+  "coverSource": "Capture retained from the 0.2.2 release. Unmodified connected-controller screenshot of this signed APK running in an Android TV emulator.",
   "license": "MIT (original application code and generated artwork/audio)",
-  "sourceCommit": "802c48bcec9d060bdce691045330c822c4f1cf83",
-  "buildRun": "https://github.com/ecojust/pureTV/actions/runs/43844870962",
+  "sourceCommit": "444bd563f2dbdb942a73bf1307f1c65b12224400",
+  "buildRun": "https://github.com/ecojust/pureTV/actions/runs/44873014406",
   "romIncluded": false,
+  "minSdk": 26,
+  "wifiController": {
+    "protocol": "puretv-tcp-jsonl-v1",
+    "defaultPort": 63485,
+    "discovery": "_puretv._tcp",
+    "maxPlayers": 1,
+    "buttonMapping": "A/X primary, B/Y secondary",
+    "guide": "../../../docs/readme-controller-support/README.md",
+    "clientIdentityDisplay": true,
+    "signalStrength": "Unavailable: current controller protocol does not report RSSI; signal strength is not displayed."
+  },
+  "downloadUrl": "https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/conveyor-window-0.2.3.apk",
   "verification": {
     "status": "passed",
-    "scope": "controller client status acceptance",
+    "scope": "Android launcher icon and TV banner update",
     "signatureVerified": true,
-    "sourceAssetsMatchApk": true,
     "inPlaceUpgradeInstalled": true,
-    "controllerClientStatusAcceptancePassed": true,
-    "fullGameplayAcceptancePerformedInThisUpdate": false,
+    "leanbackLaunchPassed": true,
+    "launcherArtworkVerified": true,
+    "gamePayloadMatchesPreviousApk": true,
     "actualAndroidEmulator": true,
+    "fullGameplayAcceptancePerformedInThisUpdate": false,
     "physicalTvTested": false,
     "physicalPhoneTested": false,
-    "physicalEsp32Tested": false,
-    "verificationReport": "docs/releases/0.2.2/verification.json"
+    "verificationReport": "docs/releases/0.2.3/android-icon-receipt.json"
   },
   "previousReleases": [
     {
@@ -185,21 +197,68 @@
         "guide": "../../../docs/readme-controller-support/README.md"
       },
       "metadata": "docs/controller-status-baseline/0.2.1/resource.json"
+    },
+    {
+      "kind": "app",
+      "name": "窗口装配",
+      "author": "ecojust / 桔子桑",
+      "description": "在工厂操作台抓取、旋转并投送零件，趁快门开放完成连续装配；六张工单包含反向传送、窄窗快装与夜班错相协同。",
+      "version": "0.2.2",
+      "packageName": "com.ecojust.conveyorwindowtv",
+      "versionCode": 4,
+      "apk": "conveyor-window-0.2.2.apk",
+      "apkBytes": 320943,
+      "sha256": "b5e7f4cb2f79427aa2966a8b334ea11e25b4f2eb0e341cec4b35af32ec3d2eb7",
+      "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+      "supportsLayoutJson": false,
+      "languages": [
+        "zh"
+      ],
+      "controllerLanguages": [
+        "zh",
+        "en"
+      ],
+      "cover": "thumb.png",
+      "coverSource": "Unmodified connected-controller screenshot of this signed APK running in an Android TV emulator.",
+      "license": "MIT (original application code and generated artwork/audio)",
+      "sourceCommit": "802c48bcec9d060bdce691045330c822c4f1cf83",
+      "buildRun": "https://github.com/ecojust/pureTV/actions/runs/43844870962",
+      "romIncluded": false,
+      "verification": {
+        "status": "passed",
+        "scope": "controller client status acceptance",
+        "signatureVerified": true,
+        "sourceAssetsMatchApk": true,
+        "inPlaceUpgradeInstalled": true,
+        "controllerClientStatusAcceptancePassed": true,
+        "fullGameplayAcceptancePerformedInThisUpdate": false,
+        "actualAndroidEmulator": true,
+        "physicalTvTested": false,
+        "physicalPhoneTested": false,
+        "physicalEsp32Tested": false,
+        "verificationReport": "docs/releases/0.2.2/verification.json"
+      },
+      "minSdk": 26,
+      "wifiController": {
+        "protocol": "puretv-tcp-jsonl-v1",
+        "defaultPort": 63485,
+        "discovery": "_puretv._tcp",
+        "maxPlayers": 1,
+        "buttonMapping": "A/X primary, B/Y secondary",
+        "guide": "../../../docs/readme-controller-support/README.md",
+        "clientIdentityDisplay": true,
+        "signalStrength": "Unavailable: current controller protocol does not report RSSI; signal strength is not displayed."
+      },
+      "controllerStatusVideo": "docs/releases/0.2.2/controller-status.mp4",
+      "controllerStatusMetadata": "docs/releases/0.2.2/controller-status.json",
+      "historicalGameplayVideo": {
+        "version": "0.2.1",
+        "video": "docs/releases/0.2.1/gameplay.mp4",
+        "metadata": "docs/releases/0.2.1/gameplay.json",
+        "currentUiEvidence": false
+      }
     }
   ],
-  "minSdk": 26,
-  "wifiController": {
-    "protocol": "puretv-tcp-jsonl-v1",
-    "defaultPort": 63485,
-    "discovery": "_puretv._tcp",
-    "maxPlayers": 1,
-    "buttonMapping": "A/X primary, B/Y secondary",
-    "guide": "../../../docs/readme-controller-support/README.md",
-    "clientIdentityDisplay": true,
-    "signalStrength": "Unavailable: current controller protocol does not report RSSI; signal strength is not displayed."
-  },
-  "controllerStatusVideo": "docs/releases/0.2.2/controller-status.mp4",
-  "controllerStatusMetadata": "docs/releases/0.2.2/controller-status.json",
   "historicalGameplayVideo": {
     "version": "0.2.1",
     "video": "docs/releases/0.2.1/gameplay.mp4",

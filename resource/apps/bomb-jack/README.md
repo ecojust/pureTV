@@ -1,10 +1,12 @@
 # 炸弹杰克 TV
 
-## Android 0.5.7 · 手柄与手机连接
-
 <!-- apk-resource:start -->
-[下载签名 APK](bomb-jack-0.5.7.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
+[Android 0.5.8 APK](bomb-jack-0.5.8.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/bomb-jack-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/bomb-jack-macos.dmg) · [图标与安装验证](docs/releases/0.5.8/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.5.7 实玩录像](docs/releases/0.5.7/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
+
+## 历史 Android 版本 0.5.7 · 手柄与手机连接
+
+[下载签名 APK](bomb-jack-0.5.7.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
 
 首帧绘制失败后，手机仍可连接并看到房间状态。在 720 × 480 电视上，二维码和两个玩家席位都能完整显示。可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
 
@@ -30,7 +32,7 @@ Android **0.5.4 / versionCode 6**：手柄连接后，侧边显示手柄图标�
 
 以 NES《Mighty Bomb Jack》为参考的独立重写：16 个金字塔阶段、行动区与 24 弹宫殿、高低跳与空中缓降、宝箱和蓝／橙／绿 Mighty 能力。
 
-当前版本 **0.5.7**，适用于 Android 8.0 及以上电视，包名 `com.ecojust.bombjacktv`。电视显示游戏与房间二维码，手机扫码作为手柄。
+当前版本 **0.5.8**，适用于 Android 8.0 及以上电视，包名 `com.ecojust.bombjacktv`。电视显示游戏与房间二维码，手机扫码作为手柄。
 <!-- visual-release:start -->
 ## 历史：0.5.2 视觉更新与验证
 

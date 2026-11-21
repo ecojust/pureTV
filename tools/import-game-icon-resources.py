@@ -80,6 +80,7 @@ def verify(inputs, tools, assets, evidence):
     if (directory / 'game.json').is_file():
         game = read(directory / 'game.json')
         assert (game['version'], game['versionCode']) == (after['versionName'], after['versionCode']), directory
+        assert after['bytes'] < 10_000_000, 'Game Kit APK exceeds the catalog limit: ' + directory.name
     else:
         gradle = (directory / 'build.gradle').read_text()
         assert f"versionName '{after['versionName']}'" in gradle and re.search(r'\bversionCode ' + str(after['versionCode']) + r'\b', gradle), directory
@@ -127,13 +128,19 @@ def publish(directory, evidence, assets):
                 sha256=actual['sha256'], apk=evidence['filename'], apkBytes=actual['bytes'],
                 sourceCommit=evidence['sourceSha'], buildRun=evidence['buildRun'],
                 downloadUrl=DOWNLOAD + evidence['filename'],
-                coverSource=f"Capture retained from Android {old['version']}. " + old['coverSource'],
+                coverSource=f"Capture retained from the {old['version']} release. " + old['coverSource'],
                 verification={'status': 'passed', 'scope': 'Android launcher icon and TV banner update',
                               'signatureVerified': True, 'inPlaceUpgradeInstalled': True, 'leanbackLaunchPassed': True,
                               'launcherArtworkVerified': True, 'gamePayloadMatchesPreviousApk': True,
                               'actualAndroidEmulator': True, 'fullGameplayAcceptancePerformedInThisUpdate': False,
                               'physicalTvTested': False, 'physicalPhoneTested': False, 'verificationReport': receipt},
                 previousReleases=history)
+    if old.get('gameplayVideo'):
+        info['historicalGameplayVideo'] = {
+            'version': old['version'], 'video': old['gameplayVideo'],
+            'metadata': old.get('gameplayMetadata'), 'currentUiEvidence': False}
+    elif old.get('historicalGameplayVideo'):
+        info['historicalGameplayVideo'] = old['historicalGameplayVideo']
     target = directory / info['apk']
     if not target.exists():
         with tempfile.NamedTemporaryFile(dir=directory, prefix='.apk-import-', delete=False) as temporary:
@@ -157,16 +164,29 @@ def checksums(directory, baseline_commit):
         value, name = line.split('  ', 1)
         assert re.fullmatch(r'[a-f0-9]{64}', value) and name not in rows, line
         rows[name] = value
+    sorted_manifest = list(rows) == sorted(rows)
     relative = directory.relative_to(ROOT)
     changed = subprocess.check_output(['git', 'diff', '--diff-filter=ACMRT', '--name-only', '-z',
                                        baseline_commit, '--', str(relative)], cwd=ROOT)
     untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard', '-z',
                                          '--', str(relative)], cwd=ROOT)
-    for entry in set((changed + untracked).decode().split('\0')) - {''}:
+    active = read(directory / 'resource.json')
+    entries = set((changed + untracked).decode().split('\0')) - {''}
+    entries.update(str(relative / name) for name in (active['apk'], active['verification']['verificationReport']))
+    for entry in sorted(entries):
         path = ROOT / entry
-        if path != checksum_path:
-            rows[path.relative_to(directory).as_posix()] = digest(path)
-    checksum_path.write_text(''.join(f'{value}  {name}\n' for name, value in sorted(rows.items())))
+        if path == checksum_path:
+            continue
+        if path.is_file():
+            value = digest(path)
+        else:
+            state = subprocess.check_output(['git', 'ls-files', '-t', '--', entry], text=True, cwd=ROOT)
+            assert state.startswith('S '), 'Missing release file: ' + entry
+            blob = subprocess.check_output(['git', 'show', ':' + entry], cwd=ROOT)
+            value = hashlib.sha256(blob).hexdigest()
+        rows[path.relative_to(directory).as_posix()] = value
+    names = sorted(rows) if sorted_manifest else rows
+    checksum_path.write_text(''.join(f'{rows[name]}  {name}\n' for name in names))
 
 
 def main():

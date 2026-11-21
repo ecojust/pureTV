@@ -1,6 +1,8 @@
 # 墨绘地图集 · Atlas of Ink
 
-[下载当前 Android TV 手柄版 0.1.2](https://github.com/ecojust/pureTV/releases/download/catalog-tv-controls-v1.0.1/atlas-of-ink-0.1.2.apk) · [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
+[Android TV 0.1.3 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/atlas-of-ink-0.1.3.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/atlas-of-ink-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/atlas-of-ink-windows-x64-setup.exe)
+
+[用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
 为各类客户探索未知地形，画出一季的地图。地图、羊皮纸与页面装饰由原版 Canvas 2D 程序离线绘制。
 
@@ -13,7 +15,7 @@
 [上游固定版本](https://github.com/triptych/web-games-andrew/tree/a7051c34fe2e7550fd206e6272f758df171855b0/game-123) · [许可与归属](NOTICE.md)
 
 <!-- puzzle-downloads -->
-## 安装包 0.1.1
+## 0.1.1 版安装包与验证记录
 
 | 平台 | 安装文件 |
 | --- | --- |

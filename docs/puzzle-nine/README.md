@@ -16,10 +16,14 @@
 
 游戏使用 Andrew Wooldridge 的 MIT 授权源码。各游戏目录的 NOTICE 列出实际随包使用的引擎、字体及其他素材。场景、声音和运行依赖随各游戏安装包离线提供。[原作合辑与许可证](https://github.com/triptych/web-games-andrew/tree/a7051c34fe2e7550fd206e6272f758df171855b0)
 
-<!-- verified-puzzle-files -->
 <a id="windows-下载"></a>
 
 ## 下载安装
+
+上表的游戏名可打开各款详情页，页首提供该游戏的 Android TV 签名 APK、macOS DMG 和 Windows x64 安装程序。[按类型浏览当前下载](../../README.md#games) · [客户端版本与 SHA-256 校验值](../releases/gameplay-icons-2026.11.21/clients.json)
+
+<!-- verified-puzzle-files -->
+### 首批 45 个安装文件与实玩记录
 
 Android TV 安装 APK。macOS 的 DMG 和 ZIP 都包含通用应用，Apple Silicon 原生、端口被占用后的连接和 Rosetta 运行均已实玩。Windows x64 可选安装版 EXE，或完整解压便携 ZIP 后打开 PureTVGame.exe。Intel 栏记录每款在原生 Intel macOS 上的实玩结果。
 

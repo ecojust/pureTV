@@ -1,5 +1,9 @@
 # 纹幕校准 / Moiré Atelier
 
+<!-- apk-resource:start -->
+[Android 0.1.1 APK](moire-atelier-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+<!-- apk-resource:end -->
+
 在发光台上滑动、旋转两层细密条纹膜，观察它们叠加后的明暗变化。五个测点要求不同的亮度；只有同一次验收时全部合格，才能完成校准。
 
 这是 pureTV 百款游戏计划的第44款，包名 `com.ecojust.moireateliertv`，版本 `0.1.0`。支持电视遥控器、键盘和局域网手机手柄。本页介绍游戏规则，实际验证与发布结果由随包报告记录；完成验证并逐款推送后才计入完成数量。
@@ -34,6 +38,6 @@
 
 画面采用平滑的光学实验台风格：浅色透射光、深蓝仪器底座、青色和琥珀色膜框，以及细刻度和玻璃高光。共享Android宿主提供局域网手柄、声音、暂停及毛玻璃弹窗；图形与ASCII文字采用本地图集，中文说明使用DOM。
 
-在仓库根目录使用 `python3 resource/game-kit/build.py --game resource/apps/moire-atelier --output /tmp/moire-atelier-build` 构建。发布文件采用 `moire-atelier-0.1.0.apk` 与 `docs/gameplay-0.1.0.mp4` 这两个名称，每个文件均须严格小于10,000,000字节。实际测试、性能、签名、录像和原图审阅由后续发布报告记录；设计说明不代表已经通过这些验证。浏览器软件渲染也不代表电视真机表现。
+在仓库根目录使用 `python3 resource/game-kit/build.py --game resource/apps/moire-atelier --output /tmp/moire-atelier-build` 构建。0.1.0 的签名 APK 为 `moire-atelier-0.1.0.apk` 与 `docs/gameplay-0.1.0.mp4` 这两个名称，每个文件均须严格小于10,000,000字节。实际测试、性能、签名、录像和原图审阅由后续发布报告记录；设计说明不代表已经通过这些验证。浏览器软件渲染也不代表电视真机表现。
 
 采用仓库的 [MIT许可证](LICENSE)。本作规则与图形在项目内制作，不包含第三方游戏素材。
