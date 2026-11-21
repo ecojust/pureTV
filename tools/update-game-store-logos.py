@@ -18,7 +18,10 @@ SVG_BUDGET = 8100
 
 def pixel_art(image, size):
     """Encode each palette row with horizontal runs, exact at the chosen resolution."""
-    indexed = image.resize((size, size), Image.Resampling.LANCZOS).quantize(colors=24)
+    # Sparse bright objects such as a ship or a playing-card suit need palette
+    # entries even when most of the screenshot is the same background color.
+    indexed = image.resize((size, size), Image.Resampling.LANCZOS).quantize(
+        colors=24, method=Image.Quantize.MAXCOVERAGE, kmeans=1)
     palette = indexed.getpalette()
     background = max(indexed.getcolors())[1]
 
