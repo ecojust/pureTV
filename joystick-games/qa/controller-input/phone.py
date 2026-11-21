@@ -1,6 +1,5 @@
 """Decode a visible game-menu QR and move the real phone controller in every selected title."""
 import argparse
-import importlib.util
 import json
 import os
 from pathlib import Path, PurePosixPath
@@ -35,7 +34,7 @@ def summary(page):
                active:a?.id || a?.textContent?.trim().slice(0,60) || null, polls:s?.controller?.pollCount}};}}""")
 
 
-def verify(browser, mobile_browser, java, slug, packed, output, timeout, gameplay=None):
+def verify(browser, mobile_browser, java, slug, packed, output, timeout, gameplay=False):
     start = time.monotonic()
     report = {'game':slug, 'payloadSha256':digest(packed), 'browser':browser.version}
     phase = 'extract'
@@ -85,12 +84,14 @@ def verify(browser, mobile_browser, java, slug, packed, output, timeout, gamepla
             wait_for(tv, f"{SNAP}?.controller?.transport === 'phone'", timeout)
             cdp = phone.context.new_cdp_session(phone)
             if gameplay:
+                from expansion_gameplay import run_gameplay
+
                 phase = 'phone gameplay'
 
                 def press(key, hold_ms=0, while_held=None):
                     touch(phone, cdp, key, tv, timeout, hold_ms, while_held)
 
-                report['gameplay'] = gameplay(slug, tv, press, lambda: tv.evaluate(SNAP))
+                report['gameplay'] = run_gameplay(slug, tv, press, lambda: tv.evaluate(SNAP))
                 gameplay_shot = output / (slug + '-gameplay.png')
                 tv.screenshot(path=str(gameplay_shot))
                 report['gameplayScreenshotSha256'] = digest(gameplay_shot)
@@ -114,7 +115,7 @@ def verify(browser, mobile_browser, java, slug, packed, output, timeout, gamepla
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--gameplay-module', type=Path, help='Python file defining run_gameplay(slug, tv, touch, snapshot)')
+    p.add_argument('--gameplay', action='store_true', help='Play the selected expansion games with the paired phone')
     p.add_argument('--payloads',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--source',type=Path,default=ROOT)
@@ -124,12 +125,6 @@ def main():
     p.add_argument('--timeout',type=int,default=240)
     p.add_argument('games',nargs='+')
     args=p.parse_args();args.output.mkdir(parents=True,exist_ok=True)
-    gameplay = None
-    if args.gameplay_module:
-        spec = importlib.util.spec_from_file_location('phone_gameplay', args.gameplay_module)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        gameplay = module.run_gameplay
     servers=args.source/'resource/game-kit/android/src/main/java/com/ecojust/gamekit'
     with tempfile.TemporaryDirectory() as tmp:
         jars=os.pathsep.join(str(j.resolve()) for j in (args.android_json,args.zxing))
@@ -142,7 +137,7 @@ def main():
             phone=pw.chromium.launch(executable_path=args.chromium,args=flags,timeout=180000)
             success=True
             for slug in args.games:
-                result=verify(tv,phone,java,slug,args.payloads/(slug+'.zip'),args.output,args.timeout,gameplay)
+                result=verify(tv,phone,java,slug,args.payloads/(slug+'.zip'),args.output,args.timeout,args.gameplay)
                 (args.output/(slug+'.json')).write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
                 print(slug,result['passed'],result.get('phase',''),result.get('error',''),flush=True)
                 success=success and result['passed']

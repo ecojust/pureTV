@@ -68,11 +68,17 @@ jobs:
           bash joystick-games/qa/controller-input/run-review.sh
       - name: Preserve the results at an immutable commit
         if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          if test -d qa-results && test -n "$(ls -A qa-results)"; then
-            git config user.name github-actions
-            git config user.email github-actions@users.noreply.github.com
-            git add --sparse -f qa-results
-            git commit -m "Record $GAME $MODE acceptance on runner $GITHUB_RUN_ID"
-            git push origin "HEAD:refs/heads/qa/pr50-results-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT-$GAME-$MODE"
-          fi
+          branch="qa/pr50-results-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT-$GAME-$MODE"
+          gh api "repos/$GITHUB_REPOSITORY/git/refs" -X POST -f "ref=refs/heads/$branch" -f "sha=$GITHUB_SHA" --silent
+          for file in qa-results/*; do
+            test -f "$file" || continue
+            python - "$branch" "$file" <<'PYDATA' | gh api -X PUT --input - "repos/$GITHUB_REPOSITORY/contents/$file" --silent
+          import base64, json, sys
+          from pathlib import Path
+          branch, file = sys.argv[1:]
+          print(json.dumps({"branch":branch,"message":"Archive "+file,"content":base64.b64encode(Path(file).read_bytes()).decode()}))
+          PYDATA
+          done
