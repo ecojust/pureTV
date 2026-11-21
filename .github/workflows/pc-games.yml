@@ -1,71 +1,74 @@
-name: Catalog desktop player
-
+name: Stage verified standalone game packages
 on:
   workflow_dispatch:
     inputs:
-      target:
-        description: Desktop package to build
+      run:
+        description: Verified game package workflow run
+        required: true
+      platform:
+        description: Platform to stage
+        required: true
         type: choice
-        options: [catalog, standalone, standalone-macos, standalone-windows]
-        default: catalog
-  push:
-    branches: [master, 'feat/catalog-game-controls-*']
-    paths:
-      - 'tools/pc-games/**'
-      - '.github/workflows/pc-games.yml'
-
+        options: [macos, windows]
+      source:
+        description: Full commit SHA of the native build
+        required: true
 permissions:
-  contents: read
-
+  contents: write
+  actions: read
 jobs:
-  games:
-    if: startsWith(inputs.target, 'standalone')
-    uses: ./.github/workflows/standalone-games.yml
-    with:
-      target: ${{ inputs.target }}
-
-  windows:
-    if: ${{ !startsWith(inputs.target, 'standalone') }}
-    runs-on: windows-2022
-    timeout-minutes: 18
+  stage:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RUN_ID: ${{ inputs.run }}
+      SYSTEM: ${{ inputs.platform }}
+      SOURCE: ${{ inputs.source }}
+      TAG: standalone-games-2026.11.21
     steps:
-      - uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          sparse-checkout: |
-            tools/pc-games
-            puretv-joystick
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install build and test dependencies
-        run: python -m pip install -r tools/pc-games/requirements.txt pyinstaller==6.16.0 playwright==1.56.0
-      - name: Verify player and build Windows executable
-        working-directory: tools/pc-games
+      - name: Stage verified artifacts in the existing draft
+        shell: bash
         run: |
-          python -m unittest discover -v
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          node --test test_bridge.cjs
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python package.py --output dist
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python -m PyInstaller --clean --onefile --name pureTV-Games --add-data 'catalog.json:.' --add-data 'pc-bridge.js:.' --collect-all zeroconf --recursive-copy-metadata zeroconf launcher.py
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          $games = .\dist\pureTV-Games.exe --list
-          if ($LASTEXITCODE -ne 0 -or $games.Count -eq 0) { throw 'The packaged catalog did not open' }
-      - name: Start the Windows executable and play with keyboard and Wi-Fi protocol
-        run: python tools/pc-games/smoke.py --exe tools/pc-games/dist/pureTV-Games.exe --channel msedge
-      - name: Record verified download checksums
-        shell: pwsh
-        run: |
-          Get-ChildItem tools/pc-games/dist/pureTV-Games* -File | ForEach-Object {
-            $digest = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
-            Write-Output "$digest  $($_.Name)  $($_.Length)"
-          }
-      - uses: actions/upload-artifact@v4
-        with:
-          name: pureTV-Games-windows-x64
-          path: |
-            tools/pc-games/dist/pureTV-Games.exe
-            tools/pc-games/dist/pureTV-Games-portable.zip
-          if-no-files-found: error
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os,re,subprocess
+          from pathlib import Path
+          def gh(*args):
+              return subprocess.check_output(['gh',*args])
+          repo=os.environ['GH_REPO']
+          api=lambda part: json.loads(gh('api',f'repos/{repo}/{part}'))
+          run,source,system,tag=[os.environ[k] for k in ('RUN_ID','SOURCE','SYSTEM','TAG')]
+          assert run.isdigit() and re.fullmatch('[0-9a-f]{40}',source)
+          assert system in ('macos','windows')
+          info=api(f'actions/runs/{run}')
+          assert info['head_sha']==source and info['head_repository']['full_name']==repo and info['head_branch']=='fix/game-client-downloads' and info['path']=='.github/workflows/pc-games.yml'
+          jobs=api(f'actions/runs/{run}/jobs')['jobs']
+          job,=[j for j in jobs if j['name'].startswith('games / build ('+system+',')]
+          assert job['conclusion']=='success'
+          gh('run','download',run,'-n','standalone-'+system,'-D','packages')
+          root=Path('packages')
+          report=root/f'verification-{system}.json'
+          rows=json.loads(report.read_text())
+          assert len(rows)==(16 if system=='macos' else 21)
+          files={report.name:report}
+          for row in rows:
+              slug=row['id']
+              assert re.fullmatch('[a-z0-9-]+',slug) and row['normalLaunch'] and row['controllerKey']=='A'
+              state=row['wkGameState'] if system=='macos' else row['browser']['initialGameState']
+              assert state and state.lower() not in ('loading','error')
+              name=slug+('-macos.dmg' if system=='macos' else '-windows-x64-setup.exe')
+              assert name==row['installer'] and name not in files
+              p=root/name
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==row['installerSha256']
+              files[name]=p
+          draft=json.loads(gh('release','view',tag,'--json','assets,isDraft,tagName'))
+          assert draft['isDraft'] and draft['tagName']==tag
+          existing={a['name']:a for a in draft['assets']}
+          for name,p in files.items():
+              if name in existing:
+                  assert existing[name]['digest']=='sha256:'+hashlib.sha256(p.read_bytes()).hexdigest()
+              else:
+                  gh('release','upload',tag,str(p))
+          print(f'Staged {len(rows)} verified {system} packages and their report.')
+          PY
