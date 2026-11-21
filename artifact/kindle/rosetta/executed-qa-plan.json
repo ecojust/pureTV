@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": [
+    "gameplay.x",
+    "gameplay.time"
+  ],
+  "steps": [
+    {
+      "name": "Enter the game",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 300,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Walk across the planet",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 300,
+      "expect": [
+        {
+          "path": "gameplay.x",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Pause",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 300,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Resume",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 300,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ]
+}
