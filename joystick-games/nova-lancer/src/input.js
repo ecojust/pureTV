@@ -1,6 +1,6 @@
 // Unified input: keyboard, mouse, gamepad (standard mapping) and on-screen touch controls.
 import { G, clamp } from './core.js';
-import { readController } from './tv-controller.js';
+import { readController, applyControllerFrame } from './tv-controller.js';
 
 // Physical bindings per action. Codes are KeyboardEvent.code, 'Mouse0/2', 'Pad<n>' or 'Touch<name>'.
 const BIND = {
@@ -131,16 +131,9 @@ function pollGamepad() {
 export function updateInput(realDt) {
   now += realDt;
   const frame = readController(G.state === 'play' && !G.paused);
-  // Keep Wi-Fi/phone actions independent of concurrently held physical keys.
-  const values = { ...frame.buttons, RollL: frame.buttons.X && frame.buttons.LEFT,
-                  RollR: frame.buttons.X && frame.buttons.RIGHT };
-  for (const [key, down] of Object.entries(values)) {
-    const code = 'TV' + key;
-    if (down && !held.has(code)) {
-      held.add(code); justDown.add(code); anyPress = true; Input.device = 'gamepad';
-    } else if (!down && held.delete(code)) {
-      justUp.add(code);
-    }
+  if (applyControllerFrame(frame, held, justDown, justUp)) {
+    anyPress = true;
+    Input.device = 'gamepad';
   }
   pollGamepad();
   for (const a in BIND) {
