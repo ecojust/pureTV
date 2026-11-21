@@ -15,7 +15,7 @@ class StandaloneTests(unittest.TestCase):
     def setUp(self):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
-        self.root = Path(temporary.name)
+        self.root = Path(temporary.name).resolve()
         entry = patch.object(standalone, '__file__', str(self.root / 'standalone.py'))
         entry.start()
         self.addCleanup(entry.stop)

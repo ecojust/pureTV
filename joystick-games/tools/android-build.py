@@ -114,7 +114,7 @@ def target_sdk(slug):
     if slug == 'backroad-rally':
         return 35
     if slug in (
-        'clawd-pop', 'kart-royale', 'lumenrift', 'operation-ironhold',
+        'clawd-pop', 'kart-royale', 'lumenrift', 'nova-lancer', 'operation-ironhold',
         'ponpoko-kart', 'saber-magic-tower', 'starbase-spooky', 'turbo-kart-rally',
     ):
         target = metadata(slug).get('androidTargetSdk', 29)

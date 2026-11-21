@@ -1,0 +1,177 @@
+{
+  "game": "nova-lancer",
+  "runtime": "pureTV PC host.py on Linux, headless Chromium, unmodified repository JoystickClient over TCP",
+  "physicalDeviceTested": false,
+  "clientModuleSha256": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+  "testedAssets": {
+    "tv.html": "7370f09ad2f535ed3198be445bb25ac8e8e46cd5d0e6f2c0f163064b1e569642",
+    "nova-lancer.js": "5b0a829cdc9a56e2e539cc587e29656f992f3f35717a596ab7db593961e43516"
+  },
+  "observations": [
+    {
+      "action": "Original SDK hello and sync acquire seat and render identity",
+      "state": {
+        "stage": "menu",
+        "x": 0.06651458558080775,
+        "distance": 156.75,
+        "shots": 0,
+        "transport": "wifi",
+        "connected": true,
+        "seat": [
+          {
+            "id": 1,
+            "controllerId": "virtual-17c2b0977c54"
+          }
+        ],
+        "label": "pureTV 手柄\n1P\n已连接\nID: virtual-17c2b0977c54\n\n单人游戏 · 1P 无线手柄操作\n小键盘 8/2/4/6 方向 · 5 START · 1/3/7/9 A/B/X/Y\npureTV-nova-lancer\n172.26.91.245\nTCP 42249\n手柄服务暂不可用",
+        "canvas": [
+          [
+            800,
+            450
+          ],
+          [
+            800,
+            450
+          ]
+        ]
+      }
+    },
+    {
+      "action": "SDK START launches Quick Sortie and A fires",
+      "state": {
+        "stage": "playing",
+        "x": 0,
+        "distance": 25,
+        "shots": 1,
+        "transport": "wifi",
+        "connected": true,
+        "seat": [
+          {
+            "id": 1,
+            "controllerId": "virtual-17c2b0977c54"
+          }
+        ],
+        "label": "1P\n已连接\nID: virtual-17c2b0977c54",
+        "canvas": [
+          [
+            800,
+            450
+          ],
+          [
+            800,
+            450
+          ]
+        ]
+      }
+    },
+    {
+      "action": "SDK disconnect releases seat and game pauses",
+      "state": {
+        "stage": "paused",
+        "x": 0,
+        "distance": 30,
+        "shots": 1,
+        "transport": null,
+        "connected": false,
+        "seat": [],
+        "label": "pureTV 手柄\n\n无线手柄按 GPIO 23 搜索连接\n小键盘 8/2/4/6 方向 · 5 START · 1/3/7/9 A/B/X/Y\npureTV-nova-lancer\n172.26.91.245\nTCP 42249\n手柄服务暂不可用",
+        "canvas": [
+          [
+            800,
+            450
+          ],
+          [
+            800,
+            450
+          ]
+        ]
+      }
+    },
+    {
+      "action": "Same SDK identity rejoins with neutral keys",
+      "state": {
+        "stage": "paused",
+        "x": 0,
+        "distance": 30,
+        "shots": 1,
+        "transport": "wifi",
+        "connected": true,
+        "seat": [
+          {
+            "id": 1,
+            "controllerId": "virtual-17c2b0977c54"
+          }
+        ],
+        "label": "pureTV 手柄\n1P\n已连接\nID: virtual-17c2b0977c54\n\n单人游戏 · 1P 无线手柄操作\n小键盘 8/2/4/6 方向 · 5 START · 1/3/7/9 A/B/X/Y\npureTV-nova-lancer\n172.26.91.245\nTCP 42249\n手柄服务暂不可用",
+        "canvas": [
+          [
+            800,
+            450
+          ],
+          [
+            800,
+            450
+          ]
+        ]
+      }
+    },
+    {
+      "action": "Sustained SDK START advances flight across multiple frames",
+      "state": {
+        "stage": "playing",
+        "x": 0,
+        "distance": 55,
+        "shots": 1,
+        "transport": "wifi",
+        "connected": true,
+        "seat": [
+          {
+            "id": 1,
+            "controllerId": "virtual-17c2b0977c54"
+          }
+        ],
+        "label": "1P\n已连接\nID: virtual-17c2b0977c54",
+        "canvas": [
+          [
+            800,
+            450
+          ],
+          [
+            800,
+            450
+          ]
+        ]
+      }
+    },
+    {
+      "action": "Separate SDK START pauses again",
+      "state": {
+        "stage": "paused",
+        "x": 0,
+        "distance": 70,
+        "shots": 1,
+        "transport": "wifi",
+        "connected": true,
+        "seat": [
+          {
+            "id": 1,
+            "controllerId": "virtual-17c2b0977c54"
+          }
+        ],
+        "label": "pureTV 手柄\n1P\n已连接\nID: virtual-17c2b0977c54\n\n单人游戏 · 1P 无线手柄操作\n小键盘 8/2/4/6 方向 · 5 START · 1/3/7/9 A/B/X/Y\npureTV-nova-lancer\n172.26.91.245\nTCP 42249\n手柄服务暂不可用",
+        "canvas": [
+          [
+            800,
+            450
+          ],
+          [
+            800,
+            450
+          ]
+        ]
+      }
+    }
+  ],
+  "passed": true,
+  "transport": "Original repository JoystickClient.connect()/ping()/button()/disconnect(), directly connected to local TCP port. mDNS discovery was unavailable on the test machine."
+}

@@ -22,10 +22,9 @@ on:
         default: '1'
         type: string
       batch:
-        description: Completed original batch
+        description: Batch from the frozen package registry, or capability for a graphics probe
         required: true
-        type: choice
-        options: [triptych-01, triptych-02, one-button-01, adventure-01, racing-01, racing-02, racing-03, puzzle-01, puzzle-02, puzzle-03, capability]
+        type: string
       evidence_kind:
         description: Completed original job evidence (never installation packages)
         required: true
@@ -62,7 +61,7 @@ jobs:
           assert re.fullmatch('[1-9][0-9]*',run) and re.fullmatch('[1-9][0-9]*',attempt) and re.fullmatch('[a-f0-9]{40}',source)
           assert re.fullmatch('[a-f0-9]{40}',package_source)
           assert os.environ['GITHUB_REPOSITORY']=='ecojust/pureTV'
-          assert batch in ['triptych-01','triptych-02','one-button-01','adventure-01','racing-01','racing-02','racing-03','puzzle-01','puzzle-02','puzzle-03','capability'] and kind in ['plan','build','qa-arm64','qa-intel','capability-arm64','capability-intel']
+          assert re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*',batch) and kind in ['plan','build','qa-arm64','qa-intel','capability-arm64','capability-intel']
           def api(path):return json.loads(subprocess.check_output(['gh','api','repos/ecojust/pureTV/'+path]))
           original=api('actions/runs/'+run)
           assert original['path'] in ['.github/workflows/joystick-catalog-macos.yml','.github/workflows/joystick-catalog-macos-runtime.yml','.github/workflows/joystick-macos-capability.yml'] and original['event']=='workflow_dispatch'
@@ -74,6 +73,9 @@ jobs:
           else:assert package_source==source, 'Original build/runtime workflow package source must match its workflow commit'
           assert original['head_sha']==source and original['run_attempt']==int(attempt), 'Run source or attempt changed'
           assert original['repository']['full_name']==original['head_repository']['full_name']=='ecojust/pureTV'
+          if not capability:
+              registry=json.loads(subprocess.check_output(['gh','api','-H','Accept: application/vnd.github.raw+json',f'repos/ecojust/pureTV/contents/joystick-games/catalog-registry.json?ref={package_source}']))
+              assert batch in registry['batches'], 'Batch missing from frozen package registry'
           plan=kind=='plan'
           if plan:assert original['path']=='.github/workflows/joystick-catalog-macos.yml', 'Plan evidence is restricted to the original catalog build workflow'
           jobs_response=api(f'actions/runs/{run}/attempts/{attempt}/jobs?per_page=100');jobs=jobs_response['jobs']
