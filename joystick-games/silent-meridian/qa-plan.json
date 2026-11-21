@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "renderer": "dom",
+  "pauseStablePaths": [
+    "gameplay.phase"
+  ],
+  "steps": [
+    {
+      "name": "Enter the game",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 300,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Close briefing",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 300,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Shift the observatory into its echo",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 300,
+      "expect": [
+        {
+          "path": "gameplay.phase",
+          "op": "eq",
+          "value": "echo"
+        }
+      ]
+    },
+    {
+      "name": "Pause",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 300,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Resume",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 300,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ]
+}
