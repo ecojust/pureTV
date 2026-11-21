@@ -111,11 +111,21 @@ def frozen_host(row, work, icon):
     return build / 'Release/PureTVGame.exe', rev
 
 
-def shortcut(folder, title):
-    # Resolve the installed link via the same shell service Explorer uses.
-    env = {**os.environ, 'ICON_SHORTCUT': str(folder / (title + '.lnk'))}
-    result = run('powershell', '-NoProfile', '-Command', "$s=(New-Object -ComObject WScript.Shell).CreateShortcut($env:ICON_SHORTCUT); Write-Output $s.TargetPath", env=env, capture_output=True, text=True)
-    return Path(result.stdout.strip())
+def verify_shortcut(folder, relative, executable):
+    # WScript can return the 8.3 spelling for a file under the runner's temp
+    # directory. Test the file identity, including redirected shell folders.
+    env = {**os.environ, 'ICON_SHELL_FOLDER': folder, 'ICON_SHORTCUT': relative}
+    command = """
+        $ErrorActionPreference='Stop'
+        $shell=New-Object -ComObject WScript.Shell
+        $path=Join-Path $shell.SpecialFolders.Item($env:ICON_SHELL_FOLDER) $env:ICON_SHORTCUT
+        if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Missing shortcut $path" }
+        Write-Output ($shell.CreateShortcut($path).TargetPath)
+    """
+    result = run('powershell', '-NoProfile', '-Command', command, env=env, capture_output=True, text=True)
+    target = Path(result.stdout.strip())
+    if not target.is_file() or not target.samefile(executable):
+        raise ValueError(f'Shortcut {relative!r} targets {target!s}; expected {executable!s}')
 
 
 def smoke_native(app, work):
@@ -198,8 +208,7 @@ def nsis(row, old, work, output, icon):
                 raise ValueError(f'Original game file changed: {rel}')
         if sha(install_dir / 'game.ico') != sha(icon):
             raise ValueError('Installed icon mismatch')
-        if shortcut(Path.home() / 'Desktop', registry['appName']) != actual:
-            raise ValueError('Desktop shortcut points to a different executable')
+        verify_shortcut('Desktop', registry['appName'] + '.lnk', actual)
         with zipfile.ZipFile(portable) as archive:
             for entry in archive.infolist():
                 file = install_dir / Path(entry.filename).relative_to(original_root)
@@ -245,9 +254,7 @@ def inno(row, old, work, output, icon, runtime_work):
             raise ValueError('Installed game identity mismatch')
         if sha(installed / 'game.ico') != sha(icon):
             raise ValueError('Installed ICO mismatch')
-        programs = Path(os.environ['APPDATA']) / 'Microsoft/Windows/Start Menu/Programs/pureTV'
-        if shortcut(programs, metadata['en']) != actual:
-            raise ValueError('Start menu shortcut points to a different executable')
+        verify_shortcut('Programs', 'pureTV/' + metadata['en'] + '.lnk', actual)
         icons = verify_icons(icon, [actual, package, installed / 'unins000.exe'])
         # Exercise the installed HTTP server, including the favicon route of the game tab.
         proc = subprocess.Popen([str(actual), '--no-browser', '--http-port', '0', '--controller-port', '0'], stdout=subprocess.PIPE, text=True)
