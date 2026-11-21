@@ -1,0 +1,151 @@
+{
+  "sourceCommit": "142111f95a7f6e25fb04edc9b09cf0d3695e49aa",
+  "batch": "exploration-01",
+  "runner": "macos-latest",
+  "expectedArchitecture": "arm64",
+  "status": "passed",
+  "games": [
+    {
+      "game": "kindle",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/kindle",
+            "--output",
+            "/Users/runner/work/_temp/qa/kindle/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "kindle/package-verification.log",
+          "startedAt": "2026-11-21T07:00:30.020050+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kindle",
+            "--app",
+            "/Users/runner/work/_temp/packages/kindle/installed/KINDLE.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kindle/native"
+          ],
+          "status": "passed",
+          "log": "kindle/native.log",
+          "startedAt": "2026-11-21T07:01:15.366356+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kindle",
+            "--app",
+            "/Users/runner/work/_temp/packages/kindle/installed/KINDLE.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kindle/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "kindle/occupied-port.log",
+          "startedAt": "2026-11-21T07:01:51.256924+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kindle",
+            "--app",
+            "/Users/runner/work/_temp/packages/kindle/installed/KINDLE.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kindle/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "kindle/rosetta.log",
+          "startedAt": "2026-11-21T07:02:24.246196+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "silent-meridian",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/silent-meridian",
+            "--output",
+            "/Users/runner/work/_temp/qa/silent-meridian/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "silent-meridian/package-verification.log",
+          "startedAt": "2026-11-21T07:03:02.903267+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "silent-meridian",
+            "--app",
+            "/Users/runner/work/_temp/packages/silent-meridian/installed/Silent Meridian.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/silent-meridian/native"
+          ],
+          "status": "passed",
+          "log": "silent-meridian/native.log",
+          "startedAt": "2026-11-21T07:03:26.868740+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "silent-meridian",
+            "--app",
+            "/Users/runner/work/_temp/packages/silent-meridian/installed/Silent Meridian.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/silent-meridian/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "silent-meridian/occupied-port.log",
+          "startedAt": "2026-11-21T07:04:01.125790+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "silent-meridian",
+            "--app",
+            "/Users/runner/work/_temp/packages/silent-meridian/installed/Silent Meridian.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/silent-meridian/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "silent-meridian/rosetta.log",
+          "startedAt": "2026-11-21T07:04:35.276507+00:00",
+          "returncode": 0
+        }
+      ]
+    }
+  ]
+}
