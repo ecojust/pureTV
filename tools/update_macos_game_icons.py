@@ -4,11 +4,12 @@ import argparse
 from contextlib import contextmanager
 import hashlib
 import json
+import os
 from pathlib import Path
 import plistlib
 import re
-import shutil
 import subprocess
+import struct
 import tempfile
 
 from game_icons import source_image
@@ -54,18 +55,53 @@ def tree(app):
     return result
 
 
+def payload_digest(path):
+    # A Mach-O signature is link-edit data at EOF. Signing on a newer SDK can
+    # resize __LINKEDIT and align its final symbol strings to a larger boundary.
+    # Hash the header, every load command and all pre-signature bytes, stripping
+    # only the signature bookkeeping and terminal NUL padding of that payload.
+    data = bytearray(path.read_bytes())
+    magic, = struct.unpack_from("<I", data)
+    if magic != 0xFEEDFACF:
+        raise ValueError(f"Expected a thin 64-bit little-endian Mach-O: {path}")
+    commands, command_bytes = struct.unpack_from("<II", data, 16)
+    signature = None
+    linkedit = None
+    pos = 32
+    for _ in range(commands):
+        cmd, length = struct.unpack_from("<II", data, pos)
+        if length < 8 or pos + length > 32 + command_bytes:
+            raise ValueError("Invalid Mach-O load command")
+        if cmd == 0x19 and data[pos + 8:pos + 24].rstrip(b"\0") == b"__LINKEDIT":
+            linkedit, = struct.unpack_from("<Q", data, pos + 40)
+            struct.pack_into("<Q", data, pos + 32, 0)  # segment vmsize
+            struct.pack_into("<Q", data, pos + 48, 0)  # segment filesize
+        elif cmd == 0x1d:  # LC_CODE_SIGNATURE
+            signature, size = struct.unpack_from("<II", data, pos + 8)
+            if not size or signature + size > len(data) or any(data[signature + size:]):
+                raise ValueError("Invalid terminal code-signature range")
+            struct.pack_into("<II", data, pos + 8, 0, 0)
+        elif cmd == 0x2:  # LC_SYMTAB
+            offset, size = struct.unpack_from("<II", data, pos + 16)
+            strings = data[offset:offset + size]
+            if size and (len(strings) != size or strings[-1] != 0):
+                raise ValueError("Invalid Mach-O string table")
+            struct.pack_into("<I", data, pos + 20, len(strings.rstrip(b"\0")))
+        pos += length
+    if pos != 32 + command_bytes or signature is None or linkedit is None or not pos <= linkedit <= signature:
+        raise ValueError("Missing Mach-O signature or link-edit segment")
+    return hashlib.sha256(data[:signature].rstrip(b"\0")).hexdigest()
+
+
 def unsigned_slices(exe, scratch):
-    # The main executable has an embedded Mach-O signature. Compare each actual
-    # architecture after stripping that signature from disposable file copies.
     archs = run("lipo", "-archs", exe, capture_output=True, text=True).stdout.split()
     if set(archs) != {"arm64", "x86_64"}:
         raise ValueError(f"Expected a Universal 2 executable at {exe}")
     hashes = {}
     for arch in archs:
-        thin = scratch / ("unsigned-" + arch)
+        thin = scratch / ("slice-" + arch)
         run("lipo", exe, "-thin", arch, "-output", thin)
-        run("codesign", "--remove-signature", thin)
-        hashes[arch] = digest(thin)
+        hashes[arch] = payload_digest(thin)
         thin.unlink()
     return hashes
 
@@ -114,7 +150,7 @@ def repackage(row, scratch, out):
         "--timestamp=none", app)
     run("codesign", "--verify", "--deep", "--strict", app)
     if unsigned_slices(exe, scratch) != slices:
-        raise ValueError(f"{slug}: executable code changed")
+        raise ValueError(f"{slug}: executable payload differs outside signature fields")
     signed = tree(app)
     allowed = {p.relative_to(app).as_posix() for p in (icon, info_file, exe)}
     allowed.add("Contents/_CodeSignature/CodeResources")
@@ -166,8 +202,14 @@ def main():
     report = []
     for row in rows[args.shard::args.shards]:
         print(f"Refreshing {row['id']}", flush=True)
-        with tempfile.TemporaryDirectory() as directory:
-            report.append(repackage(row, Path(directory), out))
+        try:
+            with tempfile.TemporaryDirectory() as directory:
+                report.append(repackage(row, Path(directory), out))
+        except Exception as error:
+            if "GITHUB_ACTIONS" in os.environ:
+                message = str(error).replace("%", "%25").replace("\n", "%0A").replace("\r", "%0D")
+                print(f"::error title={row['id']} macOS artwork::{message}", flush=True)
+            raise
     (out / f"macos-shard-{args.shard}.json").write_text(json.dumps(report, indent=2) + "\n")
 
 

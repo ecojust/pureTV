@@ -151,14 +151,9 @@ def main():
     with tempfile.TemporaryDirectory() as temporary:
         work = Path(temporary)
         sys.path.insert(0, str(SOURCE.parent))
-        from game_icons import save_ico
-        pages = {}
-        for section in json.loads((SOURCE.parent / 'readme-app-games.json').read_text(encoding='utf-8')):
-            for item in section['games']:
-                page = item.get('page') or 'resource/' + item['resource']
-                pages[Path(page).name] = SOURCE.parents[1] / page
+        from game_icons import catalog_game_dir, save_ico
         for game in games:
-            page = pages.get(game.name, SOURCE.parents[1] / 'resource' / 'apps' / game.name)
+            page = catalog_game_dir(SOURCE.parents[1], game.name)
             icon = work / (game.name + '.ico')
             save_ico(page, icon)
             runtime = build_runtime(work, icon)
