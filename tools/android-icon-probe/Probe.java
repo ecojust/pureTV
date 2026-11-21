@@ -61,6 +61,9 @@ public final class Probe extends Instrumentation {
                 Intent intent = new Intent(Intent.ACTION_MAIN).addCategory(category).setPackage(game);
                 ResolveInfo resolve = pm.resolveActivity(intent, 0);
                 if (resolve == null) throw new AssertionError("Missing launcher: " + category);
+                if (Intent.CATEGORY_LEANBACK_LAUNCHER.equals(category)) {
+                    result.putString("leanbackComponent", resolve.activityInfo.name);
+                }
                 check(res, resolve.activityInfo.getIconResource(), input.getString("icon"), 192, 192);
                 int banner = resolve.activityInfo.banner;
                 check(res, banner == 0 ? app.banner : banner, input.getString("banner"), 320, 180);

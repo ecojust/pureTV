@@ -254,8 +254,12 @@ def device(args):
         probe = command(adb, 'shell', 'am', 'instrument', '-w', '-e', 'game', package, '-e', 'icon', game['icon']['sha256'],
                         '-e', 'banner', game['banner']['sha256'], 'com.ecojust.iconprobe/.Probe')
         assert 'INSTRUMENTATION_CODE: -1' in probe and 'PASS' in probe, probe
+        component = re.search(r'^INSTRUMENTATION_RESULT: leanbackComponent=([\w.$]+)$', probe, re.M)
+        assert component, probe
+        # Android TV launches its resolved component explicitly. An implicit
+        # start would additionally require CATEGORY_DEFAULT on a launcher filter.
         launch = command(adb, 'shell', 'am', 'start', '-W', '-a', 'android.intent.action.MAIN',
-                         '-c', 'android.intent.category.LEANBACK_LAUNCHER', '-p', package)
+                         '-c', 'android.intent.category.LEANBACK_LAUNCHER', '-n', package + '/' + component[1])
         assert 'Status: ok' in launch and package in launch, launch
         assert command(adb, 'shell', 'pidof', package).strip(), 'Android TV client exited: ' + package
         installed = command(adb, 'shell', 'pm', 'path', package).strip().split(':', 1)[1]
