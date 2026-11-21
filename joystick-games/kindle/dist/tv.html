@@ -6128,7 +6128,7 @@ void main() {
         canvasWidth:gl.drawingBufferWidth, canvasHeight:gl.drawingBufferHeight, frames,
         controller:window.kindlePad.peek(), ready:phase !== 'boot', paused,
         stage:paused ? 'paused' : phase === 'title' ? 'menu' : phase === 'play' ? 'playing' : phase,
-        gameplay:{x:player.pos[0], lit:litCount, time:sinceStart}};
+        gameplay:{x:player?.pos[0] ?? 0, lit:litCount, time:sinceStart}};
     }};
     const pauseLabel = document.createElement('div');
     pauseLabel.textContent = '已暂停 · START 继续';

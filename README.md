@@ -82,6 +82,8 @@
 
 [新增与更新的六款手柄游戏 · 浏览器试玩及操作说明](joystick-games/README.md#game-expansion)
 
+适配中的游戏（浏览器试玩与操作说明） · [KINDLE](joystick-games/kindle/) · [Silent Meridian](joystick-games/silent-meridian/)
+
 <!-- game-index:start -->
 
 **37 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · Android TV 37 款 · macOS 独立安装包 37 款 · Windows x64 独立安装包 37 款

@@ -82,6 +82,8 @@
 
 [Six new or updated controller games · browser builds and controls](joystick-games/README.md#game-expansion)
 
+Ports in testing (browser builds and controls) · [KINDLE](joystick-games/kindle/) · [Silent Meridian](joystick-games/silent-meridian/)
+
 <!-- game-index:start -->
 
 **37 controller games** · [Play every game on a computer](docs/guide/README.en.md#play-on-a-computer) · Android TV (37) · Standalone macOS downloads (37) · Standalone Windows x64 downloads (37)
