@@ -1,0 +1,81 @@
+{
+  "sourceCommit": "142111f95a7f6e25fb04edc9b09cf0d3695e49aa",
+  "batch": "exploration-01",
+  "runner": "macos-15-intel",
+  "expectedArchitecture": "x86_64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "kindle",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/kindle",
+            "--output",
+            "/Users/runner/work/_temp/qa/kindle/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "kindle/package-verification.log",
+          "startedAt": "2026-11-21T07:01:03.177372+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kindle",
+            "--app",
+            "/Users/runner/work/_temp/packages/kindle/installed/KINDLE.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kindle/native"
+          ],
+          "status": "failed",
+          "log": "kindle/native.log",
+          "startedAt": "2026-11-21T07:02:21.360068+00:00",
+          "returncode": 1
+        }
+      ]
+    },
+    {
+      "game": "silent-meridian",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/silent-meridian",
+            "--output",
+            "/Users/runner/work/_temp/qa/silent-meridian/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "silent-meridian/package-verification.log",
+          "startedAt": "2026-11-21T07:03:52.666006+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "silent-meridian",
+            "--app",
+            "/Users/runner/work/_temp/packages/silent-meridian/installed/Silent Meridian.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/silent-meridian/native"
+          ],
+          "status": "passed",
+          "log": "silent-meridian/native.log",
+          "startedAt": "2026-11-21T07:05:34.946137+00:00",
+          "returncode": 0
+        }
+      ]
+    }
+  ]
+}
