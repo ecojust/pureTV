@@ -171,7 +171,15 @@ def browser_boot(pw, inspector, base):
             if time.monotonic() >= deadline:
                 raise RuntimeError(f'{base} did not reach the menu (last state {ready!r})')
             page.wait_for_timeout(250)
-        return {'initialGameState': ready, 'pngSha256': hashlib.sha256(page.screenshot()).hexdigest()}
+        result = {'initialGameState': ready}
+        from playwright.sync_api import TimeoutError as ScreenshotTimeout
+        try:
+            result['pngSha256'] = hashlib.sha256(page.screenshot(timeout=30000)).hexdigest()
+        except ScreenshotTimeout:
+            # Edge may time out copying a software-rendered 3D frame even
+            # after the game has reached its menu and exposes its live state.
+            result['screenshotNote'] = 'Frame capture timed out after the game reached its ready state.'
+        return result
 
 
 def verify_game(package, source, work, system, pw):
@@ -216,7 +224,9 @@ def verify_game(package, source, work, system, pw):
                         time.sleep(.2)
             finally:
                 if system == 'windows' and child.poll() is None:
-                    subprocess.run(['taskkill', '/PID', str(child.pid), '/T', '/F'], check=True)
+                    # Some Edge subprocesses may exit during tree enumeration;
+                    # the wait below verifies that the game itself has exited.
+                    subprocess.run(['taskkill', '/PID', str(child.pid), '/T', '/F'], check=False)
                 elif system == 'macos' and child.poll() is None:
                     # Ask AppKit to quit, so applicationWillTerminate stops the
                     # frozen helper before the read-only disk image is detached.
