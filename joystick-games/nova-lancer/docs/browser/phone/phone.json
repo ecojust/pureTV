@@ -1,0 +1,305 @@
+{
+  "game": "nova-lancer",
+  "method": "Original Game Kit production JVM room and shipped phone UI over WebSocket, Chromium touch and TV views using a relay of Android JS bridge methods. No native TV/physical camera or phone in this run.",
+  "actions": [
+    {
+      "check": "TV menu QR screenshot decodes to the running room",
+      "value": {
+        "canvas": [
+          0,
+          0,
+          960,
+          540
+        ],
+        "qr": [
+          797,
+          47.5,
+          108,
+          108
+        ],
+        "status": "pureTV 手柄\n同一 Wi-Fi 下用手机扫码\n\n无线手柄按 GPIO 23 搜索连接\n127.0.0.1\nTCP 63485",
+        "client": null,
+        "badge": null
+      }
+    },
+    {
+      "check": "Real phone webpage joined seat 1 and QR hid without moving the playfield",
+      "value": {
+        "ui": {
+          "canvas": [
+            0,
+            0,
+            960,
+            540
+          ],
+          "qr": null,
+          "status": "pureTV 手柄\n\n单人游戏 · 1P 手机手柄操作\n127.0.0.1\nTCP 63485",
+          "client": null,
+          "badge": null
+        },
+        "state": {
+          "stage": "menu",
+          "controllable": false,
+          "x": 1.7883397592517971,
+          "y": 25.157310070553983,
+          "shots": 0,
+          "bombs": 3,
+          "distance": 185.25300000000007,
+          "seat": [
+            {
+              "id": 1,
+              "connected": true,
+              "transport": "phone"
+            }
+          ]
+        },
+        "phoneStatus": "Connected · watch the TV"
+      }
+    },
+    {
+      "check": "Touch START enters Quick Sortie",
+      "value": {
+        "stage": "playing",
+        "controllable": true,
+        "x": 0,
+        "y": 24,
+        "shots": 0,
+        "bombs": 3,
+        "distance": 30,
+        "seat": [
+          {
+            "id": 1,
+            "connected": true,
+            "transport": "phone"
+          }
+        ]
+      }
+    },
+    {
+      "check": "Compact phone seat status remains visible during gameplay",
+      "value": {
+        "canvas": [
+          0,
+          0,
+          960,
+          540
+        ],
+        "qr": null,
+        "status": "1P 手机手柄已连接",
+        "client": null,
+        "badge": [
+          786,
+          121,
+          102.8,
+          17.8
+        ],
+        "scoreHUD": {
+          "x": 876,
+          "y": 12,
+          "width": 68,
+          "height": 76.1875
+        }
+      }
+    },
+    {
+      "check": "Touch A fires actual weapons",
+      "value": {
+        "stage": "playing",
+        "controllable": true,
+        "x": 0,
+        "y": 24,
+        "shots": 1,
+        "bombs": 3,
+        "distance": 55,
+        "seat": [
+          {
+            "id": 1,
+            "connected": true,
+            "transport": "phone"
+          }
+        ]
+      }
+    },
+    {
+      "check": "Touch stick steers spacecraft right",
+      "value": {
+        "stage": "playing",
+        "controllable": true,
+        "x": 3.415622332633539,
+        "y": 24,
+        "shots": 1,
+        "bombs": 3,
+        "distance": 91.67000000000007,
+        "seat": [
+          {
+            "id": 1,
+            "connected": true,
+            "transport": "phone"
+          }
+        ]
+      }
+    },
+    {
+      "check": "Phone disconnect releases the seat without resizing playfield",
+      "value": {
+        "geometry": {
+          "canvas": [
+            0,
+            0,
+            960,
+            540
+          ],
+          "qr": [
+            797,
+            47.5,
+            108,
+            108
+          ],
+          "status": "pureTV 手柄\n同一 Wi-Fi 下用手机扫码\n\n无线手柄按 GPIO 23 搜索连接\n127.0.0.1\nTCP 63485",
+          "client": null,
+          "badge": null
+        },
+        "state": {
+          "stage": "paused",
+          "controllable": true,
+          "x": 8.283525231285202,
+          "y": 24,
+          "shots": 1,
+          "bombs": 3,
+          "distance": 113.34000000000052,
+          "seat": [
+            {
+              "id": 1,
+              "connected": false,
+              "transport": "phone"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "check": "Phone history back rejoins and preserves paused flight until fresh START",
+      "value": {
+        "stage": "paused",
+        "controllable": true,
+        "x": 8.283525231285202,
+        "y": 24,
+        "shots": 1,
+        "bombs": 3,
+        "distance": 113.34000000000052,
+        "seat": [
+          {
+            "id": 1,
+            "connected": true,
+            "transport": "phone"
+          }
+        ]
+      }
+    },
+    {
+      "check": "Flight state and physical START changes during one sustained contact",
+      "value": [
+        {
+          "stage": "paused",
+          "start": false,
+          "reset": false
+        },
+        {
+          "stage": "playing",
+          "start": true,
+          "reset": false
+        }
+      ]
+    },
+    {
+      "check": "One sustained touch START after return resumes and continues advancing",
+      "value": {
+        "stage": "playing",
+        "controllable": true,
+        "x": 10.086790818676851,
+        "y": 24,
+        "shots": 1,
+        "bombs": 3,
+        "distance": 148.34000000000052,
+        "seat": [
+          {
+            "id": 1,
+            "connected": true,
+            "transport": "phone"
+          }
+        ]
+      }
+    },
+    {
+      "check": "A separate START contact pauses again and freezes track distance",
+      "value": {
+        "stage": "paused",
+        "controllable": true,
+        "x": 10.160837668923902,
+        "y": 24,
+        "shots": 1,
+        "bombs": 3,
+        "distance": 153.34000000000052,
+        "seat": [
+          {
+            "id": 1,
+            "connected": true,
+            "transport": "phone"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "inputs": {
+    "controller.html": "55f93df0d46ae8cac8879f111636659b3f716d9ab3823e4a0a819b317ec3f53d",
+    "controller.js": "d51aa6c341e5c17779262a2dadcc9fe1128be7cd0c15920d065dddba959cd1e7",
+    "tv.html": "7370f09ad2f535ed3198be445bb25ac8e8e46cd5d0e6f2c0f163064b1e569642",
+    "controller.css": "0ac28ebce6105e8353f1c1b8699abc592b3f077909eeed8f99718a0eb56fb4f7",
+    "nova-lancer.js": "5b0a829cdc9a56e2e539cc587e29656f992f3f35717a596ab7db593961e43516",
+    "assets-index.json": "9d9f2aa906d5508253fd7b5a4d6b11c7642adc8d8043ad163739dcc01ecaf743",
+    "THIRD-PARTY-NOTICES.txt": "8ae404c02907a8b5fe8f60a24a8eeeee3d12e275f24e24410e872726495ffb5d",
+    "game-config.json": "40370983e1650b53a42948891b0666964b5db65d262cf903623617c421de9e41"
+  },
+  "passed": true,
+  "priorRegression": {
+    "scriptSha256": "b50dbe6826543bf326ecaba90ea5d29d92df0c6349216ec76973202855e1c8b5",
+    "samePhoneContactAcrossFrames": [
+      {
+        "stage": "paused",
+        "start": false,
+        "reset": false
+      },
+      {
+        "stage": "playing",
+        "start": true,
+        "reset": false
+      },
+      {
+        "stage": "paused",
+        "start": true,
+        "reset": false
+      },
+      {
+        "stage": "paused",
+        "start": false,
+        "reset": false
+      }
+    ]
+  },
+  "testSources": {
+    "LanGameServer.java": "a0d8f1c15f0f639997d0a7cb7994a9866f3b01fc29580f000d34c9e53403b582",
+    "ActualPhoneRoom.java": "8d900826ec0078760a53b4073e77daba3646914b8bec25e9e8449b4b27dd2299",
+    "Qr.java": "bc9a9960ce22f866772059f79c63f0dac7af4be0682166ce7c21e631dddd3209"
+  },
+  "physicalPhoneTested": false,
+  "physicalTVTested": false,
+  "tvViewport": {
+    "width": 960,
+    "height": 540
+  },
+  "phoneViewport": {
+    "width": 844,
+    "height": 390
+  }
+}
