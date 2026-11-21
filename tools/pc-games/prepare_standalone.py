@@ -89,25 +89,25 @@ def write_notices(archive, game, page, directory):
     )
 
 
-def prepare(game, page, readme_url, output):
+def prepare(game, page, apk_url, output):
     slug = game["id"]
     filename = urlsplit(game["url"]).path.rsplit("/", 1)[-1]
     match = re.fullmatch(re.escape(slug) + r"-(\d+\.\d+\.\d+)\.apk", filename)
-    source = urlsplit(readme_url)
+    source = urlsplit(apk_url)
     if not match or source.path.rsplit("/", 1)[-1] != filename:
-        raise ValueError(f"{slug}: check game ID and version against the README APK")
+        raise ValueError(f"{slug}: check game ID and version against the source APK")
     size = game["bytes"]
     data = download(game["url"], size)
     if hashlib.sha256(data).hexdigest() != game["sha256"]:
         raise ValueError(f"{slug}: catalog download SHA-256 mismatch")
     if not source.scheme:
-        readme_data = tracked_file(source.path)
-    elif readme_url != game["url"]:
-        readme_data = download(readme_url, size)
+        source_data = tracked_file(source.path)
+    elif apk_url != game["url"]:
+        source_data = download(apk_url, size)
     else:
-        readme_data = data
-    if data != readme_data:
-        raise ValueError(f"{slug}: README and desktop catalog point to different APK content")
+        source_data = data
+    if data != source_data:
+        raise ValueError(f"{slug}: source and desktop catalog point to different APK content")
 
     target = output / slug
     target.mkdir(parents=True, exist_ok=True)
@@ -160,7 +160,13 @@ def main():
         raise ValueError("Duplicate desktop catalog game ID")
     readme = readme_apks()
     for slug in sorted(selected):
-        prepare(games[slug], *readme[slug], args.output)
+        if slug in readme:
+            page, apk_url = readme[slug]
+        else:
+            page = f"resource/apps/{slug}"
+            resource = json.loads(tracked_file(f"{page}/resource.json"))
+            apk_url = f"{page}/{resource['apk']}"
+        prepare(games[slug], page, apk_url, args.output)
 
 
 if __name__ == "__main__":

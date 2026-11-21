@@ -66,7 +66,7 @@ python3 -m venv .venv
 
 ### Join a TV game from a phone
 
-Choose a game on the homepage, select its TV icon to download the signed APK, and install it on the television. [Browse all 40 games](../../README.en.md#games) · [Download the six updated and new games](../../joystick-games/README.md#game-expansion)
+Choose a game on the homepage, select its TV icon to download the signed APK, and install it on the television. [Browse the homepage game catalog](../../README.en.md#games) · [Download the six updated and new games](../../joystick-games/README.md#game-expansion)
 
 Open the game on the TV. Connect your phone to the same LAN and scan the QR code on the game's menu. The page on the phone becomes a virtual controller. Use its direction pad and action buttons while watching the TV. The connection display shows the occupied seat. Open the menu or pause screen to view connection details.
 

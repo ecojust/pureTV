@@ -13,13 +13,18 @@ def build(output, root=Path(__file__).resolve().parents[2]):
     genres = json.loads((root / 'tools' / 'readme-app-games.json').read_text(encoding='utf-8'))
     entries = [entry for genre in genres for entry in genre['games']]
     featured = [entry.get('page', entry.get('resource')).strip('/').rsplit('/', 1)[-1] for entry in entries]
-    if [row['id'] for row in games] != featured or len(set(featured)) != len(featured):
+    games_by_id = {game['id']: game for game in games}
+    featured_ids = set(featured)
+    if len(games_by_id) != len(games):
+        raise ValueError('Duplicate desktop game ID')
+    if [slug for slug in games_by_id if slug in featured_ids] != featured:
         raise ValueError('Desktop release and featured catalog differ')
-    for entry, game in zip(entries, games):
-        if 'page' in entry and entry['apk'] != game['url']:
-            raise ValueError(f'Desktop and TV download URLs differ for {game["id"]}')
+    for game in games:
         if not re.fullmatch(r'[0-9a-f]{64}', game['sha256']) or game['bytes'] <= 0:
             raise ValueError(f'Incomplete download identity for {game["id"]}')
+    for slug, entry in zip(featured, entries):
+        if 'page' in entry and entry['apk'] != games_by_id[slug]['url']:
+            raise ValueError(f'Desktop and TV download URLs differ for {slug}')
     output.mkdir(parents=True, exist_ok=True)
     archive = output / 'pureTV-Games-portable.zip'
     files = [src / name for name in ('catalog.json', 'launcher.py', 'host.py', 'pc-bridge.js', 'requirements.txt')]
