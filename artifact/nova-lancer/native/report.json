@@ -1,0 +1,297 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "2dcf42712be7a9ea598fd376e2ecd72aa7369e00",
+  "artifactSourceCommit": "2dcf42712be7a9ea598fd376e2ecd72aa7369e00",
+  "artifactRunId": "44867511385",
+  "startedAt": "2026-11-21T04:51:37.752310+00:00",
+  "game": "nova-lancer",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "6add0ec04a022ec4d716e516199aed45e9279514d2b33246d8b88113db47ae41",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "47d65e9e50b0630dab7e6c0957293be5b0a511b8db11b290a6a0ff3d08dc9d6f",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/nova-lancer/qa-plan.json": "5c32e51bde6a38924053610f0c62489032d29fa7fbc6ebc3f09afae194bf28d3",
+    "joystick-games/tools/qa-plan.py": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9",
+    "joystick-games/tools/macos-build.py": "4fa65936293a5d6c5e728577780edc30429a500627e8799c1c83a5095470b853",
+    "joystick-games/catalog-registry.json": "18732deee5f5c79315f20cbe39c10e40eb0730b9b3bcbf65034551c9891a0683",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaRunId": 44867511385,
+  "qaRunAttempt": 1,
+  "runnerKind": "macos-15-intel",
+  "runnerName": "GitHub Actions 1000012517",
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "webgl2",
+    "pauseStablePaths": [
+      "gameplay.distance",
+      "gameplay.shots",
+      "gameplay.x"
+    ],
+    "steps": [
+      {
+        "name": "Launch a sortie and finish the launch cinematic",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 100,
+        "timeoutSeconds": 120,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "gameplay.controllable",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      {
+        "name": "Steer the ship right",
+        "keys": [
+          "RIGHT"
+        ],
+        "holdMs": 280,
+        "expect": [
+          {
+            "path": "gameplay.x",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Fire the ship's cannon",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 280,
+        "expect": [
+          {
+            "path": "gameplay.shots",
+            "op": "increased"
+          }
+        ]
+      },
+      {
+        "name": "Use a bomb",
+        "keys": [
+          "B"
+        ],
+        "holdMs": 120,
+        "expect": [
+          {
+            "path": "gameplay.bombs",
+            "op": "changed"
+          }
+        ]
+      }
+    ]
+  },
+  "acceptedRenderers": [
+    "webgl2"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "36087ab74333daef8b33fab09de2fa6823e97491c23861c45611f334b1835daf",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.nova-lancer.d95b621ae2c443e9ba71a62b0a80303e",
+    "reusedAcrossRestartOnly": true
+  },
+  "nativeProcessArchitecture": "x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 478, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 202, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": true, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"ja\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"NOVA LANCER\", \"url\": \"http://127.0.0.1:65008/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.ecojust.joystick.novalancer\", \"name\": \"新星枪骑兵\"}, \"game\": {\"canvasHeight\": 0, \"canvasWidth\": 0, \"controller\": {\"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelled\": false, \"connected\": false, \"info\": {}, \"players\": [], \"pollCount\": 0, \"pressed\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"released\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"source\": \"\"}, \"frames\": 0, \"game\": \"nova-lancer\", \"gameplay\": {\"boost\": false, \"brake\": false, \"controllable\": false, \"distance\": 0, \"fireHeld\": false, \"inputX\": 0, \"inputY\": 0, \"screen\": null}, \"paused\": false, \"ready\": false, \"renderer\": null, \"stage\": \"loading\", \"webglVersion\": null}, \"input\": {\"connections\": 0, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 4, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 4}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"novaLancer.progress.v1\", \"novaLancer.settings.v1\", \"novaLancer.best.v1\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.6\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"新星枪骑兵\", \"state\": \"available\"}}, \"storage\": {\"current\": {\"novaLancer.best.v1\": null, \"novaLancer.progress.v1\": null, \"novaLancer.settings.v1\": null}, \"initial\": {\"novaLancer.best.v1\": null, \"novaLancer.progress.v1\": null, \"novaLancer.settings.v1\": null}, \"origin\": \"http://127.0.0.1:65008\"}, \"timestamp\": 1795236787.674375}\n",
+  "lastState": {
+    "active": true,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "ja",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "NOVA LANCER",
+      "url": "http://127.0.0.1:65008/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystick.novalancer",
+      "name": "新星枪骑兵"
+    },
+    "game": {
+      "canvasHeight": 0,
+      "canvasWidth": 0,
+      "controller": {
+        "buttons": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "cancelled": false,
+        "connected": false,
+        "info": {},
+        "players": [],
+        "pollCount": 0,
+        "pressed": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "released": {
+          "A": false,
+          "B": false,
+          "DOWN": false,
+          "LEFT": false,
+          "RIGHT": false,
+          "START": false,
+          "UP": false,
+          "X": false,
+          "Y": false
+        },
+        "source": ""
+      },
+      "frames": 0,
+      "game": "nova-lancer",
+      "gameplay": {
+        "boost": false,
+        "brake": false,
+        "controllable": false,
+        "distance": 0,
+        "fireHeld": false,
+        "inputX": 0,
+        "inputY": 0,
+        "screen": null
+      },
+      "paused": false,
+      "ready": false,
+      "renderer": null,
+      "stage": "loading",
+      "webglVersion": null
+    },
+    "input": {
+      "connections": 0,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 4,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 4
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "novaLancer.progress.v1",
+        "novaLancer.settings.v1",
+        "novaLancer.best.v1"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.6"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "新星枪骑兵",
+        "state": "available"
+      }
+    },
+    "storage": {
+      "current": {
+        "novaLancer.best.v1": null,
+        "novaLancer.progress.v1": null,
+        "novaLancer.settings.v1": null
+      },
+      "initial": {
+        "novaLancer.best.v1": null,
+        "novaLancer.progress.v1": null,
+        "novaLancer.settings.v1": null
+      },
+      "origin": "http://127.0.0.1:65008"
+    },
+    "timestamp": 1795236787.674375
+  },
+  "failurePhase": "initialization",
+  "nativeProcessAlive": true,
+  "lastStateFresh": true,
+  "phase": "initialization",
+  "finishedAt": "2026-11-21T04:53:08.377324+00:00"
+}
