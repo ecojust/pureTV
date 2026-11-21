@@ -9,7 +9,7 @@ function snapshot() {
   return { game:'silent-meridian', renderer:'dom', frames, ready:!!document.querySelector('#app button'),
     stage:paused ? 'paused' : game ? 'playing' : 'menu', paused, controller:pad.peek(),
     canvasWidth:innerWidth, canvasHeight:innerHeight,
-    gameplay:{phase:document.documentElement.dataset.phase, chapter:document.body.dataset.chapter} };
+    gameplay:{phase:document.documentElement.dataset.phase, chapter:Number(document.body.dataset.chapter)} };
 }
 window.JoystickGameQA = { snapshot };
 function update() {

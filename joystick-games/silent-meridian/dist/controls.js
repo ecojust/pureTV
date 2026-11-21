@@ -443,7 +443,7 @@
       controller: pad.peek(),
       canvasWidth: innerWidth,
       canvasHeight: innerHeight,
-      gameplay: { phase: document.documentElement.dataset.phase, chapter: document.body.dataset.chapter }
+      gameplay: { phase: document.documentElement.dataset.phase, chapter: Number(document.body.dataset.chapter) }
     };
   }
   window.JoystickGameQA = { snapshot };
