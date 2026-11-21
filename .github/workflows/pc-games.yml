@@ -2,6 +2,12 @@ name: Catalog desktop player
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Desktop package to build
+        type: choice
+        options: [catalog, standalone, standalone-macos, standalone-windows]
+        default: catalog
   push:
     branches: [master, 'feat/catalog-game-controls-*']
     paths:
@@ -12,7 +18,14 @@ permissions:
   contents: read
 
 jobs:
+  games:
+    if: startsWith(inputs.target, 'standalone')
+    uses: ./.github/workflows/standalone-games.yml
+    with:
+      target: ${{ inputs.target }}
+
   windows:
+    if: ${{ !startsWith(inputs.target, 'standalone') }}
     runs-on: windows-2022
     timeout-minutes: 18
     steps:

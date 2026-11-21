@@ -48,6 +48,12 @@ The TV store works with updated launchers to let you choose the position of an a
 
 ### Play on a computer
 
+Find your game on the homepage and select its Apple or Windows icon. On macOS, open the DMG and drag the game to Applications. On Windows, run the installer and open the game from the Start menu. [Browse installers by game](../../README.en.md#games)
+
+The 37 added installers include the game assets and support offline play. The macOS games open in their own windows and quit with Command-Q. The Windows games open in your default browser and quit when you close the game's console. Some 3D games require WebGL 2. [Downloads and SHA-256 checksums](https://github.com/ecojust/pureTV/releases/tag/standalone-games-2026.11.21)
+
+#### Use the multi-game player
+
 Open the Windows x64 player, choose a game with the arrow keys and press Enter. The player downloads the game on first launch, verifies it and opens it in your default browser. Subsequent launches use the local copy. Follow the game's own keyboard prompts, or use a pureTV Wi-Fi controller on the same LAN. Keep the player running while you play. [Download the Windows player](https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/tools/pc-games/packages/pureTV-Games.exe)
 
 On macOS or Linux, extract the portable ZIP, open a terminal in the extracted folder and run the following commands with Python 3.10 or later. Pass a game ID to start it directly, for example `.venv/bin/python launcher.py tetris`. [Download the portable player](https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/tools/pc-games/packages/pureTV-Games-portable.zip)
@@ -66,7 +72,7 @@ Open the game on the TV. Connect your phone to the same LAN and scan the QR code
 
 ### Connect a pureTV Wi-Fi controller
 
-1. Choose a game by genre on the project homepage. Select the television icon to download the Android TV APK. The Apple and Windows icons download the standalone game when available. For the remaining titles, they download the desktop player, where you can select the game. The gamepad icon marks pureTV controller support. Open the game title or preview for controls, portable packages and tested platforms. [Browse games by genre](../../README.en.md#games)
+1. Choose a game by genre on the project homepage. Select the television icon to download the Android TV APK. A game card shows a macOS or Windows icon when the game has a standalone download for that platform. Select the icon to download that game’s installer. The gamepad icon marks pureTV controller support. Open the game title or preview for controls, portable packages and tested platforms. [Browse games by genre](../../README.en.md#games)
 2. Connect the controller and game device to the same reachable LAN. Open the game and press the controller's **GPIO 23 search button**. The firmware automatically connects when it finds exactly one valid service. If several games are open, close the other services or enter the game's IPv4 address and port on the controller's setup page.
 3. The default TCP port is **63485**. If it was occupied at startup, use the actual port displayed by the game. Connection details identify the seat and controller ID. The game updates the seat when the controller disconnects. Press **START (GPIO 27)** to begin or pause. The D-pad and A commonly select and confirm. Consult each game's instructions for other buttons, two-player support and resuming after disconnect. [Controller mappings and multiplayer (Chinese)](../readme-controller-support/README.md) · [Connection indicator examples](../controller-client-status/README.md)
 

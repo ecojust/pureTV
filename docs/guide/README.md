@@ -48,6 +48,12 @@ pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电�
 
 ### 在电脑上玩
 
+在首页找到游戏，点击苹果或 Windows 图标下载这款游戏的独立客户端。macOS 打开 DMG，将游戏拖入“应用程序”。Windows 运行安装程序后，从开始菜单打开游戏。[按游戏选择安装包](../../README.md#games)
+
+本批补齐的 37 个安装包都已内置游戏资源，可以离线启动。macOS 在独立窗口中运行，按 ⌘Q 退出。Windows 在默认浏览器中运行，关闭游戏控制台即可退出。部分 3D 游戏需要支持 WebGL 2 的图形环境。[本批安装包与 SHA-256 校验值](https://github.com/ecojust/pureTV/releases/tag/standalone-games-2026.11.21)
+
+#### 使用多游戏启动器
+
 Windows x64 用户打开游戏启动器，用方向键选择游戏，按回车开始。启动器首次下载并校验游戏，在默认浏览器中打开。之后可从本机缓存启动。键盘操作按各游戏画面的提示，也可以连接同一局域网内的 pureTV 无线手柄。游玩时请保持启动器运行。[下载 Windows 启动器](https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/tools/pc-games/packages/pureTV-Games.exe)
 
 macOS 和 Linux 用户可解压便携包，在解压目录用 Python 3.10 或更新版本运行下面的命令。若要直接打开某款游戏，可在启动命令后加游戏 ID，例如 `.venv/bin/python launcher.py tetris`。[下载便携启动器](https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/tools/pc-games/packages/pureTV-Games-portable.zip)
@@ -66,7 +72,7 @@ python3 -m venv .venv
 
 ### 连接 pureTV 无线手柄
 
-1. 在首页游戏专栏按类型选择游戏。电视图标下载这款游戏的 Android TV 安装包。苹果和 Windows 图标优先下载该游戏的独立版本，其余游戏链接到相应的电脑启动器，打开后选择游戏即可。手柄图标表示支持 pureTV 手柄。点击游戏名称或截图可查看按键、便携包和该版本的兼容性。[按类型浏览游戏](../../README.md#games)
+1. 在首页游戏专栏按类型选择游戏。电视图标下载这款游戏的 Android TV 安装包。游戏有独立的 macOS 或 Windows 安装包时，卡片会显示对应的平台图标，点击即可下载该游戏的安装包。手柄图标表示支持 pureTV 手柄。点击游戏名称或截图可查看按键、便携包和该版本的兼容性。[按类型浏览游戏](../../README.md#games)
 2. 将手柄和运行游戏的电视或电脑接入同一个可互通的局域网，启动游戏。按手柄搜索键 **GPIO 23** 发现游戏。当前固件只会自动连接发现的唯一有效服务。若同时打开了其他游戏，先关闭其他服务，或在手柄配网页手动填写游戏主机的 IPv4 地址和实际端口。
 3. 游戏默认使用 TCP **63485**。如果启动时端口已被占用，以游戏显示的实际端口为准。连接后可在连接详情中查看玩家席位和设备 ID。断开后，游戏会更新席位状态。按 **START（GPIO 27）** 开始或暂停。方向键和 A 常用于选择和确认，其他操作、双人支持与断线后如何继续请按该游戏说明。[按键与双人支持](../readme-controller-support/README.md) · [客户端标识示例](../controller-client-status/README.md)
 

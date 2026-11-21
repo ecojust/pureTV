@@ -26,11 +26,18 @@ def game_catalog(genres, resources, english, root):
                 covers = {'zh': page + info['cover'], 'en': english[key]['cover'], **item.get('cover', {})}
                 downloads = {'apk': page + info['apk'] + '?raw=1'}
                 controller = bool(info.get('wifiController'))
-                if 'macos' in item:
-                    dmg = Path(item['macos'])
-                    assert not dmg.is_absolute() and '..' not in dmg.parts and dmg.suffix == '.dmg', f'{key}: invalid DMG path'
-                    assert (root / page / dmg).is_file(), f'{key}: missing game download {dmg}'
-                    downloads['macos'] = page + dmg.as_posix() + '?raw=1'
+                for platform, extension in (('macos', '.dmg'), ('windows', '.exe')):
+                    if platform not in item:
+                        continue
+                    target = item[platform]
+                    if target.startswith('https://github.com/ecojust/pureTV/releases/download/'):
+                        assert target.endswith(extension), f'{key}: invalid {platform} release file'
+                        downloads[platform] = target
+                    else:
+                        path = Path(target)
+                        assert not path.is_absolute() and '..' not in path.parts and path.suffix == extension, f'{key}: invalid {platform} path'
+                        assert (root / page / path).is_file(), f'{key}: missing game download {path}'
+                        downloads[platform] = page + path.as_posix() + '?raw=1'
             else:
                 page = item['page']
                 assert re.fullmatch(r'joystick-games/[a-z0-9-]+/', page), f'Invalid game page: {page}'
@@ -55,11 +62,6 @@ def game_catalog(genres, resources, english, root):
     return catalog
 
 
-PLAYER_DOWNLOADS = (
-    'https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/'
-    'tools/pc-games/packages/'
-)
-
 PLATFORM_ICONS = {
     'apk': ('android-tv', 'Android TV', 'APK'),
     'macos': ('macos', 'macOS', 'DMG'),
@@ -83,13 +85,9 @@ def game_card(card, locale):
     icons = []
     for platform, (icon, system, package) in PLATFORM_ICONS.items():
         url = card['downloads'].get(platform)
-        if url:
-            label = f'{title} {system} {package}'
-        else:
-            filename = 'pureTV-Games.exe' if platform == 'windows' else 'pureTV-Games-portable.zip'
-            url = PLAYER_DOWNLOADS + filename
-            player = '游戏启动器' if locale == 'zh' else 'game player'
-            label = f'{title} · {system} {player}'
+        if not url:
+            continue
+        label = f'{title} {system} {package}'
         content = support_icon(icon, label)
         icons.append(f'<a href="{escape(url)}" title="{escape(label)}">{content}</a>')
     if card['controller']:

@@ -1,0 +1,81 @@
+name: Standalone desktop games
+on:
+  workflow_call:
+    inputs:
+      target:
+        type: string
+        required: true
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos
+            os: macos-15
+          - platform: windows
+            os: windows-2022
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    env:
+      PYTHONUTF8: '1'
+    steps:
+      - name: Determine requested platform
+        id: select
+        shell: bash
+        run: |
+          if [[ "${{ inputs.target }}" == standalone || "${{ inputs.target }}" == "standalone-${{ matrix.platform }}" ]]; then
+            echo 'build=true' >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.select.outputs.build
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            tools/pc-games
+      - uses: actions/setup-python@v5
+        if: steps.select.outputs.build && runner.os == 'Windows'
+        with:
+          python-version: '3.12'
+          architecture: x64
+      - name: Install Universal 2 Python and packaging dependencies
+        if: steps.select.outputs.build && runner.os == 'macOS'
+        shell: bash
+        run: |
+          curl --retry 3 -fsSL https://www.python.org/ftp/python/3.12.10/python-3.12.10-macos11.pkg -o "$RUNNER_TEMP/python.pkg"
+          echo "8373e58da4ea146b3eb1c1f9834f19a319440b6b679b06050b1f9ee3237aa8e4  $RUNNER_TEMP/python.pkg" | shasum -a 256 -c -
+          sudo installer -pkg "$RUNNER_TEMP/python.pkg" -target /
+          /Library/Frameworks/Python.framework/Versions/3.12/bin/python3 -m venv "$RUNNER_TEMP/game-venv"
+          echo "$RUNNER_TEMP/game-venv/bin" >> "$GITHUB_PATH"
+          echo "SSL_CERT_FILE=/etc/ssl/cert.pem" >> "$GITHUB_ENV"
+          SKIP_CYTHON=1 "$RUNNER_TEMP/game-venv/bin/python" -m pip install --no-binary=zeroconf -r tools/pc-games/requirements.txt pyinstaller==6.16.0
+      - name: Install Windows packaging dependencies
+        if: steps.select.outputs.build && runner.os == 'Windows'
+        run: python -m pip install -r tools/pc-games/requirements.txt pyinstaller==6.16.0 playwright==1.56.0
+      - name: Prepare and verify the individual game payloads
+        if: steps.select.outputs.build
+        run: python tools/pc-games/prepare_standalone.py --platform ${{ matrix.platform }} --output inputs
+      - name: Build standalone installers
+        id: installers
+        if: steps.select.outputs.build
+        run: python tools/pc-games/build_standalone_${{ matrix.platform }}.py --inputs inputs --output packages
+      - name: Verify each packaged game
+        if: steps.select.outputs.build
+        run: python tools/pc-games/verify_standalone_packages.py --platform ${{ matrix.platform }} --inputs inputs --packages packages --report packages/verification-${{ matrix.platform }}.json ${{ runner.os == 'Windows' && '--browser-channel msedge' || '' }}
+      - uses: actions/upload-artifact@v4
+        if: steps.select.outputs.build && success()
+        with:
+          name: standalone-${{ matrix.platform }}
+          path: packages/
+          compression-level: 0
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: failure() && steps.installers.outcome == 'success'
+        with:
+          name: unverified-${{ matrix.platform }}
+          path: packages/
+          compression-level: 0
+          if-no-files-found: error
