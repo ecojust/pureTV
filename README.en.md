@@ -1,5 +1,9 @@
 # pureTV app catalog
 
+<div align="center">
+  <img src="docs/branding/puretv-logo.png" width="112" alt="pureTV Chinese zodiac dragon logo">
+</div>
+
 [简体中文](README.md) · **English** · [User guide](docs/guide/README.en.md) · [Development and MCP](docs/guide/development.en.md)
 
 [Management apps and TV tools](#management-apps-and-tv-tools) · [Launchers and TV apps](#launcher-and-tv-app-resources) · [Game catalog](#games) · [Third-party TV apps](fork/README.md) · [Game reference catalog](docs/claude-games/catalog.en.md)
