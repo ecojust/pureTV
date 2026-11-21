@@ -6,7 +6,7 @@ on:
       target:
         description: Desktop package to build
         type: choice
-        options: [catalog, standalone, standalone-macos, standalone-windows]
+        options: [catalog, standalone, standalone-macos, standalone-windows, icons-android, icons-macos, icons-windows]
         default: catalog
   push:
     branches: [master, 'feat/catalog-game-controls-*']
@@ -18,6 +18,25 @@ permissions:
   contents: read
 
 jobs:
+  android-icons:
+    if: inputs.target == 'icons-android'
+    permissions:
+      contents: write
+    uses: ./.github/workflows/game-icons-android.yml
+    secrets: inherit
+
+  macos-icons:
+    if: inputs.target == 'icons-macos'
+    permissions:
+      contents: write
+    uses: ./.github/workflows/game-icons-macos.yml
+
+  windows-icons:
+    if: inputs.target == 'icons-windows'
+    permissions:
+      contents: write
+    uses: ./.github/workflows/game-icons-windows.yml
+
   games:
     if: startsWith(inputs.target, 'standalone')
     uses: ./.github/workflows/standalone-games.yml
@@ -25,7 +44,7 @@ jobs:
       target: ${{ inputs.target }}
 
   windows:
-    if: ${{ !startsWith(inputs.target, 'standalone') }}
+    if: ${{ !startsWith(inputs.target, 'standalone') && !startsWith(inputs.target, 'icons-') }}
     runs-on: windows-2022
     timeout-minutes: 18
     steps:

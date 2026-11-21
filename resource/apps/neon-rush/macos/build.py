@@ -7,15 +7,17 @@ import json
 from pathlib import Path
 import platform
 import plistlib
-import re
 import shutil
 import subprocess
 import tempfile
-import xml.etree.ElementTree as ET
+import sys
 
 MACOS = Path(__file__).resolve().parent
 GAME = MACOS.parent
 REPO = GAME.parents[2]
+sys.path.insert(0, str(REPO / 'tools'))
+from macos_game_icons import committed_inputs, write_icns
+
 VERSION = '0.1.4'
 BUILD_VERSION = '4'
 NAME = 'Neon Rush'
@@ -36,81 +38,8 @@ def tree(root: Path):
     return {p.relative_to(root).as_posix(): {'bytes': p.stat().st_size, 'sha256': digest(p)}
             for p in sorted(root.rglob('*')) if p.is_file()}
 
-def svg_paths():
-    """Render only the simple, local geometry used by this game's existing icon."""
-    icon = ET.parse(GAME / 'logo.svg').getroot()
-    if icon.attrib.get('viewBox') != '0 0 64 64':
-        raise ValueError('Unexpected logo viewBox; update the icon renderer explicitly')
-    lines = []
-    for index, element in enumerate(icon):
-        color = element.attrib.get('fill', '')
-        if not re.fullmatch(r'#[0-9a-fA-F]{6}', color):
-            raise ValueError('Unsupported icon color')
-        rgb = [int(color[i:i + 2], 16) / 255 for i in (1, 3, 5)]
-        lines.append('ctx.setFillColor(CGColor(red: %s, green: %s, blue: %s, alpha: 1))' % tuple(rgb))
-        kind = element.tag.rsplit('}', 1)[-1]
-        name = 'path' + str(index)
-        if kind == 'rect':
-            x, y, w, h, r = (float(element.attrib.get(k, 0)) for k in ('x', 'y', 'width', 'height', 'rx'))
-            lines.append(f'let {name} = CGPath(roundedRect: CGRect(x: {x}, y: {y}, width: {w}, height: {h}), cornerWidth: {r}, cornerHeight: {r}, transform: nil)')
-        elif kind == 'path':
-            data = element.attrib['d']
-            tokens = re.findall(r'[MLHVZ]|-?\d+(?:\.\d+)?', data)
-            if re.sub(r'[MLHVZ\s,\d.\-]', '', data):
-                raise ValueError('Unsupported SVG path command')
-            lines.append(f'let {name} = CGMutablePath()')
-            i = 0
-            x = y = 0.0
-            while i < len(tokens):
-                command = tokens[i]
-                i += 1
-                if command in ('M', 'L'):
-                    x, y = float(tokens[i]), float(tokens[i + 1])
-                    i += 2
-                    method = 'move' if command == 'M' else 'addLine'
-                    lines.append(f'{name}.{method}(to: CGPoint(x: {x}, y: {y}))')
-                elif command == 'H':
-                    x = float(tokens[i]); i += 1
-                    lines.append(f'{name}.addLine(to: CGPoint(x: {x}, y: {y}))')
-                elif command == 'V':
-                    y = float(tokens[i]); i += 1
-                    lines.append(f'{name}.addLine(to: CGPoint(x: {x}, y: {y}))')
-                elif command == 'Z':
-                    lines.append(f'{name}.closeSubpath()')
-                else:
-                    raise ValueError('SVG path requires explicit commands')
-        else:
-            raise ValueError('Unsupported SVG element: ' + kind)
-        lines.append(f'ctx.addPath({name}); ctx.fillPath()')
-    return '\n'.join(lines)
-
-def make_icon(work: Path, resources: Path):
-    source = work / 'render-icon.swift'
-    source.write_text('''import AppKit
-import CoreGraphics
-let ctx = CGContext(data: nil, width: 1024, height: 1024, bitsPerComponent: 8, bytesPerRow: 0, space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
-ctx.translateBy(x: 72, y: 952)
-ctx.scaleBy(x: 13.75, y: -13.75)
-''' + svg_paths() + '''
-let image = NSBitmapImageRep(cgImage: ctx.makeImage()!)
-try image.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: CommandLine.arguments[1]))
-''')
-    renderer = work / 'render-icon'
-    run('xcrun', 'swiftc', '-swift-version', '5', source, '-o', renderer)
-    png = work / 'icon-1024.png'
-    run(renderer, png)
-    iconset = work / 'NeonRush.iconset'
-    iconset.mkdir()
-    for points in (16, 32, 128, 256, 512):
-        for factor in (1, 2):
-            pixels = points * factor
-            name = f'icon_{points}x{points}' + ('@2x' if factor == 2 else '') + '.png'
-            run('sips', '-z', str(pixels), str(pixels), png, '--out', iconset / name,
-                stdout=subprocess.DEVNULL)
-    run('iconutil', '-c', 'icns', iconset, '-o', resources / 'NeonRush.icns')
-
 def source_inputs():
-    paths = [MACOS / 'build.py', GAME / 'package.json', GAME / 'package-lock.json', GAME / 'game.json', GAME / 'logo.svg', GAME / 'LICENSE', GAME / 'NOTICE.md',
+    paths = [MACOS / 'build.py', GAME / 'package.json', GAME / 'package-lock.json', GAME / 'game.json', GAME / 'LICENSE', GAME / 'NOTICE.md',
              REPO / 'resource/game-kit/build.py', REPO / '.github/workflows/neon-rush-macos.yml']
     for directory in (MACOS / 'Sources', MACOS / 'Web', MACOS / 'tools', MACOS / 'tests',
                       GAME / 'source', GAME / 'tests', GAME / 'tools', GAME / 'src/main/assets',
@@ -159,7 +88,7 @@ def main():
     source_commit = capture('git', '-C', REPO, 'rev-parse', 'HEAD')
     with tempfile.TemporaryDirectory(prefix='neon-rush-build-', dir=output) as temporary:
         work = Path(temporary)
-        make_icon(work, resources)
+        icon = write_icns(GAME, resources / 'NeonRush.icns')
         binaries = []
         sources = sorted((MACOS / 'Sources').glob('*.swift'))
         if not sources:
@@ -193,7 +122,7 @@ def main():
                 'appleNotarized': False, 'gatekeeperApprovalTested': False,
                 'sdkVersion': capture('xcrun', '--sdk', 'macosx', '--show-sdk-version'),
                 'swiftVersion': capture('xcrun', 'swiftc', '--version'),
-                'inputFiles': source_inputs(), 'appFiles': tree(app), 'packages': packages,
+                'icon': icon, 'inputFiles': {**source_inputs(), **committed_inputs(GAME, REPO, source_commit)}, 'appFiles': tree(app), 'packages': packages,
                 'physicalControllerTested': False}
     (output / 'build-manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
     print(json.dumps({'app': str(app), 'packages': packages}, indent=2), flush=True)

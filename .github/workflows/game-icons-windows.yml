@@ -1,0 +1,61 @@
+name: Windows game installer artwork
+on:
+  workflow_call:
+permissions:
+  contents: write
+jobs:
+  refresh:
+    runs-on: windows-2022
+    timeout-minutes: 80
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    env:
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            tools/pc-games
+            joystick-games/tools
+            joystick-games/shared/windows/Sources
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          architecture: x64
+      - name: Install Windows packaging tools
+        shell: pwsh
+        run: |
+          python -m pip install -r tools/pc-games/requirements.txt pyinstaller==6.16.0 Pillow==11.3.0 pefile==2023.2.7
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if (-not (Test-Path "${env:ProgramFiles(x86)}\NSIS\makensis.exe")) {
+            choco install nsis --version=3.10 -y --no-progress
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+      - name: Refresh and exercise installed games
+        run: python tools/pc-games/refresh_windows_icons.py --shard ${{ matrix.shard }} --count 8 --output packages
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-game-icons-${{ matrix.shard }}
+          path: packages/
+          if-no-files-found: ignore
+          compression-level: 0
+  publish:
+    needs: refresh
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools/pc-games
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: windows-game-icons-*
+          merge-multiple: true
+          path: packages
+      - name: Verify checksums and attach games and receipt to draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python tools/pc-games/publish_windows_icons.py --packages packages

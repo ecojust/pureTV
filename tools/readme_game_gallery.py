@@ -1,5 +1,6 @@
 """Render README card tables and the bilingual controller-game catalog."""
 from html import escape
+import json
 from pathlib import Path
 import re
 
@@ -50,6 +51,13 @@ def game_catalog(genres, resources, english, root):
                 downloads = {'apk': item['apk']}
                 downloads.update({platform: item[platform] for platform in ('macos', 'windows') if platform in item})
 
+            # The game's own manifest identifies the original project for a port.
+            manifest = root / page / 'game.json'
+            upstream = None
+            if 'page' in item or manifest.is_file():
+                upstream = json.loads(manifest.read_text(encoding='utf-8')).get('upstream')
+                if upstream is not None:
+                    assert isinstance(upstream, str) and upstream.startswith('https://'), f'{page}: invalid upstream repository'
             assert page not in pages, f'Duplicate game page: {page}'
             assert all(titles.get(lang) and covers.get(lang) for lang in ('zh', 'en')), f'{page}: missing title or cover'
             assert all(isinstance(url, str) and url.strip() for url in downloads.values()), f'{page}: empty download URL'
@@ -57,7 +65,7 @@ def game_catalog(genres, resources, english, root):
             assert not preview or 'macos' in downloads, f'{page}: missing macOS preview download'
             pages.add(page)
             cards.append({'page': page, 'titles': titles, 'covers': covers, 'downloads': downloads,
-                          'controller': controller})
+                          'controller': controller, 'upstream': upstream})
         catalog.append({'id': genre_id, 'zh': genre['zh'], 'en': genre['en'], 'cards': cards})
     return catalog
 
@@ -98,6 +106,9 @@ def game_card(card, locale):
             guide = 'docs/guide/README.en.md#install-a-game-and-connect-a-controller'
             label = 'Controller supported. View setup guide'
         icons.append(f'<a href="{guide}" title="{label}">{support_icon("controller", label)}</a>')
+    if card['upstream']:
+        label = f'{title} · 原作仓库' if locale == 'zh' else f'{title} · Original repository'
+        icons.append(f'<a href="{escape(card["upstream"])}" title="{escape(label)}">{support_icon("upstream", label)}</a>')
     return f'{page}<br>{" ".join(icons)}'
 
 
@@ -139,4 +150,7 @@ def game_index(catalog, locale):
     legend = [f'{support_icon(icon)} {system}' for icon, system, _ in PLATFORM_ICONS.values()]
     controller_label = '支持手柄' if locale == 'zh' else 'Controller supported'
     legend.append(f'{support_icon("controller")} {controller_label}')
+    if any(card['upstream'] for card in cards):
+        upstream_label = '原作仓库' if locale == 'zh' else 'Original repository'
+        legend.append(f'{support_icon("upstream")} {upstream_label}')
     return '\n'.join([summary, '', ' · '.join(headings), '', *sections, ' · '.join(legend)])

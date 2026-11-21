@@ -48,6 +48,7 @@
 - 基础接口、取消输入和手机控制约定：`resource/game-kit/README.md`。
 - 模型实现 `PureModel.create(seed, difficulty)` / `step(state, dt, input)`；终局冻结。界面通过 `GameDef` 和公共运行时接入。
 - 每款目录维护 `game.json`、`src/main/assets/game-model.js`、`game.js`、说明、许可证、测试、`logo.svg`、实际画面 `thumb.png`、验证记录和发布资源。图标和资源约定见 `resource/README-development.md`、`docs/resource-maintenance.md`。
+- 各平台的游戏客户端图标使用该游戏实际游玩时的画面。用 `tools/game_icons.py` 从同一帧输出方形图标、Windows ICO 和 Android TV 横幅。默认取游戏目录的 `thumb.png`，需要换帧或调整方形裁剪时分别登记在 `tools/game-icon-sources.json` 和 `tools/game-icon-crops.json`。首页收录从外部仓库封装的游戏时，在游戏清单提供上游仓库根地址，由中英文 README 生成器显示来源图标。
 - 模型测试覆盖该款核心规则、资源边界、成功与失败、输入取消和终局。测试求解器不随游戏资产打包。
 - 美术预览、源码冻结与最终 QA 前核对实际加载资产的 SHA256；最终测试资产必须与冻结源码及正式签名 APK 一致。渲染代码变更后旧录像不能冒充新版本证据。
 - 浏览器 QA 与录像使用正常输入推进，不写入模型或强制获胜。录像、性能观测和合成协议测试分别说明，具体要求见 `resource/game-kit/qa/README.md`。

@@ -15,6 +15,8 @@ from zipfile import ZipFile
 
 
 SOURCE = Path(__file__).resolve().parent
+sys.path.insert(0, str(SOURCE.parent))
+
 ARCHS = ("arm64", "x86_64")
 
 
@@ -80,7 +82,11 @@ def build_game(source, game, players, output):
         shutil.copyfile(source / "game.apk", apk)
         shutil.copyfile(source / "game.json", resources / "game.json")
         licenses(resources, apk, source / "licenses")
+        from game_icons import catalog_game_dir
+        from macos_game_icons import write_icns
+        write_icns(catalog_game_dir(SOURCE.parents[1], slug), resources / "Game.icns")
         info = {
+            "CFBundleIconFile": "Game.icns",
             "CFBundleExecutable": "Game", "CFBundleName": name, "CFBundleDisplayName": name,
             "CFBundleIdentifier": "com.ecojust.puretv.games." + slug,
             "CFBundlePackageType": "APPL", "CFBundleInfoDictionaryVersion": "6.0",

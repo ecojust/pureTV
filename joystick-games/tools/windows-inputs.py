@@ -208,6 +208,14 @@ def select(game,root=ROOT):
     for name in ('CMakeLists.txt','dependencies.json','README.md','.gitattributes','.gitignore'):scope.add(host/name,'host-build')
     for name in ('Sources','Web','tests'):scope.tree(host/name,'host-build' if name!='tests' else 'qa')
     if (host/'docs').exists():scope.exclude(host/'docs','historical evidence; preserved at original source/run')
+    if (root/'tools/game_icons.py').is_file():
+        scope.add(root/'tools/game_icons.py','host-build')
+        scope.add(root/'tools/game-icon-crops.json','host-build')
+        overrides=root/'tools/game-icon-sources.json'
+        if overrides.is_file():
+            scope.add(overrides,'host-build')
+            source=json.loads(overrides.read_text(encoding='utf-8')).get(game.relative_to(root).as_posix())
+            if source:scope.add(root/source,'host-build')
     for name in TOOLS:scope.add(root/'joystick-games/tools'/name,'qa' if name not in ('windows-build.py','windows-inputs.py') else 'host-build')
     for name in (WORKFLOW,'joystick-games/catalog-registry.json','puretv-joystick/joystick_sdk.py'):scope.add(root/name,'qa')
     shared=root/'joystick-games/shared';assert (shared/'web').is_dir(),'Required shared/web missing'

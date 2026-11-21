@@ -202,7 +202,7 @@ int WINAPI wWinMain(HINSTANCE instance,HINSTANCE,LPWSTR,int show){
  WSADATA winsock={};if(WSAStartup(MAKEWORD(2,2),&winsock)!=0){CoUninitialize();return 1;}
  int result=0;
  try{
-  WNDCLASSW cls={};cls.lpfnWndProc=windowProc;cls.hInstance=instance;cls.lpszClassName=L"PureTVGameWindow";cls.hCursor=LoadCursorW(nullptr,IDC_ARROW);cls.hIcon=LoadIconW(nullptr,IDI_APPLICATION);
+  WNDCLASSW cls={};cls.lpfnWndProc=windowProc;cls.hInstance=instance;cls.lpszClassName=L"PureTVGameWindow";cls.hCursor=LoadCursorW(nullptr,IDC_ARROW);cls.hIcon=LoadIconW(instance,MAKEINTRESOURCEW(101));
   if(!RegisterClassW(&cls))throw std::runtime_error("Cannot register game window");
   RECT initial=clientSizeForDpi(1280,720,WS_OVERLAPPEDWINDOW,0,windowDpi(nullptr));
   HWND window=CreateWindowExW(0,cls.lpszClassName,L"pureTV",WS_OVERLAPPEDWINDOW,CW_USEDEFAULT,CW_USEDEFAULT,initial.right-initial.left,initial.bottom-initial.top,nullptr,nullptr,instance,nullptr);

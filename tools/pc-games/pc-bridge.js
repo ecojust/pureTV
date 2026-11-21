@@ -2,6 +2,12 @@
 (() => {
   'use strict';
   const { info, alias, gameKit } = pureTVPCConfig;
+  if (info.gameIcon) document.addEventListener('DOMContentLoaded', () => {
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.href = info.gameIcon;
+    document.head.appendChild(link);
+  }, { once: true });
   const keys = ['UP', 'DOWN', 'LEFT', 'RIGHT', 'START', 'A', 'B', 'X', 'Y'];
   const neutral = () => Object.fromEntries(keys.map(key => [key, false]));
   const seats = new Map();
