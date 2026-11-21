@@ -1,6 +1,6 @@
 # 星球点灯人 · KINDLE
 
-[Android TV APK](kindle-0.1.0.apk?raw=1) · [macOS DMG](macos/Kindle-0.1.0-macos-universal.dmg?raw=1) · [Windows x64 安装程序](windows/Kindle-0.1.0-windows-x64-setup.exe?raw=1) · [SHA-256](SHA256SUMS.txt)
+[Android TV APK](kindle-0.1.1.apk?raw=1) · [macOS DMG](macos/Kindle-0.1.0-macos-universal.dmg?raw=1) · [Windows x64 安装程序](windows/Kindle-0.1.0-windows-x64-setup.exe?raw=1) · [SHA-256](SHA256SUMS.txt)
 
 在极光下环绕小行星，寻找并点亮九座灯塔。方向上下行走，左右转向，A 跳跃（长按滑翔），B 点灯，X 呼唤，Y 奔跑，START 开始或暂停。
 
@@ -25,3 +25,5 @@ python3 joystick-games/qa/controller-input/pc.py --payloads .local-games --outpu
 [二维码菜单截图](docs/controller/phone-menu.png) · [手机房间测试记录](docs/controller/phone-room.json)
 
 macOS 需要 WebGL 2。Apple Silicon 原生及 Rosetta 运行验证通过，Intel Mac 测试机未完成初始化。
+
+Android TV 0.1.1 使用适合电视的地形网格和阴影分辨率。桌面版为 0.1.0。
