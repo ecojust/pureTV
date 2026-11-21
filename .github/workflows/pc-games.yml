@@ -8,6 +8,10 @@ on:
         type: choice
         options: [catalog, standalone, standalone-macos, standalone-windows, icons-android, icons-macos, icons-windows]
         default: catalog
+      android_shards:
+        description: Android icon build batches (JSON array, 0–7)
+        type: string
+        default: '[0,1,2,3,4,5,6,7]'
   push:
     branches: [master, 'feat/catalog-game-controls-*']
     paths:
@@ -23,6 +27,8 @@ jobs:
     permissions:
       contents: write
     uses: ./.github/workflows/game-icons-android.yml
+    with:
+      shards: ${{ inputs.android_shards || '[0,1,2,3,4,5,6,7]' }}
     secrets: inherit
 
   macos-icons:

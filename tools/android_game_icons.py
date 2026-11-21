@@ -10,6 +10,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+import time
 import xml.etree.ElementTree as ET
 import zipfile
 
@@ -242,49 +243,134 @@ def prepare(args):
                                       'games': receipts}, indent=2) + '\n')
 
 
+def adb_call(adb, *args, timeout=45):
+    """Allow ADB to recover from the TV image's boot-time transport restart."""
+    invocation = [str(adb), *(str(a) for a in args)]
+    for attempt in range(3):
+        print('ADB:', ' '.join(invocation[1:]), flush=True)
+        try:
+            result = subprocess.run(invocation, capture_output=True, text=True, timeout=timeout)
+            if result.returncode == 0:
+                return result.stdout
+            message = (result.stderr + result.stdout).strip()
+            if not re.search(r'offline|closed|no devices|not found.*emulator|device .*not found|transport error', message, re.I):
+                raise RuntimeError(' '.join(invocation[1:]) + ': ' + message)
+        except subprocess.TimeoutExpired:
+            message = f'timed out after {timeout}s'
+        print('ADB transport:', message, flush=True)
+        if attempt < 2:
+            try:
+                subprocess.run([str(adb), 'wait-for-device'], check=False, timeout=30)
+            except subprocess.TimeoutExpired:
+                pass
+            time.sleep(2)
+    raise RuntimeError('ADB did not recover: ' + ' '.join(invocation[1:]) + ': ' + message)
+
+
+def foreground(adb, package, component):
+    """Check the activity stack after the same explicit launch used by Android TV."""
+    start = adb_call(adb, 'shell', 'am', 'start', '-a', 'android.intent.action.MAIN',
+                     '-c', 'android.intent.category.LEANBACK_LAUNCHER', '-n', package + '/' + component)
+    assert 'Error' not in start and package in start, start
+    deadline = time.monotonic() + 45
+    while True:
+        activities = adb_call(adb, 'shell', 'dumpsys', 'activity', 'activities', timeout=20)
+        resumed = [line for line in activities.splitlines() if re.search(r'(?:topResumedActivity|mResumedActivity|ResumedActivity|mFocusedApp)', line)]
+        if any(package + '/' in line for line in resumed):
+            assert adb_call(adb, 'shell', 'pidof', package).strip()
+            return
+        if time.monotonic() >= deadline:
+            raise RuntimeError(f'{package}: activity did not become foreground: {resumed}')
+        time.sleep(1)
+
+
 def device(args):
     data = json.loads(args.report.read_text())
     adb = args.adb
-    command(adb, 'install', '-r', '-t', args.probe)
+    assert 'package:' in adb_call(adb, 'shell', 'pm', 'path', 'android')
+    assert 'Success' in adb_call(adb, 'install', '-r', '-t', args.probe, timeout=90)
+    api = adb_call(adb, 'shell', 'getprop', 'ro.build.version.sdk').strip()
     for game in data['games']:
         print('Checking installed Android TV update for', game['id'], flush=True)
         package = game['updated']['packageName']
-        command(adb, 'install', '-r', args.originals / (game['id'] + '.apk'))
-        command(adb, 'install', '-r', args.output / game['filename'])
-        probe = command(adb, 'shell', 'am', 'instrument', '-w', '-e', 'game', package, '-e', 'icon', game['icon']['sha256'],
-                        '-e', 'banner', game['banner']['sha256'], 'com.ecojust.iconprobe/.Probe')
+        assert 'Success' in adb_call(adb, 'install', '-r', args.originals / (game['id'] + '.apk'), timeout=150)
+        assert 'Success' in adb_call(adb, 'install', '-r', args.output / game['filename'], timeout=150)
+        probe = adb_call(adb, 'shell', 'am', 'instrument', '-w', '-e', 'game', package, '-e', 'icon', game['icon']['sha256'],
+                         '-e', 'banner', game['banner']['sha256'], 'com.ecojust.iconprobe/.Probe', timeout=60)
         assert 'INSTRUMENTATION_CODE: -1' in probe and 'PASS' in probe, probe
         component = re.search(r'^INSTRUMENTATION_RESULT: leanbackComponent=([\w.$]+)$', probe, re.M)
         assert component, probe
-        # Android TV launches its resolved component explicitly. An implicit
-        # start would additionally require CATEGORY_DEFAULT on a launcher filter.
-        launch = command(adb, 'shell', 'am', 'start', '-W', '-a', 'android.intent.action.MAIN',
-                         '-c', 'android.intent.category.LEANBACK_LAUNCHER', '-n', package + '/' + component[1])
-        assert 'Status: ok' in launch and package in launch, launch
-        assert command(adb, 'shell', 'pidof', package).strip(), 'Android TV client exited: ' + package
-        installed = command(adb, 'shell', 'pm', 'path', package).strip().split(':', 1)[1]
-        checksum = command(adb, 'shell', 'sha256sum', installed).split()[0]
+        foreground(adb, package, component[1])
+        installed = adb_call(adb, 'shell', 'pm', 'path', package).strip().split(':', 1)[1]
+        checksum = adb_call(adb, 'shell', 'sha256sum', installed).split()[0]
         assert checksum == game['updated']['sha256']
         game['installed'] = {'upgrade': 'passed', 'leanbackLaunch': 'passed', 'launcherArtwork': 'passed',
-                             'installedApkSha256': checksum, 'emulatorApi': command(adb, 'shell', 'getprop', 'ro.build.version.sdk').strip()}
-        command(adb, 'uninstall', package)
-    args.report.write_text(json.dumps(data, indent=2) + '\n')
+                             'installedApkSha256': checksum, 'emulatorApi': api}
+        adb_call(adb, 'uninstall', package)
+        args.report.write_text(json.dumps(data, indent=2) + '\n')
+        print('Android TV upgrade, foreground launch and installed artwork verified:', game['id'], flush=True)
+
+
+def draft_assets():
+    release = json.loads(command('gh', 'release', 'view', RELEASE, '--repo', 'ecojust/pureTV', '--json', 'apiUrl,isDraft,tagName'))
+    assert release['isDraft'] and release['tagName'] == RELEASE
+    entries = {}
+    page = 1
+    while True:
+        assets = json.loads(command('gh', 'api', release['apiUrl'] + f'/assets?per_page=100&page={page}'))
+        for asset in assets:
+            assert asset['name'] not in entries
+            entries[asset['name']] = asset
+        if len(assets) < 100:
+            return entries
+        page += 1
+
+
+def cached(args):
+    """Reuse a successful shard only when its signed and installed bytes and exact input art still match."""
+    assets = draft_assets()
+    item = assets.get(f'android-icons-{args.shard}.json')
+    if item is None:
+        print('false')
+        return
+    receipt = subprocess.check_output(['gh', 'api', '-H', 'Accept: application/octet-stream', item['url']])
+    assert item['digest'] == 'sha256:' + hashlib.sha256(receipt).hexdigest()
+    games = json.loads(receipt)['games']
+    rows = dataset()[args.shard::args.shards]
+    assert [r['id'] for r in rows] == [g['id'] for g in games], 'Changed APK input selection'
+    pin = (ROOT / 'tools/puretv-release-certificate-v2.sha256').read_text().strip()
+    with tempfile.TemporaryDirectory() as temp:
+        icon, banner = Path(temp) / 'icon.png', Path(temp) / 'banner.png'
+        for row, game in zip(rows, games):
+            before, after, validation = game['original'], game['updated'], game['installed']
+            assert before['sha256'] == row['apkSha256'] and before['packageName'] == after['packageName'] == row['packageName']
+            assert before['versionName'] == row['version'] and before['versionCode'] == row['versionCode']
+            assert before['certificateSha256'] == after['certificateSha256'] == pin
+            assert after['versionCode'] == before['versionCode'] + 1
+            assert game['filename'] == row['id'] + '-' + after['versionName'] + '.apk'
+            assert game['gameDir'] == row['gameDir'] and game['originalUrl'] == row['apk']
+            staged = assets[game['filename']]
+            assert staged['digest'] == 'sha256:' + after['sha256'] and staged['size'] == after['bytes']
+            assert validation['installedApkSha256'] == after['sha256']
+            assert all(validation[k] == 'passed' for k in ('upgrade','leanbackLaunch','launcherArtwork'))
+            folder = ROOT / row['gameDir']
+            assert game['sourceImageSha256'] == hashlib.sha256(game_icons.source_bytes(folder)).hexdigest()
+            game_icons.save_png(folder, icon, 192)
+            game_icons.save_banner(folder, banner)
+            assert game['icon']['sha256'] == digest(icon) and game['banner']['sha256'] == digest(banner)
+    print('true')
 
 
 def upload(args):
     # The fixed draft is shared with desktop builders. A retry may reuse only an identical asset.
-    release = json.loads(command('gh', 'release', 'view', RELEASE, '--repo', 'ecojust/pureTV', '--json', 'apiUrl,isDraft,tagName'))
-    assert release['isDraft'] and release['tagName'] == RELEASE
-    pages = json.loads(command('gh', 'api', '--paginate', '--slurp',
-                               release['apiUrl'] + '/assets?per_page=100'))
-    existing = {asset['name']: asset.get('digest') for page in pages for asset in page}
+    existing = draft_assets()
     games = json.loads(args.report.read_text())['games']
     for game in games:
         assert game['installed']['installedApkSha256'] == game['updated']['sha256']
     files = [args.output / game['filename'] for game in games] + [args.report]
     for path in files:
         if path.name in existing:
-            assert existing[path.name] == 'sha256:' + digest(path), 'Conflicting release asset: ' + path.name
+            assert existing[path.name]['digest'] == 'sha256:' + digest(path), 'Conflicting release asset: ' + path.name
         else:
             command('gh', 'release', 'upload', RELEASE, path, '--repo', 'ecojust/pureTV')
 
@@ -302,6 +388,10 @@ def main():
     qa.set_defaults(run=device)
     qa.add_argument('--probe', required=True, type=Path)
     qa.add_argument('--adb', required=True, type=Path)
+    check = commands.add_parser('cached')
+    check.set_defaults(run=cached)
+    check.add_argument('--shard', required=True, type=int)
+    check.add_argument('--shards', required=True, type=int)
     pub = commands.add_parser('upload')
     pub.set_defaults(run=upload)
     for c in (build_cli, qa):
