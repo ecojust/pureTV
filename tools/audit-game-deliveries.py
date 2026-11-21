@@ -114,12 +114,24 @@ def report_reference_checks(reference,available):
 def checks_pass(checks):
     return bool(checks) and all(type(actual) is type(expected) and actual==expected for _,actual,expected in checks)
 
+def release_scope(games):
+    historical = sum(game['ledgerApkSha256'] != game['catalogApkSha256'] for game in games)
+    return {'currentVersionsOnly': historical == 0,
+            'previousReleasesIgnored': not any(game['artworkReleaseReceipts'] for game in games),
+            'historicalLedgerReleases': historical}
+
 def validation_self_tests():
     """In-memory file-set mutations only: no production files are changed."""
     tests=[]
     def test(name,ok,details):
         if not ok:raise AssertionError(name)
         tests.append({'name':name,'passed':True,**details})
+    current = {'ledgerApkSha256': 'a'*64, 'catalogApkSha256': 'a'*64, 'artworkReleaseReceipts': []}
+    previous = {**current, 'catalogApkSha256': 'b'*64, 'artworkReleaseReceipts': ['docs/releases/0.1.1/android-icon-receipt.json']}
+    test('gameplay audit of current APK', release_scope([current]) == {
+        'currentVersionsOnly': True, 'previousReleasesIgnored': True, 'historicalLedgerReleases': 0}, {})
+    test('gameplay audit after artwork update', release_scope([current, previous]) == {
+        'currentVersionsOnly': False, 'previousReleasesIgnored': False, 'historicalLedgerReleases': 1}, {})
     available={'model-tests.txt','independent-review.json','shared-checks/summary.json'}
     for field,ref in zip(DETAILED_REQUIRED_REFS,('model-tests.txt','independent-review.json','shared-checks/summary.json')):
         kind=reference_kind(48,'verification.'+field,False)
@@ -204,6 +216,33 @@ def main():
             except (ValueError,OSError) as ex:
                 ck(str(path.relative_to(root))+':validJson',str(ex),True); return {}
         resource=load(app/'resource.json'); verification=load(app/g['checks']); signing=load(docs/'signing-receipt.json'); game_config=load(app/'game.json')
+        # The ledger identifies the APK that was actually played and recorded.
+        # Later Android artwork updates each point back to their signed input.
+        item.update(catalogApkSha256=resource.get('sha256'), ledgerApkSha256=g['apkSha256'], artworkReleaseReceipts=[])
+        releases = {row['sha256']: row for row in resource.get('previousReleases', []) if 'sha256' in row}
+        seen = set()
+        while resource.get('sha256') != g['apkSha256'] and resource.get('verification', {}).get('gamePayloadMatchesPreviousApk') is True:
+            active_sha = resource.get('sha256')
+            if not ck('artworkRelease.unique', active_sha not in seen, True):
+                break
+            seen.add(active_sha)
+            receipt_path = resource['verification']['verificationReport']
+            item['artworkReleaseReceipts'].append(receipt_path)
+            receipt = load(app / receipt_path)
+            updated = receipt.get('updated', {})
+            ck('artworkRelease.receiptSha256', updated.get('sha256'), active_sha)
+            ck('artworkRelease.packageName', updated.get('packageName'), g['packageName'])
+            original = receipt.get('original', {})
+            previous = releases.get(original.get('sha256'))
+            if not ck('artworkRelease.previousMetadataFound', previous is not None, True):
+                break
+            ck('artworkRelease.previousVersion', previous.get('version'), original.get('versionName'))
+            resource = previous
+        if seen:
+            frozen = git('show', g['sourceCommit'] + ':' + g['path'] + '/game.json')
+            if ck('gameplayRelease.sourceConfigAvailable', frozen.returncode, 0):
+                game_config = json.loads(frozen.stdout)
+            item['schemaNotes'].append('The gameplay record is checked against its own signed APK and frozen game.json. Later artwork receipts identify each previous APK by SHA-256.')
         ck('progress.status',g.get('status'),'verified')
         for rk,pk in [('version','version'),('packageName','packageName'),('apk','apk'),('apkBytes','apkBytes'),('sha256','apkSha256'),('sourceCommit','sourceCommit'),('gameplayVideo','video')]:
             ck('resource.'+rk,resource.get(rk),g.get(pk))
@@ -486,15 +525,15 @@ def main():
         supersession.update(path=str(prior_path),exists=prior_path.is_file())
         if prior_path.is_file():supersession.update(sha256=digest(prior_path),bytes=prior_path.stat().st_size)
     report={
-        'schema':4,'revision':2,'supersedes':supersession,'validationSelfTests':self_tests,'auditUtc':datetime.now(timezone.utc).isoformat(),'auditorScriptSha256':digest(Path(__file__).resolve()),'scope':{'root':str(root),'through':through,'currentVersionsOnly':True,'previousReleasesIgnored':True,'capturedCompleted':progress['completed'],'capturedHead':head,'endingHead':final_head,'progressSha256':sha(progress_bytes),'progressUnchangedDuringAudit':progress_unchanged},
-        'method':{'readOnly':True,'apkZipAndManifestRead':True,'sha256Recomputed':True,'assetManifestCompared':'Every actual APK asset, exact key set and SHA256 value, against signing/verification/gameplay and present browser asset maps','sourceCompared':'Exactly three source files: actual APK game-model.js, game.js and shared renderer.js against published files AND progress.sourceCommit blobs','browserRerun':False,'modelTestsRerun':False,'buildOrSigningRerun':False,'cryptographicSignatureVerificationRerun':False,'videoDecodeRerun':False,'signatureScope':'stored certificate/signature/source receipts checked against the exact independently hashed APK; no new certificate validation claim','referenceScope':'Current schema report links are required even if their fields are missing. Only game-and-field-specific legacy descriptive citations receive historical-retention classification; unknown references must exist and otherwise fail. Explicit scratch/includedInRelease:false and hash-only originals are disclosed separately. Encoder frameManifest describes intermediate inputs. Old maintenance/previousReleases are not audited.'},
+        'schema':4,'revision':2,'supersedes':supersession,'validationSelfTests':self_tests,'auditUtc':datetime.now(timezone.utc).isoformat(),'auditorScriptSha256':digest(Path(__file__).resolve()),'scope':{'root':str(root),'through':through,**release_scope(games),'capturedCompleted':progress['completed'],'capturedHead':head,'endingHead':final_head,'progressSha256':sha(progress_bytes),'progressUnchangedDuringAudit':progress_unchanged},
+        'method':{'readOnly':True,'apkZipAndManifestRead':True,'sha256Recomputed':True,'assetManifestCompared':'Every actual APK asset, exact key set and SHA256 value, against signing/verification/gameplay and present browser asset maps','sourceCompared':'Exactly three source files: actual APK game-model.js, game.js and shared renderer.js against published files AND progress.sourceCommit blobs','browserRerun':False,'modelTestsRerun':False,'buildOrSigningRerun':False,'cryptographicSignatureVerificationRerun':False,'videoDecodeRerun':False,'signatureScope':'stored certificate/signature/source receipts checked against the exact independently hashed APK; no new certificate validation claim','referenceScope':'Current schema report links are required even if their fields are missing. Only game-and-field-specific legacy descriptive citations receive historical-retention classification; unknown references must exist and otherwise fail. Explicit scratch/includedInRelease:false and hash-only originals are disclosed separately. Encoder frameManifest describes intermediate inputs. Later artwork receipts link the ledger APK to its historical metadata by SHA256; gameplay checks cover the recorded APK.'},
         'passed':all(c['passed']for c in global_checks)and all(g['passed']for g in games),
         'payloadIdentityAndVerificationPassed':not any(':formalReferenceExists' not in f['field'] for f in findings),
         'primaryPublishedReferencesPresent':all(r['exists'] for g in games for r in g['formalReferences'] if r['declaredRetention']=='explicit-published-report'),
         'historicalEvidenceRetentionComplete':all(g['historicalEvidenceRetentionComplete'] for g in games),
         'summary':{'auditedGames':len(games),'failedGames':[g['number']for g in games if not g['passed']],'findingCount':len(findings),'deliveryErrorCount':sum(f.get('category')!='historical-evidence-retention' for f in findings),'historicalRetentionFindingCount':sum(f.get('category')=='historical-evidence-retention' for f in findings),'missingRecognizedHistoricalReferenceCount':sum(f.get('category')=='historical-evidence-retention' for f in findings),'missingUnknownReferenceCount':sum(not r['exists'] and r['declaredRetention']=='unknown-reference-requires-presence' for g in games for r in g['formalReferences']),'distinctMissingReferencePaths':len({r['resolved'] for g in games for r in g['formalReferences'] if not r['exists']}),'payloadIdentityOrVerificationFindingCount':sum(not f['field'].endswith(':formalReferenceExists') for f in findings),'uniqueModelHashes':len(model_groups),'duplicateModels':duplicate_models,'apkMaxBytes':max(g['artifacts'].get('apk',{}).get('bytes',0)for g in games),'videoMaxBytes':max(g['artifacts'].get('video',{}).get('bytes',0)for g in games),'formalReferences':sum(len(g['formalReferences'])for g in games),'primaryPublishedReferenceCount':sum(r['declaredRetention']=='explicit-published-report' for g in games for r in g['formalReferences']),'primaryPublishedReferencesMissing':sum(not r['exists'] and r['declaredRetention']=='explicit-published-report' for g in games for r in g['formalReferences']),'temporaryReferencesNotRequiredAsPublishedFiles':temp_count,'hashOnlyOriginalClaimsWithoutPublishedMatchingFile':unlocated,'gamesWithUnarchivedHashOnlyOriginals':[g['number']for g in games if any(not e['originalFilePresent']for e in g['hashOnlyEvidence'])]},
         'globalChecks':global_checks,'findings':findings,'games':games,'publishedIntermediateFrameCleanup':cleanup,
-        'limitations':['No physical TV or phone testing was performed; all current records explicitly report both false.','This audit confirms stored delivery facts and payload/evidence consistency, not a fresh playthrough, signature certification, video decode, or judgment of gameplay uniqueness.','Recorder frameManifest entries are intermediate JPEG inputs, not a promise to publish each JPEG. The video hash and retained manifest are checked; no frame-content decode was rerun.','Missing descriptive legacy citations are retained as historical-evidence-retention findings, separate from primary published report links. Missing originals cannot be reverified from embedded summaries.','Explicit scratch references and unmatched hash-only original-evidence claims are not falsely promoted to archived files; per-game records disclose them.','If publication advanced concurrently, this report covers its captured current releases through the requested number only.'],
+        'limitations':['No physical TV or phone testing was performed; all current records explicitly report both false.','This audit confirms stored delivery facts and payload/evidence consistency, not a fresh playthrough, signature certification, video decode, or judgment of gameplay uniqueness.','Recorder frameManifest entries are intermediate JPEG inputs, not a promise to publish each JPEG. The video hash and retained manifest are checked; no frame-content decode was rerun.','Missing descriptive legacy citations are retained as historical-evidence-retention findings, separate from primary published report links. Missing originals cannot be reverified from embedded summaries.','Explicit scratch references and unmatched hash-only original-evidence claims are not falsely promoted to archived files; per-game records disclose them.','If publication advanced concurrently, this report covers the captured ledger entries through the requested number only.'],
         'reproduce':f'python3 {Path(__file__).resolve()} --root {root} --through {through} --output {output}'+(f' --supersedes {prior_path}' if prior_path else '')
     }
     output.parent.mkdir(parents=True,exist_ok=True);output.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')

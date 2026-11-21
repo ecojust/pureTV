@@ -1,6 +1,7 @@
 import io
 import json
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -55,6 +56,22 @@ class GameIcons(unittest.TestCase):
         self.write('game-icon-sources', {self.key: 'captures/play.png'})
         self.assertEqual(game_icons.source_image(self.game), alternative)
         self.assertEqual(game_icons.source_bytes(self.game), alternative.read_bytes())
+
+    def test_hidden_game_can_use_a_sparse_capture_without_reviving_deleted_art(self):
+        subprocess.run(['git', 'init', '--quiet'], cwd=self.root, check=True)
+        self.write('readme-app-games', [])
+        (self.game / 'game.json').write_text('{}')
+        capture = self.game / 'thumb.png'
+        expected = capture.read_bytes()
+        rel = capture.relative_to(self.root).as_posix()
+        subprocess.run(['git', 'add', rel], cwd=self.root, check=True)
+        subprocess.run(['git', 'update-index', '--skip-worktree', rel], cwd=self.root, check=True)
+        capture.unlink()
+        self.assertEqual(game_icons.catalog_game_dir(self.root, self.game.name), self.game)
+        self.assertEqual(game_icons.source_bytes(self.game), expected)
+        subprocess.run(['git', 'update-index', '--no-skip-worktree', rel], cwd=self.root, check=True)
+        with self.assertRaises(FileNotFoundError):
+            game_icons.source_bytes(self.game)
 
     def test_unknown_capture_and_invalid_crop_cannot_generate_an_icon(self):
         self.write('game-icon-sources', {self.key: '../outside.png'})
