@@ -43,6 +43,7 @@ jobs:
             .github/workflows
             joystick-games
             resource/game-kit
+            docs/puzzle-nine/browser
             tools
             puretv-joystick
       - id: select
@@ -84,8 +85,11 @@ jobs:
             .github/workflows
             joystick-games
             resource/game-kit
+            docs/puzzle-nine/browser
             tools
             puretv-joystick
+      - name: Install the gameplay artwork renderer
+        run: python3 -m pip install Pillow==11.3.0
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -185,6 +189,7 @@ jobs:
             .github/workflows
             joystick-games
             resource/game-kit
+            docs/puzzle-nine/browser
             tools
             puretv-joystick
       - uses: actions/setup-java@v4
@@ -242,6 +247,7 @@ jobs:
             .github/workflows
             joystick-games
             resource/game-kit
+            docs/puzzle-nine/browser
             tools
             puretv-joystick
       - uses: actions/setup-java@v4
@@ -323,6 +329,7 @@ jobs:
             .github/workflows
             joystick-games
             resource/game-kit
+            docs/puzzle-nine/browser
             tools
             puretv-joystick
       - uses: actions/setup-java@v4

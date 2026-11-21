@@ -2,7 +2,7 @@
 """Build one small, independent TV APK with the shared, unsigned Android host.
 
 No signing key is read here. The output directory must be outside the game tree.
-The Android command line SDK, JDK 17 and pinned ZXing jar are the only tools used.
+Builds use the Android SDK, JDK 17, the pinned ZXing jar and Pillow.
 """
 import argparse
 import hashlib
@@ -12,12 +12,14 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import xml.etree.ElementTree as ET
 import zipfile
 
 KIT = Path(__file__).resolve().parent
 REPO = KIT.parents[1]
+sys.path.insert(0, str(REPO / 'tools'))
 MAX_APK_BYTES = 10_000_000
 ZXING_SHA256 = '8d8064c1636fdaef7189dd9055c7d59950a8940a12f2293956446ec3c109fd82'
 ANDROID = '{http://schemas.android.com/apk/res/android}'
@@ -106,6 +108,39 @@ def game_icon(game):
     return data
 
 
+def launcher_source_hashes(game):
+    """Bind the selected picture and crop settings to the game's signing receipt."""
+    source = game.parents[2]
+    mappings = ('tools/game-icon-sources.json', 'tools/game-icon-crops.json')
+    if not (source / mappings[0]).exists():
+        icon = game_icon(game)
+        return {(game / 'icon.xml').relative_to(source).as_posix(): hashlib.sha256(icon).hexdigest()} if icon else {}
+    from game_icons import source_bytes, source_image
+    hashes = {name: digest(source / name) for name in mappings}
+    hashes[source_image(game).relative_to(source).as_posix()] = hashlib.sha256(source_bytes(game)).hexdigest()
+    return hashes
+
+
+def install_launcher_art(game, res, artwork_game=None):
+    """Generate launcher resources for shipping games; keep free-standing fixtures usable."""
+    if artwork_game is None and game.parent.name == 'apps' and game.parent.parent.name == 'resource':
+        if (game.parents[2] / 'tools/game-icon-sources.json').exists():
+            artwork_game = game
+    if artwork_game is None:
+        icon = game_icon(game)
+        if icon is not None:
+            (res / 'drawable/ic_game.xml').write_bytes(icon)
+        return {'gameIconSha256': hashlib.sha256(icon).hexdigest() if icon else None}
+    from game_icons import save_banner, save_png
+    output = res / 'drawable-nodpi'
+    output.mkdir(exist_ok=True)
+    save_png(artwork_game, output / 'ic_game.png', 192)
+    save_banner(artwork_game, output / 'banner.png')
+    for name in ('ic_game', 'banner'):
+        (res / 'drawable' / (name + '.xml')).unlink()
+    return {'gameIconSha256': digest(output / 'ic_game.png'), 'gameBannerSha256': digest(output / 'banner.png')}
+
+
 def metadata(game):
     game = checked_directory(game, 'game directory')
     path = game / 'game.json'
@@ -189,7 +224,7 @@ def run(args, env=None):
     subprocess.run([str(a) for a in args], check=True, env=env)
 
 
-def main(argv=None, *, limits=None, target_sdk=29):
+def main(argv=None, *, limits=None, target_sdk=29, artwork_game=None):
     global KIT
     # Programmatic opt-in only; the normal Game Kit CLI retains target 29/min 26.
     require(type(target_sdk) is int and target_sdk in (29, 35), 'Unsupported explicit target SDK')
@@ -209,7 +244,6 @@ def main(argv=None, *, limits=None, target_sdk=29):
     require(not output.is_relative_to(game) and not output.is_relative_to(KIT), 'Output must be outside source directories')
     meta = metadata(game)
     data = payload(game, limits)
-    icon = game_icon(game)
     tools = args.sdk / 'build-tools/34.0.0'
     android_jar = args.sdk / 'platforms/android-35/android.jar'
     zxing = args.zxing
@@ -226,8 +260,7 @@ def main(argv=None, *, limits=None, target_sdk=29):
         work = Path(temp)
         res = work / 'res'
         shutil.copytree(KIT / 'android/src/main/res', res)
-        if icon is not None:
-            (res / 'drawable/ic_game.xml').write_bytes(icon)
+        launcher_art = install_launcher_art(game, res, artwork_game)
         for folder, title in (('values', meta['name']), ('values-en', meta['nameEn'])):
             path = res / folder / 'strings.xml'
             tree = ET.parse(path)
@@ -281,7 +314,7 @@ def main(argv=None, *, limits=None, target_sdk=29):
         receipt = {'schema': 1, 'game': meta['id'], 'packageName': meta['packageName'], 'version': meta['version'],
                    'versionCode': meta['versionCode'], 'unsigned': True, 'bytes': apk.stat().st_size, 'sha256': digest(apk),
                    'minSdk': 26, 'targetSdk': target_sdk, 'assets': {name: hashlib.sha256(value).hexdigest() for name, value in data.items()},
-                   'hostDexCacheKey': cache_key, 'gameIconSha256': hashlib.sha256(icon).hexdigest() if icon is not None else None,
+                   'hostDexCacheKey': cache_key, **launcher_art,
                    'physicalTvTested': False, 'assetLimits': limits}
         (output / 'build-receipt.json').write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n')
         print(json.dumps({'apk': str(apk), 'bytes': receipt['bytes'], 'sha256': receipt['sha256'], 'unsigned': True}))

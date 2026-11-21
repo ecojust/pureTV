@@ -148,6 +148,9 @@ class SignatureInputBoundaries(unittest.TestCase):
                      *[kit / 'web' / n for n in build.PHONE]]
             for path in files:
                 path.parent.mkdir(parents=True, exist_ok=True); path.write_text('fixture')
+            for name in build.ARTWORK_TOOLS:
+                (root / name).write_text('{}')
+            (game / 'thumb.png').write_bytes(b'fixture capture')
             with patch.object(build, 'ROOT', root), patch.object(build, 'KIT', kit), patch.object(build, 'metadata', return_value={}):
                 with self.assertRaises(AssertionError):
                     build.sources('cf-transport-ship')
@@ -234,6 +237,9 @@ class CatalogRegistrationBoundaries(unittest.TestCase):
             for name in files:
                 path = root / name; path.parent.mkdir(parents=True, exist_ok=True); path.write_text('fixture')
             (root / build.REGISTRY).write_text(json.dumps(self.registry()))
+            for name in build.ARTWORK_TOOLS:
+                (root / name).write_text('{}')
+            (game / 'thumb.png').write_bytes(b'fixture capture')
             with patch.object(build, 'ROOT', root), patch.object(build, 'KIT', kit), patch.object(build, 'metadata', return_value={}):
                 inputs = build.sources('fixture-game')
                 subprocess.run(['git', 'init', '-q', str(root)], check=True)

@@ -14,6 +14,7 @@ import tempfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'tools'))
 KIT = ROOT / 'resource/game-kit'
 LEGACY_PACKAGES = {'cf-transport-ship': 'com.ecojust.joystickcf', 'qq-speed': 'com.ecojust.joystickqqspeed'}
 REGISTRY = 'joystick-games/catalog-registry.json'
@@ -140,11 +141,17 @@ def observer_sources(slug):
     return {name: record(ROOT / name) for name in sorted(names)}
 
 
+ARTWORK_TOOLS = ('tools/game_icons.py', 'tools/game-icon-sources.json', 'tools/game-icon-crops.json')
+
+
 def sources(slug):
+    from game_icons import source_image
     metadata(slug)
     game = ROOT / 'joystick-games' / slug
     paths = [KIT / 'build.py', ROOT / POLICY_PATH, ROOT / 'tools/resource_catalog.py', ROOT / 'tools/puretv-release-certificate-v2.sha256',
              game / 'game.json', game / 'package.json', game / 'package-lock.json', game / 'build.mjs']
+    paths += [ROOT / name for name in ARTWORK_TOOLS]
+    paths.append(source_image(game))
     paths += [KIT / 'web' / name for name in PHONE]
     for folder in [KIT / 'android/src/main', game / 'src', game / 'dist', ROOT / 'joystick-games/shared/web']:
         assert folder.is_dir() and not folder.is_symlink(), str(folder)
@@ -174,8 +181,6 @@ def sources(slug):
                     assert not path.is_symlink(), str(path)
                     assert not set(path.relative_to(folder).parts) & {'node_modules', '__pycache__', '.cache'}, 'Shared build tree contains cache/dependency outputs'
                     if path.is_file(): paths.append(path)
-    if (game / 'icon.xml').exists():
-        paths.append(game / 'icon.xml')
     return {p.relative_to(ROOT).as_posix(): record(p) for p in sorted(set(paths))}
 
 
@@ -212,8 +217,6 @@ def prepare(slug, directory):
         shutil.copyfile(path, target)
     assert (assets / 'tv.html').is_file(), 'Build the committed Web game first'
     write(staged / 'game.json', {**meta, 'phoneControllerButtons': 9})
-    if (game / 'icon.xml').exists():
-        shutil.copyfile(game / 'icon.xml', staged / 'icon.xml')
     original.KIT = kit
     return kit, staged, original.payload(staged, policy)
 
@@ -253,7 +256,7 @@ def main():
                         '--output', str(out / 'build'), '--cache', str(a.cache), '--sdk', str(a.sdk),
                         '--jdk', str(a.jdk), '--zxing', str(a.zxing)],
                        limits=asset_policy.android_limits(metadata(a.game), policy_registration(a.game)),
-                       target_sdk=target_sdk(a.game))
+                       target_sdk=target_sdk(a.game), artwork_game=ROOT / 'joystick-games' / a.game)
     apk = out / 'unsigned.apk'
     shutil.move(out / 'build/unsigned.apk', apk)
     receipt = json.loads((out / 'build/build-receipt.json').read_text())
