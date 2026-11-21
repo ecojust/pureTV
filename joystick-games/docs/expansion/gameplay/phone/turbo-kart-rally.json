@@ -1,0 +1,128 @@
+{
+  "game": "turbo-kart-rally",
+  "payloadSha256": "2308571ad5398719306f5e9a907def1b6c03bcec19ed78ec9c2976d82a00045a",
+  "browser": "156.0.8078.79",
+  "tvSha256": "668f56bce5201bfb686c08910aff39f6275e715e2f653d5b47eb7670b772159c",
+  "qrRect": [
+    785,
+    47,
+    108,
+    109
+  ],
+  "qrScreenshots": 1,
+  "screenshotSha256": "7c0ff94cd8f6ff96fd15a318dff8cee939dfa99a599d56508710d57c32d1e4e0",
+  "menu": {
+    "stage": "menu",
+    "screen": null,
+    "frames": 23,
+    "active": "LAP1/30:00.00E / SHIFT0km/hDRIFT1stWRONG WAY\n      \n      \n ",
+    "polls": 23
+  },
+  "gameplay": {
+    "plan": "joystick-games/turbo-kart-rally/qa-plan.json",
+    "steps": [
+      {
+        "step": "Open racer selection",
+        "key": "START",
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "select"
+          }
+        ],
+        "before": {
+          "gameplay.mode": "title"
+        },
+        "after": {
+          "gameplay.mode": "select"
+        }
+      },
+      {
+        "step": "Choose the next driver",
+        "key": "RIGHT",
+        "expect": [
+          {
+            "path": "gameplay.characterIndex",
+            "op": "changed"
+          }
+        ],
+        "before": {
+          "gameplay.characterIndex": 0
+        },
+        "after": {
+          "gameplay.characterIndex": 1
+        }
+      },
+      {
+        "step": "Confirm the driver",
+        "key": "A",
+        "expect": [
+          {
+            "path": "gameplay.menuZone",
+            "op": "eq",
+            "value": "opts"
+          }
+        ],
+        "before": {
+          "gameplay.menuZone": "grid"
+        },
+        "after": {
+          "gameplay.menuZone": "opts"
+        }
+      },
+      {
+        "step": "Start Palm Cove Circuit and wait for the countdown",
+        "key": "START",
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "racing"
+          }
+        ],
+        "before": {
+          "gameplay.mode": "select"
+        },
+        "after": {
+          "gameplay.mode": "racing"
+        }
+      },
+      {
+        "step": "Accelerate in the original physics simulation",
+        "key": "UP",
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "gt",
+            "value": 2
+          },
+          {
+            "path": "gameplay.progress",
+            "op": "changed"
+          }
+        ],
+        "before": {
+          "gameplay.speed": 0,
+          "gameplay.progress": 0.9839345212345334
+        },
+        "after": {
+          "gameplay.speed": 16.978047273554544,
+          "gameplay.progress": 0.9862000566358846
+        }
+      }
+    ]
+  },
+  "gameplayScreenshotSha256": "85a91e01f6598ee1ac42846b160a38e9710ca1098775e2d9c1d3659f38d7e6c2",
+  "touch": "DOWN",
+  "afterTouch": {
+    "stage": "playing",
+    "screen": null,
+    "frames": 122,
+    "active": "LAP1/30:04.21E / SHIFT1Rex2Dotty3Toadly4Blaze5Grumbo6Bella7K",
+    "polls": 122
+  },
+  "disconnectReleased": true,
+  "passed": true,
+  "seconds": 193.1
+}

@@ -1,5 +1,7 @@
 # Portable PC host controller checks
 
+Each of the six signed games has a separate keypad session and an official TCP controller session that starts from the menu and reaches a core game action. [Gameplay reports](../gameplay/)
+
 All six games in the final player passed the signed-APK input check on Windows Server 2022 x64 and macOS 15.8.2 ARM64. Both systems ran the five 0.1.1 releases and Kart Royale 0.1.6. [Native OS reports and reproduction steps](native/README.md)
 
 Each report comes from the repository's Linux PC host loading the game's actual offline payload at 960×540 in Chromium. The official SDK opens a TCP session, verifies the displayed identity, exercises DOWN and release, and counts the acknowledgements. After disconnection, a real keyboard press/release of Numpad8 is observed through the game's cached input frame. These checks cover the host input path; campaign completion and normal game actions are covered by the individual game tests.
