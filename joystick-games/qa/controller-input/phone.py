@@ -34,7 +34,7 @@ def summary(page):
                active:a?.id || a?.textContent?.trim().slice(0,60) || null, polls:s?.controller?.pollCount}};}}""")
 
 
-def verify(browser, mobile_browser, java, slug, packed, output, timeout):
+def verify(browser, mobile_browser, java, slug, packed, output, timeout, gameplay=False):
     start = time.monotonic()
     report = {'game':slug, 'payloadSha256':digest(packed), 'browser':browser.version}
     phase = 'extract'
@@ -82,15 +82,27 @@ def verify(browser, mobile_browser, java, slug, packed, output, timeout):
             phone.goto(room,wait_until='commit')
             phone.get_by_text('已连接 · 看着电视玩',exact=True).wait_for()
             wait_for(tv, f"{SNAP}?.controller?.transport === 'phone'", timeout)
-            phase = 'touch and release'
             cdp = phone.context.new_cdp_session(phone)
+            if gameplay:
+                from expansion_gameplay import run_gameplay
+
+                phase = 'phone gameplay'
+
+                def press(key, hold_ms=0, while_held=None):
+                    touch(phone, cdp, key, tv, timeout, hold_ms, while_held)
+
+                report['gameplay'] = run_gameplay(slug, tv, press, lambda: tv.evaluate(SNAP))
+                gameplay_shot = output / (slug + '-gameplay.png')
+                tv.screenshot(path=str(gameplay_shot))
+                report['gameplayScreenshotSha256'] = digest(gameplay_shot)
+            phase = 'touch and release'
             touch(phone, cdp, 'DOWN', tv, timeout)
             report.update(touch='DOWN', afterTouch=summary(tv))
             phone.close();phone=None
             wait_for(tv, f"{SNAP}?.controller?.connected === false && {SNAP}?.controller?.buttons?.DOWN === false", timeout)
             report.update(disconnectReleased=True, passed=True)
         except Exception as error:
-            report.update(passed=False, phase=phase, error=str(error).splitlines()[0])
+            report.update(passed=False, phase=phase, error=str(error).splitlines()[0] if str(error) else type(error).__name__)
         finally:
             if phone: phone.close()
             if tv: tv.close()
@@ -103,6 +115,7 @@ def verify(browser, mobile_browser, java, slug, packed, output, timeout):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--gameplay', action='store_true', help='Play the selected expansion games with the paired phone')
     p.add_argument('--payloads',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--source',type=Path,default=ROOT)
@@ -124,7 +137,7 @@ def main():
             phone=pw.chromium.launch(executable_path=args.chromium,args=flags,timeout=180000)
             success=True
             for slug in args.games:
-                result=verify(tv,phone,java,slug,args.payloads/(slug+'.zip'),args.output,args.timeout)
+                result=verify(tv,phone,java,slug,args.payloads/(slug+'.zip'),args.output,args.timeout,args.gameplay)
                 (args.output/(slug+'.json')).write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
                 print(slug,result['passed'],result.get('phase',''),result.get('error',''),flush=True)
                 success=success and result['passed']

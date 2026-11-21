@@ -38,7 +38,7 @@ def held(tv, key, down, timeout=75):
     wait_for(tv, f'{SNAP}?.controller?.buttons?.{key} === {str(down).lower()}', timeout)
 
 
-def touch(phone, cdp, key, tv, timeout=75):
+def touch(phone, cdp, key, tv, timeout=75, hold_ms=0, while_held=None):
     axes = {'UP': (0, -50), 'DOWN': (0, 50), 'LEFT': (-50, 0), 'RIGHT': (50, 0)}
     control = 'stick-zone' if key in axes else {'A':'a', 'B':'b', 'X':'buttonX', 'Y':'buttonY', 'START':'start'}[key]
     rect = phone.locator('#' + control).bounding_box()
@@ -48,8 +48,14 @@ def touch(phone, cdp, key, tv, timeout=75):
     send('touchStart', [{'x':x, 'y':y}])
     if key in axes:
         dx,dy=axes[key];send('touchMove', [{'x':x+dx, 'y':y+dy}])
-    held(tv, key, True, timeout)
-    send('touchEnd', [])
+    try:
+        held(tv, key, True, timeout)
+        if hold_ms:
+            tv.wait_for_timeout(hold_ms)
+        if while_held:
+            while_held()
+    finally:
+        send('touchEnd', [])
     held(tv, key, False, timeout)
 
 

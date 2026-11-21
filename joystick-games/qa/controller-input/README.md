@@ -37,6 +37,8 @@ python joystick-games/qa/controller-input/phone.py \
 
 The TV browser loads the game's own assets at 960×540. ZXing decodes the QR from the saved viewport screenshot. In a separate touch-enabled browser, the original mobile page opens the decoded room and sends a DOWN press and release. The check observes both button states through the game's controller snapshot, then closes the phone and checks for a disconnected controller with neutral input. The output directory retains the menu screenshot, its digest, the QR bounds, each game's stage and the timing.
 
+To exercise gameplay in Kart Royale, Saber Magic Tower, Lumenrift, Turbo Kart Rally, Clawd Pop or Operation Ironhold, add `--gameplay` to the phone command and select the game IDs. To test the released assets, use each game's APK from `packages.json`, verify its SHA-256 and place it at `<payloads>/<game-id>.zip`. The APK can be symlinked directly. The phone enters through the decoded QR and performs each game's scenario before the standard touch and disconnect checks. The JSON records the observed game state and the hash of the gameplay screenshot. This exercises the Java server and browser-rendered game with emulated touch.
+
 ## Portable PC game host
 
 Install the portable host's Python dependencies from `tools/pc-games/requirements.txt` and Playwright for Python. Use one `<game-id>.zip` per game in the payload directory, with the exact files under `assets/`. The script accepts multiple game IDs.
