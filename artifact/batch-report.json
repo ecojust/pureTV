@@ -1,0 +1,49 @@
+{
+  "sourceCommit": "b5773d740331e4bcea40f830bb8a46d919a96cad",
+  "batch": "exploration-01",
+  "runner": "macos-latest",
+  "expectedArchitecture": "arm64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "kindle",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/kindle",
+            "--output",
+            "/Users/runner/work/_temp/qa/kindle/package-verification.json"
+          ],
+          "status": "failed",
+          "log": "kindle/package-verification.log",
+          "startedAt": "2026-11-21T06:49:28.947554+00:00",
+          "returncode": 1
+        }
+      ]
+    },
+    {
+      "game": "silent-meridian",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/silent-meridian",
+            "--output",
+            "/Users/runner/work/_temp/qa/silent-meridian/package-verification.json"
+          ],
+          "status": "failed",
+          "log": "silent-meridian/package-verification.log",
+          "startedAt": "2026-11-21T06:49:30.104354+00:00",
+          "returncode": 1
+        }
+      ]
+    }
+  ]
+}
