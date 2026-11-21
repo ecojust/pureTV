@@ -1,0 +1,85 @@
+{
+  "game": "clawd-pop",
+  "payloadSha256": "c1ff193c8c804a05b64e18f636d098524538816a8f0ab1b139a7bd65a8fb9a2e",
+  "initial": {
+    "stage": "loading",
+    "renderer": null,
+    "polls": 3
+  },
+  "startupSeconds": 4.5,
+  "entryStage": "menu",
+  "tcpIdentity": "virtual-f16164dd2266",
+  "gameplay": {
+    "plan": "joystick-games/clawd-pop/qa-plan.json",
+    "steps": [
+      {
+        "step": "Enter the laboratory",
+        "key": "START",
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "gameplay.time",
+            "op": "gt",
+            "value": 1.5
+          }
+        ],
+        "before": {
+          "stage": "menu",
+          "gameplay.time": 0
+        },
+        "after": {
+          "stage": "playing",
+          "gameplay.time": 1.5833333333333326
+        }
+      },
+      {
+        "step": "Walk in the airlock",
+        "key": "UP",
+        "expect": [
+          {
+            "path": "gameplay.position",
+            "op": "changed"
+          }
+        ],
+        "before": {
+          "gameplay.position": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "gameplay.position": [
+            -1.2499999999999998,
+            -7.654042494670959e-17
+          ]
+        }
+      },
+      {
+        "step": "Fire the cannon",
+        "key": "A",
+        "expect": [
+          {
+            "path": "gameplay.shots",
+            "op": "increased"
+          }
+        ],
+        "before": {
+          "gameplay.shots": 0
+        },
+        "after": {
+          "gameplay.shots": 1
+        }
+      }
+    ]
+  },
+  "acknowledged": 26,
+  "passed": true,
+  "input": "sdk",
+  "seconds": 48.7,
+  "browser": "157.0.8103.78",
+  "angle": "swiftshader"
+}

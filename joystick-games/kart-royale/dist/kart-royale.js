@@ -19,6 +19,176 @@
   };
   var __publicField = (obj, key2, value) => __defNormalProp(obj, typeof key2 !== "symbol" ? key2 + "" : key2, value);
 
+  // src/src/world/Circuits.ts
+  function resolveCircuit(search) {
+    const id = new URLSearchParams(search).get("track");
+    return circuits.find((course) => course.id === id) ?? circuits[0];
+  }
+  var circuits, activeCircuit;
+  var init_Circuits = __esm({
+    "src/src/world/Circuits.ts"() {
+      circuits = [
+        { id: "sunset-bay", name: "Sunset Bay Circuit", banner: "SUNSET BAY", seed: 12241662, heading: 45 },
+        {
+          id: "cape-crown",
+          name: "Cape Crown Circuit",
+          banner: "CAPE CROWN",
+          seed: 6930510,
+          heading: 75,
+          // A long opening sweeper, a climbing switchback and a fast bridge return.
+          legs: [
+            [190, -7.6],
+            [160, -84.72],
+            [120, 39.36],
+            [100, -65.91],
+            [160, -48.04],
+            [140, -25.93],
+            [100, 35.58],
+            [160, -79.61],
+            [130, 37.85],
+            [150, -47.51],
+            [180, -93.16],
+            [180, -8.47],
+            [150, -11.83]
+          ],
+          elevation: [
+            [0, 4],
+            [0.09, 5],
+            [0.18, 9],
+            [0.26, 17],
+            [0.34, 30],
+            [0.43, 49],
+            [0.5, 46],
+            [0.56, 39],
+            [0.64, 22],
+            [0.73, 7],
+            [0.79, 12],
+            [0.86, 26],
+            [0.91, 22],
+            [0.96, 11],
+            [0.99, 4.5]
+          ],
+          bank: [
+            [0, 0],
+            [0.09, 1],
+            [0.15, 9],
+            [0.21, -4],
+            [0.27, 8],
+            [0.36, 6],
+            [0.43, 3],
+            [0.49, -4],
+            [0.53, 4],
+            [0.58, 11],
+            [0.64, -4],
+            [0.71, 5],
+            [0.79, 14],
+            [0.85, 5],
+            [0.93, 2],
+            [0.98, 0]
+          ],
+          halfWidth: [
+            [0, 8.8],
+            [0.11, 8.5],
+            [0.23, 7.4],
+            [0.35, 6.6],
+            [0.43, 5.6],
+            [0.53, 6.3],
+            [0.64, 7.4],
+            [0.79, 8.7],
+            [0.9, 7.1],
+            [0.97, 8]
+          ],
+          boosts: [
+            { t0: 0.32, t1: 0.333, lat: 1.8, hw: 2 },
+            { t0: 0.565, t1: 0.579, lat: -1.9, hw: 2 },
+            { t0: 0.928, t1: 0.945, lat: 0, hw: 3 }
+          ]
+        },
+        {
+          id: "marina-esses",
+          name: "Marina Esses",
+          banner: "MARINA ESSES",
+          seed: 3257512,
+          heading: 15,
+          // Alternating dockside corners lead into a long left at the tunnel entrance.
+          legs: [
+            [200, -6.34],
+            [130, -99.01],
+            [100, 35.83],
+            [120, -62.87],
+            [120, 36.41],
+            [175, -106.34],
+            [70, 20.86],
+            [100, -12.21],
+            [110, -72.49],
+            [144, 44.75],
+            [108, -80.68],
+            [124, -28.65],
+            [80, 16.56],
+            [100, -45.82]
+          ],
+          elevation: [
+            [0, 4],
+            [0.1, 5],
+            [0.18, 6],
+            [0.26, 12],
+            [0.32, 9],
+            [0.4, 16],
+            [0.48, 29],
+            [0.55, 26],
+            [0.6, 20],
+            [0.69, 8],
+            [0.76, 6],
+            [0.84, 14],
+            [0.91, 18],
+            [0.97, 8],
+            [0.995, 4.1]
+          ],
+          bank: [
+            [0, 0],
+            [0.1, 1],
+            [0.16, 11],
+            [0.23, -5],
+            [0.29, 8],
+            [0.35, -4],
+            [0.4, 3],
+            [0.46, 13],
+            [0.52, -3],
+            [0.58, 3],
+            [0.63, 11],
+            [0.69, -4],
+            [0.74, -5],
+            [0.79, 13],
+            [0.86, 6],
+            [0.92, -3],
+            [0.96, 6],
+            [0.99, 0]
+          ],
+          halfWidth: [
+            [0, 8.8],
+            [0.1, 8.2],
+            [0.18, 7.8],
+            [0.3, 6.6],
+            [0.42, 7.4],
+            [0.49, 6.2],
+            [0.58, 6.7],
+            [0.66, 7.3],
+            [0.79, 8.3],
+            [0.91, 6.9],
+            [0.98, 8.3]
+          ],
+          boosts: [
+            { t0: 0.205, t1: 0.22, lat: -2, hw: 2 },
+            { t0: 0.531, t1: 0.547, lat: 2, hw: 2 },
+            { t0: 0.718, t1: 0.731, lat: 0, hw: 2.8 },
+            { t0: 0.963, t1: 0.978, lat: -2, hw: 2 }
+          ]
+        }
+      ];
+      activeCircuit = globalThis.location ? resolveCircuit(globalThis.location.search) : circuits[0];
+    }
+  });
+
   // ../shared/web/controller-clients.js
   var init_controller_clients = __esm({
     "../shared/web/controller-clients.js"() {
@@ -30727,7 +30897,7 @@ void main() {
         frames: frame.pollCount,
         controller: frame,
         paused: ctx.race.state === 5 /* Paused */,
-        gameplay: { menu: activeRoot()?.matches(".kc-root") ? "controls" : activeRoot()?.matches(".kr-s-title") ? "title" : activeRoot()?.matches(".kr-s-select") ? "select" : "", focus: document.activeElement?.textContent?.trim().slice(0, 100) || "", savedControls, controlHand: input.pad.prefs.hand, state: ctx.race.state, phase: ["menu", "countdown", "racing", "finished", "results", "paused"][ctx.race.state], time: ctx.race.raceTime, speed: p?.forwardSpeed, position: p?.position.toArray(), lap: p?.lap, place: p?.place, driftDir: p?.driftDir, driftTier: p?.driftTier, driftCharge: p?.driftCharge, boostTime: p?.boostTime, controls: { ...input.state } },
+        gameplay: { circuit: activeCircuit.id, menu: activeRoot()?.matches(".kc-root") ? "controls" : activeRoot()?.matches(".kr-s-title") ? "title" : activeRoot()?.matches(".kr-s-select") ? "select" : "", focus: document.activeElement?.textContent?.trim().slice(0, 100) || "", savedControls, controlHand: input.pad.prefs.hand, state: ctx.race.state, phase: ["menu", "countdown", "racing", "finished", "results", "paused"][ctx.race.state], time: ctx.race.raceTime, speed: p?.forwardSpeed, position: p?.position.toArray(), lap: p?.lap, place: p?.place, driftDir: p?.driftDir, driftTier: p?.driftTier, driftCharge: p?.driftCharge, boostTime: p?.boostTime, controls: { ...input.state } },
         panel: rect ? { x: rect.x, y: rect.y, width: rect.width, height: rect.height, scrollHeight: panel2.scrollHeight, clientHeight: panel2.clientHeight, hidden: panel2.hidden } : null,
         focused: document.activeElement?.textContent?.slice(0, 100),
         boot: document.querySelector(".boot-step")?.textContent
@@ -30737,6 +30907,7 @@ void main() {
   }
   var init_tv_input = __esm({
     "src/src/tv-input.ts"() {
+      init_Circuits();
       init_input();
       init_types();
     }
@@ -50902,6 +51073,7 @@ vec3 triWeights() {
   var init_Props = __esm({
     "src/src/world/Props.ts"() {
       init_three_module();
+      init_Circuits();
       init_simplex_noise();
       init_Materials();
       PAL = {
@@ -51297,8 +51469,8 @@ vec3 triWeights() {
             g.letterSpacing = "10px";
             g.strokeStyle = "rgba(60,20,16,0.55)";
             g.lineWidth = 7;
-            g.strokeText("SUNSET BAY", size / 2, hh * 0.4);
-            g.fillText("SUNSET BAY", size / 2, hh * 0.4);
+            g.strokeText(activeCircuit.banner, size / 2, hh * 0.4);
+            g.fillText(activeCircuit.banner, size / 2, hh * 0.4);
             g.fillStyle = "#c8382f";
             g.fillRect(0, hh, size, size - hh);
             const h = new Float32Array(size * size);
@@ -56480,7 +56652,7 @@ void main() {
     const raw = new Float64Array(N0);
     {
       let s = 0;
-      for (const [len, turn] of LEGS) {
+      for (const [len, turn] of routeLegs) {
         const k = turn * MathUtils.DEG2RAD / len;
         const i0 = Math.round(s / DS0), i1 = Math.round((s + len) / DS0);
         for (let i = i0; i < i1; i++) raw[i] = k;
@@ -56512,7 +56684,7 @@ void main() {
     const Y = new Float64Array(N0 + 1);
     for (let i = 0; i <= N0; i++) {
       const u = i / N0 % 1;
-      Y[i] = cyclic(ELEVATION, u) + 0.74 * Math.sin(u * Math.PI * 2 * 7 + 0.9) + 0.33 * Math.sin(u * Math.PI * 2 * 13 + 2.4);
+      Y[i] = cyclic(activeCircuit.elevation ?? ELEVATION, u) + 0.74 * Math.sin(u * Math.PI * 2 * 7 + 0.9) + 0.33 * Math.sin(u * Math.PI * 2 * 13 + 2.4);
     }
     const cum = new Float64Array(N0 + 1);
     for (let i = 1; i <= N0; i++) {
@@ -56638,8 +56810,8 @@ void main() {
     }
     for (let i = 0; i < count; i++) {
       const t = i / count;
-      cl.half[i] = cyclicMonotone(HALF_WIDTH, t);
-      const b = cyclic(BANK, t) * MathUtils.DEG2RAD;
+      cl.half[i] = cyclicMonotone(activeCircuit.halfWidth ?? HALF_WIDTH, t);
+      const b = cyclic(activeCircuit.bank ?? BANK, t) * MathUtils.DEG2RAD;
       cl.bank[i] = b;
       let hx, hy, hz;
       if (Math.abs(cl.ty[i]) < 0.985) {
@@ -56762,11 +56934,12 @@ void main() {
     const c = (rr2 * rr2 - 0.45) * 5.2 * rock;
     return amp * (a + b + c);
   }
-  var SEA_Y, CROWN, KERB_W, KERB_QS, KERB_HS, KERB_RIPPLE_A, KERB_RIPPLE_K, KERB_END, KERB_CROWN0, KERB_CROWN1, SKIRT_W, CHECKPOINTS, STATION_DS, WALL_NONE, WALL_GUARDRAIL, WALL_ROCK, WALL_PARAPET, WALL_HEIGHT, Z_TUNNEL, Z_BEACH, TUNNEL_T0, TUNNEL_T1, BRIDGE_T0, BRIDGE_T1, TUNNEL_CLEAR, TUNNEL_H, PARAPET_OFF, PARAPET_FACE, FASCIA_OFF, GRID_LAT, GRID_ROW_DS, GRID_STAGGER, GRID_BACK0, GRID_BOX_HL, GRID_BOX_HW, LEGS, PLAN_LENGTH, START_HEADING, ELEVATION, HALF_WIDTH, BANK, ZONES, BOOST_PADS, CORNER_GATE, CORNER_MIN_TURN, CORNER_MERGE, CORNER_PER, CORNER_MIN_GAP, rnd, noiseA, noiseB, noiseC;
+  var SEA_Y, CROWN, KERB_W, KERB_QS, KERB_HS, KERB_RIPPLE_A, KERB_RIPPLE_K, KERB_END, KERB_CROWN0, KERB_CROWN1, SKIRT_W, CHECKPOINTS, STATION_DS, WALL_NONE, WALL_GUARDRAIL, WALL_ROCK, WALL_PARAPET, WALL_HEIGHT, Z_TUNNEL, Z_BEACH, TUNNEL_T0, TUNNEL_T1, BRIDGE_T0, BRIDGE_T1, TUNNEL_CLEAR, TUNNEL_H, PARAPET_OFF, PARAPET_FACE, FASCIA_OFF, GRID_LAT, GRID_ROW_DS, GRID_STAGGER, GRID_BACK0, GRID_BOX_HL, GRID_BOX_HW, LEGS, routeLegs, PLAN_LENGTH, START_HEADING, ELEVATION, HALF_WIDTH, BANK, ZONES, BOOST_PADS, CORNER_GATE, CORNER_MIN_TURN, CORNER_MERGE, CORNER_PER, CORNER_MIN_GAP, rnd, noiseA, noiseB, noiseC;
   var init_TrackLayout = __esm({
     "src/src/world/TrackLayout.ts"() {
       init_three_module();
       init_types();
+      init_Circuits();
       init_simplex_noise();
       SEA_Y = 0;
       CROWN = 0.09;
@@ -56837,8 +57010,9 @@ void main() {
         [80, 24.47]
         // 0.950 return to the line
       ];
-      PLAN_LENGTH = 1600;
-      START_HEADING = 45 * MathUtils.DEG2RAD;
+      routeLegs = activeCircuit.legs ?? LEGS;
+      PLAN_LENGTH = routeLegs.reduce((sum, [length]) => sum + length, 0);
+      START_HEADING = activeCircuit.heading * MathUtils.DEG2RAD;
       ELEVATION = [
         [0, 3],
         [0.1, 3.6],
@@ -57163,7 +57337,7 @@ void main() {
           kerb: 1
         }
       ];
-      BOOST_PADS = [
+      BOOST_PADS = activeCircuit.boosts ?? [
         { t0: 0.538, t1: 0.5555, lat: -2.9, hw: 1.9 },
         { t0: 0.538, t1: 0.5555, lat: 2.9, hw: 1.9 },
         { t0: 0.572, t1: 0.5895, lat: 0, hw: 2.6 },
@@ -62076,6 +62250,7 @@ void main() {
   var init_Scenery = __esm({
     "src/src/world/Scenery.ts"() {
       init_three_module();
+      init_Circuits();
       init_types();
       init_Water();
       init_Foliage();
@@ -62187,7 +62362,7 @@ void main() {
         // ==========================================================================
         init(ctx) {
           this.ctx = ctx;
-          this.rng = mulberry322(12241662);
+          this.rng = mulberry322(activeCircuit.seed);
           this.group.name = "scenery";
           const stages = this.buildScenery(ctx);
           if (this.softwareLow()) this.pendingDecor = stages;
@@ -80266,6 +80441,7 @@ html[data-kc-open] .kr-screens { opacity: 0; }
   var STAT_RANGE, STATS, LOGO_SVG, Menus;
   var init_Menus = __esm({
     "src/src/ui/Menus.ts"() {
+      init_Circuits();
       init_types();
       init_uiUtil();
       init_ControlsMenu();
@@ -80382,6 +80558,8 @@ html[data-kc-open] .kr-screens { opacity: 0; }
           __publicField(this, "localPause", false);
           __publicField(this, "localTitle", false);
           __publicField(this, "selected", 0);
+          __publicField(this, "circuitIndex", circuits.indexOf(activeCircuit));
+          __publicField(this, "circuitLabel");
           __publicField(this, "cards", []);
           __publicField(this, "buttons", { pause: [], results: [] });
           __publicField(this, "btnIndex", 0);
@@ -80406,7 +80584,7 @@ html[data-kc-open] .kr-screens { opacity: 0; }
           __publicField(this, "pauseOrderKey", "");
           __publicField(this, "lapsEl");
           __publicField(this, "resultTitle");
-          __publicField(this, "selecting", false);
+          __publicField(this, "selecting", new URLSearchParams(location.search).get("chooseRacer") === "1");
           this.root = el("div", "kr-screens", parent);
           this.controls = new ControlsMenu(parent);
           this.screens = {
@@ -80500,8 +80678,29 @@ html[data-kc-open] .kr-screens { opacity: 0; }
           if (want === "none") delete document.documentElement.dataset.menu;
           else document.documentElement.dataset.menu = want;
         }
+        changeCircuit(dir) {
+          this.circuitIndex = (this.circuitIndex + dir + circuits.length) % circuits.length;
+          this.circuitLabel.textContent = circuits[this.circuitIndex].name;
+          this.ui("move");
+        }
+        chooseRacer() {
+          const circuit = circuits[this.circuitIndex];
+          if (circuit !== activeCircuit) {
+            const url = new URL(location.href);
+            url.searchParams.set("track", circuit.id);
+            url.searchParams.set("chooseRacer", "1");
+            location.replace(url.href);
+            return;
+          }
+          this.selecting = true;
+          this.ui("confirm");
+        }
         // ------------------------------------------------------------------ input
         nav(dir) {
+          if (this.screen === "title") {
+            this.changeCircuit(dir);
+            return;
+          }
           if (this.screen === "select") {
             this.selected = (this.selected + dir + this.cards.length) % this.cards.length;
             this.syncCards();
@@ -80521,8 +80720,7 @@ html[data-kc-open] .kr-screens { opacity: 0; }
         onConfirm(ctx, inRace) {
           switch (this.screen) {
             case "title":
-              this.selecting = true;
-              this.ui("confirm");
+              this.chooseRacer();
               return;
             case "select":
               this.startRace(ctx);
@@ -80570,15 +80768,26 @@ html[data-kc-open] .kr-screens { opacity: 0; }
           wrap.style.flexDirection = "column";
           wrap.style.alignItems = "center";
           wrap.innerHTML = LOGO_SVG.replace("RAYS", buildRays());
-          el("div", "kr-sub", wrap, "Sunset Bay Circuit");
+          const row = el("div", "kr-circuits", wrap);
+          const arrow = (dir, label) => {
+            const btn = el("div", "kr-btn kr-circuit-arrow", row, dir < 0 ? "\u2039" : "\u203A");
+            btn.setAttribute("aria-label", label);
+            btn.onclick = (e) => {
+              e.stopPropagation();
+              this.changeCircuit(dir);
+            };
+          };
+          arrow(-1, "Previous circuit");
+          this.circuitLabel = el("div", "kr-sub", row, activeCircuit.name);
+          this.circuitLabel.setAttribute("aria-live", "polite");
+          arrow(1, "Next circuit");
           this.titlePrompt = el("div", "kr-prompt", wrap);
           this.titleGlyphs = el("div", "kr-glyphs", wrap);
           this.titleHint = el("div", "kr-hint", wrap);
           const start = el("div", "kr-btn puretv-start", wrap, "Start");
           start.onclick = (e) => {
             e.stopPropagation();
-            this.selecting = true;
-            this.ui("confirm");
+            this.chooseRacer();
           };
           const cbtn = el("div", "kr-btn kr-btn-controls", wrap, "Controls");
           cbtn.onclick = (e) => {

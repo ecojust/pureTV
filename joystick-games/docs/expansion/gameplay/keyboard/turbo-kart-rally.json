@@ -1,0 +1,111 @@
+{
+  "game": "turbo-kart-rally",
+  "payloadSha256": "2308571ad5398719306f5e9a907def1b6c03bcec19ed78ec9c2976d82a00045a",
+  "initial": {
+    "stage": "menu",
+    "renderer": "webgl2",
+    "polls": 4
+  },
+  "startupSeconds": 4.6,
+  "entryStage": "menu",
+  "gameplay": {
+    "plan": "joystick-games/turbo-kart-rally/qa-plan.json",
+    "steps": [
+      {
+        "step": "Open racer selection",
+        "key": "START",
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "select"
+          }
+        ],
+        "before": {
+          "gameplay.mode": "title"
+        },
+        "after": {
+          "gameplay.mode": "select"
+        }
+      },
+      {
+        "step": "Choose the next driver",
+        "key": "RIGHT",
+        "expect": [
+          {
+            "path": "gameplay.characterIndex",
+            "op": "changed"
+          }
+        ],
+        "before": {
+          "gameplay.characterIndex": 0
+        },
+        "after": {
+          "gameplay.characterIndex": 1
+        }
+      },
+      {
+        "step": "Confirm the driver",
+        "key": "A",
+        "expect": [
+          {
+            "path": "gameplay.menuZone",
+            "op": "eq",
+            "value": "opts"
+          }
+        ],
+        "before": {
+          "gameplay.menuZone": "grid"
+        },
+        "after": {
+          "gameplay.menuZone": "opts"
+        }
+      },
+      {
+        "step": "Start Palm Cove Circuit and wait for the countdown",
+        "key": "START",
+        "expect": [
+          {
+            "path": "gameplay.mode",
+            "op": "eq",
+            "value": "racing"
+          }
+        ],
+        "before": {
+          "gameplay.mode": "select"
+        },
+        "after": {
+          "gameplay.mode": "racing"
+        }
+      },
+      {
+        "step": "Accelerate in the original physics simulation",
+        "key": "UP",
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "gt",
+            "value": 2
+          },
+          {
+            "path": "gameplay.progress",
+            "op": "changed"
+          }
+        ],
+        "before": {
+          "gameplay.speed": 0,
+          "gameplay.progress": 0.9863914786776125
+        },
+        "after": {
+          "gameplay.speed": 36.12516988607246,
+          "gameplay.progress": 0.9957303496773804
+        }
+      }
+    ]
+  },
+  "passed": true,
+  "input": "keyboard",
+  "seconds": 26.4,
+  "browser": "157.0.8103.78",
+  "angle": "swiftshader"
+}

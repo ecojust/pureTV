@@ -11,7 +11,7 @@ from zipfile import ZipFile
 
 from playwright.sync_api import sync_playwright
 from android import BRIDGE, SNAP, digest, touch
-from sdk import ROOT
+from sdk import ROOT, wait_for
 
 
 def copy_assets(archive, target):
@@ -34,7 +34,7 @@ def summary(page):
                active:a?.id || a?.textContent?.trim().slice(0,60) || null, polls:s?.controller?.pollCount}};}}""")
 
 
-def verify(browser, mobile_browser, java, slug, packed, output, timeout):
+def verify(browser, mobile_browser, java, slug, packed, output, timeout, gameplay=False):
     start = time.monotonic()
     report = {'game':slug, 'payloadSha256':digest(packed), 'browser':browser.version}
     phase = 'extract'
@@ -51,7 +51,7 @@ def verify(browser, mobile_browser, java, slug, packed, output, timeout):
             tv.set_default_timeout(timeout * 1000)
             tv.add_init_script(BRIDGE)
             tv.goto(info['tv'], wait_until='commit')
-            tv.wait_for_function(f"() => {{const s={SNAP};return s?.controller?.pollCount > 2 && !s.webglError && !['loading','boot','error'].includes(s.stage);}}")
+            wait_for(tv, f"() => {{const s={SNAP};return s?.controller?.pollCount > 2 && !s.webglError && !['loading','boot','error'].includes(s.stage);}}", timeout)
             qr = tv.locator('.ptv-phone img')
             qr.wait_for(state='visible')
             shot = output / (slug + '-menu.png')
@@ -81,16 +81,28 @@ def verify(browser, mobile_browser, java, slug, packed, output, timeout):
             phone.set_default_timeout(timeout*1000)
             phone.goto(room,wait_until='commit')
             phone.get_by_text('已连接 · 看着电视玩',exact=True).wait_for()
-            tv.wait_for_function(f"{SNAP}?.controller?.transport === 'phone'")
-            phase = 'touch and release'
+            wait_for(tv, f"{SNAP}?.controller?.transport === 'phone'", timeout)
             cdp = phone.context.new_cdp_session(phone)
-            touch(phone, cdp, 'DOWN', tv)
+            if gameplay:
+                from expansion_gameplay import run_gameplay
+
+                phase = 'phone gameplay'
+
+                def press(key, hold_ms=0, while_held=None):
+                    touch(phone, cdp, key, tv, timeout, hold_ms, while_held)
+
+                report['gameplay'] = run_gameplay(slug, tv, press, lambda: tv.evaluate(SNAP))
+                gameplay_shot = output / (slug + '-gameplay.png')
+                tv.screenshot(path=str(gameplay_shot))
+                report['gameplayScreenshotSha256'] = digest(gameplay_shot)
+            phase = 'touch and release'
+            touch(phone, cdp, 'DOWN', tv, timeout)
             report.update(touch='DOWN', afterTouch=summary(tv))
             phone.close();phone=None
-            tv.wait_for_function(f"{SNAP}?.controller?.connected === false && {SNAP}?.controller?.buttons?.DOWN === false")
+            wait_for(tv, f"{SNAP}?.controller?.connected === false && {SNAP}?.controller?.buttons?.DOWN === false", timeout)
             report.update(disconnectReleased=True, passed=True)
         except Exception as error:
-            report.update(passed=False, phase=phase, error=str(error).splitlines()[0])
+            report.update(passed=False, phase=phase, error=str(error).splitlines()[0] if str(error) else type(error).__name__)
         finally:
             if phone: phone.close()
             if tv: tv.close()
@@ -103,6 +115,7 @@ def verify(browser, mobile_browser, java, slug, packed, output, timeout):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--gameplay', action='store_true', help='Play the selected expansion games with the paired phone')
     p.add_argument('--payloads',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--source',type=Path,default=ROOT)
@@ -124,7 +137,7 @@ def main():
             phone=pw.chromium.launch(executable_path=args.chromium,args=flags,timeout=180000)
             success=True
             for slug in args.games:
-                result=verify(tv,phone,java,slug,args.payloads/(slug+'.zip'),args.output,args.timeout)
+                result=verify(tv,phone,java,slug,args.payloads/(slug+'.zip'),args.output,args.timeout,args.gameplay)
                 (args.output/(slug+'.json')).write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
                 print(slug,result['passed'],result.get('phase',''),result.get('error',''),flush=True)
                 success=success and result['passed']

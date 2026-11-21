@@ -48,9 +48,9 @@ The TV store works with updated launchers to let you choose the position of an a
 
 ### Play on a computer
 
-Open the Windows x64 player, choose a game with the arrow keys and press Enter. The player downloads the game on first launch, verifies it and opens it in your default browser. Subsequent launches use the local copy. Follow the game's own keyboard prompts, or use a pureTV Wi-Fi controller on the same LAN. Keep the player running while you play. [Download the Windows player](https://github.com/ecojust/pureTV/releases/download/catalog-player-v1.0.1/pureTV-Games.exe)
+Open the Windows x64 player, choose a game with the arrow keys and press Enter. The player downloads the game on first launch, verifies it and opens it in your default browser. Subsequent launches use the local copy. Follow the game's own keyboard prompts, or use a pureTV Wi-Fi controller on the same LAN. Keep the player running while you play. [Download the Windows player](https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/tools/pc-games/packages/pureTV-Games.exe)
 
-On macOS or Linux, extract the portable ZIP, open a terminal in the extracted folder and run the following commands with Python 3.10 or later. Pass a game ID to start it directly, for example `.venv/bin/python launcher.py tetris`. [Download the portable player](https://github.com/ecojust/pureTV/releases/download/catalog-player-v1.0.1/pureTV-Games-portable.zip)
+On macOS or Linux, extract the portable ZIP, open a terminal in the extracted folder and run the following commands with Python 3.10 or later. Pass a game ID to start it directly, for example `.venv/bin/python launcher.py tetris`. [Download the portable player](https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/tools/pc-games/packages/pureTV-Games-portable.zip)
 
 ```sh
 python3 -m venv .venv
@@ -60,7 +60,7 @@ python3 -m venv .venv
 
 ### Join a TV game from a phone
 
-Install the game’s APK on the television. Use its TV icon on the homepage or find the game by filename in the Android TV collection. [Download Android TV games](https://github.com/ecojust/pureTV/releases/tag/catalog-tv-controls-v1.0.1)
+Choose a game on the homepage, select its TV icon to download the signed APK, and install it on the television. [Browse all 40 games](../../README.en.md#games) · [Download the six updated and new games](../../joystick-games/README.md#game-expansion)
 
 Open the game on the TV. Connect your phone to the same LAN and scan the QR code on the game's menu. The page on the phone becomes a virtual controller. Use its direction pad and action buttons while watching the TV. The connection display shows the occupied seat. Open the menu or pause screen to view connection details.
 

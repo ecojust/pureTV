@@ -113,7 +113,10 @@ def target_sdk(slug):
     assert slug in registered_packages(), 'Unregistered target SDK selection'
     if slug == 'backroad-rally':
         return 35
-    if slug in ('ponpoko-kart', 'kart-royale', 'starbase-spooky'):
+    if slug in (
+        'clawd-pop', 'kart-royale', 'lumenrift', 'operation-ironhold',
+        'ponpoko-kart', 'saber-magic-tower', 'starbase-spooky', 'turbo-kart-rally',
+    ):
         target = metadata(slug).get('androidTargetSdk', 29)
         assert type(target) is int and target in (29, 35), 'Unsupported catalog Android target SDK'
         return target

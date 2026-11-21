@@ -1,0 +1,100 @@
+{
+  "game": "clawd-pop",
+  "payloadSha256": "c1ff193c8c804a05b64e18f636d098524538816a8f0ab1b139a7bd65a8fb9a2e",
+  "browser": "156.0.8078.79",
+  "tvSha256": "2afd2fc9e7c635baf03680609bfea57fe2f7520c10e5d4d8cea3d0f3c33ab71c",
+  "qrRect": [
+    794,
+    47,
+    108,
+    109
+  ],
+  "qrScreenshots": 1,
+  "screenshotSha256": "cdc161cba0811cd68c01decf617505560137df3acb367680fa0dc6423217ea1a",
+  "menu": {
+    "stage": "menu",
+    "screen": "title",
+    "frames": 23,
+    "active": "Downloading game\n            Still downloading…\n            ",
+    "polls": 23
+  },
+  "gameplay": {
+    "plan": "joystick-games/clawd-pop/qa-plan.json",
+    "steps": [
+      {
+        "step": "Enter the laboratory",
+        "key": "START",
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "gameplay.time",
+            "op": "gt",
+            "value": 1.5
+          }
+        ],
+        "before": {
+          "stage": "menu",
+          "gameplay.time": 0
+        },
+        "after": {
+          "stage": "playing",
+          "gameplay.time": 1.5833333333333326
+        }
+      },
+      {
+        "step": "Walk in the airlock",
+        "key": "UP",
+        "expect": [
+          {
+            "path": "gameplay.position",
+            "op": "changed"
+          }
+        ],
+        "before": {
+          "gameplay.position": [
+            0,
+            0.5
+          ]
+        },
+        "after": {
+          "gameplay.position": [
+            0,
+            -0.3333333333333332
+          ]
+        }
+      },
+      {
+        "step": "Fire the cannon",
+        "key": "A",
+        "expect": [
+          {
+            "path": "gameplay.shots",
+            "op": "increased"
+          }
+        ],
+        "before": {
+          "gameplay.shots": 0
+        },
+        "after": {
+          "gameplay.shots": 1
+        }
+      }
+    ]
+  },
+  "gameplayScreenshotSha256": "908d9f8f5388b18b8606086fcf2f70043bf67912d69f71e55c523e2ec9dad565",
+  "touch": "DOWN",
+  "afterTouch": {
+    "stage": "playing",
+    "screen": "none",
+    "frames": 69,
+    "active": "Downloading game\n            Still downloading…\n            ",
+    "polls": 69
+  },
+  "disconnectReleased": true,
+  "passed": true,
+  "seconds": 250.6
+}

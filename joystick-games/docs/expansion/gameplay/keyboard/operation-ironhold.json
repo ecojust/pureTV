@@ -1,0 +1,110 @@
+{
+  "game": "operation-ironhold",
+  "payloadSha256": "fbef10d1164341d4fa2ffe1a78b43a5850604875908e0ddf2ba6b4d7ec09a972",
+  "initial": {
+    "stage": "menu",
+    "renderer": "webgl2",
+    "polls": 3
+  },
+  "startupSeconds": 21.8,
+  "entryStage": "menu",
+  "gameplay": {
+    "plan": "joystick-games/operation-ironhold/qa-plan.json",
+    "steps": [
+      {
+        "step": "Enter the yard",
+        "key": "START",
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ],
+        "before": {
+          "stage": "menu"
+        },
+        "after": {
+          "stage": "playing"
+        }
+      },
+      {
+        "step": "Advance from deployment",
+        "key": "UP",
+        "expect": [
+          {
+            "path": "gameplay.position",
+            "op": "changed"
+          }
+        ],
+        "before": {
+          "gameplay.position": [
+            0,
+            -1.5543122344752192e-15,
+            24
+          ]
+        },
+        "after": {
+          "gameplay.position": [
+            0,
+            -1.5543122344752192e-15,
+            23.8906
+          ]
+        }
+      },
+      {
+        "step": "Turn right",
+        "key": "RIGHT",
+        "expect": [
+          {
+            "path": "gameplay.yaw",
+            "op": "changed"
+          }
+        ],
+        "before": {
+          "gameplay.yaw": 0
+        },
+        "after": {
+          "gameplay.yaw": -0.09250000000000001
+        }
+      },
+      {
+        "step": "Fire a round",
+        "key": "A",
+        "expect": [
+          {
+            "path": "gameplay.shots",
+            "op": "increased"
+          }
+        ],
+        "before": {
+          "gameplay.shots": 0
+        },
+        "after": {
+          "gameplay.shots": 1
+        }
+      },
+      {
+        "step": "Change loadout",
+        "key": "Y",
+        "expect": [
+          {
+            "path": "gameplay.weapon",
+            "op": "changed"
+          }
+        ],
+        "before": {
+          "gameplay.weapon": 0
+        },
+        "after": {
+          "gameplay.weapon": 1
+        }
+      }
+    ]
+  },
+  "passed": true,
+  "input": "keyboard",
+  "seconds": 36.4,
+  "browser": "156.0.8078.79",
+  "angle": "swiftshader"
+}

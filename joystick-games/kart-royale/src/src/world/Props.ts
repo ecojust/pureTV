@@ -15,6 +15,7 @@
  * ============================================================================
  */
 import * as THREE from 'three';
+import { activeCircuit } from './Circuits';
 import { createNoise2D } from 'simplex-noise';
 import { getMaterials } from '../render/Materials';
 
@@ -802,8 +803,8 @@ export class TexLib {
       g.letterSpacing = '10px';
       g.strokeStyle = 'rgba(60,20,16,0.55)';
       g.lineWidth = 7;
-      g.strokeText('SUNSET BAY', size / 2, hh * 0.4);
-      g.fillText('SUNSET BAY', size / 2, hh * 0.4);
+      g.strokeText(activeCircuit.banner, size / 2, hh * 0.4);
+      g.fillText(activeCircuit.banner, size / 2, hh * 0.4);
       // the rest of the sheet is plain cloth for the fold-over
       g.fillStyle = '#c8382f';
       g.fillRect(0, hh, size, size - hh);

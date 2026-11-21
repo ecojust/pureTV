@@ -7,6 +7,32 @@
 - [运输船 CF](cf-transport-ship/)：保留运输船地图、机器人队伍对战、枪械和换装，增加九键移动、瞄准与射击。
 - [QQ 飞车](qq-speed/)：保留四张赛道、竞速与道具模式，以及漂移、氮气和小喷。
 
+<a id="game-expansion"></a>
+
+## 本批新增与更新的游戏
+
+| 游戏 | 玩法 | Android TV |
+| --- | --- | --- |
+| [Kart Royale](kart-royale/) | 在原有 Sunset Bay 之外，新增高低落差较大的 Cape Crown 和连续转弯的 Marina Esses。 | [APK 0.1.6](https://raw.githubusercontent.com/ecojust/pureTV/f1e41ebba5c58d6ab78a10eca07b3720bb2c5c79/joystick-games/kart-royale/kart-royale-0.1.6.apk) |
+| [Turbo Kart Rally](turbo-kart-rally/) | 在 Palm Cove 与七位 AI 车手竞速。 | [APK 0.1.1](https://raw.githubusercontent.com/ecojust/pureTV/b9dbfd704e5d45e0a8849e72ea6da6855c3c54b0/joystick-games/turbo-kart-rally/turbo-kart-rally-0.1.1.apk) |
+| [Clawd Pop 3D](clawd-pop/) | 在随机生成的实验室中使用黑洞炮，迎战新增怪物和 Codex 主题敌人。 | [APK 0.1.1](https://raw.githubusercontent.com/ecojust/pureTV/b9dbfd704e5d45e0a8849e72ea6da6855c3c54b0/joystick-games/clawd-pop/clawd-pop-0.1.1.apk) |
+| [光刃魔塔 · Saber Magic Tower](saber-magic-tower/) | 在 21 层立体迷宫中规划钥匙和属性，用连击、重斩和适时格挡迎战守卫。 | [APK 0.1.1](https://raw.githubusercontent.com/ecojust/pureTV/b9dbfd704e5d45e0a8849e72ea6da6855c3c54b0/joystick-games/saber-magic-tower/saber-magic-tower-0.1.1.apk) |
+| [Operation Ironhold](operation-ironhold/) | 在三分钟内清除集装箱堆场的十名对手。 | [APK 0.1.1](https://raw.githubusercontent.com/ecojust/pureTV/b9dbfd704e5d45e0a8849e72ea6da6855c3c54b0/joystick-games/operation-ironhold/operation-ironhold-0.1.1.apk) |
+| [Lumenrift · 光隙守望](lumenrift/) | 建塔、升级并守住敌人进攻的路线。 | [APK 0.1.1](https://raw.githubusercontent.com/ecojust/pureTV/b9dbfd704e5d45e0a8849e72ea6da6855c3c54b0/joystick-games/lumenrift/lumenrift-0.1.1.apk) |
+
+[Android TV 安装与逐款手柄验收](docs/expansion/android.md) · [Windows 与 macOS 手柄输入](docs/expansion/pc/native/) · [手机扫码操作](docs/expansion/phone/)
+
+在仓库根目录运行 `python3 -m http.server 8000 --bind 127.0.0.1`，然后打开 `http://127.0.0.1:8000/joystick-games/<游戏目录>/dist/tv.html` 即可用键盘试玩。每行链接指向对应的游戏目录，内含具体键位。
+
+电脑要使用局域网无线手柄时，可以在仓库根目录运行下列命令启动同一版本。把两处游戏 ID 和 ZIP 文件名换成表内的目录名即可切换游戏。
+
+```sh
+python3 -m pip install -r tools/pc-games/requirements.txt
+python3 joystick-games/qa/controller-input/payloads.py --output .local-games lumenrift
+python3 tools/pc-games/host.py --game lumenrift --apk .local-games/lumenrift.zip
+```
+
+
 ## 安装包
 
 首版 **0.1.0** 提供 Android TV APK，以及同时包含 Apple Silicon 与 Intel 的 macOS DMG／ZIP。
