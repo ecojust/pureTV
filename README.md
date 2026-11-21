@@ -1,5 +1,3 @@
-# pureTV 应用目录
-
 <div align="center">
   <img src="docs/branding/puretv-logo.png" width="112" alt="pureTV 生肖龙 Logo">
 </div>

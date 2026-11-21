@@ -1,5 +1,3 @@
-# pureTV app catalog
-
 <div align="center">
   <img src="docs/branding/puretv-logo.png" width="112" alt="pureTV Chinese zodiac dragon logo">
 </div>
