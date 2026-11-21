@@ -427,5 +427,5 @@
   }
 
   // src/controls.js
-  window.kindlePad = createController({ keyboard: true });
+  window.kindlePad = createController({ keyboard: true, onSuspend: () => window.dispatchEvent(new Event("kindle-suspend")) });
 })();

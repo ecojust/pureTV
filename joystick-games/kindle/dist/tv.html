@@ -6135,6 +6135,13 @@ void main() {
     pauseLabel.style.cssText = 'position:fixed;inset:42% 20% auto;text-align:center;padding:1em;background:#172536;color:white;z-index:20';
     pauseLabel.hidden = true;
     document.body.append(pauseLabel);
+    addEventListener('kindle-suspend', () => {
+      if (phase === 'play') {
+        paused = true;
+        pauseLabel.hidden = false;
+        window.kindlePad.setPlaying(false);
+      }
+    });
     function frame(now) {
       frames++;
       const raw = (now - last) / 1000;

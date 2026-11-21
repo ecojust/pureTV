@@ -1,11 +1,23 @@
 import { createController } from '../../shared/web/input.js';
 
-const pad = createController({ keyboard: true });
+const pauseDialog = document.createElement('dialog');
+const resume = document.createElement('button');
+resume.textContent = '继续 · Resume (START)';
+resume.addEventListener('click', () => pauseDialog.close());
+pauseDialog.append(resume);
+document.body.append(pauseDialog);
+
+function pause() {
+  if (document.body.dataset.screen === 'game' && !pauseDialog.open) {
+    pauseDialog.showModal();
+    pad.setPlaying(false);
+  }
+}
+const pad = createController({ keyboard: true, onSuspend: pause });
 let frames = 0;
 function snapshot() {
   const game = document.body.dataset.screen === 'game';
-  const dialog = document.querySelector('dialog[open]');
-  const paused = !!dialog?.querySelector('[data-action="title"], [data-action="reset"]') || !!dialog?.querySelector('.settings-list');
+  const paused = pauseDialog.open;
   return { game:'silent-meridian', renderer:'dom', frames, ready:!!document.querySelector('#app button'),
     stage:paused ? 'paused' : game ? 'playing' : 'menu', paused, controller:pad.peek(),
     canvasWidth:innerWidth, canvasHeight:innerHeight,
@@ -15,7 +27,13 @@ window.JoystickGameQA = { snapshot };
 function update() {
   frames++;
   const { pressed, cancelled } = pad.poll();
-  const dialog = document.querySelector('dialog[open]');
+  if (cancelled) pause();
+  if (pauseDialog.open) {
+    if (!cancelled && (pressed.START || pressed.A || pressed.B)) pauseDialog.close();
+    requestAnimationFrame(update);
+    return;
+  }
+  const dialog = document.querySelector('#app dialog[open]');
   const root = dialog || document.querySelector('#app');
   const targets = [...root.querySelectorAll('button:enabled, summary, textarea, input:enabled')]
     .filter(element => element.getClientRects().length && !element.closest('[aria-hidden="true"]'));
@@ -25,10 +43,12 @@ function update() {
     targets[(index + step + targets.length) % targets.length].focus();
   }
   const action = name => root.querySelector('[data-action="' + name + '"]')?.click();
-  if (cancelled && !dialog && document.body.dataset.screen === 'game') action('settings');
-  else if (pressed.A) (targets.includes(document.activeElement) ? document.activeElement : targets[0])?.click();
+  if (pressed.A) (targets.includes(document.activeElement) ? document.activeElement : targets[0])?.click();
   else if (pressed.B && dialog) action('close');
-  else if (pressed.START) action(dialog ? 'close' : document.body.dataset.screen === 'title' ? 'start' : 'settings');
+  else if (pressed.START) {
+    if (document.body.dataset.screen === 'title') action('start');
+    else pause();
+  }
   else if (pressed.Y && !dialog) action('journal');
   else if (pressed.X && !dialog) root.querySelector('.phase-control button:not(.active)')?.click();
   pad.setPlaying(document.body.dataset.screen === 'game' && !dialog);
