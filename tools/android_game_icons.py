@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
@@ -84,7 +85,11 @@ def updated_manifest(apk, work, apktool, tools, before, version):
         assert count == 1, 'Missing APK version metadata: ' + key
     project.write_text(config)
     native = work / 'manifest-output.apk'
-    command('java', '-jar', apktool, 'b', '-j', '1', '--aapt', tools / 'aapt2', '-o', native, decoded)
+    # Apktool sets the executable bit even when the SDK binary is already
+    # executable; the system SDK on a hosted runner belongs to root.
+    compiler = work / 'aapt2'
+    shutil.copy2(tools / 'aapt2', compiler)
+    command('java', '-jar', apktool, 'b', '-j', '1', '--aapt', compiler, '-o', native, decoded)
     assert manifest_tree(tools, native) == manifest_tree(tools, apk), 'Android manifest changed beyond the two version fields'
     with zipfile.ZipFile(native) as z:
         return z.read('AndroidManifest.xml'), paths
