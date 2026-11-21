@@ -84,6 +84,28 @@ final class GameWindow: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         window.title = name
         window.makeFirstResponder(webView)
         FileHandle.standardError.write(Data("WKWebView ready\n".utf8))
+        if ProcessInfo.processInfo.environment["PURETV_GAME_VERIFY"] == "1" {
+            reportGameState(until: Date().addingTimeInterval(60))
+        }
+    }
+
+    // The CI check observes the same WebView and gameplay state as the user.
+    func reportGameState(until deadline: Date) {
+        let expression = """
+            (() => {
+                const state = window.PureTVQA?.snapshot?.() ?? window.JoystickGameQA?.snapshot?.();
+                return state?.phase || state?.stage || "";
+            })()
+            """
+        web.evaluateJavaScript(expression) { result, _ in
+            if let stage = result as? String, !stage.isEmpty, stage.lowercased() != "loading" {
+                FileHandle.standardError.write(Data(("WK game ready: " + stage + "\n").utf8))
+            } else if !self.stopping && Date() < deadline {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                    self.reportGameState(until: deadline)
+                }
+            }
+        }
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!,

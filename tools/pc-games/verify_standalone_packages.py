@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import plistlib
+import re
 import signal
 import socket
 import struct
@@ -119,9 +120,12 @@ def browser_boot(browser, base):
         # Both game families expose their own read-only gameplay snapshot.
         ready = page.wait_for_function('''() => {
             const s = window.PureTVQA?.snapshot() ?? window.JoystickGameQA?.snapshot();
+            if (s?.webglError || s?.error || s?.phase === 'error' || s?.stage === 'error') {
+                throw new Error(s.error || s.message || "Game failed to initialize");
+            }
             const state = s?.phase || s?.stage;
             return state && state !== 'loading' && state;
-        }''', timeout=45000).json_value()
+        }''', timeout=180000).json_value()
         return {'initialGameState': ready, 'pngSha256': hashlib.sha256(page.screenshot()).hexdigest()}
 
 
@@ -139,7 +143,8 @@ def verify_game(package, source, work, system, browser):
         log = work / 'start.log'
         with log.open('wb') as output:
             child = subprocess.Popen([str(exe)], cwd=work, stdout=output, stderr=subprocess.STDOUT,
-                                     start_new_session=system != 'windows')
+                                     start_new_session=system != 'windows',
+                                     env={**os.environ, 'PURETV_GAME_VERIFY': '1'})
             try:
                 assets = verify_server(base, game, source, log, child)
                 result = dict(id=slug, version=game['version'], installer=package.name,
@@ -148,13 +153,19 @@ def verify_game(package, source, work, system, browser):
                 if browser is not None:
                     result['browser'] = browser_boot(browser, base)
                 if system == 'macos':
-                    deadline = time.monotonic() + 45
-                    while b'WKWebView ready' not in log.read_bytes():
+                    deadline = time.monotonic() + 75
+                    while True:
+                        snapshot = re.search(rb'^WK game ready: ([^\r\n]+)', log.read_bytes(), re.MULTILINE)
+                        if snapshot:
+                            stage = snapshot[1].decode()
+                            if stage.lower() == 'error':
+                                raise RuntimeError(f'{slug} reported an error inside WKWebView')
+                            result['wkGameState'] = stage
+                            break
                         if child.poll() is not None or time.monotonic() >= deadline:
-                            raise RuntimeError('Game window did not finish loading: ' +
+                            raise RuntimeError('Game did not reach its ready state in WKWebView: ' +
                                                log.read_text(encoding='utf-8', errors='replace')[-4000:])
                         time.sleep(.2)
-                    result['wkWebViewLoaded'] = True
             finally:
                 if system == 'windows' and child.poll() is None:
                     subprocess.run(['taskkill', '/PID', str(child.pid), '/T', '/F'], check=True)

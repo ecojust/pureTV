@@ -81,6 +81,9 @@ def write_notices(archive, game, page, directory):
         "source_apk": game["url"],
         "apk_sha256": game["sha256"],
     }
+    if page.startswith("resource/apps/"):
+        resource = json.loads(tracked_file(f"{page}/resource.json"))
+        source.update({k: resource[k] for k in ("author", "license", "romIncluded") if k in resource})
     (directory / "source.json").write_text(
         json.dumps(source, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
