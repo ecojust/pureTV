@@ -114,48 +114,35 @@ def verify_server(base, game, source, log, child):
     return len(assets)
 
 
-def edge_command(work):
-    # Use the real Windows client's webbrowser.open call. A private profile
-    # isolates each game's data from other CI jobs and enables observing the
-    # actual page Edge opens without rendering a second copy of the game.
-    edge = next(path for env in ('ProgramFiles(x86)', 'ProgramFiles', 'LocalAppData')
-                if env in os.environ
-                for path in [Path(os.environ[env]) / 'Microsoft/Edge/Application/msedge.exe']
-                if path.is_file())
-    with socket.socket() as probe:
-        probe.bind(('127.0.0.1', 0))
-        port = probe.getsockname()[1]
-    command = shlex.join([str(edge), '--headless=new', '--no-first-run',
-                          '--remote-debugging-address=127.0.0.1', f'--remote-debugging-port={port}',
-                          '--user-data-dir=' + str(work / 'edge-profile'), '--window-size=960,540',
-                          '--enable-unsafe-swiftshader', '--use-angle=swiftshader',
-                          '--disable-background-timer-throttling', '--disable-renderer-backgrounding', '%s'])
-    # The stdlib webbrowser module uses shlex to parse BROWSER and treats
-    # a trailing ampersand as an asynchronous application launch.
-    return command + ' &', f'http://127.0.0.1:{port}'
+def browser_command(work):
+    # The installed application uses webbrowser.open on a normal launch. Supply
+    # a test browser handler that hands that exact URL to the controlled Edge
+    # instance, avoiding two concurrent software-rendered copies of the game.
+    helper = work / 'browser_handler.py'
+    helper.write_text(
+        "from pathlib import Path\n"
+        "import sys\n"
+        "Path(__file__).with_name('browser-url.txt').write_text(sys.argv[1], encoding='utf-8')\n",
+        encoding='utf-8',
+    )
+    # Python's webbrowser uses shlex.split for BROWSER command templates.
+    return shlex.join([sys.executable, str(helper), '%s'])
 
 
-def browser_boot(pw, inspector, base):
-    deadline = time.monotonic() + 45
-    while True:
-        try:
-            with HTTP.open(inspector + '/json/version', timeout=2):
-                break
-        except OSError:
-            if time.monotonic() >= deadline:
-                raise RuntimeError('The installed game failed to launch its Edge window')
-            time.sleep(.2)
-    with pw.chromium.connect_over_cdp(inspector) as browser:
+def browser_boot(browser, work, base):
+    url_file = work / 'browser-url.txt'
+    deadline = time.monotonic() + 30
+    while not url_file.exists() or not url_file.stat().st_size:
+        if time.monotonic() >= deadline:
+            raise RuntimeError('The installed client did not request a browser URL')
+        time.sleep(.1)
+    url = url_file.read_text(encoding='utf-8')
+    if url != base + '/tv.html':
+        raise ValueError(f'The installed client opened the wrong game URL: {url!r}')
+    with browser.new_context(viewport={'width': 800, 'height': 450}, device_scale_factor=0.75) as context:
+        page = context.new_page()
+        page.goto(url, wait_until='domcontentloaded', timeout=120000)
         deadline = time.monotonic() + 180
-        while True:
-            pages = [p for context in browser.contexts for p in context.pages
-                     if p.url == base + '/tv.html']
-            if pages:
-                break
-            if time.monotonic() >= deadline:
-                raise RuntimeError(f'The installed game opened no tab for {base}/tv.html')
-            time.sleep(.2)
-        page = pages[0]
         # Several games enforce CSP. Evaluate their read-only state directly
         # instead of injecting an in-page predicate which could be blocked.
         while True:
@@ -171,7 +158,7 @@ def browser_boot(pw, inspector, base):
             if time.monotonic() >= deadline:
                 raise RuntimeError(f'{base} did not reach the menu (last state {ready!r})')
             page.wait_for_timeout(250)
-        result = {'initialGameState': ready}
+        result = {'openedUrl': url, 'initialGameState': ready}
         from playwright.sync_api import TimeoutError as ScreenshotTimeout
         try:
             result['pngSha256'] = hashlib.sha256(page.screenshot(timeout=30000)).hexdigest()
@@ -182,7 +169,7 @@ def browser_boot(pw, inspector, base):
         return result
 
 
-def verify_game(package, source, work, system, pw):
+def verify_game(package, source, work, system, browser):
     game = json.loads((source / 'game.json').read_text(encoding='utf-8'))
     with installed(package, game, work, system) as (exe, data):
         if json.loads((data / 'game.json').read_text(encoding='utf-8')) != game:
@@ -195,8 +182,8 @@ def verify_game(package, source, work, system, pw):
         base = f'http://127.0.0.1:{port}'
         log = work / 'start.log'
         env = {**os.environ, 'PURETV_GAME_VERIFY': '1'}
-        if pw is not None:
-            env['BROWSER'], inspector = edge_command(work)
+        if browser is not None:
+            env['BROWSER'] = browser_command(work)
         with log.open('wb') as output:
             child = subprocess.Popen([str(exe)], cwd=work, stdout=output, stderr=subprocess.STDOUT,
                                      start_new_session=system != 'windows',
@@ -206,8 +193,8 @@ def verify_game(package, source, work, system, pw):
                 result = dict(id=slug, version=game['version'], installer=package.name,
                               installerSha256=digest(package), apkSha256=game['sha256'],
                               httpAssets=assets, controllerKey='A', normalLaunch=True)
-                if pw is not None:
-                    result['browser'] = browser_boot(pw, inspector, base)
+                if browser is not None:
+                    result['browser'] = browser_boot(browser, work, base)
                 if system == 'macos':
                     deadline = time.monotonic() + 75
                     while True:
@@ -248,7 +235,7 @@ def main():
     p.add_argument('--packages', type=Path, required=True)
     p.add_argument('--inputs', type=Path, required=True)
     p.add_argument('--report', type=Path, required=True)
-    p.add_argument('--browser-channel', choices=['msedge'], help='Observe the Edge window opened by the Windows client')
+    p.add_argument('--browser-channel', choices=['msedge'], help='Open the client’s requested game URL in Edge')
     args = p.parse_args()
     if {'macos': 'darwin', 'windows': 'win32'}[args.platform] != sys.platform:
         p.error('The verification must run on the target platform')
@@ -261,15 +248,20 @@ def main():
     suffix = '-macos.dmg' if args.platform == 'macos' else '-windows-x64-setup.exe'
     args.report.parent.mkdir(parents=True, exist_ok=True)
     with playwright as pw:
-        for metadata in sorted(args.inputs.glob('*/game.json')):
-            source = metadata.parent
-            if args.platform not in json.loads(metadata.read_text(encoding='utf-8'))['platforms']:
-                continue
-            package = (args.packages / (source.name + suffix)).resolve(strict=True)
-            with tempfile.TemporaryDirectory() as temp:
-                report.append(verify_game(package, source, Path(temp), args.platform, pw))
-            args.report.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-            print(f'Checked {package.name}', flush=True)
+        edge = (pw.chromium.launch(channel=args.browser_channel, args=[
+            '--enable-unsafe-swiftshader', '--use-angle=swiftshader', '--disable-renderer-backgrounding',
+            '--disable-background-timer-throttling',
+        ]) if pw else nullcontext())
+        with edge as browser:
+            for metadata in sorted(args.inputs.glob('*/game.json')):
+                source = metadata.parent
+                if args.platform not in json.loads(metadata.read_text(encoding='utf-8'))['platforms']:
+                    continue
+                package = (args.packages / (source.name + suffix)).resolve(strict=True)
+                with tempfile.TemporaryDirectory() as temp:
+                    report.append(verify_game(package, source, Path(temp), args.platform, browser))
+                args.report.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+                print(f'Checked {package.name}', flush=True)
     if not report:
         p.error('No matching game packages were verified')
 

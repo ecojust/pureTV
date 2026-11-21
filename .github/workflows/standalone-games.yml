@@ -59,6 +59,7 @@ jobs:
         if: steps.select.outputs.build
         run: python tools/pc-games/prepare_standalone.py --platform ${{ matrix.platform }} --output inputs
       - name: Build standalone installers
+        id: installers
         if: steps.select.outputs.build
         run: python tools/pc-games/build_standalone_${{ matrix.platform }}.py --inputs inputs --output packages
       - name: Verify each packaged game
@@ -68,6 +69,13 @@ jobs:
         if: steps.select.outputs.build && success()
         with:
           name: standalone-${{ matrix.platform }}
+          path: packages/
+          compression-level: 0
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: failure() && steps.installers.outcome == 'success'
+        with:
+          name: unverified-${{ matrix.platform }}
           path: packages/
           compression-level: 0
           if-no-files-found: error
