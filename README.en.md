@@ -84,9 +84,9 @@
 
 <!-- game-index:start -->
 
-**37 controller games** · [Play every game on a computer](docs/guide/README.en.md#play-on-a-computer) · Android TV (37) · Standalone macOS downloads (37) · Standalone Windows x64 downloads (37)
+**39 controller games** · [Play every game on a computer](docs/guide/README.en.md#play-on-a-computer) · Android TV (39) · Standalone macOS downloads (39) · Standalone Windows x64 downloads (39)
 
-[Racing and sports (13)](#controller-racing) · [Action, RPGs and exploration (5)](#controller-action) · [Platformers, bullet hell and arcade (5)](#controller-arcade) · [Strategy, tower defense and card games (2)](#controller-strategy) · [Puzzles and brainteasers (12)](#controller-puzzle)
+[Racing and sports (13)](#controller-racing) · [Action, RPGs and exploration (6)](#controller-action) · [Platformers, bullet hell and arcade (5)](#controller-arcade) · [Strategy, tower defense and card games (2)](#controller-strategy) · [Puzzles and brainteasers (13)](#controller-puzzle)
 
 <a id="controller-racing"></a>
 
@@ -121,7 +121,7 @@
 
 <a id="controller-action"></a>
 
-### Action, RPGs and exploration (5)
+### Action, RPGs and exploration (6)
 
 <table>
   <tr>
@@ -132,7 +132,7 @@
   </tr>
   <tr>
     <td align="center" valign="top" width="207"><a href="joystick-games/operation-ironhold/"><img src="joystick-games/operation-ironhold/thumb.png" width="180" alt=""><br>Operation Ironhold</a><br><a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/operation-ironhold-0.1.2.apk" title="Operation Ironhold Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Operation Ironhold Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/operation-ironhold-macos.dmg" title="Operation Ironhold macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Operation Ironhold macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/operation-ironhold-windows-x64-setup.exe" title="Operation Ironhold Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Operation Ironhold Windows x64 EXE"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/StarKnightt/operation-ironhold" title="Operation Ironhold · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Operation Ironhold · Original repository"></a></td>
-    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/kindle/"><img src="joystick-games/kindle/thumb.png" width="180" alt=""><br>KINDLE</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/5bf4f37b4abc207bbd86febd7ade6ba4f9b8a0e7/joystick-games/kindle/kindle-0.1.1.apk" title="KINDLE Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="KINDLE Android TV APK"></a> <a href="joystick-games/kindle/macos/Kindle-0.1.0-macos-universal.dmg?raw=1" title="KINDLE macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="KINDLE macOS DMG"></a> <a href="joystick-games/kindle/windows/Kindle-0.1.0-windows-x64-setup.exe?raw=1" title="KINDLE Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="KINDLE Windows x64 EXE"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/TonyDowney/kindle" title="KINDLE · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="KINDLE · Original repository"></a></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
@@ -172,7 +172,7 @@
 
 <a id="controller-puzzle"></a>
 
-### Puzzles and brainteasers (12)
+### Puzzles and brainteasers (13)
 
 <table>
   <tr>
@@ -193,8 +193,16 @@
     <td align="center" valign="top" width="207"><a href="joystick-games/starbase-spooky/"><img src="docs/puzzle-nine/browser/starbase-spooky/playing-1280.jpg" width="180" alt=""><br>Starbase Spooky</a><br><a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/starbase-spooky-0.1.4.apk" title="Starbase Spooky Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Starbase Spooky Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/starbase-spooky-macos.dmg" title="Starbase Spooky macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Starbase Spooky macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/starbase-spooky-windows-x64-setup.exe" title="Starbase Spooky Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Starbase Spooky Windows x64 EXE"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/triptych/web-games-andrew" title="Starbase Spooky · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Starbase Spooky · Original repository"></a></td>
     <td align="center" valign="top" width="207"><a href="joystick-games/sugarplum-drop/"><img src="joystick-games/sugarplum-drop/docs/browser-attempt-3/playing-1280.png" width="180" alt=""><br>Sugarplum Drop</a><br><a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/sugarplum-drop-0.1.2.apk" title="Sugarplum Drop Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Sugarplum Drop Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/sugarplum-drop-macos.dmg" title="Sugarplum Drop macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Sugarplum Drop macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/sugarplum-drop-windows-x64-setup.exe" title="Sugarplum Drop Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Sugarplum Drop Windows x64 EXE"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/triptych/web-games-andrew" title="Sugarplum Drop · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Sugarplum Drop · Original repository"></a></td>
   </tr>
+  <tr>
+    <td align="center" valign="top" width="207"><a href="joystick-games/silent-meridian/"><img src="joystick-games/silent-meridian/thumb.png" width="180" alt=""><br>Silent Meridian</a><br><a href="https://raw.githubusercontent.com/ecojust/pureTV/4020dfbc5ba24af70adabad2cf5c50f983d96432/joystick-games/silent-meridian/silent-meridian-0.1.0.apk" title="Silent Meridian Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Silent Meridian Android TV APK"></a> <a href="joystick-games/silent-meridian/macos/SilentMeridian-0.1.0-macos-universal.dmg?raw=1" title="Silent Meridian macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Silent Meridian macOS DMG"></a> <a href="joystick-games/silent-meridian/windows/SilentMeridian-0.1.0-windows-x64-setup.exe?raw=1" title="Silent Meridian Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Silent Meridian Windows x64 EXE"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/stackloomdev/silent-meridian" title="Silent Meridian · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Silent Meridian · Original repository"></a></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"></td>
+  </tr>
 </table>
 
 <img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt=""> Android TV · <img src="docs/branding/platforms/macos.png" width="22" height="22" alt=""> macOS · <img src="docs/branding/platforms/windows.png" width="22" height="22" alt=""> Windows x64 · <img src="docs/branding/platforms/controller.png" width="22" height="22" alt=""> Controller supported · <img src="docs/branding/platforms/upstream.png" width="22" height="22" alt=""> Original repository
 
 <!-- game-index:end -->
+
+KINDLE requires WebGL 2. Its macOS package passed native Apple Silicon and Rosetta testing. The game did not finish initializing on the Intel Mac test runner. The signed Android TV build has only partial emulator verification.

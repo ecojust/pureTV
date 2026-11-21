@@ -185,7 +185,7 @@ def build(args):
     from game_icons import save_ico
     icon=out/'game.ico';save_ico(game,icon);rc=icon_resource(icon)
     deps=args.dependencies.resolve();lock=dependencies(deps)
-    work=out/'build';run('cmake','-S',SHARED,'-B',work,'-A','x64','-DPURETV_DEPS='+str(deps),'-DPURETV_GAME_ICON_RC='+str(rc));run('cmake','--build',work,'--config','Release');run('ctest','--test-dir',work,'-C','Release','--output-on-failure')
+    work=out/'build';run('cmake','-S',SHARED,'-B',work,'-A','x64','-DPURETV_DEPS='+str(deps),'-DPURETV_GAME_ICON_RC='+rc.as_posix());run('cmake','--build',work,'--config','Release');run('ctest','--test-dir',work,'-C','Release','--output-on-failure')
     folder=out/(identity['executable']+'-'+meta['version']+'-windows-x64');folder.mkdir();shutil.copy2(work/'Release/PureTVGame.exe',folder/'PureTVGame.exe');shutil.copy2(game/'game.json',folder/'game.json');copy_web_assets(game/'dist',folder/'Web',meta,identity)
     shutil.copyfile(icon,folder/'game.ico')
     for p in (SHARED/'Web').iterdir():

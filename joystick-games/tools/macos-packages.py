@@ -8,6 +8,7 @@ import os
 import plistlib
 import re
 import subprocess
+import sys
 from pathlib import Path, PurePosixPath
 
 
@@ -94,8 +95,13 @@ def main():
         builder = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(builder)
         game = builder.ROOT / 'joystick-games' / meta['game']
-        assert meta['inputFiles'] == builder.inputs(game), 'Current frozen input set differs from package source'
-        builder.verify_committed(builder.ROOT, meta['inputFiles'], meta['sourceCommit'])
+        inputs = builder.inputs(game)
+        builder.verify_committed(builder.ROOT, inputs, meta['sourceCommit'])
+        if 'icon' in meta:
+            sys.path.insert(0, str(builder.ROOT / 'tools'))
+            from macos_game_icons import committed_inputs
+            inputs.update(committed_inputs(game, builder.ROOT, meta['sourceCommit']))
+        assert meta['inputFiles'] == inputs, 'Current frozen input set differs from package source'
     assert len(meta['packages']) == 2
     for name, value in meta['packages'].items():
         assert name == Path(name).name and re.fullmatch(r'[A-Za-z0-9_.-]+\.(zip|dmg)', name)
