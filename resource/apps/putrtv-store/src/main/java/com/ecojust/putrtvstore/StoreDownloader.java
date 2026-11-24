@@ -18,8 +18,6 @@ public class StoreDownloader {
     public static final long MAX_APK_BYTES = 128L * 1024 * 1024;
     private static final long DISK_RESERVE_BYTES = 1024L * 1024;
     private static final long CACHE_RETENTION_MS = 24L * 60 * 60 * 1000;
-    private static final Pattern APK_PATH = Pattern.compile(
-            "(?:resource/(?:apps|launcher)|joystick-games)/[a-z0-9][a-z0-9-]*/[A-Za-z0-9][A-Za-z0-9._-]*\\.apk");
     private static final Pattern SHA256 = Pattern.compile("[a-f0-9]{64}");
     private static final Pattern SHA1 = Pattern.compile("[a-f0-9]{40}");
     private static final Object CACHE_LOCK = new Object();
@@ -138,8 +136,7 @@ public class StoreDownloader {
     private static void validate(StoreCatalog catalog, StoreEntry entry) throws IOException {
         if (catalog == null || catalog.revision == null || !SHA1.matcher(catalog.revision).matches()
                 || entry == null || entry.bytes <= 0 || entry.bytes > MAX_APK_BYTES
-                || entry.apkPath == null || !APK_PATH.matcher(entry.apkPath).matches()
-                || entry.apkPath.contains("..") || entry.sha256 == null
+                || !StoreNetwork.validApkPath(entry.apkPath) || entry.sha256 == null
                 || !SHA256.matcher(entry.sha256).matches() || entry.gitBlobSha == null
                 || !SHA1.matcher(entry.gitBlobSha).matches()) {
             throw new DownloadException(Reason.INVALID_ENTRY);

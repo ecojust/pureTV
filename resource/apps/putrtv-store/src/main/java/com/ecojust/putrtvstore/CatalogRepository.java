@@ -131,7 +131,7 @@ public class CatalogRepository {
                 throw new IOException("Invalid or duplicate package identity");
             String apk = string(item, "apkPath", 512, false), cover = string(item, "coverPath", 512, true);
             String prefix = (id.startsWith("joystick-games/") ? id : "resource/" + id) + "/";
-            if (!StoreNetwork.validPath(apk) || !apk.startsWith(prefix) || apk.substring(prefix.length()).contains("/") || !apk.endsWith(".apk"))
+            if (!StoreNetwork.validApkPath(apk) || !apk.startsWith(prefix))
                 throw new IOException("APK path does not match catalog identity");
             if (!cover.isEmpty() && (!StoreNetwork.validPath(cover) || !cover.startsWith(prefix)
                     || cover.substring(prefix.length()).contains("/") || !cover.endsWith(".png"))) throw new IOException("Invalid cover path");

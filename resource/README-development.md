@@ -17,7 +17,7 @@ joystick-games/tank/
 └── src/
 ```
 
-APK 必须直接放在对应软件目录，源码可以附在同一目录。`SHA256SUMS.txt` 同时记录 APK 和 `logo.svg` 的校验值，README 提供图标文件链接。市场仓库使用对应的 `apps/<应用名>/`、`launcher/<启动器名>/` 目录；应用图标通过固定文件名发现，无须在 `resource.json` 增加图标地址字段。可参考 [Tank TV 图标](apps/tank/logo.svg)。
+APK 必须直接放在对应软件目录，源码可以附在同一目录。`SHA256SUMS.txt` 同时记录 APK 和 `logo.svg` 的校验值，README 提供图标文件链接。市场仓库使用对应的 `apps/<应用名>/`、`launcher/<启动器名>/` 目录；应用图标通过固定文件名发现，无须在 `resource.json` 增加图标地址字段。可参考 [Tank TV 图标](../joystick-games/tank/logo.svg)。
 
 ### 图标格式与安全子集
 

@@ -84,6 +84,11 @@ public class CatalogRepositoryTest {
         item.put("apkPath", "joystick-games/sample/sample.apk");
         item.put("coverPath", "joystick-games/sample/thumb.png");
         assertEquals("joystick-games/sample", parse(feed(item)).entries.get(0).id);
+        for (String path : new String[]{"joystick-games/sample/../x.apk", "joystick-games/sample/sub/game.apk",
+                "joystick-games/sample/a..b.apk", "joystick-games/sample/.apk", "joystick-games/other/sample.apk"}) {
+            item.put("apkPath", path); invalid(feed(item));
+        }
+        item.put("apkPath", "joystick-games/sample/sample.apk");
         item.put("category", "tools"); invalid(feed(item));
         item.put("category", "game"); item.put("coverPath", "joystick-games/other/thumb.png"); invalid(feed(item));
     }

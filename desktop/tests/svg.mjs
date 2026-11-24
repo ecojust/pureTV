@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {after, before, test} from 'node:test';
 import {readFile,readdir} from 'node:fs/promises';
+import {existsSync} from 'node:fs';
 import ts from 'typescript';
 import {chromium} from 'playwright';
 
@@ -25,19 +26,26 @@ const inspect=value=>page.evaluate(value=>{
 },value);
 
 test('every bundled application supplies a 64px logo usable by launcher layouts',async()=>{
-  const root=new URL('../../resource/apps/',import.meta.url);
-  const folders=(await readdir(root,{withFileTypes:true})).filter(entry=>entry.isDirectory()&&!entry.name.startsWith('.'));
+  const folders=[];
+  for(const location of ['resource/apps','joystick-games']){
+    const root=new URL('../../'+location+'/',import.meta.url);
+    for(const entry of await readdir(root,{withFileTypes:true})){
+      if(!entry.isDirectory()||entry.name.startsWith('.'))continue;
+      const folder=new URL(entry.name+'/',root);
+      if(location==='resource/apps'||existsSync(new URL('resource.json',folder)))folders.push(folder);
+    }
+  }
   assert.ok(folders.length>0,'The public app catalog is not empty');
   for(const folder of folders){
-    const svg=await readFile(new URL(folder.name+'/logo.svg',root),'utf8');
+    const svg=await readFile(new URL('logo.svg',folder),'utf8');
     const result=await inspect(svg);
-    assert.equal(result.strict,null,folder.name+': '+JSON.stringify(result));
-    assert.equal(result.result.svg,svg,folder.name+': the shipped logo is already protocol-compatible');
+    assert.equal(result.strict,null,folder.pathname+': '+JSON.stringify(result));
+    assert.equal(result.result.svg,svg,folder.pathname+': the shipped logo is already protocol-compatible');
     const dimensions=await page.evaluate(svg=>{
       const root=new DOMParser().parseFromString(svg,'image/svg+xml').documentElement;
       return ['width','height','viewBox'].map(name=>root.getAttribute(name));
     },svg);
-    assert.deepEqual(dimensions,['64','64','0 0 64 64'],folder.name+': standard logo dimensions');
+    assert.deepEqual(dimensions,['64','64','0 0 64 64'],folder.pathname+': standard logo dimensions');
   }
 });
 

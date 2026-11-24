@@ -22,7 +22,9 @@ public final class StoreNetwork {
     public static final String REF_URL = "https://api.github.com/repos/ecojust/pureTV/git/ref/heads/master";
     private static final String RAW_PREFIX = "/ecojust/pureTV/";
     private static final Pattern REVISION = Pattern.compile("[a-f0-9]{40}");
-    private static final Pattern RESOURCE = Pattern.compile("(?:resource|joystick-games)/(?:[A-Za-z0-9._-]+/)*[A-Za-z0-9._-]+");
+    private static final Pattern RESOURCE = Pattern.compile("resource/(?:[A-Za-z0-9._-]+/)*[A-Za-z0-9._-]+|joystick-games/[a-z0-9][a-z0-9-]*/[A-Za-z0-9][A-Za-z0-9._-]*\\.(?:apk|png)");
+    private static final Pattern APK_PATH = Pattern.compile(
+            "(?:resource/(?:apps|launcher)|joystick-games)/[a-z0-9][a-z0-9-]*/[A-Za-z0-9][A-Za-z0-9._-]*\\.apk");
     private static final long TRANSFER_TIMEOUT_MS = 15L * 60 * 1000;
     private StoreNetwork() { }
 
@@ -32,6 +34,10 @@ public final class StoreNetwork {
     }
 
     static boolean validRevision(String revision) { return revision != null && REVISION.matcher(revision).matches(); }
+    static boolean validApkPath(String path) {
+        return path != null && path.length() <= 512 && !path.contains("..") && APK_PATH.matcher(path).matches();
+    }
+
     static boolean validPath(String path) {
         if (path == null || path.length() > 512 || !RESOURCE.matcher(path).matches()) return false;
         for (String segment : path.split("/")) if (segment.equals(".") || segment.equals("..")) return false;
