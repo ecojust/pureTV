@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": [
+    "gameplay.distance",
+    "gameplay.x",
+    "gameplay.dives"
+  ],
+  "steps": [
+    {
+      "name": "Start an offline flight",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ],
+      "timeoutSeconds": 120
+    },
+    {
+      "name": "Steer the gull sideways",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 450,
+      "expect": [
+        {
+          "path": "gameplay.x",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Dive toward the water",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 400,
+      "expect": [
+        {
+          "path": "gameplay.dives",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Pause with START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 750,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Resume with START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 900,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ]
+}
