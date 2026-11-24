@@ -1,0 +1,51 @@
+{
+  "sourceCommit": "2dfa5ec14cedc16cf5d49065a25e8096c8514bbe",
+  "batch": "selected-seven-02",
+  "runner": "macos-15-intel",
+  "expectedArchitecture": "x86_64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "gogh-strike",
+      "status": "failed",
+      "checks": [],
+      "error": "Traceback (most recent call last):\n  File \"<stdin>\", line 31, in <module>\n  File \"/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py\", line 1027, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py\", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/Users/runner/work/_temp/packages/gogh-strike/build-manifest.json'\n"
+    },
+    {
+      "game": "bloom-hop",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/bloom-hop",
+            "--output",
+            "/Users/runner/work/_temp/qa/bloom-hop/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "bloom-hop/package-verification.log",
+          "startedAt": "2026-11-24T16:41:31.692410+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "bloom-hop",
+            "--app",
+            "/Users/runner/work/_temp/packages/bloom-hop/installed/Bloom Hop.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/bloom-hop/native"
+          ],
+          "status": "passed",
+          "log": "bloom-hop/native.log",
+          "startedAt": "2026-11-24T16:43:17.110599+00:00",
+          "returncode": 0
+        }
+      ]
+    }
+  ]
+}
