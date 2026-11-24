@@ -259,6 +259,42 @@ public class ApkInstallerTest {
         return info;
     }
 
+    private StoreEntry discovered(String validator) {
+        String path = "media/new/new.apk";
+        return new StoreEntry(path, "New", "", "", "", "media", "", "", path, "", "",
+                "", "", "", 0, APK.length, 0, validator, "", "", "");
+    }
+
+    @Test public void discoveredVersionUsesActualIdentityAndChecksumForHandoff() throws Exception {
+        StoreEntry listed = discovered("\"current\"");
+        File received = new File(activity.getCacheDir(), StoreDownloader.snapshotKey(listed) + "-" + sha(APK) + ".apk");
+        write(received, APK);
+        InstalledApps apps = new InstalledApps(activity);
+        assertFalse(apps.resolve(listed).hasPackageIdentity());
+        ApkInstaller.PreparedApk prepared = installer.prepare(listed, received);
+        StoreEntry actual = apps.resolve(listed);
+        expect(ApkInstaller.Error.INVALID_FILE, () -> installer.prepare(discovered("\"other\""), received));
+        assertEquals(PACKAGE, actual.packageName);
+        assertEquals(2, actual.versionCode);
+        assertEquals(sha(APK), actual.sha256);
+        assertEquals(sha(CERTIFICATE.toByteArray()), actual.certificateSha256);
+        assertFalse(apps.resolve(discovered("\"changed\"")).hasPackageIdentity());
+        installer.install(prepared);
+        assertEquals("/apk/" + actual.sha256 + ".apk", launched().getData().getPath());
+    }
+
+    @Test public void discoveryCannotBypassInstalledSignerOrVersionChecks() throws Exception {
+        StoreEntry listed = discovered("\"unknown\"");
+        File received = new File(activity.getCacheDir(), StoreDownloader.snapshotKey(listed) + "-" + sha(APK) + ".apk");
+        write(received, APK);
+        installPackage(archive(1, new Signature(new byte[] {9, 8, 7})));
+        expect(ApkInstaller.Error.SIGNATURE_MISMATCH, () -> installer.prepare(listed, received));
+        installPackage(archive(2, CERTIFICATE));
+        expect(ApkInstaller.Error.NOT_NEWER, () -> installer.prepare(listed, received));
+        write(received, new byte[APK.length]);
+        expect(ApkInstaller.Error.HASH_MISMATCH, () -> installer.prepare(listed, received));
+    }
+
     private static StoreEntry entry(int minSdk) throws Exception {
         return new StoreEntry("apps/fixture", "示例", "Fixture", "", "", "tools", PACKAGE, "2.0",
                 "resource/apps/fixture/fixture.apk", "", "", sha(APK), sha(CERTIFICATE.toByteArray()),

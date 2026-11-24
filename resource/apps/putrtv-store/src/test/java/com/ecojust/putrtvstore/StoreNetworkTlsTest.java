@@ -18,6 +18,10 @@ import org.junit.Test;
 public class StoreNetworkTlsTest {
     private static final String[] LEGACY_SUPPORTED = {"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"};
 
+    @Test public void requestsReuseTheSamePlatformBackedTlsFactory() throws Exception {
+        assertSame(StoreNetwork.tlsFactory(), StoreNetwork.tlsFactory());
+    }
+
     @Test public void allSixCreationOverloadsEnableTls12OnTheActualDelegatedSocket() throws Exception {
         InetAddress remote = InetAddress.getByAddress(new byte[] {127, 0, 0, 1});
         InetAddress local = InetAddress.getByAddress(new byte[] {127, 0, 0, 2});

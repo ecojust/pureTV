@@ -16,8 +16,9 @@ import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Map;
 import java.util.List;
 import java.util.Set;
 import org.json.JSONArray;
@@ -25,126 +26,144 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 
-/** A refreshed feed always refers to one immutable source commit, including all assets. */
+/** Live market membership comes from the same server directories as the desktop manager. */
 public class CatalogRepository {
     public static final int MAX_CATALOG_BYTES = 4 * 1024 * 1024;
     public static final long FRESH_MS = 5 * 60 * 1000L;
-    public static final String FEED_PATH = "resource/tv-store-catalog-v2.json";
     public static final String BUNDLED_ASSET = "catalog-snapshot.json";
     private final Context context;
     private final AtomicFile cache;
-    private final Transport transport;
+    private final MarketDirectory.Transport transport;
     private boolean refreshFailed;
 
-    interface Transport { byte[] read(URL url, int maxBytes, Cancellation cancellation) throws IOException; }
-    public CatalogRepository(Context context) { this(context, StoreNetwork::read); }
-    CatalogRepository(Context context, Transport transport) {
-        this.context = context.getApplicationContext(); this.transport = transport;
-        this.cache = new AtomicFile(new File(this.context.getFilesDir(), "tv-store-catalog-v2-cache.json"));
+    public CatalogRepository(Context context) {
+        this(context, new MarketDirectory.Transport() {
+            @Override public byte[] read(URL url, int limit, Cancellation cancel) throws IOException {
+                return StoreNetwork.read(url, limit, cancel);
+            }
+            @Override public MarketDirectory.Metadata head(URL url, Cancellation cancel) throws IOException {
+                return StoreNetwork.head(url, cancel);
+            }
+        });
     }
 
-    public synchronized StoreCatalog load(boolean force, Cancellation cancellation) throws IOException {
-        cancellation.check();
-        StoreCatalog previous = null;
+    CatalogRepository(Context context, MarketDirectory.Transport transport) {
+        this.context = context.getApplicationContext();
+        this.transport = transport;
+        this.cache = new AtomicFile(new File(this.context.getFilesDir(), "market-directory-cache-v3.json"));
+    }
+
+    public synchronized StoreCatalog load(boolean force, Cancellation cancel) throws IOException {
+        cancel.check();
+        StoreCatalog cached = null;
         try (InputStream input = cache.openRead()) {
-            previous = snapshot(StoreNetwork.readBounded(input, MAX_CATALOG_BYTES, cancellation), false);
-        } catch (IOException ignored) { cancellation.check(); }
+            cached = snapshot(input, "Saved APK market", cancel);
+        } catch (IOException ignored) { cancel.check(); }
         long now = System.currentTimeMillis();
-        if (!force && !refreshFailed && previous != null && now >= previous.fetchedAt && now - previous.fetchedAt < FRESH_MS) return previous;
+        if (!force && !refreshFailed && cached != null && now >= cached.fetchedAt && now - cached.fetchedAt < FRESH_MS)
+            return cached;
+
+        StoreCatalog bundled = null;
+        try (InputStream input = context.getAssets().open(BUNDLED_ASSET)) {
+            bundled = snapshot(input, "Bundled APK market", cancel);
+        } catch (IOException ignored) { cancel.check(); }
         try {
-            JSONObject ref = object(transport.read(new URL(StoreNetwork.REF_URL), 64 * 1024, cancellation));
-            JSONObject target = requireObject(ref, "object");
-            if (!string(target, "type", 32, false).equals("commit")) throw new IOException("Repository ref is not a commit");
-            String revision = string(target, "sha", 40, false);
-            if (!StoreNetwork.validRevision(revision)) throw new IOException("Invalid repository revision");
-            byte[] bytes = transport.read(StoreNetwork.raw(revision, FEED_PATH), MAX_CATALOG_BYTES, cancellation);
-            cancellation.check();
-            StoreCatalog live = parse(bytes, revision, "GitHub", now, false, "");
+            JSONObject feed = MarketDirectory.load(transport, cancel);
+            enrich(feed, bundled);
+            StoreCatalog live = parse(feed, StoreNetwork.SOURCE, now, false, "");
+            cancel.check();
             refreshFailed = false;
-            try { save(bytes, revision, now, cancellation); }
-            catch (IOException failedCache) {
-                cancellation.check();
-                return new StoreCatalog(revision, "GitHub", "Live catalog loaded; offline cache could not be saved.", now, false, live.entries);
+            try { save(feed, now, cancel); } catch (IOException failure) {
+                cancel.check();
+                return new StoreCatalog(live.revision, live.source, "Live market loaded; offline cache could not be saved.", now, false, live.entries);
             }
             return live;
-        } catch (IOException failure) {
-            cancellation.check(); refreshFailed = true;
-            if (previous == null) {
-                try (InputStream input = context.getAssets().open(BUNDLED_ASSET)) {
-                    previous = snapshot(StoreNetwork.readBounded(input, MAX_CATALOG_BYTES, cancellation), true);
-                } catch (IOException invalidBundle) {
-                    cancellation.check(); throw new IOException("Cannot load the online or bundled catalog", failure);
-                }
-            }
-            return new StoreCatalog(previous.revision, previous.source,
-                    "Online refresh failed; showing a saved catalog. Newer versions may be available.",
-                    previous.fetchedAt, true, previous.entries);
+        } catch (IOException | JSONException failure) {
+            cancel.check(); refreshFailed = true;
+            StoreCatalog fallback = cached != null ? cached : bundled;
+            if (fallback == null) throw new IOException("Cannot load the online or saved APK market", failure);
+            return new StoreCatalog(fallback.revision, fallback.source, "Market refresh failed; showing a saved list.",
+                    fallback.fetchedAt, true, fallback.entries);
         }
     }
 
-    private StoreCatalog snapshot(byte[] bytes, boolean bundled) throws IOException {
-        JSONObject wrapper = object(bytes); fields(wrapper, "revision", "fetchedAt", "catalog");
-        String revision = string(wrapper, "revision", 40, false);
-        long fetchedAt = number(wrapper, "fetchedAt", 0, Long.MAX_VALUE);
-        JSONObject feed = requireObject(wrapper, "catalog");
-        return parse(feed.toString().getBytes(StandardCharsets.UTF_8), revision,
-                bundled ? "Bundled snapshot" : "Saved GitHub catalog", fetchedAt, bundled,
-                bundled ? "Bundled catalog; connect to check for newer versions." : "");
+    private StoreCatalog snapshot(InputStream stream, String source, Cancellation cancel) throws IOException {
+        JSONObject wrapper = object(StoreNetwork.readBounded(stream, MAX_CATALOG_BYTES, cancel));
+        if (!StoreNetwork.SOURCE.equals(string(wrapper, "source", 256, false))) throw new IOException("Unknown market source");
+        return parse(requireObject(wrapper, "catalog"), source, number(wrapper, "fetchedAt", 1, Long.MAX_VALUE), false, "");
     }
 
-    private void save(byte[] bytes, String revision, long fetchedAt, Cancellation cancellation) throws IOException {
+    private void save(JSONObject feed, long fetchedAt, Cancellation cancel) throws IOException {
         FileOutputStream output = null;
         try {
-            JSONObject wrapper = new JSONObject(); wrapper.put("revision", revision);
-            wrapper.put("fetchedAt", fetchedAt); wrapper.put("catalog", object(bytes));
+            JSONObject wrapper = new JSONObject().put("source", StoreNetwork.SOURCE).put("fetchedAt", fetchedAt).put("catalog", feed);
             byte[] encoded = wrapper.toString().getBytes(StandardCharsets.UTF_8);
             if (encoded.length > MAX_CATALOG_BYTES) throw new IOException("Catalog cache is too large");
-            cancellation.check(); output = cache.startWrite(); output.write(encoded);
-            cancellation.check(); cache.finishWrite(output); output = null;
-        } catch (JSONException failure) { throw new IOException("Invalid cache data", failure); }
+            cancel.check(); output = cache.startWrite(); output.write(encoded); cancel.check();
+            cache.finishWrite(output); output = null;
+        } catch (JSONException e) { throw new IOException("Invalid cache document", e); }
         finally { if (output != null) cache.failWrite(output); }
     }
 
-    public static StoreCatalog parse(byte[] bytes, String revision, String source, long fetchedAt,
-            boolean stale, String warning) throws IOException {
-        if (!StoreNetwork.validRevision(revision)) throw new IOException("Invalid catalog revision");
-        JSONObject feed = object(bytes); fields(feed, "schemaVersion", "entries");
-        if (number(feed, "schemaVersion", 1, 1) != 1) throw new IOException("Unsupported catalog version");
-        Object list = feed.opt("entries");
-        if (!(list instanceof JSONArray)) throw new IOException("Missing catalog entries");
-        JSONArray items = (JSONArray) list;
-        if (items.length() < 1 || items.length() > 1024) throw new IOException("Invalid catalog entry count");
-        List<StoreEntry> entries = new ArrayList<>(); Set<String> packages = new HashSet<>(), ids = new HashSet<>();
-        for (int i = 0; i < items.length(); i++) {
-            Object value = items.opt(i);
-            if (!(value instanceof JSONObject)) throw new IOException("Invalid catalog entry");
-            JSONObject item = (JSONObject) value;
-            fields(item, "id", "name", "nameEn", "description", "descriptionEn", "category", "packageName",
-                    "versionName", "apkPath", "coverPath", "logoSvg", "sha256", "certificateSha256", "gitBlobSha", "versionCode", "bytes", "minSdk");
-            String id = string(item, "id", 120, false), category = string(item, "category", 16, false);
-            if (!id.matches("(?:launcher|apps|joystick-games)/[a-z0-9][a-z0-9-]*") || !ids.add(id)) throw new IOException("Invalid or duplicate catalog id");
-            if (!Arrays.asList("launcher", "media", "game", "tools").contains(category)
-                    || (id.startsWith("joystick-games/") && !category.equals("game"))
-                    || (id.startsWith("launcher/") != category.equals("launcher"))) throw new IOException("Invalid catalog category");
-            String packageName = string(item, "packageName", 255, false);
-            if (!packageName.matches("[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)+") || !packages.add(packageName))
-                throw new IOException("Invalid or duplicate package identity");
-            String apk = string(item, "apkPath", 512, false), cover = string(item, "coverPath", 512, true);
-            String prefix = (id.startsWith("joystick-games/") ? id : "resource/" + id) + "/";
-            if (!StoreNetwork.validApkPath(apk) || !apk.startsWith(prefix))
-                throw new IOException("APK path does not match catalog identity");
-            if (!cover.isEmpty() && (!StoreNetwork.validPath(cover) || !cover.startsWith(prefix)
-                    || cover.substring(prefix.length()).contains("/") || !cover.endsWith(".png"))) throw new IOException("Invalid cover path");
-            String logo = string(item, "logoSvg", 8192, true);
-            if (!logo.isEmpty() && !safeLogo(logo)) throw new IOException("Unsafe catalog logo");
-            entries.add(new StoreEntry(id, string(item, "name", 160, false), string(item, "nameEn", 160, false),
-                    string(item, "description", 2048, true), string(item, "descriptionEn", 2048, true), category, packageName,
-                    string(item, "versionName", 80, false), apk, cover, logo, hash(item, "sha256", 64),
-                    hash(item, "certificateSha256", 64), hash(item, "gitBlobSha", 40),
-                    number(item, "versionCode", 1, Long.MAX_VALUE), number(item, "bytes", 1, StoreDownloader.MAX_APK_BYTES),
-                    (int) number(item, "minSdk", 1, 1000)));
+    /** Attach inspected package metadata only to the exact live file represented by that receipt. */
+    static void enrich(JSONObject feed, StoreCatalog bundled) throws IOException, JSONException {
+        if (bundled == null) return;
+        Map<String, StoreEntry> known = new HashMap<>();
+        for (StoreEntry entry : bundled.entries) known.put(entry.apkPath, entry);
+        JSONArray rows = feed.getJSONArray("entries");
+        for (int i = 0; i < rows.length(); i++) {
+            JSONObject row = rows.getJSONObject(i);
+            StoreEntry entry = known.get(row.getString("apkPath"));
+            if (entry == null || !entry.hasPackageIdentity() || row.getLong("bytes") != entry.bytes) continue;
+            String checksum = row.getString("sha256");
+            boolean sameFile = checksum.isEmpty() ? StoreNetwork.strongEtag(entry.etag) && entry.etag.equals(row.getString("etag"))
+                    : checksum.equals(entry.sha256);
+            if (sameFile) row.put("sha256", entry.sha256).put("gitBlobSha", entry.gitBlobSha)
+                    .put("certificateSha256", entry.certificateSha256).put("packageName", entry.packageName)
+                    .put("apkVersionName", entry.versionName).put("versionCode", entry.versionCode).put("minSdk", entry.minSdk);
         }
-        return new StoreCatalog(revision, source, warning, fetchedAt, stale, entries);
+    }
+
+    static StoreCatalog parse(JSONObject feed, String source, long fetchedAt, boolean stale, String warning) throws IOException {
+        number(feed, "schemaVersion", 3, 3);
+        JSONArray items = feed.optJSONArray("entries");
+        if (items == null || items.length() > 1024) throw new IOException("Invalid market entries");
+        List<StoreEntry> entries = new ArrayList<>();
+        Set<String> paths = new HashSet<>();
+        for (int i = 0; i < items.length(); i++) {
+            JSONObject item = items.optJSONObject(i);
+            if (item == null) throw new IOException("Invalid market entry");
+            String path = string(item, "apkPath", 2048, false);
+            String category = string(item, "category", 16, false);
+            if (!StoreNetwork.validApkPath(path) || !path.startsWith(category + "/") ||
+                    !path.equals(string(item, "id", 2048, false)) || !paths.add(path)) throw new IOException("Invalid or duplicate APK path");
+            String cover = string(item, "coverPath", 2048, true);
+            if (!cover.isEmpty() && (!StoreNetwork.validPath(cover) || !cover.endsWith(".png") ||
+                    !cover.substring(0, cover.lastIndexOf('/') + 1).equals(path.substring(0, path.lastIndexOf('/') + 1))))
+                throw new IOException("Invalid market cover");
+            String etag = string(item, "etag", 512, true), date = string(item, "lastModified", 29, true);
+            if ((!etag.isEmpty() && !StoreNetwork.strongEtag(etag)) || (!date.isEmpty() && !StoreNetwork.validModified(date)) ||
+                    (etag.isEmpty() && date.isEmpty())) throw new IOException("Invalid APK validators");
+            String digest = string(item, "sha256", 64, true);
+            if (!digest.isEmpty() && !digest.matches("[a-f0-9]{64}")) throw new IOException("Invalid APK checksum");
+            String name = string(item, "name", 512, false), version = string(item, "versionName", 255, true);
+            long bytes = number(item, "bytes", 1, StoreDownloader.MAX_APK_BYTES);
+            String provider = string(item, "provider", 512, true);
+            Object artwork = item.opt("logoSvg");
+            String logo = artwork instanceof String ? (String) artwork : "";
+            if (!logo.isEmpty() && !safeLogo(logo)) logo = "";
+            StoreEntry entry = new StoreEntry(path, name, "", "", "", category, "", "", path, cover, logo, digest, "", "",
+                    0, bytes, 0, etag, date, provider, version);
+            if (item.has("packageName")) {
+                String pkg = string(item, "packageName", 255, false);
+                if (!pkg.matches("[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)+")) throw new IOException("Invalid APK package");
+                entry = entry.withIdentity(pkg, string(item, "apkVersionName", 255, true),
+                        number(item, "versionCode", 1, Long.MAX_VALUE), (int) number(item, "minSdk", 1, 1000),
+                        hash(item, "sha256", 64), hash(item, "certificateSha256", 64), hash(item, "gitBlobSha", 40));
+            }
+            entries.add(entry);
+        }
+        return new StoreCatalog(Long.toString(fetchedAt), source, warning, fetchedAt, stale, entries);
     }
 
     private static String hash(JSONObject object, String key, int length) throws IOException {
@@ -172,12 +191,6 @@ public class CatalogRepository {
         if (number < min || number > max) throw new IOException("Out of range " + key);
         return number;
     }
-    private static void fields(JSONObject object, String... names) throws IOException {
-        Set<String> expected = new HashSet<>(Arrays.asList(names));
-        for (Iterator<String> it = object.keys(); it.hasNext();) if (!expected.remove(it.next())) throw new IOException("Unknown catalog field");
-        if (!expected.isEmpty()) throw new IOException("Missing catalog fields");
-    }
-
     /** Android's JSONObject parser accepts duplicate keys and lenient JSON. Use strict streaming first. */
     private static JSONObject object(byte[] bytes) throws IOException {
         if (bytes.length > MAX_CATALOG_BYTES) throw new IOException("Catalog exceeds size limit");

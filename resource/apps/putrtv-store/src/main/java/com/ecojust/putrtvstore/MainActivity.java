@@ -46,6 +46,9 @@ public class MainActivity extends Activity {
     private final ExecutorService worker = Executors.newSingleThreadExecutor();
     private final Map<String, Button> tabs = new LinkedHashMap<>();
     private final Map<String, InstalledApps.Status> states = new LinkedHashMap<>();
+    private final Map<String, List<StoreEntry>> groups = new LinkedHashMap<>();
+    private final Map<String, String> choices = new LinkedHashMap<>();
+    private String reopenId;
     private Future<?> pending;
     private Cancellation cancellation;
     private int generation, page;
@@ -101,8 +104,8 @@ public class MainActivity extends Activity {
         super.onCreate(state);
         if (state != null) {
             String savedCategory = state.getString("category", "media");
-            if ("game".equals(savedCategory) || "tools".equals(savedCategory) || "updates".equals(savedCategory)) category = savedCategory;
-            query = state.getString("query", ""); reopenPackage = state.getString("selectedPackage");
+            if ("game".equals(savedCategory) || "launcher".equals(savedCategory) || "updates".equals(savedCategory)) category = savedCategory;
+            query = state.getString("query", ""); reopenId = state.getString("selectedMarketId");
         }
         repository = createRepository(); installed = createInstalledApps(); installer = createInstaller(); downloader = createDownloader(); launcher = new LauncherIntegration(this); artwork = new StoreArtwork();
         build(); refresh(false);
@@ -112,7 +115,7 @@ public class MainActivity extends Activity {
         LinearLayout side = column(); side.setPadding(0, dp(3), dp(20), 0);
         TextView brand = text("putrtv", 27, BLUE); brand.setTypeface(null, Typeface.BOLD); side.addView(brand);
         TextView brandHint = text(tr("电视应用商城", "TV app store"), 12, MUTED); side.addView(brandHint, space(-1, -2, 30));
-        String[] kinds = {"media", "game", "tools", "updates"};
+        String[] kinds = {"media", "game", "launcher", "updates"};
         for (String kind : kinds) {
             Button tab = button(categoryName(kind), "tab-" + kind, v -> navigate(kind)); tab.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
             LinearLayout.LayoutParams lp = space(-1, 43, 9); if ("updates".equals(kind)) lp.topMargin = dp(18); side.addView(tab, lp); tabs.put(kind, tab);
@@ -136,7 +139,7 @@ public class MainActivity extends Activity {
         root.addView(body, new LinearLayout.LayoutParams(0, -1, 1)); setContentView(root); render(); tabs.get(category).requestFocus();
     }
     private String categoryName(String value) {
-        switch (value) { case "media": return tr("影音", "Media"); case "game": return tr("游戏", "Games"); case "tools": return tr("工具", "Tools"); default: return tr("应用更新", "Updates"); }
+        switch (value) { case "media": return tr("影音", "Media"); case "game": return tr("游戏", "Games"); case "launcher": return tr("启动器", "Launchers"); default: return tr("应用更新", "Updates"); }
     }
     private void navigate(String value) { page = 0; category = value; query = ""; search.setText(""); render(); scroll.smoothScrollTo(0, 0); tabs.get(value).requestFocus(); }
     private void search() {
@@ -147,26 +150,67 @@ public class MainActivity extends Activity {
     private void refresh(boolean force) {
         if (modal != null) closeModal(); loading = true; refresh.setEnabled(false); syncStatus.setText(tr("正在检查应用目录…", "Checking app catalog…"));
         request(token -> repository.load(force, token), value -> {
-            loading = false; refresh.setEnabled(true); catalog = value; inspect(); render();
+            loading = false; refresh.setEnabled(true); catalog = value; rebuildGroups(); inspect(); render();
+            if (reopenId != null) { for (StoreEntry entry : catalog.entries) if (entry.id.equals(reopenId)) { detail(entry); break; } reopenId = null; }
             if (reopenPackage != null) { StoreEntry entry = findEntry(reopenPackage); reopenPackage = null; if (entry != null) detail(entry); }
         }, e -> { loading = false; refresh.setEnabled(true); syncStatus.setText(tr("暂时无法连接。按“检查更新”重试。", "Unable to connect. Choose Check updates to retry.")); if (catalog == null) showEmpty(tr("暂时无法读取目录", "Catalog unavailable"), tr("请检查电视网络后重试。", "Check your TV connection and try again.")); });
     }
-    private void inspect() { states.clear(); if (catalog != null) for (StoreEntry entry : catalog.entries) states.put(entry.packageName, installed.inspect(entry)); }
-    private boolean needsUpdate(StoreEntry entry) { InstalledApps.Status state = states.get(entry.packageName); return state != null && state.state == InstalledApps.State.UPDATE_AVAILABLE; }
+    // The market orders each folder/file-stem group newest first, just like the desktop client.
+    private static String groupKey(StoreEntry entry) {
+        String path = entry.apkPath;
+        String stem = path.toLowerCase(Locale.ROOT).endsWith(".apk") ? path.substring(0, path.length() - 4) : path;
+        String suffix = "-" + entry.marketVersion;
+        return !entry.marketVersion.isEmpty() && stem.endsWith(suffix) ? stem.substring(0, stem.length() - suffix.length()) : stem;
+    }
+    private void rebuildGroups() {
+        groups.clear();
+        for (StoreEntry entry : catalog.entries) {
+            String key = groupKey(entry);
+            List<StoreEntry> versions = groups.get(key);
+            if (versions == null) { versions = new ArrayList<>(); groups.put(key, versions); }
+            if (versions.size() < 5) versions.add(entry);
+        }
+    }
+    private StoreEntry chosen(List<StoreEntry> versions) {
+        String id = choices.get(groupKey(versions.get(0)));
+        for (StoreEntry version : versions) if (version.id.equals(id)) return version;
+        return versions.get(0);
+    }
+    private boolean matches(List<StoreEntry> versions, String needle) {
+        for (StoreEntry entry : versions) {
+            if ((entry.name + " " + entry.nameEn + " " + entry.apkPath + " " + entry.provider + " " + entry.packageName)
+                    .toLowerCase(Locale.ROOT).contains(needle)) return true;
+        }
+        return false;
+    }
+    private void inspect() { states.clear(); if (catalog != null) for (StoreEntry entry : catalog.entries) states.put(entry.id, installed.inspect(entry)); }
+    private boolean needsUpdate(StoreEntry entry) { InstalledApps.Status state = states.get(entry.id); return state != null && state.state == InstalledApps.State.UPDATE_AVAILABLE; }
     private void render() {
-        for (Map.Entry<String, Button> tab : tabs.entrySet()) { tab.getValue().setBackground(focusBackground(category.equals(tab.getKey()) && query.isEmpty())); int count = 0; if (catalog != null) for (StoreEntry entry : catalog.entries) if (tab.getKey().equals("updates") ? needsUpdate(entry) : tab.getKey().equals(entry.category)) count++; tab.getValue().setText(categoryName(tab.getKey()) + (catalog == null ? "" : "  " + count)); }
+        for (Map.Entry<String, Button> tab : tabs.entrySet()) {
+            tab.getValue().setBackground(focusBackground(category.equals(tab.getKey()) && query.isEmpty()));
+            int count = 0;
+            for (List<StoreEntry> versions : groups.values()) {
+                StoreEntry latest = versions.get(0);
+                if (tab.getKey().equals("updates") ? needsUpdate(latest) : tab.getKey().equals(latest.category)) count++;
+            }
+            tab.getValue().setText(categoryName(tab.getKey()) + (catalog == null ? "" : "  " + count));
+        }
         String title = query.isEmpty() ? categoryName(category) : tr("搜索结果", "Search results"); headline.setText(title);
-        subtitle.setText(query.isEmpty() ? ("updates".equals(category) ? tr("查看已安装应用的新版本，安装前由你确认。", "New versions for installed apps. You confirm every installation.") : tr("发现好用的电视应用，让大屏多一点可能。", "Useful apps, made for your bigger screen.")) : tr("关键词：", "Results for: ") + query);
+        subtitle.setText(query.isEmpty() ? ("updates".equals(category) ? tr("仅列出已核实包名、签名和版本的更新。", "Updates with a verified package, signer and version.") : "apps.b14f.com  ·  " + category + "/") : tr("关键词：", "Results for: ") + query);
         grid.removeAllViews();
         if (catalog == null) { showEmpty(tr("正在载入…", "Loading…"), tr("首次打开需要连接网络。", "Connect to the internet to get the latest catalog.")); return; }
         String time = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, getResources().getConfiguration().locale).format(new Date(catalog.fetchedAt));
         syncStatus.setText(catalog.stale ? tr("离线目录 · 版本可能已变化，请联网检查更新", "Offline catalog · Versions may have changed. Check again when online.") : tr("检查时间：", "Last checked: ") + time + tr("  ·  安装需要系统确认", "  ·  System confirmation required"));
         List<StoreEntry> filtered = new ArrayList<>(); String needle = query.toLowerCase(Locale.ROOT);
-        for (StoreEntry entry : catalog.entries) {
-            boolean match = !query.isEmpty() ? (entry.name + " " + entry.nameEn + " " + entry.packageName).toLowerCase(Locale.ROOT).contains(needle) : ("updates".equals(category) ? needsUpdate(entry) : category.equals(entry.category));
-            if (match) filtered.add(entry);
+        for (List<StoreEntry> versions : groups.values()) {
+            StoreEntry latest = versions.get(0);
+            if (!query.isEmpty()) {
+                if (matches(versions, needle)) filtered.add(chosen(versions));
+            } else if ("updates".equals(category)) {
+                if (needsUpdate(latest)) filtered.add(latest);
+            } else if (category.equals(latest.category)) filtered.add(chosen(versions));
         }
-        if (filtered.isEmpty()) { showEmpty(query.isEmpty() && "updates".equals(category) ? (catalog.stale ? tr("缓存中没有可用更新", "No updates in the cached catalog") : tr("未发现可用更新", "No updates found")) : tr("没有找到应用", "No matching apps"), catalog.stale ? tr("联网刷新后才能确认最新版本。", "Refresh online to check the latest versions.") : tr("试试其他分类或关键词。", "Try another category or search term.")); return; }
+        if (filtered.isEmpty()) { showEmpty(query.isEmpty() && "updates".equals(category) ? (catalog.stale ? tr("缓存中没有已核实的更新", "No verified updates in the cache") : tr("没有已核实的可用更新", "No verified updates found")) : tr("没有找到应用", "No matching apps"), catalog.stale ? tr("联网刷新后才能确认最新版本。", "Refresh online to check the latest versions.") : tr("试试其他分类或关键词。", "Try another category or search term.")); return; }
         int columns = getResources().getConfiguration().screenWidthDp < 800 ? 2 : 3;
         int pageSize = columns * 3; int pages = (filtered.size() + pageSize - 1) / pageSize;
         page = Math.min(page, pages - 1); int start = page * pageSize; int end = Math.min(start + pageSize, filtered.size());
@@ -183,14 +227,18 @@ public class MainActivity extends Activity {
         }
     }
     private void showEmpty(String title, String description) { grid.removeAllViews(); LinearLayout box = column(); box.setGravity(Gravity.CENTER); box.setPadding(dp(24), dp(35), dp(24), dp(30)); box.setBackground(shape(Color.WHITE, LINE, 1)); TextView t = text(title, 20, INK); t.setGravity(Gravity.CENTER); box.addView(t); TextView d = text(description, 13, MUTED); d.setGravity(Gravity.CENTER); d.setPadding(0, dp(12), 0, 0); box.addView(d); grid.addView(box); }
+    private String versionLabel(StoreEntry entry) {
+        return entry.marketVersion.isEmpty() ? tr("版本未标注", "Unlisted version") : "v" + entry.marketVersion;
+    }
+    private String sizeLabel(long bytes) { return bytes > 0 ? size(bytes) : tr("大小未知", "Unknown size"); }
     private View card(StoreEntry entry, int index) {
-        LinearLayout card = column(); card.setPadding(dp(8), dp(8), dp(8), dp(8)); card.setTag("card-" + index); card.setFocusable(true); card.setClickable(true); card.setBackground(focusBackground(false)); card.setContentDescription(entry.displayName(english()) + ", " + statusText(states.get(entry.packageName))); card.setOnClickListener(v -> { lastCard = card; detail(entry); });
+        LinearLayout card = column(); card.setPadding(dp(8), dp(8), dp(8), dp(8)); card.setTag("card-" + index); card.setFocusable(true); card.setClickable(true); card.setBackground(focusBackground(false)); card.setContentDescription(entry.displayName(english()) + ", " + statusText(states.get(entry.id))); card.setOnClickListener(v -> { lastCard = card; detail(entry); });
         FrameLayout cover = new FrameLayout(this); int[] palette = {0xffe4edff, 0xffdff3ec, 0xffffeed9, 0xffeae5fc}; cover.setBackground(shape(palette[Math.abs(entry.id.hashCode() % palette.length)], Color.TRANSPARENT, 0));
         TextView monogram = text(entry.displayName(english()), 21, 0xff486185); monogram.setTypeface(null, Typeface.BOLD); monogram.setGravity(Gravity.CENTER); monogram.setMaxLines(2); monogram.setPadding(dp(12), 0, dp(12), 0); cover.addView(monogram, new FrameLayout.LayoutParams(-1, -1));
         ImageView image = new ImageView(this); image.setScaleType(ImageView.ScaleType.CENTER_CROP); cover.addView(image, new FrameLayout.LayoutParams(-1, -1)); if (enableNetworkArtwork()) artwork.load(catalog, entry, image);
         card.addView(cover, space(-1, getResources().getConfiguration().screenHeightDp < 600 ? 72 : 92, 7)); TextView title = text(entry.displayName(english()), 14, INK); title.setTypeface(null, Typeface.BOLD); title.setSingleLine(true); title.setEllipsize(TextUtils.TruncateAt.END); card.addView(title);
-        TextView version = text("v" + entry.versionName + "  ·  " + size(entry.bytes), 10, MUTED); version.setPadding(0, dp(3), 0, dp(3)); card.addView(version);
-        InstalledApps.Status state = states.get(entry.packageName); TextView status = text(statusText(state), 11, needsUpdate(entry) ? BLUE : MUTED); status.setSingleLine(true); status.setEllipsize(TextUtils.TruncateAt.END); card.addView(status); return card;
+        TextView version = text(versionLabel(entry) + "  ·  " + sizeLabel(entry.bytes), 10, MUTED); version.setPadding(0, dp(3), 0, dp(3)); card.addView(version);
+        InstalledApps.Status state = states.get(entry.id); TextView status = text(statusText(state), 11, needsUpdate(entry) ? BLUE : MUTED); status.setSingleLine(true); status.setEllipsize(TextUtils.TruncateAt.END); card.addView(status); return card;
     }
     private String statusText(InstalledApps.Status status) {
         if (status == null) return tr("正在读取", "Checking");
@@ -206,11 +254,31 @@ public class MainActivity extends Activity {
     }
     private void paragraph(LinearLayout body, String value) { TextView t = text(value, 13, MUTED); t.setPadding(0, 0, 0, dp(14)); t.setLineSpacing(dp(3), 1); body.addView(t); }
     private Button action(LinearLayout body, String label, String tag, View.OnClickListener action) { Button b = button(label, tag, action); body.addView(b, space(-1, 43, 8)); return b; }
-    private void detail(StoreEntry entry) {
-        selected = entry; LinearLayout body = dialog(entry.displayName(english())); InstalledApps.Status state = installed.inspect(entry); states.put(entry.packageName, state);
-        paragraph(body, entry.displayDescription(english())); paragraph(body, "v" + entry.versionName + " · " + size(entry.bytes) + "\n" + statusText(state) + (state.installed ? tr("  ·  本机：", "  ·  Installed: ") + state.versionName : ""));
+    private void detail(StoreEntry listing) {
+        StoreEntry entry = installed.resolve(listing);
+        selected = entry;
+        choices.put(groupKey(listing), listing.id); LinearLayout body = dialog(entry.displayName(english())); InstalledApps.Status state = installed.inspect(entry); states.put(entry.id, state);
+        if (!entry.displayDescription(english()).isEmpty()) paragraph(body, entry.displayDescription(english()));
+        paragraph(body, versionLabel(entry) + " · " + sizeLabel(entry.bytes) + "\n" + statusText(state)
+                + (state.installed ? tr("  ·  本机：", "  ·  Installed: ") + state.versionName : ""));
+        if (!entry.provider.isEmpty()) paragraph(body, tr("提供者：", "Provider: ") + entry.provider);
+        if (!entry.hasPackageIdentity()) paragraph(body, tr("下载后核对安装包的包名、版本和签名，再检查本机安装状态。",
+                "The store checks the package name, version and signer after download and compares them with installed apps."));
+        List<StoreEntry> versions = groups.get(groupKey(listing));
+        if (versions != null && versions.size() > 1) {
+            action(body, tr("选择版本", "Choose version") + " (" + versions.size() + ")", "choose-version", v -> {
+                LinearLayout picker = dialog(tr("选择版本", "Choose version"));
+                for (StoreEntry version : versions) {
+                    Button option = action(picker, versionLabel(version) + " · " + sizeLabel(version.bytes),
+                            "version-" + version.id, view -> detail(version));
+                    if (version.id.equals(listing.id)) option.requestFocus();
+                }
+                modal.setOnCancelListener(ignored -> detail(listing));
+                action(picker, tr("返回详情", "Back to details"), "back-to-detail", view -> detail(listing));
+            });
+        }
         Button first = null;
-        if (state.state == InstalledApps.State.NOT_INSTALLED || state.state == InstalledApps.State.UPDATE_AVAILABLE) first = action(body, state.installed ? tr("下载更新", "Download update") : tr("下载并安装", "Download and install"), "install", v -> download(entry));
+        if (state.state == InstalledApps.State.NOT_INSTALLED || state.state == InstalledApps.State.UPDATE_AVAILABLE || !entry.hasPackageIdentity()) first = action(body, state.installed ? tr("下载更新", "Download update") : tr("下载并安装", "Download and install"), "install", v -> download(entry));
         if (state.state == InstalledApps.State.INCOMPATIBLE) paragraph(body, tr("此应用要求 Android API ", "This app requires Android API ") + entry.minSdk + tr(" 或更新版本。", " or newer."));
         if (state.state == InstalledApps.State.SIGNATURE_MISMATCH) paragraph(body, tr("本机应用与商城版本的签名不同，不能覆盖安装。请保留当前应用和数据。", "The installed app uses a different signing key and cannot be updated here. Keep your existing app and data."));
         if (state.installed) {
@@ -223,17 +291,17 @@ public class MainActivity extends Activity {
         Button close = action(body, tr("返回", "Back"), "close-detail", v -> closeModal()); if (first == null) first = close; first.requestFocus();
     }
     private String homeHelp(LauncherIntegration.Availability value) {
-        switch (value) { case NEEDS_LAUNCHER_UPDATE: return tr("当前桌面版本暂不支持从商城添加应用。可在电脑端 pureTV 管理器更新桌面后重试，或使用桌面自己的编辑功能添加。", "This home version cannot add apps from the store yet. Update your home app with the pureTV desktop manager and retry, or use your home’s own editor."); case NO_DEFAULT_HOME: return tr("请先设置默认桌面，再添加应用。", "Choose your default home app before adding apps."); default: return tr("当前桌面不支持商城添加入口，请使用电视桌面自己的应用管理功能。", "Your current home does not support adding apps from this store. Use your TV home’s app management."); }
+        switch (value) { case NEEDS_LAUNCHER_UPDATE: return tr("当前桌面版本暂不支持从商城添加应用。请在商城的「启动器」分类查找兼容版本，或使用桌面自己的编辑功能。", "This home version cannot add apps from the store yet. Look for a compatible version under Launchers, or use your home screen’s editor."); case NO_DEFAULT_HOME: return tr("请先设置默认桌面，再添加应用。", "Choose your default home app before adding apps."); default: return tr("当前桌面不支持商城添加入口，请使用电视桌面自己的应用管理功能。", "Your current home does not support adding apps from this store. Use your TV home’s app management."); }
     }
     private void download(StoreEntry entry) {
         if (!installer.canInstall()) {
             LinearLayout body = dialog(tr("允许商城安装应用", "Allow app installation")); paragraph(body, tr("需要在电视系统设置中允许来自 putrtv商城 的安装。返回后，再次选择下载并安装。", "Allow installations from putrtv Store in your TV settings. Return here and choose Download and install again."));
             action(body, tr("打开系统设置", "Open system settings"), "install-permission", v -> { try { installer.openPermissionSettings(); } catch (IOException e) { toast(installError(e)); } }).requestFocus(); action(body, tr("返回", "Back"), "close-detail", v -> detail(entry)); return;
         }
-        LinearLayout body = dialog(tr("下载应用", "Downloading app")); paragraph(body, entry.displayName(english()) + " · " + size(entry.bytes)); TextView progress = text(tr("准备下载…", "Preparing download…"), 15, BLUE); progress.setTag("download-progress"); body.addView(progress, space(-1, -2, 16)); paragraph(body, tr("下载校验完成后会打开系统安装确认。", "Android will ask you to confirm after the download is verified."));
+        LinearLayout body = dialog(tr("下载应用", "Downloading app")); paragraph(body, entry.displayName(english()) + " · " + sizeLabel(entry.bytes)); TextView progress = text(tr("准备下载…", "Preparing download…"), 15, BLUE); progress.setTag("download-progress"); body.addView(progress, space(-1, -2, 16)); paragraph(body, tr("下载校验完成后会打开系统安装确认。", "Android will ask you to confirm after the download is verified."));
         action(body, tr("取消下载", "Cancel download"), "cancel-download", v -> { cancelRequest(); detail(entry); }).requestFocus();
         final int token = generation + 1;
-        request(cancel -> { File apk = downloader.download(catalog, entry, cancel, (bytes, total) -> main.post(() -> { if (generation == token && modal != null) progress.setText(size(bytes) + " / " + size(total)); })); cancel.check(); return installer.prepare(entry, apk); }, prepared -> {
+        request(cancel -> { File apk = downloader.download(catalog, entry, cancel, (bytes, total) -> main.post(() -> { if (generation == token && modal != null) progress.setText(total > 0 ? size(bytes) + " / " + size(total) : size(bytes)); })); cancel.check(); return installer.prepare(entry, apk); }, prepared -> {
             try { installer.install(prepared); dismissModal(); toast(tr("请在系统页面确认安装。", "Confirm installation on the Android screen.")); }
             catch (IOException e) { failure(entry, e); }
         }, e -> failure(entry, e));
@@ -253,12 +321,12 @@ public class MainActivity extends Activity {
         }
         return tr("下载或校验未完成，请检查网络及可用空间后重试。", "Download or verification failed. Check your connection and free space, then retry.");
     }
-    private StoreEntry findEntry(String packageName) { if (catalog != null) for (StoreEntry entry : catalog.entries) if (entry.packageName.equals(packageName)) return entry; return null; }
+    private StoreEntry findEntry(String packageName) { if (catalog != null) for (StoreEntry entry : catalog.entries) if (installed.resolve(entry).packageName.equals(packageName)) return entry; return null; }
     private void installationResult(ApkInstaller.Result result) {
         if (result.outcome == ApkInstaller.Outcome.NONE) return;
         inspect(); render();
         if (result.outcome == ApkInstaller.Outcome.INSTALLED) {
-            StoreEntry entry = findEntry(result.packageName); toast(tr("已确认安装完成", "Installation verified"));
+            StoreEntry entry = selected != null && result.packageName.equals(installed.resolve(selected).packageName) ? selected : findEntry(result.packageName); toast(tr("已确认安装完成", "Installation verified"));
             if (entry == null) reopenPackage = result.packageName;
             if (entry != null) { detail(entry); View add = modal.getWindow().getDecorView().findViewWithTag("add-to-home"); if (add != null) add.requestFocus(); }
         } else { toast(tr("尚未确认安装成功，可返回详情重试。", "Installation was not confirmed. Reopen the app details to retry.")); if (selected != null) detail(selected); }
@@ -286,11 +354,17 @@ public class MainActivity extends Activity {
     }
     private void cancelRequest() { generation++; if (cancellation != null) cancellation.cancel(); if (pending != null) pending.cancel(true); pending = null; }
     private void dismissModal() { if (modal != null) { Dialog old = modal; modal = null; old.dismiss(); } }
-    private void closeModal() { cancelRequest(); dismissModal(); selected = null; if (lastCard != null && lastCard.isAttachedToWindow()) lastCard.requestFocus(); else if (tabs.get(category) != null) tabs.get(category).requestFocus(); }
+    private void closeModal() {
+        cancelRequest(); dismissModal(); selected = null;
+        Object tag = lastCard == null ? null : lastCard.getTag();
+        render();
+        View card = tag == null ? null : grid.findViewWithTag(tag);
+        if (card != null) card.requestFocus(); else tabs.get(category).requestFocus();
+    }
     private void toast(String value) { Toast.makeText(this, value, Toast.LENGTH_LONG).show(); }
     @Override protected void onResume() { super.onResume(); active = true; if (installer != null) { installationResult(installer.reconcile()); if (catalog != null) { inspect(); render(); } if (downloadInterrupted) { downloadInterrupted = false; if (selected != null) detail(selected); toast(tr("下载已暂停，可重新选择下载。", "Download paused. Choose Download again to resume.")); } } }
     @Override protected void onPause() { active = false; if (pending != null && modal != null && modal.getWindow().getDecorView().findViewWithTag("download-progress") != null) { downloadInterrupted = true; dismissModal(); } if (loading) { cancelRequest(); loading = false; refresh.setEnabled(true); syncStatus.setText(tr("检查已暂停，请返回后刷新。", "Check paused. Refresh when you return.")); } else cancelRequest(); artwork.cancel(); super.onPause(); }
     @Override protected void onDestroy() { destroyed = true; cancelRequest(); dismissModal(); artwork.close(); worker.shutdownNow(); main.removeCallbacksAndMessages(null); super.onDestroy(); }
-    @Override protected void onSaveInstanceState(Bundle state) { super.onSaveInstanceState(state); state.putString("category", category); state.putString("query", query); if (selected != null) state.putString("selectedPackage", selected.packageName); }
+    @Override protected void onSaveInstanceState(Bundle state) { super.onSaveInstanceState(state); state.putString("category", category); state.putString("query", query); if (selected != null) state.putString("selectedMarketId", selected.id); }
     @Override public void onBackPressed() { if (modal != null) { closeModal(); return; } if (!query.isEmpty()) { query = ""; search.setText(""); render(); tabs.get(category).requestFocus(); return; } if (!"media".equals(category)) { navigate("media"); return; } super.onBackPressed(); }
 }

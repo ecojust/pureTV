@@ -157,39 +157,6 @@ class StoreFeedTest(unittest.TestCase):
                 with patch.object(FEED, 'verify_catalog', return_value=resources), patch.object(FEED, 'min_sdk', return_value=19), self.assertRaises(AssertionError):
                     FEED.generate(root, root)
 
-    def test_snapshot_rejects_legacy_catalog_with_launchers(self):
-        catalog = {'schemaVersion': 1, 'entries': [{'id': 'launcher/home', 'category': 'launcher'}]}
-        with self.assertRaisesRegex(AssertionError, 'Store snapshot must contain apps only'):
-            FEED.snapshot(Path('/unused'), catalog, 'a' * 40)
-
-    def test_actual_snapshot_is_apps_only_and_includes_only_published_store_hash(self):
-        root = Path(__file__).resolve().parents[1]
-        snapshot = json.loads((root / FEED.SNAPSHOT).read_text())
-        self.assertEqual('35ca666ac73e0598e5e2d87c78d322cd3c178258', snapshot['revision'])
-        self.assertEqual(15, len(snapshot['catalog']['entries']))
-        self.assertEqual(15, len({entry['packageName'] for entry in snapshot['catalog']['entries']}))
-        order = json.loads((root / 'tools/resource-order.json').read_text())
-        snapshot_ids = {entry['id'] for entry in snapshot['catalog']['entries']}
-        expected_ids = [identity for category in ('media', 'game', 'tools')
-                        for identity in reversed(order[category]) if identity in snapshot_ids]
-        self.assertEqual(expected_ids, [entry['id'] for entry in snapshot['catalog']['entries']])
-        store = next(entry for entry in snapshot['catalog']['entries'] if entry['id'] == 'apps/putrtv-store')
-        self.assertEqual('0.1.1', store['versionName'])
-        self.assertEqual(2, store['versionCode'])
-        # These are the verified 0.1.1 release values at the pinned revision.
-        # Keep this check independent of Git history so a shallow CI checkout works.
-        self.assertEqual('12d49dacfc564b8a18f80d84818bb5622ae1554857cbadf06fd1780e5d4e7233', store['sha256'])
-        self.assertEqual('eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23', store['certificateSha256'])
-        self.assertEqual('putrtv-store-0.1.1.apk', Path(store['apkPath']).name)
-        for entry in snapshot['catalog']['entries']:
-            self.assertTrue(entry['id'].startswith('joystick-games/' if entry['category'] == 'game' else 'apps/'))
-            self.assertIn(entry['category'], ('media', 'game', 'tools'))
-            self.assertGreater(entry['minSdk'], 0)
-            self.assertRegex(entry['sha256'], r'^[a-f0-9]{64}$')
-            self.assertRegex(entry['certificateSha256'], r'^[a-f0-9]{64}$')
-            if entry['logoSvg']:
-                self.assertTrue(FEED.safe_logo(entry['logoSvg']))
-
     def test_actual_feed_has_only_apps_and_retains_repository_order(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / FEED.FEED).read_text())

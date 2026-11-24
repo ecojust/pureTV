@@ -14,7 +14,7 @@ This is the actual Android UI rendered with a fixture catalog, not a physical TV
 
 ## Use
 
-Install the store on your TV once, then open it to refresh the catalog and check installed versions. Browse Media, Games and Tools, search by name, or select Updates. Launchers are not listed in the store.
+The TV store and the desktop manager use the same APK market at `https://apps.b14f.com/`. Browse Media, Games or Launchers. Each card shows the latest version by default. If several versions are available, select **Choose version** in the details to see up to five APKs. Search by name, file path or provider.
 
 Select an app to download it, then confirm installation in the TV's system installer. On Android 8 or later you may first need to allow putrtv Store to install unknown apps in system settings. TV manufacturers can impose additional restrictions. On return, the store checks the actual installed package before reporting success.
 
@@ -24,15 +24,15 @@ Updates compare exact package IDs and integer version codes. A newer local versi
 
 After installation, select **Add to home** in app details. Your current launcher opens a confirmation page where you select a free position on the Home or Apps page with the remote. The launcher saves the app's actual name and icon, using white text, without rearranging existing tiles.
 
-This requires an updated pureTV family launcher supporting the add-to-home entry point. Update older launchers using this repository’s [launcher resources](../../README.md). These launchers require Android 8 or later, independently of the store's Android 4.4 minimum. Manufacturer launchers use their own app list or pinning controls.
+This requires an updated pureTV family launcher supporting the add-to-home entry point. Look for a compatible version under **Launchers** in the store. These launchers require Android 8 or later, independently of the store's Android 4.4 minimum. Manufacturer launchers use their own app list or pinning controls.
 
 The store passes only the installed package ID and catalog SVG. The launcher validates and saves its own layout; the ADB layout provider remains protected. If there is no free position or the layout contains removed apps, the launcher reports the issue instead of overwriting or deleting tiles.
 
 ## Catalog and updates
 
-The catalog contains this project's verified app APK resources. Launchers are excluded from online, cached and bundled offline catalogs. Each refresh pins one GitHub commit for both catalog and APKs. Downloads check file size, SHA256, Git blob, package ID, version and signing certificate. Offline browsing is marked stale and does not imply a fresh update check.
+The store reads the server’s `media/`, `game/` and `launcher/` directories and displays available cover art. If a refresh fails, the store shows the last successful catalog or the bundled market snapshot and labels it offline.
 
-Checks run when opening the store or refreshing manually. There is no automatic background installation. Store updates use the same catalog. The desktop manager's Gitee marketplace is a separate publication channel and may differ.
+Version labels from filenames are used for browsing and sorting. **Updates** lists updates with a verified package ID, signing certificate and Android version code. You can still download an entry with missing metadata. The store reads the downloaded APK and checks the signer and installed version before opening the Android installer. Installation requires your confirmation.
 
 Old Android devices still depend on their system trust store and network for HTTPS. The minimum installation version is not a claim that every TV model has been tested. Installation always requires user confirmation.
 

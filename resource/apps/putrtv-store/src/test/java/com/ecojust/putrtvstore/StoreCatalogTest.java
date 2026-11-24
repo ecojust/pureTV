@@ -11,14 +11,13 @@ public class StoreCatalogTest {
         return new StoreEntry(id, id, id, "", "", category, "com.example.app", "1.0", "", "", "", "", "", "", 1, 1, 19);
     }
 
-    @Test public void catalogExcludesLauncherByEitherCategoryOrIdentityAndPreservesAppOrder() {
-        StoreEntry media = entry("apps/media", "media"), game = entry("apps/game", "game"), tool = entry("apps/tool", "tools");
-        List<StoreEntry> source = new ArrayList<>(Arrays.asList(entry("launcher/puretv", "launcher"), media,
-                entry("apps/old-launcher", "launcher"), game, entry("launcher/old-category", "tools"), tool));
+    @Test public void catalogKeepsEveryMarketCategoryAndFileInOrder() {
+        List<StoreEntry> source = new ArrayList<>(Arrays.asList(entry("launcher/puretv.apk", "launcher"),
+                entry("game/puzzle.apk", "game"), entry("media/tv-2.0.apk", "media"), entry("media/tv-1.0.apk", "media")));
         StoreCatalog catalog = new StoreCatalog("revision", "saved", "", 0, true, source);
-        assertEquals(Arrays.asList(media, game, tool), catalog.entries);
-        source.clear(); assertEquals(3, catalog.entries.size());
-        try { catalog.entries.add(entry("launcher/late", "launcher")); fail("Catalog must remain immutable"); }
+        assertEquals(source, catalog.entries);
+        source.clear(); assertEquals(4, catalog.entries.size());
+        try { catalog.entries.clear(); fail("Catalog must remain immutable"); }
         catch (UnsupportedOperationException expected) { }
     }
 }
