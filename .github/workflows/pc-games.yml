@@ -23,6 +23,11 @@ jobs:
           jq -e '.run_id==45441821479 and .head_sha=="48e65237433b2e4974b5a47c8dc9bcecae6e0624" and .name=="windows" and .conclusion=="failure"' job.json
           gh api repos/ecojust/pureTV/actions/jobs/138614741083/logs > windows.log
           sha256sum windows.log > windows.sha256
-          git add -f job.json windows.log windows.sha256
+          git add --sparse -f job.json windows.log windows.sha256
           git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Preserve original signed-catalog Windows build diagnostics'
           git push origin HEAD:refs/heads/build-assets/pc-log-138614741083
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: original-windows-log
+          path: pc-job-log
