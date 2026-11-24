@@ -16,7 +16,7 @@
 <table>
   <tr>
     <td align="center" valign="top" width="207"><a href="docs/guide/README.en.md#install-or-upgrade-the-desktop-manager"><img src="docs/previews/manager-en.png" width="180" alt=""><br>pureTV Manager</a><br>Manage TV apps and launchers from a computer<br>Windows, macOS, Linux<br><a href="https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.9">Download 0.5.9</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/apps/putrtv-store/"><img src="docs/previews/en/app-putrtv-store.png" width="180" alt=""><br>putrtv Store</a><br>Browse, install and check TV app updates directly on your television<br>Android TV<br><a href="resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1">Download 0.1.1 APK</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/putrtv-store/"><img src="docs/previews/en/app-putrtv-store.png" width="180" alt=""><br>putrtv Store</a><br>Browse, install and check TV app updates directly on your television<br>Android TV<br><a href="resource/apps/putrtv-store/putrtv-store-0.1.2.apk?raw=1">Download 0.1.2 APK</a></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>

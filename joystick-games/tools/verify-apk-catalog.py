@@ -57,8 +57,13 @@ def check_android(slug, data):
 
 
 def main():
+    order = read_json('tools/resource-order.json')
+    apps = ROOT / 'resource/apps'
+    indexed_apps = {m.parent.relative_to(ROOT / 'resource').as_posix() for m in apps.glob('*/resource.json')}
+    if indexed_apps != set(order['media'] + order['tools']) or any(apps.glob('*/game.json')):
+        raise ValueError('Keep game projects under joystick-games and register non-game apps in resource-order.json')
     resources = {}
-    for resource in read_json('tools/resource-order.json')['game']:
+    for resource in order['game']:
         if not re.fullmatch(r'joystick-games/[a-z0-9-]+', resource):
             raise ValueError(f'Expected a joystick game directory, got {resource}')
         info = read_json(Path(resource) / 'resource.json')
