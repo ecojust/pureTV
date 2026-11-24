@@ -2,6 +2,12 @@
 
 在迷宫里放置炸弹，躲开沿通道扩展的爆风，炸开木箱收集道具。主菜单默认选中三名电脑对手，按 START 即可进入四人竞技场。也可以选择剧情战役、每日挑战或本机多人对战。默认使用像素画面，主菜单的 Graphics 可切换到 3D 或第一人称视角。[上游游戏](https://github.com/janroudaut/kaboom-arena/tree/b9191f6f045e4153ec238a47969a21621a940713)
 
+## 下载
+
+[Android TV APK](kaboom-arena-0.1.0.apk?raw=1) · [Windows x64 安装版](windows/KaboomArena-0.1.0-windows-x64-setup.exe?raw=1) · [Windows x64 便携版](windows/KaboomArena-0.1.0-windows-x64.zip?raw=1) · [macOS 通用 DMG](macos/KaboomArena-0.1.0-macos-universal.dmg?raw=1) · [macOS 通用 ZIP](macos/KaboomArena-0.1.0-macos-universal.zip?raw=1)
+
+[文件校验值](SHA256SUMS.txt) · [Android TV 验证](docs/releases/0.1.0/android.json) · [Windows 验证](docs/releases/0.1.0/windows.json) · [macOS 验证](docs/releases/0.1.0/macos.json)
+
 ## 操作
 
 | 动作 | pureTV 或标准手柄 | 键盘 |
