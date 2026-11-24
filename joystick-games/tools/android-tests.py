@@ -93,7 +93,10 @@ class PayloadBoundaries(unittest.TestCase):
 
 
 class TargetSdkBoundaries(unittest.TestCase):
-    expansion_games = ('clawd-pop', 'lumenrift', 'nova-lancer', 'operation-ironhold', 'saber-magic-tower', 'turbo-kart-rally')
+    expansion_games = (
+        'bloom-hop', 'clawd-pop', 'dolmus', 'gogh-strike', 'kaboom-arena', 'lumenrift', 'marti',
+        'mechapede', 'nerd-of-duty', 'nova-lancer', 'operation-ironhold', 'saber-magic-tower', 'turbo-kart-rally',
+    )
 
     def test_expansion_manifests_select_sdk_35(self):
         for slug in self.expansion_games:
