@@ -2,6 +2,16 @@
 
 选一个职业，从会场街区守住金色账本。欺诈分析师配备步枪，支付工程师使用冲锋枪，合规官使用手枪并拥有双倍护甲。清完一波敌人后，下一波会更难。每局可继续一次，最高分和最高波次保存在本机。街区、角色、材质和音效均由原版代码生成。[上游源码](https://github.com/sytaylor/nerd-of-duty/tree/1bd18d4e0c4c5116ffc3ae229bd0261cbd744148) · [许可与移植说明](NOTICE.md)
 
+## 下载
+
+[Android TV APK](nerd-of-duty-0.1.0.apk?raw=1) · [Windows x64 安装版](windows/NerdOfDuty-0.1.0-windows-x64-setup.exe?raw=1) · [Windows x64 便携版](windows/NerdOfDuty-0.1.0-windows-x64.zip?raw=1) · [macOS 通用 DMG](macos/NerdOfDuty-0.1.0-macos-universal.dmg?raw=1) · [macOS 通用 ZIP](macos/NerdOfDuty-0.1.0-macos-universal.zip?raw=1)
+
+[文件校验值](SHA256SUMS.txt) · [Android TV 验证](docs/releases/0.1.0/android.json) · [Windows 验证](docs/releases/0.1.0/windows.json) · [macOS 验证](docs/releases/0.1.0/macos.json)
+
+macOS 已在 Apple Silicon 原生和 Rosetta 两种模式下通过实玩。安装包包含 Intel 版本。托管 Intel Mac 未能完成游玩验证。[逐项结果](docs/releases/0.1.0/macos.json)
+
+Android TV 安装包已核验签名。模拟器游玩验证的通过项及限制见 [Android TV 记录](docs/releases/0.1.0/android.json)。
+
 ## 操作
 
 | 动作 | pureTV 九键手柄 | 标准双摇杆手柄 | 键鼠 |

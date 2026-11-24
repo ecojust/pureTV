@@ -2,6 +2,16 @@
 
 在机器底部移动切割器，将沿齿轮下降的履带切开。持续发射会在上一发脉冲消失后再次射击。击中链头、链身、机架与齿轮的收益各不相同。穿越画面边界的传送带、活塞和失控飞轮会改变避让路线。
 
+## 下载
+
+[Android TV APK](mechapede-0.1.0.apk?raw=1) · [Windows x64 安装版](windows/Mechapede-0.1.0-windows-x64-setup.exe?raw=1) · [Windows x64 便携版](windows/Mechapede-0.1.0-windows-x64.zip?raw=1) · [macOS 通用 DMG](macos/Mechapede-0.1.0-macos-universal.dmg?raw=1) · [macOS 通用 ZIP](macos/Mechapede-0.1.0-macos-universal.zip?raw=1)
+
+[文件校验值](SHA256SUMS.txt) · [Android TV 验证](docs/releases/0.1.0/android.json) · [Windows 验证](docs/releases/0.1.0/windows.json) · [macOS 验证](docs/releases/0.1.0/macos.json)
+
+Android TV 安装包已核验签名。模拟器游玩验证的通过项及限制见 [Android TV 记录](docs/releases/0.1.0/android.json)。
+
+## 操作
+
 | 操作 | 手柄 | 电脑键盘 |
 | --- | --- | --- |
 | 启动、暂停、继续 | START | P |
