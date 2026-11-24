@@ -20,6 +20,16 @@ class CatalogDownloadTests(unittest.TestCase):
     def fetch(self):
         return launcher.fetch_game(self.game, Path(self.cache.name))
 
+    def test_source_archive_launches_verified_repository_apk_offline(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            apk = root / 'joystick-games' / 'demo' / 'demo.apk'
+            apk.parent.mkdir(parents=True)
+            apk.write_bytes(self.data)
+            with (patch.object(launcher, '__file__', str(root / 'tools/pc-games/launcher.py')),
+                  patch.object(launcher, 'urlopen', side_effect=AssertionError('offline'))):
+                self.assertEqual(self.fetch(), apk)
+
     def test_parallel_download_and_offline_launch(self):
         with patch.object(launcher, 'urlopen', side_effect=lambda *a, **k: io.BytesIO(self.data)):
             with ThreadPoolExecutor(2) as pool:

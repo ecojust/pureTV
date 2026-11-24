@@ -1,7 +1,7 @@
 # 车阵出口 · Traffic Escape
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](traffic-escape-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/traffic-escape/traffic-escape-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 在固定6×6停车场中移动长度2格或3格的车辆，为1号目标车清出第三行右侧出口。车辆只能沿自身长轴逐格滑动，不能转向、横移、重叠或穿过边框。目标车除了红色车身，还带白色箭头和白色尾部条纹，便于辨认。

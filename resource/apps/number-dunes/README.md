@@ -1,7 +1,7 @@
 # 沙丘数列 / Number Dunes
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](number-dunes-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/number-dunes/number-dunes-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 选择沙盘边缘的箭头，把对应一行或一列中的数字石压向一端。固定岩柱把压实范围分成独立段；数字石不会合并，也不会在段内自动排序。目标是让蛇形读数严格递增，同时把所有空洞留在指定位置。

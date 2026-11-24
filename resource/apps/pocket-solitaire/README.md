@@ -1,7 +1,7 @@
 # 口袋接龙 / Pocket Solitaire
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](pocket-solitaire-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/pocket-solitaire/pocket-solitaire-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 四列全部可见的牌、两个暂存格、四个固定花色归位区。三副牌分别包含每花色 1–3、1–4、1–5，共 12／16／20 张，步数上限 50／70／90。

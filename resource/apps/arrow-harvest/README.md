@@ -1,7 +1,7 @@
 # 箭田收获 / Arrow Harvest
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](arrow-harvest-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/arrow-harvest/arrow-harvest-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 转动田格里的箭头，再一次播种，让多颗种子同步走遍目标田块。每格只能覆盖一次；种子不能进入禁地，也不能在同一拍撞到一起。固定箭头不能调整，播种之后也不能临时改路。

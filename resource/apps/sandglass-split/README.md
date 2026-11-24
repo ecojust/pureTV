@@ -1,7 +1,7 @@
 # 分流沙漏
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](sandglass-split-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/sandglass-split/sandglass-split-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 两股落沙，三只量杯，中央杯接收两路汇流。左右挡片各自选择外侧杯或中央杯，把有限料斗中的沙分到目标重量范围内。

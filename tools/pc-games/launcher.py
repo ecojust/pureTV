@@ -7,6 +7,7 @@ import os
 import sys
 import tempfile
 from pathlib import Path
+from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
 
@@ -31,6 +32,11 @@ def matching_file(path, game):
 
 
 def fetch_game(game, directory):
+    # A source checkout or archive already contains the signed game.
+    games = Path(__file__).resolve().parent.parent.parent / 'joystick-games'
+    source = games / game['id'] / Path(urlsplit(game['url']).path).name
+    if matching_file(source, game):
+        return source
     directory.mkdir(parents=True, exist_ok=True)
     target = directory / (game['id'] + '-' + game['sha256'][:16] + '.apk')
     if matching_file(target, game):

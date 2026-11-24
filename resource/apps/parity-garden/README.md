@@ -1,7 +1,7 @@
 # 奇偶花圃 / Parity Garden
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](parity-garden-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/parity-garden/parity-garden-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 用有限的水滴，把 4×4 花圃变成左侧的目标图案。每次浇水会翻转一片花朵；带 EVEN 标记的花还必须保持开放，并且被直接浇水偶数次。

@@ -1,4 +1,4 @@
-name: Publish Android release assets
+name: Publish signed launchers and non-game apps
 on:
   workflow_dispatch:
     inputs:
@@ -11,16 +11,6 @@ on:
         required: true
         default: android-v0.5.0
         type: string
-      package_scope:
-        description: Packages included in this release
-        required: true
-        default: all
-        type: choice
-        options:
-          - all
-          - games
-          - used-car-racing
-          - alien-shooter
 permissions:
   contents: write
   actions: read
@@ -38,17 +28,13 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           SOURCE_SHA: ${{ inputs.source_sha }}
           RELEASE_TAG: ${{ inputs.release_tag }}
-          PACKAGE_SCOPE: ${{ inputs.package_scope }}
         run: |
           python3 - <<'PY'
           import os, re
           assert os.environ['REPOSITORY'] == 'ecojust/pureTV', 'This publisher is restricted to ecojust/pureTV'
           source_sha, release_tag = os.environ['SOURCE_SHA'], os.environ['RELEASE_TAG']
           assert re.fullmatch(r'[0-9a-f]{40}', source_sha), 'An exact source SHA is required'
-          scope = os.environ['PACKAGE_SCOPE']
-          prefix = {'used-car-racing': 'android-used-car-v', 'alien-shooter': 'android-alien-shooter-v'}.get(scope, 'android-v')
-          pattern = re.escape(prefix) + r'[0-9]+\.[0-9]+\.[0-9]+'
-          assert scope in ('all', 'games', 'used-car-racing', 'alien-shooter') and re.fullmatch(pattern, release_tag), 'Release tag does not match the selected package scope'
+          assert re.fullmatch(r'android-v[0-9]+\.[0-9]+\.[0-9]+', release_tag), 'Expected an Android collection tag'
           with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
               output.write(f'source_sha={source_sha}\nrelease_tag={release_tag}\n')
           PY
@@ -68,11 +54,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           SOURCE_SHA: ${{ steps.inputs.outputs.source_sha }}
           RELEASE_TAG: ${{ steps.inputs.outputs.release_tag }}
-          PACKAGE_SCOPE: ${{ inputs.package_scope }}
         run: |
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           python tools/publish-android-release.py \
             --source-sha "$SOURCE_SHA" \
             --tag "$RELEASE_TAG" \
             --build-tools "$ANDROID_HOME/build-tools/34.0.0" \
-            --scope "$PACKAGE_SCOPE"
+            --scope non-games

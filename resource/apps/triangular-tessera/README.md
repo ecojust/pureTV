@@ -1,7 +1,7 @@
 # 三角拼域 / Triangular Tessera
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](triangular-tessera-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/triangular-tessera/triangular-tessera-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 旋转或镜像六块三角彩砖，让每条共享边两侧颜色相同，并让红、绿、蓝三种颜色的连通域数量分别等于目标。彩砖上的编号随操作移动；同色相碰是否连通，取决于它们是否共享一段边界。

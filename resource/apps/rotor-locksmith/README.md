@@ -1,7 +1,7 @@
 # 旋环锁匠 · Rotor Locksmith
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](rotor-locksmith-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/rotor-locksmith/rotor-locksmith-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 拨转黄铜锁环，让探头穿过三层缺口，进入核心取钥匙，再把整把钥匙带回出口。三个圆环按不同的正反齿轮比同步转动；拿到钥匙后，探头占用的空间变大，回程也需要逐环对齐。

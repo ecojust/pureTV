@@ -1,7 +1,7 @@
 # 万花钥匙 / Kaleido Keys
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](kaleido-keys-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/kaleido-keys/kaleido-keys-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 在一个源扇区的六个插槽中摆放有限的珐琅图符，让镜面复制出完整花钥。阶数可选 3、4、5，分别产生 6、8、10 个交替镜像扇区。只有源扇区可编辑；复制图符不消耗库存。

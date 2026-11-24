@@ -1,7 +1,7 @@
 # 记忆陈列 / Memory Gallery
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](memory-gallery-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/memory-gallery/memory-gallery-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 记住短暂亮相的展品位置，盖牌后找出相同图形与编号的两张。全部配对即可完成巡展。每种图形恰好出现两次，图形旁的数字帮助区分相近颜色。

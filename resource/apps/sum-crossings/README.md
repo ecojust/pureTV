@@ -1,7 +1,7 @@
 # 交叉数和 / Sum Crossings
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](sum-crossings-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/sum-crossings/sum-crossings-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 Kakuro 数和填格。三张不规则黑白棋盘为 4×4、5×5、6×6，含 8／13／16 个白格；每个连续横段和纵段长度为 2–4。

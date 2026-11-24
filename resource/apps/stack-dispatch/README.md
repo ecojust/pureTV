@@ -1,7 +1,7 @@
 # 序栈货运 / Stack Dispatch
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](stack-dispatch-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/stack-dispatch/stack-dispatch-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 用一台只能吊起一箱的吊机，在三个有限容量货栈之间安排货物，按货单顺序完成出港。货栈只能从顶端取放，压在下面的箱子必须先挪开上面的货物。所有来货和出货次序始终公开，第三关需要为被压住的早期货箱腾挪空间。

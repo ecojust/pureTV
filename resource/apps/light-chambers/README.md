@@ -1,7 +1,7 @@
 # 光室布灯 · Light Chambers
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](light-chambers-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/light-chambers/light-chambers-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 原创Akari谜题。在白格放灯，光沿上下左右直行，直到遇到任意黑墙。必须同时满足三条规则：所有白格受照；任何两盏灯不能在无遮挡的同一直线上互见；编号墙上下左右紧邻的灯数恰好等于数字。斜角不算相邻，数字0也必须满足。

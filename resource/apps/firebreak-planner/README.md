@@ -1,7 +1,7 @@
 # 防火带
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](firebreak-planner-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/firebreak-planner/firebreak-planner-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 在山火蔓延前清理林格，规划能保住村落与森林的防火带。行动点有限，而且主动砍掉的树同样不计入存活森林；把所有路径都清空不是答案。

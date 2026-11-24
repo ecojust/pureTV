@@ -1,7 +1,7 @@
 # 天台疾跑 / Rooftop Runner
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](rooftop-runner-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/rooftop-runner/rooftop-runner-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 角色沿屋顶自动前进，不能左右走位。用跳跃高度和下蹲时机越过矮箱、悬梁与屋顶缺口。三关分别有 **8／11／14** 个决策障碍，速度为 **145／165／185** 单位每活跃秒。

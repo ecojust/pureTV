@@ -1,7 +1,7 @@
 # 潮汐闸门 / Tide Lock
 
 <!-- apk-resource:start -->
-[Android 0.1.2 APK](tide-lock-0.1.2.apk?raw=1) · [图标与安装验证](docs/releases/0.1.2/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.1 实玩录像](docs/gameplay-0.1.1.mp4?raw=1)
+[Android 0.1.2 APK](../../../joystick-games/tide-lock/tide-lock-0.1.2.apk?raw=1) · [图标与安装验证](docs/releases/0.1.2/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.1 实玩录像](docs/gameplay-0.1.1.mp4?raw=1)
 <!-- apk-resource:end -->
 
 通过两级船闸，把货船从低水位入口送到高水位出口。调节闸室的进水、排水阀，让相邻水面接近后再开启闸门。船体正在过门时不能关门；过量灌水会溢流，排水过多会使船搁浅。

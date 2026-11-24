@@ -1,7 +1,7 @@
 # 路径刻印 / Path Glyphs
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](path-glyphs-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/path-glyphs/path-glyphs-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 在 5×5 石板上走出一条不重复经过格子的路径，让沿途刻下的方向符号与目标顺序完全一致。石板上的大箭头表示它会刻下什么符号，入边标记则表示必须从哪一侧走进来；两者并不是同一个方向。

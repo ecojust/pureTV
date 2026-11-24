@@ -1,7 +1,7 @@
 # 彩径连点 / Color Paths
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](color-paths-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/color-paths/color-paths-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 把同号、同形的两个端点连成路径，并让每一个格子都属于一条路径。三关分别为 4×4／3 对、5×5／4 对、6×6／5 对端点。颜色同时配有数字和形状，辨认路径不只依赖颜色。

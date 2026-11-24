@@ -1,7 +1,7 @@
 # 岛海墨图 / Island Ink
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](island-ink-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/island-ink/island-ink-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 Nurikabe 岛海涂格。三张 4×4、5×5、6×6 墨图只公开数字种子，没有预填海格；分别保留 13／20／30 个格子供判断。

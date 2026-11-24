@@ -54,6 +54,7 @@ jobs:
         with:
           ref: ${{ inputs.source_sha }}
           path: original
+          lfs: ${{ contains(fromJSON(inputs.games), 'backroad-rally') }}
           sparse-checkout-cone-mode: false
           sparse-checkout: ${{ steps.original.outputs.source_paths }}
       - name: Verify original source, packages and retained native results

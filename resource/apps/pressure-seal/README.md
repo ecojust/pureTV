@@ -1,7 +1,7 @@
 # 压力封装 / Pressure Seal
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](pressure-seal-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/pressure-seal/pressure-seal-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 操控带有余热的封装机，让压力依次稳定在三种材料要求的范围内。加热、松手、泄压都需要把握时机：松开加压后，余热仍可能让压力继续上升。

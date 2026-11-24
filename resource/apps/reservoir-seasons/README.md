@@ -1,7 +1,7 @@
 # 四季蓄水
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](reservoir-seasons-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/reservoir-seasons/reservoir-seasons-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 根据四季公开预报，为居民、农田和生态河流分配水库储水。春汛可能溢流，旱季需要留水；三类年度满足率分别计算，不能靠另一类的富余抵消缺水。

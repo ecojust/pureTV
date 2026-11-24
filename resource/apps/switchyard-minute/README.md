@@ -1,7 +1,7 @@
 # 分岔调度 / Switchyard Minute
 
 <!-- apk-resource:start -->
-[Android 0.1.2 APK](switchyard-minute-0.1.2.apk?raw=1) · [图标与安装验证](docs/releases/0.1.2/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.1 实玩录像](docs/gameplay-0.1.1.mp4?raw=1)
+[Android 0.1.2 APK](../../../joystick-games/switchyard-minute/switchyard-minute-0.1.2.apk?raw=1) · [图标与安装验证](docs/releases/0.1.2/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.1 实玩录像](docs/gameplay-0.1.1.mp4?raw=1)
 <!-- apk-resource:end -->
 
 管理一座小型铁路站场，把不同颜色的货车送到对应站台。列车会按时刻表进入两侧等待区；观察在途车辆，安排放行，再选择道岔改变线路。列车占用中的道岔不能切换，过早放行可能造成追尾或迎面冲突。

@@ -1,7 +1,7 @@
 # 异形装箱 / Packing Sculptor
 
 <!-- apk-resource:start -->
-[Android 0.2.3 APK](packing-sculptor-0.2.3.apk?raw=1) · [图标与安装验证](docs/releases/0.2.3/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.2.1 实玩录像](docs/releases/0.2.1/gameplay.mp4?raw=1)
+[Android 0.2.3 APK](../../../joystick-games/packing-sculptor/packing-sculptor-0.2.3.apk?raw=1) · [图标与安装验证](docs/releases/0.2.3/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.2.1 实玩录像](docs/releases/0.2.1/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 <!-- controller-client-status:start -->

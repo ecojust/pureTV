@@ -1,7 +1,7 @@
 # 隐墙测绘 / Hidden Corridors
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](hidden-corridors-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/hidden-corridors/hidden-corridors-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 只凭每行的通路格数、入口到出口的最短距离，以及有限的探针，推断隐藏墙体的位置。最后画出一条长度正确、避开真实墙体的路线。

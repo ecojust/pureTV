@@ -1,7 +1,7 @@
 # 逻辑工坊 / Logic Workbench
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](logic-workbench-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/logic-workbench/logic-workbench-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 公开固定布线的布尔电路拼配。三个输入 A/B/C 的全部八种组合及目标输出全部可见，每个门槽的两个来源只能指向输入或更早的门，最后一个门是整电路输出。玩家配置 AND、OR、XOR、NOT，由真实布尔运算逐行判定，不比较隐藏的门答案。

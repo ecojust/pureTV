@@ -1,6 +1,6 @@
 # 蜜蜂果篮 · Bumble Basket
 
-[Android TV 0.1.4 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/bumble-basket-0.1.4.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/bumble-basket-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/bumble-basket-windows-x64-setup.exe)
+[Android TV 0.1.4 · APK](bumble-basket-0.1.4.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/bumble-basket-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/bumble-basket-windows-x64-setup.exe)
 
 [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
@@ -24,7 +24,7 @@
 
 | 平台 | 安装文件 |
 | --- | --- |
-| Android TV | [APK](https://github.com/ecojust/pureTV/releases/download/joystick-bumble-basket-v0.1.2/bumble-basket-0.1.2.apk) |
+| Android TV | [APK](bumble-basket-0.1.2.apk?raw=1) |
 | macOS | [DMG](https://github.com/ecojust/pureTV/releases/download/joystick-bumble-basket-v0.1.2/BumbleBasket-0.1.2-macos-universal.dmg) · [ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-bumble-basket-v0.1.2/BumbleBasket-0.1.2-macos-universal.zip) |
 | Windows x64 | [安装版 EXE](https://github.com/ecojust/pureTV/releases/download/joystick-bumble-basket-v0.1.2/BumbleBasket-0.1.2-windows-x64-setup.exe) · [便携 ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-bumble-basket-v0.1.2/BumbleBasket-0.1.2-windows-x64.zip) |
 

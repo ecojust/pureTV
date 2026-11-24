@@ -1,7 +1,7 @@
 # 热流滑翔 / Thermal Glider
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](thermal-glider-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/thermal-glider/thermal-glider-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 驾驶无引擎滑翔翼穿过山谷中的观测圈，借热气流补充高度，最后平稳降落。抬头会把空速换成高度，俯冲则反向交换；转弯、刹车和失速都会加快能量消耗。

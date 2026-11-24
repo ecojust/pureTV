@@ -1,7 +1,7 @@
 # 砝码账本 / Weight Ledger
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](weight-ledger-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/weight-ledger/weight-ledger-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 把六个砝码分配到三只共用托盘，让三台天平同时平衡。一次搬动会改变多台天平的读数：只顾眼前一台，可能让另一台失衡。

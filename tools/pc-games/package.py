@@ -5,6 +5,10 @@ import json
 import re
 import zipfile
 from pathlib import Path
+from urllib.parse import urlsplit
+
+
+REPOSITORY_RAW = 'https://github.com/ecojust/pureTV/raw/refs/heads/master/'
 
 
 def build(output, root=Path(__file__).resolve().parents[2]):
@@ -23,7 +27,7 @@ def build(output, root=Path(__file__).resolve().parents[2]):
         if not re.fullmatch(r'[0-9a-f]{64}', game['sha256']) or game['bytes'] <= 0:
             raise ValueError(f'Incomplete download identity for {game["id"]}')
     for slug, entry in zip(featured, entries):
-        if 'page' in entry and entry['apk'] != games_by_id[slug]['url']:
+        if 'page' in entry and REPOSITORY_RAW + urlsplit(entry['apk']).path != games_by_id[slug]['url']:
             raise ValueError(f'Desktop and TV download URLs differ for {slug}')
     output.mkdir(parents=True, exist_ok=True)
     archive = output / 'pureTV-Games-portable.zip'

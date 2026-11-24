@@ -1,7 +1,7 @@
 # 影形铸坊 / Shadow Foundry
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](shadow-foundry-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/shadow-foundry/shadow-foundry-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 转动高低不同的金属工件和侧向灯光，让真实高度投出的地面阴影覆盖青色目标格，同时避开琥珀色禁区。改变灯向，阴影会向相反方向伸展；重叠阴影只计算一次。

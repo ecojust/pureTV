@@ -1,7 +1,7 @@
 # 冰面刹停 / Frost Brake
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](frost-brake-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/frost-brake/frost-brake-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 沿低摩擦冰道推动货橇，把整辆货橇依次停进三个越来越窄的交付区。松开方向仍会滑行；冰爪只有接触结霜带才会刹车。

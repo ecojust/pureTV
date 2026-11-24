@@ -1,7 +1,7 @@
 # 二元织格 / Binary Weave
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](binary-weave-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/binary-weave/binary-weave-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 Takuzu 二元逻辑填格。三张 4×4、6×6、8×8 织格只提供固定的 0/1 线索，分别保留 **10、23、38 个可填写格**。

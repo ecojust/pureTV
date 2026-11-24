@@ -1,7 +1,7 @@
 # 视差天际 / Parallax Skyline
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](parallax-skyline-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/parallax-skyline/parallax-skyline-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 沿着两条深度不同的轨道移动建筑板，让两个观察点都出现指定的天际线。近层移动一个世界单位，投影移动两格；远层只移动一格。正面看似严丝合缝的建筑，换个角度可能暴露错误。
