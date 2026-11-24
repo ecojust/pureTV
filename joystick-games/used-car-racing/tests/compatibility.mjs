@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {readFile, readdir} from 'node:fs/promises';
-const require = createRequire(new URL('../../../../desktop/package.json', import.meta.url));
+const require = createRequire(new URL('../../../desktop/package.json', import.meta.url));
 const {transform} = require('esbuild');
 const assets = new URL('../src/main/assets/', import.meta.url);
 const scripts = (await readdir(assets)).filter(name => name.endsWith('.js'));

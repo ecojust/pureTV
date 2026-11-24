@@ -1,2 +1,2 @@
-import { runCaptureTests } from '../../../../tools/tests/puzzle-harness.mjs';
+import { runCaptureTests } from '../../../tools/tests/puzzle-harness.mjs';
 await runCaptureTests({ kind: 'jewel' });

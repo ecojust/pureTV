@@ -1,14 +1,14 @@
 # 霓虹飞车 · Neon Rush TV
 
 <!-- apk-resource:start -->
-[Android 0.1.5 APK](../../../joystick-games/neon-rush/neon-rush-0.1.5.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-macos.dmg) · [图标与安装验证](docs/releases/0.1.5/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.4 实玩录像](docs/releases/0.1.4/gameplay.mp4?raw=1)
+[Android 0.1.5 APK](neon-rush-0.1.5.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-macos.dmg) · [图标与安装验证](docs/releases/0.1.5/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.4 实玩录像](docs/releases/0.1.4/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 ## 历史 Android 版本 0.1.4 · 手柄与手机连接
 
 [下载签名 APK](neon-rush-0.1.4.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
 
-可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
+可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../docs/guide/README.md#安装游戏与连接手柄)
 
 此签名 APK 已从 0.1.3 在 Android TV 模拟器完成覆盖安装。原版手柄 SDK 通过 8 项检查，实际发出的 76 条消息全部收到同序号确认。[游戏截图](docs/releases/0.1.4/gameplay.png) · [Android 玩法录像](docs/releases/0.1.4/gameplay.mp4?raw=1) · [验证记录与测试范围](docs/releases/0.1.4/verification.json)
 
@@ -23,7 +23,7 @@
 
 Android **0.1.3 / versionCode 4**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
-[连接截图](docs/releases/0.1.3/connected.png) · [连接状态专项录像](docs/releases/0.1.3/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.1.3/verification.json) · [20 款更新记录](../../../docs/controller-client-status/README.md)
+[连接截图](docs/releases/0.1.3/connected.png) · [连接状态专项录像](docs/releases/0.1.3/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.1.3/verification.json) · [20 款更新记录](../../docs/controller-client-status/README.md)
 
 安装包沿用原发布证书。本轮在 Android TV 模拟器中验证连接身份、断开／重连状态及同证书覆盖安装；截图和录像记录菜单中的连接状态专项，没有重做完整玩法验收。未改规则模型按精确哈希复用历史依据，旧版报告继续保留。尚未验证实体电视、手机、ESP32 或带已有存档的升级与数据保留。
 
@@ -72,7 +72,7 @@ Android 客户端自 0.1.2 起提供 pureTV 九键 TCP 手柄与 mDNS 自动发�
 
 也可以在电脑运行仓库的 `python3 puretv-joystick/bridge.py 电视IP --port 63485`，打开 `http://127.0.0.1:8767/` 使用原版虚拟手柄；若服务使用备用端口，请填写实际端口。操作和协议见[Wi-Fi 手柄说明](docs/WIFI-CONTROLLER.md)。
 
-历史 0.1.1 完成了 66 项原生回归和 6 项原版虚拟手柄实际游戏联调；这些历史计数不代表本次连接标识更新重新执行。历史 Android 0.1.2 已完成的 8 项实包手柄验收、同证书覆盖安装结果及来源哈希见[版本验证](docs/releases/0.1.2/verification.json)和[历史手柄接入记录](../../../docs/readme-controller-support/README.md)。实体电视、手机和 ESP32 的同网搜索、连接尚未实测。
+历史 0.1.1 完成了 66 项原生回归和 6 项原版虚拟手柄实际游戏联调；这些历史计数不代表本次连接标识更新重新执行。历史 Android 0.1.2 已完成的 8 项实包手柄验收、同证书覆盖安装结果及来源哈希见[版本验证](docs/releases/0.1.2/verification.json)和[历史手柄接入记录](../../docs/readme-controller-support/README.md)。实体电视、手机和 ESP32 的同网搜索、连接尚未实测。
 
 ## 画面与声音
 
@@ -93,9 +93,9 @@ python3 tools/prepare-web.py --output /tmp/neon-rush-web
 python3 -m http.server 8080 --directory /tmp/neon-rush-web
 ```
 
-打开 `http://127.0.0.1:8080/tv.html` 查看实际宿主页面。浏览器预览和实体电视测试分别记录；软件渲染速度、录屏帧率不能当作设备帧率。历史 Android 0.1.2 的验证范围见[20款游戏接入记录](../../../docs/readme-controller-support/README.md)。Android 0.1.2 的规则模型与已交付 macOS 0.1.3 的修正模型一致，按精确哈希复用其规则与方向回归依据；独立方向和三赛道记录见 [Mac 验证记录](macos/docs/verification-0.1.3/README.md)。[Android 0.1.1 验证](docs/releases/0.1.1/verification.json)及其复用的 0.1.0 规则检查、三赛道录像仅作历史基线，不作为 Android 0.1.2 转向修复的证据。原始报告见 [docs/README.md](docs/README.md)。尚未在实体电视、手机或 ESP32 上测试。
+打开 `http://127.0.0.1:8080/tv.html` 查看实际宿主页面。浏览器预览和实体电视测试分别记录；软件渲染速度、录屏帧率不能当作设备帧率。历史 Android 0.1.2 的验证范围见[20款游戏接入记录](../../docs/readme-controller-support/README.md)。Android 0.1.2 的规则模型与已交付 macOS 0.1.3 的修正模型一致，按精确哈希复用其规则与方向回归依据；独立方向和三赛道记录见 [Mac 验证记录](macos/docs/verification-0.1.3/README.md)。[Android 0.1.1 验证](docs/releases/0.1.1/verification.json)及其复用的 0.1.0 规则检查、三赛道录像仅作历史基线，不作为 Android 0.1.2 转向修复的证据。原始报告见 [docs/README.md](docs/README.md)。尚未在实体电视、手机或 ESP32 上测试。
 
-Android 构建和固定证书签名沿用 [Game Kit 构建说明](../../game-kit/BUILD.md)。本地 builder 只生成未签名包；只有源码、资产、签名和验证证据核对完成的 APK 才作为发布包。
+Android 构建和固定证书签名沿用 [Game Kit 构建说明](../../resource/game-kit/BUILD.md)。本地 builder 只生成未签名包；只有源码、资产、签名和验证证据核对完成的 APK 才作为发布包。
 
 <!-- controller-client-status-history:start -->
 <details>
@@ -103,7 +103,7 @@ Android 构建和固定证书签名沿用 [Game Kit 构建说明](../../game-kit
 
 以下为旧版发布记录，其测试与画面不代表本次连接 ID 界面验收。[原提交中的完整说明](https://github.com/ecojust/pureTV/blob/9af9f197855eb7a0ce7174c0e6295c8974b3250d/resource/apps/neon-rush/README.md)。
 
-**Android 0.1.2 · 正式签名 APK：447,980 字节（约 448 KB）。** [下载安装包](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.2.apk) · [Android 实包手柄回归录像](docs/releases/0.1.2/gameplay.mp4) · [版本验证](docs/releases/0.1.2/verification.json) · [当时接入记录](../../../docs/readme-controller-support/README.md) · [图标](logo.svg)
+**Android 0.1.2 · 正式签名 APK：447,980 字节（约 448 KB）。** [下载安装包](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.2.apk) · [Android 实包手柄回归录像](docs/releases/0.1.2/gameplay.mp4) · [版本验证](docs/releases/0.1.2/verification.json) · [当时接入记录](../../docs/readme-controller-support/README.md) · [图标](logo.svg)
 
 当时将 pureTV 手柄默认端口改为 **63485**，补充连接状态与地址说明，短暂失焦或扫码房间刷新时保留 TCP 连接并隔离输入。macOS 0.1.3 已交付的左右转向修复也已进入此 Android 安装包。
 

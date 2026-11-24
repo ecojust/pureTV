@@ -8,7 +8,7 @@ import { spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { mkdir, readFile, writeFile, readdir, copyFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { parseArgs, sourceHashes, launch, snapshot, delay, sha256, run, verifyErrors } from '../../../game-kit/qa/common.mjs';
+import { parseArgs, sourceHashes, launch, snapshot, delay, sha256, run, verifyErrors } from '../../../resource/game-kit/qa/common.mjs';
 import * as strategy from './automation.mjs';
 
 const args=parseArgs();
@@ -16,7 +16,7 @@ assert.ok(args.assets&&args.output&&args.jdk&&args['json-jar'],'--assets --outpu
 const assets=path.resolve(args.assets),output=path.resolve(args.output),jdk=path.resolve(args.jdk),jsonJar=path.resolve(args['json-jar']);
 assert.ok(output!==assets&&!output.startsWith(assets+path.sep));
 await mkdir(output,{recursive:true});assert.equal((await readdir(output)).length,0,'Use a fresh evidence directory; keep failures');
-const production=fileURLToPath(new URL('../../../game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java',import.meta.url));
+const production=fileURLToPath(new URL('../../../resource/game-kit/android/src/main/java/com/ecojust/gamekit/WifiControllerServer.java',import.meta.url));
 const harness=fileURLToPath(new URL('./WifiWireHarness.java',import.meta.url));
 const self=fileURLToPath(import.meta.url);
 const scriptFiles=[production,harness,self,fileURLToPath(new URL('./automation.mjs',import.meta.url)),fileURLToPath(new URL('../source/model.mjs',import.meta.url)),fileURLToPath(new URL('../source/tracks.mjs',import.meta.url))];

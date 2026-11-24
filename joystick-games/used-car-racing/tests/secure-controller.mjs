@@ -12,7 +12,7 @@ import {readFile,writeFile,mkdir,mkdtemp,rm,access} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
-const require=createRequire(new URL('../../../../desktop/package.json',import.meta.url));
+const require=createRequire(new URL('../../../desktop/package.json',import.meta.url));
 const {chromium}=require('playwright');
 const assetRoot=new URL('../src/main/assets/',import.meta.url);
 const actualAssets=Object.fromEntries(await Promise.all(['controller.html','controller.css','controller.js','steering.js','secure-controller.js'].map(async name=>[name,await readFile(new URL(name,assetRoot))])));

@@ -8,7 +8,7 @@ import {createHash} from 'node:crypto';
 import {createRequire} from 'node:module';
 import {readFile,writeFile,mkdir,readdir} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
-const require=createRequire(new URL('../../../../desktop/package.json',import.meta.url));
+const require=createRequire(new URL('../../../desktop/package.json',import.meta.url));
 const {chromium}=require('playwright');
 const options={assets:fileURLToPath(new URL('../src/main/assets/',import.meta.url)),output:'/tmp/puretv-alien-shooter-performance',label:'current',samples:12,warmup:3,regressions:false};
 for(let i=2;i<process.argv.length;i++){

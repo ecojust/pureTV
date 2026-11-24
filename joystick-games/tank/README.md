@@ -1,14 +1,14 @@
 # Tank TV · 经典坦克大战
 
 <!-- apk-resource:start -->
-[Android 0.5.7 APK](../../../joystick-games/tank/tank-0.5.7.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tank-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tank-macos.dmg) · [图标与安装验证](docs/releases/0.5.7/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.5.6 实玩录像](docs/releases/0.5.6/gameplay.mp4?raw=1)
+[Android 0.5.7 APK](tank-0.5.7.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tank-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tank-macos.dmg) · [图标与安装验证](docs/releases/0.5.7/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.5.6 实玩录像](docs/releases/0.5.6/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 ## 历史 Android 版本 0.5.6 · 手柄与手机连接
 
 [下载签名 APK](tank-0.5.6.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
 
-在 720 × 480 电视上，二维码和两个玩家席位都能完整显示。可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
+在 720 × 480 电视上，二维码和两个玩家席位都能完整显示。可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../docs/guide/README.md#安装游戏与连接手柄)
 
 此签名 APK 已在 Android TV 模拟器完成从 0.5.4 到 0.5.5、再到 0.5.6 的两段同证书覆盖安装。原版手柄 SDK 通过 9 项检查，实际发出的 102 条消息全部收到同序号确认。[游戏截图](docs/releases/0.5.6/gameplay.png) · [Android 玩法录像](docs/releases/0.5.6/gameplay.mp4?raw=1) · [验证记录与测试范围](docs/releases/0.5.6/verification.json)
 
@@ -23,7 +23,7 @@
 
 Android **0.5.4 / versionCode 11**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
-[连接截图](docs/releases/0.5.4/connected.png) · [连接状态专项录像](docs/releases/0.5.4/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.5.4/verification.json) · [20 款更新记录](../../../docs/controller-client-status/README.md)
+[连接截图](docs/releases/0.5.4/connected.png) · [连接状态专项录像](docs/releases/0.5.4/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.5.4/verification.json) · [20 款更新记录](../../docs/controller-client-status/README.md)
 
 安装包沿用原发布证书。本轮在 Android TV 模拟器中验证连接身份、断开／重连状态及同证书覆盖安装；截图和录像记录菜单中的连接状态专项，没有重做完整玩法验收。未改规则模型按精确哈希复用历史依据，旧版报告继续保留。尚未验证实体电视、手机、ESP32 或带已有存档的升级与数据保留。
 
@@ -39,7 +39,7 @@ Android **0.5.4 / versionCode 11**：手柄连接后，侧边显示手柄图标�
 <!-- visual-release:start -->
 ## 历史：0.5.2 视觉更新与验证
 
-以下保留 **0.5.2** 发布时的视觉更新、源码和验收记录；这些旧版结果不代表本轮 pureTV 手柄更新已经通过验收。当时沿用 0.5.0／0.5.1 的 pureTV 发布证书。逐款改动、检查范围和实机验证状态见[0.5.2 视觉更新记录](../../../docs/game-visuals-0.5.2.md)。
+以下保留 **0.5.2** 发布时的视觉更新、源码和验收记录；这些旧版结果不代表本轮 pureTV 手柄更新已经通过验收。当时沿用 0.5.0／0.5.1 的 pureTV 发布证书。逐款改动、检查范围和实机验证状态见[0.5.2 视觉更新记录](../../docs/game-visuals-0.5.2.md)。
 
 该次视觉更新只读核对 1985 年 FC/NES《Battle City》的视觉对应关系，保留已有像素战场；没有修改 Tank 渲染器。
 
@@ -53,7 +53,7 @@ Android **0.5.4 / versionCode 11**：手柄连接后，侧边显示手柄图标�
 
 复核 35 关地图、波次和双人规则，保留整区开火手柄。
 
-沿用 0.5.0 证书，可直接覆盖更新；0.5.1 的核对结果与剩余差距见[还原度复核](../../../docs/game-fidelity-0.5.1.md)。
+沿用 0.5.0 证书，可直接覆盖更新；0.5.1 的核对结果与剩余差距见[还原度复核](../../docs/game-fidelity-0.5.1.md)。
 
 ## 安装与签名
 
@@ -109,19 +109,19 @@ Android **0.5.4 / versionCode 11**：手柄连接后，侧边显示手柄图标�
 从仓库根目录执行：
 
 ```bash
-node --test resource/apps/tank/tests/game.test.cjs
+node --test joystick-games/tank/tests/game.test.cjs
 npm ci --prefix desktop
 cd desktop && npx playwright install chromium && cd ..
-node resource/apps/tank/tests/compatibility.mjs
-node resource/apps/tank/tests/controller.mjs
-node resource/apps/tank/tests/capture.mjs
+node joystick-games/tank/tests/compatibility.mjs
+node joystick-games/tank/tests/controller.mjs
+node joystick-games/tank/tests/capture.mjs
 cd resource/launcher/puretv
 ./gradlew :tank:assembleDebug :tank:testDebugUnitTest :tank:lintDebug :tank:verifyReleaseSize
 ```
 
-APK 输出在 `resource/apps/tank/build/outputs/apk/`。Release 开启代码与资源压缩，体积上限为 5 MiB；正式资源 APK 使用 pureTV 发布证书签名。Android 测试验证房间服务及生命周期，Node 测试验证游戏规则，浏览器测试验证手机触控。
+APK 输出在 `joystick-games/tank/build/outputs/apk/`。Release 开启代码与资源压缩，体积上限为 5 MiB；正式资源 APK 使用 pureTV 发布证书签名。Android 测试验证房间服务及生命周期，Node 测试验证游戏规则，浏览器测试验证手机触控。
 
-设置 `TANK_UI_CAPTURE_DIR` 后运行 `tests/capture.mjs`，可导出中英文游戏页面预览。这些图片由随 APK 打包的真实页面在 Chromium 中渲染，原生桥接使用测试房间数据，不代表电视实机性能或真实手机网络时延。0.5.2 的历史构建记录保留于上文；本轮安装包验收结果见本轮验收记录，源码提交、APK 校验值及构建方式见 [resource.json](resource.json)；资源目录维护见[资源维护说明](../../../docs/resource-maintenance.md)。
+设置 `TANK_UI_CAPTURE_DIR` 后运行 `tests/capture.mjs`，可导出中英文游戏页面预览。这些图片由随 APK 打包的真实页面在 Chromium 中渲染，原生桥接使用测试房间数据，不代表电视实机性能或真实手机网络时延。0.5.2 的历史构建记录保留于上文；本轮安装包验收结果见本轮验收记录，源码提交、APK 校验值及构建方式见 [resource.json](resource.json)；资源目录维护见[资源维护说明](../../docs/resource-maintenance.md)。
 
 ## 素材与许可
 
@@ -149,7 +149,7 @@ APK 输出在 `resource/apps/tank/build/outputs/apk/`。Release 开启代码与�
 
 历史版本为 **0.5.3 / versionCode 10**，新增 pureTV Wi-Fi 手柄输入，默认 TCP 端口 **63485**，保留扫码手机手柄和电视遥控器。正式签名 APK 已在 Android TV 模拟器完成 9/9 项手柄验收，并通过从上一版本执行 `adb install -r` 覆盖安装。未做带存档升级或数据保留验证。
 
-实际结果和限制见[当时 20 款游戏验收记录](../../../docs/readme-controller-support/README.md)及[发布进度](../../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
+实际结果和限制见[当时 20 款游戏验收记录](../../docs/readme-controller-support/README.md)及[发布进度](../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
 
 该历史版本验收资源：[菜单截图](docs/releases/0.5.3/menu.png) · [实际 APK 运行录像](docs/releases/0.5.3/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.5.3/verification.json)。截图和录像来自 Android TV 模拟器，未做实体电视测试。验收范围和具体结果见验证记录；模拟器结果不代表实体电视或带存档升级验证。
 

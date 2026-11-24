@@ -76,7 +76,7 @@ The introductory world banner does not block controller input. Crouch-slide coll
 Run:
 
 ```sh
-node --test resource/apps/super-mario/tests/model.test.cjs
+node --test joystick-games/super-mario/tests/model.test.cjs
 ```
 
 The model tests cover motion, variable jump height, head collisions, items, coins/lives, damage, stomps, shells, fireballs, boss hits, pipe travel, swimming, player turns, disconnects, timer/game over, checkpoints, distinct geometry, fixed-step behavior, music persistence, crouch-slide clearance, full moving-lift cycles, stomp/shell chains, staged goal clears, timer-digit fireworks and exact once-only bonuses, bridge collapse/previously-defeated bosses, paused clear sequences, emerging pickups, projectile collision isolation and progression.

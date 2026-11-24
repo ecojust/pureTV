@@ -1,14 +1,14 @@
 # 孤胆枪手 TV
 
 <!-- apk-resource:start -->
-[Android 0.1.6 APK](../../../joystick-games/alien-shooter/alien-shooter-0.1.6.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-macos.dmg) · [图标与安装验证](docs/releases/0.1.6/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.5 实玩录像](docs/releases/0.1.5/gameplay.mp4?raw=1)
+[Android 0.1.6 APK](alien-shooter-0.1.6.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-macos.dmg) · [图标与安装验证](docs/releases/0.1.6/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.5 实玩录像](docs/releases/0.1.5/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 ## 历史 Android 版本 0.1.5 · 手柄与手机连接
 
 [下载签名 APK](alien-shooter-0.1.5.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
 
-可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
+可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../docs/guide/README.md#安装游戏与连接手柄)
 
 此签名 APK 已从 0.1.4 在 Android TV 模拟器完成覆盖安装。原版手柄 SDK 通过 8 项检查，实际发出的 72 条消息全部收到同序号确认。[游戏截图](docs/releases/0.1.5/gameplay.png) · [Android 玩法录像](docs/releases/0.1.5/gameplay.mp4?raw=1) · [验证记录与测试范围](docs/releases/0.1.5/verification.json)
 
@@ -23,7 +23,7 @@
 
 Android **0.1.4 / versionCode 5**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
-[连接截图](docs/releases/0.1.4/connected.png) · [连接状态专项录像](docs/releases/0.1.4/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.1.4/verification.json) · [20 款更新记录](../../../docs/controller-client-status/README.md)
+[连接截图](docs/releases/0.1.4/connected.png) · [连接状态专项录像](docs/releases/0.1.4/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.1.4/verification.json) · [20 款更新记录](../../docs/controller-client-status/README.md)
 
 安装包沿用原发布证书。本轮在 Android TV 模拟器中验证连接身份、断开／重连状态及同证书覆盖安装；截图和录像记录菜单中的连接状态专项，没有重做完整玩法验收。未改规则模型按精确哈希复用历史依据，旧版报告继续保留。尚未验证实体电视、手机、ESP32 或带已有存档的升级与数据保留。
 
@@ -98,13 +98,13 @@ Android **0.1.4 / versionCode 5**：手柄连接后，侧边显示手柄图标�
 以下命令是可复现的检查入口，不表示本轮已经全部执行通过；本轮实际执行结果见上方验收记录。
 
 ```sh
-node --test resource/apps/alien-shooter/tests/*.test.cjs
-node resource/apps/alien-shooter/tests/controller.mjs
-node resource/apps/alien-shooter/tests/integration.mjs
-node resource/apps/alien-shooter/tests/runtime-performance.mjs
-node resource/apps/alien-shooter/tests/animation.mjs
-node resource/apps/alien-shooter/tests/performance.mjs --samples 6 --warmup 1 --regressions
-node resource/apps/alien-shooter/tools/bake-materials.mjs --verify
+node --test joystick-games/alien-shooter/tests/*.test.cjs
+node joystick-games/alien-shooter/tests/controller.mjs
+node joystick-games/alien-shooter/tests/integration.mjs
+node joystick-games/alien-shooter/tests/runtime-performance.mjs
+node joystick-games/alien-shooter/tests/animation.mjs
+node joystick-games/alien-shooter/tests/performance.mjs --samples 6 --warmup 1 --regressions
+node joystick-games/alien-shooter/tools/bake-materials.mjs --verify
 
 cd resource/launcher/puretv
 ./gradlew :alien-shooter:testDebugUnitTest :alien-shooter:lintDebug :alien-shooter:assembleRelease :alien-shooter:verifyReleaseSize
@@ -136,7 +136,7 @@ APK 已使用原 pureTV 发布证书签名，已在 Android TV 模拟器完成 0
 
 历史版本 **0.1.3 / versionCode 4** 新增 pureTV Wi-Fi 手柄输入，默认 TCP 端口 **63485**，保留扫码手机手柄和电视遥控器。APK 已沿用原发布证书正式签名。Android TV 模拟器中的实际 APK 手柄验收已通过 8/8，覆盖 START、实际玩法输入、暂停恢复、断线重连和同序号 ACK。
 
-实际结果和限制见[当时 20 款游戏验收记录](../../../docs/readme-controller-support/README.md)及[发布进度](../../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
+实际结果和限制见[当时 20 款游戏验收记录](../../docs/readme-controller-support/README.md)及[发布进度](../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
 
 该历史版本验收资源：[菜单截图](docs/releases/0.1.3/menu.png) · [实际 APK 运行录像](docs/releases/0.1.3/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.1.3/verification.json)。截图和录像来自 Android TV 模拟器，未做实体电视测试。完整归档、具体检查范围与限制见验证记录。
 

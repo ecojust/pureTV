@@ -17,7 +17,7 @@ For matching the existing local cinematic reference playback, sound-command time
 [transcribe-audio.py](transcribe-audio.py) reads only declarative `db`, `dw`, and `SoundDefinition` data statements. It resolves the documented score repeats and subphrases **offline**, and writes flat note events. The app never parses ASM or executes the original score-command stream. The tool does not assemble instructions or require a ROM.
 
 ```sh
-python resource/apps/jackal/docs/transcribe-audio.py \
+python joystick-games/jackal/docs/transcribe-audio.py \
   '/path/to/NES-Jackal_Disassembly_Fully_Commented/ASM Source/Code/Bank0.ASM' \
   /path/to/local-jackal-art/data/audio-score.json \
   /path/to/local-jackal-art/cinematics

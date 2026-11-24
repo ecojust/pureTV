@@ -24,7 +24,7 @@ test('actual bundle honors the synthetic native bridge, address, panel and langu
   skip:!assetsArgument && !outputArgument && 'Explicit final assets and output are required; synthetic native UI browser fixture not run',
 }, async t => {
   assert.ok(assetsArgument && outputArgument, 'Set both NEON_RUSH_NATIVE_UI_ASSETS and NEON_RUSH_NATIVE_UI_OUTPUT');
-  const { launch, sourceHashes, sha256, snapshot, tap, delay, verifyErrors } = await import('../../../game-kit/qa/common.mjs');
+  const { launch, sourceHashes, sha256, snapshot, tap, delay, verifyErrors } = await import('../../../resource/game-kit/qa/common.mjs');
   const assets = path.resolve(assetsArgument), output = path.resolve(outputArgument);
   assert.ok(output !== assets && !output.startsWith(assets + path.sep), 'Evidence must not modify tested assets');
   await mkdir(output, { recursive:true });
@@ -112,7 +112,7 @@ test('actual bundle honors the synthetic native bridge, address, panel and langu
     for(const name of ['tv.html','tv.css','runtime.js','renderer.js','game.js','game-model.js','rush-theme.css','game-config.json'])assert.ok(sourceAssetHashes[name], 'Final asset is present: '+name);
     // Reject old extraction directories before claiming that this is the final bundle.
     for(const name of ['game.js','game-model.js','rush-theme.css'])assert.equal(sourceAssetHashes[name],sha256(await readFile(new URL('../src/main/assets/'+name,import.meta.url))),'Extracted game asset matches current production output: '+name);
-    for(const name of ['tv.html','tv.css','runtime.js','renderer.js'])assert.equal(sourceAssetHashes[name],sha256(await readFile(new URL('../../../game-kit/web/'+name,import.meta.url))),'Extracted shared asset matches current production source: '+name);
+    for(const name of ['tv.html','tv.css','runtime.js','renderer.js'])assert.equal(sourceAssetHashes[name],sha256(await readFile(new URL('../../../resource/game-kit/web/'+name,import.meta.url))),'Extracted shared asset matches current production source: '+name);
     browser=await launch(); report.environment.browser=await browser.version();
     context=await browser.newContext({viewport:viewports[1],locale:'zh-CN',deviceScaleFactor:1});
     // Deliberately use a Chinese browser locale: English must come from getInfo().

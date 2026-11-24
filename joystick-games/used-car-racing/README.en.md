@@ -1,7 +1,7 @@
 # Used Car Racing TV
 
 <!-- apk-resource:start -->
-[Android 0.1.8 APK](../../../joystick-games/used-car-racing/used-car-racing-0.1.8.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.1.8/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.1.7 gameplay video](docs/releases/0.1.7/gameplay.mp4?raw=1)
+[Android 0.1.8 APK](used-car-racing-0.1.8.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.1.8/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.1.7 gameplay video](docs/releases/0.1.7/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 ## Earlier Android release 0.1.7 · Returning to a phone-controlled race
@@ -20,7 +20,7 @@ The signed APK upgraded 0.1.6 in place on Android TV. Driving, pause, reconnect 
 [Download the signed APK](used-car-racing-0.1.6.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
 <!-- previous-0.1.6-apk-resource:end -->
 
-Connect a keyboard, pair a pureTV Wi-Fi controller, or scan the TV room’s QR code with a phone on the same network. The connection indicator identifies each player while the game keeps its playing area at the same size. [Controller guide](../../../docs/guide/README.en.md#install-a-game-and-connect-a-controller)
+Connect a keyboard, pair a pureTV Wi-Fi controller, or scan the TV room’s QR code with a phone on the same network. The connection indicator identifies each player while the game keeps its playing area at the same size. [Controller guide](../../docs/guide/README.en.md#install-a-game-and-connect-a-controller)
 
 The signed APK upgraded Android 0.1.5 in place on an Android TV emulator. The original controller SDK completed 9 checks and received matching acknowledgements for 106 messages. [Gameplay screenshot](docs/releases/0.1.6/gameplay.png) · [Android gameplay recording](docs/releases/0.1.6/gameplay.mp4?raw=1) · [Verification and limitations](docs/releases/0.1.6/verification.json)
 
@@ -35,7 +35,7 @@ The signed APK upgraded Android 0.1.5 in place on an Android TV emulator. The or
 
 Android **0.1.5 / versionCode 6** shows a controller icon, player seat (1P/2P where supported), and the connected device's complete ID in the side area. Disconnected devices disappear. The default TCP port remains **63485**. Current controller firmware does not report RSSI, so signal strength is not displayed.
 
-[Connected screenshot](docs/releases/0.1.5/connected.png) · [Controller-status recording](docs/releases/0.1.5/controller-status.mp4?raw=1) · [Version verification](docs/releases/0.1.5/verification.json) · [Twenty-game update record](../../../docs/controller-client-status/README.md)
+[Connected screenshot](docs/releases/0.1.5/connected.png) · [Controller-status recording](docs/releases/0.1.5/controller-status.mp4?raw=1) · [Version verification](docs/releases/0.1.5/verification.json) · [Twenty-game update record](../../docs/controller-client-status/README.md)
 
 The APK uses the existing release certificate. This update verifies connection identity, disconnect/reconnect status and in-place installation in an Android TV emulator; the capture and video show the menu status checks. It does not repeat full gameplay acceptance. Unchanged model evidence is reused by exact hash, with previous reports retained below. Physical TVs, phones, ESP32 devices and upgrades containing existing user saves remain untested.
 
@@ -132,7 +132,7 @@ In fixed six-car scenes across all three tracks, batching reduces single-player 
 
 Roads gain repairs and rubber marks, while buildings and containers use surface-scaled textures. Continuous irregular ridges replace isolated cone mountains; rocks have less regular facets and trees use alpha-tested foliage cards. Clouds, fog and directional light add depth. Route and collision boundaries still use the original road data.
 
-The project’s [generator](../../../tools/generate-used-car-textures.py) bakes the original textures offline and packages them in the APK; see the [asset notice](src/main/assets/TEXTURE-LICENSE.txt). These changes do not use live reflection captures or full-screen post-processing. Actual TV frame rates still require device testing.
+The project’s [generator](../../tools/generate-used-car-textures.py) bakes the original textures offline and packages them in the APK; see the [asset notice](src/main/assets/TEXTURE-LICENSE.txt). These changes do not use live reflection captures or full-screen post-processing. Actual TV frame rates still require device testing.
 
 ## Historical vehicle and circuit views
 
@@ -157,12 +157,12 @@ This is a reduced vehicle-dynamics game designed for phone controls and TVs. Mod
 The commands below are reproducible check entry points, not a claim that all checks passed for this release. Current execution results are linked above.
 
 ```sh
-node --test resource/apps/used-car-racing/tests/*.test.cjs
-node resource/apps/used-car-racing/tests/compatibility.mjs
-node resource/apps/used-car-racing/tests/rendering.mjs
-node resource/apps/used-car-racing/tests/controller.mjs
-node resource/apps/used-car-racing/tests/secure-controller.mjs
-node resource/apps/used-car-racing/tests/integration.mjs
+node --test joystick-games/used-car-racing/tests/*.test.cjs
+node joystick-games/used-car-racing/tests/compatibility.mjs
+node joystick-games/used-car-racing/tests/rendering.mjs
+node joystick-games/used-car-racing/tests/controller.mjs
+node joystick-games/used-car-racing/tests/secure-controller.mjs
+node joystick-games/used-car-racing/tests/integration.mjs
 
 cd resource/launcher/puretv
 ./gradlew :used-car-racing:assembleRelease :used-car-racing:testDebugUnitTest :used-car-racing:lintDebug :used-car-racing:verifyReleaseSize
@@ -208,7 +208,7 @@ The APK is signed with the existing pureTV release certificate. An in-place inst
 
 Historical version **0.1.4 / versionCode 5** adds pureTV Wi-Fi controller input on default TCP port **63485**, while retaining phone QR and TV remote controls. The APK is signed with the existing release certificate. The complete official-SDK browser checks passed 9/9; native checks, release signing and in-place installation also passed. The actual APK passed menu, initial synchronization and START checks. A host RenderThread segmentation fault during acceleration blocked the remaining Android checks; complete Android gameplay acceptance is not claimed. See the verification record for original results and limitations.
 
-See the [historical twenty-game acceptance record](../../../docs/readme-controller-support/README.md) and [rollout status](../../../docs/readme-controller-support/rollout.json) for actual results and limitations. Earlier CI reports, videos and screenshots below remain historical evidence.
+See the [historical twenty-game acceptance record](../../docs/readme-controller-support/README.md) and [rollout status](../../docs/readme-controller-support/rollout.json) for actual results and limitations. Earlier CI reports, videos and screenshots below remain historical evidence.
 
 Acceptance resources for that historical version: [actual Android APK menu screenshot](docs/releases/0.1.4/menu.png) · [browser gameplay screenshot](docs/releases/0.1.4/gameplay.png) · [browser gameplay video](docs/releases/0.1.4/gameplay.mp4?raw=1) · [verification record](docs/releases/0.1.4/verification.json). The menu comes from an Android TV emulator. Gameplay images and video show the bundled page driven by the official SDK in Chromium with a synthetic native bridge; they are not APK or physical-TV recordings. Exact sources, hashes and the Android environment limitation are documented in the verification record and the acceptance guide above.
 

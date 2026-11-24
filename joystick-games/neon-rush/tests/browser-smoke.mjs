@@ -5,7 +5,7 @@ import path from 'node:path';
 import { mkdir, readFile, writeFile, readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { parseArgs, sourceHashes, serveAssets, launch, preparePage, snapshot, tap,
-  applyKeys, releaseAll, verifyErrors, inspectFrame, summarize, delay, sha256 } from '../../../game-kit/qa/common.mjs';
+  applyKeys, releaseAll, verifyErrors, inspectFrame, summarize, delay, sha256 } from '../../../resource/game-kit/qa/common.mjs';
 import * as automation from './automation.mjs';
 
 const args = parseArgs();

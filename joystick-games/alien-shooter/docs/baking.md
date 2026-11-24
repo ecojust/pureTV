@@ -29,8 +29,8 @@
 在仓库根目录执行。生成需要 Node、`desktop` 的 Playwright 依赖、Chromium，以及 Python 3 / Pillow；这些只用于离线制作，应用运行时不需要它们。
 
 ```sh
-CHROMIUM_PATH=/usr/bin/chromium node resource/apps/alien-shooter/tools/bake-materials.mjs
-node resource/apps/alien-shooter/tools/bake-materials.mjs --verify
+CHROMIUM_PATH=/usr/bin/chromium node joystick-games/alien-shooter/tools/bake-materials.mjs
+node joystick-games/alien-shooter/tools/bake-materials.mjs --verify
 ```
 
 可使用 `--output /absolute/path` 把生成结果写入其它目录。制作过程只使用固定种子的绘图、原创位图字母和本地 `world.js`，不下载图片，也不依赖系统字体。

@@ -53,11 +53,11 @@
 在仓库根目录执行，需要 `desktop` 的 Playwright 依赖及 Chromium：
 
 ```sh
-CHROMIUM_PATH=/usr/bin/chromium node resource/apps/alien-shooter/tests/animation.mjs
-CHROMIUM_PATH=/usr/bin/chromium node resource/apps/alien-shooter/tests/performance.mjs \
+CHROMIUM_PATH=/usr/bin/chromium node joystick-games/alien-shooter/tests/animation.mjs
+CHROMIUM_PATH=/usr/bin/chromium node joystick-games/alien-shooter/tests/performance.mjs \
   --samples 8 --warmup 2 --regressions --output /tmp/alien-shooter-performance
-CHROMIUM_PATH=/usr/bin/chromium node resource/apps/alien-shooter/tests/runtime-performance.mjs
-node resource/apps/alien-shooter/tools/bake-materials.mjs --verify
+CHROMIUM_PATH=/usr/bin/chromium node joystick-games/alien-shooter/tests/runtime-performance.mjs
+node joystick-games/alien-shooter/tools/bake-materials.mjs --verify
 ```
 
 动作脚本加 `--record` 可生成当前资源的检查视频，需要安装 FFmpeg。`--assets` 指向指定版本的资源快照；`--compare-trace` 可传入另一侧的 `motion-trace.json`，要求每一帧的输入与模拟状态相同。CI 默认执行动作断言并保存检查 JSON，不录制视频。

@@ -7,7 +7,7 @@ import {createRequire} from 'node:module';
 // Real browser and HTTP assets with a simulated LAN WebSocket peer.
 // Captures show bundled pages; they are not physical phone/TV evidence.
 const gameRoot=resolve(dirname(fileURLToPath(import.meta.url)),'..');
-const require=createRequire(resolve(gameRoot,'../../../desktop/package.json'));
+const require=createRequire(resolve(gameRoot,'../../desktop/package.json'));
 const {chromium}=require('playwright');
 const world=require(resolve(gameRoot,'src/main/assets/world.js'));
 const assets=resolve(gameRoot,'src/main/assets');

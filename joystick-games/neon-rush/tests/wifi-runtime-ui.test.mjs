@@ -5,13 +5,13 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
-import { launch, sourceHashes, sha256, tap, delay } from '../../../game-kit/qa/common.mjs';
+import { launch, sourceHashes, sha256, tap, delay } from '../../../resource/game-kit/qa/common.mjs';
 const assetsArg=process.env.NEON_RUSH_WIFI_UI_ASSETS,outputArg=process.env.NEON_RUSH_WIFI_UI_OUTPUT;
 const entry='https://game-kit.invalid/tv.html';
 const qr='data:image/svg+xml;base64,'+Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25"><rect width="25" height="25" fill="white"/><path fill="black" d="M2 2h7v7H2zM16 2h7v7h-7zM2 16h7v7H2zM11 11h4v4h-4zM17 15h3v8h-3zM11 19h3v4h-3zM21 20h2v3h-2z"/></svg>').toString('base64');
 test('Wi-Fi status and QR controls fit the final Chinese/English game UI',{timeout:150000,skip:!assetsArg&&!outputArg&&'Explicit final assets/output required'},async()=>{
  assert.ok(assetsArg&&outputArg);const assets=path.resolve(assetsArg),output=path.resolve(outputArg);await mkdir(output,{recursive:true});assert.equal((await readdir(output)).length,0,'Keep previous failures');
- const hashes=await sourceHashes(assets);for(const name of ['game.js','game-model.js','rush-theme.css'])assert.equal(hashes[name],sha256(await readFile(new URL('../src/main/assets/'+name,import.meta.url))));assert.equal(hashes['runtime.js'],sha256(await readFile(new URL('../../../game-kit/web/runtime.js',import.meta.url))));
+ const hashes=await sourceHashes(assets);for(const name of ['game.js','game-model.js','rush-theme.css'])assert.equal(hashes[name],sha256(await readFile(new URL('../src/main/assets/'+name,import.meta.url))));assert.equal(hashes['runtime.js'],sha256(await readFile(new URL('../../../resource/game-kit/web/runtime.js',import.meta.url))));
  const script=await readFile(fileURLToPath(import.meta.url));await writeFile(path.join(output,'executed-wifi-runtime-ui.test.mjs'),script);
  const report={passed:false,scope:'Actual 3D UI with synthetic native bridge and ordinary keyboard controls; no real TCP/mDNS/radio/hardware claim.',sourceAssetHashes:hashes,scriptSha256:sha256(script),physicalTvTested:false,physicalControllerTested:false,layouts:[],statusChecks:[],screenshots:[],visualReviewCompleted:false};
  let browser,context,page;const errors=[];

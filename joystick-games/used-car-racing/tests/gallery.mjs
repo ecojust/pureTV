@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import http from 'node:http';
 import {readFile, mkdir} from 'node:fs/promises';
 import {createRequire} from 'node:module';
-const require = createRequire(new URL('../../../../desktop/package.json', import.meta.url));
+const require = createRequire(new URL('../../../desktop/package.json', import.meta.url));
 const {chromium} = require('playwright');
 const assets = new URL('../src/main/assets/', import.meta.url);
 const output = process.env.USED_CAR_UI_CAPTURE_DIR || '/tmp/puretv-used-car-gallery';

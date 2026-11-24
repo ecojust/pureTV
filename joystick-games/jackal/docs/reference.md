@@ -43,7 +43,7 @@ World Y is `worldHeight - distance + (from_bottom ? 239 : 0)`. Source pages stre
 | 5 | 512 × 3120 | 138 | 144 |
 | 6 | 512 × 3360 | 143 | 205 |
 
-Run `node resource/apps/jackal/tools/build-levels.cjs` after editing JSON. Its `--check` mode detects bundle drift. Generated `levels.js` synchronously exposes `JackalLevels`; Android's asset WebView does not need network fetches. Load `levels.js`, `enemies.js`, then `game-model.js`.
+Run `node joystick-games/jackal/tools/build-levels.cjs` after editing JSON. Its `--check` mode detects bundle drift. Generated `levels.js` synchronously exposes `JackalLevels`; Android's asset WebView does not need network fetches. Load `levels.js`, `enemies.js`, then `game-model.js`.
 
 `level.tiles`, `level.palettes`, and `level.collision` are live per-game copies. Permanent destruction modifies these arrays and appends `backgroundPatches`, while the source dataset remains immutable. Collision values are ground0, solid1, water2, special3; stage-four special tiles are slow traversable marsh.
 
@@ -94,8 +94,8 @@ Renderer-facing players expose `frameId`, `flipX`, `flipY`, `palette` and world 
 Run:
 
 ```sh
-node resource/apps/jackal/tools/build-levels.cjs --check
-node --test resource/apps/jackal/tests/game.test.cjs resource/apps/jackal/tests/enemies.test.cjs
+node joystick-games/jackal/tools/build-levels.cjs --check
+node --test joystick-games/jackal/tests/game.test.cjs joystick-games/jackal/tests/enemies.test.cjs
 ```
 
 Core tests check independent source facts, map dimensions and event anchors, controls, weapons, queued rescue, camera backtracking, co-op life sharing, all transition timings, score/tally rules and bounded deterministic combat. Enemy tests separately cover source-type behavior and six boss compositions.

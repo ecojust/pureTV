@@ -8,7 +8,7 @@ from pathlib import Path
 
 MACOS = Path(__file__).resolve().parents[1]
 APP = MACOS.parent
-KIT = APP.parents[1] / 'game-kit'
+KIT = APP.parents[1] / 'resource/game-kit'
 spec = importlib.util.spec_from_file_location('game_kit_build', KIT / 'build.py')
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)

@@ -15,6 +15,6 @@
 | Three.js 0.160.1 | 随本地 `game.js` 打包的三维渲染库 | MIT；完整许可随 APK 资产保存在 [THREE-LICENSE.txt](src/main/assets/THREE-LICENSE.txt)，版权归 three.js authors。 |
 | esbuild 0.25.12 | 开发时打包 ESM 模块 | MIT；仅构建工具，不作为游戏运行服务。 |
 | pureTV Game Kit | 电视宿主、页面、输入生命周期和扫码手机手柄 | 沿用本仓库 MIT 代码及其许可。 |
-| ZXing Core 3.5.3 | Game Kit 原生宿主生成二维码 | Apache-2.0；版本、固定哈希与构建流程沿用 [Game Kit](../../game-kit/BUILD.md)，不属于 Three.js 的 MIT 许可。 |
+| ZXing Core 3.5.3 | Game Kit 原生宿主生成二维码 | Apache-2.0；版本、固定哈希与构建流程沿用 [Game Kit](../../resource/game-kit/BUILD.md)，不属于 Three.js 的 MIT 许可。 |
 
 本作依赖的 Three.js 版本是 0.160.1；参考 QQ 项目锁定的是 0.169.0，两者分别记录。参考仓库 README 的 r186 总体徽章不能替代具体项目的依赖记录。

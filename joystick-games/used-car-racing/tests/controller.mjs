@@ -6,7 +6,7 @@ import {createHash, randomBytes} from 'node:crypto';
 import {readFile, mkdir} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
-const require = createRequire(new URL('../../../../desktop/package.json', import.meta.url));
+const require = createRequire(new URL('../../../desktop/package.json', import.meta.url));
 const {chromium} = require('playwright');
 const assets = new URL('../src/main/assets/', import.meta.url);
 const rooms = new Map();

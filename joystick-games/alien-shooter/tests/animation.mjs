@@ -9,7 +9,7 @@ import {spawn} from 'node:child_process';
 import {readFile,writeFile,mkdir,readdir,stat,rm} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
-const require=createRequire(new URL('../../../../desktop/package.json',import.meta.url));
+const require=createRequire(new URL('../../../desktop/package.json',import.meta.url));
 const {chromium}=require('playwright');
 const options={assets:fileURLToPath(new URL('../src/main/assets/',import.meta.url)),output:'/tmp/puretv-alien-shooter-animation',label:'current',record:false,tests:true};
 for(let i=2;i<process.argv.length;i++){

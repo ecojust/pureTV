@@ -71,7 +71,7 @@ python3 tools/generate-used-car-textures.py
 可选对比工具只读取本地已有的基线提交，不联网拉取历史，也不作为日常 CI 的历史依赖：
 
 ```sh
-node resource/apps/used-car-racing/tests/performance.mjs \
+node joystick-games/used-car-racing/tests/performance.mjs \
   --baseline e1ce37522542b21d4386cb0bd1ba9597c9bc953d \
   --output /tmp/puretv-used-car-performance
 ```

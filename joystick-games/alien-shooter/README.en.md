@@ -1,14 +1,14 @@
 # Alien Shooter TV
 
 <!-- apk-resource:start -->
-[Android 0.1.6 APK](../../../joystick-games/alien-shooter/alien-shooter-0.1.6.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.1.6/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.1.5 gameplay video](docs/releases/0.1.5/gameplay.mp4?raw=1)
+[Android 0.1.6 APK](alien-shooter-0.1.6.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/alien-shooter-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.1.6/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.1.5 gameplay video](docs/releases/0.1.5/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 ## Earlier Android release 0.1.5 · Controllers and phone pairing
 
 [Download the signed APK](alien-shooter-0.1.5.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
 
-Connect a keyboard, pair a pureTV Wi-Fi controller, or scan the TV room’s QR code with a phone on the same network. The connection indicator identifies each player while the game keeps its playing area at the same size. [Controller guide](../../../docs/guide/README.en.md#install-a-game-and-connect-a-controller)
+Connect a keyboard, pair a pureTV Wi-Fi controller, or scan the TV room’s QR code with a phone on the same network. The connection indicator identifies each player while the game keeps its playing area at the same size. [Controller guide](../../docs/guide/README.en.md#install-a-game-and-connect-a-controller)
 
 The signed APK upgraded Android 0.1.4 in place on an Android TV emulator. The original controller SDK completed 8 checks and received matching acknowledgements for 72 messages. [Gameplay screenshot](docs/releases/0.1.5/gameplay.png) · [Android gameplay recording](docs/releases/0.1.5/gameplay.mp4?raw=1) · [Verification and limitations](docs/releases/0.1.5/verification.json)
 
@@ -23,7 +23,7 @@ The signed APK upgraded Android 0.1.4 in place on an Android TV emulator. The or
 
 Android **0.1.4 / versionCode 5** shows a controller icon, player seat (1P/2P where supported), and the connected device's complete ID in the side area. Disconnected devices disappear. The default TCP port remains **63485**. Current controller firmware does not report RSSI, so signal strength is not displayed.
 
-[Connected screenshot](docs/releases/0.1.4/connected.png) · [Controller-status recording](docs/releases/0.1.4/controller-status.mp4?raw=1) · [Version verification](docs/releases/0.1.4/verification.json) · [Twenty-game update record](../../../docs/controller-client-status/README.md)
+[Connected screenshot](docs/releases/0.1.4/connected.png) · [Controller-status recording](docs/releases/0.1.4/controller-status.mp4?raw=1) · [Version verification](docs/releases/0.1.4/verification.json) · [Twenty-game update record](../../docs/controller-client-status/README.md)
 
 The APK uses the existing release certificate. This update verifies connection identity, disconnect/reconnect status and in-place installation in an Android TV emulator; the capture and video show the menu status checks. It does not repeat full gameplay acceptance. Unchanged model evidence is reused by exact hash, with previous reports retained below. Physical TVs, phones, ESP32 devices and upgrades containing existing user saves remain untested.
 
@@ -98,13 +98,13 @@ These captures show the bundled page rendered in Chromium with a simulated Andro
 The commands below are reproducible check entry points, not a claim that all checks passed for this release. Current execution results are linked above.
 
 ```sh
-node --test resource/apps/alien-shooter/tests/*.test.cjs
-node resource/apps/alien-shooter/tests/controller.mjs
-node resource/apps/alien-shooter/tests/integration.mjs
-node resource/apps/alien-shooter/tests/runtime-performance.mjs
-node resource/apps/alien-shooter/tests/animation.mjs
-node resource/apps/alien-shooter/tests/performance.mjs --samples 6 --warmup 1 --regressions
-node resource/apps/alien-shooter/tools/bake-materials.mjs --verify
+node --test joystick-games/alien-shooter/tests/*.test.cjs
+node joystick-games/alien-shooter/tests/controller.mjs
+node joystick-games/alien-shooter/tests/integration.mjs
+node joystick-games/alien-shooter/tests/runtime-performance.mjs
+node joystick-games/alien-shooter/tests/animation.mjs
+node joystick-games/alien-shooter/tests/performance.mjs --samples 6 --warmup 1 --regressions
+node joystick-games/alien-shooter/tools/bake-materials.mjs --verify
 
 cd resource/launcher/puretv
 ./gradlew :alien-shooter:testDebugUnitTest :alien-shooter:lintDebug :alien-shooter:assembleRelease :alien-shooter:verifyReleaseSize
@@ -136,7 +136,7 @@ The APK is signed with the existing pureTV release certificate. An in-place inst
 
 Historical version **0.1.3 / versionCode 4** adds pureTV Wi-Fi controller input on default TCP port **63485**, while retaining phone QR and TV remote controls. The APK is signed with the existing release certificate. All 8/8 actual-APK controller acceptance checks passed in an Android TV emulator, including START, gameplay input, pause/resume, reconnect safety and same-sequence ACKs.
 
-See the [historical twenty-game acceptance record](../../../docs/readme-controller-support/README.md) and [rollout status](../../../docs/readme-controller-support/rollout.json) for actual results and limitations. Earlier CI reports, videos and screenshots below remain historical evidence.
+See the [historical twenty-game acceptance record](../../docs/readme-controller-support/README.md) and [rollout status](../../docs/readme-controller-support/rollout.json) for actual results and limitations. Earlier CI reports, videos and screenshots below remain historical evidence.
 
 Acceptance resources for that historical version: [menu screenshot](docs/releases/0.1.3/menu.png) · [actual APK gameplay video](docs/releases/0.1.3/gameplay.mp4?raw=1) · [verification record](docs/releases/0.1.3/verification.json). Screenshots and recordings use an Android TV emulator; physical-TV testing has not been performed. See the verification record for the archived evidence, exact test scope and limitations.
 

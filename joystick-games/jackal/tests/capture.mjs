@@ -7,7 +7,7 @@ import { resolve, relative, extname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 const kind = 'jackal', api = 'JackalTV', bridge = 'JackalHost';
-const require = createRequire(new URL('../../../../desktop/package.json', import.meta.url));
+const require = createRequire(new URL('../../../desktop/package.json', import.meta.url));
 const { chromium } = require('playwright');
 const assets = fileURLToPath(new URL('../src/main/assets/', import.meta.url));
 const artwork = kind === 'jackal' ? resolve(process.env.JACKAL_ART_DIR || resolve(assets, 'art')) : null;

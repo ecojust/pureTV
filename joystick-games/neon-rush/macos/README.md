@@ -32,14 +32,14 @@
 python3 puretv-joystick/bridge.py Mac的局域网IP --port 游戏显示的端口
 ```
 
-浏览器打开 `http://127.0.0.1:8767/`，点“连接游戏”。游戏本身不需要该桥接程序或浏览器。完整协议见[手柄规范](../../../../puretv-joystick/README.md)和[游戏客户端接入要求](../../../../docs/guide/development.md#游戏客户端开发兼容手柄的要求)。
+浏览器打开 `http://127.0.0.1:8767/`，点“连接游戏”。游戏本身不需要该桥接程序或浏览器。完整协议见[手柄规范](../../../puretv-joystick/README.md)和[游戏客户端接入要求](../../../docs/guide/development.md#游戏客户端开发兼容手柄的要求)。
 
 ## 构建
 
 Mac安装Xcode命令行工具后，在仓库根目录执行：
 
 ```sh
-python3 resource/apps/neon-rush/macos/build.py --output /tmp/neon-rush-macos-build
+python3 joystick-games/neon-rush/macos/build.py --output /tmp/neon-rush-macos-build
 ```
 
 输出通用 `.app`、ZIP、DMG、SHA256清单和准确构建输入记录。构建输出需位于仓库外；最终经验证的ZIP／DMG才放入本目录。游戏资源、Three.js及字体均随应用提供，保留原许可；网页只从应用内的环回HTTP服务加载。
@@ -49,8 +49,8 @@ python3 resource/apps/neon-rush/macos/build.py --output /tmp/neon-rush-macos-bui
 ## 验证
 
 ```sh
-node --test resource/apps/neon-rush/macos/tests/web-bridge.test.mjs
-xcrun swiftc -swift-version 5 resource/apps/neon-rush/macos/Sources/ControllerServer.swift resource/apps/neon-rush/macos/tests/ControllerServerTests.swift -o /tmp/neon-controller-tests
+node --test joystick-games/neon-rush/macos/tests/web-bridge.test.mjs
+xcrun swiftc -swift-version 5 joystick-games/neon-rush/macos/Sources/ControllerServer.swift joystick-games/neon-rush/macos/tests/ControllerServerTests.swift -o /tmp/neon-controller-tests
 /tmp/neon-controller-tests
 ```
 

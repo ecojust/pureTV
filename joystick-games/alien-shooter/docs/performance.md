@@ -56,10 +56,10 @@
 仓库根目录执行，需要已安装 `desktop` 的 Playwright 依赖及 Chromium：
 
 ```sh
-CHROMIUM_PATH=/usr/bin/chromium node resource/apps/alien-shooter/tests/performance.mjs \
+CHROMIUM_PATH=/usr/bin/chromium node joystick-games/alien-shooter/tests/performance.mjs \
   --samples 8 --warmup 2 --regressions --output /tmp/alien-shooter-performance
-CHROMIUM_PATH=/usr/bin/chromium node resource/apps/alien-shooter/tests/runtime-performance.mjs
-node resource/apps/alien-shooter/tools/bake-materials.mjs --verify
+CHROMIUM_PATH=/usr/bin/chromium node joystick-games/alien-shooter/tests/runtime-performance.mjs
+node joystick-games/alien-shooter/tools/bake-materials.mjs --verify
 ```
 
 可用 `--assets /absolute/path/to/assets --label before` 指向基线资源快照，随后在新资源测试中传 `--compare /path/to/before/performance.json`。只有新版使用 `--regressions`，因为其中包含新版的实例上传、裁剪及绘制预算断言。CI 会保存本次运行的 JSON 和 12 张场景截图为独立性能附件。

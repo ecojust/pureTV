@@ -1,14 +1,14 @@
 # Tank TV
 
 <!-- apk-resource:start -->
-[Android 0.5.7 APK](../../../joystick-games/tank/tank-0.5.7.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tank-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tank-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.5.7/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.5.6 gameplay video](docs/releases/0.5.6/gameplay.mp4?raw=1)
+[Android 0.5.7 APK](tank-0.5.7.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tank-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tank-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.5.7/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.5.6 gameplay video](docs/releases/0.5.6/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 ## Earlier Android release 0.5.6 · Controllers and phone pairing
 
 [Download the signed APK](tank-0.5.6.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Package and source](resource.json)
 
-On 720 × 480 TVs, the QR code and both player seats fit inside the screen. Connect a keyboard, pair a pureTV Wi-Fi controller, or scan the TV room’s QR code with a phone on the same network. The connection indicator identifies each player while the game keeps its playing area at the same size. [Controller guide](../../../docs/guide/README.en.md#install-a-game-and-connect-a-controller)
+On 720 × 480 TVs, the QR code and both player seats fit inside the screen. Connect a keyboard, pair a pureTV Wi-Fi controller, or scan the TV room’s QR code with a phone on the same network. The connection indicator identifies each player while the game keeps its playing area at the same size. [Controller guide](../../docs/guide/README.en.md#install-a-game-and-connect-a-controller)
 
 The signed APK completed an in-place upgrade on an Android TV emulator, following the previously verified 0.5.4 to 0.5.5 upgrade. The original controller SDK completed 9 checks and received matching acknowledgements for 102 messages. [Gameplay screenshot](docs/releases/0.5.6/gameplay.png) · [Android gameplay recording](docs/releases/0.5.6/gameplay.mp4?raw=1) · [Verification and limitations](docs/releases/0.5.6/verification.json)
 
@@ -23,7 +23,7 @@ The signed APK completed an in-place upgrade on an Android TV emulator, followin
 
 Android **0.5.4 / versionCode 11** shows a controller icon, player seat (1P/2P where supported), and the connected device's complete ID in the side area. Disconnected devices disappear. The default TCP port remains **63485**. Current controller firmware does not report RSSI, so signal strength is not displayed.
 
-[Connected screenshot](docs/releases/0.5.4/connected.png) · [Controller-status recording](docs/releases/0.5.4/controller-status.mp4?raw=1) · [Version verification](docs/releases/0.5.4/verification.json) · [Twenty-game update record](../../../docs/controller-client-status/README.md)
+[Connected screenshot](docs/releases/0.5.4/connected.png) · [Controller-status recording](docs/releases/0.5.4/controller-status.mp4?raw=1) · [Version verification](docs/releases/0.5.4/verification.json) · [Twenty-game update record](../../docs/controller-client-status/README.md)
 
 The APK uses the existing release certificate. This update verifies connection identity, disconnect/reconnect status and in-place installation in an Android TV emulator; the capture and video show the menu status checks. It does not repeat full gameplay acceptance. Unchanged model evidence is reused by exact hash, with previous reports retained below. Physical TVs, phones, ESP32 devices and upgrades containing existing user saves remain untested.
 
@@ -39,7 +39,7 @@ Requires Android 8.0 or later; package `com.ecojust.tanktv`. The room UI and pho
 <!-- visual-release:start -->
 ## Historical: 0.5.2 visual update and verification
 
-The following preserves the **0.5.2** visual changes, source and verification records. These historical results do not verify the current pureTV controller update. That release retained the pureTV certificate used by 0.5.0/0.5.1. See the [0.5.2 visual update record](../../../docs/game-visuals-0.5.2.md) for its per-game changes, verification scope and physical-device test status.
+The following preserves the **0.5.2** visual changes, source and verification records. These historical results do not verify the current pureTV controller update. That release retained the pureTV certificate used by 0.5.0/0.5.1. See the [0.5.2 visual update record](../../docs/game-visuals-0.5.2.md) for its per-game changes, verification scope and physical-device test status.
 
 That visual update reviewed the visual reference to the 1985 FC/NES Battle City and retained the existing pixel battlefield. The Tank renderer was not changed.
 
@@ -53,7 +53,7 @@ The historical frozen source 0752b658aecbb1322cb7294e3176500639db1b54 passed And
 
 Rechecked all 35 maps, enemy waves and co-op rules; the full-area fire control remains available.
 
-The historical 0.5.1 release used the same signing certificate as 0.5.0 and supported an in-place update. See the [fidelity review](../../../docs/game-fidelity-0.5.1.md) for tested behavior and remaining differences.
+The historical 0.5.1 release used the same signing certificate as 0.5.0 and supported an in-place update. See the [fidelity review](../../docs/game-fidelity-0.5.1.md) for tested behavior and remaining differences.
 
 ## Installation and signing
 
@@ -109,19 +109,19 @@ The commands below are reproducible check entry points, not a claim that all che
 Run from the repository root:
 
 ```bash
-node --test resource/apps/tank/tests/game.test.cjs
+node --test joystick-games/tank/tests/game.test.cjs
 npm ci --prefix desktop
 cd desktop && npx playwright install chromium && cd ..
-node resource/apps/tank/tests/compatibility.mjs
-node resource/apps/tank/tests/controller.mjs
-node resource/apps/tank/tests/capture.mjs
+node joystick-games/tank/tests/compatibility.mjs
+node joystick-games/tank/tests/controller.mjs
+node joystick-games/tank/tests/capture.mjs
 cd resource/launcher/puretv
 ./gradlew :tank:assembleDebug :tank:testDebugUnitTest :tank:lintDebug :tank:verifyReleaseSize
 ```
 
-APKs are generated under `resource/apps/tank/build/outputs/apk/`. Release builds enable code and resource shrinking and enforce a 5 MiB size limit. Published resource APKs are signed with the pureTV release certificate. Android tests cover the room server and lifecycle, Node tests cover game rules, and browser tests cover phone input.
+APKs are generated under `joystick-games/tank/build/outputs/apk/`. Release builds enable code and resource shrinking and enforce a 5 MiB size limit. Published resource APKs are signed with the pureTV release certificate. Android tests cover the room server and lifecycle, Node tests cover game rules, and browser tests cover phone input.
 
-Set `TANK_UI_CAPTURE_DIR` and run `tests/capture.mjs` to export Chinese and English game previews. These capture the actual bundled page in Chromium using test data for the native room bridge; they are not measurements of physical TV performance or phone network latency. The historical 0.5.2 build is documented above. See this round’s acceptance record for the new package status, and [resource.json](resource.json) for its source commit, APK checksum and build method, and [resource maintenance](../../../docs/resource-maintenance.md) for catalog maintenance.
+Set `TANK_UI_CAPTURE_DIR` and run `tests/capture.mjs` to export Chinese and English game previews. These capture the actual bundled page in Chromium using test data for the native room bridge; they are not measurements of physical TV performance or phone network latency. The historical 0.5.2 build is documented above. See this round’s acceptance record for the new package status, and [resource.json](resource.json) for its source commit, APK checksum and build method, and [resource maintenance](../../docs/resource-maintenance.md) for catalog maintenance.
 
 ## Artwork and licensing
 
@@ -149,7 +149,7 @@ This APK is signed with the existing pureTV release certificate and has passed a
 
 Version **0.5.3 / versionCode 10** adds pureTV Wi-Fi controller input on default TCP port **63485**, while retaining phone QR and TV remote controls. The signed APK passed all 9/9 controller checks on an Android TV emulator and an in-place `adb install -r` update from the previous version. Upgrading with pre-existing saves and retaining user data were not tested.
 
-See the [historical twenty-game acceptance record](../../../docs/readme-controller-support/README.md) and [rollout status](../../../docs/readme-controller-support/rollout.json) for actual results and limitations. Earlier CI reports, videos and screenshots below remain historical evidence.
+See the [historical twenty-game acceptance record](../../docs/readme-controller-support/README.md) and [rollout status](../../docs/readme-controller-support/rollout.json) for actual results and limitations. Earlier CI reports, videos and screenshots below remain historical evidence.
 
 That historical version’s acceptance resources: [menu screenshot](docs/releases/0.5.3/menu.png) · [actual APK recording](docs/releases/0.5.3/gameplay.mp4?raw=1) · [verification record](docs/releases/0.5.3/verification.json). Images and recordings come from an Android TV emulator; no physical television has been tested. The verification record gives the exact acceptance scope and results; emulator checks do not establish physical-TV compatibility or save-data retention during an upgrade.
 

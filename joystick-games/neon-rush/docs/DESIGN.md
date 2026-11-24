@@ -35,7 +35,7 @@
 | `GameDef.createRenderer(canvas)` | 为现有画布创建 `RushRenderer`，提供 `begin/end/dispose`、本作 `draw` 及实际绘制指标 | 只声明本 hook 的游戏选用它；其他游戏继续使用默认渲染器。渲染器不得修改比赛状态。 |
 | `GameDef.afterUI(state, context)` | 更新小地图、漂移/氮气表、倒数、触屏控件、双语文案和声音 | 在共享界面更新后调用；不能跳过暂停、输入取消或原生手柄生命周期，也不能改变模型。 |
 
-扩展位于 [Game Kit 运行时](../../../game-kit/web/runtime.js)，说明见 [Game Kit README](../../../game-kit/README.md)。本作样式、音效和附加控件仍由自己的 `source/game.mjs`、`audio.mjs` 与 `rush-theme.css` 管理。
+扩展位于 [Game Kit 运行时](../../../resource/game-kit/web/runtime.js)，说明见 [Game Kit README](../../../resource/game-kit/README.md)。本作样式、音效和附加控件仍由自己的 `source/game.mjs`、`audio.mjs` 与 `rush-theme.css` 管理。
 
 ## 图形与性能
 

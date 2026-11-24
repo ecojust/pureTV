@@ -1,7 +1,7 @@
 # 极品二手车
 
 <!-- apk-resource:start -->
-[Android 0.1.8 APK](../../../joystick-games/used-car-racing/used-car-racing-0.1.8.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-macos.dmg) · [图标与安装验证](docs/releases/0.1.8/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.7 实玩录像](docs/releases/0.1.7/gameplay.mp4?raw=1)
+[Android 0.1.8 APK](used-car-racing-0.1.8.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-macos.dmg) · [图标与安装验证](docs/releases/0.1.8/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.7 实玩录像](docs/releases/0.1.7/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 ## 历史 Android 版本 0.1.7 · 手机驾车时取消退出
@@ -20,7 +20,7 @@
 [下载签名 APK](used-car-racing-0.1.6.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
 <!-- previous-0.1.6-apk-resource:end -->
 
-可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
+可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../docs/guide/README.md#安装游戏与连接手柄)
 
 此签名 APK 已从 0.1.5 在 Android TV 模拟器完成覆盖安装。原版手柄 SDK 通过 9 项检查，实际发出的 106 条消息全部收到同序号确认。[游戏截图](docs/releases/0.1.6/gameplay.png) · [Android 玩法录像](docs/releases/0.1.6/gameplay.mp4?raw=1) · [验证记录与测试范围](docs/releases/0.1.6/verification.json)
 
@@ -35,7 +35,7 @@
 
 Android **0.1.5 / versionCode 6**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
-[连接截图](docs/releases/0.1.5/connected.png) · [连接状态专项录像](docs/releases/0.1.5/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.1.5/verification.json) · [20 款更新记录](../../../docs/controller-client-status/README.md)
+[连接截图](docs/releases/0.1.5/connected.png) · [连接状态专项录像](docs/releases/0.1.5/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.1.5/verification.json) · [20 款更新记录](../../docs/controller-client-status/README.md)
 
 安装包沿用原发布证书。本轮在 Android TV 模拟器中验证连接身份、断开／重连状态及同证书覆盖安装；截图和录像记录菜单中的连接状态专项，没有重做完整玩法验收。未改规则模型按精确哈希复用历史依据，旧版报告继续保留。尚未验证实体电视、手机、ESP32 或带已有存档的升级与数据保留。
 
@@ -132,7 +132,7 @@ MP4（H.264 / AAC），1280×720、25 fps，时长约 2 分钟，大小 41.66 MB
 
 路面增加修补与轮胎痕迹，建筑和集装箱按表面尺寸铺设纹理。山体改为连续的不规则山脊，岩石增加棱面，树林使用带透明裁切的枝叶贴片，天空和远景通过云层、雾与侧光形成层次。路线和碰撞边界仍使用原来的道路数据。
 
-贴图由项目自己的[生成脚本](../../../tools/generate-used-car-textures.py)离线烘焙，随 APK 打包，详见[素材声明](src/main/assets/TEXTURE-LICENSE.txt)。这些改进不使用实时反射捕获或全屏后处理；电视上的实际帧率仍需实机验证。
+贴图由项目自己的[生成脚本](../../tools/generate-used-car-textures.py)离线烘焙，随 APK 打包，详见[素材声明](src/main/assets/TEXTURE-LICENSE.txt)。这些改进不使用实时反射捕获或全屏后处理；电视上的实际帧率仍需实机验证。
 
 ## 历史车型与路线画面
 
@@ -157,12 +157,12 @@ MP4（H.264 / AAC），1280×720、25 fps，时长约 2 分钟，大小 41.66 MB
 以下命令是可复现的检查入口，不表示本轮已经全部执行通过；本轮实际执行结果见上方验收记录。
 
 ```sh
-node --test resource/apps/used-car-racing/tests/*.test.cjs
-node resource/apps/used-car-racing/tests/compatibility.mjs
-node resource/apps/used-car-racing/tests/rendering.mjs
-node resource/apps/used-car-racing/tests/controller.mjs
-node resource/apps/used-car-racing/tests/secure-controller.mjs
-node resource/apps/used-car-racing/tests/integration.mjs
+node --test joystick-games/used-car-racing/tests/*.test.cjs
+node joystick-games/used-car-racing/tests/compatibility.mjs
+node joystick-games/used-car-racing/tests/rendering.mjs
+node joystick-games/used-car-racing/tests/controller.mjs
+node joystick-games/used-car-racing/tests/secure-controller.mjs
+node joystick-games/used-car-racing/tests/integration.mjs
 
 cd resource/launcher/puretv
 ./gradlew :used-car-racing:assembleRelease :used-car-racing:testDebugUnitTest :used-car-racing:lintDebug :used-car-racing:verifyReleaseSize
@@ -208,7 +208,7 @@ APK 已使用原 pureTV 发布证书签名，已在 Android TV 模拟器完成 0
 
 历史版本 **0.1.4 / versionCode 5** 新增 pureTV Wi-Fi 手柄输入，默认 TCP 端口 **63485**，保留扫码手机手柄和电视遥控器。APK 已沿用原发布证书正式签名。原 SDK 完整浏览器检查已通过 9/9，原生检查、正式签名和覆盖安装均通过。实际 APK 的菜单、初始同步和 START 开赛三项通过；加速阶段遇到宿主 RenderThread 段错误，后续 Android 检查受模拟器环境阻塞，未宣称完整 Android 玩法验收通过。原始结果与限制见验证记录。
 
-实际结果和限制见[当时 20 款游戏验收记录](../../../docs/readme-controller-support/README.md)及[发布进度](../../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
+实际结果和限制见[当时 20 款游戏验收记录](../../docs/readme-controller-support/README.md)及[发布进度](../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
 
 该历史版本验收资源：[实际 Android APK 菜单截图](docs/releases/0.1.4/menu.png) · [浏览器游戏截图](docs/releases/0.1.4/gameplay.png) · [浏览器游玩录像](docs/releases/0.1.4/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.1.4/verification.json)。菜单来自 Android TV 模拟器；游戏截图与录像来自实际打包页面在 Chromium 中的原 SDK 操作，使用合成原生桥接，不是 APK 或实体电视录像。具体来源、哈希和 Android 环境阻塞记录见验证记录及上方当时验收说明。
 

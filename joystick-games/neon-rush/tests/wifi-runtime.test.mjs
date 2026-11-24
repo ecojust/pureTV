@@ -7,10 +7,10 @@ import path from 'node:path';
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { mkdtemp, copyFile, writeFile, readFile, mkdir, rm } from 'node:fs/promises';
-import { launch, serveAssets, sha256 } from '../../../game-kit/qa/common.mjs';
+import { launch, serveAssets, sha256 } from '../../../resource/game-kit/qa/common.mjs';
 import { aiInput } from '../source/model.mjs';
 
-const kit=fileURLToPath(new URL('../../../game-kit/web/',import.meta.url));
+const kit=fileURLToPath(new URL('../../../resource/game-kit/web/',import.meta.url));
 const game=fileURLToPath(new URL('../src/main/assets/game-model.js',import.meta.url));
 const fixtureGame=`window.lastUi=null;window.GameDef={id:'neon-rush-wifi-probe',title:'Wi-Fi input protocol fixture',description:'Synthetic bridge',tip:'Not a device test',controls:{move:'Move',a:'Drift',b:'Nitro'},holdConfirmAsA:true,hud:()=>[],result:()=>'',createRenderer(){return{begin(){},end(){},draw(){},dispose(){},metrics:{renderer:'protocol-fixture'}};},render(){},afterUI(s,ui){window.lastUi=JSON.parse(JSON.stringify(ui));}};`;
 

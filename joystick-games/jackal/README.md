@@ -1,14 +1,14 @@
 # Jackal TV · 赤色要塞
 
 <!-- apk-resource:start -->
-[Android 0.5.8 APK](../../../joystick-games/jackal/jackal-0.5.8.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/jackal-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/jackal-macos.dmg) · [图标与安装验证](docs/releases/0.5.8/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.5.7 实玩录像](docs/releases/0.5.7/gameplay.mp4?raw=1)
+[Android 0.5.8 APK](jackal-0.5.8.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/jackal-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/jackal-macos.dmg) · [图标与安装验证](docs/releases/0.5.8/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.5.7 实玩录像](docs/releases/0.5.7/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 ## 历史 Android 版本 0.5.7 · 手柄与手机连接
 
 [下载签名 APK](jackal-0.5.7.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
 
-首帧绘制失败后，手机仍可连接并看到房间状态。在 720 × 480 电视上，二维码和两个玩家席位都能完整显示。可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../../docs/guide/README.md#安装游戏与连接手柄)
+首帧绘制失败后，手机仍可连接并看到房间状态。在 720 × 480 电视上，二维码和两个玩家席位都能完整显示。可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../docs/guide/README.md#安装游戏与连接手柄)
 
 此签名 APK 已在 Android TV 模拟器上从 0.5.6 成功覆盖安装，验证记录可追溯至已发布的 0.5.4。原版手柄 SDK 通过 9 项检查，实际发出的 97 条消息全部收到同序号确认。[游戏截图](docs/releases/0.5.7/gameplay.png) · [Android 玩法录像](docs/releases/0.5.7/gameplay.mp4?raw=1) · [验证记录与测试范围](docs/releases/0.5.7/verification.json)
 
@@ -23,7 +23,7 @@
 
 Android **0.5.4 / versionCode 8**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
 
-[连接截图](docs/releases/0.5.4/connected.png) · [连接状态专项录像](docs/releases/0.5.4/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.5.4/verification.json) · [20 款更新记录](../../../docs/controller-client-status/README.md)
+[连接截图](docs/releases/0.5.4/connected.png) · [连接状态专项录像](docs/releases/0.5.4/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.5.4/verification.json) · [20 款更新记录](../../docs/controller-client-status/README.md)
 
 安装包沿用原发布证书。本轮在 Android TV 模拟器中验证连接身份、断开／重连状态及同证书覆盖安装；截图和录像记录菜单中的连接状态专项，没有重做完整玩法验收。未改规则模型按精确哈希复用历史依据，旧版报告继续保留。尚未验证实体电视、手机、ESP32 或带已有存档的升级与数据保留。
 
@@ -37,7 +37,7 @@ Jackal TV 独立重写红白机 NES 版《赤色要塞》的六关玩法：吉�
 <!-- visual-release:start -->
 ## 历史：0.5.2 视觉更新与验证
 
-以下保留 **0.5.2** 发布时的视觉更新、源码和验收记录；这些旧版结果不代表本轮 pureTV 手柄更新已经通过验收。当时沿用 0.5.0／0.5.1 的 pureTV 发布证书。逐款改动、检查范围和实机验证状态见[0.5.2 视觉更新记录](../../../docs/game-visuals-0.5.2.md)。
+以下保留 **0.5.2** 发布时的视觉更新、源码和验收记录；这些旧版结果不代表本轮 pureTV 手柄更新已经通过验收。当时沿用 0.5.0／0.5.1 的 pureTV 发布证书。逐款改动、检查范围和实机验证状态见[0.5.2 视觉更新记录](../../docs/game-visuals-0.5.2.md)。
 
 该次视觉更新只读核对 NES 美版《Jackal》的视觉对应关系，保留已有像素关卡；没有修改 Jackal 渲染器。
 
@@ -51,7 +51,7 @@ Jackal TV 独立重写红白机 NES 版《赤色要塞》的六关玩法：吉�
 
 修复第 3 关两段激光长度和预警端点，按实际地图切换长、短光束。
 
-沿用 0.5.0 证书，可直接覆盖更新；0.5.1 的核对结果与剩余差距见[还原度复核](../../../docs/game-fidelity-0.5.1.md)。
+沿用 0.5.0 证书，可直接覆盖更新；0.5.1 的核对结果与剩余差距见[还原度复核](../../docs/game-fidelity-0.5.1.md)。
 
 ## 安装与签名
 
@@ -107,8 +107,8 @@ Jackal TV 独立重写红白机 NES 版《赤色要塞》的六关玩法：吉�
 从仓库根目录验证逻辑与数据：
 
 ```sh
-node resource/apps/jackal/tools/build-levels.cjs --check
-node --test resource/apps/jackal/tests/game.test.cjs resource/apps/jackal/tests/enemies.test.cjs resource/apps/jackal/tests/scenes.test.cjs
+node joystick-games/jackal/tools/build-levels.cjs --check
+node --test joystick-games/jackal/tests/game.test.cjs joystick-games/jackal/tests/enemies.test.cjs joystick-games/jackal/tests/scenes.test.cjs
 ```
 
 准备好所需素材后构建 Android：
@@ -119,7 +119,7 @@ cd resource/launcher/puretv
   -PjackalArtworkDir=/absolute/path/to/artwork
 ```
 
-APK 输出在 `resource/apps/jackal/build/outputs/apk/`。局域网协议、服务关闭和进程退出由 Android 测试验证；游戏规则由 Node 测试验证。浏览器测试和截图只能说明页面行为，不能代表电视性能、手机网络时延或全部原作一致性。发布资源的维护流程见[资源维护说明](../../../docs/resource-maintenance.md)。
+APK 输出在 `joystick-games/jackal/build/outputs/apk/`。局域网协议、服务关闭和进程退出由 Android 测试验证；游戏规则由 Node 测试验证。浏览器测试和截图只能说明页面行为，不能代表电视性能、手机网络时延或全部原作一致性。发布资源的维护流程见[资源维护说明](../../docs/resource-maintenance.md)。
 
 ## 历史画面（0.5.2）
 
@@ -155,7 +155,7 @@ APK 输出在 `resource/apps/jackal/build/outputs/apk/`。局域网协议、服�
 
 历史版本为 **0.5.3 / versionCode 7**，新增 pureTV Wi-Fi 手柄输入，默认 TCP 端口 **63485**，保留扫码手机手柄和电视遥控器。正式签名 APK 已在 Android TV 模拟器完成 9/9 项手柄验收，并通过从上一版本执行 `adb install -r` 覆盖安装。未做带存档升级或数据保留验证。
 
-实际结果和限制见[当时 20 款游戏验收记录](../../../docs/readme-controller-support/README.md)及[发布进度](../../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
+实际结果和限制见[当时 20 款游戏验收记录](../../docs/readme-controller-support/README.md)及[发布进度](../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
 
 该历史版本验收资源：[菜单截图](docs/releases/0.5.3/menu.png) · [实际 APK 运行录像](docs/releases/0.5.3/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.5.3/verification.json)。截图和录像来自 Android TV 模拟器，未做实体电视测试。验收范围和具体结果见验证记录；模拟器结果不代表实体电视或带存档升级验证。
 

@@ -66,7 +66,7 @@ The current split is clipped at the known background-row extent, `worldY328 - ca
 Run the data-contract tests without external artwork or network access:
 
 ```sh
-node --test resource/apps/jackal/tests/scenes.test.cjs
+node --test joystick-games/jackal/tests/scenes.test.cjs
 ```
 
 The tests check all 40 converted row entries and 494 tile bytes against a digest independently derived from the source tables. They reject embedded FE/FF control markers and rows crossing nametable boundaries, preserve the concrete index63 source example, and verify palette attributes and write order. Atlas selection is checked at transition boundaries, after pauses, through stage changes, and through both final-boss sequences. Frozen inputs and detached results verify that the adapter cannot modify the model. A second independently derived digest checks the complete 297-image path manifest. These Node tests do not require the reference PNGs; the actual downloaded images are separately hashed in the local provenance manifest.

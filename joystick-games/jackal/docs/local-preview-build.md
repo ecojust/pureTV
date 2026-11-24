@@ -10,7 +10,7 @@
 
 ```sh
 # 仓库根目录
-python resource/apps/jackal/tools/extract-artwork.py --output /tmp/puretv-jackal-art
+python joystick-games/jackal/tools/extract-artwork.py --output /tmp/puretv-jackal-art
 ```
 
 提取工具先核对整个 APK 与资源清单的 SHA-256、大小，再核对全部 367 项必需素材与 APK 内 `preview-asset-provenance.json` 的逐文件大小、摘要。它保留另三份来源清单，不联网下载，也不会覆盖未由此工具创建的目标目录。
@@ -21,11 +21,11 @@ python resource/apps/jackal/tools/extract-artwork.py --output /tmp/puretv-jackal
 
 ```sh
 # 仓库根目录；浏览器测试使用已恢复的素材
-JACKAL_ART_DIR=/tmp/puretv-jackal-art node resource/apps/jackal/tests/compatibility.mjs
-node resource/apps/jackal/tests/controller.mjs
-JACKAL_ART_DIR=/tmp/puretv-jackal-art node resource/apps/jackal/tests/capture.mjs
-node resource/apps/jackal/tools/build-levels.cjs --check
-node --test resource/apps/jackal/tests/game.test.cjs resource/apps/jackal/tests/enemies.test.cjs resource/apps/jackal/tests/scenes.test.cjs
+JACKAL_ART_DIR=/tmp/puretv-jackal-art node joystick-games/jackal/tests/compatibility.mjs
+node joystick-games/jackal/tests/controller.mjs
+JACKAL_ART_DIR=/tmp/puretv-jackal-art node joystick-games/jackal/tests/capture.mjs
+node joystick-games/jackal/tools/build-levels.cjs --check
+node --test joystick-games/jackal/tests/game.test.cjs joystick-games/jackal/tests/enemies.test.cjs joystick-games/jackal/tests/scenes.test.cjs
 
 cd resource/launcher/puretv
 ./gradlew :jackal:assembleRelease :jackal:verifyReleaseSize \
@@ -35,7 +35,7 @@ cd resource/launcher/puretv
 
 也可添加 `:tank:assembleRelease` 一并构建坦克大战。浏览器测试需要 `desktop` 的 npm 依赖及 Chromium；可通过 `CHROMIUM_PATH` 指定浏览器。
 
-Gradle 输出位于 `resource/apps/jackal/build/outputs/apk/release/`，默认未签名。目录内已发布 APK 使用 pureTV 发布证书签名。构建命令不会自行上传、改写资源表或替换公开 APK。
+Gradle 输出位于 `joystick-games/jackal/build/outputs/apk/release/`，默认未签名。目录内已发布 APK 使用 pureTV 发布证书签名。构建命令不会自行上传、改写资源表或替换公开 APK。
 
 素材仅暂存到 Gradle 管理的生成目录，不写入 `src/main/assets/art/`。未传参数时会清理旧的暂存素材；文件缺失、格式或结构错误时，打包明确失败。单元测试与 lint 可以不传素材参数。
 

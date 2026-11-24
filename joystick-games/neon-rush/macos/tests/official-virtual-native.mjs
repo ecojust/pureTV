@@ -9,7 +9,7 @@ const args=Object.fromEntries(process.argv.slice(2).reduce((pairs,value,index,li
 assert.ok(args.url&&args.diagnostics&&args.output&&process.env.PLAYWRIGHT_MODULE,'--url --diagnostics --output and PLAYWRIGHT_MODULE required');
 const {chromium}=await import(pathToFileURL(path.resolve(process.env.PLAYWRIGHT_MODULE)).href);
 const output=path.resolve(args.output);await mkdir(output,{recursive:true});
-const official=fileURLToPath(new URL('../../../../../puretv-joystick/virtual.html',import.meta.url));
+const official=fileURLToPath(new URL('../../../../puretv-joystick/virtual.html',import.meta.url));
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const state=async()=>JSON.parse(await readFile(path.join(args.diagnostics,'state.json'),'utf8'));

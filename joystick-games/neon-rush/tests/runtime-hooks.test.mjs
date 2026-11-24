@@ -5,7 +5,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { mkdtemp, copyFile, writeFile, rm } from 'node:fs/promises';
-import { launch, serveAssets, preparePage, snapshot, tap, delay, verifyErrors } from '../../../game-kit/qa/common.mjs';
+import { launch, serveAssets, preparePage, snapshot, tap, delay, verifyErrors } from '../../../resource/game-kit/qa/common.mjs';
 
 const fixtureSource = `
 window.probe={factoryCalls:0,defaultCalls:0,begins:0,ends:0,draws:0,disposes:0,ui:[]};
@@ -19,7 +19,7 @@ if(new URL(location.href).searchParams.get('ui')==='1')GameDef.afterUI=(state,ui
 
 test('optional renderer/UI hooks retain the shared default and real lifecycle', {timeout:60000}, async t => {
   const temporary=await mkdtemp(path.join(os.tmpdir(),'neon-rush-hook-fixture-'));
-  const web=fileURLToPath(new URL('../../../game-kit/web/',import.meta.url));
+  const web=fileURLToPath(new URL('../../../resource/game-kit/web/',import.meta.url));
   let browser,server;
   try{
     for(const name of ['runtime.js','renderer.js','tv.html','tv.css','puretv-controller.js'])await copyFile(path.join(web,name),path.join(temporary,name));

@@ -1,6 +1,6 @@
 # pureTV Wi-Fi 手柄接入（Android 0.1.2）
 
-本版本遵循 [puretv-joystick 接入与测试说明](../../../../puretv-joystick/README.md)，对应 SDK 提交 `a5fd8b2a`。ESP32 实体手柄使用原生 TCP 输入服务；扫码手机继续使用原有 HTTP/WebSocket 房间。两者共用游戏输入取消与暂停逻辑。
+本版本遵循 [puretv-joystick 接入与测试说明](../../../puretv-joystick/README.md)，对应 SDK 提交 `a5fd8b2a`。ESP32 实体手柄使用原生 TCP 输入服务；扫码手机继续使用原有 HTTP/WebSocket 房间。两者共用游戏输入取消与暂停逻辑。
 
 ## 连接与操作
 
@@ -65,4 +65,4 @@ python3 puretv-joystick/bridge.py 电视IP --port 63485
 
 ## 验证边界
 
-软件回归包含实际环回 TCP 消息/ACK、Android 宿主与 NSD 注册生命周期、真实游戏浏览器输入链路。Robolectric 的 NSD shadow 验证的是注册字段和调用顺序；浏览器联调使用测试桥，均不能代替实体电视与 ESP32 在同一 Wi-Fi 下的发现和操作测试。本轮结果随[README游戏手柄接入记录](../../../../docs/readme-controller-support/README.md)归档；[0.1.1记录](releases/0.1.1/verification.json)为历史基线。实体测试状态明确列出。
+软件回归包含实际环回 TCP 消息/ACK、Android 宿主与 NSD 注册生命周期、真实游戏浏览器输入链路。Robolectric 的 NSD shadow 验证的是注册字段和调用顺序；浏览器联调使用测试桥，均不能代替实体电视与 ESP32 在同一 Wi-Fi 下的发现和操作测试。本轮结果随[README游戏手柄接入记录](../../../docs/readme-controller-support/README.md)归档；[0.1.1记录](releases/0.1.1/verification.json)为历史基线。实体测试状态明确列出。

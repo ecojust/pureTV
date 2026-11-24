@@ -19,10 +19,10 @@ for(let i=2;i<process.argv.length;i++){
 }
 assert.match(options.baseline||'',/^[0-9a-f]{40}$/i,'An explicit full baseline SHA is required; the benchmark never fetches history.');
 options.samples=Number(options.samples);assert.ok(Number.isInteger(options.samples)&&options.samples>=3&&options.samples<=20);
-const repository=fileURLToPath(new URL('../../../../',import.meta.url)),assetRoot=new URL('../src/main/assets/',import.meta.url),assetPrefix='resource/apps/used-car-racing/src/main/assets/';
+const repository=fileURLToPath(new URL('../../../',import.meta.url)),assetRoot=new URL('../src/main/assets/',import.meta.url),assetPrefix='joystick-games/used-car-racing/src/main/assets/';
 const git=async args=>(await execute('git',args,{cwd:repository,maxBuffer:32*1024*1024,encoding:'buffer'})).stdout;
 await git(['cat-file','-e',options.baseline+'^{commit}']);
-const require=createRequire(new URL('../../../../desktop/package.json',import.meta.url)),{chromium}=require('playwright');
+const require=createRequire(new URL('../../../desktop/package.json',import.meta.url)),{chromium}=require('playwright');
 await mkdir(options.output,{recursive:true});
 const resultPath=path.join(options.output,'performance.json'),logPath=path.join(options.output,'performance.log');await writeFile(logPath,'');
 const log=async message=>{console.log(message);await appendFile(logPath,message+'\n');};

@@ -3,7 +3,7 @@
 Use the official virtual-controller check for SDK acceptance:
 
 ```sh
-node resource/apps/neon-rush/tests/official-virtual-smoke.mjs \
+node joystick-games/neon-rush/tests/official-virtual-smoke.mjs \
   --assets /absolute/final-extracted-assets \
   --output /absolute/empty-official-evidence-directory \
   --jdk /absolute/jdk17 \
@@ -21,7 +21,7 @@ This check runs the **actual production `WifiControllerServer.java`** on a deskt
 It is not Android execution, NSD service discovery, or a physical ESP32/TV test. The HTTP snapshot adapter is test infrastructure; Android lifecycle, transport selection, and NSD registration are covered separately by the native tests. The desktop JSON dependency is test-only and is never included in the APK.
 
 ```sh
-node resource/apps/neon-rush/tests/wifi-wire-smoke.mjs \
+node joystick-games/neon-rush/tests/wifi-wire-smoke.mjs \
   --assets /absolute/final-extracted-assets \
   --output /absolute/empty-evidence-directory \
   --jdk /absolute/jdk17 \

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import http from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
 import {createRequire} from 'node:module';
-const require=createRequire(new URL('../../../../desktop/package.json',import.meta.url));
+const require=createRequire(new URL('../../../desktop/package.json',import.meta.url));
 const {chromium}=require('playwright');
 const assets=new URL('../src/main/assets/',import.meta.url),output=process.env.GAME_RENDER_OUTPUT||'/tmp/puretv-used-car-rendering';await mkdir(output,{recursive:true});
 const html='<!doctype html><html><head><style>html,body{margin:0;background:#08121a;overflow:hidden}canvas{width:100vw;height:100vh}</style></head><body><canvas id="scene"></canvas><script src="three.min.js"></script><script src="materials.js"></script><script src="tracks.js"></script><script src="game-model.js"></script><script src="vehicle-models.js"></script><script src="renderer-3d.js"></script></body></html>';

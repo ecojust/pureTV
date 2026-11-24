@@ -14,7 +14,7 @@ import sys
 
 MACOS = Path(__file__).resolve().parent
 GAME = MACOS.parent
-REPO = GAME.parents[2]
+REPO = GAME.parents[1]
 sys.path.insert(0, str(REPO / 'tools'))
 from macos_game_icons import committed_inputs, write_icns
 

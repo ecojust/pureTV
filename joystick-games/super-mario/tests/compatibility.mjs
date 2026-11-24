@@ -1,2 +1,2 @@
-import { runCompatibilityTests } from '../../../../tools/tests/platformer-harness.mjs';
+import { runCompatibilityTests } from '../../../tools/tests/platformer-harness.mjs';
 await runCompatibilityTests({kind:'super-mario'});

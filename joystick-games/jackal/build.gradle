@@ -1,6 +1,6 @@
 plugins { id 'com.android.application' }
 
-apply from: '../../game-kit/legacy-controller-native/integration.gradle'
+apply from: '../../resource/game-kit/legacy-controller-native/integration.gradle'
 apply from: 'tools/preview-png.gradle'
 
 android {
@@ -113,7 +113,7 @@ def verifyPreviewArtwork = tasks.register('verifyJackalPreviewArtwork') {
     doLast {
         if (!artworkLocation.isPresent() || artworkLocation.get().trim().isEmpty()) {
             throw new GradleException('Jackal preview APK requires -PjackalArtworkDir=/absolute/path/to/visual-data. '
-                + 'No artwork was bundled. See resource/apps/jackal/docs/local-preview-build.md. '
+                + 'No artwork was bundled. See joystick-games/jackal/docs/local-preview-build.md. '
                 + 'Unit tests and lint can run without this property.')
         }
         File source = file(artworkLocation.get())

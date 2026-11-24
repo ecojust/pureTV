@@ -28,7 +28,7 @@ class CatalogDownloadTests(unittest.TestCase):
             apk.write_bytes(self.data)
             with (patch.object(launcher, '__file__', str(root / 'tools/pc-games/launcher.py')),
                   patch.object(launcher, 'urlopen', side_effect=AssertionError('offline'))):
-                self.assertEqual(self.fetch(), apk)
+                self.assertTrue(self.fetch().samefile(apk))
 
     def test_parallel_download_and_offline_launch(self):
         with patch.object(launcher, 'urlopen', side_effect=lambda *a, **k: io.BytesIO(self.data)):

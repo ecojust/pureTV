@@ -27,7 +27,7 @@ import urllib.parse
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO = HERE.parents[4]
+REPO = HERE.parents[3]
 SDK = REPO / 'puretv-joystick/joystick_sdk.py'
 KEYS = ('UP', 'DOWN', 'LEFT', 'RIGHT', 'START', 'A', 'B', 'X', 'Y')
 
