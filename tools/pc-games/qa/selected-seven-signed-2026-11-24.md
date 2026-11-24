@@ -5,7 +5,7 @@
 | 游戏 | 在签名 APK 中操作并检查的原作行为 |
 | --- | --- |
 | Bloom Hop | 开局、跳上下一片荷叶、撤销 |
-| Mechapede | 开局、横移切割器、发射切割脉冲 |
+| Mechapede | 开局、横移切割器、发射切割脉冲。[8.7 秒实录](../../../joystick-games/mechapede/docs/browser/gameplay.mp4) |
 | Kaboom Arena | 与三个电脑对手入场、离开出生角、放置炸弹 |
 | Nerd of Duty | 进入第一波、横移、转向、射击 |
 | Gogh Strike | 进入十二位画家的对局、前进、转向、发射颜料、换装 |
@@ -28,4 +28,10 @@ python -m playwright install chromium
 python tools/pc-games/qa/signed_apk_plans.py \
   bloom-hop mechapede kaboom-arena nerd-of-duty gogh-strike marti dolmus \
   --apksigner apksigner --output selected-seven-signed.json
+```
+
+同一份 Mechapede 签名 APK 另行录制了 640×360 的无声 MP4。实际对局中发射计数从 0 增至 17，分数从 0 增至 51。安装 FFmpeg 后，在仓库根目录运行以下命令可重新录制。[采集收据](../../../joystick-games/mechapede/docs/browser/gameplay-capture.json)
+
+```sh
+python tools/pc-games/qa/record_mechapede_sdk.py > joystick-games/mechapede/docs/browser/gameplay-capture.json
 ```
