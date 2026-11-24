@@ -113,6 +113,8 @@ jobs:
               assert re.fullmatch('[a-f0-9]{40}',os.environ['ARTIFACT_EXPORT']) and not os.environ['ARTIFACT_ATTEMPT']
           else:
               for key in ['ARTIFACT_ID','ARTIFACT_ATTEMPT']:assert re.fullmatch('[1-9][0-9]*',os.environ[key])
+          assert (os.environ['GAMES'],os.environ['BATCH'],os.environ['ARTIFACT_SOURCE'],os.environ['ARTIFACT_RUN'],os.environ['ARTIFACT_ID'],os.environ['ARTIFACT_ATTEMPT']) == ('mechapede','selected-seven-03','42b83ed4afd096ed09ac5186684c4f9f87894868','45437983950','14941714410','1')
+          assert not os.environ['ARTIFACT_EXPORT'] and all(os.environ[k]=='false' for k in ['CONFIRM_BACKROAD_INSTALL','SUPERVISE_PON_EMULATOR','PON_DISABLE_VULKAN','PON_CAPTURE_QEMU_STACK'])
           assert os.environ['REQUESTED_QA']==os.environ['GITHUB_SHA']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
           assert os.environ['CONFIRM_BACKROAD_INSTALL'] in ('true','false')
           if os.environ['CONFIRM_BACKROAD_INSTALL']=='true':
@@ -284,34 +286,95 @@ jobs:
           test -e /dev/kvm
           sudo chmod a+rw /dev/kvm
           command -v ffprobe >/dev/null || sudo apt-get install -y --no-install-recommends ffmpeg
-      - name: Run normal and occupied-port QA independently against unchanged signed bytes
-        # Same resolved v2 source used by the original failed runs; fixes the pre-launch hook contract.
+      - name: Bind official QA bytes and prepare the two independent scenarios
+        id: prepare_modes
+        run: |
+          set -euo pipefail
+          test "$(git cat-file -p HEAD | sed -n '2s/^parent //p')" = "$ARTIFACT_SOURCE"
+          test "$(git diff --name-only "$ARTIFACT_SOURCE" HEAD)" = .github/workflows/joystick-catalog-android-runtime.yml
+          test "$(git diff --name-only "$ARTIFACT_SOURCE" -- joystick-games/qa/android joystick-games/tools/qa-plan.py "joystick-games/$GAME/qa-plan.json" puretv-joystick/joystick_sdk.py)" = ""
+          mkdir -p "$RUNNER_TEMP/runtime/$GAME"
+          cat > "$RUNNER_TEMP/run-frozen-mode.sh" <<'MODE_SCRIPT'
+          set -euo pipefail
+          mode=$1
+          case "$mode" in
+            normal) extra=() ;;
+            occupied) extra=(--occupy-default-port) ;;
+            *) exit 2 ;;
+          esac
+          adb="$ANDROID_HOME/platform-tools/adb"
+          evidence="$RUNNER_TEMP/runtime/$GAME"
+          {
+            printf 'avd=FrozenTV%s\n' "$mode"
+            timeout 12 "$adb" -s emulator-5554 shell getprop ro.build.fingerprint || true
+            timeout 12 "$adb" -s emulator-5554 shell getprop ro.build.version.sdk || true
+            timeout 12 "$adb" -s emulator-5554 shell getprop ro.product.cpu.abi || true
+            timeout 12 "$adb" -s emulator-5554 shell wm size || true
+            timeout 12 "$adb" -s emulator-5554 shell dumpsys SurfaceFlinger | grep -Ei '(GLES:|GL_RENDERER|Vulkan driver)' | head -12 || true
+            timeout 12 "$adb" -s emulator-5554 shell dumpsys webviewupdate | grep -Ei '(Current WebView package|Preferred WebView package)' || true
+          } > "$evidence/guest-$mode.txt"
+          version=$(jq -er .versionName "$RUNNER_TEMP/input/packages/$GAME/signing-receipt.json")
+          set +e
+          python3 joystick-games/tools/android-environment-diagnostics.py --output "$evidence/environment-diagnostics-$mode" -- \
+            python3 joystick-games/qa/android/run.py --game "$GAME" \
+            --apk "$RUNNER_TEMP/input/packages/$GAME/$GAME-$version.apk" \
+            --observer "$RUNNER_TEMP/input/observers/$GAME/observer-$GAME.apk" \
+            --output "$RUNNER_TEMP/runtime/$GAME-$mode" --adb "$adb" "${extra[@]}"
+          result=$?
+          printf '%s\n' "$result" > "$evidence/$mode-exit-code.txt"
+          exit "$result"
+          MODE_SCRIPT
+          cp "$RUNNER_TEMP/run-frozen-mode.sh" "$RUNNER_TEMP/runtime/$GAME/run-frozen-mode.sh"
+      - name: Run the frozen normal QA in a fresh Android TV with Mesa lavapipe
+        id: normal
+        if: always() && steps.prepare_modes.outcome == 'success'
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
-          # Controlled original-APK comparison: official stable 37.3.10 (2026-11-19), not a claimed crash fix.
-          # https://dl.google.com/android/repository/repository2-3.xml — emulator-linux_x64-16970787.zip
           emulator-build: '16970787'
           api-level: 36
           target: android-tv
           arch: x86_64
           profile: tv_1080p
-          avd-name: JoystickGamesValidation
+          avd-name: FrozenTVnormal
           force-avd-creation: true
           disable-animations: true
-          # Controlled original-APK comparison: guest RAM only; not a proven crash fix.
-          # Optional controlled Vulkan-off comparison; not an established crash cause or fix.
-          emulator-options: -no-window -memory 2048 -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot${{ inputs.pon_disable_vulkan && ' -feature -Vulkan' || '' }}
-          pre-emulator-launch-script: >-
-            python3 joystick-games/tools/android-emulator-supervisor.py prepare
-            --sdk "$ANDROID_HOME" --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor"
-          script: >-
-            python3 joystick-games/tools/android-emulator-supervisor.py assert-ready
-            --output "$RUNNER_TEMP/runtime/$GAME/emulator-launch-supervisor" &&
-            python3 joystick-games/tools/android-environment-diagnostics.py
-            --output "$RUNNER_TEMP/runtime/$GAME/environment-diagnostics" --
-            python3 joystick-games/tools/android-catalog.py runtime --game "$GAME"
-            --input "$RUNNER_TEMP/input" --output "$RUNNER_TEMP/runtime" --adb "$ANDROID_HOME/platform-tools/adb"
-            --confirm-backroad-install "$CONFIRM_BACKROAD_INSTALL"
+          emulator-options: -no-window -memory 2048 -gpu lavapipe -noaudio -no-boot-anim -no-snapshot
+          script: bash "$RUNNER_TEMP/run-frozen-mode.sh" normal
+      - name: Run the frozen occupied QA in a fresh Android TV with Mesa lavapipe
+        id: occupied
+        if: always() && steps.prepare_modes.outcome == 'success'
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          emulator-build: '16970787'
+          api-level: 36
+          target: android-tv
+          arch: x86_64
+          profile: tv_1080p
+          avd-name: FrozenTVoccupied
+          force-avd-creation: true
+          disable-animations: true
+          emulator-options: -no-window -memory 2048 -gpu lavapipe -noaudio -no-boot-anim -no-snapshot
+          script: bash "$RUNNER_TEMP/run-frozen-mode.sh" occupied
+      - name: Preserve both independent outcomes including incomplete AVD startup
+        if: always()
+        env:
+          NORMAL_STEP: ${{ steps.normal.outcome }}
+          OCCUPIED_STEP: ${{ steps.occupied.outcome }}
+        run: |
+          python3 - <<'PYCODE'
+          import json, os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'runtime'
+          directory=root/os.environ['GAME']; directory.mkdir(parents=True,exist_ok=True)
+          outcomes=[]
+          for mode in ['normal','occupied']:
+              path=directory/(mode+'-exit-code.txt')
+              code=int(path.read_text()) if path.is_file() else 1
+              if not code and os.environ[mode.upper()+'_STEP']!='success': code=1
+              outcomes.append({'mode':mode,'exitCode':code})
+          (root/(os.environ['GAME']+'-outcomes.json')).write_text(json.dumps(outcomes,indent=2)+'\n')
+          assert all(o['exitCode']==0 for o in outcomes), outcomes
+          PYCODE
       - name: Restore the exact disposable SDK launcher after optional supervision
         if: always() && inputs.supervise_pon_emulator
         run: >-
@@ -448,7 +511,7 @@ jobs:
               if path.is_file():
                   assert path.stat().st_size<100_000_000
                   files[path.relative_to(out).as_posix()]=record(path)
-          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'qaRunAttempt':os.environ['GITHUB_RUN_ATTEMPT'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'games':games,'runtimeResult':os.environ['RUNTIME_RESULT'],'runtimeAccepted':accepted,'diagnosticIntervened':diagnostic,'nativeAcceptanceAllowed':not diagnostic,'files':files,'reusedSignedPackagesAndObservers':True,'physicalTvTested':False,'physicalEsp32Tested':False},indent=2)+'\n')
+          (out/'export-manifest.json').write_text(json.dumps({'qaSourceSha':os.environ['GITHUB_SHA'],'qaRunId':os.environ['GITHUB_RUN_ID'],'qaRunAttempt':os.environ['GITHUB_RUN_ATTEMPT'],'artifactSourceSha':os.environ['ARTIFACT_SOURCE'],'artifactExportCommit':os.environ['ARTIFACT_EXPORT'],'artifactRunId':os.environ['ARTIFACT_RUN'],'artifactId':os.environ['ARTIFACT_ID'],'artifactRunAttempt':os.environ['ARTIFACT_ATTEMPT'],'games':games,'runtimeResult':os.environ['RUNTIME_RESULT'],'runtimeAccepted':accepted,'supplementalProfile':{'apiLevel': 36, 'target': 'android-tv', 'abi': 'x86_64', 'profile': 'tv_1080p', 'guestRamMiB': 2048, 'gpu': 'lavapipe', 'emulatorBuild': '16970787', 'freshAvdPerMode': True},'diagnosticIntervened':diagnostic,'nativeAcceptanceAllowed':not diagnostic,'files':files,'reusedSignedPackagesAndObservers':True,'physicalTvTested':False,'physicalEsp32Tested':False},indent=2)+'\n')
           PY
           export_branch="build-assets/joystick-catalog-android-runtime-${GITHUB_RUN_ID}-attempt-${GITHUB_RUN_ATTEMPT}"
           test -z "$(git ls-remote --heads origin "refs/heads/$export_branch")"
