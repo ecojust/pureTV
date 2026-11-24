@@ -16,7 +16,7 @@
 <table>
   <tr>
     <td align="center" valign="top" width="207"><a href="docs/guide/README.md#安装与升级电脑管理器"><img src="docs/previews/manager-zh.png" width="180" alt=""><br>pureTV Manager</a><br>在电脑上管理电视应用和启动器<br>Windows、macOS、Linux<br><a href="https://github.com/ecojust/pureTV/releases/tag/desktop-v0.5.9">下载 0.5.9</a></td>
-    <td align="center" valign="top" width="207"><a href="resource/apps/putrtv-store/"><img src="resource/apps/putrtv-store/thumb.png" width="180" alt=""><br>putrtv商城</a><br>直接在电视上浏览、安装应用和检查更新<br>Android TV<br><a href="resource/apps/putrtv-store/putrtv-store-0.1.2.apk?raw=1">下载 0.1.2 APK</a></td>
+    <td align="center" valign="top" width="207"><a href="resource/apps/putrtv-store/"><img src="resource/apps/putrtv-store/thumb.png" width="180" alt=""><br>putrtv商城</a><br>直接在电视上浏览、安装应用和检查更新<br>Android TV<br><a href="resource/apps/putrtv-store/putrtv-store-0.1.3.apk?raw=1">下载 0.1.3 APK</a></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
