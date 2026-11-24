@@ -204,6 +204,13 @@ class StoreFeedTest(unittest.TestCase):
                 self.assertEqual(entry['id'], str(Path(entry['coverPath']).parent))
         legacy = json.loads((root / FEED.LEGACY_FEED).read_text())
         self.assertEqual([entry for entry in catalog['entries'] if entry['category'] != 'game'], legacy['entries'])
+        # Older stores discover the upgrade via the original feed path.
+        metadata = json.loads((root / 'resource/apps/putrtv-store/resource.json').read_text())
+        upgrade = next(entry for entry in legacy['entries'] if entry['id'] == 'apps/putrtv-store')
+        self.assertEqual(upgrade['apkPath'], 'resource/apps/putrtv-store/' + metadata['apk'])
+        self.assertEqual(upgrade['versionName'], metadata['version'])
+        for key in ('versionCode', 'sha256', 'certificateSha256'):
+            self.assertEqual(upgrade[key], metadata[key])
 
 
 if __name__ == '__main__':

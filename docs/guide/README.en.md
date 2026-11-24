@@ -2,7 +2,7 @@
 
 [简体中文](README.md) · **English** · [Home](../../README.en.md) · [Developer guide](development.en.md)
 
-pureTV Manager runs on your computer and manages Android TV and Google TV devices over ADB. To browse, install or check for apps directly on your TV, install putrtv Store. To play a controller game, install the game on the TV or computer and connect the controller to the game. [putrtv Store 0.1.1 APK](../../resource/apps/putrtv-store/putrtv-store-0.1.1.apk?raw=1) · [Browse games by genre](../../README.en.md#games)
+pureTV Manager runs on your computer and manages Android TV and Google TV devices over ADB. To browse, install or check for apps directly on your TV, install putrtv Store. To play a controller game, install the game on the TV or computer and connect the controller to the game. [putrtv Store 0.1.2 APK](../../resource/apps/putrtv-store/putrtv-store-0.1.2.apk?raw=1) · [Browse games by genre](../../README.en.md#games)
 
 ## Install or upgrade the desktop manager
 

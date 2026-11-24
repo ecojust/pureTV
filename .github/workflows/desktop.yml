@@ -59,30 +59,11 @@ jobs:
       PYTHONUTF8: '1'
       MACOSX_DEPLOYMENT_TARGET: '11.0'
     steps:
+      - name: Enable long repository paths on Windows
+        if: runner.os == 'Windows'
+        working-directory: ${{ runner.temp }}
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
-        with:
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /desktop/
-            /resource/launcher/*/layout.example.json
-            /resource/launcher/*/app/src/main/assets/layout.json
-            /resource/apps/*/resource.json
-            /joystick-games/*/resource.json
-      - name: Check out shipped APKs and logos for desktop tests
-        working-directory: .
-        run: |
-          python - <<'PYTHON'
-          import json, subprocess
-          from pathlib import Path
-          paths = []
-          for root in (Path('resource/apps'), Path('joystick-games')):
-              for metadata in sorted(root.glob('*/resource.json')):
-                  apk = json.loads(metadata.read_text(encoding='utf-8'))['apk']
-                  assert Path(apk).name == apk and apk.endswith('.apk')
-                  paths.extend('/' + (metadata.parent / name).as_posix() for name in (apk, 'logo.svg'))
-          subprocess.run(['git', 'sparse-checkout', 'add', '--stdin'], input='\n'.join(paths) + '\n',
-                         text=True, check=True)
-          PYTHON
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
