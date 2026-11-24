@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "renderer": "canvas2d",
+  "pauseStablePaths": [
+    "gameplay.playerX",
+    "gameplay.shots",
+    "gameplay.frame"
+  ],
+  "steps": [
+    {
+      "name": "Start a new game",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 130,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Move the cutter across the conveyor",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 300,
+      "expect": [
+        {
+          "path": "gameplay.playerX",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Fire a cutting pulse at the gears",
+      "keys": [
+        "A"
+      ],
+      "holdMs": 280,
+      "expect": [
+        {
+          "path": "gameplay.shots",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Pause with START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 130,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Resume with START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 130,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    }
+  ]
+}
