@@ -19,61 +19,6 @@
   "payloadFiles": 8,
   "sourceFiles": 257,
   "screenshotDerivedIconAndBannerVerified": true,
-  "status": "partial",
-  "qaRunId": 45444159850,
-  "qaSourceCommit": "c0f229230d92ab2d7458b9441cd1aa13a68ad535",
-  "qaExportCommit": "7c3489a5048b82656e11867d2c990a23b4384259",
-  "officialSdkDefaultAndOccupiedPort": "incomplete",
-  "runtime": [
-    {
-      "mode": "normal",
-      "status": "failed",
-      "passedChecks": 5,
-      "report": "https://github.com/ecojust/pureTV/blob/7c3489a5048b82656e11867d2c990a23b4384259/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty-normal/report.json",
-      "sha256": "2da7bb2c2dc533f8f1f7299b42e18db016c29171eb00d704dbdddcf1414b63d9",
-      "lastObservedStage": "playing",
-      "lastObservedFrame": 108,
-      "error": [
-        "AssertionError: all-released timed out; last snapshot retained"
-      ],
-      "gameplayChecks": [
-        "actual SDK gameplay: Deploy as the selected job",
-        "actual SDK gameplay: Strafe across the street"
-      ],
-      "screenshots": [
-        {
-          "name": "join-before-connection.png",
-          "url": "https://github.com/ecojust/pureTV/blob/7c3489a5048b82656e11867d2c990a23b4384259/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty-normal/join-before-connection.png",
-          "width": 1920,
-          "height": 1080,
-          "bytes": 1110148,
-          "sha256": "60993d4bb911ea9d64b2d5b5702cd94dee26e9d69e3fb5312f7e861729d2d71c"
-        },
-        {
-          "name": "connected.png",
-          "url": "https://github.com/ecojust/pureTV/blob/7c3489a5048b82656e11867d2c990a23b4384259/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty-normal/connected.png",
-          "width": 1920,
-          "height": 1080,
-          "bytes": 1138394,
-          "sha256": "6898f3fa57f9bca48c8ed43a9998e2ab69b77719180883a8e44e759dd462391a"
-        }
-      ]
-    },
-    {
-      "mode": "occupied",
-      "status": "failed",
-      "passedChecks": 0,
-      "report": "https://github.com/ecojust/pureTV/blob/7c3489a5048b82656e11867d2c990a23b4384259/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty-occupied/report.json",
-      "sha256": "73e555e23c44bca05d2801e584f2e1f8e4dbc8d053b6de55a1315d25f349eaec",
-      "lastObservedStage": null,
-      "lastObservedFrame": null,
-      "error": [
-        "subprocess.TimeoutExpired: Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'wait-for-device']' timed out after 45 seconds"
-      ],
-      "gameplayChecks": [],
-      "screenshots": []
-    }
-  ],
   "originalRuntimeAttempt": {
     "runId": 45438957573,
     "exportCommit": "f5c7f458a82fad737077570afb5e84fd6b374779",
@@ -135,8 +80,161 @@
       "nativeEmulatorStarted": false,
       "failedStep": "Bind original signed packages to their frozen source and current QA checkout",
       "workflow": "https://github.com/ecojust/pureTV/actions/runs/45443759848"
+    },
+    {
+      "runId": 45447113090,
+      "sourceCommit": "a0ce83f030475cc2b9d18d1ffc1555f2a1c5f916",
+      "exportCommit": "857d8c4c6f74f0277ff3f6d2653de7783a275733",
+      "workflow": "https://github.com/ecojust/pureTV/actions/runs/45447113090",
+      "profile": {
+        "apiLevel": 36,
+        "target": "android-tv",
+        "abi": "x86_64",
+        "profile": "tv_1080p",
+        "guestRamMiB": 2048,
+        "gpu": "lavapipe",
+        "emulatorBuild": "16970787",
+        "freshAvdPerMode": true
+      },
+      "runtimeVerification": "https://github.com/ecojust/pureTV/blob/857d8c4c6f74f0277ff3f6d2653de7783a275733/runtime-verification.json",
+      "modes": [],
+      "guestEnvironmentEvidence": [],
+      "failedSteps": [
+        "Check generic input and read-only observation contracts",
+        "Preserve both independent outcomes including incomplete AVD startup"
+      ],
+      "status": "failed",
+      "nativeEmulatorStarted": false
     }
   ],
-  "workflow": "https://github.com/ecojust/pureTV/actions/runs/45444159850",
+  "additionalNativeAttempts": [
+    {
+      "runId": 45444159850,
+      "sourceCommit": "c0f229230d92ab2d7458b9441cd1aa13a68ad535",
+      "exportCommit": "7c3489a5048b82656e11867d2c990a23b4384259",
+      "workflow": "https://github.com/ecojust/pureTV/actions/runs/45444159850",
+      "modes": [
+        {
+          "mode": "normal",
+          "status": "failed",
+          "passedChecks": 5,
+          "report": "https://github.com/ecojust/pureTV/blob/7c3489a5048b82656e11867d2c990a23b4384259/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty-normal/report.json",
+          "sha256": "2da7bb2c2dc533f8f1f7299b42e18db016c29171eb00d704dbdddcf1414b63d9",
+          "lastObservedStage": "playing",
+          "lastObservedFrame": 108,
+          "error": [
+            "AssertionError: all-released timed out; last snapshot retained"
+          ],
+          "gameplayChecks": [
+            "actual SDK gameplay: Deploy as the selected job",
+            "actual SDK gameplay: Strafe across the street"
+          ],
+          "screenshots": [
+            {
+              "name": "join-before-connection.png",
+              "url": "https://github.com/ecojust/pureTV/blob/7c3489a5048b82656e11867d2c990a23b4384259/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty-normal/join-before-connection.png",
+              "width": 1920,
+              "height": 1080,
+              "bytes": 1110148,
+              "sha256": "60993d4bb911ea9d64b2d5b5702cd94dee26e9d69e3fb5312f7e861729d2d71c"
+            },
+            {
+              "name": "connected.png",
+              "url": "https://github.com/ecojust/pureTV/blob/7c3489a5048b82656e11867d2c990a23b4384259/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty-normal/connected.png",
+              "width": 1920,
+              "height": 1080,
+              "bytes": 1138394,
+              "sha256": "6898f3fa57f9bca48c8ed43a9998e2ab69b77719180883a8e44e759dd462391a"
+            }
+          ]
+        },
+        {
+          "mode": "occupied",
+          "status": "failed",
+          "passedChecks": 0,
+          "report": "https://github.com/ecojust/pureTV/blob/7c3489a5048b82656e11867d2c990a23b4384259/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty-occupied/report.json",
+          "sha256": "73e555e23c44bca05d2801e584f2e1f8e4dbc8d053b6de55a1315d25f349eaec",
+          "lastObservedStage": null,
+          "lastObservedFrame": null,
+          "error": [
+            "subprocess.TimeoutExpired: Command '['/usr/local/lib/android/sdk/platform-tools/adb', 'wait-for-device']' timed out after 45 seconds"
+          ],
+          "gameplayChecks": [],
+          "screenshots": []
+        }
+      ]
+    }
+  ],
+  "supplementalProfile": {
+    "apiLevel": 36,
+    "target": "android-tv",
+    "abi": "x86_64",
+    "profile": "tv_1080p",
+    "guestRamMiB": 2048,
+    "gpu": "lavapipe",
+    "emulatorBuild": "16970787",
+    "freshAvdPerMode": true
+  },
+  "guestEnvironmentEvidence": [
+    {
+      "mode": "normal",
+      "url": "https://github.com/ecojust/pureTV/blob/e943e93ffcf00650d6b28681cdf0bc1ddcd210a2/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty/guest-normal.txt",
+      "bytes": 561,
+      "sha256": "0f9e2733eeba68c904069afe81e35914b4009ea3e8ac1c09a0b184059f3289e2"
+    },
+    {
+      "mode": "occupied",
+      "url": "https://github.com/ecojust/pureTV/blob/e943e93ffcf00650d6b28681cdf0bc1ddcd210a2/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty/guest-occupied.txt",
+      "bytes": 563,
+      "sha256": "72d38a0e90d404037544eac30cdb0de8989bab78414a625c7a330094503d4f3f"
+    }
+  ],
+  "runtimeVerification": "https://github.com/ecojust/pureTV/blob/e943e93ffcf00650d6b28681cdf0bc1ddcd210a2/runtime-verification.json",
+  "status": "verified",
+  "qaRunId": 45448471513,
+  "qaSourceCommit": "76e44b6ec9811f9e54ab1b168b59080dd54da17a",
+  "qaExportCommit": "e943e93ffcf00650d6b28681cdf0bc1ddcd210a2",
+  "officialSdkDefaultAndOccupiedPort": "passed",
+  "runtime": [
+    {
+      "mode": "normal",
+      "passedChecks": 44,
+      "gameplayScreenshots": [
+        {
+          "url": "https://github.com/ecojust/pureTV/blob/e943e93ffcf00650d6b28681cdf0bc1ddcd210a2/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty-normal/playing.png",
+          "width": 1920,
+          "height": 1080,
+          "bytes": 1190313,
+          "sha256": "be73075647b88ae429ba0f2d4328cac57d8012b6a3acef7477a48a3ffbce0228"
+        }
+      ],
+      "report": "https://github.com/ecojust/pureTV/blob/e943e93ffcf00650d6b28681cdf0bc1ddcd210a2/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty-normal/report.json",
+      "video": {
+        "url": "https://github.com/ecojust/pureTV/blob/e943e93ffcf00650d6b28681cdf0bc1ddcd210a2/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty-normal/controller-gameplay.mp4",
+        "bytes": 5930882,
+        "sha256": "44644cdb2ab25478adaa15e8451adfc332292d7d8756b55dfb48e38a2ffeb33c"
+      }
+    },
+    {
+      "mode": "occupied",
+      "passedChecks": 44,
+      "gameplayScreenshots": [
+        {
+          "url": "https://github.com/ecojust/pureTV/blob/e943e93ffcf00650d6b28681cdf0bc1ddcd210a2/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty-occupied/playing.png",
+          "width": 1920,
+          "height": 1080,
+          "bytes": 1500267,
+          "sha256": "b2bf2667de6cee6b3608e50a4f95ebb2b89c7e58d0d3470e1c11bd895bbe729e"
+        }
+      ],
+      "report": "https://github.com/ecojust/pureTV/blob/e943e93ffcf00650d6b28681cdf0bc1ddcd210a2/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty-occupied/report.json",
+      "video": {
+        "url": "https://github.com/ecojust/pureTV/blob/e943e93ffcf00650d6b28681cdf0bc1ddcd210a2/evidence/joystick-android-runtime-nerd-of-duty/nerd-of-duty-occupied/controller-gameplay.mp4",
+        "bytes": 5183091,
+        "sha256": "733573a8f23a9f2a8daa73060e8a46ec46123bdd71a225e6b17874c0cab6831c"
+      }
+    }
+  ],
+  "workflow": "https://github.com/ecojust/pureTV/actions/runs/45448471513",
   "physicalDeviceTested": false
 }

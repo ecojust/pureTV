@@ -21,7 +21,7 @@
 | 97 | [Dolmuş · 伊斯坦布尔小巴](dolmus/) | 驾驶小巴沿途接客，在乘客的目的站停车并赚取车费。 |
 | 64 | [Martı · 博斯普鲁斯海鸥](marti/) | 飞过博斯普鲁斯海峡，从渡轮上叼走芝麻面包，避开桥梁和船只。 |
 
-每个游戏目录提供手柄按键表、安装包和校验值。七款 macOS 版均通过 Apple Silicon 原生和 Rosetta 实玩验证。Intel 测试机上，Kaboom Arena、Bloom Hop 和 Mechapede 也通过了实玩。其余四款 3D 游戏的验证范围见各自的下载说明。[三端下载入口](../README.md#games)
+每个游戏目录提供手柄按键表、安装包和校验值。七款均在 Android TV 模拟器和 Windows 上通过手柄实玩，包括按住方向键时断线、重连后保持暂停。七款 macOS 版均通过 Apple Silicon 原生和 Rosetta 实玩验证。Intel 测试机上，Kaboom Arena、Bloom Hop 和 Mechapede 也通过了实玩。其余四款 3D 游戏的验证范围见各自的下载说明。[三端下载入口](../README.md#games)
 
 ## 探索与场景解谜
 

@@ -8,7 +8,7 @@
 
 [文件校验值](SHA256SUMS.txt) · [Android TV 验证](docs/releases/0.1.0/android.json) · [Windows 验证](docs/releases/0.1.0/windows.json) · [macOS 验证](docs/releases/0.1.0/macos.json)
 
-Android TV 安装包已核验签名。模拟器游玩验证的通过项及限制见 [Android TV 记录](docs/releases/0.1.0/android.json)。
+Android TV 模拟器使用 `-gpu lavapipe` 启动时，默认端口和端口占用两种场景均通过手柄实玩测试。早期使用 `-gpu swiftshader_indirect` 的模拟器曾与 ADB 断开连接。[逐次结果](docs/releases/0.1.0/android.json)
 
 ## 操作
 
