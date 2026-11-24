@@ -8,7 +8,7 @@ export function attachTV(engine) {
   const weapons = ctx.peek('weapons');
   const gl = ctx.peek('render').renderer.getContext();
   const version = gl.getParameter(gl.VERSION);
-  let lastStage, lastPublished = -Infinity;
+  let lastStage, lastButtons = {}, lastPublished = -Infinity;
   const blocked = new Set();
 
   function stage() {
@@ -90,9 +90,10 @@ export function attachTV(engine) {
       for (const direction of ['Up', 'Down', 'Left', 'Right'])
         pressed[direction.toUpperCase()] ||= input.pressed('Arrow' + direction);
     }
-    if (frame.cancelled || current !== lastStage) {
-      for (const key of ['A', 'B', 'X', 'Y']) if (buttons[key]) blocked.add(key);
+    for (const key of ['A', 'B', 'X', 'Y']) {
+      if (buttons[key] && (frame.cancelled || (current !== lastStage && lastButtons[key]))) blocked.add(key);
     }
+    lastButtons = { ...buttons };
     for (const key of [...blocked]) {
       if (!buttons[key]) blocked.delete(key);
       buttons[key] = false;
