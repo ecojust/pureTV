@@ -1,0 +1,81 @@
+{
+  "sourceCommit": "3831360cd4bb90ffa37b202b01dc7c151bb65116",
+  "batch": "selected-seven-02",
+  "runner": "macos-15-intel",
+  "expectedArchitecture": "x86_64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "gogh-strike",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/gogh-strike",
+            "--output",
+            "/Users/runner/work/_temp/qa/gogh-strike/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "gogh-strike/package-verification.log",
+          "startedAt": "2026-11-24T17:02:26.142785+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "gogh-strike",
+            "--app",
+            "/Users/runner/work/_temp/packages/gogh-strike/installed/Gogh Strike.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/gogh-strike/native"
+          ],
+          "status": "failed",
+          "log": "gogh-strike/native.log",
+          "startedAt": "2026-11-24T17:04:38.827793+00:00",
+          "returncode": 1
+        }
+      ]
+    },
+    {
+      "game": "bloom-hop",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/bloom-hop",
+            "--output",
+            "/Users/runner/work/_temp/qa/bloom-hop/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "bloom-hop/package-verification.log",
+          "startedAt": "2026-11-24T17:06:09.944604+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "bloom-hop",
+            "--app",
+            "/Users/runner/work/_temp/packages/bloom-hop/installed/Bloom Hop.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/bloom-hop/native"
+          ],
+          "status": "passed",
+          "log": "bloom-hop/native.log",
+          "startedAt": "2026-11-24T17:07:43.354661+00:00",
+          "returncode": 0
+        }
+      ]
+    }
+  ]
+}
