@@ -84,13 +84,13 @@
 
 <!-- game-index:start -->
 
-**39 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · Android TV 39 款 · macOS 独立安装包 39 款 · Windows x64 独立安装包 39 款
+**46 款手柄游戏** · [全部支持电脑键盘和无线手柄](docs/guide/README.md#在电脑上玩) · Android TV 46 款 · macOS 独立安装包 46 款 · Windows x64 独立安装包 46 款
 
-[竞速与体育（13）](#controller-racing) · [动作、角色扮演与探索（6）](#controller-action) · [平台、弹幕与街机（5）](#controller-arcade) · [策略、塔防与卡牌（2）](#controller-strategy) · [解谜与益智（13）](#controller-puzzle)
+[竞速与体育（14）](#controller-racing) · [动作、角色扮演与探索（8）](#controller-action) · [平台、弹幕与街机（8）](#controller-arcade) · [策略、塔防与卡牌（2）](#controller-strategy) · [解谜与益智（14）](#controller-puzzle)
 
 <a id="controller-racing"></a>
 
-### 竞速与体育（13）
+### 竞速与体育（14）
 
 <table>
   <tr>
@@ -113,7 +113,7 @@
   </tr>
   <tr>
     <td align="center" valign="top" width="207"><a href="joystick-games/turbo-kart-rally/"><img src="joystick-games/turbo-kart-rally/thumb.png" width="180" alt=""><br>涡轮卡丁拉力赛</a><br><a href="joystick-games/turbo-kart-rally/turbo-kart-rally-0.1.2.apk?raw=1" title="涡轮卡丁拉力赛 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="涡轮卡丁拉力赛 Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/turbo-kart-rally-macos.dmg" title="涡轮卡丁拉力赛 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="涡轮卡丁拉力赛 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/turbo-kart-rally-windows-x64-setup.exe" title="涡轮卡丁拉力赛 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="涡轮卡丁拉力赛 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/bridge-mind/turbo-kart-rally" title="涡轮卡丁拉力赛 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="涡轮卡丁拉力赛 · 原作仓库"></a></td>
-    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/dolmus/"><img src="joystick-games/dolmus/thumb.png" width="180" alt=""><br>多尔穆什 · 伊斯坦布尔小巴</a><br><a href="joystick-games/dolmus/dolmus-0.1.0.apk?raw=1" title="多尔穆什 · 伊斯坦布尔小巴 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="多尔穆什 · 伊斯坦布尔小巴 Android TV APK"></a> <a href="joystick-games/dolmus/macos/Dolmus-0.1.0-macos-universal.dmg?raw=1" title="多尔穆什 · 伊斯坦布尔小巴 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="多尔穆什 · 伊斯坦布尔小巴 macOS DMG"></a> <a href="joystick-games/dolmus/windows/Dolmus-0.1.0-windows-x64-setup.exe?raw=1" title="多尔穆什 · 伊斯坦布尔小巴 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="多尔穆什 · 伊斯坦布尔小巴 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/Furkiozknn/dolmus" title="多尔穆什 · 伊斯坦布尔小巴 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="多尔穆什 · 伊斯坦布尔小巴 · 原作仓库"></a></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
@@ -121,7 +121,7 @@
 
 <a id="controller-action"></a>
 
-### 动作、角色扮演与探索（6）
+### 动作、角色扮演与探索（8）
 
 <table>
   <tr>
@@ -133,14 +133,14 @@
   <tr>
     <td align="center" valign="top" width="207"><a href="joystick-games/operation-ironhold/"><img src="joystick-games/operation-ironhold/thumb.png" width="180" alt=""><br>铁垒行动</a><br><a href="joystick-games/operation-ironhold/operation-ironhold-0.1.2.apk?raw=1" title="铁垒行动 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="铁垒行动 Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/operation-ironhold-macos.dmg" title="铁垒行动 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="铁垒行动 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/operation-ironhold-windows-x64-setup.exe" title="铁垒行动 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="铁垒行动 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/StarKnightt/operation-ironhold" title="铁垒行动 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="铁垒行动 · 原作仓库"></a></td>
     <td align="center" valign="top" width="207"><a href="joystick-games/kindle/"><img src="joystick-games/kindle/thumb.png" width="180" alt=""><br>星球点灯人</a><br><a href="joystick-games/kindle/kindle-0.1.1.apk?raw=1" title="星球点灯人 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="星球点灯人 Android TV APK"></a> <a href="joystick-games/kindle/macos/Kindle-0.1.0-macos-universal.dmg?raw=1" title="星球点灯人 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="星球点灯人 macOS DMG"></a> <a href="joystick-games/kindle/windows/Kindle-0.1.0-windows-x64-setup.exe?raw=1" title="星球点灯人 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="星球点灯人 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/TonyDowney/kindle" title="星球点灯人 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="星球点灯人 · 原作仓库"></a></td>
-    <td align="center" valign="top" width="207"></td>
-    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/nerd-of-duty/"><img src="joystick-games/nerd-of-duty/thumb.png" width="180" alt=""><br>账本保卫战</a><br><a href="joystick-games/nerd-of-duty/nerd-of-duty-0.1.0.apk?raw=1" title="账本保卫战 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="账本保卫战 Android TV APK"></a> <a href="joystick-games/nerd-of-duty/macos/NerdOfDuty-0.1.0-macos-universal.dmg?raw=1" title="账本保卫战 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="账本保卫战 macOS DMG"></a> <a href="joystick-games/nerd-of-duty/windows/NerdOfDuty-0.1.0-windows-x64-setup.exe?raw=1" title="账本保卫战 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="账本保卫战 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/sytaylor/nerd-of-duty" title="账本保卫战 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="账本保卫战 · 原作仓库"></a></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/gogh-strike/"><img src="joystick-games/gogh-strike/thumb.png" width="180" alt=""><br>梵高突击</a><br><a href="joystick-games/gogh-strike/gogh-strike-0.1.0.apk?raw=1" title="梵高突击 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="梵高突击 Android TV APK"></a> <a href="joystick-games/gogh-strike/macos/GoghStrike-0.1.0-macos-universal.dmg?raw=1" title="梵高突击 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="梵高突击 macOS DMG"></a> <a href="joystick-games/gogh-strike/windows/GoghStrike-0.1.0-windows-x64-setup.exe?raw=1" title="梵高突击 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="梵高突击 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/petergpt/gogh-strike" title="梵高突击 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="梵高突击 · 原作仓库"></a></td>
   </tr>
 </table>
 
 <a id="controller-arcade"></a>
 
-### 平台、弹幕与街机（5）
+### 平台、弹幕与街机（8）
 
 <table>
   <tr>
@@ -151,9 +151,9 @@
   </tr>
   <tr>
     <td align="center" valign="top" width="207"><a href="joystick-games/glup/"><img src="joystick-games/glup/thumb.png" width="180" alt=""><br>GLUP · 沼泽猫鱼</a><br><a href="joystick-games/glup/glup-0.1.2.apk?raw=1" title="GLUP · 沼泽猫鱼 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="GLUP · 沼泽猫鱼 Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/glup-macos.dmg" title="GLUP · 沼泽猫鱼 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="GLUP · 沼泽猫鱼 macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/glup-windows-x64-setup.exe" title="GLUP · 沼泽猫鱼 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="GLUP · 沼泽猫鱼 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/gavilanbe/glup" title="GLUP · 沼泽猫鱼 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="GLUP · 沼泽猫鱼 · 原作仓库"></a></td>
-    <td align="center" valign="top" width="207"></td>
-    <td align="center" valign="top" width="207"></td>
-    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/kaboom-arena/"><img src="joystick-games/kaboom-arena/thumb.png" width="180" alt=""><br>爆破竞技场</a><br><a href="joystick-games/kaboom-arena/kaboom-arena-0.1.0.apk?raw=1" title="爆破竞技场 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="爆破竞技场 Android TV APK"></a> <a href="joystick-games/kaboom-arena/macos/KaboomArena-0.1.0-macos-universal.dmg?raw=1" title="爆破竞技场 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="爆破竞技场 macOS DMG"></a> <a href="joystick-games/kaboom-arena/windows/KaboomArena-0.1.0-windows-x64-setup.exe?raw=1" title="爆破竞技场 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="爆破竞技场 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/janroudaut/kaboom-arena" title="爆破竞技场 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="爆破竞技场 · 原作仓库"></a></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/mechapede/"><img src="joystick-games/mechapede/thumb.png" width="180" alt=""><br>机甲蜈蚣</a><br><a href="joystick-games/mechapede/mechapede-0.1.0.apk?raw=1" title="机甲蜈蚣 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="机甲蜈蚣 Android TV APK"></a> <a href="joystick-games/mechapede/macos/Mechapede-0.1.0-macos-universal.dmg?raw=1" title="机甲蜈蚣 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="机甲蜈蚣 macOS DMG"></a> <a href="joystick-games/mechapede/windows/Mechapede-0.1.0-windows-x64-setup.exe?raw=1" title="机甲蜈蚣 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="机甲蜈蚣 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/davbachman/Mechapede" title="机甲蜈蚣 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="机甲蜈蚣 · 原作仓库"></a></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/marti/"><img src="joystick-games/marti/thumb.png" width="180" alt=""><br>马尔蒂 · 博斯普鲁斯海鸥</a><br><a href="joystick-games/marti/marti-0.1.0.apk?raw=1" title="马尔蒂 · 博斯普鲁斯海鸥 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="马尔蒂 · 博斯普鲁斯海鸥 Android TV APK"></a> <a href="joystick-games/marti/macos/Marti-0.1.0-macos-universal.dmg?raw=1" title="马尔蒂 · 博斯普鲁斯海鸥 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="马尔蒂 · 博斯普鲁斯海鸥 macOS DMG"></a> <a href="joystick-games/marti/windows/Marti-0.1.0-windows-x64-setup.exe?raw=1" title="马尔蒂 · 博斯普鲁斯海鸥 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="马尔蒂 · 博斯普鲁斯海鸥 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/Furkiozknn/marti" title="马尔蒂 · 博斯普鲁斯海鸥 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="马尔蒂 · 博斯普鲁斯海鸥 · 原作仓库"></a></td>
   </tr>
 </table>
 
@@ -172,7 +172,7 @@
 
 <a id="controller-puzzle"></a>
 
-### 解谜与益智（13）
+### 解谜与益智（14）
 
 <table>
   <tr>
@@ -195,7 +195,7 @@
   </tr>
   <tr>
     <td align="center" valign="top" width="207"><a href="joystick-games/silent-meridian/"><img src="joystick-games/silent-meridian/thumb.png" width="180" alt=""><br>静默子午线</a><br><a href="joystick-games/silent-meridian/silent-meridian-0.1.0.apk?raw=1" title="静默子午线 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="静默子午线 Android TV APK"></a> <a href="joystick-games/silent-meridian/macos/SilentMeridian-0.1.0-macos-universal.dmg?raw=1" title="静默子午线 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="静默子午线 macOS DMG"></a> <a href="joystick-games/silent-meridian/windows/SilentMeridian-0.1.0-windows-x64-setup.exe?raw=1" title="静默子午线 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="静默子午线 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/stackloomdev/silent-meridian" title="静默子午线 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="静默子午线 · 原作仓库"></a></td>
-    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/bloom-hop/"><img src="joystick-games/bloom-hop/thumb.png" width="180" alt=""><br>莲池跃蛙</a><br><a href="joystick-games/bloom-hop/bloom-hop-0.1.0.apk?raw=1" title="莲池跃蛙 Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="莲池跃蛙 Android TV APK"></a> <a href="joystick-games/bloom-hop/macos/BloomHop-0.1.0-macos-universal.dmg?raw=1" title="莲池跃蛙 macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="莲池跃蛙 macOS DMG"></a> <a href="joystick-games/bloom-hop/windows/BloomHop-0.1.0-windows-x64-setup.exe?raw=1" title="莲池跃蛙 Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="莲池跃蛙 Windows x64 EXE"></a> <a href="docs/guide/README.md#安装游戏与连接手柄" title="支持手柄，查看连接说明"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="支持手柄，查看连接说明"></a> <a href="https://github.com/zeveck/bloom-hop" title="莲池跃蛙 · 原作仓库"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="莲池跃蛙 · 原作仓库"></a></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>

@@ -1,0 +1,1923 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Martı · Seagull Run</title>
+<meta name="arena-game" content="marti">
+<meta name="description" content="Fly a seagull over the Istanbul strait: snatch simit, dodge bridges and ships. · Boğaz üzerinde bir martı: simit kap, köprü ve gemilerden kaç.">
+<meta property="og:title" content="Martı · Seagull Run">
+<meta property="og:description" content="An endless 3D seagull run over the Istanbul strait: snatch simit from ferries, dodge bridge cables and kites, fly from sunset into a night of fireworks.">
+<meta property="og:image" content="https://furkiozknn.github.io/marti/docs/card.jpg">
+<meta property="og:image:width" content="960">
+<meta property="og:image:height" content="540">
+<meta property="og:url" content="https://furkiozknn.github.io/marti/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Martı · Seagull Run">
+<meta name="twitter:description" content="Boğaz üzerinde sonsuz bir martı koşusu: simit kap, köprü ve gemilerden kaç. · An endless seagull run over the Istanbul strait.">
+<meta name="twitter:image" content="https://furkiozknn.github.io/marti/docs/card.jpg">
+<meta name="theme-color" content="#0a192f">
+<link rel="icon" type="image/png" href="assets/ui/favicon.png">
+
+
+
+<script>/*ARENA-KIT:BEGIN v1.3.2 sha256:ce77e23fab7c*/
+/* ARENA-KIT v1 — shared layer for the 21 Claude Game Arena games.
+ *
+ * Injected inline into each game's index.html (between begin/end marker comments) by
+ * arena-kit/inject.py, so every game stays a single file. Plain script, no imports; the kit itself opens no
+ * connection (v1.1 play events are handed to the page's existing GoatCounter counter, if it is there).
+ * Everything is optional: a game that never calls Arena.* behaves exactly as before.
+ *
+ *   Arena.perf.attach(renderer)        dynamic pixel ratio for weak GPUs (Intel UHD)
+ *   Arena.hint(id, text)               one-time hint toast (first 30 s guidance)
+ *   Arena.endCard({...})               end-of-session card: reason, score, "again", another game
+ *   Arena.daily(game, {dayKey})        UTC-day seed (or the game's own day key) + mulberry32 rng + streak
+ *   Arena.quiet                        true on ?auto / ?nosave / ?demo: nothing is written to localStorage
+ *   Arena.share({...})                 Web Share / clipboard text + optional PNG card
+ *   Arena.profile(), Arena.award(id)   cross-game passport (shared origin localStorage)
+ *   Arena.settings / openSettings()    accessibility panel (text size, contrast, motion, vibration, auto-pause)
+ *   Arena.complete({mount, feedback})  v1.1: "completed" event + one-tap 👍/👎 (once a day per game), inline in `mount`
+ *   Arena.track(name)                  v1.1: one GoatCounter event "<game>/<name>" per page load; automatic:
+ *                                      "start" (first real input) and "return" (played this game on an earlier day)
+ *                                      Nothing is sent or shown on quiet runs; no cookies, no ids, no new service.
+ *                                      v1.2: also "play1m", "play5m", "play10m" (visible play time after the first input)
+ *   Daily streak freeze (v1.2)         every 7 streak days earn a freeze (max 2); one missed day spends it instead of
+ *                                      resetting the streak. daily().freeze, complete() -> {saved:true} + toast
+ *
+ *   Arena.portal (v1.3)               portal SDK adapter (CrazyGames v3, Poki, Playgama Bridge). On the game's own site
+ *                                      (no SDK on the page, no ?portal=) every call is a no-op and nothing changes.
+ *                                      The kit still loads no script: a portal build adds the SDK <script> itself.
+ *                                      portal.gameplay(true|false), portal.loading(true|false),
+ *                                      portal.midgame() -> Promise<shown>  (between rounds only; paced, first after 60 s,
+ *                                      then at most one per 3 min), portal.rewarded() -> Promise<granted> (opt-in;
+ *                                      portal.canReward tells whether to show the button). During an ad every
+ *                                      AudioContext of the page is suspended and 'adstart' / 'adend' are emitted
+ *                                      (v1.3.2; not 'pause', which games use to auto-pause until the player resumes).
+ *                                      gameplay(true) is sent automatically on the first real input.
+ *                                      v1.3.1: on a portal the end card has no "another game" link (cross-promotion).
+ *
+ * Storage: every key starts with "arena." and is versioned; every access is wrapped in try/catch
+ * (private mode, quota, portals). Pure logic lives in Arena._core so it can be tested in Node.
+ */
+(function (root) {
+  'use strict';
+  if (root.Arena && root.Arena.version) return; // injected twice (e.g. iframe) -> keep the first
+  var VERSION = '1.3.2';
+  var hasDOM = typeof document !== 'undefined';
+
+  /* ---------- core (pure, Node-testable) ---------- */
+  var core = {};
+
+  core.dayKey = function (date) { // UTC YYYYMMDD
+    var d = date || new Date();
+    return d.getUTCFullYear() * 10000 + (d.getUTCMonth() + 1) * 100 + d.getUTCDate();
+  };
+  core.localDayKey = function (date) { // local-time YYYYMMDD (for games whose own daily turns at local midnight)
+    var d = date || new Date();
+    return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  };
+  // Bot / demo / no-save runs must not touch the player's storage: ?auto, ?nosave, ?demo (any value).
+  core.isQuiet = function (search) { return /[?&](auto|nosave|demo)(=|&|$)/.test(search || ''); };
+  core.prevDayKey = function (key) {
+    var y = Math.floor(key / 10000), m = Math.floor(key / 100) % 100, d = key % 100;
+    return core.dayKey(new Date(Date.UTC(y, m - 1, d) - 86400000));
+  };
+  // v1.1: a player is "returning" if this game was last played on an earlier day (old profiles: any earlier play)
+  core.isReturn = function (lastDay, plays, lastAnyAt, today) {
+    if (lastDay) return lastDay < today;
+    return !!(plays > 0 && lastAnyAt && core.dayKey(new Date(lastAnyAt)) < today);
+  };
+  core.eventName = function (name) { return String(name || '').replace(/[^a-z0-9-]/gi, '').slice(0, 24).toLowerCase(); };
+  core.hash = function (str) { // FNV-1a 32-bit
+    var h = 0x811c9dc5;
+    for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+    return h >>> 0;
+  };
+  core.mulberry32 = function (seed) {
+    var a = seed >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      var t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  };
+  // Streak after finishing the daily run on `today`: same day keeps it, yesterday +1, gap resets to 1.
+  // v1.2 freeze: a gap of exactly one missed day spends a freeze and the streak continues (+1).
+  // A freeze is earned each time the streak reaches a multiple of 7 (kept at most FREEZE_MAX).
+  core.FREEZE_MAX = 2;
+  core.nextStreak = function (rec, today) {
+    rec = rec || { last: 0, streak: 0, best: 0 };
+    var freeze = rec.freeze || 0;
+    var out = { last: today, streak: 1, best: rec.best || 0, freeze: freeze };
+    var yesterday = core.prevDayKey(today);
+    if (rec.last === today) out.streak = rec.streak || 1;
+    else if (rec.last && rec.last === yesterday) out.streak = (rec.streak || 0) + 1;
+    else if (rec.last && freeze > 0 && rec.streak > 0 && rec.last === core.prevDayKey(yesterday)) {
+      out.streak = rec.streak + 1; out.freeze = freeze - 1; out.saved = true;
+    }
+    if (rec.last !== today && out.streak % 7 === 0) out.freeze = Math.min(core.FREEZE_MAX, out.freeze + 1);
+    out.best = Math.max(out.best, out.streak);
+    return out;
+  };
+  // Streak to show before today's run: alive if played today or yesterday, or the day before with a freeze left.
+  core.liveStreak = function (rec, today) {
+    if (!rec || !rec.last) return 0;
+    var y = core.prevDayKey(today);
+    if (rec.last === today || rec.last === y) return rec.streak || 0;
+    if ((rec.freeze || 0) > 0 && rec.last === core.prevDayKey(y)) return rec.streak || 0;
+    return 0;
+  };
+  // Dynamic-resolution controller. Feed frame times (ms); returns the pixel ratio to use.
+  core.perfController = function (opts) {
+    opts = opts || {};
+    var s = {
+      min: opts.min || 0.6, max: opts.max || 2, ratio: opts.start || opts.max || 2,
+      slow: opts.slowMs || 22, fast: opts.fastMs || 14, avg: 16.7, n: 0, cool: 0,
+    };
+    s.feed = function (dt, now) {
+      if (!(dt > 0) || dt > 250) return s.ratio; // tab switch / breakpoint: ignore
+      s.avg += (dt - s.avg) * (1 / 30); s.n++;
+      if (s.n < 60 || now < s.cool) return s.ratio;
+      if (s.avg > s.slow && s.ratio > s.min) { s.ratio = Math.max(s.min, +(s.ratio * 0.85).toFixed(3)); s.cool = now + 2000; }
+      else if (s.avg < s.fast && s.ratio < s.max) { s.ratio = Math.min(s.max, +(s.ratio * 1.1).toFixed(3)); s.cool = now + 4000; }
+      return s.ratio;
+    };
+    return s;
+  };
+  // v1.3 portal: ?portal= wins, then the host name, then which SDK object the portal build put on the page.
+  core.PORTALS = ['crazygames', 'poki', 'playgama'];
+  core.portalName = function (search, host, sdk) {
+    var m = /[?&]portal=([a-z]+)/i.exec(search || '');
+    if (m) { var q = m[1].toLowerCase(); return core.PORTALS.indexOf(q) >= 0 ? q : 'none'; }
+    host = String(host || '').toLowerCase();
+    for (var i = 0; i < core.PORTALS.length; i++) if (host.indexOf(core.PORTALS[i]) >= 0) return core.PORTALS[i];
+    sdk = sdk || {};
+    if (sdk.crazygames) return 'crazygames';
+    if (sdk.poki) return 'poki';
+    if (sdk.playgama) return 'playgama';
+    return 'none';
+  };
+  // Interstitial pacing: never in the first `first` ms of play, then at least `gap` ms apart (CrazyGames: 3 min).
+  core.adPacer = function (opts) {
+    opts = opts || {};
+    var p = { first: opts.first == null ? 60000 : opts.first, gap: opts.gap == null ? 180000 : opts.gap, start: null, last: null };
+    p.begin = function (now) { if (p.start == null) p.start = now; };
+    p.can = function (now) {
+      if (p.start == null || now - p.start < p.first) return false;
+      return p.last == null || now - p.last >= p.gap;
+    };
+    p.mark = function (now) { p.last = now; };
+    return p;
+  };
+  core.shareText = function (o) {
+    var lines = [o.title || o.game || 'Claude Game Arena'];
+    (o.lines || []).forEach(function (l) { lines.push(String(l)); });
+    if (o.url) lines.push(o.url);
+    return lines.join('\n');
+  };
+
+  /* ---------- storage ---------- */
+  var mem = {};
+  var quiet = false;
+  try { quiet = hasDOM && core.isQuiet(location.search); } catch (e) {}
+  function store() { if (quiet) return null; try { return root.localStorage; } catch (e) { return null; } }
+  function get(key, fallback) {
+    var s = store(), raw = null;
+    try { raw = s ? s.getItem('arena.' + key) : (key in mem ? mem[key] : null); } catch (e) { raw = null; }
+    if (raw == null) return fallback;
+    try { var v = JSON.parse(raw); return v == null ? fallback : v; } catch (e) { return fallback; }
+  }
+  function set(key, val) {
+    var raw = JSON.stringify(val), s = store();
+    try { if (s) s.setItem('arena.' + key, raw); else mem[key] = raw; } catch (e) { mem[key] = raw; }
+  }
+
+  /* ---------- language ---------- */
+  var STR = {
+    tr: { again: 'Bir daha', another: 'Başka bir oyun dene', close: 'Kapat', settings: 'Erişilebilirlik',
+      textSize: 'Yazı boyutu', contrast: 'Yüksek karşıtlık', motion: 'Hareketi azalt', vibration: 'Titreşim',
+      autoPause: 'Sekme değişince duraklat', copied: 'Panoya kopyalandı', streak: 'Seri', days: 'gün', share: 'Paylaş',
+      fbAsk: 'Beğendin mi?', like: 'Beğendim', dislike: 'Beğenmedim', thanks: 'Teşekkürler!',
+      freezeUsed: '❄️ Seri dondurucu kaçırdığın günü kurtardı', freezeEarned: '❄️ Seri dondurucu kazandın: bir günü kaçırsan da serin sürer' },
+    en: { again: 'Play again', another: 'Try another game', close: 'Close', settings: 'Accessibility',
+      textSize: 'Text size', contrast: 'High contrast', motion: 'Reduce motion', vibration: 'Vibration',
+      autoPause: 'Pause when the tab is hidden', copied: 'Copied to clipboard', streak: 'Streak', days: 'days', share: 'Share',
+      fbAsk: 'Did you enjoy it?', like: 'I liked it', dislike: 'I did not like it', thanks: 'Thanks!',
+      freezeUsed: '❄️ A streak freeze saved the day you missed', freezeEarned: '❄️ Streak freeze earned: miss a day and your streak survives' },
+  };
+  var lang = 'en';
+  try { lang = /^tr/i.test((hasDOM && document.documentElement.lang) || (root.navigator && navigator.language) || '') ? 'tr' : 'en'; } catch (e) {}
+  function t(k) { return (STR[lang] && STR[lang][k]) || STR.en[k] || k; }
+
+  /* ---------- game id + passport ---------- */
+  var GAMES = ['bogaz-vapuru', 'carsi-kacisi', 'cay-ocagi', 'cini-ustasi', 'dolmus', 'ebru', 'fay-hatti', 'hamsi',
+    'kale-savunmasi', 'kapadokya-balonu', 'karagoz', 'kervan', 'kirkpinar', 'lale-bahcesi', 'marti', 'mehter',
+    'mimar-sinan', 'pamukkale', 'peri-golf', 'simit-firini', 'topkapi-gecesi'];
+  var gameId = 'unknown';
+  try {
+    var seg = (hasDOM && location.pathname.split('/').filter(Boolean)[0]) || '';
+    var meta = hasDOM && document.querySelector('meta[name="arena-game"]');
+    gameId = (meta && meta.content) || (GAMES.indexOf(seg) >= 0 ? seg : 'unknown');
+  } catch (e) {}
+  function profile() { return get('profile.v1', { plays: {}, badges: {}, last: null, first: null }); }
+  var returning = false;
+  function touchProfile() {
+    var p = profile(), now = Date.now(), today = core.dayKey();
+    p.lastDay = p.lastDay || {};
+    returning = core.isReturn(p.lastDay[gameId], p.plays[gameId] || 0, p.last && p.last.at, today);
+    p.plays[gameId] = (p.plays[gameId] || 0) + 1; p.last = { game: gameId, at: now }; p.first = p.first || now;
+    p.lastDay[gameId] = today;
+    set('profile.v1', p); return p;
+  }
+  function award(id, label) {
+    var p = profile(); if (p.badges[id]) return false;
+    p.badges[id] = { at: Date.now(), game: gameId, label: label || id }; set('profile.v1', p); return true;
+  }
+
+  /* ---------- settings ---------- */
+  var DEFAULTS = { textScale: 1, highContrast: false, reducedMotion: null, vibration: true, autoPause: true };
+  var settings = Object.assign({}, DEFAULTS, get('settings.v1', {}));
+  if (settings.reducedMotion === null) {
+    try { settings.reducedMotion = !!(root.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) { settings.reducedMotion = false; }
+  }
+  var listeners = { pause: [], resume: [], settings: [], adstart: [], adend: [] };
+  function emit(name, arg) { (listeners[name] || []).forEach(function (f) { try { f(arg); } catch (e) {} }); }
+  function applySettings() {
+    if (!hasDOM) return;
+    var h = document.documentElement;
+    h.style.setProperty('--arena-text-scale', String(settings.textScale));
+    h.toggleAttribute('data-arena-contrast', !!settings.highContrast);
+    h.toggleAttribute('data-arena-reduced-motion', !!settings.reducedMotion);
+    emit('settings', settings);
+  }
+  // Vibration toggle without touching game code: wrap navigator.vibrate once.
+  try {
+    if (root.navigator && typeof navigator.vibrate === 'function' && !navigator.__arenaWrapped) {
+      var vib = navigator.vibrate.bind(navigator);
+      navigator.vibrate = function (p) { return settings.vibration ? vib(p) : false; };
+      navigator.__arenaWrapped = true;
+    }
+  } catch (e) {}
+
+  /* ---------- DOM helpers (kit UI) ---------- */
+  var CSS = '' +
+    '.arena-toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483000;' +
+    'max-width:min(92vw,520px);padding:10px 14px;border-radius:10px;background:rgba(14,13,11,.88);color:#f6f1e6;' +
+    'font:500 calc(14px*var(--arena-text-scale,1))/1.35 system-ui,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.35);pointer-events:none;' +
+    'opacity:0;transition:opacity .25s}' +
+    '.arena-toast.on{opacity:1}' +
+    '.arena-modal{position:fixed;inset:0;z-index:2147483001;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45)}' +
+    '.arena-card{width:min(92vw,420px);padding:20px;border-radius:14px;background:#f6f1e6;color:#1a1712;' +
+    'font:500 calc(15px*var(--arena-text-scale,1))/1.45 system-ui,sans-serif;box-shadow:0 18px 50px rgba(0,0,0,.4)}' +
+    '.arena-card h2{margin:0 0 6px;font-size:1.3em}.arena-card p{margin:4px 0}' +
+    '.arena-card button,.arena-card a.arena-btn{display:block;width:100%;margin-top:10px;padding:11px;border:0;border-radius:10px;' +
+    'font:inherit;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;box-sizing:border-box}' +
+    '.arena-primary{background:#e2552f;color:#fff}.arena-secondary{background:#e7dfd0;color:#1a1712}' +
+    '.arena-card label{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0}' +
+    '.arena-card button:focus-visible,.arena-card a:focus-visible,.arena-card input:focus-visible{outline:3px solid #3fd4dc;outline-offset:2px}' +
+    '.arena-gear{position:fixed;right:calc(10px + env(safe-area-inset-right));bottom:calc(10px + env(safe-area-inset-bottom));z-index:2147482999;' +
+    'width:40px;height:40px;border-radius:50%;border:0;background:rgba(14,13,11,.7);color:#f6f1e6;font:20px/40px system-ui;cursor:pointer;opacity:.7}' +
+    '.arena-gear:hover,.arena-gear:focus-visible{opacity:1}' +
+    'html[data-arena-contrast] body{filter:contrast(1.25) saturate(1.1)}' +
+    '.arena-fb{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translateX(-50%);z-index:2147483000;white-space:nowrap;' +
+    'display:flex;align-items:center;gap:8px;padding:6px 6px 6px 14px;border-radius:999px;background:rgba(14,13,11,.9);color:#f6f1e6;' +
+    'font:600 calc(15px*var(--arena-text-scale,1))/1.2 system-ui,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.35)}' +
+    '.arena-fb button{min-width:44px;min-height:44px;border:0;border-radius:50%;background:#2b2722;color:#f6f1e6;font:22px/1 system-ui;cursor:pointer}' +
+    '.arena-fb button.arena-fb-x{font-size:16px;background:transparent}' +
+    '.arena-fb.arena-fb-inline{position:static;transform:none;margin:12px auto 0;width:max-content;max-width:100%;box-shadow:none}' +
+    '.arena-fb button:focus-visible{outline:3px solid #3fd4dc;outline-offset:2px}' +
+    'html[data-arena-reduced-motion] *{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}';
+  var styled = false;
+  function style() {
+    if (styled || !hasDOM) return; styled = true;
+    var s = document.createElement('style'); s.id = 'arena-kit-style'; s.textContent = CSS; document.head.appendChild(s);
+  }
+  function el(tag, attrs, kids) {
+    var e = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) { if (k === 'text') e.textContent = attrs[k]; else e.setAttribute(k, attrs[k]); });
+    (kids || []).forEach(function (c) { e.appendChild(c); });
+    return e;
+  }
+  var live = null;
+  function announce(text) { // screen readers
+    if (!hasDOM) return;
+    if (!live) { live = el('div', { 'aria-live': 'polite', style: 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden' }); document.body.appendChild(live); }
+    live.textContent = ''; setTimeout(function () { live.textContent = text; }, 30);
+  }
+  var toastTimer = null, toastEl = null;
+  function toast(text, ms) {
+    if (!hasDOM || !document.body) return;
+    style();
+    if (!toastEl) { toastEl = el('div', { class: 'arena-toast', role: 'status' }); document.body.appendChild(toastEl); }
+    toastEl.textContent = text; toastEl.classList.add('on'); announce(text);
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { toastEl.classList.remove('on'); }, ms || 4000);
+  }
+  function modal(card) {
+    style();
+    var m = el('div', { class: 'arena-modal', role: 'dialog', 'aria-modal': 'true' }, [card]);
+    function close() { if (m.parentNode) m.parentNode.removeChild(m); document.removeEventListener('keydown', onKey, true); }
+    function onKey(e) { if (e.key === 'Escape') { e.stopPropagation(); close(); } }
+    m.addEventListener('click', function (e) { if (e.target === m) close(); });
+    document.addEventListener('keydown', onKey, true);
+    document.body.appendChild(m);
+    var f = card.querySelector('button,a,input'); if (f) f.focus();
+    return close;
+  }
+
+  /* ---------- features ---------- */
+  function hint(id, text, opts) {
+    var seen = get('hints.v1', {});
+    if (seen[gameId + ':' + id]) return false;
+    seen[gameId + ':' + id] = Date.now(); set('hints.v1', seen);
+    setTimeout(function () { toast(text, (opts && opts.ms) || 5000); }, (opts && opts.delay) || 0);
+    return true;
+  }
+
+  function endCard(o) {
+    if (!hasDOM) return function () {};
+    o = o || {};
+    var others = GAMES.filter(function (g) { return g !== gameId; });
+    var pick = others[core.hash(String(Date.now() / 60000 | 0) + gameId) % others.length];
+    var kids = [el('h2', { text: o.title || '' })];
+    if (o.reason) kids.push(el('p', { text: o.reason }));
+    (o.lines || []).forEach(function (l) { kids.push(el('p', { text: l })); });
+    var again = el('button', { class: 'arena-primary', type: 'button', text: o.againLabel || t('again') });
+    kids.push(again);
+    if (o.share) {
+      var sh = el('button', { class: 'arena-secondary', type: 'button', text: t('share') });
+      sh.addEventListener('click', function () { share(o.share); });
+      kids.push(sh);
+    }
+    if (o.another !== false && portal.name === 'none') { // portals forbid cross-promotion of other games
+      kids.push(el('a', { class: 'arena-btn arena-secondary', href: 'https://furkiozknn.github.io/' + pick + '/', target: '_blank', rel: 'noopener', text: t('another') }));
+    }
+    var close = modal(el('div', { class: 'arena-card' }, kids));
+    again.addEventListener('click', function () { close(); if (o.onAgain) o.onAgain(); });
+    return close;
+  }
+
+  /* ---------- play events (v1.1) ---------- */
+  // Handed to the page's own GoatCounter (`window.goatcounter.count`, already on 20 of 21 pages). The kit opens no
+  // connection itself; without the counter (or on ?auto / ?nosave / ?demo) the events are simply dropped.
+  var sent = {}, pending = [];
+  function gcSend(path, title) {
+    var gc = root.goatcounter;
+    if (!gc || typeof gc.count !== 'function') return false;
+    try { gc.count({ path: path, title: title || path, event: true }); } catch (e) {}
+    return true;
+  }
+  function flush(tries) {
+    pending = pending.filter(function (e) { return !gcSend(e[0], e[1]); });
+    if (pending.length && tries < 20) setTimeout(function () { flush(tries + 1); }, 500); // count.js loads async
+  }
+  function track(name, title) {
+    name = core.eventName(name);
+    if (quiet || !hasDOM || !name || sent[name]) return false;
+    sent[name] = 1;
+    var path = gameId + '/' + name;
+    if (!gcSend(path, title)) { pending.push([path, title]); if (pending.length === 1) flush(0); }
+    return true;
+  }
+  var fbEl = null;
+  function complete(o) {
+    o = o || {};
+    track('complete');
+    if (quiet || !hasDOM || !document.body || o.feedback === false || fbEl) return;
+    var asked = get('feedback.v1', {}), today = core.dayKey();
+    if (asked[gameId] === today) return;
+    style();
+    var up = el('button', { type: 'button', 'aria-label': t('like'), title: t('like'), text: '👍' });
+    var down = el('button', { type: 'button', 'aria-label': t('dislike'), title: t('dislike'), text: '👎' });
+    var x = el('button', { type: 'button', class: 'arena-fb-x', 'aria-label': t('close'), title: t('close'), text: '✕' });
+    var label = el('span', { text: t('fbAsk') });
+    var mount = o.mount && o.mount.appendChild ? o.mount : null;   // inline in the game's own end screen if given
+    fbEl = el('div', { class: mount ? 'arena-fb arena-fb-inline' : 'arena-fb', role: 'group', 'aria-label': t('fbAsk') }, [label, up, down, x]);
+    function done() { if (fbEl && fbEl.parentNode) fbEl.parentNode.removeChild(fbEl); fbEl = null; }
+    function vote(v) {
+      track(v); var a = get('feedback.v1', {}); a[gameId] = today; set('feedback.v1', a);
+      [up, down, x].forEach(function (b) { b.remove(); }); label.textContent = t('thanks'); announce(t('thanks'));
+      setTimeout(done, 1500);
+    }
+    up.addEventListener('click', function () { vote('like'); });
+    down.addEventListener('click', function () { vote('dislike'); });
+    x.addEventListener('click', done);
+    (mount || document.body).appendChild(fbEl);
+    if (!mount) setTimeout(done, o.ms || 20000);   // floating panel fades out; an inline one stays with the end screen
+  }
+
+  function daily(game, opts) {
+    game = game || gameId;
+    var own = opts && /^\d{8}$/.test(String(opts.dayKey || '')) ? +opts.dayKey : 0;
+    var q = null;
+    try { q = hasDOM && new URLSearchParams(location.search).get('d'); } catch (e) {}
+    var day = /^\d{8}$/.test(q || '') ? +q : (own || core.dayKey());
+    var seed = core.hash(game + ':' + day);
+    var recs = get('daily.v1', {});
+    var rec = recs[game] || { last: 0, streak: 0, best: 0 };
+    return {
+      day: day, seed: seed, rng: core.mulberry32(seed), streak: core.liveStreak(rec, day),
+      done: rec.last === day, best: rec.best || 0, freeze: rec.freeze || 0,
+      complete: function (score) {
+        var all = get('daily.v1', {});
+        var next = core.nextStreak(all[game], day);
+        next.score = Math.max(score || 0, (all[game] && all[game].last === day && all[game].score) || 0);
+        var had = (all[game] && all[game].freeze) || 0;
+        all[game] = next; set('daily.v1', all);
+        if (!quiet && next.saved) toast(t('freezeUsed'), 4000);
+        else if (!quiet && next.freeze > had) toast(t('freezeEarned'), 4000);
+        if (next.streak >= 3) award('streak3-' + game, game + ' 3');
+        if (next.streak >= 7) award('streak7', '7');
+        return next;
+      },
+    };
+  }
+
+  function share(o) {
+    o = o || {};
+    var text = core.shareText(o);
+    var nav = root.navigator || {};
+    if (nav.share) return nav.share({ title: o.title, text: text, url: o.url }).catch(function () {});
+    if (nav.clipboard && nav.clipboard.writeText) return nav.clipboard.writeText(text).then(function () { toast(t('copied'), 2500); }, function () {});
+    return Promise.resolve();
+  }
+  function shareCard(o) { // 1080x1350 PNG blob; returns Promise<Blob|null>
+    if (!hasDOM) return Promise.resolve(null);
+    var c = document.createElement('canvas'); c.width = 1080; c.height = 1350;
+    var g = c.getContext('2d'); if (!g) return Promise.resolve(null);
+    g.fillStyle = o.bg || '#1a1712'; g.fillRect(0, 0, 1080, 1350);
+    g.fillStyle = o.accent || '#e2552f'; g.fillRect(0, 0, 1080, 18);
+    g.fillStyle = '#f6f1e6'; g.font = '700 84px system-ui,sans-serif'; g.fillText(o.title || gameId, 72, 220);
+    g.font = '500 52px system-ui,sans-serif';
+    (o.lines || []).forEach(function (l, i) { g.fillText(String(l), 72, 340 + i * 78); });
+    g.font = '500 36px system-ui,sans-serif'; g.fillStyle = '#c9bda4'; g.fillText(o.url || ('furkiozknn.github.io/' + gameId), 72, 1270);
+    return new Promise(function (res) { c.toBlob ? c.toBlob(function (b) { res(b); }, 'image/png') : res(null); });
+  }
+
+  function openSettings() {
+    if (!hasDOM) return;
+    function row(label, input) { return el('label', {}, [el('span', { text: label }), input]); }
+    function check(key) {
+      var i = el('input', { type: 'checkbox' }); i.checked = !!settings[key];
+      i.addEventListener('change', function () { settings[key] = i.checked; set('settings.v1', settings); applySettings(); });
+      return i;
+    }
+    var size = el('input', { type: 'range', min: '0.85', max: '1.6', step: '0.05', 'aria-label': t('textSize') });
+    size.value = String(settings.textScale);
+    size.addEventListener('input', function () { settings.textScale = +size.value; set('settings.v1', settings); applySettings(); });
+    var closeBtn = el('button', { class: 'arena-secondary', type: 'button', text: t('close') });
+    var close = modal(el('div', { class: 'arena-card' }, [
+      el('h2', { text: t('settings') }), row(t('textSize'), size), row(t('contrast'), check('highContrast')),
+      row(t('motion'), check('reducedMotion')), row(t('vibration'), check('vibration')), row(t('autoPause'), check('autoPause')), closeBtn]));
+    closeBtn.addEventListener('click', close);
+  }
+  function mountSettingsButton() {
+    if (!hasDOM || document.querySelector('.arena-gear')) return;
+    style();
+    var b = el('button', { class: 'arena-gear', type: 'button', 'aria-label': t('settings'), title: t('settings'), text: '♿' });
+    b.addEventListener('click', openSettings);
+    document.body.appendChild(b);
+  }
+
+  var perf = {
+    attach: function (renderer, opts) {
+      if (!renderer || typeof renderer.setPixelRatio !== 'function' || !root.requestAnimationFrame) return null;
+      var dpr = Math.min((root.devicePixelRatio || 1), (opts && opts.max) || 2);
+      var ctl = core.perfController(Object.assign({ max: dpr, start: dpr }, opts || {}));
+      var last = 0, applied = dpr, stopped = false;
+      function loop(now) {
+        if (stopped) return;
+        if (last) {
+          var r = ctl.feed(now - last, now);
+          if (Math.abs(r - applied) > 0.01 && settingsQuality() === 'auto') { applied = r; try { renderer.setPixelRatio(r); } catch (e) {} }
+        }
+        last = now; root.requestAnimationFrame(loop);
+      }
+      root.requestAnimationFrame(loop);
+      perf.state = ctl;
+      return { stop: function () { stopped = true; }, state: ctl };
+    },
+  };
+  function settingsQuality() { return settings.quality || 'auto'; }
+
+  if (hasDOM) {
+    document.addEventListener('visibilitychange', function () {
+      if (!settings.autoPause) return;
+      emit(document.hidden ? 'pause' : 'resume');
+    });
+    var boot = function () {
+      applySettings(); touchProfile();
+      if (quiet) return;
+      var first = function (e) {
+        if (e && e.isTrusted === false) return;
+        ['pointerdown', 'keydown', 'touchstart'].forEach(function (n) { document.removeEventListener(n, first, true); });
+        track('start'); if (returning) track('return');
+        portal.gameplay(true);
+        // v1.2 funnel: visible play time since the first input (a hidden tab does not count)
+        var played = 0, marks = [[60, 'play1m'], [300, 'play5m'], [600, 'play10m']];
+        var tick = setInterval(function () {
+          if (document.hidden) return;
+          played += 5;
+          while (marks.length && played >= marks[0][0]) track(marks.shift()[1]);
+          if (!marks.length) clearInterval(tick);
+        }, 5000);
+      };
+      ['pointerdown', 'keydown', 'touchstart'].forEach(function (n) { document.addEventListener(n, first, true); });
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+  }
+
+  /* ---------- portal (v1.3) ---------- */
+  var portal = (function () {
+    var sdk = {};
+    try { sdk = { crazygames: !!(root.CrazyGames && root.CrazyGames.SDK), poki: !!root.PokiSDK, playgama: !!root.bridge }; } catch (e) {}
+    var name = 'none';
+    try { name = quiet ? 'none' : core.portalName(hasDOM ? location.search : '', hasDOM ? location.hostname : '', sdk); } catch (e) {}
+    var api = { name: name, canReward: false, ready: Promise.resolve(false), _pacer: core.adPacer() };
+    var now = function () { return Date.now(); };
+    var CG = function () { return root.CrazyGames && root.CrazyGames.SDK; };
+    // During an ad: suspend every AudioContext the page made (wrapped below, portal builds only) and pause the game.
+    var contexts = [], adOn = false;
+    if (name !== 'none') {
+      ['AudioContext', 'webkitAudioContext'].forEach(function (k) {
+        var C = root[k]; if (typeof C !== 'function') return;
+        var W = function (a, b) { var c = new C(a, b); contexts.push(c); return c; };
+        W.prototype = C.prototype; try { Object.setPrototypeOf(W, C); } catch (e) {}
+        root[k] = W;
+      });
+    }
+    // v1.3.2: 'adstart' / 'adend', not 'pause' / 'resume': 17 games auto-pause on 'pause' (hidden tab) and wait for the
+    // player to resume, so after a between-rounds ad they sat on a pause screen. Ads run where the game already waits.
+    function adStart() { if (adOn) return; adOn = true; contexts.forEach(function (c) { try { c.suspend(); } catch (e) {} }); emit('adstart'); }
+    function adEnd() { if (!adOn) return; adOn = false; contexts.forEach(function (c) { try { c.resume(); } catch (e) {} }); emit('adend'); }
+    var playing = false;
+    api.gameplay = function (on) {
+      on = !!on; if (on === playing || name === 'none') { playing = on; return; }
+      playing = on;
+      if (on) api._pacer.begin(now());
+      try {
+        if (name === 'crazygames' && CG()) CG().game[on ? 'gameplayStart' : 'gameplayStop']();
+        else if (name === 'poki' && root.PokiSDK) root.PokiSDK[on ? 'gameplayStart' : 'gameplayStop']();
+        else if (name === 'playgama' && root.bridge && root.bridge.platform) root.bridge.platform.sendMessage(on ? 'gameplay_started' : 'gameplay_stopped');
+      } catch (e) {}
+    };
+    api.loading = function (on) {
+      if (name === 'none') return;
+      try {
+        if (name === 'crazygames' && CG()) CG().game[on ? 'loadingStart' : 'loadingStop']();
+        else if (name === 'poki' && root.PokiSDK && !on) root.PokiSDK.gameLoadingFinished();
+        else if (name === 'playgama' && root.bridge && root.bridge.platform && !on) root.bridge.platform.sendMessage('game_ready');
+      } catch (e) {}
+    };
+    // One ad call at a time; resolves when the ad is over (or failed / not available).
+    var busy = false;
+    function show(kind) {
+      return new Promise(function (done) {
+        var finished = false;
+        var end = function (ok) { if (finished) return; finished = true; busy = false; adEnd(); done(!!ok); };
+        try {
+          if (name === 'crazygames' && CG()) {
+            CG().ad.requestAd(kind === 'rewarded' ? 'rewarded' : 'midgame', {
+              adStarted: adStart, adFinished: function () { end(true); }, adError: function () { end(false); },
+            });
+          } else if (name === 'poki' && root.PokiSDK) {
+            var call = kind === 'rewarded' ? root.PokiSDK.rewardedBreak(adStart) : root.PokiSDK.commercialBreak(adStart);
+            Promise.resolve(call).then(function (r) { end(kind === 'rewarded' ? !!r : true); }, function () { end(false); });
+          } else if (name === 'playgama' && root.bridge && root.bridge.advertisement) {
+            var ad = root.bridge.advertisement, EV = root.bridge.EVENT_NAME || {};
+            var ev = kind === 'rewarded' ? (EV.REWARDED_STATE_CHANGED || 'rewarded_state_changed') : (EV.INTERSTITIAL_STATE_CHANGED || 'interstitial_state_changed');
+            var granted = false;
+            var on = function (st) {
+              if (st === 'opened') adStart();
+              else if (st === 'rewarded') granted = true;
+              else if (st === 'closed' || st === 'failed') { try { ad.off(ev, on); } catch (e) {} end(kind === 'rewarded' ? granted : st === 'closed'); }
+            };
+            ad.on(ev, on);
+            if (kind === 'rewarded') ad.showRewarded(); else ad.showInterstitial();
+          } else { end(false); return; }
+        } catch (e) { end(false); return; }
+        setTimeout(function () { end(false); }, 90000); // an SDK that never calls back must not freeze the game
+      });
+    }
+    api.midgame = function () {
+      if (name === 'none' || busy || !api._pacer.can(now())) return Promise.resolve(false);
+      busy = true; api._pacer.mark(now());
+      return show('midgame');
+    };
+    api.rewarded = function () {
+      if (name === 'none' || busy || !api.canReward) return Promise.resolve(false);
+      busy = true;
+      return show('rewarded');
+    };
+    if (name !== 'none') {
+      api.canReward = true;
+      api.ready = new Promise(function (ok) {
+        var t = setTimeout(function () { ok(false); }, 4000);
+        var fin = function (v) { clearTimeout(t); ok(v); };
+        try {
+          if (name === 'crazygames' && CG()) Promise.resolve(CG().init()).then(function () { fin(true); }, function () { fin(false); });
+          else if (name === 'poki' && root.PokiSDK) Promise.resolve(root.PokiSDK.init()).then(function () { fin(true); }, function () { fin(false); });
+          else if (name === 'playgama' && root.bridge) Promise.resolve(root.bridge.initialize()).then(function () { fin(true); }, function () { fin(false); });
+          else fin(false);
+        } catch (e) { fin(false); }
+      });
+    }
+    return api;
+  })();
+
+  root.Arena = {
+    version: VERSION, quiet: quiet, game: gameId, games: GAMES.slice(), lang: function (l) { if (l) lang = l === 'tr' ? 'tr' : 'en'; return lang; },
+    perf: perf, hint: hint, toast: toast, endCard: endCard, daily: daily, share: share, shareCard: shareCard,
+    profile: profile, award: award, settings: settings, openSettings: openSettings, mountSettingsButton: mountSettingsButton,
+    track: track, complete: complete, portal: portal,
+    on: function (name, fn) { (listeners[name] = listeners[name] || []).push(fn); },
+    _core: core, _store: { get: get, set: set },
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+/*ARENA-KIT:END*/</script>
+<script defer src="game.js"></script>
+
+
+<style>
+/* ============================================================
+   MARTI · BOĞAZİÇİ KANATLARI (Bosphorus Aero-Maritime Identity)
+   Radical UI/UX rebirth: Aero flight instrument deck, Istanbul
+   maritime heritage (Şehir Hatları navy/white, brass gold & amber),
+   tactile glassmorphism, crisp typography and balanced hierarchy.
+   ============================================================ */
+:root {
+  --navy-abyss: #060e1a;
+  --navy-deep: #0a192f;
+  --navy-mid: #102a43;
+  --navy-surface: #1e3a5f;
+  --sky-cyan: #38bdf8;
+  --sky-blue: #00b4d8;
+  --sun-gold: #fca311;
+  --sun-amber: #e85d04;
+  --sun-bright: #ffd166;
+  --foam-white: #f8fafc;
+  --feather-pure: #ffffff;
+  --danger-red: #ef476f;
+  --emerald-green: #10b981;
+  --glass-bg: rgba(10, 25, 47, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.16);
+  --glass-shadow: 0 16px 40px -8px rgba(0, 10, 25, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  --font-display: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  /* Backward compatibility tokens */
+  --ink: var(--navy-abyss);
+  --outline: rgba(255, 255, 255, 0.16);
+  --navy: var(--navy-mid);
+  --navy-d: var(--navy-abyss);
+  --cream: var(--foam-white);
+  --sun: var(--sun-gold);
+  --sun-d: var(--sun-amber);
+  --sea: #1e6091;
+  --red: var(--danger-red);
+  --glass: rgba(10, 25, 47, 0.65);
+  --glass-b: rgba(255, 255, 255, 0.2);
+  --accent: var(--sun-gold);
+  --accent2: var(--sun-bright);
+  --danger: var(--danger-red);
+  --ok: var(--emerald-green);
+  --shadow: 0 8px 24px -4px rgba(0, 10, 25, 0.45);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; padding: 0; }
+body {
+  overflow: hidden;
+  background: var(--navy-abyss);
+  color: var(--foam-white);
+  font-family: var(--font-body);
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Browser surfaces theming */
+::selection { background: var(--sun-gold); color: var(--navy-abyss); }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: rgba(10, 25, 47, 0.6); }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.22); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--sun-gold); }
+
+#c { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; outline: none; }
+.hidden { display: none !important; }
+
+/* Aero Glassmorphism Panel */
+.glass {
+  background: linear-gradient(135deg, rgba(16, 42, 67, 0.85) 0%, rgba(10, 25, 47, 0.92) 100%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 20px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--foam-white);
+}
+
+/* ---------- HUD Flight Deck ---------- */
+#hud { position: fixed; inset: 0; pointer-events: none; z-index: 4; }
+
+#topbar {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 16px;
+  pointer-events: auto;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* Seagull Logo Mark */
+.logo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+  color: var(--feather-pure);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+.logo i { font-style: normal; color: var(--sun-gold); }
+.logo .gull-emblem {
+  width: 22px;
+  height: 16px;
+  fill: var(--sky-cyan);
+  filter: drop-shadow(0 2px 6px rgba(56, 189, 248, 0.5));
+}
+.logo .crest-s { width: 24px; height: 24px; vertical-align: -3px; }
+
+/* Stat Telemetry */
+.stat {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  min-width: 52px;
+}
+.stat small {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  color: #94a3b8;
+}
+.stat b {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--feather-pure);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+/* Prominent Live Score */
+.stat.score-stat b {
+  font-size: 28px;
+  color: var(--sun-bright);
+  text-shadow: 0 0 16px rgba(255, 209, 102, 0.4), 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+/* Dynamic Combo Pill */
+.stat.combo {
+  background: rgba(252, 163, 17, 0.15);
+  border: 1px solid rgba(252, 163, 17, 0.35);
+  border-radius: 12px;
+  padding: 3px 10px;
+  align-items: center;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stat.combo b {
+  font-size: 18px;
+  color: var(--sun-gold);
+}
+.grow { flex: 1 1 auto; }
+
+/* Feather Lives System */
+#lives { display: flex; gap: 6px; align-items: center; margin: 0 6px; }
+#lives svg {
+  width: 24px;
+  height: 24px;
+  filter: drop-shadow(0 2px 8px rgba(252, 163, 17, 0.5));
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s;
+}
+#lives svg.lost {
+  opacity: 0.18;
+  transform: scale(0.7) rotate(-22deg);
+  filter: grayscale(1) drop-shadow(none);
+}
+
+/* Control Buttons Cluster */
+.icons { display: flex; gap: 8px; align-items: center; }
+.ibtn {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--foam-white);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ibtn svg { width: 20px; height: 20px; display: block; stroke: currentColor; }
+.ibtn .code {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 5px;
+  background: var(--sun-gold);
+  color: var(--navy-abyss);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.ibtn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+.ibtn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+.ibtn.off { opacity: 0.45; }
+.ibtn.off::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 50%;
+  height: 2px;
+  background: var(--danger-red);
+  transform: rotate(-45deg);
+  border-radius: 2px;
+}
+
+/* Accessible focus ring */
+button:focus-visible, a:focus-visible, input:focus-visible {
+  outline: 2px solid var(--sun-gold);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px rgba(252, 163, 17, 0.35);
+}
+
+/* Dedicated Dive Action Trigger (Ergonomic Touch / Hold Trigger) */
+#bDive {
+  position: absolute;
+  right: calc(18px + env(safe-area-inset-right));
+  bottom: calc(64px + env(safe-area-inset-bottom));
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: radial-gradient(circle at 35% 30%, rgba(56, 189, 248, 0.3), rgba(10, 25, 47, 0.88));
+  border: 1.5px solid rgba(56, 189, 248, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 10, 25, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--foam-white);
+  cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  z-index: 6;
+}
+#bDive:hover {
+  background: radial-gradient(circle at 35% 30%, rgba(56, 189, 248, 0.45), rgba(10, 25, 47, 0.92));
+  border-color: rgba(56, 189, 248, 0.7);
+  box-shadow: 0 10px 28px rgba(56, 189, 248, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+#bDive:active, #bDive.active {
+  transform: scale(0.92) translateY(2px);
+  background: radial-gradient(circle at 35% 30%, rgba(252, 163, 17, 0.6), rgba(232, 93, 4, 0.9));
+  border-color: rgba(252, 163, 17, 0.9);
+  box-shadow: 0 4px 16px rgba(232, 93, 4, 0.65), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+}
+#bDive .dive-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+#bDive .dive-lbl {
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--sun-bright);
+  line-height: 1;
+}
+#bDive:active .dive-lbl, #bDive.active .dive-lbl {
+  color: #ffffff;
+}
+
+/* ---------- Aerodynamic Flight Stamina Gauge ---------- */
+#stamina {
+  position: absolute;
+  left: 50%;
+  top: 76px;
+  transform: translateX(-50%);
+  width: min(340px, calc(100vw - 32px));
+  height: 14px;
+  padding: 2px;
+  pointer-events: none;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  background: rgba(6, 14, 26, 0.88);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 3px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  z-index: 3;
+}
+#stBar {
+  height: 100%;
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--sky-blue) 0%, var(--sky-cyan) 30%, var(--sun-gold) 75%, var(--sun-bright) 100%);
+  transform-origin: left;
+  transition: transform 0.1s linear, background 0.3s ease;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}
+#stamina.low {
+  border-color: rgba(239, 71, 111, 0.8);
+  box-shadow: 0 0 20px rgba(239, 71, 111, 0.55), inset 0 1px 3px rgba(0, 0, 0, 0.7);
+  animation: stamPulse 1s ease-in-out infinite;
+}
+#stamina.low #stBar {
+  background: linear-gradient(90deg, #ef476f 0%, #f43f5e 50%, #fda4af 100%);
+  box-shadow: 0 0 14px rgba(239, 71, 111, 0.7);
+}
+@keyframes stamPulse {
+  0%, 100% { border-color: rgba(239, 71, 111, 0.8); }
+  50% { border-color: rgba(255, 255, 255, 0.9); }
+}
+#stLabel {
+  position: absolute;
+  left: 4px;
+  top: -19px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #7dd3fc;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+#carry {
+  position: absolute;
+  right: 4px;
+  top: -21px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+}
+.simit-i { display: inline-block; width: 16px; height: 16px; vertical-align: -2px; }
+
+/* Status Badges / Augments */
+#chips {
+  position: absolute;
+  left: 50%;
+  top: 102px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  pointer-events: none;
+  max-width: 90vw;
+  z-index: 3;
+}
+.chip {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(10, 25, 47, 0.84);
+  color: var(--foam-white);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  animation: chipEnter 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.chip.on {
+  background: rgba(252, 163, 17, 0.22);
+  border-color: var(--sun-gold);
+  color: var(--sun-bright);
+  box-shadow: 0 0 16px rgba(252, 163, 17, 0.45);
+}
+@keyframes chipEnter {
+  from { opacity: 0; transform: translateY(-6px) scale(0.95); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Flight Notifications / Toasts */
+#toasts {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  width: max-content;
+  max-width: 90vw;
+  z-index: 5;
+}
+.toast {
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  background: rgba(10, 25, 47, 0.9);
+  color: var(--feather-pure);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  text-align: center;
+  animation: toastIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.toast.good, .toast.gold {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.95), rgba(217, 119, 6, 0.95));
+  color: #ffffff;
+  border-color: rgba(254, 240, 138, 0.6);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.45), 0 0 15px rgba(254, 240, 138, 0.3);
+}
+.toast.bad {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.95), rgba(185, 28, 28, 0.95));
+  color: #ffffff;
+  border-color: rgba(254, 202, 202, 0.6);
+  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.45);
+}
+.toast.out { animation: toastOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(12px) scale(0.95); } to { opacity: 1; transform: none; } }
+@keyframes toastOut { to { opacity: 0; transform: translateY(-10px); } }
+
+/* Projected 3D Score Floats */
+.float {
+  position: fixed;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 24px;
+  color: var(--sun-bright);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8), 0 0 16px rgba(252, 163, 17, 0.7);
+  pointer-events: none;
+  animation: floatUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  white-space: nowrap;
+  z-index: 4;
+}
+@keyframes floatUp { from { opacity: 1; margin-top: 0; transform: translate(-50%, -50%) scale(0.9); } to { opacity: 0; margin-top: -50px; transform: translate(-50%, -50%) scale(1.15); } }
+
+/* Dynamic Aerodynamic Combo Badge */
+#combo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 26%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 5;
+}
+.cb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 38px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(16, 42, 67, 0.95) 0%, rgba(10, 25, 47, 0.98) 100%);
+  border: 2px solid var(--sun-bright);
+  border-radius: 24px;
+  padding: 8px 26px 10px;
+  box-shadow: 0 14px 40px -5px rgba(0, 0, 0, 0.65), 0 0 28px rgba(255, 209, 102, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 18px rgba(255, 209, 102, 0.8);
+  animation: cbPop 0.45s cubic-bezier(0.16, 1.4, 0.3, 1) both;
+}
+.cb.out { animation: cbOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+@keyframes cbPop {
+  0% { opacity: 0; transform: scale(0.35) translateY(24px) rotate(-5deg); }
+  65% { transform: scale(1.08) translateY(-4px) rotate(1deg); }
+  100% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
+}
+@keyframes cbOut { to { opacity: 0; transform: scale(0.9) translateY(-24px); } }
+
+/* ---------- Modal Overlays & Cards ---------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 6;
+  background: radial-gradient(circle at 50% 35%, rgba(16, 42, 67, 0.75) 0%, rgba(6, 14, 26, 0.92) 80%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  max-height: 92vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px 24px 20px;
+  border-radius: 28px;
+  background: linear-gradient(165deg, rgba(16, 42, 67, 0.92) 0%, rgba(10, 25, 47, 0.97) 100%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 25px 60px -10px rgba(0, 10, 25, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  color: var(--foam-white);
+  text-align: center;
+  animation: cardIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Atmospheric Title Vignette */
+.title-vignette {
+  margin: -4px auto 8px;
+  display: flex;
+  justify-content: center;
+}
+.hero-bosphorus-svg {
+  width: 170px;
+  height: 64px;
+  overflow: visible;
+}
+.card .crest {
+  display: block;
+  width: 80px;
+  height: 80px;
+  margin: -4px auto 4px;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+}
+.card .logo {
+  font-size: 48px;
+  letter-spacing: -1px;
+  margin: 2px 0 2px;
+  background: linear-gradient(180deg, #ffffff 30%, #e2e8f0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+.card .tag {
+  margin: 2px 0 14px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #a0c4e2;
+  letter-spacing: 0.2px;
+}
+
+/* Nest Progression Card */
+.nestcard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 0 auto 14px;
+  padding: 10px 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #e2e8f0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+.nestcard svg {
+  width: 68px;
+  height: 50px;
+  flex: none;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
+}
+
+/* Bento How-to-Play Cards */
+.how {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  text-align: left;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  font-size: 13.5px;
+}
+.how li {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(10, 25, 47, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  line-height: 1.35;
+  color: #e2e8f0;
+}
+.how li b {
+  color: var(--sun-gold);
+  display: block;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 2px;
+}
+
+/* Action Buttons */
+.btn {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 0.4px;
+  padding: 12px 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  color: #ffffff;
+  background: linear-gradient(135deg, #fca311 0%, #e85d04 100%);
+  box-shadow: 0 8px 25px rgba(232, 93, 4, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(232, 93, 4, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.55);
+  filter: brightness(1.08);
+}
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 4px 12px rgba(232, 93, 4, 0.4);
+}
+.btn:disabled {
+  filter: grayscale(0.7);
+  opacity: 0.65;
+  cursor: wait;
+  transform: none;
+}
+.btn.ghost {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--foam-white);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 16px;
+  padding: 10px 22px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+.btn.ghost:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #ffffff;
+}
+.btn.pill { padding: 10px 20px; }
+.row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+.col { display: grid; gap: 12px; max-width: 300px; margin: 12px auto 0; }
+
+.bestline {
+  margin: 12px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--sun-bright);
+  min-height: 1em;
+  text-shadow: 0 0 12px rgba(255, 209, 102, 0.4);
+}
+.bestline:empty { display: none; }
+
+/* Bento Two-Column Grid */
+.two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  text-align: left;
+  margin: 14px 0 8px;
+  font-size: 13.5px;
+}
+.two > div {
+  background: rgba(10, 25, 47, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+.two h4 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  color: var(--sky-cyan);
+}
+.two ul, .two ol { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 6px; }
+.two li {
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.two li.done { opacity: 0.5; text-decoration: line-through; }
+.two li span { font-variant-numeric: tabular-nums; opacity: 0.9; white-space: nowrap; }
+
+/* Fact & Footnotes */
+.fact {
+  margin: 14px 0 0;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.04);
+  border-left: 3px solid var(--sun-gold);
+  border-radius: 0 10px 10px 0;
+  padding: 8px 12px;
+  text-align: left;
+}
+.fact b { color: var(--sun-gold); }
+.hint { font-size: 12px; color: #94a3b8; margin: 10px 0 0; }
+.foot { margin: 12px 0 0; font-size: 12px; color: #64748b; }
+.foot a { color: inherit; text-decoration: none; transition: color 0.2s; }
+.foot a:hover { color: var(--sun-gold); }
+
+/* Settings Form Controls */
+.setgrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px 16px;
+  align-items: center;
+  text-align: left;
+  margin: 18px 0 22px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.setgrid input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  outline: none;
+}
+.setgrid input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--sun-gold);
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.setgrid input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.18); }
+.seg { display: flex; gap: 8px; flex-wrap: wrap; }
+.segb {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  padding: 8px 18px;
+  cursor: pointer;
+  min-height: 44px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.segb:hover { background: rgba(255, 255, 255, 0.16); color: #ffffff; }
+.segb.on {
+  background: var(--sun-gold);
+  color: var(--navy-abyss);
+  border-color: var(--sun-gold);
+  box-shadow: 0 4px 16px rgba(252, 163, 17, 0.45);
+}
+#settings { z-index: 7; }
+.setopen #title .card, .setopen #pause .card { visibility: hidden; }
+
+/* Game Over Debrief Card */
+#overReason {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--sun-bright);
+  background: rgba(255, 190, 11, 0.12);
+  border: 1px solid rgba(255, 190, 11, 0.3);
+  border-radius: 12px;
+  padding: 8px 14px;
+  margin: 6px 0 8px;
+}
+#overTip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #e2e8f0;
+  background: rgba(10, 25, 47, 0.65);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  border-radius: 12px;
+  padding: 8px 12px;
+  margin: 0 auto 10px;
+  text-align: left;
+  max-width: 440px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+#overTip.hidden { display: none !important; }
+#overTip .tip-badge {
+  flex-shrink: 0;
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--sky-cyan);
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 6px;
+  padding: 2px 7px;
+  line-height: 1.25;
+  margin-top: 1px;
+}
+#overTip .tip-text {
+  flex: 1;
+  color: #e2e8f0;
+}
+.newbest {
+  color: var(--sun-bright);
+  font-family: var(--font-display);
+  font-weight: 900;
+  min-height: 0;
+  margin: 0 0 10px;
+  font-size: 20px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(255, 209, 102, 0.8);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+.newbest:empty { display: none; }
+@keyframes pulse { 50% { transform: scale(1.05); } }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 12px 0 16px;
+}
+.grid div {
+  padding: 12px 10px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--foam-white);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+.grid small {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #94a3b8;
+  margin-bottom: 2px;
+}
+.grid b {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  color: #ffffff;
+}
+
+.mascot {
+  position: absolute;
+  right: 18px;
+  top: -30px;
+  width: 76px;
+  height: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5));
+  z-index: 3;
+}
+
+/* Debug console */
+#dbg {
+  position: fixed;
+  left: 8px;
+  bottom: 8px;
+  margin: 0;
+  font: 12px/1.35 Consolas, monospace;
+  background: rgba(6, 14, 26, 0.85);
+  color: #bfffbf;
+  padding: 6px 8px;
+  border-radius: 8px;
+  max-width: 90vw;
+  white-space: pre-wrap;
+  pointer-events: none;
+  z-index: 9;
+}
+#dbg .err { color: #ff8a8a; }
+#fatal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 20px; background: #060e1a; z-index: 20; text-align: center; }
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Mobile Adaptations (Touch targets >= 44px, no overlapping) ---------- */
+@media (max-width: 680px) {
+  #topbar {
+    gap: 8px;
+    padding: 6px 10px;
+    left: 8px;
+    right: 8px;
+    top: 8px;
+  }
+  .logo { font-size: 18px; }
+  .logo .gull-emblem { width: 18px; height: 13px; }
+  .logo .crest-s { display: none; }
+  .stat { min-width: 0; }
+  .stat b { font-size: 16px; }
+  .stat.score-stat b { font-size: 20px; }
+  .stat small { font-size: 8px; }
+  #dist-stat, #best-stat { display: none; }
+
+  /* Hide redundant music/sfx toggles on compact HUD to prevent clutter and mis-taps */
+  #bMusic, #bSfx { display: none !important; }
+  .icons { gap: 6px; }
+
+  /* Stamina bar stays smoothly anchored at top on mobile */
+  #stamina {
+    top: 64px;
+    width: min(280px, calc(100vw - 20px));
+    height: 12px;
+  }
+  #stLabel { display: none; }
+  #chips { top: 88px; }
+
+  .card {
+    padding: 18px 16px 16px;
+    border-radius: 22px;
+    max-height: 88vh;
+  }
+  .card .logo { font-size: 38px; }
+  .btn { font-size: 18px; padding: 11px 26px; min-height: 44px; }
+  .two { grid-template-columns: 1fr; gap: 8px; }
+  .how { grid-template-columns: 1fr; font-size: 13px; gap: 6px; }
+  .mascot { width: 56px; right: 12px; top: -16px; }
+  .nestcard svg { width: 58px; height: 42px; }
+  .ibtn { width: 44px; height: 44px; }
+  .btn.ghost { min-height: 44px; font-size: 15px; }
+  .btn, .segb { min-height: 44px; }
+  .foot, .hint, .fact { font-size: 13px; }
+  #overTip { font-size: 12px; padding: 7px 10px; margin-bottom: 8px; }
+  .toast { font-size: 14px; padding: 8px 16px; }
+  .cb { font-size: 28px; padding: 6px 18px; }
+}
+
+/* Narrow phones: logo + score + combo + feathers + 4 buttons is wider than the screen (the last buttons sat off-screen
+   and the score was squeezed to 0 px). Two rows: score, combo, feathers on top; logo and buttons below. */
+@media (max-width: 480px) {
+  #topbar { flex-wrap: wrap; row-gap: 0; }
+  #topbar::after { content: ''; order: 1; flex: 0 0 100%; height: 6px; } /* line break */
+  #topbar .stat { flex: 0 0 auto; }
+  #topbar .logo { order: 2; }
+  #topbar .icons { order: 2; margin-left: auto; }
+  #lives { margin: 0 2px; }
+  #stamina { top: 116px; }
+  #chips { top: 140px; }
+  /* Title card: Start and the Daily challenge in the first screen. At 360 and 390 px the Daily button sat below the
+     card's visible area (y 798-866 on 740-844 px screens); the button rows and the daily line now follow the tagline. */
+  #title .card { display: flex; flex-direction: column; }
+  #title .card > * { order: 2; flex-shrink: 0; }
+  #title .card > .title-vignette, #title .card > .crest, #title .card > .logo, #title .card > .tag { order: 0; }
+  #title .card > .logo { align-self: center; }
+  #title .card > .nestcard { margin-left: 0; margin-right: 0; } /* full width as before (auto margins shrink a flex item) */
+  #title .card > .row, #title .card > #dailyLine { order: 1; }
+  #title .card > .row:first-of-type { margin-top: 0; }
+  #title .card > #dailyLine { margin-bottom: 12px; }
+}
+
+/* Landscape mobile optimization */
+@media (max-height: 520px) and (orientation: landscape) {
+  #title .card { max-width: 720px; padding: 14px 20px 12px; max-height: 94vh; }
+  .title-vignette { display: none; }
+  .card .crest { width: 48px; height: 48px; margin: 0 auto; }
+  .card .logo { font-size: 32px; }
+  .card .tag { margin: 2px 0 6px; font-size: 13px; }
+  .how { grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; font-size: 12.5px; }
+  .how li { padding: 6px 10px; }
+  .two { margin: 8px 0 4px; gap: 8px; }
+  .two li { padding: 4px 8px; font-size: 12px; }
+  .nestcard { padding: 6px 12px; margin-bottom: 8px; }
+  .nestcard svg { width: 46px; height: 32px; }
+}
+
+/* Medium height desktop windows */
+@media (min-width: 681px) and (max-height: 820px) {
+  #title .card { padding: 16px 22px 14px; }
+  .hero-bosphorus-svg { height: 48px; }
+  #title .crest { width: 56px; height: 56px; margin: 0 auto; }
+  #title .logo { font-size: 38px; margin: 0 0 2px; }
+  #title .tag { margin: 2px 0 8px; font-size: 14px; }
+  #title .nestcard { margin-bottom: 8px; padding: 8px 14px; }
+  #title .nestcard svg { width: 54px; height: 38px; }
+  #title .how { margin-bottom: 10px; gap: 6px; font-size: 13px; }
+  #title .how li { padding: 6px 10px; }
+  #title .bestline { margin-top: 6px; }
+  #title .two { margin: 8px 0 4px; gap: 10px; }
+  #title .two li { padding: 4px 8px; }
+  #title .fact { margin-top: 8px; font-size: 12.5px; }
+  #title .hint { margin-top: 4px; }
+  #title .foot { margin-top: 6px; }
+}
+
+/* v2.1: sürüm etiketi, Yenilikler / Başarımlar penceresi, daha büyük dokunma hedefleri */
+.btn { min-height: 44px; }
+.foot { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0 6px; }
+.foot a, .linkb { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; }
+.linkb { background: none; border: 0; font: inherit; font-size: 13px; color: #9fb3c8; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.linkb:hover { color: var(--sun-gold); }
+#news .card { max-width: 560px; text-align: left; }
+#news h3 { margin: 0 0 4px; font-family: var(--font-display); font-size: 26px; font-weight: 800; }
+#news h4 { margin: 18px 0 8px; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--sun-gold); }
+#news .ver { margin: 0 0 8px; font-size: 13px; color: #94a3b8; }
+.nl { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.nl li { padding: 9px 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.06); font-size: 14px; line-height: 1.4; }
+.achgrid { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.achgrid li { padding: 8px 10px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); font-size: 13px; line-height: 1.3; opacity: 0.55; }
+.achgrid li.on { opacity: 1; background: rgba(252, 163, 17, 0.14); border: 1px solid rgba(252, 163, 17, 0.45); }
+.achgrid li b { display: block; font-size: 14px; }
+.achgrid li span { color: #cbd5e1; }
+.newach { margin: 8px 0 0; font-size: 14px; font-weight: 700; color: var(--sun-gold); }
+.newach:empty { display: none; }
+#news .row { margin-top: 16px; }
+@media (max-width: 480px) { .achgrid { grid-template-columns: 1fr; } #news .card { padding: 20px 16px 16px; } }
+
+/* ---------- stil-3d: the song video's warm 3D world (sea blue #0F5E8C, sun yellow #FFD23F, soft clay shadows) ---------- */
+.overlay { background: radial-gradient(circle at 50% 18%, rgba(255, 196, 120, 0.42) 0%, rgba(15, 94, 140, 0.55) 45%, rgba(6, 30, 52, 0.86) 100%); }
+.card {
+  background: linear-gradient(170deg, rgba(25, 118, 168, 0.95) 0%, rgba(15, 94, 140, 0.96) 38%, rgba(9, 58, 92, 0.98) 100%);
+  border: 2px solid rgba(255, 220, 140, 0.45);
+  box-shadow: 0 26px 50px -12px rgba(3, 22, 40, 0.75), 0 10px 0 -4px rgba(6, 46, 74, 0.55), inset 0 2px 0 rgba(255, 255, 255, 0.35), inset 0 -6px 14px rgba(0, 30, 60, 0.35);
+}
+.card .logo { background: linear-gradient(180deg, #ffffff 35%, #ffe7a3 100%); -webkit-background-clip: text; filter: drop-shadow(0 4px 0 rgba(6, 46, 74, 0.6)) drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35)); }
+.card .tag { color: #d6efff; }
+.btn { background: linear-gradient(180deg, #ffe066 0%, #ffd23f 45%, #f4a300 100%); color: #5a3200; border: 2px solid rgba(255, 255, 255, 0.55); text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); box-shadow: 0 6px 0 #b86f00, 0 12px 22px rgba(120, 60, 0, 0.35), inset 0 2px 0 rgba(255, 255, 255, 0.6); }
+.btn:hover:not(:disabled) { box-shadow: 0 8px 0 #b86f00, 0 16px 26px rgba(120, 60, 0, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.6); }
+.btn:active:not(:disabled) { box-shadow: 0 2px 0 #b86f00, 0 6px 12px rgba(120, 60, 0, 0.35); }
+.btn.ghost { background: linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.1)); color: #ffffff; text-shadow: none; border: 2px solid rgba(255, 255, 255, 0.3); box-shadow: 0 5px 0 rgba(4, 40, 66, 0.6), 0 10px 18px rgba(0, 20, 40, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.35); }
+.how li, .two > div, .grid div, .nestcard { background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 4px 0 rgba(4, 40, 66, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.22); }
+.two li { background: rgba(4, 40, 66, 0.35); }
+.fact { background: rgba(4, 40, 66, 0.35); color: #e6f4ff; border-left-color: #ffd23f; }
+.glass { background: linear-gradient(170deg, rgba(25, 118, 168, 0.82) 0%, rgba(10, 66, 104, 0.9) 100%); border: 1px solid rgba(255, 220, 140, 0.35); box-shadow: 0 4px 0 rgba(4, 40, 66, 0.45), 0 10px 22px rgba(0, 20, 40, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+.ibtn { background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)); box-shadow: 0 3px 0 rgba(4, 40, 66, 0.5); }
+.title-vignette.has3d .hero-bosphorus-svg { display: none; }
+.hero3d { display: block; width: 150px; height: auto; margin: -6px auto -2px; filter: drop-shadow(0 10px 12px rgba(0, 30, 60, 0.45)); animation: glide3d 3.2s ease-in-out infinite; }
+@keyframes glide3d { 50% { transform: translateY(-5px) rotate(-2deg); } }
+.nestcard img.chick3d { flex: none; height: auto; filter: drop-shadow(0 6px 8px rgba(0, 30, 60, 0.4)); }
+.fig3d { position: absolute; top: 10px; right: 12px; height: auto; pointer-events: none; z-index: 2; filter: drop-shadow(0 8px 10px rgba(0, 30, 60, 0.45)); }
+.fig-over { width: 62px; }
+.fig-pause { width: 84px; top: 14px; }
+@media (min-width: 681px) and (max-height: 820px) { .hero3d { width: 104px; margin: -10px auto -4px; } }
+@media (max-height: 520px) and (orientation: landscape) { .fig3d { display: none; } }
+@media (max-width: 480px) { .hero3d { width: 112px; margin: -8px auto -4px; } .fig-over { width: 52px; top: 8px; right: 8px; } .fig-pause { width: 64px; top: 10px; right: 8px; } }
+@media (prefers-reduced-motion: reduce) { .hero3d { animation: none; } }
+</style>
+<style>
+/* Keep controller focus visible on scrollable TV menus. */
+button:focus-visible, input:focus-visible { outline: 3px solid #ffd35e !important; outline-offset: 2px; }
+#bShare, #bOther, #titleHub, #bAd, a[href^="http"], .arena-gear, .arena-end-card { display: none !important; }
+</style></head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="hud" class="hidden">
+  <div id="topbar" class="glass">
+    <div class="logo">
+      <svg class="gull-emblem" viewBox="0 0 28 20" aria-hidden="true">
+        <path d="M2 13 C 7 3, 12 7, 14 10 C 16 7, 21 3, 26 13 C 21 8, 16 11, 14 13 C 12 11, 7 8, 2 13 Z"/>
+      </svg>
+      <img class="crest-s" src="assets/ui/logo.png" alt="" onerror="this.remove()">Martı<i>.</i>
+    </div>
+    <div class="stat score-stat"><small data-i18n="score">Skor</small><b id="sScore">0</b></div>
+    <div class="stat combo"><small data-i18n="combo">Kombo</small><b id="sCombo">x1</b></div>
+    <div class="stat" id="dist-stat"><small data-i18n="dist">Mesafe</small><b id="sDist">0 m</b></div>
+    <div class="stat" id="best-stat"><small data-i18n="best">En iyi</small><b id="sBest">0</b></div>
+    <div class="grow"></div>
+    <div id="lives"></div>
+    <div class="icons">
+      <button class="ibtn" id="bPause" data-icon="pause"></button>
+      <button class="ibtn" id="bMute" data-icon="sound"></button>
+      <button class="ibtn" id="bMusic" data-icon="music"></button>
+      <button class="ibtn" id="bSfx" data-icon="sound"></button>
+      <button class="ibtn" id="bLang" data-icon="globe"></button>
+      <button class="ibtn" id="bSet" data-icon="gear"></button>
+    </div>
+  </div>
+  <div id="stamina" class="glass"><span id="stLabel" data-i18n="stamina">Enerji</span><span id="carry"></span><div id="stBar"></div></div>
+  <div id="chips"></div>
+  <div id="toasts" role="status" aria-live="polite"></div>
+  <div id="combo" aria-live="polite"></div>
+  <button id="bDive" type="button" aria-label="Dalış" title="Dalış">
+    <svg viewBox="0 0 24 24" class="dive-icon" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3v13m0 0l-5-5m5 5l5-5M5 20c3.5-1.5 6.5 1.5 10 0s3.5-1.5 4 0"/>
+    </svg>
+    <span class="dive-lbl" data-i18n="diveAction">Dalış</span>
+  </button>
+</div>
+
+<div id="title" class="overlay">
+  <div class="card">
+    <div class="title-vignette" aria-hidden="true">
+      <img class="hero3d" src="assets/3d/poz-marti.webp" alt="" onload="this.parentNode.classList.add('has3d')" onerror="this.remove()">
+      <svg viewBox="0 0 180 70" class="hero-bosphorus-svg">
+        <defs>
+          <linearGradient id="sunGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ffd166" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#fca311" stop-opacity="0.1"/>
+          </linearGradient>
+        </defs>
+        <circle cx="90" cy="42" r="30" fill="url(#sunGlow)"/>
+        <path d="M20 54 L20 32 M24 54 L24 32 M156 54 L156 32 M160 54 L160 32" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+        <path d="M8 50 L172 50" stroke="rgba(255,255,255,0.6)" stroke-width="1.8"/>
+        <path d="M20 32 Q90 50 160 32" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.4"/>
+        <path d="M72 32 C 80 20, 87 24, 90 28 C 93 24, 100 20, 108 32 C 101 26, 93 30, 90 32 C 87 30, 79 26, 72 32 Z" fill="#ffffff" filter="drop-shadow(0 2px 6px rgba(255,255,255,0.6))"/>
+      </svg>
+    </div>
+    <img class="crest" src="assets/ui/logo.png" alt="" onerror="this.remove()">
+    <div class="logo">Martı<i>.</i></div>
+    <p class="tag" data-i18n="tagline"></p>
+    <div class="nestcard" id="nestCard"></div>
+    <ul class="how" id="how"></ul>
+    <div class="row">
+      <button class="btn" id="bStart" disabled>Loading…</button>
+      <button class="btn ghost" id="bSetT" data-i18n="settings">Ayarlar</button>
+      <button class="btn ghost pill" id="bLangT">EN</button>
+    </div>
+    <div class="row"><button class="btn ghost" id="bDaily" data-i18n="daily">Günün Meydan Okuması</button></div>
+    <p class="bestline" id="dailyLine"></p>
+    <p class="bestline" id="bestLine"></p>
+    <div class="two">
+      <div><h4 data-i18n="missions">Görevler</h4><ul id="missList"></ul></div>
+      <div><h4 data-i18n="highs">Yüksek skorlar</h4><ol id="highList"></ol></div>
+    </div>
+    <p class="fact"><b data-i18n="didYou">Biliyor muydun?</b> <span id="titleFact"></span></p>
+    <p class="hint" data-i18n="hint"></p>
+    <p class="foot">
+      <button class="linkb" id="bNews" type="button"><span id="verTag"></span> · <span data-i18n="news">Yenilikler</span></button>
+      <a class="linkb" id="titleHub" href="https://furkiozknn.github.io/" data-i18n="otherGames">Diğer oyunlar</a>
+    </p>
+    <p class="foot"><a href="https://github.com/Furkiozknn" target="_blank" rel="noopener" data-i18n="footer">Claude Game Arena · built by Claude Haiku 5.5 · assets remastered</a></p>
+  </div>
+</div>
+
+<div id="pause" class="overlay hidden">
+  <div class="card">
+    <img class="fig3d fig-pause" src="assets/3d/poz-marti.webp" alt="" onerror="this.remove()">
+    <div class="logo" style="font-size:40px" data-i18n="paused">Duraklatıldı</div>
+    <p class="tag" data-i18n="hint"></p>
+    <div class="col">
+      <button class="btn" id="bResume" data-i18n="resume">Devam et</button>
+      <button class="btn ghost" id="bRestart" data-i18n="restart">Yeniden başla</button>
+      <button class="btn ghost" id="bSetP" data-i18n="settings">Ayarlar</button>
+      <button class="btn ghost" id="bMenuP" data-i18n="menu">Ana menü</button>
+    </div>
+  </div>
+</div>
+
+<div id="settings" class="overlay hidden">
+  <div class="card">
+    <div class="logo" style="font-size:36px" data-i18n="settings">Ayarlar</div>
+    <div class="setgrid">
+      <label for="vMaster" data-i18n="master">Genel ses</label><input type="range" id="vMaster" min="0" max="100" step="5">
+      <label for="vMusic" data-i18n="music">Müzik</label><input type="range" id="vMusic" min="0" max="100" step="5">
+      <label for="vSfx" data-i18n="sfx">Efektler</label><input type="range" id="vSfx" min="0" max="100" step="5">
+      <span data-i18n="language">Dil</span><div class="seg"><button class="segb" id="sTR">Türkçe</button><button class="segb" id="sEN">English</button></div>
+      <span data-i18n="quality">Kalite</span><div class="seg"><button class="segb" id="sLow" data-i18n="low">Düşük</button><button class="segb" id="sHigh" data-i18n="high">Yüksek</button></div>
+      <span data-i18n="fullscreen">Tam ekran</span><div class="seg"><button class="segb" id="sFull" data-i18n="toggleFs">Aç / kapat</button></div>
+    </div>
+    <p class="hint" id="setVer"></p>
+    <div class="row"><button class="btn" id="bSetBack" data-i18n="back">Geri</button></div>
+  </div>
+</div>
+
+<div id="news" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="newsT">
+  <div class="card">
+    <h3 id="newsT" data-i18n="newsTitle">Neler yeni?</h3>
+    <p class="ver" id="newsVer"></p>
+    <ul class="nl" id="newsList"></ul>
+    <h4><span data-i18n="achTitle">Başarımlar</span> <span id="achCount"></span></h4>
+    <ul class="achgrid" id="achList"></ul>
+    <div class="row"><button class="btn" id="bNewsBack" type="button" data-i18n="back">Geri</button></div>
+  </div>
+</div>
+
+<div id="over" class="overlay hidden">
+  <div class="card">
+    <img class="fig3d fig-over" src="assets/3d/poz-yavru.webp" alt="" onerror="this.remove()">
+    <div class="logo" style="font-size:40px" data-i18n="over">Koşu bitti</div>
+    <p class="tag" id="overReason"></p>
+    <div id="overTip" class="hidden"><span class="tip-badge" data-i18n="tipBadge">İpucu</span><span class="tip-text" id="oTip"></span></div>
+    <div class="newbest" id="newBest"></div>
+    <p class="newach" id="oAch"></p>
+    <div class="grid">
+      <div><small data-i18n="score">Skor</small><b id="oScore">0</b></div>
+      <div><small data-i18n="best">En iyi</small><b id="oBest">0</b></div>
+      <div><small data-i18n="dist">Mesafe</small><b id="oDist">0</b></div>
+      <div><small data-i18n="simit">Simit</small><b id="oSimit">0</b></div>
+    </div>
+    <div class="row">
+      <button class="btn hidden" id="bCont" data-i18n="cont">Reklam izle, devam et</button>
+      <button class="btn" id="bRetry" data-i18n="retry">Tekrar dene</button>
+      <button class="btn ghost" id="bMenuO" data-i18n="menu">Ana menü</button>
+    </div>
+    <div class="row">
+      <button class="btn ghost" id="bShare" data-i18n="share">Paylaş</button>
+      <button class="btn ghost" id="bOther" data-i18n="anotherGame">Başka oyun</button>
+    </div>
+    <p class="bestline" id="oDaily"></p>
+    <p class="hint" id="overMissions"></p>
+    <p class="fact"><b data-i18n="didYou">Biliyor muydun?</b> <span id="oFact"></span></p>
+  </div>
+</div>
+
+<pre id="dbg" class="hidden"><span id="dbgL"></span><span id="dbgE"></span></pre>
+<div id="fatal"></div>
+
+<script>
+// CDN watchdog: if Three.js (jsDelivr) cannot load, the module never runs. Show a message instead of a dead Start button.
+setTimeout(function () {
+  if (window.martiBoot) return;
+  var f = document.getElementById('fatal');
+  f.style.display = 'flex';
+  f.textContent = 'Could not load the game (network or blocked CDN). Check your connection and reload. · Oyun yüklenemedi (ağ ya da engellenen CDN). Bağlantını kontrol edip sayfayı yenile.';
+}, 10000);
+</script>
+
+
+
+</body>
+</html>

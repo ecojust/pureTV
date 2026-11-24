@@ -1,5 +1,9 @@
 import hashlib
 import io
+import json
+import os
+import subprocess
+import sys
 import tempfile
 import unittest
 from concurrent.futures import ThreadPoolExecutor
@@ -7,6 +11,20 @@ from pathlib import Path
 from unittest.mock import patch
 
 import launcher
+
+
+class CatalogOutputTests(unittest.TestCase):
+    def test_redirected_list_preserves_localized_titles_as_utf8(self):
+        script = Path(launcher.__file__)
+        games = json.loads(script.with_name('catalog.json').read_text(encoding='utf-8'))
+        for language in ('en', 'zh'):
+            with self.subTest(language=language):
+                output = subprocess.check_output(
+                    [sys.executable, str(script), '--list', '--language', language],
+                    env={**os.environ, 'PYTHONIOENCODING': 'cp1252'},
+                )
+                self.assertEqual(output.decode('utf-8').splitlines(),
+                                 [f'{game["id"]:<24} {game[language]}' for game in games])
 
 
 class CatalogDownloadTests(unittest.TestCase):

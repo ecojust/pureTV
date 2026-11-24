@@ -1,6 +1,7 @@
 """Choose a catalog game, verify its offline files, and start the local player."""
 import argparse
 import hashlib
+import io
 import json
 import locale
 import os
@@ -156,6 +157,9 @@ def main(argv=None):
 
 
 if __name__ == '__main__':
+    # Windows pipes can use an ANSI code page even when the console supports Unicode.
+    if isinstance(sys.stdout, io.TextIOWrapper) and not sys.stdout.isatty():
+        sys.stdout.reconfigure(encoding='utf-8')
     try:
         raise SystemExit(main())
     except KeyboardInterrupt:

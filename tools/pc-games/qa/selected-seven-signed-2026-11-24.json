@@ -1,0 +1,793 @@
+{
+  "platform": "Linux",
+  "browser": "156.0.8078.79",
+  "chromiumArgs": [
+    "--no-sandbox",
+    "--disable-dev-shm-usage",
+    "--use-gl=angle",
+    "--use-angle=swiftshader",
+    "--enable-unsafe-swiftshader",
+    "--disable-gpu-sandbox"
+  ],
+  "sourceSha256": {
+    "tools/pc-games/host.py": "dfff43d87421e97751ccff19f264fa6d5c6ed7178ab7ab6620f933418457e681",
+    "tools/pc-games/pc-bridge.js": "16e565db5b851fc6de3bb7c4828da51b304df4dfa8e1f271d7d698d9985d5f9d",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023"
+  },
+  "games": [
+    {
+      "game": "bloom-hop",
+      "apk": "joystick-games/bloom-hop/bloom-hop-0.1.0.apk",
+      "bytes": 7654390,
+      "sha256": "713d590e3517d1be4e57fc69fc6de847c511c0ad519e0ce2633aa3f171faa0fc",
+      "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+      "renderer": "canvas2d",
+      "webgl": null,
+      "steps": [
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Start a new game",
+          "before": {
+            "stage": "menu"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        },
+        {
+          "keys": [
+            "DOWN"
+          ],
+          "name": "Hop to the next lily pad and eat its fly",
+          "before": {
+            "gameplay.moves": 0,
+            "gameplay.frogY": 0
+          },
+          "after": {
+            "gameplay.moves": 1,
+            "gameplay.frogY": 2
+          }
+        },
+        {
+          "keys": [
+            "B"
+          ],
+          "name": "Undo the hop through the original puzzle history",
+          "before": {
+            "gameplay.undos": 0
+          },
+          "after": {
+            "gameplay.undos": 1
+          }
+        },
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Pause with START",
+          "before": {
+            "stage": "playing",
+            "paused": false
+          },
+          "after": {
+            "stage": "paused",
+            "paused": true
+          }
+        },
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Resume with START",
+          "before": {
+            "stage": "paused",
+            "paused": true
+          },
+          "after": {
+            "stage": "playing",
+            "paused": false
+          }
+        }
+      ],
+      "localPaths": 29,
+      "pageErrors": [],
+      "externalRequests": [],
+      "controller": {
+        "seat": 1,
+        "transport": "wifi",
+        "reconnectedWithNewSession": true,
+        "keyDownAtDisconnect": "RIGHT",
+        "disconnectedKeysNeutral": true,
+        "reconnectedKeysNeutral": true,
+        "pausedFields": {
+          "gameplay.turn": 0,
+          "gameplay.frogY": 0,
+          "gameplay.fliesLeft": 4
+        },
+        "resume": {
+          "keys": [
+            "START"
+          ],
+          "name": "Explicit resume after reconnect",
+          "before": {
+            "stage": "paused"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        }
+      }
+    },
+    {
+      "game": "mechapede",
+      "apk": "joystick-games/mechapede/mechapede-0.1.0.apk",
+      "bytes": 2766161,
+      "sha256": "8aaf05cf467fe1ce9a313cd2b4d77a18bf74d9723f62a2589ec23fcb3b5288ef",
+      "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+      "renderer": "canvas2d",
+      "webgl": null,
+      "steps": [
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Start a new game",
+          "before": {
+            "stage": "menu"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        },
+        {
+          "keys": [
+            "RIGHT"
+          ],
+          "name": "Move the cutter across the conveyor",
+          "before": {
+            "gameplay.playerX": 120
+          },
+          "after": {
+            "gameplay.playerX": 138
+          }
+        },
+        {
+          "keys": [
+            "A"
+          ],
+          "name": "Fire a cutting pulse at the gears",
+          "before": {
+            "gameplay.shots": 0
+          },
+          "after": {
+            "gameplay.shots": 1
+          }
+        },
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Pause with START",
+          "before": {
+            "stage": "playing",
+            "paused": false
+          },
+          "after": {
+            "stage": "paused",
+            "paused": true
+          }
+        },
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Resume with START",
+          "before": {
+            "stage": "paused",
+            "paused": true
+          },
+          "after": {
+            "stage": "playing",
+            "paused": false
+          }
+        }
+      ],
+      "localPaths": 7,
+      "pageErrors": [],
+      "externalRequests": [],
+      "controller": {
+        "seat": 1,
+        "transport": "wifi",
+        "reconnectedWithNewSession": true,
+        "keyDownAtDisconnect": "RIGHT",
+        "disconnectedKeysNeutral": true,
+        "reconnectedKeysNeutral": true,
+        "pausedFields": {
+          "gameplay.playerX": 156,
+          "gameplay.shots": 1,
+          "gameplay.frame": 55
+        },
+        "resume": {
+          "keys": [
+            "START"
+          ],
+          "name": "Explicit resume after reconnect",
+          "before": {
+            "stage": "paused"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        }
+      }
+    },
+    {
+      "game": "kaboom-arena",
+      "apk": "joystick-games/kaboom-arena/kaboom-arena-0.1.0.apk",
+      "bytes": 858310,
+      "sha256": "0f6184829daa35cfe749e1c53a56dbbd774343ccef76f72ee80f7ed8e7bd9c59",
+      "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+      "renderer": "canvas2d",
+      "webgl": "",
+      "steps": [
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Enter the arena with three bots",
+          "before": {
+            "stage": "menu",
+            "gameplay.players": 0
+          },
+          "after": {
+            "stage": "playing",
+            "gameplay.players": 4
+          }
+        },
+        {
+          "keys": [
+            "RIGHT"
+          ],
+          "name": "Move away from the spawn corner",
+          "before": {
+            "gameplay.x": 24
+          },
+          "after": {
+            "gameplay.x": 30
+          }
+        },
+        {
+          "keys": [
+            "A"
+          ],
+          "name": "Place a bomb on the arena grid",
+          "before": {
+            "gameplay.ownBombs": 0
+          },
+          "after": {
+            "gameplay.ownBombs": 1
+          }
+        },
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Pause the arena",
+          "before": {
+            "stage": "playing"
+          },
+          "after": {
+            "stage": "paused"
+          }
+        },
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Resume the match",
+          "before": {
+            "stage": "paused"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        }
+      ],
+      "localPaths": 5,
+      "pageErrors": [],
+      "externalRequests": [],
+      "controller": {
+        "seat": 1,
+        "transport": "wifi",
+        "reconnectedWithNewSession": true,
+        "keyDownAtDisconnect": "RIGHT",
+        "disconnectedKeysNeutral": true,
+        "reconnectedKeysNeutral": true,
+        "pausedFields": {
+          "gameplay.x": 36,
+          "gameplay.y": 24,
+          "gameplay.tick": 56
+        },
+        "resume": {
+          "keys": [
+            "START"
+          ],
+          "name": "Explicit resume after reconnect",
+          "before": {
+            "stage": "paused"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        }
+      }
+    },
+    {
+      "game": "nerd-of-duty",
+      "apk": "joystick-games/nerd-of-duty/nerd-of-duty-0.1.0.apk",
+      "bytes": 951437,
+      "sha256": "1cec8d7e048ca11a033fab59dc00d1a5081c788de1272b3a6d48ca8a8bba3282",
+      "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+      "renderer": "webgl2",
+      "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "steps": [
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Deploy as the selected job",
+          "before": {
+            "stage": "menu",
+            "gameplay.wave": 0
+          },
+          "after": {
+            "stage": "playing",
+            "gameplay.wave": 1
+          }
+        },
+        {
+          "keys": [
+            "RIGHT"
+          ],
+          "name": "Strafe across the street",
+          "before": {
+            "gameplay.x": 13.707976007081133
+          },
+          "after": {
+            "gameplay.x": 13.566715305006978
+          }
+        },
+        {
+          "keys": [
+            "X",
+            "LEFT"
+          ],
+          "name": "Turn toward the plaza",
+          "before": {
+            "gameplay.yaw": -2.5538926535897932
+          },
+          "after": {
+            "gameplay.yaw": -2.305892653589793
+          }
+        },
+        {
+          "keys": [
+            "A"
+          ],
+          "name": "Fire the equipped weapon",
+          "before": {
+            "gameplay.shots": 0
+          },
+          "after": {
+            "gameplay.shots": 1
+          }
+        },
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Pause the wave",
+          "before": {
+            "stage": "playing"
+          },
+          "after": {
+            "stage": "paused"
+          }
+        },
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Resume the wave",
+          "before": {
+            "stage": "paused"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        }
+      ],
+      "localPaths": 4,
+      "pageErrors": [],
+      "externalRequests": [],
+      "controller": {
+        "seat": 1,
+        "transport": "wifi",
+        "reconnectedWithNewSession": true,
+        "keyDownAtDisconnect": "RIGHT",
+        "disconnectedKeysNeutral": true,
+        "reconnectedKeysNeutral": true,
+        "pausedFields": {
+          "gameplay.shots": 1,
+          "gameplay.x": 13.20241612395387,
+          "gameplay.z": 20.230012525999264
+        },
+        "resume": {
+          "keys": [
+            "START"
+          ],
+          "name": "Explicit resume after reconnect",
+          "before": {
+            "stage": "paused"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        }
+      }
+    },
+    {
+      "game": "gogh-strike",
+      "apk": "joystick-games/gogh-strike/gogh-strike-0.1.0.apk",
+      "bytes": 8431167,
+      "sha256": "e1b6ac3bdaa33ec491bb4826a2276c0aa2d325de37c6ebb828a327dc81578296",
+      "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+      "renderer": "webgl2",
+      "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "steps": [
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Deploy into Paint Clash after the countdown",
+          "before": {
+            "stage": "menu",
+            "gameplay.ready": false,
+            "gameplay.actors": 0
+          },
+          "after": {
+            "stage": "playing",
+            "gameplay.ready": true,
+            "gameplay.actors": 12
+          }
+        },
+        {
+          "keys": [
+            "UP"
+          ],
+          "name": "Walk from the initial spawn",
+          "before": {
+            "gameplay.position": [
+              -12,
+              -0.0,
+              10
+            ]
+          },
+          "after": {
+            "gameplay.position": [
+              -11.884245517116405,
+              -0.0,
+              9.838950284683698
+            ]
+          }
+        },
+        {
+          "keys": [
+            "RIGHT"
+          ],
+          "name": "Turn toward the town",
+          "before": {
+            "gameplay.yaw": -0.623199329934066
+          },
+          "after": {
+            "gameplay.yaw": -0.8181993299340659
+          }
+        },
+        {
+          "keys": [
+            "A"
+          ],
+          "name": "Fire the artist's paint weapon",
+          "before": {
+            "gameplay.shots": 0
+          },
+          "after": {
+            "gameplay.shots": 1
+          }
+        },
+        {
+          "keys": [
+            "Y"
+          ],
+          "name": "Switch to the sidearm",
+          "before": {
+            "gameplay.weapon": "rifle"
+          },
+          "after": {
+            "gameplay.weapon": "pistol"
+          }
+        },
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Hold START to pause once",
+          "before": {
+            "stage": "playing"
+          },
+          "after": {
+            "stage": "paused"
+          }
+        },
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Resume once",
+          "before": {
+            "stage": "paused"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        }
+      ],
+      "localPaths": 37,
+      "pageErrors": [],
+      "externalRequests": [],
+      "controller": {
+        "seat": 1,
+        "transport": "wifi",
+        "reconnectedWithNewSession": true,
+        "keyDownAtDisconnect": "RIGHT",
+        "disconnectedKeysNeutral": true,
+        "reconnectedKeysNeutral": true,
+        "pausedFields": {
+          "gameplay.time": 1.6166666666666658,
+          "gameplay.position": [
+            -11.813722827964636,
+            -0.0,
+            9.740831760646461
+          ],
+          "gameplay.yaw": -1.2081993299340656,
+          "gameplay.shots": 1,
+          "gameplay.ammo": 12
+        },
+        "resume": {
+          "keys": [
+            "START"
+          ],
+          "name": "Explicit resume after reconnect",
+          "before": {
+            "stage": "paused"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        }
+      }
+    },
+    {
+      "game": "marti",
+      "apk": "joystick-games/marti/marti-0.1.0.apk",
+      "bytes": 1534667,
+      "sha256": "52360aabb50eb75ad97655786a5ce16a7a02cebbaa9b03ea55227b255eca990c",
+      "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+      "renderer": "webgl2",
+      "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "steps": [
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Start an offline flight",
+          "before": {
+            "stage": "menu"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        },
+        {
+          "keys": [
+            "RIGHT"
+          ],
+          "name": "Steer the gull sideways",
+          "before": {
+            "gameplay.x": 0
+          },
+          "after": {
+            "gameplay.x": -0.29250000000000004
+          }
+        },
+        {
+          "keys": [
+            "A"
+          ],
+          "name": "Dive toward the water",
+          "before": {
+            "gameplay.dives": 0
+          },
+          "after": {
+            "gameplay.dives": 1
+          }
+        },
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Pause with START",
+          "before": {
+            "stage": "playing"
+          },
+          "after": {
+            "stage": "paused"
+          }
+        },
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Resume with START",
+          "before": {
+            "stage": "paused"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        }
+      ],
+      "localPaths": 20,
+      "pageErrors": [],
+      "externalRequests": [],
+      "controller": {
+        "seat": 1,
+        "transport": "wifi",
+        "reconnectedWithNewSession": true,
+        "keyDownAtDisconnect": "RIGHT",
+        "disconnectedKeysNeutral": true,
+        "reconnectedKeysNeutral": true,
+        "pausedFields": {
+          "gameplay.distance": 12.61587670558872,
+          "gameplay.x": -1.1350395637042237,
+          "gameplay.dives": 1
+        },
+        "resume": {
+          "keys": [
+            "START"
+          ],
+          "name": "Explicit resume after reconnect",
+          "before": {
+            "stage": "paused"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        }
+      }
+    },
+    {
+      "game": "dolmus",
+      "apk": "joystick-games/dolmus/dolmus-0.1.0.apk",
+      "bytes": 1392387,
+      "sha256": "0255e291d8c4d050c1131ea80036891fd275075f859a38e60d0f6612bb0144d1",
+      "certificateSha256": "eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23",
+      "renderer": "webgl2",
+      "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "steps": [
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Start the first campaign shift",
+          "before": {
+            "stage": "menu"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        },
+        {
+          "keys": [
+            "UP"
+          ],
+          "name": "Accelerate away from the terminus",
+          "before": {
+            "gameplay.speed": 0
+          },
+          "after": {
+            "gameplay.speed": 0.34688903253856596
+          }
+        },
+        {
+          "keys": [
+            "RIGHT"
+          ],
+          "name": "Turn the front wheels",
+          "before": {
+            "gameplay.steer": 0
+          },
+          "after": {
+            "gameplay.steer": 0.413818359375
+          }
+        },
+        {
+          "keys": [
+            "X"
+          ],
+          "name": "Sound the minibus horn",
+          "before": {
+            "gameplay.horns": 0
+          },
+          "after": {
+            "gameplay.horns": 1
+          }
+        },
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Pause with START",
+          "before": {
+            "stage": "playing"
+          },
+          "after": {
+            "stage": "paused"
+          }
+        },
+        {
+          "keys": [
+            "START"
+          ],
+          "name": "Resume with START",
+          "before": {
+            "stage": "paused"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        }
+      ],
+      "localPaths": 21,
+      "pageErrors": [],
+      "externalRequests": [],
+      "controller": {
+        "seat": 1,
+        "transport": "wifi",
+        "reconnectedWithNewSession": true,
+        "keyDownAtDisconnect": "RIGHT",
+        "disconnectedKeysNeutral": true,
+        "reconnectedKeysNeutral": true,
+        "pausedFields": {
+          "gameplay.x": -98,
+          "gameplay.z": -21.2456748674527,
+          "gameplay.horns": 1
+        },
+        "resume": {
+          "keys": [
+            "START"
+          ],
+          "name": "Explicit resume after reconnect",
+          "before": {
+            "stage": "paused"
+          },
+          "after": {
+            "stage": "playing"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -93,6 +93,17 @@ class PolicyBoundaries(unittest.TestCase):
         self.assertEqual(kit.checked_limits(policy.android_limits(meta,entry))['maxApkBytes'],128_000_000)
         self.assertEqual(policy.desktop_package_limit(meta,entry),128_000_000)
         self.assertEqual(policy.desktop_package_limit(metadata()),100_000_000)
+
+    def test_macos_wrapper_budget_is_separate_from_game_and_windows_budgets(self):
+        assets = dict(large_policy(), maxApkBytes=10_000_000)
+        meta = dict(metadata(), assetPolicy=assets)
+        entry = dict(packageName=meta['packageName'], assetPolicy=assets, maxMacosPackageBytes=16_000_000)
+        self.assertEqual(policy.desktop_package_limit(meta, entry, platform='macos'), 16_000_000)
+        self.assertEqual(policy.desktop_package_limit(meta, entry), 10_000_000)
+        self.assertEqual(policy.android_limits(meta, entry)['maxApkBytes'], 10_000_000)
+        for invalid in (True, 0, 100_000_001):
+            with self.assertRaises(AssertionError):
+                policy.desktop_package_limit(meta, dict(entry, maxMacosPackageBytes=invalid), platform='macos')
         self.assertEqual(policy.limits(metadata())['maxApkBytes'],10_000_000)
         self.assertEqual(policy.limits(metadata(),platform='windows'),policy.DEFAULT_MACOS)
 
@@ -242,7 +253,8 @@ class NativeMime(unittest.TestCase):
         javac = shutil.which('javac')
         if javac is None: self.skipTest('Requires JDK; no Android runtime claim')
         java = str(Path(javac).with_name('java'))
-        source = (ROOT / 'resource/game-kit/android/src/main/java/com/ecojust/gamekit/MainActivity.java').read_text()
+        sources = ROOT / 'resource/game-kit/android/src/main/java/com/ecojust/gamekit'
+        source = (sources / 'MainActivity.java').read_text()
         method = source[source.index('    static boolean validBundledAssetPath('):source.index('    static String bundledAssetMime(')]
         valid = ['tv.html', 'models/cars/car.glb', 'js/worker/physics.js', 'vendor/LICENSE', 'docs/AI.md']
         invalid = ['', '/tv.html', '../secret', 'models/../secret', 'a//b.js', 'a/', 'a\\b.js',
@@ -250,9 +262,9 @@ class NativeMime(unittest.TestCase):
                    '/'.join(['a'] * 17), 'a' * 1025]
         with tempfile.TemporaryDirectory(prefix='actual-path-java-') as tmp:
             path = Path(tmp) / 'PathFixture.java'
-            path.write_text('public final class PathFixture {\n' + method + '\npublic static void main(String[] args) { for (String arg: args) System.out.println(validBundledAssetPath(arg)); }}\n')
-            subprocess.run([javac, str(path)], check=True, capture_output=True)
-            actual = subprocess.check_output([java, '-cp', tmp, 'PathFixture', *valid, *invalid], text=True).splitlines()
+            path.write_text('package com.ecojust.gamekit;\npublic final class PathFixture {\n' + method + '\npublic static void main(String[] args) { for (String arg: args) System.out.println(validBundledAssetPath(arg)); }}\n')
+            subprocess.run([javac, '-d', tmp, str(sources / 'LocalGameUrl.java'), str(path)], check=True, capture_output=True)
+            actual = subprocess.check_output([java, '-cp', tmp, 'com.ecojust.gamekit.PathFixture', *valid, *invalid], text=True).splitlines()
             self.assertEqual(actual, ['true'] * len(valid) + ['false'] * len(invalid))
 
     def test_actual_java_mime_method_with_jdk(self):
