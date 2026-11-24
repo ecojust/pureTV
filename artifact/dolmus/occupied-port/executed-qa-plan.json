@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": [
+    "gameplay.x",
+    "gameplay.z",
+    "gameplay.horns"
+  ],
+  "steps": [
+    {
+      "name": "Start the first campaign shift",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 180,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ],
+      "timeoutSeconds": 120
+    },
+    {
+      "name": "Accelerate away from the terminus",
+      "keys": [
+        "UP"
+      ],
+      "holdMs": 650,
+      "expect": [
+        {
+          "path": "gameplay.speed",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Turn the front wheels",
+      "keys": [
+        "RIGHT"
+      ],
+      "holdMs": 450,
+      "expect": [
+        {
+          "path": "gameplay.steer",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Sound the minibus horn",
+      "keys": [
+        "X"
+      ],
+      "holdMs": 350,
+      "expect": [
+        {
+          "path": "gameplay.horns",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Pause with START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 750,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        }
+      ]
+    },
+    {
+      "name": "Resume with START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 900,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    }
+  ]
+}

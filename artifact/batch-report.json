@@ -1,0 +1,222 @@
+{
+  "sourceCommit": "fa9be39173533da1aa8ce5b4b01121193500e3f2",
+  "batch": "selected-seven-03",
+  "runner": "macos-latest",
+  "expectedArchitecture": "arm64",
+  "status": "passed",
+  "games": [
+    {
+      "game": "mechapede",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/mechapede",
+            "--output",
+            "/Users/runner/work/_temp/qa/mechapede/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "mechapede/package-verification.log",
+          "startedAt": "2026-11-24T17:00:35.294801+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "mechapede",
+            "--app",
+            "/Users/runner/work/_temp/packages/mechapede/installed/Mechapede.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/mechapede/native"
+          ],
+          "status": "passed",
+          "log": "mechapede/native.log",
+          "startedAt": "2026-11-24T17:01:34.923575+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "mechapede",
+            "--app",
+            "/Users/runner/work/_temp/packages/mechapede/installed/Mechapede.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/mechapede/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "mechapede/occupied-port.log",
+          "startedAt": "2026-11-24T17:02:21.351689+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "mechapede",
+            "--app",
+            "/Users/runner/work/_temp/packages/mechapede/installed/Mechapede.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/mechapede/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "mechapede/rosetta.log",
+          "startedAt": "2026-11-24T17:03:05.005155+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "dolmus",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/dolmus",
+            "--output",
+            "/Users/runner/work/_temp/qa/dolmus/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "dolmus/package-verification.log",
+          "startedAt": "2026-11-24T17:03:56.107414+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "dolmus",
+            "--app",
+            "/Users/runner/work/_temp/packages/dolmus/installed/Dolmus.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/dolmus/native"
+          ],
+          "status": "passed",
+          "log": "dolmus/native.log",
+          "startedAt": "2026-11-24T17:04:25.782793+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "dolmus",
+            "--app",
+            "/Users/runner/work/_temp/packages/dolmus/installed/Dolmus.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/dolmus/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "dolmus/occupied-port.log",
+          "startedAt": "2026-11-24T17:05:18.722987+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "dolmus",
+            "--app",
+            "/Users/runner/work/_temp/packages/dolmus/installed/Dolmus.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/dolmus/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "dolmus/rosetta.log",
+          "startedAt": "2026-11-24T17:06:07.601466+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "marti",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/marti",
+            "--output",
+            "/Users/runner/work/_temp/qa/marti/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "marti/package-verification.log",
+          "startedAt": "2026-11-24T17:07:01.583618+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "marti",
+            "--app",
+            "/Users/runner/work/_temp/packages/marti/installed/Marti.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/marti/native"
+          ],
+          "status": "passed",
+          "log": "marti/native.log",
+          "startedAt": "2026-11-24T17:07:34.840975+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "marti",
+            "--app",
+            "/Users/runner/work/_temp/packages/marti/installed/Marti.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/marti/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "marti/occupied-port.log",
+          "startedAt": "2026-11-24T17:08:18.158459+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "marti",
+            "--app",
+            "/Users/runner/work/_temp/packages/marti/installed/Marti.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/marti/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "marti/rosetta.log",
+          "startedAt": "2026-11-24T17:09:00.473244+00:00",
+          "returncode": 0
+        }
+      ]
+    }
+  ]
+}
