@@ -4,6 +4,8 @@
 
 ![伊斯坦布尔街头的实际驾驶画面](thumb.png)
 
+[Android 模拟器实玩录像（18 秒）](docs/releases/0.1.0/android-gameplay.mp4)展示了手柄通过 pureTV SDK 发车、加速和转向的过程。[完整录屏与输入记录](https://github.com/ecojust/pureTV/tree/4d31b03f1f598c8e022c8623f61680cb345697c9/artifact/dolmus-normal)
+
 ## 手柄
 
 | 操作 | 驾驶时 | 菜单中 |
