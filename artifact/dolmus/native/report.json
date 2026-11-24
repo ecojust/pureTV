@@ -1,0 +1,245 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "fa9be39173533da1aa8ce5b4b01121193500e3f2",
+  "artifactSourceCommit": "fa9be39173533da1aa8ce5b4b01121193500e3f2",
+  "artifactRunId": "45437427221",
+  "startedAt": "2026-11-24T16:43:59.956464+00:00",
+  "game": "dolmus",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "6add0ec04a022ec4d716e516199aed45e9279514d2b33246d8b88113db47ae41",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "47d65e9e50b0630dab7e6c0957293be5b0a511b8db11b290a6a0ff3d08dc9d6f",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/dolmus/qa-plan.json": "57f4e03312eb0468b9fb7b40b1b8ba4b5ac5607cb667e2e3eaa4df1d53de0350",
+    "joystick-games/tools/qa-plan.py": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9",
+    "joystick-games/tools/macos-build.py": "9dcbe541e72caef7e52f2b1edc7b06a021d7e949dd3499afd3929f1127617946",
+    "joystick-games/catalog-registry.json": "dfebd32fbd8b1f810ac525fed40b93205a231cc5a02e8d458ed9e8f5f8195a22",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaRunId": 45437427221,
+  "qaRunAttempt": 1,
+  "runnerKind": "macos-15-intel",
+  "runnerName": "GitHub Actions 1000012966",
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "webgl2",
+    "pauseStablePaths": [
+      "gameplay.x",
+      "gameplay.z",
+      "gameplay.horns"
+    ],
+    "steps": [
+      {
+        "name": "Start the first campaign shift",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 180,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ],
+        "timeoutSeconds": 120
+      },
+      {
+        "name": "Accelerate away from the terminus",
+        "keys": [
+          "UP"
+        ],
+        "holdMs": 650,
+        "expect": [
+          {
+            "path": "gameplay.speed",
+            "op": "increased"
+          }
+        ]
+      },
+      {
+        "name": "Turn the front wheels",
+        "keys": [
+          "RIGHT"
+        ],
+        "holdMs": 450,
+        "expect": [
+          {
+            "path": "gameplay.steer",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Sound the minibus horn",
+        "keys": [
+          "X"
+        ],
+        "holdMs": 350,
+        "expect": [
+          {
+            "path": "gameplay.horns",
+            "op": "increased"
+          }
+        ]
+      },
+      {
+        "name": "Pause with START",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 750,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "paused"
+          }
+        ]
+      },
+      {
+        "name": "Resume with START",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 900,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      }
+    ]
+  },
+  "acceptedRenderers": [
+    "webgl2"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "a5a91e3ce246f7529fd8a5d82d83ef81b5cf874aaf7a1a136f9e5c355cbc17ad",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.dolmus.53b49f677ce64781aaed14c7f1f3ffb2",
+    "reusedAcrossRestartOnly": true
+  },
+  "nativeProcessArchitecture": "x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 478, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 202, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": true, \"diagnosticError\": \"JavaScript execution returned a result of an unsupported type\", \"frontmostApplication\": {\"bundleIdentifier\": \"com.ecojust.joystick.dolmus\", \"name\": \"多尔穆什 · 伊斯坦布尔小巴\"}, \"input\": {\"connections\": 0, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 4, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 4}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {\"arena.core.kalite\": \"\\\"yuksek\\\"\", \"arena.profile.v1\": \"{\\\"plays\\\":{\\\"dolmus\\\":1},\\\"badges\\\":{},\\\"last\\\":{\\\"game\\\":\\\"dolmus\\\",\\\"at\\\":1795538641446},\\\"first\\\":1795538641446,\\\"lastDay\\\":{\\\"dolmus\\\":20261124}}\"}, \"qr\": \"\", \"storageKeys\": [\"arena.core.kalite\", \"arena.dolmus.settings\", \"arena.dolmus.save\", \"dolmus.hat\", \"arena.dolmus.board\", \"arena.dolmus.rozet\", \"arena.profile.v1\", \"arena.settings.v1\", \"arena.daily.v1\", \"arena.hints.v1\", \"arena.feedback.v1\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.4\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"多尔穆什 · 伊斯坦布尔小巴\", \"state\": \"available\"}}, \"timestamp\": 1795538729.793103}\n",
+  "lastState": {
+    "active": true,
+    "diagnosticError": "JavaScript execution returned a result of an unsupported type",
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystick.dolmus",
+      "name": "多尔穆什 · 伊斯坦布尔小巴"
+    },
+    "input": {
+      "connections": 0,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 4,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 4
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {
+        "arena.core.kalite": "\"yuksek\"",
+        "arena.profile.v1": "{\"plays\":{\"dolmus\":1},\"badges\":{},\"last\":{\"game\":\"dolmus\",\"at\":1795538641446},\"first\":1795538641446,\"lastDay\":{\"dolmus\":20261124}}"
+      },
+      "qr": "",
+      "storageKeys": [
+        "arena.core.kalite",
+        "arena.dolmus.settings",
+        "arena.dolmus.save",
+        "dolmus.hat",
+        "arena.dolmus.board",
+        "arena.dolmus.rozet",
+        "arena.profile.v1",
+        "arena.settings.v1",
+        "arena.daily.v1",
+        "arena.hints.v1",
+        "arena.feedback.v1"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.4"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "多尔穆什 · 伊斯坦布尔小巴",
+        "state": "available"
+      }
+    },
+    "timestamp": 1795538729.793103
+  },
+  "failurePhase": "initialization",
+  "nativeProcessAlive": true,
+  "lastStateFresh": true,
+  "phase": "initialization",
+  "finishedAt": "2026-11-24T16:45:30.112866+00:00"
+}

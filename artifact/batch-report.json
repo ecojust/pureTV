@@ -1,0 +1,117 @@
+{
+  "sourceCommit": "fa9be39173533da1aa8ce5b4b01121193500e3f2",
+  "batch": "selected-seven-03",
+  "runner": "macos-15-intel",
+  "expectedArchitecture": "x86_64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "mechapede",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/mechapede",
+            "--output",
+            "/Users/runner/work/_temp/qa/mechapede/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "mechapede/package-verification.log",
+          "startedAt": "2026-11-24T16:40:53.704968+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "mechapede",
+            "--app",
+            "/Users/runner/work/_temp/packages/mechapede/installed/Mechapede.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/mechapede/native"
+          ],
+          "status": "passed",
+          "log": "mechapede/native.log",
+          "startedAt": "2026-11-24T16:42:08.975560+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "dolmus",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/dolmus",
+            "--output",
+            "/Users/runner/work/_temp/qa/dolmus/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "dolmus/package-verification.log",
+          "startedAt": "2026-11-24T16:42:47.956399+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "dolmus",
+            "--app",
+            "/Users/runner/work/_temp/packages/dolmus/installed/Dolmus.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/dolmus/native"
+          ],
+          "status": "failed",
+          "log": "dolmus/native.log",
+          "startedAt": "2026-11-24T16:43:59.836412+00:00",
+          "returncode": 1
+        }
+      ]
+    },
+    {
+      "game": "marti",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/marti",
+            "--output",
+            "/Users/runner/work/_temp/qa/marti/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "marti/package-verification.log",
+          "startedAt": "2026-11-24T16:45:30.256082+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "marti",
+            "--app",
+            "/Users/runner/work/_temp/packages/marti/installed/Marti.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/marti/native"
+          ],
+          "status": "failed",
+          "log": "marti/native.log",
+          "startedAt": "2026-11-24T16:46:24.766797+00:00",
+          "returncode": 1
+        }
+      ]
+    }
+  ]
+}
