@@ -822,8 +822,13 @@ class InitialMenuReadiness(unittest.TestCase):
             if len(calls) == 1: return state
             raise ConnectionRefusedError('original observer connection lost')
         a.snapshot = snapshot
-        with self.assertRaisesRegex(AssertionError, 'initial-menu timed out'):
-            a.wait(a.initial_menu_ready, timeout=.16, label='initial-menu')
+        with mock.patch.object(runner, 'time') as clock:
+            clock.monotonic.return_value = 0.0
+            def advance(seconds):
+                clock.monotonic.return_value += seconds
+            clock.sleep.side_effect = advance
+            with self.assertRaisesRegex(AssertionError, 'initial-menu timed out'):
+                a.wait(a.initial_menu_ready, timeout=.16, label='initial-menu')
         self.assertGreater(len(calls), 1)
         self.assertIs(a.snapshots[-1]['snapshot'], state)
         self.assertIn('ConnectionRefusedError', a.snapshots[-1]['error'])
