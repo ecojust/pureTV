@@ -12,3 +12,6 @@ qa/catalog-native-ci/** -whitespace
 
 # Preserve the original failed inline-script compiler excerpt byte-for-byte.
 glup/docs/inline-scripts-attempt-1.log -whitespace
+
+# Backroad Rally's signed Android packages exceed GitHub's 100 MiB blob limit.
+backroad-rally/*.apk filter=lfs diff=lfs merge=lfs -text
