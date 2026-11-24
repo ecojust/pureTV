@@ -22,4 +22,4 @@
 
 在本目录运行 `npm ci`、`npm run build` 和 `npm run build:check` 可以重新打包并逐字节比对离线文件。[源码指纹](upstream.json) · [手柄验收步骤](qa-plan.json)
 
-用 `python -m pip install playwright` 准备浏览器驱动，在装有 Chromium 和 FFmpeg 的系统上运行 `python tools/record-gameplay.py gameplay.mp4` 可以录制从选职到街区内移动、转向、射击、跳跃和暂停的实际画面。脚本向游戏发送真实小键盘事件，可用 `--chromium` 指定浏览器路径。
+用 `python -m pip install playwright` 准备浏览器驱动，在装有 Chromium 和 FFmpeg 的系统上运行 `python qa/record-gameplay.py gameplay.mp4` 可以录制从选职到街区内移动、转向、射击、跳跃和暂停的实际画面。脚本向游戏发送真实小键盘事件，可用 `--chromium` 指定浏览器路径。
