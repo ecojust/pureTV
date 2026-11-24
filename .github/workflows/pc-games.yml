@@ -1,107 +1,40 @@
-name: Catalog desktop player
-
-on:
-  workflow_dispatch:
-    inputs:
-      target:
-        description: Desktop package to build
-        type: choice
-        options: [catalog, standalone, standalone-macos, standalone-windows, icons-android, icons-macos, icons-windows]
-        default: catalog
-      android_shards:
-        description: Android icon build batches (JSON array, 0–7)
-        type: string
-        default: '[0,1,2,3,4,5,6,7]'
-      android_pilot:
-        description: Check the first three Android games in each selected batch without publishing
-        type: boolean
-        default: false
-      android_verified_run:
-        description: Reuse the installed APK checks from an earlier Android icon run
-        type: string
-        required: false
-  push:
-    branches: [master, 'feat/catalog-game-controls-*']
-    paths:
-      - 'tools/pc-games/**'
-      - '.github/workflows/pc-games.yml'
-
+name: Intel WKWebView game diagnostics
+on: workflow_dispatch
 permissions:
-  contents: read
-
+  contents: write
 jobs:
-  android-icons:
-    if: inputs.target == 'icons-android'
-    permissions:
-      actions: read
-      contents: read
-    uses: ./.github/workflows/game-icons-android.yml
-    with:
-      shards: ${{ inputs.android_shards || '[0,1,2,3,4,5,6,7]' }}
-      pilot: ${{ inputs.android_pilot || false }}
-      verified_run: ${{ inputs.android_verified_run || '' }}
-    secrets: inherit
-
-  macos-icons:
-    if: inputs.target == 'icons-macos'
-    permissions:
-      contents: write
-    uses: ./.github/workflows/game-icons-macos.yml
-
-  windows-icons:
-    if: inputs.target == 'icons-windows'
-    permissions:
-      contents: write
-    uses: ./.github/workflows/game-icons-windows.yml
-
-  games:
-    if: startsWith(inputs.target, 'standalone')
-    uses: ./.github/workflows/standalone-games.yml
-    with:
-      target: ${{ inputs.target }}
-
-  windows:
-    if: ${{ !startsWith(inputs.target, 'standalone') && !startsWith(inputs.target, 'icons-') }}
-    runs-on: windows-2022
-    timeout-minutes: 18
+  probe:
+    if: github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/build-assets/seven-intel-diagnostic-nerd-of-duty-c0f22923'
+    runs-on: macos-15-intel
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
           filter: blob:none
           sparse-checkout: |
-            tools/pc-games
-            puretv-joystick
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install build and test dependencies
-        run: python -m pip install -r tools/pc-games/requirements.txt pyinstaller==6.16.0 playwright==1.56.0
-      - name: Verify player and build Windows executable
-        working-directory: tools/pc-games
+            joystick-games/nerd-of-duty/dist
+            joystick-games/shared/macos/tools
+            intel-diagnostic
+      - name: Probe default WebGL and load the exact game files in visible WKWebViews
         run: |
-          python -m unittest discover -v
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          node --test test_bridge.cjs
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python package.py --output dist
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python -m PyInstaller --clean --onefile --name pureTV-Games --add-data 'catalog.json:.' --add-data 'pc-bridge.js:.' --collect-all zeroconf --recursive-copy-metadata zeroconf launcher.py
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          $games = .\dist\pureTV-Games.exe --list
-          if ($LASTEXITCODE -ne 0 -or $games.Count -eq 0) { throw 'The packaged catalog did not open' }
-      - name: Start the Windows executable and play with keyboard and Wi-Fi protocol
-        run: python tools/pc-games/smoke.py --exe tools/pc-games/dist/pureTV-Games.exe --channel msedge
-      - name: Record verified download checksums
-        shell: pwsh
-        run: |
-          Get-ChildItem tools/pc-games/dist/pureTV-Games* -File | ForEach-Object {
-            $digest = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
-            Write-Output "$digest  $($_.Name)  $($_.Length)"
-          }
+          set -euo pipefail
+          mkdir -p intel-diagnostic/evidence
+          git ls-files -z joystick-games/nerd-of-duty/dist | xargs -0 shasum -a256 > intel-diagnostic/evidence/game-digests.txt
+          swiftc joystick-games/shared/macos/tools/webgl-probe.swift -o "$RUNNER_TEMP/probe"
+          swiftc intel-diagnostic/WKInspect.swift -o "$RUNNER_TEMP/inspect"
+          "$RUNNER_TEMP/probe" "$PWD/intel-diagnostic/evidence/webgl.json"
+          python3 -m http.server 18392 --bind 127.0.0.1 --directory joystick-games > "$RUNNER_TEMP/server.log" 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          until curl -fsS -o /dev/null http://127.0.0.1:18392/nerd-of-duty/dist/tv.html; do sleep 1; done
+          for game in nerd-of-duty; do
+            "$RUNNER_TEMP/inspect" "http://127.0.0.1:18392/$game/dist/tv.html" "$PWD/intel-diagnostic/evidence/$game.json"
+          done
+          cp "$RUNNER_TEMP/server.log" intel-diagnostic/evidence/server.log
+          git add -f intel-diagnostic/evidence
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Record independent Intel WKWebView game and GPU observations'
+          git push origin HEAD:refs/heads/build-assets/seven-intel-diagnostic-nerd-of-duty-c0f22923
       - uses: actions/upload-artifact@v4
         with:
-          name: pureTV-Games-windows-x64
-          path: |
-            tools/pc-games/dist/pureTV-Games.exe
-            tools/pc-games/dist/pureTV-Games-portable.zip
-          if-no-files-found: error
+          name: intel-webgl-evidence
+          path: intel-diagnostic/evidence
