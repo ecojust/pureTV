@@ -8,9 +8,10 @@ import package
 
 
 class PortablePackageTests(unittest.TestCase):
-    def test_hidden_desktop_rows_still_require_unique_ids_and_valid_downloads(self):
+    def test_catalog_rejects_hidden_duplicate_or_invalid_rows(self):
         game = {'id': 'hidden', 'bytes': 1, 'sha256': '0' * 64}
         cases = [
+            ([game], 'Desktop release and featured catalog differ'),
             ([game, game], 'Duplicate desktop game ID'),
             ([dict(game, bytes=0)], 'Incomplete download identity for hidden'),
             ([dict(game, sha256='invalid')], 'Incomplete download identity for hidden'),
