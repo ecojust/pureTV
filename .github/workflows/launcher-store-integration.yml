@@ -55,6 +55,8 @@ jobs:
       - name: Build, test, lint and capture native launcher UI
         working-directory: resource/launcher/${{ matrix.launcher }}
         env:
+          # Robolectric downloads large Android runtime jars separately from Gradle.
+          JAVA_TOOL_OPTIONS: -Drobolectric.dependency.repo.url=https://maven-central.storage-download.googleapis.com/maven2
           CLEAN_UI_CAPTURE_DIR: ${{ runner.temp }}/launcher-previews
           NOVA_UI_CAPTURE_DIR: ${{ runner.temp }}/launcher-previews
           LAUNCHER_UI_CAPTURE_DIR: ${{ runner.temp }}/launcher-previews
