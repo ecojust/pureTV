@@ -1084,8 +1084,42 @@ class Acceptance:
         self.catalog_pause()
         self.capture('focus-restored-paused', [self.clients[0].identity])
         self.passed('native exit dialog and focus return cancel input and never automatically resume gameplay')
+        # BEGIN MECHAPEDE ACTIVE ROUND 1
+        mecha_round = self.args.game == 'mechapede' and os.environ.get('MECHAPEDE_ACTIVE_ROUND') == 'true'
+        if mecha_round:
+            assert self.report['apk']['sha256'] == '8aaf05cf467fe1ce9a313cd2b4d77a18bf74d9723f62a2589ec23fcb3b5288ef'
+            assert os.environ['ARTIFACT_SOURCE'] == '42b83ed4afd096ed09ac5186684c4f9f87894868'
+            # This round has already been used for the complete plan, raw key, and focus checks.
+            previous = self.catalog_playing()
+            self.record('mecha-previous-round-resumed', previous)
+            terminal = self.wait_fresh(previous, lambda s: self.game(s)['stage'] == 'gameover'
+                                       and self.game(s)['gameplay']['lives'] == 0,
+                                       timeout=120, label='mecha-previous-round-ended')
+            self.record('mecha-previous-round-gameover', terminal)
+            primary = self.clients[0].identity
+            assert self.visible_ids(terminal) == [primary]
+            last_frame = self.game(terminal)['gameplay']['frame']
+            self.tap('START')
+            fresh = self.wait_fresh(terminal, lambda s: self.game(s)['stage'] == 'playing'
+                                    and self.game(s)['gameplay']['lives'] == 3
+                                    and self.game(s)['gameplay']['wave'] == 1
+                                    and self.game(s)['gameplay']['shots'] == 0
+                                    and self.game(s)['gameplay']['frame'] < last_frame,
+                                    label='mecha-real-start-restarts-full-round')
+            assert self.visible_ids(fresh) == [primary] and fresh['info']['wifiController']['port'] == self.service_port
+            assert self.command('shell', 'pidof', self.package).decode().strip() == self.report['targetPid']
+            self.record('mecha-new-round-playing', fresh)
+        # END MECHAPEDE ACTIVE ROUND 1
         self.catalog_playing()
         self.press_observed('UP', effective=True)
+        # BEGIN MECHAPEDE ACTIVE ROUND 2
+        if mecha_round:
+            active = self.record('mecha-active-up-before-disconnect')
+            assert self.game(active)['stage'] == 'playing' and self.game(active)['gameplay']['lives'] > 0
+            assert self.visible_ids(active) == [primary] and active['info']['wifiController']['port'] == self.service_port
+            assert active['windowFocused'] is True and active['activityState'] == 'resumed'
+            assert self.native_buttons(active).get('UP') is True and self.button_state(active, 'UP')
+        # END MECHAPEDE ACTIVE ROUND 2
         self.ack_barrier(disconnect=True)
         lost = self.wait(lambda s: self.paused(s) and not self.visible_ids(s) and not any(self.button_state(s, k) for k in KEYS), label='disconnect-pauses-clears')
         self.record('disconnect-paused', lost)
