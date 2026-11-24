@@ -105,7 +105,7 @@ def run(browser, url, mode, width, height, evidence, video=None):
         from recording import Recording
         recording=Recording(page,video)
     point=state()["gameplay"]["position"]
-    press("UP",f"JSON.stringify({STATE}.gameplay.position) !== {json.dumps(json.dumps(point,separators=(',',':')))}")
+    press("UP",f"{STATE}.gameplay.position.some((v,i)=>Math.abs(v-{json.dumps(point)}[i])>.04)")
     yaw=state()["gameplay"]["yaw"]
     press("RIGHT",f"Math.abs({STATE}.gameplay.yaw - ({yaw})) > .15")
     button("X",True)
