@@ -4,6 +4,8 @@
 
 ![海峡上空的实际飞行画面](thumb.png)
 
+[Android 模拟器实玩录像（13 秒）](docs/releases/0.1.0/android-gameplay.mp4)展示了手柄通过 pureTV SDK 控制海鸥飞行、转向和俯冲的过程。[完整录屏与输入记录](https://github.com/ecojust/pureTV/tree/a95383709da6b433c0363e305c849e607083a371/reports/joystick-android-report-runtime-marti/marti-normal)
+
 ## 手柄
 
 | 操作 | 游玩时 | 菜单中 |
