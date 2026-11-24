@@ -1,0 +1,444 @@
+﻿2026-11-24T16:51:16.7891630Z Current runner version: '2.338.2'
+2026-11-24T16:51:16.7916271Z ##[group]Runner Image Provisioner
+2026-11-24T16:51:16.7917831Z Hosted Compute Agent
+2026-11-24T16:51:16.7918397Z Version: 20261111.635
+2026-11-24T16:51:16.7918952Z Commit: b8a594ea514ff44cadb5342986c68b1eac6e22ed
+2026-11-24T16:51:16.7919620Z Build Date: 2026-11-11T01:49:01Z
+2026-11-24T16:51:16.7920252Z Worker ID: {36adde5e-93e4-4e35-8edf-d0a891920bc8}
+2026-11-24T16:51:16.7920920Z Region: westus2
+2026-11-24T16:51:16.7921396Z Cloud: Azure
+2026-11-24T16:51:16.7921850Z ##[endgroup]
+2026-11-24T16:51:16.7923273Z ##[group]Operating System
+2026-11-24T16:51:16.7923867Z Microsoft Windows Server 2022
+2026-11-24T16:51:16.7924394Z 10.0.20348
+2026-11-24T16:51:16.7924859Z Datacenter
+2026-11-24T16:51:16.7925303Z ##[endgroup]
+2026-11-24T16:51:16.7925781Z ##[group]Runner Image
+2026-11-24T16:51:16.7926351Z Image: windows-2022
+2026-11-24T16:51:16.7926860Z Version: 20261116.370.1
+2026-11-24T16:51:16.7928123Z Included Software: https://github.com/actions/runner-images/blob/win22/20261116.370/images/windows/Windows2022-Readme.md
+2026-11-24T16:51:16.7929565Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261116.370
+2026-11-24T16:51:16.7930479Z ##[endgroup]
+2026-11-24T16:51:16.7931443Z ##[group]GITHUB_TOKEN Permissions
+2026-11-24T16:51:16.7933879Z Contents: read
+2026-11-24T16:51:16.7934399Z Metadata: read
+2026-11-24T16:51:16.7934913Z ##[endgroup]
+2026-11-24T16:51:16.7936927Z Secret source: Actions
+2026-11-24T16:51:16.7937779Z Cache mode: write
+2026-11-24T16:51:16.7938397Z Prepare workflow directory
+2026-11-24T16:51:16.8269825Z Prepare all required actions
+2026-11-24T16:51:16.8318228Z Getting action download info
+2026-11-24T16:51:17.2226673Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-24T16:51:17.3397695Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-24T16:51:17.4734039Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-24T16:51:17.8031323Z Complete job name: windows
+2026-11-24T16:51:17.9600777Z ##[group]Run actions/checkout@v4
+2026-11-24T16:51:17.9601801Z with:
+2026-11-24T16:51:17.9602191Z   filter: blob:none
+2026-11-24T16:51:17.9602719Z   sparse-checkout: tools/pc-games
+puretv-joystick
+
+2026-11-24T16:51:17.9603329Z   repository: ecojust/pureTV
+2026-11-24T16:51:17.9607261Z   token: ***
+2026-11-24T16:51:17.9607660Z   ssh-strict: true
+2026-11-24T16:51:17.9608073Z   ssh-user: git
+2026-11-24T16:51:17.9608486Z   persist-credentials: true
+2026-11-24T16:51:17.9608936Z   clean: true
+2026-11-24T16:51:17.9609354Z   sparse-checkout-cone-mode: true
+2026-11-24T16:51:17.9609837Z   fetch-depth: 1
+2026-11-24T16:51:17.9610236Z   fetch-tags: false
+2026-11-24T16:51:17.9610640Z   show-progress: true
+2026-11-24T16:51:17.9611051Z   lfs: false
+2026-11-24T16:51:17.9611434Z   submodules: false
+2026-11-24T16:51:17.9611843Z   set-safe-directory: true
+2026-11-24T16:51:17.9612339Z   allow-unsafe-pr-checkout: false
+2026-11-24T16:51:17.9613022Z ##[endgroup]
+2026-11-24T16:51:18.1064153Z Syncing repository: ecojust/pureTV
+2026-11-24T16:51:18.1065830Z ##[group]Getting Git version info
+2026-11-24T16:51:18.1066431Z Working directory is 'D:\a\pureTV\pureTV'
+2026-11-24T16:51:18.2093185Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-24T16:51:18.5012522Z git version 2.56.1.windows.1
+2026-11-24T16:51:18.5051778Z ##[endgroup]
+2026-11-24T16:51:18.5070041Z Temporarily overriding HOME='D:\a\_temp\44a0cb2c-3397-4830-acdc-3e97ac402d6b' before making global git config changes
+2026-11-24T16:51:18.5071863Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-24T16:51:18.5080351Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\pureTV\pureTV
+2026-11-24T16:51:18.5648705Z Deleting the contents of 'D:\a\pureTV\pureTV'
+2026-11-24T16:51:18.5653801Z ##[group]Initializing the repository
+2026-11-24T16:51:18.5664879Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\pureTV\pureTV
+2026-11-24T16:51:18.6309873Z Initialized empty Git repository in D:/a/pureTV/pureTV/.git/
+2026-11-24T16:51:18.6347896Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/ecojust/pureTV
+2026-11-24T16:51:18.6925194Z ##[endgroup]
+2026-11-24T16:51:18.6926757Z ##[group]Disabling automatic garbage collection
+2026-11-24T16:51:18.6932671Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-24T16:51:18.7228314Z ##[endgroup]
+2026-11-24T16:51:18.7230687Z ##[group]Setting up auth
+2026-11-24T16:51:18.7241289Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-24T16:51:18.7537690Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-24T16:51:20.0477802Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-24T16:51:20.0786785Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-24T16:51:20.5472038Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-24T16:51:20.5772915Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-24T16:51:21.0535631Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-24T16:51:21.0841496Z ##[endgroup]
+2026-11-24T16:51:21.0842198Z ##[group]Fetching the repository
+2026-11-24T16:51:21.0856444Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +48e65237433b2e4974b5a47c8dc9bcecae6e0624:refs/remotes/origin/add-seven-selected-games
+2026-11-24T16:51:22.1032670Z From https://github.com/ecojust/pureTV
+2026-11-24T16:51:22.1033682Z  * [new ref]         48e65237433b2e4974b5a47c8dc9bcecae6e0624 -> origin/add-seven-selected-games
+2026-11-24T16:51:22.1065579Z ##[endgroup]
+2026-11-24T16:51:22.1066194Z ##[group]Determining the checkout info
+2026-11-24T16:51:22.1068628Z ##[endgroup]
+2026-11-24T16:51:22.1069371Z ##[group]Setting up sparse checkout
+2026-11-24T16:51:22.1078008Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout set tools/pc-games puretv-joystick
+2026-11-24T16:51:22.1505574Z ##[endgroup]
+2026-11-24T16:51:22.1506254Z ##[group]Checking out the ref
+2026-11-24T16:51:22.1515863Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B add-seven-selected-games refs/remotes/origin/add-seven-selected-games
+2026-11-24T16:51:23.7769856Z Updating files:   0% (1/105)
+2026-11-24T16:51:23.7773349Z Updating files:   1% (2/105)
+2026-11-24T16:51:23.7775931Z Updating files:   2% (3/105)
+2026-11-24T16:51:23.7778756Z Updating files:   3% (4/105)
+2026-11-24T16:51:23.7787577Z Updating files:   4% (5/105)
+2026-11-24T16:51:23.7793090Z Updating files:   5% (6/105)
+2026-11-24T16:51:23.7797224Z Updating files:   6% (7/105)
+2026-11-24T16:51:23.7801981Z Updating files:   7% (8/105)
+2026-11-24T16:51:23.7804458Z Updating files:   8% (9/105)
+2026-11-24T16:51:23.7883589Z Updating files:   9% (10/105)
+2026-11-24T16:51:23.7886622Z Updating files:  10% (11/105)
+2026-11-24T16:51:23.7890032Z Updating files:  11% (12/105)
+2026-11-24T16:51:23.7893094Z Updating files:  12% (13/105)
+2026-11-24T16:51:23.7898581Z Updating files:  13% (14/105)
+2026-11-24T16:51:23.8471744Z Updating files:  14% (15/105)
+2026-11-24T16:51:23.8475583Z Updating files:  15% (16/105)
+2026-11-24T16:51:23.8478464Z Updating files:  16% (17/105)
+2026-11-24T16:51:23.8480873Z Updating files:  17% (18/105)
+2026-11-24T16:51:23.8484815Z Updating files:  18% (19/105)
+2026-11-24T16:51:23.8489542Z Updating files:  19% (20/105)
+2026-11-24T16:51:23.8498217Z Updating files:  20% (21/105)
+2026-11-24T16:51:23.8501827Z Updating files:  21% (23/105)
+2026-11-24T16:51:23.8504478Z Updating files:  22% (24/105)
+2026-11-24T16:51:23.8507345Z Updating files:  23% (25/105)
+2026-11-24T16:51:23.8511151Z Updating files:  24% (26/105)
+2026-11-24T16:51:23.8514315Z Updating files:  25% (27/105)
+2026-11-24T16:51:23.8516772Z Updating files:  26% (28/105)
+2026-11-24T16:51:23.8518283Z Updating files:  27% (29/105)
+2026-11-24T16:51:23.8521287Z Updating files:  28% (30/105)
+2026-11-24T16:51:23.8525101Z Updating files:  29% (31/105)
+2026-11-24T16:51:23.8527588Z Updating files:  30% (32/105)
+2026-11-24T16:51:23.8529955Z Updating files:  31% (33/105)
+2026-11-24T16:51:23.8531847Z Updating files:  32% (34/105)
+2026-11-24T16:51:23.8534433Z Updating files:  33% (35/105)
+2026-11-24T16:51:23.8537745Z Updating files:  34% (36/105)
+2026-11-24T16:51:23.8541141Z Updating files:  35% (37/105)
+2026-11-24T16:51:23.8542969Z Updating files:  36% (38/105)
+2026-11-24T16:51:23.8545348Z Updating files:  37% (39/105)
+2026-11-24T16:51:23.8548395Z Updating files:  38% (40/105)
+2026-11-24T16:51:23.8550684Z Updating files:  39% (41/105)
+2026-11-24T16:51:23.8556601Z Updating files:  40% (42/105)
+2026-11-24T16:51:23.8559319Z Updating files:  41% (44/105)
+2026-11-24T16:51:23.8562099Z Updating files:  42% (45/105)
+2026-11-24T16:51:23.8565276Z Updating files:  43% (46/105)
+2026-11-24T16:51:23.8568677Z Updating files:  44% (47/105)
+2026-11-24T16:51:23.8573635Z Updating files:  45% (48/105)
+2026-11-24T16:51:23.8575962Z Updating files:  46% (49/105)
+2026-11-24T16:51:23.8578665Z Updating files:  47% (50/105)
+2026-11-24T16:51:23.8582933Z Updating files:  48% (51/105)
+2026-11-24T16:51:23.9197387Z Updating files:  49% (52/105)
+2026-11-24T16:51:23.9198482Z Updating files:  50% (53/105)
+2026-11-24T16:51:23.9201750Z Updating files:  51% (54/105)
+2026-11-24T16:51:23.9205519Z Updating files:  52% (55/105)
+2026-11-24T16:51:23.9207950Z Updating files:  53% (56/105)
+2026-11-24T16:51:23.9210605Z Updating files:  54% (57/105)
+2026-11-24T16:51:23.9213223Z Updating files:  55% (58/105)
+2026-11-24T16:51:23.9215997Z Updating files:  56% (59/105)
+2026-11-24T16:51:23.9221852Z Updating files:  57% (60/105)
+2026-11-24T16:51:23.9225171Z Updating files:  58% (61/105)
+2026-11-24T16:51:23.9226984Z Updating files:  59% (62/105)
+2026-11-24T16:51:23.9231966Z Updating files:  60% (63/105)
+2026-11-24T16:51:23.9234356Z Updating files:  61% (65/105)
+2026-11-24T16:51:23.9236537Z Updating files:  62% (66/105)
+2026-11-24T16:51:23.9238885Z Updating files:  63% (67/105)
+2026-11-24T16:51:23.9241264Z Updating files:  64% (68/105)
+2026-11-24T16:51:23.9243737Z Updating files:  65% (69/105)
+2026-11-24T16:51:23.9246543Z Updating files:  66% (70/105)
+2026-11-24T16:51:23.9249435Z Updating files:  67% (71/105)
+2026-11-24T16:51:23.9252999Z Updating files:  68% (72/105)
+2026-11-24T16:51:23.9255166Z Updating files:  69% (73/105)
+2026-11-24T16:51:23.9258812Z Updating files:  70% (74/105)
+2026-11-24T16:51:23.9261498Z Updating files:  71% (75/105)
+2026-11-24T16:51:23.9266880Z Updating files:  72% (76/105)
+2026-11-24T16:51:23.9269687Z Updating files:  73% (77/105)
+2026-11-24T16:51:23.9272852Z Updating files:  74% (78/105)
+2026-11-24T16:51:23.9276329Z Updating files:  75% (79/105)
+2026-11-24T16:51:23.9278803Z Updating files:  76% (80/105)
+2026-11-24T16:51:23.9280595Z Updating files:  77% (81/105)
+2026-11-24T16:51:23.9282480Z Updating files:  78% (82/105)
+2026-11-24T16:51:23.9286066Z Updating files:  79% (83/105)
+2026-11-24T16:51:23.9290655Z Updating files:  80% (84/105)
+2026-11-24T16:51:23.9292789Z Updating files:  81% (86/105)
+2026-11-24T16:51:23.9295940Z Updating files:  82% (87/105)
+2026-11-24T16:51:23.9298794Z Updating files:  83% (88/105)
+2026-11-24T16:51:23.9301247Z Updating files:  84% (89/105)
+2026-11-24T16:51:23.9305262Z Updating files:  85% (90/105)
+2026-11-24T16:51:23.9310351Z Updating files:  86% (91/105)
+2026-11-24T16:51:23.9313324Z Updating files:  87% (92/105)
+2026-11-24T16:51:23.9315092Z Updating files:  88% (93/105)
+2026-11-24T16:51:23.9318703Z Updating files:  89% (94/105)
+2026-11-24T16:51:23.9321022Z Updating files:  90% (95/105)
+2026-11-24T16:51:23.9323891Z Updating files:  91% (96/105)
+2026-11-24T16:51:23.9326102Z Updating files:  92% (97/105)
+2026-11-24T16:51:23.9328940Z Updating files:  93% (98/105)
+2026-11-24T16:51:23.9330792Z Updating files:  94% (99/105)
+2026-11-24T16:51:23.9333724Z Updating files:  95% (100/105)
+2026-11-24T16:51:23.9335604Z Updating files:  96% (101/105)
+2026-11-24T16:51:23.9338300Z Updating files:  97% (102/105)
+2026-11-24T16:51:23.9341104Z Updating files:  98% (103/105)
+2026-11-24T16:51:23.9426826Z Updating files:  99% (104/105)
+2026-11-24T16:51:23.9427495Z Updating files: 100% (105/105)
+2026-11-24T16:51:23.9427973Z Updating files: 100% (105/105), done.
+2026-11-24T16:51:24.0130217Z Switched to a new branch 'add-seven-selected-games'
+2026-11-24T16:51:24.0193003Z branch 'add-seven-selected-games' set up to track 'origin/add-seven-selected-games'.
+2026-11-24T16:51:24.0253737Z ##[endgroup]
+2026-11-24T16:51:24.0655041Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-24T16:51:24.0930884Z 48e65237433b2e4974b5a47c8dc9bcecae6e0624
+2026-11-24T16:51:24.1325789Z ##[group]Run actions/setup-python@v5
+2026-11-24T16:51:24.1326143Z with:
+2026-11-24T16:51:24.1326350Z   python-version: 3.12
+2026-11-24T16:51:24.1326574Z   check-latest: false
+2026-11-24T16:51:24.1329105Z   token: ***
+2026-11-24T16:51:24.1329316Z   update-environment: true
+2026-11-24T16:51:24.1329553Z   allow-prereleases: false
+2026-11-24T16:51:24.1329775Z   freethreaded: false
+2026-11-24T16:51:24.1329970Z ##[endgroup]
+2026-11-24T16:51:24.2859257Z ##[group]Installed versions
+2026-11-24T16:51:24.3017155Z (node:7784) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-24T16:51:24.3017949Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-24T16:51:24.3018969Z Successfully set up CPython (3.12.10)
+2026-11-24T16:51:24.3019513Z ##[endgroup]
+2026-11-24T16:51:24.3255551Z ##[group]Run python -m pip install -r tools/pc-games/requirements.txt pyinstaller==6.16.0 playwright==1.56.0
+2026-11-24T16:51:24.3256487Z [36;1mpython -m pip install -r tools/pc-games/requirements.txt pyinstaller==6.16.0 playwright==1.56.0[0m
+2026-11-24T16:51:24.3391808Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-24T16:51:24.3392191Z env:
+2026-11-24T16:51:24.3392475Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-24T16:51:24.3392980Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-24T16:51:24.3393472Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-24T16:51:24.3393903Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-24T16:51:24.3394361Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-24T16:51:24.3394703Z ##[endgroup]
+2026-11-24T16:51:29.0293327Z Collecting pyinstaller==6.16.0
+2026-11-24T16:51:29.2027093Z   Downloading pyinstaller-6.16.0-py3-none-win_amd64.whl.metadata (8.5 kB)
+2026-11-24T16:51:29.2781414Z Collecting playwright==1.56.0
+2026-11-24T16:51:29.2901539Z   Downloading playwright-1.56.0-py3-none-win_amd64.whl.metadata (3.5 kB)
+2026-11-24T16:51:29.8395821Z Collecting zeroconf==0.148.0 (from -r tools/pc-games/requirements.txt (line 1))
+2026-11-24T16:51:29.8497542Z   Downloading zeroconf-0.148.0-cp312-cp312-win_amd64.whl.metadata (6.3 kB)
+2026-11-24T16:51:29.9001514Z Collecting ifaddr==0.2.0 (from -r tools/pc-games/requirements.txt (line 2))
+2026-11-24T16:51:29.9094349Z   Downloading ifaddr-0.2.0-py3-none-any.whl.metadata (4.9 kB)
+2026-11-24T16:51:29.9522426Z Collecting altgraph (from pyinstaller==6.16.0)
+2026-11-24T16:51:29.9605922Z   Downloading altgraph-0.17.5-py2.py3-none-any.whl.metadata (7.5 kB)
+2026-11-24T16:51:29.9787327Z Requirement already satisfied: packaging>=22.0 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from pyinstaller==6.16.0) (26.3)
+2026-11-24T16:51:30.0043278Z Collecting pefile!=2024.8.26,>=2022.5.30 (from pyinstaller==6.16.0)
+2026-11-24T16:51:30.0128932Z   Downloading pefile-2023.2.7-py3-none-any.whl.metadata (1.4 kB)
+2026-11-24T16:51:30.0650655Z Collecting pyinstaller-hooks-contrib>=2025.8 (from pyinstaller==6.16.0)
+2026-11-24T16:51:30.0749307Z   Downloading pyinstaller_hooks_contrib-2026.10-py3-none-any.whl.metadata (16 kB)
+2026-11-24T16:51:30.1336080Z Collecting pywin32-ctypes>=0.2.1 (from pyinstaller==6.16.0)
+2026-11-24T16:51:30.1423778Z   Downloading pywin32_ctypes-0.2.3-py3-none-any.whl.metadata (3.9 kB)
+2026-11-24T16:51:30.2596068Z Collecting setuptools>=42.0.0 (from pyinstaller==6.16.0)
+2026-11-24T16:51:30.2690605Z   Downloading setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
+2026-11-24T16:51:30.3223671Z Collecting pyee<14,>=13 (from playwright==1.56.0)
+2026-11-24T16:51:30.3310982Z   Downloading pyee-13.0.1-py3-none-any.whl.metadata (3.0 kB)
+2026-11-24T16:51:30.5380378Z Collecting greenlet<4.0.0,>=3.1.1 (from playwright==1.56.0)
+2026-11-24T16:51:30.5477653Z   Downloading greenlet-3.5.6-cp312-cp312-win_amd64.whl.metadata (3.9 kB)
+2026-11-24T16:51:30.6021065Z Collecting typing-extensions (from pyee<14,>=13->playwright==1.56.0)
+2026-11-24T16:51:30.6106868Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-11-24T16:51:30.6562933Z Downloading pyinstaller-6.16.0-py3-none-win_amd64.whl (1.4 MB)
+2026-11-24T16:51:30.7093893Z    ---------------------------------------- 1.4/1.4 MB 35.9 MB/s  0:00:00
+2026-11-24T16:51:30.7199397Z Downloading playwright-1.56.0-py3-none-win_amd64.whl (35.6 MB)
+2026-11-24T16:51:31.2506451Z    ---------------------------------------- 35.6/35.6 MB 66.5 MB/s  0:00:00
+2026-11-24T16:51:31.3687837Z Downloading zeroconf-0.148.0-cp312-cp312-win_amd64.whl (1.5 MB)
+2026-11-24T16:51:31.3947434Z    ---------------------------------------- 1.5/1.5 MB 84.7 MB/s  0:00:00
+2026-11-24T16:51:31.4030936Z Downloading ifaddr-0.2.0-py3-none-any.whl (12 kB)
+2026-11-24T16:51:31.4245152Z Downloading greenlet-3.5.6-cp312-cp312-win_amd64.whl (324 kB)
+2026-11-24T16:51:31.4508975Z Downloading pyee-13.0.1-py3-none-any.whl (15 kB)
+2026-11-24T16:51:31.4726424Z Downloading pefile-2023.2.7-py3-none-any.whl (71 kB)
+2026-11-24T16:51:31.4934578Z Downloading pyinstaller_hooks_contrib-2026.10-py3-none-any.whl (463 kB)
+2026-11-24T16:51:31.5189564Z Downloading pywin32_ctypes-0.2.3-py3-none-any.whl (30 kB)
+2026-11-24T16:51:31.5524930Z Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+2026-11-24T16:51:31.6054747Z    ---------------------------------------- 876.3/876.3 kB 9.9 MB/s  0:00:00
+2026-11-24T16:51:31.6133867Z Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+2026-11-24T16:51:31.6354388Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-11-24T16:51:31.9914657Z Installing collected packages: ifaddr, altgraph, zeroconf, typing-extensions, setuptools, pywin32-ctypes, pyinstaller-hooks-contrib, pefile, greenlet, pyinstaller, pyee, playwright
+2026-11-24T16:51:39.3224700Z 
+2026-11-24T16:51:39.3249480Z Successfully installed altgraph-0.17.5 greenlet-3.5.6 ifaddr-0.2.0 pefile-2023.2.7 playwright-1.56.0 pyee-13.0.1 pyinstaller-6.16.0 pyinstaller-hooks-contrib-2026.10 pywin32-ctypes-0.2.3 setuptools-84.2.1 typing-extensions-4.16.0 zeroconf-0.148.0
+2026-11-24T16:51:39.5174644Z ##[group]Run python -m unittest discover -v
+2026-11-24T16:51:39.5175105Z [36;1mpython -m unittest discover -v[0m
+2026-11-24T16:51:39.5175437Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-24T16:51:39.5175760Z [36;1mnode --test test_bridge.cjs[0m
+2026-11-24T16:51:39.5176077Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-24T16:51:39.5176408Z [36;1mpython package.py --output dist[0m
+2026-11-24T16:51:39.5177514Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-24T16:51:39.5178380Z [36;1mpython -m PyInstaller --clean --onefile --name pureTV-Games --add-data 'catalog.json:.' --add-data 'pc-bridge.js:.' --collect-all zeroconf --recursive-copy-metadata zeroconf launcher.py[0m
+2026-11-24T16:51:39.5179217Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-24T16:51:39.5179547Z [36;1m$games = .\dist\pureTV-Games.exe --list[0m
+2026-11-24T16:51:39.5180066Z [36;1mif ($LASTEXITCODE -ne 0 -or $games.Count -eq 0) { throw 'The packaged catalog did not open' }[0m
+2026-11-24T16:51:39.5223193Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-24T16:51:39.5223536Z env:
+2026-11-24T16:51:39.5223803Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-24T16:51:39.5224275Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-24T16:51:39.5224730Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-24T16:51:39.5225148Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-24T16:51:39.5225537Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-24T16:51:39.5225841Z ##[endgroup]
+2026-11-24T16:51:41.5701700Z test_loopback_and_lan_setup_do_not_require_dns (test_host.NetworkStartupTests.test_loopback_and_lan_setup_do_not_require_dns) ... ok
+2026-11-24T16:51:41.5727509Z Demo  �  0.0 MiB
+2026-11-24T16:51:41.5743711Z Demo  �  0.0 MiB
+2026-11-24T16:51:41.5761150Z Demo  �  0.0 MiB
+2026-11-24T16:51:41.5772237Z test_invalid_download_never_enters_cache (test_launcher.CatalogDownloadTests.test_invalid_download_never_enters_cache) ... ok
+2026-11-24T16:51:41.5798708Z Demo  �  0.0 MiB
+2026-11-24T16:51:41.5800562Z Demo  �  0.0 MiB
+2026-11-24T16:51:41.5834122Z test_parallel_download_and_offline_launch (test_launcher.CatalogDownloadTests.test_parallel_download_and_offline_launch) ... ok
+2026-11-24T16:51:41.5864809Z test_source_archive_launches_verified_repository_apk_offline (test_launcher.CatalogDownloadTests.test_source_archive_launches_verified_repository_apk_offline) ... ok
+2026-11-24T16:51:41.5911128Z test_catalog_rejects_hidden_duplicate_or_invalid_rows (test_package.PortablePackageTests.test_catalog_rejects_hidden_duplicate_or_invalid_rows) ... ok
+2026-11-24T16:51:41.5939387Z test_stale_port_download_is_rejected_even_when_game_id_matches (test_package.PortablePackageTests.test_stale_port_download_is_rejected_even_when_game_id_matches) ... ok
+2026-11-24T16:51:41.6145660Z test_windows_and_unix_text_checkouts_produce_the_same_archive (test_package.PortablePackageTests.test_windows_and_unix_text_checkouts_produce_the_same_archive) ... ok
+2026-11-24T16:51:41.6186106Z test_interactive_windows_console_names_game_and_shows_exit_action (test_standalone.StandaloneTests.test_interactive_windows_console_names_game_and_shows_exit_action) ... ok
+2026-11-24T16:51:41.6224004Z test_macos_app_reads_resources_outside_frozen_helper (test_standalone.StandaloneTests.test_macos_app_reads_resources_outside_frozen_helper) ... ok
+2026-11-24T16:51:41.6284625Z test_smoke_checks_game_and_bridge_offline (test_standalone.StandaloneTests.test_smoke_checks_game_and_bridge_offline) ... ok
+2026-11-24T16:51:41.6306541Z test_starts_only_bundled_game (test_standalone.StandaloneTests.test_starts_only_bundled_game) ... ok
+2026-11-24T16:51:41.6307431Z 
+2026-11-24T16:51:41.6307744Z ----------------------------------------------------------------------
+2026-11-24T16:51:41.6308358Z Ran 11 tests in 0.098s
+2026-11-24T16:51:41.6311286Z 
+2026-11-24T16:51:41.6311479Z OK
+2026-11-24T16:51:41.6312150Z pureTV-Games-portable.zip 21848922cee9c35fa3d48c965b3e90f44507e57bc8d7af80fe7885f42eb77156
+2026-11-24T16:51:41.6313228Z pureTV-Games-portable.zip 21848922cee9c35fa3d48c965b3e90f44507e57bc8d7af80fe7885f42eb77156
+2026-11-24T16:51:43.8921304Z TAP version 13
+2026-11-24T16:51:44.0912545Z # Subtest: legacy, Game Kit, and nine-button games preserve the signed host mappings
+2026-11-24T16:51:44.0920300Z ok 1 - legacy, Game Kit, and nine-button games preserve the signed host mappings
+2026-11-24T16:51:44.0921766Z   ---
+2026-11-24T16:51:44.0921999Z   duration_ms: 30.2642
+2026-11-24T16:51:44.0922384Z   type: 'test'
+2026-11-24T16:51:44.0922703Z   ...
+2026-11-24T16:51:44.0932925Z # Subtest: separate seats retain a short pulse and quarantine held input after focus loss
+2026-11-24T16:51:44.0936195Z ok 2 - separate seats retain a short pulse and quarantine held input after focus loss
+2026-11-24T16:51:44.0938683Z   ---
+2026-11-24T16:51:44.0939574Z   duration_ms: 2.6396
+2026-11-24T16:51:44.0939799Z   type: 'test'
+2026-11-24T16:51:44.0939968Z   ...
+2026-11-24T16:51:44.0941855Z # Subtest: reloading an existing room baselines previous counts and closes the old event stream
+2026-11-24T16:51:44.0945317Z ok 3 - reloading an existing room baselines previous counts and closes the old event stream
+2026-11-24T16:51:44.0946650Z   ---
+2026-11-24T16:51:44.0946859Z   duration_ms: 1.2496
+2026-11-24T16:51:44.0947079Z   type: 'test'
+2026-11-24T16:51:44.0947254Z   ...
+2026-11-24T16:51:44.1176088Z 1..3
+2026-11-24T16:51:44.1176490Z # tests 3
+2026-11-24T16:51:44.1177557Z # suites 0
+2026-11-24T16:51:44.1179489Z # pass 3
+2026-11-24T16:51:44.1179836Z # fail 0
+2026-11-24T16:51:44.1181067Z # cancelled 0
+2026-11-24T16:51:44.1181385Z # skipped 0
+2026-11-24T16:51:44.1182571Z # todo 0
+2026-11-24T16:51:44.1182919Z # duration_ms 303.4386
+2026-11-24T16:51:44.1882680Z pureTV-Games-portable.zip 21848922cee9c35fa3d48c965b3e90f44507e57bc8d7af80fe7885f42eb77156
+2026-11-24T16:51:44.6002313Z 266 INFO: PyInstaller: 6.16.0, contrib hooks: 2026.10
+2026-11-24T16:51:44.6005425Z 266 INFO: Python: 3.12.10
+2026-11-24T16:51:44.6198831Z 297 INFO: Platform: Windows-2022Server-10.0.20348-SP0
+2026-11-24T16:51:44.6199332Z 297 INFO: Python environment: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-24T16:51:44.6203739Z 297 INFO: wrote D:\a\pureTV\pureTV\tools\pc-games\pureTV-Games.spec
+2026-11-24T16:51:44.6279294Z 297 INFO: Removing temporary files and cleaning cache in C:\Users\runneradmin\AppData\Local\pyinstaller
+2026-11-24T16:51:45.3470108Z 1016 INFO: Module search paths (PYTHONPATH):
+2026-11-24T16:51:45.3470853Z ['D:\\a\\pureTV\\pureTV\\tools\\pc-games',
+2026-11-24T16:51:45.3471395Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.zip',
+2026-11-24T16:51:45.3472003Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\DLLs',
+2026-11-24T16:51:45.3472542Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib',
+2026-11-24T16:51:45.3473092Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64',
+2026-11-24T16:51:45.3473684Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages',
+2026-11-24T16:51:45.3474254Z  'D:\\a\\pureTV\\pureTV\\tools\\pc-games']
+2026-11-24T16:51:45.5821291Z 1251 INFO: Appending 'datas' from .spec
+2026-11-24T16:51:45.5863610Z 1266 INFO: checking Analysis
+2026-11-24T16:51:45.5864823Z 1266 INFO: Building Analysis because Analysis-00.toc is non existent
+2026-11-24T16:51:45.5865797Z 1266 INFO: Looking for Python shared library...
+2026-11-24T16:51:45.5866445Z 1266 INFO: Using Python shared library: C:\hostedtoolcache\windows\Python\3.12.10\x64\python312.dll
+2026-11-24T16:51:45.5867337Z 1266 INFO: Running Analysis Analysis-00.toc
+2026-11-24T16:51:45.5867711Z 1266 INFO: Target bytecode optimization level: 0
+2026-11-24T16:51:45.5868091Z 1266 INFO: Initializing module dependency graph...
+2026-11-24T16:51:45.5899648Z 1266 INFO: Initializing module graph hook caches...
+2026-11-24T16:51:45.6052236Z 1282 INFO: Analyzing modules for base_library.zip ...
+2026-11-24T16:51:46.5169023Z 2190 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-24T16:51:46.6199685Z 2299 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-24T16:51:48.5009779Z 4178 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-24T16:51:50.1793463Z 5851 INFO: Caching module dependency graph...
+2026-11-24T16:51:50.2174444Z 5898 INFO: Analyzing D:\a\pureTV\pureTV\tools\pc-games\launcher.py
+2026-11-24T16:51:50.5407457Z 6211 INFO: Processing pre-find-module-path hook 'hook-tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+2026-11-24T16:51:50.5409488Z 6211 INFO: TclTkInfo: initializing cached Tcl/Tk info...
+2026-11-24T16:51:51.3716284Z 7048 INFO: Processing standard module hook 'hook-_tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-24T16:51:51.6076054Z 7283 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-24T16:51:51.6643431Z 7330 INFO: Processing standard module hook 'hook-_ctypes.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-24T16:51:52.0007445Z 7673 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-24T16:51:52.0958911Z 7767 INFO: Processing standard module hook 'hook-xml.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-24T16:51:52.8373515Z 8518 INFO: Analyzing hidden import 'zeroconf.asyncio'
+2026-11-24T16:51:52.8441762Z 8518 INFO: Processing module hooks (post-graph stage)...
+2026-11-24T16:51:52.9014622Z 8581 INFO: Processing standard module hook 'hook-_tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-24T16:51:52.9133973Z 8581 INFO: Performing binary vs. data reclassification (994 entries)
+2026-11-24T16:51:53.4440335Z 9113 INFO: Looking for ctypes DLLs
+2026-11-24T16:51:53.4557505Z 9129 INFO: Analyzing run-time hooks ...
+2026-11-24T16:51:53.4576618Z 9129 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+2026-11-24T16:51:53.4600663Z 9129 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+2026-11-24T16:51:53.4623404Z 9142 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+2026-11-24T16:51:53.4646873Z 9145 INFO: Including run-time hook 'pyi_rth__tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+2026-11-24T16:51:53.4932473Z 9161 INFO: Creating base_library.zip...
+2026-11-24T16:51:53.5136550Z 9192 INFO: Looking for dynamic libraries
+2026-11-24T16:51:53.7816905Z 9457 INFO: Extra DLL search directories (AddDllDirectory): []
+2026-11-24T16:51:53.7817782Z 9457 INFO: Extra DLL search directories (PATH): []
+2026-11-24T16:51:54.6602776Z 10333 WARNING: Library not found: could not resolve 'api-ms-win-core-path-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.dll'.
+2026-11-24T16:51:54.6899356Z 10364 INFO: Warnings written to D:\a\pureTV\pureTV\tools\pc-games\build\pureTV-Games\warn-pureTV-Games.txt
+2026-11-24T16:51:54.7174292Z 10395 INFO: Graph cross-reference written to D:\a\pureTV\pureTV\tools\pc-games\build\pureTV-Games\xref-pureTV-Games.html
+2026-11-24T16:51:54.7541262Z 10427 INFO: checking PYZ
+2026-11-24T16:51:54.7542013Z 10427 INFO: Building PYZ because PYZ-00.toc is non existent
+2026-11-24T16:51:54.7543029Z 10427 INFO: Building PYZ (ZlibArchive) D:\a\pureTV\pureTV\tools\pc-games\build\pureTV-Games\PYZ-00.pyz
+2026-11-24T16:51:55.0287916Z 10709 INFO: Building PYZ (ZlibArchive) D:\a\pureTV\pureTV\tools\pc-games\build\pureTV-Games\PYZ-00.pyz completed successfully.
+2026-11-24T16:51:55.0650670Z 10740 INFO: checking PKG
+2026-11-24T16:51:55.0651553Z 10740 INFO: Building PKG because PKG-00.toc is non existent
+2026-11-24T16:51:55.0652803Z 10740 INFO: Building PKG (CArchive) pureTV-Games.pkg
+2026-11-24T16:51:59.7046302Z 15384 INFO: Building PKG (CArchive) pureTV-Games.pkg completed successfully.
+2026-11-24T16:51:59.7258188Z 15400 INFO: Bootloader C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\run.exe
+2026-11-24T16:51:59.7259958Z 15400 INFO: checking EXE
+2026-11-24T16:51:59.7260448Z 15400 INFO: Building EXE because EXE-00.toc is non existent
+2026-11-24T16:51:59.7260994Z 15400 INFO: Building EXE from EXE-00.toc
+2026-11-24T16:51:59.7261931Z 15400 INFO: Copying bootloader EXE to D:\a\pureTV\pureTV\tools\pc-games\dist\pureTV-Games.exe
+2026-11-24T16:51:59.7330899Z 15400 INFO: Copying icon to EXE
+2026-11-24T16:51:59.7350823Z 15415 INFO: Copying 0 resources to EXE
+2026-11-24T16:51:59.7351305Z 15415 INFO: Embedding manifest in EXE
+2026-11-24T16:51:59.7366053Z 15415 INFO: Appending PKG archive to EXE
+2026-11-24T16:51:59.7440975Z 15415 INFO: Fixing EXE headers
+2026-11-24T16:51:59.8319960Z 15509 INFO: Building EXE from EXE-00.toc completed successfully.
+2026-11-24T16:51:59.8533896Z 15525 INFO: Build complete! The results are available in: D:\a\pureTV\pureTV\tools\pc-games\dist
+2026-11-24T16:52:01.7107317Z Traceback (most recent call last):
+2026-11-24T16:52:01.7115400Z   File "launcher.py", line 160, in <module>
+2026-11-24T16:52:01.7116045Z     raise SystemExit(main())
+2026-11-24T16:52:01.7116444Z                      ^^^^^^
+2026-11-24T16:52:01.7116961Z   File "launcher.py", line 136, in main
+2026-11-24T16:52:01.7117612Z     print(f'{game["id"]:<24} {game[language]}')
+2026-11-24T16:52:01.7118348Z   File "encodings\cp1252.py", line 19, in encode
+2026-11-24T16:52:01.7119648Z UnicodeEncodeError: 'charmap' codec can't encode character '\u015f' in position 30: character maps to <undefined>
+2026-11-24T16:52:01.7120967Z [PYI-3744:ERROR] Failed to execute script 'launcher' due to unhandled exception!
+2026-11-24T16:52:02.4421469Z [31;1mException: [0mD:\a\_temp\3860db70-384c-4427-82c0-064680e95c7a.ps1:11[0m
+2026-11-24T16:52:02.4422403Z [31;1m[0m[36;1mLine |[0m
+2026-11-24T16:52:02.4424179Z [31;1m[0m[36;1m[36;1m  11 | [0m … -or $games.Count -eq 0) { [36;1mthrow 'The packaged catalog did not open'[0m }[0m
+2026-11-24T16:52:02.4425067Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+2026-11-24T16:52:02.4425710Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe packaged catalog did not open[0m
+2026-11-24T16:52:02.4626621Z ##[error]Process completed with exit code 1.
+2026-11-24T16:52:02.4899863Z Post job cleanup.
+2026-11-24T16:52:02.6818770Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-24T16:52:02.7096687Z git version 2.56.1.windows.1
+2026-11-24T16:52:02.7162003Z Temporarily overriding HOME='D:\a\_temp\d834940f-b002-40e4-a8ac-ee14aebb2d0d' before making global git config changes
+2026-11-24T16:52:02.7163312Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-24T16:52:02.7173323Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\pureTV\pureTV
+2026-11-24T16:52:02.7481407Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-24T16:52:02.7791636Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-24T16:52:03.2924062Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-24T16:52:03.3197759Z http.https://github.com/.extraheader
+2026-11-24T16:52:03.3234522Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-24T16:52:03.3612791Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-24T16:52:03.8571493Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-24T16:52:03.8879503Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-24T16:52:04.3869511Z Cleaning up orphan processes
+2026-11-24T16:52:04.4122382Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
