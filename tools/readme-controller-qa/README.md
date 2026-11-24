@@ -1,6 +1,6 @@
 # README 游戏 pureTV 手柄验收
 
-范围由 `baseline-inventory.json` 固定为根 README 的20个游戏入口，基线提交为 bf58393b。该文件记录的是旧已发布APK及元数据；签名指纹是元数据记录，不冒充重新执行过的签名验证。基线APK中仅霓虹飞车包含Wi-Fi接收类和 `_puretv._tcp` 常量。
+当前运行范围是首页的八款迁移游戏，源码位于 `joystick-games/<id>/`。`baseline-inventory.json` 保存当时 20 个入口的历史基线，基线提交为 bf58393b。该文件记录的是旧已发布APK及元数据；签名指纹是元数据记录，不冒充重新执行过的签名验证。基线APK中仅霓虹飞车包含Wi-Fi接收类和 `_puretv._tcp` 常量。
 
 ## 输入与观察
 

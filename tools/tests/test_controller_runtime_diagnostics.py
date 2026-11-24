@@ -25,11 +25,11 @@ class BatchIsolation(unittest.TestCase):
         planned = []
         for name in batch.DEFAULT_BATCHES:
             group, slugs = batch.BATCHES[name]
-            self.assertGreaterEqual(len(slugs), 2); self.assertLessEqual(len(slugs), 3)
+            self.assertGreaterEqual(len(slugs), 1); self.assertLessEqual(len(slugs), 3)
             self.assertEqual(batch.selected_slugs(group, name), slugs)
             planned.extend(slugs)
-        self.assertEqual(len(planned), 20)
-        self.assertEqual(len(set(planned)), 20)
+        self.assertEqual(len(planned), 8)
+        self.assertEqual(len(set(planned)), 8)
         self.assertEqual(set(planned), set(batch.release.ALL_SLUGS))
 
     def test_batch_cannot_borrow_another_signing_source_group(self):
@@ -47,10 +47,10 @@ class BatchIsolation(unittest.TestCase):
         self.assertTrue(plan['completeCatalogRequested'])
 
     def test_selected_batches_keep_full_games_and_exact_source_groups(self):
-        plan = batch.runtime_plan('["kit-3","worlds-1"]')
-        self.assertEqual(plan['selectedBatches'], ['worlds-1', 'kit-3'])
-        self.assertEqual(plan['plannedSlugs'], ['coast-kart', 'cozy-island', 'glass-fold', 'tension-span', 'prism-relay'])
-        self.assertEqual([(x['group'], x['batch']) for x in plan['matrix']['include']], [('worlds', 'worlds-1'), ('kit', 'kit-3')])
+        plan = batch.runtime_plan('["kit-1","arcade-3"]')
+        self.assertEqual(plan['selectedBatches'], ['arcade-3', 'kit-1'])
+        self.assertEqual(plan['plannedSlugs'], ['super-mario', 'neon-rush'])
+        self.assertEqual([(x['group'], x['batch']) for x in plan['matrix']['include']], [('arcade', 'arcade-3'), ('kit', 'kit-1')])
         self.assertFalse(plan['completeCatalogRequested'])
         self.assertFalse(plan['worlds2GraphicsExperiment']['selected'])
 
@@ -68,33 +68,33 @@ class BatchIsolation(unittest.TestCase):
             self.assertEqual((row['apiLevel'], row['arch'], row['renderer']), (36, 'x86_64', 'swiftshader_indirect'))
 
     def test_home_scope_matches_the_game_and_observer_selection(self):
-        plan = batch.runtime_plan(scope='home-12')
-        self.assertEqual(len(plan['plannedSlugs']), 12)
+        plan = batch.runtime_plan(scope='home-8')
+        self.assertEqual(len(plan['plannedSlugs']), 8)
         self.assertEqual(set(plan['plannedSlugs']), batch.release.HOME_GAMES)
-        self.assertEqual(batch.release.scoped_games(batch.release.KIT_SLUGS, 'home-12'), ['neon-rush', 'tower-overlap'])
-        self.assertEqual(len(batch.release.scoped_games(batch.release.SLUGS, 'home-12')), 10)
+        self.assertEqual(batch.release.scoped_games(batch.release.KIT_SLUGS, 'home-8'), ['neon-rush'])
+        self.assertEqual(len(batch.release.scoped_games(batch.release.SLUGS, 'home-8')), 7)
         self.assertNotIn('cozy-island', plan['plannedSlugs'])
-        with self.assertRaisesRegex(AssertionError, 'outside the signed selection'):
-            batch.runtime_plan('["worlds-1"]', scope='home-12')
+        with self.assertRaisesRegex(AssertionError, 'predefined batch'):
+            batch.runtime_plan('["worlds-1"]', scope='home-8')
         with self.assertRaisesRegex(AssertionError, 'Unknown controller release scope'):
             batch.runtime_plan(scope='unknown')
 
-    def test_compact_tv_scope_signs_and_runs_only_the_seven_arcade_games(self):
-        plan = batch.runtime_plan(scope='arcade-7')
+    def test_compact_tv_scope_signs_and_runs_only_the_five_arcade_games(self):
+        plan = batch.runtime_plan(scope='arcade-5')
         self.assertEqual(plan['selectedBatches'], ['arcade-1', 'arcade-2', 'arcade-3'])
         self.assertEqual(set(plan['plannedSlugs']), set(batch.release.GROUPS['arcade']))
-        self.assertEqual(batch.release.scoped_games(batch.release.KIT_SLUGS, 'arcade-7'), [])
+        self.assertEqual(batch.release.scoped_games(batch.release.KIT_SLUGS, 'arcade-5'), [])
         with self.assertRaises(AssertionError):
-            batch.runtime_plan('["retry-alien"]', scope='arcade-7')
+            batch.runtime_plan('["retry-alien"]', scope='arcade-5')
 
     def test_room_recovery_scope_excludes_tank_from_signing_and_runtime(self):
-        plan = batch.runtime_plan(scope='arcade-recovery-6')
+        plan = batch.runtime_plan(scope='arcade-recovery-4')
         expected = set(batch.release.GROUPS['arcade']) - {'tank'}
         self.assertEqual(set(plan['plannedSlugs']), expected)
-        self.assertEqual(set(batch.release.scoped_games(batch.release.SLUGS, 'arcade-recovery-6')), expected)
-        self.assertEqual(batch.release.scoped_games(batch.release.KIT_SLUGS, 'arcade-recovery-6'), [])
+        self.assertEqual(set(batch.release.scoped_games(batch.release.SLUGS, 'arcade-recovery-4')), expected)
+        self.assertEqual(batch.release.scoped_games(batch.release.KIT_SLUGS, 'arcade-recovery-4'), [])
         with self.assertRaises(AssertionError):
-            batch.runtime_plan('["arcade-1"]', scope='arcade-recovery-6')
+            batch.runtime_plan('["arcade-1"]', scope='arcade-recovery-4')
 
     def test_used_car_only_signs_and_runs_on_its_supported_tv_profile(self):
         plan = batch.runtime_plan(scope='used-car-1')
@@ -105,30 +105,21 @@ class BatchIsolation(unittest.TestCase):
         with self.assertRaises(AssertionError):
             batch.runtime_plan('["home-coast"]', scope='used-car-1')
 
-    def test_coast_scope_builds_and_runs_a_single_signed_world_game(self):
-        plan=batch.runtime_plan(scope='coast-1')
-        self.assertEqual(plan['plannedSlugs'], ['coast-kart'])
-        self.assertEqual(batch.release.scoped_games(batch.release.SLUGS, 'coast-1'), ['coast-kart'])
-        self.assertEqual(batch.release.scoped_games(batch.release.KIT_SLUGS, 'coast-1'), [])
-        with self.assertRaises(AssertionError):
-            batch.runtime_plan('["retry-alien"]', scope='coast-1')
-
     def test_only_exact_requested_retry_aliases_exist(self):
         aliases = set(batch.BATCHES) - set(batch.DEFAULT_BATCHES) - set(batch.HOME_BATCHES)
-        self.assertEqual(aliases, {'retry-used-car', 'retry-alien', 'retry-prism', 'retry-arcade-visual', 'retry-cozy', 'retry-super-mario', 'retry-jackal', 'retry-used-car-mesa'})
-        plan = batch.runtime_plan('["retry-used-car","retry-alien","retry-prism"]')
-        self.assertEqual(plan['plannedSlugs'], ['used-car-racing', 'alien-shooter', 'prism-relay'])
+        self.assertEqual(aliases, {'retry-used-car', 'retry-alien', 'retry-arcade-visual', 'retry-super-mario', 'retry-jackal', 'retry-used-car-mesa'})
+        plan = batch.runtime_plan('["retry-used-car","retry-alien"]')
+        self.assertEqual(plan['plannedSlugs'], ['used-car-racing', 'alien-shooter'])
         self.assertFalse(plan['completeCatalogRequested'])
         self.assertTrue(plan['usedCarStableImageComparison']['selected'])
         rows = plan['matrix']['include']
         self.assertEqual([(r['group'], r['apiLevel'], r['arch']) for r in rows],
-                         [('worlds', 29, 'x86'), ('worlds', 36, 'x86_64'), ('kit', 36, 'x86_64')])
+                         [('worlds', 29, 'x86'), ('worlds', 36, 'x86_64')])
         self.assertIn('-feature -Vulkan -verbose', rows[0]['emulatorOptions'])
         self.assertNotIn('-Vulkan', rows[1]['emulatorOptions'])
-        self.assertNotIn('-Vulkan', rows[2]['emulatorOptions'])
 
     def test_parent_and_retry_alias_cannot_test_or_claim_a_game_twice(self):
-        for raw in ['["worlds-2","retry-used-car"]', '["worlds-2","retry-alien"]', '["kit-3","retry-prism"]', '["arcade-1","retry-arcade-visual"]', '["worlds-1","retry-cozy"]']:
+        for raw in ['["worlds-2","retry-used-car"]', '["worlds-2","retry-alien"]', '["arcade-1","retry-arcade-visual"]']:
             with self.subTest(raw=raw), self.assertRaisesRegex(AssertionError, 'must not repeat a game'):
                 batch.runtime_plan(raw)
 
@@ -143,12 +134,12 @@ class BatchIsolation(unittest.TestCase):
         self.assertIn('-feature -Vulkan -verbose', row['emulatorOptions'])
 
     def test_only_used_car_changes_the_deprecated_renderer(self):
-        plan = batch.runtime_plan('["retry-used-car","retry-alien","retry-prism","retry-arcade-visual"]')
+        plan = batch.runtime_plan('["retry-used-car","retry-alien","retry-arcade-visual"]')
         rows = {row['batch']: row for row in plan['matrix']['include']}
         used = rows['retry-used-car']; comparison = rows['retry-arcade-visual']
         self.assertEqual((used['apiLevel'], used['arch'], used['renderer']), (29, 'x86', 'swiftshader'))
         self.assertEqual(used['emulatorOptions'], comparison['emulatorOptions'].replace('-gpu swiftshader_indirect', '-gpu swiftshader'))
-        for name in ['retry-alien', 'retry-prism', 'retry-arcade-visual']:
+        for name in ['retry-alien', 'retry-arcade-visual']:
             self.assertEqual(rows[name]['renderer'], 'swiftshader_indirect')
             self.assertIn('-gpu swiftshader_indirect', rows[name]['emulatorOptions'])
 
@@ -192,11 +183,10 @@ class BatchIsolation(unittest.TestCase):
     def test_retry_selection_does_not_silently_include_completed_neighbors(self):
         self.assertEqual(batch.selected_slugs('worlds', 'retry-alien'), ['alien-shooter'])
         self.assertEqual(batch.selected_slugs('arcade', 'retry-super-mario'), ['super-mario'])
-        mesa = batch.runtime_plan('["retry-used-car-mesa"]', scope='home-12')['matrix']['include'][0]
+        mesa = batch.runtime_plan('["retry-used-car-mesa"]', scope='home-8')['matrix']['include'][0]
         self.assertEqual((mesa['apiLevel'], mesa['arch'], mesa['renderer'], mesa['emulatorBuild']),
                          (36, 'x86_64', 'host', ''))
         self.assertIn('-gpu host', mesa['emulatorOptions'])
-        self.assertEqual(batch.selected_slugs('kit', 'retry-prism'), ['prism-relay'])
         with self.assertRaisesRegex(AssertionError, 'exact artifact source group'):
             batch.selected_slugs('kit', 'retry-used-car')
 

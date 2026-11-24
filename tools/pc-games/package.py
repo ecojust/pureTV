@@ -18,14 +18,13 @@ def build(output, root=Path(__file__).resolve().parents[2]):
     entries = [entry for genre in genres for entry in genre['games']]
     featured = [entry.get('page', entry.get('resource')).strip('/').rsplit('/', 1)[-1] for entry in entries]
     games_by_id = {game['id']: game for game in games}
-    featured_ids = set(featured)
     if len(games_by_id) != len(games):
         raise ValueError('Duplicate desktop game ID')
-    if [slug for slug in games_by_id if slug in featured_ids] != featured:
-        raise ValueError('Desktop release and featured catalog differ')
     for game in games:
         if not re.fullmatch(r'[0-9a-f]{64}', game['sha256']) or game['bytes'] <= 0:
             raise ValueError(f'Incomplete download identity for {game["id"]}')
+    if list(games_by_id) != featured:
+        raise ValueError('Desktop release and featured catalog differ')
     for slug, entry in zip(featured, entries):
         if 'page' in entry and REPOSITORY_RAW + urlsplit(entry['apk']).path != games_by_id[slug]['url']:
             raise ValueError(f'Desktop and TV download URLs differ for {slug}')

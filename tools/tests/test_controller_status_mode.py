@@ -17,7 +17,7 @@ class AcceptanceModeTests(unittest.TestCase):
         self.assertTrue(plan['fullGameplayAcceptance'])
         self.assertEqual(plan['driverFlags'], [])
 
-    def test_status_only_still_selects_twenty_exact_games(self):
+    def test_status_only_still_selects_current_games(self):
         plan = batch.runtime_plan('', 'client-status')
         self.assertEqual(set(plan['plannedSlugs']), set(batch.release.ALL_SLUGS))
         self.assertEqual(plan['driverFlags'], ['--status-only'])
@@ -28,15 +28,9 @@ class AcceptanceModeTests(unittest.TestCase):
             with self.subTest(mode=mode), self.assertRaises(AssertionError):
                 batch.runtime_plan('', mode)
 
-    def test_cozy_retry_preserves_original_emulator_without_repeating_coast(self):
-        original = batch.runtime_plan('["worlds-1"]', 'client-status')
-        retry = batch.runtime_plan('["retry-cozy"]', 'client-status')
-        self.assertEqual(retry['plannedSlugs'], ['cozy-island'])
-        self.assertEqual(batch.selected_slugs('worlds', 'retry-cozy'), ['cozy-island'])
-        self.assertEqual(
-            {k:v for k,v in retry['matrix']['include'][0].items() if k != 'batch'},
-            {k:v for k,v in original['matrix']['include'][0].items() if k != 'batch'})
-        self.assertNotIn('retry-cozy', batch.DEFAULT_BATCHES)
+    def test_retired_batch_is_rejected(self):
+        with self.assertRaisesRegex(AssertionError, 'predefined batch'):
+            batch.runtime_plan('["retry-cozy"]', 'client-status')
 
     def report(self):
         return {'mode':'android','status':'passed','scope':batch.ACCEPTANCE_SCOPES['client-status'],

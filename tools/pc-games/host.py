@@ -25,11 +25,8 @@ ALIASES = {
     "tank": "TankHost",
     "super-mario": "MarioHost",
     "jackal": "JackalHost",
-    "adventure-island": "AdventureHost",
-    "bomb-jack": "BombJackHost",
     "tetris": "TetrisHost",
     "jewel": "JewelHost",
-    "coast-kart": "CoastKartHost",
     "alien-shooter": "AlienShooterHost",
     "used-car-racing": "UsedCarHost",
 }
@@ -473,7 +470,7 @@ def main(argv=None):
             config = dict(
                 info=info,
                 alias=ALIASES.get(args.game),
-                gameKit=args.game in {"neon-rush", "tower-overlap"},
+                gameKit=args.game == "neon-rush",
             )
             web.bridge = (
                 "const pureTVPCConfig=" + json.dumps(config, ensure_ascii=True) + ";\n"

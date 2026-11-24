@@ -23,13 +23,13 @@ import org.robolectric.annotation.Config;
 @Config(sdk = 28)
 public class CatalogRepositoryTest {
     private static final String REV = "23bf3b11c156922a70a64d5f10f2700c52ac10f6";
-    private static final String SNAPSHOT_REV = "801bf6c212fd17a63399f7eb48d7b05936f8954b";
+    private static final String SNAPSHOT_REV = "35ca666ac73e0598e5e2d87c78d322cd3c178258";
     private Context context;
 
     @Before public void cleanCache() {
         context = RuntimeEnvironment.getApplication();
         for (String suffix : new String[]{"", ".bak", ".new"})
-            new File(context.getFilesDir(), "tv-store-catalog-cache.json" + suffix).delete();
+            new File(context.getFilesDir(), "tv-store-catalog-v2-cache.json" + suffix).delete();
     }
     private static JSONObject entry() throws Exception {
         JSONObject value = new JSONObject();
@@ -78,6 +78,20 @@ public class CatalogRepositoryTest {
         JSONObject other = entry(); other.put("id", "apps/second"); other.put("apkPath", "resource/apps/second/a.apk"); other.put("coverPath", "");
         invalid(new JSONObject().put("schemaVersion", 1).put("entries", new JSONArray().put(entry()).put(other)).toString().getBytes(StandardCharsets.UTF_8));
     }
+    @Test public void localJoystickGameRequiresMatchingPathsAndCategory() throws Exception {
+        JSONObject item = entry();
+        item.put("id", "joystick-games/sample");
+        item.put("apkPath", "joystick-games/sample/sample.apk");
+        item.put("coverPath", "joystick-games/sample/thumb.png");
+        assertEquals("joystick-games/sample", parse(feed(item)).entries.get(0).id);
+        for (String path : new String[]{"joystick-games/sample/../x.apk", "joystick-games/sample/sub/game.apk",
+                "joystick-games/sample/a..b.apk", "joystick-games/sample/.apk", "joystick-games/other/sample.apk"}) {
+            item.put("apkPath", path); invalid(feed(item));
+        }
+        item.put("apkPath", "joystick-games/sample/sample.apk");
+        item.put("category", "tools"); invalid(feed(item));
+        item.put("category", "game"); item.put("coverPath", "joystick-games/other/thumb.png"); invalid(feed(item));
+    }
     @Test public void rejectsWrongTypesHashesVersionsAndUnknownFields() throws Exception {
         for (String key : new String[]{"versionCode", "bytes", "minSdk"}) {
             JSONObject item = entry(); item.put(key, "5"); invalid(feed(item)); item.put(key, 0); invalid(feed(item)); item.put(key, 1.25); invalid(feed(item));
@@ -111,7 +125,7 @@ public class CatalogRepositoryTest {
         CatalogRepository repository = new CatalogRepository(context, (url, limit, cancel) -> {
             calls.incrementAndGet();
             if (url.toString().equals(StoreNetwork.REF_URL)) return ("{\"object\":{\"type\":\"commit\",\"sha\":\"" + REV + "\"}}").getBytes(StandardCharsets.UTF_8);
-            assertEquals("https://raw.githubusercontent.com/ecojust/pureTV/" + REV + "/resource/tv-store-catalog.json", url.toString()); return data;
+            assertEquals("https://raw.githubusercontent.com/ecojust/pureTV/" + REV + "/resource/tv-store-catalog-v2.json", url.toString()); return data;
         });
         StoreCatalog fresh = repository.load(true, new Cancellation()); assertFalse(fresh.stale); assertEquals(2, calls.get());
         assertFalse(repository.load(false, new Cancellation()).stale); assertEquals(2, calls.get());
@@ -149,7 +163,7 @@ public class CatalogRepositoryTest {
     @Test public void firstOfflineStartUsesExplicitlyStaleFrozenSnapshot() throws Exception {
         CatalogRepository offline = new CatalogRepository(context, (url, limit, cancel) -> { throw new IOException("offline"); });
         StoreCatalog bundled = offline.load(true, new Cancellation());
-        assertTrue(bundled.stale); assertEquals(SNAPSHOT_REV, bundled.revision); assertEquals(117, bundled.entries.size());
+        assertTrue(bundled.stale); assertEquals(SNAPSHOT_REV, bundled.revision); assertEquals(15, bundled.entries.size());
         for (StoreEntry app : bundled.entries) { assertFalse(app.id.startsWith("launcher/")); assertNotEquals("launcher", app.category); }
         assertFalse(bundled.warning.isEmpty());
     }

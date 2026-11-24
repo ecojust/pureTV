@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update 20 Android app READMEs after controller-status artifacts are staged.
+"""Update Android game READMEs after controller-status artifacts are staged.
 
 Default: read-only plan and in-memory idempotence checks. --preview DIR writes
 reviewable drafts/diff outside the repository, without claiming artifacts exist.
@@ -43,7 +43,7 @@ def checked_file(path):
 def validate_artifacts(rollout):
     """Check staging assertions and exact linked bytes; signing stays in release.py."""
     for game in rollout['games']:
-        app = ROOT / 'resource/apps' / game['id']
+        app = ROOT / 'joystick-games' / game['id']
         release = app / 'docs/releases' / game['version']
         metadata = read_json(app / 'resource.json')
         verification = read_json(checked_file(release / 'verification.json'))
@@ -72,7 +72,7 @@ def validate_artifacts(rollout):
                 f"Recording mismatch: {game['id']}")
         for key in ['physicalTvTested', 'physicalPhoneTested', 'physicalEsp32Tested']:
             require(verification.get(key) is False, f"Review physical-device wording: {game['id']}/{key}")
-    mac = ROOT / 'resource/apps/neon-rush/macos'
+    mac = ROOT / 'joystick-games/neon-rush/macos'
     for extension in ['dmg', 'zip']:
         checked_file(mac / f"NeonRush-{rollout['macos']['version']}-macos-universal.{extension}")
 
@@ -274,8 +274,11 @@ def main():
     mode.add_argument('--check', action='store_true', help='Require staged artifacts and current README content')
     args = parser.parse_args()
     rollout = read_json(ROOT / 'docs/controller-client-status/rollout.json')
-    games = rollout['games']
-    require(len(games) == len({g['id'] for g in games}) == 20, 'Expected exactly twenty rollout games')
+    catalog = read_json(ROOT / 'tools/readme-app-games.json')
+    active = {Path(entry['resource']).name for category in catalog for entry in category['games'] if 'resource' in entry}
+    games = [game for game in rollout['games'] if game['id'] in active]
+    require(len(games) == len(active) and {g['id'] for g in games} == active, 'Incomplete rollout for current games')
+    rollout = {**rollout, 'games': games}
     require(re.fullmatch('[0-9a-f]{40}', rollout['baseCommit']), 'Invalid baseline commit')
     for game in games:
         require(re.fullmatch('[a-z0-9-]+', game['id']), 'Invalid slug')
@@ -284,7 +287,7 @@ def main():
     planned = []
     for game in games:
         for filename, language in [('README.md', 'zh'), ('README.en.md', 'en')]:
-            path = ROOT / 'resource/apps' / game['id'] / filename
+            path = ROOT / 'joystick-games' / game['id'] / filename
             if not path.exists():
                 require(language == 'en', f'Missing {path}')
                 continue

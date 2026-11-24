@@ -1,0 +1,218 @@
+# 极品二手车
+
+<!-- apk-resource:start -->
+[Android 0.1.8 APK](used-car-racing-0.1.8.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-macos.dmg) · [图标与安装验证](docs/releases/0.1.8/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.7 实玩录像](docs/releases/0.1.7/gameplay.mp4?raw=1)
+<!-- apk-resource:end -->
+
+## 历史 Android 版本 0.1.7 · 手机驾车时取消退出
+
+[下载签名 APK](used-car-racing-0.1.7.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
+
+手机驾车时，在电视上取消退出对话框，游戏会等到读到手机的当前连接状态后继续比赛。主动暂停的比赛会保持暂停，使用 pureTV Wi-Fi 手柄时，重新按 START 可继续。
+
+原版手机网页已在 Android TV 上实际驾车。退出窗口内选择「继续游戏」后比赛继续，原先主动暂停的比赛则保持暂停，直到玩家再次按 START。[Android 手机与退出窗口实测](https://github.com/ecojust/pureTV/blob/964036b6e0526beaaa8650bc0f362e5b50c6cbb4/phone-dialog.json)
+
+签名 APK 已在 Android TV 上从 0.1.6 覆盖安装。驾驶、暂停、重连和两个手柄席位共通过 9 项检查，107 条 SDK 消息都收到了同序号确认。[游戏截图](docs/releases/0.1.7/gameplay.png) · [玩法录像](docs/releases/0.1.7/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.1.7/verification.json)
+
+## 历史版本 0.1.6 · 手柄与手机连接
+
+<!-- previous-0.1.6-apk-resource:start -->
+[下载签名 APK](used-car-racing-0.1.6.apk?raw=1) · [校验值](SHA256SUMS.txt) · [安装包与源码](resource.json)
+<!-- previous-0.1.6-apk-resource:end -->
+
+可用键盘、pureTV Wi-Fi 手柄，或用同一局域网内的手机扫描电视房间二维码。连接标识区分玩家，连接与断开时保留游戏画布尺寸。[连接手柄指南](../../docs/guide/README.md#安装游戏与连接手柄)
+
+此签名 APK 已从 0.1.5 在 Android TV 模拟器完成覆盖安装。原版手柄 SDK 通过 9 项检查，实际发出的 106 条消息全部收到同序号确认。[游戏截图](docs/releases/0.1.6/gameplay.png) · [Android 玩法录像](docs/releases/0.1.6/gameplay.mp4?raw=1) · [验证记录与测试范围](docs/releases/0.1.6/verification.json)
+
+[中文](README.md) · [English](README.en.md)
+
+<!-- controller-client-status:start -->
+## 历史版本 0.1.5 · 手柄连接标识
+
+<!-- previous-apk-resource:start -->
+[下载签名 APK](used-car-racing-0.1.5.apk?raw=1) · [校验值](SHA256SUMS.txt) · [签名与来源](resource.json) · [源码](src/) · [图标](logo.svg)
+<!-- previous-apk-resource:end -->
+
+Android **0.1.5 / versionCode 6**：手柄连接后，侧边显示手柄图标、玩家席位（按游戏人数显示 1P/2P）和设备完整连接 ID；断开后隐藏。默认 TCP 端口仍为 **63485**。当前手柄固件未上报 RSSI，因此不显示信号强弱。
+
+[连接截图](docs/releases/0.1.5/connected.png) · [连接状态专项录像](docs/releases/0.1.5/controller-status.mp4?raw=1) · [版本验证](docs/releases/0.1.5/verification.json) · [20 款更新记录](../../docs/controller-client-status/README.md)
+
+安装包沿用原发布证书。本轮在 Android TV 模拟器中验证连接身份、断开／重连状态及同证书覆盖安装；截图和录像记录菜单中的连接状态专项，没有重做完整玩法验收。未改规则模型按精确哈希复用历史依据，旧版报告继续保留。尚未验证实体电视、手机、ESP32 或带已有存档的升级与数据保留。
+
+![Android 0.1.5 手柄已连接及完整 ID](docs/releases/0.1.5/connected.png)
+
+此前完整 Android 玩法检查受模拟器宿主 RenderThread 崩溃阻塞；本次菜单状态专项不代表该限制已解决。
+<!-- controller-client-status:end -->
+
+**极品二手车 / Used Car Racing TV** 是一款原创三维赛车游戏。开局随机获得车辆和车况，检车台展示车型、动力、重量、驱动形式以及故障说明；比赛支持一人或两人手机操控，其余车位由 AI 补齐，总计六车同场。
+
+当前版本为 **0.1.6 / versionCode 7**，包名 `com.ecojust.usedcartv`，适用于 Android 8.0 及以上电视。签名安装包与来源见 [resource.json](resource.json)。
+
+## 历史录像：0.1.3
+
+[观看／下载 0.1.3 历史游玩录像](docs/gameplay-0.1.3.mp4?raw=1) · [录制信息](docs/gameplay-0.1.3.json) · [校验值](SHA256SUMS.txt)
+
+MP4（H.264 / AAC），1280×720、25 fps，时长约 2 分钟，大小 41.66 MB（41,659,881 字节，低于 100 MB）。开头 18 秒依次展示全部六款车的实际车库模型、名称与参数，再进入霓虹港湾、云脊公路、落日能源环线三条赛道，展示追车／引擎盖镜头，以及持续踩到 1600 N 后刹车踏板断裂的表现；播放器支持时可按车型和赛道章节跳转。
+
+使用正式 0.1.3 APK 的原始游戏资源在 Chromium 中运行，脚本模拟手机操控，与 5 名 AI 竞速。按游戏时间逐帧录制，音效由原游戏音频代码按录制状态同步合成；这是实际游戏画面，不是电视实机录像或设备帧率测试。
+
+录像保留了该版本的现有表现，包括高速时引擎盖镜头退入车厢、座椅遮挡视野的问题。
+
+## 历史：0.1.3 操控修复
+
+修正虚拟摇杆、陀螺仪和键盘共用的左右方向映射，使前进时的转弯方向与玩家输入一致。转向采用渐进响应：小幅操作更便于微调，高速时收小最大转角，方向盘逐渐转到目标位置，减少突然猛转和左右反打的突兀感。具体规则与验证方法见[设计与物理说明](docs/design.md)。
+
+## 开始比赛
+
+1. 手机和电视连接同一局域网，在电视上打开游戏。
+2. 扫描电视房间二维码；每位玩家使用一部手机，最多两人。
+3. 在检车台查看随机车辆及故障，选择赛道和人数，再开始比赛。
+4. 手机左侧大区域转向，右侧三分之一分为上方油门、下方刹车；油门、刹车可与转向同时操作。操作区禁止文字选择和长按菜单。
+
+### 选择转向方式
+
+默认使用**虚拟摇杆**：手机左侧任意位置落指，左右滑动转向。电视与手机连接同一局域网即可使用，不需要互联网。
+
+**陀螺仪**可像转方向盘一样转动手机。0.1.2 的安全手柄页面和 WSS 连接由电视 APK 在局域网内提供，不需要公网域名、GitHub Pages 或公网转发。
+
+每部手机首次连接这台电视时，需要先建立证书信任：
+
+1. 在扫码打开的手柄页面选择「陀螺仪」，在自己可信的局域网内按本地设置引导下载电视证书。通过系统证书详情或可信证书查看器，核对**下载证书本身**的完整 SHA-256 指纹与电视屏幕一致；HTTP 引导页中的摘要仅供对照。
+2. Android 在系统设置中安装该 CA 证书；iPhone 安装下载的证书描述文件后，还需到「设置 → 通用 → 关于本机 → 证书信任设置」开启该证书的完整信任。具体步骤见[手机证书设置](docs/phone-trust.md)。
+3. 返回手柄，点击「已信任，进入安全手柄」，或扫描电视上的「已信任证书」二维码。在同一个手柄页面选择「陀螺仪」，按浏览器提示允许运动传感器权限。
+4. 横握手机并稍微立起，保持舒适姿态；首次有效姿态自动设为中立，也可点「校准中立」重新校准。左右转动约 45° 达到最大转向。
+5. 随时选择「虚拟摇杆」切回触控转向。两位玩家各自选择模式；右侧油门、刹车始终使用触控。检车台仍通过左侧滑动选择赛道，倒计时及比赛中使用姿态转向。
+
+安装 CA 是**手机系统级证书信任**，与浏览器的**运动传感器授权**是两件事。仅在浏览器证书警告中点「继续访问」不能保证陀螺仪可用。证书应来自自己的电视；不再使用时可按[移除步骤](docs/phone-trust.md#移除信任)撤销信任。
+
+同一电视的 CA 未改变时，后续通常无需重新安装。电视内网 IP 变化会更新服务器证书，保留原 CA；电视清除数据、卸载重装或重建身份导致 CA 改变时，需要重新配对。证书和手柄文件都由电视本地提供，初次设置及比赛均不依赖互联网。
+
+若电视证书损坏、过期或需要重新配对，在电视上按返回键，选择「重新配对手机」并再次确认。操作会结束当前比赛、断开所有手机并生成新证书，但保留游戏本地记录；所有手机需重新安装并信任新证书。见[证书恢复步骤](docs/phone-trust.md#修复电视证书身份)。
+
+权限被拒绝、没有有效传感器数据时可继续使用虚拟摇杆；传感器中断、手机平放或页面失焦时会释放操作。Android 厂商浏览器和 iOS Safari 的证书安装、授权行为仍需实机验证，不能把自动化姿态测试当作所有手机兼容的证明。
+
+检车台按 SELECT 重新抽取车辆。赛中短按 SELECT 切换追车／引擎盖镜头；车速低于 **1.2 m/s** 时，长按 SELECT 约 **0.8 秒** 切换 D 前进／R 倒车，然后使用油门驱动。START 开始或暂停比赛。
+
+键盘调试：1P 使用左右方向键转向、Z 油门、X 刹车、Enter 开始／暂停；Shift 短按切镜头，低速长按切 D/R，R 键也可在低速换向。2P 使用 A/D 转向、W 油门、S 刹车。
+
+刹车采用**虚拟踏板力**：持续按住逐渐蓄力，松开快速释放。抽到“脆弱刹车踏板”的车辆在模拟踏板力达到 **1600 N** 时断裂，本场比赛中永久失去脚刹；画面显示受力和故障状态。普通手机不测量真实脚力或手指压力，这个数值由游戏输入与模型计算。
+
+陀螺仪模式界面（Chromium 实际页面渲染，使用测试姿态与车辆状态）：
+
+![陀螺仪手柄](docs/controller-gyro.png)
+
+## 赛车与赛道
+
+六款车均为原创虚构车型，参数是游戏设定。下表为未计入随机车况的基础数据；抽车后的轮胎、动力和刹车故障会改变实际表现。
+
+| 车型 | 车身 / 驱动 | 功率 | 峰值扭矩 | 质量 |
+|---|---|---:|---:|---:|
+| 口袋火箭 98 | 紧凑车 / 前驱 | 82 kW | 146 N·m | 970 kg |
+| 行政快线 04 | 轿车 / 后驱 | 141 kW | 255 N·m | 1460 kg |
+| 彗星双门 96 | 双门跑车 / 后驱 | 161 kW | 262 N·m | 1210 kg |
+| 远行旅行家 07 | 旅行车 / 四驱 | 148 kW | 315 N·m | 1630 kg |
+| 铁锈猛兽 88 | 肌肉车 / 后驱 | 205 kW | 425 N·m | 1570 kg |
+| 山猫四驱 02 | 拉力车 / 四驱 | 173 kW | 305 N·m | 1320 kg |
+
+三条路线都是闭合公路，每场比赛 3 圈。长度按游戏中心线计算，画面和物理使用相同的道路数据。
+
+| 赛道 | 单圈长度 | 实际场景 |
+|---|---:|---|
+| 霓虹港湾 | 约 1.753 km | 雨后夜间港湾高架、城市楼宇、吊机、集装箱与海面；道路高度约 3.7–21.0 m |
+| 云脊公路 | 约 2.033 km | 山路连续弯、树林、岩壁、雪山远景与桥段；道路高度约 7.5–72.1 m |
+| 落日能源环线 | 约 1.894 km | 荒漠高速、光伏阵列、电塔、砂岩与落日；道路高度约 1.9–16.1 m |
+
+0.1.2 增加纯局域网 HTTPS 手机手柄，沿用 0.1.1 的画质与合批优化，保留既有路线、车辆动力学、随机故障和一至两人比赛规则。采用实际 WebGL 1 三维渲染，本地打包 Three.js 和全部图形资源，游玩无需联网下载贴图。
+
+## 历史：0.1.1 画质升级
+
+在保留较低几何复杂度的基础上，沥青、岩石及车辆图集使用 1024² 颜色贴图，其余环境材质使用 512² 颜色贴图，结合 256–512² 法线与高光遮罩表现颗粒、层理、胎纹、灯罩刻纹和织物。车漆、橡胶、灯罩和织物合入车辆共享图集，车身与各车轮按材质合批，减少重复绘制；六辆车共享材质图片。车身、玻璃和金属使用随场景切换的静态环境反射，避免每帧重新绘制反射场景。
+
+三条赛道的固定六车场景对比中，单人绘制调用由 214–218 次降至 99–104 次，双人合计由 391–403 次降至 181–195 次；这是图集与合批前后的调用量对比，不代表电视帧率提升比例。环境、基线和复现方法见[绘制验证记录](docs/design.md#合批前后绘制次数)。
+
+路面增加修补与轮胎痕迹，建筑和集装箱按表面尺寸铺设纹理。山体改为连续的不规则山脊，岩石增加棱面，树林使用带透明裁切的枝叶贴片，天空和远景通过云层、雾与侧光形成层次。路线和碰撞边界仍使用原来的道路数据。
+
+贴图由项目自己的[生成脚本](../../tools/generate-used-car-textures.py)离线烘焙，随 APK 打包，详见[素材声明](src/main/assets/TEXTURE-LICENSE.txt)。这些改进不使用实时反射捕获或全屏后处理；电视上的实际帧率仍需实机验证。
+
+## 历史车型与路线画面
+
+以下图片由游戏实际三维渲染器在 Chromium 中输出，用于展示车辆和赛道；不是概念图或电视实机拍摄。
+
+![六款原创车型](docs/car-lineup.png)
+
+![霓虹港湾：夜间高架与港口城市](docs/track-harbor.png)
+
+![云脊公路：连续山弯与岩壁树林](docs/track-ridge.png)
+
+![落日能源环线：荒漠与光伏阵列](docs/track-solar.png)
+
+## 操控模型
+
+以固定小时间步更新车辆，模拟发动机扭矩和转速、自动变速箱、轮胎侧偏与摩擦圆抓地限制、制动和载荷转移、气动阻力及机械故障。转向输入、车速与抓地力会共同决定车辆响应，见[设计与物理说明](docs/design.md)。
+
+这是面向手机触控与电视的简化车辆动力学游戏；模型测试和浏览器渲染不等同于真实车辆标定，也不能证明电视 GPU 性能。实体电视测试状态以验证记录为准。
+
+## 构建与验证
+
+以下命令是可复现的检查入口，不表示本轮已经全部执行通过；本轮实际执行结果见上方验收记录。
+
+```sh
+node --test joystick-games/used-car-racing/tests/*.test.cjs
+node joystick-games/used-car-racing/tests/compatibility.mjs
+node joystick-games/used-car-racing/tests/rendering.mjs
+node joystick-games/used-car-racing/tests/controller.mjs
+node joystick-games/used-car-racing/tests/secure-controller.mjs
+node joystick-games/used-car-racing/tests/integration.mjs
+
+cd resource/launcher/puretv
+./gradlew :used-car-racing:assembleRelease :used-car-racing:testDebugUnitTest :used-car-racing:lintDebug :used-car-racing:verifyReleaseSize
+```
+
+浏览器检查使用 `desktop/` 的 npm 依赖，可通过 `CHROMIUM_PATH` 指定 Chromium。`USED_CAR_UI_CAPTURE_DIR` 指定真实页面截图输出目录。发布使用统一 pureTV v2 证书，历史 0.1.3 的独立发布标签为 `android-used-car-v0.1.3`，本轮发布进度以上方 20 款游戏验收记录为准。
+
+本地 HTTPS 集成检查还需要完整 JDK（`java` / `javac`）、NSS `certutil`（Linux 的 `libnss3-tools` 包）及真实私网 IPv4 地址。测试临时信任独立测试 CA，结束后移除，不跳过证书验证。既有 HTTPS CI 工作流另配置了 Android API 26 和 35 模拟器检查，用于验证真实 Keystore 密钥、TLS 握手、身份持久化及明确授权的重新配对；该工作流配置不代表本轮已经完成这些检查。
+
+原创代码、车身模型、赛道、贴图与合成音效使用 [MIT](LICENSE)；Three.js 保留其[上游 MIT 许可](src/main/assets/THREE-LICENSE.txt)。游戏不包含商业赛车游戏的 ROM、车型资产或地图提取文件。[64×64 SVG 图标](logo.svg)由本项目绘制。
+
+<!-- verified-previews:start -->
+## 历史实际画面（0.1.3）
+
+截图来自真实游戏页面的 Chromium 渲染与模拟局域网房间，不是电视实机拍摄。
+
+![极品二手车](docs/used-car-racing-tv.png)
+
+![手机手柄](docs/controller.png)
+
+![转向与踏板操作](docs/controller-active.png)
+<!-- verified-previews:end -->
+
+## pureTV Wi-Fi 手柄
+
+电视与手柄连接同一局域网，打开游戏后按手柄 GPIO 23 搜索键。界面显示真实地址、端口和发现状态；默认 TCP 端口为 **63485**，仅首次被占用时选备用端口，临时失焦期间保持已选端口；按 Home 或切换应用退出会关闭服务。同网只运行一个游戏接收服务时才能自动选中。
+
+START 开始、暂停或继续。左右键转向；A / X 油门；B 按住刹车；Y 在车库抽车，比赛中短按切换镜头、低速长按切换 D / R 挡。 手机扫码、遥控器和键盘仍可使用；此游戏的 Y 是 SELECT 功能，X 与 A 为同一动作。
+
+断线、手柄会话替换或控制来源切换会取消旧输入并暂停。重新连接后先松开按键，再按 START 继续，保持的按键不会自动触发操作。双人模式可连接两只独立 Wi-Fi 手柄；开始前在检车台连接两只手柄，人数默认跟随已连接手柄数量，也可手动选择。
+
+<!-- controller-client-status-history:start -->
+<details>
+<summary>历史 0.1.4 安装包与验收记录</summary>
+
+以下为旧版发布记录，其测试与画面不代表本次连接 ID 界面验收。[原提交中的完整说明](https://github.com/ecojust/pureTV/blob/9af9f197855eb7a0ce7174c0e6295c8974b3250d/resource/apps/used-car-racing/README.md)。
+
+[下载 APK](used-car-racing-0.1.4.apk?raw=1) · [校验值](docs/controller-status-baseline/0.1.4/SHA256SUMS.txt) · [签名及构建来源](docs/controller-status-baseline/0.1.4/resource.json) · [源码](src/) · [64×64 SVG 图标](logo.svg)
+
+APK 已使用原 pureTV 发布证书签名，已在 Android TV 模拟器完成 0.1.3 → 0.1.4 覆盖安装；未验证带存档升级及数据保留。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。
+
+## 0.1.4 pureTV 手柄更新
+
+历史版本 **0.1.4 / versionCode 5** 新增 pureTV Wi-Fi 手柄输入，默认 TCP 端口 **63485**，保留扫码手机手柄和电视遥控器。APK 已沿用原发布证书正式签名。原 SDK 完整浏览器检查已通过 9/9，原生检查、正式签名和覆盖安装均通过。实际 APK 的菜单、初始同步和 START 开赛三项通过；加速阶段遇到宿主 RenderThread 段错误，后续 Android 检查受模拟器环境阻塞，未宣称完整 Android 玩法验收通过。原始结果与限制见验证记录。
+
+实际结果和限制见[当时 20 款游戏验收记录](../../docs/readme-controller-support/README.md)及[发布进度](../../docs/readme-controller-support/rollout.json)。下文保留的旧版 CI、录像和截图均为历史依据。
+
+该历史版本验收资源：[实际 Android APK 菜单截图](docs/releases/0.1.4/menu.png) · [浏览器游戏截图](docs/releases/0.1.4/gameplay.png) · [浏览器游玩录像](docs/releases/0.1.4/gameplay.mp4?raw=1) · [验证记录](docs/releases/0.1.4/verification.json)。菜单来自 Android TV 模拟器；游戏截图与录像来自实际打包页面在 Chromium 中的原 SDK 操作，使用合成原生桥接，不是 APK 或实体电视录像。具体来源、哈希和 Android 环境阻塞记录见验证记录及上方当时验收说明。
+
+历史版本为 **0.1.4 / versionCode 5**，包名 `com.ecojust.usedcartv`，适用于 Android 8.0 及以上电视。已沿用 0.1.2／0.1.3 的 pureTV v2 证书正式签名，并在 Android TV 模拟器完成 0.1.3 → 0.1.4 覆盖安装；未验证带存档升级及数据保留。可下载 APK 的实际版本、签名与验证结果以 [resource.json](docs/controller-status-baseline/0.1.4/resource.json) 为准。
+
+</details>
+<!-- controller-client-status-history:end -->

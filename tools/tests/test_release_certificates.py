@@ -70,6 +70,45 @@ class ReleaseCertificatesTest(unittest.TestCase):
                 self.assertEqual(resource_catalog.expected_release_certificate(
                     self.root, self.identity(package, code + 1, '0.6.0')), self.new)
 
+    def test_verifies_moved_joystick_store_games_and_skips_other_ports(self):
+        identity = self.identity('com.ecojust.usedcartv', 1, '0.1.0', self.new)
+        previous = self.fixture('used-car-racing', identity)
+        parent = self.root / 'joystick-games'
+        parent.mkdir()
+        previous.rename(parent / previous.name)
+        (parent / 'another-port').mkdir()
+        with patch.object(resource_catalog, 'apk_info', return_value=identity):
+            entries = resource_catalog.verify_catalog(self.root, Path('/unused'))
+        self.assertEqual([entry['path'] for entry in entries], ['joystick-games/used-car-racing/game.apk'])
+        self.assertEqual(resource_catalog.catalog_identity(self.root, parent / previous.name), 'joystick-games/used-car-racing')
+
+    def test_registered_joystick_games_require_metadata_even_if_it_disappears(self):
+        order = self.root / 'tools/resource-order.json'
+        joystick = self.root / 'joystick-games'
+        joystick.mkdir()
+        store = self.identity('com.ecojust.putrtvstore', 2, '0.1.1', self.new)
+        self.fixture('putrtv-store', store)
+        for slug, flag in (('used-car-racing', 'allow_unpublished_used_car'),
+                           ('alien-shooter', 'allow_unpublished_alien_shooter')):
+            with self.subTest(slug=slug):
+                directory = joystick / slug
+                order.write_text(json.dumps({'game': ['joystick-games/' + slug]}))
+                with self.assertRaisesRegex(AssertionError, 'Invalid resource directory'):
+                    resource_catalog.verify_catalog(self.root, Path('/unused'), **{flag: True})
+                directory.mkdir()
+                with self.assertRaisesRegex(AssertionError, 'Missing regular resource file'):
+                    resource_catalog.verify_catalog(self.root, Path('/unused'))
+                with patch.object(resource_catalog, 'apk_info', return_value=store):
+                    entries = resource_catalog.verify_catalog(self.root, Path('/unused'), **{flag: True})
+                self.assertEqual([entry['packageName'] for entry in entries], [store['packageName']])
+                (directory / 'game.apk').touch()
+                with self.assertRaisesRegex(AssertionError, 'Missing regular resource file'):
+                    resource_catalog.verify_catalog(self.root, Path('/unused'), **{flag: True})
+                shutil.rmtree(directory)
+        order.write_text(json.dumps({'game': ['joystick-games/../tools']}))
+        with self.assertRaisesRegex(AssertionError, 'Invalid game catalog key'):
+            list(resource_catalog.catalog_directories(self.root))
+
     def test_used_car_first_release_uses_only_the_new_certificate(self):
         for code, version in ((1, '0.1.0'), (2, '0.1.1'), (20, '1.0.0')):
             with self.subTest(code=code, version=version):

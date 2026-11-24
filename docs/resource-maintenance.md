@@ -2,7 +2,7 @@
 
 电脑管理器与公共资源入口位于根目录，第三方小体积 APK 独立收录于 [fork/](../fork/README.md)，维护方式见其 [MAINTENANCE.md](../fork/MAINTENANCE.md)。下列 resource 约定用于原有启动器与应用目录；fork 不计入自研资源目录或自动上架商城。
 
-原 Android 源码整体位于 `resource/launcher/puretv/` 与 `resource/apps/`；启动器与应用均按软件分目录：`resource/launcher/<启动器名>/` 和 `resource/apps/<应用名>/`，每个目录直接存放对应 APK。每个软件目录必须有实际 APK、resource.json、README、LICENSE 和 SHA256SUMS.txt。源码可直接放在目录中，也可附对应源码归档；封面使用 thumb.png。
+Android 启动器位于 `resource/launcher/<ID>/`，影音和工具应用位于 `resource/apps/<ID>/`，游戏位于 `joystick-games/<ID>/`。各目录直接存放对应 APK。每个软件目录必须有实际 APK、resource.json、README、LICENSE 和 SHA256SUMS.txt。源码可直接放在目录中，也可附对应源码归档；封面使用 thumb.png。
 
 新应用还必须随 APK 提供同目录的 `logo.svg`：`width="64"`、`height="64"`、`viewBox="0 0 64 64"`，UTF-8 文件不超过 8192 字节，遵循 layout.json 的静态 SVG 子集。README 链接图标，SHA256SUMS.txt 记录其校验值；第三方图标保留来源及许可说明。完整要求、市场多版本目录示例及缓存到布局 `icon` 的流程见 [应用资源与 logo.svg 约定](../resource/README-development.md#应用资源与-logosvg-约定)。历史商店资源没有图标时仍可下载安装。
 
@@ -28,7 +28,7 @@ python tools/update-tv-store-catalog.py --build-tools "$ANDROID_HOME/build-tools
 
 [完整资源目录](../resource/README.md)中的启动器、影音应用、游戏和工具各组按制作顺序倒序展示。`tools/resource-order.json` 按**从早到晚**记录每组资源目录；新增资源时追加到所属数组末尾，版本更新、重新截图或目录文件修改不调整位置。索引生成器逆序展示，并检查重复、缺失和分类错误，不使用文件修改时间或最近发布版本排序。
 
-现有顺序依据首次新增资源的 Git 历史（目录搬迁前的条目继续追溯原路径），百款 Game Kit 游戏依据 `resource/game-kit/progress.json` 的 `number` 从 1 到 100 登记。旧游戏先于这百款游戏；影音从早到晚为 ShortVideo TV、WebTV、HIFINi TV、CCTV Live。同一提交批量新增、无法证明独立制作先后的条目按目录名固定登记，不把这些条目之间的位置视为精确的时间先后。新资源尚未提交时也须先登记，因此浅克隆或源码归档中重新生成索引会得到相同顺序。
+现有顺序依据首次新增资源的 Git 历史（目录搬迁前的条目继续追溯原路径）。`game` 组使用商城游戏相对于仓库根目录的 `joystick-games/<ID>` 路径。影音从早到晚为 ShortVideo TV、WebTV、HIFINi TV、CCTV Live。同一提交批量新增、无法证明独立制作先后的条目按目录名固定登记，不把这些条目之间的位置视为精确的时间先后。新资源尚未提交时也须先登记，因此浅克隆或源码归档中重新生成索引会得到相同顺序。
 
 中英文首页将管理工具和应用工具合并展示，接着列出启动器和影音应用。所有卡片每行四格。分隔线后的游戏专栏按玩法分组，每款游戏只占一张卡，Android TV、macOS 和 Windows x64 的可用下载放在同一张卡上。[首页游戏专栏](../README.md#games)
 

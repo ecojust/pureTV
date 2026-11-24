@@ -1,5 +1,7 @@
 # Controller client-status update delivery
 
+This document records the original twenty-game rollout. To build and test the eight games still on the homepage, use the [current controller release guide](README-controller-release.md). To reproduce the rollout below, use its [pre-migration checkout](https://github.com/ecojust/pureTV/tree/7cba602846e3efe6ddb499db2be258edc82ab5de).
+
 This update covers the twenty Android games listed in `docs/controller-client-status/rollout.json` and Neon Rush macOS 0.1.4. The Android scope is **controller client status acceptance**, separately from prior full gameplay acceptance. A current status screenshot/recording must never be described as a new full gameplay run. Used Car Racing retains its previous complete-Android-gameplay environment limitation.
 
 ## Source and versions

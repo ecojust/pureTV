@@ -21,10 +21,11 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from resource_catalog import child, verify_catalog
+from resource_catalog import catalog_identity, child, verify_catalog
 
 ROOT = Path(__file__).resolve().parents[1]
-FEED = 'resource/tv-store-catalog.json'
+FEED = 'resource/tv-store-catalog-v2.json'
+LEGACY_FEED = 'resource/tv-store-catalog.json'
 SNAPSHOT = 'resource/apps/putrtv-store/src/main/assets/catalog-snapshot.json'
 CATEGORIES = ('launcher', 'media', 'game', 'tools')
 STORE_CATEGORIES = ('media', 'game', 'tools')
@@ -117,7 +118,7 @@ def generate(root, tools, allow_unpublished_store=False):
     order = json.loads((root / 'tools/resource-order.json').read_text())
     translations = json.loads((root / 'tools/resource-index.en.json').read_text())
     assert set(order) == set(CATEGORIES), 'Resource order must contain the four repository categories'
-    indexed = {str(Path(info['path']).parent.relative_to('resource')): info for info in resources}
+    indexed = {catalog_identity(root, (root / info['path']).parent): info for info in resources}
     ordered_ids = [key for group in CATEGORIES for key in order[group]]
     assert len(ordered_ids) == len(set(ordered_ids)), 'Duplicate resource creation-order entry'
     pending = {'apps/putrtv-store'} if allow_unpublished_store and 'apps/putrtv-store' not in indexed else set()
@@ -127,12 +128,12 @@ def generate(root, tools, allow_unpublished_store=False):
         for identity in reversed(order[category]):
             if identity in pending:
                 continue
-            assert re.fullmatch(r'(?:apps|launcher)/[a-z0-9][a-z0-9-]*', identity), 'Unsafe catalog identity'
+            assert re.fullmatch(r'(?:apps|launcher|joystick-games)/[a-z0-9][a-z0-9-]*', identity), 'Unsafe catalog identity'
             info = indexed[identity]
             assert (category == 'launcher') == (info['kind'] == 'launcher'), 'Mismatched launcher category'
             assert info['packageName'] not in packages, 'Duplicate package identity'
             packages.add(info['packageName'])
-            directory = root / 'resource' / identity
+            directory = (root / info['path']).parent
             english = translations[identity]
             assert isinstance(english['name'], str) and english['name'].strip(), f'{identity}: missing English name'
             description = info.get('description', '')
@@ -172,7 +173,7 @@ def snapshot(root, catalog, revision):
     # previous store release, but never the APK currently being built.
     frozen = []
     for entry in catalog['entries']:
-        directory = 'resource/' + entry['id']
+        directory = str(Path(entry['apkPath']).parent)
         metadata_path = directory + '/resource.json'
         probe = subprocess.run(['git', 'cat-file', '-e', revision + ':' + metadata_path], cwd=root, stderr=subprocess.DEVNULL)
         if probe.returncode:
@@ -199,6 +200,9 @@ def main():
     args = parser.parse_args()
     catalog, lint = generate(ROOT, args.build_tools, args.allow_unpublished_store)
     changed = write_if_changed(ROOT / FEED, encode(catalog), args.check)
+    # Released store clients only accept resource/apps paths. Keep their live feed usable.
+    legacy = {**catalog, 'entries': [entry for entry in catalog['entries'] if entry['apkPath'].startswith('resource/apps/')]}
+    changed = write_if_changed(ROOT / LEGACY_FEED, encode(legacy), args.check) or changed
     if args.snapshot_revision:
         changed = write_if_changed(ROOT / SNAPSHOT, encode(snapshot(ROOT, catalog, args.snapshot_revision)), args.check) or changed
     report = {'entries': len(catalog['entries']), 'changed': changed, 'logoWarnings': lint}

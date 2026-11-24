@@ -88,12 +88,12 @@ class CommittedAssetBoundaries(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix='status-source-boundary-');self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name);self.slug = 'cozy-island'
-        self.assets = self.root/'resource/apps'/self.slug/'src/main/assets';self.assets.mkdir(parents=True)
+        self.assets = self.root/'joystick-games'/self.slug/'src/main/assets';self.assets.mkdir(parents=True)
         (self.assets/'game-model.js').write_bytes(b'unchanged model')
         (self.assets/'tv.css').write_bytes(b'original css')
         shared = self.root/'resource/game-kit/web';shared.mkdir(parents=True);(shared/'tv.html').write_bytes(b'shared shell')
         self.config = {'id':self.slug,'version':'0.5.4'}
-        (self.root/'resource/apps'/self.slug/'game.json').write_text(json.dumps(self.config))
+        (self.root/'joystick-games'/self.slug/'game.json').write_text(json.dumps(self.config))
         self.git('init','-q');self.git('add','.');self.git('-c','user.name=Boundary test','-c','user.email=qa@example.invalid','commit','-q','-m','Original assets')
         self.original = self.git('rev-parse','HEAD').strip()
         (self.assets/'tv.css').write_bytes(b'corrected css');self.git('add','.');self.git('-c','user.name=Boundary test','-c','user.email=qa@example.invalid','commit','-q','-m','Corrected assets')

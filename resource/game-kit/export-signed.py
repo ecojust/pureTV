@@ -61,7 +61,7 @@ def verify_artifact(*, source, source_sha, workflow_sha, slug, run_id, artifact,
     require(command(['git', 'rev-parse', 'HEAD'], cwd=source).decode().strip() == source_sha, 'Source checkout mismatch')
     builder.KIT = builder.checked_directory(source / 'resource/game-kit', 'source game kit')
     builder.validate_native_source(builder.KIT)
-    game = builder.checked_directory(source / 'resource/apps' / slug, 'game source')
+    game = builder.checked_directory(source / 'joystick-games' / slug, 'game source')
     meta = builder.metadata(game)
     require(meta['id'] == slug, 'Source game id mismatch')
     apk_name = slug + '-' + meta['version'] + '.apk'

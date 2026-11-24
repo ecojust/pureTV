@@ -166,7 +166,7 @@ jobs:
           elif [ "$PACKAGE_SCOPE" = alien-shooter ]; then
             game_apps=(--app alien-shooter)
           elif [ "$PACKAGE_SCOPE" = games ]; then
-            game_apps=(--app tank --app jackal --app jewel --app tetris --app bomb-jack --app adventure-island --app super-mario --app coast-kart --app cozy-island)
+            game_apps=(--app tank --app jackal --app jewel --app tetris --app super-mario)
           else
             exit 1
           fi
@@ -188,10 +188,7 @@ jobs:
           git switch -c "build-assets/published-games-${GITHUB_RUN_ID}"
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add joystick-games README.md README.en.md resource/README.md docs/previews/en \
-            resource/apps/tank resource/apps/jackal resource/apps/jewel resource/apps/tetris \
-            resource/apps/bomb-jack resource/apps/adventure-island resource/apps/super-mario \
-            resource/apps/coast-kart resource/apps/cozy-island resource/apps/used-car-racing resource/apps/alien-shooter
+          git add joystick-games README.md README.en.md resource/README.md docs/previews/en
           git commit -m "Publish signed game resources from $SOURCE_SHA"
           git push origin HEAD
           printf 'Published branch: `build-assets/published-games-%s`\n\nSource: `%s`\n' "$GITHUB_RUN_ID" "$SOURCE_SHA" >> "$GITHUB_STEP_SUMMARY"

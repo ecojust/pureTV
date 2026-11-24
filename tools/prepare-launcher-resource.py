@@ -3,6 +3,7 @@
 import argparse,hashlib,json,os,re,shutil,subprocess,tempfile
 from pathlib import Path
 from resource_catalog import apk_info,digest,launcher_source_tree,LAUNCHER_INPUTS,expected_release_certificate
+from launcher_project_sources import launcher_projects
 from resource_previews import write_english_previews
 
 parser=argparse.ArgumentParser()
@@ -65,14 +66,12 @@ with tempfile.TemporaryDirectory(prefix='puretv-resource-') as temporary:
     archive_paths=['resource/launcher/puretv/'+name for name in LAUNCHER_INPUTS]
     archive_paths += ['resource/launcher/puretv/'+name for name in ('layout.example.json','layout.example.en.json','README.md','LICENSE','NOTICE.md')]
     module_inputs={'build.gradle','src','proguard-rules.pro','tools','tests','README.md','README.en.md','LICENSE','NOTICE.md'}
-    for entry in git('ls-tree',args.source_sha+':resource/apps').decode().splitlines():
-        attributes,module=entry.split('\t',1)
-        if attributes.split()[1]!='tree':
-            continue
-        prefix='resource/apps/'+module
+    modules,shared_inputs=launcher_projects(git,args.source_sha)
+    archive_paths.extend(shared_inputs)
+    for prefix in modules:
         files=set(git('ls-tree','--name-only',args.source_sha+':'+prefix).decode().splitlines())
-        if 'build.gradle' in files:
-            archive_paths += [prefix+'/'+name for name in sorted(files & module_inputs)]
+        assert 'build.gradle' in files, prefix
+        archive_paths += [prefix+'/'+name for name in sorted(files & module_inputs)]
     if git('ls-tree',args.source_sha,'resource/launcher/shared').strip():
         archive_paths.append('resource/launcher/shared')
     archive_paths += ['tools/tests','LICENSE','NOTICE.md']

@@ -34,8 +34,10 @@ jobs:
         if: steps.select.outputs.build
         with:
           filter: blob:none
+          sparse-checkout-cone-mode: false
           sparse-checkout: |
-            tools/pc-games
+            /tools/pc-games/
+            /joystick-games/*/resource.json
       - uses: actions/setup-python@v5
         if: steps.select.outputs.build && runner.os == 'Windows'
         with:

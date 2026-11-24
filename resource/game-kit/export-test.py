@@ -99,7 +99,7 @@ class FetchApi:
             return {'repository': {'full_name': 'ecojust/pureTV'}, 'head_repository': {'full_name': 'ecojust/pureTV'},
                     'head_sha': WORKFLOW, 'path': '.github/workflows/sign-game-kit.yml', 'event': 'workflow_dispatch',
                     'status': 'completed', 'conclusion': 'success'}
-        if path == 'contents/resource/apps/' + SLUG + '/game.json?ref=' + SOURCE:
+        if path == 'contents/joystick-games/' + SLUG + '/game.json?ref=' + SOURCE:
             return {**self.metadata, 'type': 'file'}
         raise AssertionError('Unexpected read-only API path')
 
@@ -109,7 +109,7 @@ class Fixture:
         self.root = root
         self.source, self.artifact = root / 'source', root / 'artifact'
         kit = self.source / 'resource/game-kit'
-        game = self.source / 'resource/apps' / SLUG
+        game = self.source / 'joystick-games' / SLUG
         for path in (kit / 'web', kit / 'android/src/main/java', kit / 'android/src/main/res/raw', game / 'src/main/assets', self.artifact):
             path.mkdir(parents=True)
         self.metadata_raw = (json.dumps({'id': SLUG, 'name': '测试', 'nameEn': 'Protocol fixture',
@@ -135,7 +135,7 @@ class Fixture:
         native = {path.relative_to(self.source).as_posix(): exporter.digest(path.read_bytes())
                   for path in (kit / 'android/src/main').rglob('*') if path.is_file()}
         native[(game / 'icon.xml').relative_to(self.source).as_posix()] = exporter.digest((game / 'icon.xml').read_bytes())
-        self.receipt = {'schema': 1, 'slug': SLUG, 'sourceSha': SOURCE, 'signerCommit': WORKFLOW, 'workflowRun': RUN,
+        self.receipt = {'schema': 1, 'slug': SLUG, 'gameDir': 'joystick-games/' + SLUG, 'sourceSha': SOURCE, 'signerCommit': WORKFLOW, 'workflowRun': RUN,
             'file': APK, 'packageName': 'com.ecojust.protocolfixture', 'version': '0.1.0', 'versionCode': 1,
             'bytes': len(self.raw), 'sha256': exporter.digest(self.raw), 'certificateSha256': PIN,
             'signatureVerified': True, 'sourceAssetsMatchApk': True, 'checkedAssets': len(assets),
@@ -230,7 +230,7 @@ class ProtocolTests(unittest.TestCase):
     def test_missing_asset_or_native_icon_hash_is_rejected(self):
         for field in ('assetsSha256', 'nativeSourceSha256'):
             receipt = copy.deepcopy(self.fixture.receipt)
-            removed = 'game.js' if field == 'assetsSha256' else 'resource/apps/' + SLUG + '/icon.xml'
+            removed = 'game.js' if field == 'assetsSha256' else 'joystick-games/' + SLUG + '/icon.xml'
             receipt[field].pop(removed)
             (self.fixture.artifact / 'signing-receipt.json').write_text(json.dumps(receipt))
             with self.subTest(field=field), self.assertRaises(ValueError): self.verify()

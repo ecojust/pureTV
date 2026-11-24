@@ -14,9 +14,9 @@ from package import REPOSITORY_RAW
 
 ROOT = Path(__file__).resolve().parents[2]
 BOTH_PLATFORMS = {
-    "adventure-island", "alien-shooter", "bomb-jack", "clawd-pop", "coast-kart",
+    "alien-shooter", "clawd-pop",
     "jackal", "jewel", "lumenrift", "operation-ironhold", "saber-magic-tower",
-    "super-mario", "tank", "tetris", "tower-overlap", "turbo-kart-rally", "used-car-racing",
+    "super-mario", "tank", "tetris", "turbo-kart-rally", "used-car-racing",
 }
 WINDOWS_ONLY = {"cf-transport-ship", "emberbrood", "glup", "neon-rush", "qq-speed"}
 
@@ -73,7 +73,8 @@ def write_notices(archive, game, page, directory):
         "source_apk": game["url"],
         "apk_sha256": game["sha256"],
     }
-    if page.startswith("resource/apps/"):
+    resource_games = json.loads(tracked_file("tools/resource-order.json"))["game"]
+    if page in resource_games:
         resource = json.loads(tracked_file(f"{page}/resource.json"))
         source.update({k: resource[k] for k in ("author", "license", "romIncluded") if k in resource})
     (directory / "source.json").write_text(
@@ -146,12 +147,7 @@ def main():
         raise ValueError("Duplicate desktop catalog game ID")
     readme = readme_apks()
     for slug in sorted(selected):
-        if slug in readme:
-            page, apk_url = readme[slug]
-        else:
-            page = f"resource/apps/{slug}"
-            resource = json.loads(tracked_file(f"{page}/resource.json"))
-            apk_url = f"joystick-games/{slug}/{resource['apk']}"
+        page, apk_url = readme[slug]
         prepare(games[slug], page, apk_url, args.output)
 
 

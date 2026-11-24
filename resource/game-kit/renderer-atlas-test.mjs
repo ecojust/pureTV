@@ -9,7 +9,7 @@ import {fileURLToPath} from 'node:url';
 
 const args = process.argv.slice(2), options = {};
 for (let i = 0; i < args.length; i += 2) {
-  assert.ok(['--baseline', '--output', '--chromium'].includes(args[i]) && args[i + 1], 'Expected --baseline FILE, --output DIR or --chromium FILE');
+  assert.ok(['--baseline', '--output', '--chromium', '--legacy-games'].includes(args[i]) && args[i + 1], 'Expected --baseline FILE, --output DIR or --chromium FILE or --legacy-games DIR');
   options[args[i].slice(2)] = resolve(args[i + 1]);
 }
 const kit = fileURLToPath(new URL('.', import.meta.url));
@@ -186,8 +186,9 @@ try {
   checks.push('Canvas 2D fallback uses custom UV/pixels and core graphics, reports no GPU calls');await fallbackPage.close();
 
   report.games=[];
-  for(const slug of ['gravity-courier','prism-relay','switchyard-minute']){
-    const sources=await Promise.all(['game-model.js','game.js'].map(name=>readFile(join(kit,'../apps',slug,'src/main/assets',name),'utf8')));
+  const legacyGames = options['legacy-games'];
+  for(const slug of legacyGames ? ['gravity-courier','prism-relay','switchyard-minute'] : []){
+    const sources=await Promise.all(['game-model.js','game.js'].map(name=>readFile(join(legacyGames,slug,'src/main/assets',name),'utf8')));
     async function snapshots(source){
       const page=await pageFor(source);try{
         for(const content of sources)await page.addScriptTag({content});
@@ -207,7 +208,7 @@ try {
     for(const frame of frames){assert.equal(frame.metrics.drawCalls,1);await writeFile(join(output,`${slug}-${frame.level+1}.png`),png(frame.image));}
     report.games.push({slug,frames:frames.map(f=>({level:f.level+1,sha256:sha(png(f.image)),quads:f.metrics.quads,drawCalls:f.metrics.drawCalls})),baselineExact:!!old});
   }
-  checks.push('Three legacy games × three levels render successfully with one draw per frame'+(baseline?', exact baseline frame PNGs':' (baseline comparison not requested)'));
+  if (legacyGames) checks.push('Three legacy games × three levels render successfully with one draw per frame'+(baseline?', exact baseline frame PNGs':' (baseline comparison not requested)'));
   assert.deepEqual(errors,[]);report.pageErrors=errors;report.passed=checks.length;report.baselineProvided=!!baseline;
   await writeFile(join(output,'report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
 }finally{await browser.close();}

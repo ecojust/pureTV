@@ -20,7 +20,7 @@ class Boundaries(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root=Path(self.temp.name)
         self.slug='tetris'
-        self.game=self.root/'resource/apps'/self.slug
+        self.game=self.root/'joystick-games'/self.slug
         assets=self.game/'src/main/assets';assets.mkdir(parents=True)
         (assets/'runtime.js').write_bytes(b'fixed runtime')
         (assets/'tv.html').write_bytes(b'<html>fixed</html>')

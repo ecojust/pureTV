@@ -9,10 +9,10 @@ import {createHash} from 'node:crypto';
 const repo=fileURLToPath(new URL('../../../',import.meta.url)),out=process.argv[2];
 if(!out)throw Error('Pass fresh output directory');
 const {chromium}=createRequire(process.env.PURETV_PACKAGE||path.join(repo,'desktop/package.json'))('playwright');
-const games={'alien-shooter':'AlienShooterHost','used-car-racing':'UsedCarHost','cozy-island':'CozyIslandHost','coast-kart':'CoastKartHost'};
+const games={'alien-shooter':'AlienShooterHost','used-car-racing':'UsedCarHost'};
 await mkdir(out,{recursive:true});await copyFile(fileURLToPath(import.meta.url),path.join(out,'executed-layout-3d.mjs'));
 const report={status:'running',method:'Actual final bundled pages, synthetic Android information and clearly TEST-labelled QR graphic; no game-state or clock writes.',physicalTvTested:false,cases:[],hashes:{}};
-const server=http.createServer(async(req,res)=>{try{const [slug,...parts]=new URL(req.url,'http://localhost').pathname.slice(1).split('/');if(!games[slug]||parts.includes('..'))throw Error();const rel=parts.join('/')||'tv.html';res.setHeader('Content-Type',rel.endsWith('.js')?'text/javascript':rel.endsWith('.css')?'text/css':rel.endsWith('.png')?'image/png':rel.endsWith('.jpg')?'image/jpeg':'text/html');res.end(await readFile(path.join(repo,'resource/apps',slug,'src/main/assets',rel)));}catch{res.writeHead(404).end();}});
+const server=http.createServer(async(req,res)=>{try{const [slug,...parts]=new URL(req.url,'http://localhost').pathname.slice(1).split('/');if(!games[slug]||parts.includes('..'))throw Error();const rel=parts.join('/')||'tv.html';res.setHeader('Content-Type',rel.endsWith('.js')?'text/javascript':rel.endsWith('.css')?'text/css':rel.endsWith('.png')?'image/png':rel.endsWith('.jpg')?'image/jpeg':'text/html');res.end(await readFile(path.join(repo,'joystick-games',slug,'src/main/assets',rel)));}catch{res.writeHead(404).end();}});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 try{
@@ -28,19 +28,6 @@ for(const [slug,host] of Object.entries(games).filter(([slug])=>!process.env.GAM
   const g=row.geometry;assert.ok(g.top>=0&&g.bottom<=size.height&&g.left>=0&&g.right<=size.width,'Wi-Fi panel in viewport');
   for(const a of g.ancestors)assert.ok(g.top>=a.top-1&&g.bottom<=a.bottom+1,'Wi-Fi panel not clipped by '+a.tag);
   await page.screenshot({path:path.join(out,slug+'-'+language+'-'+size.width+'.png')});
-  if(slug==='coast-kart'){
-   row.sidebar=await page.locator('.sidebar').evaluate(e=>{const r=e.getBoundingClientRect(),h=e.querySelector('.room-brand').getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right,scrollTop:e.scrollTop,headingTop:h.top,headingBottom:h.bottom};});
-   assert.ok(row.sidebar.top>=0 && row.sidebar.bottom<=size.height,'entire sidebar fits viewport');
-   assert.ok(row.sidebar.headingTop>=row.sidebar.top-1 && row.sidebar.headingBottom<=row.sidebar.bottom+1,'heading visible without scroll');
-   await page.keyboard.press('Tab');
-   for(let tries=0;tries<12 && await page.evaluate(()=>document.activeElement.id!=='music-button');tries++)await page.keyboard.press('Tab');
-   assert.equal(await page.evaluate(()=>document.activeElement.id),'music-button','normal Tab reaches music');
-   row.focus=await page.locator('#music-button').evaluate(e=>{const r=e.getBoundingClientRect(),p=e.closest('.sidebar'),b=p.getBoundingClientRect();return {top:r.top,bottom:r.bottom,sidebarTop:b.top,sidebarBottom:b.bottom,scrollTop:p.scrollTop};});
-   assert.ok(row.focus.top>=row.focus.sidebarTop-1 && row.focus.bottom<=row.focus.sidebarBottom+1,'focused music control visible');
-   await page.screenshot({path:path.join(out,slug+'-'+language+'-'+size.width+'-music-focused.png')});
-   await page.keyboard.press('Control+Home');
-   await page.waitForFunction(()=>document.querySelector('.sidebar').scrollTop<=1,null,{timeout:60000});
-  }
   row.status='passed';
  }
  await page.evaluate(()=>{__info.wifiController.state='unavailable';__info.wifiController.error=-1;});
@@ -51,7 +38,7 @@ for(const [slug,host] of Object.entries(games).filter(([slug])=>!process.env.GAM
  assert.deepEqual(errors,[]);
  }catch(error){report.failure={game:slug,language,error:error.stack,state:await page.evaluate(()=>({info:window.__info,status:document.querySelector('#puretv-status').textContent,visible:document.visibilityState})).catch(()=>null),pageErrors:errors};await page.screenshot({path:path.join(out,slug+'-'+language+'-failure.png')}).catch(()=>{});throw error;}finally{await context.close();}
  }
- for(const name of ['puretv-controller.js',slug==='used-car-racing'?'game.js':'runtime.js','tv.html','tv.css']){const rel=`resource/apps/${slug}/src/main/assets/${name}`;report.hashes[rel]=createHash('sha256').update(await readFile(path.join(repo,rel))).digest('hex');}
+ for(const name of ['puretv-controller.js',slug==='used-car-racing'?'game.js':'runtime.js','tv.html','tv.css']){const rel=`joystick-games/${slug}/src/main/assets/${name}`;report.hashes[rel]=createHash('sha256').update(await readFile(path.join(repo,rel))).digest('hex');}
  console.log('PASS '+slug+' layouts and live status');
 }
 report.status='passed';

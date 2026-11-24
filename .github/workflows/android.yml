@@ -45,26 +45,24 @@ jobs:
       - name: Verify CCTV website player presentation
         run: node --test resource/apps/cctv/src/test/js/player-focus.test.mjs
       - name: Verify Tank TV game rules
-        run: node --test resource/apps/tank/tests/game.test.cjs
+        run: node --test joystick-games/tank/tests/game.test.cjs
       - name: Verify Jackal TV game rules
         run: |
-          node resource/apps/jackal/tools/build-levels.cjs --check
-          node --test resource/apps/jackal/tests/game.test.cjs resource/apps/jackal/tests/enemies.test.cjs resource/apps/jackal/tests/scenes.test.cjs
+          node joystick-games/jackal/tools/build-levels.cjs --check
+          node --test joystick-games/jackal/tests/game.test.cjs joystick-games/jackal/tests/enemies.test.cjs joystick-games/jackal/tests/scenes.test.cjs
       - name: Verify classic puzzle game rules
-        run: node --test resource/apps/jewel/tests/*.test.cjs resource/apps/tetris/tests/*.test.cjs
-      - name: Verify classic platform game rules
-        run: node --test resource/apps/bomb-jack/tests/*.test.cjs resource/apps/adventure-island/tests/*.test.cjs resource/apps/super-mario/tests/*.test.cjs
-      - name: Verify kart racing and island life game rules
-        run: node --test resource/apps/coast-kart/tests/*.test.cjs resource/apps/cozy-island/tests/*.test.cjs
+        run: node --test joystick-games/jewel/tests/*.test.cjs joystick-games/tetris/tests/*.test.cjs
+      - name: Verify Super Mario TV game rules
+        run: node --test joystick-games/super-mario/tests/*.test.cjs
       - name: Verify Used Car Racing physics and track rules
-        run: node --test resource/apps/used-car-racing/tests/*.test.cjs
+        run: node --test joystick-games/used-car-racing/tests/*.test.cjs
       - name: Verify Alien Shooter rules and baked resources
         run: |
-          node --test resource/apps/alien-shooter/tests/*.test.cjs
-          node resource/apps/alien-shooter/tools/bake-materials.mjs --verify
+          node --test joystick-games/alien-shooter/tests/*.test.cjs
+          node joystick-games/alien-shooter/tools/bake-materials.mjs --verify
       - name: Prepare verified Jackal preview artwork
         run: |
-          python resource/apps/jackal/tools/extract-artwork.py --output "$RUNNER_TEMP/puretv-jackal-art"
+          python joystick-games/jackal/tools/extract-artwork.py --output "$RUNNER_TEMP/puretv-jackal-art"
           echo "JACKAL_ART_DIR=$RUNNER_TEMP/puretv-jackal-art" >> "$GITHUB_ENV"
       - name: Install game browser test tools
         timeout-minutes: 5
@@ -79,7 +77,15 @@ jobs:
             echo "CHROMIUM_PATH=$tank_chrome_path" >> "$GITHUB_ENV"
           else
             npx playwright install --with-deps chromium
+            node -e 'console.log("CHROMIUM_PATH="+require("playwright").chromium.executablePath())' >> "$GITHUB_ENV"
           fi
+      - name: Build and test Neon Rush game content
+        working-directory: joystick-games/neon-rush
+        run: |
+          npm ci --no-audit --no-fund
+          npm install --prefix "$RUNNER_TEMP/neon-test-tools" --no-audit --no-fund --no-package-lock pngjs@7.0.0
+          npm run build:check
+          NODE_PATH="$RUNNER_TEMP/neon-test-tools/node_modules" npm test
       - name: Install Chinese font for game previews
         timeout-minutes: 3
         run: |
@@ -113,103 +119,72 @@ jobs:
         env:
           TANK_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-tank-previews
         run: |
-          node resource/apps/tank/tests/compatibility.mjs
-          node resource/apps/tank/tests/controller.mjs
-          node resource/apps/tank/tests/capture.mjs
+          node joystick-games/tank/tests/compatibility.mjs
+          node joystick-games/tank/tests/controller.mjs
+          node joystick-games/tank/tests/capture.mjs
       - name: Verify Jackal TV phone controls and capture actual game UI
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
         env:
           JACKAL_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-jackal-previews
         run: |
-          node resource/apps/jackal/tests/compatibility.mjs
-          node resource/apps/jackal/tests/controller.mjs
-          node resource/apps/jackal/tests/capture.mjs
+          node joystick-games/jackal/tests/compatibility.mjs
+          node joystick-games/jackal/tests/controller.mjs
+          node joystick-games/jackal/tests/capture.mjs
       - name: Verify Magic Jewelry TV controls, compatibility and game UI
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
         env:
           JEWEL_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-jewel-previews
         run: |
-          node resource/apps/jewel/tests/compatibility.mjs
-          node resource/apps/jewel/tests/controller.mjs
-          node resource/apps/jewel/tests/capture.mjs
+          node joystick-games/jewel/tests/compatibility.mjs
+          node joystick-games/jewel/tests/controller.mjs
+          node joystick-games/jewel/tests/capture.mjs
       - name: Verify Tetris TV controls, compatibility and game UI
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
         env:
           TETRIS_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-tetris-previews
         run: |
-          node resource/apps/tetris/tests/compatibility.mjs
-          node resource/apps/tetris/tests/controller.mjs
-          node resource/apps/tetris/tests/capture.mjs
-      - name: Verify Mighty Bomb Jack TV controls, compatibility and game UI
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        env:
-          BOMB_JACK_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-bomb-jack-previews
-        run: |
-          node resource/apps/bomb-jack/tests/compatibility.mjs
-          node resource/apps/bomb-jack/tests/controller.mjs
-          node resource/apps/bomb-jack/tests/capture.mjs
-      - name: Verify Adventure Island TV controls, compatibility and game UI
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        env:
-          ADVENTURE_ISLAND_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-adventure-island-previews
-        run: |
-          node resource/apps/adventure-island/tests/compatibility.mjs
-          node resource/apps/adventure-island/tests/controller.mjs
-          node resource/apps/adventure-island/tests/capture.mjs
+          node joystick-games/tetris/tests/compatibility.mjs
+          node joystick-games/tetris/tests/controller.mjs
+          node joystick-games/tetris/tests/capture.mjs
       - name: Verify Super Mario TV controls, compatibility and game UI
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
         env:
           SUPER_MARIO_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-super-mario-previews
         run: |
-          node resource/apps/super-mario/tests/compatibility.mjs
-          node resource/apps/super-mario/tests/controller.mjs
-          node resource/apps/super-mario/tests/capture.mjs
-      - name: Verify Coast Kart TV phone controls, compatibility and game UI
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        env:
-          COAST_KART_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-coast-kart-previews
-        run: |
-          node resource/apps/coast-kart/tests/compatibility.mjs
-          node resource/apps/coast-kart/tests/rendering.mjs
-          node resource/apps/coast-kart/tests/controller.mjs
-          node resource/apps/coast-kart/tests/combat.mjs
-          node resource/apps/coast-kart/tests/capture.mjs
-      - name: Verify Cozy Island TV phone controls, compatibility and game UI
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        env:
-          COZY_ISLAND_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-cozy-island-previews
-        run: |
-          node resource/apps/cozy-island/tests/compatibility.mjs
-          node resource/apps/cozy-island/tests/rendering.mjs
-          node resource/apps/cozy-island/tests/controller.mjs
-          node resource/apps/cozy-island/tests/capture.mjs
+          node joystick-games/super-mario/tests/compatibility.mjs
+          node joystick-games/super-mario/tests/controller.mjs
+          node joystick-games/super-mario/tests/capture.mjs
       - name: Verify Used Car Racing controls, 3D runtime and bilingual previews
         env:
           USED_CAR_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-used-car-racing-previews
           GAME_RENDER_OUTPUT: ${{ runner.temp }}/puretv-used-car-rendering-checks
         run: |
-          node resource/apps/used-car-racing/tests/compatibility.mjs
-          node resource/apps/used-car-racing/tests/rendering.mjs
-          node resource/apps/used-car-racing/tests/gallery.mjs
-          node resource/apps/used-car-racing/tests/controller.mjs
-          node resource/apps/used-car-racing/tests/secure-controller.mjs
-          node resource/apps/used-car-racing/tests/integration.mjs
+          node joystick-games/used-car-racing/tests/compatibility.mjs
+          node joystick-games/used-car-racing/tests/rendering.mjs
+          node joystick-games/used-car-racing/tests/gallery.mjs
+          node joystick-games/used-car-racing/tests/controller.mjs
+          node joystick-games/used-car-racing/tests/secure-controller.mjs
+          node joystick-games/used-car-racing/tests/integration.mjs
       - name: Verify Alien Shooter phone controls and actual game scenes
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' || inputs.resource_scope == 'alien-shooter' }}
         env:
           ALIEN_SHOOTER_UI_CAPTURE_DIR: ${{ runner.temp }}/puretv-alien-shooter-previews
         run: |
-          node resource/apps/alien-shooter/tests/controller.mjs
-          node resource/apps/alien-shooter/tests/performance.mjs --samples 6 --warmup 1 --regressions --output "$RUNNER_TEMP/puretv-alien-shooter-performance"
-          node resource/apps/alien-shooter/tests/integration.mjs
-          node resource/apps/alien-shooter/tests/runtime-performance.mjs
-          node resource/apps/alien-shooter/tests/animation.mjs --output "$RUNNER_TEMP/puretv-alien-shooter-animation"
+          node joystick-games/alien-shooter/tests/controller.mjs
+          node joystick-games/alien-shooter/tests/performance.mjs --samples 6 --warmup 1 --regressions --output "$RUNNER_TEMP/puretv-alien-shooter-performance"
+          node joystick-games/alien-shooter/tests/integration.mjs
+          node joystick-games/alien-shooter/tests/runtime-performance.mjs
+          node joystick-games/alien-shooter/tests/animation.mjs --output "$RUNNER_TEMP/puretv-alien-shooter-animation"
       - uses: android-actions/setup-android@v3
         with:
           packages: platform-tools
       - uses: gradle/actions/setup-gradle@v4
       - name: Install SDK
         run: sdkmanager "platforms;android-35" "build-tools;34.0.0"
+      - name: Build the Neon Rush Android APK
+        run: |
+          python joystick-games/tools/android-zxing.py --output "$RUNNER_TEMP/zxing.jar" --receipt "$RUNNER_TEMP/zxing.json"
+          python resource/game-kit/build.py --game joystick-games/neon-rush --output "$RUNNER_TEMP/neon-rush" --cache "$RUNNER_TEMP/neon-rush-cache" --zxing "$RUNNER_TEMP/zxing.jar"
       # Staged game builds stay unsigned; the game publication workflow owns signing.
       - name: Prepare release signing
         if: ${{ github.event_name != 'workflow_dispatch' || !inputs.stage_resources }}
@@ -238,14 +213,14 @@ jobs:
         working-directory: resource/launcher/puretv
         run: |
           set -o pipefail
-          ./gradlew --no-daemon --continue "-PjackalArtworkDir=$JACKAL_ART_DIR" assembleDebug assembleRelease lintDebug testDebugUnitTest :hifini:verifyReleaseSize :hifini:lintDebug :hifini:testDebugUnitTest :shortvideo:verifyReleaseSize :shortvideo:lintDebug :shortvideo:testDebugUnitTest :webtv:verifyReleaseSize :webtv:lintDebug :webtv:testDebugUnitTest :cctv:verifyReleaseSize :cctv:lintDebug :cctv:testDebugUnitTest :tank:verifyReleaseSize :tank:lintDebug :tank:testDebugUnitTest :jackal:verifyReleaseSize :jackal:lintDebug :jackal:testDebugUnitTest :jewel:verifyReleaseSize :tetris:verifyReleaseSize :bomb-jack:verifyReleaseSize :adventure-island:verifyReleaseSize :super-mario:verifyReleaseSize :coast-kart:verifyReleaseSize :cozy-island:verifyReleaseSize :used-car-racing:verifyReleaseSize :used-car-racing:lintDebug :used-car-racing:testDebugUnitTest :used-car-racing:assembleDebugAndroidTest :alien-shooter:verifyReleaseSize :alien-shooter:lintDebug :alien-shooter:testDebugUnitTest 2>&1 | tee "$RUNNER_TEMP/android-build.log"
+          ./gradlew --no-daemon --continue "-PjackalArtworkDir=$JACKAL_ART_DIR" assembleDebug assembleRelease lintDebug testDebugUnitTest :hifini:verifyReleaseSize :hifini:lintDebug :hifini:testDebugUnitTest :shortvideo:verifyReleaseSize :shortvideo:lintDebug :shortvideo:testDebugUnitTest :webtv:verifyReleaseSize :webtv:lintDebug :webtv:testDebugUnitTest :cctv:verifyReleaseSize :cctv:lintDebug :cctv:testDebugUnitTest :tank:verifyReleaseSize :tank:lintDebug :tank:testDebugUnitTest :jackal:verifyReleaseSize :jackal:lintDebug :jackal:testDebugUnitTest :jewel:verifyReleaseSize :tetris:verifyReleaseSize :super-mario:verifyReleaseSize :used-car-racing:verifyReleaseSize :used-car-racing:lintDebug :used-car-racing:testDebugUnitTest :used-car-racing:assembleDebugAndroidTest :alien-shooter:verifyReleaseSize :alien-shooter:lintDebug :alien-shooter:testDebugUnitTest 2>&1 | tee "$RUNNER_TEMP/android-build.log"
       - name: Report Android build or test failures
         if: failure()
         run: |
           python - <<'PYTHON'
           import os, pathlib, xml.etree.ElementTree as ET
           messages=[]
-          modules = [pathlib.Path('resource/launcher/puretv/app'), *pathlib.Path('resource/apps').iterdir()]
+          modules = [pathlib.Path('resource/launcher/puretv/app'), *pathlib.Path('resource/apps').iterdir(), *pathlib.Path('joystick-games').iterdir()]
           for report in (xml for module in modules for xml in module.glob('build/test-results/*/TEST-*.xml')):
               for case in ET.parse(report).getroot().iter('testcase'):
                   for failure in case.findall('failure'):
@@ -338,13 +313,13 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
         with:
           name: tank-tv
-          path: resource/apps/tank/build/outputs/apk/**/*.apk
+          path: joystick-games/tank/build/outputs/apk/**/*.apk
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
         with:
           name: jackal-tv
-          path: resource/apps/jackal/build/outputs/apk/**/*.apk
+          path: joystick-games/jackal/build/outputs/apk/**/*.apk
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
@@ -356,7 +331,7 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
         with:
           name: jewel-tv
-          path: resource/apps/jewel/build/outputs/apk/**/*.apk
+          path: joystick-games/jewel/build/outputs/apk/**/*.apk
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
@@ -368,31 +343,7 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
         with:
           name: tetris-tv
-          path: resource/apps/tetris/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: bomb-jack-tv-previews
-          path: ${{ runner.temp }}/puretv-bomb-jack-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: bomb-jack-tv
-          path: resource/apps/bomb-jack/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: adventure-island-tv-previews
-          path: ${{ runner.temp }}/puretv-adventure-island-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: adventure-island-tv
-          path: resource/apps/adventure-island/build/outputs/apk/**/*.apk
+          path: joystick-games/tetris/build/outputs/apk/**/*.apk
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
@@ -404,31 +355,7 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
         with:
           name: super-mario-tv
-          path: resource/apps/super-mario/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: coast-kart-tv-previews
-          path: ${{ runner.temp }}/puretv-coast-kart-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: coast-kart-tv
-          path: resource/apps/coast-kart/build/outputs/apk/**/*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: cozy-island-tv-previews
-          path: ${{ runner.temp }}/puretv-cozy-island-previews/*.png
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' }}
-        with:
-          name: cozy-island-tv
-          path: resource/apps/cozy-island/build/outputs/apk/**/*.apk
+          path: joystick-games/super-mario/build/outputs/apk/**/*.apk
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
@@ -438,7 +365,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: used-car-racing-tv
-          path: resource/apps/used-car-racing/build/outputs/apk/**/*.apk
+          path: joystick-games/used-car-racing/build/outputs/apk/**/*.apk
           if-no-files-found: error
 
       - uses: actions/upload-artifact@v4
@@ -463,7 +390,7 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.resource_scope == 'all' || inputs.resource_scope == 'alien-shooter' }}
         with:
           name: alien-shooter-tv
-          path: resource/apps/alien-shooter/build/outputs/apk/**/*.apk
+          path: joystick-games/alien-shooter/build/outputs/apk/**/*.apk
           if-no-files-found: error
 
   lan-tls-platform:
@@ -530,16 +457,16 @@ jobs:
           assert info['sourceSha']==os.environ['GITHUB_SHA']
           apk=root/'pureTV-release'/info['releaseName'];assert hashlib.file_digest(apk.open('rb'),'sha256').hexdigest()==info['sha256']
           shutil.copyfile(apk,output/info['releaseName']);shutil.copyfile(root/'pureTV-release-metadata/release-metadata.json',output/'release-metadata.json')
-          apps=['hifini','shortvideo','webtv','cctv','tank','jackal','jewel','tetris','bomb-jack','adventure-island','super-mario','coast-kart','cozy-island','used-car-racing','alien-shooter'] if scope=='all' else [scope]
+          apps=['hifini','shortvideo','webtv','cctv','tank','jackal','jewel','tetris','super-mario','used-car-racing','alien-shooter'] if scope=='all' else [scope]
           for app in apps:
-              apks=list((root/({'hifini':'hifini-tv','shortvideo':'shortvideo-tv','webtv':'webtv','cctv':'cctv-tv','tank':'tank-tv','jackal':'jackal-tv','jewel':'jewel-tv','tetris':'tetris-tv','bomb-jack':'bomb-jack-tv','adventure-island':'adventure-island-tv','super-mario':'super-mario-tv','coast-kart':'coast-kart-tv','cozy-island':'cozy-island-tv','used-car-racing':'used-car-racing-tv','alien-shooter':'alien-shooter-tv'}[app])).rglob('*.apk'))
+              apks=list((root/({'hifini':'hifini-tv','shortvideo':'shortvideo-tv','webtv':'webtv','cctv':'cctv-tv','tank':'tank-tv','jackal':'jackal-tv','jewel':'jewel-tv','tetris':'tetris-tv','super-mario':'super-mario-tv','used-car-racing':'used-car-racing-tv','alien-shooter':'alien-shooter-tv'}[app])).rglob('*.apk'))
               apks=[p for p in apks if 'release' in p.name]
               assert len(apks)==1,apks
               shutil.copyfile(apks[0],output/(app+'.apk'))
           if scope=='all':
               for artifact,names in [('hifini-tv-previews',['hifini-tv.png','hifini-tv.en.png']),('shortvideo-tv-previews',['shortvideo-tv.png','shortvideo-tv.en.png']),('webtv-previews',['webtv-controls.png','webtv-controls.en.png']),('cctv-tv-previews',['cctv-live.png','cctv-live.en.png'])]:
                   for name in names:shutil.copyfile(root/artifact/name,output/name)
-          games=['tank','jackal','jewel','tetris','bomb-jack','adventure-island','super-mario','coast-kart','cozy-island','used-car-racing','alien-shooter'] if scope=='all' else [scope]
+          games=['tank','jackal','jewel','tetris','super-mario','used-car-racing','alien-shooter'] if scope=='all' else [scope]
           for game in games:
               for scene in ['tv','controller','controller-active']:
                   for language in ['', '.en']:

@@ -4,10 +4,10 @@ import json,re
 from collections import Counter
 from html import escape
 from pathlib import Path
-from resource_catalog import catalog_directories
+from resource_catalog import catalog_directories, catalog_identity
 from readme_game_gallery import card_link, card_table, game_catalog, game_index
 root=Path(__file__).resolve().parents[1]
-entries=[(folder.relative_to(root/'resource').as_posix(),json.loads((folder/'resource.json').read_text())) for folder in catalog_directories(root)]
+entries=[(catalog_identity(root,folder),json.loads((folder/'resource.json').read_text())) for folder in catalog_directories(root)]
 counts={kind:sum(info['kind']==kind for _,info in entries) for kind in ('launcher','app')}
 LOCALES={
     'zh':{'launcher':'启动器','media':'应用-影音','game':'应用-游戏','tools':'应用-工具','alt':'{name} 界面'},
@@ -24,8 +24,7 @@ def section(key,info):
     if info['kind']=='launcher':return 'launcher'
     if key in MEDIA_APPS:return 'media'
     if key in TOOL_APPS:return 'tools'
-    directory=root/'resource'/key
-    if (directory/'game.json').is_file() or (directory/'src/main/assets/game.js').is_file():return 'game'
+    if key.startswith('joystick-games/'):return 'game'
     raise ValueError(f'{key}: classify the new app before generating the README index')
 
 def ordered_groups():
@@ -56,14 +55,19 @@ def validate_english():
         assert (root/expected).is_file(),f'{key}: missing English preview {expected}'
 
 def resource_card(key, info, prefix, locale, show_download=False):
-    directory = prefix + key + '/'
+    if key.startswith('joystick-games/'):
+        directory = ('' if prefix else '../') + key + '/'
+        source = root / key
+    else:
+        directory = prefix + key + '/'
+        source = root / 'resource' / key
     translated = ENGLISH[key] if locale == 'en' else info
     name = translated['name']
     cover = translated.get('cover')
     if cover and locale == 'zh':
         cover = directory + cover
     apk = info['apk']
-    assert (root / 'resource' / key / apk).stat().st_size == info['apkBytes']
+    assert (source / apk).stat().st_size == info['apkBytes']
     alt = '' if prefix == 'resource/' else LOCALES[locale]['alt'].format(name=name)
     content = card_link(directory, cover, name, alt)
     if show_download:
@@ -134,7 +138,7 @@ def main():
             for card in genre['cards']:
                 assert page_cards[card['page']] == 1, f'{filename}: expected one image card for {card["page"]}'
         rendered[p] = text
-    rendered[root/'resource/README.md'] = ('# 电视 APK 资源目录\n\n目录分为 `launcher/`（启动器）和 `apps/`（应用）。源码与 APK 放在同一软件目录。每个软件文件夹至少包含一个真实 APK，以及 resource.json、许可证和校验文件；可附对应源码及封面。点击软件名称查看详情。各游戏的签名 APK 也可在 [joystick-games/](../joystick-games/) 的对应游戏目录中下载。当前收录桔子桑（ecojust）开发的启动器和电视应用。\n\n启动器布局自定义使用管理器可识别的 layout.json 接口，当前配套启动器使用 v5 users/system 协议。界面预览与相关许可见各文件夹说明。\n\n'+tables('',groups)+'\n\n开发者请参阅 [开发与协议 README](README-development.md)，包含 layout.json 字段说明、画面对照、构建与测试。'+'\n\n维护校验：`python tools/resource_catalog.py --build-tools <Android Build Tools 34.0.0 目录>`。索引由 `python tools/update-resource-index.py` 根据资源元数据生成。\n')
+    rendered[root/'resource/README.md'] = ('# 电视 APK 资源目录\n\n启动器位于 `launcher/`，影音和工具应用位于 `apps/`，游戏的源码与签名 APK 位于 [joystick-games/](../joystick-games/)。下表按商城资源分类，点击名称可查看对应软件及其 APK。[浏览首页全部游戏](../README.md#games)\n\n启动器布局自定义使用管理器可识别的 layout.json 接口，当前配套启动器使用 v5 users/system 协议。界面预览与相关许可见各文件夹说明。\n\n'+tables('',groups)+'\n\n开发者请参阅 [开发与协议 README](README-development.md)，包含 layout.json 字段说明、画面对照、构建与测试。'+'\n\n维护校验：`python tools/resource_catalog.py --build-tools <Android Build Tools 34.0.0 目录>`。索引由 `python tools/update-resource-index.py` 根据资源元数据生成。\n')
     for path, content in rendered.items():
         path.write_text(content)
 

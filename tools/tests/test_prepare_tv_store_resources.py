@@ -62,24 +62,28 @@ class ExportContractTest(unittest.TestCase):
 
 class SourceArchiveTest(unittest.TestCase):
     def test_archive_includes_shared_and_only_settings_dependencies(self):
-        settings = "include ':app'\ninclude ':jackal'\nproject(':jackal').projectDir = file('../../apps/jackal')\n"
+        settings = "include ':app'\ninclude ':jackal'\nproject(':jackal').projectDir = file('../../../joystick-games/jackal')\n"
         selected = ['LICENSE', 'resource/launcher/puretv/settings.gradle',
                     'resource/launcher/shared/src/main/java/com/ecojust/launcher/shared/HomePlacement.java',
                     'resource/launcher/shared/src/test/java/com/ecojust/launcher/shared/AddToHomeActivityTest.java',
-                    'resource/apps/jackal/build.gradle', 'resource/apps/jackal/tools/preview-png.gradle',
-                    'resource/apps/jackal/src/main/assets/scene-update-paths.json']
+                    'joystick-games/jackal/build.gradle', 'joystick-games/jackal/tools/preview-png.gradle',
+                    'joystick-games/jackal/src/main/assets/scene-update-paths.json']
         removed = ['resource/launcher/puretv/resource.json', 'resource/launcher/puretv/pureTV-0.5.2.apk',
-                   'resource/apps/jackal/docs/recording.mp4']
+                   'joystick-games/jackal/docs/recording.mp4']
         calls = []
         def git(*args):
             calls.append(args)
+            if args[0] == 'show' and args[1].endswith(':tools/game-icon-sources.json'):
+                return b'{}'
             return settings.encode() if args[0] == 'show' else '\n'.join(selected + removed).encode()
         with tempfile.TemporaryDirectory() as directory, patch.object(publisher, 'git', side_effect=git), patch.object(publisher.subprocess, 'run') as archive:
             publisher.source_archive('a' * 40, 'puretv', Path(directory) / 'source.tar.gz')
-        listing = calls[1]
-        self.assertIn('resource/apps/jackal', listing)
+        listing = calls[-1]
+        self.assertIn('joystick-games/jackal', listing)
         self.assertNotIn('resource/apps', listing)
         self.assertIn('resource/launcher/shared', listing)
+        self.assertIn('resource/game-kit/legacy-controller-native/integration.gradle', listing)
+        self.assertIn('joystick-games/jackal/thumb.png', listing)
         command = archive.call_args.args[0]
         self.assertEqual(command[command.index('--') + 1:], selected)
 

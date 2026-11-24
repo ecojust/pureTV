@@ -12,7 +12,7 @@ from pathlib import Path
 
 from resource_catalog import digest, verify_catalog
 
-GAMES = ('tank', 'jackal', 'jewel', 'tetris', 'bomb-jack', 'adventure-island', 'super-mario', 'coast-kart', 'cozy-island')
+GAMES = ('tank', 'jackal', 'jewel', 'tetris', 'super-mario')
 
 
 def validate_version_transition(game, scope, metadata, previous):
@@ -38,19 +38,15 @@ def main():
     verify_catalog(root, args.build_tools)
     games = GAMES if args.scope == 'games' else (args.scope,)
     packages = []
-    catalog_paths = set()
     for game in games:
-        folder = root / 'resource/apps' / game
+        folder = root / 'joystick-games' / game
         metadata_file = folder / 'resource.json'
         metadata = json.loads(metadata_file.read_text())
         assert metadata['sourceCommit'] == args.source_sha, f'{game}: incorrect build provenance'
-        old_path = f'{args.source_sha}:resource/apps/{game}/resource.json'
+        old_path = f'{args.source_sha}:joystick-games/{game}/resource.json'
         has_previous = subprocess.run(['git', 'cat-file', '-e', old_path], cwd=root, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
         old = json.loads(subprocess.check_output(['git', 'show', old_path], cwd=root)) if has_previous else None
         validate_version_transition(game, args.scope, metadata, old)
-        catalog_apk = root / 'joystick-games' / game / metadata['apk']
-        assert catalog_apk.is_file() and not catalog_apk.is_symlink() and digest(catalog_apk) == metadata['sha256'], f'{game}: catalog APK differs'
-        catalog_paths.add(catalog_apk.relative_to(root).as_posix())
         count = 0
         with zipfile.ZipFile(folder / metadata['apk']) as archive:
             assert len(archive.namelist()) == len(set(archive.namelist())), f'{game}: duplicate APK entries'
@@ -79,7 +75,7 @@ def main():
     for game in games:
         allowed_files.add(f'docs/previews/en/app-{game}.png')
     def allowed(path):
-        return path in allowed_files or path in catalog_paths or any(path.startswith(f'resource/apps/{game}/') and not path.startswith(f'resource/apps/{game}/src/') for game in games)
+        return path in allowed_files or any(path.startswith(f'joystick-games/{game}/') and not path.startswith(f'joystick-games/{game}/src/') for game in games)
     assert paths and all(allowed(path) for path in paths), 'Publication changed files outside the game resource scope'
     output = Path(os.environ['RUNNER_TEMP']) / 'published-game-resources'
     output.mkdir(exist_ok=False)

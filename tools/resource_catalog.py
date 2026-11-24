@@ -90,6 +90,10 @@ def launcher_source_tree(root,ref='HEAD'):
         selected+=('040000 tree '+shared.stdout.strip()+'\tshared\n').encode()
     return subprocess.check_output(['git','mktree'],cwd=root,input=selected).decode().strip()
 
+def catalog_identity(root, directory):
+    relative = directory.relative_to(root)
+    return relative.relative_to('resource').as_posix() if relative.parts[0] == 'resource' else relative.as_posix()
+
 def catalog_directories(root):
     directories={p.name for p in (root/'resource').iterdir() if p.is_dir()}
     assert {'launcher','apps'} <= directories <= {'launcher','apps','game-kit'},'Classify software under resource/launcher or resource/apps'
@@ -97,7 +101,19 @@ def catalog_directories(root):
     kit=root/'resource/game-kit'
     if kit.exists():
         assert kit.is_dir() and not kit.is_symlink(),'Game Kit must be a regular source directory'
-        assert not (kit/'resource.json').exists() and not any(kit.glob('*.apk')),'Publish Game Kit applications under resource/apps'
+        assert not (kit/'resource.json').exists() and not any(kit.glob('*.apk')),'Publish games under joystick-games'
+    # Registered store games remain required even when metadata or a directory is missing.
+    joystick = root / 'joystick-games'
+    games = {metadata.parent for metadata in joystick.glob('*/resource.json')}
+    order = root / 'tools/resource-order.json'
+    if order.is_file():
+        for key in json.loads(order.read_text())['game']:
+            assert re.fullmatch(r'(?:apps|joystick-games)/[a-z0-9][a-z0-9-]*', key), f'Invalid game catalog key: {key}'
+            if key.startswith('joystick-games/'):
+                games.add(root / key)
+    for directory in sorted(games):
+        assert directory.is_dir() and not directory.is_symlink(), f'Invalid resource directory: {directory}'
+        yield directory
     for category in ('launcher','apps'):
         parent=root/'resource'/category
         assert parent.is_dir(),f'Missing resource/{category}'
@@ -119,8 +135,8 @@ def verify_catalog(root,tools,*,allow_unpublished_used_car=False,allow_unpublish
     entries=[]
     for directory in catalog_directories(root):
         metadata=directory/'resource.json'
-        source_only = ((allow_unpublished_used_car and directory==root/'resource/apps/used-car-racing')
-                       or (allow_unpublished_alien_shooter and directory==root/'resource/apps/alien-shooter')
+        source_only = ((allow_unpublished_used_car and directory in (root/'joystick-games/used-car-racing', root/'resource/apps/used-car-racing'))
+                       or (allow_unpublished_alien_shooter and directory in (root/'joystick-games/alien-shooter', root/'resource/apps/alien-shooter'))
                        or (allow_unpublished_putrtv_store and directory==root/'resource/apps/putrtv-store'))
         if (source_only
                 and not directory.is_symlink()

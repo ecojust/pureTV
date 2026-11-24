@@ -19,17 +19,17 @@ class Sources(unittest.TestCase):
     def test_reused_gamekit_retains_its_own_exact_source(self):
         self.assertEqual(self.binding('neon-rush',self.kit,self.legacy),(self.kit,self.legacy))
     def test_new_legacy_game_binds_new_source(self):
-        self.assertEqual(self.binding('coast-kart',self.legacy,self.legacy),(self.legacy,self.legacy))
+        self.assertEqual(self.binding('tank',self.legacy,self.legacy),(self.legacy,self.legacy))
     def test_old_legacy_apk_cannot_pass_new_group(self):
-        with self.assertRaisesRegex(AssertionError,'wrong source group'):self.binding('coast-kart',self.kit,self.legacy)
+        with self.assertRaisesRegex(AssertionError,'wrong source group'):self.binding('tank',self.kit,self.legacy)
     def test_gamekit_is_not_silently_rebound_to_legacy_commit(self):
         with self.assertRaisesRegex(AssertionError,'wrong source group'):self.binding('neon-rush',self.legacy,self.legacy)
     def test_observer_from_wrong_signing_source_fails(self):
         with self.assertRaisesRegex(AssertionError,'Observer must match'):self.binding('neon-rush',self.kit,self.kit)
     def test_missing_legacy_source_preserves_original_single_source_format(self):
-        self.manifest.pop('legacySourceSha');self.assertEqual(self.binding('coast-kart',self.kit,self.kit),(self.kit,self.kit))
+        self.manifest.pop('legacySourceSha');self.assertEqual(self.binding('tank',self.kit,self.kit),(self.kit,self.kit))
     def test_unregistered_game_is_rejected(self):
-        with self.assertRaisesRegex(AssertionError,'twenty README'):self.binding('unknown',self.legacy,self.legacy)
+        with self.assertRaisesRegex(AssertionError,'registered controller'):self.binding('unknown',self.legacy,self.legacy)
     def test_wrong_observer_target_is_rejected(self):
         with self.assertRaisesRegex(AssertionError,'another package'):
             m.source_bindings(self.manifest,'neon-rush',{'sourceSha':self.kit,'packageName':'com.ecojust.neonrushtv'}, {'sourceSha':self.legacy,'targetPackage':'com.ecojust.other'})
@@ -50,7 +50,7 @@ class Baselines(unittest.TestCase):
             return result
     def test_metadata_comes_from_artifact_commit(self):
         path,receipt=self.read()
-        self.assertEqual(path,ROOT/'resource/apps/neon-rush/old.apk')
+        self.assertEqual(path,ROOT/'joystick-games/neon-rush/old.apk')
         self.assertEqual(receipt['baselineMetadataRef'],self.ref+':resource/apps/neon-rush/resource.json')
     def test_changed_old_apk_fails(self):
         self.actual['sha256']='e'*64

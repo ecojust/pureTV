@@ -6,12 +6,12 @@ import {mkdir,readFile,writeFile,copyFile,stat} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {launch,serveAssets,parseArgs,sourceHashes as assetManifest,sha256} from './common.mjs';
 const args=parseArgs(),repo=fileURLToPath(new URL('../../../',import.meta.url));
-const games=(args.games||'twenty-four,torch-bridge,tower-overlap,packing-sculptor,conveyor-window,glass-fold,tension-span,prism-relay,neon-rush').split(',');
+const games=(args.games||'neon-rush').split(',');
 const output=path.resolve(args.output);await mkdir(output,{recursive:false});
 const script=fileURLToPath(import.meta.url);await copyFile(script,path.join(output,'executed-readme-controller-ui.mjs'));
 const qr=await readFile(path.resolve(args.qr));await writeFile(path.join(output,'qr-fixture.png'),qr);
 const report={startedAt:new Date().toISOString(),scope:'Actual assembled game UI and normal keyboard input with a synthetic native connection/info fixture. No game model, clock or renderer writes. Not TCP protocol or physical device evidence.',physicalTvTested:false,physicalEsp32Tested:false,gameStateWrites:false,clockWrites:false,scriptSha256:sha256(await readFile(script)),cases:[],passed:false};
-const buildPrepare=`import sys,importlib.util,json\nfrom pathlib import Path\nspec=importlib.util.spec_from_file_location('builder',Path(sys.argv[1])/'resource/game-kit/build.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)\ngame=Path(sys.argv[1])/'resource/apps'/sys.argv[2];out=Path(sys.argv[3]);out.mkdir(parents=True)\nfor name,data in m.payload(game).items():(out/name).write_bytes(data)\n`;
+const buildPrepare=`import sys,importlib.util,json\nfrom pathlib import Path\nspec=importlib.util.spec_from_file_location('builder',Path(sys.argv[1])/'resource/game-kit/build.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)\ngame=Path(sys.argv[1])/'joystick-games'/sys.argv[2];out=Path(sys.argv[3]);out.mkdir(parents=True)\nfor name,data in m.payload(game).items():(out/name).write_bytes(data)\n`;
 await writeFile(path.join(output,'prepare-assets.py'),buildPrepare);
 const browser=await launch();
 async function measure(page){return page.evaluate(()=>{

@@ -19,13 +19,13 @@ import xml.etree.ElementTree as ET
 
 
 CASES = (
-    ("neon-rush-0.1.1", "resource/apps/neon-rush/neon-rush-0.1.1.apk",
+    ("neon-rush-0.1.1", "joystick-games/neon-rush/neon-rush-0.1.1.apk",
      "com.ecojust.neonrushtv", "com.ecojust.gamekit.MainActivity",
      "7a76f3fb85f006cefa95afbc876fe4a0abbda52c537f28f560241b42c9018376"),
     ("hifini-0.5.0", "resource/apps/hifini/hifini-0.5.0.apk",
      "com.ecojust.hifinitv", "com.ecojust.hifinitv.MainActivity",
      "11953adb659f93838f37535ba73bf7cf8a73e3409374abe0e9016f46240ee2af"),
-    ("neon-rush-0.1.0", "resource/apps/neon-rush/neon-rush-0.1.0.apk",
+    ("neon-rush-0.1.0", "joystick-games/neon-rush/neon-rush-0.1.0.apk",
      "com.ecojust.neonrushtv", "com.ecojust.gamekit.MainActivity",
      "7582c084f14d2ef951a51237a9d2b2641f0f55d845f38926c2e8d138ad8f47a9"),
 )

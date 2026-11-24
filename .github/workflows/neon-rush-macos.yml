@@ -5,14 +5,14 @@ on:
     branches: [feat/neon-rush-macos]
     paths:
       - '.github/workflows/neon-rush-macos.yml'
-      - 'resource/apps/neon-rush/macos/**'
-      - 'resource/apps/neon-rush/src/main/assets/**'
-      - 'resource/apps/neon-rush/source/**'
-      - 'resource/apps/neon-rush/tests/**'
-      - 'resource/apps/neon-rush/tools/**'
-      - 'resource/apps/neon-rush/package*.json'
-      - 'resource/apps/neon-rush/logo.svg'
-      - 'resource/apps/neon-rush/game.json'
+      - 'joystick-games/neon-rush/macos/**'
+      - 'joystick-games/neon-rush/src/main/assets/**'
+      - 'joystick-games/neon-rush/source/**'
+      - 'joystick-games/neon-rush/tests/**'
+      - 'joystick-games/neon-rush/tools/**'
+      - 'joystick-games/neon-rush/package*.json'
+      - 'joystick-games/neon-rush/logo.svg'
+      - 'joystick-games/neon-rush/game.json'
       - 'resource/game-kit/web/**'
       - 'resource/game-kit/qa/**'
       - 'resource/game-kit/build.py'
@@ -31,7 +31,7 @@ jobs:
         with:
           sparse-checkout: |
             tools/pc-games/qa
-            resource/apps/neon-rush
+            joystick-games/neon-rush
             resource/game-kit
             puretv-joystick
             .github/workflows
@@ -44,7 +44,7 @@ jobs:
         with:
           node-version: '22'
       - name: Install the pinned game build dependencies
-        working-directory: resource/apps/neon-rush
+        working-directory: joystick-games/neon-rush
         run: npm ci --no-audit --no-fund
       - name: Prepare the browser for shared game runtime regressions
         run: |
@@ -59,15 +59,15 @@ jobs:
           console.log('CHROMIUM_PATH=' + require('playwright').chromium.executablePath());
           JS
       - name: Test game rules and verify the committed generated bundle
-        working-directory: resource/apps/neon-rush
+        working-directory: joystick-games/neon-rush
         run: |
           set -euo pipefail
           npm test
           npm run build:check
       - name: Test the WebView controller bridge
-        run: node --test resource/apps/neon-rush/macos/tests/web-bridge.test.mjs
+        run: node --test joystick-games/neon-rush/macos/tests/web-bridge.test.mjs
       - name: Build the universal app and install packages
-        run: python3 resource/apps/neon-rush/macos/build.py --output "$RUNNER_TEMP/neon-rush-package"
+        run: python3 joystick-games/neon-rush/macos/build.py --output "$RUNNER_TEMP/neon-rush-package"
       - uses: actions/upload-artifact@v4
         with:
           name: neon-rush-macos-package
@@ -101,7 +101,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: |
-            resource/apps/neon-rush
+            joystick-games/neon-rush
             resource/game-kit
             puretv-joystick
       - uses: actions/setup-python@v5
@@ -171,8 +171,8 @@ jobs:
         run: |
           set -euo pipefail
           xcrun swiftc -swift-version 5 \
-            resource/apps/neon-rush/macos/Sources/ControllerServer.swift \
-            resource/apps/neon-rush/macos/tests/ControllerServerTests.swift \
+            joystick-games/neon-rush/macos/Sources/ControllerServer.swift \
+            joystick-games/neon-rush/macos/tests/ControllerServerTests.swift \
             -o "$RUNNER_TEMP/controller-tests"
           "$RUNNER_TEMP/controller-tests" | tee "$RUNNER_TEMP/neon-rush-qa/controller-tests.txt"
       - name: Install the browser used for the unmodified virtual controller
@@ -187,7 +187,7 @@ jobs:
         env:
           PLAYWRIGHT_MODULE: ${{ runner.temp }}/neon-rush-browser/node_modules/playwright/index.mjs
         run: >-
-          python3 resource/apps/neon-rush/macos/tests/verify-native.py
+          python3 joystick-games/neon-rush/macos/tests/verify-native.py
           --app "$RUNNER_TEMP/neon-rush-package/installed/Neon Rush.app"
           --output "$RUNNER_TEMP/neon-rush-qa/native-occupied-port"
           --occupy-default-port
@@ -195,7 +195,7 @@ jobs:
         env:
           PLAYWRIGHT_MODULE: ${{ runner.temp }}/neon-rush-browser/node_modules/playwright/index.mjs
         run: >-
-          python3 resource/apps/neon-rush/macos/tests/verify-native.py
+          python3 joystick-games/neon-rush/macos/tests/verify-native.py
           --app "$RUNNER_TEMP/neon-rush-package/installed/Neon Rush.app"
           --output "$RUNNER_TEMP/neon-rush-qa/native"
           ${{ matrix.qa_options }}
@@ -208,7 +208,7 @@ jobs:
           if ! /usr/bin/arch -x86_64 /usr/bin/true; then
             sudo /usr/sbin/softwareupdate --install-rosetta --agree-to-license
           fi
-          python3 resource/apps/neon-rush/macos/tests/verify-native.py \
+          python3 joystick-games/neon-rush/macos/tests/verify-native.py \
             --app "$RUNNER_TEMP/neon-rush-package/installed/Neon Rush.app" \
             --output "$RUNNER_TEMP/neon-rush-qa/rosetta" --launch-architecture x86_64 --language en
       - uses: actions/upload-artifact@v4

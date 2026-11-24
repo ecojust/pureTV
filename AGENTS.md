@@ -25,7 +25,7 @@
 ## 项目结构与改动范围
 
 - `desktop/`：电脑端 Android TV / Google TV 管理器；开发入口为 `desktop/README.md`。
-- `resource/launcher/<id>/`：独立启动器；`resource/apps/<id>/`：独立电视应用或游戏。
+- `resource/launcher/<id>/`：独立启动器；`resource/apps/<id>/`：独立电视应用。游戏的源码、素材和 APK 统一放在 `joystick-games/<id>/`。
 - `fork/<分类>/<id>/`：第三方小体积 APK 归档；保留上游原包和证书，按 `fork/MAINTENANCE.md` 生成来源、图标、封面与校验清单，不计入自研资源或自动上架商城。
 - `resource/game-kit/`：小游戏原生宿主、局域网手机手柄、公共 Web 运行时、渲染器、构建和验证工具。
 - `tools/`：资源目录、签名证书及索引维护；`docs/`：公共说明与预览；`history/`：用户请求和可复查的行动记录。
@@ -41,7 +41,7 @@
 
 ## 百款游戏与验收
 
-以 `resource/game-kit/progress.json` 的实际验证状态为准，不能从应用目录总数推算游戏数量。公共组件、草稿和未签名构建不计数。
+当前上架游戏以首页清单为准。原百款计划已下架，历史计数可在[归档交付清单](https://github.com/ecojust/pureTV/blob/7cba602846e3efe6ddb499db2be258edc82ab5de/resource/game-kit/progress.json)复核。公共组件、草稿和未签名构建不计数。
 
 每款游戏必须具备独立可玩的规则，完成规则回归、浏览器实际输入回归及画面检查，提供严格小于 **10,000,000 字节**的正式签名 APK、实际游玩录像，并完成该款的独立 GitHub 提交后，才能计入完成数。不得为了达到数量复制换皮、虚构结果或提前增加计数。
 
@@ -72,7 +72,7 @@
 
 ```bash
 python3 resource/game-kit/build.py \
-  --game resource/apps/<id> --output /absolute/scratch/<id>/build \
+  --game joystick-games/<id> --output /absolute/scratch/<id>/build \
   --sdk /absolute/android-sdk --jdk /absolute/jdk17 \
   --zxing /absolute/core-3.5.3.jar
 ```

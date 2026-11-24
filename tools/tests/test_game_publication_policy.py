@@ -36,7 +36,7 @@ class GamePublicationPolicyTest(unittest.TestCase):
             with self.subTest(tag=tag, scope=scope), self.assertRaises(AssertionError):
                 publish.release_scope(tag, scope)
 
-    def test_existing_game_collection_keeps_its_nine_packages(self):
+    def test_historical_game_release_keeps_its_nine_packages(self):
         version, packages = publish.release_scope('android-v0.5.2', 'games')
         self.assertEqual(version, '0.5.2')
         self.assertEqual(len(packages), 9)
@@ -55,7 +55,11 @@ class GamePublicationPolicyTest(unittest.TestCase):
             for kind in ('apps', 'launcher')
             for metadata in (resources / kind).glob('*/resource.json')
         }
-        self.assertSetEqual(all_packages, published_packages)
+        self.assertSetEqual(publish.release_scope('android-v0.6.0', 'non-games')[1], published_packages)
+        games = {json.loads(meta.read_text())['packageName']
+                 for meta in (TOOLS.parent / 'joystick-games').glob('*/resource.json')}
+        self.assertTrue(games.isdisjoint(published_packages))
+        self.assertSetEqual(all_packages, published_packages | games)
 
     def test_only_registered_first_release_can_have_no_previous_metadata(self):
         identity = {'packageName': 'com.ecojust.usedcartv', 'versionCode': 1, 'version': '0.1.0'}

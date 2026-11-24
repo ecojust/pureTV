@@ -1,4 +1,4 @@
-"""Exercise the 21 standalone game payloads using real keyboard events in Chromium.
+"""Exercise the standalone game payloads using real keyboard events in Chromium.
 
 python tools/pc-games/verify_standalone_gameplay.py INPUT_DIRECTORY --browser /usr/bin/chromium
 Each INPUT_DIRECTORY/<game>/game.apk is the signed input used by the package builders.
@@ -15,12 +15,12 @@ import time
 from playwright.sync_api import sync_playwright
 
 
-MOVEMENT = {'adventure-island', 'alien-shooter', 'bomb-jack', 'jackal', 'super-mario', 'tank'}
+MOVEMENT = {'alien-shooter', 'jackal', 'super-mario', 'tank'}
 PIECES = {'tetris': 'piece', 'jewel': 'active'}
-RESOURCE = MOVEMENT | PIECES.keys() | {'coast-kart', 'neon-rush', 'tower-overlap', 'used-car-racing'}
+RESOURCE = MOVEMENT | PIECES.keys() | {'neon-rush', 'used-car-racing'}
 JOYSTICK = {'cf-transport-ship', 'clawd-pop', 'emberbrood', 'glup', 'lumenrift', 'operation-ironhold',
             'qq-speed', 'saber-magic-tower', 'turbo-kart-rally'}
-SOFTWARE_2D = (RESOURCE - {'alien-shooter', 'coast-kart', 'neon-rush', 'used-car-racing'}) | {
+SOFTWARE_2D = (RESOURCE - {'alien-shooter', 'neon-rush', 'used-car-racing'}) | {
     'emberbrood', 'glup', 'lumenrift'}
 
 
@@ -118,18 +118,12 @@ def exercise(page, url, slug):
             increase('ArrowRight', 'players.0.x')
         elif slug in PIECES:
             increase('ArrowRight', f'players.0.{PIECES[slug]}.x')
-        elif slug == 'tower-overlap':
-            increase('Space', 'model.drops')
         elif slug == 'neon-rush':
             wait('model.cars.0.speed', lambda speed: speed is not None and speed > 10)
             increase('b', 'model.stats.nitros')
         elif slug == 'used-car-racing':
             wait(stage, equals('race'))
             act('ArrowUp', 'players.0.speed', lambda speed: speed is not None and speed > 1)
-        elif slug == 'coast-kart':
-            wait('players.0.speed', lambda speed: speed is not None and speed > 10)
-            start = field(read(), 'players.0.x')
-            act('ArrowLeft', 'players.0.x', lambda x: x is not None and x < start - .05)
     elif slug == 'emberbrood':
         act('Enter', 'gameplay.rosterCount', equals(1))
     elif slug == 'glup':
@@ -184,7 +178,7 @@ def exercise(page, url, slug):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('inputs', type=Path)
-    parser.add_argument('games', nargs='*', help='default: all 21 standalone payloads')
+    parser.add_argument('games', nargs='*', help='default: all standalone payloads')
     parser.add_argument('--browser', help='installed Chromium executable')
     parser.add_argument('--report', type=Path)
     args = parser.parse_args()

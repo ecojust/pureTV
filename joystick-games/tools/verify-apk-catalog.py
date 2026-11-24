@@ -59,16 +59,22 @@ def check_android(slug, data):
 def main():
     resources = {}
     for resource in read_json('tools/resource-order.json')['game']:
-        info = read_json(Path('resource') / resource / 'resource.json')
+        if not re.fullmatch(r'joystick-games/[a-z0-9-]+', resource):
+            raise ValueError(f'Expected a joystick game directory, got {resource}')
+        info = read_json(Path(resource) / 'resource.json')
         resources[resource] = check(Path(resource).name, info['apk'], info['downloadUrl'],
                                     version=info['version'], size=info['apkBytes'], sha256=info['sha256'])
 
     readme = (GAMES / 'README.md').read_text(encoding='utf-8')
     manifest, = set(re.findall(r'\(\.\./(docs/releases/[\w.-]+/clients\.json)\)', readme))
-    for game in read_json(manifest)['games']:
+    clients = read_json(manifest)['games']
+    for game in clients:
+        if game['gameDir'] != 'joystick-games/' + game['id']:
+            raise ValueError(f"Unexpected game directory: {game['gameDir']}")
         if game.get('android'):
             check_android(game['id'], game['android'])
-    for game in read_json('tools/pc-games/catalog.json'):
+    desktop = read_json('tools/pc-games/catalog.json')
+    for game in desktop:
         check_android(game['id'], game)
 
     for path in GAMES.glob('*/packages.json'):
@@ -84,13 +90,20 @@ def main():
     for genre in read_json('tools/readme-app-games.json'):
         for game in genre['games']:
             if 'resource' in game:
-                page = f"resource/{game['resource']}/"
+                page = game['resource'] + '/'
                 expected[page] = resources[game['resource']]
             else:
                 reference = game['apk']
                 filename = Path(urlsplit(reference).path).name
                 relative = check(Path(game['page']).name, filename, reference)
                 expected[game['page']] = relative
+    slugs = [Path(page).name for page in expected]
+    if [game['id'] for game in desktop] != slugs:
+        raise ValueError('Desktop game catalog differs from the homepage')
+    if not {game['id'] for game in clients}.issubset(slugs):
+        raise ValueError('Client download catalog includes a game outside the homepage')
+    if not resources.keys() <= {page.rstrip('/') for page in expected}:
+        raise ValueError('Resource game catalog includes a game outside the homepage')
     for name in ('README.md', 'README.en.md'):
         readme = (ROOT / name).read_text(encoding='utf-8')
         gallery = readme.split('<!-- game-index:start -->')[1].split('<!-- game-index:end -->')[0]

@@ -310,11 +310,13 @@ mod tests {
     fn shipped_apks_bind_persisted_logos_to_real_package_names() {
         // Existing shipped APKs cover AAPT variants, UTF-8/UTF-16 string pools,
         // and both project apps and third-party manifests without duplicating ZIPs.
-        let root = std::env::var_os("PURETV_RESOURCE_APPS")
-            .map(std::path::PathBuf::from)
-            .unwrap_or_else(|| {
-                std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../resource/apps")
-            });
+        let roots = match std::env::var_os("PURETV_RESOURCE_APPS") {
+            Some(path) => vec![std::path::PathBuf::from(path)],
+            None => {
+                let project = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+                vec![project.join("resource/apps"), project.join("joystick-games")]
+            }
+        };
         let cache = std::env::temp_dir().join(format!(
             "puretv-logo-apks-{}-{}",
             std::process::id(),
@@ -323,7 +325,11 @@ mod tests {
         let mut apps = Vec::new();
         let mut expected = Vec::new();
         let mut count = 0;
-        for entry in fs::read_dir(root).unwrap().flatten() {
+        for entry in roots
+            .iter()
+            .flat_map(|root| fs::read_dir(root).unwrap())
+            .map(Result::unwrap)
+        {
             let metadata = entry.path().join("resource.json");
             if !metadata.exists() {
                 continue;

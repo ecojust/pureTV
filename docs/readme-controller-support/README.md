@@ -1,6 +1,6 @@
 # README 20款游戏的pureTV手柄接入
 
-> 这是上一轮首次接入手柄的历史记录。最新安装包、连接图标与 ID 显示见[本次连接标识更新](../controller-client-status/README.md)。
+> 这是上一轮首次接入手柄的历史记录。当前游戏与下载见[首页游戏清单](../../README.md#games)。该批游戏后续的连接图标与 ID 显示见[连接标识更新](../controller-client-status/README.md)。
 
 本轮为根 README 展示的 **20 款游戏**加入 pureTV Wi-Fi 手柄支持，全部提供沿用原证书的新签名 APK。19 款通过完整 Android 模拟器手柄验收；极品二手车通过完整浏览器手柄验收，Android 后续玩法因模拟器宿主渲染线程崩溃而受阻。该限制未记为通过，详见下方验证范围。完整资源目录中的另外 92 款未展示游戏不属于本次更新。
 
@@ -24,26 +24,26 @@
 
 | 游戏 | 原版 → 新版 | versionCode | 宿主 |
 | --- | --- | ---: | --- |
-| [霓虹飞车](../../resource/apps/neon-rush/) | 0.1.1 → 0.1.2 | 2 → 3 | game-kit |
-| [四则二十四](../../resource/apps/twenty-four/) | 0.2.0 → 0.2.1 | 2 → 3 | game-kit |
-| [夜桥接力](../../resource/apps/torch-bridge/) | 0.2.0 → 0.2.1 | 2 → 3 | game-kit |
-| [叠塔工匠](../../resource/apps/tower-overlap/) | 0.2.0 → 0.2.1 | 2 → 3 | game-kit |
-| [异形装箱](../../resource/apps/packing-sculptor/) | 0.2.0 → 0.2.1 | 2 → 3 | game-kit |
-| [窗口装配](../../resource/apps/conveyor-window/) | 0.2.0 → 0.2.1 | 2 → 3 | game-kit |
-| [折光工坊](../../resource/apps/glass-fold/) | 0.2.0 → 0.2.1 | 2 → 3 | game-kit |
-| [拉索桥梁](../../resource/apps/tension-span/) | 0.2.1 → 0.2.2 | 3 → 4 | game-kit |
-| [镜光接力](../../resource/apps/prism-relay/) | 0.2.1 → 0.2.2 | 4 → 5 | game-kit |
-| [孤胆枪手 TV](../../resource/apps/alien-shooter/) | 0.1.2 → 0.1.3 | 3 → 4 | legacy |
-| [极品二手车](../../resource/apps/used-car-racing/) | 0.1.3 → 0.1.4 | 4 → 5 | legacy |
-| [Cozy Island TV](../../resource/apps/cozy-island/) | 0.5.2 → 0.5.3 | 4 → 5 | legacy |
-| [Coast Kart TV](../../resource/apps/coast-kart/) | 0.5.2 → 0.5.3 | 4 → 5 | legacy |
-| [Super Mario TV](../../resource/apps/super-mario/) | 0.5.2 → 0.5.3 | 4 → 5 | legacy |
-| [Mighty Bomb Jack TV](../../resource/apps/bomb-jack/) | 0.5.2 → 0.5.3 | 4 → 5 | legacy |
-| [Adventure Island TV](../../resource/apps/adventure-island/) | 0.5.2 → 0.5.3 | 4 → 5 | legacy |
-| [Tetris TV](../../resource/apps/tetris/) | 0.5.2 → 0.5.3 | 4 → 5 | legacy |
-| [Magic Jewelry TV](../../resource/apps/jewel/) | 0.5.2 → 0.5.3 | 4 → 5 | legacy |
-| [Jackal TV](../../resource/apps/jackal/) | 0.5.2 → 0.5.3 | 6 → 7 | legacy |
-| [Tank TV](../../resource/apps/tank/) | 0.5.2 → 0.5.3 | 9 → 10 | legacy |
+| [霓虹飞车](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/neon-rush/) | 0.1.1 → 0.1.2 | 2 → 3 | game-kit |
+| [四则二十四](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/twenty-four/) | 0.2.0 → 0.2.1 | 2 → 3 | game-kit |
+| [夜桥接力](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/torch-bridge/) | 0.2.0 → 0.2.1 | 2 → 3 | game-kit |
+| [叠塔工匠](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/tower-overlap/) | 0.2.0 → 0.2.1 | 2 → 3 | game-kit |
+| [异形装箱](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/packing-sculptor/) | 0.2.0 → 0.2.1 | 2 → 3 | game-kit |
+| [窗口装配](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/conveyor-window/) | 0.2.0 → 0.2.1 | 2 → 3 | game-kit |
+| [折光工坊](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/glass-fold/) | 0.2.0 → 0.2.1 | 2 → 3 | game-kit |
+| [拉索桥梁](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/tension-span/) | 0.2.1 → 0.2.2 | 3 → 4 | game-kit |
+| [镜光接力](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/prism-relay/) | 0.2.1 → 0.2.2 | 4 → 5 | game-kit |
+| [孤胆枪手 TV](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/alien-shooter/) | 0.1.2 → 0.1.3 | 3 → 4 | legacy |
+| [极品二手车](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/used-car-racing/) | 0.1.3 → 0.1.4 | 4 → 5 | legacy |
+| [Cozy Island TV](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/cozy-island/) | 0.5.2 → 0.5.3 | 4 → 5 | legacy |
+| [Coast Kart TV](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/coast-kart/) | 0.5.2 → 0.5.3 | 4 → 5 | legacy |
+| [Super Mario TV](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/super-mario/) | 0.5.2 → 0.5.3 | 4 → 5 | legacy |
+| [Mighty Bomb Jack TV](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/bomb-jack/) | 0.5.2 → 0.5.3 | 4 → 5 | legacy |
+| [Adventure Island TV](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/adventure-island/) | 0.5.2 → 0.5.3 | 4 → 5 | legacy |
+| [Tetris TV](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/tetris/) | 0.5.2 → 0.5.3 | 4 → 5 | legacy |
+| [Magic Jewelry TV](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/jewel/) | 0.5.2 → 0.5.3 | 4 → 5 | legacy |
+| [Jackal TV](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/jackal/) | 0.5.2 → 0.5.3 | 6 → 7 | legacy |
+| [Tank TV](https://github.com/ecojust/pureTV/tree/54de762f1c5e72cfad11623dbfe16bc976cdcc51/resource/apps/tank/) | 0.5.2 → 0.5.3 | 9 → 10 | legacy |
 
 所有包沿用原 applicationId 和固定发布证书，并在模拟器中成功从上一正式版覆盖安装；旧包与旧证据保留。本轮未进行带既有存档的升级验证，不能把安装成功当作存档保留已验证。
 

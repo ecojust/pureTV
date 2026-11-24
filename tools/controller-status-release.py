@@ -105,7 +105,8 @@ def verify_signed_identity(choice, row, receipt, identity, certificate):
 def verify_committed_assets(slug, host, source_sha, actual):
     """Bind the selected APK to its own source commit, including Kit-generated JSON."""
     assert re.fullmatch('[0-9a-f]{40}', source_sha)
-    prefixes = ['resource/apps/'+slug+'/src/main/assets/']
+    game_dir = batch.release.committed_game_dir(ROOT, source_sha, slug)
+    prefixes = [game_dir+'/src/main/assets/']
     if host == 'game-kit':
         prefixes.append('resource/game-kit/web/')
     names = subprocess.check_output(['git','ls-tree','-r','--name-only',source_sha,'--',*prefixes],cwd=ROOT,text=True).splitlines()
@@ -116,7 +117,7 @@ def verify_committed_assets(slug, host, source_sha, actual):
         assert relative_name not in expected
         expected[relative_name] = subprocess.check_output(['git','show',source_sha+':'+name],cwd=ROOT)
     if host == 'game-kit':
-        config = json.loads(subprocess.check_output(['git','show',source_sha+':resource/apps/'+slug+'/game.json'],cwd=ROOT))
+        config = json.loads(subprocess.check_output(['git','show',source_sha+':'+game_dir+'/game.json'],cwd=ROOT))
         expected['game-config.json'] = (json.dumps(config,ensure_ascii=False,separators=(',',':'))+'\n').encode()
         expected['assets-index.json'] = (json.dumps(sorted(expected),separators=(',',':'))+'\n').encode()
     assert expected and all(actual.get(name) == data for name,data in expected.items()), 'APK asset bytes do not match the selected production commit: '+slug
@@ -134,7 +135,7 @@ def prepare_requests(args):
     for game in read(ROLLOUT)['games']:
         if game['id'] not in games or game['host'] != 'game-kit':
             continue
-        app = ROOT / 'resource/apps' / game['id']
+        app = ROOT / 'joystick-games' / game['id']
         prefixes = ['resource/game-kit/android/src/main', 'resource/game-kit/web',
                     str(app.relative_to(ROOT) / 'src'), str(app.relative_to(ROOT) / 'game.json'),
                     str(app.relative_to(ROOT) / 'icon.xml')]
@@ -161,7 +162,7 @@ def stage(args):
     rollout = read(ROLLOUT)
     assert rollout['status'] == 'source_in_progress' and rollout['published'] is False
     games = {g['id']:g for g in rollout['games']}
-    assert len(games) == len(rollout['games']) == 20
+    assert len(games) == len(rollout['games']) and set(games) == set(batch.release.ALL_SLUGS)
     selection = read(args.selection)['games']
     assert set(selection) == set(games)
     candidates = {}
@@ -194,12 +195,12 @@ def stage(args):
         assert {n:hashlib.sha256(v).hexdigest() for n,v in actual.items()} == expected_assets
         verify_committed_assets(slug, games[slug]['host'], receipt['sourceSha'], actual)
         for name, data in actual.items():
-            local = ROOT/'resource/apps'/slug/'src/main/assets'/name
+            local = ROOT/'joystick-games'/slug/'src/main/assets'/name
             if not local.exists() and games[slug]['host'] == 'game-kit':
                 local = ROOT/'resource/game-kit/web'/name
             if local.is_file():
                 assert local.read_bytes() == data, 'Production asset changed since signing: '+str(local)
-        model_path = 'resource/apps/'+slug+'/src/main/assets/game-model.js'
+        model_path = batch.release.committed_game_dir(ROOT, rollout['baseCommit'], slug)+'/src/main/assets/game-model.js'
         prior_model = subprocess.check_output(['git','show',rollout['baseCommit']+':'+model_path],cwd=ROOT)
         assert actual['game-model.js'] == prior_model, 'UI update unexpectedly changes the game model: '+slug
         row = {**row, 'modelReuse': {'sourceRef':rollout['baseCommit']+':'+model_path,'sha256':hashlib.sha256(prior_model).hexdigest(),'bytes':len(prior_model),'matchesNewApk':True}}
@@ -234,10 +235,10 @@ def stage(args):
         assert case['artifactSourceSha'] == receipt['sourceSha']
         assert case['packageSha256'] == binding['package']['sha256'] == sha(apk)
         assert case['observerSourceSha'] == binding['observerSourceSha'] and case['observerSha256'] == binding['observerSha256']
-        old = read(ROOT/'resource/apps'/slug/'resource.json');baseline = ROOT/game['baseline']
+        old = read(ROOT/'joystick-games'/slug/'resource.json');baseline = ROOT/game['baseline']
         assert old['version'] == game['previousVersion'] and old['versionCode'] == game['previousVersionCode']
         for name, record in game['baselineFiles'].items():
-            assert sha(baseline/name) == record['sha256'] and (baseline/name).read_bytes() == (ROOT/'resource/apps'/slug/name).read_bytes()
+            assert sha(baseline/name) == record['sha256'] and (baseline/name).read_bytes() == (ROOT/'joystick-games'/slug/name).read_bytes()
         identity = binding['package']
         assert identity['packageName'] == old['packageName'] == game['packageName']
         assert identity['versionName'] == game['version'] and identity['versionCode'] == game['versionCode'] > old['versionCode']
@@ -271,7 +272,7 @@ def stage(args):
     progress = read(ROOT/'resource/game-kit/progress.json')
     progress_by_id = {g['id']:g for g in progress['games']}
     for slug, game, old, binding, receipt, receipt_file, case, driver, image, video, export, choice, probe in prepared:
-        app = ROOT/'resource/apps'/slug;release = app/'docs/releases'/game['version'];run = str(export['runId'])
+        app = ROOT/'joystick-games'/slug;release = app/'docs/releases'/game['version'];run = str(export['runId'])
         original = (archive_root/run/'evidence'/choice['group']/slug).relative_to(ROOT).as_posix()
         preserve(signed[slug][0], app/game['apk']);preserve(receipt_file, release/'signing-receipt.json')
         preserve(image, release/'connected.png');preserve(video, release/'controller-status.mp4')
@@ -316,7 +317,7 @@ def stage(args):
             entry = progress_by_id[slug];previous_entry = copy.deepcopy(entry);previous_entry.pop('previousReleases',None)
             entry.update(version=game['version'],apk=game['apk'],apkBytes=binding['package']['bytes'],apkSha256=binding['package']['sha256'],sourceCommit=receipt['sourceSha'],signingRun=int(receipt.get('workflowRun',receipt.get('runId'))),checks='docs/releases/'+game['version']+'/verification.json',video=current['controllerStatusVideo'],videoBytes=video.stat().st_size,videoSha256=sha(video),videoScope=SCOPE,modelReuse=binding['modelReuse'],fullGameplayAcceptancePerformedInThisUpdate=False)
             entry['previousReleases'] = entry.get('previousReleases',[])+[previous_entry]
-        game.update(status='signed_apk_status_verified',sourceCommit=receipt['sourceSha'],sha256=binding['package']['sha256'],verification='../../resource/apps/'+slug+'/docs/releases/'+game['version']+'/verification.json')
+        game.update(status='signed_apk_status_verified',sourceCommit=receipt['sourceSha'],sha256=binding['package']['sha256'],verification='../../joystick-games/'+slug+'/docs/releases/'+game['version']+'/verification.json')
         results.append({'game':slug,'runId':run,'artifactSourceSha':receipt['sourceSha'],'qaSourceSha':export['qaSourceSha'],'apkSha256':binding['package']['sha256'],'scope':SCOPE})
     write(ROOT/'resource/game-kit/progress.json', progress)
     rollout.update(status='signed_apks_status_verified_pending_publication',acceptanceScope=SCOPE,fullGameplayAcceptancePerformedInThisUpdate=False)
@@ -331,7 +332,7 @@ def checksums(args):
     assert rollout['status'] == 'signed_apks_status_verified_pending_publication'
     results = []
     for game in rollout['games']:
-        app = ROOT/'resource/apps'/game['id']
+        app = ROOT/'joystick-games'/game['id']
         names = subprocess.check_output(['git','ls-files','-z','--cached','--others','--exclude-standard','--',str(app.relative_to(ROOT))],cwd=ROOT).decode().split('\0')
         output = app/'SHA256SUMS.txt';lines = []
         for name in sorted(set(n for n in names if n)):
@@ -353,11 +354,13 @@ def public_verify(args):
     paths = {'README.md','README.en.md','resource/README.md','resource/tv-store-catalog.json',
              'docs/controller-client-status/README.md','docs/controller-client-status/rollout.json'}
     for game in rollout['games']:
-        base = 'resource/apps/'+game['id']+'/'
+        if game['id'] not in batch.release.ALL_SLUGS:
+            continue
+        base = 'joystick-games/'+game['id']+'/'
         paths.update(base+n for n in [game['apk'],'resource.json','thumb.png','SHA256SUMS.txt','README.md'])
         paths.update(base+'docs/releases/'+game['version']+'/'+n for n in ['verification.json','controller-status.mp4','controller-status.json','connected.png'])
         paths.add('docs/previews/en/app-'+game['id']+'.png')
-    mac = 'resource/apps/neon-rush/macos/'
+    mac = 'joystick-games/neon-rush/macos/'
     paths.update(mac+'NeonRush-'+rollout['macos']['version']+'-macos-universal.'+extension for extension in ['dmg','zip'])
     paths.update(mac+n for n in ['README.md','SHA256SUMS.txt'])
     for name in paths:

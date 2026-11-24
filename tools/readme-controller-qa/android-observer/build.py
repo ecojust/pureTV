@@ -6,7 +6,7 @@ HERE=Path(__file__).resolve().parent
 ROOT=HERE.parents[2]
 p=argparse.ArgumentParser();p.add_argument('--game',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--sdk',type=Path,required=True);p.add_argument('--jdk',type=Path,required=True);a=p.parse_args()
 assert re.fullmatch('[a-z0-9]+(?:-[a-z0-9]+)*',a.game)
-game=ROOT/'resource/apps'/a.game
+game=ROOT/'joystick-games'/a.game
 meta=game/'game.json'
 if meta.exists(): package=json.loads(meta.read_text())['packageName']
 else:

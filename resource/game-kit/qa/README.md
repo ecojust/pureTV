@@ -7,11 +7,11 @@
 ```sh
 node resource/game-kit/qa/qa.mjs \
   --assets /absolute/path/to/extracted-apk-assets \
-  --output /workspace/scratch/hundred-games/results/gravity-courier \
+  --output /workspace/scratch/hundred-games/results/neon-rush \
   --automation /absolute/path/to/automation.mjs \
   --seconds 25 --record \
-  --apk /absolute/path/to/gravity-courier.apk \
-  --package com.ecojust.gravitycouriertv
+  --apk /absolute/path/to/neon-rush.apk \
+  --package com.ecojust.neonrushtv
 ```
 
 `--assets` 应指向 APK 解出的完整 assets 目录，包含公共运行时和本游戏资源。入口默认 `tv.html`，可传 `--entry index.html`。`--seconds` 控制普通操作回归时长，默认 15 秒。录像默认 30 秒；`--recipe recipe.json` 可指定 `{ "durationSeconds": 45 }`。省略 `--record` 或 `--apk` 时报告不声称相应项目已通过。

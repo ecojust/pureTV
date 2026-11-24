@@ -1,4 +1,4 @@
-"""Exercise the twelve resource games through their desktop host with an actual SDK client."""
+"""Exercise the catalog’s original Android TV games through their desktop host with an actual SDK client."""
 
 import argparse
 import contextlib
@@ -18,20 +18,16 @@ from joystick_sdk import JoystickClient
 
 # The first phase reached by START is game-specific.
 STARTED = {
-    "adventure-island": "playing",
     "alien-shooter": "playing",
-    "bomb-jack": "playing",
-    "coast-kart": "playing",
     "jackal": "intro",
     "jewel": "playing",
     "neon-rush": "playing",
     "super-mario": "playing",
     "tank": "stageintro",
     "tetris": "playing",
-    "tower-overlap": "playing",
     "used-car-racing": "countdown",
 }
-ONE_SEAT = {"alien-shooter", "neon-rush", "tower-overlap"}
+ONE_SEAT = {"alien-shooter", "neon-rush"}
 OBSERVE = """() => {
   const qa = window.PureTVQA?.snapshot();
   return qa ? {
@@ -219,7 +215,7 @@ def main():
         type=Path,
         help="game.apk or game/*.apk; .zip payloads also accepted",
     )
-    parser.add_argument("games", nargs="*", help="default: all twelve")
+    parser.add_argument("games", nargs="*", help="default: all supported games")
     parser.add_argument(
         "--browser", type=Path, default=os.environ.get("PURETV_CHROMIUM")
     )

@@ -1,6 +1,6 @@
 # Legacy game controller adapter
 
-`puretv-controller.js` is the shared input boundary for the eleven standalone games. Game Kit uses its own runtime. The native host handles TCP, ACK, nine-key synchronization, A/X aliases, Y/SELECT and retained quick presses. This adapter preserves the existing phone fields and detects changes involving Wi-Fi sessions, seats, cancellations and disconnects.
+`puretv-controller.js` is the shared input boundary for the standalone legacy games. Game Kit uses its own runtime. The native host handles TCP, ACK, nine-key synchronization, A/X aliases, Y/SELECT and retained quick presses. This adapter preserves the existing phone fields and detects changes involving Wi-Fi sessions, seats, cancellations and disconnects.
 
 Create with `PureTVControllerAdapter.create({onCancel})` and call `read(players)` exactly once per simulation input read. The callback receives `{id, previous, source, disconnected}`. Return `true` when active gameplay was paused: that input is neutralized and held actions remain quarantined until release. Return `false` in title menus to preserve a normal first START. The returned cancellation marker remains stable until the next source/cancellation change. `peek()` only returns a copy of cached input; UI timers and diagnostics must use it, since native snapshots consume retained short presses.
 

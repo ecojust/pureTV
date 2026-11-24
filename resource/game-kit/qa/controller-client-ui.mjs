@@ -9,7 +9,7 @@ import {launch,serveAssets,parseArgs,sourceHashes,sha256} from './common.mjs';
 const args=parseArgs(),repo=fileURLToPath(new URL('../../../',import.meta.url));
 assert.ok(!args.macos||args.games==='neon-rush','macOS presentation applies only to Neon Rush');
 const language=args.language==='en'?'en':'zh';
-const games=(args.games||'twenty-four,torch-bridge,tower-overlap,packing-sculptor,conveyor-window,glass-fold,tension-span,prism-relay,neon-rush').split(',');
+const games=(args.games||'neon-rush').split(',');
 const output=path.resolve(args.output);await mkdir(output,{recursive:false});
 const script=fileURLToPath(import.meta.url);await copyFile(script,path.join(output,'executed-controller-client-ui.mjs'));
 const qr=await readFile(path.resolve(args.qr));await writeFile(path.join(output,'qr-fixture.png'),qr);
@@ -30,7 +30,7 @@ try{
   const dir=path.join(output,slug);await mkdir(dir);const assets=path.join(dir,'assets');
   if(args.macos){
    const temporary=await mkdtemp(path.join(os.tmpdir(),'neon-client-ui-'));
-   execFileSync('python3',[path.join(repo,'resource/apps/neon-rush/macos/tools/prepare-web.py'),'--output',path.join(temporary,'assets')],{env:{...process.env,PYTHONDONTWRITEBYTECODE:'1'}});
+   execFileSync('python3',[path.join(repo,'joystick-games/neon-rush/macos/tools/prepare-web.py'),'--output',path.join(temporary,'assets')],{env:{...process.env,PYTHONDONTWRITEBYTECODE:'1'}});
    await cp(path.join(temporary,'assets'),assets,{recursive:true});await copyFile(path.join(temporary,'web-assets.json'),path.join(dir,'mac-web-assets.json'));
   }else execFileSync('python3',[path.join(repo,'tools/readme-controller-qa/prepare-assets.py'),'--slug',slug,'--output',assets],{env:{...process.env,PYTHONDONTWRITEBYTECODE:'1'}});
   const manifest=await sourceHashes(assets);await writeFile(path.join(dir,'assets-manifest.json'),JSON.stringify(manifest,null,2)+'\n');const server=await serveAssets(assets);

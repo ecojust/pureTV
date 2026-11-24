@@ -38,9 +38,9 @@ def receipts(assets, games):
         assert re.fullmatch(r'[0-9a-f]{40}', receipt['sourceSha']), path
         assert re.fullmatch(r'https://github.com/ecojust/pureTV/actions/runs/[1-9][0-9]*', receipt['buildRun']), path
         for row in receipt['games']:
-            key = row['gameDir']
+            key = 'joystick-games/' + row['id']
             if key in games:
-                assert key not in found and key == 'resource/apps/' + row['id'], key
+                assert key not in found and row['gameDir'] in (key, 'resource/apps/' + row['id']), key
                 found[key] = (row, receipt['sourceSha'], receipt['buildRun'], path)
     assert found.keys() == games.keys(), f'Missing resource receipts: {sorted(games.keys() - found.keys())}'
     return found
@@ -65,7 +65,7 @@ def input_apk(assets, row):
 def verify(inputs, tools, assets, evidence):
     row, commit, build_run, shard = evidence
     before, after = row['original'], row['updated']
-    directory = ROOT / row['gameDir']
+    directory = ROOT / game_apk(row).parent
     current = read(directory / 'resource.json')
     old = baseline(current, before)
     assert current['sha256'] in (before['sha256'], after['sha256']), directory
@@ -84,7 +84,10 @@ def verify(inputs, tools, assets, evidence):
     installed = row['installed']
     assert all(installed[key] == 'passed' for key in ('upgrade', 'leanbackLaunch', 'launcherArtwork')), directory
     assert installed['installedApkSha256'] == after['sha256'] and int(installed['emulatorApi']) >= 26, directory
-    assert row['sourceImage'] == source_image(directory).relative_to(ROOT).as_posix(), directory
+    source = row['sourceImage'].removeprefix('resource/apps/')
+    if source != row['sourceImage']:
+        source = 'joystick-games/' + source
+    assert source == source_image(directory).relative_to(ROOT).as_posix(), directory
     assert hashlib.sha256(source_bytes(directory)).hexdigest() == row['sourceImageSha256'], directory
     if (directory / 'game.json').is_file():
         game = read(directory / 'game.json')
@@ -150,11 +153,10 @@ def publish(directory, evidence, assets):
             'metadata': old.get('gameplayMetadata'), 'currentUiEvidence': False}
     elif old.get('historicalGameplayVideo'):
         info['historicalGameplayVideo'] = old['historicalGameplayVideo']
-    for target in (ROOT / game_apk(evidence), directory / info['apk']):
-        if target.exists():
-            assert digest(target) == actual['sha256'], target
-            continue
-        target.parent.mkdir(parents=True, exist_ok=True)
+    target = directory / info['apk']
+    if target.exists():
+        assert digest(target) == actual['sha256'], target
+    else:
         with tempfile.NamedTemporaryFile(dir=target.parent, prefix='.apk-import-', delete=False) as temporary:
             temp = Path(temporary.name)
         try:
@@ -212,15 +214,18 @@ def main():
     parser.add_argument('--assets', required=True, type=Path, help='Merged Actions artifact directory containing joystick-games/ and android-icons-*.json (also accepts legacy flat APKs)')
     parser.add_argument('--build-tools', required=True, type=Path)
     args = parser.parse_args()
-    games = {row['gameDir']: row for row in read(ROOT / 'tools/game-client-icon-inputs.json') if row['gameDir'].startswith('resource/apps/')}
-    assert set(games) == {'resource/' + key for key in read(ROOT / 'tools/resource-order.json')['game']}
+    resource_games = {entry['resource'] for category in read(ROOT / 'tools/readme-app-games.json')
+                      for entry in category['games'] if 'resource' in entry}
+    games = {row['gameDir']: row for row in read(ROOT / 'tools/game-client-icon-inputs.json')
+             if row['gameDir'] in resource_games}
+    assert games.keys() == resource_games
     evidence = receipts(args.assets, games)
     with ThreadPoolExecutor(max_workers=4) as workers:
         results = list(workers.map(lambda key: verify(games[key], args.build_tools, args.assets, evidence[key]), games))
     for row in results:
-        directory = ROOT / row['gameDir']
+        directory = ROOT / game_apk(row).parent
         publish(directory, row, args.assets)
-        originals = (row['gameDir'], game_apk(row).parent.as_posix())
+        originals = (game_apk(row).parent.as_posix(), 'resource/apps/' + row['id'])
         locations = '|'.join(map(re.escape, originals))
         match = re.fullmatch(r'https://raw\.githubusercontent\.com/ecojust/pureTV/([a-f0-9]{40})/(?:' + locations + r')/[^/]+\.apk', row['originalUrl'])
         assert match, row['originalUrl']
