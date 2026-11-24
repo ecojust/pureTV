@@ -6,7 +6,7 @@ Browse, install and check app updates directly on your TV. Native remote-friendl
 
 ## Download and preview
 
-[Download putrtv Store 0.1.2 APK](putrtv-store-0.1.2.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Validation](docs/VALIDATION.md)
+[Download putrtv Store 0.1.3 APK](putrtv-store-0.1.3.apk?raw=1) · [Checksums](SHA256SUMS.txt) · [Validation](docs/VALIDATION.md)
 
 ![putrtv Store native interface](../../../docs/previews/en/app-putrtv-store.png)
 

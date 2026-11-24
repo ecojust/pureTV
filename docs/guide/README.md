@@ -2,7 +2,7 @@
 
 **简体中文** · [English](README.en.md) · [返回首页](../../README.md) · [开发指南](development.md)
 
-pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电视上直接浏览、安装应用或检查更新，可以安装 putrtv 商城。要玩手柄游戏，在电视或电脑上安装所选游戏，再让手柄连接游戏。[电视端商城 APK 0.1.2](../../resource/apps/putrtv-store/putrtv-store-0.1.2.apk?raw=1) · [按类型浏览游戏](../../README.md#games)
+pureTV Manager 在电脑上通过 ADB 管理 Android TV / Google TV。要在电视上直接浏览、安装应用或检查更新，可以安装 putrtv 商城。要玩手柄游戏，在电视或电脑上安装所选游戏，再让手柄连接游戏。[电视端商城 APK 0.1.3](../../resource/apps/putrtv-store/putrtv-store-0.1.3.apk?raw=1) · [按类型浏览游戏](../../README.md#games)
 
 ## 安装与升级电脑管理器
 
