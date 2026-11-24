@@ -19,7 +19,7 @@ public class StoreDownloader {
     private static final long DISK_RESERVE_BYTES = 1024L * 1024;
     private static final long CACHE_RETENTION_MS = 24L * 60 * 60 * 1000;
     private static final Pattern APK_PATH = Pattern.compile(
-            "resource/(apps|launcher)/[a-z0-9][a-z0-9-]*/[A-Za-z0-9][A-Za-z0-9._-]*\\.apk");
+            "(?:resource/(?:apps|launcher)|joystick-games)/[a-z0-9][a-z0-9-]*/[A-Za-z0-9][A-Za-z0-9._-]*\\.apk");
     private static final Pattern SHA256 = Pattern.compile("[a-f0-9]{64}");
     private static final Pattern SHA1 = Pattern.compile("[a-f0-9]{40}");
     private static final Object CACHE_LOCK = new Object();

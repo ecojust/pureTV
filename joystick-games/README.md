@@ -55,7 +55,7 @@ python3 tools/pc-games/host.py --game lumenrift --apk .local-games/lumenrift.zip
 
 Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包同时包含 Apple Silicon 与 Intel。两平台均需要 **WebGL2**，旧电视的系统 WebView／GPU 可能无法运行。Mac 包采用 ad-hoc 签名，尚未 Apple 公证。
 
-已有 20 款支持手柄的游戏仍在原目录，入口见[原游戏接入说明](../docs/controller-client-status/README.md)。
+电视商城中的八款手柄游戏也在本目录提供源码、APK 和操作说明：[霓虹飞车](neon-rush/) · [极品二手车](used-car-racing/) · [孤胆枪手](alien-shooter/) · [超级玛丽](super-mario/) · [赤色要塞](jackal/) · [坦克大战](tank/) · [俄罗斯方块](tetris/) · [钻石方块](jewel/)。
 
 
 ## 解谜与益智手柄游戏

@@ -29,7 +29,7 @@
 在仓库根目录执行。生成需要 Node、`desktop` 的 Playwright 依赖、Chromium，以及 Python 3 / Pillow；这些只用于离线制作，应用运行时不需要它们。
 
 ```sh
-CHROMIUM_PATH=/usr/bin/chromium node joystick-games/alien-shooter/tools/bake-materials.mjs
+NODE_PATH="$PWD/desktop/node_modules" CHROMIUM_PATH=/usr/bin/chromium node joystick-games/alien-shooter/tools/bake-materials.mjs
 node joystick-games/alien-shooter/tools/bake-materials.mjs --verify
 ```
 

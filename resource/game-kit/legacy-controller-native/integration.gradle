@@ -2,11 +2,11 @@
 // Give it a generated directory containing exactly the three shared controller files.
 def controllerOutput = layout.buildDirectory.dir('generated/sources/puretv-controller')
 def prepareController = tasks.register('preparePuretvControllerSources', Sync) {
-    from(file('../../game-kit/android/src/main/java')) {
+    from(file('../../resource/game-kit/android/src/main/java')) {
         include 'com/ecojust/gamekit/WifiControllerServer.java'
         include 'com/ecojust/gamekit/WifiControllerDiscovery.java'
     }
-    from(file('../../game-kit/legacy-controller-native/src/main/java')) {
+    from(file('../../resource/game-kit/legacy-controller-native/src/main/java')) {
         include 'com/ecojust/controller/LegacyWifiController.java'
     }
     into(controllerOutput)
@@ -19,11 +19,11 @@ tasks.configureEach {
 }
 
 // Generate the two images that the Android launcher and Android TV display.
-def repoRoot = projectDir.toPath().getParent().getParent().getParent().toFile()
+def repoRoot = projectDir.parentFile.parentFile
 def iconTool = new File(repoRoot, 'tools/game_icons.py')
 def captureMap = new File(repoRoot, 'tools/game-icon-sources.json')
 def crops = new File(repoRoot, 'tools/game-icon-crops.json')
-def gamePath = 'resource/apps/' + projectDir.name
+def gamePath = 'joystick-games/' + projectDir.name
 def capture = new groovy.json.JsonSlurper().parse(captureMap)[gamePath] ?: gamePath + '/thumb.png'
 def generatedArt = layout.buildDirectory.dir('generated/res/gameplay')
 def launcherArt = tasks.register('generateGameplayLauncherArt') {

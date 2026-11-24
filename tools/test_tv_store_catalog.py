@@ -165,24 +165,24 @@ class StoreFeedTest(unittest.TestCase):
     def test_actual_snapshot_is_apps_only_and_includes_only_published_store_hash(self):
         root = Path(__file__).resolve().parents[1]
         snapshot = json.loads((root / FEED.SNAPSHOT).read_text())
-        self.assertEqual('801bf6c212fd17a63399f7eb48d7b05936f8954b', snapshot['revision'])
-        self.assertEqual(117, len(snapshot['catalog']['entries']))
-        self.assertEqual(117, len({entry['packageName'] for entry in snapshot['catalog']['entries']}))
+        self.assertEqual('35ca666ac73e0598e5e2d87c78d322cd3c178258', snapshot['revision'])
+        self.assertEqual(15, len(snapshot['catalog']['entries']))
+        self.assertEqual(15, len({entry['packageName'] for entry in snapshot['catalog']['entries']}))
         order = json.loads((root / 'tools/resource-order.json').read_text())
         snapshot_ids = {entry['id'] for entry in snapshot['catalog']['entries']}
         expected_ids = [identity for category in ('media', 'game', 'tools')
                         for identity in reversed(order[category]) if identity in snapshot_ids]
         self.assertEqual(expected_ids, [entry['id'] for entry in snapshot['catalog']['entries']])
         store = next(entry for entry in snapshot['catalog']['entries'] if entry['id'] == 'apps/putrtv-store')
-        self.assertEqual('0.1.0', store['versionName'])
-        self.assertEqual(1, store['versionCode'])
-        # These are the verified 0.1.0 release values at the pinned revision.
+        self.assertEqual('0.1.1', store['versionName'])
+        self.assertEqual(2, store['versionCode'])
+        # These are the verified 0.1.1 release values at the pinned revision.
         # Keep this check independent of Git history so a shallow CI checkout works.
-        self.assertEqual('53e5c279204b52fa262bc040b003d09b7fd9374ee0aecbb9325edf452e322f2f', store['sha256'])
+        self.assertEqual('12d49dacfc564b8a18f80d84818bb5622ae1554857cbadf06fd1780e5d4e7233', store['sha256'])
         self.assertEqual('eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23', store['certificateSha256'])
-        self.assertEqual('putrtv-store-0.1.0.apk', Path(store['apkPath']).name)
+        self.assertEqual('putrtv-store-0.1.1.apk', Path(store['apkPath']).name)
         for entry in snapshot['catalog']['entries']:
-            self.assertTrue(entry['id'].startswith('apps/'))
+            self.assertTrue(entry['id'].startswith('joystick-games/' if entry['category'] == 'game' else 'apps/'))
             self.assertIn(entry['category'], ('media', 'game', 'tools'))
             self.assertGreater(entry['minSdk'], 0)
             self.assertRegex(entry['sha256'], r'^[a-f0-9]{64}$')
@@ -197,8 +197,13 @@ class StoreFeedTest(unittest.TestCase):
         expected_ids = [identity for category in ('media', 'game', 'tools') for identity in reversed(order[category])]
         self.assertEqual(expected_ids, [entry['id'] for entry in catalog['entries']])
         self.assertEqual(len(expected_ids), len(catalog['entries']))
-        self.assertTrue(all(entry['id'].startswith('apps/') and entry['category'] in ('media', 'game', 'tools')
-                            for entry in catalog['entries']))
+        for entry in catalog['entries']:
+            if entry['category'] == 'game':
+                self.assertTrue(entry['id'].startswith('joystick-games/'))
+                self.assertEqual(entry['id'], str(Path(entry['apkPath']).parent))
+                self.assertEqual(entry['id'], str(Path(entry['coverPath']).parent))
+        legacy = json.loads((root / FEED.LEGACY_FEED).read_text())
+        self.assertEqual([entry for entry in catalog['entries'] if entry['category'] != 'game'], legacy['entries'])
 
 
 if __name__ == '__main__':

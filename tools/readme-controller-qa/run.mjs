@@ -14,6 +14,8 @@ import {CLIENT_STATUS_SCOPE,assertControllerClients,statusAcceptance,captureCont
 const args=parseArgs(),root=fileURLToPath(new URL('../../',import.meta.url)),here=path.dirname(fileURLToPath(import.meta.url));
 assert.ok(args.slug&&args.output&&['android','browser'].includes(args.mode),'--slug --output --mode android|browser');
 assert.ok(!(args['status-only']&&args['gameplay-only']),'Choose either --status-only or --gameplay-only, not both');
+const catalog=JSON.parse(await readFile(path.join(root,'tools/readme-app-games.json'),'utf8'));
+assert.ok(catalog.some(section=>section.games.some(game=>game.resource==='joystick-games/'+args.slug)),'Unknown controller game');
 const inventory=JSON.parse(await readFile(path.join(here,'baseline-inventory.json'),'utf8'));
 const entry=inventory.games.find(g=>g.slug===args.slug);assert.ok(entry,'Game must be in root README');
 const kit=entry.engine==='game-kit',output=path.resolve(args.output);await mkdir(output,{recursive:true});assert.equal((await readdir(output)).length,0,'Keep previous evidence; use empty output');

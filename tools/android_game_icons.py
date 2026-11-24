@@ -210,7 +210,7 @@ def dataset():
     assert selected and len({r['id'] for r in selected}) == len(selected)
     for r in selected:
         assert re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', r['id'])
-        assert r['gameDir'] in ('resource/apps/' + r['id'], 'joystick-games/' + r['id'])
+        assert r['gameDir'] == 'joystick-games/' + r['id']
         assert r['apk'].startswith(('https://raw.githubusercontent.com/ecojust/pureTV/',
                                     'https://github.com/ecojust/pureTV/'))
     return selected

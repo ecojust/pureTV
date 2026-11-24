@@ -105,7 +105,7 @@ Android builds and the existing release certificate follow the [Game Kit build i
 
 The following describes the previous release; its tests and media do not validate the new controller-ID UI. [Original README at the previous source](https://github.com/ecojust/pureTV/blob/9af9f197855eb7a0ce7174c0e6295c8974b3250d/resource/apps/neon-rush/README.en.md).
 
-**Android 0.1.2 · Release-signed APK: 447,980 bytes (about 448 KB).** [Download APK](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.2.apk) · [Actual Android controller regression video](docs/releases/0.1.2/gameplay.mp4) · [Release verification](docs/releases/0.1.2/verification.json) · [Controller rollout record](../../docs/readme-controller-support/README.md) · [Icon](logo.svg)
+**Android 0.1.2 · Release-signed APK: 447,980 bytes (about 448 KB).** [Download APK](neon-rush-0.1.2.apk?raw=1) · [Actual Android controller regression video](docs/releases/0.1.2/gameplay.mp4) · [Release verification](docs/releases/0.1.2/verification.json) · [Controller rollout record](../../docs/readme-controller-support/README.md) · [Icon](logo.svg)
 
 That earlier update defaults the pureTV controller service to port **63485**, shows its actual connection status/address, and preserves the TCP connection while isolating input during temporary focus loss or QR-room refresh. It also brings the steering-direction fix already delivered in macOS 0.1.3 to Android.
 
@@ -113,7 +113,7 @@ That historical release-signed APK passed all eight controller acceptance checks
 
 Historical Android 0.1.1: [old English menu](https://raw.githubusercontent.com/ecojust/pureTV/bf58393ba8fa8bb3bdf731ab24f9ab09d90f5075/docs/previews/en/app-neon-rush.png) · [gameplay video](docs/releases/0.1.1/gameplay.mp4) · [verification](docs/releases/0.1.1/verification.json). These records describe the old version, not the 0.1.2 UI, steering fix, or controller validation.
 
-**macOS 0.1.3:** [Download universal DMG](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.3-macos-universal.dmg) · [ZIP, installation and controller guide](macos/README.md). Requires macOS 11+ and WebGL; includes Apple silicon / Intel code with keyboard and pureTV Wi-Fi controller support. The macOS 0.1.3 packages remain unchanged; their left/right steering fix is now included in Android 0.1.2 as well.
+**macOS 0.1.3:** [Download universal DMG](macos/NeonRush-0.1.3-macos-universal.dmg?raw=1) · [ZIP, installation and controller guide](macos/README.md). Requires macOS 11+ and WebGL; includes Apple silicon / Intel code with keyboard and pureTV Wi-Fi controller support. The macOS 0.1.3 packages remain unchanged; their left/right steering fix is now included in Android 0.1.2 as well.
 
 ![Android 0.1.2 actual APK menu](docs/releases/0.1.2/menu.png)
 

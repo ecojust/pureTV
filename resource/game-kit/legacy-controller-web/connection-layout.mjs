@@ -22,7 +22,7 @@ try {
     await page.route('http://127.0.0.1/**', async route => {
       const name = new URL(route.request().url()).pathname.slice(1);
       if (!/^[a-z-]+\.(html|css|js)$/.test(name)) return route.fulfill({status: 404});
-      const asset = new URL('../../apps/tetris/src/main/assets/' + name, import.meta.url);
+      const asset = new URL('../../../joystick-games/tetris/src/main/assets/' + name, import.meta.url);
       const contentType = name.endsWith('.js') ? 'application/javascript' : name.endsWith('.css') ? 'text/css' : 'text/html';
       await route.fulfill({body: await readFile(asset), contentType});
     });

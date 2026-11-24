@@ -133,7 +133,9 @@ def main():
     args = parser.parse_args()
     rows = []
     manual = []
-    for path in sorted((ROOT / 'resource/apps').glob('*/logo.svg')):
+    directories = [p.parent for folder in ('resource/apps', 'joystick-games')
+                   for p in (ROOT / folder).glob('*/resource.json')]
+    for path in sorted(d / 'logo.svg' for d in directories if (d / 'logo.svg').is_file()):
         before = path.read_bytes()
         try:
             after, methods = normalize(before)

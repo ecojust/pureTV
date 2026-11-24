@@ -25,7 +25,7 @@ args = parser.parse_args()
 spec = importlib.util.spec_from_file_location('sign_request', Path(__file__).with_name('sign-request.py'))
 signer = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(signer)
-meta = json.loads((args.source / 'resource/apps/gravity-courier/game.json').read_text())
+meta = json.loads((args.source / 'joystick-games/neon-rush/game.json').read_text())
 raw = args.apk.read_bytes()
 source_sha, request_commit = 'a' * 40, 'b' * 40
 original_command = signer.command

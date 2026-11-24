@@ -70,6 +70,18 @@ class ReleaseCertificatesTest(unittest.TestCase):
                 self.assertEqual(resource_catalog.expected_release_certificate(
                     self.root, self.identity(package, code + 1, '0.6.0')), self.new)
 
+    def test_verifies_moved_joystick_store_games_and_skips_other_ports(self):
+        identity = self.identity('com.ecojust.usedcartv', 1, '0.1.0', self.new)
+        previous = self.fixture('used-car-racing', identity)
+        parent = self.root / 'joystick-games'
+        parent.mkdir()
+        previous.rename(parent / previous.name)
+        (parent / 'another-port').mkdir()
+        with patch.object(resource_catalog, 'apk_info', return_value=identity):
+            entries = resource_catalog.verify_catalog(self.root, Path('/unused'))
+        self.assertEqual([entry['path'] for entry in entries], ['joystick-games/used-car-racing/game.apk'])
+        self.assertEqual(resource_catalog.catalog_identity(self.root, parent / previous.name), 'joystick-games/used-car-racing')
+
     def test_used_car_first_release_uses_only_the_new_certificate(self):
         for code, version in ((1, '0.1.0'), (2, '0.1.1'), (20, '1.0.0')):
             with self.subTest(code=code, version=version):

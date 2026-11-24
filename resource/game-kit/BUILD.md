@@ -1,6 +1,6 @@
 # Shared APK host and signing
 
-Every game has its own `resource/apps/<slug>/game.json` and `src/main/assets/`.
+Every game has its own `joystick-games/<slug>/game.json` and `src/main/assets/`.
 The shared Java package is `com.ecojust.gamekit`; `packageName` in each game's
 metadata is the independent installed Android application ID.
 
@@ -16,8 +16,8 @@ bridge origin. The phone can load only its controller files and public config.
 
 ```sh
 python3 resource/game-kit/build.py \
-  --game resource/apps/gravity-courier \
-  --output /workspace/scratch/hundred-games/gravity-courier/build
+  --game joystick-games/neon-rush \
+  --output /workspace/scratch/hundred-games/neon-rush/build
 ```
 
 The local defaults use the installed scratch SDK/JDK/ZXing cache. Elsewhere,
@@ -59,7 +59,7 @@ rebuilds that source locally, then creates request files:
 
 ```sh
 python3 resource/game-kit/prepare-signing-request.py \
-  --build /workspace/scratch/hundred-games/gravity-courier/build \
+  --build /workspace/scratch/hundred-games/neon-rush/build \
   --source-sha EXACT_40_CHARACTER_SOURCE_SHA \
   --output /path/to/request-worktree
 ```
@@ -107,7 +107,7 @@ avoids temporary Azure artifact URLs:
 ```sh
 python3 resource/game-kit/fetch-signed.py \
   --run-id SIGNING_WORKFLOW_RUN_ID \
-  --slug gravity-courier \
+  --slug neon-rush \
   --source-sha EXACT_40_CHARACTER_SOURCE_SHA \
   --output /path/to/scratch/signed-game
 ```

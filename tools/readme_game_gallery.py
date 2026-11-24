@@ -22,10 +22,10 @@ def game_catalog(genres, resources, english, root):
                 key = item['resource']
                 assert key in resources and 'page' not in item, f'{key}: expected a game in the resource catalog'
                 info = resources[key]
-                page = f'resource/{key}/'
+                page = key + '/'
                 titles = {'zh': info['name'], 'en': english[key]['name'], **item.get('title', {})}
                 covers = {'zh': page + info['cover'], 'en': english[key]['cover'], **item.get('cover', {})}
-                apk_dir = Path('joystick-games') / Path(key).name
+                apk_dir = Path(key)
                 downloads = {'apk': (apk_dir / info['apk']).as_posix() + '?raw=1'}
                 controller = bool(info.get('wifiController'))
                 for platform, extension in (('macos', '.dmg'), ('windows', '.exe')):

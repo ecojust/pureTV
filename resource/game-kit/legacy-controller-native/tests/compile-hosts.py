@@ -4,13 +4,13 @@ import argparse,hashlib,json,os,re,subprocess
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 p=argparse.ArgumentParser();p.add_argument('--repo',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--toolchain',type=Path,required=True);a=p.parse_args()
-slugs=['alien-shooter','used-car-racing','cozy-island','coast-kart','super-mario','bomb-jack','adventure-island','tetris','jewel','jackal','tank']
+slugs=['alien-shooter','used-car-racing','super-mario','tetris','jewel','jackal','tank']
 a.output.mkdir(parents=True,exist_ok=True)
 android=a.toolchain/'android-sdk/platforms/android-35/android.jar';jdk=a.toolchain/'jdk-17.0.21+9/bin/javac'
 common=[*(a.repo/'resource/game-kit/android/src/main/java/com/ecojust/gamekit').glob('WifiController*.java'),*(a.repo/'resource/game-kit/legacy-controller-native/src/main/java').rglob('*.java')]
 script=Path(__file__);(a.output/'executed-compile-hosts.py').write_bytes(script.read_bytes())
 def check(slug):
- root=a.repo/'resource/apps'/slug;out=a.output/slug;out.mkdir(exist_ok=True);(out/'gen').mkdir(exist_ok=True);(out/'classes').mkdir(exist_ok=True)
+ root=a.repo/'joystick-games'/slug;out=a.output/slug;out.mkdir(exist_ok=True);(out/'gen').mkdir(exist_ok=True);(out/'classes').mkdir(exist_ok=True)
  sources=[*common,*sorted((root/'src/main/java').rglob('*.java'))]
  # Gradle normally injects namespace; supply the identical value to standalone aapt.
  namespace=re.search(r"namespace ['\"]([^'\"]+)",(root/'build.gradle').read_text()).group(1)

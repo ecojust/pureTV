@@ -15,22 +15,18 @@ from resource_catalog import apk_info, digest, expected_release_certificate
 
 ROOT = Path(__file__).resolve().parents[1]
 GROUPS = {
-    'arcade': ['tank', 'jackal', 'jewel', 'tetris', 'bomb-jack', 'adventure-island', 'super-mario'],
-    'worlds': ['coast-kart', 'cozy-island', 'used-car-racing', 'alien-shooter'],
+    'arcade': ['tank', 'jackal', 'jewel', 'tetris', 'super-mario'],
+    'worlds': ['used-car-racing', 'alien-shooter'],
 }
 SLUGS = sum(GROUPS.values(), [])
-KIT_SLUGS = ['neon-rush', 'twenty-four', 'torch-bridge', 'tower-overlap', 'packing-sculptor', 'conveyor-window', 'glass-fold', 'tension-span', 'prism-relay']
+KIT_SLUGS = ['neon-rush']
 ALL_SLUGS = SLUGS + KIT_SLUGS
-HOME_GAMES = {
-    'neon-rush', 'tower-overlap', 'coast-kart', 'used-car-racing', 'alien-shooter',
-    'tank', 'jackal', 'jewel', 'tetris', 'bomb-jack', 'adventure-island', 'super-mario',
-}
+HOME_GAMES = set(ALL_SLUGS)
 SCOPED_GAMES = {
-    'home-12': HOME_GAMES,
-    'arcade-7': set(GROUPS['arcade']),
-    'coast-1': {'coast-kart'},
+    'home-8': HOME_GAMES,
+    'arcade-5': set(GROUPS['arcade']),
     'used-car-1': {'used-car-racing'},
-    'arcade-recovery-6': set(GROUPS['arcade']) - {'tank'},
+    'arcade-recovery-4': set(GROUPS['arcade']) - {'tank'},
 }
 RELEASE_SCOPES = ('all', *SCOPED_GAMES)
 
@@ -41,7 +37,15 @@ def scoped_games(slugs, scope):
 
 
 
-def checkout_inputs(scope='home-12'):
+def committed_game_dir(root, commit, slug):
+    """Look up the game's directory in the production commit named by a receipt."""
+    current = 'joystick-games/' + slug
+    exists = subprocess.run(['git', 'cat-file', '-e', commit + ':' + current + '/src/main/assets'],
+                            cwd=root, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return current if exists.returncode == 0 else 'resource/apps/' + slug
+
+
+def checkout_inputs(scope='home-8'):
     """Populate scoped product sources and the matching published upgrade APKs."""
     patterns = [
         '/.github/workflows/controller*.yml', '/tools/', '/desktop/package*.json',
@@ -50,13 +54,13 @@ def checkout_inputs(scope='home-12'):
         '/resource/game-kit/legacy-controller-native/', '/resource/game-kit/legacy-controller-web/',
         '/resource/game-kit/qa/', '/resource/launcher/puretv/*.gradle', '/resource/launcher/puretv/gradlew',
         '/resource/launcher/puretv/gradle/', '/resource/launcher/puretv/gradle.properties',
-        '/resource/launcher/puretv/app/build.gradle', '/resource/apps/*/build.gradle',
+        '/resource/launcher/puretv/app/build.gradle', '/joystick-games/*/build.gradle', '/resource/apps/*/build.gradle',
         # Gradle configures every included app, even when only one app is built.
-        '/resource/apps/jackal/tools/preview-png.gradle', '/resource/apps/jackal/src/main/assets/scene-update-paths.json',
-        '/resource/apps/*/src/main/AndroidManifest.xml', '/joystick-games/tools/android-zxing.py',
+        '/joystick-games/jackal/tools/preview-png.gradle', '/joystick-games/jackal/src/main/assets/scene-update-paths.json',
+        '/joystick-games/*/src/main/AndroidManifest.xml', '/resource/apps/*/src/main/AndroidManifest.xml', '/joystick-games/tools/android-zxing.py',
     ]
     for slug in sorted(scoped_games(ALL_SLUGS, scope)):
-        directory = 'resource/apps/' + slug + '/'
+        directory = 'joystick-games/' + slug + '/'
         metadata = json.loads(subprocess.check_output(['git', 'show', 'HEAD:' + directory + 'resource.json'], cwd=ROOT))
         apk = metadata['apk']
         assert re.fullmatch(r'[a-z0-9][a-z0-9.-]*\.apk', apk), (slug, apk)
@@ -92,7 +96,7 @@ def info(path, build_tools, unsigned=False):
 
 
 def identity(slug):
-    gradle = (ROOT/'resource/apps'/slug/'build.gradle').read_text()
+    gradle = (ROOT/'joystick-games'/slug/'build.gradle').read_text()
     def match(pattern):
         result = re.search(pattern, gradle)
         assert result, (slug, pattern)
@@ -103,7 +107,7 @@ def identity(slug):
 
 
 def upgrade(slug, candidate, build_tools):
-    directory = ROOT/'resource/apps'/slug
+    directory = ROOT/'joystick-games'/slug
     resource = json.loads((directory/'resource.json').read_text())
     assert '/' not in resource['apk'] and '\\' not in resource['apk']
     old = info(directory/resource['apk'], build_tools)
@@ -125,7 +129,7 @@ def assets(apk, slug):
         assert len(names) == len(set(names)), 'Duplicate ZIP entry'
         assert all(not n.startswith('/') and '..' not in Path(n).parts for n in names)
         actual = {n[7:]: archive.read(n) for n in names if n.startswith('assets/') and not n.endswith('/')}
-    folder = ROOT/'resource/apps'/slug/'src/main/assets'
+    folder = ROOT/'joystick-games'/slug/'src/main/assets'
     expected = {p.relative_to(folder).as_posix(): p.read_bytes() for p in folder.rglob('*') if p.is_file()}
     assert expected and all(actual.get(n) == data for n, data in expected.items()), 'APK assets differ from source'
     extra = set(actual) - set(expected)
@@ -136,10 +140,10 @@ def assets(apk, slug):
 
 
 def source_inputs(slug, commit):
-    prefixes = ('resource/apps/'+slug+'/src/', 'resource/apps/'+slug+'/tools/',
+    prefixes = ('joystick-games/'+slug+'/src/', 'joystick-games/'+slug+'/tools/',
                 'resource/game-kit/android/src/main/', 'resource/game-kit/legacy-controller-native/', 'resource/game-kit/legacy-controller-web/',
                 'resource/launcher/puretv/gradle/')
-    exact = {'resource/apps/'+slug+'/build.gradle', 'resource/apps/'+slug+'/proguard-rules.pro',
+    exact = {'joystick-games/'+slug+'/build.gradle', 'joystick-games/'+slug+'/proguard-rules.pro',
              'resource/launcher/puretv/build.gradle', 'resource/launcher/puretv/settings.gradle',
              'resource/launcher/puretv/gradle.properties', 'resource/launcher/puretv/gradlew',
              'tools/controller-release.py', '.github/workflows/controller-games.yml'}
@@ -159,7 +163,7 @@ def source_inputs(slug, commit):
 def stage(args):
     commit = source()
     for slug in scoped_games(GROUPS[args.group], args.scope):
-        found = list((ROOT/'resource/apps'/slug/'build/outputs/apk/release').glob('*.apk'))
+        found = list((ROOT/'joystick-games'/slug/'build/outputs/apk/release').glob('*.apk'))
         assert len(found) == 1, slug
         value = info(found[0], args.build_tools, True)
         assert value['certificateSha256'] is None, 'Build job must not sign'
@@ -191,7 +195,7 @@ def sign_observers(args, commit, key, temporary, pin):
         observer = folder/('observer-'+slug+'-unsigned.apk')
         assert receipt['game'] == slug and receipt['signed'] is False and receipt['modelWrites'] is False
         assert receipt['packageName'] == 'com.ecojust.controllerqa.'+slug.replace('-', '')
-        game = ROOT/'resource/apps'/slug
+        game = ROOT/'joystick-games'/slug
         target = json.loads((game/'game.json').read_text())['packageName'] if slug in KIT_SLUGS else identity(slug)['packageName']
         assert receipt['targetPackage'] == target
         assert receipt['instrumentationRunner'] == 'com.ecojust.controllerqa.Observer'
@@ -319,7 +323,7 @@ def main():
     parser.add_argument('--runtime-result', default='not_run')
     args = parser.parse_args()
     if args.command == 'checkout-home-inputs':
-        checkout_inputs(args.scope if args.scope != 'all' else 'home-12')
+        checkout_inputs(args.scope if args.scope != 'all' else 'home-8')
         return
     if args.command == 'list':
         games = ALL_SLUGS if args.all else GROUPS[args.group] if args.group else SLUGS

@@ -13,7 +13,7 @@ const { transform } = require('esbuild');
 const launchOptions = () => ({ headless: true, ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}), args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
 
 export async function runControllerTests({ kind }) {
-const assets = new URL('../../resource/apps/' + kind + '/src/main/assets/', import.meta.url);
+const assets = new URL('../../joystick-games/' + kind + '/src/main/assets/', import.meta.url);
 const server = http.createServer(async (request, response) => {
   const path = new URL(request.url, 'http://localhost').pathname;
   const file = path === '/' ? 'controller.html' : path.substring(1);
@@ -337,7 +337,7 @@ function gameConfig(kind) {
   assert.ok(['jewel', 'tetris'].includes(kind));
   const name = kind === 'jewel' ? 'Jewel' : 'Tetris';
   return { kind, name, api: name + 'TV', bridge: name + 'Host',
-    assets: resolve(process.env[kind.toUpperCase() + '_TEST_ASSETS'] || fileURLToPath(new URL('../../resource/apps/' + kind + '/src/main/assets/', import.meta.url))),
+    assets: resolve(process.env[kind.toUpperCase() + '_TEST_ASSETS'] || fileURLToPath(new URL('../../joystick-games/' + kind + '/src/main/assets/', import.meta.url))),
     output: resolve(process.env[kind.toUpperCase() + '_UI_CAPTURE_DIR'] || '/tmp/puretv-' + kind + '-previews') };
 }
 
@@ -358,7 +358,7 @@ async function assetServer(assets) {
 }
 
 async function tvBridge(context, config, language, legacy = false) {
-  const qr = 'data:image/svg+xml;base64,' + (await readFile(new URL('../../resource/apps/tank/tests/fixtures/room-preview.svg', import.meta.url))).toString('base64');
+  const qr = 'data:image/svg+xml;base64,' + (await readFile(new URL('../../joystick-games/tank/tests/fixtures/room-preview.svg', import.meta.url))).toString('base64');
   await context.addInitScript(({ bridge, language, qr, legacy }) => {
     if (legacy) {
       for (const [target,names] of [

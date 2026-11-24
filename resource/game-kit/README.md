@@ -1,6 +1,6 @@
 # pureTV 小游戏公共组件
 
-这里复用原生电视宿主、局域网手柄、绘制批次和菜单。每个游戏在 `resource/apps/<id>/` 中维护独立规则、地图、美术组织与测试，生成独立包名的 APK。公共组件本身不计作游戏。
+这里复用原生电视宿主、局域网手柄、绘制批次和菜单。每个游戏在 `joystick-games/<id>/` 中维护独立规则、地图、美术组织与测试，生成独立包名的 APK。公共组件本身不计作游戏。
 
 新游戏按[游戏输入与连接显示规范](../../docs/guide/game-controls.md)接入电脑和电视。逐款验收时，将文末的共享组件测试和规范中的四条实际游玩路径一并核对。
 
@@ -10,8 +10,8 @@
 
 ```bash
 python3 resource/game-kit/build.py \
-  --game resource/apps/gravity-courier \
-  --output /tmp/gravity-courier-build \
+  --game joystick-games/neon-rush \
+  --output /tmp/neon-rush-build \
   --sdk "$ANDROID_HOME" --jdk "$JAVA_HOME" \
   --zxing /path/to/core-3.5.3.jar
 ```
@@ -47,7 +47,7 @@ node resource/game-kit/qa/input-lifecycle-test.mjs --output /tmp/puretv-input-li
 
 此项在 Chromium 中用手动推进的 RAF、探针模型和受控手机快照验证输入协议，包括持续确认键、短按、取消、暂停及断线恢复；它不代表实际游玩、帧率或实体硬件测试。旧游戏兼容性和新游戏的实际操作仍需分别回归。
 
-进度见 [progress.json](progress.json)。只有完成上述项目并逐款提交到 GitHub 后才计数，草稿与公共组件不计数。浏览器软件渲染的帧耗时不代表实体电视表现；报告必须说明是否做过真机验证。
+百款计划的游戏已下架，原验证和签名记录见[归档清单](https://github.com/ecojust/pureTV/blob/7cba602846e3efe6ddb499db2be258edc82ab5de/resource/game-kit/progress.json)。当前游戏见[首页游戏清单](../../README.md#games)。只有完成上述项目并逐款提交到 GitHub 后才计数，草稿与公共组件不计数。浏览器软件渲染的帧耗时不代表实体电视表现；报告必须说明是否做过真机验证。
 
 原生宿主与局域网协议基于本仓库既有游戏实现，继续遵循根目录 [MIT 许可证](../../LICENSE)。新增公共渲染素材为代码绘制的原创图集，不包含第三方游戏资源。
 

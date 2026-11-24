@@ -95,7 +95,10 @@ def fetch_bundle(api, *, run_id, slug, source_sha, build_tools, expected_cert):
     require(run.get('repository', {}).get('full_name') == REPOSITORY and run.get('head_repository', {}).get('full_name') == REPOSITORY, 'Signing run belongs to a different repository')
     require(run.get('head_sha') == workflow_sha and run.get('path') == '.github/workflows/sign-game-kit.yml' and run.get('event') == 'workflow_dispatch', 'Receipt does not match the signing workflow run')
     require(run.get('status') == 'completed' and run.get('conclusion') == 'success', 'Wait for the complete signing/export workflow to succeed')
-    metadata_blob = api('contents/resource/apps/' + slug + '/game.json?ref=' + source_sha)
+    # Receipts created before game consolidation refer to frozen resource/apps trees.
+    game_dir = receipt.get('gameDir', 'resource/apps/' + slug)
+    require(game_dir in ('resource/apps/' + slug, 'joystick-games/' + slug), 'Invalid game directory in receipt')
+    metadata_blob = api('contents/' + game_dir + '/game.json?ref=' + source_sha)
     require(metadata_blob.get('type') == 'file', 'Game metadata is not a regular source file')
     metadata = json.loads(decode_blob(metadata_blob, metadata_blob.get('sha', ''), 16_384))
     require(metadata.get('id') == slug and re.fullmatch(r'com\.ecojust\.[a-z][a-z0-9]*(?:\.[a-z][a-z0-9]*)*', metadata.get('packageName', '')), 'Invalid source game identity')

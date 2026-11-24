@@ -110,7 +110,7 @@ def game_icon(game):
 
 def launcher_source_hashes(game):
     """Bind the selected picture and crop settings to the game's signing receipt."""
-    source = game.parents[2]
+    source = game.parents[1] if game.parent.name == 'joystick-games' else game.parents[2]
     mappings = ('tools/game-icon-sources.json', 'tools/game-icon-crops.json')
     if not (source / mappings[0]).exists():
         icon = game_icon(game)
@@ -123,8 +123,8 @@ def launcher_source_hashes(game):
 
 def install_launcher_art(game, res, artwork_game=None):
     """Generate launcher resources for shipping games; keep free-standing fixtures usable."""
-    if artwork_game is None and game.parent.name == 'apps' and game.parent.parent.name == 'resource':
-        if (game.parents[2] / 'tools/game-icon-sources.json').exists():
+    if artwork_game is None and game.parent.name == 'joystick-games':
+        if (game.parents[1] / 'tools/game-icon-sources.json').is_file():
             artwork_game = game
     if artwork_game is None:
         icon = game_icon(game)

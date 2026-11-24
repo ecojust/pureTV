@@ -90,6 +90,10 @@ def launcher_source_tree(root,ref='HEAD'):
         selected+=('040000 tree '+shared.stdout.strip()+'\tshared\n').encode()
     return subprocess.check_output(['git','mktree'],cwd=root,input=selected).decode().strip()
 
+def catalog_identity(root, directory):
+    relative = directory.relative_to(root)
+    return relative.relative_to('resource').as_posix() if relative.parts[0] == 'resource' else relative.as_posix()
+
 def catalog_directories(root):
     directories={p.name for p in (root/'resource').iterdir() if p.is_dir()}
     assert {'launcher','apps'} <= directories <= {'launcher','apps','game-kit'},'Classify software under resource/launcher or resource/apps'
@@ -97,7 +101,11 @@ def catalog_directories(root):
     kit=root/'resource/game-kit'
     if kit.exists():
         assert kit.is_dir() and not kit.is_symlink(),'Game Kit must be a regular source directory'
-        assert not (kit/'resource.json').exists() and not any(kit.glob('*.apk')),'Publish Game Kit applications under resource/apps'
+        assert not (kit/'resource.json').exists() and not any(kit.glob('*.apk')),'Publish games under joystick-games'
+    # Only joystick titles with store metadata participate in the TV store.
+    for metadata in sorted((root/'joystick-games').glob('*/resource.json')):
+        assert not metadata.parent.is_symlink(), f'Invalid resource directory: {metadata.parent}'
+        yield metadata.parent
     for category in ('launcher','apps'):
         parent=root/'resource'/category
         assert parent.is_dir(),f'Missing resource/{category}'

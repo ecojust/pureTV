@@ -18,7 +18,7 @@ def module(name,path):
 release=module('controller_release',ROOT/'tools/controller-release.py')
 fetch=module('gamekit_fetch',ROOT/'resource/game-kit/fetch-signed.py')
 def source_bindings(manifest,slug,receipt,observer):
-    assert slug in release.ALL_SLUGS, 'Only the twenty README games are accepted'
+    assert slug in release.ALL_SLUGS, 'Only registered controller games are accepted'
     kit_source=manifest['sourceSha'];legacy_source=manifest.get('legacySourceSha',kit_source)
     assert re.fullmatch('[a-f0-9]{40}',kit_source) and re.fullmatch('[a-f0-9]{40}',legacy_source)
     artifact_source=kit_source if slug in release.KIT_SLUGS else legacy_source
@@ -93,7 +93,8 @@ def main():
         for name,value in native.items():
             data=committed(artifact_source,name);fingerprint=hashlib.sha256(data).hexdigest()
             assert value==fingerprint if isinstance(value,str) else value=={'bytes':len(data),'sha256':fingerprint}
-        prefixes=['resource/apps/'+slug+'/src/main/assets/']
+        game_dir=release.committed_game_dir(ROOT,artifact_source,slug)
+        prefixes=[game_dir+'/src/main/assets/']
         if slug in release.KIT_SLUGS:prefixes.append('resource/game-kit/web/')
         paths=subprocess.check_output(['git','ls-tree','-r','--name-only',artifact_source,'--',*prefixes],cwd=ROOT,text=True).splitlines()
         expected={}
@@ -101,7 +102,7 @@ def main():
             prefix=next(p for p in prefixes if name.startswith(p));relative=name[len(prefix):]
             assert relative not in expected;expected[relative]=committed(artifact_source,name)
         if slug in release.KIT_SLUGS:
-            metadata=json.loads(committed(artifact_source,'resource/apps/'+slug+'/game.json'))
+            metadata=json.loads(committed(artifact_source,game_dir+'/game.json'))
             expected['game-config.json']=(json.dumps(metadata,ensure_ascii=False,separators=(',',':'))+'\n').encode()
             expected['assets-index.json']=(json.dumps(sorted(expected),separators=(',',':'))+'\n').encode()
         with zipfile.ZipFile(apks[0]) as package:

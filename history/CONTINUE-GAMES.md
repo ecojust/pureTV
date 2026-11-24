@@ -1,5 +1,7 @@
 # 百款游戏完成记录与历史恢复入口
 
+此文档记录百款游戏计划的历史环境。复核该批交付时，使用清理前的提交 `7cba602` 及其[交付清单](https://github.com/ecojust/pureTV/blob/7cba602846e3efe6ddb499db2be258edc82ab5de/resource/game-kit/progress.json)。
+
 先读 [INDEX](INDEX.md)、当前任务记录、[交付队列](game-delivery-state.json)，然后核对 `master` 的 `resource/game-kit/progress.json` 与实际 Git 状态。队列是提示，不是验收证据；已发布记录以各游戏 `docs/verification.json` 和对应提交为准。
 
 百款任务已完成，正式进度100/100，待办队列为空。[最终审计与限制](../resource/game-kit/docs/delivery-audits/README.md)已归档。下面步骤用于历史重建或后续维护，不表示仍有候选等待发布。

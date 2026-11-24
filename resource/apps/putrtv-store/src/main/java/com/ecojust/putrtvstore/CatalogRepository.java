@@ -29,7 +29,7 @@ import org.xmlpull.v1.XmlPullParser;
 public class CatalogRepository {
     public static final int MAX_CATALOG_BYTES = 4 * 1024 * 1024;
     public static final long FRESH_MS = 5 * 60 * 1000L;
-    public static final String FEED_PATH = "resource/tv-store-catalog.json";
+    public static final String FEED_PATH = "resource/tv-store-catalog-v2.json";
     public static final String BUNDLED_ASSET = "catalog-snapshot.json";
     private final Context context;
     private final AtomicFile cache;
@@ -40,7 +40,7 @@ public class CatalogRepository {
     public CatalogRepository(Context context) { this(context, StoreNetwork::read); }
     CatalogRepository(Context context, Transport transport) {
         this.context = context.getApplicationContext(); this.transport = transport;
-        this.cache = new AtomicFile(new File(this.context.getFilesDir(), "tv-store-catalog-cache.json"));
+        this.cache = new AtomicFile(new File(this.context.getFilesDir(), "tv-store-catalog-v2-cache.json"));
     }
 
     public synchronized StoreCatalog load(boolean force, Cancellation cancellation) throws IOException {
@@ -122,14 +122,15 @@ public class CatalogRepository {
             fields(item, "id", "name", "nameEn", "description", "descriptionEn", "category", "packageName",
                     "versionName", "apkPath", "coverPath", "logoSvg", "sha256", "certificateSha256", "gitBlobSha", "versionCode", "bytes", "minSdk");
             String id = string(item, "id", 120, false), category = string(item, "category", 16, false);
-            if (!id.matches("(?:launcher|apps)/[a-z0-9][a-z0-9-]*") || !ids.add(id)) throw new IOException("Invalid or duplicate catalog id");
+            if (!id.matches("(?:launcher|apps|joystick-games)/[a-z0-9][a-z0-9-]*") || !ids.add(id)) throw new IOException("Invalid or duplicate catalog id");
             if (!Arrays.asList("launcher", "media", "game", "tools").contains(category)
+                    || (id.startsWith("joystick-games/") && !category.equals("game"))
                     || (id.startsWith("launcher/") != category.equals("launcher"))) throw new IOException("Invalid catalog category");
             String packageName = string(item, "packageName", 255, false);
             if (!packageName.matches("[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)+") || !packages.add(packageName))
                 throw new IOException("Invalid or duplicate package identity");
             String apk = string(item, "apkPath", 512, false), cover = string(item, "coverPath", 512, true);
-            String prefix = "resource/" + id + "/";
+            String prefix = (id.startsWith("joystick-games/") ? id : "resource/" + id) + "/";
             if (!StoreNetwork.validPath(apk) || !apk.startsWith(prefix) || apk.substring(prefix.length()).contains("/") || !apk.endsWith(".apk"))
                 throw new IOException("APK path does not match catalog identity");
             if (!cover.isEmpty() && (!StoreNetwork.validPath(cover) || !cover.startsWith(prefix)

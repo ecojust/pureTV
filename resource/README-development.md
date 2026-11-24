@@ -7,8 +7,8 @@
 后续新增应用必须在 APK 同目录提供 `logo.svg`。文件使用 UTF-8 编码，根元素声明 `width="64"`、`height="64"`、`viewBox="0 0 64 64"`，文件总大小不超过 **8192 字节（8 KiB）**。图标应在 64×64 尺寸下保持清晰，作者与许可随资源一起说明；第三方应用图标保留其来源和权利声明。
 
 ```text
-resource/apps/tank/
-├── tank-0.3.0.apk
+joystick-games/tank/
+├── tank-0.5.7.apk
 ├── logo.svg
 ├── resource.json
 ├── README.md

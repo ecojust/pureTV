@@ -7,7 +7,7 @@
 | Directory | What you’ll find there |
 | --- | --- |
 | [desktop/](../../desktop/README.md) | The desktop TV manager, including its interface, ADB operations and Tauri host. |
-| [resource/](../../resource/README.md) | Source, APKs and manifests for first-party TV launchers and apps, plus the [Game Kit host](../../resource/game-kit/README.md). |
+| [resource/](../../resource/README.md) | Source, APKs and manifests for TV launchers, media apps and tools, plus the [Game Kit host](../../resource/game-kit/README.md). |
 | [joystick-games/](../../joystick-games/README.md) | Games for the pureTV Wi-Fi controller. Each game has its own directory for source, platform packages and verification records. |
 | [puretv-joystick/](../../puretv-joystick/README.md) | ESP32 controller firmware, the TCP protocol, the Python SDK and tools for testing a connection. |
 | [fork/](../../fork/README.md) | Original third-party APKs grouped by category, with upstream sources and checksums. |

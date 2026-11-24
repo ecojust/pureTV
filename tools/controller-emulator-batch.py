@@ -19,26 +19,19 @@ release=importlib.util.module_from_spec(spec);spec.loader.exec_module(release)
 BATCHES = {
     'arcade-1': ('arcade', ['tank', 'jackal']),
     'arcade-2': ('arcade', ['jewel', 'tetris']),
-    'arcade-3': ('arcade', ['bomb-jack', 'adventure-island', 'super-mario']),
-    'worlds-1': ('worlds', ['coast-kart', 'cozy-island']),
+    'arcade-3': ('arcade', ['super-mario']),
     'worlds-2': ('worlds', ['used-car-racing', 'alien-shooter']),
-    'kit-1': ('kit', ['neon-rush', 'twenty-four', 'torch-bridge']),
-    'kit-2': ('kit', ['tower-overlap', 'packing-sculptor', 'conveyor-window']),
-    'kit-3': ('kit', ['glass-fold', 'tension-span', 'prism-relay']),
+    'kit-1': ('kit', ['neon-rush']),
 }
 DEFAULT_BATCHES = tuple(BATCHES)
-HOME_BATCHES = ('arcade-1', 'arcade-2', 'arcade-3', 'home-coast', 'worlds-2', 'home-kit')
+HOME_BATCHES = DEFAULT_BATCHES
 BATCHES.update({
     'retry-used-car': ('worlds', ['used-car-racing']),
     'retry-used-car-mesa': ('worlds', ['used-car-racing']),
     'retry-alien': ('worlds', ['alien-shooter']),
     'retry-super-mario': ('arcade', ['super-mario']),
     'retry-jackal': ('arcade', ['jackal']),
-    'retry-prism': ('kit', ['prism-relay']),
     'retry-arcade-visual': ('arcade', ['tank', 'jackal']),
-    'retry-cozy': ('worlds', ['cozy-island']),
-    'home-coast': ('worlds', ['coast-kart']),
-    'home-kit': ('kit', ['neon-rush', 'tower-overlap']),
 })
 USED_CAR_EMULATOR = {
     'version': '35.6.11', 'build': '13610412',
@@ -82,11 +75,10 @@ def runtime_plan(requested='', acceptance_mode='complete', scope='all'):
     acceptance = acceptance_config(acceptance_mode)
     available = release.scoped_games(release.ALL_SLUGS, scope)
     defaults = {
-        'home-12': HOME_BATCHES,
-        'coast-1': ('home-coast',),
+        'home-8': HOME_BATCHES,
         'used-car-1': ('retry-used-car-mesa',),
-        'arcade-7': ('arcade-1', 'arcade-2', 'arcade-3'),
-        'arcade-recovery-6': ('retry-jackal', 'arcade-2', 'arcade-3'),
+        'arcade-5': ('arcade-1', 'arcade-2', 'arcade-3'),
+        'arcade-recovery-4': ('retry-jackal', 'arcade-2', 'arcade-3'),
     }.get(scope, DEFAULT_BATCHES)
     names = json.loads(requested) if requested.strip() else list(defaults)
     assert isinstance(names, list) and names, 'batches must be a nonempty JSON array'
@@ -188,10 +180,10 @@ class ContinuousLogcat:
 
 def baseline_release(slug, artifact_source, signed, build_tools):
     assert slug in release.ALL_SLUGS and re.fullmatch('[a-f0-9]{40}', artifact_source)
-    metadata_path='resource/apps/'+slug+'/resource.json'
+    metadata_path=release.committed_game_dir(ROOT,artifact_source,slug)+'/resource.json'
     old=json.loads(subprocess.check_output(['git','show',artifact_source+':'+metadata_path],cwd=ROOT))
     assert Path(old['apk']).name==old['apk'] and '/' not in old['apk'] and '\\' not in old['apk']
-    old_apk=ROOT/'resource/apps'/slug/old['apk']
+    old_apk=ROOT/'joystick-games'/slug/old['apk']
     prior=release.info(old_apk,build_tools)
     keys={'packageName':'packageName','versionName':'version','versionCode':'versionCode','sha256':'sha256','bytes':'apkBytes','certificateSha256':'certificateSha256'}
     assert all(prior[k]==old[v] for k,v in keys.items()),'Baseline APK must match its committed resource metadata'

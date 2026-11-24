@@ -10,10 +10,10 @@ import {createHash} from 'node:crypto';
 const repo=fileURLToPath(new URL('../../../',import.meta.url)),out=process.argv[2];
 if(!out)throw new Error('Pass a fresh RAM output directory');
 const {chromium}=createRequire(process.env.PURETV_PACKAGE||path.join(repo,'desktop/package.json'))('playwright');
-const games={'alien-shooter':'AlienShooterHost','used-car-racing':'UsedCarHost','cozy-island':'CozyIslandHost','coast-kart':'CoastKartHost'};
+const games={'alien-shooter':'AlienShooterHost','used-car-racing':'UsedCarHost'};
 await mkdir(out,{recursive:true});await copyFile(fileURLToPath(import.meta.url),path.join(out,'executed-browser-3d.mjs'));
 const report={startedAt:new Date().toISOString(),method:'Unmodified bundled game with normal synthetic native bridge inputs and actual requestAnimationFrame; no model, time or camera writes.',physicalTvTested:false,physicalEsp32Tested:false,gameStateWrites:false,cases:[],sourceHashes:{}};
-const server=http.createServer(async(req,res)=>{try{const name=decodeURIComponent(new URL(req.url,'http://localhost').pathname);const [slug,...parts]=name.slice(1).split('/');if(!games[slug]||parts.includes('..'))throw Error();const rel=parts.join('/')||'tv.html';const file=path.join(repo,'resource/apps',slug,'src/main/assets',rel);res.setHeader('Content-Type',rel.endsWith('.js')?'text/javascript':rel.endsWith('.css')?'text/css':rel.endsWith('.png')?'image/png':rel.endsWith('.jpg')?'image/jpeg':'text/html');res.end(await readFile(file));}catch{res.writeHead(404).end();}});
+const server=http.createServer(async(req,res)=>{try{const name=decodeURIComponent(new URL(req.url,'http://localhost').pathname);const [slug,...parts]=name.slice(1).split('/');if(!games[slug]||parts.includes('..'))throw Error();const rel=parts.join('/')||'tv.html';const file=path.join(repo,'joystick-games',slug,'src/main/assets',rel);res.setHeader('Content-Type',rel.endsWith('.js')?'text/javascript':rel.endsWith('.css')?'text/css':rel.endsWith('.png')?'image/png':rel.endsWith('.jpg')?'image/jpeg':'text/html');res.end(await readFile(file));}catch{res.writeHead(404).end();}});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader','--autoplay-policy=no-user-gesture-required']});
 try{
@@ -38,7 +38,7 @@ for(const [slug,host] of Object.entries(games).filter(([slug])=>!process.env.GAM
    await page.screenshot({path:path.join(out,slug+'-'+viewport.width+'.png')});
   }
   await page.setViewportSize({width:960,height:540});
-  await put({start:true});await waitPhase(['playing','countdown','race']);await put({start:false});await page.waitForTimeout(250);await waitPhase(['playing','race']);if(slug==='coast-kart')await page.waitForFunction(()=>PureTVQA.snapshot().model.countdown<=0,null,{timeout:60000});
+  await put({start:true});await waitPhase(['playing','countdown','race']);await put({start:false});await page.waitForTimeout(250);await waitPhase(['playing','race']);
   const before=await snap();await put({x:1,a:slug==='used-car-racing'});await page.waitForTimeout(650);const right=await snap();await put({x:-1});await page.waitForTimeout(650);const left=await snap();await put({x:0,a:false});
   row.movement={before,right,left};assert.equal(right.controllers[0].x,1);assert.equal(left.controllers[0].x,-1);row.checks.push('ordinary start and both direction inputs reach running model');
   await put({a:true});await page.waitForTimeout(550);row.actionA=await snap();await put({a:false,b:true});await page.waitForTimeout(200);row.actionB=await snap();await put({b:false,select:true});await page.waitForTimeout(200);row.select=await snap();await put({select:false});
@@ -52,7 +52,7 @@ for(const [slug,host] of Object.entries(games).filter(([slug])=>!process.env.GAM
   assert.deepEqual(errors,[]);row.status='passed';
  }catch(error){row.status='failed';row.error=error.stack;row.pageErrors=errors;row.last=await snap().catch(()=>null);row.debug=await page.evaluate(()=>({reads:window.__reads,controls:window.AlienShooterTV&&AlienShooterTV.game._controls,runtime:window.AlienShooterTV&&AlienShooterTV.runtimeStats})).catch(()=>null);await page.screenshot({path:path.join(out,slug+'-failure.png')}).catch(()=>{});throw error;}
  finally{await context.close();await writeFile(path.join(out,'report.json'),JSON.stringify(report,null,2)+'\n');}
- for(const name of ['puretv-controller.js',slug==='used-car-racing'?'game.js':'runtime.js','game-model.js','tv.html','tv.css']){const rel=`resource/apps/${slug}/src/main/assets/${name}`;report.sourceHashes[rel]=createHash('sha256').update(await readFile(path.join(repo,rel))).digest('hex');}
+ for(const name of ['puretv-controller.js',slug==='used-car-racing'?'game.js':'runtime.js','game-model.js','tv.html','tv.css']){const rel=`joystick-games/${slug}/src/main/assets/${name}`;report.sourceHashes[rel]=createHash('sha256').update(await readFile(path.join(repo,rel))).digest('hex');}
  console.log('PASS '+slug);
 }
 report.status='passed';

@@ -5,7 +5,9 @@ on:
     branches: [master, feat/putrtv-store]
     paths:
       - 'resource/apps/putrtv-store/**'
-      - 'resource/tv-store-catalog.json'
+      - 'resource/tv-store-catalog*.json'
+      - 'joystick-games/*/resource.json'
+      - 'joystick-games/*/*.apk'
       - 'tools/update-tv-store-catalog.py'
       - 'tools/test_tv_store_catalog.py'
       - 'tools/resource_catalog.py'
@@ -18,7 +20,9 @@ on:
   pull_request:
     paths:
       - 'resource/apps/putrtv-store/**'
-      - 'resource/tv-store-catalog.json'
+      - 'resource/tv-store-catalog*.json'
+      - 'joystick-games/*/resource.json'
+      - 'joystick-games/*/*.apk'
       - 'tools/update-tv-store-catalog.py'
       - 'tools/test_tv_store_catalog.py'
       - 'tools/resource_catalog.py'

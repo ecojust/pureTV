@@ -6,7 +6,6 @@ This does not sign locally, publish a GitHub Release, push Git, or alter Gitee.
 import argparse
 import hashlib
 import json
-import posixpath
 import re
 import subprocess
 import tempfile
@@ -14,6 +13,7 @@ import zipfile
 from pathlib import Path, PurePosixPath
 
 from resource_catalog import apk_info, digest, expected_release_certificate, launcher_source_tree
+from launcher_project_sources import launcher_projects
 from resource_previews import validate_png, write_english_previews
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -30,22 +30,16 @@ def git(*args):
 def source_archive(source_sha, slug, target):
     assert slug in LAUNCHERS
     paths = ['resource/launcher/' + slug, 'resource/launcher/shared', 'LICENSE']
+    shared_inputs = []
     if slug == 'puretv':
-        # Its settings include other app projects, even when only :app is built.
-        settings = git('show', source_sha + ':resource/launcher/puretv/settings.gradle').decode()
-        dependencies = re.findall(r"project\('(:[^']+)'\)\.projectDir\s*=\s*file\('([^']+)'\)", settings)
-        configured = re.findall(r"include\s+'(:[^']+)'", settings)
-        assert set(configured) == {':app', *(name for name, _ in dependencies)}, 'Unrecognized settings dependency'
-        for _, relative in dependencies:
-            path = posixpath.normpath('resource/launcher/puretv/' + relative)
-            assert re.fullmatch(r'resource/apps/[a-z0-9-]+', path), 'Unexpected project outside application sources'
-            paths.append(path)
+        modules, shared_inputs = launcher_projects(git, source_sha)
+        paths.extend(modules + shared_inputs)
     files = git('ls-tree', '-r', '--name-only', source_sha, '--', *paths).decode().splitlines()
     excluded_names = {'resource.json', 'SHA256SUMS.txt', 'source.tar.gz', 'thumb.png', 'apps.png'}
     included = []
     for name in files:
         path = PurePosixPath(name)
-        if path.name in excluded_names or path.suffix == '.apk' or 'docs' in path.parts or 'build' in path.parts:
+        if name not in shared_inputs and (path.name in excluded_names or path.suffix == '.apk' or 'docs' in path.parts or 'build' in path.parts):
             continue
         # source assets remain included; public recordings and gallery files are not build inputs.
         if any(part in ('qa', 'recordings', 'previews') for part in path.parts):

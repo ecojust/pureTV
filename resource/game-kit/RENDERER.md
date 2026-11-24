@@ -77,3 +77,5 @@ node resource/game-kit/renderer-atlas-test.mjs \
 ```
 
 Chromium 默认路径为 `/usr/bin/chromium`，可用 `--chromium` 或 `CHROMIUM_PATH` 指定。浏览器软件渲染不代替实体电视性能验证。
+
+复查三款已下架游戏的历史画面时，传入 `--legacy-games /path/to/old-checkout/resource/apps`。

@@ -97,7 +97,7 @@ def main():
     raw = git_blob(source, request_commit, prefix + 'unsigned.apk', MAX_BYTES - 1)
     require(len(raw) == request['unsignedBytes'] and digest(raw) == request['unsignedSha256'], 'Unsigned APK differs from request')
     require(b'APK Sig Block 42' not in raw, 'Requested APK has a signing block')
-    game = source / 'resource/apps' / args.slug
+    game = source / 'joystick-games' / args.slug
     require(game.resolve().is_relative_to(source) and not game.is_symlink(), 'Game source escapes checkout')
     # Import only the builder next to this trusted signer; source data is never imported.
     spec = importlib.util.spec_from_file_location('trusted_game_kit_build', Path(__file__).with_name('build.py'))
@@ -133,7 +133,7 @@ def main():
             native_source[file.relative_to(source).as_posix()] = digest(file.read_bytes())
     native_source.update(builder.launcher_source_hashes(game))
     require(native_source, 'Missing native host source')
-    validation = {'schema': 1, 'slug': args.slug, 'sourceSha': args.source_sha, 'requestCommit': request_commit,
+    validation = {'schema': 1, 'slug': args.slug, 'gameDir': game.relative_to(source).as_posix(), 'sourceSha': args.source_sha, 'requestCommit': request_commit,
                   **expected, 'requestedUnsignedSha256': digest(raw), 'requestedUnsignedBytes': len(raw),
                   'unsignedSha256': digest(rebuilt_raw), 'unsignedBytes': len(rebuilt_raw),
                   'sourceAssetsMatchApk': True, 'localBuildMatchesCi': actual_entries == rebuilt_entries,

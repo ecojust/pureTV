@@ -54,9 +54,9 @@ The original batch of 37 standalone installers includes the game assets for offl
 
 #### Use the multi-game player
 
-Open the Windows x64 player, choose a game with the arrow keys and press Enter. The player downloads the game on first launch, verifies it and opens it in your default browser. Subsequent launches use the local copy. Follow the game's own keyboard prompts, or use a pureTV Wi-Fi controller on the same LAN. Keep the player running while you play. [Download the Windows player](https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/tools/pc-games/packages/pureTV-Games.exe)
+Open the Windows x64 player, choose a game with the arrow keys and press Enter. The player downloads the game on first launch, verifies it and opens it in your default browser. Subsequent launches use the local copy. Follow the game's own keyboard prompts, or use a pureTV Wi-Fi controller on the same LAN. Keep the player running while you play. [Download the Windows player](../../tools/pc-games/packages/pureTV-Games.exe?raw=1)
 
-On macOS or Linux, extract the portable ZIP, open a terminal in the extracted folder and run the following commands with Python 3.10 or later. Pass a game ID to start it directly, for example `.venv/bin/python launcher.py tetris`. [Download the portable player](https://raw.githubusercontent.com/ecojust/pureTV/34236b9b8e287997335e90e1546cf7397aa2f041/tools/pc-games/packages/pureTV-Games-portable.zip)
+On macOS or Linux, extract the portable ZIP, open a terminal in the extracted folder and run the following commands with Python 3.10 or later. Pass a game ID to start it directly, for example `.venv/bin/python launcher.py tetris`. [Download the portable player](../../tools/pc-games/packages/pureTV-Games-portable.zip?raw=1)
 
 ```sh
 python3 -m venv .venv
@@ -82,6 +82,6 @@ The standalone macOS downloads for Backroad Rally, Alchemist’s Lattice, Bumble
 
 ## Resources, license and acknowledgments
 
-- Each first-party TV app or launcher has a resource folder with its APK, source and available checksums and licenses. Historical TV releases use `android-v*` tags. Desktop manager versions use `desktop-v*`. The nine TV games covered by the 0.5.1 rules update retain their 0.5.0 certificate and support in-place upgrades from that version. [Resource catalog](../../resource/README.md) · [Game fidelity review (Chinese)](../game-releases/game-fidelity-0.5.1.md)
+- TV launchers, media apps and tools live under `resource/`. Each game has its own folder under `joystick-games/` with its source code and APK. Historical TV releases use `android-v*` tags. Desktop manager versions use `desktop-v*`. The nine TV games covered by the 0.5.1 rules update retain their 0.5.0 certificate and support in-place upgrades from that version. [Resource catalog](../../resource/README.md) · [Game fidelity review (Chinese)](../game-releases/game-fidelity-0.5.1.md)
 - The third-party TV app catalog provides icons, covers, manifests and upstream information. [Third-party apps](../../fork/README.md) · [Oversized files and implementation notes](../../fork/OVERSIZED.md)
 - pureTV uses the MIT license. Some TV launcher code draws on Gathin23's cleanyourtv and retains the original authors' copyright and license notices. Third-party code, fonts and assets retain their respective licenses. [MIT](../../LICENSE) · [NOTICE](../../NOTICE.md) · [cleanyourtv](https://github.com/Gathin23/cleanyourtv) · [Font OFL license](../../resource/launcher/puretv/FONT-LICENSE-OFL.txt)

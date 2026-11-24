@@ -8,7 +8,7 @@ on:
         type: string
         required: true
       slug:
-        description: Game directory name under resource/apps
+        description: Game directory name under joystick-games
         type: string
         required: true
       request_branch:
@@ -55,7 +55,7 @@ jobs:
           path: source
           sparse-checkout: |
             resource/game-kit
-            resource/apps/${{ inputs.slug }}
+            joystick-games/${{ inputs.slug }}
             tools/game-icon-sources.json
             tools/game-icon-crops.json
           sparse-checkout-cone-mode: false
@@ -82,7 +82,7 @@ jobs:
         run: |
           python3 signer/resource/game-kit/build.py \
             --kit "$GITHUB_WORKSPACE/source/resource/game-kit" \
-            --game "$GITHUB_WORKSPACE/source/resource/apps/$GAME_SLUG" \
+            --game "$GITHUB_WORKSPACE/source/joystick-games/$GAME_SLUG" \
             --output "$RUNNER_TEMP/rebuilt" --cache "$RUNNER_TEMP/dex-cache" \
             --sdk "$ANDROID_HOME" --jdk "$JAVA_HOME" --zxing "$RUNNER_TEMP/zxing.jar"
       - name: Verify source, package, bytecode, resources, assets and size
@@ -148,9 +148,9 @@ jobs:
           sparse-checkout: |
             resource/game-kit/android/src/main
             resource/game-kit/web
-            resource/apps/${{ inputs.slug }}/game.json
-            resource/apps/${{ inputs.slug }}/icon.xml
-            resource/apps/${{ inputs.slug }}/src/main/assets
+            joystick-games/${{ inputs.slug }}/game.json
+            joystick-games/${{ inputs.slug }}/icon.xml
+            joystick-games/${{ inputs.slug }}/src/main/assets
             tools/game-icon-sources.json
             tools/game-icon-crops.json
           sparse-checkout-cone-mode: false

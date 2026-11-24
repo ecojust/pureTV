@@ -17,7 +17,7 @@ parser.add_argument('--stage-branch', required=True)
 parser.add_argument('--source-sha', required=True)
 parser.add_argument('--build-tools', required=True, type=Path)
 parser.add_argument('--skip-index', action='store_true', help='Defer resource index regeneration until the batch is complete')
-parser.add_argument('--app', action='append', choices=['shortvideo', 'webtv', 'hifini', 'cctv', 'tank', 'jackal', 'jewel', 'tetris', 'bomb-jack', 'adventure-island', 'super-mario', 'coast-kart', 'cozy-island', 'used-car-racing', 'alien-shooter'], help='Update only this app; repeat to select several (default: shortvideo, webtv)')
+parser.add_argument('--app', action='append', choices=['shortvideo', 'webtv', 'hifini', 'cctv', 'tank', 'jackal', 'jewel', 'tetris', 'super-mario', 'used-car-racing', 'alien-shooter'], help='Update only this app; repeat to select several (default: shortvideo, webtv)')
 args = parser.parse_args()
 if not re.fullmatch(r'build-assets/resources-\d+', args.stage_branch) or not re.fullmatch(r'[a-f0-9]{40}', args.source_sha):
     parser.error('Expected a build-assets/resources-RUN_ID branch and a complete source SHA')
@@ -52,7 +52,7 @@ metadata = json.loads(artifact('release-metadata.json'))['launcher']
 require(metadata['sourceSha'] == args.source_sha, 'Staged metadata does not match the requested source commit')
 key = os.environ['PURETV_KEYSTORE_PATH']
 require(bool(os.environ.get('PURETV_KEYSTORE_PASSWORD')), 'PURETV_KEYSTORE_PASSWORD is required')
-GAMES = ('tank', 'jackal', 'jewel', 'tetris', 'bomb-jack', 'adventure-island', 'super-mario', 'coast-kart', 'cozy-island', 'used-car-racing', 'alien-shooter')
+GAMES = ('tank', 'jackal', 'jewel', 'tetris', 'super-mario', 'used-car-racing', 'alien-shooter')
 apps = [
     ('shortvideo', 'ShortVideo TV', '遥控器短视频播放器', 'shortvideo-tv', 'controls-preview', 'com.ecojust.shortvideo'),
     ('webtv', 'WebTV', '电视直播与 M3U 播放器', 'webtv-controls', 'controls-render', 'com.ecojust.webtv'),
@@ -62,11 +62,7 @@ apps = [
     ('jackal', 'Jackal TV', '独立重写的六关吉普车营救游戏，支持手机扫码双人合作', 'jackal-tv', 'jackal-tv', 'com.ecojust.jackaltv'),
     ('jewel', 'Magic Jewelry TV', '经典三宝石连锁消除，支持手机扫码单人或双人比拼', 'jewel-tv', 'jewel-tv', 'com.ecojust.jeweltv'),
     ('tetris', 'Tetris TV', '经典俄罗斯方块，支持手机扫码单人或双人比拼', 'tetris-tv', 'tetris-tv', 'com.ecojust.tetristv'),
-    ('bomb-jack', 'Mighty Bomb Jack TV', '16 关金字塔跳跃冒险，支持手机扫码单人或双人轮流', 'bomb-jack-tv', 'bomb-jack-tv', 'com.ecojust.bombjacktv'),
-    ('adventure-island', 'Adventure Island TV', '8 区域 32 关横版冒险，支持手机扫码单人或双人轮流', 'adventure-island-tv', 'adventure-island-tv', 'com.ecojust.adventureislandtv'),
     ('super-mario', 'Super Mario TV', '8 世界 32 关平台冒险，支持手机扫码单人或双人轮流', 'super-mario-tv', 'super-mario-tv', 'com.ecojust.supermariotv'),
-    ('coast-kart', 'Coast Kart TV', '原创卡丁车竞速，支持漂移、道具和手机扫码双人分屏', 'coast-kart-tv', 'coast-kart-tv', 'com.ecojust.coastkarttv'),
-    ('cozy-island', 'Cozy Island TV', '原创岛屿生活，支持采集、钓鱼、布置和手机扫码双人游玩', 'cozy-island-tv', 'cozy-island-tv', 'com.ecojust.cozyislandtv'),
     ('used-car-racing', '极品二手车', '随机车况与机械故障的三维赛车，支持手机扫码一至两人竞速和 AI 对手', 'used-car-racing-tv', 'used-car-racing-tv', 'com.ecojust.usedcartv'),
     ('alien-shooter', '孤胆枪手 TV', '工业基地异形群潮单人射击，三关战役、五种武器与手机扫码操作', 'alien-shooter-tv', 'alien-shooter-tv', 'com.ecojust.alienshootertv'),
 ]
@@ -75,7 +71,7 @@ apps = [app for app in apps if app[0] in selected_apps]
 with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
     temporary = Path(temporary)
     for slug, name, description, capture, doc_image, package_name in apps:
-        folder = root / 'resource/apps' / slug
+        folder = root / ('joystick-games' if slug in GAMES else 'resource/apps') / slug
         require(folder.is_dir(), f'{slug}: missing application source directory')
         resource_path = folder / 'resource.json'
         old_resource = json.loads(resource_path.read_text()) if resource_path.exists() else {}
@@ -89,7 +85,7 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
         unsigned.write_bytes(artifact(slug + '.apk'))
         identity = apk_info(unsigned, args.build_tools, allow_unsigned=True)
         require(identity['packageName'] == package_name and not identity['certificateSha256'], f'{slug}: expected the unsigned application artifact')
-        gradle = git('show', args.source_sha + ':resource/apps/' + slug + '/build.gradle').decode()
+        gradle = git('show', args.source_sha + ':' + folder.relative_to(root).as_posix() + '/build.gradle').decode()
         application_id = re.search(r"applicationId '([^']+)'", gradle)
         require(application_id is not None and application_id[1] == package_name, f'{slug}: source application ID does not match the expected package')
         version = re.search(r"versionName '([^']+)'", gradle)[1]
@@ -108,12 +104,6 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
         subprocess.run([str(args.build_tools / 'zipalign'), '-c', '4', str(signed)], check=True)
         apk = folder / (slug + '-' + version + '.apk')
         shutil.copyfile(signed, apk)
-        download_path = apk.name
-        if slug in GAMES:
-            catalog_apk = root / 'joystick-games' / slug / apk.name
-            catalog_apk.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(signed, catalog_apk)
-            download_path = os.path.relpath(catalog_apk, folder).replace(os.sep, '/')
         shutil.copyfile(root / 'LICENSE', folder / 'LICENSE')
         docs = folder / 'docs'
         docs.mkdir(exist_ok=True)
@@ -155,7 +145,7 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
             resource['releaseChannel'] = 'preview'
         if slug in GAMES:
             resource['romIncluded'] = False
-            resource['downloadUrl'] = 'https://raw.githubusercontent.com/ecojust/pureTV/master/' + catalog_apk.relative_to(root).as_posix()
+            resource['downloadUrl'] = 'https://raw.githubusercontent.com/ecojust/pureTV/master/' + apk.relative_to(root).as_posix()
         resource_path.write_text(json.dumps(resource, ensure_ascii=False, indent=2) + '\n')
         checksums = [apk.name, 'thumb.png', 'docs/' + doc_image + '.png', 'docs/' + doc_image + '.en.png']
         logo = folder / 'logo.svg'
@@ -187,7 +177,7 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
         heading, _, rest = readme_text.partition('\n')
         rest = re.sub(r'\n*<!-- apk-resource:start -->.*?<!-- apk-resource:end -->\n*', '\n', rest, flags=re.S)
         logo_link = ' · [64×64 SVG 图标](logo.svg)' if has_logo else ''
-        readme.write_text(heading + '\n\n<!-- apk-resource:start -->\n[下载 APK](' + download_path + '?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)' + logo_link + '\n\n此目录内 APK 使用 pureTV 发布证书签名。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。\n<!-- apk-resource:end -->\n' + rest)
+        readme.write_text(heading + '\n\n<!-- apk-resource:start -->\n[下载 APK](' + apk.name + '?raw=1) · [校验值](SHA256SUMS.txt) · [签名及构建来源](resource.json) · [源码](src/)' + logo_link + '\n\n此目录内 APK 使用 pureTV 发布证书签名。若设备中存在使用旧证书的同包应用，Android 无法直接覆盖安装；需先备份数据并卸载旧包。\n<!-- apk-resource:end -->\n' + rest)
         english_readme = folder / 'README.en.md'
         if english_readme.exists():
             english_text = english_readme.read_text()
@@ -199,7 +189,7 @@ with tempfile.TemporaryDirectory(prefix='puretv-app-resources-') as temporary:
                 else:
                     english_text += '\n' + previews + '\n'
             logo_link_en = ' · [64×64 SVG icon](logo.svg)' if has_logo else ''
-            block = ('<!-- apk-resource:start -->\n[Download APK](' + download_path + '?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)' + logo_link_en + '\n\n'
+            block = ('<!-- apk-resource:start -->\n[Download APK](' + apk.name + '?raw=1) · [Checksums](SHA256SUMS.txt) · [Signing and build provenance](resource.json) · [Source code](src/)' + logo_link_en + '\n\n'
                      'The APK in this directory is signed with the pureTV release certificate. Android cannot update an existing installation of the same package if it uses a different signing certificate. Back up its data and uninstall the old package first.\n<!-- apk-resource:end -->')
             if '<!-- apk-resource:start -->' in english_text:
                 english_text = re.sub(r'<!-- apk-resource:start -->.*?<!-- apk-resource:end -->', lambda _: block, english_text, flags=re.S)

@@ -11,7 +11,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / 'resource/apps/used-car-racing/src/main/assets/textures'
+OUT = ROOT / 'joystick-games/used-car-racing/src/main/assets/textures'
 OUT.mkdir(parents=True, exist_ok=True)
 MANIFEST = {}
 

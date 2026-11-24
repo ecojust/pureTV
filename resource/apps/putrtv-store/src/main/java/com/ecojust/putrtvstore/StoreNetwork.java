@@ -22,7 +22,7 @@ public final class StoreNetwork {
     public static final String REF_URL = "https://api.github.com/repos/ecojust/pureTV/git/ref/heads/master";
     private static final String RAW_PREFIX = "/ecojust/pureTV/";
     private static final Pattern REVISION = Pattern.compile("[a-f0-9]{40}");
-    private static final Pattern RESOURCE = Pattern.compile("resource/(?:[A-Za-z0-9._-]+/)*[A-Za-z0-9._-]+");
+    private static final Pattern RESOURCE = Pattern.compile("(?:resource|joystick-games)/(?:[A-Za-z0-9._-]+/)*[A-Za-z0-9._-]+");
     private static final long TRANSFER_TIMEOUT_MS = 15L * 60 * 1000;
     private StoreNetwork() { }
 

@@ -4,7 +4,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 p=argparse.ArgumentParser();p.add_argument('--slug',required=True);p.add_argument('--apk',type=Path);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
 out=a.output.resolve();out.mkdir(parents=True,exist_ok=True);assert not list(out.iterdir()),'Use an empty output directory'
-game=ROOT/'resource/apps'/a.slug
+game=ROOT/'joystick-games'/a.slug
 if a.apk:
  with zipfile.ZipFile(a.apk) as z:
   for n in z.namelist():

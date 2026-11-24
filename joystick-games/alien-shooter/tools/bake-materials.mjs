@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {runInNewContext} from 'node:vm';
 import {spawnSync} from 'node:child_process';
-const require=createRequire(new URL('../../../desktop/package.json',import.meta.url));
+const require=createRequire(new URL('../../../../desktop/package.json',import.meta.url));
 const root=new URL('../',import.meta.url),assets=new URL('src/main/assets/',root);
 const destination=process.argv.includes('--output')?process.argv[process.argv.indexOf('--output')+1]:fileURLToPath(assets);
 const worldSource=await readFile(new URL('world.js',assets),'utf8');

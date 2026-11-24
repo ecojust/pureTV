@@ -103,7 +103,7 @@ Android 构建和固定证书签名沿用 [Game Kit 构建说明](../../resource
 
 以下为旧版发布记录，其测试与画面不代表本次连接 ID 界面验收。[原提交中的完整说明](https://github.com/ecojust/pureTV/blob/9af9f197855eb7a0ce7174c0e6295c8974b3250d/resource/apps/neon-rush/README.md)。
 
-**Android 0.1.2 · 正式签名 APK：447,980 字节（约 448 KB）。** [下载安装包](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/neon-rush-0.1.2.apk) · [Android 实包手柄回归录像](docs/releases/0.1.2/gameplay.mp4) · [版本验证](docs/releases/0.1.2/verification.json) · [当时接入记录](../../docs/readme-controller-support/README.md) · [图标](logo.svg)
+**Android 0.1.2 · 正式签名 APK：447,980 字节（约 448 KB）。** [下载安装包](neon-rush-0.1.2.apk?raw=1) · [Android 实包手柄回归录像](docs/releases/0.1.2/gameplay.mp4) · [版本验证](docs/releases/0.1.2/verification.json) · [当时接入记录](../../docs/readme-controller-support/README.md) · [图标](logo.svg)
 
 当时将 pureTV 手柄默认端口改为 **63485**，补充连接状态与地址说明，短暂失焦或扫码房间刷新时保留 TCP 连接并隔离输入。macOS 0.1.3 已交付的左右转向修复也已进入此 Android 安装包。
 
@@ -111,7 +111,7 @@ Android 构建和固定证书签名沿用 [Game Kit 构建说明](../../resource
 
 历史 Android 0.1.1：[旧版菜单](docs/controller-update-baseline/0.1.1/thumb.png) · [实玩录像](docs/releases/0.1.1/gameplay.mp4) · [验证记录](docs/releases/0.1.1/verification.json)。这些记录保留为旧版依据，不代表 0.1.2 的画面、转向或手柄验收。
 
-**macOS 0.1.3：** [下载通用 DMG](https://raw.githubusercontent.com/ecojust/pureTV/master/resource/apps/neon-rush/macos/NeonRush-0.1.3-macos-universal.dmg) · [ZIP、安装与手柄说明](macos/README.md)。需要 macOS 11+ 和 WebGL，包含 Apple 芯片／Intel 代码，支持键盘与 pureTV Wi-Fi 手柄。macOS 0.1.3 安装包保持原样，其左右转向修复现也包含在 Android 0.1.2 中。
+**macOS 0.1.3：** [下载通用 DMG](macos/NeonRush-0.1.3-macos-universal.dmg?raw=1) · [ZIP、安装与手柄说明](macos/README.md)。需要 macOS 11+ 和 WebGL，包含 Apple 芯片／Intel 代码，支持键盘与 pureTV Wi-Fi 手柄。macOS 0.1.3 安装包保持原样，其左右转向修复现也包含在 Android 0.1.2 中。
 
 ![Android 0.1.2 实际 APK 菜单](docs/releases/0.1.2/menu.png)
 

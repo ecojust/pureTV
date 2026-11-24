@@ -40,17 +40,19 @@ def catalog_game_dir(root, slug):
     catalog = json.loads(_read(root, root / 'tools/readme-app-games.json'))
     for category in catalog:
         for entry in category['games']:
-            location = entry.get('page') or 'resource/' + entry['resource']
+            location = entry.get('page') or entry['resource']
             if Path(location).name == slug:
+                # Frozen pre-migration checkouts store resource paths relative to resource/.
+                if location.startswith('apps/'):
+                    return root / 'resource' / location
                 return root / location
-    for parent in ('resource/apps', 'joystick-games'):
-        candidate = root / parent / slug
-        for manifest in ('resource.json', 'game.json'):
-            try:
-                _read(root, candidate / manifest)
-            except FileNotFoundError:
-                continue
-            return candidate
+    candidate = root / 'joystick-games' / slug
+    for manifest in ('resource.json', 'game.json'):
+        try:
+            _read(root, candidate / manifest)
+        except FileNotFoundError:
+            continue
+        return candidate
     raise ValueError(f'Unknown game: {slug}')
 
 

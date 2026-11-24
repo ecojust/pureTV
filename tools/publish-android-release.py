@@ -9,7 +9,7 @@ import time
 import zipfile
 from pathlib import Path
 
-from resource_catalog import digest, verify_catalog, RELEASE_CERTIFICATE_CUTOVERS, NEW_RELEASE_CERTIFICATE_PACKAGES
+from resource_catalog import digest, verify_catalog, catalog_directories
 
 REPOSITORY = 'ecojust/pureTV'
 GAME_PACKAGES = {'com.ecojust.' + name + 'tv' for name in (
@@ -38,9 +38,12 @@ def release_scope(tag, scope):
                     for path in resources}
         assert packages and len(packages) == len(resources), 'Invalid non-game package selection'
         return match[1], packages
-    # Retired applications remain in certificate history, not in new collections.
-    active_packages = (set(RELEASE_CERTIFICATE_CUTOVERS) - {'com.ecojust.music'}) | NEW_RELEASE_CERTIFICATE_PACKAGES
-    return match[1], GAME_PACKAGES if scope == 'games' else active_packages
+    if scope == 'games':
+        return match[1], GAME_PACKAGES
+    root = Path(__file__).resolve().parents[1]
+    packages = {json.loads((directory / 'resource.json').read_text())['packageName']
+                for directory in catalog_directories(root)}
+    return match[1], packages
 
 
 def api(path, payload=None):
