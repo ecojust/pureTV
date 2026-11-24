@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "storageRestartRequired": false,
+  "pauseStablePaths": ["gameplay.time", "gameplay.position", "gameplay.yaw", "gameplay.shots", "gameplay.ammo"],
+  "steps": [
+    {"name": "Deploy into Paint Clash after the countdown", "keys": ["START"], "holdMs": 300, "timeoutSeconds": 180, "expect": [{"path":"stage","op":"eq","value":"playing"},{"path":"gameplay.ready","op":"eq","value":true},{"path":"gameplay.actors","op":"eq","value":12}]},
+    {"name": "Walk from the initial spawn", "keys": ["UP"], "holdMs": 800, "timeoutSeconds": 40, "expect": [{"path":"gameplay.position","op":"changed"}]},
+    {"name": "Turn toward the town", "keys": ["RIGHT"], "holdMs": 650, "timeoutSeconds": 40, "expect": [{"path":"gameplay.yaw","op":"changed"}]},
+    {"name": "Fire the artist's paint weapon", "keys": ["A"], "holdMs": 450, "timeoutSeconds": 40, "expect": [{"path":"gameplay.shots","op":"increased"}]},
+    {"name": "Switch to the sidearm", "keys": ["Y"], "holdMs": 250, "timeoutSeconds": 40, "expect": [{"path":"gameplay.weapon","op":"changed"}]},
+    {"name": "Hold START to pause once", "keys": ["START"], "holdMs": 800, "expect": [{"path":"stage","op":"eq","value":"paused"}]},
+    {"name": "Resume once", "keys": ["START"], "holdMs": 500, "expect": [{"path":"stage","op":"eq","value":"playing"}]}
+  ]
+}

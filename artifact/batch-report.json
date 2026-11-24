@@ -1,0 +1,151 @@
+{
+  "sourceCommit": "3831360cd4bb90ffa37b202b01dc7c151bb65116",
+  "batch": "selected-seven-02",
+  "runner": "macos-latest",
+  "expectedArchitecture": "arm64",
+  "status": "passed",
+  "games": [
+    {
+      "game": "gogh-strike",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/gogh-strike",
+            "--output",
+            "/Users/runner/work/_temp/qa/gogh-strike/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "gogh-strike/package-verification.log",
+          "startedAt": "2026-11-24T17:02:21.238355+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "gogh-strike",
+            "--app",
+            "/Users/runner/work/_temp/packages/gogh-strike/installed/Gogh Strike.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/gogh-strike/native"
+          ],
+          "status": "passed",
+          "log": "gogh-strike/native.log",
+          "startedAt": "2026-11-24T17:03:26.040739+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "gogh-strike",
+            "--app",
+            "/Users/runner/work/_temp/packages/gogh-strike/installed/Gogh Strike.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/gogh-strike/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "gogh-strike/occupied-port.log",
+          "startedAt": "2026-11-24T17:04:27.254483+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "gogh-strike",
+            "--app",
+            "/Users/runner/work/_temp/packages/gogh-strike/installed/Gogh Strike.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/gogh-strike/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "gogh-strike/rosetta.log",
+          "startedAt": "2026-11-24T17:05:19.090112+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "bloom-hop",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/bloom-hop",
+            "--output",
+            "/Users/runner/work/_temp/qa/bloom-hop/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "bloom-hop/package-verification.log",
+          "startedAt": "2026-11-24T17:06:18.652104+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "bloom-hop",
+            "--app",
+            "/Users/runner/work/_temp/packages/bloom-hop/installed/Bloom Hop.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/bloom-hop/native"
+          ],
+          "status": "passed",
+          "log": "bloom-hop/native.log",
+          "startedAt": "2026-11-24T17:06:59.057958+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "bloom-hop",
+            "--app",
+            "/Users/runner/work/_temp/packages/bloom-hop/installed/Bloom Hop.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/bloom-hop/occupied-port",
+            "--occupy-default-port"
+          ],
+          "status": "passed",
+          "log": "bloom-hop/occupied-port.log",
+          "startedAt": "2026-11-24T17:07:35.041309+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "bloom-hop",
+            "--app",
+            "/Users/runner/work/_temp/packages/bloom-hop/installed/Bloom Hop.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/bloom-hop/rosetta",
+            "--launch-architecture",
+            "x86_64"
+          ],
+          "status": "passed",
+          "log": "bloom-hop/rosetta.log",
+          "startedAt": "2026-11-24T17:08:08.103101+00:00",
+          "returncode": 0
+        }
+      ]
+    }
+  ]
+}
