@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "renderer": "canvas2d",
+  "pauseStablePaths": ["gameplay.x", "gameplay.y", "gameplay.tick"],
+  "steps": [
+    {"name": "Enter the arena with three bots", "keys": ["START"], "holdMs": 150, "expect": [{"path": "stage", "op": "eq", "value": "playing"}, {"path": "gameplay.players", "op": "eq", "value": 4}]},
+    {"name": "Move away from the spawn corner", "keys": ["RIGHT"], "holdMs": 260, "expect": [{"path": "gameplay.x", "op": "changed"}]},
+    {"name": "Place a bomb on the arena grid", "keys": ["A"], "holdMs": 130, "expect": [{"path": "gameplay.ownBombs", "op": "gt", "value": 0}]},
+    {"name": "Pause the arena", "keys": ["START"], "holdMs": 200, "expect": [{"path": "stage", "op": "eq", "value": "paused"}]},
+    {"name": "Resume the match", "keys": ["START"], "holdMs": 150, "expect": [{"path": "stage", "op": "eq", "value": "playing"}]}
+  ]
+}
