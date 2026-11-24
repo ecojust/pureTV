@@ -1,0 +1,111 @@
+{"originalNpmTestConfigured":true,"scope":"Configured original tests only; an absent script is recorded, not claimed as tested"}
+
+> puretv-gogh-strike@0.1.0 test
+> node --test tests/*.test.js
+
+TAP version 13
+# Subtest: intro gives each numeral a beat and releases play at2.4 seconds before the short exit
+ok 1 - intro gives each numeral a beat and releases play at2.4 seconds before the short exit
+  ---
+  duration_ms: 0.631606
+  type: 'test'
+  ...
+# Subtest: cancel and restart discard the previous sequence without deferred transitions
+ok 2 - cancel and restart discard the previous sequence without deferred transitions
+  ---
+  duration_ms: 0.529651
+  type: 'test'
+  ...
+# Subtest: ordinary60Hz updates show the same count and end without a leftover blocking frame
+ok 3 - ordinary60Hz updates show the same count and end without a leftover blocking frame
+  ---
+  duration_ms: 0.822155
+  type: 'test'
+  ...
+# Subtest: TDM counts enemy kills, ends at limit, and freezes after the result
+ok 4 - TDM counts enemy kills, ends at limit, and freezes after the result
+  ---
+  duration_ms: 1.825556
+  type: 'test'
+  ...
+# Subtest: TDM timer resolves wins and honest draws
+ok 5 - TDM timer resolves wins and honest draws
+  ---
+  duration_ms: 0.212181
+  type: 'test'
+  ...
+# Subtest: neutral control capture takes five seconds and only then awards owner points
+ok 6 - neutral control capture takes five seconds and only then awards owner points
+  ---
+  duration_ms: 0.761852
+  type: 'test'
+  ...
+# Subtest: contested points freeze capture and scoring, ignoring dead or distant actors
+ok 7 - contested points freeze capture and scoring, ignoring dead or distant actors
+  ---
+  duration_ms: 0.474915
+  type: 'test'
+  ...
+# Subtest: enemy takeover neutralizes then captures, with correct scoring across long frames
+ok 8 - enemy takeover neutralizes then captures, with correct scoring across long frames
+  ---
+  duration_ms: 0.251037
+  type: 'test'
+  ...
+# Subtest: unoccupied points retain progress, ownership, and earned scoring
+ok 9 - unoccupied points retain progress, ownership, and earned scoring
+  ---
+  duration_ms: 0.227354
+  type: 'test'
+  ...
+# Subtest: control match ends at the first exact limit crossing, including simultaneous draws
+ok 10 - control match ends at the first exact limit crossing, including simultaneous draws
+  ---
+  duration_ms: 0.304144
+  type: 'test'
+  ...
+# Subtest: control timer never scores beyond match duration and kill reports add no points
+ok 11 - control timer never scores beyond match duration and kill reports add no points
+  ---
+  duration_ms: 0.177428
+  type: 'test'
+  ...
+# Subtest: elimination intermission emits a single new-round signal and retains round wins
+ok 12 - elimination intermission emits a single new-round signal and retains round wins
+  ---
+  duration_ms: 0.530011
+  type: 'test'
+  ...
+# Subtest: elimination first to three finishes best-of-five and cannot reset a finished match
+ok 13 - elimination first to three finishes best-of-five and cannot reset a finished match
+  ---
+  duration_ms: 0.451328
+  type: 'test'
+  ...
+# Subtest: elimination timer resolves living count first, then health, and replays exact draws
+ok 14 - elimination timer resolves living count first, then health, and replays exact draws
+  ---
+  duration_ms: 0.286659
+  type: 'test'
+  ...
+# Subtest: simultaneous elimination is a draw; an empty initial roster does not lose instantly
+ok 15 - simultaneous elimination is a draw; an empty initial roster does not lose instantly
+  ---
+  duration_ms: 0.161797
+  type: 'test'
+  ...
+# Subtest: invalid elapsed times are harmless and an unsupported mode fails clearly
+ok 16 - invalid elapsed times are harmless and an unsupported mode fails clearly
+  ---
+  duration_ms: 0.371873
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 120.736435

@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "renderer": "canvas2d",
+  "pauseStablePaths": [
+    "gameplay.turn",
+    "gameplay.frogY",
+    "gameplay.fliesLeft"
+  ],
+  "steps": [
+    {
+      "name": "Start a new game",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 130,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        }
+      ]
+    },
+    {
+      "name": "Hop to the next lily pad and eat its fly",
+      "keys": [
+        "DOWN"
+      ],
+      "holdMs": 200,
+      "expect": [
+        {
+          "path": "gameplay.moves",
+          "op": "increased"
+        },
+        {
+          "path": "gameplay.frogY",
+          "op": "changed"
+        }
+      ]
+    },
+    {
+      "name": "Undo the hop through the original puzzle history",
+      "keys": [
+        "B"
+      ],
+      "holdMs": 140,
+      "expect": [
+        {
+          "path": "gameplay.undos",
+          "op": "increased"
+        }
+      ]
+    },
+    {
+      "name": "Pause with START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 130,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "paused"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "name": "Resume with START",
+      "keys": [
+        "START"
+      ],
+      "holdMs": 130,
+      "expect": [
+        {
+          "path": "stage",
+          "op": "eq",
+          "value": "playing"
+        },
+        {
+          "path": "paused",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    }
+  ]
+}
