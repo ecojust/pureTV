@@ -4,6 +4,14 @@
 
 [在电视上连接手机手柄](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上游玩](../../docs/guide/README.md#在电脑上玩)
 
+## 下载
+
+[Android TV APK](gogh-strike-0.1.0.apk?raw=1) · [Windows x64 安装版](windows/GoghStrike-0.1.0-windows-x64-setup.exe?raw=1) · [Windows x64 便携版](windows/GoghStrike-0.1.0-windows-x64.zip?raw=1) · [macOS 通用 DMG](macos/GoghStrike-0.1.0-macos-universal.dmg?raw=1) · [macOS 通用 ZIP](macos/GoghStrike-0.1.0-macos-universal.zip?raw=1)
+
+[文件校验值](SHA256SUMS.txt) · [Android TV 验证](docs/releases/0.1.0/android.json) · [Windows 验证](docs/releases/0.1.0/windows.json) · [macOS 验证](docs/releases/0.1.0/macos.json)
+
+macOS 已在 Apple Silicon 原生和 Rosetta 两种模式下通过实玩。安装包包含 Intel 版本。托管 Intel Mac 未能完成游玩验证。[逐项结果](docs/releases/0.1.0/macos.json)
+
 ## 操作
 
 | 动作 | 手柄 | 键盘 |

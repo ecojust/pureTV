@@ -27,3 +27,9 @@ npm run test:browser
 ~~~
 
 系统已安装 Chromium 时可设置 CHROME_BIN。浏览器回归用普通按键移动、撤销、解首关、确认下一关、断开与恢复输入。只读 JoystickGameQA.snapshot() 返回实际青蛙位置、剩余苍蝇、回合和当帧手柄状态。[输入脚本](tests/browser.mjs) · [原生平台测试步骤](qa-plan.json) · [游玩画面](thumb.png)
+
+## 下载
+
+[Android TV APK](bloom-hop-0.1.0.apk?raw=1) · [Windows x64 安装版](windows/BloomHop-0.1.0-windows-x64-setup.exe?raw=1) · [Windows x64 便携版](windows/BloomHop-0.1.0-windows-x64.zip?raw=1) · [macOS 通用 DMG](macos/BloomHop-0.1.0-macos-universal.dmg?raw=1) · [macOS 通用 ZIP](macos/BloomHop-0.1.0-macos-universal.zip?raw=1)
+
+[文件校验值](SHA256SUMS.txt) · [Android TV 验证](docs/releases/0.1.0/android.json) · [Windows 验证](docs/releases/0.1.0/windows.json) · [macOS 验证](docs/releases/0.1.0/macos.json)
