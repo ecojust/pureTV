@@ -1,0 +1,81 @@
+{
+  "sourceCommit": "c0f229230d92ab2d7458b9441cd1aa13a68ad535",
+  "batch": "selected-seven-01",
+  "runner": "macos-15-intel",
+  "expectedArchitecture": "x86_64",
+  "status": "failed",
+  "games": [
+    {
+      "game": "kaboom-arena",
+      "status": "passed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/kaboom-arena",
+            "--output",
+            "/Users/runner/work/_temp/qa/kaboom-arena/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "kaboom-arena/package-verification.log",
+          "startedAt": "2026-11-24T16:54:10.003505+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "kaboom-arena",
+            "--app",
+            "/Users/runner/work/_temp/packages/kaboom-arena/installed/Kaboom Arena.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/kaboom-arena/native"
+          ],
+          "status": "passed",
+          "log": "kaboom-arena/native.log",
+          "startedAt": "2026-11-24T16:55:35.903873+00:00",
+          "returncode": 0
+        }
+      ]
+    },
+    {
+      "game": "nerd-of-duty",
+      "status": "failed",
+      "checks": [
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-packages.py",
+            "--directory",
+            "/Users/runner/work/_temp/packages/nerd-of-duty",
+            "--output",
+            "/Users/runner/work/_temp/qa/nerd-of-duty/package-verification.json"
+          ],
+          "status": "passed",
+          "log": "nerd-of-duty/package-verification.log",
+          "startedAt": "2026-11-24T16:56:23.166384+00:00",
+          "returncode": 0
+        },
+        {
+          "command": [
+            "python3",
+            "joystick-games/tools/macos-verify.py",
+            "--game",
+            "nerd-of-duty",
+            "--app",
+            "/Users/runner/work/_temp/packages/nerd-of-duty/installed/Nerd of Duty.app",
+            "--output",
+            "/Users/runner/work/_temp/qa/nerd-of-duty/native"
+          ],
+          "status": "failed",
+          "log": "nerd-of-duty/native.log",
+          "startedAt": "2026-11-24T16:57:45.941050+00:00",
+          "returncode": 1
+        }
+      ]
+    }
+  ]
+}

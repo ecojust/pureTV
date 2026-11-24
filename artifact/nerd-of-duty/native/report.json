@@ -1,0 +1,262 @@
+{
+  "status": "failed",
+  "qaSourceCommit": "c0f229230d92ab2d7458b9441cd1aa13a68ad535",
+  "artifactSourceCommit": "c0f229230d92ab2d7458b9441cd1aa13a68ad535",
+  "artifactRunId": "45438956900",
+  "startedAt": "2026-11-24T16:57:46.059313+00:00",
+  "game": "nerd-of-duty",
+  "method": "Actual AppKit/WKWebView app, unchanged official Python SDK, byte-transparent TCP observer and read-only diagnostic files. No game-state or clock writes.",
+  "physicalEsp32Tested": false,
+  "tests": [],
+  "wire": [],
+  "observerErrors": [],
+  "observerConnectionEnds": [],
+  "snapshots": [],
+  "screenshots": [],
+  "sourceHashes": {
+    "joystick-games/tools/macos-verify.py": "6add0ec04a022ec4d716e516199aed45e9279514d2b33246d8b88113db47ae41",
+    "puretv-joystick/joystick_sdk.py": "c5e18886fce56edf6c653640f056e01fe588403378f174c48553a054c1f9b023",
+    "joystick-games/shared/macos/tools/webgl-probe.swift": "ce488bddebe035be822b5682245cce719545aa4d796479a97793d952bfb44156",
+    "joystick-games/shared/macos/tools/allow-local-network.py": "daefdeb485bf087513aad5fb13d79a23312651f84a8ff87f866e84db139a1a03",
+    "joystick-games/shared/macos/Sources/main.swift": "47d65e9e50b0630dab7e6c0957293be5b0a511b8db11b290a6a0ff3d08dc9d6f",
+    "joystick-games/shared/macos/Sources/ControllerServer.swift": "5d1081652964f8f6fe657cecd629acd4355e69cff7a7945e66082f72a454e430",
+    "joystick-games/shared/macos/Web/bridge.js": "1d695632bbe6db2f5cc1c6103aaf241131c3f0b844c695ef53b2d289a59e839c",
+    "joystick-games/nerd-of-duty/qa-plan.json": "0ab391aa0aab139a8dd93dba1fabbda428fca37bffe9308464184c9a1ff40e87",
+    "joystick-games/tools/qa-plan.py": "3f39471e539675ac589a44ea062ee3d42d7363dd85b9ee1d64257df27bec96f9",
+    "joystick-games/tools/macos-build.py": "9dcbe541e72caef7e52f2b1edc7b06a021d7e949dd3499afd3929f1127617946",
+    "joystick-games/catalog-registry.json": "237996111c88527f2117e77394c1ec06b0f8615d1cb1084dbf5c2b32f34d169d",
+    "joystick-games/shared/macos/Sources/GameStorage.swift": "adde4ec27088693490b381f799d41a0e3df9d8750a4d01e4dd1d941bc36c2f4b"
+  },
+  "qaRunId": 45438956900,
+  "qaRunAttempt": 1,
+  "runnerKind": "macos-15-intel",
+  "runnerName": "GitHub Actions 1000013021",
+  "qaPlan": {
+    "schemaVersion": 1,
+    "renderer": "webgl2",
+    "pauseStablePaths": [
+      "gameplay.shots",
+      "gameplay.x",
+      "gameplay.z"
+    ],
+    "steps": [
+      {
+        "name": "Deploy as the selected job",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 250,
+        "timeoutSeconds": 120,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          },
+          {
+            "path": "gameplay.wave",
+            "op": "eq",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "name": "Strafe across the street",
+        "keys": [
+          "RIGHT"
+        ],
+        "holdMs": 550,
+        "expect": [
+          {
+            "path": "gameplay.x",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Turn toward the plaza",
+        "keys": [
+          "X",
+          "LEFT"
+        ],
+        "holdMs": 400,
+        "expect": [
+          {
+            "path": "gameplay.yaw",
+            "op": "changed"
+          }
+        ]
+      },
+      {
+        "name": "Fire the equipped weapon",
+        "keys": [
+          "A"
+        ],
+        "holdMs": 550,
+        "expect": [
+          {
+            "path": "gameplay.shots",
+            "op": "increased"
+          }
+        ]
+      },
+      {
+        "name": "Pause the wave",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 750,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "paused"
+          }
+        ]
+      },
+      {
+        "name": "Resume the wave",
+        "keys": [
+          "START"
+        ],
+        "holdMs": 750,
+        "expect": [
+          {
+            "path": "stage",
+            "op": "eq",
+            "value": "playing"
+          }
+        ]
+      }
+    ]
+  },
+  "acceptedRenderers": [
+    "webgl2"
+  ],
+  "limitations": [
+    "No physical ESP32, physical Mac display or full-game completion claim."
+  ],
+  "binarySha256": "86070da99991816e17e81b1f6fbc51075667a8681dafa5b12f5338e0d50a88cf",
+  "freshInstallSetup": {
+    "method": "New randomly named app preference suite; existing user domains are untouched",
+    "preferencesDomain": "com.ecojust.joystick.qa.nerd-of-duty.055633629f2549cf922e91459f6af660",
+    "reusedAcrossRestartOnly": true
+  },
+  "nativeProcessArchitecture": "x86_64",
+  "error": "Traceback (most recent call last):\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 478, in run\n    initial=self.until(lambda s:s.get('ready') and s.get('active') and initialization(s.get('game'),probe,getattr(self,'renderers',None))!='pending','Native initialization terminal state',90)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/pureTV/pureTV/joystick-games/tools/macos-verify.py\", line 202, in until\n    raise AssertionError(label+' timed out: '+json.dumps(self.last,ensure_ascii=False)[:3500])\nAssertionError: Native initialization terminal state timed out: {\"active\": true, \"document\": {\"controllerClients\": [], \"height\": 720, \"language\": \"en\", \"primaryText\": \"\", \"scrollHeight\": 720, \"scrollWidth\": 1280, \"title\": \"NERD OF DUTY — A Fintech NerdCon Game\", \"url\": \"http://127.0.0.1:57336/tv.html\", \"webglError\": false, \"width\": 1280}, \"frontmostApplication\": {\"bundleIdentifier\": \"com.ecojust.joystick.nerdofduty\", \"name\": \"账本保卫战\"}, \"game\": null, \"input\": {\"connections\": 0, \"inputEnabled\": true, \"players\": [{\"a\": false, \"aimX\": 0, \"aimY\": 0, \"b\": false, \"buttonCounters\": {\"A\": 0, \"B\": 0, \"DOWN\": 0, \"LEFT\": 0, \"RIGHT\": 0, \"START\": 0, \"UP\": 0, \"X\": 0, \"Y\": 0}, \"buttons\": {\"A\": false, \"B\": false, \"DOWN\": false, \"LEFT\": false, \"RIGHT\": false, \"START\": false, \"UP\": false, \"X\": false, \"Y\": false}, \"cancelSeq\": 4, \"connected\": false, \"controllerId\": \"\", \"id\": 1, \"pulseCounters\": {\"a\": 0, \"b\": 0, \"down\": 0, \"left\": 0, \"right\": 0, \"start\": 0, \"up\": 0}, \"select\": false, \"session\": \"\", \"start\": false, \"transport\": \"wifi\", \"x\": 0, \"y\": 0}], \"revision\": 4}, \"processArchitecture\": \"x86_64\", \"ready\": true, \"server\": {\"appVersion\": \"0.1.0\", \"language\": \"zh\", \"platform\": \"macos\", \"preferences\": {}, \"qr\": \"\", \"storageKeys\": [\"nod.best\", \"nod.bestWave\"], \"storageMaxBytes\": 1048576, \"url\": \"\", \"wifiController\": {\"addresses\": [\"192.168.64.4\"], \"inputEnabled\": true, \"port\": 63485, \"serviceName\": \"账本保卫战\", \"state\": \"available\"}}, \"storage\": {\"current\": {\"nod.best\": null, \"nod.bestWave\": null}, \"initial\": {\"nod.best\": null, \"nod.bestWave\": null}, \"origin\": \"http://127.0.0.1:57336\"}, \"timestamp\": 1795539555.956003}\n",
+  "lastState": {
+    "active": true,
+    "document": {
+      "controllerClients": [],
+      "height": 720,
+      "language": "en",
+      "primaryText": "",
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "NERD OF DUTY — A Fintech NerdCon Game",
+      "url": "http://127.0.0.1:57336/tv.html",
+      "webglError": false,
+      "width": 1280
+    },
+    "frontmostApplication": {
+      "bundleIdentifier": "com.ecojust.joystick.nerdofduty",
+      "name": "账本保卫战"
+    },
+    "game": null,
+    "input": {
+      "connections": 0,
+      "inputEnabled": true,
+      "players": [
+        {
+          "a": false,
+          "aimX": 0,
+          "aimY": 0,
+          "b": false,
+          "buttonCounters": {
+            "A": 0,
+            "B": 0,
+            "DOWN": 0,
+            "LEFT": 0,
+            "RIGHT": 0,
+            "START": 0,
+            "UP": 0,
+            "X": 0,
+            "Y": 0
+          },
+          "buttons": {
+            "A": false,
+            "B": false,
+            "DOWN": false,
+            "LEFT": false,
+            "RIGHT": false,
+            "START": false,
+            "UP": false,
+            "X": false,
+            "Y": false
+          },
+          "cancelSeq": 4,
+          "connected": false,
+          "controllerId": "",
+          "id": 1,
+          "pulseCounters": {
+            "a": 0,
+            "b": 0,
+            "down": 0,
+            "left": 0,
+            "right": 0,
+            "start": 0,
+            "up": 0
+          },
+          "select": false,
+          "session": "",
+          "start": false,
+          "transport": "wifi",
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "revision": 4
+    },
+    "processArchitecture": "x86_64",
+    "ready": true,
+    "server": {
+      "appVersion": "0.1.0",
+      "language": "zh",
+      "platform": "macos",
+      "preferences": {},
+      "qr": "",
+      "storageKeys": [
+        "nod.best",
+        "nod.bestWave"
+      ],
+      "storageMaxBytes": 1048576,
+      "url": "",
+      "wifiController": {
+        "addresses": [
+          "192.168.64.4"
+        ],
+        "inputEnabled": true,
+        "port": 63485,
+        "serviceName": "账本保卫战",
+        "state": "available"
+      }
+    },
+    "storage": {
+      "current": {
+        "nod.best": null,
+        "nod.bestWave": null
+      },
+      "initial": {
+        "nod.best": null,
+        "nod.bestWave": null
+      },
+      "origin": "http://127.0.0.1:57336"
+    },
+    "timestamp": 1795539555.956003
+  },
+  "failurePhase": "initialization",
+  "nativeProcessAlive": true,
+  "lastStateFresh": true,
+  "phase": "initialization",
+  "finishedAt": "2026-11-24T16:59:16.308856+00:00"
+}
