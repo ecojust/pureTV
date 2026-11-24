@@ -27,7 +27,7 @@ final class StoreArtwork {
         Cancellation request = cancellation;
         workers.execute(() -> {
             try {
-                byte[] bytes = StoreNetwork.read(StoreNetwork.raw(catalog.revision, entry.coverPath), 2 * 1024 * 1024, request);
+                byte[] bytes = StoreNetwork.read(StoreNetwork.market(entry.coverPath), 2 * 1024 * 1024, request);
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = true;
                 BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);

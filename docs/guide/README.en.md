@@ -42,7 +42,7 @@ In **Adjust layout**, add installed user apps with launchable activities to Home
 
 Cards for compatible launchers display their Home background even when inactive. Change that background in **Adjust layout**. The pending-APK preview reads the embedded Home background and falls back to a sibling `thumb.png` or `APK-name.thumb.png` if it cannot read one.
 
-The TV store works with updated launchers to let you choose the position of an app on the home screen. To use English on supported launchers and first-party TV apps, select English in the TV system settings. User-provided app names, playlists and media titles retain their original text. [TV store guide](../../resource/apps/putrtv-store/README.en.md) · [Full resource catalog](../../resource/README.md)
+The TV store uses the same Media, Games and Launchers directories as the desktop APK market. Open a card to choose from up to five versions. The TV store works with updated launchers to let you choose the position of an app on the home screen. To use English on supported launchers and first-party TV apps, select English in the TV system settings. User-provided app names, playlists and media titles retain their original text. [TV store guide](../../resource/apps/putrtv-store/README.en.md) · [Full resource catalog](../../resource/README.md)
 
 ## Install a game and connect a controller
 

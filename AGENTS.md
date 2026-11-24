@@ -87,7 +87,7 @@ python3 tools/update-resource-index.py
 python3 tools/update-tv-store-catalog.py --build-tools /absolute/android-sdk/build-tools/34.0.0
 ```
 
-电视商城使用同提交中的 `resource/tv-store-catalog.json` 与 APK；每次新增或更新资源都要重新生成目录，不能只更新版本文案。首次源码构建的商城跳过参数只用于尚未发布的源码目录，发布时仍运行默认严格校验。更新商城内置快照时固定一个已发布提交，避免把自身 APK 哈希写进自身安装包。
+电视商城 0.1.3 起和桌面 APK 市场共同读取 `apps.b14f.com` 的影音、游戏和启动器目录。冻结新商城版本时用 `tools/freeze-tv-market.py` 从服务器核验 APK 并生成内置快照。更新仓库资源时仍须运行 `tools/update-tv-store-catalog.py`，让旧版商城从 GitHub 兼容目录取得签名升级。
 
 `tools/verify-game-publication.py` 仅支持其注册的旧游戏，不要直接套用于新 Game Kit 游戏。签名产物、GitHub 提交、GitHub Release 和 Gitee 市场发布是不同状态，分别如实记录。
 

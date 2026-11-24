@@ -36,14 +36,16 @@ import static org.robolectric.Shadows.shadowOf;
 @Config(sdk = 28, qualifiers = "zh-rCN-w960dp-h540dp-land-mdpi")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 public class StoreUiTest {
-    private static boolean stale, fail, installedNow, permissionAllowed, settingsOpened, legacyCatalog;
-    private static int launcherInspections;
+    private static boolean stale, fail, installedNow, permissionAllowed, settingsOpened;
     private static CountDownLatch downloadEntered, downloadCancelled;
+    private static String downloadedPath;
     static List<StoreEntry> entries() {
         List<StoreEntry> entries = new ArrayList<>();
-        String[] zh = {"BiliTV", "CCTV Live", "HIFINi TV", "WebTV", "ShortVideo TV", "折光工坊", "镜光接力", "拉索桥梁", "窗口装配", "异形装箱", "叠塔工匠", "夜桥接力", "四则二十四", "推箱子", "数独", "putrtv商城"};
-        String[] en = {"BiliTV", "CCTV Live", "HIFINi TV", "WebTV", "ShortVideo TV", "Refraction Workshop", "Mirror Relay", "Cable Bridge", "Window Assembly", "Shape Packing", "Tower Crafter", "Night Bridge Relay", "Twenty Four", "Sokoban", "Sudoku", "putrtv Store"};
-        for (int i = 0; i < zh.length; i++) entries.add(new StoreEntry("fixture" + i, zh[i], en[i], "为电视遥控器设计，轻松发现大屏应用。", "Designed for your remote. Discover more on your TV.", i < 5 ? "media" : i < 15 ? "game" : "tools", "com.example.app" + i, "0.1.0", "resource/apps/fixture/fixture.apk", "", "", repeat('a', 64), repeat('b', 64), repeat('c', 40), 3, 820000 + i * 31000, 19));
+        String[] zh = {"BiliTV", "CCTV Live", "HIFINi TV", "WebTV", "ShortVideo TV", "折光工坊", "镜光接力", "拉索桥梁", "窗口装配", "异形装箱", "叠塔工匠", "夜桥接力", "四则二十四", "推箱子", "数独", "PureTV 桌面"};
+        String[] en = {"BiliTV", "CCTV Live", "HIFINi TV", "WebTV", "ShortVideo TV", "Refraction Workshop", "Mirror Relay", "Cable Bridge", "Window Assembly", "Shape Packing", "Tower Crafter", "Night Bridge Relay", "Twenty Four", "Sokoban", "Sudoku", "PureTV Home"};
+        for (int i = 0; i < zh.length; i++) entries.add(new StoreEntry("fixture" + i, zh[i], en[i], "为电视遥控器设计，轻松发现大屏应用。", "Designed for your remote. Discover more on your TV.", i < 5 ? "media" : i < 15 ? "game" : "launcher", "com.example.app" + i, "0.1.0", (i < 5 ? "media" : i < 15 ? "game" : "launcher") + "/fixture" + i + "/app-0.1.0.apk", "", "", repeat('a', 64), repeat('b', 64), repeat('c', 40), 3, 820000 + i * 31000, 19));
+        entries.add(new StoreEntry("alternative", "BiliTV", "BiliTV", "", "", "media", "", "",
+                "media/fixture0/app-0.0.8.apk", "", "", "", "", "", 0, 0, 0, "", "", "North Star Media", "0.0.8"));
         return entries;
     }
     static String repeat(char c, int n) { StringBuilder s = new StringBuilder(); while (n-- > 0) s.append(c); return s.toString(); }
@@ -54,6 +56,7 @@ public class StoreUiTest {
         }; }
         @Override protected StoreDownloader createDownloader() { return new StoreDownloader(this) {
             @Override public File download(StoreCatalog catalog, StoreEntry entry, Cancellation cancellation, Progress progress) throws IOException {
+                downloadedPath = entry.apkPath;
                 downloadEntered.countDown();
                 try { while (!cancellation.isCancelled()) { try { Thread.sleep(10); } catch (InterruptedException ignored) { } } cancellation.check(); throw new AssertionError("Cancelled download returned"); }
                 finally { downloadCancelled.countDown(); }
@@ -63,21 +66,20 @@ public class StoreUiTest {
         @Override protected CatalogRepository createRepository() { return new CatalogRepository(this) {
             @Override public StoreCatalog load(boolean force, Cancellation cancellation) throws IOException {
                 if (fail) throw new IOException("fixture offline");
-                if (legacyCatalog) return CatalogRepository.parse(CatalogRepositoryTest.legacyFeed(), repeat('d', 40), "legacy", 1794013200000L, stale, "");
                 return new StoreCatalog(repeat('d', 40), stale ? "bundled" : "network", "", 1794013200000L, stale, entries());
             }
         }; }
         @Override protected InstalledApps createInstalledApps() { return new InstalledApps(this) {
             @Override public Status inspect(StoreEntry entry) {
-                if (entry.id.equals("launcher/puretv")) { launcherInspections++; return new Status(State.UPDATE_AVAILABLE, 15, "0.5.1", true); }
                 if (entry.id.equals("fixture0") || entry.id.equals("apps/bilibili")) return new Status(installedNow ? State.CURRENT : State.UPDATE_AVAILABLE, installedNow ? entry.versionCode : entry.versionCode - 1, installedNow ? entry.versionName : "0.0.9", true);
                 if (entry.id.equals("fixture1")) return new Status(State.CURRENT, 3, "0.1.0", true);
+                if (!entry.hasPackageIdentity()) return new Status(State.UNKNOWN, 0, "", false);
                 return new Status(State.NOT_INSTALLED, 0, "", false);
             }
             @Override public Intent launchIntent(StoreEntry entry) { return entry.id.equals("fixture0") ? new Intent("fixture.OPEN").setPackage(entry.packageName) : null; }
         }; }
     }
-    @Before public void before() { stale = fail = installedNow = permissionAllowed = settingsOpened = legacyCatalog = false; launcherInspections = 0; downloadEntered = new CountDownLatch(1); downloadCancelled = new CountDownLatch(1); new android.app.Instrumentation().setInTouchMode(false); }
+    @Before public void before() { stale = fail = installedNow = permissionAllowed = settingsOpened = false; downloadedPath = null; downloadEntered = new CountDownLatch(1); downloadCancelled = new CountDownLatch(1); new android.app.Instrumentation().setInTouchMode(false); }
     static Object field(MainActivity a, String name) throws Exception { Field f = MainActivity.class.getDeclaredField(name); f.setAccessible(true); return f.get(a); }
     static View root(MainActivity a) { return a.getWindow().getDecorView(); }
     static View tag(MainActivity a, String name) { View v = root(a).findViewWithTag(name); assertNotNull(name, v); return v; }
@@ -88,14 +90,14 @@ public class StoreUiTest {
     @Test public void remoteSearchUpdatesAndInstallStateRefresh() throws Exception {
         try (ActivityController<TestActivity> c = Robolectric.buildActivity(TestActivity.class).setup().visible().windowFocusChanged(true)) {
             TestActivity a = c.get(); flush(a); layout(root(a), 960, 540);
-            assertNull(root(a).findViewWithTag("tab-launcher")); assertEquals("media", field(a, "category"));
-            assertTrue(text(tag(a, "tab-media")).contains("5")); assertTrue(text(tag(a, "tab-game")).contains("10")); assertTrue(text(tag(a, "tab-tools")).contains("1")); assertTrue(text(tag(a, "tab-updates")).contains("1"));
+            assertNotNull(root(a).findViewWithTag("tab-launcher")); assertEquals("media", field(a, "category"));
+            assertTrue(text(tag(a, "tab-media")).contains("5")); assertTrue(text(tag(a, "tab-game")).contains("10")); assertTrue(text(tag(a, "tab-launcher")).contains("1")); assertTrue(text(tag(a, "tab-updates")).contains("1"));
             tag(a, "tab-updates").performClick(); layout(root(a), 960, 540);
             View card = tag(a, "card-0"); assertTrue(card.requestFocus()); assertSame(card, root(a).findFocus());
             a.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_CENTER)); a.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_CENTER));
             Dialog detail = modal(a); assertNotNull(detail); assertTrue(text(detail.getWindow().getDecorView()).contains("下载更新"));
             detail.getWindow().getDecorView().findViewWithTag("open-app").performClick(); assertEquals("com.example.app0", shadowOf(a).getNextStartedActivity().getPackage());
-            a.onBackPressed(); assertNull(modal(a)); installedNow = true; c.pause().stop().start().resume(); assertTrue(text(root(a)).contains("未发现可用更新"));
+            a.onBackPressed(); assertNull(modal(a)); installedNow = true; c.pause().stop().start().resume(); assertTrue(text(root(a)).contains("没有已核实的可用更新"));
             ((EditText) tag(a, "search-input")).setText("bili"); tag(a, "search-submit").performClick(); assertTrue(text(tag(a, "card-0")).contains("BiliTV"));
             ((EditText) tag(a, "search-input")).setText("missing app"); tag(a, "search-submit").performClick(); assertTrue(text(root(a)).contains("没有找到应用"));
         }
@@ -108,31 +110,47 @@ public class StoreUiTest {
             a.onBackPressed(); assertEquals("media", field(a, "category")); assertSame(tag(a, "tab-media"), root(a).findFocus()); assertTrue(text(tag(a, "card-0")).contains("BiliTV"));
         }
     }
-    @Test public void oldLauncherCategoryAndDetailsRestoreToMediaWithoutLauncherSearchOrUpdates() throws Exception {
-        legacyCatalog = true;
-        Bundle saved = new Bundle(); saved.putString("category", "launcher"); saved.putString("selectedPackage", "com.ecojust.puretv");
-        try (ActivityController<TestActivity> c = Robolectric.buildActivity(TestActivity.class).setup(saved).visible().windowFocusChanged(true)) {
-            TestActivity a = c.get(); flush(a); layout(root(a), 960, 540);
-            assertEquals("media", field(a, "category")); assertNull(root(a).findViewWithTag("tab-launcher")); assertNull(modal(a));
-            assertTrue(text(tag(a, "card-0")).contains("BiliTV")); assertNull(root(a).findViewWithTag("card-1"));
-            assertEquals("应用更新  1\n", text(tag(a, "tab-updates")));
-            tag(a, "tab-updates").performClick(); assertTrue(text(tag(a, "card-0")).contains("BiliTV")); assertNull(root(a).findViewWithTag("card-1"));
-            for (String keyword : new String[]{"pureTV", "com.ecojust.puretv"}) {
-                ((EditText) tag(a, "search-input")).setText(keyword); tag(a, "search-submit").performClick();
-                assertNull(root(a).findViewWithTag("card-0")); assertTrue(text(root(a)).contains("没有找到应用"));
-            }
-            installedNow = true; tag(a, "tab-updates").performClick(); tag(a, "refresh").performClick(); flush(a);
-            assertEquals("应用更新  0\n", text(tag(a, "tab-updates"))); assertTrue(text(root(a)).contains("未发现可用更新"));
-            // The old feed offers launcher code 16 over the fixture's installed code 15.
-            // It must be excluded before inspecting installed versions or opening details.
-            assertEquals(0, launcherInspections);
+    @Test public void launcherTabAndRestoredFileIdOpenTheMarketEntry() throws Exception {
+        Bundle saved = new Bundle();
+        saved.putString("category", "launcher");
+        saved.putString("selectedMarketId", "fixture15");
+        try (ActivityController<TestActivity> c = Robolectric.buildActivity(TestActivity.class).setup(saved).visible()) {
+            TestActivity a = c.get(); flush(a);
+            assertEquals("launcher", field(a, "category"));
+            assertTrue(text(tag(a, "card-0")).contains("PureTV"));
+            assertTrue(text(modal(a).getWindow().getDecorView()).contains("PureTV"));
         }
     }
-    @Test public void addToHomeRemainsAvailableAndOldHomeHelpPointsToDesktopManager() throws Exception {
+    @Test public void groupedVersionsKeepDistinctInstallStateAndCanSearchByProvider() throws Exception {
+        try (ActivityController<TestActivity> c = Robolectric.buildActivity(TestActivity.class).setup().visible()) {
+            TestActivity a = c.get(); flush(a);
+            ((EditText) tag(a, "search-input")).setText("North Star Media"); tag(a, "search-submit").performClick();
+            assertNull(root(a).findViewWithTag("card-1"));
+            assertTrue(text(tag(a, "card-0")).contains("v0.1.0"));
+            tag(a, "card-0").performClick();
+            modal(a).getWindow().getDecorView().findViewWithTag("choose-version").performClick();
+            modal(a).getWindow().getDecorView().findViewWithTag("version-alternative").performClick();
+            View detail = modal(a).getWindow().getDecorView();
+            assertTrue(text(detail).contains("v0.0.8"));
+            assertTrue(text(detail).contains("下载后核对"));
+            assertTrue(text(detail).contains("大小未知"));
+            permissionAllowed = true;
+            detail.findViewWithTag("install").performClick();
+            assertTrue(downloadEntered.await(2, TimeUnit.SECONDS));
+            assertEquals("media/fixture0/app-0.0.8.apk", downloadedPath);
+            modal(a).getWindow().getDecorView().findViewWithTag("cancel-download").performClick();
+            assertTrue(downloadCancelled.await(2, TimeUnit.SECONDS));
+            a.onBackPressed();
+            assertTrue(text(tag(a, "card-0")).contains("v0.0.8"));
+            tag(a, "tab-updates").performClick();
+            assertTrue(text(tag(a, "card-0")).contains("v0.1.0"));
+        }
+    }
+    @Test public void addToHomeRemainsAvailableAndOldHomeHelpPointsToLaunchers() throws Exception {
         try (ActivityController<TestActivity> c = Robolectric.buildActivity(TestActivity.class).setup().visible()) {
             TestActivity a = c.get(); flush(a); LauncherIntegrationTest.home(a, "com.ecojust.puretv");
             tag(a, "card-0").performClick(); String help = text(modal(a).getWindow().getDecorView());
-            assertTrue(help.contains("电脑端 pureTV 管理器")); assertFalse(help.contains("在商城更新当前启动器"));
+            assertTrue(help.contains("「启动器」分类"));
             a.onBackPressed();
             Intent action = new Intent(LauncherIntegration.ACTION).setPackage("com.ecojust.puretv");
             shadowOf(a.getPackageManager()).addResolveInfoForIntent(action, LauncherIntegrationTest.handler("com.ecojust.puretv", "com.ecojust.puretv.AddToHomeActivity"));
@@ -144,7 +162,7 @@ public class StoreUiTest {
     @Test public void offlineCatalogNeverClaimsApplicationsAreCurrentAndCanRecover() throws Exception {
         stale = true;
         try (ActivityController<TestActivity> c = Robolectric.buildActivity(TestActivity.class).setup().visible()) {
-            TestActivity a = c.get(); flush(a); assertTrue(text(tag(a, "sync-status")).contains("离线目录")); installedNow = true; tag(a, "refresh").performClick(); flush(a); tag(a, "tab-updates").performClick(); assertTrue(text(root(a)).contains("缓存中没有可用更新"));
+            TestActivity a = c.get(); flush(a); assertTrue(text(tag(a, "sync-status")).contains("离线目录")); installedNow = true; tag(a, "refresh").performClick(); flush(a); tag(a, "tab-updates").performClick(); assertTrue(text(root(a)).contains("缓存中没有已核实的更新"));
             stale = false; tag(a, "refresh").performClick(); flush(a); assertTrue(text(tag(a, "sync-status")).contains("检查时间"));
         }
     }

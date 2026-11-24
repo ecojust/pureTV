@@ -6,6 +6,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Build;
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -77,7 +79,39 @@ public class InstalledApps {
         }
     }
 
+    public StoreEntry resolve(StoreEntry entry) {
+        if (entry.hasPackageIdentity()) return entry;
+        String key = StoreDownloader.snapshotKey(entry);
+        if (key == null) return entry;
+        String receipt = context.getSharedPreferences("verified-market-packages", 0).getString(entry.apkPath, null);
+        if (receipt == null) return entry;
+        try {
+            JSONObject data = new JSONObject(receipt);
+            if (!key.equals(data.getString("snapshot"))) return entry;
+            return entry.withIdentity(data.getString("package"), data.getString("name"), data.getLong("code"),
+                    data.getInt("minSdk"), data.getString("sha256"), data.getString("signer"), entry.gitBlobSha);
+        } catch (JSONException invalidReceipt) {
+            return entry;
+        }
+    }
+
+    void remember(StoreEntry listed, StoreEntry verified) {
+        if (listed.hasPackageIdentity()) return;
+        String key = StoreDownloader.snapshotKey(listed);
+        if (key == null) return;
+        try {
+            JSONObject data = new JSONObject().put("snapshot", key).put("package", verified.packageName).put("name", verified.versionName)
+                    .put("code", verified.versionCode).put("minSdk", verified.minSdk)
+                    .put("sha256", verified.sha256).put("signer", verified.certificateSha256);
+            context.getSharedPreferences("verified-market-packages", 0).edit().putString(listed.apkPath, data.toString()).apply();
+        } catch (JSONException invalidReceipt) {
+            throw new IllegalStateException(invalidReceipt);
+        }
+    }
+
     public Status inspect(StoreEntry entry) {
+        entry = resolve(entry);
+        if (!entry.hasPackageIdentity()) return new Status(State.UNKNOWN, 0, "", false);
         PackageInfo installed = null;
         try {
             try {
@@ -105,6 +139,8 @@ public class InstalledApps {
     }
 
     public Intent launchIntent(StoreEntry entry) {
+        entry = resolve(entry);
+        if (!entry.hasPackageIdentity()) return null;
         try {
             Intent intent = Build.VERSION.SDK_INT >= 21
                     ? packages.getLeanbackLaunchIntentForPackage(entry.packageName) : null;

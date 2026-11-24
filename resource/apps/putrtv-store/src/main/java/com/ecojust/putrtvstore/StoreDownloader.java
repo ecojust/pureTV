@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -15,7 +14,7 @@ import java.util.regex.Pattern;
 
 /** Downloads one immutable catalog APK into private storage, verifying every byte before use. */
 public class StoreDownloader {
-    public static final long MAX_APK_BYTES = 128L * 1024 * 1024;
+    public static final long MAX_APK_BYTES = 512L * 1024 * 1024;
     private static final long DISK_RESERVE_BYTES = 1024L * 1024;
     private static final long CACHE_RETENTION_MS = 24L * 60 * 60 * 1000;
     private static final Pattern SHA256 = Pattern.compile("[a-f0-9]{64}");
@@ -43,7 +42,7 @@ public class StoreDownloader {
         }
     }
 
-    interface Source { InputStream open(URL url, Cancellation cancellation) throws IOException; }
+    interface Source { InputStream open(StoreEntry entry, Cancellation cancellation) throws IOException; }
     interface Space { long available(File directory); }
 
     private final File privateRoot;
@@ -51,7 +50,7 @@ public class StoreDownloader {
     private final Space space;
 
     public StoreDownloader(Context context) {
-        this(context.getFilesDir(), StoreNetwork::open, File::getUsableSpace);
+        this(context.getFilesDir(), StoreNetwork::openApk, File::getUsableSpace);
     }
 
     // The injected source and storage budget keep verification tests entirely offline.
@@ -66,14 +65,26 @@ public class StoreDownloader {
         if (cancellation == null) throw new IllegalArgumentException("Cancellation is required");
         cancellation.check();
         validate(catalog, entry);
-        URL url = StoreNetwork.raw(catalog.revision, entry.apkPath);
         // A second activity instance can survive configuration changes. Serialize cache publication
         // and cleanup across instances; temporary files still have unique, operation-owned names.
         synchronized (CACHE_LOCK) {
             cancellation.check();
             File directory = directory();
-            File complete = child(directory, entry.sha256 + ".apk");
-            if (complete.exists()) {
+            String key = snapshotKey(entry);
+            File complete = null;
+            if (!entry.sha256.isEmpty()) {
+                complete = child(directory, entry.sha256 + ".apk");
+            } else if (key != null) {
+                // A cache receipt binds the observed digest to this exact server generation.
+                String[] names = directory.list();
+                if (names != null) for (String name : names) {
+                    if (name.matches(key + "-[a-f0-9]{64}\\.apk")) {
+                        complete = child(directory, name);
+                        break;
+                    }
+                }
+            }
+            if (complete != null && complete.exists()) {
                 if (!complete.isFile()) throw new DownloadException(Reason.CACHE_IO);
                 if (verify(complete, entry, cancellation)) {
                     complete.setLastModified(System.currentTimeMillis());
@@ -97,7 +108,7 @@ public class StoreDownloader {
                 MessageDigest blob = blobDigest(entry.bytes);
                 long received = 0;
                 report(progress, 0, entry.bytes);
-                try (InputStream input = source.open(url, cancellation);
+                try (InputStream input = source.open(entry, cancellation);
                      FileOutputStream output = new FileOutputStream(partial)) {
                     byte[] buffer = new byte[64 * 1024];
                     while (true) {
@@ -117,10 +128,13 @@ public class StoreDownloader {
                     }
                     cancellation.check();
                     if (received != entry.bytes) throw new DownloadException(Reason.TRUNCATED);
-                    if (!entry.sha256.equals(hex(sha256.digest()))
-                            || !entry.gitBlobSha.equals(hex(blob.digest()))) {
+                    String actualHash = hex(sha256.digest());
+                    if ((!entry.sha256.isEmpty() && !entry.sha256.equals(actualHash))
+                            || (!entry.gitBlobSha.isEmpty() && !entry.gitBlobSha.equals(hex(blob.digest())))) {
                         throw new DownloadException(Reason.HASH_MISMATCH);
                     }
+                    String prefix = entry.sha256.isEmpty() && key != null ? key + "-" : "";
+                    complete = child(directory, prefix + actualHash + ".apk");
                     output.getFD().sync();
                 }
                 cancellation.check();
@@ -134,13 +148,20 @@ public class StoreDownloader {
     }
 
     private static void validate(StoreCatalog catalog, StoreEntry entry) throws IOException {
-        if (catalog == null || catalog.revision == null || !SHA1.matcher(catalog.revision).matches()
-                || entry == null || entry.bytes <= 0 || entry.bytes > MAX_APK_BYTES
+        if (catalog == null || entry == null || entry.bytes <= 0 || entry.bytes > MAX_APK_BYTES
                 || !StoreNetwork.validApkPath(entry.apkPath) || entry.sha256 == null
-                || !SHA256.matcher(entry.sha256).matches() || entry.gitBlobSha == null
-                || !SHA1.matcher(entry.gitBlobSha).matches()) {
+                || (!entry.sha256.isEmpty() && !SHA256.matcher(entry.sha256).matches())
+                || entry.gitBlobSha == null || (!entry.gitBlobSha.isEmpty() && !SHA1.matcher(entry.gitBlobSha).matches())) {
             throw new DownloadException(Reason.INVALID_ENTRY);
         }
+    }
+
+    static String snapshotKey(StoreEntry entry) {
+        if (entry.sha256.isEmpty() && !StoreNetwork.strongEtag(entry.etag)
+                && !StoreNetwork.validModified(entry.lastModified)) return null;
+        String identity = entry.apkPath + "\n" + entry.bytes + "\n" + entry.sha256
+                + "\n" + entry.etag + "\n" + entry.lastModified;
+        return hex(digest("SHA-256").digest(identity.getBytes(Charset.forName("UTF-8"))));
     }
 
     private File directory() throws IOException {
@@ -176,8 +197,10 @@ public class StoreDownloader {
             }
         }
         cancellation.check();
-        return total == entry.bytes && entry.sha256.equals(hex(sha256.digest()))
-                && entry.gitBlobSha.equals(hex(blob.digest()));
+        String hash = hex(sha256.digest());
+        return total == entry.bytes && file.getName().endsWith(hash + ".apk")
+                && (entry.sha256.isEmpty() || entry.sha256.equals(hash))
+                && (entry.gitBlobSha.isEmpty() || entry.gitBlobSha.equals(hex(blob.digest())));
     }
 
     private static void cleanOldFiles(File directory, File current) throws IOException {
@@ -188,7 +211,7 @@ public class StoreDownloader {
             String name = file.getName();
             if (file.equals(current) || !file.isFile() || file.lastModified() <= 0
                     || file.lastModified() >= cutoff) continue;
-            if (!name.matches("[a-f0-9]{64}\\.apk") && !name.matches("apk-[A-Za-z0-9-]+\\.part")) continue;
+            if (!name.matches("(?:[a-f0-9]{64}-)?[a-f0-9]{64}\\.apk") && !name.matches("apk-[A-Za-z0-9-]+\\.part")) continue;
             // Leave unexpected links and unrelated application files untouched.
             if (file.getCanonicalFile().equals(new File(directory.getCanonicalFile(), name))) file.delete();
         }

@@ -22,7 +22,7 @@ import java.util.UUID;
 public class ApkInstaller {
     public static final int INSTALL_REQUEST = 4701;
     public static final int SETTINGS_REQUEST = 4702;
-    private static final long MAX_BYTES = 128L * 1024 * 1024;
+    private static final long MAX_BYTES = StoreDownloader.MAX_APK_BYTES;
     private static final long RETAIN_MILLIS = 24L * 60 * 60 * 1000;
     private static final String PREFERENCES = "pending-apk-install";
 
@@ -96,7 +96,29 @@ public class ApkInstaller {
 
     /** Run on a worker thread. Copies, hashes and inspects the actual APK before exposing it. */
     public PreparedApk prepare(StoreEntry entry, File source) throws IOException {
-        validateEntry(entry);
+        if (entry == null || source == null || entry.bytes <= 0 || entry.bytes > MAX_BYTES) {
+            throw failure(Error.INVALID_FILE, "Invalid marketplace APK size or file");
+        }
+        if (entry.sha256 == null || entry.certificateSha256 == null || entry.packageName == null
+                || entry.versionName == null || entry.versionCode < 0 || entry.minSdk < 0) {
+            throw failure(Error.INVALID_APK, "Invalid marketplace APK metadata");
+        }
+        StoreEntry listed = entry;
+        if (entry.sha256.isEmpty()) {
+            // The downloader publishes under the observed digest after checking the HTTP snapshot.
+            String name = source.getName();
+            String key = StoreDownloader.snapshotKey(entry);
+            String prefix = key == null ? "" : key + "-";
+            if (!name.matches(prefix + "[a-f0-9]{64}\\.apk")) {
+                throw failure(Error.INVALID_FILE, "Missing verified APK digest");
+            }
+            String hash = name.substring(name.length() - 68, name.length() - 4);
+            entry = entry.withIdentity(entry.packageName, entry.versionName, entry.versionCode,
+                    entry.minSdk, hash, entry.certificateSha256, entry.gitBlobSha);
+        }
+        if (!entry.sha256.matches("[0-9a-f]{64}")) {
+            throw failure(Error.INVALID_APK, "Invalid marketplace checksum");
+        }
         if (entry.minSdk > Build.VERSION.SDK_INT) {
             throw failure(Error.INCOMPATIBLE_ANDROID, "The APK requires a newer Android version");
         }
@@ -108,20 +130,30 @@ public class ApkInstaller {
         copyVerified(source, privateApk, entry);
         PackageInfo archive = archiveInfo(privateApk);
         if (archive == null) throw failure(Error.INVALID_APK, "Android could not read the APK");
-        if (!entry.packageName.equals(archive.packageName)) {
+        if (!entry.packageName.isEmpty() && !entry.packageName.equals(archive.packageName)) {
             throw failure(Error.WRONG_PACKAGE, "The APK package does not match the catalog");
         }
-        if (InstalledApps.version(archive) != entry.versionCode
-                || !entry.versionName.equals(archive.versionName)) {
+        long actualCode = InstalledApps.version(archive);
+        String actualName = archive.versionName == null ? "" : archive.versionName;
+        if ((entry.versionCode > 0 && actualCode != entry.versionCode)
+                || (!entry.versionName.isEmpty() && !entry.versionName.equals(actualName))) {
             throw failure(Error.WRONG_VERSION, "The APK version does not match the catalog");
         }
-        if (!entry.certificateSha256.equalsIgnoreCase(InstalledApps.signer(archive))) {
+        String actualSigner = InstalledApps.signer(archive);
+        if (actualSigner.isEmpty() || (!entry.certificateSha256.isEmpty()
+                && !entry.certificateSha256.equalsIgnoreCase(actualSigner))) {
             throw failure(Error.WRONG_SIGNER, "The APK signing certificate does not match the catalog");
         }
         if (Build.VERSION.SDK_INT >= 24 && archive.applicationInfo != null
                 && archive.applicationInfo.minSdkVersion > Build.VERSION.SDK_INT) {
             throw failure(Error.INCOMPATIBLE_ANDROID, "The APK requires a newer Android version");
         }
+        int minSdk = Build.VERSION.SDK_INT >= 24 && archive.applicationInfo != null
+                ? Math.max(1, archive.applicationInfo.minSdkVersion) : Math.max(1, entry.minSdk);
+        entry = entry.withIdentity(archive.packageName, actualName, actualCode, minSdk,
+                entry.sha256, actualSigner, entry.gitBlobSha);
+        validateEntry(entry);
+        installed.remember(listed, entry);
         baseline(entry);
         File ready = privateApk;
         if (Build.VERSION.SDK_INT < 24) {
@@ -280,7 +312,6 @@ public class ApkInstaller {
                 output.getFD().sync();
             }
             verifyFile(part, entry);
-            if (target.exists() && !target.delete()) throw failure(Error.STORAGE_UNAVAILABLE, "Cannot replace a staged APK");
             if (!part.renameTo(target)) throw failure(Error.STORAGE_UNAVAILABLE, "Cannot publish the staged APK");
             verifyFile(target, entry);
         } finally {

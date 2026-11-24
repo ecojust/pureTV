@@ -1,8 +1,8 @@
 # putrtv商城 构建与签名
 
-独立原生 Android TV 模块 `:putrtv-store`，包名 `com.ecojust.putrtvstore`，当前源码为 0.1.2（versionCode 3）。构建根目录为 `resource/launcher/puretv`，使用已有 Gradle Wrapper、JDK17、Android SDK35与Build Tools34.0.0。
+独立 Android TV 模块 `:putrtv-store` 的包名是 `com.ecojust.putrtvstore`，当前源码版本为 0.1.3（versionCode 4）。构建根目录为 `resource/launcher/puretv`，使用已有 Gradle Wrapper、JDK 17、Android SDK 35 与 Build Tools 34.0.0。
 
-商城从 `resource/tv-store-catalog-v2.json` 加载应用以及迁移至 `joystick-games/` 的游戏。已发布的 0.1.1 客户端从 `resource/tv-store-catalog.json` 获取兼容应用及商城升级。两个目录均由 `tools/update-tv-store-catalog.py` 在同一提交生成。
+0.1.3 与桌面 APK 市场共同使用 `apps.b14f.com` 的影音、游戏和启动器目录。内置离线快照来自相同目录，维护命令见[目录来源](CATALOG.md)。0.1.2 及更早版本通过 GitHub 兼容目录获取商城升级。
 
 ```bash
 cd resource/launcher/puretv

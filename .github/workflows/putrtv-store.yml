@@ -10,6 +10,8 @@ on:
       - 'joystick-games/*/*.apk'
       - 'tools/update-tv-store-catalog.py'
       - 'tools/test_tv_store_catalog.py'
+      - 'tools/freeze-tv-market.py'
+      - 'tools/test_freeze_tv_market.py'
       - 'tools/resource_catalog.py'
       - 'tools/puretv-release-certificate-v2.sha256'
       - 'resource/launcher/puretv/settings.gradle'
@@ -25,6 +27,8 @@ on:
       - 'joystick-games/*/*.apk'
       - 'tools/update-tv-store-catalog.py'
       - 'tools/test_tv_store_catalog.py'
+      - 'tools/freeze-tv-market.py'
+      - 'tools/test_freeze_tv_market.py'
       - 'tools/resource_catalog.py'
       - 'tools/puretv-release-certificate-v2.sha256'
       - 'resource/launcher/puretv/settings.gradle'
@@ -47,8 +51,10 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - name: Verify catalog parser and feed policy
-        run: python3 -m unittest discover -s tools -p test_tv_store_catalog.py
+      - name: Verify market snapshot and legacy upgrade feeds
+        run: |
+          python3 -m unittest discover -s tools -p test_freeze_tv_market.py
+          python3 -m unittest discover -s tools -p test_tv_store_catalog.py
       - uses: actions/setup-java@v4
         with:
           distribution: temurin

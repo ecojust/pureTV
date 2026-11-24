@@ -22,18 +22,17 @@ import org.junit.rules.TemporaryFolder;
 
 public class StoreDownloaderTest {
     private static final String REVISION = "1234567890abcdef1234567890abcdef12345678";
-    private static final String PATH = "resource/apps/example/example-1.0.0.apk";
+    private static final String PATH = "media/example/example-1.0.0.apk";
     private static final byte[] APK = "verified APK fixture".getBytes(StandardCharsets.US_ASCII);
     @Rule public TemporaryFolder temporary = new TemporaryFolder();
 
-    @Test public void verifiesBothHashesAndOnlyRequestsPinnedCommit() throws Exception {
+    @Test public void verifiesPublishedHashesAndOnlyRequestsMarketApk() throws Exception {
         File root = temporary.newFolder();
         AtomicInteger calls = new AtomicInteger();
         List<Long> progress = new ArrayList<>();
         StoreDownloader downloader = new StoreDownloader(root, (url, cancellation) -> {
             calls.incrementAndGet();
-            assertEquals("https://raw.githubusercontent.com/ecojust/pureTV/" + REVISION + "/" + PATH,
-                    url.toExternalForm());
+            assertEquals("https://apps.b14f.com/" + PATH, StoreNetwork.market(url.apkPath).toExternalForm());
             return new ByteArrayInputStream(APK);
         }, directory -> Long.MAX_VALUE);
         StoreEntry entry = entry(APK, PATH);
@@ -107,10 +106,6 @@ public class StoreDownloaderTest {
             fail("Invalid metadata must not contact a server");
             return null;
         }, directory -> Long.MAX_VALUE);
-        for (String revision : new String[] {"master", "../../master", REVISION + "?x=1", ""}) {
-            expect(StoreDownloader.Reason.INVALID_ENTRY, () -> downloader.download(
-                    catalog(revision), entry(APK, PATH), new Cancellation(), null));
-        }
         for (String path : new String[] {"resource/apps/../example.apk", "/" + PATH,
                 "https://evil.example/a.apk", PATH + "?foo=bar", PATH + "#fragment",
                 "resource/apps/example/%2e%2e.apk", "resource/apps/example/a..apk"}) {
@@ -226,6 +221,32 @@ public class StoreDownloaderTest {
         assertFalse(oldPartial.exists());
         assertTrue(unrelated.exists());
         assertTrue(recent.exists());
+    }
+
+    @Test public void unknownHashCacheVerifiesDigestAndHonorsChangedMetadata() throws Exception {
+        File root = temporary.newFolder();
+        AtomicInteger calls = new AtomicInteger();
+        StoreDownloader downloader = new StoreDownloader(root, (entry, cancel) -> {
+            calls.incrementAndGet();
+            return new ByteArrayInputStream(APK);
+        }, directory -> Long.MAX_VALUE);
+        StoreEntry listed = discovered("\"first\"");
+        File apk = downloader.download(catalog("market"), listed, new Cancellation(), null);
+        assertTrue(apk.getName().endsWith(sha("SHA-256", APK) + ".apk"));
+        assertEquals(apk, downloader.download(catalog("market"), listed, new Cancellation(), null));
+        assertEquals(1, calls.get());
+        write(apk, new byte[APK.length]);
+        assertArrayEquals(APK, read(downloader.download(catalog("market"), listed, new Cancellation(), null)));
+        assertEquals(2, calls.get());
+        downloader.download(catalog("market"), discovered("\"next\""), new Cancellation(), null);
+        assertEquals(3, calls.get());
+        for (int i = 0; i < 2; i++) downloader.download(catalog("market"), discovered(""), new Cancellation(), null);
+        assertEquals(5, calls.get());
+    }
+
+    private static StoreEntry discovered(String etag) {
+        return new StoreEntry(PATH, "Example", "", "", "", "media", "", "", PATH, "", "",
+                "", "", "", 0, APK.length, 0, etag, "", "", "");
     }
 
     private StoreDownloader source(File root, byte[] data) {

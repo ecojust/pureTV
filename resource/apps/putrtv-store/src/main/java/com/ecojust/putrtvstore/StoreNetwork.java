@@ -7,7 +7,10 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,94 +20,159 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-/** Public repository transport. Every redirect is checked before opening a connection. */
+/** HTTPS market transport. Validate the host and path before every request and redirect. */
 public final class StoreNetwork {
-    public static final String REF_URL = "https://api.github.com/repos/ecojust/pureTV/git/ref/heads/master";
-    private static final String RAW_PREFIX = "/ecojust/pureTV/";
-    private static final Pattern REVISION = Pattern.compile("[a-f0-9]{40}");
-    private static final Pattern RESOURCE = Pattern.compile("resource/(?:[A-Za-z0-9._-]+/)*[A-Za-z0-9._-]+|joystick-games/[a-z0-9][a-z0-9-]*/[A-Za-z0-9][A-Za-z0-9._-]*\\.(?:apk|png)");
-    private static final Pattern APK_PATH = Pattern.compile(
-            "(?:resource/(?:apps|launcher)|joystick-games)/[a-z0-9][a-z0-9-]*/[A-Za-z0-9][A-Za-z0-9._-]*\\.apk");
+    static final String SOURCE = "https://apps.b14f.com";
+    private static final Pattern MODIFIED = Pattern.compile("(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun), (?:0[1-9]|[12][0-9]|3[01]) (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} (?:[01][0-9]|2[0-3]):[0-5][0-9]:(?:[0-5][0-9]|60) GMT");
     private static final long TRANSFER_TIMEOUT_MS = 15L * 60 * 1000;
+    private static SSLSocketFactory marketTls;
     private StoreNetwork() { }
 
-    public static URL raw(String revision, String path) throws IOException {
-        if (!validRevision(revision) || !validPath(path)) throw new IOException("Invalid repository asset path");
-        return new URL("https://raw.githubusercontent.com" + RAW_PREFIX + revision + "/" + path);
+    // A stable TLS factory allows HttpsURLConnection to reuse connections across refresh requests.
+    static synchronized SSLSocketFactory tlsFactory() throws IOException {
+        if (marketTls == null) {
+            try {
+                SSLContext context = SSLContext.getInstance("TLS");
+                context.init(null, null, null);
+                marketTls = new EnabledTlsFactory(context.getSocketFactory());
+            } catch (java.security.GeneralSecurityException unavailable) {
+                throw new IOException("TLS is unavailable on this device", unavailable);
+            }
+        }
+        return marketTls;
     }
 
-    static boolean validRevision(String revision) { return revision != null && REVISION.matcher(revision).matches(); }
-    static boolean validApkPath(String path) {
-        return path != null && path.length() <= 512 && !path.contains("..") && APK_PATH.matcher(path).matches();
+    public static URL market(String path) throws IOException {
+        if (!validPath(path)) throw new IOException("Invalid market path");
+        try {
+            return new URL(new URI("https", "apps.b14f.com", "/" + path, null).toASCIIString());
+        } catch (URISyntaxException e) { throw new IOException("Invalid market path", e); }
     }
 
     static boolean validPath(String path) {
-        if (path == null || path.length() > 512 || !RESOURCE.matcher(path).matches()) return false;
-        for (String segment : path.split("/")) if (segment.equals(".") || segment.equals("..")) return false;
+        if (path == null || path.length() > 2048 || path.indexOf('\\') >= 0) return false;
+        String[] segments = path.split("/", -1);
+        if (segments.length < 2 || !Arrays.asList("game", "launcher", "media").contains(segments[0])) return false;
+        for (int i = 1; i < segments.length; i++) {
+            String part = segments[i];
+            if (part.length() > 255 || part.equals(".") || part.equals("..") || (part.isEmpty() && i != segments.length - 1)) return false;
+            for (int j = 0; j < part.length(); j++) if (Character.isISOControl(part.charAt(j))) return false;
+        }
         return true;
     }
 
-    static void validate(URL url) throws IOException {
-        if (!url.getProtocol().equals("https") || url.getUserInfo() != null || url.getRef() != null
-                || url.getQuery() != null || (url.getPort() != -1 && url.getPort() != 443))
-            throw new IOException("Untrusted repository URL");
-        if (url.getHost().equals("api.github.com")
-                && url.getPath().equals("/repos/ecojust/pureTV/git/ref/heads/master")) return;
-        if (url.getHost().equals("raw.githubusercontent.com") && url.getPath().startsWith(RAW_PREFIX)) {
-            String tail = url.getPath().substring(RAW_PREFIX.length());
-            int slash = tail.indexOf('/');
-            if (slash == 40 && validRevision(tail.substring(0, slash)) && validPath(tail.substring(slash + 1))) return;
-        }
-        throw new IOException("Untrusted repository URL");
+    static boolean validApkPath(String path) {
+        return validPath(path) && path.toLowerCase(Locale.ROOT).endsWith(".apk") && path.split("/").length <= 3;
     }
 
-    public static InputStream open(URL url, Cancellation cancellation) throws IOException {
-        final long deadline = android.os.SystemClock.elapsedRealtime() + TRANSFER_TIMEOUT_MS;
+    static void validate(URL url) throws IOException {
+        if (!"https".equals(url.getProtocol()) || !"apps.b14f.com".equalsIgnoreCase(url.getHost()) ||
+                (url.getPort() != -1 && url.getPort() != 443) || url.getUserInfo() != null || url.getRef() != null || url.getQuery() != null)
+            throw new IOException("Untrusted market URL");
+        try {
+            URI uri = url.toURI();
+            String raw = uri.getRawPath().toLowerCase(Locale.ROOT);
+            if (raw.contains("%2f") || raw.contains("%5c") || !raw.startsWith("/") || !validPath(uri.getPath().substring(1)))
+                throw new IOException("Invalid market URL path");
+        } catch (URISyntaxException e) { throw new IOException("Invalid market URL", e); }
+    }
+
+    static boolean strongEtag(String value) {
+        if (value == null || value.length() < 2 || value.length() > 512 || value.charAt(0) != '"' || value.charAt(value.length() - 1) != '"') return false;
+        for (int i = 1; i < value.length() - 1; i++) {
+            char c = value.charAt(i);
+            if (c < 33 || c == 127 || c == '"') return false;
+        }
+        return true;
+    }
+
+    static boolean validModified(String value) { return value != null && MODIFIED.matcher(value).matches(); }
+
+    static MarketDirectory.Metadata head(URL url, Cancellation cancellation) throws IOException {
+        HttpsURLConnection connection = connect(url, "HEAD", null, cancellation);
+        try { return metadata(connection); } finally { connection.disconnect(); }
+    }
+
+    private static MarketDirectory.Metadata metadata(HttpsURLConnection connection) throws IOException {
+        String length = connection.getHeaderField("Content-Length");
+        long bytes;
+        try { bytes = Long.parseLong(length); } catch (NumberFormatException e) { throw new IOException("Missing market file size", e); }
+        String etag = connection.getHeaderField("ETag"), date = connection.getHeaderField("Last-Modified");
+        if (bytes <= 0 || bytes > StoreDownloader.MAX_APK_BYTES || (!strongEtag(etag) && !validModified(date)))
+            throw new IOException("Missing or invalid market file metadata");
+        return new MarketDirectory.Metadata(bytes, strongEtag(etag) ? etag : "", validModified(date) ? date : "");
+    }
+
+    static void verifyResponse(StoreEntry entry, String length, String etag, String modified) throws IOException {
+        if (length != null) {
+            try {
+                if (Long.parseLong(length) != entry.bytes) throw new IOException("Market APK size changed");
+            } catch (NumberFormatException e) { throw new IOException("Invalid market APK size", e); }
+        }
+        boolean matches = strongEtag(entry.etag) ? entry.etag.equals(etag)
+                : validModified(entry.lastModified) && entry.lastModified.equals(modified);
+        if (!matches) throw new IOException("Market APK changed. Refresh the catalog.");
+    }
+
+    private static HttpsURLConnection connect(URL url, String method, StoreEntry entry, Cancellation cancellation) throws IOException {
         for (int redirects = 0; redirects <= 3; redirects++) {
             cancellation.check(); validate(url);
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            connection.setConnectTimeout(10000); connection.setReadTimeout(10000);
-            connection.setInstanceFollowRedirects(false); connection.setUseCaches(false);
-            connection.setRequestProperty("User-Agent", "putrtv-store/0.1");
-            connection.setRequestProperty("Accept-Encoding", "identity");
-            connection.setRequestProperty("Accept", "application/json, application/octet-stream, image/png");
-            // Android 4.4 supports TLS 1.2 but does not enable it for all default HTTPS sockets.
-            // Keep the platform trust store and hostname verifier; never accept invalid certificates.
             try {
-                SSLContext tls = SSLContext.getInstance("TLS");
-                tls.init(null, null, null);
-                connection.setSSLSocketFactory(new EnabledTlsFactory(tls.getSocketFactory()));
-                int status = connection.getResponseCode();
-                cancellation.check();
+                connection.setRequestMethod(method);
+                connection.setConnectTimeout(10000); connection.setReadTimeout(10000);
+                connection.setInstanceFollowRedirects(false); connection.setUseCaches(false);
+                connection.setRequestProperty("User-Agent", "putrtv-store");
+                connection.setRequestProperty("Accept-Encoding", "identity");
+                if (entry != null) {
+                    if (strongEtag(entry.etag)) connection.setRequestProperty("If-Match", entry.etag);
+                    else if (validModified(entry.lastModified)) connection.setRequestProperty("If-Unmodified-Since", entry.lastModified);
+                    else throw new IOException("Missing APK validator");
+                }
+                connection.setSSLSocketFactory(tlsFactory());
+                int status = connection.getResponseCode(); cancellation.check();
                 if (status == 301 || status == 302 || status == 303 || status == 307 || status == 308) {
                     String location = connection.getHeaderField("Location");
-                    if (location == null || redirects == 3) throw new IOException("Too many repository redirects");
-                    URL next = new URL(url, location); validate(next);
-                    connection.disconnect(); url = next; continue;
+                    if (location == null || redirects == 3) throw new IOException("Too many market redirects");
+                    url = new URL(url, location); connection.disconnect(); continue;
                 }
-                if (status != HttpURLConnection.HTTP_OK) throw new IOException("Repository HTTP " + status);
+                if (status != HttpURLConnection.HTTP_OK) throw new IOException("Market HTTP " + status);
                 String encoding = connection.getContentEncoding();
-                if (encoding != null && !encoding.equalsIgnoreCase("identity"))
-                    throw new IOException("Unexpected response encoding");
-                final HttpsURLConnection active = connection;
-                return new FilterInputStream(connection.getInputStream()) {
-                    private void check() throws IOException {
-                        cancellation.check();
-                        if (android.os.SystemClock.elapsedRealtime() > deadline) throw new IOException("Repository transfer timed out");
-                    }
-                    @Override public int read() throws IOException { check(); return super.read(); }
-                    @Override public int read(byte[] bytes, int offset, int count) throws IOException {
-                        check(); return in.read(bytes, offset, count);
-                    }
-                    @Override public void close() throws IOException { try { super.close(); } finally { active.disconnect(); } }
-                };
+                if (encoding != null && !encoding.equalsIgnoreCase("identity")) throw new IOException("Unexpected market response encoding");
+                if (entry != null) verifyResponse(entry, connection.getHeaderField("Content-Length"),
+                        connection.getHeaderField("ETag"), connection.getHeaderField("Last-Modified"));
+                return connection;
             } catch (Exception failure) {
                 connection.disconnect();
                 if (failure instanceof IOException) throw (IOException) failure;
-                throw new IOException("HTTPS is unavailable on this device", failure);
+                throw new IOException("Cannot connect to APK market", failure);
             }
         }
-        throw new IOException("Too many repository redirects");
+        throw new IOException("Too many market redirects");
+    }
+
+    static InputStream openApk(StoreEntry entry, Cancellation cancellation) throws IOException {
+        if (!validApkPath(entry.apkPath)) throw new IOException("Invalid market APK");
+        return stream(connect(market(entry.apkPath), "GET", entry, cancellation), cancellation);
+    }
+
+    public static InputStream open(URL url, Cancellation cancellation) throws IOException {
+        return stream(connect(url, "GET", null, cancellation), cancellation);
+    }
+
+    private static InputStream stream(final HttpsURLConnection active, final Cancellation cancellation) throws IOException {
+        final long deadline = android.os.SystemClock.elapsedRealtime() + TRANSFER_TIMEOUT_MS;
+        try {
+            return new FilterInputStream(active.getInputStream()) {
+                private void check() throws IOException {
+                    cancellation.check();
+                    if (android.os.SystemClock.elapsedRealtime() > deadline) throw new IOException("Market transfer timed out");
+                }
+                @Override public int read() throws IOException { check(); return super.read(); }
+                @Override public int read(byte[] bytes, int offset, int count) throws IOException { check(); return in.read(bytes, offset, count); }
+                @Override public void close() throws IOException { try { super.close(); } finally { active.disconnect(); } }
+            };
+        } catch (IOException e) { active.disconnect(); throw e; }
     }
 
     /** Android 4.4 aliases TLS context names and still creates SSLv3/TLSv1-only
