@@ -1,7 +1,7 @@
 # 数字汇聚 / Merge Tiles
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](merge-tiles-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/merge-tiles/merge-tiles-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 向四个方向滑动整盘数字，把相邻的相同数字合成更大的块，在有效步数用完前形成目标数字。每个数字每次滑动只能合并一次：`2 2 2 2` 向左得到 `4 4`，不会直接变成 `8`。

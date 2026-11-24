@@ -1,7 +1,7 @@
 # 脉冲储库 · Pulse Vault
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](pulse-vault-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/pulse-vault/pulse-vault-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 按住接收周期能量，选择放电档位，依次开启四道门锁，最后留下足够的储备。储库最多容纳 72 EU；溢出的能量会漏失并升温，热量达到 100 HU 则失败。

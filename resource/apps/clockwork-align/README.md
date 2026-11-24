@@ -1,7 +1,7 @@
 # 齿轮同刻
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](clockwork-align-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/clockwork-align/clockwork-align-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 在钟表工坊中操纵独立离合器，让不同齿数的齿轮指针同时停进目标带，并在预约时间窗内共同保持。相邻啮合轮转向相反，齿数越多转得越慢；制动和重新接合都保留当前角度。

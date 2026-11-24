@@ -26,9 +26,18 @@ def release_scope(tag, scope):
         match = re.fullmatch(r'android-used-car-v(\d+\.\d+\.\d+)', tag)
         assert match, 'Used Car Racing requires its own android-used-car-v tag'
         return match[1], {'com.ecojust.usedcartv'}
-    assert scope in ('all', 'games'), 'Unknown Android package scope'
+    assert scope in ('all', 'games', 'non-games'), 'Unknown Android package scope'
     match = re.fullmatch(r'android-v(\d+\.\d+\.\d+)', tag)
     assert match, 'Expected an Android collection version tag'
+    if scope == 'non-games':
+        root = Path(__file__).resolve().parents[1]
+        order = json.loads((root / 'tools/resource-order.json').read_text())
+        resources = [path for group in ('launcher', 'media', 'tools') for path in order[group]]
+        assert set(resources).isdisjoint(order['game']), 'Game APKs belong under joystick-games'
+        packages = {json.loads((root / 'resource' / path / 'resource.json').read_text())['packageName']
+                    for path in resources}
+        assert packages and len(packages) == len(resources), 'Invalid non-game package selection'
+        return match[1], packages
     # Retired applications remain in certificate history, not in new collections.
     active_packages = (set(RELEASE_CERTIFICATE_CUTOVERS) - {'com.ecojust.music'}) | NEW_RELEASE_CERTIFICATE_PACKAGES
     return match[1], GAME_PACKAGES if scope == 'games' else active_packages
@@ -46,9 +55,11 @@ def main():
     parser.add_argument('--source-sha', required=True)
     parser.add_argument('--tag', required=True)
     parser.add_argument('--build-tools', required=True, type=Path)
-    parser.add_argument('--scope', choices=('all', 'games', 'used-car-racing', 'alien-shooter'), default='all')
+    parser.add_argument('--scope', choices=('non-games', 'all', 'games', 'used-car-racing', 'alien-shooter'), default='non-games')
     parser.add_argument('--validate-only', action='store_true')
     args = parser.parse_args()
+    if not args.validate_only and args.scope != 'non-games':
+        parser.error('Publish game APKs in joystick-games/<id>/, or use --validate-only for historical Releases')
     assert re.fullmatch(r'[0-9a-f]{40}', args.source_sha), 'Exact source SHA required'
     version, selected = release_scope(args.tag, args.scope)
     root = Path(__file__).resolve().parents[1]

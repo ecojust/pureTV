@@ -1,7 +1,7 @@
 # 灯塔节拍 / Lantern Rhythm
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](lantern-rhythm-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/lantern-rhythm/lantern-rhythm-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 观察灯号的方向、长短和顺序，再按节拍传回信号，依次点亮沿岸三座灯塔。示范只展示当前灯号；复现阶段给出拍点和计时，不显示待答的方向或长短。

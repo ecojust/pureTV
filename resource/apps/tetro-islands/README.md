@@ -1,7 +1,7 @@
 # 四格岛群 / Tetro Islands
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](tetro-islands-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/tetro-islands/tetro-islands-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 LITS 区域逻辑谜题。每个公开编号区域恰选四个黑格，须构成 I、L、T、S 四连块之一，旋转与镜像同型（L/J 同类、S/Z 同类），O 方块禁止。全部黑格正交相连，不得出现 2×2 全黑；不同区域的黑块若正交接触，其类型必须不同。斜角接触不连接，也不触发异型限制。

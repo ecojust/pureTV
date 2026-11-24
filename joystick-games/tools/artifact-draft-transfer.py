@@ -261,6 +261,8 @@ def execute(client, request, output):
         report['request'] = request.copy()
         base = f'/repos/{REPO}'
         run = client.get(f"{base}/actions/runs/{request['run']}/attempts/{request['attempt']}")
+        require(run.get('path') in (MACOS_WORKFLOW, '.github/workflows/joystick-catalog-windows.yml'),
+                'only_desktop_packages_use_release_drafts')
         artifact = client.get(f"{base}/actions/artifacts/{request['artifact']}")
         jobs = client.pages(f"{base}/actions/runs/{request['run']}/attempts/{request['attempt']}/jobs", 'jobs')
         registry_source = source_registry(client, request['source']) if run.get('path') == MACOS_WORKFLOW else None

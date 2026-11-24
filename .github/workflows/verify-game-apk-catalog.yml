@@ -1,0 +1,47 @@
+name: Verify game APK catalog
+on:
+  pull_request:
+    paths:
+      - 'README*.md'
+      - '.gitattributes'
+      - 'joystick-games/.gitattributes'
+      - 'joystick-games/README.md'
+      - 'joystick-games/*/*.apk'
+      - 'joystick-games/*/packages.json'
+      - 'joystick-games/*/android-release.json'
+      - 'docs/releases/*/clients.json'
+      - 'resource/apps/*/resource.json'
+      - 'tools/resource-order.json'
+      - 'tools/readme-app-games.json'
+      - 'tools/pc-games/catalog.json'
+      - 'joystick-games/tools/verify-apk-catalog.py'
+      - '.github/workflows/verify-game-apk-catalog.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.gitattributes
+            /README*.md
+            /joystick-games/.gitattributes
+            /joystick-games/README.md
+            /joystick-games/*/*.apk
+            /joystick-games/*/packages.json
+            /joystick-games/*/android-release.json
+            /docs/releases/*/clients.json
+            /resource/apps/*/resource.json
+            /tools/resource-order.json
+            /tools/readme-app-games.json
+            /tools/pc-games/catalog.json
+            /joystick-games/tools/verify-apk-catalog.py
+      - name: Verify catalog links, APK sizes and checksums
+        run: python3 joystick-games/tools/verify-apk-catalog.py

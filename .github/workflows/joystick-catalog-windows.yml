@@ -52,6 +52,8 @@ jobs:
           git config --global core.autocrlf false
           git config --global core.eol lf
       - uses: actions/checkout@v4
+        with:
+          lfs: ${{ matrix.game == 'backroad-rally' }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -145,6 +147,8 @@ jobs:
       actions: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: ${{ contains(fromJSON(needs.plan.outputs.games), 'backroad-rally') }}
       - uses: actions/download-artifact@v4
         with:
           pattern: joystick-windows-*

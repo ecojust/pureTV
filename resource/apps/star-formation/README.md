@@ -1,7 +1,7 @@
 # 星阵防线 / Star Formation
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](star-formation-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/star-formation/star-formation-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 原创编队入侵射击。战机只能横向移动；敌阵按节拍整体左右步进，触边转向并下降，敌人减少后步进加快。公开规则从仍存活列的最底部敌人轮流发射敌弹。三档为6/9/12架敌人，每架一击清除。

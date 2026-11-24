@@ -1,7 +1,7 @@
 # 比较器工坊 · Sorting Wires
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](sorting-wires-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/sorting-wires/sorting-wires-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 设计能处理全部二进制输入的排序网络。水平线从左向右传递数值；每个竖直比较器将两条线中的较小值送到上端、较大值送到下端。同一层的比较器同时工作，每条线在该层最多连接一个端点。最终输出从上到下应先0后1。

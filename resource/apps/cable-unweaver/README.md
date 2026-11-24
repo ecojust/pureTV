@@ -1,7 +1,7 @@
 # 解线工
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](cable-unweaver-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/cable-unweaver/cable-unweaver-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 沿轨道移动接线端子，让工作台上的直线电缆消除所有非法交叉。带金属夹的端子保持相对位置，移动其中一个会带动整组；某个成员先到轨道尽头，整组就会停止。

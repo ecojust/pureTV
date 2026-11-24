@@ -1,7 +1,7 @@
 # Cozy Island TV
 
 <!-- apk-resource:start -->
-[Android 0.5.5 APK](cozy-island-0.5.5.apk?raw=1) · [Launcher artwork and installation checks](docs/releases/0.5.5/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.5.3 gameplay video](docs/releases/0.5.3/gameplay.mp4?raw=1)
+[Android 0.5.5 APK](../../../joystick-games/cozy-island/cozy-island-0.5.5.apk?raw=1) · [Launcher artwork and installation checks](docs/releases/0.5.5/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.5.3 gameplay video](docs/releases/0.5.3/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 [中文](README.md) · [English](README.en.md)

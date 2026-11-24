@@ -1,6 +1,6 @@
 # 霓虹秘仪 · NEON ARCANA
 
-[Android TV 0.1.3 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-arcana-0.1.3.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-arcana-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-arcana-windows-x64-setup.exe)
+[Android TV 0.1.3 · APK](neon-arcana-0.1.3.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-arcana-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-arcana-windows-x64-setup.exe)
 
 [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
@@ -30,7 +30,7 @@
 
 | 平台 | 安装文件 |
 | --- | --- |
-| Android TV | [APK](https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/neon-arcana-0.1.1.apk) |
+| Android TV | [APK](neon-arcana-0.1.1.apk?raw=1) |
 | macOS | [DMG](https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/NeonArcana-0.1.1-macos-universal.dmg) · [ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/NeonArcana-0.1.1-macos-universal.zip) |
 | Windows x64 | [安装版 EXE](https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/NeonArcana-0.1.1-windows-x64-setup.exe) · [便携 ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-neon-arcana-v0.1.1/NeonArcana-0.1.1-windows-x64.zip) |
 

@@ -1,7 +1,7 @@
 # 海岸卡丁车 TV
 
 <!-- apk-resource:start -->
-[Android 0.5.7 APK](coast-kart-0.5.7.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/coast-kart-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/coast-kart-macos.dmg) · [图标与安装验证](docs/releases/0.5.7/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.5.6 实玩录像](docs/releases/0.5.6/gameplay.mp4?raw=1)
+[Android 0.5.7 APK](../../../joystick-games/coast-kart/coast-kart-0.5.7.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/coast-kart-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/coast-kart-macos.dmg) · [图标与安装验证](docs/releases/0.5.7/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.5.6 实玩录像](docs/releases/0.5.6/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 ## 历史 Android 版本 0.5.6 · 手柄与手机连接

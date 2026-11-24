@@ -1,7 +1,7 @@
 # 双线节律 · Beat Braid
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](beat-braid-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/beat-braid/beat-braid-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 一条线持续按住，另一条线点拍三次，再按段序交换职责，把双色线织成完整编带。左右两键独立工作，保持一侧时可以反复点按另一侧。

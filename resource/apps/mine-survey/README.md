@@ -1,7 +1,7 @@
 # 雷纹勘探 / Mine Survey
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](mine-survey-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/mine-survey/mine-survey-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 三道固定的 6×6 扫雷推理题，分别有 5、6、7 枚雷。开始时已有一片安全区域打开，数字表示周围八个格子中的雷数。每关都可以仅凭公开数字和总雷数完成，不需要猜测。

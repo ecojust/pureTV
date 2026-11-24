@@ -1,7 +1,7 @@
 # 传粉契约
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](pollinator-contract-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/pollinator-contract/pollinator-contract-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 两支蜂群在花园里完成授粉契约。按花期和前置关系调配蜂群，照看它们的耐力，让全部花田完成授粉，并让两群实际回到蜂巢。

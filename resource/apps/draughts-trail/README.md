@@ -1,7 +1,7 @@
 # 跳吃棋径 / Draughts Trail
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](draughts-trail-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/draughts-trail/draughts-trail-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 在 6×6 棋盘上执浅色棋子，与公开规则的深色对手对弈。吃光对手或让对手无合法行动即可获胜；己方被吃光或无路可走则失败。

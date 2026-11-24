@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Import signed gameplay-icon APKs from the release and its Android CI receipts."""
+"""Import verified gameplay-icon APKs and receipts from the Android CI artifacts."""
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 import hashlib
@@ -14,12 +14,12 @@ import zipfile
 
 from PIL import Image
 
-from android_game_icons import RELEASE, compare_contents, drawable_paths, manifest_tree
+from android_game_icons import compare_contents, drawable_paths, manifest_tree
 from game_icons import save_banner, save_png, source_bytes, source_image
 from resource_catalog import apk_info, digest, expected_release_certificate
 
 ROOT = Path(__file__).resolve().parents[1]
-DOWNLOAD = 'https://github.com/ecojust/pureTV/releases/download/' + RELEASE + '/'
+RAW = 'https://raw.githubusercontent.com/ecojust/pureTV/master/'
 
 
 def read(path):
@@ -53,6 +53,15 @@ def baseline(metadata, original):
     return matches[0]
 
 
+def game_apk(row):
+    return Path('joystick-games') / row['id'] / row['filename']
+
+
+def input_apk(assets, row):
+    packaged = assets / game_apk(row)
+    return packaged if packaged.is_file() else assets / row['filename']
+
+
 def verify(inputs, tools, assets, evidence):
     row, commit, build_run, shard = evidence
     before, after = row['original'], row['updated']
@@ -68,7 +77,7 @@ def verify(inputs, tools, assets, evidence):
     stem, patch = before['versionName'].rsplit('.', 1)
     assert after['versionName'] == stem + '.' + str(int(patch) + 1) and after['versionCode'] == before['versionCode'] + 1, directory
     assert row['filename'] == directory.name + '-' + after['versionName'] + '.apk', directory
-    apk = assets / row['filename']
+    apk = input_apk(assets, row)
     original = directory / old['apk']
     assert before['bytes'] == old['apkBytes'] == original.stat().st_size and digest(original) == before['sha256'], directory
     assert apk_info(apk, tools) == after and manifest_tree(tools, original) == manifest_tree(tools, apk), directory
@@ -109,8 +118,8 @@ def verify(inputs, tools, assets, evidence):
     assert (count, checksum) == (row['preservedFiles'], row['preservedFilesDigest']), directory
     dest = directory / row['filename']
     assert not dest.exists() or digest(dest) == after['sha256'], dest
-    return {**row, 'sourceSha': commit, 'buildRun': build_run, 'releaseReceipt': DOWNLOAD + shard.name,
-            'releaseReceiptSha256': digest(shard)}
+    return {**row, 'sourceSha': commit, 'buildRun': build_run,
+            'receiptFile': shard.name, 'releaseReceiptSha256': digest(shard)}
 
 
 def publish(directory, evidence, assets):
@@ -127,7 +136,7 @@ def publish(directory, evidence, assets):
     info.update(version=actual['versionName'], versionCode=actual['versionCode'],
                 sha256=actual['sha256'], apk=evidence['filename'], apkBytes=actual['bytes'],
                 sourceCommit=evidence['sourceSha'], buildRun=evidence['buildRun'],
-                downloadUrl=DOWNLOAD + evidence['filename'],
+                downloadUrl=RAW + game_apk(evidence).as_posix(),
                 coverSource=f"Capture retained from the {old['version']} release. " + old['coverSource'],
                 verification={'status': 'passed', 'scope': 'Android launcher icon and TV banner update',
                               'signatureVerified': True, 'inPlaceUpgradeInstalled': True, 'leanbackLaunchPassed': True,
@@ -141,18 +150,27 @@ def publish(directory, evidence, assets):
             'metadata': old.get('gameplayMetadata'), 'currentUiEvidence': False}
     elif old.get('historicalGameplayVideo'):
         info['historicalGameplayVideo'] = old['historicalGameplayVideo']
-    target = directory / info['apk']
-    if not target.exists():
-        with tempfile.NamedTemporaryFile(dir=directory, prefix='.apk-import-', delete=False) as temporary:
+    for target in (ROOT / game_apk(evidence), directory / info['apk']):
+        if target.exists():
+            assert digest(target) == actual['sha256'], target
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.NamedTemporaryFile(dir=target.parent, prefix='.apk-import-', delete=False) as temporary:
             temp = Path(temporary.name)
         try:
-            shutil.copyfile(assets / info['apk'], temp)
+            shutil.copyfile(input_apk(assets, evidence), temp)
             assert digest(temp) == actual['sha256']
             temp.chmod(0o644)
             temp.replace(target)
         finally:
             temp.unlink(missing_ok=True)
-    write_json(directory / receipt, evidence)
+    receipt_path = directory / receipt
+    # Keep the original receipt URL when reimporting the same historical shard.
+    if receipt_path.is_file():
+        archived = read(receipt_path)
+        if archived.get('releaseReceipt') and all(archived.get(k) == v for k, v in evidence.items() if k != 'receiptFile'):
+            evidence = archived
+    write_json(receipt_path, evidence)
     write_json(directory / 'resource.json', info)
 
 
@@ -191,7 +209,7 @@ def checksums(directory, baseline_commit):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--assets', required=True, type=Path, help='Directory with the release APKs and android-icons-*.json')
+    parser.add_argument('--assets', required=True, type=Path, help='Merged Actions artifact directory containing joystick-games/ and android-icons-*.json (also accepts legacy flat APKs)')
     parser.add_argument('--build-tools', required=True, type=Path)
     args = parser.parse_args()
     games = {row['gameDir']: row for row in read(ROOT / 'tools/game-client-icon-inputs.json') if row['gameDir'].startswith('resource/apps/')}
@@ -202,7 +220,9 @@ def main():
     for row in results:
         directory = ROOT / row['gameDir']
         publish(directory, row, args.assets)
-        match = re.fullmatch(r'https://raw\.githubusercontent\.com/ecojust/pureTV/([a-f0-9]{40})/' + re.escape(row['gameDir']) + r'/[^/]+\.apk', row['originalUrl'])
+        originals = (row['gameDir'], game_apk(row).parent.as_posix())
+        locations = '|'.join(map(re.escape, originals))
+        match = re.fullmatch(r'https://raw\.githubusercontent\.com/ecojust/pureTV/([a-f0-9]{40})/(?:' + locations + r')/[^/]+\.apk', row['originalUrl'])
         assert match, row['originalUrl']
         checksums(directory, match[1])
     print(f'Imported {len(results)} individually verified Android APKs.')

@@ -1,7 +1,7 @@
 # 星盘皇后 / Queen Constellation
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](queen-constellation-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/queen-constellation/queen-constellation-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 把皇后放到星盘上，让任意两枚皇后都不在同一行、同一列或同一条斜线上。每张星盘必须恰好放满与边长相同的皇后数量，固定皇后也计入总数。斜纹格禁放，带锁的皇后不能移动。

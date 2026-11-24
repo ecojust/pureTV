@@ -75,6 +75,27 @@ class SourceScope(unittest.TestCase):
         for platform in ['android','windows']:
             with self.subTest(platform=platform):
                 target,meta,row=self.release_fixture(platform,nested=False);result=self.selection();self.assertIn(target.relative_to(self.root).as_posix(),result['excluded']);target.unlink()
+    def test_versioned_repo_apk_is_not_a_windows_build_input(self):
+        target, _, _ = self.release_fixture('android', nested=False)
+        (self.game/'packages.json').unlink()
+        target = target.rename(self.game/'sample-0.2.1.apk')
+        result = self.selection()
+        name = target.relative_to(self.root).as_posix()
+        self.assertIn(name, result['excluded'])
+        self.assertNotIn(name, result['files'])
+        target.write_text('invalid payload')
+        with self.assertRaisesRegex(AssertionError, 'Invalid published archive'):
+            self.selection()
+
+    def test_android_index_verifies_local_game_root_apk(self):
+        target,meta,row=self.release_fixture('android',nested=False)
+        self.put('joystick-games/sample/android-release.json',json.dumps({'game':'sample','file':target.name}))
+        index=self.put('joystick-games/sample/android/SHA256SUMS.txt',row['sha256']+'  '+target.name+'\n')
+        result=self.selection()
+        self.assertIn(target.relative_to(self.root).as_posix(),result['excluded'])
+        self.assertIn('scope-configuration',result['files'][index.relative_to(self.root).as_posix()]['roles'])
+        index.write_text('0'*64+'  '+target.name+'\n')
+        with self.assertRaisesRegex(AssertionError,'checksum list differs'):self.selection()
     def test_new_release_metadata_does_not_hide_undeclared_source_in_directory(self):
         target,meta,row=self.release_fixture();extra=self.put('joystick-games/sample/macos/build.mjs','real derivation source')
         with self.assertRaisesRegex(AssertionError,'Undeclared file'):self.selection()

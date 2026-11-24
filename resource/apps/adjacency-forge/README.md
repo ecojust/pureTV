@@ -1,7 +1,7 @@
 # 邻接铸造 / Adjacency Forge
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](adjacency-forge-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/adjacency-forge/adjacency-forge-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 在七格六边形工坊中交换铜、铁、银块，让每块金属的局部配方满足要求，再让炉源的热路实际抵达铸模。材料总数正确还不够：同样的邻居数量也可能导向堵塞或循环。

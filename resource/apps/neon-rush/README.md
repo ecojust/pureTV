@@ -1,7 +1,7 @@
 # 霓虹飞车 · Neon Rush TV
 
 <!-- apk-resource:start -->
-[Android 0.1.5 APK](neon-rush-0.1.5.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-macos.dmg) · [图标与安装验证](docs/releases/0.1.5/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.4 实玩录像](docs/releases/0.1.4/gameplay.mp4?raw=1)
+[Android 0.1.5 APK](../../../joystick-games/neon-rush/neon-rush-0.1.5.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/neon-rush-macos.dmg) · [图标与安装验证](docs/releases/0.1.5/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.4 实玩录像](docs/releases/0.1.4/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 ## 历史 Android 版本 0.1.4 · 手柄与手机连接

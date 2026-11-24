@@ -1,7 +1,7 @@
 # 镜光接力 / Light Relay
 
 <!-- apk-resource:start -->
-[Android 0.2.4 APK](prism-relay-0.2.4.apk?raw=1) · [图标与安装验证](docs/releases/0.2.4/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.2.2 实玩录像](docs/releases/0.2.2/gameplay.mp4?raw=1)
+[Android 0.2.4 APK](../../../joystick-games/prism-relay/prism-relay-0.2.4.apk?raw=1) · [图标与安装验证](docs/releases/0.2.4/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.2.2 实玩录像](docs/releases/0.2.2/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 <!-- controller-client-status:start -->

@@ -1,7 +1,7 @@
 # 舰队账册 · Fleet Ledger
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](fleet-ledger-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/fleet-ledger/fleet-ledger-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 根据行列船格总数、舰队长度多重集和少量固定船/海线索，填完海图。每艘船由上下左右相连的船格组成，必须是一条没有转弯的直线；不同船之间不能正交或斜角相邻。

@@ -25,7 +25,8 @@ def game_catalog(genres, resources, english, root):
                 page = f'resource/{key}/'
                 titles = {'zh': info['name'], 'en': english[key]['name'], **item.get('title', {})}
                 covers = {'zh': page + info['cover'], 'en': english[key]['cover'], **item.get('cover', {})}
-                downloads = {'apk': page + info['apk'] + '?raw=1'}
+                apk_dir = Path('joystick-games') / Path(key).name
+                downloads = {'apk': (apk_dir / info['apk']).as_posix() + '?raw=1'}
                 controller = bool(info.get('wifiController'))
                 for platform, extension in (('macos', '.dmg'), ('windows', '.exe')):
                     if platform not in item:
@@ -48,8 +49,13 @@ def game_catalog(genres, resources, english, root):
                 covers = item['cover']
                 if isinstance(covers, str):
                     covers = {'zh': covers, 'en': covers}
+                apk_dir = Path(page)
                 downloads = {'apk': item['apk']}
                 downloads.update({platform: item[platform] for platform in ('macos', 'windows') if platform in item})
+
+            apk = Path(downloads['apk'].removesuffix('?raw=1'))
+            assert apk.parent == apk_dir and apk.suffix == '.apk', f'{page}: expected an APK in {apk_dir}'
+            assert (root / apk).is_file(), f'{page}: missing game APK {apk}'
 
             # The game's own manifest identifies the original project for a port.
             manifest = root / page / 'game.json'

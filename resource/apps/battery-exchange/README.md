@@ -1,7 +1,7 @@
 # 电芯交换
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](battery-exchange-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/battery-exchange/battery-exchange-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 在港口维修台上，为机械泵和信标塔分配六枚电芯。每枚电芯的电量与内阻不同，串联和并联会实际改变供电功率、耗电速度与发热。看清下一段任务的功率范围，在断电窗口安排交换和接线，让两台设备完成各自的工作。

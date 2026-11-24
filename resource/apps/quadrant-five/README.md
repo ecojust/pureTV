@@ -1,7 +1,7 @@
 # 旋盘五子 · Quadrant Five
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](quadrant-five-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/quadrant-five/quadrant-five-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 在6×6棋盘中落子，再旋转一个3×3棋区。白棋是玩家，蓝棋是自动对手；每一完整回合都包括一次落子和一次任意棋区的90度旋转。横、竖、斜线连续至少五枚同色棋获胜，但只在旋转后判定。

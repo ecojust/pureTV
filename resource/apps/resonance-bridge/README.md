@@ -1,7 +1,7 @@
 # 共振浮桥
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](resonance-bridge-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/resonance-bridge/resonance-bridge-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 调节三块悬浮桥板的频率和相位，让行人安全穿过海峡。桥板始终连续运动；调频不会瞬移位置，调相会在十个实际模拟间隔内平滑完成。

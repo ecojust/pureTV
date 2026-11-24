@@ -124,6 +124,9 @@ def fetch():
         manifest=json.loads((out/'original'/row['packages']['name']/'build-manifest.json').read_text(encoding='utf-8'))
         assert manifest['sourceCommit']==request['source'] and manifest['game']==game and manifest['inputFiles']
         for name in manifest['inputFiles']:safe_name(name);paths.add(name)
+        # The frozen Windows selector inspects Android distributions before
+        # excluding their bytes from the Windows build inputs.
+        paths.add(f'joystick-games/{game}/*.apk')
     write(provenance/'original-selection.json',selection);write(provenance/'original-downloads.json',downloads)
     write(out/'request.json',request)
     sparse='\n'.join('/'+name for name in sorted(paths))

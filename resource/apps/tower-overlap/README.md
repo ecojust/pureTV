@@ -1,7 +1,7 @@
 # 叠塔工匠 / Tower Overlap
 
 <!-- apk-resource:start -->
-[Android 0.2.4 APK](tower-overlap-0.2.4.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tower-overlap-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tower-overlap-macos.dmg) · [图标与安装验证](docs/releases/0.2.4/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.2.3 实玩录像](docs/releases/0.2.3/gameplay.mp4?raw=1)
+[Android 0.2.4 APK](../../../joystick-games/tower-overlap/tower-overlap-0.2.4.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tower-overlap-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tower-overlap-macos.dmg) · [图标与安装验证](docs/releases/0.2.4/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.2.3 实玩录像](docs/releases/0.2.3/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 ## 历史 Android 版本 0.2.3 · 手柄与手机连接

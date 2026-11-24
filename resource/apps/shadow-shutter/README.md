@@ -1,7 +1,7 @@
 # 影窗快门
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](shadow-shutter-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/shadow-shutter/shadow-shutter-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 移动遮光板的窗口，让三块运动中的纸影完整组成目标照片。纸片必须全部入窗，不能被前层纸片或浅色纸带遮挡；位置、画幅和朝向都要准确。按顺序拍齐三张照片即可完成关卡。

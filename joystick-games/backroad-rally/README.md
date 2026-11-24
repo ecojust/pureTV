@@ -1,6 +1,6 @@
 # Backroad Rally · 乡野拉力
 
-[Android TV 0.1.8 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/backroad-rally-0.1.8.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/backroad-rally-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/backroad-rally-windows-x64-setup.exe)
+[Android TV 0.1.8 · APK](backroad-rally-0.1.8.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/backroad-rally-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/backroad-rally-windows-x64-setup.exe)
 
 [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
@@ -8,7 +8,7 @@
 
 ## Android TV 0.1.2 版交付记录
 
-0.1.2 版支持 Android 8.0 及以上，需要 WebGL 2。APK 共 105,024,551 字节，使用 pureTV 发布证书签名。[下载签名 APK](https://github.com/ecojust/pureTV/releases/download/joystick-backroad-rally-android-v0.1.2/backroad-rally-0.1.2.apk) · [SHA-256](android/SHA256SUMS.txt) · [版本清单](android-release.json)
+0.1.2 版支持 Android 8.0 及以上，需要 WebGL 2。APK 共 105,024,551 字节，使用 pureTV 发布证书签名。[下载签名 APK](backroad-rally-0.1.2.apk?raw=1) · [SHA-256](android/SHA256SUMS.txt) · [版本清单](android-release.json)
 
 在 720p Android TV 16 模拟器上，原手柄 SDK 在默认端口和端口占用回退两次都完成芬兰快速赛的驾驶、暂停和断线重连，每种模式各通过 56 项检查并收到 552 条输入确认。四张系统截图都能看清赛车、碎石路和绿色草地。此配置的 Android 合成器报告 Mesa llvmpipe；旧版 GLES 模拟器上可能只显示 HUD。实体电视与 ESP32 手柄尚未实测。[双端口截图、录像及验收范围](docs/android-delivery/) · [其他图形配置](docs/android-0.1.2/)
 

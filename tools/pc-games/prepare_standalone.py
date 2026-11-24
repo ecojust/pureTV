@@ -8,8 +8,9 @@ import subprocess
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from urllib.parse import urlsplit
-from urllib.request import Request, urlopen
 from zipfile import ZipFile
+
+from package import REPOSITORY_RAW
 
 ROOT = Path(__file__).resolve().parents[2]
 BOTH_PLATFORMS = {
@@ -33,15 +34,6 @@ def readme_apks():
                 raise ValueError(f"Duplicate README game: {slug}")
             apks[slug] = (links[0].rstrip("/"), apk)
     return apks
-
-
-def download(url, size):
-    request = Request(url, headers={"User-Agent": "pureTV-standalone-builder"})
-    with urlopen(request, timeout=90) as response:
-        payload = response.read(size + 1)
-    if len(payload) != size:
-        raise ValueError(f"Unexpected APK size at {url}")
-    return payload
 
 
 def tracked_file(path):
@@ -96,18 +88,12 @@ def prepare(game, page, apk_url, output):
     source = urlsplit(apk_url)
     if not match or source.path.rsplit("/", 1)[-1] != filename:
         raise ValueError(f"{slug}: check game ID and version against the source APK")
-    size = game["bytes"]
-    data = download(game["url"], size)
-    if hashlib.sha256(data).hexdigest() != game["sha256"]:
-        raise ValueError(f"{slug}: catalog download SHA-256 mismatch")
-    if not source.scheme:
-        source_data = tracked_file(source.path)
-    elif apk_url != game["url"]:
-        source_data = download(apk_url, size)
-    else:
-        source_data = data
-    if data != source_data:
-        raise ValueError(f"{slug}: source and desktop catalog point to different APK content")
+    path = f"joystick-games/{slug}/{filename}"
+    if source.path != path or game["url"] != REPOSITORY_RAW + path:
+        raise ValueError(f"{slug}: desktop and TV catalogs must use the same repository APK")
+    data = tracked_file(path)
+    if len(data) != game["bytes"] or hashlib.sha256(data).hexdigest() != game["sha256"]:
+        raise ValueError(f"{slug}: repository APK does not match the desktop catalog")
 
     target = output / slug
     target.mkdir(parents=True, exist_ok=True)
@@ -165,7 +151,7 @@ def main():
         else:
             page = f"resource/apps/{slug}"
             resource = json.loads(tracked_file(f"{page}/resource.json"))
-            apk_url = f"{page}/{resource['apk']}"
+            apk_url = f"joystick-games/{slug}/{resource['apk']}"
         prepare(games[slug], page, apk_url, args.output)
 
 

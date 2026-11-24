@@ -1,7 +1,7 @@
 # 滑格归序 / Sliding Order
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](sliding-order-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/sliding-order/sliding-order-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 经典 3×3 滑块数字谜题：八块瓷砖和一个空格，把棋盘排成 `1 2 3 / 4 5 6 / 7 8 空格`。三种固定起点都可解，不会随机生成无解棋盘。

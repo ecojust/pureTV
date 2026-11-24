@@ -1,7 +1,7 @@
 # 节拍闸道 · Metronome Gates
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](metronome-gates-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/metronome-gates/metronome-gates-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 先排方向，再随节拍过门。蓝色玻璃球每 1.2 秒只走一格，收齐所有标记后进入出口即可过关。二拍门与三拍门共用同一拍号，观察门牌的当前、下一拍状态和未来预览，安排移动与等待。

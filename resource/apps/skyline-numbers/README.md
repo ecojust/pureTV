@@ -1,7 +1,7 @@
 # 数塔天际 / Skyline Numbers
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](skyline-numbers-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/skyline-numbers/skyline-numbers-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 在方形城市里安排楼高，每行、每列都恰好使用一次 `1…N`。棋盘四边的数字不是楼高，而是从该方向看进去能看见的楼数：高楼挡住后面的矮楼，只有比之前所有楼都高的楼才会再次出现。

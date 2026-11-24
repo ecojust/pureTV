@@ -1,7 +1,7 @@
 # 纹幕校准 / Moiré Atelier
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](moire-atelier-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/moire-atelier/moire-atelier-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 在发光台上滑动、旋转两层细密条纹膜，观察它们叠加后的明暗变化。五个测点要求不同的亮度；只有同一次验收时全部合格，才能完成校准。

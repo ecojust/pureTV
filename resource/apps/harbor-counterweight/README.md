@@ -1,7 +1,7 @@
 # 港口配重
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](harbor-counterweight-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/harbor-counterweight/harbor-counterweight-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 六件货物依次抵港，四个船上货位各能叠放两件。安排装船位置，再按公开清单卸下四件货物，让剩余两件出口货随船安全离港。上层货物会挡住下层货物，选位置时也要考虑后面的卸货顺序。

@@ -28,9 +28,9 @@ def registry_item(raw=None):
     return {'type': 'file', 'path': m.REGISTRY_PATH, 'name': 'catalog-registry.json', 'url': f'{m.API}/repos/{m.REPO}/contents/{m.REGISTRY_PATH}?ref={REQ["source"]}', 'sha': blob, 'git_url': f'{m.API}/repos/{m.REPO}/git/blobs/{blob}', 'size': len(raw), 'encoding': 'base64', 'content': base64.encodebytes(raw).decode()}
 
 def fixture():
-    run = {'id': 71, 'run_attempt': 2, 'head_sha': 'a'*40, 'head_branch': 'source/frozen', 'repository': {'id': 7, 'full_name': m.REPO}, 'head_repository': {'id': 7, 'full_name': m.REPO}, 'path': '.github/workflows/joystick-catalog-android.yml', 'event': 'workflow_dispatch', 'status': 'in_progress', 'conclusion': None}
-    artifact = {'id': 91, 'name': 'joystick-android-signed', 'expired': False, 'expires_at': '2099-01-01T00:00:00Z', 'size_in_bytes': len(BODY), 'digest': 'sha256:' + DIGEST, 'created_at': '2026-11-19T00:00:30Z', 'workflow_run': {'id': 71, 'head_sha': 'a'*40, 'head_branch': 'source/frozen', 'repository_id': 7, 'head_repository_id': 7}}
-    job = {'id': 61, 'name': 'sign', 'run_id': 71, 'run_attempt': 2, 'head_sha': 'a'*40, 'status': 'completed', 'conclusion': 'success', 'started_at': '2026-11-19T00:00:00Z', 'completed_at': '2026-11-19T00:01:00Z', 'steps': [{'name': 'Run actions/upload-artifact@v4', 'number': 4, 'status': 'completed', 'conclusion': 'success', 'started_at': '2026-11-19T00:00:20Z', 'completed_at': '2026-11-19T00:00:40Z'}]}
+    run = {'id': 71, 'run_attempt': 2, 'head_sha': 'a'*40, 'head_branch': 'source/frozen', 'repository': {'id': 7, 'full_name': m.REPO}, 'head_repository': {'id': 7, 'full_name': m.REPO}, 'path': '.github/workflows/joystick-catalog-windows.yml', 'event': 'workflow_dispatch', 'status': 'in_progress', 'conclusion': None}
+    artifact = {'id': 91, 'name': 'joystick-windows-packages-backroad-rally', 'expired': False, 'expires_at': '2099-01-01T00:00:00Z', 'size_in_bytes': len(BODY), 'digest': 'sha256:' + DIGEST, 'created_at': '2026-11-19T00:00:50Z', 'workflow_run': {'id': 71, 'head_sha': 'a'*40, 'head_branch': 'source/frozen', 'repository_id': 7, 'head_repository_id': 7}}
+    job = {'id': 61, 'name': 'verify (backroad-rally)', 'run_id': 71, 'run_attempt': 2, 'head_sha': 'a'*40, 'status': 'completed', 'conclusion': 'success', 'started_at': '2026-11-19T00:00:00Z', 'completed_at': '2026-11-19T00:01:00Z', 'steps': [{'name': 'Run actions/upload-artifact@v4', 'number': 4, 'status': 'completed', 'conclusion': 'success', 'started_at': '2026-11-19T00:00:20Z', 'completed_at': '2026-11-19T00:00:40Z'}]}
     job['steps'].append({'name': 'Run actions/upload-artifact@v4', 'number': 5, 'status': 'completed', 'conclusion': 'success', 'started_at': '2026-11-19T00:00:40Z', 'completed_at': '2026-11-19T00:00:55Z'})
     release = {'id': 81, 'draft': True, 'tag_name': 'racing-package-staging-71-attempt-2', 'target_commitish': 'a'*40, 'url': 'https://api.github.com/repos/ecojust/pureTV/releases/81', 'upload_url': 'https://uploads.github.com/repos/ecojust/pureTV/releases/81/assets{?name,label}'}
     return run, artifact, [job], release
@@ -112,7 +112,7 @@ class TransferTests(unittest.TestCase):
             lambda f: f.artifact.update(created_at='2026-11-19T00:00:10Z'),
             lambda f: f.jobs[0].update(run_attempt=1),
             lambda f: f.jobs[0].update(status='in_progress'),
-            lambda f: f.jobs[0]['steps'][0].update(conclusion='failure'),
+            lambda f: f.jobs[0]['steps'][1].update(conclusion='failure'),
             lambda f: f.jobs.append(copy.deepcopy(f.jobs[0])),
             lambda f: f.release.update(draft=False),
             lambda f: f.release.update(tag_name='unrelated'),
@@ -148,10 +148,9 @@ class TransferTests(unittest.TestCase):
         self.assertFalse(passed); self.assertEqual(len(f.uploads), 1)
         self.assertNotIn('SECRET', json.dumps(record)); self.assertNotIn('signed.example', json.dumps(record))
     def test_allowed_platform_artifact_names_bind_producer_job(self):
-        cases = [('android', 'joystick-android-unsigned-backroad-rally', 'build (backroad-rally)'), ('macos', 'joystick-catalog-macos-packages-racing-01', 'build (racing-01, backroad-rally, ponpoko-kart, night-racer)'), ('windows', 'joystick-windows-packages-backroad-rally', 'verify (backroad-rally)')]
+        cases = [('macos', 'joystick-catalog-macos-packages-racing-01', 'build (racing-01, backroad-rally, ponpoko-kart, night-racer)'), ('windows', 'joystick-windows-packages-backroad-rally', 'verify (backroad-rally)')]
         for platform, name, job in cases:
             f = Fake(); f.run['path'] = f'.github/workflows/joystick-catalog-{platform}.yml'; f.artifact['name'] = name; f.jobs[0]['name'] = job
-            if platform in ('macos', 'windows'): f.artifact['created_at'] = '2026-11-19T00:00:50Z'
             passed, record = self.execute(f)
             self.assertTrue(passed)
             if platform == 'macos':
@@ -164,6 +163,16 @@ class TransferTests(unittest.TestCase):
             else:
                 self.assertNotIn('producerMatrix', record['source'])
                 self.assertFalse(any('/contents/' in p for p in f.reads))
+
+    def test_android_artifacts_cannot_be_staged_in_releases(self):
+        for name in ('joystick-android-signed', 'joystick-android-unsigned-backroad-rally'):
+            f = Fake()
+            f.run['path'] = '.github/workflows/joystick-catalog-android.yml'
+            f.artifact['name'] = name
+            passed, receipt = self.execute(f)
+            self.assertFalse(passed)
+            self.assertEqual(receipt['failureCode'], 'only_desktop_packages_use_release_drafts')
+            self.assertFalse(f.uploads)
 
     def macos_fake(self):
         f = Fake()

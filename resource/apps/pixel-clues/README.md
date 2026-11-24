@@ -1,7 +1,7 @@
 # 像素线索 / Pixel Clues
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](pixel-clues-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/pixel-clues/pixel-clues-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 用行、列两侧的数字推导像素图。每个数字是一段连续涂色格的长度，多个数字按顺序排列，段与段之间至少留一格。例如 `2 1` 表示连续两格、至少一格空白、再一格涂色。所有行列同时吻合即完成。

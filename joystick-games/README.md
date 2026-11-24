@@ -2,6 +2,8 @@
 
 [按类型浏览当前游戏与下载](../README.md#games) · [客户端版本与 SHA-256 校验值](../docs/releases/gameplay-icons-2026.11.21/clients.json) · [电视扫码和电脑游玩指南](../docs/guide/README.md#安装游戏与连接手柄)
 
+各款游戏的签名 Android TV 安装包位于 `joystick-games/<游戏 ID>/`。解压源码包后即可在游戏目录中找到 APK。Backroad Rally 使用 Git LFS；如果解压出的 APK 只有一百多字节，可从[游戏详情页](backroad-rally/)下载完整文件，或在安装了 Git LFS 的克隆中运行 `git lfs pull`。
+
 这里集中放置为 pureTV Wi-Fi 手柄适配的游戏、Android TV APK、macOS DMG 和 Windows x64 安装程序。首批两款来自 [riba2534/claude-opus-5-5-demo](https://github.com/riba2534/claude-opus-5-5-demo)，固定上游提交 `54adc1fb64155f9dd7c1c90ecae7b8185ac540b8`。
 
 - [运输船 CF](cf-transport-ship/)：保留运输船地图、机器人队伍对战、枪械和换装，增加九键移动、瞄准与射击。
@@ -22,12 +24,12 @@
 
 | 游戏 | 玩法 | Android TV |
 | --- | --- | --- |
-| [Kart Royale](kart-royale/) | 在原有 Sunset Bay 之外，新增高低落差较大的 Cape Crown 和连续转弯的 Marina Esses。 | [APK 0.1.7](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-royale-0.1.7.apk) |
-| [Turbo Kart Rally](turbo-kart-rally/) | 在 Palm Cove 与七位 AI 车手竞速。 | [APK 0.1.2](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/turbo-kart-rally-0.1.2.apk) |
-| [Clawd Pop 3D](clawd-pop/) | 在随机生成的实验室中使用黑洞炮，迎战新增怪物和 Codex 主题敌人。 | [APK 0.1.2](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/clawd-pop-0.1.2.apk) |
-| [光刃魔塔 · Saber Magic Tower](saber-magic-tower/) | 在 21 层立体迷宫中规划钥匙和属性，用连击、重斩和适时格挡迎战守卫。 | [APK 0.1.2](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/saber-magic-tower-0.1.2.apk) |
-| [Operation Ironhold](operation-ironhold/) | 在三分钟内清除集装箱堆场的十名对手。 | [APK 0.1.2](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/operation-ironhold-0.1.2.apk) |
-| [Lumenrift · 光隙守望](lumenrift/) | 建塔、升级并守住敌人进攻的路线。 | [APK 0.1.2](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/lumenrift-0.1.2.apk) |
+| [Kart Royale](kart-royale/) | 在原有 Sunset Bay 之外，新增高低落差较大的 Cape Crown 和连续转弯的 Marina Esses。 | [APK 0.1.7](kart-royale/kart-royale-0.1.7.apk?raw=1) |
+| [Turbo Kart Rally](turbo-kart-rally/) | 在 Palm Cove 与七位 AI 车手竞速。 | [APK 0.1.2](turbo-kart-rally/turbo-kart-rally-0.1.2.apk?raw=1) |
+| [Clawd Pop 3D](clawd-pop/) | 在随机生成的实验室中使用黑洞炮，迎战新增怪物和 Codex 主题敌人。 | [APK 0.1.2](clawd-pop/clawd-pop-0.1.2.apk?raw=1) |
+| [光刃魔塔 · Saber Magic Tower](saber-magic-tower/) | 在 21 层立体迷宫中规划钥匙和属性，用连击、重斩和适时格挡迎战守卫。 | [APK 0.1.2](saber-magic-tower/saber-magic-tower-0.1.2.apk?raw=1) |
+| [Operation Ironhold](operation-ironhold/) | 在三分钟内清除集装箱堆场的十名对手。 | [APK 0.1.2](operation-ironhold/operation-ironhold-0.1.2.apk?raw=1) |
+| [Lumenrift · 光隙守望](lumenrift/) | 建塔、升级并守住敌人进攻的路线。 | [APK 0.1.2](lumenrift/lumenrift-0.1.2.apk?raw=1) |
 
 [Android TV 安装与逐款手柄验收](docs/expansion/android.md) · [Windows 与 macOS 手柄输入](docs/expansion/pc/native/) · [手机扫码操作](docs/expansion/phone/)
 
@@ -48,8 +50,8 @@ python3 tools/pc-games/host.py --game lumenrift --apk .local-games/lumenrift.zip
 
 | 游戏 | Android TV | macOS | Windows x64 |
 | --- | --- | --- | --- |
-| [运输船 CF](cf-transport-ship/) | [APK 0.1.2](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/cf-transport-ship-0.1.2.apk) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/cf-transport-ship-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/cf-transport-ship-windows-x64-setup.exe) |
-| [QQ 飞车](qq-speed/) | [APK 0.1.2](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/qq-speed-0.1.2.apk) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/qq-speed-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/qq-speed-windows-x64-setup.exe) |
+| [运输船 CF](cf-transport-ship/) | [APK 0.1.2](cf-transport-ship/cf-transport-ship-0.1.2.apk?raw=1) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/cf-transport-ship-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/cf-transport-ship-windows-x64-setup.exe) |
+| [QQ 飞车](qq-speed/) | [APK 0.1.2](qq-speed/qq-speed-0.1.2.apk?raw=1) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/qq-speed-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/qq-speed-windows-x64-setup.exe) |
 
 Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包同时包含 Apple Silicon 与 Intel。两平台均需要 **WebGL2**，旧电视的系统 WebView／GPU 可能无法运行。Mac 包采用 ad-hoc 签名，尚未 Apple 公证。
 
@@ -70,15 +72,15 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 
 | 游戏 | Android TV | macOS | Windows x64 |
 | --- | --- | --- | --- |
-| [Backroad Rally](backroad-rally/) | [APK 0.1.8](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/backroad-rally-0.1.8.apk) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/backroad-rally-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/backroad-rally-windows-x64-setup.exe) |
-| [Ponpoko Kart](ponpoko-kart/) | [APK 0.1.7](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/ponpoko-kart-0.1.7.apk) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/ponpoko-kart-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/ponpoko-kart-windows-x64-setup.exe) |
-| [Night Racer](night-racer/) | [APK 0.1.2](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/night-racer-0.1.2.apk) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/night-racer-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/night-racer-windows-x64-setup.exe) |
-| [Penguintrack](penguintrack/) | [APK 0.1.2](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/penguintrack-0.1.2.apk) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/penguintrack-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/penguintrack-windows-x64-setup.exe) |
-| [Last Track](last-track/) | [APK 0.1.2](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/last-track-0.1.2.apk) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/last-track-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/last-track-windows-x64-setup.exe) |
-| [Dirt Crown](dirt-crown/) | [APK 0.1.2](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/dirt-crown-0.1.2.apk) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/dirt-crown-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/dirt-crown-windows-x64-setup.exe) |
-| [Turbo Kart Rush](turbo-kart-rush/) | [APK 0.1.3](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/turbo-kart-rush-0.1.3.apk) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/turbo-kart-rush-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/turbo-kart-rush-windows-x64-setup.exe) |
-| [Kart Rush](kart-rush/) | [APK 0.1.2](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-rush-0.1.2.apk) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-rush-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-rush-windows-x64-setup.exe) |
-| [Kart Royale](kart-royale/) | [APK 0.1.7](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-royale-0.1.7.apk) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-royale-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-royale-windows-x64-setup.exe) |
+| [Backroad Rally](backroad-rally/) | [APK 0.1.8](backroad-rally/backroad-rally-0.1.8.apk?raw=1) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/backroad-rally-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/backroad-rally-windows-x64-setup.exe) |
+| [Ponpoko Kart](ponpoko-kart/) | [APK 0.1.7](ponpoko-kart/ponpoko-kart-0.1.7.apk?raw=1) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/ponpoko-kart-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/ponpoko-kart-windows-x64-setup.exe) |
+| [Night Racer](night-racer/) | [APK 0.1.2](night-racer/night-racer-0.1.2.apk?raw=1) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/night-racer-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/night-racer-windows-x64-setup.exe) |
+| [Penguintrack](penguintrack/) | [APK 0.1.2](penguintrack/penguintrack-0.1.2.apk?raw=1) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/penguintrack-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/penguintrack-windows-x64-setup.exe) |
+| [Last Track](last-track/) | [APK 0.1.2](last-track/last-track-0.1.2.apk?raw=1) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/last-track-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/last-track-windows-x64-setup.exe) |
+| [Dirt Crown](dirt-crown/) | [APK 0.1.2](dirt-crown/dirt-crown-0.1.2.apk?raw=1) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/dirt-crown-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/dirt-crown-windows-x64-setup.exe) |
+| [Turbo Kart Rush](turbo-kart-rush/) | [APK 0.1.3](turbo-kart-rush/turbo-kart-rush-0.1.3.apk?raw=1) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/turbo-kart-rush-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/turbo-kart-rush-windows-x64-setup.exe) |
+| [Kart Rush](kart-rush/) | [APK 0.1.2](kart-rush/kart-rush-0.1.2.apk?raw=1) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-rush-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-rush-windows-x64-setup.exe) |
+| [Kart Royale](kart-royale/) | [APK 0.1.7](kart-royale/kart-royale-0.1.7.apk?raw=1) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-royale-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/kart-royale-windows-x64-setup.exe) |
 
 首发验收覆盖九款游戏当时的 Android TV、macOS 与 Windows 客户端。原批次共 45 个安装文件，均已从公开地址完整下载并核对 SHA-256。[首批 45 个文件的下载校验](../docs/racing-nine/download-verification-20261120.json) · [0.1.2 三个签名测试包](../docs/racing-nine/test-download-updates-20261120.json) · [首批测试包校验](../docs/racing-nine/test-downloads-20261120.json)
 
@@ -114,9 +116,9 @@ Android 要求 **8.0 及以上**；Mac 要求 **macOS 11 及以上**，安装包
 
 | 游戏 | Android TV | macOS | Windows x64 |
 | --- | --- | --- | --- |
-| [Sugarplum Drop](sugarplum-drop/) | [APK 0.1.2](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/sugarplum-drop-0.1.2.apk) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/sugarplum-drop-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/sugarplum-drop-windows-x64-setup.exe) |
-| [Emberbrood · 余烬龙裔](emberbrood/) | [APK 0.1.3](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/emberbrood-0.1.3.apk) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/emberbrood-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/emberbrood-windows-x64-setup.exe) |
-| [GLUP · 沼泽猫鱼](glup/) | [APK 0.1.2](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/glup-0.1.2.apk) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/glup-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/glup-windows-x64-setup.exe) |
+| [Sugarplum Drop](sugarplum-drop/) | [APK 0.1.2](sugarplum-drop/sugarplum-drop-0.1.2.apk?raw=1) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/sugarplum-drop-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/sugarplum-drop-windows-x64-setup.exe) |
+| [Emberbrood · 余烬龙裔](emberbrood/) | [APK 0.1.3](emberbrood/emberbrood-0.1.3.apk?raw=1) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/emberbrood-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/emberbrood-windows-x64-setup.exe) |
+| [GLUP · 沼泽猫鱼](glup/) | [APK 0.1.2](glup/glup-0.1.2.apk?raw=1) | [DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/glup-macos.dmg) | [安装 EXE](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/glup-windows-x64-setup.exe) |
 
 Sugarplum Drop 的 Windows 0.1.0 [安装版](sugarplum-drop/SugarplumDrop-0.1.0-windows-x64-setup.exe) 和 [便携版](sugarplum-drop/SugarplumDrop-0.1.0-windows-x64.zip)，原生运行与安装／卸载已验证；它是共享宿主样本，不计入九款赛车。
 

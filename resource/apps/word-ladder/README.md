@@ -1,7 +1,7 @@
 # 词阶接龙 / Word Ladder
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](word-ladder-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/word-ladder/word-ladder-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 每关公开完整四字母英文词库，按字母顺序展示，没有隐藏词典。从起词到目标，每一步只能改变一个位置的字母，并且必须选择本关可见词库中的词。只判断公开规则，不比较任何预设路线；无需用户凭空猜英文单词。选中词的简短中文释义显示在信息栏。

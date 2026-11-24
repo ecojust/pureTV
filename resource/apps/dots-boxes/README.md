@@ -1,7 +1,7 @@
 # 点线围格 / Dots and Boxes
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](dots-boxes-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/dots-boxes/dots-boxes-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 用一条条边线围住方格，与公开规则的对手争夺更多区域。你拥有的方格盖上珊瑚色圆环，对手的方格盖上青色叉形；线条颜色表示谁画了那条边，方格内的印记表示最终归属。

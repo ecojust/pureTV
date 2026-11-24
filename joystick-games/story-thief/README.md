@@ -1,6 +1,6 @@
 # The Story Thief of Greymantle · 灰斗篷山的故事大盗
 
-[Android TV 0.1.3 · APK](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/story-thief-0.1.3.apk) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/story-thief-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/story-thief-windows-x64-setup.exe)
+[Android TV 0.1.3 · APK](story-thief-0.1.3.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/story-thief-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/story-thief-windows-x64-setup.exe)
 
 [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 
@@ -39,7 +39,7 @@ python3 -m http.server 8000 --directory dist
 
 | 平台 | 安装文件 |
 | --- | --- |
-| Android TV | [APK](https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/story-thief-0.1.1.apk) |
+| Android TV | [APK](story-thief-0.1.1.apk?raw=1) |
 | macOS | [DMG](https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/StoryThief-0.1.1-macos-universal.dmg) · [ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/StoryThief-0.1.1-macos-universal.zip) |
 | Windows x64 | [安装版 EXE](https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/StoryThief-0.1.1-windows-x64-setup.exe) · [便携 ZIP](https://github.com/ecojust/pureTV/releases/download/joystick-story-thief-v0.1.1/StoryThief-0.1.1-windows-x64.zip) |
 

@@ -1,7 +1,7 @@
 # 逐日供电 / Solar Shift
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](solar-shift-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/solar-shift/solar-shift-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 把一个昼夜压缩为60秒：转动太阳板接收日照，在阴影和夜间用有限电池供电，为三台设备分别完成用电配额。设备优先级固定；开关打开不代表一定拿到足额电力。

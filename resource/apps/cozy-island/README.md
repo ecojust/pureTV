@@ -1,7 +1,7 @@
 # 悠岛生活 TV
 
 <!-- apk-resource:start -->
-[Android 0.5.5 APK](cozy-island-0.5.5.apk?raw=1) · [图标与安装验证](docs/releases/0.5.5/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.5.3 实玩录像](docs/releases/0.5.3/gameplay.mp4?raw=1)
+[Android 0.5.5 APK](../../../joystick-games/cozy-island/cozy-island-0.5.5.apk?raw=1) · [图标与安装验证](docs/releases/0.5.5/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.5.3 实玩录像](docs/releases/0.5.3/gameplay.mp4?raw=1)
 <!-- apk-resource:end -->
 
 [中文](README.md) · [English](README.en.md)

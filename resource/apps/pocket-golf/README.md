@@ -1,7 +1,7 @@
 # 口袋果岭 / Pocket Golf
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](pocket-golf-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/pocket-golf/pocket-golf-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 俯视迷你高尔夫。静止时选择角度、五档力度，A 击球；之后球的位置由真实时间、摩擦和圆球碰撞积分决定。边墙与矩形石障会反弹，球停稳后可从新位置再击。没有预设角度命中、路线判定或自动进洞。

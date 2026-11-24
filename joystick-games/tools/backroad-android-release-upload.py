@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Copy one fixed original APK after fixed native QA; never build, publish or replace."""
-import argparse
+"""Historical Backroad transfer checks, retained for the offline publication evidence tests."""
 import base64
 import hashlib
 import http.client
@@ -10,7 +9,6 @@ import os
 from pathlib import Path
 import re
 import stat
-import sys
 import time
 import urllib.parse
 import urllib.request
@@ -375,20 +373,3 @@ def execute(client, output):
     except Exception as error:
         code = str(error) if isinstance(error, origin.Rejected) and re.fullmatch('[a-z0-9_]+', str(error)) else type(error).__name__
         report.update(status='failed', failureCode=code); save(); return False
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__); commands = parser.add_subparsers(dest='command', required=True)
-    commands.add_parser('transfer').add_argument('--output', type=Path, required=True)
-    commands.add_parser('export-receipt').add_argument('--directory', type=Path, required=True)
-    args = parser.parse_args()
-    try:
-        require(os.environ.get('GITHUB_REPOSITORY') == origin.REPO, 'wrong_executor_repository')
-        if args.command == 'export-receipt': origin.export_receipt(args.directory); return 0
-        require(os.environ.get('GITHUB_ACTIONS') == 'true' and os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch', 'actions_dispatch_only')
-        return 0 if execute(GitHub(os.environ.get('GH_TOKEN')), args.output) else 1
-    except Exception as error:
-        print('Fixed Android upload failed: ' + (str(error) if isinstance(error, origin.Rejected) else type(error).__name__), file=sys.stderr); return 1
-
-
-if __name__ == '__main__': sys.exit(main())

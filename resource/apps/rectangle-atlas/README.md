@@ -1,7 +1,7 @@
 # 矩形图册 / Rectangle Atlas
 
 <!-- apk-resource:start -->
-[Android 0.1.1 APK](rectangle-atlas-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
+[Android 0.1.1 APK](../../../joystick-games/rectangle-atlas/rectangle-atlas-0.1.1.apk?raw=1) · [图标与安装验证](docs/releases/0.1.1/android-icon-receipt.json) · [文件校验](SHA256SUMS.txt) · [0.1.0 实玩录像](docs/gameplay-0.1.0.mp4?raw=1)
 <!-- apk-resource:end -->
 
 Shikaku 矩形划分谜题。三张 4×4、5×5、6×6 图册只公开数字位置与面积，分别需要 4、5、6 个矩形。每张都包含细长矩形和面积大于一的正方形。

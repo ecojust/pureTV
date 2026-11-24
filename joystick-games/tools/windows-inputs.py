@@ -170,6 +170,8 @@ def declared_package_outputs(scope,game):
 def published_directory(scope,game,path,declared):
     """Verify local payloads or an exact remote index; keep index bytes bound."""
     expected={name:record for name,record in declared.items() if name.startswith(path.name+'/')}
+    if path.name=='android':
+        expected.update({name:record for name,record in declared.items() if '/' not in name and name.endswith('.apk')})
     remote={name:record for name,record in scope.remote_packages.items() if name.startswith(path.name+'/')}
     assert expected or remote,'Unclassified game root directory: '+str(path)
     assert not ({Path(n).name.casefold() for n in expected}&{Path(n).name.casefold() for n in remote}),'Ambiguous local and remote package basename'
@@ -194,7 +196,7 @@ def release_outputs(scope,game):
         path=game/(platform+'-release.json')
         if not path.exists():continue
         scope.add(path,'scope-configuration');meta=json.loads(path.read_text(encoding='utf-8'));assert meta.get('game')==game.name,'Release descriptor game mismatch'
-        items=[meta['apk']['file']] if platform=='android' else list(meta.get('packages',{}))
+        items=[meta.get('apk', meta)['file']] if platform=='android' else list(meta.get('packages',{}))
         for name in items:
             assert isinstance(name,str) and Path(name).name==name and '/' not in name and '\\' not in name,'Unsafe release output name'
             endings={'android':('.apk',),'macos':('-macos-universal.zip','-macos-universal.dmg'),'windows':('-windows-x64.zip','-windows-x64-setup.exe')}
@@ -235,8 +237,12 @@ def select(game,root=ROOT):
         if path.name in CACHE or path.name=='docs':scope.exclude(path,'installed dependency/cache' if path.name in CACHE else 'historical evidence');continue
         if path.name in outputs:scope.exclude(path,'published artifact declared by platform release descriptor');continue
         assert not is_link(path),'Symlink game input: '+str(path)
+        if path.is_file() and re.fullmatch(re.escape(game.name) + r'-\d+\.\d+\.\d+(?:-preview\.\d+)?\.apk', path.name):
+            published_format(path, 'android')
+            scope.exclude(path, 'versioned Android distribution')
+            continue
         if path.is_dir():
-            if path.name in PLATFORMS and any(name.startswith(path.name+'/') for name in [*declared,*scope.remote_packages]):
+            if path.name in PLATFORMS:
                 published_directory(scope,game,path,declared);continue
             assert path.name in GAME_DIRS,'Unclassified game root directory: '+str(path)
             scope.tree(path,'packaged-assets' if path.name=='dist' else 'game-derivation')
