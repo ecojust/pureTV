@@ -1,107 +1,29 @@
-name: Catalog desktop player
-
-on:
-  workflow_dispatch:
-    inputs:
-      target:
-        description: Desktop package to build
-        type: choice
-        options: [catalog, standalone, standalone-macos, standalone-windows, icons-android, icons-macos, icons-windows]
-        default: catalog
-      android_shards:
-        description: Android icon build batches (JSON array, 0–7)
-        type: string
-        default: '[0,1,2,3,4,5,6,7]'
-      android_pilot:
-        description: Check the first three Android games in each selected batch without publishing
-        type: boolean
-        default: false
-      android_verified_run:
-        description: Reuse the installed APK checks from an earlier Android icon run
-        type: string
-        required: false
-  push:
-    branches: [master, 'feat/catalog-game-controls-*']
-    paths:
-      - 'tools/pc-games/**'
-      - '.github/workflows/pc-games.yml'
-
+name: Verify original launcher integration HTTP evidence
+on: workflow_dispatch
 permissions:
+  actions: read
   contents: read
-
 jobs:
-  android-icons:
-    if: inputs.target == 'icons-android'
-    permissions:
-      actions: read
-      contents: read
-    uses: ./.github/workflows/game-icons-android.yml
-    with:
-      shards: ${{ inputs.android_shards || '[0,1,2,3,4,5,6,7]' }}
-      pilot: ${{ inputs.android_pilot || false }}
-      verified_run: ${{ inputs.android_verified_run || '' }}
-    secrets: inherit
-
-  macos-icons:
-    if: inputs.target == 'icons-macos'
-    permissions:
-      contents: write
-    uses: ./.github/workflows/game-icons-macos.yml
-
-  windows-icons:
-    if: inputs.target == 'icons-windows'
-    permissions:
-      contents: write
-    uses: ./.github/workflows/game-icons-windows.yml
-
-  games:
-    if: startsWith(inputs.target, 'standalone')
-    uses: ./.github/workflows/standalone-games.yml
-    with:
-      target: ${{ inputs.target }}
-
-  windows:
-    if: ${{ !startsWith(inputs.target, 'standalone') && !startsWith(inputs.target, 'icons-') }}
-    runs-on: windows-2022
-    timeout-minutes: 18
+  inspect:
+    if: github.repository == 'ecojust/pureTV' && github.ref == 'refs/heads/build-assets/launcher-maven-diagnostic-45442541226'
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          sparse-checkout: |
-            tools/pc-games
-            puretv-joystick
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install build and test dependencies
-        run: python -m pip install -r tools/pc-games/requirements.txt pyinstaller==6.16.0 playwright==1.56.0
-      - name: Verify player and build Windows executable
-        working-directory: tools/pc-games
+      - name: Verify original report identities and enumerate HTTP causes
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          python -m unittest discover -v
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          node --test test_bridge.cjs
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python package.py --output dist
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python -m PyInstaller --clean --onefile --name pureTV-Games --add-data 'catalog.json:.' --add-data 'pc-bridge.js:.' --collect-all zeroconf --recursive-copy-metadata zeroconf launcher.py
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          $games = .\dist\pureTV-Games.exe --list
-          if ($LASTEXITCODE -ne 0 -or $games.Count -eq 0) { throw 'The packaged catalog did not open' }
-      - name: Start the Windows executable and play with keyboard and Wi-Fi protocol
-        run: python tools/pc-games/smoke.py --exe tools/pc-games/dist/pureTV-Games.exe --channel msedge
-      - name: Record verified download checksums
-        shell: pwsh
-        run: |
-          Get-ChildItem tools/pc-games/dist/pureTV-Games* -File | ForEach-Object {
-            $digest = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
-            Write-Output "$digest  $($_.Name)  $($_.Length)"
-          }
-      - uses: actions/upload-artifact@v4
-        with:
-          name: pureTV-Games-windows-x64
-          path: |
-            tools/pc-games/dist/pureTV-Games.exe
-            tools/pc-games/dist/pureTV-Games-portable.zip
-          if-no-files-found: error
+          python - <<'PY'
+          import collections, hashlib, io, re, subprocess, xml.etree.ElementTree as ET, zipfile
+          for name,(artifact,digest) in {'pixel': [14945705398, 'sha256:e6eb80bca84b2d5c8d2b6470718ba45df0e194abf707bccdcc3555a3ba46ae4c'], 'moss': [14945106822, 'sha256:6ff93bf55183cb16557fde78bcdcb350da88348494ef6014fbf694122075429e'], 'aster': [14944941878, 'sha256:f0868c461ada7b2afeb72a9689b4405e18f0f7d3dfb8683cfcb6beb2b925857b'], 'drift': [14944106883, 'sha256:607f0a44e47f83ccacf3f818fa5391e75bce5a74a82e6b70f2c7653b1a94baa8']}.items():
+              data=subprocess.check_output(['gh','api','repos/ecojust/pureTV/actions/artifacts/'+str(artifact)+'/zip'])
+              assert 'sha256:'+hashlib.sha256(data).hexdigest()==digest
+              count=collections.Counter()
+              with zipfile.ZipFile(io.BytesIO(data)) as report:
+                  for path in report.namelist():
+                      if '/test-results/' not in path or not path.endswith('.xml'): continue
+                      for case in ET.fromstring(report.read(path)).iter('testcase'):
+                          for failure in case.findall('failure')+case.findall('error'):
+                              causes=[line.strip() for line in failure.text.splitlines() if line.strip().startswith('Caused by: java.io.IOException:')]
+                              count.update(causes or ['Other error: '+failure.get('type','')])
+              print(name,artifact,digest,dict(count),flush=True)
+          PY
