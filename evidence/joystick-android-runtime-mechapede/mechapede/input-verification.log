@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/runner/work/pureTV/pureTV/joystick-games/tools/android-runtime-inputs.py", line 347, in <module>
+    main()
+  File "/home/runner/work/pureTV/pureTV/joystick-games/tools/android-runtime-inputs.py", line 343, in main
+    verify(p.parse_args())
+  File "/home/runner/work/pureTV/pureTV/joystick-games/tools/android-runtime-inputs.py", line 266, in verify
+    check_production_bytes(ROOT / name, data, frozen(ROOT, qa, name))
+  File "/home/runner/work/pureTV/pureTV/joystick-games/tools/android-runtime-inputs.py", line 145, in check_production_bytes
+    assert path.read_bytes() == artifact_bytes == qa_committed_bytes, 'QA changed production input: ' + str(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: QA changed production input: /home/runner/work/pureTV/pureTV/joystick-games/catalog-registry.json
