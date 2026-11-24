@@ -231,8 +231,8 @@ def main():
         staging=Path(temporary);run('ditto',app,staging/app.name);(staging/'Applications').symlink_to('/Applications')
         run('hdiutil','create','-volname',name,'-srcfolder',staging,'-format','UDZO','-ov',dmg)
     run('hdiutil','verify',dmg)
-    package_limit=asset_policy.desktop_package_limit(meta,None if args.game in LEGACY_GAMES else registry_games()[args.game])
-    assert all(0<p.stat().st_size<package_limit for p in [zipfile,dmg]),'Package exceeds declared desktop budget: '+str(package_limit)
+    package_limit=asset_policy.desktop_package_limit(meta,None if args.game in LEGACY_GAMES else registry_games()[args.game],platform='macos')
+    assert all(0<p.stat().st_size<package_limit for p in [zipfile,dmg]),f'ZIP {zipfile.stat().st_size} or DMG {dmg.stat().st_size} exceeds macOS budget {package_limit}'
     packages={p.name:{'bytes':p.stat().st_size,'sha256':digest(p)} for p in [zipfile,dmg]}
     assert capture('git','-C',ROOT,'rev-parse','HEAD')==source_commit, 'HEAD changed during build'
     assert inputs(game)==source_inputs, 'Source files or input set changed during build'

@@ -93,6 +93,17 @@ class PolicyBoundaries(unittest.TestCase):
         self.assertEqual(kit.checked_limits(policy.android_limits(meta,entry))['maxApkBytes'],128_000_000)
         self.assertEqual(policy.desktop_package_limit(meta,entry),128_000_000)
         self.assertEqual(policy.desktop_package_limit(metadata()),100_000_000)
+
+    def test_macos_wrapper_budget_is_separate_from_game_and_windows_budgets(self):
+        assets = dict(large_policy(), maxApkBytes=10_000_000)
+        meta = dict(metadata(), assetPolicy=assets)
+        entry = dict(packageName=meta['packageName'], assetPolicy=assets, maxMacosPackageBytes=16_000_000)
+        self.assertEqual(policy.desktop_package_limit(meta, entry, platform='macos'), 16_000_000)
+        self.assertEqual(policy.desktop_package_limit(meta, entry), 10_000_000)
+        self.assertEqual(policy.android_limits(meta, entry)['maxApkBytes'], 10_000_000)
+        for invalid in (True, 0, 100_000_001):
+            with self.assertRaises(AssertionError):
+                policy.desktop_package_limit(meta, dict(entry, maxMacosPackageBytes=invalid), platform='macos')
         self.assertEqual(policy.limits(metadata())['maxApkBytes'],10_000_000)
         self.assertEqual(policy.limits(metadata(),platform='windows'),policy.DEFAULT_MACOS)
 

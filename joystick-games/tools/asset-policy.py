@@ -50,7 +50,14 @@ def android_limits(meta, registered=None):
     return {**limits(meta, registered), 'extraExtensions': EXTRA_EXTENSIONS, 'allowNestedAssets': True}
 
 
-def desktop_package_limit(meta, registered=None):
+def desktop_package_limit(meta, registered=None, *, platform='windows'):
     """Keep historical desktop cap unless a game explicitly declares its budget."""
     value = declaration(meta, registered)
-    return 100_000_000 if value is None else value['maxApkBytes']
+    assert platform in ('macos', 'windows')
+    limit = 100_000_000 if value is None else value['maxApkBytes']
+    if platform == 'macos' and registered and 'maxMacosPackageBytes' in registered:
+        # A universal app includes two native slices and a disk-image filesystem.
+        assert value is not None, 'macOS package override requires a registered game asset policy'
+        limit = registered['maxMacosPackageBytes']
+        assert type(limit) is int and 0 < limit <= 100_000_000, 'Invalid macOS package limit'
+    return limit
