@@ -1,0 +1,441 @@
+﻿2026-11-24T16:56:51.1143380Z Current runner version: '2.338.2'
+2026-11-24T16:56:51.1180760Z ##[group]Runner Image Provisioner
+2026-11-24T16:56:51.1182160Z Hosted Compute Agent
+2026-11-24T16:56:51.1183100Z Version: 20261111.635
+2026-11-24T16:56:51.1184140Z Commit: b8a594ea514ff44cadb5342986c68b1eac6e22ed
+2026-11-24T16:56:51.1185370Z Build Date: 2026-11-11T01:49:01Z
+2026-11-24T16:56:51.1186600Z Worker ID: {bf03a9aa-f91b-4a08-b18a-74acbcfd1301}
+2026-11-24T16:56:51.1187080Z Region: westus
+2026-11-24T16:56:51.1187430Z Cloud: MacCloud
+2026-11-24T16:56:51.1187780Z ##[endgroup]
+2026-11-24T16:56:51.1188710Z ##[group]Operating System
+2026-11-24T16:56:51.1189100Z macOS
+2026-11-24T16:56:51.1189420Z 26.7.2
+2026-11-24T16:56:51.1189740Z 25G332
+2026-11-24T16:56:51.1190070Z ##[endgroup]
+2026-11-24T16:56:51.1190410Z ##[group]Runner Image
+2026-11-24T16:56:51.1190780Z Image: macos-26-arm64
+2026-11-24T16:56:51.1191160Z Version: 20261117.0516.1
+2026-11-24T16:56:51.1191980Z Included Software: https://github.com/actions/runner-images/blob/macos-26-arm64/20261117.0516/images/macos/macos-26-arm64-Readme.md
+2026-11-24T16:56:51.1193020Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-26-arm64%2F20261117.0516
+2026-11-24T16:56:51.1193700Z ##[endgroup]
+2026-11-24T16:56:51.1194470Z ##[group]GITHUB_TOKEN Permissions
+2026-11-24T16:56:51.1195730Z Actions: read
+2026-11-24T16:56:51.1196090Z Contents: read
+2026-11-24T16:56:51.1196460Z Metadata: read
+2026-11-24T16:56:51.1196810Z ##[endgroup]
+2026-11-24T16:56:51.1198060Z Secret source: Actions
+2026-11-24T16:56:51.1198600Z Cache mode: write
+2026-11-24T16:56:51.1199030Z Prepare workflow directory
+2026-11-24T16:56:51.1751560Z Prepare all required actions
+2026-11-24T16:56:51.1828230Z Getting action download info
+2026-11-24T16:56:51.7930280Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-24T16:56:52.0996450Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-24T16:56:52.2272890Z Download action repository 'actions/download-artifact@v4' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-11-24T16:56:53.3094770Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-24T16:56:53.5316680Z Complete job name: verify (selected-seven-01, kaboom-arena, nerd-of-duty, macos-latest)
+2026-11-24T16:56:53.6079580Z ##[group]Run actions/checkout@v4
+2026-11-24T16:56:53.6080150Z with:
+2026-11-24T16:56:53.6080510Z   ref: c0f229230d92ab2d7458b9441cd1aa13a68ad535
+2026-11-24T16:56:53.6081140Z   sparse-checkout: tools/pc-games/qa
+joystick-games
+puretv-joystick
+.github/workflows
+
+2026-11-24T16:56:53.6081740Z   repository: ecojust/pureTV
+2026-11-24T16:56:53.6084720Z   token: ***
+2026-11-24T16:56:53.6085030Z   ssh-strict: true
+2026-11-24T16:56:53.6085360Z   ssh-user: git
+2026-11-24T16:56:53.6085680Z   persist-credentials: true
+2026-11-24T16:56:53.6086040Z   clean: true
+2026-11-24T16:56:53.6086370Z   sparse-checkout-cone-mode: true
+2026-11-24T16:56:53.6086750Z   fetch-depth: 1
+2026-11-24T16:56:53.6087090Z   fetch-tags: false
+2026-11-24T16:56:53.6087420Z   show-progress: true
+2026-11-24T16:56:53.6087740Z   lfs: false
+2026-11-24T16:56:53.6088050Z   submodules: false
+2026-11-24T16:56:53.6088390Z   set-safe-directory: true
+2026-11-24T16:56:53.6088760Z   allow-unsafe-pr-checkout: false
+2026-11-24T16:56:53.6089280Z env:
+2026-11-24T16:56:53.6089640Z   GAMES_JSON: [
+  "kaboom-arena",
+  "nerd-of-duty"
+]
+2026-11-24T16:56:53.6090090Z   BATCH: selected-seven-01
+2026-11-24T16:56:53.6090450Z   RUNNER_KIND: macos-latest
+2026-11-24T16:56:53.6090810Z   PYTHONUNBUFFERED: 1
+2026-11-24T16:56:53.6091140Z ##[endgroup]
+2026-11-24T16:56:53.9536710Z Syncing repository: ecojust/pureTV
+2026-11-24T16:56:53.9538320Z ##[group]Getting Git version info
+2026-11-24T16:56:53.9538840Z Working directory is '/Users/runner/work/pureTV/pureTV'
+2026-11-24T16:56:53.9539620Z [command]/opt/homebrew/bin/git version
+2026-11-24T16:56:54.0032870Z git version 2.56.1
+2026-11-24T16:56:54.0045620Z ##[endgroup]
+2026-11-24T16:56:54.0057880Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/3a5daaef-2cb7-4d4c-8ae4-d63ffd9fe27e/.gitconfig'
+2026-11-24T16:56:54.0061020Z Temporarily overriding HOME='/Users/runner/work/_temp/3a5daaef-2cb7-4d4c-8ae4-d63ffd9fe27e' before making global git config changes
+2026-11-24T16:56:54.0064250Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-24T16:56:54.0066820Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/pureTV/pureTV
+2026-11-24T16:56:54.0186230Z Deleting the contents of '/Users/runner/work/pureTV/pureTV'
+2026-11-24T16:56:54.0191970Z ##[group]Initializing the repository
+2026-11-24T16:56:54.0195280Z [command]/opt/homebrew/bin/git init /Users/runner/work/pureTV/pureTV
+2026-11-24T16:56:54.0424130Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-24T16:56:54.0426360Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-24T16:56:54.0428340Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-24T16:56:54.0430040Z hint: call:
+2026-11-24T16:56:54.0430490Z hint:
+2026-11-24T16:56:54.0432080Z hint: 	git config --global init.defaultBranch <name>
+2026-11-24T16:56:54.0432630Z hint:
+2026-11-24T16:56:54.0433140Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-24T16:56:54.0433950Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-24T16:56:54.0434520Z hint:
+2026-11-24T16:56:54.0434870Z hint: 	git branch -m <name>
+2026-11-24T16:56:54.0435250Z hint:
+2026-11-24T16:56:54.0435870Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-24T16:56:54.0438070Z Initialized empty Git repository in /Users/runner/work/pureTV/pureTV/.git/
+2026-11-24T16:56:54.0450180Z [command]/opt/homebrew/bin/git remote add origin https://github.com/ecojust/pureTV
+2026-11-24T16:56:54.0537980Z ##[endgroup]
+2026-11-24T16:56:54.0539920Z ##[group]Disabling automatic garbage collection
+2026-11-24T16:56:54.0541620Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+2026-11-24T16:56:54.0617450Z ##[endgroup]
+2026-11-24T16:56:54.0619520Z ##[group]Setting up auth
+2026-11-24T16:56:54.0621510Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-24T16:56:54.0689030Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-24T16:56:54.1785410Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-24T16:56:54.1857500Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-24T16:56:54.2712170Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-24T16:56:54.2779710Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-24T16:56:54.3739500Z [command]/opt/homebrew/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-24T16:56:54.4044310Z ##[endgroup]
+2026-11-24T16:56:54.4067990Z ##[group]Fetching the repository
+2026-11-24T16:56:54.4189010Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin c0f229230d92ab2d7458b9441cd1aa13a68ad535
+2026-11-24T16:56:55.2308970Z From https://github.com/ecojust/pureTV
+2026-11-24T16:56:55.2311910Z  * branch            c0f229230d92ab2d7458b9441cd1aa13a68ad535 -> FETCH_HEAD
+2026-11-24T16:56:55.2317590Z ##[endgroup]
+2026-11-24T16:56:55.2319910Z ##[group]Determining the checkout info
+2026-11-24T16:56:55.2322420Z ##[endgroup]
+2026-11-24T16:56:55.2324660Z ##[group]Setting up sparse checkout
+2026-11-24T16:56:55.2328470Z [command]/opt/homebrew/bin/git sparse-checkout set tools/pc-games/qa joystick-games puretv-joystick .github/workflows
+2026-11-24T16:56:55.2426640Z ##[endgroup]
+2026-11-24T16:56:55.2429260Z ##[group]Checking out the ref
+2026-11-24T16:56:55.2432330Z [command]/opt/homebrew/bin/git checkout --progress --force c0f229230d92ab2d7458b9441cd1aa13a68ad535
+2026-11-24T16:59:27.5862620Z Updating files:   0% (1/19181)
+2026-11-24T16:59:28.2294290Z Updating files:   1% (192/19181)
+2026-11-24T16:59:28.3655020Z Updating files:   2% (384/19181)
+2026-11-24T16:59:28.3821020Z Updating files:   3% (576/19181)
+2026-11-24T16:59:28.7694090Z Updating files:   3% (599/19181)
+2026-11-24T16:59:28.8489010Z Updating files:   4% (768/19181)
+2026-11-24T16:59:28.9566550Z Updating files:   5% (960/19181)
+2026-11-24T16:59:29.0501390Z Updating files:   6% (1151/19181)
+2026-11-24T16:59:29.1404820Z Updating files:   7% (1343/19181)
+2026-11-24T16:59:29.2641710Z Updating files:   8% (1535/19181)
+2026-11-24T16:59:29.3531210Z Updating files:   9% (1727/19181)
+2026-11-24T16:59:29.3881360Z Updating files:  10% (1919/19181)
+2026-11-24T16:59:29.5169020Z Updating files:  10% (1949/19181)
+2026-11-24T16:59:29.6646820Z Updating files:  11% (2110/19181)
+2026-11-24T16:59:30.0002320Z Updating files:  12% (2302/19181)
+2026-11-24T16:59:30.2753630Z Updating files:  13% (2494/19181)
+2026-11-24T16:59:30.3594620Z Updating files:  14% (2686/19181)
+2026-11-24T16:59:30.3826550Z Updating files:  15% (2878/19181)
+2026-11-24T16:59:30.4450390Z Updating files:  15% (2926/19181)
+2026-11-24T16:59:30.5328050Z Updating files:  16% (3069/19181)
+2026-11-24T16:59:30.6061010Z Updating files:  17% (3261/19181)
+2026-11-24T16:59:30.6813150Z Updating files:  18% (3453/19181)
+2026-11-24T16:59:30.7462150Z Updating files:  19% (3645/19181)
+2026-11-24T16:59:30.8301380Z Updating files:  20% (3837/19181)
+2026-11-24T16:59:30.8937970Z Updating files:  21% (4029/19181)
+2026-11-24T16:59:31.2013980Z Updating files:  22% (4220/19181)
+2026-11-24T16:59:31.3875080Z Updating files:  23% (4412/19181)
+2026-11-24T16:59:31.3889540Z Updating files:  23% (4600/19181)
+2026-11-24T16:59:31.6166200Z Updating files:  24% (4604/19181)
+2026-11-24T16:59:31.7077100Z Updating files:  25% (4796/19181)
+2026-11-24T16:59:31.9034620Z Updating files:  26% (4988/19181)
+2026-11-24T16:59:32.0703740Z Updating files:  27% (5179/19181)
+2026-11-24T16:59:32.3902550Z Updating files:  28% (5371/19181)
+2026-11-24T16:59:32.5304990Z Updating files:  28% (5498/19181)
+2026-11-24T16:59:32.7482870Z Updating files:  29% (5563/19181)
+2026-11-24T16:59:32.9119680Z Updating files:  30% (5755/19181)
+2026-11-24T16:59:33.1000550Z Updating files:  31% (5947/19181)
+2026-11-24T16:59:33.3676660Z Updating files:  32% (6138/19181)
+2026-11-24T16:59:33.3859290Z Updating files:  33% (6330/19181)
+2026-11-24T16:59:33.4617230Z Updating files:  33% (6355/19181)
+2026-11-24T16:59:33.8242280Z Updating files:  34% (6522/19181)
+2026-11-24T16:59:34.1247340Z Updating files:  35% (6714/19181)
+2026-11-24T16:59:34.2097360Z Updating files:  36% (6906/19181)
+2026-11-24T16:59:34.3301340Z Updating files:  37% (7097/19181)
+2026-11-24T16:59:34.3850770Z Updating files:  38% (7289/19181)
+2026-11-24T16:59:34.6400320Z Updating files:  38% (7368/19181)
+2026-11-24T16:59:34.8226670Z Updating files:  39% (7481/19181)
+2026-11-24T16:59:35.1912880Z Updating files:  40% (7673/19181)
+2026-11-24T16:59:35.3855150Z Updating files:  41% (7865/19181)
+2026-11-24T16:59:35.4388200Z Updating files:  41% (7903/19181)
+2026-11-24T16:59:35.6556470Z Updating files:  42% (8057/19181)
+2026-11-24T16:59:35.8949700Z Updating files:  43% (8248/19181)
+2026-11-24T16:59:36.2193940Z Updating files:  44% (8440/19181)
+2026-11-24T16:59:36.4099350Z Updating files:  45% (8632/19181)
+2026-11-24T16:59:36.4571740Z Updating files:  45% (8796/19181)
+2026-11-24T16:59:36.7491820Z Updating files:  46% (8824/19181)
+2026-11-24T16:59:36.8804750Z Updating files:  47% (9016/19181)
+2026-11-24T16:59:37.1567660Z Updating files:  48% (9207/19181)
+2026-11-24T16:59:37.3749790Z Updating files:  49% (9399/19181)
+2026-11-24T16:59:37.3899450Z Updating files:  50% (9591/19181)
+2026-11-24T16:59:37.6015150Z Updating files:  50% (9619/19181)
+2026-11-24T16:59:37.7727860Z Updating files:  51% (9783/19181)
+2026-11-24T16:59:37.8625600Z Updating files:  52% (9975/19181)
+2026-11-24T16:59:38.2533910Z Updating files:  53% (10166/19181)
+2026-11-24T16:59:38.3877860Z Updating files:  54% (10358/19181)
+2026-11-24T16:59:38.7014170Z Updating files:  54% (10456/19181)
+2026-11-24T16:59:38.9087410Z Updating files:  55% (10550/19181)
+2026-11-24T16:59:39.1703650Z Updating files:  56% (10742/19181)
+2026-11-24T16:59:39.4099610Z Updating files:  57% (10934/19181)
+2026-11-24T16:59:39.6475950Z Updating files:  57% (11012/19181)
+2026-11-24T16:59:39.8218380Z Updating files:  58% (11125/19181)
+2026-11-24T16:59:40.0055650Z Updating files:  59% (11317/19181)
+2026-11-24T16:59:40.3879280Z Updating files:  60% (11509/19181)
+2026-11-24T16:59:40.4001750Z Updating files:  60% (11666/19181)
+2026-11-24T16:59:40.5686290Z Updating files:  61% (11701/19181)
+2026-11-24T16:59:40.7117760Z Updating files:  62% (11893/19181)
+2026-11-24T16:59:40.9693310Z Updating files:  63% (12085/19181)
+2026-11-24T16:59:41.0468260Z Updating files:  64% (12276/19181)
+2026-11-24T16:59:41.2159690Z Updating files:  65% (12468/19181)
+2026-11-24T16:59:41.2504410Z Updating files:  66% (12660/19181)
+2026-11-24T16:59:41.2830980Z Updating files:  67% (12852/19181)
+2026-11-24T16:59:41.3167240Z Updating files:  68% (13044/19181)
+2026-11-24T16:59:41.3956450Z Updating files:  69% (13235/19181)
+2026-11-24T16:59:41.5605430Z Updating files:  69% (13367/19181)
+2026-11-24T16:59:41.6694910Z Updating files:  70% (13427/19181)
+2026-11-24T16:59:41.8453110Z Updating files:  71% (13619/19181)
+2026-11-24T16:59:41.9912520Z Updating files:  72% (13811/19181)
+2026-11-24T16:59:42.2238240Z Updating files:  73% (14003/19181)
+2026-11-24T16:59:42.3347720Z Updating files:  74% (14194/19181)
+2026-11-24T16:59:42.3886830Z Updating files:  75% (14386/19181)
+2026-11-24T16:59:42.4962460Z Updating files:  75% (14487/19181)
+2026-11-24T16:59:42.6437740Z Updating files:  76% (14578/19181)
+2026-11-24T16:59:42.7359750Z Updating files:  77% (14770/19181)
+2026-11-24T16:59:43.1817420Z Updating files:  78% (14962/19181)
+2026-11-24T16:59:43.3416750Z Updating files:  79% (15153/19181)
+2026-11-24T16:59:43.3936730Z Updating files:  80% (15345/19181)
+2026-11-24T16:59:43.4337520Z Updating files:  80% (15475/19181)
+2026-11-24T16:59:43.4929190Z Updating files:  81% (15537/19181)
+2026-11-24T16:59:43.5334510Z Updating files:  82% (15729/19181)
+2026-11-24T16:59:43.5811020Z Updating files:  83% (15921/19181)
+2026-11-24T16:59:43.6754690Z Updating files:  84% (16113/19181)
+2026-11-24T16:59:43.7849590Z Updating files:  85% (16304/19181)
+2026-11-24T16:59:43.9118890Z Updating files:  86% (16496/19181)
+2026-11-24T16:59:43.9561120Z Updating files:  87% (16688/19181)
+2026-11-24T16:59:44.0892550Z Updating files:  88% (16880/19181)
+2026-11-24T16:59:44.4612310Z Updating files:  89% (17072/19181)
+2026-11-24T16:59:44.7632070Z Updating files:  89% (17087/19181)
+2026-11-24T16:59:45.0354700Z Updating files:  90% (17263/19181)
+2026-11-24T16:59:45.1723500Z Updating files:  91% (17455/19181)
+2026-11-24T16:59:45.3189620Z Updating files:  92% (17647/19181)
+2026-11-24T16:59:45.3905840Z Updating files:  93% (17839/19181)
+2026-11-24T16:59:45.5166670Z Updating files:  93% (17892/19181)
+2026-11-24T16:59:45.7479600Z Updating files:  94% (18031/19181)
+2026-11-24T16:59:45.8714160Z Updating files:  95% (18222/19181)
+2026-11-24T16:59:46.1638310Z Updating files:  96% (18414/19181)
+2026-11-24T16:59:46.3539520Z Updating files:  97% (18606/19181)
+2026-11-24T16:59:46.3908380Z Updating files:  98% (18798/19181)
+2026-11-24T16:59:46.9854800Z Updating files:  98% (18854/19181)
+2026-11-24T16:59:47.3155070Z Updating files:  99% (18990/19181)
+2026-11-24T16:59:47.3255800Z Updating files: 100% (19181/19181)
+2026-11-24T16:59:47.3359030Z Updating files: 100% (19181/19181), done.
+2026-11-24T16:59:47.4486510Z HEAD is now at c0f22923 Accept newly pressed controls on the first gameplay frame
+2026-11-24T16:59:47.9925100Z ##[endgroup]
+2026-11-24T16:59:48.0239780Z [command]/opt/homebrew/bin/git log -1 --format=%H
+2026-11-24T16:59:48.0242010Z c0f229230d92ab2d7458b9441cd1aa13a68ad535
+2026-11-24T16:59:48.0860170Z ##[group]Run actions/setup-python@v5
+2026-11-24T16:59:48.0860550Z with:
+2026-11-24T16:59:48.0860750Z   python-version: 3.12
+2026-11-24T16:59:48.0861000Z   check-latest: false
+2026-11-24T16:59:48.0863210Z   token: ***
+2026-11-24T16:59:48.0863470Z   update-environment: true
+2026-11-24T16:59:48.0863700Z   allow-prereleases: false
+2026-11-24T16:59:48.0863920Z   freethreaded: false
+2026-11-24T16:59:48.0864190Z env:
+2026-11-24T16:59:48.0864410Z   GAMES_JSON: [
+  "kaboom-arena",
+  "nerd-of-duty"
+]
+2026-11-24T16:59:48.0864730Z   BATCH: selected-seven-01
+2026-11-24T16:59:48.0865290Z   RUNNER_KIND: macos-latest
+2026-11-24T16:59:48.0866060Z   PYTHONUNBUFFERED: 1
+2026-11-24T16:59:48.0866570Z ##[endgroup]
+2026-11-24T16:59:48.3470870Z ##[group]Installed versions
+2026-11-24T16:59:48.3662140Z (node:3733) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-24T16:59:48.3663010Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-24T16:59:48.3664530Z Successfully set up CPython (3.12.10)
+2026-11-24T16:59:48.3665170Z ##[endgroup]
+2026-11-24T16:59:48.3787930Z ##[group]Run actions/download-artifact@v4
+2026-11-24T16:59:48.3788200Z with:
+2026-11-24T16:59:48.3788510Z   name: joystick-catalog-macos-packages-selected-seven-01
+2026-11-24T16:59:48.3788810Z   path: /Users/runner/work/_temp/packages
+2026-11-24T16:59:48.3789030Z   merge-multiple: false
+2026-11-24T16:59:48.3789210Z   repository: ecojust/pureTV
+2026-11-24T16:59:48.3789420Z   run-id: 45438956900
+2026-11-24T16:59:48.3789580Z env:
+2026-11-24T16:59:48.3789760Z   GAMES_JSON: [
+  "kaboom-arena",
+  "nerd-of-duty"
+]
+2026-11-24T16:59:48.3790010Z   BATCH: selected-seven-01
+2026-11-24T16:59:48.3790180Z   RUNNER_KIND: macos-latest
+2026-11-24T16:59:48.3790370Z   PYTHONUNBUFFERED: 1
+2026-11-24T16:59:48.3790640Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.12.10/arm64
+2026-11-24T16:59:48.3791060Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.12.10/arm64/lib/pkgconfig
+2026-11-24T16:59:48.3791470Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.12.10/arm64
+2026-11-24T16:59:48.3791880Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.12.10/arm64
+2026-11-24T16:59:48.3792250Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.12.10/arm64
+2026-11-24T16:59:48.3792520Z ##[endgroup]
+2026-11-24T16:59:48.5527560Z Downloading single artifact
+2026-11-24T16:59:48.5739490Z (node:3750) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-24T16:59:48.5742260Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-24T16:59:48.7759670Z Preparing to download the following artifacts:
+2026-11-24T16:59:48.7761820Z - joystick-catalog-macos-packages-selected-seven-01 (ID: 14945180150, Size: 9612250, Expected Digest: sha256:3d8d737e63e3b0bd8d6168a82babc2af512524e39fef3e558938684acccd1587)
+2026-11-24T16:59:48.9691350Z Redirecting to blob download url: https://productionresultssa9.blob.core.windows.net/actions-results/159c0c21-7688-4b76-9422-66a1dbe4e6e6/workflow-job-run-994c3cfa-ae83-5d35-a3c0-a7d78eac106a/artifacts/5dfc97cb9302848c575a2be30cf631cbee027126997a72e3ea944110c97b8d20.zip
+2026-11-24T16:59:48.9700370Z Starting download of artifact to: /Users/runner/work/_temp/packages
+2026-11-24T16:59:49.2204440Z (node:3750) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-11-24T16:59:50.0229920Z SHA256 digest of downloaded artifact is 3d8d737e63e3b0bd8d6168a82babc2af512524e39fef3e558938684acccd1587
+2026-11-24T16:59:50.0230680Z Artifact download completed successfully.
+2026-11-24T16:59:50.0231190Z Total of 1 artifact(s) downloaded
+2026-11-24T16:59:50.0370340Z Download artifact has finished successfully
+2026-11-24T16:59:50.0711640Z ##[group]Run python3 - <<'PY'
+2026-11-24T16:59:50.0712250Z [36;1mpython3 - <<'PY'[0m
+2026-11-24T16:59:50.0712640Z [36;1mimport datetime,importlib.util,json,os,signal,subprocess,sys,traceback[0m
+2026-11-24T16:59:50.0713020Z [36;1mfrom pathlib import Path[0m
+2026-11-24T16:59:50.0713420Z [36;1mtemp=Path(os.environ['RUNNER_TEMP']);out=temp/'qa';out.mkdir();source=os.environ['GITHUB_SHA'][0m
+2026-11-24T16:59:50.0714210Z [36;1mspec=importlib.util.spec_from_file_location('qa_plan','joystick-games/tools/qa-plan.py');qa_plan=importlib.util.module_from_spec(spec);spec.loader.exec_module(qa_plan)[0m
+2026-11-24T16:59:50.0715200Z [36;1mspec=importlib.util.spec_from_file_location('coverage','joystick-games/tools/macos-coverage.py');coverage=importlib.util.module_from_spec(spec);spec.loader.exec_module(coverage)[0m
+2026-11-24T16:59:50.0717820Z [36;1mregistry=json.loads(Path('joystick-games/catalog-registry.json').read_text())[0m
+2026-11-24T16:59:50.0719550Z [36;1massert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==source[0m
+2026-11-24T16:59:50.0720940Z [36;1marm=os.environ['RUNNER_KIND']=='macos-latest';expected_arch='arm64' if arm else 'x86_64'[0m
+2026-11-24T16:59:50.0722450Z [36;1massert subprocess.check_output(['uname','-m'],text=True).strip()==expected_arch, 'Runner architecture changed'[0m
+2026-11-24T16:59:50.0724490Z [36;1mreport={'sourceCommit':source,'batch':os.environ['BATCH'],'runner':os.environ['RUNNER_KIND'],'expectedArchitecture':expected_arch,'status':'running','games':[]}[0m
+2026-11-24T16:59:50.0726320Z [36;1mdef save(): (out/'batch-report.json').write_text(json.dumps(report,indent=2)+'\n')[0m
+2026-11-24T16:59:50.0727280Z [36;1mdef execute(argv,log,timeout=900):[0m
+2026-11-24T16:59:50.0729150Z [36;1m  result={'command':list(map(str,argv)),'status':'running','log':str(log.relative_to(out)),'startedAt':datetime.datetime.now(datetime.timezone.utc).isoformat()};log.parent.mkdir(parents=True,exist_ok=True)[0m
+2026-11-24T16:59:50.0731040Z [36;1m  with log.open('w') as stream:[0m
+2026-11-24T16:59:50.0731620Z [36;1m    try:[0m
+2026-11-24T16:59:50.0732630Z [36;1m      process=subprocess.Popen(result['command'],stdout=stream,stderr=subprocess.STDOUT,start_new_session=True)[0m
+2026-11-24T16:59:50.0733850Z [36;1m      try:process.wait(timeout=timeout)[0m
+2026-11-24T16:59:50.0734630Z [36;1m      except subprocess.TimeoutExpired:[0m
+2026-11-24T16:59:50.0735540Z [36;1m        os.killpg(process.pid,signal.SIGKILL);process.wait();raise[0m
+2026-11-24T16:59:50.0736900Z [36;1m      result.update(returncode=process.returncode,status='passed' if process.returncode==0 else 'failed')[0m
+2026-11-24T16:59:50.0738630Z [36;1m    except Exception:result.update(status='failed',error=traceback.format_exc());stream.write(result['error'])[0m
+2026-11-24T16:59:50.0739980Z [36;1m  print(str(log)+': '+result['status'],flush=True);return result[0m
+2026-11-24T16:59:50.0742760Z [36;1mif arm:[0m
+2026-11-24T16:59:50.0743390Z [36;1m  available=subprocess.run(['/usr/bin/arch','-x86_64','/usr/bin/true'],capture_output=True).returncode==0[0m
+2026-11-24T16:59:50.0744200Z [36;1m  if not available:report['rosettaInstallation']=execute(['sudo','/usr/sbin/softwareupdate','--install-rosetta','--agree-to-license'],out/'rosetta-install.log',1200)[0m
+2026-11-24T16:59:50.0744820Z [36;1msave()[0m
+2026-11-24T16:59:50.0745050Z [36;1mfor game in json.loads(os.environ['GAMES_JSON']):[0m
+2026-11-24T16:59:50.0746220Z [36;1m  record={'game':game,'status':'running','checks':[]};report['games'].append(record);save()[0m
+2026-11-24T16:59:50.0748130Z [36;1m  package=temp/'packages'/game;game_out=out/game;game_out.mkdir()[0m
+2026-11-24T16:59:50.0749890Z [36;1m  try:[0m
+2026-11-24T16:59:50.0751920Z [36;1m    meta=json.loads((package/'build-manifest.json').read_text());assert meta['sourceCommit']==source and meta['game']==game[0m
+2026-11-24T16:59:50.0753670Z [36;1m    renderers=qa_plan.accepted_renderers(qa_plan.load_plan(Path('joystick-games')/game/'qa-plan.json'))[0m
+2026-11-24T16:59:50.0757550Z [36;1m    coverage_policy=coverage.policy(game,registry['games'][game],renderers)[0m
+2026-11-24T16:59:50.0759900Z [36;1m    install=execute(['python3','joystick-games/tools/macos-packages.py','--directory',str(package),'--output',str(game_out/'package-verification.json')],game_out/'package-verification.log');record['checks'].append(install);save()[0m
+2026-11-24T16:59:50.0760750Z [36;1m    if install['status']=='passed':[0m
+2026-11-24T16:59:50.0761060Z [36;1m      app=package/'installed'/meta['appName'][0m
+2026-11-24T16:59:50.0761380Z [36;1m      if coverage_policy!='full-v1':[0m
+2026-11-24T16:59:50.0762480Z [36;1m        record['capability']={'before':execute(['python3','joystick-games/tools/macos-capability.py','--game',game,'--phase','before','--manifest',str(package/'build-manifest.json'),'--output',str(game_out/'capability/before')],game_out/'capability-before.log')};save()[0m
+2026-11-24T16:59:50.0763730Z [36;1m      for mode,extra in [('native',[]),*([('occupied-port',['--occupy-default-port']),('rosetta',['--launch-architecture','x86_64'])] if arm else [])]:[0m
+2026-11-24T16:59:50.0764670Z [36;1m        result=execute(['python3','joystick-games/tools/macos-verify.py','--game',game,'--app',str(app),'--output',str(game_out/mode),*extra],game_out/(mode+'.log'));record['checks'].append(result);save()[0m
+2026-11-24T16:59:50.0765460Z [36;1m        if result['status']=='passed':[0m
+2026-11-24T16:59:50.0766020Z [36;1m          try:[0m
+2026-11-24T16:59:50.0767170Z [36;1m            observed=json.loads((game_out/mode/'report.json').read_text())[0m
+2026-11-24T16:59:50.0768470Z [36;1m            assert observed['status']=='passed', 'Catalog gameplay cannot be waived as limited graphics'[0m
+2026-11-24T16:59:50.0770080Z [36;1m            assert observed['initialization']['observedGame']['renderer'] in renderers[0m
+2026-11-24T16:59:50.0771540Z [36;1m            assert observed['nativeProcessArchitecture']==('x86_64' if mode=='rosetta' else expected_arch)[0m
+2026-11-24T16:59:50.0774050Z [36;1m          except Exception:result.update(status='failed',error=traceback.format_exc())[0m
+2026-11-24T16:59:50.0775100Z [36;1m          save()[0m
+2026-11-24T16:59:50.0776570Z [36;1m      if coverage_policy!='full-v1':[0m
+2026-11-24T16:59:50.0777530Z [36;1m        record['capability']['after']=execute(['python3','joystick-games/tools/macos-capability.py','--game',game,'--phase','after','--manifest',str(package/'build-manifest.json'),'--output',str(game_out/'capability/after')],game_out/'capability-after.log');save()[0m
+2026-11-24T16:59:50.0779040Z [36;1m    record['status']='passed' if record['checks'] and all(item['status']=='passed' for item in record['checks']) else 'failed'[0m
+2026-11-24T16:59:50.0779680Z [36;1m  except Exception:record.update(status='failed',error=traceback.format_exc())[0m
+2026-11-24T16:59:50.0780040Z [36;1m  save()[0m
+2026-11-24T16:59:50.0780420Z [36;1mreport['status']='passed' if all(item['status']=='passed' for item in report['games']) else 'failed';save()[0m
+2026-11-24T16:59:50.0780900Z [36;1msys.exit(0 if report['status']=='passed' else 1)[0m
+2026-11-24T16:59:50.0781150Z [36;1mPY[0m
+2026-11-24T16:59:50.1445610Z shell: /bin/bash -e {0}
+2026-11-24T16:59:50.1446150Z env:
+2026-11-24T16:59:50.1446660Z   GAMES_JSON: [
+  "kaboom-arena",
+  "nerd-of-duty"
+]
+2026-11-24T16:59:50.1447360Z   BATCH: selected-seven-01
+2026-11-24T16:59:50.1447860Z   RUNNER_KIND: macos-latest
+2026-11-24T16:59:50.1448410Z   PYTHONUNBUFFERED: 1
+2026-11-24T16:59:50.1449110Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.12.10/arm64
+2026-11-24T16:59:50.1450180Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.12.10/arm64/lib/pkgconfig
+2026-11-24T16:59:50.1451280Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.12.10/arm64
+2026-11-24T16:59:50.1452230Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.12.10/arm64
+2026-11-24T16:59:50.1453210Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.12.10/arm64
+2026-11-24T16:59:50.1460230Z   GH_TOKEN: ***
+2026-11-24T16:59:50.1460690Z ##[endgroup]
+2026-11-24T17:00:47.5340560Z /Users/runner/work/_temp/qa/kaboom-arena/package-verification.log: passed
+2026-11-24T17:01:28.4128440Z /Users/runner/work/_temp/qa/kaboom-arena/native.log: passed
+2026-11-24T17:02:03.4889710Z /Users/runner/work/_temp/qa/kaboom-arena/occupied-port.log: passed
+2026-11-24T17:02:43.1369190Z /Users/runner/work/_temp/qa/kaboom-arena/rosetta.log: passed
+2026-11-24T17:03:07.0364720Z /Users/runner/work/_temp/qa/nerd-of-duty/package-verification.log: passed
+2026-11-24T17:04:20.4503850Z /Users/runner/work/_temp/qa/nerd-of-duty/native.log: passed
+2026-11-24T17:05:25.4823330Z /Users/runner/work/_temp/qa/nerd-of-duty/occupied-port.log: passed
+2026-11-24T17:06:38.0540680Z /Users/runner/work/_temp/qa/nerd-of-duty/rosetta.log: passed
+2026-11-24T17:06:38.2607960Z ##[group]Run actions/upload-artifact@v4
+2026-11-24T17:06:38.2608410Z with:
+2026-11-24T17:06:38.2609030Z   name: joystick-catalog-macos-qa-selected-seven-01-macos-latest
+2026-11-24T17:06:38.2609910Z   path: /Users/runner/work/_temp/qa/
+2026-11-24T17:06:38.2610570Z   if-no-files-found: warn
+2026-11-24T17:06:38.2611300Z   include-hidden-files: true
+2026-11-24T17:06:38.2611690Z   retention-days: 30
+2026-11-24T17:06:38.2612140Z   compression-level: 6
+2026-11-24T17:06:38.2612660Z   overwrite: false
+2026-11-24T17:06:38.2612940Z env:
+2026-11-24T17:06:38.2613380Z   GAMES_JSON: [
+  "kaboom-arena",
+  "nerd-of-duty"
+]
+2026-11-24T17:06:38.2613800Z   BATCH: selected-seven-01
+2026-11-24T17:06:38.2614420Z   RUNNER_KIND: macos-latest
+2026-11-24T17:06:38.2614910Z   PYTHONUNBUFFERED: 1
+2026-11-24T17:06:38.2616030Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.12.10/arm64
+2026-11-24T17:06:38.2616910Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.12.10/arm64/lib/pkgconfig
+2026-11-24T17:06:38.2617940Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.12.10/arm64
+2026-11-24T17:06:38.2618760Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.12.10/arm64
+2026-11-24T17:06:38.2619770Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.12.10/arm64
+2026-11-24T17:06:38.2620390Z ##[endgroup]
+2026-11-24T17:06:39.6212830Z (node:19065) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-24T17:06:39.6215320Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-24T17:06:39.6928610Z With the provided path, there will be 167 files uploaded
+2026-11-24T17:06:39.6929130Z Artifact name is valid!
+2026-11-24T17:06:39.6929370Z Root directory input is valid!
+2026-11-24T17:06:40.1900220Z Beginning upload of artifact content to blob storage
+2026-11-24T17:06:40.7962630Z (node:19065) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-24T17:06:41.3685060Z Uploaded bytes 8388608
+2026-11-24T17:06:41.7399560Z Uploaded bytes 16659354
+2026-11-24T17:06:41.7872150Z Finished uploading artifact content to blob storage!
+2026-11-24T17:06:41.7875060Z SHA256 digest of uploaded artifact zip is c5754236fd9dc3f55a86cc98540856fbfba3d69262de0c919fc64159a6101f96
+2026-11-24T17:06:41.7877670Z Finalizing artifact upload
+2026-11-24T17:06:42.1653910Z Artifact joystick-catalog-macos-qa-selected-seven-01-macos-latest.zip successfully finalized. Artifact ID 14945402592
+2026-11-24T17:06:42.1655360Z Artifact joystick-catalog-macos-qa-selected-seven-01-macos-latest has been successfully uploaded! Final size is 16659354 bytes. Artifact ID is 14945402592
+2026-11-24T17:06:42.1675000Z Artifact download URL: https://github.com/ecojust/pureTV/actions/runs/45438956900/artifacts/14945402592
+2026-11-24T17:06:42.2155620Z Post job cleanup.
+2026-11-24T17:06:42.6030450Z (node:19292) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-24T17:06:42.6031570Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-24T17:06:42.6346440Z Post job cleanup.
+2026-11-24T17:06:42.8422780Z [command]/opt/homebrew/bin/git version
+2026-11-24T17:06:42.8906100Z git version 2.56.1
+2026-11-24T17:06:42.8944440Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/4909bd14-5e24-40ea-8deb-67e591777a42/.gitconfig'
+2026-11-24T17:06:42.8966100Z Temporarily overriding HOME='/Users/runner/work/_temp/4909bd14-5e24-40ea-8deb-67e591777a42' before making global git config changes
+2026-11-24T17:06:42.8968430Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-24T17:06:42.8975350Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/pureTV/pureTV
+2026-11-24T17:06:42.9208420Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-24T17:06:42.9382000Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-24T17:06:43.1708860Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-24T17:06:43.1866660Z http.https://github.com/.extraheader
+2026-11-24T17:06:43.1900000Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-24T17:06:43.2409490Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-24T17:06:43.5040700Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-24T17:06:43.5255170Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-24T17:06:43.7933520Z Cleaning up orphan processes
+2026-11-24T17:06:47.2228660Z Terminate orphan process: pid (6819) (System Events)
+2026-11-24T17:06:50.3528970Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/download-artifact@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
