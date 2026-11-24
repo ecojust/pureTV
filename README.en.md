@@ -84,13 +84,13 @@
 
 <!-- game-index:start -->
 
-**39 controller games** · [Play every game on a computer](docs/guide/README.en.md#play-on-a-computer) · Android TV (39) · Standalone macOS downloads (39) · Standalone Windows x64 downloads (39)
+**46 controller games** · [Play every game on a computer](docs/guide/README.en.md#play-on-a-computer) · Android TV (46) · Standalone macOS downloads (39) · Standalone Windows x64 downloads (39)
 
-[Racing and sports (13)](#controller-racing) · [Action, RPGs and exploration (6)](#controller-action) · [Platformers, bullet hell and arcade (5)](#controller-arcade) · [Strategy, tower defense and card games (2)](#controller-strategy) · [Puzzles and brainteasers (13)](#controller-puzzle)
+[Racing and sports (14)](#controller-racing) · [Action, RPGs and exploration (8)](#controller-action) · [Platformers, bullet hell and arcade (8)](#controller-arcade) · [Strategy, tower defense and card games (2)](#controller-strategy) · [Puzzles and brainteasers (14)](#controller-puzzle)
 
 <a id="controller-racing"></a>
 
-### Racing and sports (13)
+### Racing and sports (14)
 
 <table>
   <tr>
@@ -113,7 +113,7 @@
   </tr>
   <tr>
     <td align="center" valign="top" width="207"><a href="joystick-games/turbo-kart-rally/"><img src="joystick-games/turbo-kart-rally/thumb.png" width="180" alt=""><br>Turbo Kart Rally</a><br><a href="joystick-games/turbo-kart-rally/turbo-kart-rally-0.1.2.apk?raw=1" title="Turbo Kart Rally Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Turbo Kart Rally Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/turbo-kart-rally-macos.dmg" title="Turbo Kart Rally macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Turbo Kart Rally macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/turbo-kart-rally-windows-x64-setup.exe" title="Turbo Kart Rally Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Turbo Kart Rally Windows x64 EXE"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/bridge-mind/turbo-kart-rally" title="Turbo Kart Rally · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Turbo Kart Rally · Original repository"></a></td>
-    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/dolmus/"><img src="joystick-games/dolmus/thumb.png" width="180" alt=""><br>Dolmuş</a><br><a href="joystick-games/dolmus/dolmus-0.1.0.apk?raw=1" title="Dolmuş Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Dolmuş Android TV APK"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/Furkiozknn/dolmus" title="Dolmuş · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Dolmuş · Original repository"></a></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
@@ -121,7 +121,7 @@
 
 <a id="controller-action"></a>
 
-### Action, RPGs and exploration (6)
+### Action, RPGs and exploration (8)
 
 <table>
   <tr>
@@ -133,14 +133,14 @@
   <tr>
     <td align="center" valign="top" width="207"><a href="joystick-games/operation-ironhold/"><img src="joystick-games/operation-ironhold/thumb.png" width="180" alt=""><br>Operation Ironhold</a><br><a href="joystick-games/operation-ironhold/operation-ironhold-0.1.2.apk?raw=1" title="Operation Ironhold Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Operation Ironhold Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/operation-ironhold-macos.dmg" title="Operation Ironhold macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Operation Ironhold macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/operation-ironhold-windows-x64-setup.exe" title="Operation Ironhold Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Operation Ironhold Windows x64 EXE"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/StarKnightt/operation-ironhold" title="Operation Ironhold · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Operation Ironhold · Original repository"></a></td>
     <td align="center" valign="top" width="207"><a href="joystick-games/kindle/"><img src="joystick-games/kindle/thumb.png" width="180" alt=""><br>KINDLE</a><br><a href="joystick-games/kindle/kindle-0.1.1.apk?raw=1" title="KINDLE Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="KINDLE Android TV APK"></a> <a href="joystick-games/kindle/macos/Kindle-0.1.0-macos-universal.dmg?raw=1" title="KINDLE macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="KINDLE macOS DMG"></a> <a href="joystick-games/kindle/windows/Kindle-0.1.0-windows-x64-setup.exe?raw=1" title="KINDLE Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="KINDLE Windows x64 EXE"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/TonyDowney/kindle" title="KINDLE · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="KINDLE · Original repository"></a></td>
-    <td align="center" valign="top" width="207"></td>
-    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/nerd-of-duty/"><img src="joystick-games/nerd-of-duty/thumb.png" width="180" alt=""><br>Nerd of Duty</a><br><a href="joystick-games/nerd-of-duty/nerd-of-duty-0.1.0.apk?raw=1" title="Nerd of Duty Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Nerd of Duty Android TV APK"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/sytaylor/nerd-of-duty" title="Nerd of Duty · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Nerd of Duty · Original repository"></a></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/gogh-strike/"><img src="joystick-games/gogh-strike/thumb.png" width="180" alt=""><br>Gogh Strike</a><br><a href="joystick-games/gogh-strike/gogh-strike-0.1.0.apk?raw=1" title="Gogh Strike Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Gogh Strike Android TV APK"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/petergpt/gogh-strike" title="Gogh Strike · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Gogh Strike · Original repository"></a></td>
   </tr>
 </table>
 
 <a id="controller-arcade"></a>
 
-### Platformers, bullet hell and arcade (5)
+### Platformers, bullet hell and arcade (8)
 
 <table>
   <tr>
@@ -151,9 +151,9 @@
   </tr>
   <tr>
     <td align="center" valign="top" width="207"><a href="joystick-games/glup/"><img src="joystick-games/glup/thumb.png" width="180" alt=""><br>GLUP</a><br><a href="joystick-games/glup/glup-0.1.2.apk?raw=1" title="GLUP Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="GLUP Android TV APK"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/glup-macos.dmg" title="GLUP macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="GLUP macOS DMG"></a> <a href="https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/glup-windows-x64-setup.exe" title="GLUP Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="GLUP Windows x64 EXE"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/gavilanbe/glup" title="GLUP · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="GLUP · Original repository"></a></td>
-    <td align="center" valign="top" width="207"></td>
-    <td align="center" valign="top" width="207"></td>
-    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/kaboom-arena/"><img src="joystick-games/kaboom-arena/thumb.png" width="180" alt=""><br>Kaboom Arena</a><br><a href="joystick-games/kaboom-arena/kaboom-arena-0.1.0.apk?raw=1" title="Kaboom Arena Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Kaboom Arena Android TV APK"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/janroudaut/kaboom-arena" title="Kaboom Arena · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Kaboom Arena · Original repository"></a></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/mechapede/"><img src="joystick-games/mechapede/thumb.png" width="180" alt=""><br>Mechapede</a><br><a href="joystick-games/mechapede/mechapede-0.1.0.apk?raw=1" title="Mechapede Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Mechapede Android TV APK"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/davbachman/Mechapede" title="Mechapede · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Mechapede · Original repository"></a></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/marti/"><img src="joystick-games/marti/thumb.png" width="180" alt=""><br>Martı · Seagull Run</a><br><a href="joystick-games/marti/marti-0.1.0.apk?raw=1" title="Martı · Seagull Run Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Martı · Seagull Run Android TV APK"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/Furkiozknn/marti" title="Martı · Seagull Run · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Martı · Seagull Run · Original repository"></a></td>
   </tr>
 </table>
 
@@ -172,7 +172,7 @@
 
 <a id="controller-puzzle"></a>
 
-### Puzzles and brainteasers (13)
+### Puzzles and brainteasers (14)
 
 <table>
   <tr>
@@ -195,7 +195,7 @@
   </tr>
   <tr>
     <td align="center" valign="top" width="207"><a href="joystick-games/silent-meridian/"><img src="joystick-games/silent-meridian/thumb.png" width="180" alt=""><br>Silent Meridian</a><br><a href="joystick-games/silent-meridian/silent-meridian-0.1.0.apk?raw=1" title="Silent Meridian Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Silent Meridian Android TV APK"></a> <a href="joystick-games/silent-meridian/macos/SilentMeridian-0.1.0-macos-universal.dmg?raw=1" title="Silent Meridian macOS DMG"><img src="docs/branding/platforms/macos.png" width="22" height="22" alt="Silent Meridian macOS DMG"></a> <a href="joystick-games/silent-meridian/windows/SilentMeridian-0.1.0-windows-x64-setup.exe?raw=1" title="Silent Meridian Windows x64 EXE"><img src="docs/branding/platforms/windows.png" width="22" height="22" alt="Silent Meridian Windows x64 EXE"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/stackloomdev/silent-meridian" title="Silent Meridian · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Silent Meridian · Original repository"></a></td>
-    <td align="center" valign="top" width="207"></td>
+    <td align="center" valign="top" width="207"><a href="joystick-games/bloom-hop/"><img src="joystick-games/bloom-hop/thumb.png" width="180" alt=""><br>Bloom Hop</a><br><a href="joystick-games/bloom-hop/bloom-hop-0.1.0.apk?raw=1" title="Bloom Hop Android TV APK"><img src="docs/branding/platforms/android-tv.png" width="22" height="22" alt="Bloom Hop Android TV APK"></a> <a href="docs/guide/README.en.md#install-a-game-and-connect-a-controller" title="Controller supported. View setup guide"><img src="docs/branding/platforms/controller.png" width="22" height="22" alt="Controller supported. View setup guide"></a> <a href="https://github.com/zeveck/bloom-hop" title="Bloom Hop · Original repository"><img src="docs/branding/platforms/upstream.png" width="22" height="22" alt="Bloom Hop · Original repository"></a></td>
     <td align="center" valign="top" width="207"></td>
     <td align="center" valign="top" width="207"></td>
   </tr>
