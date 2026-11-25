@@ -4,7 +4,9 @@
 
 ## 下载
 
-[Android TV APK](nerd-of-duty-0.1.0.apk?raw=1) · [Windows x64 安装版](windows/NerdOfDuty-0.1.0-windows-x64-setup.exe?raw=1) · [Windows x64 便携版](windows/NerdOfDuty-0.1.0-windows-x64.zip?raw=1) · [macOS 通用 DMG](macos/NerdOfDuty-0.1.0-macos-universal.dmg?raw=1) · [macOS 通用 ZIP](macos/NerdOfDuty-0.1.0-macos-universal.zip?raw=1)
+[Android TV 0.1.1 · APK](nerd-of-duty-0.1.1.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/nerd-of-duty-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/nerd-of-duty-windows-x64-setup.exe)
+
+历史安装包（Android 0.1.0） · [Android TV APK](nerd-of-duty-0.1.0.apk?raw=1) · [Windows x64 安装版](windows/NerdOfDuty-0.1.0-windows-x64-setup.exe?raw=1) · [Windows x64 便携版](windows/NerdOfDuty-0.1.0-windows-x64.zip?raw=1) · [macOS 通用 DMG](macos/NerdOfDuty-0.1.0-macos-universal.dmg?raw=1) · [macOS 通用 ZIP](macos/NerdOfDuty-0.1.0-macos-universal.zip?raw=1)
 
 [文件校验值](SHA256SUMS.txt) · [Android TV 验证](docs/releases/0.1.0/android.json) · [Windows 验证](docs/releases/0.1.0/windows.json) · [macOS 验证](docs/releases/0.1.0/macos.json)
 

@@ -4,7 +4,9 @@
 
 ## 下载
 
-[Android TV 0.1.1 · APK](nova-lancer-0.1.1.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/nova-lancer-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/nova-lancer-windows-x64-setup.exe)
+[Android TV 0.1.2 · APK](nova-lancer-0.1.2.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/nova-lancer-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/nova-lancer-windows-x64-setup.exe)
+
+历史安装包（Android 0.1.1） · [Android TV 0.1.1 · APK](nova-lancer-0.1.1.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/nova-lancer-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/nova-lancer-windows-x64-setup.exe)
 
 Windows 客户端需要 Microsoft Edge WebView2 Runtime。macOS 安装包包含 arm64 和 x86_64，采用临时签名，未经 Apple 公证。0.1.0 的 Apple Silicon 原生运行和 Rosetta 测试均通过实玩；Intel 测试机未能初始化 WebGL 2，原生 Intel 游戏兼容性尚未验证。
 

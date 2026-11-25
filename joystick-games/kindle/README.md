@@ -1,6 +1,8 @@
 # 星球点灯人 · KINDLE
 
-[Android TV APK](kindle-0.1.1.apk?raw=1) · [macOS DMG](macos/Kindle-0.1.0-macos-universal.dmg?raw=1) · [Windows x64 安装程序](windows/Kindle-0.1.0-windows-x64-setup.exe?raw=1) · [SHA-256](SHA256SUMS.txt)
+[Android TV 0.1.2 · APK](kindle-0.1.2.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/kindle-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/kindle-windows-x64-setup.exe)
+
+历史安装包（Android 0.1.1） · [Android TV APK](kindle-0.1.1.apk?raw=1) · [macOS DMG](macos/Kindle-0.1.0-macos-universal.dmg?raw=1) · [Windows x64 安装程序](windows/Kindle-0.1.0-windows-x64-setup.exe?raw=1) · [SHA-256](SHA256SUMS.txt)
 
 在极光下环绕小行星，寻找并点亮九座灯塔。方向上下行走，左右转向，A 跳跃（长按滑翔），B 点灯，X 呼唤，Y 奔跑，START 开始或暂停。
 

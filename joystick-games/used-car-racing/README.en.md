@@ -1,8 +1,10 @@
 # Used Car Racing TV
 
 <!-- apk-resource:start -->
-[Android 0.1.8 APK](used-car-racing-0.1.8.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.1.8/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.1.7 gameplay video](docs/releases/0.1.7/gameplay.mp4?raw=1)
+[Android TV 0.1.9 · APK](used-car-racing-0.1.9.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/used-car-racing-macos.dmg) · [Windows x64 · Installer](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/used-car-racing-windows-x64-setup.exe)
 <!-- apk-resource:end -->
+
+Earlier downloads (Android 0.1.8) · [Android 0.1.8 APK](used-car-racing-0.1.8.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/used-car-racing-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.1.8/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.1.7 gameplay video](docs/releases/0.1.7/gameplay.mp4?raw=1)
 
 ## Earlier Android release 0.1.7 · Returning to a phone-controlled race
 

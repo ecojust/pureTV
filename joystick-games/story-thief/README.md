@@ -1,6 +1,8 @@
 # The Story Thief of Greymantle · 灰斗篷山的故事大盗
 
-[Android TV 0.1.3 · APK](story-thief-0.1.3.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/story-thief-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/story-thief-windows-x64-setup.exe)
+[Android TV 0.1.4 · APK](story-thief-0.1.4.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/story-thief-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/story-thief-windows-x64-setup.exe)
+
+历史安装包（Android 0.1.3） · [Android TV 0.1.3 · APK](story-thief-0.1.3.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/story-thief-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/story-thief-windows-x64-setup.exe)
 
 [用手机扫码加入](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上用键盘或无线手柄玩](../../docs/guide/README.md#在电脑上玩)
 

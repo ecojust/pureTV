@@ -1,8 +1,10 @@
 # Tetris TV
 
 <!-- apk-resource:start -->
-[Android 0.5.8 APK](tetris-0.5.8.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tetris-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tetris-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.5.8/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.5.7 gameplay video](docs/releases/0.5.7/gameplay.mp4?raw=1)
+[Android TV 0.5.9 · APK](tetris-0.5.9.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/tetris-macos.dmg) · [Windows x64 · Installer](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/tetris-windows-x64-setup.exe)
 <!-- apk-resource:end -->
+
+Earlier downloads (Android 0.5.8) · [Android 0.5.8 APK](tetris-0.5.8.apk?raw=1) · [Windows x64](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tetris-windows-x64-setup.exe) · [macOS](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/tetris-macos.dmg) · [Launcher artwork and installation checks](docs/releases/0.5.8/android-icon-receipt.json) · [Checksums](SHA256SUMS.txt) · [0.5.7 gameplay video](docs/releases/0.5.7/gameplay.mp4?raw=1)
 
 ## Earlier Android release 0.5.7 · Controllers and phone pairing
 

@@ -1,12 +1,14 @@
 # Lumenrift · 光隙守望
 
-[Android TV 0.1.2 · APK](lumenrift-0.1.2.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/lumenrift-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/lumenrift-windows-x64-setup.exe)
+[Android TV 0.1.3 · APK](lumenrift-0.1.3.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/lumenrift-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/games-zh-cn-2026.11.25/lumenrift-windows-x64-setup.exe)
+
+历史安装包（Android 0.1.2） · [Android TV 0.1.2 · APK](lumenrift-0.1.2.apk?raw=1) · [macOS · DMG](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/lumenrift-macos.dmg) · [Windows x64 · 安装程序](https://github.com/ecojust/pureTV/releases/download/gameplay-icons-2026.11.21/lumenrift-windows-x64-setup.exe)
 
 [扫码连接手机](../../docs/guide/README.md#在电视上扫码加入) · [在电脑上游玩](../../docs/guide/README.md#在电脑上玩)
 
 在夜色、日光或四季战役中守住中央的光源。用围墙改变敌人的路线，在路边架设炮塔、在矿脉上建造采集站。每个战役都有自己的建筑、敌人和音乐。撑过第 30 波后可以继续挑战无尽模式。
 
-从 [dist/tv.html](dist/tv.html) 打开离线版。选择战役和难度后按 START 开局。游戏保留原版八种语言；首次进入时会依据系统语言选择，未匹配时显示英语。
+从 [dist/tv.html](dist/tv.html) 打开离线版。选择战役和难度后按 START 开局。首次进入时使用简体中文。设置中也可选择原版提供的八种语言。
 
 | 场景 | pureTV 手柄 | 电脑键盘 |
 | --- | --- | --- |
