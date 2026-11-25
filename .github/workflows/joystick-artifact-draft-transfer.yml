@@ -45,7 +45,7 @@ jobs:
       - name: Verify package certificate, content and source binding before attaching
         run: |
           python3 - <<'PY'
-          import hashlib, json, os, re, subprocess, zipfile
+          import hashlib, json, os, re, shutil, subprocess, zipfile
           from pathlib import Path
           def gh(*args):
               return subprocess.check_output(['gh', *args], text=True)
@@ -53,6 +53,7 @@ jobs:
           games = os.environ['GAMES'].split(',')
           cert = 'eb31978a5bd768fe3cedf483530c51df1e901cf00da5c822d3a7e98fc492cf23'
           apksigner = sorted(Path(os.environ['ANDROID_HOME']).glob('build-tools/*/apksigner'))[-1]
+          assert set(games)=={'atlas-of-ink','neon-arcana'} and len(games)==2
           records = []
           paths = []
           for game in games:
@@ -69,7 +70,9 @@ jobs:
               with zipfile.ZipFile(apk) as archive:
                   assert archive.testzip() is None and 'assets/tv.html' in archive.namelist()
               records.append({k:r[k] for k in ('game','sourceSha','runId','packageName','versionName','versionCode','bytes','sha256','certificateSha256','signatureVerified')})
-              paths.append(apk)
+              candidate=Path(apk.name+'.candidate-'+run)
+              shutil.copyfile(apk,candidate)
+              paths.append(candidate)
           report = Path('android-'+run+'-'+str(os.environ['GITHUB_RUN_ID'])+'.json')
           report.write_text(json.dumps(records,indent=2)+'\n'); paths.append(report)
           release = json.loads(gh('release','view',tag,'--json','apiUrl,isDraft'))
@@ -83,4 +86,7 @@ jobs:
                   assert old['digest'] == 'sha256:'+hashlib.sha256(p.read_bytes()).hexdigest()
               else:
                   gh('release','upload',tag,str(p))
+              remote=json.loads(gh('api','--paginate','--slurp',api+'/assets?per_page=100'))
+              item,=[a for page in remote for a in page if a['name']==p.name]
+              assert item['state']=='uploaded' and item['size']==p.stat().st_size and item['digest']=='sha256:'+hashlib.sha256(p.read_bytes()).hexdigest()
           PY
