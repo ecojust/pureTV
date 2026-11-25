@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "renderer": "webgl2",
+  "pauseStablePaths": ["gameplay.shots", "gameplay.x", "gameplay.z"],
+  "steps": [
+    {"name": "Deploy as the selected job", "keys": ["START"], "holdMs": 250, "timeoutSeconds": 120, "expect": [{"path": "stage", "op": "eq", "value": "playing"}, {"path": "gameplay.wave", "op": "eq", "value": 1}]},
+    {"name": "Strafe across the street", "keys": ["RIGHT"], "holdMs": 550, "expect": [{"path": "gameplay.x", "op": "changed"}]},
+    {"name": "Turn toward the plaza", "keys": ["X", "LEFT"], "holdMs": 400, "expect": [{"path": "gameplay.yaw", "op": "changed"}]},
+    {"name": "Fire the equipped weapon", "keys": ["A"], "holdMs": 550, "expect": [{"path": "gameplay.shots", "op": "increased"}]},
+    {"name": "Pause the wave", "keys": ["START"], "holdMs": 750, "expect": [{"path": "stage", "op": "eq", "value": "paused"}]},
+    {"name": "Resume the wave", "keys": ["START"], "holdMs": 750, "expect": [{"path": "stage", "op": "eq", "value": "playing"}]}
+  ]
+}
