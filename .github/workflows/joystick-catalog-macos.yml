@@ -25,6 +25,7 @@ jobs:
       FROZEN: ${{ inputs.source_sha }}
       GAME: ${{ matrix.id }}
       BUILD_MODE: ${{ matrix.mode }}
+      PREVIOUS_SOURCE: ${{ matrix.supersedes }}
     defaults:
       run:
         shell: bash
@@ -99,13 +100,13 @@ jobs:
           tag=games-zh-cn-2026.11.25
           test "$(gh release view "$tag" --json isDraft -q .isDraft)" = true
           flags=()
-          if [[ "${{ matrix.supersedes }}" != "" ]]; then
+          if [[ -n "$PREVIOUS_SOURCE" ]]; then
             platform=windows
             if [[ "$RUNNER_OS" = macOS ]]; then platform=macos; fi
             previous="$GAME-$platform-verification.json"
             if gh release view "$tag" --json assets --jq '.assets[].name' > "$RUNNER_TEMP/existing-assets" && grep -Fqx "$previous" "$RUNNER_TEMP/existing-assets"; then
               gh release download "$tag" -p "$previous" -O "$RUNNER_TEMP/previous.json"
-              python -c "import json,os,pathlib; assert json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'previous.json').read_text())['sourceCommit']=='${{ matrix.supersedes }}'"
+              python -c "import json,os,pathlib; assert json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'previous.json').read_text())['sourceCommit']==os.environ['PREVIOUS_SOURCE']"
               flags+=(--clobber)
             fi
           fi
