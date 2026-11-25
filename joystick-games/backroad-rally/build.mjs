@@ -1,3 +1,4 @@
+import { localizeHtml } from '../shared/web/localize-html.mjs';
 import { build } from 'vite';
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, mkdtempSync, rmSync, renameSync, copyFileSync, existsSync } from 'node:fs';
@@ -32,6 +33,7 @@ try {
     },
   });
   renameSync(join(out, 'index.html'), join(out, 'tv.html'));
+  writeFileSync(join(out, 'tv.html'), await localizeHtml(readFileSync(join(out, 'tv.html'), 'utf8'), here));
   const notices = [
     ['Backroad Rally (MIT)', join(here, 'LICENSE')],
     ['Three.js (MIT)', join(here, 'node_modules/three/LICENSE')],

@@ -162,7 +162,7 @@ function nextLine() {
     $('dlg-who').style.color = who === 'you' ? story.paint : c.color;
     $('dlg-role').textContent = c.role;
     drawPortrait($('dlg-portrait'), who, mood, story.paint);
-    story.full = fillName(text, story.name);
+    story.full = fillName(globalThis.PureTVChinese?.translate(text) ?? text, story.name);
     story.typed = 0;
     story.who = who;
     $('dlg-text').textContent = '';
