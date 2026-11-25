@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "renderer": "canvas2d",
+  "storageRestartRequired": true,
+  "pauseStablePaths": ["gameplay.time", "gameplay.wave", "gameplay.buildings"],
+  "steps": [
+    {"name": "Enter the Night campaign", "keys": ["START"], "holdMs": 100, "expect": [{"path": "stage", "op": "eq", "value": "playing"}]},
+    {"name": "Open the build bar", "keys": ["X"], "holdMs": 100, "expect": [{"path": "gameplay.toolbar", "op": "eq", "value": true}]},
+    {"name": "Select the Bulwark", "keys": ["A"], "holdMs": 100, "expect": [{"path": "gameplay.placing", "op": "eq", "value": "wall"}]},
+    {"name": "Build the first Bulwark beside the Beacon", "keys": ["A"], "holdMs": 100, "expect": [{"path": "gameplay.buildings", "op": "increased"}]},
+    {"name": "Call the first night", "keys": ["Y"], "holdMs": 100, "expect": [{"path": "gameplay.wave", "op": "increased"}]}
+  ]
+}
