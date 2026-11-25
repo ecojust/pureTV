@@ -3,6 +3,104 @@
   "use strict";
   const WIDTH = 256,
     HEIGHT = 240;
+  // The source cinematics store their lettering as 8×8 picture tiles. Localize
+  // those regions in the cached 256×240 scene before drawing the live score.
+  function drawChineseScene(g, name, tick) {
+    function box(x, y, width, height, color = "#000") {
+      g.fillStyle = color;
+      g.fillRect(x, y, width, height);
+    }
+    function words(value, x, y, size = 12, color = "#fff", align = "left") {
+      g.fillStyle = color;
+      g.font = "bold " + size + "px sans-serif";
+      g.textBaseline = "middle";
+      g.textAlign = align;
+      g.fillText(value, x, y);
+    }
+    function title() {
+      box(20, 41, 216, 66);
+      box(48, 58, 160, 2, "#af451d");
+      box(48, 97, 160, 2, "#af451d");
+      words("赤 色 要 塞", 128, 78, 27, "#ffd47a", "center");
+      // Keep the two original player-selection cursors.
+      box(50, 128, 155, 20);
+      box(101, 146, 100, 35);
+      words("选择游戏人数", 128, 136, 12, "#fff", "center");
+      words("单人行动", 104, 155);
+      words("双人行动", 104, 172);
+      box(22, 187, 212, 45);
+      words("商标及版权 © 1988 科乐美工业株式会社", 128, 201, 10, "#ccc", "center");
+      words("经美国任天堂授权发行", 128, 217, 10, "#ccc", "center");
+    }
+    function mapStart() {
+      box(33, 205, 30, 11, "#13447e");
+      words("起点", 48, 211, 9, "#fff", "center");
+    }
+    function tally() {
+      mapStart();
+      [64, 136].forEach((y, i) => {
+        box(101, y - 3, 72, 14);
+        words("玩家" + (i + 1) + " 得分", 103, y + 4, 11);
+      });
+    }
+    function restart() {
+      box(10, 37, 148, 28, "#730b00");
+      words("按开始键再次出发", 17, 51, 13);
+    }
+    if (name.startsWith("title_") || (name.startsWith("intro_") && tick < 81)) {
+      title();
+    } else if (name === "attract") {
+      if (tick < 532) {
+        box(0, 0, WIDTH, HEIGHT);
+        words("营救行动", 128, 32, 17, "#ffd47a", "center");
+        ["你的战友被俘，困在敌后。", "你是他们重获自由的唯一希望。",
+          "敌人的火力十分凶猛。", "冲进敌军建筑，把战友救出来！",
+          "你需要一点奇迹，也需要", "像豺狼一样勇猛。"].forEach((line, i) => words(line, 20, 68 + i * 24));
+      } else {
+        if (tick >= 586) {
+          box(127, 24, 113, 41);
+          words(tick < 862 ? "德克尔上校" : "昆特中士", 132, 42);
+        }
+        if (tick >= 701) {
+          box(50, 150, 102, 54);
+          words(tick < 985 ? "鲍勃中尉" : "格雷下士", 54, 172);
+        }
+      }
+    } else if (name.startsWith("intro_") && tick >= 88 && tick < 228) {
+      box(96, 46, 149, 80);
+      words("即将迎来一场", 102, 63);
+      words("热血沸腾的战斗。", 102, 83);
+      words("祝你好运！", 102, 107, 13, "#ffd47a");
+      mapStart();
+    } else if (name.startsWith("stage_clear_")) {
+      if (tick >= 6 && tick < 138) {
+        box(46, 84, 43, 16, "#fff");
+        words("这里？", 68, 92, 11, "#13181b", "center");
+      } else if (tick >= 143) tally();
+    } else if (name.startsWith("stage_load_") && tick === 0) {
+      if (name === "stage_load_01") restart();
+      else tally();
+    } else if (name.startsWith("continue_") && tick < 130) {
+      box(83, 87, 93, 27);
+      box(114, 122, 87, 38);
+      words("是否继续？", 128, 100, 15, "#fff", "center");
+      words("继续", 119, 131);
+      words("结束", 119, 148);
+    } else if (name === "game_over" && tick >= 6) {
+      box(66, 109, 120, 27);
+      words("游戏结束", 128, 123, 16, "#fff", "center");
+    } else if (name === "ending_restart" || (name === "ending" && tick >= 4821)) {
+      restart();
+    } else if (name === "ending" && tick >= 2003) {
+      // Preserve each original contributor's spelling below the translated role.
+      const credits = [[2288, "程序设计"], [2965, "角色设计"], [3296, "程序设计"],
+        [3617, "角色设计"], [4194, "音乐制作"], [4821, "视觉设计"]];
+      const role = credits.find(([until]) => tick < until);
+      box(24, 34, 138, 19, "#730b00");
+      if (role) words(role[1], 31, 44);
+    }
+  }
+
   function image(url) {
     return new Promise((resolve, reject) => {
       const value = new Image();
@@ -149,7 +247,8 @@
     static async load(base) {
       return new JackalArtwork(base).initialize();
     }
-    constructor(canvas, art) {
+    constructor(canvas, art, language) {
+      this.chinese = language === "zh";
       this.canvas = canvas;
       canvas.width = WIDTH;
       canvas.height = HEIGHT;
@@ -248,6 +347,7 @@
             position++;
           }
         }
+        if (this.chinese) drawChineseScene(context, name, frameTime);
         this.lastScene = name;
         this.lastSceneFrame = left;
       }

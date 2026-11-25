@@ -31,6 +31,8 @@
   messages.actionALabel += english ? ' (bottom right half)' : '（右下半区）';
   messages.actionBLabel += english ? ' (top right half)' : '（右上半区）';
   document.documentElement.lang = english ? 'en' : 'zh-CN';
+  $('game-title').textContent = english ? 'JACKAL TV' : '赤色要塞';
+  document.title = $('game-title').textContent + (english ? ' · Controller' : ' · 手机手柄');
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = messages[el.dataset.i18n]; });
   $('joystick-zone').setAttribute('aria-label', messages.joystick);
   $('button-a').setAttribute('aria-label', messages.actionALabel);

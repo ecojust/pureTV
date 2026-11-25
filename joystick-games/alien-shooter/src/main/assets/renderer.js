@@ -198,10 +198,11 @@
     }
     return c;
   }
-  function stencilTexture() {
+  var sectorSigns = ['货运区 01', '生物实验室 02', '反应堆 03'];
+  function stencilTexture(english) {
     var c = canvas(1024, 512), g = c.getContext('2d');
     g.clearRect(0, 0, 1024, 512); g.fillStyle = '#d8d1ae'; g.font = '900 70px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
-    ['CARGO 01', 'BIOLAB 02', 'CORE 03'].forEach(function (s, i) { g.fillText(s, 512, 70 + i * 150); });
+    (english ? ['CARGO 01', 'BIOLAB 02', 'CORE 03'] : sectorSigns).forEach(function (s, i) { g.fillText(s, 512, 70 + i * 150); });
     return c;
   }
   function Renderer(target, options) {
@@ -250,15 +251,40 @@
     if (repeat) t.wrapS = t.wrapT = T.RepeatWrapping;
     this.textures.push(t); return t;
   };
+  // The bundled English stencils are part of the original art. Repaint their
+  // label strips once at upload, keeping the surrounding scratches and lighting.
+  function localizedSignImage(image, url, language) {
+    if (String(language).indexOf('en') === 0) return image;
+    var stage = /^baked-light-([0-2])\.png$/.exec(url);
+    if (url !== 'baked-atlas.png' && !stage) return image;
+    var sheet = canvas(image.width, image.height), g = sheet.getContext('2d');
+    g.drawImage(image, 0, 0);
+    function sign(text, x, y, w, h, color) {
+      g.drawImage(image, x, y - 2, w, 1, x, y, w, h);
+      g.fillStyle = color;
+      g.font = 'bold ' + h + 'px sans-serif';
+      g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.fillText(text, x + w / 2, y + h / 2, w);
+    }
+    if (stage) {
+      sign(sectorSigns[Number(stage[1])], 209, 250, 94, 13, 'rgba(237,236,202,.38)');
+    } else {
+      // Pixel bounds of crateTop, crateSide and barrelSide in the 1024² atlas.
+      sign('物资', 176, 210, 122, 30, '#44514b');
+      sign('货运', 693, 216, 128, 23, '#3c4a43');
+      sign('燃料', 347, 687, 75, 23, '#e4d6a4');
+    }
+    return sheet;
+  }
   Renderer.prototype.bakedTexture = function (url, repeat, linear) {
     var self = this, key = url + ':' + !!repeat + ':' + !!linear;
     this.bakedTextures = this.bakedTextures || {};
     if (this.bakedTextures[key]) return this.bakedTextures[key];
     var image = this.baked.images && this.baked.images[url], texture;
-    if (image) { texture = new T.Texture(image); texture.needsUpdate = true; }
+    if (image) { texture = new T.Texture(localizedSignImage(image, url, this.options.language)); texture.needsUpdate = true; }
     else {
       this.pendingTextures++;
-      texture = new T.TextureLoader().load(url, function () { self.pendingTextures--; self.textureRevision++; }, undefined, function () {
+      texture = new T.TextureLoader().load(url, function (loaded) { loaded.image = localizedSignImage(loaded.image, url, self.options.language); loaded.needsUpdate = true; self.pendingTextures--; self.textureRevision++; }, undefined, function () {
         self.pendingTextures--; self.failed = true; self.active = false; self.error = 'Baked texture could not be loaded: ' + url;
       });
     }
@@ -325,7 +351,7 @@
     this.shadowMaterial = this.material({ map: this.shadowTexture, color: 0x000000, transparent: true, opacity: .7, depthWrite: false }, true);
     this.glowMaterial = this.material({ map: this.glowTexture, transparent: true, color: 0xffffff, opacity: .72, vertexColors: true, blending: T.AdditiveBlending, depthWrite: false }, true);
     this.decalMaterial = this.material({ map: this.bloodTexture, color: 0xffffff, transparent: true, opacity: .75, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 }, true);
-    if (!this.baked) this.stencilMaterial = this.material({ map: this.texture(stencilTexture()), color: 0xffffff, transparent: true, opacity: .3, depthWrite: false }, true);
+    if (!this.baked) this.stencilMaterial = this.material({ map: this.texture(stencilTexture(this.options.language === 'en')), color: 0xffffff, transparent: true, opacity: .3, depthWrite: false }, true);
   };
   Renderer.prototype.pool = function (g, material, max) {
     // Three r124 caches instancing shader defines on the material. Keep pool

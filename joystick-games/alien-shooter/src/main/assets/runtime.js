@@ -210,11 +210,11 @@
       var connectionLabel = connected + ":" + (controller && controller.transport || "phone");
       if (connectionLabel === roomConnected) return;
       roomConnected = connectionLabel;
-      var value = '<div class="room-player' + (connected ? ' connected' : '') + '"><span class="player-tag">LINK</span><strong>' + esc(controller && controller.transport === "wifi" ? tr("Wi-Fi 手柄", "WI-FI PAD") : tr("手机手柄", "PHONE")) + '</strong><span>' + esc(connected ? tr("已就绪", "READY") : tr("等待连接", "WAITING")) + '</span></div>';
+      var value = '<div class="room-player' + (connected ? ' connected' : '') + '"><span class="player-tag">' + tr("连接", "LINK") + '</span><strong>' + esc(controller && controller.transport === "wifi" ? tr("Wi-Fi 手柄", "WI-FI PAD") : tr("手机手柄", "PHONE")) + '</strong><span>' + esc(connected ? tr("已就绪", "READY") : tr("等待连接", "WAITING")) + '</span></div>';
       if (value !== roomHtml) { $("room-players").innerHTML = value; roomHtml = value; runtimeStats.domWrites++; }
     }
     function titleMenu() {
-      return '<div class="title-kicker">' + esc(tr("封锁区 · 03", "QUARANTINE SECTOR · 03")) + '</div><h1 class="game-title"><span class="title-line">' + tr("孤胆", "ALIEN") + '</span><span class="title-line">' + tr("枪手", "SHOOTER") + '</span></h1><div class="title-english">' + tr("ALIEN SHOOTER / TV", "SURVIVE. REARM. BREAK THROUGH.") + '</div><p class="title-description">' + esc(tr("基地失去联络，异形正从黑暗中涌出。带上武器，重启控制系统，独自杀出一条撤离路线。", "The base has gone silent. Hostiles are pouring out of the dark. Arm up, restore the control systems and fight your way to extraction, alone.")) + '</p><div class="mission-tags"><span>' + esc(tr("三段战役", "3-STAGE CAMPAIGN")) + '</span><span>' + esc(tr("五种武器", "5 WEAPONS")) + '</span><span>' + esc(tr("单人行动", "SINGLE PLAYER")) + '</span></div><div class="title-actions"><button type="button" class="primary wide" id="start-button" data-action="start"><span>' + esc(tr("进入封锁区", "ENTER THE ZONE")) + '</span><em>START / ENTER</em></button><p class="start-hint">' + esc(game.noticeTime > 0 && text(game.notice) ? text(game.notice) : tr("连接一部手机即可开始，也可用遥控器或键盘游玩。", "Connect one phone to begin, or use a TV remote or keyboard.")) + '</p></div>';
+      return '<div class="title-kicker">' + esc(tr("封锁区 · 03", "QUARANTINE SECTOR · 03")) + '</div><h1 class="game-title"><span class="title-line">' + tr("孤胆", "ALIEN") + '</span><span class="title-line">' + tr("枪手", "SHOOTER") + '</span></h1><div class="title-english">' + tr("突围 · 补给 · 生存", "SURVIVE. REARM. BREAK THROUGH.") + '</div><p class="title-description">' + esc(tr("基地失去联络，异形正从黑暗中涌出。带上武器，重启控制系统，独自杀出一条撤离路线。", "The base has gone silent. Hostiles are pouring out of the dark. Arm up, restore the control systems and fight your way to extraction, alone.")) + '</p><div class="mission-tags"><span>' + esc(tr("三段战役", "3-STAGE CAMPAIGN")) + '</span><span>' + esc(tr("五种武器", "5 WEAPONS")) + '</span><span>' + esc(tr("单人行动", "SINGLE PLAYER")) + '</span></div><div class="title-actions"><button type="button" class="primary wide" id="start-button" data-action="start"><span>' + esc(tr("进入封锁区", "ENTER THE ZONE")) + '</span><em>' + tr("开始键 / 回车", "START / ENTER") + '</em></button><p class="start-hint">' + esc(game.noticeTime > 0 && text(game.notice) ? text(game.notice) : tr("连接一部手机即可开始，也可用遥控器或键盘游玩。", "Connect one phone to begin, or use a TV remote or keyboard.")) + '</p></div>';
     }
     function pauseMenu() {
       var disconnected = game.pausedReason === "disconnected";
@@ -264,7 +264,7 @@
         return;
       }
       if (!hudPlayer) {
-        $("players-hud").innerHTML = '<section class="player-hud" data-player="1"><div class="player-hud-header"><strong>' + esc(tr("突击队员", "OPERATOR")) + '</strong><span class="player-connection"></span></div><div class="health-line"><span>HP</span><div class="health-meter"><i></i></div><b></b></div><div class="armor-line"></div><div class="weapon-line"><span class="weapon-name"></span><span class="weapon-ammo"><b class="ammo-count"></b><small>' + esc(tr("发", "RDS")) + '</small></span></div><div class="grenade-count"></div></section>';
+        $("players-hud").innerHTML = '<section class="player-hud" data-player="1"><div class="player-hud-header"><strong>' + esc(tr("突击队员", "OPERATOR")) + '</strong><span class="player-connection"></span></div><div class="health-line"><span>' + tr("生命", "HP") + '</span><div class="health-meter"><i></i></div><b></b></div><div class="armor-line"></div><div class="weapon-line"><span class="weapon-name"></span><span class="weapon-ammo"><b class="ammo-count"></b><small>' + esc(tr("发", "RDS")) + '</small></span></div><div class="grenade-count"></div></section>';
         var section = $("players-hud");
         hudPlayer = { connection: section.querySelector(".player-connection"), meter: section.querySelector(".health-meter"), healthBar: section.querySelector(".health-meter i"), health: section.querySelector(".health-line b"), armor: section.querySelector(".armor-line"), weapon: section.querySelector(".weapon-name"), ammo: section.querySelector(".ammo-count"), grenades: section.querySelector(".grenade-count") };
         runtimeStats.domWrites++;
@@ -309,7 +309,7 @@
       var active = (game.players || []).filter(function (p) { return p.active; });
       var distances = active.map(function (p) { return target ? Math.hypot(target.x - p.x, target.y - p.y) : 0; });
       var distance = distances.length ? Math.round(Math.min.apply(Math, distances)) : 0;
-      setText($("tactical-distance"), target ? distance + " m" : "");
+      setText($("tactical-distance"), target ? distance + tr(" 米", " m") : "");
       setText($("tactical-target"), game.extractionReady ? tr("绿色标记 · 撤离", "GREEN MARKER · EXTRACT") : text(objective && objective.name) || tr("探索基地", "EXPLORE THE BASE"));
       if (minimapMap !== map || !minimapBase || minimapBase.width !== width || minimapBase.height !== height) {
         minimapBase = document.createElement("canvas"); minimapBase.width = width; minimapBase.height = height;

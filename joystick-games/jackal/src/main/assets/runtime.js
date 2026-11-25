@@ -10,13 +10,17 @@
     let info = { language: "zh", url: "", qr: "" };
     try {
       if (bridge) info = JSON.parse(bridge.getInfo());
+      else if (new URLSearchParams(location.search).get("lang") === "en") info.language = "en";
     } catch (_) {}
     const english = String(info.language).startsWith("en");
     const tr = (zh, en) => (english ? en : zh);
     document.documentElement.lang = english ? "en" : "zh-CN";
-    document.title = config.title;
+    document.title = config.title[english ? 1 : 0];
+    canvas.setAttribute("aria-label", document.title);
+    $("room-qr").alt = tr("房间二维码", "Room QR code");
+    document.querySelector(".players").setAttribute("aria-label", tr("玩家", "Players"));
     const labels = {
-      "room-brand": [config.title, config.title],
+      "room-brand": config.title,
       "join-label": ["手机手柄", "PHONE CONTROLLERS"],
       "lan-label": ["同一局域网", "SAME LOCAL NETWORK"],
       "scan-title": ["扫码连接手柄", "Scan to connect"],
@@ -31,7 +35,7 @@
       "move-label": ["移动", "MOVE"],
       "a-label": config.actions.a,
       "b-label": config.actions.b,
-      "footer-left": [config.title, config.title],
+      "footer-left": config.title,
       "footer-right": [
         "返回：退出游戏 · 播放键：START",
         "Back: exit game · Play: START",
@@ -396,7 +400,7 @@
       const loaded = config.load ? await config.load() : null;
       if (destroyed) return;
       game = config.createGame(loaded);
-      renderer = config.createRenderer(canvas, loaded);
+      renderer = config.createRenderer(canvas, loaded, english ? "en" : "zh");
       sound = config.createAudio ? config.createAudio(loaded) : null;
       renderer.draw(game);
       if (!$("game-loading").hasAttribute("data-failed")) $("game-loading").hidden = true;

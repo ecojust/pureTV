@@ -1,6 +1,6 @@
 /* Jackal TV: independent game rules, original-reference data and native room. */
 startTvGame({
-  title: "JACKAL TV",
+  title: ["赤色要塞", "JACKAL TV"],
   bridge: "JackalHost",
   api: "JackalTV",
   actions: { a: ["榴弹", "GRENADE"], b: ["机枪", "GUN"] },
@@ -19,6 +19,6 @@ startTvGame({
     return { art, audio };
   },
   createGame: () => new JackalGame(),
-  createRenderer: (canvas, assets) => new JackalRenderer(canvas, assets.art),
+  createRenderer: (canvas, assets, language) => new JackalRenderer(canvas, assets.art, language),
   createAudio: (assets) => assets.audio,
 });

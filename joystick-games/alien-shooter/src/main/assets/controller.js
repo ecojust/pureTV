@@ -19,6 +19,7 @@
     "游戏操作",
     "Game controls"
   ],
+  "soloBadge": ["单人", "SOLO"],
   "soloMission": [
     "单人行动",
     "SOLO MISSION"
